@@ -49,7 +49,6 @@ NameValuePairs<double> DistribuePointsAvg::distribute(const Int result) const
             Int diff = abs(result-pair.second);
             if ( diff < maxdiff )
                 award.emplace_back(pair.first,(result-diff)*payout);
-            diffs.push_back(diff);
         });
     
     return award;
