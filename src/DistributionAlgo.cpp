@@ -40,12 +40,22 @@ NameValuePairs<double> DistribuePointsAvg::distribute(const Int result) const
         
     double payout = static_cast<double>(result) / sum;
     NameValuePairs<double> award{};
+<<<<<<< HEAD
 
     for (const auto& pair : projections) {
         Int diff = abs(result-pair.second);
         if ( diff < maxdiff )
             award.emplace_back(pair.first,(result-diff)*payout);
     }
+=======
+    for_each(begin(projections), end(projections),
+        [&](decltype(projections)::const_reference pair)
+        {
+            Int diff = abs(result-pair.second);
+            if ( diff < maxdiff )
+                award.emplace_back(pair.first,(result-diff)*payout);
+        });
+>>>>>>> FETCH_HEAD
     
     return award;
 }
