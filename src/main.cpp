@@ -34,7 +34,7 @@ int main(int argc, const char * argv[])
     auto res = d.distribute(points);
 
     double sum = accumulate(begin(res), end(res), 0.0,
-        [&](const double rsum, decltype(res)::const_reference &pair){return rsum + pair.second;});
+        [](const double rsum, decltype(res)::const_reference pair){return rsum + pair.second;});
     
     if ( sum > points )
         throw exception();

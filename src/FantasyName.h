@@ -10,14 +10,24 @@
 #define __fantasybit__FantasyName__
 
 #include <string>
+#include <unordered_map>
+#include <map>
 
 namespace fantasybit
 {
 
 struct FantasyName
 {
-    std::string pubkey;
-    std::string alias;
+    using Pubkey = std::string;
+    using Alias = std::string;
+    
+    Pubkey pubkey;
+    Alias  alias;
+    
+    static std::unordered_map<Pubkey,std::shared_ptr<FantasyName>> FantasyNames;
+    static std::map<Alias,Pubkey> Aliases;
+    
+    
 };
 
 

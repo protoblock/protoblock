@@ -33,26 +33,6 @@ struct DistribuePointsAvg : DistributePoints
 };
 
 
-
 }
 
 #endif /* defined(__fantasybit__DistributionAlgo__) */
-
-/*
-template <class IMP>
-class DistributePoints : public IMP
-{
-public:
-    //using input = Int;
-    //using output = MapS2I;
-    DistributePoints(const Projections &p) : projections(p) {}
-    
-protected:
-    Projections projections;
-};
-
-struct DistribuePointsAvg
-{
-    MapNameValue distribute(const Int result) const;
-};
-*/
