@@ -24,8 +24,13 @@ The algorithm awards more bits to those with projections that were closest to ac
 3. unitpayout = result / (sum of (result-projection))
 4. award = 100 * (result - difference) * unitpayout 
 
+<<<<<<< HEAD
 ###Consensus 
 All data in the network, such as fantasy point results, will be determined by the consensus. At least 51% of total fantasybits must agree before data can be included in block. This is done by recursively signing the data payload. 
+=======
+###Concensus 
+All data in the network, such as fantasy point results, will be determined by the concenses. At least 51% of total fantasybits must agree before data can be included in block. This is done by recusivly signing the data payload. 
+>>>>>>> FETCH_HEAD
 
 ##Fantasy Name
 Fantasy Names are mined into existence in a separate proof-of-work blockchain similar to bitnames for [BitShares](https://github.com/InvictusInnovations/BitShares). A fantasy name is an alias to your public key that corresponds to your private "wallet" key. 
