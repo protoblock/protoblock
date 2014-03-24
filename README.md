@@ -24,7 +24,7 @@ The algorithm awards more bits to those with projections that were closest to ac
 3. unitpayout = result / (sum of (result-projection))
 4. award = 100 * (result - difference) * unitpayout 
 
-###Concenses 
+###Concensus 
 All data in the network, such as fantasy point results, will be determined by the concenses. At least 51% of total fantasybits must agree before data can be included in block. This is done by recusivly signing the data payload. 
 
 ##Fantasy Name
