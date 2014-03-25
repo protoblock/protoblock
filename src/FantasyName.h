@@ -12,9 +12,22 @@
 #include <string>
 #include <unordered_map>
 #include <map>
+#include "fbutils.h"
 
 namespace fantasybit
 {
+
+class Bits
+{
+    Int64 base;
+public:
+    Bits(Int64 b) : base(b) {}
+    
+    double points() { return base * .00000001; }
+    double bits() { return points() * 100; }
+    Int64 amount() { return base; }
+    void add(Bits b) { base+=b.amount(); }
+};
 
 struct FantasyName
 {
@@ -24,10 +37,10 @@ struct FantasyName
     Pubkey pubkey;
     Alias  alias;
     
+    Bits getBalance() { return 0; }
+     
     static std::unordered_map<Pubkey,std::shared_ptr<FantasyName>> FantasyNames;
     static std::map<Alias,Pubkey> Aliases;
-    
-    
 };
 
 

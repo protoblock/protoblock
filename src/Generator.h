@@ -14,21 +14,20 @@
 #include <map> 
 #include <string>
 #include "fbutils.h"
+#include "Source.h"
 
 namespace fantasybit
 {
 
 class Transaction {};
-using Source = FantasyName;
 
 //generates transactions for new fantasybits
 class Generator
 {
 public:
-    std::vector<Transaction> generate(const Source&,const MapS2I&) const;
+    std::vector<Transaction> generate(const Source&) const;
 };
     
-
 
 } //fantasybit
 

@@ -12,7 +12,7 @@ namespace fantasybit
 {
     using std::vector;
     
-    vector<Transaction> Generator::generate(const Source &s, const MapS2I &m) const
+    vector<Transaction> Generator::generate(const Source &s) const
     {
         return vector<Transaction>{};
     }
