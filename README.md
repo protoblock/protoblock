@@ -1,4 +1,9 @@
-#Fantasy Bits
+#Satoshi Fantasy
+
+##Fantasy Name
+Fantasy Names are mined into existence in a separate proof-of-work blockchain similar to bitnames for [BitShares](https://github.com/InvictusInnovations/BitShares). A fantasy name is an alias to your public key that corresponds to your private "wallet" key. 
+
+##Fantasy Bits
 
 Fantasy Bits are tokens that get created based on NFL player events.  Each fantsybit is owned by a single Fantasy Name. Fantsybits can be transferred by transactions in the underlying Proof-of-skill block chain.    
 
@@ -24,10 +29,42 @@ The algorithm awards more bits to those with projections that were closest to ac
 3. unitpayout = result / (sum of (result-projection))
 4. award = 100 * (result - difference) * unitpayout 
 
-###Consensus 
-All data in the network, such as fantasy point results, will be determined by the consensus. At least 51% of total fantasybits must agree before data can be included in block. This is done by recursively signing the data payload. 
 
-##Fantasy Name
-Fantasy Names are mined into existence in a separate proof-of-work blockchain similar to bitnames for [BitShares](https://github.com/InvictusInnovations/BitShares). A fantasy name is an alias to your public key that corresponds to your private "wallet" key. 
+###Consensus 
+All data in the network, such as fantasy point results, will be determined by the consensus. At least 51% of total Stake Values must agree before data can be included in block. This is done by recursively signing the data payload. 
+
+####Stake Value
+Each fantasy name will have four different Stake Values
+
+1. Skill - total historical bits earned from projections.
+2. Stake - total bits owned. 
+2. Data-feed - sum of Skill of all fantasy names that designate you as their feed provider.
+3. Time-sync - sum of Stake of all fantasy names that designate you as their sync provider.  
+
+
+##State Machine
+System has a built in state machine, and will act differently depending on its current state. A new block with specific data can trigger a transition to a new state. 
+
+1. **Season**
+ 	- **PreGame**(week[1-16])  
+	- **InGame**(week[1-16]) 
+	- **TradingSession** - Wed 6pm - 11:59pm EDT 
+4. **PreDraft** 
+5. **PreSeason**
+6. **53ManRoster**
+
+##BlockChain
+Satoshi Fantasy uses a Proof-of-Stake(type) system to determine who can mine the next block. Special state transition blocks require 51% Consensus from Data-feed or Time-sync stake values 
+
+###Transactions
+
+Type | Description
+---- | -----------
+xxxx | xxxxxxxx
+
+State transition transactions must be signed by 51% Data-feed-Stake consensus, and any block containing these transactions is Proof-of-Skill or Proof-of-Data-feed.
+
+TradingSession state transition transactions must be signed by 51% Time-sync-Stake consensus, and any block containing these transactions is Proof-of-Stake or Proof-of-Time-sync
+
 
 
