@@ -1,4 +1,5 @@
 #Satoshi Fantasy
+A distributed autonomous fantasy football players only market.  
 
 ##Fantasy Name
 Fantasy Names are mined into existence in a separate proof-of-work blockchain similar to bitnames for [BitShares](https://github.com/InvictusInnovations/BitShares). A fantasy name is an alias to your public key that corresponds to your private "wallet" key. 
@@ -37,9 +38,9 @@ All data in the network, such as fantasy point results, will be determined by th
 Each fantasy name will have four different Stake Values
 
 1. Skill - total historical bits earned from projections.
-2. Stake - total bits owned. 
+2. Points - total fantasybits owned * 100. 
 2. Data-feed - sum of Skill of all fantasy names that designate you as their feed provider.
-3. Time-sync - sum of Stake of all fantasy names that designate you as their sync provider.  
+3. Time-sync - sum of Points of all fantasy names that designate you as their sync provider.  
 
 
 ##State Machine
@@ -54,17 +55,40 @@ System has a built in state machine, and will act differently depending on its c
 6. **53ManRoster**
 
 ##BlockChain
-Satoshi Fantasy uses a Proof-of-Stake(type) system to determine who can mine the next block. Special state transition blocks require 51% Consensus from Data-feed or Time-sync stake values 
+Satoshi Fantasy uses a Proof-of-Stake(type) system to determine who can mine the next block. Special state transition blocks require 51% consensus from Data-feed or Time-sync stake values 
 
-###Transactions
-
-Type | Description
----- | -----------
-xxxx | xxxxxxxx
-
-State transition transactions must be signed by 51% Data-feed-Stake consensus, and any block containing these transactions is Proof-of-Skill or Proof-of-Data-feed.
-
-TradingSession state transition transactions must be signed by 51% Time-sync-Stake consensus, and any block containing these transactions is Proof-of-Stake or Proof-of-Time-sync
+###~~Transactions~~ Events
 
 
+Type |Proof      |Target Release  
+-----|:---------:|:------:
+Projection|Skill|MVP 
+State|Data-feed  |Alpha
+State|Time-sync  |Beta
+Transaction|Points|Prod
 
+####Transitions
+
+````
+Data-feed transition events must be signed by 51% Data-feed-Stake consensus, and any block containing these transactions is {Proof-of-Skill, Proof-of-Data-feed}
+
+Time-sync transition events must be signed by 51% Time-sync-Stake consensus, and any block containing these transactions is {Proof-of-Points , Proof-of-Time-sync}
+````
+####RPC - Deterministic transactions
+State events trigger deterministic transactions. Payload may include Pre and Post processing RPC calls. 
+
+1. RPC
+2. DATA
+3. RPC 
+
+###Priority Blocks
+Some blocks have higher priority than others.
+
+````
+A Proof-of-Points Transaction Block, can only contain transactions and is only valid in specific states.  
+
+A Data-feed Transition Block can also contain Transaction events. 
+
+Note: once a transition event has consensus, a block can be immediately "forged" by NXT like Proof-of-Stake(value)
+
+````
