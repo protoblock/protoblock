@@ -18,13 +18,39 @@ Fantsybits are awarded based on:
 ###Proof-of-skill
 Proof-of-skill is essentially a [Proof-of-stake](http://en.wikipedia.org/wiki/Proof-of-stake) system, where the stakes are earned based on the skill of projecting weekly fantasy football results. The main downside in other proof-of-stake networks, such as [NXT](http://wiki.nxtcrypto.org/wiki/Whitepaper:Nxt#Proof-of-Stake), is that all tokens must be pre-distributed, creating an unfair advantage to early stake holders. Fantasybits are created by NFL players playing football, so there is no pre-distribution needed.  
 
+###Fantasy Scoring Rules
+Standard PPR (points per reception) rules apply. Rules mirror [FFPC](http://www.myffpc.com/footballguys-players-championship/rules.html) (except for 1.5 TE PPR)
 
+	Passing Yards - 1 point per 20 yards or .05 points per yard
+	Passing TD - 4 points
+	Pass interception - -1 points
+
+	Rushing Yards - 1 point per 10 yards or .1 point per yard
+	Rushing TD - 6 points
+
+	Receiving Yards - 1 point per 10 yards or .1 point per yard
+	Receiving TD - 6 Points
+	Reception - 1 point per reception
+
+	2-point conversion - 2 points for passer, rusher, receiver
+	PAT kick - 1 point
+	Field Goal - 3 points for 1-30 yards, .1 point for each additional yard.
+
+	**Team Defense / Special Teams**
+	Sack - 1 point
+	Takeaway (interception or fumble recovery) - 2 points
+	Defensive TD - 6 points
+	Safety - 5 points
+	Shutout - 12 points
+	1-6 points allowed - 8 points
+	7-10 points allowed - 10 points
+	
 ###Fantasy point projections
 100 fantasybits are generated for each real fantasy point earned by an NFL player during the fantasy season. A generation and distribution algorithm determines the number of bits to generate and the names to distribute them to.
 
 The algorithm awards more bits to those with projections that were closest to actual results. 
 
-####[Distribution Algorithm](https://github.com/jaybny/fantasybit/blob/master/src/DistributionAlgo.cpp) 
+#####[Distribution Algorithm](https://github.com/jaybny/fantasybit/blob/master/src/DistributionAlgo.cpp) 
 1. Calculate average difference of all projections from actual result. 
 2. Filter out projections that are below average or have a difference > result.
 3. unitpayout = result / (sum of (result-projection))
