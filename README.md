@@ -95,11 +95,11 @@ Transaction|Points|Prod
 
 ####Transitions
 
-````
-Data-feed transition events must be signed by 51% Data-feed-Stake consensus, and any block containing these transactions is {Proof-of-Skill, Proof-of-Data-feed}
 
-Time-sync transition events must be signed by 51% Time-sync-Stake consensus, and any block containing these transactions is {Proof-of-Points , Proof-of-Time-sync}
-````
+	Data-feed transition events must be signed by 51% Data-feed-Stake consensus, and any block containing these transactions is {Proof-of-Skill, Proof-of-Data-feed}
+
+	Time-sync transition events must be signed by 51% Time-sync-Stake consensus, and any block containing these transactions is {Proof-of-Points , Proof-of-Time-sync}
+
 ####RPC - Deterministic transactions
 State events trigger deterministic transactions. Payload may include Pre and Post processing RPC calls. 
 
@@ -110,11 +110,9 @@ State events trigger deterministic transactions. Payload may include Pre and Pos
 ###Priority Blocks
 Some blocks have higher priority than others.
 
-````
-A Proof-of-Points Transaction Block, can only contain transactions and is only valid in specific states.  
 
-A Data-feed Transition Block can also contain Transaction events. 
+	A Proof-of-Points Transaction Block, can only contain transactions and is only valid in specific states.  
+
+	A Data-feed Transition Block can also contain Transaction events. 
 
 Note: once a transition event has consensus, a block can be immediately "forged" by NXT like Proof-of-Stake(value)
-
-````
