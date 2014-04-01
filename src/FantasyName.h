@@ -13,12 +13,16 @@
 #include <unordered_map>
 #include <map>
 #include "fbutils.h"
+#include <fc/crypto/elliptic.hpp>
+#include <future>
+#include <fc/crypto/sha224.hpp>
+#include <fc/time.hpp>
 
 namespace fantasybit
 {
 
 class Bits
-{
+{ 
     Int64 base;
 public:
     Bits(Int64 b) : base(b) {}
@@ -29,20 +33,70 @@ public:
     void add(Bits b) { base+=b.amount(); }
 };
 
+using pubkey_t = fc::ecc::public_key_data;
+using alias_t = std::string;
+using hash_t = uint64_t;
+
 struct FantasyName
 {
-    using Pubkey = std::string;
-    using Alias = std::string;
+    pubkey_t pubkey;
+    alias_t  alias;
     
-    Pubkey pubkey;
-    Alias  alias;
     
     Bits getBalance() { return 0; }
-     
-    static std::unordered_map<Pubkey,std::shared_ptr<FantasyName>> FantasyNames;
-    static std::map<Alias,Pubkey> Aliases;
+    
+    hash_t hash() const {
+        return name_hash(alias);
+    }
+    
+    bool isAlias(const alias_t &that) const {
+        return hash() == name_hash(that);
+    }
+    
+    static hash_t  name_hash( const alias_t& n );
 };
 
+using nameid_t = fc::sha224;
+using nonce_t = uint32_t;
+struct name_transaction
+{
+    name_transaction(nameid_t p) : name_hash(0),nonce(0),prev(p) {}
+    hash_t name_hash;
+    pubkey_t pubkey;
+    nonce_t nonce;
+    fc::time_point_sec utc_sec;
+    nameid_t prev;
+    
+    nameid_t id() const;
+};
+
+
+
+
+
+
+
+/*
+class KeyPair
+{
+public:
+	KeyPair() {}
+	KeyPair(Secret _k);
+
+	static KeyPair create();
+
+	Secret const& secret() const { return m_secret; }
+	Secret const& sec() const { return m_secret; }
+	Public const& pub() const { return m_public; }
+
+	Address const& address() const { return m_address; }
+
+private:
+	Secret m_secret;
+	Public m_public;
+	Address m_address;
+};
+*/
 
 }
 

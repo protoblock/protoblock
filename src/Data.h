@@ -10,6 +10,7 @@
 #define __fantasybit__Data__
 
 #include "FantasyName.h"
+#include "Comissioner.h"
 
 namespace fantasybit
 {
@@ -18,7 +19,7 @@ template<class T>
 class Data
 {
     T data;
-    FantasyName::Alias alias;
+    alias_t alias;
 public:
     Data(T t) : data(t) {}
     
@@ -26,7 +27,7 @@ public:
         Bits stake{0};
 
         do {
-            stake.add(FantasyName::FantasyNames[FantasyName::Aliases[alias]].getBalance());
+            stake.add(Comissioner::FantasyNames[Comissioner::Aliases[alias]].getBalance());
         } while ( !decrypt());
             
         return stake;
@@ -46,6 +47,22 @@ private:
         //set data
         return false;
     }
+};
+
+
+struct predict
+{
+    alias_t id;
+    Uid player;
+    int8_t weak;
+    int8_t projection;
+    Int nonce;
+
+    Signature sig;
+    void sign()
+    {
+    }
+    
 };
 
 }

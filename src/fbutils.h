@@ -26,6 +26,8 @@ using Int64 = uint64_t;
 using MapS2I = std::map<std::string,Int>;
 template<class T>
     using NameValuePairs = std::vector<std::pair<std::shared_ptr<FantasyName>, T>>;
+    
+using Signature = std::string;
 
 }
 
