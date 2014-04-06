@@ -10,7 +10,7 @@
 #define __fantasybit__Data__
 
 #include "FantasyName.h"
-#include "Comissioner.h"
+#include "Commissioner.h"
 
 namespace fantasybit
 {
@@ -27,7 +27,7 @@ public:
         Bits stake{0};
 
         do {
-            stake.add(Comissioner::FantasyNames[Comissioner::Aliases[alias]].getBalance());
+            stake.add(Commissioner::FantasyNames[Commissioner::Aliases[alias]].getBalance());
         } while ( !decrypt());
             
         return stake;

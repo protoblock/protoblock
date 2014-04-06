@@ -1,0 +1,52 @@
+package fantasybit;
+
+enum MyNameStatus 
+{
+    none=1;
+    requested=2;
+    found=3;
+    transaction_sent=4;
+    confirmed=5;
+}
+
+message MyFantasyName
+{
+    required string name=1;
+    required MyNameStatus status=2;
+    optional NameTransaction fantasyname=3;
+}
+
+message Secret
+{
+    required string private_key = 1;
+    optional MyFantasyName myfantasyname=2;
+}
+
+message FantasyNameT 
+{
+    required string public_key=1;
+    required string hash=2;
+    required BitStake balances=3;
+    optional string name=4;
+}
+
+message BitStake 
+{
+}
+
+message NameTransaction
+{
+}
+
+enum Type { MYFANTASYNAME = 1; }
+
+message OutData {
+	required Type type = 1;
+	
+  	extensions 100 to max;
+}
+
+// Elsewhere...
+extend OutData {
+  optional MyFantasyName myfantasyname_ext = 100;
+}
