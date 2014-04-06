@@ -34,7 +34,7 @@ namespace fantasybit {
   }
 
 
-FantasyName Commissioner::generateName(alias_t alias, pubkey_t pub)
+name_transaction Commissioner::generateName(alias_t alias, pubkey_t pub)
 {
     name_transaction nt{lastId()};
 
@@ -55,7 +55,9 @@ FantasyName Commissioner::generateName(alias_t alias, pubkey_t pub)
         hit = difficulty(nt.id());
     }
     
-    return FantasyName{pub,alias};
+    return nt;
+    
+    //return FantasyName{pub,alias};
 }
 
 nameid_t Commissioner::m_genesis_id = Commissioner::createGenesisName().id();

@@ -10,6 +10,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB ProtoFiles *.proto)
 PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${ProtoFiles})
+set_source_files_properties(${ProtoSources} ${ProtoHeaders} PROPERTIES GENERATED TRUE)
 
 
 link_directories(lib)
@@ -26,7 +27,7 @@ find_package( Boost 1.54 REQUIRED COMPONENTS
                    program_options 
                    serialization 
                    chrono 
-                   unit_test_framework 
+                   unit_test_framework  
                    context 
                    locale
                    coroutine)
@@ -37,6 +38,6 @@ include_directories( ${OPENSSL_INCLUDE_DIR} )
 SET( ALL_OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} ${SSL_EAY_RELEASE} ${LIB_EAY_RELEASE})
 
 add_executable( fantasybit ${SRCS} ${ProtoSources} ${ProtoHeaders})
-target_link_libraries(fantasybit libfc.a ${Boost_LIBRARIES} ${ALL_OPENSSL_LIBRARIES} 
+target_link_libraries(fantasybit libfc.a ${Boost_LIBRARIES} ${ALL_OPENSSL_LIBRARIES}  
         nanomsg
         ${PROTOBUF_LIBRARY} ) 

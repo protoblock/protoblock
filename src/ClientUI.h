@@ -17,6 +17,9 @@
 namespace fantasybit
 {
 
+
+
+
 class ClientUI
 {
     nn::socket sock;
@@ -28,15 +31,9 @@ public:
         sock.connect(addr.c_str());
     }
     
-    void run()
-    {
-        init();
-        while (running)
-        {
-        }
-    }
+    void run();
     
-    void init();
+    void init() {};
     void stop()
     {
         running = false;

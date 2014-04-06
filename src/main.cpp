@@ -16,11 +16,36 @@
 #include "DataPersist.h"
 #include "ProtoData.pb.h"
 
+#include "Server.h"
+#include "ClientUI.h"
+
 using namespace fantasybit;
 using namespace std;
 
-
 int main(int argc, const char * argv[])
+{
+    string address{"inproc://test"};
+    Server server{address};
+    ClientUI client{address};
+    
+    
+    thread servert{&Server::run,&server};
+    thread clientt{&ClientUI::run,&client};
+    
+    string command;
+    cin >> command;
+    if ( command == "exit" )
+    {
+        server.stop();
+        client.stop();
+        nn_term();
+    }
+    
+    servert.join();
+    clientt.join();
+    
+}
+int main2(int argc, const char * argv[])
 {
 
 {
@@ -58,8 +83,8 @@ secretdata.set_private_key(str4);
 
 cout << "(" << secretdata.private_key() << ")\n";
 
-//Writer<Secret> write{"secret.out",std::ios::app};
-//write(secretdata);
+Writer<Secret> write{"secret.out",std::ios::app};
+write(secretdata);
 
 
 Secret secretdata2;

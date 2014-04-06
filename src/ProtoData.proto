@@ -3,17 +3,18 @@ package fantasybit;
 enum MyNameStatus 
 {
     none=1;
-    requested=2;
-    found=3;
-    transaction_sent=4;
-    confirmed=5;
+    notavil=2;
+    requested=5;
+    found=10;
+    transaction_sent=15;
+    confirmed=20;
 }
 
 message MyFantasyName
 {
     required string name=1;
     required MyNameStatus status=2;
-    optional NameTransaction fantasyname=3;
+    optional NameTransaction nametransaction=3;
 }
 
 message Secret
@@ -36,17 +37,36 @@ message BitStake
 
 message NameTransaction
 {
+	required uint64 hash=1;
+	required bytes public_key=2;
+	required uint32 nonce=3;
+	required uint32 utc_sec=4;
+	required string prev_id=5; 
+	optional bytes sig=6;
 }
 
-enum Type { MYFANTASYNAME = 1; }
-
 message OutData {
+	enum Type { MYFANTASYNAME = 1; }
 	required Type type = 1;
-	
+
+	optional MyFantasyName myfantasyname = 2;	
   	extensions 100 to max;
 }
 
 // Elsewhere...
-extend OutData {
-  optional MyFantasyName myfantasyname_ext = 100;
+//extend OutData {
+//	optional int32 test = 100;	
+//}
+
+message InData {
+	enum Type { MineName = 1; }
+	required Type type = 1;
+	
+	optional string data = 2;	
+  	extensions 100 to max;
 }
+
+// Elsewhere...
+//extend InData {
+//	optional int32 test = 100;	
+//}

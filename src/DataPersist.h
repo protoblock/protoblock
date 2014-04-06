@@ -55,17 +55,24 @@ class Reader
 
 	google::protobuf::io::IstreamInputStream *_IstreamInputStream;
 	google::protobuf::io::CodedInputStream *_CodedInputStream;
+    
+    bool gd = false;
 
 public:
 	Reader(const std::string &file, std::ios::openmode flags = 0):
 		mFs(file,std::ios::in | std::ios::binary | flags)
 	{
-		assert(mFs.good());
-
-		_IstreamInputStream = new google::protobuf::io::IstreamInputStream(&mFs);
-		_CodedInputStream = new google::protobuf::io::CodedInputStream(_IstreamInputStream);
+		if (mFs.good())
+        {
+            gd = true;
+            _IstreamInputStream = new google::protobuf::io::IstreamInputStream(&mFs);
+            _CodedInputStream = new google::protobuf::io::CodedInputStream(_IstreamInputStream);
+        }
 	}
 
+    bool good() const {
+        return gd;
+    }
 
 	bool ReadNext(T &msg)
 	{

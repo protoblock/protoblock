@@ -17,6 +17,7 @@
 #include <future>
 #include <fc/crypto/sha224.hpp>
 #include <fc/time.hpp>
+#include "ProtoData.pb.h"
 
 namespace fantasybit
 {
@@ -66,14 +67,20 @@ struct name_transaction
     nonce_t nonce;
     fc::time_point_sec utc_sec;
     nameid_t prev;
-    
+    fc::ecc::signature sig;
     nameid_t id() const;
+    fc::sha256 digest() const;
 };
 
 
 
-
-
+/*
+NameTransaction convert_name_transaction(const name_transaction &nt)
+{
+    NameTransaction namet;
+    return namet;
+}
+*/
 
 
 /*
