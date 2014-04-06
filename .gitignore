@@ -4,7 +4,7 @@ CMakecache.txt
 cmake_install.cmake
 Makefile
 names.txt
-xcode-old 
+xcode-old/ 
 src/CMakeFiles/
 src/CMakecache.txt
 src/Makefile
