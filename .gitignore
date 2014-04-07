@@ -6,7 +6,7 @@ CMakecache.txt
 cmake_install.cmake
 Makefile
 names.txt
-xcode-old/ 
 src/CMakeFiles/
 src/CMakecache.txt
 src/Makefile
+*.DS_Store
