@@ -40,4 +40,6 @@ SET( ALL_OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} ${SSL_EAY_RELEASE} ${LIB_EAY_REL
 add_executable( fantasybit ${SRCS} ${ProtoSources} ${ProtoHeaders})
 target_link_libraries(fantasybit libfc.a ${Boost_LIBRARIES} ${ALL_OPENSSL_LIBRARIES}  
         nanomsg
-        ${PROTOBUF_LIBRARY} ) 
+        ${PROTOBUF_LIBRARY} )  
+        
+add_library(fb ${SRCS} ${ProtoSources} ${ProtoHeaders})

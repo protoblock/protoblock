@@ -2,7 +2,7 @@
 //  main.cpp
 //  satoshifantasy
 //
-//  Created by User on 3/17/14.
+//  Created by Jay Berg on 3/17/14.
 //
 #include "Commissioner.h"
 #include "FantasyName.h"
@@ -24,9 +24,11 @@ using namespace std;
 
 int main(int argc, const char * argv[])
 {
-    string address{"inproc://test"};
-    Server server{address};
-    ClientUI client{address};
+    string server_address{"inproc://test"};
+    Server server{server_address};
+    
+    string gui_address{"ipc:///tmp/test.ipc"};
+    ClientUI client{server_address,gui_address};
     
     
     thread servert{&Server::run,&server};
@@ -41,9 +43,10 @@ int main(int argc, const char * argv[])
         nn_term();
     }
     
-    servert.join();
     clientt.join();
-    
+    server.stop();
+    servert.join();
+     
 }
 int main2(int argc, const char * argv[])
 {

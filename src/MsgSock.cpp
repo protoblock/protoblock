@@ -18,6 +18,6 @@ int Sender::Send(nn::socket &s, const google::protobuf::Message &msg)
     msg.SerializeWithCachedSizesToArray((::google::protobuf::uint8_t *)buf);
     return s.send(buf,sz,0);
 }
-
+ 
 
 }

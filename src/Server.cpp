@@ -34,7 +34,6 @@ void verify(const string priv_key,const NameTransaction &nt)
     std::copy(begin(nt.sig()),end(nt.sig()),begin(nt2.sig));
     bool ver = pk.verify(nt2.digest(), nt2.sig);
 
-    cout << " verfied " << ver <<  "\n";
     if ( ver )
     {
         cout << " hit " << difficulty(nt2.id()) << " target " << Commissioner::target(difficulty(nt2.prev)) << "\n";
@@ -61,46 +60,39 @@ void Server::init()
             else if ( secret.myfantasyname().status() > bestsecret[secret.myfantasyname().name()].status())
             {
                 bestsecret[secret.myfantasyname().name()] = secret.myfantasyname();
+                priv_key = secret.private_key();
             }
         }
         else if (priv_key == "")
             priv_key = secret.private_key();
     }
 
+    for(auto p :bestsecret)
+        cout << p.second.DebugString() << "\n" ;
     OutData o;
     o.set_type( OutData_Type::OutData_Type_MYFANTASYNAME);
-   
+    agent.reset(new FantasyAgent{fc::sha256{priv_key}});
     if ( bestsecret.size() == 0)
     {
         agent.reset(new FantasyAgent{});
         secret.set_private_key(agent->getSecret());
-        sender.send(o);
         
+        sender.send(o);
         Writer<Secret> writer{"secret.out",ios::trunc};
         writer(secret);
     }
     else for ( const auto& pair : bestsecret)
     {
+        agent.reset(new FantasyAgent{});
         o.mutable_myfantasyname()->CopyFrom(pair.second);
         sender.send(o);
-    
-        //MyFantasyName *m = o.MutableExtension(MyFantasyName_ext);
-        //o.SetExtension(myfantasyname_ext,pair.second);
-        //, <#typename _proto_TypeTraits::ConstType value#>)
-        //MyFantasyName *m = o.MutableExtension(myfantasyname_ext);
-        //*m=pair.second;
-        //o.set_my
-        //o.mutable_myfantasyname();
-        //mfn->set_allocated_fantasyname(<#::fantasybit::NameTransaction *fantasyname#>)
-        //o.set_allocated_myfantasyname(pair.sec)
-
     }
 }
 
 void Server::run()
 {
     init();
-    
+
     Receiver rec{sock};
     InData indata;
     while (running)
@@ -109,8 +101,11 @@ void Server::run()
       
         switch (indata.type())
         {
-            case InData_Type_MineName:
+            case InData_Type_MINENAME:
                 mine(indata.data());
+                break;
+            case InData_Type_QUIT:
+                running = false;
                 break;
             default:
                 break;
@@ -178,18 +173,6 @@ void Server::mine(const std::string &name)
             break;
     }
 }
-
-/*
-    const int bsize = 256;
-    char buf[bsize];
-    int flags=0;
-    
-            int size = sock.recv(buf, bsize, flags);
-        outdata.ParseFromArray(buf, size);
-*/
-
-
-
 
 
 }

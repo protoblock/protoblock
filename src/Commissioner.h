@@ -51,10 +51,10 @@ public:
     
     static constexpr int hashmineindex()
     {
-#ifdef HARD_MINING 
-        return 3;
-#else
+#ifdef EASY_TEST_MINING
         return 2;
+#else
+        return 3;
 #endif
     }
     
@@ -62,9 +62,9 @@ public:
         fc::sha224 mining_hash;
         char* tmpPtr = (char*)&mining_hash;
         memset( tmpPtr, 0xff, sizeof(mining_hash) );
-        for (int i=0;i<hashmineindex()-1;i++)
-            tmpPtr[0] = 0;
-         tmpPtr[hashmineindex()] = 0x0f;
+        for (int i=0;i<hashmineindex();++i)
+            tmpPtr[i] = 0;
+        tmpPtr[hashmineindex()] = 0x0f;
         return mining_hash;
     }
     

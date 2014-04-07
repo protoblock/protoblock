@@ -13,31 +13,37 @@
 #include <nanomsg/pair.h>
 #include <assert.h>
 #include <string>
-
+#include "ProtoData.pb.h"
+#include <iostream>
 namespace fantasybit
 {
 
-
-
-
 class ClientUI
 {
-    nn::socket sock;
-    volatile bool running = true;
+    nn::socket sockserv, sockgui;
 public:
-    
-    ClientUI(std::string addr) : sock{AF_SP, NN_PAIR}
+    ClientUI(std::string addrserv,std::string addrgui)
+        : sockserv{AF_SP, NN_PAIR}, sockgui{AF_SP, NN_PAIR}
     {
-        sock.connect(addr.c_str());
+        sockserv.connect(addrserv.c_str());
+        sockgui.bind(addrgui.c_str());
     }
-    
     void run();
-    
-    void init() {};
     void stop()
     {
         running = false;
     }
+    
+private:
+    volatile bool running = true;
+    void init();
+protected:
+    MyFantasyName myname{};
+    
+    void process_server(const OutData &);
+    void process_gui(const InData &);
+    void snapshot_gui();
+    bool havegui;
 };
 
 }

@@ -21,10 +21,8 @@ class Receiver
     nn::socket &sock;
     //size_t bsize;
     void *buf;
-
 public:
     //Receiver(nn::socket &s, char *b, std::size_t size) : sock{s}, bsize{size} , buf{b} {}
-
     Receiver(nn::socket &s) : sock{s} , buf(nullptr){} //, bsize{256}, buf{new char[bsize]} {}
 
     template <class T>
@@ -45,13 +43,11 @@ class Sender
 public:
     Sender(nn::socket &s) : sock{s} {}
     
-    static int Send(nn::socket &s, const google::protobuf::Message &msg);
-
     int send(const google::protobuf::Message &msg)
     {
         return Send(sock,msg);
     }
-
+    static int Send(nn::socket &s, const google::protobuf::Message &msg);
 };
 
 }
