@@ -17,7 +17,7 @@ link_directories(lib)
 
 file ( GLOB SRCS *.cpp *.h *.hpp)
 
-FIND_PACKAGE( OpenSSL )
+FIND_PACKAGE( OpenSSL ) 
 #find_package( BerkeleyDB )
 find_package( Boost 1.54 REQUIRED COMPONENTS
                    thread 
@@ -26,7 +26,7 @@ find_package( Boost 1.54 REQUIRED COMPONENTS
                    filesystem 
                    program_options 
                    serialization 
-                   chrono 
+                   chrono
                    unit_test_framework  
                    context 
                    locale
@@ -38,8 +38,6 @@ include_directories( ${OPENSSL_INCLUDE_DIR} )
 SET( ALL_OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} ${SSL_EAY_RELEASE} ${LIB_EAY_RELEASE})
 
 add_executable( fantasybit ${SRCS} ${ProtoSources} ${ProtoHeaders})
-target_link_libraries(fantasybit libfc.a ${Boost_LIBRARIES} ${ALL_OPENSSL_LIBRARIES}  
-        nanomsg
-        ${PROTOBUF_LIBRARY} )  
+target_link_libraries(fantasybit libfc.a ${Boost_LIBRARIES} ${ALL_OPENSSL_LIBRARIES}  nanomsg ${PROTOBUF_LIBRARY} )
         
 add_library(fb ${SRCS} ${ProtoSources} ${ProtoHeaders})

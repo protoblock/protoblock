@@ -34,30 +34,36 @@ void verify(const string priv_key,const NameTransaction &nt)
     std::copy(begin(nt.sig()),end(nt.sig()),begin(nt2.sig));
     bool ver = pk.verify(nt2.digest(), nt2.sig);
 
-    if ( ver )
-    {
-        cout << " hit " << difficulty(nt2.id()) << " target " << Commissioner::target(difficulty(nt2.prev)) << "\n";
-    }
+    cout << "priv_key{"<<priv_key<<"}\n hash " << nt.hash() << "\n";
+    cout << "sig verify=" << ver <<
+            " hit " << difficulty(nt2.id()) <<
+            " target " << Commissioner::target(difficulty(nt2.prev)) << "\n\n";
 }
 
 void Server::init()
 {
     Reader<Secret> read{"secret.out"};
-
+    string priv_key{""};
     map<string,MyFantasyName> bestsecret{};
     Secret secret{};
-    string priv_key{""};
+    secret.set_private_key(priv_key);
+
     if ( read.good() )
     while (read.ReadNext(secret))
     {
+        cout << secret.DebugString() << "\n\n";
         if ( secret.has_myfantasyname() )
         {
-            if ( secret.private_key() == "" && secret.myfantasyname().has_nametransaction() && priv_key != "")
+            if ( secret.private_key() == "" && secret.myfantasyname().has_nametransaction()
+                    && priv_key != "")
                 verify(priv_key,secret.myfantasyname().nametransaction());
+            else
+                verify(secret.private_key(),secret.myfantasyname().nametransaction());
             
             if ( bestsecret.find(secret.myfantasyname().name()) == end(bestsecret))
                 bestsecret[secret.myfantasyname().name()] = secret.myfantasyname();
-            else if ( secret.myfantasyname().status() > bestsecret[secret.myfantasyname().name()].status())
+            else if ( secret.myfantasyname().status() >
+                        bestsecret[secret.myfantasyname().name()].status())
             {
                 bestsecret[secret.myfantasyname().name()] = secret.myfantasyname();
                 priv_key = secret.private_key();
@@ -71,10 +77,12 @@ void Server::init()
         cout << p.second.DebugString() << "\n" ;
     OutData o;
     o.set_type( OutData_Type::OutData_Type_MYFANTASYNAME);
-    agent.reset(new FantasyAgent{fc::sha256{priv_key}});
+    
+    if ( priv_key != "")
+        agent.reset(new FantasyAgent{fc::sha256{priv_key}});
+        
     if ( bestsecret.size() == 0)
     {
-        agent.reset(new FantasyAgent{});
         secret.set_private_key(agent->getSecret());
         
         sender.send(o);
@@ -83,7 +91,6 @@ void Server::init()
     }
     else for ( const auto& pair : bestsecret)
     {
-        agent.reset(new FantasyAgent{});
         o.mutable_myfantasyname()->CopyFrom(pair.second);
         sender.send(o);
     }
@@ -136,7 +143,7 @@ void Server::mine(const std::string &name)
                 name_transaction nt = agent->getRequested();
                 fc::ecc::public_key pk{nt.pubkey};
                 if ( !pk.verify(nt.digest(),nt.sig) )
-                    cerr << "error key not verfied \n";
+                    cout << "error key not verfied \n";
                 else {
                     mfn.set_status(MyNameStatus::found);
                     NameTransaction nt2;
@@ -150,7 +157,7 @@ void Server::mine(const std::string &name)
                     
                     Writer<Secret> writer{"secret.out",ios::app};
                     Secret secret{};
-                    secret.set_private_key("");
+                    secret.set_private_key(agent->getSecret());
                     secret.mutable_myfantasyname()->CopyFrom(mfn);
                     writer(secret);
                     

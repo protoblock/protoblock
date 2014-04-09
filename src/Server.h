@@ -25,7 +25,7 @@ class Server
     nn::socket sock;
     Sender sender;
 public:
-    Server(std::string addr) : sock{AF_SP, NN_PAIR}, sender{sock}
+    Server(std::string addr) : sock{AF_SP, NN_PAIR}, sender{sock}, agent{new FantasyAgent{}}
     {
         sock.bind(addr.c_str());
     }
@@ -37,7 +37,7 @@ public:
     }
 private:
     volatile bool running = true;
-    std::unique_ptr<FantasyAgent> agent{};
+    std::unique_ptr<FantasyAgent> agent;
     
     void init();
 protected:

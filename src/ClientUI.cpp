@@ -48,12 +48,20 @@ void ClientUI::run()
     start = std::chrono::system_clock::now();
     int scount = -1;
     int gcount = -1;
+    bool first=true;
+
     while (running)
     {
  
         scount = -1;
         while (server.receive(outdata,NN_DONTWAIT) && (++scount < RECEIVE_BREAK_LOOP_COUNT))
             process_server(outdata);
+        
+        if ( first && scount >= 0)
+        {
+            snapshot_gui();
+            first = false;
+        }
  
         gcount = -1;
         while ( gui.receive(indata,NN_DONTWAIT) && (++gcount < RECEIVE_BREAK_LOOP_COUNT))
@@ -61,9 +69,9 @@ void ClientUI::run()
             if ( !havegui )
             {
                 havegui = true;
-                start = std::chrono::system_clock::now();
                 snapshot_gui();
             }
+            start = std::chrono::system_clock::now();
             process_gui(indata);
         }
  

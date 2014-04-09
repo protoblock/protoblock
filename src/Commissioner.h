@@ -43,9 +43,14 @@ public:
     static name_transaction createGenesisName()
     {
         name_transaction genesis(nameid_t{});
-        genesis.name_hash = FantasyName::name_hash("SatoshiFantasy");
-        genesis.pubkey = fc::ecc::private_key::regenerate(fc::sha256::hash("SatoshiFantasy",7)).get_public_key();
+        genesis.name_hash = FantasyName::name_hash("genesis");
+        fc::ecc::private_key pk =
+                fc::ecc::private_key::regenerate(fc::sha256::hash("genesis",7));
+        genesis.pubkey = pk.get_public_key();
         genesis.utc_sec = fc::time_point_sec(fc::time_point::from_iso_string( "20140401T134233" ));
+        genesis.nonce = 0;
+        genesis.sig = pk.sign(genesis.digest());
+        assert(pk.verify(genesis.digest(),genesis.sig));
         return genesis;
     };
     

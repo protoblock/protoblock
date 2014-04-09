@@ -33,7 +33,7 @@ int main(int argc, const char * argv[])
     
     thread servert{&Server::run,&server};
     thread clientt{&ClientUI::run,&client};
-    
+/*
     string command;
     cin >> command;
     if ( command == "exit" )
@@ -42,9 +42,10 @@ int main(int argc, const char * argv[])
         client.stop();
         nn_term();
     }
-    
+*/
     clientt.join();
     server.stop();
+    nn_term();
     servert.join();
      
 }
