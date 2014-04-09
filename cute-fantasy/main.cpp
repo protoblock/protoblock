@@ -1,5 +1,12 @@
+//
+//  main.cpp
+//  cute-fantasy
+//
+//  Created by Jay Berg on 4/8/14.
+//
+//
+
 #include "sfgui.h"
-//#include "ui_sfgui.h"
 #include <QApplication>
 #include "client.h"
 
@@ -21,9 +28,6 @@ int main(int argc, char *argv[])
     QObject::connect(&widget, SIGNAL(onClose()), client, SLOT(quit()) );
 
     clientthread.start();
-
-    //Ui_sfGUI ui;
-    //ui.setupUi(w);
     widget.show();
 
     return a.exec();

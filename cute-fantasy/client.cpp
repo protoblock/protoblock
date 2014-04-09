@@ -1,3 +1,10 @@
+//
+//  client.cpp
+//  cute-fantasy
+//
+//  Created by Jay Berg on 4/8/14.
+//
+//
 #include "client.h"
 #include <nanomsg/pair.h>
 #include <MsgSock.h>
@@ -35,7 +42,6 @@ bool Client::event(QEvent *ev)
         QTimer::singleShot(0, this, SLOT(start()));
     }
 
-
     return QObject::event(ev);
 }
 
@@ -49,12 +55,6 @@ void Client::start()
     timer->start(10000);
     timer2->start(500);
     //emit doPoll();
-}
-
-void Client::fromGUI(const QString &in)
-{
-    //todo
-    Sender::Send(sock,indata);
 }
 
 void Client::toServer(const InData &in)

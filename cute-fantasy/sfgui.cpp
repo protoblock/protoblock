@@ -1,3 +1,10 @@
+//
+//  sfgui.cpp
+//  cute-fantasy
+//
+//  Created by Jay Berg on 4/8/14.
+//
+//
 #include "sfgui.h"
 #include "client.h"
 #include <fb/ProtoData.pb.h>
@@ -11,63 +18,55 @@ sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
 {
     ui->setupUi(this);
     m_state = CONNECTING;
-    //m_status = MyNameStatus::none;
     m_namestatus.set_name("");
     m_namestatus.set_status(none);
 }
 
 void sfGUI::fromServer(const OutData &in)
 {
-    int i = 0;
-//    if ( in.has_type() )
-        i++;
-    if ( in.type() == OutData_Type_SNAPSHOT)
+    if ( in.type() == OutData_Type_SNAPSHOT && m_state == CONNECTING )
     {
-        //ui->textBrowser->clear();
-        if ( m_state == CONNECTING )
-        {
-            ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
-            m_state = SNAPSHOT;
-            if ( in.has_myfantasyname() )
-                switch ( in.myfantasyname().status())
-                {
-                    case none:
-                        break;
-                    case notavil:
-                        ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + "not available.");
-                        break;
-                    case requested:
-                        ui->textBrowser->append("previous try for: " + QString::fromStdString(in.myfantasyname().name()) + ", was aborted. please retry");
-                        ui->fantasyname->setText(in.myfantasyname().name().c_str());
-                        break;
-                    case found:
-                        ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", already found." );
-                        //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
-                        m_state = FOUND;
-                        m_namestatus.CopyFrom(in.myfantasyname());
-                        ui->fantasyname->setText(in.myfantasyname().name().c_str());
-                    case transaction_sent:
-                        ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", found, pending confirmation." );
-                        //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
-                        m_state = FOUND;
-                        m_namestatus.CopyFrom(in.myfantasyname());
-                        ui->fantasyname->setText(in.myfantasyname().name().c_str());
-                        break;
-                    case confirmed:
-                        ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", confirmed!" );
-                        //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
-                        m_state = CONFIRMED;
-                        m_namestatus.CopyFrom(in.myfantasyname());
-                        ui->fantasyname->setText(in.myfantasyname().name().c_str());
-                        break;
-                    default:
-                        break;
-                }
+        ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
+        m_state = SNAPSHOT;
+        if ( in.has_myfantasyname() )
+            switch ( in.myfantasyname().status())
+            {
+                case none:
+                    break;
+                case notavil:
+                    ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + "not available.");
+                    break;
+                case requested:
+                    ui->textBrowser->append("previous try for: " + QString::fromStdString(in.myfantasyname().name()) + ", was aborted. please retry");
+                    ui->fantasyname->setText(in.myfantasyname().name().c_str());
+                    break;
+                case found:
+                    ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", already found." );
+                    //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
+                    m_state = FOUND;
+                    m_namestatus.CopyFrom(in.myfantasyname());
+                    ui->fantasyname->setText(in.myfantasyname().name().c_str());
+                case transaction_sent:
+                    ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", found, pending confirmation." );
+                    //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
+                    m_state = FOUND;
+                    m_namestatus.CopyFrom(in.myfantasyname());
+                    ui->fantasyname->setText(in.myfantasyname().name().c_str());
+                    break;
+                case confirmed:
+                    ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", confirmed!" );
+                    //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
+                    m_state = CONFIRMED;
+                    m_namestatus.CopyFrom(in.myfantasyname());
+                    ui->fantasyname->setText(in.myfantasyname().name().c_str());
+                    break;
+                default:
+                    break;
+            }
 
-            updatestatic();
-        }
+        updatestatic();
     }
-    else if ( m_state == REQUESTED || m_state == MINING)
+    else if ( in.type() != OutData_Type_SNAPSHOT  && (m_state == REQUESTED || m_state == MINING))
     {
         m_namestatus.CopyFrom(in.myfantasyname());
         switch ( in.myfantasyname().status())
@@ -78,7 +77,8 @@ void sfGUI::fromServer(const OutData &in)
                 break;
             case requested:
                 m_state = MINING;
-                ui->textBrowser->append(QDateTime::currentDateTime().toString() + "mining for: " + QString::fromStdString(in.myfantasyname().name()));
+                ui->textBrowser->append(QDateTime::currentDateTime().toString() + " mining for: " + QString::fromStdString(in.myfantasyname().name()));
+                ui->textBrowser->append("please be patient. process can take 1 to 24 hours.");
                 break;
             case found:
                 ui->textBrowser->append(QDateTime::currentDateTime().toString() + QString::fromStdString(in.myfantasyname().name()) + ", found!" );

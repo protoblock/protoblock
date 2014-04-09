@@ -1,8 +1,15 @@
+//
+//  client.h
+//  cute-fantasy
+//
+//  Created by Jay Berg on 4/8/14.
+//
+//
+
 #ifndef CLIENT_H
 #define CLIENT_H
 
 #include <QObject>
-
 #include <nn.hpp>
 #include <MsgSock.h>
 #include <fb/ProtoData.pb.h>
@@ -23,7 +30,6 @@ class Client : public QObject
     InData indata{};
     OutData outdata{};
     InData hbdata{};
-    //QThread thread;
 public:
     explicit Client(const std::string &,QObject *parent = 0);
 
@@ -39,16 +45,10 @@ signals:
     void doPoll();
 
 public slots:
-    void fromGUI(const QString &in);
-
     void toServer(const InData &in);
-
     void pollServer();
-
     void heartbeat();
-
     void start();
-
     void quit();
 };
 

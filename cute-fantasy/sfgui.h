@@ -1,3 +1,10 @@
+//
+//  sfgui.h
+//  cute-fantasy
+//
+//  Created by Jay Berg on 4/8/14.
+//
+//
 #ifndef SFGUI_H
 #define SFGUI_H
 
