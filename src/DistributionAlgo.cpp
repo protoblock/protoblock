@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <numeric>
 
-
+ 
 namespace fantasybit {
 
 using namespace std;
@@ -36,7 +36,10 @@ NameValuePairs<double> DistribuePointsAvg::distribute(const Int result) const
     Int maxdiff = min((Int)lround(mean),result);
     
     Int sum = accumulate(begin(diffs), end(diffs), 0,
-        [maxdiff,result](const Int sum,const Int val) {return sum + ((val < maxdiff) ? result-val : 0);});
+        [maxdiff,result](const Int sum,const Int val)
+        {
+            return sum + ((val < maxdiff) ? result-val : 0);
+        });
         
     double payout = static_cast<double>(result) / sum;
     NameValuePairs<double> award{};
@@ -46,9 +49,6 @@ NameValuePairs<double> DistribuePointsAvg::distribute(const Int result) const
         if ( diff < maxdiff )
             award.emplace_back(pair.first,(result-diff)*payout);
     }
-    
     return award;
 }
-
-  
 }

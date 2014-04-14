@@ -59,17 +59,17 @@ public:
 #ifdef EASY_TEST_MINING
         return 2;
 #else
-        return 3;
+        return 4;
 #endif
     }
     
     static fc::sha224 max_hash() {
-        fc::sha224 mining_hash;
+        fc::sha224 mining_hash{};
         char* tmpPtr = (char*)&mining_hash;
         memset( tmpPtr, 0xff, sizeof(mining_hash) );
         for (int i=0;i<hashmineindex();++i)
             tmpPtr[i] = 0;
-        tmpPtr[hashmineindex()] = 0x0f;
+        tmpPtr[hashmineindex()] = 0xe   f;
         return mining_hash;
     }
     

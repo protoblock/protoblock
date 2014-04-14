@@ -46,7 +46,7 @@ message NameTransaction
 }
 
 message OutData {
-	enum Type { MYFANTASYNAME = 1; SNAPSHOT = 2; }
+	enum Type { MYFANTASYNAME = 1; SNAPSHOT = 2; HEARTBEAT=3; }
 	required Type type = 1;
 
 	optional MyFantasyName myfantasyname = 2;	

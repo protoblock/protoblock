@@ -116,7 +116,7 @@ void ClientUI::run()
 
 void ClientUI::process_server(const OutData &data)
 {
-    cout << data.DebugString() << "\n";
+    cout << data.DebugString() << " *** process_server\n";
     switch ( data.type())
     {
         case OutData_Type_MYFANTASYNAME:
@@ -134,7 +134,7 @@ void ClientUI::process_server(const OutData &data)
 
 void ClientUI::process_gui(const InData &data)
 {
-    cout << data.DebugString() << "\n";
+    cout << data.DebugString() << "***** process_gui\n";
     switch ( data.type())
     {
         case InData_Type_MINENAME:
@@ -147,6 +147,13 @@ void ClientUI::process_gui(const InData &data)
         case InData_Type_CONNECT:
             snapshot_gui();
             break;
+        case InData_Type_HEARTBEAT:
+            {
+                OutData out{};
+                out.set_type(OutData_Type_HEARTBEAT);
+                Sender::Send(sockgui,out);
+            }
+            break;
         default:
             break;
     }
@@ -154,7 +161,7 @@ void ClientUI::process_gui(const InData &data)
 
 void ClientUI::snapshot_gui() 
 {
-    OutData out;
+    OutData out{};
     out.set_type(OutData_Type_SNAPSHOT);
     out.mutable_myfantasyname()->CopyFrom(myname);
     Sender::Send(sockgui,out);
