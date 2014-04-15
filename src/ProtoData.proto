@@ -21,7 +21,7 @@ message Secret
 {
     required string private_key = 1;
     optional MyFantasyName myfantasyname=2;
-}
+} 	
 
 message FantasyNameT 
 {
@@ -43,6 +43,7 @@ message NameTransaction
 	required uint32 utc_sec=4;
 	required string prev_id=5; 
 	optional bytes sig=6;
+	optional string sigid=7;
 }
 
 message OutData {

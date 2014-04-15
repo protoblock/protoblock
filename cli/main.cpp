@@ -25,11 +25,14 @@ string input(const std::string &in,char c=' ')
 
 int main(int argc, const char * argv[])
 {
-    string address{"ipc:///tmp/test.ipc"};
+    std::string ipc{"ipc:///tmp/"};
+    ipc += ( argc > 1) ? argv[1] : "test";
+    ipc+= ".ipc";
+
     string in;
     
     nn::socket sock{AF_SP, NN_PAIR};
-    sock.connect(address.c_str());
+    sock.connect(ipc.c_str());
     Receiver ui{sock};
     
     InData indata{};
@@ -72,7 +75,7 @@ int main(int argc, const char * argv[])
         {
             indata.set_type(InData_Type_QUIT);
             Sender::Send(sock,indata);
-
+            break;
         }
     }
     

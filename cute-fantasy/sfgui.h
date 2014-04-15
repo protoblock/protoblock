@@ -43,6 +43,8 @@ private slots:
     void on_generate_clicked();
 
     void on_copy_clicked();
+    //void flashing();
+
 
 protected:
     virtual void closeEvent(QCloseEvent *)
@@ -53,6 +55,7 @@ protected:
 signals:
     void onClose();
     void fromGUI(const InData &);
+    //void on_flash();
 
 private:
     Ui::sfGUI *ui;

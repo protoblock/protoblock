@@ -34,10 +34,12 @@ void verify(const string priv_key,const NameTransaction &nt)
     std::copy(begin(nt.sig()),end(nt.sig()),begin(nt2.sig));
     bool ver = pk.verify(nt2.digest(), nt2.sig);
 
+#ifdef TRACE
     cout << "priv_key{"<<priv_key<<"}\n hash " << nt.hash() << "\n";
     cout << "sig verify=" << ver <<
             " hit " << difficulty(nt2.id()) <<
             " target " << Commissioner::target(difficulty(nt2.prev)) << "\n\n";
+#endif
 }
 
 void Server::init()
@@ -51,7 +53,7 @@ void Server::init()
     if ( read.good() )
     while (read.ReadNext(secret))
     {
-        cout << secret.DebugString() << "\n\n";
+        //cout << secret.DebugString() << "\n\n";
         if ( secret.has_myfantasyname() )
         {
             if ( secret.private_key() == "" && secret.myfantasyname().has_nametransaction()
@@ -73,8 +75,11 @@ void Server::init()
             priv_key = secret.private_key();
     }
 
+#ifdef TRACE
     for(auto p :bestsecret)
         cout << p.second.DebugString() << "\n" ;
+#endif
+
     OutData o;
     o.set_type( OutData_Type::OutData_Type_MYFANTASYNAME);
     
@@ -112,12 +117,12 @@ void Server::run()
                 mine(indata.data());
                 break;
             case InData_Type_QUIT:
-                running = false;
+                stop();
                 break;
             default:
                 break;
         }
-        cout << "server " << indata.DebugString() << "\n";
+        //cout << "server " << indata.DebugString() << "\n";
     }
 }
 
@@ -125,8 +130,10 @@ void Server::mine(const std::string &name)
 {
     //FantasyName me;
     //agent fa{true};
-    auto ret = agent->signPlayer(name);
     
+    cout << "Server::mine  {" << Commissioner::hashmineindex() << "}\n";
+    auto ret = agent->signPlayer(name);
+
     OutData o;
     o.set_type( OutData_Type::OutData_Type_MYFANTASYNAME);
     MyFantasyName mfn;
@@ -141,6 +148,14 @@ void Server::mine(const std::string &name)
                 sender.send(o);
             
                 name_transaction nt = agent->getRequested();
+                cout << "Server::after mine  {" << ret << "}\n";
+                
+                if ( !running )
+                {
+                    if ( difficulty(nt.id()) < Commissioner::target(difficulty(nt.prev)))
+                        return;
+                }
+                
                 fc::ecc::public_key pk{nt.pubkey};
                 if ( !pk.verify(nt.digest(),nt.sig) )
                     cout << "error key not verfied \n";
@@ -153,6 +168,7 @@ void Server::mine(const std::string &name)
                     nt2.set_utc_sec(nt.utc_sec.sec_since_epoch());
                     nt2.set_prev_id(nt.prev.str());
                     nt2.set_sig(&nt.sig, nt.sig.size());
+                    nt2.set_sigid(nt.sigdigest().str());    
                     mfn.mutable_nametransaction()->CopyFrom(nt2);
                     
                     Writer<Secret> writer{"secret.out",ios::app};

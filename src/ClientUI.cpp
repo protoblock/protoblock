@@ -34,11 +34,7 @@ void ClientUI::run()
     const int GUI_TIMEOUT_SECONDS = 500;
     const int LONG_NAP_SECONDS = 30;
     const int SHORT_SLEEP_MILLIS = 1000;
-
-    //const int bsize = 256;
-    //char buf[bsize];
-    //int flags=0;
-    
+ 
     Receiver server{sockserv};
     Receiver gui{sockgui};
     OutData outdata{};
@@ -52,7 +48,6 @@ void ClientUI::run()
 
     while (running)
     {
- 
         scount = -1;
         while (server.receive(outdata,NN_DONTWAIT) && (++scount < RECEIVE_BREAK_LOOP_COUNT))
             process_server(outdata);

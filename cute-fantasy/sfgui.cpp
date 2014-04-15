@@ -20,15 +20,29 @@ sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
     m_state = CONNECTING;
     m_namestatus.set_name("");
     m_namestatus.set_status(none);
+    //QObject::connect(this, SIGNAL(on_flash()), this, SLOT(flashing()) );
+
 }
+
+/*
+void sfGUI::flashing()
+{
+    ui->progressBar->setVisible(true);
+}
+*/
 
 void sfGUI::fromServer(const OutData &in)
 {
-    if ( in.type() == OutData_Type_SNAPSHOT && m_state == CONNECTING )
+    if ( in.type() == OutData_Type_HEARTBEAT )
+    {
+        ui->textBrowser->insertPlainText(".");
+    }
+    else if ( in.type() == OutData_Type_SNAPSHOT && m_state == CONNECTING )
     {
         ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
         m_state = SNAPSHOT;
         if ( in.has_myfantasyname() )
+        {
             switch ( in.myfantasyname().status())
             {
                 case none:
@@ -63,10 +77,10 @@ void sfGUI::fromServer(const OutData &in)
                 default:
                     break;
             }
-
+        }
         updatestatic();
     }
-    else if ( in.type() != OutData_Type_SNAPSHOT  && (m_state == REQUESTED || m_state == MINING))
+    else if ( in.type() != OutData_Type_SNAPSHOT  || (m_state == REQUESTED || m_state == MINING))
     {
         m_namestatus.CopyFrom(in.myfantasyname());
         switch ( in.myfantasyname().status())
@@ -78,7 +92,7 @@ void sfGUI::fromServer(const OutData &in)
             case requested:
                 m_state = MINING;
                 ui->textBrowser->append(QDateTime::currentDateTime().toString() + " mining for: " + QString::fromStdString(in.myfantasyname().name()));
-                ui->textBrowser->append("please be patient. process can take 1 to 24 hours.");
+                ui->textBrowser->append("please be patient. process can take 1 to 6 hours.");
                 break;
             case found:
                 ui->textBrowser->append(QDateTime::currentDateTime().toString() + QString::fromStdString(in.myfantasyname().name()) + ", found!" );
@@ -153,16 +167,31 @@ void fantasybit::sfGUI::on_generate_clicked()
 
     indata.set_type(InData_Type_MINENAME);
     indata.set_data(ui->fantasyname->text().toStdString());
-    emit fromGUI(indata);
     m_state = REQUESTED;
     updatestatic();
+
+    emit fromGUI(indata);
 }
 
 void fantasybit::sfGUI::on_copy_clicked()
 {
-    ui->message->setText("Proof copied. Please paste to twitter or email");
-
-    ui->textBrowser->append("copied proof-of-work to clipboard");
     QClipboard *clipboard = QApplication::clipboard();
-    clipboard->setText(ui->proofofwork->toPlainText());
+    if ( ui->twitter->isChecked() )
+    {
+        QString tweet("@satoshifantsy (");
+        tweet += m_namestatus.name().c_str();
+        tweet += ") (";
+        tweet += QString::number(m_namestatus.nametransaction().hash()),
+        tweet += ") (";
+        tweet += m_namestatus.nametransaction().sigid().c_str();
+        tweet += ")";
+        ui->proofofwork->append(tweet);
+        clipboard->setText(tweet);
+        ui->message->setText("Proof copied to clipboard, please paste ad tweet");
+    }
+    else
+    {
+        clipboard->setText(ui->proofofwork->toPlainText());
+        ui->message->setText("Proof copied to clipboard");
+    }
 }

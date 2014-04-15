@@ -58,7 +58,7 @@ struct FantasyName
 };
 
 using nameid_t = fc::sha224;
-using nonce_t = uint32_t;
+using nonce_t = int32_t;
 struct name_transaction
 {
     name_transaction(nameid_t p) : name_hash(0),nonce(0),prev(p) {}
@@ -70,6 +70,8 @@ struct name_transaction
     fc::ecc::signature sig;
     nameid_t id() const;
     fc::sha256 digest() const;
+    nameid_t sigid() const;
+    fc::sha256 sigdigest() const;
 };
 
 

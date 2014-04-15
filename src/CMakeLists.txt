@@ -38,6 +38,7 @@ include_directories( ${OPENSSL_INCLUDE_DIR} )
 SET( ALL_OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} ${SSL_EAY_RELEASE} ${LIB_EAY_RELEASE})
 
 add_executable( fantasybit ${SRCS} ${ProtoSources} ${ProtoHeaders})
+add_library(fb ${SRCS} ${ProtoSources} ${ProtoHeaders})
 target_link_libraries(fantasybit libfc.a ${Boost_LIBRARIES} ${ALL_OPENSSL_LIBRARIES}  nanomsg ${PROTOBUF_LIBRARY} )
         
-add_library(fb ${SRCS} ${ProtoSources} ${ProtoHeaders})
+	

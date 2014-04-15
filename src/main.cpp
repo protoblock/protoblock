@@ -1,4 +1,4 @@
-//
+    //
 //  main.cpp
 //  satoshifantasy
 //
@@ -22,33 +22,31 @@
 using namespace fantasybit;
 using namespace std;
 
+
 int main(int argc, const char * argv[])
 {
-    string server_address{"inproc://test"};
-    Server server{server_address};
+    std::string ipc{"ipc:///tmp/"};
+    ipc += ( argc > 1) ? argv[1] :  "test";
+    ipc+= ".ipc";
     
-    string gui_address{"ipc:///tmp/test.ipc"};
+    string server_address{"inproc://test"};
+    Server server{server_address} ;
+    
+    string gui_address{ipc};
     ClientUI client{server_address,gui_address};
     
     
     thread servert{&Server::run,&server};
     thread clientt{&ClientUI::run,&client};
-/*
-    string command;
-    cin >> command;
-    if ( command == "exit" )
-    {
-        server.stop();
-        client.stop();
-        nn_term();
-    }
-*/
+
     clientt.join();
     server.stop();
     nn_term();
     servert.join();
      
 }
+
+
 int main2(int argc, const char * argv[])
 {
 

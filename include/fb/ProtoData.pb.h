@@ -44,11 +44,12 @@ class InData;
 
 enum OutData_Type {
   OutData_Type_MYFANTASYNAME = 1,
-  OutData_Type_SNAPSHOT = 2
+  OutData_Type_SNAPSHOT = 2,
+  OutData_Type_HEARTBEAT = 3
 };
 bool OutData_Type_IsValid(int value);
 const OutData_Type OutData_Type_Type_MIN = OutData_Type_MYFANTASYNAME;
-const OutData_Type OutData_Type_Type_MAX = OutData_Type_SNAPSHOT;
+const OutData_Type OutData_Type_Type_MAX = OutData_Type_HEARTBEAT;
 const int OutData_Type_Type_ARRAYSIZE = OutData_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* OutData_Type_descriptor();
@@ -627,6 +628,18 @@ class NameTransaction : public ::google::protobuf::Message {
   inline ::std::string* release_sig();
   inline void set_allocated_sig(::std::string* sig);
 
+  // optional string sigid = 7;
+  inline bool has_sigid() const;
+  inline void clear_sigid();
+  static const int kSigidFieldNumber = 7;
+  inline const ::std::string& sigid() const;
+  inline void set_sigid(const ::std::string& value);
+  inline void set_sigid(const char* value);
+  inline void set_sigid(const char* value, size_t size);
+  inline ::std::string* mutable_sigid();
+  inline ::std::string* release_sigid();
+  inline void set_allocated_sigid(::std::string* sigid);
+
   // @@protoc_insertion_point(class_scope:fantasybit.NameTransaction)
  private:
   inline void set_has_hash();
@@ -641,6 +654,8 @@ class NameTransaction : public ::google::protobuf::Message {
   inline void clear_has_prev_id();
   inline void set_has_sig();
   inline void clear_has_sig();
+  inline void set_has_sigid();
+  inline void clear_has_sigid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -650,9 +665,10 @@ class NameTransaction : public ::google::protobuf::Message {
   ::google::protobuf::uint32 utc_sec_;
   ::std::string* prev_id_;
   ::std::string* sig_;
+  ::std::string* sigid_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -718,6 +734,7 @@ class OutData : public ::google::protobuf::Message {
   typedef OutData_Type Type;
   static const Type MYFANTASYNAME = OutData_Type_MYFANTASYNAME;
   static const Type SNAPSHOT = OutData_Type_SNAPSHOT;
+  static const Type HEARTBEAT = OutData_Type_HEARTBEAT;
   static inline bool Type_IsValid(int value) {
     return OutData_Type_IsValid(value);
   }
@@ -1691,6 +1708,76 @@ inline void NameTransaction::set_allocated_sig(::std::string* sig) {
   } else {
     clear_has_sig();
     sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string sigid = 7;
+inline bool NameTransaction::has_sigid() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void NameTransaction::set_has_sigid() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void NameTransaction::clear_has_sigid() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void NameTransaction::clear_sigid() {
+  if (sigid_ != &::google::protobuf::internal::kEmptyString) {
+    sigid_->clear();
+  }
+  clear_has_sigid();
+}
+inline const ::std::string& NameTransaction::sigid() const {
+  return *sigid_;
+}
+inline void NameTransaction::set_sigid(const ::std::string& value) {
+  set_has_sigid();
+  if (sigid_ == &::google::protobuf::internal::kEmptyString) {
+    sigid_ = new ::std::string;
+  }
+  sigid_->assign(value);
+}
+inline void NameTransaction::set_sigid(const char* value) {
+  set_has_sigid();
+  if (sigid_ == &::google::protobuf::internal::kEmptyString) {
+    sigid_ = new ::std::string;
+  }
+  sigid_->assign(value);
+}
+inline void NameTransaction::set_sigid(const char* value, size_t size) {
+  set_has_sigid();
+  if (sigid_ == &::google::protobuf::internal::kEmptyString) {
+    sigid_ = new ::std::string;
+  }
+  sigid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NameTransaction::mutable_sigid() {
+  set_has_sigid();
+  if (sigid_ == &::google::protobuf::internal::kEmptyString) {
+    sigid_ = new ::std::string;
+  }
+  return sigid_;
+}
+inline ::std::string* NameTransaction::release_sigid() {
+  clear_has_sigid();
+  if (sigid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sigid_;
+    sigid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NameTransaction::set_allocated_sigid(::std::string* sigid) {
+  if (sigid_ != &::google::protobuf::internal::kEmptyString) {
+    delete sigid_;
+  }
+  if (sigid) {
+    set_has_sigid();
+    sigid_ = sigid;
+  } else {
+    clear_has_sigid();
+    sigid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

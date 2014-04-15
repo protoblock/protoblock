@@ -17,11 +17,12 @@ uint64_t difficulty( const fc::sha224& hash_value );
 
 class Commissioner
 {
+    volatile bool running = true;
 public:
     name_transaction generateName(alias_t,pubkey_t) ;
 
     nameid_t lastId() const { return m_genesis_id; }
-    
+    void stop() { running = false; }
     static std::unordered_map<pubkey_t,std::shared_ptr<FantasyName>> FantasyNames;
     static std::map<hash_t,pubkey_t> Aliases;
       
@@ -54,6 +55,11 @@ public:
         return genesis;
     };
     
+    static std::vector<name_transaction> createGenesisChild()
+    {
+        return std::vector<name_transaction>{};
+    }
+    
     static constexpr int hashmineindex()
     {
 #ifdef EASY_TEST_MINING
@@ -69,7 +75,7 @@ public:
         memset( tmpPtr, 0xff, sizeof(mining_hash) );
         for (int i=0;i<hashmineindex();++i)
             tmpPtr[i] = 0;
-        tmpPtr[hashmineindex()] = 0xe   f;
+        tmpPtr[hashmineindex()] = 0xff;
         return mining_hash;
     }
     

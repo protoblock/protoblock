@@ -43,6 +43,11 @@ public:
         return nt;
     }
     
+    void kill()
+    {
+        comish.stop();
+    }
+    
     std::string getSecret() const
     {
         return m_priv.get_secret().str();

@@ -22,13 +22,10 @@ Client::Client(const string &a, QObject *parent) :
                     QObject(parent) , sock {AF_SP, NN_PAIR},
                     receiver{sock}, timer(new QTimer(this)), timer2(new QTimer(this))
 {
-    //std::string address= {"ipc:///tmp/test.ipc"};
-    //sock.connect(address.c_str());
-    //Receiver receiver{sock};
-    QProcess process;// = new QProcess();
+    QProcess process;
     process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
-    int i = process.startDetached(QCoreApplication::applicationDirPath()+"/fantasybit");///usr/local/bin/fantasybit");///bin/bash", QStringList() << "-c" << "fantasybit");
-    //int i = QProcess::execute(QString("/bin/bash -c fantasybit"));
+    int i = process.startDetached(QCoreApplication::applicationDirPath()+"/fantasybit");
+    //,QStringList() << " xxxx");
     hbdata.set_type(InData_Type_HEARTBEAT);
     connect(timer2, SIGNAL(timeout()), this, SLOT(pollServer()));
     connect(timer, SIGNAL(timeout()), this, SLOT(heartbeat()));
@@ -67,12 +64,10 @@ void Client::pollServer()
     if ( receiver.receive(outdata,NN_DONTWAIT))
     {
         //std::cout << outdata.DebugString() << " \n";
-        //QString q
         qDebug() << QString::fromStdString(outdata.DebugString());
-        emit onData(outdata);//QString::fromStdString(outdata.DebugString()));
+        emit onData(outdata);
     }
     //emit doPoll();
-
 }
 
 void Client::heartbeat()

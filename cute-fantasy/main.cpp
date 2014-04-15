@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     QObject::connect(client, SIGNAL(onData(OutData)), &widget, SLOT(fromServer(OutData)) );
     QObject::connect(&widget, SIGNAL(onClose()), client, SLOT(quit()) );
 
+
     clientthread.start();
     widget.show();
 
