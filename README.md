@@ -5,14 +5,14 @@
 	cute-fantsy - QT GUI 
 	fantsybitcli - Commandline UI for testing 
 
-##Status
+##Status / Schedule
 	Minimal Viable Product / Whitepaper - released April 15th 2014 
 	block-chain
 	projections
 	exchnage
 	transfers 
 
-##Dependancies
+##Dependencies
 	clang++ -std=c++11 -stdlib=libc++
 	fc
 	nanomsg
