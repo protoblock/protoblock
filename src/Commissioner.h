@@ -10,6 +10,8 @@
 #define __fantasybit__Comissioner__
 
 #include "FantasyName.h"
+#include <fc/crypto/base58.hpp>
+#include <iostream>
 
 namespace fantasybit {
 
@@ -19,14 +21,18 @@ class Commissioner
 {
     volatile bool running = true;
 public:
+	Commissioner() {
+	}
+
     name_transaction generateName(alias_t,pubkey_t) ;
 
-    nameid_t lastId() const { return m_genesis_id; }
+	nameid_t lastId() const { return m_genesis_id; }
     void stop() { running = false; }
     static std::unordered_map<pubkey_t,std::shared_ptr<FantasyName>> FantasyNames;
     static std::map<hash_t,pubkey_t> Aliases;
-      
+			
     static nameid_t m_genesis_id;
+	static fc::ecc::public_key_data GENESIS_PUB_KEY;
     static bool isAliasAvailable(alias_t alias)
     {
         return Commissioner::Aliases.find(FantasyName::name_hash(alias)) == end(Commissioner::Aliases);
@@ -40,32 +46,96 @@ public:
     }
     
     static uint64_t target(uint64_t in) { return std::max(in,Commissioner::min_difficulty); }
-    
+  
+	/***********************************************************
+	type: MYFANTASYNAME
+	myfantasyname{
+		name: "FantasyAgent"
+		status : found
+		   nametransaction{
+				hash: 10576213825162658308
+				public_key : "mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"
+				nonce : 57428892
+				utc_sec : 1408989677
+				prev_id : "00000000000000000000000000000000000000000000000000000000"
+				sig : "iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m"
+				sigid : "19cacff77cae784ada296272e43b6dd6f22975d1"
+			}
+	}
+	*************************************************************/
     static name_transaction createGenesisName()
     {
-        name_transaction genesis(nameid_t{});
-        genesis.name_hash = FantasyName::name_hash("genesis");
-        fc::ecc::private_key pk =
-                fc::ecc::private_key::regenerate(fc::sha256::hash("genesis",7));
-        genesis.pubkey = pk.get_public_key();
-        genesis.utc_sec = fc::time_point_sec(fc::time_point::from_iso_string( "20140401T134233" ));
-        genesis.nonce = 0;
-        genesis.sig = pk.sign(genesis.digest());
-        assert(pk.verify(genesis.digest(),genesis.sig));
+		name_transaction genesis(nameid_t{ "00000000000000000000000000000000000000000000000000000000" });
+		genesis.name_hash = 10576213825162658308;// FantasyName::name_hash("FantasyAgent");
+		genesis.pubkey = Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+		genesis.utc_sec = fc::time_point_sec(1408989677);// = fc::time_point_sec(fc::time_point::from_iso_string("20140401T134233")); // 1408989677
+		genesis.nonce = 57428892;
+		genesis.sig = Commissioner::str2sig(std::string("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m"));
+		
+		assert(Commissioner::verify(genesis.sig,genesis.digest(),genesis.pubkey));
+
+		GENESIS_PUB_KEY = genesis.pubkey;
+ 
         return genesis;
-    };
-    
+    };	
+	
+	static SignedBlock GenesisBlock;
+
+	static SignedBlock makeGenesisBlock() {
+	{
+		NameTrans nametrans{};
+		nametrans.set_hash(10576213825162658308);
+		nametrans.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+		nametrans.set_nonce(57428892);
+		nametrans.set_utc_sec(1408989677);
+		nametrans.set_prev_id("00000000000000000000000000000000000000000000000000000000");
+		nametrans.set_sig("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m");
+		nametrans.set_sigid("19cacff77cae784ada296272e43b6dd6f22975d1");
+
+		Transaction trans{};
+		trans.set_version(1);
+		trans.set_type(TransType::NAME);
+		//[fantasybit.NameTrans.name_trans]
+		trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
+
+		SignedTransaction st{};
+		st.mutable_trans()->CopyFrom(trans);
+		st.set_id("6ca607c105f8f9adfa652a89c285e58a1848f35caef132267e0385f79c453eb4");
+		st.set_sig("iKkki4FAQFoNR4foHVv1KNqfnJ1Fm1xuTToW3LgRjfAem2PSuPU3cH7ZPiJNm3xyTLt2bJx5kdRMfn1aEhfCGiTsHbE3PHBeis");
+		st.set_fantasy_name("FantasyAgent");
+
+		BlockHeader bh{};
+		bh.set_prev_id("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+		bh.set_num(1);
+
+		Block b{};
+		b.mutable_head()->CopyFrom(bh);
+		SignedTransaction* st2 = b.add_signed_transactions();
+		st2->CopyFrom(st);
+
+		SignedBlock sb{};
+		sb.mutable_block()->CopyFrom(b);
+		sb.set_id("c9348ceb2551871534121114cd707c40653303250602aad6c6e0c67c522e5e9c");
+		sb.set_sig("iKkkiYr6vYFtkRtxCeWQvu7iZ9oFdLwrpRe1P3XYUwZz3BvBuwiufWTFj1JSRJ3d1zjvp9W2whNVTWtT5Jxtn1ByyiW3qQYMyy");
+
+		//std::cout << sb.DebugString();
+		//Commissioner::GenesisBlock = sb;
+		return sb;
+	}
+
+}
+
     static std::vector<name_transaction> createGenesisChild()
     {
         return std::vector<name_transaction>{};
     }
     
-    static constexpr int hashmineindex()
+    static int hashmineindex()
     {
 #ifdef EASY_TEST_MINING
         return 2;
 #else
-        return 4;
+        return 3;
 #endif
     }
     
@@ -80,6 +150,40 @@ public:
     }
     
     static uint64_t min_difficulty;
+
+	static bool verify(const fc::ecc::signature &sig, const fc::sha256 &digest, pubkey_t& pk)
+	{
+		return fc::ecc::public_key(pk).verify(digest, sig);// fc::ecc::public_key(sig, digest) == pub;
+	}
+
+	static bool verifyOracle(const fc::ecc::signature &sig, const fc::sha256 &digest)
+	{
+		return verify(sig, digest, GENESIS_PUB_KEY);
+	}
+
+	static std::string pk2str(pubkey_t &pk)
+	{
+		return fc::to_base58(pk.data, pk.size());
+	}
+
+	static pubkey_t str2pk(const std::string &str)
+	{
+		pubkey_t pbb;
+		fc::from_base58(str, pbb.data, pbb.size());
+		return pbb;
+	}
+
+	static std::string sig2str(fc::ecc::signature &sig)
+	{
+		return fc::to_base58(sig.data, sig.size());
+	}
+
+	static fc::ecc::signature str2sig(const std::string &str)
+	{
+		fc::ecc::signature sig;
+		fc::from_base58(str, sig.data, sig.size());
+		return sig;
+	}
 };
 
 
@@ -88,3 +192,41 @@ public:
 }
 
 #endif /* defined(__fantasybit__Comissioner__) */
+
+
+/****************************GENESIS BLOCK***************************************
+SignedBlock
+{
+	block
+	{
+		head
+		{
+			num: 1
+			prev_id : "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+		}
+		signed_transactions
+		{
+			trans	
+			{
+				version: 1
+				type : NAME
+				[fantasybit.NameTrans.name_trans] 
+				{
+					hash: 10576213825162658308
+					public_key : "mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"
+					nonce : 57428892
+					utc_sec : 1408989677
+					prev_id : "00000000000000000000000000000000000000000000000000000000"
+					sig : "iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m"
+					sigid : "19cacff77cae784ada296272e43b6dd6f22975d1"
+				}
+			}
+			id: "6ca607c105f8f9adfa652a89c285e58a1848f35caef132267e0385f79c453eb4"
+			sig: "iKkki4FAQFoNR4foHVv1KNqfnJ1Fm1xuTToW3LgRjfAem2PSuPU3cH7ZPiJNm3xyTLt2bJx5kdRMfn1aEhfCGiTsHbE3PHBeis"
+			fantasy_name : "FantasyAgent"
+		}
+	}
+	id: "c9348ceb2551871534121114cd707c40653303250602aad6c6e0c67c522e5e9c"
+	sig : "iKkkiYr6vYFtkRtxCeWQvu7iZ9oFdLwrpRe1P3XYUwZz3BvBuwiufWTFj1JSRJ3d1zjvp9W2whNVTWtT5Jxtn1ByyiW3qQYMyy"
+}
+*********************************************************************************************************************************/

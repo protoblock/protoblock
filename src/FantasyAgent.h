@@ -10,6 +10,7 @@
 #define __fantasybit__FanatsyAgent__
 
 #include "Commissioner.h" 
+#include <utility>
 
 namespace fantasybit
 {
@@ -33,8 +34,11 @@ public:
         if ( generate )
             m_priv = m_priv.generate();
     }
-    
-    status signPlayer(alias_t name);
+	
+	bool makeBlock();
+	
+
+	status signPlayer(alias_t name);
 
     name_transaction getRequested()
     {
@@ -52,6 +56,12 @@ public:
     {
         return m_priv.get_secret().str();
     }
+
+	std::pair<std::string, std::string> getIdSig(std::string in)
+	{
+		fc::sha256 sha = fc::sha256::hash( in );
+		return make_pair(sha.str(), Commissioner::sig2str(m_priv.sign(sha)));
+	}
 };
 
 }

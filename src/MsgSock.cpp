@@ -15,7 +15,7 @@ int Sender::Send(nn::socket &s, const google::protobuf::Message &msg)
 {
     size_t sz = msg.ByteSize();
     void *buf = nn::allocmsg(sz,0);
-    msg.SerializeWithCachedSizesToArray((::google::protobuf::uint8_t *)buf);
+    msg.SerializeWithCachedSizesToArray((::google::protobuf::uint8 *)buf);
     return s.send(buf,sz,0);
 }
  

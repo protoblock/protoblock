@@ -173,7 +173,7 @@ nameid_t name_transaction::id() const
     return enc.result();
 }
 
-nameid_t name_transaction::sigid() const
+signedid_t name_transaction::sigid() const
 {
     nameid_t::encoder enc;
     fc::raw::pack(enc,name_hash);
@@ -182,13 +182,14 @@ nameid_t name_transaction::sigid() const
     fc::raw::pack(enc,utc_sec);
     fc::raw::pack(enc,prev);
     fc::raw::pack(enc,sig);
-    return enc.result();
+    return fc::ripemd160::hash(enc.result());
 }
 
 fc::sha256 name_transaction::digest() const
-{
+{	
     return fc::sha256::hash(id());
 }
+
 
 fc::sha256 name_transaction::sigdigest() const
 {

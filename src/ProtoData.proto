@@ -60,7 +60,7 @@ message OutData {
 //}
 
 message InData {
-	enum Type { MINENAME = 1; QUIT=2; HEARTBEAT=3;CONNECT=4;}
+	enum Type { MINENAME = 1; QUIT=2; HEARTBEAT=3; CONNECT=4; MAKE_BLOCK=5;}
 	required Type type = 1;
 	
 	optional string data = 2;	
@@ -71,3 +71,78 @@ message InData {
 //extend InData {
 //	optional int32 test = 100;	
 //}
+
+enum TransType {
+	NAME = 0;
+	PROJECTION = 1;
+	RESULT = 2;	
+}
+
+message Transaction {
+	optional int32 version = 1;
+	optional TransType type = 2;
+	
+	extensions 100 to max;
+}
+
+message NameTrans {
+	extend Transaction {
+		optional NameTrans name_trans = 200;
+	}
+	optional uint64 hash=1;
+	optional bytes public_key=2;
+	optional uint32 nonce=3;
+	optional uint32 utc_sec=4;
+	optional string prev_id=5; 
+	optional bytes sig=6;
+	optional string sigid=7;
+}
+
+message FantasyPlayerPoints {
+	optional string fantasy_player_id = 1;
+	optional int32 points = 2;
+}
+
+message ProjectionTrans {
+	extend Transaction {
+		optional ProjectionTrans proj_trans = 201;
+	}
+
+	optional string game_id = 2;	
+	optional FantasyPlayerPoints fpp_projection = 3;
+}
+
+message ResultTrans {
+	extend Transaction {
+		optional ResultTrans result_trans = 202;
+	}
+	optional string game_id = 10;
+	repeated FantasyPlayerPoints fpp_results = 20;
+}
+
+message SignedTransaction {
+	optional Transaction trans = 10;
+	optional bytes id = 20;
+	optional bytes sig = 30;
+	optional string fantasy_name = 40;
+}
+
+message BlockHeader {
+	optional int32 num = 10;
+	optional bytes prev_id = 20; 
+}
+
+message Block {
+	optional BlockHeader head = 10;
+	repeated SignedTransaction signed_transactions = 20;
+	
+	extensions 1000 to max;
+}
+
+message SignedBlock {
+	optional Block block = 10;
+	optional bytes id = 20;
+	optional string sig = 30;
+	
+	extensions 1000 to max;
+}

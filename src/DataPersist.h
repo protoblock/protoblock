@@ -56,13 +56,13 @@ public:
 		mFs.close();
 	}
 };
-
+	
 template<class T>
 class Reader
 {
 	std::ifstream mFs;
-	google::protobuf::io::IstreamInputStream *_IstreamInputStream;
-	google::protobuf::io::CodedInputStream *_CodedInputStream;
+	google::protobuf::io::IstreamInputStream *_IstreamInputStream = nullptr;
+	google::protobuf::io::CodedInputStream *_CodedInputStream = nullptr;
     bool gd = false;
 public:
 	Reader(const std::string &file, std::ios::openmode flags = 0):
@@ -103,8 +103,10 @@ public:
 	
 	~Reader()
 	{
-   		delete _CodedInputStream;
-		delete _IstreamInputStream;
+		if (_CodedInputStream != nullptr )
+   			delete _CodedInputStream;
+		if (_IstreamInputStream != nullptr)
+			delete _IstreamInputStream;
    		mFs.close();
 	}
 };

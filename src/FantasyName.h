@@ -16,6 +16,7 @@
 #include <fc/crypto/elliptic.hpp>
 #include <future>
 #include <fc/crypto/sha224.hpp>
+#include <fc/crypto/ripemd160.hpp>
 #include <fc/time.hpp>
 #include "ProtoData.pb.h"
 
@@ -41,8 +42,7 @@ using hash_t = uint64_t;
 struct FantasyName
 {
     pubkey_t pubkey;
-    alias_t  alias;
-    
+    alias_t  alias;  
     
     Bits getBalance() { return 0; }
     
@@ -58,19 +58,21 @@ struct FantasyName
 };
 
 using nameid_t = fc::sha224;
+using signedid_t = fc::ripemd160;
 using nonce_t = int32_t;
 struct name_transaction
 {
-    name_transaction(nameid_t p) : name_hash(0),nonce(0),prev(p) {}
+	name_transaction() {}
+	name_transaction(nameid_t p) : name_hash(0),nonce(0),prev(p) {}
     hash_t name_hash;
     pubkey_t pubkey;
     nonce_t nonce;
-    fc::time_point_sec utc_sec;
+    fc::time_point_sec utc_sec;	
     nameid_t prev;
     fc::ecc::signature sig;
     nameid_t id() const;
     fc::sha256 digest() const;
-    nameid_t sigid() const;
+	signedid_t sigid() const;
     fc::sha256 sigdigest() const;
 };
 

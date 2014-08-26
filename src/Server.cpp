@@ -28,11 +28,13 @@ void verify(const string priv_key,const NameTransaction &nt)
     
     name_transaction nt2(fc::sha224(nt.prev_id()));
     nt2.name_hash = nt.hash();
-    std::copy(begin(nt.public_key()),end(nt.public_key()),begin(nt2.pubkey));
+    //std::copy(begin(nt.public_key()),end(nt.public_key()),begin(nt2.pubkey));
+	nt2.pubkey = Commissioner::str2pk(nt.public_key());
     nt2.nonce = nt.nonce();
     nt2.utc_sec = fc::time_point_sec{nt.utc_sec()};
-    std::copy(begin(nt.sig()),end(nt.sig()),begin(nt2.sig));
-    bool ver = pk.verify(nt2.digest(), nt2.sig);
+    //std::copy(begin(nt.sig()),end(nt.sig()),begin(nt2.sig));
+	nt2.sig = Commissioner::str2sig(nt.sig());
+	bool ver = pk.verify(nt2.digest(),nt2.sig);
 
 #ifdef TRACE
     cout << "priv_key{"<<priv_key<<"}\n hash " << nt.hash() << "\n";
@@ -53,7 +55,7 @@ void Server::init()
     if ( read.good() )
     while (read.ReadNext(secret))
     {
-        //cout << secret.DebugString() << "\n\n";
+        cout << secret.DebugString() << "\n";
         if ( secret.has_myfantasyname() )
         {
             if ( secret.private_key() == "" && secret.myfantasyname().has_nametransaction()
@@ -119,6 +121,9 @@ void Server::run()
             case InData_Type_QUIT:
                 stop();
                 break;
+			case InData_Type_MAKE_BLOCK:
+				agent->makeBlock();
+				break;
             default:
                 break;
         }
@@ -157,18 +162,18 @@ void Server::mine(const std::string &name)
                 }
                 
                 fc::ecc::public_key pk{nt.pubkey};
-                if ( !pk.verify(nt.digest(),nt.sig) )
+				if (!pk.verify(nt.digest(),nt.sig))
                     cout << "error key not verfied \n";
                 else {
                     mfn.set_status(MyNameStatus::found);
                     NameTransaction nt2;
                     nt2.set_hash(nt.name_hash);
-                    nt2.set_public_key(&nt.pubkey,nt.pubkey.size());
+                    nt2.set_public_key(Commissioner::pk2str(nt.pubkey));
                     nt2.set_nonce(nt.nonce);
                     nt2.set_utc_sec(nt.utc_sec.sec_since_epoch());
                     nt2.set_prev_id(nt.prev.str());
-                    nt2.set_sig(&nt.sig, nt.sig.size());
-                    nt2.set_sigid(nt.sigdigest().str());    
+					nt2.set_sig(Commissioner::sig2str(nt.sig));
+                    nt2.set_sigid(nt.sigid());    
                     mfn.mutable_nametransaction()->CopyFrom(nt2);
                     
                     Writer<Secret> writer{"secret.out",ios::app};

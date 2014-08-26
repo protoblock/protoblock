@@ -77,6 +77,7 @@ void ClientUI::run()
             if ( elapsed_seconds.count() >= GUI_TIMEOUT_SECONDS  )
                 havegui = false;
         }
+
         
         if (!havegui && scount <= 0) //no gui - take a nap
         {
@@ -149,6 +150,9 @@ void ClientUI::process_gui(const InData &data)
                 Sender::Send(sockgui,out);
             }
             break;
+		case InData_Type_MAKE_BLOCK:
+			Sender::Send(sockserv, data);
+			break;
         default:
             break;
     }
