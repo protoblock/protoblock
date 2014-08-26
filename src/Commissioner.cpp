@@ -37,15 +37,15 @@ uint64_t difficulty( const fc::sha224& hash_value )
 
 name_transaction Commissioner::generateName(alias_t alias, pubkey_t pub)
 {
-    name_transaction nt{lastId()};
+	name_transaction nt{ lastId() };
 
     nt.pubkey = pub;
     nt.name_hash = FantasyName::name_hash(alias);
     
     nt.nonce = 0;
-    nt.utc_sec = fc::time_point::now();
+	nt.utc_sec = fc::time_point::now();
     uint64_t hit = difficulty(nt.id());
-    uint64_t target = std::max(difficulty(nt.prev),Commissioner::min_difficulty);
+	uint64_t target = std::max(difficulty(nt.prev), Commissioner::min_difficulty);
     cout << " target " << target << "\n";
 
 #ifdef TRACE
@@ -71,10 +71,12 @@ name_transaction Commissioner::generateName(alias_t alias, pubkey_t pub)
     return nt;
 }
 
+fc::ecc::public_key_data Commissioner::GENESIS_PUB_KEY;
 nameid_t Commissioner::m_genesis_id = Commissioner::createGenesisName().id();
 std::unordered_map<pubkey_t,std::shared_ptr<FantasyName>> Commissioner::FantasyNames{};
 std::map<hash_t,pubkey_t> Commissioner::Aliases{};
 uint64_t Commissioner::min_difficulty = difficulty(Commissioner::max_hash());
-
+//SignedBlock Commissioner::GenesisBlock{};
+//Commissioner::makeGenesisBlock();
 
 }

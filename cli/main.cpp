@@ -9,7 +9,7 @@
 #include <string>
 #include "nn.hpp"
 #include <nanomsg/pair.h>
-#include "MsgSock.h"
+#include <fb/MsgSock.h>
 #include "ProtoData.pb.h"
  
 using namespace std;
@@ -42,10 +42,11 @@ int main(int argc, const char * argv[])
     
     string commands =
                     "1: \t\tconnect\n" \
-                    "2:\t\treceive" \
-                    "3:\t\tmine" \
-                    "4:\t\tquit" \
-                    "\nexit:\tquit";
+                    "2:\t\treceive\n" \
+                    "3:\t\tmine\n" \
+                    "4:\t\tquit\n" \
+					"4:\t\tblock\n" \
+                    "\nexit:\tquit\n";
     while ( "exit" != (in = input(commands)) )
     { 
         if ( in == "1")
@@ -77,6 +78,11 @@ int main(int argc, const char * argv[])
             Sender::Send(sock,indata);
             break;
         }
+		if (in == "5")
+		{
+			indata.set_type(InData_Type_MAKE_BLOCK);
+			Sender::Send(sock, indata);
+		}
     }
     
     nn_term();
