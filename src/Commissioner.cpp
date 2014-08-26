@@ -9,6 +9,8 @@
 #include "Commissioner.h"
 #include "FantasyName.h"
 #include <iostream> 
+#include <ctime>
+
 using namespace std;
 
 namespace fantasybit {
