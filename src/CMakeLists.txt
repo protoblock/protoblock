@@ -1,25 +1,20 @@
 # Author: Jay Berg
 # Date: March 17 2014
 
-include(FindProtobuf)
-find_package(Protobuf REQUIRED)
-
-include_directories (.. ../include include/nanomsg)
-include_directories(${PROTOBUF_INCLUDE_DIR})
+include_directories (.. ../include ../include/nanomsg ../include/fb)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-file(GLOB ProtoFiles *.proto)
-PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${ProtoFiles})
-set_source_files_properties(${ProtoSources} ${ProtoHeaders} PROPERTIES GENERATED TRUE)
+link_directories(../../lib )
 
-
-link_directories(lib)
-
-file ( GLOB SRCS *.cpp *.h *.hpp)
-
+file ( GLOB SRCS *.cpp *.h *.hpp *.cc)
+set(BOOST_DEBUG 1)
+set(Boost_INCLUDE_DIR "C:/libs/boost_1_55_0")	
+set(Boost_LIBRARY_DIR  "C:/libs/boost_1_55_0/stage/lib")
 FIND_PACKAGE( OpenSSL ) 
 #find_package( BerkeleyDB )
-find_package( Boost 1.54 REQUIRED COMPONENTS
+    set (Boost_USE_STATIC_LIBS TRUE)
+
+find_package( Boost REQUIRED COMPONENTS
                    thread 
                    date_time
                    system 
@@ -32,13 +27,17 @@ find_package( Boost 1.54 REQUIRED COMPONENTS
                    locale
                    coroutine)
 
-                   
+MESSAGE(WARNING " boost ${Boost_INCLUDE_DIR} ${Boost_LIBRARIES} ${Boost_LIBRARY_DIRS} xxx")
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 include_directories( ${OPENSSL_INCLUDE_DIR} )
-SET( ALL_OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} ${SSL_EAY_RELEASE} ${LIB_EAY_RELEASE})
+LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS} )
 
-add_executable( fantasybit ${SRCS} ${ProtoSources} ${ProtoHeaders})
-add_library(fb ${SRCS} ${ProtoSources} ${ProtoHeaders})
-target_link_libraries(fantasybit libfc.a ${Boost_LIBRARIES} ${ALL_OPENSSL_LIBRARIES}  nanomsg ${PROTOBUF_LIBRARY} )
+SET( ALL_OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} ${SSL_EAY_RELEASE} ${LIB_EAY_RELEASE})
+add_executable( fantasybit ${SRCS} )
+add_library(fb ${SRCS} )
+
+MESSAGE(WARNING " ssl ${OPENSSL_LIBRARIES}")
+
+target_link_libraries(fantasybit ${FC_LIBRARY}  ${OPENSSL_LIBRARIES} nanomsg ${PROTOBUF_LIBRARY}  )
         
 	
