@@ -44,24 +44,46 @@ name_transaction Commissioner::generateName(alias_t alias, pubkey_t pub)
     
     nt.nonce = 0;
     nt.utc_sec = fc::time_point::now();
+    //fc::time_point_sec(fc::time_point::from_iso_string( "20140401T134233" ));
     uint64_t hit = difficulty(nt.id());
     uint64_t target = std::max(difficulty(nt.prev),Commissioner::min_difficulty);
-    cout << " target " << target << "\n";
+    //nt = createGenesisName();
 
-#ifdef TRACE
+#ifdef TRACE    
+    cout << "id " << nt.id() << " target " << target << "\n";
+
+    cout << "before " << nt.nonce << " utc " << nt.utc_sec.sec_since_epoch() << "\n";
+
     cout << "in max " << nt.nonce << " utc " << nt.utc_sec.sec_since_epoch() << "\n";
 #endif
     nonce_t reset = std::numeric_limits<nonce_t>::max()-1000;
+
+/**/
+        std::chrono::time_point<std::chrono::system_clock> start, end;
+        start = std::chrono::system_clock::now();
+        std::time_t start_time = std::chrono::system_clock::to_time_t(start);
+        std::cout << "started computation at " << std::ctime(&start_time);
+/**/
     while ( running && hit < target ) {
         if ( nt.nonce >= reset   ) //214748364)
         {
             nt.utc_sec = fc::time_point::now();
             nt.nonce = 0;
+            cout << "in max " << nt.nonce << " utc " << nt.utc_sec.sec_since_epoch() << "\n";
         }
         else { ++nt.nonce; }
         
         hit = difficulty(nt.id());
     }
+
+/**/
+        end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end-start;
+        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+ 
+        std::cout << "finished computation at " << std::ctime(&end_time)
+             << "elapsed time: " << elapsed_seconds.count() << "s\n";
+/**/
     
 #ifdef TRACE
     cout << "after loop hit " << hit << " target " << target << "\n";

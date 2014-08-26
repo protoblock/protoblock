@@ -19,20 +19,83 @@
 #include "Server.h"
 #include "ClientUI.h"
 
+#include "tclap/CmdLine.h"
+
 using namespace fantasybit;
 using namespace std;
-
+using namespace TCLAP;
 
 int main(int argc, const char * argv[])
 {
+    std::string address{};
+
+    CmdLine cmd("fantasybit ", ' ', "0.1");
+
+    ValueArg<string> tcpPort("p","port","use tcp for GUI",false,"31200","port number");
+    cmd.add( tcpPort );
+
+    SwitchArg tcp("t","tcp","Use Tcp -p port", false);
+    cmd.add( tcp );
+    
+    SwitchArg mine("m","mine","Just mine", false);
+    cmd.add( mine );
+
+    ValueArg<int> minecount("c","minecount","mine count for test", false,1,"number of times");
+    cmd.add( minecount );
+
+    ValueArg<string> mineName("n","name","mine name",false,"satohi fantasy","name to mine");
+    cmd.add( mineName );
+    
+    ValueArg<string> ipcSuf("i","ipc","use ipc for GUI",false,"temp","address suffix");
+    cmd.add( ipcSuf );
+
+    cmd.parse( argc, argv );
+
+ 
+    if ( mine.isSet() )
+    {
+        //for(auto n : names)
+        for(int i=0; i < minecount.getValue(); i++ )
+        {
+        FantasyAgent fa{};
+        std::chrono::time_point<std::chrono::system_clock> start, end;
+        start = std::chrono::system_clock::now();
+        std::time_t start_time = std::chrono::system_clock::to_time_t(start);
+        std::cout << " started computation at " << std::ctime(&start_time);
+        
+        fa.signPlayer(mineName.getValue());
+        auto nt = fa.getRequested();
+        
+        end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end-start;
+        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+ 
+        std::cout << " finished computation at " << std::ctime(&end_time)
+             << "elapsed time: " << elapsed_seconds.count() / 60 << " minutes\n";
+        }
+        return 0;
+    }
+
+    if ( tcp.isSet() )
+        address = "tcp://127.0.0.1:" + tcpPort.getValue();
+    else
+        address = "ipc:///tmp/" + ipcSuf.getValue() + ".ipc";
+
+    cout << " using " << address << endl;
+    /*
     std::string ipc{"ipc:///tmp/"};
     ipc += ( argc > 1) ? argv[1] :  "test";
     ipc+= ".ipc";
     
+    ipc = "tcp://127.0.0.1:";
+    ipc += ( argc > 1) ? argv[1] :  "56633";
+    */
+    
+    
     string server_address{"inproc://test"};
     Server server{server_address} ;
     
-    string gui_address{ipc};
+    string gui_address{address};
     ClientUI client{server_address,gui_address};
     
     
