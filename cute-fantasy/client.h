@@ -31,7 +31,7 @@ class Client : public QObject
     OutData outdata{};
     InData hbdata{};
 public:
-    explicit Client(const std::string &,QObject *parent = 0);
+    explicit Client(const std::string &,const std::string &,QObject *parent = 0);
 
     virtual bool event(QEvent *ev);
 

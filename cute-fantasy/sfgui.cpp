@@ -21,7 +21,7 @@ sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
     m_namestatus.set_name("");
     m_namestatus.set_status(none);
     //QObject::connect(this, SIGNAL(on_flash()), this, SLOT(flashing()) );
-
+    ui->textBrowser->append(QCoreApplication::applicationDirPath());
 }
 
 /*

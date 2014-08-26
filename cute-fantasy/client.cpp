@@ -13,19 +13,21 @@
 #include <QtDebug>
 #include <QProcess>>
 #include <QCoreApplication>
+#include <iostream>
 
 using namespace fantasybit;
 using namespace std;
 
-Client::Client(const string &a, QObject *parent) :
+Client::Client(const string &a, const string &arg, QObject *parent) :
                     address(a),
                     QObject(parent) , sock {AF_SP, NN_PAIR},
                     receiver{sock}, timer(new QTimer(this)), timer2(new QTimer(this))
 {
     QProcess process;
     process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
-    int i = process.startDetached(QCoreApplication::applicationDirPath()+"/fantasybit");
-    //,QStringList() << " xxxx");
+    std::cout << QCoreApplication::applicationDirPath().toStdString() << "\n";
+    int i = process.startDetached(QCoreApplication::applicationDirPath()+"/fantasybit");//, QStringList() << "-m" << arg.c_str());
+    //int i = process.startDetached("fantasybit");//, QStringList() << "-m" << arg.c_str());
     hbdata.set_type(InData_Type_HEARTBEAT);
     connect(timer2, SIGNAL(timeout()), this, SLOT(pollServer()));
     connect(timer, SIGNAL(timeout()), this, SLOT(heartbeat()));

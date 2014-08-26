@@ -11,10 +11,11 @@
 #include <nanomsg/pair.h>
 #include <fb/MsgSock.h>
 #include "ProtoData.pb.h"
+#include "tclap/CmdLine.h"
  
 using namespace std;
 using namespace fantasybit;
-
+using namespace TCLAP;
 string input(const std::string &in,char c=' ')
 {
 	cout << in << c << endl;
@@ -25,14 +26,32 @@ string input(const std::string &in,char c=' ')
 
 int main(int argc, const char * argv[])
 {
-    std::string ipc{"ipc:///tmp/"};
-    ipc += ( argc > 1) ? argv[1] : "test";
-    ipc+= ".ipc";
+    std::string address{};
+
+    CmdLine cmd("fantasybit ", ' ', "0.1");
+
+    ValueArg<string> tcpPort("p","port","use tcp for GUI",false,"31200","port number");
+    cmd.add( tcpPort );
+
+    SwitchArg tcp("t","tcp","Use Tcp -p port", false);
+    cmd.add( tcp );
+    
+    ValueArg<string> ipcSuf("i","ipc","use ipc for GUI",false,"temp","address suffix");
+    cmd.add( ipcSuf );
+
+    cmd.parse( argc, argv );
+
+    if ( tcp.isSet() )
+        address = "tcp://127.0.0.1:" + tcpPort.getValue();
+    else
+        address = "ipc:///tmp/" + ipcSuf.getValue() + ".ipc";
+
+    cout << " using " << address << endl;
 
     string in;
     
     nn::socket sock{AF_SP, NN_PAIR};
-    sock.connect(ipc.c_str());
+    sock.connect(address.c_str());
     Receiver ui{sock};
     
     InData indata{};
