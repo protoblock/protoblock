@@ -33,11 +33,10 @@ namespace fc
     #define SSL_TYPE(name, ssl_type, free_func) \
         struct name  : public ssl_wrapper<ssl_type> \
         { \
-            name(ssl_type* obj=nullptr) \
+            name(ssl_type* obj) \
               : ssl_wrapper(obj) {} \
             ~name() \
             { \
-                if( obj != nullptr ) \
                 free_func(obj); \
             } \
         };

@@ -23,7 +23,7 @@ namespace fc {
 
       operator bool()const;
 
-      bool    is_negative()const;
+      bool    is_negative()const;	
       int64_t to_int64()const;
 
       int64_t log2()const;

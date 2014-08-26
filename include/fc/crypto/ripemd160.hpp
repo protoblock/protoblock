@@ -1,8 +1,6 @@
 #pragma once
 #include <fc/fwd.hpp>
 #include <fc/string.hpp>
-#include <fc/reflect/typename.hpp>
-
 
 namespace fc{
 class sha512;
@@ -74,15 +72,12 @@ class ripemd160
   void to_variant( const ripemd160& bi, variant& v );
   void from_variant( const variant& v, ripemd160& bi );
 
-  typedef ripemd160 uint160_t;
-  typedef ripemd160 uint160;
-
-  template<> struct get_typename<uint160>    { static const char* name()  { return "uint160";  } };
-
 } // namespace fc
 
 namespace std
 {
+    template<typename T> struct hash;
+
     template<>
     struct hash<fc::ripemd160>
     {

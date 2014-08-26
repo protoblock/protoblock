@@ -72,6 +72,8 @@ class sha1
 
 namespace std
 {
+    template<typename T> struct hash;
+
     template<>
     struct hash<fc::sha1>
     {

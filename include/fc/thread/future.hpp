@@ -169,14 +169,7 @@ namespace fc {
     public:
       future( const fc::shared_ptr<promise<T>>& p ):m_prom(p){}
       future( fc::shared_ptr<promise<T>>&& p ):m_prom(fc::move(p)){}
-      future(const future<T>& f ) : m_prom(f.m_prom){}
       future(){}
-
-      future& operator=(future<T>&& f ) {
-        fc_swap(m_prom,f.m_prom); 
-        return *this;
-      }
-
 
       operator const T&()const { return wait(); }
       
@@ -202,7 +195,7 @@ namespace fc {
       /// @pre valid()
       bool error()const { return m_prom->error(); }
 
-      void cancel()const { if( m_prom ) m_prom->cancel(); }
+      void cancel()const { m_prom->cancel(); }
       bool canceled()const { return m_prom->canceled(); }
 
       /**
@@ -226,14 +219,7 @@ namespace fc {
     public:
       future( const fc::shared_ptr<promise<void>>& p ):m_prom(p){}
       future( fc::shared_ptr<promise<void>>&& p ):m_prom(fc::move(p)){}
-      future(const future<void>& f ) : m_prom(f.m_prom){}
       future(){}
-
-      future& operator=(future<void>&& f ) {
-        fc_swap(m_prom,f.m_prom); 
-        return *this;
-      }
-
       
       /// @pre valid()
       /// @post ready()
@@ -258,7 +244,7 @@ namespace fc {
       /// @pre valid()
       bool error()const { return m_prom->error(); }
 
-      void cancel()const { if( m_prom ) m_prom->cancel(); }
+      void cancel()const { m_prom->cancel(); }
 
       template<typename CompletionHandler>
       void on_complete( CompletionHandler&& c ) {

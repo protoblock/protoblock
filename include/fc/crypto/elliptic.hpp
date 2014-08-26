@@ -16,7 +16,6 @@ namespace fc {
     }
 
     typedef fc::array<char,33>          public_key_data;
-    typedef fc::array<char,65>          public_key_point_data; ///< the full non-compressed version of the ECC point
     typedef fc::array<char,72>          signature;
     typedef fc::array<unsigned char,65> compact_signature;
 
@@ -32,13 +31,10 @@ namespace fc {
            ~public_key();
            bool verify( const fc::sha256& digest, const signature& sig );
            public_key_data serialize()const;
-           public_key_point_data serialize_ecc_point()const;
 
            operator public_key_data()const { return serialize(); }
 
-
            public_key( const public_key_data& v );
-           public_key( const public_key_point_data& v );
            public_key( const compact_signature& c, const fc::sha256& digest );
 
            bool valid()const;
@@ -53,14 +49,6 @@ namespace fc {
            {
             return a.serialize() == b.serialize();
            }
-           inline friend bool operator!=( const public_key& a, const public_key& b )
-           {
-            return a.serialize() != b.serialize();
-           }
-
-           /// Allows to convert current public key object into base58 number.
-           std::string to_base58() const;
-
         private:
           friend class private_key;
           fc::fwd<detail::public_key_impl,8> my;
@@ -104,12 +92,6 @@ namespace fc {
            bool              verify( const fc::sha256& digest, const signature& sig );
 
            public_key get_public_key()const;
-
-
-           inline friend bool operator==( const private_key& a, const private_key& b )
-           {
-            return a.get_secret() == b.get_secret();
-           }
         private:
            fc::fwd<detail::private_key_impl,8> my;
     };

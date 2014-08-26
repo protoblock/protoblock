@@ -13,7 +13,7 @@ namespace fc {
       void        run(); 
     protected:
       ~task_base();
-      /// Task priority looks like unsupported feature.
+
       uint64_t    _posted_num;
       priority    _prio;
       time_point  _when;
@@ -33,8 +33,6 @@ namespace fc {
       void*         _functor;
       void          (*_destroy_functor)(void*);
       void          (*_run_functor)(void*, void* );
-
-      void          run_impl(); 
   };
 
   namespace detail {

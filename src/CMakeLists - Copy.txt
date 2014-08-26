@@ -1,0 +1,26 @@
+# Author: Jay Berg
+# Date: March 17 2014
+
+include_directories (. ../include ../include/nanomsg ../include/fb ../include/openssl)
+
+#C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++ C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++/mingw32)
+
+file ( GLOB SRCS *.cpp *.cc)
+#*.h *.hpp)
+
+
+set(BOOST_DEBUG 1)
+set(BOOST_ROOT "C:/libs/boost_1_56_0")
+
+find_package(Boost)
+IF (Boost_FOUND) 
+    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR}) 
+    ADD_DEFINITIONS( "-DHAS_BOOST" ) 
+ENDIF() 
+
+link_directories(../../lib ${Boost_LIBRARY_DIRS} )
+
+
+add_executable( fantasybit ${SRCS} )
+        
+target_link_libraries(fantasybit nanomsg libprotobuf fc_debug)

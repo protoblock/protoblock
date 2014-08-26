@@ -14,11 +14,6 @@ namespace fc {
       void     connect_to( const fc::ip::endpoint& e );
       fc::ip::endpoint remote_endpoint()const;
 
-      void get( char& c )
-      {
-          read( &c, 1 );
-      }
-
       /// istream interface
       /// @{
       virtual size_t   readsome( char* buffer, size_t max );
@@ -37,11 +32,12 @@ namespace fc {
     private:
       friend class tcp_server;
       class impl;
-      #ifdef _WIN64
-      fc::fwd<impl,0x68> my;
-      #else
-      fc::fwd<impl,0x44> my;
-      #endif
+      //fc::fwd<impl,0x44> my;
+#ifdef _WIN64
+	  fc::fwd<impl, 0x81> my;
+#else
+	  fc::fwd<impl, 0x54> my;
+#endif
   };
   typedef std::shared_ptr<tcp_socket> tcp_socket_ptr;
 
@@ -52,11 +48,9 @@ namespace fc {
       tcp_server();
       ~tcp_server();
 
-      void     close();
-      void     accept( tcp_socket& s );
-      void     listen( uint16_t port );
-      void     listen( const fc::ip::endpoint& ep );
-      uint16_t get_port()const;
+      void close();
+      void accept( tcp_socket& s );
+      void listen( uint16_t port );
     
     private:
       // non copyable

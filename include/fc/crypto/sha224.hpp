@@ -1,5 +1,4 @@
 #pragma once
-#include <unordered_map>
 #include <fc/fwd.hpp>
 #include <fc/string.hpp>
 
@@ -74,6 +73,8 @@ class sha224
 } // fc
 namespace std
 {
+    template<typename T> struct hash;
+
     template<>
     struct hash<fc::sha224>
     {

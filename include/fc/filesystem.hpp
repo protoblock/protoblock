@@ -30,8 +30,6 @@ namespace fc {
       ~path();
       path( const boost::filesystem::path& );
       path( const fc::string& p );
-      /// Constructor to build path using unicode native characters.
-      path(const std::wstring& p);
       path( const char* );
       path( const path& p );
       path( path&& p );
@@ -47,23 +45,13 @@ namespace fc {
       operator boost::filesystem::path& ();
       operator const boost::filesystem::path& ()const;
 
-      void         replace_extension( const fc::path& e );
-      fc::path     stem()const;
-      fc::path     extension()const;
-      fc::path     filename()const;
-      fc::path     parent_path()const;
-      fc::string   string()const;
-      fc::string   generic_string()const;
-
-      std::wstring wstring() const;
-      std::wstring generic_wstring() const;
-
-      /** Retrieves native string path representation and next converts it into
-          ANSI UTF-8 representation.
-          It is needed since not all parts of fc library accept unicode paths
-          (fc::file_mapping).
-      */
-      std::string  to_native_ansi_path() const;
+      void       replace_extension( const fc::path& e );
+      fc::path   stem()const;
+      fc::path   extension()const;
+      fc::path   filename()const;
+      fc::path   parent_path()const;
+      fc::string string()const;
+      fc::string generic_string()const;
 
       /**
        * @brief replaces '/' with '\' in the result of generic_string()
@@ -78,7 +66,7 @@ namespace fc {
       static char    separator_char;
 
     private:
-    #ifdef _WIN64
+     #ifdef _WIN64
       fwd<boost::filesystem::path,40> _p; 
     #else
       fwd<boost::filesystem::path,32> _p; 
@@ -135,16 +123,8 @@ namespace fc {
 
   void     create_hard_link( const path& from, const path& to );
 
-  path        unique_path();
-  path        temp_directory_path();
-
-  /** @return the home directory on Linux and OS X and the Profile directory on Windows */
-  const path& home_path();
-
-  /** @return the home_path() on Linux, home_path()/Library/Application Support/ on OS X, 
-   *  and APPDATA on windows
-   */
-  const path& app_path();
+  path     unique_path();
+  path     temp_directory_path();
 
   class variant;
   void to_variant( const fc::path&,  fc::variant&  );

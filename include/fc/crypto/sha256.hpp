@@ -1,7 +1,6 @@
 #pragma once
 #include <fc/fwd.hpp>
 #include <fc/string.hpp>
-#include <fc/platform_independence.hpp>
 
 namespace fc
 {
@@ -11,7 +10,6 @@ class sha256
   public:
     sha256();
     explicit sha256( const string& hex_str );
-    explicit sha256( const char *data, size_t size );
 
     string str()const;
     operator string()const;
@@ -63,33 +61,12 @@ class sha256
     friend bool   operator >= ( const sha256& h1, const sha256& h2 );
     friend bool   operator >  ( const sha256& h1, const sha256& h2 ); 
     friend bool   operator <  ( const sha256& h1, const sha256& h2 ); 
-
-    uint32_t pop_count()
-    {
-       return __builtin_popcountll(_hash[0]) +
-              __builtin_popcountll(_hash[1]) +
-              __builtin_popcountll(_hash[2]) +
-              __builtin_popcountll(_hash[3]); 
-    }
                              
     uint64_t _hash[4]; 
 };
-
-  typedef sha256 uint256;
 
   class variant;
   void to_variant( const sha256& bi, variant& v );
   void from_variant( const variant& v, sha256& bi );
 
 } // fc
-namespace std
-{
-    template<>
-    struct hash<fc::sha256>
-    {
-       size_t operator()( const fc::sha256& s )const
-       {
-           return  *((size_t*)&s);
-       }
-    };
-}

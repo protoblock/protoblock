@@ -23,26 +23,7 @@ namespace fc
       
       enum_type& operator=( IntType i )  { value = (EnumType)i; return *this;}
       enum_type& operator=( EnumType i ) { value = i; return *this;}
-      bool       operator<( EnumType i ) const { return value < i; }
-      bool       operator>( EnumType i ) const { return value < i; }
-
-      bool operator<(const enum_type& e) const { return value < e.value;}
-      bool operator>(const enum_type& e) const { return value > e.value;}
-
-      bool operator<=(const enum_type& e) const { return value <= e.value;}
-      bool operator>=(const enum_type& e) const { return value >= e.value;}
-
-      friend bool operator==( const enum_type& e, IntType i ){ return e.value == (EnumType)i;}
-      friend bool operator==( const enum_type& e, EnumType i ){ return e.value == i;         }
-
-      friend bool operator==( const enum_type& e, const enum_type& i ){ return e.value == i.value;  }
-      friend bool operator==( IntType i, const enum_type& e){ return e.value == (EnumType)i; }
-      friend bool operator==( EnumType i, const enum_type& e ){ return e.value == i;         }
-
-      friend bool operator!=( const enum_type& e, IntType i ){ return e.value != (EnumType)i;}
-      friend bool operator!=( const enum_type& e, EnumType i ){ return e.value != i;         }
-      friend bool operator!=( const enum_type& e, const enum_type& i ){ return e.value != i.value;  }
-
+      
       EnumType value;
   };
 

@@ -48,12 +48,12 @@ namespace fc
           *   and other information that is generally only useful for
           *   developers.
           */
-         std::string to_detail_string( log_level ll = log_level::all )const;
+         string to_detail_string( log_level ll = log_level::all )const;
 
          /**
           *   Generates a user-friendly error report.
           */
-         std::string to_string( log_level ll = log_level::info  )const;
+         string to_string( log_level ll = log_level::info  )const;
 
          /**
           *  Throw this exception as its most derived type. 
@@ -183,9 +183,7 @@ namespace fc
   FC_DECLARE_EXCEPTION( assert_exception, "Assert Exception" );
   FC_DECLARE_EXCEPTION( eof_exception, "End Of File" );
 
-  FC_DECLARE_EXCEPTION( db_in_use_exception, "Database already in use" );
-
-  std::string except_str();
+  fc::string except_str();
 
 
 } // namespace fc
@@ -226,7 +224,7 @@ do { if( !(TEST) ) { FC_THROW_EXCEPTION( assert_exception, #TEST ": "  __VA_ARGS
  */
 #define FC_RETHROW_EXCEPTION( ER, LOG_LEVEL, FORMAT, ... ) \
   do { \
-     ER.append_log( FC_LOG_MESSAGE( LOG_LEVEL, FORMAT, __VA_ARGS__ ) ); \
+     er.append_log( FC_LOG_MESSAGE( LOG_LEVEL, FORMAT, __VA_ARGS__ ) ); \
      throw;\
   } while(false)
 

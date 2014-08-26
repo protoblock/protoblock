@@ -87,10 +87,6 @@ namespace fc {
   { return  memcmp( a.data, b.data, N*sizeof(T) ) < 0 ; }
 
   template<typename T, size_t N>
-  bool operator > ( const array<T,N>& a, const array<T,N>& b )
-  { return  memcmp( a.data, b.data, N*sizeof(T) ) > 0 ; }
-
-  template<typename T, size_t N>
   bool operator != ( const array<T,N>& a, const array<T,N>& b )
   { return 0 != memcmp( a.data, b.data, N*sizeof(T) ); }
 
@@ -114,10 +110,11 @@ namespace fc {
 
 }
 
-#include <unordered_map>
 #include <fc/crypto/city.hpp>
 namespace std
 {
+    template<typename T> struct hash;
+
     template<typename T, size_t N>
     struct hash<fc::array<T,N> >
     {
