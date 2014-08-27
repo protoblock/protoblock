@@ -19,7 +19,7 @@
 namespace fantasybit
 {
 
-class Transaction {};
+//class Transaction {};
 
 //generates transactions for new fantasybits
 class Generator

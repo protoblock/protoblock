@@ -140,6 +140,7 @@ message Block {
 }
 
 message SignedBlock {
+	optional int32 version = 1;
 	optional Block block = 10;
 	optional bytes id = 20;
 	optional string sig = 30;

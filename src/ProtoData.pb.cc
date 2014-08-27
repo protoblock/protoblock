@@ -338,7 +338,8 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Block));
   SignedBlock_descriptor_ = file->message_type(15);
-  static const int SignedBlock_offsets_[3] = {
+  static const int SignedBlock_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SignedBlock, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SignedBlock, block_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SignedBlock, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SignedBlock, sig_),
@@ -489,13 +490,13 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "\030\n \001(\005\022\017\n\007prev_id\030\024 \001(\014\"u\n\005Block\022%\n\004head"
     "\030\n \001(\0132\027.fantasybit.BlockHeader\022:\n\023signe"
     "d_transactions\030\024 \003(\0132\035.fantasybit.Signed"
-    "Transaction*\t\010\350\007\020\200\200\200\200\002\"S\n\013SignedBlock\022 \n"
-    "\005block\030\n \001(\0132\021.fantasybit.Block\022\n\n\002id\030\024 "
-    "\001(\014\022\013\n\003sig\030\036 \001(\t*\t\010\350\007\020\200\200\200\200\002*d\n\014MyNameSta"
-    "tus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequested\020"
-    "\005\022\t\n\005found\020\n\022\024\n\020transaction_sent\020\017\022\r\n\tco"
-    "nfirmed\020\024*1\n\tTransType\022\010\n\004NAME\020\000\022\016\n\nPROJ"
-    "ECTION\020\001\022\n\n\006RESULT\020\002", 1980);
+    "Transaction*\t\010\350\007\020\200\200\200\200\002\"d\n\013SignedBlock\022\017\n"
+    "\007version\030\001 \001(\005\022 \n\005block\030\n \001(\0132\021.fantasyb"
+    "it.Block\022\n\n\002id\030\024 \001(\014\022\013\n\003sig\030\036 \001(\t*\t\010\350\007\020\200"
+    "\200\200\200\002*d\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007notavi"
+    "l\020\002\022\r\n\trequested\020\005\022\t\n\005found\020\n\022\024\n\020transac"
+    "tion_sent\020\017\022\r\n\tconfirmed\020\024*1\n\tTransType\022"
+    "\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002", 1997);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -5334,6 +5335,7 @@ void Block::Swap(Block* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int SignedBlock::kVersionFieldNumber;
 const int SignedBlock::kBlockFieldNumber;
 const int SignedBlock::kIdFieldNumber;
 const int SignedBlock::kSigFieldNumber;
@@ -5356,6 +5358,7 @@ SignedBlock::SignedBlock(const SignedBlock& from)
 
 void SignedBlock::SharedCtor() {
   _cached_size_ = 0;
+  version_ = 0;
   block_ = NULL;
   id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
@@ -5402,6 +5405,7 @@ SignedBlock* SignedBlock::New() const {
 void SignedBlock::Clear() {
   _extensions_.Clear();
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    version_ = 0;
     if (has_block()) {
       if (block_ != NULL) block_->::fantasybit::Block::Clear();
     }
@@ -5426,10 +5430,26 @@ bool SignedBlock::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 version = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &version_)));
+          set_has_version();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(82)) goto parse_block;
+        break;
+      }
+
       // optional .fantasybit.Block block = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_block:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_block()));
         } else {
@@ -5493,6 +5513,11 @@ bool SignedBlock::MergePartialFromCodedStream(
 
 void SignedBlock::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional int32 version = 1;
+  if (has_version()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->version(), output);
+  }
+
   // optional .fantasybit.Block block = 10;
   if (has_block()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -5526,6 +5551,11 @@ void SignedBlock::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SignedBlock::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // optional int32 version = 1;
+  if (has_version()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->version(), target);
+  }
+
   // optional .fantasybit.Block block = 10;
   if (has_block()) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -5565,6 +5595,13 @@ int SignedBlock::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int32 version = 1;
+    if (has_version()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->version());
+    }
+
     // optional .fantasybit.Block block = 10;
     if (has_block()) {
       total_size += 1 +
@@ -5615,6 +5652,9 @@ void SignedBlock::MergeFrom(const ::google::protobuf::Message& from) {
 void SignedBlock::MergeFrom(const SignedBlock& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_version()) {
+      set_version(from.version());
+    }
     if (from.has_block()) {
       mutable_block()->::fantasybit::Block::MergeFrom(from.block());
     }
@@ -5652,6 +5692,7 @@ bool SignedBlock::IsInitialized() const {
 
 void SignedBlock::Swap(SignedBlock* other) {
   if (other != this) {
+    std::swap(version_, other->version_);
     std::swap(block_, other->block_);
     std::swap(id_, other->id_);
     std::swap(sig_, other->sig_);

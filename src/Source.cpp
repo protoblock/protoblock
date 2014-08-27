@@ -7,3 +7,10 @@
 //
 
 #include "Source.h"
+
+namespace fantasybit
+{
+
+decltype(Source::EventProjectionResult) Source::EventProjectionResult{};
+
+}

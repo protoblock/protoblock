@@ -1903,6 +1903,13 @@ class SignedBlock : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
+  // optional int32 version = 1;
+  inline bool has_version() const;
+  inline void clear_version();
+  static const int kVersionFieldNumber = 1;
+  inline ::google::protobuf::int32 version() const;
+  inline void set_version(::google::protobuf::int32 value);
+
   // optional .fantasybit.Block block = 10;
   inline bool has_block() const;
   inline void clear_block();
@@ -1939,6 +1946,8 @@ class SignedBlock : public ::google::protobuf::Message {
   GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(SignedBlock)
   // @@protoc_insertion_point(class_scope:fantasybit.SignedBlock)
  private:
+  inline void set_has_version();
+  inline void clear_has_version();
   inline void set_has_block();
   inline void clear_has_block();
   inline void set_has_id();
@@ -1953,9 +1962,10 @@ class SignedBlock : public ::google::protobuf::Message {
   ::fantasybit::Block* block_;
   ::std::string* id_;
   ::std::string* sig_;
+  ::google::protobuf::int32 version_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -4107,15 +4117,37 @@ Block::mutable_signed_transactions() {
 
 // SignedBlock
 
-// optional .fantasybit.Block block = 10;
-inline bool SignedBlock::has_block() const {
+// optional int32 version = 1;
+inline bool SignedBlock::has_version() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SignedBlock::set_has_block() {
+inline void SignedBlock::set_has_version() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SignedBlock::clear_has_block() {
+inline void SignedBlock::clear_has_version() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void SignedBlock::clear_version() {
+  version_ = 0;
+  clear_has_version();
+}
+inline ::google::protobuf::int32 SignedBlock::version() const {
+  return version_;
+}
+inline void SignedBlock::set_version(::google::protobuf::int32 value) {
+  set_has_version();
+  version_ = value;
+}
+
+// optional .fantasybit.Block block = 10;
+inline bool SignedBlock::has_block() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SignedBlock::set_has_block() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SignedBlock::clear_has_block() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void SignedBlock::clear_block() {
   if (block_ != NULL) block_->::fantasybit::Block::Clear();
@@ -4147,13 +4179,13 @@ inline void SignedBlock::set_allocated_block(::fantasybit::Block* block) {
 
 // optional bytes id = 20;
 inline bool SignedBlock::has_id() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void SignedBlock::set_has_id() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void SignedBlock::clear_has_id() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void SignedBlock::clear_id() {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
@@ -4217,13 +4249,13 @@ inline void SignedBlock::set_allocated_id(::std::string* id) {
 
 // optional string sig = 30;
 inline bool SignedBlock::has_sig() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void SignedBlock::set_has_sig() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void SignedBlock::clear_has_sig() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void SignedBlock::clear_sig() {
   if (sig_ != &::google::protobuf::internal::kEmptyString) {

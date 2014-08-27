@@ -15,6 +15,8 @@
 #include <fc/crypto/elliptic.hpp>
 #include <algorithm>
 #include <iostream>
+#include "fbutils.h";
+#include "Source.h"
 
 namespace fantasybit
 {
@@ -34,63 +36,95 @@ public:
 		//mRecorder.init();
 	}
 
-	void process(SignedBlock &sblock)
+	bool process(SignedBlock &sblock)
 	{
-		fc::sha256 digest = fc::sha256::hash(sblock.block().SerializeAsString() );
-		//std::cout << "1 2 " << digest.str() << " sid " << sblock.id() << "\n";
+		if (sblock.version() != Commissioner::BLOCK_VERSION ) 
+			return fbutils::LogFalse(std::string("Processor::process wrong block version ").append(sblock.DebugString()));
 
+		fc::sha256 digest = fc::sha256::hash(sblock.block().SerializeAsString() );
 		assert(digest.str() == sblock.id());
-		
-		//sblock.sig().copy(sig.begin(), sig.size(), 0);
-		//strcpy(sig.data, static_cast<unsigned char*>(sblock.mutable_sig();
-		//sblock.sig().copy(sig.begin(), sig.size());
-		//std::copy(sblock.sig().begin(), sblock.sig().end(), sig.data + 10);
+		if (digest.str() != sblock.id())
+			return fbutils::LogFalse(std::string("Processor::process block hash error digest ").append(sblock.DebugString()));
 
 		fc::ecc::signature sig = Commissioner::str2sig(sblock.sig());
+		assert(Commissioner::verifyOracle(sig, digest));
 		if (!Commissioner::verifyOracle(sig, digest))
-		{
-			std::cout << " only oracle can sign blocks!!" << "\n";
-			assert(Commissioner::verifyOracle(sig, digest));
-		}
+			return fbutils::LogFalse(std::string("Processor::process only oracle can sign blocks!! ").append(sblock.DebugString()));
 
-		//std::copy(sblock.sig().begin(), sig.begin());
-		//SerializeToArray(sig.begin(), sig.size());
-		//verify block header
-		//if (verified)
+		//mRecorder.newBlock(block);
+		for (const auto &st : sblock.block().signed_transactions())
 		{
-			//mRecorder.newBlock(block);
-			for (const auto &st : sblock.block().signed_transactions())
+			Transaction t{ st.trans() };
+
+			fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
+			if (digest.str() != st.id()) {
+				fbutils::LogFalse(std::string("Processor::process signed transaction hash error digest ").append(st.DebugString()));
+				continue;
+			}
+
+			if (t.version() != Commissioner::TRANS_VERSION) {
+				fbutils::LogFalse(std::string("Processor::process wrong transaction version ").append(st.DebugString()));
+				continue;
+			}
+
+			if (t.type() == TransType::NAME)
+			{ //TODO: fix this mess
+				auto pfn = std::make_shared < FantasyName >();
+				auto nt = t.GetExtension(NameTrans::name_trans);
+				pfn->pubkey = Commissioner::str2pk(nt.public_key());
+				pfn->alias = st.fantasy_name();
+				assert(nt.hash() == pfn->hash());
+				Commissioner::Aliases.emplace(nt.hash(), pfn->pubkey);
+				Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+				continue;
+			}
+
+			fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+			if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
 			{
-				Transaction t{ st.trans() };
-				switch (t.type())
+				fbutils::LogFalse(std::string("Processor::process cant verify trans sig").append(st.DebugString()));
+				continue;
+			}
+
+			switch (t.type())
+			{
+				case TransType::PROJECTION:
 				{
-					case TransType::NAME:
+					auto pt = t.GetExtension(ProjectionTrans::proj_trans);
+					auto iter = Source::EventProjectionResult.find(pt.game_id());
+					if (iter != end(Source::EventProjectionResult))
 					{
-						auto pfn = std::make_shared < FantasyName >();
-						auto nt = t.GetExtension(NameTrans::name_trans);
-						pfn->pubkey = Commissioner::str2pk(nt.public_key());
-						pfn->alias = st.fantasy_name();
-						assert(nt.hash() == pfn->hash());
-						Commissioner::Aliases.emplace(nt.hash(), pfn->pubkey);
-						Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+						auto pp = pt.fpp_projection();
+						iter->second.addProjection(st.fantasy_name(), pp.fantasy_player_id(), pp.points());
 					}
 					break;
-					
-					default:
-						break;
 				}
-				fc::sha256 digest = fc::sha256::hash(st.trans().SerializeAsString());
-				/*
-				if (!Commissioner::verify(Commissioner::str2sig(st.sig()), digest)
+				case TransType::RESULT:
 				{
-					std::cout << " only oracle can sign blocks!!" << "\n";
-					assert(Commissioner::verifyOracle(sig, digest));
+					auto rt = t.GetExtension(ResultTrans::result_trans);
+					//auto iter = Source::EventProjectionResult.find(rt.game_id());
+					//if (iter == end(Source::EventProjectionResult)) {
+					//}
+
+					auto iter = Source::EventProjectionResult.emplace(make_pair(rt.game_id(), rt.game_id()));
+					iter.first->second.setDataAgent(st.fantasy_name());
+					//auto &source = Source::EventProjectionResult[rt.game_id()];
+					for (const auto &fpp : rt.fpp_results())
+					{
+						iter.first->second.addResult(fpp.fantasy_player_id(), fpp.points());
+						//auto pp = pt.fpp_projection();
+						//iter->second.addProjection(st.fantasy_name(), pp.fantasy_player_id(), pp.points());
+					}
+					break;
 				}
-				*/
+				default:
+					break;
 			}
-				//std::cout << t.DebugString() << "\n";//process(t)
-			//mRecorder.comitBlock(block);
 		}
+
+		return true;
+			//std::cout << t.DebugString() << "\n";//process(t)
+		//mRecorder.comitBlock(block);
 	}
 
 };

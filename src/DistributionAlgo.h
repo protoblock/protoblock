@@ -29,7 +29,7 @@ protected:
 struct DistribuePointsAvg : DistributePoints
 {
     DistribuePointsAvg(const NameValuePairs<Int> &p) : DistributePoints(p) {}
-    NameValuePairs<double> distribute(const Int result) const;
+    NameValuePairs<double> distribute(const Int result, const std::string &agent ) const;
 };
 
 

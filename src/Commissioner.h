@@ -44,6 +44,17 @@ public:
         
         return iter->second;
     }
+
+	static std::shared_ptr<FantasyName> getName(const hash_t &hash) {
+		auto iter = Aliases.find(hash);
+		if (iter == end(Aliases)) return nullptr;
+
+		return getName(iter->second);
+	}
+
+	static std::shared_ptr<FantasyName> getName(const alias_t &alias) {
+		return getName(FantasyName::name_hash(alias));
+	}
     
     static uint64_t target(uint64_t in) { return std::max(in,Commissioner::min_difficulty); }
   
@@ -81,7 +92,7 @@ public:
 	
 	static SignedBlock GenesisBlock;
 
-	static SignedBlock makeGenesisBlock() {
+	static SignedBlock makeGenesisBlock() 
 	{
 		NameTrans nametrans{};
 		nametrans.set_hash(10576213825162658308);
@@ -123,7 +134,9 @@ public:
 		return sb;
 	}
 
-}
+	static const int BLOCK_VERSION = 1;
+	static const int TRANS_VERSION = 1;
+
 
     static std::vector<name_transaction> createGenesisChild()
     {
@@ -159,6 +172,15 @@ public:
 	static bool verifyOracle(const fc::ecc::signature &sig, const fc::sha256 &digest)
 	{
 		return verify(sig, digest, GENESIS_PUB_KEY);
+	}
+
+	static bool verifyByName(const fc::ecc::signature &sig, const fc::sha256 &digest,const std::string &fn)
+	{
+		auto iter = Aliases.find(FantasyName::name_hash(fn));
+		if (iter == Aliases.end()) 
+			return fbutils::LogFalse(std::string("cant find fantasyname").append(fn));
+		
+		return verify(sig, digest, iter->second);
 	}
 
 	static std::string pk2str(pubkey_t &pk)
