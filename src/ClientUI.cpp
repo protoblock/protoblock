@@ -154,6 +154,7 @@ void ClientUI::process_gui(const InData &data)
 			Sender::Send(sockserv, data);
 			break;
         default:
+			Sender::Send(sockserv, data);
             break;
     }
 }

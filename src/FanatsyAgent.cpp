@@ -11,14 +11,17 @@
 #include <iostream>
 namespace fantasybit {
 
-FantasyAgent::status FantasyAgent::signPlayer(alias_t name)
+FantasyAgent::status FantasyAgent::signPlayer(alias_t name,bool mine)
 {
     status ret = NOTAVAILABLE;
    
     if ( Commissioner::isAliasAvailable(name) )
     {
-        fut = std::async(&Commissioner::generateName, &comish, name, m_priv.get_public_key() );
+		if ( mine ) 
+			fut = std::async(&Commissioner::generateName, &comish, name, m_priv.get_public_key() );
         ret = REQUESTED;	
+		client.alias = name;
+		client.pubkey = m_priv.get_public_key().serialize();
     }
     else if ( auto p = Commissioner::getName(m_priv.get_public_key()) )
     {
@@ -32,92 +35,9 @@ FantasyAgent::status FantasyAgent::signPlayer(alias_t name)
     return ret;
 }
 //static SignedBlock makeGenesisBlock() {
-	bool FantasyAgent::makeBlock()
-
-		{
-		/*
-			NameTrans nametrans{};
-			nametrans.set_hash(10576213825162658308);
-			nametrans.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
-			nametrans.set_nonce(57428892);
-			nametrans.set_utc_sec(1408989677);
-			nametrans.set_prev_id("00000000000000000000000000000000000000000000000000000000");
-			nametrans.set_sig("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m");
-			nametrans.set_sigid("19cacff77cae784ada296272e43b6dd6f22975d1");
-
-			Transaction trans{};
-			trans.set_version(1);
-			trans.set_type(TransType::NAME);
-			//[fantasybit.NameTrans.name_trans]
-			trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
-
-			SignedTransaction st{};
-			st.mutable_trans()->CopyFrom(trans);
-			st.set_id("6ca607c105f8f9adfa652a89c285e58a1848f35caef132267e0385f79c453eb4");
-			st.set_sig("iKkki4FAQFoNR4foHVv1KNqfnJ1Fm1xuTToW3LgRjfAem2PSuPU3cH7ZPiJNm3xyTLt2bJx5kdRMfn1aEhfCGiTsHbE3PHBeis");
-			st.set_fantasy_name("FantasyAgent");
-
-			BlockHeader bh{};
-			bh.set_prev_id("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-			bh.set_num(1);
-
-			Block b{};
-			b.mutable_head()->CopyFrom(bh);
-			SignedTransaction* st2 = b.add_signed_transactions();
-			st2->CopyFrom(st);
-
-			SignedBlock sb{};
-			sb.mutable_block()->CopyFrom(b);
-			sb.set_id("c9348ceb2551871534121114cd707c40653303250602aad6c6e0c67c522e5e9c");
-			sb.set_sig("iKkkiYr6vYFtkRtxCeWQvu7iZ9oFdLwrpRe1P3XYUwZz3BvBuwiufWTFj1JSRJ3d1zjvp9W2whNVTWtT5Jxtn1ByyiW3qQYMyy");
-
-			//std::cout << sb.DebugString();
-			//Commissioner::GenesisBlock = sb;
-/*
-	auto nt = Commissioner::createGenesisName();
-	NameTrans nt2{};
-	nt2.set_hash(nt.name_hash);
-	nt2.set_public_key(Commissioner::pk2str(nt.pubkey));
-	nt2.set_nonce(nt.nonce);
-	nt2.set_utc_sec(nt.utc_sec.sec_since_epoch());
-	nt2.set_prev_id(nt.prev.str());
-	nt2.set_sig(Commissioner::sig2str(nt.sig));
-	nt2.set_sigid(nt.sigid());
-
-	Transaction trans{};
-	trans.set_version(1);
-	trans.set_type(TransType::NAME);
-	//trans.SetExtension(NameTrans::name_trans, );
-	trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nt2);
-	//trans.SetExtension(NameTrans::name_trans, nt2);
-
-	SignedTransaction st{};
-	st.mutable_trans()->CopyFrom(trans);
-	auto p = getIdSig(trans.SerializeAsString());
-	st.set_id(p.first);
-	st.set_sig(p.second);
-	st.set_fantasy_name("FantasyAgent");
-
-	BlockHeader bh{};
-	bh.set_prev_id
-		("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-	bh.set_num(1);
-
-	Block b{};
-	b.mutable_head()->CopyFrom(bh);
-	SignedTransaction* st2 = b.add_signed_transactions();
-	st2->CopyFrom(st);
-
-	SignedBlock sb{};
-	sb.mutable_block()->CopyFrom(b);
-	auto pp = getIdSig(sb.block().SerializeAsString());
-	sb.set_id(pp.first);
-	sb.set_sig(pp.second);
-	//std::cout << "1 id " << pp.first << " sig " << pp.second << "\n";
-	*/
+bool FantasyAgent::makeGenesis()
+{
 	SignedBlock sb = Commissioner::makeGenesisBlock();
-		
-	std::cout << "\n" << sb.DebugString() << "\n";
 
 	BlockProcessor bp{};
 	bp.init();
@@ -125,6 +45,163 @@ FantasyAgent::status FantasyAgent::signPlayer(alias_t name)
 	return true;
 }
 
+	
+bool FantasyAgent::beOracle()
+{
+#ifdef NO_ORACLE_CHECK_TESTING
+	m_oracle = m_priv;
+	Commissioner::GENESIS_PUB_KEY = m_oracle.get_public_key()	;
+	m_oracle = m_priv;
+	return true;
+#endif	
 
+	if (Commissioner::GENESIS_PUB_KEY == m_priv.get_public_key().serialize())
+		m_oracle = m_priv;
+	else
+	{
+		Secret oracle{};
+		Reader<Secret> read{ "oracle.txt" };
+		if (!read.good())
+			return false;
+		if (read.ReadNext(oracle))
+		{
+			auto pk = str2priv(oracle.private_key());
+			if (pk.get_public_key() == Commissioner::GENESIS_PUB_KEY)
+				m_oracle = pk;
+		}
+	}
+}
+
+bool FantasyAgent::makeNewBlockAsOracle()
+{
+	if (pendingTrans.size() == 0)
+		return false;
+
+	if (!beOracle())
+		return fbutils::LogFalse(std::string("cant makeNewBlockAsOracle am not him"));
+
+	BlockHeader bh{};
+	bh.set_prev_id
+		("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+	bh.set_num(2);
+
+	Block b{};
+	b.mutable_head()->CopyFrom(bh);
+	for (auto &pt : pendingTrans)
+	{
+		SignedTransaction* st2 = b.add_signed_transactions();
+		st2->CopyFrom(pt);
+	}
+
+	SignedBlock sb{};
+	sb.mutable_block()->CopyFrom(b);
+	sb.set_version(Commissioner::BLOCK_VERSION);
+
+	auto p = getIdSig(sb.block().SerializeAsString(),m_oracle);
+	sb.set_id(p.first);
+	sb.set_sig(p.second);
+
+	BlockProcessor bp{};
+	bp.init();
+	bp.process(sb);
+	pendingTrans.clear();
+	return true;
+
+}
+
+
+
+/*
+NameTrans nametrans{};
+nametrans.set_hash(10576213825162658308);
+nametrans.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+nametrans.set_nonce(57428892);
+nametrans.set_utc_sec(1408989677);
+nametrans.set_prev_id("00000000000000000000000000000000000000000000000000000000");
+nametrans.set_sig("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m");
+nametrans.set_sigid("19cacff77cae784ada296272e43b6dd6f22975d1");
+
+Transaction trans{};
+trans.set_version(1);
+trans.set_type(TransType::NAME);
+//[fantasybit.NameTrans.name_trans]
+trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
+
+SignedTransaction st{};
+st.mutable_trans()->CopyFrom(trans);
+st.set_id("6ca607c105f8f9adfa652a89c285e58a1848f35caef132267e0385f79c453eb4");
+st.set_sig("iKkki4FAQFoNR4foHVv1KNqfnJ1Fm1xuTToW3LgRjfAem2PSuPU3cH7ZPiJNm3xyTLt2bJx5kdRMfn1aEhfCGiTsHbE3PHBeis");
+st.set_fantasy_name("FantasyAgent");
+
+BlockHeader bh{};
+bh.set_prev_id("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+bh.set_num(1);
+
+Block b{};
+b.mutable_head()->CopyFrom(bh);
+SignedTransaction* st2 = b.add_signed_transactions();
+st2->CopyFrom(st);
+
+SignedBlock sb{};
+sb.mutable_block()->CopyFrom(b);
+sb.set_id("c9348ceb2551871534121114cd707c40653303250602aad6c6e0c67c522e5e9c");
+sb.set_sig("iKkkiYr6vYFtkRtxCeWQvu7iZ9oFdLwrpRe1P3XYUwZz3BvBuwiufWTFj1JSRJ3d1zjvp9W2whNVTWtT5Jxtn1ByyiW3qQYMyy");
+
+//std::cout << sb.DebugString();
+//Commissioner::GenesisBlock = sb;
+/*
+auto nt = Commissioner::createGenesisName();
+NameTrans nt2{};
+nt2.set_hash(nt.name_hash);
+nt2.set_public_key(Commissioner::pk2str(nt.pubkey));
+nt2.set_nonce(nt.nonce);
+nt2.set_utc_sec(nt.utc_sec.sec_since_epoch());
+nt2.set_prev_id(nt.prev.str());
+nt2.set_sig(Commissioner::sig2str(nt.sig));
+nt2.set_sigid(nt.sigid());
+
+Transaction trans{};
+trans.set_version(1);
+trans.set_type(TransType::NAME);
+//trans.SetExtension(NameTrans::name_trans, );
+trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nt2);
+//trans.SetExtension(NameTrans::name_trans, nt2);
+
+SignedTransaction st{};
+st.mutable_trans()->CopyFrom(trans);
+auto p = getIdSig(trans.SerializeAsString());
+st.set_id(p.first);
+st.set_sig(p.second);
+st.set_fantasy_name("FantasyAgent");
+
+BlockHeader bh{};
+bh.set_prev_id
+("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+bh.set_num(1);
+
+Block b{};
+b.mutable_head()->CopyFrom(bh);
+SignedTransaction* st2 = b.add_signed_transactions();
+st2->CopyFrom(st);
+
+SignedBlock sb{};
+sb.mutable_block()->CopyFrom(b);
+auto pp = getIdSig(sb.block().SerializeAsString());
+sb.set_id(pp.first);
+sb.set_sig(pp.second);
+//std::cout << "1 id " << pp.first << " sig " << pp.second << "\n";
+*/
+/*auto a = sb.block().signed_transactions().Get(0);
+auto p1 = getIdSig(a.trans().SerializeAsString());
+a.set_id(p1.first);
+a.set_sig(p1.second);
+
+std::cout << "\n" << a.DebugString() << "\n";
+
+auto p = getIdSig(sb.block().SerializeAsString());
+sb.set_id(p.first);
+sb.set_sig(p.second);
+std::cout << "\n" << sb.DebugString() << "\n";
+*/
 
 }

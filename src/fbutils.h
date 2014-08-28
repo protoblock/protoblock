@@ -20,7 +20,7 @@
 
 namespace fantasybit {
 
-
+#define NO_ORACLE_CHECK_TESTING 
 //forwards
 struct FantasyName;
 

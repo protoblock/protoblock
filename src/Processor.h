@@ -21,11 +21,14 @@
 namespace fantasybit
 {
 
+using comish = fantasybit::Commissioner;
+
 class BlockRecorder {};
 
 class BlockProcessor
 {
 	//BlockRecorder mRecorder{};
+	bool verify_name(const SignedTransaction &, const NameTrans &, const fc::ecc::signature&, const fc::sha256 &);
 public:
 	BlockProcessor() {
 		//mRecorder.init();
@@ -36,19 +39,24 @@ public:
 		//mRecorder.init();
 	}
 
+
 	bool process(SignedBlock &sblock)
 	{
 		if (sblock.version() != Commissioner::BLOCK_VERSION ) 
 			return fbutils::LogFalse(std::string("Processor::process wrong block version ").append(sblock.DebugString()));
 
 		fc::sha256 digest = fc::sha256::hash(sblock.block().SerializeAsString() );
-		assert(digest.str() == sblock.id());
 		if (digest.str() != sblock.id())
-			return fbutils::LogFalse(std::string("Processor::process block hash error digest ").append(sblock.DebugString()));
+			return 
+			fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));
+		assert(digest.str() == sblock.id());
 
 		fc::ecc::signature sig = Commissioner::str2sig(sblock.sig());
-		assert(Commissioner::verifyOracle(sig, digest));
+		//assert(Commissioner::verifyOracle(sig, digest));
 		if (!Commissioner::verifyOracle(sig, digest))
+#ifdef NO_ORACLE_CHECK_TESTING
+			if (!Commissioner::GENESIS_NUM == sblock.block().head().num())
+#endif
 			return fbutils::LogFalse(std::string("Processor::process only oracle can sign blocks!! ").append(sblock.DebugString()));
 
 		//mRecorder.newBlock(block);
@@ -67,19 +75,21 @@ public:
 				continue;
 			}
 
+			fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+
 			if (t.type() == TransType::NAME)
-			{ //TODO: fix this mess
-				auto pfn = std::make_shared < FantasyName >();
+			{
 				auto nt = t.GetExtension(NameTrans::name_trans);
-				pfn->pubkey = Commissioner::str2pk(nt.public_key());
-				pfn->alias = st.fantasy_name();
-				assert(nt.hash() == pfn->hash());
-				Commissioner::Aliases.emplace(nt.hash(), pfn->pubkey);
-				Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+				if (verify_name(st, nt, sig, digest))
+				{
+					auto pfn = Commissioner::makeName(nt.fantasy_name(), nt.public_key());
+					Commissioner::Aliases.emplace(pfn->hash(), pfn->pubkey);
+					Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+				}
+
 				continue;
 			}
 
-			fc::ecc::signature sig = Commissioner::str2sig(st.sig());
 			if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
 			{
 				fbutils::LogFalse(std::string("Processor::process cant verify trans sig").append(st.DebugString()));
@@ -122,9 +132,10 @@ public:
 			}
 		}
 
+		std::cout << " BLOCK(" << sblock.block().head().num() << ") processed! \n";
 		return true;
 			//std::cout << t.DebugString() << "\n";//process(t)
-		//mRecorder.comitBlock(block);
+		//mRecorder.comitBlock(block);	
 	}
 
 };

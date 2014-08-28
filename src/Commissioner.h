@@ -55,6 +55,14 @@ public:
 	static std::shared_ptr<FantasyName> getName(const alias_t &alias) {
 		return getName(FantasyName::name_hash(alias));
 	}
+
+	static std::shared_ptr<FantasyName> makeName(const alias_t &alias, const std::string &pubkey)
+	{
+		auto pfn = std::make_shared < FantasyName >();
+		pfn->alias = alias;
+		pfn->pubkey = str2pk(pubkey);
+		return pfn;
+	}
     
     static uint64_t target(uint64_t in) { return std::max(in,Commissioner::min_difficulty); }
   
@@ -90,18 +98,26 @@ public:
         return genesis;
     };	
 	
-	static SignedBlock GenesisBlock;
+	//static SignedBlock GenesisBlock;
 
 	static SignedBlock makeGenesisBlock() 
 	{
-		NameTrans nametrans{};
-		nametrans.set_hash(10576213825162658308);
-		nametrans.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
-		nametrans.set_nonce(57428892);
-		nametrans.set_utc_sec(1408989677);
-		nametrans.set_prev_id("00000000000000000000000000000000000000000000000000000000");
-		nametrans.set_sig("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m");
-		nametrans.set_sigid("19cacff77cae784ada296272e43b6dd6f22975d1");
+		NamePOW namepow{};
+		namepow.set_hash(10576213825162658308);
+		namepow.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+		namepow.set_nonce(57428892);
+		namepow.set_utc_sec(1408989677);
+		namepow.set_prev_id("00000000000000000000000000000000000000000000000000000000");
+		namepow.set_sig("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m");
+		namepow.set_sigid("19cacff77cae784ada296272e43b6dd6f22975d1");
+
+		NameProof nameproof{};
+		nameproof.set_type(NameProof_Type_POW);
+		nameproof.MutableExtension(NamePOW::name_pow)->CopyFrom(namepow);
+		NameTrans nametrans{};		
+		nametrans.set_public_key(namepow.public_key());
+		nametrans.set_fantasy_name("FantasyAgent");
+		nametrans.mutable_proof()->CopyFrom(nameproof);
 
 		Transaction trans{};
 		trans.set_version(1);
@@ -111,13 +127,13 @@ public:
 
 		SignedTransaction st{};
 		st.mutable_trans()->CopyFrom(trans);
-		st.set_id("6ca607c105f8f9adfa652a89c285e58a1848f35caef132267e0385f79c453eb4");
-		st.set_sig("iKkki4FAQFoNR4foHVv1KNqfnJ1Fm1xuTToW3LgRjfAem2PSuPU3cH7ZPiJNm3xyTLt2bJx5kdRMfn1aEhfCGiTsHbE3PHBeis");
+		st.set_id("3ed1aff4fea939ae372b2347e3af121f22daf745c1731eb280fac460d39547ca");
+		st.set_sig("iKkkiYpPLSsXDLtGZGcjNWAoHj3cTRuUiKWEd5FWZ2oQ3oczZwdnXKM74KKtpwxwnp7bQgr7vWKYRzKJGG252UrQjZD7HtBkWb	");
 		st.set_fantasy_name("FantasyAgent");
 
 		BlockHeader bh{};
 		bh.set_prev_id("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-		bh.set_num(1);
+		bh.set_num(GENESIS_NUM);
 
 		Block b{};
 		b.mutable_head()->CopyFrom(bh);
@@ -126,8 +142,9 @@ public:
 
 		SignedBlock sb{};
 		sb.mutable_block()->CopyFrom(b);
-		sb.set_id("c9348ceb2551871534121114cd707c40653303250602aad6c6e0c67c522e5e9c");
-		sb.set_sig("iKkkiYr6vYFtkRtxCeWQvu7iZ9oFdLwrpRe1P3XYUwZz3BvBuwiufWTFj1JSRJ3d1zjvp9W2whNVTWtT5Jxtn1ByyiW3qQYMyy");
+		sb.set_version(BLOCK_VERSION);
+		sb.set_id("487836348a0265cc675343c4cb3e541afcf07ce97b11656732798929f4233e8a");
+		sb.set_sig("iKZWEQEEmJRKFhgZ1PGwYyXchWfqd9qhNCWVPy42t9Fua6XtMvqA2JVb46VfwjchKvhzqotf2MjGRRTw2dDTh3arkVkQnHwDVh");
 
 		//std::cout << sb.DebugString();
 		//Commissioner::GenesisBlock = sb;
@@ -136,7 +153,7 @@ public:
 
 	static const int BLOCK_VERSION = 1;
 	static const int TRANS_VERSION = 1;
-
+	static const int GENESIS_NUM = 1;
 
     static std::vector<name_transaction> createGenesisChild()
     {

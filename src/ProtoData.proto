@@ -60,10 +60,12 @@ message OutData {
 //}
 
 message InData {
-	enum Type { MINENAME = 1; QUIT=2; HEARTBEAT=3; CONNECT=4; MAKE_BLOCK=5;}
+	enum Type { MINENAME = 1; QUIT=2; HEARTBEAT=3; CONNECT=4; MAKE_BLOCK=5; NEWNAME=6; PROJ=7;RESULT=8;}
 	required Type type = 1;
 	
 	optional string data = 2;	
+	optional string data2 = 3;	
+	optional int32 num = 4;
   	extensions 100 to max;
 }
 
@@ -71,6 +73,38 @@ message InData {
 //extend InData {
 //	optional int32 test = 100;	
 //}
+
+
+message NameProof 
+{
+	enum Type { POW=1; TWEET=2; ORACLE=3; }
+	optional Type type = 1;
+	extensions 200 to max;
+}
+
+message NamePOW
+{
+	extend NameProof {
+		optional NamePOW name_pow = 200;
+	}
+
+	optional uint64 hash=1;
+	optional bytes public_key=2;
+	optional uint32 nonce=3;
+	optional uint32 utc_sec=4;
+	optional string prev_id=5; 
+	optional bytes sig=6;
+	optional string sigid=7;
+}
+
+message TweetProof
+{ 
+	extend NameProof {
+		optional TweetProof tweet_proof = 201;
+	}
+
+	optional string tweet = 10;
+}
 
 enum TransType {
 	NAME = 0;
@@ -84,18 +118,16 @@ message Transaction {
 	
 	extensions 100 to max;
 }
-
+	
 message NameTrans {
 	extend Transaction {
 		optional NameTrans name_trans = 200;
 	}
-	optional uint64 hash=1;
-	optional bytes public_key=2;
-	optional uint32 nonce=3;
-	optional uint32 utc_sec=4;
-	optional string prev_id=5; 
-	optional bytes sig=6;
-	optional string sigid=7;
+	
+	optional string fantasy_name = 10;
+	optional bytes public_key=20;
+	optional NameProof proof = 30;
+
 }
 
 message FantasyPlayerPoints {

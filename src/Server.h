@@ -42,7 +42,7 @@ private:
     
     void init();
 protected:
-    void mine(const std::string &name);
+    void claimName(const std::string &name,bool mine);
 };
 
 }
