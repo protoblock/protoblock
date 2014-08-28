@@ -24,6 +24,13 @@ string input(const std::string &in,char c=' ')
 	return s;
 };
 
+int input_int(const std::string &in, char c = ' ')
+{
+	cout << in << c << endl;
+	int i;
+	cin >> i;
+	return i;
+};
 int main(int argc, const char * argv[])
 {
     std::string address{};
@@ -58,16 +65,24 @@ int main(int argc, const char * argv[])
     OutData outdata{};
     
 
-    
-    string commands =
-                    "1: \t\tconnect\n" \
-                    "2:\t\treceive\n" \
-                    "3:\t\tmine\n" \
-                    "4:\t\tquit\n" \
-					"4:\t\tblock\n" \
-                    "\nexit:\tquit\n";
+	stringstream ss{};
+	ss << "1" << "\t" << "connect" << "\n";
+	ss << "2" << "\t" << "receive" << "\n";
+	ss << "3" << "\t" << "mine" << "\n";
+	ss << "4" << "\t" << "block" << "\n";
+	ss << "5" << "\t" << "new name" << "\n";
+	ss << "6" << "\t" << "project" << "\n";
+	ss << "7" << "\t" << "result" << "\n";
+	//ss << "8" << "\t" << "connect" << "\n";
+	//ss << "9" << "\t" << "connect" << "\n";
+
+	ss << "99" << "\t" << "disonnect" << "\n";
+	ss << "exit" << "\t" << "quit" << "\n";
+
+	string commands = ss.str();
     while ( "exit" != (in = input(commands)) )
     { 
+		indata.Clear();
         if ( in == "1")
         {
             indata.set_type(InData_Type_CONNECT);
@@ -91,17 +106,47 @@ int main(int argc, const char * argv[])
             indata.set_data(in);
             Sender::Send(sock,indata);
         }
-        if ( in == "4")
+        if ( in == "99")
         {
             indata.set_type(InData_Type_QUIT);
             Sender::Send(sock,indata);
             break;
         }
-		if (in == "5")
+		if (in == "4")
 		{
 			indata.set_type(InData_Type_MAKE_BLOCK);
 			Sender::Send(sock, indata);
 		}
+
+		if (in == "5")
+		{
+			if ("exit" == (in = input("name"))) break;
+			indata.Clear();
+			indata.set_type(InData_Type_NEWNAME);
+			indata.set_data(in);
+			Sender::Send(sock, indata);
+		}
+
+		if (in == "6")
+		{
+			indata.Clear();
+			indata.set_type(InData_Type_PROJ);
+			indata.set_data(input("game:"));
+			indata.set_data2(input("player:"));
+			indata.set_num(input_int("proj:"));
+			Sender::Send(sock, indata);
+		}
+		if (in == "7")
+		{
+			indata.Clear();
+			indata.set_type(InData_Type_RESULT);
+			indata.set_data(input("game:"));
+			indata.set_data2(input("player:"));
+			indata.set_num(input_int("result:"));
+			Sender::Send(sock, indata);
+		}
+
+
     }
     
     nn_term();
