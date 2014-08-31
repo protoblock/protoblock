@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include "fbutils.h"
 #include "FantasyName.h"
+#include <map> 
 
 namespace fantasybit
 {
@@ -43,6 +44,7 @@ public:
 	std::string dataAgent() const { return agent; }
 
 	static std::unordered_map<Uid, Source> EventProjectionResult;
+	static std::map < std::string, std::map<std::string, Uid>> WeeklySchedule;
 };
 
 

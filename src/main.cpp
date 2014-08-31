@@ -12,6 +12,8 @@
 #include "nn.hpp"
 
 #include <nanomsg/pair.h>
+#include <nanomsg/pubsub.h>
+#include <nanomsg/tcp.h>
 
 #include "DataPersist.h"
 #include "ProtoData.pb.h"
@@ -21,22 +23,48 @@
 
 #include "tclap/CmdLine.h"
 
+#include <leveldb/db.h>
+
 using namespace fantasybit;
 using namespace std;
 using namespace TCLAP;
 
 int main(int argc, const char * argv[])
 {
+	/*
+	leveldb::DB *db;
+	leveldb::Options options;
+	options.create_if_missing = true;
+	leveldb::Status status = leveldb::DB::Open(options, "./leveldb_dir", &db);
+	assert(status.ok());
+	*/
     std::string address{};
+	/*
+	nn::socket ssso{ AF_SP_RAW, NN_PUB };
+	int rc = ssso.connect("tcp://192.168.1.127:3000");
+	std::string str("XXXsddfs");
+	char buf[4];// = nn::allocmsg(5, 0);
+	memcpy(buf, str.c_str(), 3);
+	int opt;
+	opt = 1;
+	//ssso.setsockopt(NN_SOL_SOCKET, NN_TCP_NODELAY, &opt, sizeof(opt));
 
+	rc = ssso.send(str.c_str(), str.length()+1, 0);
+	//ssso.send
+	rc = ssso.send(buf, 3, 0);
+	//ssso.setsockopt
+	*/
     CmdLine cmd("fantasybit ", ' ', "0.1");
 
     ValueArg<string> tcpPort("p","port","use tcp for GUI",false,"31200","port number");
     cmd.add( tcpPort );
 
-    SwitchArg tcp("t","tcp","Use Tcp -p port", false);
+	SwitchArg tcp("t", "tcp", "Use Tcp -p port", false);
     cmd.add( tcp );
-    
+
+	//ValueArg<string> ip("a", "ip", "Use Tcp -p port", false, "192.168.1.27", "ip");
+	//cmd.add(ip);
+
     SwitchArg mine("m","mine","Just mine", false);
     cmd.add( mine );
 
@@ -76,8 +104,8 @@ int main(int argc, const char * argv[])
         return 0;
     }
 
-    if ( tcp.isSet() )
-        address = "tcp://127.0.0.1:" + tcpPort.getValue();
+	if (tcp.isSet())
+		address = "tcp://192.168.1.27:3000";// +ip.getValue() + ":" + tcpPort.getValue();
     else
         address = "ipc:///tmp/" + ipcSuf.getValue() + ".ipc";
 
@@ -93,7 +121,7 @@ int main(int argc, const char * argv[])
     
     
     string server_address{"inproc://test"};
-    Server server{server_address} ;
+	Server server{ server_address} ;;
     
     string gui_address{address};
     ClientUI client{server_address,gui_address};

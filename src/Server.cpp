@@ -46,7 +46,7 @@ void verify(const string priv_key,const NameTransaction &nt)
 
 void Server::init()
 {
-    Reader<Secret> read{"secret.out"};
+	Reader<Secret> read{ ROOT_DIR + "secret.out" };
     string priv_key{""};
     map<string,MyFantasyName> bestsecret{};
     Secret secret{};

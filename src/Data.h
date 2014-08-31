@@ -65,6 +65,8 @@ struct predict
     
 };
 
+
+
 }
 
 #endif /* defined(__fantasybit__Data__) */

@@ -127,8 +127,8 @@ public:
 
 		SignedTransaction st{};
 		st.mutable_trans()->CopyFrom(trans);
-		st.set_id("3ed1aff4fea939ae372b2347e3af121f22daf745c1731eb280fac460d39547ca");
-		st.set_sig("iKkkiYpPLSsXDLtGZGcjNWAoHj3cTRuUiKWEd5FWZ2oQ3oczZwdnXKM74KKtpwxwnp7bQgr7vWKYRzKJGG252UrQjZD7HtBkWb	");
+		st.set_id("1071841561af1f1a813138c0c5bbfb4b86fe3140931e46427ed1c65eb57b9e00");
+		st.set_sig("iKZWEMRo3DFGtFoGz65j5h3EecfsjLRKMBhPpiZQthhuNJaGf62fUxaCARKY149WsxtRm7JuwUXQsvs1Jqf6G46ChNNYp2TX5Z");
 		st.set_fantasy_name("FantasyAgent");
 
 		BlockHeader bh{};
@@ -143,8 +143,8 @@ public:
 		SignedBlock sb{};
 		sb.mutable_block()->CopyFrom(b);
 		sb.set_version(BLOCK_VERSION);
-		sb.set_id("487836348a0265cc675343c4cb3e541afcf07ce97b11656732798929f4233e8a");
-		sb.set_sig("iKZWEQEEmJRKFhgZ1PGwYyXchWfqd9qhNCWVPy42t9Fua6XtMvqA2JVb46VfwjchKvhzqotf2MjGRRTw2dDTh3arkVkQnHwDVh");
+		sb.set_id("aec9aebf9e4f4392fb1beb15345b74588a779be8359e08a8902f0ebb872ef6fd");
+		sb.set_sig("iKx1CJLr1acFbuCAeEB5i7EtRiD9jgMvuLhJ2zyafLbNpafmJMpLtiue7Uar6aurCKh6SixCVp9MGbova6wkBosKdPFXtvcgVM");
 
 		//std::cout << sb.DebugString();
 		//Commissioner::GenesisBlock = sb;
@@ -223,6 +223,9 @@ public:
 		fc::from_base58(str, sig.data, sig.size());
 		return sig;
 	}
+
+	//static std::string DATA_DIR("data");
+	//static std::string DB_DIR("db");
 };
 
 

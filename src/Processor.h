@@ -17,17 +17,150 @@
 #include <iostream>
 #include "fbutils.h";
 #include "Source.h"
+#include <leveldb/db.h>
 
 namespace fantasybit
 {
 
-using comish = fantasybit::Commissioner;
+	//using namespace leveldb;
 
-class BlockRecorder {};
+//using comish = fantasybit::Commissioner;
+using ldbP = std::unique_ptr < leveldb::DB > ;
+class BlockRecorder 
+{
+	leveldb::DB *blockstatus;
+	leveldb::DB *namehashpup;
+	leveldb::DB *pubfantasyname;
+	leveldb::DB *pubbalance;
+	leveldb::DB *gamesids;
+	leveldb::DB *projections;
+	leveldb::WriteOptions write_sync{};
+
+	std::map<Uid, leveldb::DB*> game_projections_db{};
+public:
+	BlockRecorder() {}
+
+	void init()
+	{
+		write_sync.sync = true;
+		leveldb::Options options;
+		options.create_if_missing = true;
+		leveldb::Status status;
+		status = leveldb::DB::Open(options, filedir("blockstatus"), &blockstatus);
+		status = leveldb::DB::Open(options, filedir("namehashpup"), &namehashpup);
+		status = leveldb::DB::Open(options, filedir("pubfantasyname"), &pubfantasyname);
+		status = leveldb::DB::Open(options, filedir("pubbalance"), &pubbalance);
+		status = leveldb::DB::Open(options, filedir("gameids"), &gamesids);
+		//status = leveldb::DB::Open(options, filedir("projections"), &pubbalance);
+		//status = leveldb::DB::Open(options, filedir("last-projections"), &pubbalance);
+		leveldb::Iterator* it = gamesids->NewIterator(leveldb::ReadOptions());
+		for (it->SeekToFirst(); it->Valid(); it->Next())
+		{
+			leveldb::DB* db;
+			Uid id = it->key().ToString();
+			if (leveldb::DB::Open(options, filedir("gameids/")+id, &db).ok())
+			{
+				game_projections_db[id] = db;
+			}
+		}
+	}
+
+	void startBlock(int num) 
+	{
+		int lock = -1;
+		leveldb::Slice value((char*)&num, sizeof(int));
+		blockstatus->Put(write_sync, "processing", value);
+	}
+
+	void endBlock()
+	{
+		int none = -1;
+		leveldb::Slice value((char*)&none, sizeof(int));
+		blockstatus->Put(write_sync, "processing", value);
+	}
+
+	bool inSync()
+	{
+		std::string value;
+		blockstatus->Get(leveldb::ReadOptions(), "processing", &value);
+		int num = *(reinterpret_cast<const int *>(value.c_str()));
+		return num < 0;
+	}
+
+	void recordName(const hash_t &hash,const std::string &pubkey,const std::string &name)
+	{
+		leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+		namehashpup->Put(leveldb::WriteOptions(), hkey, pubkey);
+		pubfantasyname->Put(leveldb::WriteOptions(), pubkey, name);
+
+		std::string temp;
+		if (pubbalance->Get(leveldb::ReadOptions(), pubkey, &temp).IsNotFound())
+		{
+			uint64_t bal = 0;
+			leveldb::Slice bval((char*)&bal, sizeof(uint64_t));
+			pubbalance->Put(leveldb::WriteOptions(), pubkey, bval);
+		}
+	}
+
+	void addProjection(Uid &game, Uid &player, std::string &fname, int16_t points)
+	{
+		std::string temp;
+		//if (pubbalance->Get(leveldb::ReadOptions(), pubkey, &temp).IsNotFound())
+		leveldb::Slice pval((char*)&points, sizeof(int16_t));
+
+		auto iter = game_projections_db.find(game);
+		if (iter != end(game_projections_db))
+		{
+			iter->second->Put(leveldb::WriteOptions(), player.append(":").append(fname), pval);
+		}
+	}
+
+	void removeGameId(Uid &game)
+	{
+		auto iter = game_projections_db.find(game);
+		if (iter != end(game_projections_db))
+		{
+			delete iter->second;
+			leveldb::DestroyDB(filedir(iter->first),leveldb::Options());
+			gamesids->Delete(leveldb::WriteOptions(), game);
+		}
+	}
+
+	void addGameId(Uid &game)
+	{
+		gamesids->Put(leveldb::WriteOptions(), game, game);
+		leveldb::Options options;
+		options.create_if_missing = true;
+		leveldb::DB* db;
+		if (leveldb::DB::Open(options, filedir(game), &db).ok())
+			game_projections_db[game] = db;
+	}
+
+	void addBalance(std::string &pubkey,uint64_t add)
+	{
+		uint64_t newval = 0;
+		std::string temp;
+
+		if (pubbalance->Get(leveldb::ReadOptions(), pubkey, &temp).ok())
+		{
+			newval = *(reinterpret_cast<uint64_t *>(&temp));
+		}
+
+		add += newval;
+		leveldb::Slice bval((char*)&add, sizeof(uint64_t));
+		pubbalance->Put(leveldb::WriteOptions(), pubkey, bval);
+
+	}
+
+	std::string filedir(const std::string &in)
+	{
+		return ROOT_DIR + "index/" + in;
+	}
+};
 
 class BlockProcessor
 {
-	//BlockRecorder mRecorder{};
+	BlockRecorder mRecorder{};
 	bool verify_name(const SignedTransaction &, const NameTrans &, const fc::ecc::signature&, const fc::sha256 &);
 public:
 	BlockProcessor() {
@@ -36,7 +169,8 @@ public:
 		
 	void init() 
 	{
-		//mRecorder.init();
+		mRecorder.init();
+		if (!mRecorder.inSync());
 	}
 
 
@@ -59,7 +193,7 @@ public:
 #endif
 			return fbutils::LogFalse(std::string("Processor::process only oracle can sign blocks!! ").append(sblock.DebugString()));
 
-		//mRecorder.newBlock(block);
+		mRecorder.startBlock(sblock.block().head().num());
 		for (const auto &st : sblock.block().signed_transactions())
 		{
 			Transaction t{ st.trans() };
@@ -82,6 +216,7 @@ public:
 				auto nt = t.GetExtension(NameTrans::name_trans);
 				if (verify_name(st, nt, sig, digest))
 				{
+					mRecorder.recordName(FantasyName::name_hash(nt.fantasy_name()), nt.public_key(), nt.fantasy_name());
 					auto pfn = Commissioner::makeName(nt.fantasy_name(), nt.public_key());
 					Commissioner::Aliases.emplace(pfn->hash(), pfn->pubkey);
 					Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
@@ -133,6 +268,8 @@ public:
 		}
 
 		std::cout << " BLOCK(" << sblock.block().head().num() << ") processed! \n";
+		mRecorder.endBlock();
+		//sblock.block().head().num());
 		return true;
 			//std::cout << t.DebugString() << "\n";//process(t)
 		//mRecorder.comitBlock(block);	

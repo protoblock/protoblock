@@ -31,7 +31,7 @@ public:
     {
         m_priv = fc::ecc::private_key::regenerate(secret);
     }
-    
+		
     FantasyAgent(bool generate = true) : m_priv()
     {
         if ( generate )

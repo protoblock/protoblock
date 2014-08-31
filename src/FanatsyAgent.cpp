@@ -48,7 +48,7 @@ bool FantasyAgent::makeGenesis()
 	
 bool FantasyAgent::beOracle()
 {
-#ifdef NO_ORACLE_CHECK_TESTING
+#ifdef NO_ORACLE_CHECK_TESTING	
 	m_oracle = m_priv;
 	Commissioner::GENESIS_PUB_KEY = m_oracle.get_public_key()	;
 	m_oracle = m_priv;
@@ -97,7 +97,7 @@ bool FantasyAgent::makeNewBlockAsOracle()
 	sb.mutable_block()->CopyFrom(b);
 	sb.set_version(Commissioner::BLOCK_VERSION);
 
-	auto p = getIdSig(sb.block().SerializeAsString(),m_oracle);
+	auto p = getIdSig(sb.block().SerializeAsString(), m_oracle);
 	sb.set_id(p.first);
 	sb.set_sig(p.second);
 
@@ -108,6 +108,7 @@ bool FantasyAgent::makeNewBlockAsOracle()
 	return true;
 
 }
+
 
 
 

@@ -20,7 +20,7 @@
 
 namespace fantasybit {
 
-#define NO_ORACLE_CHECK_TESTING 
+//#define NO_ORACLE_CHECK_TESTING 
 //forwards
 struct FantasyName;
 
@@ -35,6 +35,10 @@ using NameValuePairs =
     
 using Signature = std::string;
 
+#ifdef FBWIN
+static std::string ROOT_DIR("C:/fantasybit/");
+#endif
+
 static struct fbutils
 {
 	static bool LogFalse(std::string &in)
@@ -42,6 +46,7 @@ static struct fbutils
 		std::cout << in << "\n";
 		return false;
 	}
+
 };
 }
 

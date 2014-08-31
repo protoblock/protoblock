@@ -26,7 +26,7 @@ namespace fantasybit
 class Bits
 { 
     Int64 base;
-public:
+public:		
     Bits(Int64 b) : base(b) {}
     
     double points() { return base * .00000001; }

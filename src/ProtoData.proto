@@ -152,6 +152,16 @@ message ResultTrans {
 	repeated FantasyPlayerPoints fpp_results = 20;
 }
 
+message DataTransition {
+	extend Transaction {
+		optional DataTransition data_trans = 203;
+	}
+	enum Type { PREGAME=1; INGAME=2; WEEKOVER=3; WEEKSTART=4;}
+	optional Type type =1;
+	optional int32	week = 10;
+	repeated game_id = 20;
+}
+
 message SignedTransaction {
 	optional Transaction trans = 10;
 	optional bytes id = 20;
