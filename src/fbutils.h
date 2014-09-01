@@ -39,6 +39,8 @@ using Signature = std::string;
 static std::string ROOT_DIR("C:/fantasybit/");
 #endif
 
+
+
 static struct fbutils
 {
 	static bool LogFalse(std::string &in)

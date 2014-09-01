@@ -60,7 +60,7 @@ bool FantasyAgent::beOracle()
 	else
 	{
 		Secret oracle{};
-		Reader<Secret> read{ "oracle.txt" };
+		Reader<Secret> read{ ROOT_DIR + "oracle.txt" };
 		if (!read.good())
 			return false;
 		if (read.ReadNext(oracle))

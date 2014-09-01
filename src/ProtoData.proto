@@ -159,7 +159,7 @@ message DataTransition {
 	enum Type { PREGAME=1; INGAME=2; WEEKOVER=3; WEEKSTART=4;}
 	optional Type type =1;
 	optional int32	week = 10;
-	repeated game_id = 20;
+	repeated string game_id = 20;
 }
 
 message SignedTransaction {
@@ -188,4 +188,18 @@ message SignedBlock {
 	optional string sig = 30;
 	
 	extensions 1000 to max;
+}
+
+message NodeRequest
+{
+	enum Type { HANDSHAKE=1; BLOCK_REQUEST=2; HIGHT_REQUEST=3; }
+	optional Type type = 10;
+	optional string myip=20;
+	optional int32 num=30;
+}
+
+message NodeReply
+{
+	optional int32 hight=10;
+	repeated string ips=20;
 }

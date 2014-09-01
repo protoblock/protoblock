@@ -24,12 +24,32 @@
 #include "tclap/CmdLine.h"
 
 #include <leveldb/db.h>
+#include "Node.h"
 
 using namespace fantasybit;
 using namespace std;
 using namespace TCLAP;
 
 int main(int argc, const char * argv[])
+{
+	Node node;
+	//node.getMyIp();
+	node.init();
+	node.runHandShake();
+
+	thread syncRequest_{ &Node::syncRequest, &node };
+	thread syncService_{ &Node::syncService, &node };
+	thread runLive_{ &Node::runLive, &node };
+	thread pendingTransactions_{ &Node::pendingTransactions, &node };
+	syncRequest_.join();
+	nn_term();
+	syncService_.join();
+	runLive_.join();
+	pendingTransactions_.join();
+	return 0;
+}
+
+int main2(int argc, const char * argv[])
 {
 	/*
 	leveldb::DB *db;
@@ -138,7 +158,7 @@ int main(int argc, const char * argv[])
 }
 
 
-int main2(int argc, const char * argv[])
+int main3(int argc, const char * argv[])
 {
 
 {

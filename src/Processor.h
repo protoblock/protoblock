@@ -16,8 +16,10 @@
 #include <algorithm>
 #include <iostream>
 #include "fbutils.h";
-#include "Source.h"
+#include "Source.h";
 #include <leveldb/db.h>
+#include <fc/filesystem.hpp>
+//#include <vector>
 
 namespace fantasybit
 {
@@ -25,18 +27,19 @@ namespace fantasybit
 	//using namespace leveldb;
 
 //using comish = fantasybit::Commissioner;
-using ldbP = std::unique_ptr < leveldb::DB > ;
+//using ldbP = std::unique_ptr < leveldb::DB > ;
 class BlockRecorder 
 {
 	leveldb::DB *blockstatus;
-	leveldb::DB *namehashpup;
+	leveldb::DB *namehashpub;
 	leveldb::DB *pubfantasyname;
 	leveldb::DB *pubbalance;
 	leveldb::DB *gamesids;
-	leveldb::DB *projections;
+	//leveldb::DB *projections;
 	leveldb::WriteOptions write_sync{};
 
 	std::map<Uid, leveldb::DB*> game_projections_db{};
+	//std::vector<leveldb::DB*> alldbs{};
 public:
 	BlockRecorder() {}
 
@@ -47,7 +50,7 @@ public:
 		options.create_if_missing = true;
 		leveldb::Status status;
 		status = leveldb::DB::Open(options, filedir("blockstatus"), &blockstatus);
-		status = leveldb::DB::Open(options, filedir("namehashpup"), &namehashpup);
+		status = leveldb::DB::Open(options, filedir("namehashpub"), &namehashpub);
 		status = leveldb::DB::Open(options, filedir("pubfantasyname"), &pubfantasyname);
 		status = leveldb::DB::Open(options, filedir("pubbalance"), &pubbalance);
 		status = leveldb::DB::Open(options, filedir("gameids"), &gamesids);
@@ -63,13 +66,14 @@ public:
 				game_projections_db[id] = db;
 			}
 		}
+		delete it;
 	}
 
 	void startBlock(int num) 
 	{
-		int lock = -1;
 		leveldb::Slice value((char*)&num, sizeof(int));
 		blockstatus->Put(write_sync, "processing", value);
+		blockstatus->Put(leveldb::WriteOptions(), "lastblock", value);
 	}
 
 	void endBlock()
@@ -82,7 +86,9 @@ public:
 	bool inSync()
 	{
 		std::string value;
-		blockstatus->Get(leveldb::ReadOptions(), "processing", &value);
+		if (blockstatus->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound())
+			return false; 
+
 		int num = *(reinterpret_cast<const int *>(value.c_str()));
 		return num < 0;
 	}
@@ -90,7 +96,7 @@ public:
 	void recordName(const hash_t &hash,const std::string &pubkey,const std::string &name)
 	{
 		leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
-		namehashpup->Put(leveldb::WriteOptions(), hkey, pubkey);
+		namehashpub->Put(leveldb::WriteOptions(), hkey, pubkey);
 		pubfantasyname->Put(leveldb::WriteOptions(), pubkey, name);
 
 		std::string temp;
@@ -156,6 +162,19 @@ public:
 	{
 		return ROOT_DIR + "index/" + in;
 	}
+
+	void closeAll()
+	{
+		delete blockstatus;
+		delete namehashpub;
+		delete pubfantasyname;
+		delete pubbalance;
+		delete gamesids;
+		for (auto p : game_projections_db)
+			delete p.second;
+		game_projections_db.clear();
+		//delete projections;
+	}
 };
 
 class BlockProcessor
@@ -170,28 +189,17 @@ public:
 	void init() 
 	{
 		mRecorder.init();
-		if (!mRecorder.inSync());
+		if (!mRecorder.inSync()) {
+			mRecorder.closeAll();
+			fc::remove_all(ROOT_DIR + "index/");
+		}
+		mRecorder.init();
 	}
 
 
 	bool process(SignedBlock &sblock)
 	{
-		if (sblock.version() != Commissioner::BLOCK_VERSION ) 
-			return fbutils::LogFalse(std::string("Processor::process wrong block version ").append(sblock.DebugString()));
-
-		fc::sha256 digest = fc::sha256::hash(sblock.block().SerializeAsString() );
-		if (digest.str() != sblock.id())
-			return 
-			fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));
-		assert(digest.str() == sblock.id());
-
-		fc::ecc::signature sig = Commissioner::str2sig(sblock.sig());
-		//assert(Commissioner::verifyOracle(sig, digest));
-		if (!Commissioner::verifyOracle(sig, digest))
-#ifdef NO_ORACLE_CHECK_TESTING
-			if (!Commissioner::GENESIS_NUM == sblock.block().head().num())
-#endif
-			return fbutils::LogFalse(std::string("Processor::process only oracle can sign blocks!! ").append(sblock.DebugString()));
+		if (!verifySignedBlock(sblock)) return false;
 
 		mRecorder.startBlock(sblock.block().head().num());
 		for (const auto &st : sblock.block().signed_transactions())
@@ -275,6 +283,27 @@ public:
 		//mRecorder.comitBlock(block);	
 	}
 
+	static bool verifySignedBlock(SignedBlock &sblock)
+	{
+		if (sblock.version() != Commissioner::BLOCK_VERSION)
+			return fbutils::LogFalse(std::string("Processor::process wrong block version ").append(sblock.DebugString()));
+
+		fc::sha256 digest = fc::sha256::hash(sblock.block().SerializeAsString());
+		if (digest.str() != sblock.id())
+			return
+			fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));
+		assert(digest.str() == sblock.id());
+
+		fc::ecc::signature sig = Commissioner::str2sig(sblock.sig());
+		//assert(Commissioner::verifyOracle(sig, digest));
+		if (!Commissioner::verifyOracle(sig, digest))
+#ifdef NO_ORACLE_CHECK_TESTING
+			if (!Commissioner::GENESIS_NUM == sblock.block().head().num())
+#endif
+				return fbutils::LogFalse(std::string("Processor::process only oracle can sign blocks!! ").append(sblock.DebugString()));
+
+		return true;
+	}
 };
 
 }

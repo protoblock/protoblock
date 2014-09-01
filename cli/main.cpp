@@ -12,7 +12,8 @@
 #include <fb/MsgSock.h>
 #include "ProtoData.pb.h"
 #include "tclap/CmdLine.h"
- 
+#include <nanomsg\reqrep.h>
+
 using namespace std;
 using namespace fantasybit;
 using namespace TCLAP;
@@ -56,7 +57,17 @@ int main(int argc, const char * argv[])
     cout << " using " << address << endl;
 
     string in;
-    
+
+	nn::socket sock2{ AF_SP, NN_REP };
+	sock2.bind("tcp://127.0.0.1:30000");
+	NodeRequest reqhs{};
+	Receiver rec{ sock2 };
+	rec.receive( reqhs);
+	cout << reqhs.DebugString();
+	NodeReply reply{};
+	reply.set_hight(0);
+	Sender::Send(sock2,reply);
+
     nn::socket sock{AF_SP, NN_PAIR};
     sock.connect(address.c_str());
     Receiver ui{sock};

@@ -38,6 +38,8 @@ add_library(fb ${SRCS} )
 
 MESSAGE(WARNING " ssl ${OPENSSL_LIBRARIES}")
 
-target_link_libraries(fantasybit ${FC_LIBRARY}  ${OPENSSL_LIBRARIES} nanomsg ${PROTOBUF_LIBRARY}  leveldb)
+SET(CPPNETLIBS cppnetlib-client-connections cppnetlib-uri cppnetlib-server-parsers)
+
+target_link_libraries(fantasybit ${FC_LIBRARY}  ${OPENSSL_LIBRARIES} nanomsg ${PROTOBUF_LIBRARY}  leveldb )
         
 	

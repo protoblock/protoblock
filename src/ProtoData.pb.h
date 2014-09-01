@@ -49,10 +49,13 @@ class NameTrans;
 class FantasyPlayerPoints;
 class ProjectionTrans;
 class ResultTrans;
+class DataTransition;
 class SignedTransaction;
 class BlockHeader;
 class Block;
 class SignedBlock;
+class NodeRequest;
+class NodeReply;
 
 enum OutData_Type {
   OutData_Type_MYFANTASYNAME = 1,
@@ -118,6 +121,47 @@ inline bool NameProof_Type_Parse(
     const ::std::string& name, NameProof_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<NameProof_Type>(
     NameProof_Type_descriptor(), name, value);
+}
+enum DataTransition_Type {
+  DataTransition_Type_PREGAME = 1,
+  DataTransition_Type_INGAME = 2,
+  DataTransition_Type_WEEKOVER = 3,
+  DataTransition_Type_WEEKSTART = 4
+};
+bool DataTransition_Type_IsValid(int value);
+const DataTransition_Type DataTransition_Type_Type_MIN = DataTransition_Type_PREGAME;
+const DataTransition_Type DataTransition_Type_Type_MAX = DataTransition_Type_WEEKSTART;
+const int DataTransition_Type_Type_ARRAYSIZE = DataTransition_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor();
+inline const ::std::string& DataTransition_Type_Name(DataTransition_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    DataTransition_Type_descriptor(), value);
+}
+inline bool DataTransition_Type_Parse(
+    const ::std::string& name, DataTransition_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DataTransition_Type>(
+    DataTransition_Type_descriptor(), name, value);
+}
+enum NodeRequest_Type {
+  NodeRequest_Type_HANDSHAKE = 1,
+  NodeRequest_Type_BLOCK_REQUEST = 2,
+  NodeRequest_Type_HIGHT_REQUEST = 3
+};
+bool NodeRequest_Type_IsValid(int value);
+const NodeRequest_Type NodeRequest_Type_Type_MIN = NodeRequest_Type_HANDSHAKE;
+const NodeRequest_Type NodeRequest_Type_Type_MAX = NodeRequest_Type_HIGHT_REQUEST;
+const int NodeRequest_Type_Type_ARRAYSIZE = NodeRequest_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* NodeRequest_Type_descriptor();
+inline const ::std::string& NodeRequest_Type_Name(NodeRequest_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    NodeRequest_Type_descriptor(), value);
+}
+inline bool NodeRequest_Type_Parse(
+    const ::std::string& name, NodeRequest_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<NodeRequest_Type>(
+    NodeRequest_Type_descriptor(), name, value);
 }
 enum MyNameStatus {
   none = 1,
@@ -1896,6 +1940,145 @@ class ResultTrans : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class DataTransition : public ::google::protobuf::Message {
+ public:
+  DataTransition();
+  virtual ~DataTransition();
+
+  DataTransition(const DataTransition& from);
+
+  inline DataTransition& operator=(const DataTransition& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DataTransition& default_instance();
+
+  void Swap(DataTransition* other);
+
+  // implements Message ----------------------------------------------
+
+  DataTransition* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DataTransition& from);
+  void MergeFrom(const DataTransition& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef DataTransition_Type Type;
+  static const Type PREGAME = DataTransition_Type_PREGAME;
+  static const Type INGAME = DataTransition_Type_INGAME;
+  static const Type WEEKOVER = DataTransition_Type_WEEKOVER;
+  static const Type WEEKSTART = DataTransition_Type_WEEKSTART;
+  static inline bool Type_IsValid(int value) {
+    return DataTransition_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    DataTransition_Type_Type_MIN;
+  static const Type Type_MAX =
+    DataTransition_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    DataTransition_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return DataTransition_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return DataTransition_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return DataTransition_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.DataTransition.Type type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::fantasybit::DataTransition_Type type() const;
+  inline void set_type(::fantasybit::DataTransition_Type value);
+
+  // optional int32 week = 10;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 10;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
+  // repeated string game_id = 20;
+  inline int game_id_size() const;
+  inline void clear_game_id();
+  static const int kGameIdFieldNumber = 20;
+  inline const ::std::string& game_id(int index) const;
+  inline ::std::string* mutable_game_id(int index);
+  inline void set_game_id(int index, const ::std::string& value);
+  inline void set_game_id(int index, const char* value);
+  inline void set_game_id(int index, const char* value, size_t size);
+  inline ::std::string* add_game_id();
+  inline void add_game_id(const ::std::string& value);
+  inline void add_game_id(const char* value);
+  inline void add_game_id(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& game_id() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_game_id();
+
+  static const int kDataTransFieldNumber = 203;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::DataTransition >, 11, false >
+    data_trans;
+  // @@protoc_insertion_point(class_scope:fantasybit.DataTransition)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_week();
+  inline void clear_has_week();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int type_;
+  ::google::protobuf::int32 week_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> game_id_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static DataTransition* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class SignedTransaction : public ::google::protobuf::Message {
  public:
   SignedTransaction();
@@ -2346,6 +2529,237 @@ class SignedBlock : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SignedBlock* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class NodeRequest : public ::google::protobuf::Message {
+ public:
+  NodeRequest();
+  virtual ~NodeRequest();
+
+  NodeRequest(const NodeRequest& from);
+
+  inline NodeRequest& operator=(const NodeRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const NodeRequest& default_instance();
+
+  void Swap(NodeRequest* other);
+
+  // implements Message ----------------------------------------------
+
+  NodeRequest* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const NodeRequest& from);
+  void MergeFrom(const NodeRequest& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef NodeRequest_Type Type;
+  static const Type HANDSHAKE = NodeRequest_Type_HANDSHAKE;
+  static const Type BLOCK_REQUEST = NodeRequest_Type_BLOCK_REQUEST;
+  static const Type HIGHT_REQUEST = NodeRequest_Type_HIGHT_REQUEST;
+  static inline bool Type_IsValid(int value) {
+    return NodeRequest_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    NodeRequest_Type_Type_MIN;
+  static const Type Type_MAX =
+    NodeRequest_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    NodeRequest_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return NodeRequest_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return NodeRequest_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return NodeRequest_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.NodeRequest.Type type = 10;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 10;
+  inline ::fantasybit::NodeRequest_Type type() const;
+  inline void set_type(::fantasybit::NodeRequest_Type value);
+
+  // optional string myip = 20;
+  inline bool has_myip() const;
+  inline void clear_myip();
+  static const int kMyipFieldNumber = 20;
+  inline const ::std::string& myip() const;
+  inline void set_myip(const ::std::string& value);
+  inline void set_myip(const char* value);
+  inline void set_myip(const char* value, size_t size);
+  inline ::std::string* mutable_myip();
+  inline ::std::string* release_myip();
+  inline void set_allocated_myip(::std::string* myip);
+
+  // optional int32 num = 30;
+  inline bool has_num() const;
+  inline void clear_num();
+  static const int kNumFieldNumber = 30;
+  inline ::google::protobuf::int32 num() const;
+  inline void set_num(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.NodeRequest)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_myip();
+  inline void clear_has_myip();
+  inline void set_has_num();
+  inline void clear_has_num();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* myip_;
+  int type_;
+  ::google::protobuf::int32 num_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static NodeRequest* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class NodeReply : public ::google::protobuf::Message {
+ public:
+  NodeReply();
+  virtual ~NodeReply();
+
+  NodeReply(const NodeReply& from);
+
+  inline NodeReply& operator=(const NodeReply& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const NodeReply& default_instance();
+
+  void Swap(NodeReply* other);
+
+  // implements Message ----------------------------------------------
+
+  NodeReply* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const NodeReply& from);
+  void MergeFrom(const NodeReply& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 hight = 10;
+  inline bool has_hight() const;
+  inline void clear_hight();
+  static const int kHightFieldNumber = 10;
+  inline ::google::protobuf::int32 hight() const;
+  inline void set_hight(::google::protobuf::int32 value);
+
+  // repeated string ips = 20;
+  inline int ips_size() const;
+  inline void clear_ips();
+  static const int kIpsFieldNumber = 20;
+  inline const ::std::string& ips(int index) const;
+  inline ::std::string* mutable_ips(int index);
+  inline void set_ips(int index, const ::std::string& value);
+  inline void set_ips(int index, const char* value);
+  inline void set_ips(int index, const char* value, size_t size);
+  inline ::std::string* add_ips();
+  inline void add_ips(const ::std::string& value);
+  inline void add_ips(const char* value);
+  inline void add_ips(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& ips() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_ips();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.NodeReply)
+ private:
+  inline void set_has_hight();
+  inline void clear_has_hight();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::std::string> ips_;
+  ::google::protobuf::int32 hight_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static NodeReply* default_instance_;
 };
 // ===================================================================
 
@@ -4448,6 +4862,99 @@ ResultTrans::mutable_fpp_results() {
 
 // -------------------------------------------------------------------
 
+// DataTransition
+
+// optional .fantasybit.DataTransition.Type type = 1;
+inline bool DataTransition::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DataTransition::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DataTransition::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DataTransition::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::fantasybit::DataTransition_Type DataTransition::type() const {
+  return static_cast< ::fantasybit::DataTransition_Type >(type_);
+}
+inline void DataTransition::set_type(::fantasybit::DataTransition_Type value) {
+  assert(::fantasybit::DataTransition_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional int32 week = 10;
+inline bool DataTransition::has_week() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DataTransition::set_has_week() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DataTransition::clear_has_week() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DataTransition::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 DataTransition::week() const {
+  return week_;
+}
+inline void DataTransition::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// repeated string game_id = 20;
+inline int DataTransition::game_id_size() const {
+  return game_id_.size();
+}
+inline void DataTransition::clear_game_id() {
+  game_id_.Clear();
+}
+inline const ::std::string& DataTransition::game_id(int index) const {
+  return game_id_.Get(index);
+}
+inline ::std::string* DataTransition::mutable_game_id(int index) {
+  return game_id_.Mutable(index);
+}
+inline void DataTransition::set_game_id(int index, const ::std::string& value) {
+  game_id_.Mutable(index)->assign(value);
+}
+inline void DataTransition::set_game_id(int index, const char* value) {
+  game_id_.Mutable(index)->assign(value);
+}
+inline void DataTransition::set_game_id(int index, const char* value, size_t size) {
+  game_id_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DataTransition::add_game_id() {
+  return game_id_.Add();
+}
+inline void DataTransition::add_game_id(const ::std::string& value) {
+  game_id_.Add()->assign(value);
+}
+inline void DataTransition::add_game_id(const char* value) {
+  game_id_.Add()->assign(value);
+}
+inline void DataTransition::add_game_id(const char* value, size_t size) {
+  game_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+DataTransition::game_id() const {
+  return game_id_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+DataTransition::mutable_game_id() {
+  return &game_id_;
+}
+
+// -------------------------------------------------------------------
+
 // SignedTransaction
 
 // optional .fantasybit.Transaction trans = 10;
@@ -5065,6 +5572,195 @@ inline void SignedBlock::set_allocated_sig(::std::string* sig) {
   }
 }
 
+// -------------------------------------------------------------------
+
+// NodeRequest
+
+// optional .fantasybit.NodeRequest.Type type = 10;
+inline bool NodeRequest::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void NodeRequest::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void NodeRequest::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void NodeRequest::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::fantasybit::NodeRequest_Type NodeRequest::type() const {
+  return static_cast< ::fantasybit::NodeRequest_Type >(type_);
+}
+inline void NodeRequest::set_type(::fantasybit::NodeRequest_Type value) {
+  assert(::fantasybit::NodeRequest_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional string myip = 20;
+inline bool NodeRequest::has_myip() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void NodeRequest::set_has_myip() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void NodeRequest::clear_has_myip() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void NodeRequest::clear_myip() {
+  if (myip_ != &::google::protobuf::internal::kEmptyString) {
+    myip_->clear();
+  }
+  clear_has_myip();
+}
+inline const ::std::string& NodeRequest::myip() const {
+  return *myip_;
+}
+inline void NodeRequest::set_myip(const ::std::string& value) {
+  set_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    myip_ = new ::std::string;
+  }
+  myip_->assign(value);
+}
+inline void NodeRequest::set_myip(const char* value) {
+  set_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    myip_ = new ::std::string;
+  }
+  myip_->assign(value);
+}
+inline void NodeRequest::set_myip(const char* value, size_t size) {
+  set_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    myip_ = new ::std::string;
+  }
+  myip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NodeRequest::mutable_myip() {
+  set_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    myip_ = new ::std::string;
+  }
+  return myip_;
+}
+inline ::std::string* NodeRequest::release_myip() {
+  clear_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = myip_;
+    myip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NodeRequest::set_allocated_myip(::std::string* myip) {
+  if (myip_ != &::google::protobuf::internal::kEmptyString) {
+    delete myip_;
+  }
+  if (myip) {
+    set_has_myip();
+    myip_ = myip;
+  } else {
+    clear_has_myip();
+    myip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 num = 30;
+inline bool NodeRequest::has_num() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void NodeRequest::set_has_num() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void NodeRequest::clear_has_num() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void NodeRequest::clear_num() {
+  num_ = 0;
+  clear_has_num();
+}
+inline ::google::protobuf::int32 NodeRequest::num() const {
+  return num_;
+}
+inline void NodeRequest::set_num(::google::protobuf::int32 value) {
+  set_has_num();
+  num_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// NodeReply
+
+// optional int32 hight = 10;
+inline bool NodeReply::has_hight() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void NodeReply::set_has_hight() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void NodeReply::clear_has_hight() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void NodeReply::clear_hight() {
+  hight_ = 0;
+  clear_has_hight();
+}
+inline ::google::protobuf::int32 NodeReply::hight() const {
+  return hight_;
+}
+inline void NodeReply::set_hight(::google::protobuf::int32 value) {
+  set_has_hight();
+  hight_ = value;
+}
+
+// repeated string ips = 20;
+inline int NodeReply::ips_size() const {
+  return ips_.size();
+}
+inline void NodeReply::clear_ips() {
+  ips_.Clear();
+}
+inline const ::std::string& NodeReply::ips(int index) const {
+  return ips_.Get(index);
+}
+inline ::std::string* NodeReply::mutable_ips(int index) {
+  return ips_.Mutable(index);
+}
+inline void NodeReply::set_ips(int index, const ::std::string& value) {
+  ips_.Mutable(index)->assign(value);
+}
+inline void NodeReply::set_ips(int index, const char* value) {
+  ips_.Mutable(index)->assign(value);
+}
+inline void NodeReply::set_ips(int index, const char* value, size_t size) {
+  ips_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NodeReply::add_ips() {
+  return ips_.Add();
+}
+inline void NodeReply::add_ips(const ::std::string& value) {
+  ips_.Add()->assign(value);
+}
+inline void NodeReply::add_ips(const char* value) {
+  ips_.Add()->assign(value);
+}
+inline void NodeReply::add_ips(const char* value, size_t size) {
+  ips_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+NodeReply::ips() const {
+  return ips_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+NodeReply::mutable_ips() {
+  return &ips_;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -5085,6 +5781,14 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::InData_Type>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::NameProof_Type>() {
   return ::fantasybit::NameProof_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::DataTransition_Type>() {
+  return ::fantasybit::DataTransition_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::NodeRequest_Type>() {
+  return ::fantasybit::NodeRequest_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::MyNameStatus>() {

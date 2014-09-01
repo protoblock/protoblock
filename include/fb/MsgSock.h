@@ -35,6 +35,18 @@ public:
         nn_freemsg(buf);
         return true;
     }
+
+	template <class T>
+	static bool Receive(nn::socket &rsock,T &t, int flags = 0)
+	{
+		void *sbuf;
+		int size = rsock.recv(&sbuf, NN_MSG, flags);
+		if (size == -1)
+			return false;
+		t.ParseFromArray(sbuf, size);
+		nn_freemsg(sbuf);
+		return true;
+	}
 };
 
 class Sender

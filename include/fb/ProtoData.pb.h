@@ -41,6 +41,7 @@ class BitStake;
 class NameTransaction;
 class OutData;
 class InData;
+class NameProof;
 class NamePOW;
 class TweetProof;
 class Transaction;
@@ -48,10 +49,13 @@ class NameTrans;
 class FantasyPlayerPoints;
 class ProjectionTrans;
 class ResultTrans;
+class DataTransition;
 class SignedTransaction;
 class BlockHeader;
 class Block;
 class SignedBlock;
+class NodeRequest;
+class NodeReply;
 
 enum OutData_Type {
   OutData_Type_MYFANTASYNAME = 1,
@@ -97,6 +101,67 @@ inline bool InData_Type_Parse(
     const ::std::string& name, InData_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<InData_Type>(
     InData_Type_descriptor(), name, value);
+}
+enum NameProof_Type {
+  NameProof_Type_POW = 1,
+  NameProof_Type_TWEET = 2,
+  NameProof_Type_ORACLE = 3
+};
+bool NameProof_Type_IsValid(int value);
+const NameProof_Type NameProof_Type_Type_MIN = NameProof_Type_POW;
+const NameProof_Type NameProof_Type_Type_MAX = NameProof_Type_ORACLE;
+const int NameProof_Type_Type_ARRAYSIZE = NameProof_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* NameProof_Type_descriptor();
+inline const ::std::string& NameProof_Type_Name(NameProof_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    NameProof_Type_descriptor(), value);
+}
+inline bool NameProof_Type_Parse(
+    const ::std::string& name, NameProof_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<NameProof_Type>(
+    NameProof_Type_descriptor(), name, value);
+}
+enum DataTransition_Type {
+  DataTransition_Type_PREGAME = 1,
+  DataTransition_Type_INGAME = 2,
+  DataTransition_Type_WEEKOVER = 3,
+  DataTransition_Type_WEEKSTART = 4
+};
+bool DataTransition_Type_IsValid(int value);
+const DataTransition_Type DataTransition_Type_Type_MIN = DataTransition_Type_PREGAME;
+const DataTransition_Type DataTransition_Type_Type_MAX = DataTransition_Type_WEEKSTART;
+const int DataTransition_Type_Type_ARRAYSIZE = DataTransition_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor();
+inline const ::std::string& DataTransition_Type_Name(DataTransition_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    DataTransition_Type_descriptor(), value);
+}
+inline bool DataTransition_Type_Parse(
+    const ::std::string& name, DataTransition_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DataTransition_Type>(
+    DataTransition_Type_descriptor(), name, value);
+}
+enum NodeRequest_Type {
+  NodeRequest_Type_HANDSHAKE = 1,
+  NodeRequest_Type_BLOCK_REQUEST = 2,
+  NodeRequest_Type_HIGHT_REQUEST = 3
+};
+bool NodeRequest_Type_IsValid(int value);
+const NodeRequest_Type NodeRequest_Type_Type_MIN = NodeRequest_Type_HANDSHAKE;
+const NodeRequest_Type NodeRequest_Type_Type_MAX = NodeRequest_Type_HIGHT_REQUEST;
+const int NodeRequest_Type_Type_ARRAYSIZE = NodeRequest_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* NodeRequest_Type_descriptor();
+inline const ::std::string& NodeRequest_Type_Name(NodeRequest_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    NodeRequest_Type_descriptor(), value);
+}
+inline bool NodeRequest_Type_Parse(
+    const ::std::string& name, NodeRequest_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<NodeRequest_Type>(
+    NodeRequest_Type_descriptor(), name, value);
 }
 enum MyNameStatus {
   none = 1,
@@ -991,6 +1056,116 @@ class InData : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class NameProof : public ::google::protobuf::Message {
+ public:
+  NameProof();
+  virtual ~NameProof();
+
+  NameProof(const NameProof& from);
+
+  inline NameProof& operator=(const NameProof& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const NameProof& default_instance();
+
+  void Swap(NameProof* other);
+
+  // implements Message ----------------------------------------------
+
+  NameProof* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const NameProof& from);
+  void MergeFrom(const NameProof& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef NameProof_Type Type;
+  static const Type POW = NameProof_Type_POW;
+  static const Type TWEET = NameProof_Type_TWEET;
+  static const Type ORACLE = NameProof_Type_ORACLE;
+  static inline bool Type_IsValid(int value) {
+    return NameProof_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    NameProof_Type_Type_MIN;
+  static const Type Type_MAX =
+    NameProof_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    NameProof_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return NameProof_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return NameProof_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return NameProof_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.NameProof.Type type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::fantasybit::NameProof_Type type() const;
+  inline void set_type(::fantasybit::NameProof_Type value);
+
+  GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(NameProof)
+  // @@protoc_insertion_point(class_scope:fantasybit.NameProof)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+
+  ::google::protobuf::internal::ExtensionSet _extensions_;
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static NameProof* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class NamePOW : public ::google::protobuf::Message {
  public:
   NamePOW();
@@ -1045,14 +1220,14 @@ class NamePOW : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required uint64 hash = 1;
+  // optional uint64 hash = 1;
   inline bool has_hash() const;
   inline void clear_hash();
   static const int kHashFieldNumber = 1;
   inline ::google::protobuf::uint64 hash() const;
   inline void set_hash(::google::protobuf::uint64 value);
 
-  // required bytes public_key = 2;
+  // optional bytes public_key = 2;
   inline bool has_public_key() const;
   inline void clear_public_key();
   static const int kPublicKeyFieldNumber = 2;
@@ -1064,21 +1239,21 @@ class NamePOW : public ::google::protobuf::Message {
   inline ::std::string* release_public_key();
   inline void set_allocated_public_key(::std::string* public_key);
 
-  // required uint32 nonce = 3;
+  // optional uint32 nonce = 3;
   inline bool has_nonce() const;
   inline void clear_nonce();
   static const int kNonceFieldNumber = 3;
   inline ::google::protobuf::uint32 nonce() const;
   inline void set_nonce(::google::protobuf::uint32 value);
 
-  // required uint32 utc_sec = 4;
+  // optional uint32 utc_sec = 4;
   inline bool has_utc_sec() const;
   inline void clear_utc_sec();
   static const int kUtcSecFieldNumber = 4;
   inline ::google::protobuf::uint32 utc_sec() const;
   inline void set_utc_sec(::google::protobuf::uint32 value);
 
-  // required string prev_id = 5;
+  // optional string prev_id = 5;
   inline bool has_prev_id() const;
   inline void clear_prev_id();
   static const int kPrevIdFieldNumber = 5;
@@ -1114,6 +1289,10 @@ class NamePOW : public ::google::protobuf::Message {
   inline ::std::string* release_sigid();
   inline void set_allocated_sigid(::std::string* sigid);
 
+  static const int kNamePowFieldNumber = 200;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::NameProof,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::NamePOW >, 11, false >
+    name_pow;
   // @@protoc_insertion_point(class_scope:fantasybit.NamePOW)
  private:
   inline void set_has_hash();
@@ -1207,14 +1386,33 @@ class TweetProof : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
+  // optional string tweet = 10;
+  inline bool has_tweet() const;
+  inline void clear_tweet();
+  static const int kTweetFieldNumber = 10;
+  inline const ::std::string& tweet() const;
+  inline void set_tweet(const ::std::string& value);
+  inline void set_tweet(const char* value);
+  inline void set_tweet(const char* value, size_t size);
+  inline ::std::string* mutable_tweet();
+  inline ::std::string* release_tweet();
+  inline void set_allocated_tweet(::std::string* tweet);
+
+  static const int kTweetProofFieldNumber = 201;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::NameProof,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::TweetProof >, 11, false >
+    tweet_proof;
   // @@protoc_insertion_point(class_scope:fantasybit.TweetProof)
  private:
+  inline void set_has_tweet();
+  inline void clear_has_tweet();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* tweet_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[1];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -1374,23 +1572,38 @@ class NameTrans : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .fantasybit.NamePOW name_pow = 10;
-  inline bool has_name_pow() const;
-  inline void clear_name_pow();
-  static const int kNamePowFieldNumber = 10;
-  inline const ::fantasybit::NamePOW& name_pow() const;
-  inline ::fantasybit::NamePOW* mutable_name_pow();
-  inline ::fantasybit::NamePOW* release_name_pow();
-  inline void set_allocated_name_pow(::fantasybit::NamePOW* name_pow);
+  // optional string fantasy_name = 10;
+  inline bool has_fantasy_name() const;
+  inline void clear_fantasy_name();
+  static const int kFantasyNameFieldNumber = 10;
+  inline const ::std::string& fantasy_name() const;
+  inline void set_fantasy_name(const ::std::string& value);
+  inline void set_fantasy_name(const char* value);
+  inline void set_fantasy_name(const char* value, size_t size);
+  inline ::std::string* mutable_fantasy_name();
+  inline ::std::string* release_fantasy_name();
+  inline void set_allocated_fantasy_name(::std::string* fantasy_name);
 
-  // optional .fantasybit.TweetProof tweet_proof = 20;
-  inline bool has_tweet_proof() const;
-  inline void clear_tweet_proof();
-  static const int kTweetProofFieldNumber = 20;
-  inline const ::fantasybit::TweetProof& tweet_proof() const;
-  inline ::fantasybit::TweetProof* mutable_tweet_proof();
-  inline ::fantasybit::TweetProof* release_tweet_proof();
-  inline void set_allocated_tweet_proof(::fantasybit::TweetProof* tweet_proof);
+  // optional bytes public_key = 20;
+  inline bool has_public_key() const;
+  inline void clear_public_key();
+  static const int kPublicKeyFieldNumber = 20;
+  inline const ::std::string& public_key() const;
+  inline void set_public_key(const ::std::string& value);
+  inline void set_public_key(const char* value);
+  inline void set_public_key(const void* value, size_t size);
+  inline ::std::string* mutable_public_key();
+  inline ::std::string* release_public_key();
+  inline void set_allocated_public_key(::std::string* public_key);
+
+  // optional .fantasybit.NameProof proof = 30;
+  inline bool has_proof() const;
+  inline void clear_proof();
+  static const int kProofFieldNumber = 30;
+  inline const ::fantasybit::NameProof& proof() const;
+  inline ::fantasybit::NameProof* mutable_proof();
+  inline ::fantasybit::NameProof* release_proof();
+  inline void set_allocated_proof(::fantasybit::NameProof* proof);
 
   static const int kNameTransFieldNumber = 200;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
@@ -1398,18 +1611,21 @@ class NameTrans : public ::google::protobuf::Message {
     name_trans;
   // @@protoc_insertion_point(class_scope:fantasybit.NameTrans)
  private:
-  inline void set_has_name_pow();
-  inline void clear_has_name_pow();
-  inline void set_has_tweet_proof();
-  inline void clear_has_tweet_proof();
+  inline void set_has_fantasy_name();
+  inline void clear_has_fantasy_name();
+  inline void set_has_public_key();
+  inline void clear_has_public_key();
+  inline void set_has_proof();
+  inline void clear_has_proof();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::fantasybit::NamePOW* name_pow_;
-  ::fantasybit::TweetProof* tweet_proof_;
+  ::std::string* fantasy_name_;
+  ::std::string* public_key_;
+  ::fantasybit::NameProof* proof_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -1721,6 +1937,145 @@ class ResultTrans : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ResultTrans* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DataTransition : public ::google::protobuf::Message {
+ public:
+  DataTransition();
+  virtual ~DataTransition();
+
+  DataTransition(const DataTransition& from);
+
+  inline DataTransition& operator=(const DataTransition& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DataTransition& default_instance();
+
+  void Swap(DataTransition* other);
+
+  // implements Message ----------------------------------------------
+
+  DataTransition* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DataTransition& from);
+  void MergeFrom(const DataTransition& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef DataTransition_Type Type;
+  static const Type PREGAME = DataTransition_Type_PREGAME;
+  static const Type INGAME = DataTransition_Type_INGAME;
+  static const Type WEEKOVER = DataTransition_Type_WEEKOVER;
+  static const Type WEEKSTART = DataTransition_Type_WEEKSTART;
+  static inline bool Type_IsValid(int value) {
+    return DataTransition_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    DataTransition_Type_Type_MIN;
+  static const Type Type_MAX =
+    DataTransition_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    DataTransition_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return DataTransition_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return DataTransition_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return DataTransition_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.DataTransition.Type type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::fantasybit::DataTransition_Type type() const;
+  inline void set_type(::fantasybit::DataTransition_Type value);
+
+  // optional int32 week = 10;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 10;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
+  // repeated string game_id = 20;
+  inline int game_id_size() const;
+  inline void clear_game_id();
+  static const int kGameIdFieldNumber = 20;
+  inline const ::std::string& game_id(int index) const;
+  inline ::std::string* mutable_game_id(int index);
+  inline void set_game_id(int index, const ::std::string& value);
+  inline void set_game_id(int index, const char* value);
+  inline void set_game_id(int index, const char* value, size_t size);
+  inline ::std::string* add_game_id();
+  inline void add_game_id(const ::std::string& value);
+  inline void add_game_id(const char* value);
+  inline void add_game_id(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& game_id() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_game_id();
+
+  static const int kDataTransFieldNumber = 203;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::DataTransition >, 11, false >
+    data_trans;
+  // @@protoc_insertion_point(class_scope:fantasybit.DataTransition)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_week();
+  inline void clear_has_week();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int type_;
+  ::google::protobuf::int32 week_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> game_id_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static DataTransition* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2174,6 +2529,227 @@ class SignedBlock : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SignedBlock* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class NodeRequest : public ::google::protobuf::Message {
+ public:
+  NodeRequest();
+  virtual ~NodeRequest();
+
+  NodeRequest(const NodeRequest& from);
+
+  inline NodeRequest& operator=(const NodeRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const NodeRequest& default_instance();
+
+  void Swap(NodeRequest* other);
+
+  // implements Message ----------------------------------------------
+
+  NodeRequest* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const NodeRequest& from);
+  void MergeFrom(const NodeRequest& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef NodeRequest_Type Type;
+  static const Type HANDSHAKE = NodeRequest_Type_HANDSHAKE;
+  static const Type BLOCK_REQUEST = NodeRequest_Type_BLOCK_REQUEST;
+  static const Type HIGHT_REQUEST = NodeRequest_Type_HIGHT_REQUEST;
+  static inline bool Type_IsValid(int value) {
+    return NodeRequest_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    NodeRequest_Type_Type_MIN;
+  static const Type Type_MAX =
+    NodeRequest_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    NodeRequest_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return NodeRequest_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return NodeRequest_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return NodeRequest_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional string myip = 1;
+  inline bool has_myip() const;
+  inline void clear_myip();
+  static const int kMyipFieldNumber = 1;
+  inline const ::std::string& myip() const;
+  inline void set_myip(const ::std::string& value);
+  inline void set_myip(const char* value);
+  inline void set_myip(const char* value, size_t size);
+  inline ::std::string* mutable_myip();
+  inline ::std::string* release_myip();
+  inline void set_allocated_myip(::std::string* myip);
+
+  // optional int32 num = 2;
+  inline bool has_num() const;
+  inline void clear_num();
+  static const int kNumFieldNumber = 2;
+  inline ::google::protobuf::int32 num() const;
+  inline void set_num(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.NodeRequest)
+ private:
+  inline void set_has_myip();
+  inline void clear_has_myip();
+  inline void set_has_num();
+  inline void clear_has_num();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* myip_;
+  ::google::protobuf::int32 num_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static NodeRequest* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class NodeReply : public ::google::protobuf::Message {
+ public:
+  NodeReply();
+  virtual ~NodeReply();
+
+  NodeReply(const NodeReply& from);
+
+  inline NodeReply& operator=(const NodeReply& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const NodeReply& default_instance();
+
+  void Swap(NodeReply* other);
+
+  // implements Message ----------------------------------------------
+
+  NodeReply* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const NodeReply& from);
+  void MergeFrom(const NodeReply& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 hight = 1;
+  inline bool has_hight() const;
+  inline void clear_hight();
+  static const int kHightFieldNumber = 1;
+  inline ::google::protobuf::int32 hight() const;
+  inline void set_hight(::google::protobuf::int32 value);
+
+  // repeated string ips = 2;
+  inline int ips_size() const;
+  inline void clear_ips();
+  static const int kIpsFieldNumber = 2;
+  inline const ::std::string& ips(int index) const;
+  inline ::std::string* mutable_ips(int index);
+  inline void set_ips(int index, const ::std::string& value);
+  inline void set_ips(int index, const char* value);
+  inline void set_ips(int index, const char* value, size_t size);
+  inline ::std::string* add_ips();
+  inline void add_ips(const ::std::string& value);
+  inline void add_ips(const char* value);
+  inline void add_ips(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& ips() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_ips();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.NodeReply)
+ private:
+  inline void set_has_hight();
+  inline void clear_has_hight();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::std::string> ips_;
+  ::google::protobuf::int32 hight_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static NodeReply* default_instance_;
 };
 // ===================================================================
 
@@ -3287,9 +3863,36 @@ inline void InData::set_num(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
+// NameProof
+
+// optional .fantasybit.NameProof.Type type = 1;
+inline bool NameProof::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void NameProof::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void NameProof::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void NameProof::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::fantasybit::NameProof_Type NameProof::type() const {
+  return static_cast< ::fantasybit::NameProof_Type >(type_);
+}
+inline void NameProof::set_type(::fantasybit::NameProof_Type value) {
+  assert(::fantasybit::NameProof_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // NamePOW
 
-// required uint64 hash = 1;
+// optional uint64 hash = 1;
 inline bool NamePOW::has_hash() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -3311,7 +3914,7 @@ inline void NamePOW::set_hash(::google::protobuf::uint64 value) {
   hash_ = value;
 }
 
-// required bytes public_key = 2;
+// optional bytes public_key = 2;
 inline bool NamePOW::has_public_key() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -3381,7 +3984,7 @@ inline void NamePOW::set_allocated_public_key(::std::string* public_key) {
   }
 }
 
-// required uint32 nonce = 3;
+// optional uint32 nonce = 3;
 inline bool NamePOW::has_nonce() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -3403,7 +4006,7 @@ inline void NamePOW::set_nonce(::google::protobuf::uint32 value) {
   nonce_ = value;
 }
 
-// required uint32 utc_sec = 4;
+// optional uint32 utc_sec = 4;
 inline bool NamePOW::has_utc_sec() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -3425,7 +4028,7 @@ inline void NamePOW::set_utc_sec(::google::protobuf::uint32 value) {
   utc_sec_ = value;
 }
 
-// required string prev_id = 5;
+// optional string prev_id = 5;
 inline bool NamePOW::has_prev_id() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -3639,6 +4242,76 @@ inline void NamePOW::set_allocated_sigid(::std::string* sigid) {
 
 // TweetProof
 
+// optional string tweet = 10;
+inline bool TweetProof::has_tweet() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TweetProof::set_has_tweet() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TweetProof::clear_has_tweet() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TweetProof::clear_tweet() {
+  if (tweet_ != &::google::protobuf::internal::kEmptyString) {
+    tweet_->clear();
+  }
+  clear_has_tweet();
+}
+inline const ::std::string& TweetProof::tweet() const {
+  return *tweet_;
+}
+inline void TweetProof::set_tweet(const ::std::string& value) {
+  set_has_tweet();
+  if (tweet_ == &::google::protobuf::internal::kEmptyString) {
+    tweet_ = new ::std::string;
+  }
+  tweet_->assign(value);
+}
+inline void TweetProof::set_tweet(const char* value) {
+  set_has_tweet();
+  if (tweet_ == &::google::protobuf::internal::kEmptyString) {
+    tweet_ = new ::std::string;
+  }
+  tweet_->assign(value);
+}
+inline void TweetProof::set_tweet(const char* value, size_t size) {
+  set_has_tweet();
+  if (tweet_ == &::google::protobuf::internal::kEmptyString) {
+    tweet_ = new ::std::string;
+  }
+  tweet_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* TweetProof::mutable_tweet() {
+  set_has_tweet();
+  if (tweet_ == &::google::protobuf::internal::kEmptyString) {
+    tweet_ = new ::std::string;
+  }
+  return tweet_;
+}
+inline ::std::string* TweetProof::release_tweet() {
+  clear_has_tweet();
+  if (tweet_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = tweet_;
+    tweet_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void TweetProof::set_allocated_tweet(::std::string* tweet) {
+  if (tweet_ != &::google::protobuf::internal::kEmptyString) {
+    delete tweet_;
+  }
+  if (tweet) {
+    set_has_tweet();
+    tweet_ = tweet;
+  } else {
+    clear_has_tweet();
+    tweet_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // Transaction
@@ -3692,79 +4365,181 @@ inline void Transaction::set_type(::fantasybit::TransType value) {
 
 // NameTrans
 
-// optional .fantasybit.NamePOW name_pow = 10;
-inline bool NameTrans::has_name_pow() const {
+// optional string fantasy_name = 10;
+inline bool NameTrans::has_fantasy_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void NameTrans::set_has_name_pow() {
+inline void NameTrans::set_has_fantasy_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void NameTrans::clear_has_name_pow() {
+inline void NameTrans::clear_has_fantasy_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void NameTrans::clear_name_pow() {
-  if (name_pow_ != NULL) name_pow_->::fantasybit::NamePOW::Clear();
-  clear_has_name_pow();
+inline void NameTrans::clear_fantasy_name() {
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_->clear();
+  }
+  clear_has_fantasy_name();
 }
-inline const ::fantasybit::NamePOW& NameTrans::name_pow() const {
-  return name_pow_ != NULL ? *name_pow_ : *default_instance_->name_pow_;
+inline const ::std::string& NameTrans::fantasy_name() const {
+  return *fantasy_name_;
 }
-inline ::fantasybit::NamePOW* NameTrans::mutable_name_pow() {
-  set_has_name_pow();
-  if (name_pow_ == NULL) name_pow_ = new ::fantasybit::NamePOW;
-  return name_pow_;
+inline void NameTrans::set_fantasy_name(const ::std::string& value) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(value);
 }
-inline ::fantasybit::NamePOW* NameTrans::release_name_pow() {
-  clear_has_name_pow();
-  ::fantasybit::NamePOW* temp = name_pow_;
-  name_pow_ = NULL;
-  return temp;
+inline void NameTrans::set_fantasy_name(const char* value) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(value);
 }
-inline void NameTrans::set_allocated_name_pow(::fantasybit::NamePOW* name_pow) {
-  delete name_pow_;
-  name_pow_ = name_pow;
-  if (name_pow) {
-    set_has_name_pow();
+inline void NameTrans::set_fantasy_name(const char* value, size_t size) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NameTrans::mutable_fantasy_name() {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  return fantasy_name_;
+}
+inline ::std::string* NameTrans::release_fantasy_name() {
+  clear_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
   } else {
-    clear_has_name_pow();
+    ::std::string* temp = fantasy_name_;
+    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NameTrans::set_allocated_fantasy_name(::std::string* fantasy_name) {
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete fantasy_name_;
+  }
+  if (fantasy_name) {
+    set_has_fantasy_name();
+    fantasy_name_ = fantasy_name;
+  } else {
+    clear_has_fantasy_name();
+    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
-// optional .fantasybit.TweetProof tweet_proof = 20;
-inline bool NameTrans::has_tweet_proof() const {
+// optional bytes public_key = 20;
+inline bool NameTrans::has_public_key() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void NameTrans::set_has_tweet_proof() {
+inline void NameTrans::set_has_public_key() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void NameTrans::clear_has_tweet_proof() {
+inline void NameTrans::clear_has_public_key() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void NameTrans::clear_tweet_proof() {
-  if (tweet_proof_ != NULL) tweet_proof_->::fantasybit::TweetProof::Clear();
-  clear_has_tweet_proof();
+inline void NameTrans::clear_public_key() {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    public_key_->clear();
+  }
+  clear_has_public_key();
 }
-inline const ::fantasybit::TweetProof& NameTrans::tweet_proof() const {
-  return tweet_proof_ != NULL ? *tweet_proof_ : *default_instance_->tweet_proof_;
+inline const ::std::string& NameTrans::public_key() const {
+  return *public_key_;
 }
-inline ::fantasybit::TweetProof* NameTrans::mutable_tweet_proof() {
-  set_has_tweet_proof();
-  if (tweet_proof_ == NULL) tweet_proof_ = new ::fantasybit::TweetProof;
-  return tweet_proof_;
+inline void NameTrans::set_public_key(const ::std::string& value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
 }
-inline ::fantasybit::TweetProof* NameTrans::release_tweet_proof() {
-  clear_has_tweet_proof();
-  ::fantasybit::TweetProof* temp = tweet_proof_;
-  tweet_proof_ = NULL;
+inline void NameTrans::set_public_key(const char* value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void NameTrans::set_public_key(const void* value, size_t size) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NameTrans::mutable_public_key() {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  return public_key_;
+}
+inline ::std::string* NameTrans::release_public_key() {
+  clear_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = public_key_;
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NameTrans::set_allocated_public_key(::std::string* public_key) {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete public_key_;
+  }
+  if (public_key) {
+    set_has_public_key();
+    public_key_ = public_key;
+  } else {
+    clear_has_public_key();
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .fantasybit.NameProof proof = 30;
+inline bool NameTrans::has_proof() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void NameTrans::set_has_proof() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void NameTrans::clear_has_proof() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void NameTrans::clear_proof() {
+  if (proof_ != NULL) proof_->::fantasybit::NameProof::Clear();
+  clear_has_proof();
+}
+inline const ::fantasybit::NameProof& NameTrans::proof() const {
+  return proof_ != NULL ? *proof_ : *default_instance_->proof_;
+}
+inline ::fantasybit::NameProof* NameTrans::mutable_proof() {
+  set_has_proof();
+  if (proof_ == NULL) proof_ = new ::fantasybit::NameProof;
+  return proof_;
+}
+inline ::fantasybit::NameProof* NameTrans::release_proof() {
+  clear_has_proof();
+  ::fantasybit::NameProof* temp = proof_;
+  proof_ = NULL;
   return temp;
 }
-inline void NameTrans::set_allocated_tweet_proof(::fantasybit::TweetProof* tweet_proof) {
-  delete tweet_proof_;
-  tweet_proof_ = tweet_proof;
-  if (tweet_proof) {
-    set_has_tweet_proof();
+inline void NameTrans::set_allocated_proof(::fantasybit::NameProof* proof) {
+  delete proof_;
+  proof_ = proof;
+  if (proof) {
+    set_has_proof();
   } else {
-    clear_has_tweet_proof();
+    clear_has_proof();
   }
 }
 
@@ -4073,6 +4848,99 @@ ResultTrans::fpp_results() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyPlayerPoints >*
 ResultTrans::mutable_fpp_results() {
   return &fpp_results_;
+}
+
+// -------------------------------------------------------------------
+
+// DataTransition
+
+// optional .fantasybit.DataTransition.Type type = 1;
+inline bool DataTransition::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DataTransition::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DataTransition::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DataTransition::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::fantasybit::DataTransition_Type DataTransition::type() const {
+  return static_cast< ::fantasybit::DataTransition_Type >(type_);
+}
+inline void DataTransition::set_type(::fantasybit::DataTransition_Type value) {
+  assert(::fantasybit::DataTransition_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional int32 week = 10;
+inline bool DataTransition::has_week() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DataTransition::set_has_week() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DataTransition::clear_has_week() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DataTransition::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 DataTransition::week() const {
+  return week_;
+}
+inline void DataTransition::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// repeated string game_id = 20;
+inline int DataTransition::game_id_size() const {
+  return game_id_.size();
+}
+inline void DataTransition::clear_game_id() {
+  game_id_.Clear();
+}
+inline const ::std::string& DataTransition::game_id(int index) const {
+  return game_id_.Get(index);
+}
+inline ::std::string* DataTransition::mutable_game_id(int index) {
+  return game_id_.Mutable(index);
+}
+inline void DataTransition::set_game_id(int index, const ::std::string& value) {
+  game_id_.Mutable(index)->assign(value);
+}
+inline void DataTransition::set_game_id(int index, const char* value) {
+  game_id_.Mutable(index)->assign(value);
+}
+inline void DataTransition::set_game_id(int index, const char* value, size_t size) {
+  game_id_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DataTransition::add_game_id() {
+  return game_id_.Add();
+}
+inline void DataTransition::add_game_id(const ::std::string& value) {
+  game_id_.Add()->assign(value);
+}
+inline void DataTransition::add_game_id(const char* value) {
+  game_id_.Add()->assign(value);
+}
+inline void DataTransition::add_game_id(const char* value, size_t size) {
+  game_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+DataTransition::game_id() const {
+  return game_id_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+DataTransition::mutable_game_id() {
+  return &game_id_;
 }
 
 // -------------------------------------------------------------------
@@ -4694,6 +5562,172 @@ inline void SignedBlock::set_allocated_sig(::std::string* sig) {
   }
 }
 
+// -------------------------------------------------------------------
+
+// NodeRequest
+
+// optional string myip = 1;
+inline bool NodeRequest::has_myip() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void NodeRequest::set_has_myip() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void NodeRequest::clear_has_myip() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void NodeRequest::clear_myip() {
+  if (myip_ != &::google::protobuf::internal::kEmptyString) {
+    myip_->clear();
+  }
+  clear_has_myip();
+}
+inline const ::std::string& NodeRequest::myip() const {
+  return *myip_;
+}
+inline void NodeRequest::set_myip(const ::std::string& value) {
+  set_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    myip_ = new ::std::string;
+  }
+  myip_->assign(value);
+}
+inline void NodeRequest::set_myip(const char* value) {
+  set_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    myip_ = new ::std::string;
+  }
+  myip_->assign(value);
+}
+inline void NodeRequest::set_myip(const char* value, size_t size) {
+  set_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    myip_ = new ::std::string;
+  }
+  myip_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NodeRequest::mutable_myip() {
+  set_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    myip_ = new ::std::string;
+  }
+  return myip_;
+}
+inline ::std::string* NodeRequest::release_myip() {
+  clear_has_myip();
+  if (myip_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = myip_;
+    myip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NodeRequest::set_allocated_myip(::std::string* myip) {
+  if (myip_ != &::google::protobuf::internal::kEmptyString) {
+    delete myip_;
+  }
+  if (myip) {
+    set_has_myip();
+    myip_ = myip;
+  } else {
+    clear_has_myip();
+    myip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 num = 2;
+inline bool NodeRequest::has_num() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void NodeRequest::set_has_num() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void NodeRequest::clear_has_num() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void NodeRequest::clear_num() {
+  num_ = 0;
+  clear_has_num();
+}
+inline ::google::protobuf::int32 NodeRequest::num() const {
+  return num_;
+}
+inline void NodeRequest::set_num(::google::protobuf::int32 value) {
+  set_has_num();
+  num_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// NodeReply
+
+// optional int32 hight = 1;
+inline bool NodeReply::has_hight() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void NodeReply::set_has_hight() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void NodeReply::clear_has_hight() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void NodeReply::clear_hight() {
+  hight_ = 0;
+  clear_has_hight();
+}
+inline ::google::protobuf::int32 NodeReply::hight() const {
+  return hight_;
+}
+inline void NodeReply::set_hight(::google::protobuf::int32 value) {
+  set_has_hight();
+  hight_ = value;
+}
+
+// repeated string ips = 2;
+inline int NodeReply::ips_size() const {
+  return ips_.size();
+}
+inline void NodeReply::clear_ips() {
+  ips_.Clear();
+}
+inline const ::std::string& NodeReply::ips(int index) const {
+  return ips_.Get(index);
+}
+inline ::std::string* NodeReply::mutable_ips(int index) {
+  return ips_.Mutable(index);
+}
+inline void NodeReply::set_ips(int index, const ::std::string& value) {
+  ips_.Mutable(index)->assign(value);
+}
+inline void NodeReply::set_ips(int index, const char* value) {
+  ips_.Mutable(index)->assign(value);
+}
+inline void NodeReply::set_ips(int index, const char* value, size_t size) {
+  ips_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NodeReply::add_ips() {
+  return ips_.Add();
+}
+inline void NodeReply::add_ips(const ::std::string& value) {
+  ips_.Add()->assign(value);
+}
+inline void NodeReply::add_ips(const char* value) {
+  ips_.Add()->assign(value);
+}
+inline void NodeReply::add_ips(const char* value, size_t size) {
+  ips_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+NodeReply::ips() const {
+  return ips_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+NodeReply::mutable_ips() {
+  return &ips_;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -4710,6 +5744,18 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::OutData_Type>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::InData_Type>() {
   return ::fantasybit::InData_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::NameProof_Type>() {
+  return ::fantasybit::NameProof_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::DataTransition_Type>() {
+  return ::fantasybit::DataTransition_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::NodeRequest_Type>() {
+  return ::fantasybit::NodeRequest_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::MyNameStatus>() {
