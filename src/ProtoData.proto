@@ -165,7 +165,7 @@ message DataTransition {
 message SignedTransaction {
 	optional Transaction trans = 10;
 	optional bytes id = 20;
-	optional bytes sig = 30;
+	optional bytes sig = 30;	
 	optional string fantasy_name = 40;
 }
 
@@ -196,6 +196,7 @@ message NodeRequest
 	optional Type type = 10;
 	optional string myip=20;
 	optional int32 num=30;
+	optional string myhost=40;
 }
 
 message NodeReply

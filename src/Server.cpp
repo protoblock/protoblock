@@ -93,7 +93,7 @@ void Server::init()
         secret.set_private_key(agent->getSecret());
         
         sender.send(o);
-        Writer<Secret> writer{"secret.out",ios::trunc};
+		Writer<Secret> writer{ ROOT_DIR + "secret.out", ios::trunc };
         writer(secret);
     }
     else for ( const auto& pair : bestsecret)
@@ -122,9 +122,12 @@ void Server::run()
                 stop();
                 break;
 			case InData_Type_MAKE_BLOCK:
-				agent->makeGenesis();
-				agent->makeNewBlockAsOracle();
+				//agent->makeGenesis();
+			{
+				SignedBlock sb = agent->makeNewBlockAsOracle();
+				sender_blocks.send(sb);
 				break;
+			}
 			case InData_Type_NEWNAME:
 				agent->resetPrivateKey();
 				claimName(indata.data(), false);
@@ -144,6 +147,8 @@ void Server::run()
 				trans.MutableExtension(ProjectionTrans::proj_trans)->CopyFrom(pj);
 				SignedTransaction sn = agent->makeSigned(trans);
 				agent->onSignedTransaction(sn);
+				sender_trans.send(sn);
+
 				}
 				break;
 			case InData_Type_RESULT:
@@ -162,6 +167,7 @@ void Server::run()
 				trans.MutableExtension(ResultTrans::result_trans)->CopyFrom(rj);
 				SignedTransaction sn = agent->makeSigned(trans);
 				agent->onSignedTransaction(sn);
+				sender_trans.send(sn);
 				}
 				break;
             default:
@@ -250,6 +256,7 @@ void Server::claimName(const std::string &name,bool mine)
 				trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 				SignedTransaction sn = agent->makeSigned(trans);
 				agent->onSignedTransaction(sn);
+				sender_trans.send(sn);
             }
             break;
         case FantasyAgent::NOTAVAILABLE:

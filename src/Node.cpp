@@ -24,16 +24,20 @@
 #include <fc/time.hpp>
 #include "Processor.h"
 #include <nanomsg\pubsub.h>
+#include "boostLog.h"
 
 using boost::asio::ip::tcp;
 
 using namespace std;
 using namespace nn;
 	
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 namespace fantasybit
 {
 int Node::init()
 {
+	LOG(lg, trace) << "init node";
 	leveldb::Options options;
 	options.create_if_missing = true;
 	leveldb::Status status;
@@ -46,18 +50,44 @@ int Node::init()
 	blockchain.reset(db2);
 
 	leveldb::DB *db3;
-	status = leveldb::DB::Open(options, filedir("block/holdblock"), &db2);
+	status = leveldb::DB::Open(options, filedir("block/holdblock"), &db3);
 	holdblocks.reset(db3);
 
 	current_hight = getLastBlockNum();
+	if (current_hight == 0)
+	{	
+		current_hight++;
+		SignedBlock sb{Commissioner::makeGenesisBlock()};
+		leveldb::Slice value((char*)&current_hight, sizeof(int));
+		{
+			std::lock_guard<std::mutex> lockg{ blockchain_mutex };
+			blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
+		}
+		current_hight = getLastBlockNum();
+	}
+
+	assert(getLastBlockNum() > 0);
+
+	LOG(lg, info) << " current_hight " << current_hight;
 
 	if (getMyIp())
+	{
 		reqhs.set_myip(myip);
+		reqhs.set_myhost(myhost);
+	}
+
+	LOG(lg, info) << " my ip " << myip;
+	LOG(lg, info) << " my host" << myhost << "\n";
 
 	auto *it = peers->NewIterator(leveldb::ReadOptions());
 	it->SeekToFirst();
 	if (!it->Valid())
-		peers->Put(leveldb::WriteOptions(), SEED_NODE, "0");
+	{
+		if (SEED_NODE != myip)
+			peers->Put(leveldb::WriteOptions(), SEED_NODE, "0");
+		if (SEED_HOST != myhost)
+			peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
+	}
 	delete it;
 
 	return 0;
@@ -65,14 +95,37 @@ int Node::init()
 
 void Node::runHandShake()
 {
+	bool triedseed = false;
 	int numconnected = 0;
 
 	auto *it = peers->NewIterator(leveldb::ReadOptions());
-	for (it->SeekToFirst(); it->Valid(); it->Next())
+	for (it->SeekToFirst(); it->Valid(); it->Next()) {
 		peerlist.insert(it->key().ToString());
-	
+		LOG(lg, info) << "peer" << it->key().ToString() << " seen " << it->value().ToString();
+	}
+
+	if (peerlist.find(SEED_NODE) == peerlist.end()) {
+		LOG(lg, info) << "add seed node";
+		//if (SEED_NODE != myip)
+		peers->Put(leveldb::WriteOptions(), SEED_NODE, "0");
+		//else if (peerlist.find(SEED_HOST) == peerlist.end()) {
+		//	peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
+		//}
+	}
+
+	if (peerlist.find(SEED_HOST) == peerlist.end()) {
+		LOG(lg, info) << "add seed host";
+		//if (SEED_NODE != myip)
+		peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
+		//else if (peerlist.find(SEED_HOST) == peerlist.end()) {
+		//	peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
+		//}
+	}
+
 	for (it->SeekToFirst(); it->Valid() && connected.size() < 20; it->Next())
 	{
+		if (it->key().ToString() == myip) continue;
+		if (it->key().ToString() == myhost) continue;
 		if (doHandshake(it->key().ToString())) numconnected++;
 	}
 	delete it;
@@ -90,9 +143,13 @@ void Node::runHandShake()
 
 	std::string stime(fc::time_point::now());
 	{
-		std::lock_guard<std::mutex> lg{ connected_mutex };
+		std::lock_guard<std::mutex> lockg{ connected_mutex };
 		for (auto &p : connected)
+		{
 			peers->Put(leveldb::WriteOptions(), p, stime);
+			LOG(lg, info) << "connected to peer " << p << " at time " << stime;
+
+		}
 	}
 
 	return;
@@ -100,49 +157,75 @@ void Node::runHandShake()
 
 bool Node::doHandshake(const std::string &inp)
 {
+	LOG(lg, info) << " dohandshake " << inp << "\n";
 	std::string pre{ "tcp://" };
 	std::string po{ ":8125" };
 	NodeReply reply{};
 	reqhs.set_type(NodeRequest_Type_HANDSHAKE);
 	bool isconnected = false;
-	nn::socket peer{ AF_SP, NN_REQ };
+	nn::socket peer{ AF_SP, NN_PAIR };
 	int timeout = 10000;
 	peer.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
-	if (peer.connect((pre + inp + po).c_str()))
+	peer.setsockopt(NN_SOL_SOCKET, NN_SNDTIMEO, &timeout, sizeof(timeout));
+
+	int id = peer.connect((pre + inp + po).c_str());
+	if (id < 0) {
+		LOG(lg, error) << " connect error " << nn_errno() << "\n";
+	}
+	else LOG(lg, info) << " peer id " << id << "\n";
+
+	if (Sender::Send(peer, reqhs) > 0 )
 	{
-		if (Sender::Send(peer, reqhs))
+		LOG(lg, info) << "send " << reqhs.DebugString() << "\n";
+		if (Receiver::Receive(peer, reply))//, NN_DONTWAIT))
 		{
-			if (Receiver::Receive(peer, reply))//, NN_DONTWAIT))
+			LOG(lg, info) << "receive " << reply.DebugString() << "\n";
+
 			{
+				std::lock_guard<std::mutex> lockg{ connected_mutex };
+				connected.push_back(inp);
+			}
+
+			isconnected = true;
+			if (reply.hight() > maxhi)
+				maxhi = reply.hight();
+
+			if (reply.hight() > current_hight)
+				higherpeers.push_back(inp);
+
+			for (auto i : reply.ips())
+			{
+				if (i == myip) continue;
+				if (peerlist.find(i) == end(peerlist))
 				{
-					std::lock_guard<std::mutex> lg{ connected_mutex };
-					connected.push_back(inp);
-				}
-
-				isconnected = true;
-				if (reply.hight() > maxhi)
-					maxhi = reply.hight();
-
-				if (reply.hight() > current_hight)
-					higherpeers.push_back(inp);
-
-				for (auto i : reply.ips())
-				{
-					if (i == myip) continue;
-					if (peerlist.find(i) == end(peerlist))
-					{
-						//peerlist.insert(i);
-						newpeers.push_back(i);
-					}
+					//peerlist.insert(i);
+					newpeers.push_back(i);
 				}
 			}
 		}
 	}
+	peer.shutdown(id);
 	return isconnected;
 }
 
 bool Node::getMyIp()
 {
+	WSAData wsaData;
+	if (WSAStartup(MAKEWORD(1, 1), &wsaData) != 0) {
+		return false;// 255;
+	}
+
+	char ac[80];
+	if (gethostname(ac, sizeof(ac)) == SOCKET_ERROR) {
+		LOG(lg, error) << "Error " << WSAGetLastError() <<
+			" when getting local host name." << endl;
+		return 1;
+	}
+	LOG(lg, info) << "Host name is " << ac << "." << endl;
+
+	myhost = ac;
+	WSACleanup();;
+	
 	bool ret = false;
 	try
 	{  
@@ -187,12 +270,12 @@ bool Node::getMyIp()
 		std::getline(response_stream, status_message);
 		if (!response_stream || http_version.substr(0, 5) != "HTTP/")
 		{
-			std::cout << "Invalid response\n";
+			LOG(lg, error) << "Invalid response\n";
 			return 1;
 		}
 		if (status_code != 200)
 		{
-			std::cout << "Response returned with status code " << status_code << "\n";
+			LOG(lg, info) << "Response returned with status code " << status_code << "\n";
 			return 1;
 		}
 
@@ -202,8 +285,8 @@ bool Node::getMyIp()
 		// Process the response headers.
 		std::string header;
 		while (std::getline(response_stream, header) && header != "\r")
-			std::cout << header << "\n";
-		std::cout << "\n";
+			LOG(lg, info) << header << "\n";
+		LOG(lg, info) << "\n";
 
 
 		std::string body;
@@ -253,12 +336,12 @@ void Node::syncService()
 {
 	int myhight = 0;
 	{
-		std::lock_guard<std::mutex> lg{ blockchain_mutex };
+		std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 		myhight = getLastBlockNum();
 	}
 
-	nn::socket blockreply{ AF_SP, NN_REP };
-	auto lid = blockreply.bind("inproc:://syncserv");
+	nn::socket blockreply{ AF_SP, NN_PAIR };
+	//auto lid = blockreply.bind("inproc://syncserv");
 	auto eid = blockreply.bind("tcp://*:8125");
 	Receiver rec{ blockreply };
 	Sender snd{ blockreply };
@@ -267,8 +350,12 @@ void Node::syncService()
 	int badcount = 0;
 	while (sync_running)
 	{
+		LOG(lg, trace) << "syncService try receive";
+
 		if (!rec.receive(nodereq))
 			break;
+
+		LOG(lg, info) << "received " << nodereq.DebugString() << "\n";
 
 		switch (nodereq.type())
 		{
@@ -277,7 +364,7 @@ void Node::syncService()
 				if (nodereq.num() > myhight)
 				{
 					{
-						std::lock_guard<std::mutex> lg{ blockchain_mutex };
+						std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 						myhight = getLastBlockNum();
 					}
 					if (nodereq.num() > myhight)
@@ -288,7 +375,7 @@ void Node::syncService()
 							blockreply.shutdown(eid);
 						if (badcount == 120)
 						{
-							blockreply.shutdown(lid);
+							//blockreply.shutdown(lid);
 							sync_running = false;
 						}
 						continue;
@@ -300,7 +387,7 @@ void Node::syncService()
 				int num = nodereq.num();
 				leveldb::Slice snum((char*)&num, sizeof(int));
 				{
-					std::lock_guard<std::mutex> lg{ blockchain_mutex };
+					std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 					blockchain->Get(leveldb::ReadOptions(), snum, &value);
 				}
 
@@ -311,7 +398,7 @@ void Node::syncService()
 
 			case NodeRequest_Type_HIGHT_REQUEST:
 				{
-					std::lock_guard<std::mutex> lg{ blockchain_mutex };
+					std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 					myhight = getLastBlockNum();
 				}
 
@@ -321,6 +408,14 @@ void Node::syncService()
 				break;
 
 			case NodeRequest_Type_HANDSHAKE:
+			{
+				std::string stime(fc::time_point::now());
+
+				if (nodereq.myip() != myip)
+					peers->Put(leveldb::WriteOptions(), nodereq.myip(), stime);
+				else if (nodereq.myhost() != myhost)
+					peers->Put(leveldb::WriteOptions(), nodereq.myhost(), stime);
+
 				{
 					std::lock_guard<std::mutex> lg{ blockchain_mutex };
 					myhight = getLastBlockNum();
@@ -329,16 +424,20 @@ void Node::syncService()
 				noderep.Clear();
 				noderep.set_hight(myhight);
 				{
-					std::lock_guard<std::mutex> lg{ connected_mutex };
+					std::lock_guard<std::mutex> lockg{ connected_mutex };
 					for (auto &s : connected)
 						noderep.add_ips(s);
 				}
-				snd.send(noderep);
+				if ( snd.send(noderep) > 0 )
+					LOG(lg, info) << "send " << noderep.DebugString() << "\n";
 				break;
+			}
 			default:
 				break;
 		}
 	}
+	LOG(lg, info) << "syncService receive outloop \n";
+
 }
 
 void Node::syncRequest() 
@@ -346,7 +445,7 @@ void Node::syncRequest()
 	std::string pre{ "tcp://" };
 	std::string po{ ":8125" };
 
-	nn::socket blockrequest{ AF_SP, NN_REQ };
+	nn::socket blockrequest{ AF_SP, NN_PAIR };
 	for (auto &p : higherpeers)
 		blockrequest.connect((pre + p + po).c_str());
 
@@ -359,16 +458,18 @@ void Node::syncRequest()
 	{
 		req.set_num(current_hight + 1);
 		snd.send(req);
+		LOG(lg, info) << "send " << req.DebugString() << "\n";
 
 		if (!rec.receive(sb)) break;
+		LOG(lg, info) << "receive " << sb.DebugString() << "\n";
 
 		if (!BlockProcessor::verifySignedBlock(sb))
 			continue;
 
-		if (sb.block().head().num() < current_hight)
+		if (sb.block().head().num() <= current_hight)
 			continue;
 
-		if (sb.block().head().num() > current_hight)
+		if (sb.block().head().num() > current_hight + 1)
 			continue; //TODO save for later
 
 		current_hight++;
@@ -385,23 +486,24 @@ void Node::runLive()
 {
 	int myhight = 0;
 	{
-		std::lock_guard<std::mutex> lg{ blockchain_mutex };
+		std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 		myhight = getLastBlockNum();
 	}
 	std::string pre{ "tcp://" };
 	std::string po{ ":8126" };
 	std::set<int> published{};
 	nn::socket blockslivesub{ AF_SP, NN_SUB };
+	blockslivesub.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0);
 	{
-		std::lock_guard<std::mutex> lg{ connected_mutex };
+		std::lock_guard<std::mutex> lockg{ connected_mutex };
 		for (auto &p : connected)
 			blockslivesub.connect((pre + p + po).c_str());
 	}
-	blockslivesub.connect("inproc:://newlocalblock");
+	blockslivesub.connect("inproc://newlocalblock");
 
 	nn::socket blockslivepub{ AF_SP, NN_PUB };
 	blockslivepub.bind((pre + "*" + po).c_str());
-	blockslivepub.bind("inproc:://pubblock");
+	blockslivepub.bind("inproc://pubblock");
 
 	Sender snd{ blockslivepub };
 	Receiver rec{ blockslivesub };
@@ -410,6 +512,7 @@ void Node::runLive()
 	while (running_live)
 	{
 		if (!rec.receive(sb)) continue;
+		LOG(lg, info) << "running_live rec " << sb.DebugString() << "\n";
 
 		if (!BlockProcessor::verifySignedBlock(sb))
 			continue;
@@ -422,7 +525,7 @@ void Node::runLive()
 			myhight++;
 			leveldb::Slice snum((char*)&myhight, sizeof(int));
 			{
-				std::lock_guard<std::mutex> lg{ blockchain_mutex };
+				std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 				blockchain->Put(leveldb::WriteOptions(), snum, sb.SerializeAsString());
 			}
 		}
@@ -438,16 +541,17 @@ void Node::pendingTransactions()
 	std::string po{ ":8127" };
 	std::set<std::string> published{};
 	nn::socket translivesub{ AF_SP, NN_SUB };
+	translivesub.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0);
 	{
-		std::lock_guard<std::mutex> lg{ connected_mutex };
+		std::lock_guard<std::mutex> lockg{ connected_mutex };
 		for (auto &p : connected)
 			translivesub.connect((pre + p + po).c_str());
 	}
-	translivesub.connect("inproc:://newlocaltrans");
+	translivesub.connect("inproc://newlocaltrans");
 
 	nn::socket translivepub{ AF_SP, NN_PUB };
 	translivepub.bind((pre + "*" + po).c_str());
-	translivepub.bind("inproc:://pubtrans");
+	translivepub.bind("inproc://pubtrans");
 
 	Sender snd{ translivepub };
 	Receiver rec{ translivesub };
@@ -456,6 +560,7 @@ void Node::pendingTransactions()
 	while (running_live)
 	{
 		if (!rec.receive(st)) continue;
+		LOG(lg, info) << "rec " << st.DebugString() << "\n";
 
 		if (published.find(st.id()) != end(published))
 			continue;

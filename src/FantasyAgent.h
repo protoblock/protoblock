@@ -13,6 +13,9 @@
 #include <utility>
 #include "DataPersist.h"
 
+#include "boostLog.h"
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 namespace fantasybit
 {
 
@@ -30,10 +33,14 @@ public:
     FantasyAgent(const fc::sha256& secret)
     {
         m_priv = fc::ecc::private_key::regenerate(secret);
+		LOG(lg, trace) << "have secret ";
+
     }
 		
     FantasyAgent(bool generate = true) : m_priv()
     {
+		LOG(lg, trace) << "generate=" << generate;
+
         if ( generate )
             m_priv = m_priv.generate();
     }
@@ -63,7 +70,7 @@ public:
 
 	bool beOracle();
 
-	bool makeNewBlockAsOracle();
+	SignedBlock makeNewBlockAsOracle();
 
 	fc::ecc::private_key str2priv(const std::string &in)
 	{

@@ -59,7 +59,7 @@ public:
     {
         return Send(sock,msg);
     }
-    static int Send(nn::socket &s, const google::protobuf::Message &msg);
+    static int Send(nn::socket &s, const google::protobuf::Message &msg, int flags = 0);
 };
 
 }

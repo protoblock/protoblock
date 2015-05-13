@@ -25,27 +25,113 @@
 
 #include <leveldb/db.h>
 #include "Node.h"
+#include "Processor.h"
 
+#include "boostLog.h"
+
+/*
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+
+namespace logging = boost::log;
+*/
 using namespace fantasybit;
 using namespace std;
 using namespace TCLAP;
 
+/*
+void init()
+{
+	logging::core::get()->set_filter
+		(
+		logging::trivial::severity >= logging::trivial::info
+		);
+
+	/ *
+	BOOST_LOG_TRIVIAL(trace) << "A trace severity message";
+	BOOST_LOG_TRIVIAL(debug) << "A debug severity message";
+	BOOST_LOG_TRIVIAL(info) << "An informational severity message";
+	BOOST_LOG_TRIVIAL(warning) << "A warning severity message";
+	BOOST_LOG_TRIVIAL(error) << "An error severity message";
+	BOOST_LOG_TRIVIAL(fatal) << "A fatal severity message";
+	* /
+}
+*/
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 int main(int argc, const char * argv[])
 {
-	Node node;
+	initBoostLog(); 
+
+	CmdLine cmd("fantasybit ", ' ', "0.1");
+
+	//SwitchArg push("c", "connect/push", "push/connest and not pull/bind", false);
+	//cmd.add(push);
+	cmd.parse(argc, argv);
+
+	/*
+	nn::socket s1(AF_SP, NN_PAIR);
+
+	if (push.isSet()) {
+		auto eid = s1.connect("tcp://162.254.25.193:8125");
+		cout << " connect " << eid << endl;
+
+		char buf[3];
+		int rc = s1.recv(buf, sizeof(buf), 0);
+		cout << " received " << buf << endl;
+		assert(rc == 3);
+	}
+	else {
+		//auto eid = s1.bind("tcp://*:8125");
+		auto eid = s1.bind("tcp://162.254.25.193:8125");
+
+		cout << " bind " << eid << endl;
+
+		auto i = s1.send("ABC", 3, 0);
+		cout << " sent";
+
+		assert(i == 3);
+
+	}
+	*/
+
+	Node node{};
 	//node.getMyIp();
 	node.init();
 	node.runHandShake();
 
+	string server_address{ "inproc://rcpserver" };
+	Server server{ server_address };;
+
+	string gui_address{ "ipc:///tmp/fantasygui.ipc" };
+	ClientUI client{ server_address, gui_address };
+
+
+	thread servert{ &Server::run, &server };
+	thread clientt{ &ClientUI::run, &client };
+
+
 	thread syncRequest_{ &Node::syncRequest, &node };
 	thread syncService_{ &Node::syncService, &node };
+
+	BlockProcessor processor{};
+	thread processor_{ &BlockProcessor::run, &processor };
+
 	thread runLive_{ &Node::runLive, &node };
 	thread pendingTransactions_{ &Node::pendingTransactions, &node };
-	syncRequest_.join();
+
+	clientt.join();
+	server.stop();
+	node.stop();
+	processor.stop();
 	nn_term();
+	servert.join();
+	syncRequest_.join();
 	syncService_.join();
 	runLive_.join();
 	pendingTransactions_.join();
+
 	return 0;
 }
 

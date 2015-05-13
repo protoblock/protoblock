@@ -9,6 +9,7 @@
 #ifndef __fantasybit__Processor__
 #define __fantasybit__Processor__
 
+#include <utility>
 #include "Commissioner.h"
 #include "ProtoData.pb.h"
 #include <fc/crypto/sha256.hpp>
@@ -20,6 +21,17 @@
 #include <leveldb/db.h>
 #include <fc/filesystem.hpp>
 //#include <vector>
+
+
+#include "nn.hpp"
+#include "nn.h"
+#include <nanomsg\reqrep.h>
+#include <nanomsg/pair.h>
+#include <nanomsg\pubsub.h>
+#include <assert.h>
+#include <string>
+#include "MsgSock.h"
+
 
 namespace fantasybit
 {
@@ -40,6 +52,7 @@ class BlockRecorder
 
 	std::map<Uid, leveldb::DB*> game_projections_db{};
 	//std::vector<leveldb::DB*> alldbs{};
+	int lastBlock = 0;
 public:
 	BlockRecorder() {}
 
@@ -67,6 +80,13 @@ public:
 			}
 		}
 		delete it;
+
+		std::string value;
+		status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);
+		if (!status.ok())
+			lastBlock =  0;
+		else 
+			lastBlock = *(reinterpret_cast<const int *>(value.c_str()));
 	}
 
 	void startBlock(int num) 
@@ -76,14 +96,15 @@ public:
 		blockstatus->Put(leveldb::WriteOptions(), "lastblock", value);
 	}
 
-	void endBlock()
+	int endBlock(int num)
 	{
 		int none = -1;
 		leveldb::Slice value((char*)&none, sizeof(int));
 		blockstatus->Put(write_sync, "processing", value);
+		return num;
 	}
 
-	bool inSync()
+	bool isValid()
 	{
 		std::string value;
 		if (blockstatus->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound())
@@ -91,6 +112,11 @@ public:
 
 		int num = *(reinterpret_cast<const int *>(value.c_str()));
 		return num < 0;
+	}
+
+	int getLastBlockId()
+	{
+		return lastBlock;
 	}
 
 	void recordName(const hash_t &hash,const std::string &pubkey,const std::string &name)
@@ -181,21 +207,99 @@ class BlockProcessor
 {
 	BlockRecorder mRecorder{};
 	bool verify_name(const SignedTransaction &, const NameTrans &, const fc::ecc::signature&, const fc::sha256 &);
+	NodeRequest nodereq{};
+	NodeReply noderep{};
+	nn::socket syncserv;
+	std::pair<Sender, Receiver> syncradio;
+	int syncservid;
+	int realHeight = 0;
+
+	Receiver rec_block;
+	nn::socket subblock;
+	int pubblockid;
+	int lastidprocessed = 0;
 public:
-	BlockProcessor() {
-		//mRecorder.init();
+	volatile bool running = true;
+	BlockProcessor() :
+		syncserv{ AF_SP, NN_REQ },
+		syncradio{ std::make_pair(Sender(syncserv), Receiver(syncserv)) } ,
+		subblock{ AF_SP, NN_SUB },
+		rec_block{ Receiver(subblock) }
+
+	{
+		syncservid = syncserv.connect("inproc://syncserv");
+		subblock.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0);
+		subblock.connect("inproc://pubblock");
+	}
+
+	void stop() { running = false; }
+
+	void run()
+	{
+		init();
+		SignedBlock sb{};
+		while (running && !isInSync())
+			GetInSync(lastidprocessed + 1, realHeight);
+
+		while (running)
+		{
+			if (!rec_block.receive(sb)) continue;
+
+			if (sb.block().head().num() > lastidprocessed + 1)
+				GetInSync(lastidprocessed + 1, sb.block().head().num());
+			
+			if (sb.block().head().num() == lastidprocessed + 1)
+				process(sb);
+		}
 	}
 		
 	void init() 
 	{
 		mRecorder.init();
-		if (!mRecorder.inSync()) {
+		if (!mRecorder.isValid()) {
 			mRecorder.closeAll();
 			fc::remove_all(ROOT_DIR + "index/");
+			mRecorder.init();
 		}
-		mRecorder.init();
+
+		lastidprocessed =  mRecorder.getLastBlockId();
+
+		if (!isInSync() )
+			GetInSync(lastidprocessed + 1, realHeight);
 	}
 
+	bool isInSync()
+	{
+		NodeRequest nrq{};
+		nrq.set_type(NodeRequest_Type_HIGHT_REQUEST);
+		syncradio.first.send(nrq);
+		NodeReply nrp{};
+		if (!syncradio.second.receive(nrp))
+			return true;
+
+		realHeight = nrp.hight();
+		return (realHeight == lastidprocessed);
+
+	}
+
+	void GetInSync(int start,int end)
+	{
+		int lastid = start;
+		while (true)
+		{
+			NodeRequest nrq{};
+			nrq.set_type(NodeRequest_Type_BLOCK_REQUEST);
+			nrq.set_num(lastid);
+			syncradio.first.send(nrq);
+			SignedBlock sb{};
+			if (!syncradio.second.receive(sb)) break;
+
+			if (sb.block().head().num() != lastid) break;
+			process(sb);
+			if (end == lastid) break;
+			lastid++;
+		}
+	}
 
 	bool process(SignedBlock &sblock)
 	{
@@ -276,7 +380,7 @@ public:
 		}
 
 		std::cout << " BLOCK(" << sblock.block().head().num() << ") processed! \n";
-		mRecorder.endBlock();
+		lastidprocessed = mRecorder.endBlock(sblock.block().head().num());
 		//sblock.block().head().num());
 		return true;
 			//std::cout << t.DebugString() << "\n";//process(t)

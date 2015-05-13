@@ -445,10 +445,11 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SignedBlock));
   NodeRequest_descriptor_ = file->message_type(20);
-  static const int NodeRequest_offsets_[3] = {
+  static const int NodeRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeRequest, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeRequest, myip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeRequest, num_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeRequest, myhost_),
   };
   NodeRequest_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -656,16 +657,16 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "ntasybit.SignedTransaction*\t\010\350\007\020\200\200\200\200\002\"d\n"
     "\013SignedBlock\022\017\n\007version\030\001 \001(\005\022 \n\005block\030\n"
     " \001(\0132\021.fantasybit.Block\022\n\n\002id\030\024 \001(\014\022\013\n\003s"
-    "ig\030\036 \001(\t*\t\010\350\007\020\200\200\200\200\002\"\221\001\n\013NodeRequest\022*\n\004t"
+    "ig\030\036 \001(\t*\t\010\350\007\020\200\200\200\200\002\"\241\001\n\013NodeRequest\022*\n\004t"
     "ype\030\n \001(\0162\034.fantasybit.NodeRequest.Type\022"
-    "\014\n\004myip\030\024 \001(\t\022\013\n\003num\030\036 \001(\005\";\n\004Type\022\r\n\tHA"
-    "NDSHAKE\020\001\022\021\n\rBLOCK_REQUEST\020\002\022\021\n\rHIGHT_RE"
-    "QUEST\020\003\"\'\n\tNodeReply\022\r\n\005hight\030\n \001(\005\022\013\n\003i"
-    "ps\030\024 \003(\t*d\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007no"
-    "tavil\020\002\022\r\n\trequested\020\005\022\t\n\005found\020\n\022\024\n\020tra"
-    "nsaction_sent\020\017\022\r\n\tconfirmed\020\024*1\n\tTransT"
-    "ype\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020"
-    "\002", 2841);
+    "\014\n\004myip\030\024 \001(\t\022\013\n\003num\030\036 \001(\005\022\016\n\006myhost\030( \001"
+    "(\t\";\n\004Type\022\r\n\tHANDSHAKE\020\001\022\021\n\rBLOCK_REQUE"
+    "ST\020\002\022\021\n\rHIGHT_REQUEST\020\003\"\'\n\tNodeReply\022\r\n\005"
+    "hight\030\n \001(\005\022\013\n\003ips\030\024 \003(\t*d\n\014MyNameStatus"
+    "\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequested\020\005\022\t"
+    "\n\005found\020\n\022\024\n\020transaction_sent\020\017\022\r\n\tconfi"
+    "rmed\020\024*1\n\tTransType\022\010\n\004NAME\020\000\022\016\n\nPROJECT"
+    "ION\020\001\022\n\n\006RESULT\020\002", 2857);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -7184,6 +7185,7 @@ const int NodeRequest::Type_ARRAYSIZE;
 const int NodeRequest::kTypeFieldNumber;
 const int NodeRequest::kMyipFieldNumber;
 const int NodeRequest::kNumFieldNumber;
+const int NodeRequest::kMyhostFieldNumber;
 #endif  // !_MSC_VER
 
 NodeRequest::NodeRequest()
@@ -7205,6 +7207,7 @@ void NodeRequest::SharedCtor() {
   type_ = 1;
   myip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   num_ = 0;
+  myhost_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -7215,6 +7218,9 @@ NodeRequest::~NodeRequest() {
 void NodeRequest::SharedDtor() {
   if (myip_ != &::google::protobuf::internal::kEmptyString) {
     delete myip_;
+  }
+  if (myhost_ != &::google::protobuf::internal::kEmptyString) {
+    delete myhost_;
   }
   if (this != default_instance_) {
   }
@@ -7250,6 +7256,11 @@ void NodeRequest::Clear() {
       }
     }
     num_ = 0;
+    if (has_myhost()) {
+      if (myhost_ != &::google::protobuf::internal::kEmptyString) {
+        myhost_->clear();
+      }
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -7310,6 +7321,23 @@ bool NodeRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(322)) goto parse_myhost;
+        break;
+      }
+
+      // optional string myhost = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_myhost:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_myhost()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->myhost().data(), this->myhost().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -7352,6 +7380,15 @@ void NodeRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(30, this->num(), output);
   }
 
+  // optional string myhost = 40;
+  if (has_myhost()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->myhost().data(), this->myhost().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      40, this->myhost(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -7379,6 +7416,16 @@ void NodeRequest::SerializeWithCachedSizes(
   // optional int32 num = 30;
   if (has_num()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(30, this->num(), target);
+  }
+
+  // optional string myhost = 40;
+  if (has_myhost()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->myhost().data(), this->myhost().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        40, this->myhost(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -7410,6 +7457,13 @@ int NodeRequest::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->num());
+    }
+
+    // optional string myhost = 40;
+    if (has_myhost()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->myhost());
     }
 
   }
@@ -7448,6 +7502,9 @@ void NodeRequest::MergeFrom(const NodeRequest& from) {
     if (from.has_num()) {
       set_num(from.num());
     }
+    if (from.has_myhost()) {
+      set_myhost(from.myhost());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -7474,6 +7531,7 @@ void NodeRequest::Swap(NodeRequest* other) {
     std::swap(type_, other->type_);
     std::swap(myip_, other->myip_);
     std::swap(num_, other->num_);
+    std::swap(myhost_, other->myhost_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

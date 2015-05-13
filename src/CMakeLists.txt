@@ -10,16 +10,17 @@ file ( GLOB SRCS *.cpp *.h *.hpp *.cc)
 set(BOOST_DEBUG 1)
 set(Boost_INCLUDE_DIR "C:/libs/boost_1_55_0")	
 set(Boost_LIBRARY_DIR  "C:/libs/boost_1_55_0/stage/lib")
+
 FIND_PACKAGE( OpenSSL ) 
 #find_package( BerkeleyDB )
-    set (Boost_USE_STATIC_LIBS TRUE)
+set (Boost_USE_STATIC_LIBS TRUE)
 
 find_package( Boost REQUIRED COMPONENTS
                    thread 
                    date_time
                    system 
                    filesystem 
-                   program_options 
+                   program_options
                    serialization 
                    chrono
                    unit_test_framework  
@@ -41,5 +42,6 @@ MESSAGE(WARNING " ssl ${OPENSSL_LIBRARIES}")
 SET(CPPNETLIBS cppnetlib-client-connections cppnetlib-uri cppnetlib-server-parsers)
 
 target_link_libraries(fantasybit ${FC_LIBRARY}  ${OPENSSL_LIBRARIES} nanomsg ${PROTOBUF_LIBRARY}  leveldb )
+#target_link_libraries(fantasybit fb ${FC_LIBRARY} nanomsg ${PROTOBUF_LIBRARY} ) 
         
 	

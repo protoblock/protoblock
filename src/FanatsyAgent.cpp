@@ -9,6 +9,9 @@
 #include "FantasyAgent.h"
 #include "Processor.h"
 #include <iostream>
+
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 namespace fantasybit {
 
 FantasyAgent::status FantasyAgent::signPlayer(alias_t name,bool mine)
@@ -37,6 +40,8 @@ FantasyAgent::status FantasyAgent::signPlayer(alias_t name,bool mine)
 //static SignedBlock makeGenesisBlock() {
 bool FantasyAgent::makeGenesis()
 {
+	LOG(lg, trace) << "genesis ";
+
 	SignedBlock sb = Commissioner::makeGenesisBlock();
 
 	BlockProcessor bp{};
@@ -72,13 +77,18 @@ bool FantasyAgent::beOracle()
 	}
 }
 
-bool FantasyAgent::makeNewBlockAsOracle()
+SignedBlock FantasyAgent::makeNewBlockAsOracle()
 {
+	SignedBlock sb{};
+
 	if (pendingTrans.size() == 0)
-		return false;
+		return sb;
 
 	if (!beOracle())
-		return fbutils::LogFalse(std::string("cant makeNewBlockAsOracle am not him"));
+	{
+		fbutils::LogFalse(std::string("cant makeNewBlockAsOracle am not him"));
+		return sb;
+	}
 
 	BlockHeader bh{};
 	bh.set_prev_id
@@ -93,7 +103,6 @@ bool FantasyAgent::makeNewBlockAsOracle()
 		st2->CopyFrom(pt);
 	}
 
-	SignedBlock sb{};
 	sb.mutable_block()->CopyFrom(b);
 	sb.set_version(Commissioner::BLOCK_VERSION);
 
@@ -101,11 +110,13 @@ bool FantasyAgent::makeNewBlockAsOracle()
 	sb.set_id(p.first);
 	sb.set_sig(p.second);
 
-	BlockProcessor bp{};
-	bp.init();
-	bp.process(sb);
+	
+	//BlockProcessor bp{};
+	//bp.init();
+	//bp.process(sb);
 	pendingTrans.clear();
-	return true;
+
+	return sb;
 
 }
 

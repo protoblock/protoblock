@@ -12,6 +12,8 @@
 #include "MsgSock.h"
 #include <thread>
 
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 using namespace std;
 using namespace nn;
 namespace fantasybit
@@ -19,6 +21,8 @@ namespace fantasybit
 
 void ClientUI::init()
 {
+	LOG(lg, trace) << "init havegui = true";
+
     havegui = true;
     
     myname.set_status(MyNameStatus::none);
@@ -31,7 +35,7 @@ void ClientUI::run()
     init();
   
     const int RECEIVE_BREAK_LOOP_COUNT = 50;
-    const int GUI_TIMEOUT_SECONDS = 500;
+    const int GUI_TIMEOUT_SECONDS = 120;
     const int LONG_NAP_SECONDS = 30;
     const int SHORT_SLEEP_MILLIS = 1000;
  
@@ -48,12 +52,17 @@ void ClientUI::run()
 
     while (running)
     {
+		//LOG(lg, trace) << "running ";
+
         scount = -1;
         while (server.receive(outdata,NN_DONTWAIT) && (++scount < RECEIVE_BREAK_LOOP_COUNT))
             process_server(outdata);
         
+		//LOG(lg, trace) << "processed " << scount << " from server ";
         if ( first && scount >= 0)
         {
+			LOG(lg, trace) << "first time - snapshot_gui ";
+
             snapshot_gui();
             first = false;
         }
@@ -61,32 +70,47 @@ void ClientUI::run()
         gcount = -1;
         while ( gui.receive(indata,NN_DONTWAIT) && (++gcount < RECEIVE_BREAK_LOOP_COUNT))
         {
+			LOG(lg, trace) << "received from gui " << indata.DebugString();
+
             if ( !havegui )
             {
+				LOG(lg, trace) << "snapshot_gui ";
+
                 havegui = true;
                 snapshot_gui();
             }
             start = std::chrono::system_clock::now();
             process_gui(indata);
+			LOG(lg, trace) << "processed from gui ";
+
         }
  
         if ( havegui && gcount <= 0 ) //check for gui timeout
         {
             end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed_seconds = end-start;
-            if ( elapsed_seconds.count() >= GUI_TIMEOUT_SECONDS  )
-                havegui = false;
+			//LOG(lg, trace) << "elapsed_seconds " << elapsed_seconds.count();
+			if (elapsed_seconds.count() >= GUI_TIMEOUT_SECONDS)
+			{
+				LOG(lg, trace) << "gui timeout " << elapsed_seconds.count();
+				havegui = false;
+			}
         }
 
         
         if (!havegui && scount <= 0) //no gui - take a nap
         {
             if ( !running ) break;
+			LOG(lg, trace) << "take long nap - no gui  " << LONG_NAP_SECONDS << " seconds";
             std::this_thread::sleep_for( std::chrono::seconds{LONG_NAP_SECONDS} );
+			LOG(lg, trace) << "wake";
         }
-        else if ( scount + gcount <= 0 ) //no data
-            std::this_thread::sleep_for( std::chrono::milliseconds{SHORT_SLEEP_MILLIS} );
-        
+		else if (scount + gcount <= 0) //no data
+		{
+			//LOG(lg, trace) << "take short nap - no data";
+			std::this_thread::sleep_for(std::chrono::milliseconds{ SHORT_SLEEP_MILLIS });
+		}
+
         /*
         if ( !retserver )
         {
@@ -112,15 +136,20 @@ void ClientUI::run()
 
 void ClientUI::process_server(const OutData &data)
 {
-    cout << data.DebugString() << " *** process_server\n";
+	LOG(lg, trace) << "from server " << data.DebugString();
+    //cout << data.DebugString() << " *** process_server\n";
     switch ( data.type())
     {
         case OutData_Type_MYFANTASYNAME:
             if ( data.has_myfantasyname() )
             {
                 myname = data.myfantasyname();
-                if ( havegui )
-                    Sender::Send(sockgui,data);
+				if (havegui)
+				{
+					LOG(lg, trace) << "to gui ";
+					int n = Sender::Send(sockgui, data);// , NN_DONTWAIT);
+					LOG(lg, trace) << "sent " << n << "bytes to gui ";
+				}
             }
             break;
         default:

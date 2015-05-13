@@ -11,13 +11,14 @@
 namespace fantasybit
 {
 
-int Sender::Send(nn::socket &s, const google::protobuf::Message &msg)
+int Sender::Send(nn::socket &s, const google::protobuf::Message &msg, int flags)
 {
     size_t sz = msg.ByteSize();
     void *buf = nn::allocmsg(sz,0);
     msg.SerializeWithCachedSizesToArray((::google::protobuf::uint8 *)buf);
-    return s.send(buf,sz,0);
+    return s.send(buf,sz,flags);
 }
+
  
 
 }

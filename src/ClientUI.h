@@ -15,6 +15,10 @@
 #include <string>
 #include "ProtoData.pb.h"
 #include <iostream>
+
+#include "boostLog.h"
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 namespace fantasybit
 {
 
@@ -25,8 +29,13 @@ public:
     ClientUI(std::string addrserv,std::string addrgui)
         : sockserv{AF_SP, NN_PAIR}, sockgui{AF_SP, NN_PAIR}
     {
+
         sockserv.connect(addrserv.c_str());
+		LOG(lg, trace) << "connect server" << addrserv;
+
         sockgui.bind(addrgui.c_str());
+		LOG(lg, trace) << "bind gui" << addrgui;
+
     }
     void run();
     void stop()

@@ -37,6 +37,7 @@ class Node
 	NodeRequest reqhs{};
 
 	std::string myip{};
+	std::string myhost{};
 	int current_hight = 0;
 	int maxhi = 0;
 	int count = 0;
@@ -48,6 +49,12 @@ class Node
 	std::mutex connected_mutex{};
 public:
 	Node() {} 
+	void stop()
+	{
+		sync_running = false;
+		sync_req_running = false;
+		running_live = false;	
+	}
 	bool doHandshake(const std::string &peer);
 	void runHandShake();
     int init();
@@ -61,11 +68,18 @@ public:
 		return ROOT_DIR + in;
 	}
 
+	static leveldb::Slice i2slice(int i)
+	{
+		leveldb::Slice value((char*)&i, sizeof(int) );
+		return value;
+	}
+
 };
 
 
 
-static std::string SEED_NODE("127.0.0.1");
+static std::string SEED_NODE("162.254.27.226");
+static std::string SEED_HOST("Jets");
 
 }
 
