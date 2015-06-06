@@ -237,7 +237,7 @@ public:
 	void run()
 	{
 		init();
-		SignedBlock sb{};
+		Block sb{};
 		while (running && !isInSync())
 			GetInSync(lastidprocessed + 1, realHeight);
 
@@ -245,10 +245,10 @@ public:
 		{
 			if (!rec_block.receive(sb)) continue;
 
-			if (sb.block().head().num() > lastidprocessed + 1)
-				GetInSync(lastidprocessed + 1, sb.block().head().num());
+			if (sb.signedhead().head().num() > lastidprocessed + 1)
+				GetInSync(lastidprocessed + 1, sb.signedhead().head().num());
 			
-			if (sb.block().head().num() == lastidprocessed + 1)
+			if (sb.signedhead().head().num() == lastidprocessed + 1)
 				process(sb);
 		}
 	}
@@ -291,22 +291,22 @@ public:
 			nrq.set_type(NodeRequest_Type_BLOCK_REQUEST);
 			nrq.set_num(lastid);
 			syncradio.first.send(nrq);
-			SignedBlock sb{};
+			Block sb{};
 			if (!syncradio.second.receive(sb)) break;
 
-			if (sb.block().head().num() != lastid) break;
+			if (sb.signedhead().head().num() != lastid) break;
 			process(sb);
 			if (end == lastid) break;
 			lastid++;
 		}
 	}
 
-	bool process(SignedBlock &sblock)
+	bool process(Block &sblock)
 	{
 		if (!verifySignedBlock(sblock)) return false;
 
-		mRecorder.startBlock(sblock.block().head().num());
-		for (const auto &st : sblock.block().signed_transactions())
+		mRecorder.startBlock(sblock.signedhead().head().num());
+		for (const auto &st : sblock.signed_transactions())
 		{
 			Transaction t{ st.trans() };
 
@@ -379,26 +379,26 @@ public:
 			}
 		}
 
-		std::cout << " BLOCK(" << sblock.block().head().num() << ") processed! \n";
-		lastidprocessed = mRecorder.endBlock(sblock.block().head().num());
+		std::cout << " BLOCK(" << sblock.signedhead().head().num() << ") processed! \n";
+		lastidprocessed = mRecorder.endBlock(sblock.signedhead().head().num());
 		//sblock.block().head().num());
 		return true;
 			//std::cout << t.DebugString() << "\n";//process(t)
 		//mRecorder.comitBlock(block);	
 	}
 
-	static bool verifySignedBlock(SignedBlock &sblock)
+	static bool verifySignedBlock(Block &sblock)
 	{
-		if (sblock.version() != Commissioner::BLOCK_VERSION)
+		if (sblock.signedhead().head().version() != Commissioner::BLOCK_VERSION)
 			return fbutils::LogFalse(std::string("Processor::process wrong block version ").append(sblock.DebugString()));
 
-		fc::sha256 digest = fc::sha256::hash(sblock.block().SerializeAsString());
-		if (digest.str() != sblock.id())
-			return
-			fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));
-		assert(digest.str() == sblock.id());
+		fc::sha256 digest = fc::sha256::hash(sblock.signedhead().head().SerializeAsString());
+		//if (digest.str() != sblock.signedhead().id())
+		//	return
+		//fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));
+		//assert(digest.str() == sblock.id());
 
-		fc::ecc::signature sig = Commissioner::str2sig(sblock.sig());
+		fc::ecc::signature sig = Commissioner::str2sig(sblock.signedhead().sig());
 		//assert(Commissioner::verifyOracle(sig, digest));
 		if (!Commissioner::verifyOracle(sig, digest))
 #ifdef NO_ORACLE_CHECK_TESTING

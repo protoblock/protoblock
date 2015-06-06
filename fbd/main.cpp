@@ -58,6 +58,8 @@ void init()
 	* /
 }
 */
+
+
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 int main(int argc, const char * argv[])

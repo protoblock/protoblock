@@ -70,7 +70,7 @@ public:
 
 	bool beOracle();
 
-	SignedBlock makeNewBlockAsOracle();
+	Block makeNewBlockAsOracle();
 
 	fc::ecc::private_key str2priv(const std::string &in)
 	{

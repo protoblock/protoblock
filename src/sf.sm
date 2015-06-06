@@ -1,0 +1,50 @@
+%start SfMap::PreDraft
+%class SFStateMachine
+%header   SFStateMachine.h
+
+%map SatoshiFantasy
+%%
+// State		Transition		End State		Action(s)
+PreDraft
+{
+				Draft			PreSeason		{}
+}
+
+PreSeason
+{
+				Roster			Roster53Man			{}
+}
+
+Roster53Man
+{
+				SeasonStart		Season/push(InSeason::PreGame)	{}						
+}
+
+Season 
+{
+	SeasonEnd	 	PreDraft {}
+}
+%%
+
+%map InSeason
+%%
+// State		Transition		End State		Action(s)
+PreGame
+{
+				Game			InGame			{}
+				TradeOpen 		TradingSession  {}
+}
+
+InGame
+{
+				WeekOver
+				[ctx.IsWeek16()] pop(SeasonEnd)			{}	
+				WeekOver		PreGame			{}
+}
+
+TradingSession
+{
+				Open			nil				{}
+				Close			PreGame			{}
+}
+%%

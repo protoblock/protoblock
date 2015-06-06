@@ -46,16 +46,19 @@ class NamePOW;
 class TweetProof;
 class Transaction;
 class NameTrans;
-class FantasyPlayerPoints;
-class ProjectionTrans;
-class ResultTrans;
-class DataTransition;
 class SignedTransaction;
 class BlockHeader;
+class SignedBlockHeader;
 class Block;
-class SignedBlock;
 class NodeRequest;
 class NodeReply;
+class FantasyPlayerPoints;
+class ProjectionTrans;
+class Data;
+class PlayerData;
+class TeamData;
+class ResultData;
+class DataTransition;
 
 enum OutData_Type {
   OutData_Type_MYFANTASYNAME = 1,
@@ -122,26 +125,24 @@ inline bool NameProof_Type_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<NameProof_Type>(
     NameProof_Type_descriptor(), name, value);
 }
-enum DataTransition_Type {
-  DataTransition_Type_PREGAME = 1,
-  DataTransition_Type_INGAME = 2,
-  DataTransition_Type_WEEKOVER = 3,
-  DataTransition_Type_WEEKSTART = 4
+enum BlockHeader_Type {
+  BlockHeader_Type_NORMAL = 1,
+  BlockHeader_Type_DATA = 2
 };
-bool DataTransition_Type_IsValid(int value);
-const DataTransition_Type DataTransition_Type_Type_MIN = DataTransition_Type_PREGAME;
-const DataTransition_Type DataTransition_Type_Type_MAX = DataTransition_Type_WEEKSTART;
-const int DataTransition_Type_Type_ARRAYSIZE = DataTransition_Type_Type_MAX + 1;
+bool BlockHeader_Type_IsValid(int value);
+const BlockHeader_Type BlockHeader_Type_Type_MIN = BlockHeader_Type_NORMAL;
+const BlockHeader_Type BlockHeader_Type_Type_MAX = BlockHeader_Type_DATA;
+const int BlockHeader_Type_Type_ARRAYSIZE = BlockHeader_Type_Type_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor();
-inline const ::std::string& DataTransition_Type_Name(DataTransition_Type value) {
+const ::google::protobuf::EnumDescriptor* BlockHeader_Type_descriptor();
+inline const ::std::string& BlockHeader_Type_Name(BlockHeader_Type value) {
   return ::google::protobuf::internal::NameOfEnum(
-    DataTransition_Type_descriptor(), value);
+    BlockHeader_Type_descriptor(), value);
 }
-inline bool DataTransition_Type_Parse(
-    const ::std::string& name, DataTransition_Type* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<DataTransition_Type>(
-    DataTransition_Type_descriptor(), name, value);
+inline bool BlockHeader_Type_Parse(
+    const ::std::string& name, BlockHeader_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<BlockHeader_Type>(
+    BlockHeader_Type_descriptor(), name, value);
 }
 enum NodeRequest_Type {
   NodeRequest_Type_HANDSHAKE = 1,
@@ -162,6 +163,30 @@ inline bool NodeRequest_Type_Parse(
     const ::std::string& name, NodeRequest_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<NodeRequest_Type>(
     NodeRequest_Type_descriptor(), name, value);
+}
+enum DataTransition_Type {
+  DataTransition_Type_ROSTER = 1,
+  DataTransition_Type_SEASONSTART = 2,
+  DataTransition_Type_SEASONEND = 3,
+  DataTransition_Type_DRAFTOVER = 4,
+  DataTransition_Type_HEARTBEAT = 5,
+  DataTransition_Type_GAMESTART = 6,
+  DataTransition_Type_WEEKOVER = 7
+};
+bool DataTransition_Type_IsValid(int value);
+const DataTransition_Type DataTransition_Type_Type_MIN = DataTransition_Type_ROSTER;
+const DataTransition_Type DataTransition_Type_Type_MAX = DataTransition_Type_WEEKOVER;
+const int DataTransition_Type_Type_ARRAYSIZE = DataTransition_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor();
+inline const ::std::string& DataTransition_Type_Name(DataTransition_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    DataTransition_Type_descriptor(), value);
+}
+inline bool DataTransition_Type_Parse(
+    const ::std::string& name, DataTransition_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DataTransition_Type>(
+    DataTransition_Type_descriptor(), name, value);
 }
 enum MyNameStatus {
   none = 1,
@@ -205,6 +230,26 @@ inline bool TransType_Parse(
     const ::std::string& name, TransType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<TransType>(
     TransType_descriptor(), name, value);
+}
+enum DataType {
+  SCHEDULE = 0,
+  PLAYER = 1,
+  TEAM = 2
+};
+bool DataType_IsValid(int value);
+const DataType DataType_MIN = SCHEDULE;
+const DataType DataType_MAX = TEAM;
+const int DataType_ARRAYSIZE = DataType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* DataType_descriptor();
+inline const ::std::string& DataType_Name(DataType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    DataType_descriptor(), value);
+}
+inline bool DataType_Parse(
+    const ::std::string& name, DataType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DataType>(
+    DataType_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -1636,449 +1681,6 @@ class NameTrans : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class FantasyPlayerPoints : public ::google::protobuf::Message {
- public:
-  FantasyPlayerPoints();
-  virtual ~FantasyPlayerPoints();
-
-  FantasyPlayerPoints(const FantasyPlayerPoints& from);
-
-  inline FantasyPlayerPoints& operator=(const FantasyPlayerPoints& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const FantasyPlayerPoints& default_instance();
-
-  void Swap(FantasyPlayerPoints* other);
-
-  // implements Message ----------------------------------------------
-
-  FantasyPlayerPoints* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FantasyPlayerPoints& from);
-  void MergeFrom(const FantasyPlayerPoints& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional string fantasy_player_id = 1;
-  inline bool has_fantasy_player_id() const;
-  inline void clear_fantasy_player_id();
-  static const int kFantasyPlayerIdFieldNumber = 1;
-  inline const ::std::string& fantasy_player_id() const;
-  inline void set_fantasy_player_id(const ::std::string& value);
-  inline void set_fantasy_player_id(const char* value);
-  inline void set_fantasy_player_id(const char* value, size_t size);
-  inline ::std::string* mutable_fantasy_player_id();
-  inline ::std::string* release_fantasy_player_id();
-  inline void set_allocated_fantasy_player_id(::std::string* fantasy_player_id);
-
-  // optional int32 points = 2;
-  inline bool has_points() const;
-  inline void clear_points();
-  static const int kPointsFieldNumber = 2;
-  inline ::google::protobuf::int32 points() const;
-  inline void set_points(::google::protobuf::int32 value);
-
-  // @@protoc_insertion_point(class_scope:fantasybit.FantasyPlayerPoints)
- private:
-  inline void set_has_fantasy_player_id();
-  inline void clear_has_fantasy_player_id();
-  inline void set_has_points();
-  inline void clear_has_points();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* fantasy_player_id_;
-  ::google::protobuf::int32 points_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_ProtoData_2eproto();
-  friend void protobuf_AssignDesc_ProtoData_2eproto();
-  friend void protobuf_ShutdownFile_ProtoData_2eproto();
-
-  void InitAsDefaultInstance();
-  static FantasyPlayerPoints* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class ProjectionTrans : public ::google::protobuf::Message {
- public:
-  ProjectionTrans();
-  virtual ~ProjectionTrans();
-
-  ProjectionTrans(const ProjectionTrans& from);
-
-  inline ProjectionTrans& operator=(const ProjectionTrans& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const ProjectionTrans& default_instance();
-
-  void Swap(ProjectionTrans* other);
-
-  // implements Message ----------------------------------------------
-
-  ProjectionTrans* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ProjectionTrans& from);
-  void MergeFrom(const ProjectionTrans& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional string game_id = 2;
-  inline bool has_game_id() const;
-  inline void clear_game_id();
-  static const int kGameIdFieldNumber = 2;
-  inline const ::std::string& game_id() const;
-  inline void set_game_id(const ::std::string& value);
-  inline void set_game_id(const char* value);
-  inline void set_game_id(const char* value, size_t size);
-  inline ::std::string* mutable_game_id();
-  inline ::std::string* release_game_id();
-  inline void set_allocated_game_id(::std::string* game_id);
-
-  // optional .fantasybit.FantasyPlayerPoints fpp_projection = 3;
-  inline bool has_fpp_projection() const;
-  inline void clear_fpp_projection();
-  static const int kFppProjectionFieldNumber = 3;
-  inline const ::fantasybit::FantasyPlayerPoints& fpp_projection() const;
-  inline ::fantasybit::FantasyPlayerPoints* mutable_fpp_projection();
-  inline ::fantasybit::FantasyPlayerPoints* release_fpp_projection();
-  inline void set_allocated_fpp_projection(::fantasybit::FantasyPlayerPoints* fpp_projection);
-
-  static const int kProjTransFieldNumber = 201;
-  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
-      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ProjectionTrans >, 11, false >
-    proj_trans;
-  // @@protoc_insertion_point(class_scope:fantasybit.ProjectionTrans)
- private:
-  inline void set_has_game_id();
-  inline void clear_has_game_id();
-  inline void set_has_fpp_projection();
-  inline void clear_has_fpp_projection();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* game_id_;
-  ::fantasybit::FantasyPlayerPoints* fpp_projection_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_ProtoData_2eproto();
-  friend void protobuf_AssignDesc_ProtoData_2eproto();
-  friend void protobuf_ShutdownFile_ProtoData_2eproto();
-
-  void InitAsDefaultInstance();
-  static ProjectionTrans* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class ResultTrans : public ::google::protobuf::Message {
- public:
-  ResultTrans();
-  virtual ~ResultTrans();
-
-  ResultTrans(const ResultTrans& from);
-
-  inline ResultTrans& operator=(const ResultTrans& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const ResultTrans& default_instance();
-
-  void Swap(ResultTrans* other);
-
-  // implements Message ----------------------------------------------
-
-  ResultTrans* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ResultTrans& from);
-  void MergeFrom(const ResultTrans& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional string game_id = 10;
-  inline bool has_game_id() const;
-  inline void clear_game_id();
-  static const int kGameIdFieldNumber = 10;
-  inline const ::std::string& game_id() const;
-  inline void set_game_id(const ::std::string& value);
-  inline void set_game_id(const char* value);
-  inline void set_game_id(const char* value, size_t size);
-  inline ::std::string* mutable_game_id();
-  inline ::std::string* release_game_id();
-  inline void set_allocated_game_id(::std::string* game_id);
-
-  // repeated .fantasybit.FantasyPlayerPoints fpp_results = 20;
-  inline int fpp_results_size() const;
-  inline void clear_fpp_results();
-  static const int kFppResultsFieldNumber = 20;
-  inline const ::fantasybit::FantasyPlayerPoints& fpp_results(int index) const;
-  inline ::fantasybit::FantasyPlayerPoints* mutable_fpp_results(int index);
-  inline ::fantasybit::FantasyPlayerPoints* add_fpp_results();
-  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyPlayerPoints >&
-      fpp_results() const;
-  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyPlayerPoints >*
-      mutable_fpp_results();
-
-  static const int kResultTransFieldNumber = 202;
-  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
-      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ResultTrans >, 11, false >
-    result_trans;
-  // @@protoc_insertion_point(class_scope:fantasybit.ResultTrans)
- private:
-  inline void set_has_game_id();
-  inline void clear_has_game_id();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* game_id_;
-  ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyPlayerPoints > fpp_results_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_ProtoData_2eproto();
-  friend void protobuf_AssignDesc_ProtoData_2eproto();
-  friend void protobuf_ShutdownFile_ProtoData_2eproto();
-
-  void InitAsDefaultInstance();
-  static ResultTrans* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class DataTransition : public ::google::protobuf::Message {
- public:
-  DataTransition();
-  virtual ~DataTransition();
-
-  DataTransition(const DataTransition& from);
-
-  inline DataTransition& operator=(const DataTransition& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const DataTransition& default_instance();
-
-  void Swap(DataTransition* other);
-
-  // implements Message ----------------------------------------------
-
-  DataTransition* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const DataTransition& from);
-  void MergeFrom(const DataTransition& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  typedef DataTransition_Type Type;
-  static const Type PREGAME = DataTransition_Type_PREGAME;
-  static const Type INGAME = DataTransition_Type_INGAME;
-  static const Type WEEKOVER = DataTransition_Type_WEEKOVER;
-  static const Type WEEKSTART = DataTransition_Type_WEEKSTART;
-  static inline bool Type_IsValid(int value) {
-    return DataTransition_Type_IsValid(value);
-  }
-  static const Type Type_MIN =
-    DataTransition_Type_Type_MIN;
-  static const Type Type_MAX =
-    DataTransition_Type_Type_MAX;
-  static const int Type_ARRAYSIZE =
-    DataTransition_Type_Type_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  Type_descriptor() {
-    return DataTransition_Type_descriptor();
-  }
-  static inline const ::std::string& Type_Name(Type value) {
-    return DataTransition_Type_Name(value);
-  }
-  static inline bool Type_Parse(const ::std::string& name,
-      Type* value) {
-    return DataTransition_Type_Parse(name, value);
-  }
-
-  // accessors -------------------------------------------------------
-
-  // optional .fantasybit.DataTransition.Type type = 1;
-  inline bool has_type() const;
-  inline void clear_type();
-  static const int kTypeFieldNumber = 1;
-  inline ::fantasybit::DataTransition_Type type() const;
-  inline void set_type(::fantasybit::DataTransition_Type value);
-
-  // optional int32 week = 10;
-  inline bool has_week() const;
-  inline void clear_week();
-  static const int kWeekFieldNumber = 10;
-  inline ::google::protobuf::int32 week() const;
-  inline void set_week(::google::protobuf::int32 value);
-
-  // repeated string game_id = 20;
-  inline int game_id_size() const;
-  inline void clear_game_id();
-  static const int kGameIdFieldNumber = 20;
-  inline const ::std::string& game_id(int index) const;
-  inline ::std::string* mutable_game_id(int index);
-  inline void set_game_id(int index, const ::std::string& value);
-  inline void set_game_id(int index, const char* value);
-  inline void set_game_id(int index, const char* value, size_t size);
-  inline ::std::string* add_game_id();
-  inline void add_game_id(const ::std::string& value);
-  inline void add_game_id(const char* value);
-  inline void add_game_id(const char* value, size_t size);
-  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& game_id() const;
-  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_game_id();
-
-  static const int kDataTransFieldNumber = 203;
-  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
-      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::DataTransition >, 11, false >
-    data_trans;
-  // @@protoc_insertion_point(class_scope:fantasybit.DataTransition)
- private:
-  inline void set_has_type();
-  inline void clear_has_type();
-  inline void set_has_week();
-  inline void clear_has_week();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  int type_;
-  ::google::protobuf::int32 week_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> game_id_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
-
-  friend void  protobuf_AddDesc_ProtoData_2eproto();
-  friend void protobuf_AssignDesc_ProtoData_2eproto();
-  friend void protobuf_ShutdownFile_ProtoData_2eproto();
-
-  void InitAsDefaultInstance();
-  static DataTransition* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class SignedTransaction : public ::google::protobuf::Message {
  public:
   SignedTransaction();
@@ -2260,7 +1862,38 @@ class BlockHeader : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef BlockHeader_Type Type;
+  static const Type NORMAL = BlockHeader_Type_NORMAL;
+  static const Type DATA = BlockHeader_Type_DATA;
+  static inline bool Type_IsValid(int value) {
+    return BlockHeader_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    BlockHeader_Type_Type_MIN;
+  static const Type Type_MAX =
+    BlockHeader_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    BlockHeader_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return BlockHeader_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return BlockHeader_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return BlockHeader_Type_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
+
+  // optional int32 version = 1;
+  inline bool has_version() const;
+  inline void clear_version();
+  static const int kVersionFieldNumber = 1;
+  inline ::google::protobuf::int32 version() const;
+  inline void set_version(::google::protobuf::int32 value);
 
   // optional int32 num = 10;
   inline bool has_num() const;
@@ -2281,17 +1914,194 @@ class BlockHeader : public ::google::protobuf::Message {
   inline ::std::string* release_prev_id();
   inline void set_allocated_prev_id(::std::string* prev_id);
 
+  // optional int32 timestamp = 21;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 21;
+  inline ::google::protobuf::int32 timestamp() const;
+  inline void set_timestamp(::google::protobuf::int32 value);
+
+  // optional bytes generator_pk = 30;
+  inline bool has_generator_pk() const;
+  inline void clear_generator_pk();
+  static const int kGeneratorPkFieldNumber = 30;
+  inline const ::std::string& generator_pk() const;
+  inline void set_generator_pk(const ::std::string& value);
+  inline void set_generator_pk(const char* value);
+  inline void set_generator_pk(const void* value, size_t size);
+  inline ::std::string* mutable_generator_pk();
+  inline ::std::string* release_generator_pk();
+  inline void set_allocated_generator_pk(::std::string* generator_pk);
+
+  // optional bytes generating_sig = 40;
+  inline bool has_generating_sig() const;
+  inline void clear_generating_sig();
+  static const int kGeneratingSigFieldNumber = 40;
+  inline const ::std::string& generating_sig() const;
+  inline void set_generating_sig(const ::std::string& value);
+  inline void set_generating_sig(const char* value);
+  inline void set_generating_sig(const void* value, size_t size);
+  inline ::std::string* mutable_generating_sig();
+  inline ::std::string* release_generating_sig();
+  inline void set_allocated_generating_sig(::std::string* generating_sig);
+
+  // optional int32 basetarget = 50;
+  inline bool has_basetarget() const;
+  inline void clear_basetarget();
+  static const int kBasetargetFieldNumber = 50;
+  inline ::google::protobuf::int32 basetarget() const;
+  inline void set_basetarget(::google::protobuf::int32 value);
+
+  // optional .fantasybit.BlockHeader.Type blocktype = 60;
+  inline bool has_blocktype() const;
+  inline void clear_blocktype();
+  static const int kBlocktypeFieldNumber = 60;
+  inline ::fantasybit::BlockHeader_Type blocktype() const;
+  inline void set_blocktype(::fantasybit::BlockHeader_Type value);
+
+  // optional bytes transaction_id = 70;
+  inline bool has_transaction_id() const;
+  inline void clear_transaction_id();
+  static const int kTransactionIdFieldNumber = 70;
+  inline const ::std::string& transaction_id() const;
+  inline void set_transaction_id(const ::std::string& value);
+  inline void set_transaction_id(const char* value);
+  inline void set_transaction_id(const void* value, size_t size);
+  inline ::std::string* mutable_transaction_id();
+  inline ::std::string* release_transaction_id();
+  inline void set_allocated_transaction_id(::std::string* transaction_id);
+
   // @@protoc_insertion_point(class_scope:fantasybit.BlockHeader)
  private:
+  inline void set_has_version();
+  inline void clear_has_version();
   inline void set_has_num();
   inline void clear_has_num();
   inline void set_has_prev_id();
   inline void clear_has_prev_id();
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
+  inline void set_has_generator_pk();
+  inline void clear_has_generator_pk();
+  inline void set_has_generating_sig();
+  inline void clear_has_generating_sig();
+  inline void set_has_basetarget();
+  inline void clear_has_basetarget();
+  inline void set_has_blocktype();
+  inline void clear_has_blocktype();
+  inline void set_has_transaction_id();
+  inline void clear_has_transaction_id();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* prev_id_;
+  ::google::protobuf::int32 version_;
   ::google::protobuf::int32 num_;
+  ::std::string* prev_id_;
+  ::std::string* generator_pk_;
+  ::google::protobuf::int32 timestamp_;
+  ::google::protobuf::int32 basetarget_;
+  ::std::string* generating_sig_;
+  ::std::string* transaction_id_;
+  int blocktype_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static BlockHeader* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SignedBlockHeader : public ::google::protobuf::Message {
+ public:
+  SignedBlockHeader();
+  virtual ~SignedBlockHeader();
+
+  SignedBlockHeader(const SignedBlockHeader& from);
+
+  inline SignedBlockHeader& operator=(const SignedBlockHeader& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SignedBlockHeader& default_instance();
+
+  void Swap(SignedBlockHeader* other);
+
+  // implements Message ----------------------------------------------
+
+  SignedBlockHeader* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SignedBlockHeader& from);
+  void MergeFrom(const SignedBlockHeader& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.BlockHeader head = 10;
+  inline bool has_head() const;
+  inline void clear_head();
+  static const int kHeadFieldNumber = 10;
+  inline const ::fantasybit::BlockHeader& head() const;
+  inline ::fantasybit::BlockHeader* mutable_head();
+  inline ::fantasybit::BlockHeader* release_head();
+  inline void set_allocated_head(::fantasybit::BlockHeader* head);
+
+  // optional string sig = 30;
+  inline bool has_sig() const;
+  inline void clear_sig();
+  static const int kSigFieldNumber = 30;
+  inline const ::std::string& sig() const;
+  inline void set_sig(const ::std::string& value);
+  inline void set_sig(const char* value);
+  inline void set_sig(const char* value, size_t size);
+  inline ::std::string* mutable_sig();
+  inline ::std::string* release_sig();
+  inline void set_allocated_sig(::std::string* sig);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.SignedBlockHeader)
+ private:
+  inline void set_has_head();
+  inline void clear_has_head();
+  inline void set_has_sig();
+  inline void clear_has_sig();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::BlockHeader* head_;
+  ::std::string* sig_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -2301,7 +2111,7 @@ class BlockHeader : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_ProtoData_2eproto();
 
   void InitAsDefaultInstance();
-  static BlockHeader* default_instance_;
+  static SignedBlockHeader* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2359,14 +2169,14 @@ class Block : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .fantasybit.BlockHeader head = 10;
-  inline bool has_head() const;
-  inline void clear_head();
-  static const int kHeadFieldNumber = 10;
-  inline const ::fantasybit::BlockHeader& head() const;
-  inline ::fantasybit::BlockHeader* mutable_head();
-  inline ::fantasybit::BlockHeader* release_head();
-  inline void set_allocated_head(::fantasybit::BlockHeader* head);
+  // optional .fantasybit.SignedBlockHeader signedhead = 10;
+  inline bool has_signedhead() const;
+  inline void clear_signedhead();
+  static const int kSignedheadFieldNumber = 10;
+  inline const ::fantasybit::SignedBlockHeader& signedhead() const;
+  inline ::fantasybit::SignedBlockHeader* mutable_signedhead();
+  inline ::fantasybit::SignedBlockHeader* release_signedhead();
+  inline void set_allocated_signedhead(::fantasybit::SignedBlockHeader* signedhead);
 
   // repeated .fantasybit.SignedTransaction signed_transactions = 20;
   inline int signed_transactions_size() const;
@@ -2383,14 +2193,14 @@ class Block : public ::google::protobuf::Message {
   GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(Block)
   // @@protoc_insertion_point(class_scope:fantasybit.Block)
  private:
-  inline void set_has_head();
-  inline void clear_has_head();
+  inline void set_has_signedhead();
+  inline void clear_has_signedhead();
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::fantasybit::BlockHeader* head_;
+  ::fantasybit::SignedBlockHeader* signedhead_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction > signed_transactions_;
 
   mutable int _cached_size_;
@@ -2402,133 +2212,6 @@ class Block : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Block* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class SignedBlock : public ::google::protobuf::Message {
- public:
-  SignedBlock();
-  virtual ~SignedBlock();
-
-  SignedBlock(const SignedBlock& from);
-
-  inline SignedBlock& operator=(const SignedBlock& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const SignedBlock& default_instance();
-
-  void Swap(SignedBlock* other);
-
-  // implements Message ----------------------------------------------
-
-  SignedBlock* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SignedBlock& from);
-  void MergeFrom(const SignedBlock& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional int32 version = 1;
-  inline bool has_version() const;
-  inline void clear_version();
-  static const int kVersionFieldNumber = 1;
-  inline ::google::protobuf::int32 version() const;
-  inline void set_version(::google::protobuf::int32 value);
-
-  // optional .fantasybit.Block block = 10;
-  inline bool has_block() const;
-  inline void clear_block();
-  static const int kBlockFieldNumber = 10;
-  inline const ::fantasybit::Block& block() const;
-  inline ::fantasybit::Block* mutable_block();
-  inline ::fantasybit::Block* release_block();
-  inline void set_allocated_block(::fantasybit::Block* block);
-
-  // optional bytes id = 20;
-  inline bool has_id() const;
-  inline void clear_id();
-  static const int kIdFieldNumber = 20;
-  inline const ::std::string& id() const;
-  inline void set_id(const ::std::string& value);
-  inline void set_id(const char* value);
-  inline void set_id(const void* value, size_t size);
-  inline ::std::string* mutable_id();
-  inline ::std::string* release_id();
-  inline void set_allocated_id(::std::string* id);
-
-  // optional string sig = 30;
-  inline bool has_sig() const;
-  inline void clear_sig();
-  static const int kSigFieldNumber = 30;
-  inline const ::std::string& sig() const;
-  inline void set_sig(const ::std::string& value);
-  inline void set_sig(const char* value);
-  inline void set_sig(const char* value, size_t size);
-  inline ::std::string* mutable_sig();
-  inline ::std::string* release_sig();
-  inline void set_allocated_sig(::std::string* sig);
-
-  GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(SignedBlock)
-  // @@protoc_insertion_point(class_scope:fantasybit.SignedBlock)
- private:
-  inline void set_has_version();
-  inline void clear_has_version();
-  inline void set_has_block();
-  inline void clear_has_block();
-  inline void set_has_id();
-  inline void clear_has_id();
-  inline void set_has_sig();
-  inline void clear_has_sig();
-
-  ::google::protobuf::internal::ExtensionSet _extensions_;
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::fantasybit::Block* block_;
-  ::std::string* id_;
-  ::std::string* sig_;
-  ::google::protobuf::int32 version_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
-
-  friend void  protobuf_AddDesc_ProtoData_2eproto();
-  friend void protobuf_AssignDesc_ProtoData_2eproto();
-  friend void protobuf_ShutdownFile_ProtoData_2eproto();
-
-  void InitAsDefaultInstance();
-  static SignedBlock* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2775,6 +2458,732 @@ class NodeReply : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static NodeReply* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class FantasyPlayerPoints : public ::google::protobuf::Message {
+ public:
+  FantasyPlayerPoints();
+  virtual ~FantasyPlayerPoints();
+
+  FantasyPlayerPoints(const FantasyPlayerPoints& from);
+
+  inline FantasyPlayerPoints& operator=(const FantasyPlayerPoints& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FantasyPlayerPoints& default_instance();
+
+  void Swap(FantasyPlayerPoints* other);
+
+  // implements Message ----------------------------------------------
+
+  FantasyPlayerPoints* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const FantasyPlayerPoints& from);
+  void MergeFrom(const FantasyPlayerPoints& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 season = 10;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 10;
+  inline ::google::protobuf::uint32 season() const;
+  inline void set_season(::google::protobuf::uint32 value);
+
+  // optional uint32 week = 20;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 20;
+  inline ::google::protobuf::uint32 week() const;
+  inline void set_week(::google::protobuf::uint32 value);
+
+  // optional uint32 playerid = 30;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 30;
+  inline ::google::protobuf::uint32 playerid() const;
+  inline void set_playerid(::google::protobuf::uint32 value);
+
+  // optional int32 points = 40;
+  inline bool has_points() const;
+  inline void clear_points();
+  static const int kPointsFieldNumber = 40;
+  inline ::google::protobuf::int32 points() const;
+  inline void set_points(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.FantasyPlayerPoints)
+ private:
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+  inline void set_has_points();
+  inline void clear_has_points();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 season_;
+  ::google::protobuf::uint32 week_;
+  ::google::protobuf::uint32 playerid_;
+  ::google::protobuf::int32 points_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static FantasyPlayerPoints* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProjectionTrans : public ::google::protobuf::Message {
+ public:
+  ProjectionTrans();
+  virtual ~ProjectionTrans();
+
+  ProjectionTrans(const ProjectionTrans& from);
+
+  inline ProjectionTrans& operator=(const ProjectionTrans& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProjectionTrans& default_instance();
+
+  void Swap(ProjectionTrans* other);
+
+  // implements Message ----------------------------------------------
+
+  ProjectionTrans* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProjectionTrans& from);
+  void MergeFrom(const ProjectionTrans& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.FantasyPlayerPoints fpp = 10;
+  inline bool has_fpp() const;
+  inline void clear_fpp();
+  static const int kFppFieldNumber = 10;
+  inline const ::fantasybit::FantasyPlayerPoints& fpp() const;
+  inline ::fantasybit::FantasyPlayerPoints* mutable_fpp();
+  inline ::fantasybit::FantasyPlayerPoints* release_fpp();
+  inline void set_allocated_fpp(::fantasybit::FantasyPlayerPoints* fpp);
+
+  static const int kProjTransFieldNumber = 201;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ProjectionTrans >, 11, false >
+    proj_trans;
+  // @@protoc_insertion_point(class_scope:fantasybit.ProjectionTrans)
+ private:
+  inline void set_has_fpp();
+  inline void clear_has_fpp();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::FantasyPlayerPoints* fpp_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProjectionTrans* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Data : public ::google::protobuf::Message {
+ public:
+  Data();
+  virtual ~Data();
+
+  Data(const Data& from);
+
+  inline Data& operator=(const Data& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Data& default_instance();
+
+  void Swap(Data* other);
+
+  // implements Message ----------------------------------------------
+
+  Data* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Data& from);
+  void MergeFrom(const Data& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 version = 10;
+  inline bool has_version() const;
+  inline void clear_version();
+  static const int kVersionFieldNumber = 10;
+  inline ::google::protobuf::int32 version() const;
+  inline void set_version(::google::protobuf::int32 value);
+
+  // optional .fantasybit.DataType type = 20;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 20;
+  inline ::fantasybit::DataType type() const;
+  inline void set_type(::fantasybit::DataType value);
+
+  GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(Data)
+  // @@protoc_insertion_point(class_scope:fantasybit.Data)
+ private:
+  inline void set_has_version();
+  inline void clear_has_version();
+  inline void set_has_type();
+  inline void clear_has_type();
+
+  ::google::protobuf::internal::ExtensionSet _extensions_;
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 version_;
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Data* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class PlayerData : public ::google::protobuf::Message {
+ public:
+  PlayerData();
+  virtual ~PlayerData();
+
+  PlayerData(const PlayerData& from);
+
+  inline PlayerData& operator=(const PlayerData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PlayerData& default_instance();
+
+  void Swap(PlayerData* other);
+
+  // implements Message ----------------------------------------------
+
+  PlayerData* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const PlayerData& from);
+  void MergeFrom(const PlayerData& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 playerid = 10;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 10;
+  inline ::google::protobuf::uint32 playerid() const;
+  inline void set_playerid(::google::protobuf::uint32 value);
+
+  // optional uint32 teamid = 20;
+  inline bool has_teamid() const;
+  inline void clear_teamid();
+  static const int kTeamidFieldNumber = 20;
+  inline ::google::protobuf::uint32 teamid() const;
+  inline void set_teamid(::google::protobuf::uint32 value);
+
+  static const int kPlayerFieldNumber = 101;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::PlayerData >, 11, false >
+    player;
+  // @@protoc_insertion_point(class_scope:fantasybit.PlayerData)
+ private:
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+  inline void set_has_teamid();
+  inline void clear_has_teamid();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 playerid_;
+  ::google::protobuf::uint32 teamid_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static PlayerData* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class TeamData : public ::google::protobuf::Message {
+ public:
+  TeamData();
+  virtual ~TeamData();
+
+  TeamData(const TeamData& from);
+
+  inline TeamData& operator=(const TeamData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TeamData& default_instance();
+
+  void Swap(TeamData* other);
+
+  // implements Message ----------------------------------------------
+
+  TeamData* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const TeamData& from);
+  void MergeFrom(const TeamData& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 teamid = 10;
+  inline bool has_teamid() const;
+  inline void clear_teamid();
+  static const int kTeamidFieldNumber = 10;
+  inline ::google::protobuf::uint32 teamid() const;
+  inline void set_teamid(::google::protobuf::uint32 value);
+
+  static const int kTeamDataFieldNumber = 111;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::TeamData >, 11, false >
+    team_data;
+  // @@protoc_insertion_point(class_scope:fantasybit.TeamData)
+ private:
+  inline void set_has_teamid();
+  inline void clear_has_teamid();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 teamid_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static TeamData* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ResultData : public ::google::protobuf::Message {
+ public:
+  ResultData();
+  virtual ~ResultData();
+
+  ResultData(const ResultData& from);
+
+  inline ResultData& operator=(const ResultData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ResultData& default_instance();
+
+  void Swap(ResultData* other);
+
+  // implements Message ----------------------------------------------
+
+  ResultData* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ResultData& from);
+  void MergeFrom(const ResultData& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.FantasyPlayerPoints fpp = 10;
+  inline bool has_fpp() const;
+  inline void clear_fpp();
+  static const int kFppFieldNumber = 10;
+  inline const ::fantasybit::FantasyPlayerPoints& fpp() const;
+  inline ::fantasybit::FantasyPlayerPoints* mutable_fpp();
+  inline ::fantasybit::FantasyPlayerPoints* release_fpp();
+  inline void set_allocated_fpp(::fantasybit::FantasyPlayerPoints* fpp);
+
+  static const int kResultDataFieldNumber = 202;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ResultData >, 11, false >
+    result_data;
+  // @@protoc_insertion_point(class_scope:fantasybit.ResultData)
+ private:
+  inline void set_has_fpp();
+  inline void clear_has_fpp();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::FantasyPlayerPoints* fpp_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ResultData* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DataTransition : public ::google::protobuf::Message {
+ public:
+  DataTransition();
+  virtual ~DataTransition();
+
+  DataTransition(const DataTransition& from);
+
+  inline DataTransition& operator=(const DataTransition& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DataTransition& default_instance();
+
+  void Swap(DataTransition* other);
+
+  // implements Message ----------------------------------------------
+
+  DataTransition* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DataTransition& from);
+  void MergeFrom(const DataTransition& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef DataTransition_Type Type;
+  static const Type ROSTER = DataTransition_Type_ROSTER;
+  static const Type SEASONSTART = DataTransition_Type_SEASONSTART;
+  static const Type SEASONEND = DataTransition_Type_SEASONEND;
+  static const Type DRAFTOVER = DataTransition_Type_DRAFTOVER;
+  static const Type HEARTBEAT = DataTransition_Type_HEARTBEAT;
+  static const Type GAMESTART = DataTransition_Type_GAMESTART;
+  static const Type WEEKOVER = DataTransition_Type_WEEKOVER;
+  static inline bool Type_IsValid(int value) {
+    return DataTransition_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    DataTransition_Type_Type_MIN;
+  static const Type Type_MAX =
+    DataTransition_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    DataTransition_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return DataTransition_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return DataTransition_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return DataTransition_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.DataTransition.Type type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::fantasybit::DataTransition_Type type() const;
+  inline void set_type(::fantasybit::DataTransition_Type value);
+
+  // optional uint32 season = 10;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 10;
+  inline ::google::protobuf::uint32 season() const;
+  inline void set_season(::google::protobuf::uint32 value);
+
+  // optional uint32 week = 20;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 20;
+  inline ::google::protobuf::uint32 week() const;
+  inline void set_week(::google::protobuf::uint32 value);
+
+  // repeated uint32 teamid = 30;
+  inline int teamid_size() const;
+  inline void clear_teamid();
+  static const int kTeamidFieldNumber = 30;
+  inline ::google::protobuf::uint32 teamid(int index) const;
+  inline void set_teamid(int index, ::google::protobuf::uint32 value);
+  inline void add_teamid(::google::protobuf::uint32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      teamid() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_teamid();
+
+  // repeated .fantasybit.Data data = 40;
+  inline int data_size() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 40;
+  inline const ::fantasybit::Data& data(int index) const;
+  inline ::fantasybit::Data* mutable_data(int index);
+  inline ::fantasybit::Data* add_data();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::Data >&
+      data() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Data >*
+      mutable_data();
+
+  static const int kDataTransFieldNumber = 203;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::DataTransition >, 11, false >
+    data_trans;
+  // @@protoc_insertion_point(class_scope:fantasybit.DataTransition)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int type_;
+  ::google::protobuf::uint32 season_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > teamid_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::Data > data_;
+  ::google::protobuf::uint32 week_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static DataTransition* default_instance_;
 };
 // ===================================================================
 
@@ -4570,406 +4979,6 @@ inline void NameTrans::set_allocated_proof(::fantasybit::NameProof* proof) {
 
 // -------------------------------------------------------------------
 
-// FantasyPlayerPoints
-
-// optional string fantasy_player_id = 1;
-inline bool FantasyPlayerPoints::has_fantasy_player_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void FantasyPlayerPoints::set_has_fantasy_player_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void FantasyPlayerPoints::clear_has_fantasy_player_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void FantasyPlayerPoints::clear_fantasy_player_id() {
-  if (fantasy_player_id_ != &::google::protobuf::internal::kEmptyString) {
-    fantasy_player_id_->clear();
-  }
-  clear_has_fantasy_player_id();
-}
-inline const ::std::string& FantasyPlayerPoints::fantasy_player_id() const {
-  return *fantasy_player_id_;
-}
-inline void FantasyPlayerPoints::set_fantasy_player_id(const ::std::string& value) {
-  set_has_fantasy_player_id();
-  if (fantasy_player_id_ == &::google::protobuf::internal::kEmptyString) {
-    fantasy_player_id_ = new ::std::string;
-  }
-  fantasy_player_id_->assign(value);
-}
-inline void FantasyPlayerPoints::set_fantasy_player_id(const char* value) {
-  set_has_fantasy_player_id();
-  if (fantasy_player_id_ == &::google::protobuf::internal::kEmptyString) {
-    fantasy_player_id_ = new ::std::string;
-  }
-  fantasy_player_id_->assign(value);
-}
-inline void FantasyPlayerPoints::set_fantasy_player_id(const char* value, size_t size) {
-  set_has_fantasy_player_id();
-  if (fantasy_player_id_ == &::google::protobuf::internal::kEmptyString) {
-    fantasy_player_id_ = new ::std::string;
-  }
-  fantasy_player_id_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* FantasyPlayerPoints::mutable_fantasy_player_id() {
-  set_has_fantasy_player_id();
-  if (fantasy_player_id_ == &::google::protobuf::internal::kEmptyString) {
-    fantasy_player_id_ = new ::std::string;
-  }
-  return fantasy_player_id_;
-}
-inline ::std::string* FantasyPlayerPoints::release_fantasy_player_id() {
-  clear_has_fantasy_player_id();
-  if (fantasy_player_id_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = fantasy_player_id_;
-    fantasy_player_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void FantasyPlayerPoints::set_allocated_fantasy_player_id(::std::string* fantasy_player_id) {
-  if (fantasy_player_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete fantasy_player_id_;
-  }
-  if (fantasy_player_id) {
-    set_has_fantasy_player_id();
-    fantasy_player_id_ = fantasy_player_id;
-  } else {
-    clear_has_fantasy_player_id();
-    fantasy_player_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional int32 points = 2;
-inline bool FantasyPlayerPoints::has_points() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void FantasyPlayerPoints::set_has_points() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void FantasyPlayerPoints::clear_has_points() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void FantasyPlayerPoints::clear_points() {
-  points_ = 0;
-  clear_has_points();
-}
-inline ::google::protobuf::int32 FantasyPlayerPoints::points() const {
-  return points_;
-}
-inline void FantasyPlayerPoints::set_points(::google::protobuf::int32 value) {
-  set_has_points();
-  points_ = value;
-}
-
-// -------------------------------------------------------------------
-
-// ProjectionTrans
-
-// optional string game_id = 2;
-inline bool ProjectionTrans::has_game_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void ProjectionTrans::set_has_game_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void ProjectionTrans::clear_has_game_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void ProjectionTrans::clear_game_id() {
-  if (game_id_ != &::google::protobuf::internal::kEmptyString) {
-    game_id_->clear();
-  }
-  clear_has_game_id();
-}
-inline const ::std::string& ProjectionTrans::game_id() const {
-  return *game_id_;
-}
-inline void ProjectionTrans::set_game_id(const ::std::string& value) {
-  set_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    game_id_ = new ::std::string;
-  }
-  game_id_->assign(value);
-}
-inline void ProjectionTrans::set_game_id(const char* value) {
-  set_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    game_id_ = new ::std::string;
-  }
-  game_id_->assign(value);
-}
-inline void ProjectionTrans::set_game_id(const char* value, size_t size) {
-  set_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    game_id_ = new ::std::string;
-  }
-  game_id_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* ProjectionTrans::mutable_game_id() {
-  set_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    game_id_ = new ::std::string;
-  }
-  return game_id_;
-}
-inline ::std::string* ProjectionTrans::release_game_id() {
-  clear_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = game_id_;
-    game_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void ProjectionTrans::set_allocated_game_id(::std::string* game_id) {
-  if (game_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete game_id_;
-  }
-  if (game_id) {
-    set_has_game_id();
-    game_id_ = game_id;
-  } else {
-    clear_has_game_id();
-    game_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional .fantasybit.FantasyPlayerPoints fpp_projection = 3;
-inline bool ProjectionTrans::has_fpp_projection() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void ProjectionTrans::set_has_fpp_projection() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void ProjectionTrans::clear_has_fpp_projection() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void ProjectionTrans::clear_fpp_projection() {
-  if (fpp_projection_ != NULL) fpp_projection_->::fantasybit::FantasyPlayerPoints::Clear();
-  clear_has_fpp_projection();
-}
-inline const ::fantasybit::FantasyPlayerPoints& ProjectionTrans::fpp_projection() const {
-  return fpp_projection_ != NULL ? *fpp_projection_ : *default_instance_->fpp_projection_;
-}
-inline ::fantasybit::FantasyPlayerPoints* ProjectionTrans::mutable_fpp_projection() {
-  set_has_fpp_projection();
-  if (fpp_projection_ == NULL) fpp_projection_ = new ::fantasybit::FantasyPlayerPoints;
-  return fpp_projection_;
-}
-inline ::fantasybit::FantasyPlayerPoints* ProjectionTrans::release_fpp_projection() {
-  clear_has_fpp_projection();
-  ::fantasybit::FantasyPlayerPoints* temp = fpp_projection_;
-  fpp_projection_ = NULL;
-  return temp;
-}
-inline void ProjectionTrans::set_allocated_fpp_projection(::fantasybit::FantasyPlayerPoints* fpp_projection) {
-  delete fpp_projection_;
-  fpp_projection_ = fpp_projection;
-  if (fpp_projection) {
-    set_has_fpp_projection();
-  } else {
-    clear_has_fpp_projection();
-  }
-}
-
-// -------------------------------------------------------------------
-
-// ResultTrans
-
-// optional string game_id = 10;
-inline bool ResultTrans::has_game_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void ResultTrans::set_has_game_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void ResultTrans::clear_has_game_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void ResultTrans::clear_game_id() {
-  if (game_id_ != &::google::protobuf::internal::kEmptyString) {
-    game_id_->clear();
-  }
-  clear_has_game_id();
-}
-inline const ::std::string& ResultTrans::game_id() const {
-  return *game_id_;
-}
-inline void ResultTrans::set_game_id(const ::std::string& value) {
-  set_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    game_id_ = new ::std::string;
-  }
-  game_id_->assign(value);
-}
-inline void ResultTrans::set_game_id(const char* value) {
-  set_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    game_id_ = new ::std::string;
-  }
-  game_id_->assign(value);
-}
-inline void ResultTrans::set_game_id(const char* value, size_t size) {
-  set_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    game_id_ = new ::std::string;
-  }
-  game_id_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* ResultTrans::mutable_game_id() {
-  set_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    game_id_ = new ::std::string;
-  }
-  return game_id_;
-}
-inline ::std::string* ResultTrans::release_game_id() {
-  clear_has_game_id();
-  if (game_id_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = game_id_;
-    game_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void ResultTrans::set_allocated_game_id(::std::string* game_id) {
-  if (game_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete game_id_;
-  }
-  if (game_id) {
-    set_has_game_id();
-    game_id_ = game_id;
-  } else {
-    clear_has_game_id();
-    game_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// repeated .fantasybit.FantasyPlayerPoints fpp_results = 20;
-inline int ResultTrans::fpp_results_size() const {
-  return fpp_results_.size();
-}
-inline void ResultTrans::clear_fpp_results() {
-  fpp_results_.Clear();
-}
-inline const ::fantasybit::FantasyPlayerPoints& ResultTrans::fpp_results(int index) const {
-  return fpp_results_.Get(index);
-}
-inline ::fantasybit::FantasyPlayerPoints* ResultTrans::mutable_fpp_results(int index) {
-  return fpp_results_.Mutable(index);
-}
-inline ::fantasybit::FantasyPlayerPoints* ResultTrans::add_fpp_results() {
-  return fpp_results_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyPlayerPoints >&
-ResultTrans::fpp_results() const {
-  return fpp_results_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyPlayerPoints >*
-ResultTrans::mutable_fpp_results() {
-  return &fpp_results_;
-}
-
-// -------------------------------------------------------------------
-
-// DataTransition
-
-// optional .fantasybit.DataTransition.Type type = 1;
-inline bool DataTransition::has_type() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void DataTransition::set_has_type() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void DataTransition::clear_has_type() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void DataTransition::clear_type() {
-  type_ = 1;
-  clear_has_type();
-}
-inline ::fantasybit::DataTransition_Type DataTransition::type() const {
-  return static_cast< ::fantasybit::DataTransition_Type >(type_);
-}
-inline void DataTransition::set_type(::fantasybit::DataTransition_Type value) {
-  assert(::fantasybit::DataTransition_Type_IsValid(value));
-  set_has_type();
-  type_ = value;
-}
-
-// optional int32 week = 10;
-inline bool DataTransition::has_week() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void DataTransition::set_has_week() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void DataTransition::clear_has_week() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void DataTransition::clear_week() {
-  week_ = 0;
-  clear_has_week();
-}
-inline ::google::protobuf::int32 DataTransition::week() const {
-  return week_;
-}
-inline void DataTransition::set_week(::google::protobuf::int32 value) {
-  set_has_week();
-  week_ = value;
-}
-
-// repeated string game_id = 20;
-inline int DataTransition::game_id_size() const {
-  return game_id_.size();
-}
-inline void DataTransition::clear_game_id() {
-  game_id_.Clear();
-}
-inline const ::std::string& DataTransition::game_id(int index) const {
-  return game_id_.Get(index);
-}
-inline ::std::string* DataTransition::mutable_game_id(int index) {
-  return game_id_.Mutable(index);
-}
-inline void DataTransition::set_game_id(int index, const ::std::string& value) {
-  game_id_.Mutable(index)->assign(value);
-}
-inline void DataTransition::set_game_id(int index, const char* value) {
-  game_id_.Mutable(index)->assign(value);
-}
-inline void DataTransition::set_game_id(int index, const char* value, size_t size) {
-  game_id_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* DataTransition::add_game_id() {
-  return game_id_.Add();
-}
-inline void DataTransition::add_game_id(const ::std::string& value) {
-  game_id_.Add()->assign(value);
-}
-inline void DataTransition::add_game_id(const char* value) {
-  game_id_.Add()->assign(value);
-}
-inline void DataTransition::add_game_id(const char* value, size_t size) {
-  game_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-DataTransition::game_id() const {
-  return game_id_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-DataTransition::mutable_game_id() {
-  return &game_id_;
-}
-
-// -------------------------------------------------------------------
-
 // SignedTransaction
 
 // optional .fantasybit.Transaction trans = 10;
@@ -5224,15 +5233,37 @@ inline void SignedTransaction::set_allocated_fantasy_name(::std::string* fantasy
 
 // BlockHeader
 
-// optional int32 num = 10;
-inline bool BlockHeader::has_num() const {
+// optional int32 version = 1;
+inline bool BlockHeader::has_version() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void BlockHeader::set_has_num() {
+inline void BlockHeader::set_has_version() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void BlockHeader::clear_has_num() {
+inline void BlockHeader::clear_has_version() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void BlockHeader::clear_version() {
+  version_ = 0;
+  clear_has_version();
+}
+inline ::google::protobuf::int32 BlockHeader::version() const {
+  return version_;
+}
+inline void BlockHeader::set_version(::google::protobuf::int32 value) {
+  set_has_version();
+  version_ = value;
+}
+
+// optional int32 num = 10;
+inline bool BlockHeader::has_num() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void BlockHeader::set_has_num() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void BlockHeader::clear_has_num() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void BlockHeader::clear_num() {
   num_ = 0;
@@ -5248,13 +5279,13 @@ inline void BlockHeader::set_num(::google::protobuf::int32 value) {
 
 // optional bytes prev_id = 20;
 inline bool BlockHeader::has_prev_id() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void BlockHeader::set_has_prev_id() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void BlockHeader::clear_has_prev_id() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void BlockHeader::clear_prev_id() {
   if (prev_id_ != &::google::protobuf::internal::kEmptyString) {
@@ -5316,45 +5347,434 @@ inline void BlockHeader::set_allocated_prev_id(::std::string* prev_id) {
   }
 }
 
+// optional int32 timestamp = 21;
+inline bool BlockHeader::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void BlockHeader::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void BlockHeader::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void BlockHeader::clear_timestamp() {
+  timestamp_ = 0;
+  clear_has_timestamp();
+}
+inline ::google::protobuf::int32 BlockHeader::timestamp() const {
+  return timestamp_;
+}
+inline void BlockHeader::set_timestamp(::google::protobuf::int32 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+}
+
+// optional bytes generator_pk = 30;
+inline bool BlockHeader::has_generator_pk() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void BlockHeader::set_has_generator_pk() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void BlockHeader::clear_has_generator_pk() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void BlockHeader::clear_generator_pk() {
+  if (generator_pk_ != &::google::protobuf::internal::kEmptyString) {
+    generator_pk_->clear();
+  }
+  clear_has_generator_pk();
+}
+inline const ::std::string& BlockHeader::generator_pk() const {
+  return *generator_pk_;
+}
+inline void BlockHeader::set_generator_pk(const ::std::string& value) {
+  set_has_generator_pk();
+  if (generator_pk_ == &::google::protobuf::internal::kEmptyString) {
+    generator_pk_ = new ::std::string;
+  }
+  generator_pk_->assign(value);
+}
+inline void BlockHeader::set_generator_pk(const char* value) {
+  set_has_generator_pk();
+  if (generator_pk_ == &::google::protobuf::internal::kEmptyString) {
+    generator_pk_ = new ::std::string;
+  }
+  generator_pk_->assign(value);
+}
+inline void BlockHeader::set_generator_pk(const void* value, size_t size) {
+  set_has_generator_pk();
+  if (generator_pk_ == &::google::protobuf::internal::kEmptyString) {
+    generator_pk_ = new ::std::string;
+  }
+  generator_pk_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* BlockHeader::mutable_generator_pk() {
+  set_has_generator_pk();
+  if (generator_pk_ == &::google::protobuf::internal::kEmptyString) {
+    generator_pk_ = new ::std::string;
+  }
+  return generator_pk_;
+}
+inline ::std::string* BlockHeader::release_generator_pk() {
+  clear_has_generator_pk();
+  if (generator_pk_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = generator_pk_;
+    generator_pk_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void BlockHeader::set_allocated_generator_pk(::std::string* generator_pk) {
+  if (generator_pk_ != &::google::protobuf::internal::kEmptyString) {
+    delete generator_pk_;
+  }
+  if (generator_pk) {
+    set_has_generator_pk();
+    generator_pk_ = generator_pk;
+  } else {
+    clear_has_generator_pk();
+    generator_pk_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes generating_sig = 40;
+inline bool BlockHeader::has_generating_sig() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void BlockHeader::set_has_generating_sig() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void BlockHeader::clear_has_generating_sig() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void BlockHeader::clear_generating_sig() {
+  if (generating_sig_ != &::google::protobuf::internal::kEmptyString) {
+    generating_sig_->clear();
+  }
+  clear_has_generating_sig();
+}
+inline const ::std::string& BlockHeader::generating_sig() const {
+  return *generating_sig_;
+}
+inline void BlockHeader::set_generating_sig(const ::std::string& value) {
+  set_has_generating_sig();
+  if (generating_sig_ == &::google::protobuf::internal::kEmptyString) {
+    generating_sig_ = new ::std::string;
+  }
+  generating_sig_->assign(value);
+}
+inline void BlockHeader::set_generating_sig(const char* value) {
+  set_has_generating_sig();
+  if (generating_sig_ == &::google::protobuf::internal::kEmptyString) {
+    generating_sig_ = new ::std::string;
+  }
+  generating_sig_->assign(value);
+}
+inline void BlockHeader::set_generating_sig(const void* value, size_t size) {
+  set_has_generating_sig();
+  if (generating_sig_ == &::google::protobuf::internal::kEmptyString) {
+    generating_sig_ = new ::std::string;
+  }
+  generating_sig_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* BlockHeader::mutable_generating_sig() {
+  set_has_generating_sig();
+  if (generating_sig_ == &::google::protobuf::internal::kEmptyString) {
+    generating_sig_ = new ::std::string;
+  }
+  return generating_sig_;
+}
+inline ::std::string* BlockHeader::release_generating_sig() {
+  clear_has_generating_sig();
+  if (generating_sig_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = generating_sig_;
+    generating_sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void BlockHeader::set_allocated_generating_sig(::std::string* generating_sig) {
+  if (generating_sig_ != &::google::protobuf::internal::kEmptyString) {
+    delete generating_sig_;
+  }
+  if (generating_sig) {
+    set_has_generating_sig();
+    generating_sig_ = generating_sig;
+  } else {
+    clear_has_generating_sig();
+    generating_sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 basetarget = 50;
+inline bool BlockHeader::has_basetarget() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void BlockHeader::set_has_basetarget() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void BlockHeader::clear_has_basetarget() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void BlockHeader::clear_basetarget() {
+  basetarget_ = 0;
+  clear_has_basetarget();
+}
+inline ::google::protobuf::int32 BlockHeader::basetarget() const {
+  return basetarget_;
+}
+inline void BlockHeader::set_basetarget(::google::protobuf::int32 value) {
+  set_has_basetarget();
+  basetarget_ = value;
+}
+
+// optional .fantasybit.BlockHeader.Type blocktype = 60;
+inline bool BlockHeader::has_blocktype() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void BlockHeader::set_has_blocktype() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void BlockHeader::clear_has_blocktype() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void BlockHeader::clear_blocktype() {
+  blocktype_ = 1;
+  clear_has_blocktype();
+}
+inline ::fantasybit::BlockHeader_Type BlockHeader::blocktype() const {
+  return static_cast< ::fantasybit::BlockHeader_Type >(blocktype_);
+}
+inline void BlockHeader::set_blocktype(::fantasybit::BlockHeader_Type value) {
+  assert(::fantasybit::BlockHeader_Type_IsValid(value));
+  set_has_blocktype();
+  blocktype_ = value;
+}
+
+// optional bytes transaction_id = 70;
+inline bool BlockHeader::has_transaction_id() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void BlockHeader::set_has_transaction_id() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void BlockHeader::clear_has_transaction_id() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void BlockHeader::clear_transaction_id() {
+  if (transaction_id_ != &::google::protobuf::internal::kEmptyString) {
+    transaction_id_->clear();
+  }
+  clear_has_transaction_id();
+}
+inline const ::std::string& BlockHeader::transaction_id() const {
+  return *transaction_id_;
+}
+inline void BlockHeader::set_transaction_id(const ::std::string& value) {
+  set_has_transaction_id();
+  if (transaction_id_ == &::google::protobuf::internal::kEmptyString) {
+    transaction_id_ = new ::std::string;
+  }
+  transaction_id_->assign(value);
+}
+inline void BlockHeader::set_transaction_id(const char* value) {
+  set_has_transaction_id();
+  if (transaction_id_ == &::google::protobuf::internal::kEmptyString) {
+    transaction_id_ = new ::std::string;
+  }
+  transaction_id_->assign(value);
+}
+inline void BlockHeader::set_transaction_id(const void* value, size_t size) {
+  set_has_transaction_id();
+  if (transaction_id_ == &::google::protobuf::internal::kEmptyString) {
+    transaction_id_ = new ::std::string;
+  }
+  transaction_id_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* BlockHeader::mutable_transaction_id() {
+  set_has_transaction_id();
+  if (transaction_id_ == &::google::protobuf::internal::kEmptyString) {
+    transaction_id_ = new ::std::string;
+  }
+  return transaction_id_;
+}
+inline ::std::string* BlockHeader::release_transaction_id() {
+  clear_has_transaction_id();
+  if (transaction_id_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = transaction_id_;
+    transaction_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void BlockHeader::set_allocated_transaction_id(::std::string* transaction_id) {
+  if (transaction_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete transaction_id_;
+  }
+  if (transaction_id) {
+    set_has_transaction_id();
+    transaction_id_ = transaction_id;
+  } else {
+    clear_has_transaction_id();
+    transaction_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
-// Block
+// SignedBlockHeader
 
 // optional .fantasybit.BlockHeader head = 10;
-inline bool Block::has_head() const {
+inline bool SignedBlockHeader::has_head() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Block::set_has_head() {
+inline void SignedBlockHeader::set_has_head() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Block::clear_has_head() {
+inline void SignedBlockHeader::clear_has_head() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Block::clear_head() {
+inline void SignedBlockHeader::clear_head() {
   if (head_ != NULL) head_->::fantasybit::BlockHeader::Clear();
   clear_has_head();
 }
-inline const ::fantasybit::BlockHeader& Block::head() const {
+inline const ::fantasybit::BlockHeader& SignedBlockHeader::head() const {
   return head_ != NULL ? *head_ : *default_instance_->head_;
 }
-inline ::fantasybit::BlockHeader* Block::mutable_head() {
+inline ::fantasybit::BlockHeader* SignedBlockHeader::mutable_head() {
   set_has_head();
   if (head_ == NULL) head_ = new ::fantasybit::BlockHeader;
   return head_;
 }
-inline ::fantasybit::BlockHeader* Block::release_head() {
+inline ::fantasybit::BlockHeader* SignedBlockHeader::release_head() {
   clear_has_head();
   ::fantasybit::BlockHeader* temp = head_;
   head_ = NULL;
   return temp;
 }
-inline void Block::set_allocated_head(::fantasybit::BlockHeader* head) {
+inline void SignedBlockHeader::set_allocated_head(::fantasybit::BlockHeader* head) {
   delete head_;
   head_ = head;
   if (head) {
     set_has_head();
   } else {
     clear_has_head();
+  }
+}
+
+// optional string sig = 30;
+inline bool SignedBlockHeader::has_sig() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SignedBlockHeader::set_has_sig() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SignedBlockHeader::clear_has_sig() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SignedBlockHeader::clear_sig() {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    sig_->clear();
+  }
+  clear_has_sig();
+}
+inline const ::std::string& SignedBlockHeader::sig() const {
+  return *sig_;
+}
+inline void SignedBlockHeader::set_sig(const ::std::string& value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void SignedBlockHeader::set_sig(const char* value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void SignedBlockHeader::set_sig(const char* value, size_t size) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SignedBlockHeader::mutable_sig() {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  return sig_;
+}
+inline ::std::string* SignedBlockHeader::release_sig() {
+  clear_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sig_;
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SignedBlockHeader::set_allocated_sig(::std::string* sig) {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    delete sig_;
+  }
+  if (sig) {
+    set_has_sig();
+    sig_ = sig;
+  } else {
+    clear_has_sig();
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// Block
+
+// optional .fantasybit.SignedBlockHeader signedhead = 10;
+inline bool Block::has_signedhead() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Block::set_has_signedhead() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Block::clear_has_signedhead() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Block::clear_signedhead() {
+  if (signedhead_ != NULL) signedhead_->::fantasybit::SignedBlockHeader::Clear();
+  clear_has_signedhead();
+}
+inline const ::fantasybit::SignedBlockHeader& Block::signedhead() const {
+  return signedhead_ != NULL ? *signedhead_ : *default_instance_->signedhead_;
+}
+inline ::fantasybit::SignedBlockHeader* Block::mutable_signedhead() {
+  set_has_signedhead();
+  if (signedhead_ == NULL) signedhead_ = new ::fantasybit::SignedBlockHeader;
+  return signedhead_;
+}
+inline ::fantasybit::SignedBlockHeader* Block::release_signedhead() {
+  clear_has_signedhead();
+  ::fantasybit::SignedBlockHeader* temp = signedhead_;
+  signedhead_ = NULL;
+  return temp;
+}
+inline void Block::set_allocated_signedhead(::fantasybit::SignedBlockHeader* signedhead) {
+  delete signedhead_;
+  signedhead_ = signedhead;
+  if (signedhead) {
+    set_has_signedhead();
+  } else {
+    clear_has_signedhead();
   }
 }
 
@@ -5381,210 +5801,6 @@ Block::signed_transactions() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >*
 Block::mutable_signed_transactions() {
   return &signed_transactions_;
-}
-
-// -------------------------------------------------------------------
-
-// SignedBlock
-
-// optional int32 version = 1;
-inline bool SignedBlock::has_version() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void SignedBlock::set_has_version() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void SignedBlock::clear_has_version() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void SignedBlock::clear_version() {
-  version_ = 0;
-  clear_has_version();
-}
-inline ::google::protobuf::int32 SignedBlock::version() const {
-  return version_;
-}
-inline void SignedBlock::set_version(::google::protobuf::int32 value) {
-  set_has_version();
-  version_ = value;
-}
-
-// optional .fantasybit.Block block = 10;
-inline bool SignedBlock::has_block() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void SignedBlock::set_has_block() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void SignedBlock::clear_has_block() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void SignedBlock::clear_block() {
-  if (block_ != NULL) block_->::fantasybit::Block::Clear();
-  clear_has_block();
-}
-inline const ::fantasybit::Block& SignedBlock::block() const {
-  return block_ != NULL ? *block_ : *default_instance_->block_;
-}
-inline ::fantasybit::Block* SignedBlock::mutable_block() {
-  set_has_block();
-  if (block_ == NULL) block_ = new ::fantasybit::Block;
-  return block_;
-}
-inline ::fantasybit::Block* SignedBlock::release_block() {
-  clear_has_block();
-  ::fantasybit::Block* temp = block_;
-  block_ = NULL;
-  return temp;
-}
-inline void SignedBlock::set_allocated_block(::fantasybit::Block* block) {
-  delete block_;
-  block_ = block;
-  if (block) {
-    set_has_block();
-  } else {
-    clear_has_block();
-  }
-}
-
-// optional bytes id = 20;
-inline bool SignedBlock::has_id() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SignedBlock::set_has_id() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void SignedBlock::clear_has_id() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void SignedBlock::clear_id() {
-  if (id_ != &::google::protobuf::internal::kEmptyString) {
-    id_->clear();
-  }
-  clear_has_id();
-}
-inline const ::std::string& SignedBlock::id() const {
-  return *id_;
-}
-inline void SignedBlock::set_id(const ::std::string& value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    id_ = new ::std::string;
-  }
-  id_->assign(value);
-}
-inline void SignedBlock::set_id(const char* value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    id_ = new ::std::string;
-  }
-  id_->assign(value);
-}
-inline void SignedBlock::set_id(const void* value, size_t size) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    id_ = new ::std::string;
-  }
-  id_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SignedBlock::mutable_id() {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    id_ = new ::std::string;
-  }
-  return id_;
-}
-inline ::std::string* SignedBlock::release_id() {
-  clear_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = id_;
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SignedBlock::set_allocated_id(::std::string* id) {
-  if (id_ != &::google::protobuf::internal::kEmptyString) {
-    delete id_;
-  }
-  if (id) {
-    set_has_id();
-    id_ = id;
-  } else {
-    clear_has_id();
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional string sig = 30;
-inline bool SignedBlock::has_sig() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void SignedBlock::set_has_sig() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void SignedBlock::clear_has_sig() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void SignedBlock::clear_sig() {
-  if (sig_ != &::google::protobuf::internal::kEmptyString) {
-    sig_->clear();
-  }
-  clear_has_sig();
-}
-inline const ::std::string& SignedBlock::sig() const {
-  return *sig_;
-}
-inline void SignedBlock::set_sig(const ::std::string& value) {
-  set_has_sig();
-  if (sig_ == &::google::protobuf::internal::kEmptyString) {
-    sig_ = new ::std::string;
-  }
-  sig_->assign(value);
-}
-inline void SignedBlock::set_sig(const char* value) {
-  set_has_sig();
-  if (sig_ == &::google::protobuf::internal::kEmptyString) {
-    sig_ = new ::std::string;
-  }
-  sig_->assign(value);
-}
-inline void SignedBlock::set_sig(const char* value, size_t size) {
-  set_has_sig();
-  if (sig_ == &::google::protobuf::internal::kEmptyString) {
-    sig_ = new ::std::string;
-  }
-  sig_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SignedBlock::mutable_sig() {
-  set_has_sig();
-  if (sig_ == &::google::protobuf::internal::kEmptyString) {
-    sig_ = new ::std::string;
-  }
-  return sig_;
-}
-inline ::std::string* SignedBlock::release_sig() {
-  clear_has_sig();
-  if (sig_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = sig_;
-    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SignedBlock::set_allocated_sig(::std::string* sig) {
-  if (sig_ != &::google::protobuf::internal::kEmptyString) {
-    delete sig_;
-  }
-  if (sig) {
-    set_has_sig();
-    sig_ = sig;
-  } else {
-    clear_has_sig();
-    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
 }
 
 // -------------------------------------------------------------------
@@ -5846,6 +6062,426 @@ NodeReply::mutable_ips() {
   return &ips_;
 }
 
+// -------------------------------------------------------------------
+
+// FantasyPlayerPoints
+
+// optional uint32 season = 10;
+inline bool FantasyPlayerPoints::has_season() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void FantasyPlayerPoints::set_has_season() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void FantasyPlayerPoints::clear_has_season() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void FantasyPlayerPoints::clear_season() {
+  season_ = 0u;
+  clear_has_season();
+}
+inline ::google::protobuf::uint32 FantasyPlayerPoints::season() const {
+  return season_;
+}
+inline void FantasyPlayerPoints::set_season(::google::protobuf::uint32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional uint32 week = 20;
+inline bool FantasyPlayerPoints::has_week() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void FantasyPlayerPoints::set_has_week() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void FantasyPlayerPoints::clear_has_week() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void FantasyPlayerPoints::clear_week() {
+  week_ = 0u;
+  clear_has_week();
+}
+inline ::google::protobuf::uint32 FantasyPlayerPoints::week() const {
+  return week_;
+}
+inline void FantasyPlayerPoints::set_week(::google::protobuf::uint32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional uint32 playerid = 30;
+inline bool FantasyPlayerPoints::has_playerid() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void FantasyPlayerPoints::set_has_playerid() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void FantasyPlayerPoints::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void FantasyPlayerPoints::clear_playerid() {
+  playerid_ = 0u;
+  clear_has_playerid();
+}
+inline ::google::protobuf::uint32 FantasyPlayerPoints::playerid() const {
+  return playerid_;
+}
+inline void FantasyPlayerPoints::set_playerid(::google::protobuf::uint32 value) {
+  set_has_playerid();
+  playerid_ = value;
+}
+
+// optional int32 points = 40;
+inline bool FantasyPlayerPoints::has_points() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void FantasyPlayerPoints::set_has_points() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void FantasyPlayerPoints::clear_has_points() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void FantasyPlayerPoints::clear_points() {
+  points_ = 0;
+  clear_has_points();
+}
+inline ::google::protobuf::int32 FantasyPlayerPoints::points() const {
+  return points_;
+}
+inline void FantasyPlayerPoints::set_points(::google::protobuf::int32 value) {
+  set_has_points();
+  points_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ProjectionTrans
+
+// optional .fantasybit.FantasyPlayerPoints fpp = 10;
+inline bool ProjectionTrans::has_fpp() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProjectionTrans::set_has_fpp() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProjectionTrans::clear_has_fpp() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProjectionTrans::clear_fpp() {
+  if (fpp_ != NULL) fpp_->::fantasybit::FantasyPlayerPoints::Clear();
+  clear_has_fpp();
+}
+inline const ::fantasybit::FantasyPlayerPoints& ProjectionTrans::fpp() const {
+  return fpp_ != NULL ? *fpp_ : *default_instance_->fpp_;
+}
+inline ::fantasybit::FantasyPlayerPoints* ProjectionTrans::mutable_fpp() {
+  set_has_fpp();
+  if (fpp_ == NULL) fpp_ = new ::fantasybit::FantasyPlayerPoints;
+  return fpp_;
+}
+inline ::fantasybit::FantasyPlayerPoints* ProjectionTrans::release_fpp() {
+  clear_has_fpp();
+  ::fantasybit::FantasyPlayerPoints* temp = fpp_;
+  fpp_ = NULL;
+  return temp;
+}
+inline void ProjectionTrans::set_allocated_fpp(::fantasybit::FantasyPlayerPoints* fpp) {
+  delete fpp_;
+  fpp_ = fpp;
+  if (fpp) {
+    set_has_fpp();
+  } else {
+    clear_has_fpp();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// Data
+
+// optional int32 version = 10;
+inline bool Data::has_version() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Data::set_has_version() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Data::clear_has_version() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Data::clear_version() {
+  version_ = 0;
+  clear_has_version();
+}
+inline ::google::protobuf::int32 Data::version() const {
+  return version_;
+}
+inline void Data::set_version(::google::protobuf::int32 value) {
+  set_has_version();
+  version_ = value;
+}
+
+// optional .fantasybit.DataType type = 20;
+inline bool Data::has_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Data::set_has_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Data::clear_has_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Data::clear_type() {
+  type_ = 0;
+  clear_has_type();
+}
+inline ::fantasybit::DataType Data::type() const {
+  return static_cast< ::fantasybit::DataType >(type_);
+}
+inline void Data::set_type(::fantasybit::DataType value) {
+  assert(::fantasybit::DataType_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// PlayerData
+
+// optional uint32 playerid = 10;
+inline bool PlayerData::has_playerid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void PlayerData::set_has_playerid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void PlayerData::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void PlayerData::clear_playerid() {
+  playerid_ = 0u;
+  clear_has_playerid();
+}
+inline ::google::protobuf::uint32 PlayerData::playerid() const {
+  return playerid_;
+}
+inline void PlayerData::set_playerid(::google::protobuf::uint32 value) {
+  set_has_playerid();
+  playerid_ = value;
+}
+
+// optional uint32 teamid = 20;
+inline bool PlayerData::has_teamid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void PlayerData::set_has_teamid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void PlayerData::clear_has_teamid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void PlayerData::clear_teamid() {
+  teamid_ = 0u;
+  clear_has_teamid();
+}
+inline ::google::protobuf::uint32 PlayerData::teamid() const {
+  return teamid_;
+}
+inline void PlayerData::set_teamid(::google::protobuf::uint32 value) {
+  set_has_teamid();
+  teamid_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// TeamData
+
+// optional uint32 teamid = 10;
+inline bool TeamData::has_teamid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TeamData::set_has_teamid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TeamData::clear_has_teamid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TeamData::clear_teamid() {
+  teamid_ = 0u;
+  clear_has_teamid();
+}
+inline ::google::protobuf::uint32 TeamData::teamid() const {
+  return teamid_;
+}
+inline void TeamData::set_teamid(::google::protobuf::uint32 value) {
+  set_has_teamid();
+  teamid_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ResultData
+
+// optional .fantasybit.FantasyPlayerPoints fpp = 10;
+inline bool ResultData::has_fpp() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ResultData::set_has_fpp() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ResultData::clear_has_fpp() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ResultData::clear_fpp() {
+  if (fpp_ != NULL) fpp_->::fantasybit::FantasyPlayerPoints::Clear();
+  clear_has_fpp();
+}
+inline const ::fantasybit::FantasyPlayerPoints& ResultData::fpp() const {
+  return fpp_ != NULL ? *fpp_ : *default_instance_->fpp_;
+}
+inline ::fantasybit::FantasyPlayerPoints* ResultData::mutable_fpp() {
+  set_has_fpp();
+  if (fpp_ == NULL) fpp_ = new ::fantasybit::FantasyPlayerPoints;
+  return fpp_;
+}
+inline ::fantasybit::FantasyPlayerPoints* ResultData::release_fpp() {
+  clear_has_fpp();
+  ::fantasybit::FantasyPlayerPoints* temp = fpp_;
+  fpp_ = NULL;
+  return temp;
+}
+inline void ResultData::set_allocated_fpp(::fantasybit::FantasyPlayerPoints* fpp) {
+  delete fpp_;
+  fpp_ = fpp;
+  if (fpp) {
+    set_has_fpp();
+  } else {
+    clear_has_fpp();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// DataTransition
+
+// optional .fantasybit.DataTransition.Type type = 1;
+inline bool DataTransition::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DataTransition::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DataTransition::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DataTransition::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::fantasybit::DataTransition_Type DataTransition::type() const {
+  return static_cast< ::fantasybit::DataTransition_Type >(type_);
+}
+inline void DataTransition::set_type(::fantasybit::DataTransition_Type value) {
+  assert(::fantasybit::DataTransition_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional uint32 season = 10;
+inline bool DataTransition::has_season() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DataTransition::set_has_season() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DataTransition::clear_has_season() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DataTransition::clear_season() {
+  season_ = 0u;
+  clear_has_season();
+}
+inline ::google::protobuf::uint32 DataTransition::season() const {
+  return season_;
+}
+inline void DataTransition::set_season(::google::protobuf::uint32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional uint32 week = 20;
+inline bool DataTransition::has_week() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DataTransition::set_has_week() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DataTransition::clear_has_week() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DataTransition::clear_week() {
+  week_ = 0u;
+  clear_has_week();
+}
+inline ::google::protobuf::uint32 DataTransition::week() const {
+  return week_;
+}
+inline void DataTransition::set_week(::google::protobuf::uint32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// repeated uint32 teamid = 30;
+inline int DataTransition::teamid_size() const {
+  return teamid_.size();
+}
+inline void DataTransition::clear_teamid() {
+  teamid_.Clear();
+}
+inline ::google::protobuf::uint32 DataTransition::teamid(int index) const {
+  return teamid_.Get(index);
+}
+inline void DataTransition::set_teamid(int index, ::google::protobuf::uint32 value) {
+  teamid_.Set(index, value);
+}
+inline void DataTransition::add_teamid(::google::protobuf::uint32 value) {
+  teamid_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+DataTransition::teamid() const {
+  return teamid_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+DataTransition::mutable_teamid() {
+  return &teamid_;
+}
+
+// repeated .fantasybit.Data data = 40;
+inline int DataTransition::data_size() const {
+  return data_.size();
+}
+inline void DataTransition::clear_data() {
+  data_.Clear();
+}
+inline const ::fantasybit::Data& DataTransition::data(int index) const {
+  return data_.Get(index);
+}
+inline ::fantasybit::Data* DataTransition::mutable_data(int index) {
+  return data_.Mutable(index);
+}
+inline ::fantasybit::Data* DataTransition::add_data() {
+  return data_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::Data >&
+DataTransition::data() const {
+  return data_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Data >*
+DataTransition::mutable_data() {
+  return &data_;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -5868,12 +6504,16 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::NameProof_Type>() 
   return ::fantasybit::NameProof_Type_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::DataTransition_Type>() {
-  return ::fantasybit::DataTransition_Type_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::BlockHeader_Type>() {
+  return ::fantasybit::BlockHeader_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::NodeRequest_Type>() {
   return ::fantasybit::NodeRequest_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::DataTransition_Type>() {
+  return ::fantasybit::DataTransition_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::MyNameStatus>() {
@@ -5882,6 +6522,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::MyNameStatus>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::TransType>() {
   return ::fantasybit::TransType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::DataType>() {
+  return ::fantasybit::DataType_descriptor();
 }
 
 }  // namespace google

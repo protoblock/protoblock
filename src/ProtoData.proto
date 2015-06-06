@@ -1,3 +1,5 @@
+// protoc --proto_path=src --cpp_out= ProtoData.proto 
+
 package fantasybit;
 
 enum MyNameStatus 
@@ -130,37 +132,6 @@ message NameTrans {
 
 }
 
-message FantasyPlayerPoints {
-	optional string fantasy_player_id = 1;
-	optional int32 points = 2;
-}
-
-message ProjectionTrans {
-	extend Transaction {
-		optional ProjectionTrans proj_trans = 201;
-	}
-
-	optional string game_id = 2;	
-	optional FantasyPlayerPoints fpp_projection = 3;
-}
-
-message ResultTrans {
-	extend Transaction {
-		optional ResultTrans result_trans = 202;
-	}
-	optional string game_id = 10;
-	repeated FantasyPlayerPoints fpp_results = 20;
-}
-
-message DataTransition {
-	extend Transaction {
-		optional DataTransition data_trans = 203;
-	}
-	enum Type { PREGAME=1; INGAME=2; WEEKOVER=3; WEEKSTART=4;}
-	optional Type type =1;
-	optional int32	week = 10;
-	repeated string game_id = 20;
-}
 
 message SignedTransaction {
 	optional Transaction trans = 10;
@@ -169,24 +140,35 @@ message SignedTransaction {
 	optional string fantasy_name = 40;
 }
 
+//message BlockHeader {
+//	optional int32 num = 10;
+//	optional bytes prev_id = 20; 
+//}
+
 message BlockHeader {
+	enum Type { NORMAL=1; DATA=2;}
+
+	optional int32 version = 1;
 	optional int32 num = 10;
-	optional bytes prev_id = 20; 
+	optional bytes prev_id = 20; 		
+	optional int32 timestamp = 21;
+	optional bytes generator_pk=30;
+	optional bytes generating_sig=40; //hash(prev(generating_sig) + generator_pk)
+	optional int32 basetarget=50;
+	optional Type blocktype = 60;
+	optional bytes transaction_id = 70;
+}
+
+message SignedBlockHeader {
+	optional BlockHeader head = 10;
+	optional string sig = 30;	
 }
 
 message Block {
-	optional BlockHeader head = 10;
+	optional SignedBlockHeader signedhead = 10;
 	repeated SignedTransaction signed_transactions = 20;
-	
-	extensions 1000 to max;
-}
 
-message SignedBlock {
-	optional int32 version = 1;
-	optional Block block = 10;
-	optional bytes id = 20;
-	optional string sig = 30;
-	
+
 	extensions 1000 to max;
 }
 
@@ -204,3 +186,104 @@ message NodeReply
 	optional int32 hight=10;
 	repeated string ips=20;
 }
+
+////////////////////////////////////////////////////////////
+// FantasyPlayerPoints used for projections and results   //
+// does not contain team                                  //
+// player + week is enough                                //
+////////////////////////////////////////////////////////////
+message FantasyPlayerPoints {
+	optional uint32 season = 10;	
+	optional uint32 week = 20;
+	optional uint32 playerid = 30;
+	optional int32 points = 40;	
+}
+
+////////////////////////////////////////////////////////////
+// ProjectionTrans used to make projections 
+////////////////////////////////////////////////////////////
+message ProjectionTrans {
+	extend Transaction {
+		optional ProjectionTrans proj_trans = 201;
+	}
+
+	optional FantasyPlayerPoints fpp = 10;
+}
+
+
+enum DataType {
+	SCHEDULE = 0;
+	PLAYER = 1;	
+	TEAM = 2;
+}
+
+message Data {
+	optional int32 version = 10;
+	optional DataType type = 20;
+	
+	extensions 100 to max;
+}
+
+//player is int32 
+//team is int32 
+
+////////////////////////////////////////////////////////////
+// PlayerData.playerid will be assigned a starting from 1000
+// and mapped to player data 
+// playerID 1-1000 is a teamid and is reserved for fantasy defense 
+// when a new player is added we increment number 
+////////////////////////////////////////////////////////////
+message PlayerData {
+	extend Data {
+		optional PlayerData player = 101;
+	}
+
+	optional uint32 playerid=10;
+	optional uint32 teamid=20;
+}
+
+////////////////////////////////////////////////////////////
+// TeamData.teamid will be assigned a starting from 1 
+// and mapped to team data
+// when a new team is added to NFL - we will increment number 
+// team 0 is a freeagent 
+////////////////////////////////////////////////////////////
+message TeamData {
+	extend Data {
+		optional TeamData team_data = 111;
+	}
+
+	optional uint32 teamid=10;
+}
+
+message ResultData {
+	extend Data {
+		optional ResultData result_data = 202;
+	}
+
+	optional FantasyPlayerPoints fpp = 10;
+}
+
+
+message DataTransition {
+	extend Transaction {
+		optional DataTransition data_trans = 203;
+	}
+
+	enum Type { 
+			ROSTER=1; //when cutdoen to 53 man roster 
+			SEASONSTART=2; // before week1 - week1 projection can start
+			SEASONEND=3; //after last week of season 
+			DRAFTOVER=4; //after nfl draft
+			HEARTBEAT=5; //anytime
+			GAMESTART=6; //list of teamids to cut off projections for week
+			WEEKOVER=7; //clear all projections
+	}
+
+	optional Type type =1;
+	optional uint32 season =10;
+	optional uint32 week = 20;
+	repeated uint32 teamid = 30;
+	repeated Data data = 40;
+}
+

@@ -57,7 +57,7 @@ int Node::init()
 	if (current_hight == 0)
 	{	
 		current_hight++;
-		SignedBlock sb{Commissioner::makeGenesisBlock()};
+		Block sb{Commissioner::makeGenesisBlock()};
 		leveldb::Slice value((char*)&current_hight, sizeof(int));
 		{
 			std::lock_guard<std::mutex> lockg{ blockchain_mutex };
@@ -382,7 +382,7 @@ void Node::syncService()
 					}
 				}
 
-				SignedBlock sb{};
+				Block sb{};
 				std::string value;
 				int num = nodereq.num();
 				leveldb::Slice snum((char*)&num, sizeof(int));
@@ -453,7 +453,7 @@ void Node::syncRequest()
 	req.set_type(NodeRequest_Type_BLOCK_REQUEST);
 	Sender snd{ blockrequest };
 	Receiver rec{ blockrequest };
-	SignedBlock sb{};
+	Block sb{};
 	while (current_hight < maxhi && sync_req_running)
 	{
 		req.set_num(current_hight + 1);
@@ -466,10 +466,10 @@ void Node::syncRequest()
 		if (!BlockProcessor::verifySignedBlock(sb))
 			continue;
 
-		if (sb.block().head().num() <= current_hight)
+		if (sb.signedhead().head().num() <= current_hight)
 			continue;
 
-		if (sb.block().head().num() > current_hight + 1)
+		if (sb.signedhead().head().num() > current_hight + 1)
 			continue; //TODO save for later
 
 		current_hight++;
@@ -507,7 +507,7 @@ void Node::runLive()
 
 	Sender snd{ blockslivepub };
 	Receiver rec{ blockslivesub };
-	SignedBlock sb{};
+	Block sb{};
 
 	while (running_live)
 	{
@@ -517,10 +517,10 @@ void Node::runLive()
 		if (!BlockProcessor::verifySignedBlock(sb))
 			continue;
 
-		if (published.find(sb.block().head().num()) != end(published))
+		if (published.find(sb.signedhead().head().num()) != end(published))
 			continue;
 
-		if (sb.block().head().num() == myhight + 1)
+		if (sb.signedhead().head().num() == myhight + 1)
 		{
 			myhight++;
 			leveldb::Slice snum((char*)&myhight, sizeof(int));
@@ -531,7 +531,7 @@ void Node::runLive()
 		}
 
 		snd.send(sb);
-		published.insert(sb.block().head().num());
+		published.insert(sb.signedhead().head().num());
 	}
 }
 

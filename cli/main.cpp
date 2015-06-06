@@ -13,6 +13,9 @@
 #include "ProtoData.pb.h"
 #include "tclap/CmdLine.h"
 #include <nanomsg\reqrep.h>
+#include "fb/boostLog.h"
+
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 using namespace std;
 using namespace fantasybit;
@@ -34,6 +37,8 @@ int input_int(const std::string &in, char c = ' ')
 };
 int main(int argc, const char * argv[])
 {
+	initBoostLog();
+
     std::string address{};
 
     CmdLine cmd("fantasybit ", ' ', "0.1");
@@ -54,10 +59,14 @@ int main(int argc, const char * argv[])
     else
         address = "ipc:///tmp/" + ipcSuf.getValue() + ".ipc";
 
+
+	address = "ipc:///tmp/fantasygui.ipc";
     cout << " using " << address << endl;
+	LOG(lg, trace) << " address " << address;
 
     string in;
 
+	/*
 	nn::socket sock2{ AF_SP, NN_REP };
 	sock2.bind("tcp://127.0.0.1:30000");
 	NodeRequest reqhs{};
@@ -67,9 +76,13 @@ int main(int argc, const char * argv[])
 	NodeReply reply{};
 	reply.set_hight(0);
 	Sender::Send(sock2,reply);
-
+	*/
     nn::socket sock{AF_SP, NN_PAIR};
-    sock.connect(address.c_str());
+	int con = sock.connect(address.c_str());
+	//"ipc:///tmp/fantasygui.ipc");
+
+	LOG(lg, trace) << " connect " << con;
+
     Receiver ui{sock};
     
     InData indata{};
@@ -97,6 +110,9 @@ int main(int argc, const char * argv[])
         if ( in == "1")
         {
             indata.set_type(InData_Type_CONNECT);
+
+			LOG(lg, trace) << " send " << indata.DebugString();
+
             Sender::Send(sock,indata);
 
         }

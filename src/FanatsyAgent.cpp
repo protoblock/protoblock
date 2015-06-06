@@ -42,7 +42,7 @@ bool FantasyAgent::makeGenesis()
 {
 	LOG(lg, trace) << "genesis ";
 
-	SignedBlock sb = Commissioner::makeGenesisBlock();
+	Block sb = Commissioner::makeGenesisBlock();
 
 	BlockProcessor bp{};
 	bp.init();
@@ -77,38 +77,39 @@ bool FantasyAgent::beOracle()
 	}
 }
 
-SignedBlock FantasyAgent::makeNewBlockAsOracle()
+Block FantasyAgent::makeNewBlockAsOracle()
 {
-	SignedBlock sb{};
+	Block b{};
 
 	if (pendingTrans.size() == 0)
-		return sb;
+		return b;
 
 	if (!beOracle())
 	{
 		fbutils::LogFalse(std::string("cant makeNewBlockAsOracle am not him"));
-		return sb;
+		return b;
 	}
 
 	BlockHeader bh{};
 	bh.set_prev_id
 		("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 	bh.set_num(2);
+	bh.set_version(Commissioner::BLOCK_VERSION);
 
-	Block b{};
-	b.mutable_head()->CopyFrom(bh);
+	SignedBlockHeader sbh{};
+	sbh.mutable_head()->CopyFrom(bh);
+
 	for (auto &pt : pendingTrans)
 	{
 		SignedTransaction* st2 = b.add_signed_transactions();
 		st2->CopyFrom(pt);
 	}
 
-	sb.mutable_block()->CopyFrom(b);
-	sb.set_version(Commissioner::BLOCK_VERSION);
+	b.mutable_signedhead()->CopyFrom(sbh);
 
-	auto p = getIdSig(sb.block().SerializeAsString(), m_oracle);
-	sb.set_id(p.first);
-	sb.set_sig(p.second);
+	auto p = getIdSig(sbh.head().SerializeAsString(), m_oracle);
+	//sb.set_id(p.first);
+	sbh.set_sig(p.second);
 
 	
 	//BlockProcessor bp{};
@@ -116,7 +117,7 @@ SignedBlock FantasyAgent::makeNewBlockAsOracle()
 	//bp.process(sb);
 	pendingTrans.clear();
 
-	return sb;
+	return b;
 
 }
 

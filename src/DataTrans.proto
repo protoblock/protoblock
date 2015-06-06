@@ -1,0 +1,26 @@
+import "ProtoData.proto"
+
+package fantasybit;
+
+message DataTransition {
+	extend Transaction {
+		optional DataTransition data_trans = 203;
+	}
+	enum Type { PREGAME=1; INGAME=2; WEEKOVER=3; WEEKSTART=4; HEARTBEAT=5;}
+	optional Type type =1;
+	optional int32	week = 10;
+	repeated string game_id = 20;
+}
+
+
+enum DataType {
+	SCHEDULE = 0;
+	PLAYER = 1;	
+}
+
+message Data {
+	optional int32 version = 1;
+	optional DataType type = 2;
+	
+	extensions 100 to max;
+}

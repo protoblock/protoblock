@@ -100,7 +100,7 @@ public:
 	
 	//static SignedBlock GenesisBlock;
 
-	static SignedBlock makeGenesisBlock() 
+	static Block makeGenesisBlock() 
 	{
 		NamePOW namepow{};
 		namepow.set_hash(10576213825162658308);
@@ -134,21 +134,22 @@ public:
 		BlockHeader bh{};
 		bh.set_prev_id("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 		bh.set_num(GENESIS_NUM);
+		bh.set_version(BLOCK_VERSION);
+
+		SignedBlockHeader sbh{};
+		sbh.mutable_head()->CopyFrom(bh);
+		sbh.set_sig("iKx1CJLr1acFbuCAeEB5i7EtRiD9jgMvuLhJ2zyafLbNpafmJMpLtiue7Uar6aurCKh6SixCVp9MGbova6wkBosKdPFXtvcgVM");
 
 		Block b{};
-		b.mutable_head()->CopyFrom(bh);
+		b.mutable_signedhead()->CopyFrom(sbh);
 		SignedTransaction* st2 = b.add_signed_transactions();
 		st2->CopyFrom(st);
 
-		SignedBlock sb{};
-		sb.mutable_block()->CopyFrom(b);
-		sb.set_version(BLOCK_VERSION);
-		sb.set_id("aec9aebf9e4f4392fb1beb15345b74588a779be8359e08a8902f0ebb872ef6fd");
-		sb.set_sig("iKx1CJLr1acFbuCAeEB5i7EtRiD9jgMvuLhJ2zyafLbNpafmJMpLtiue7Uar6aurCKh6SixCVp9MGbova6wkBosKdPFXtvcgVM");
+		//sb.set_id("aec9aebf9e4f4392fb1beb15345b74588a779be8359e08a8902f0ebb872ef6fd");
 
 		//std::cout << sb.DebugString();
 		//Commissioner::GenesisBlock = sb;
-		return sb;
+		return b;
 	}
 
 	static const int BLOCK_VERSION = 1;

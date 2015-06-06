@@ -124,7 +124,7 @@ void Server::run()
 			case InData_Type_MAKE_BLOCK:
 				//agent->makeGenesis();
 			{
-				SignedBlock sb = agent->makeNewBlockAsOracle();
+				Block sb = agent->makeNewBlockAsOracle();
 				sender_blocks.send(sb);
 				break;
 			}

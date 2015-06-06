@@ -34,6 +34,8 @@ find_package( Boost REQUIRED COMPONENTS
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS} )
 
+MESSAGE(WARNING " ssl ${OPENSSL_LIBRARIES}")
 
-add_executable( fantasybitcli ${SRCS2} ${SRCPB} )
-target_link_libraries(fantasybitcli fb ${FC_LIBRARY} nanomsg ${PROTOBUF_LIBRARY} ) 
+
+add_executable( fantasybit ${SRCS2} ${SRCPB} )
+target_link_libraries(fantasybit fb ${FC_LIBRARY}  ${OPENSSL_LIBRARIES} nanomsg ${PROTOBUF_LIBRARY}  leveldb )

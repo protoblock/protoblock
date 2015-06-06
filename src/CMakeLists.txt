@@ -6,7 +6,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 link_directories(../../lib )
 
-file ( GLOB SRCS *.cpp *.h *.hpp *.cc)
+file ( GLOB SRCS *.cpp *.h *.hpp *.cc *.c)
 set(BOOST_DEBUG 1)
 set(Boost_INCLUDE_DIR "C:/libs/boost_1_55_0")	
 set(Boost_LIBRARY_DIR  "C:/libs/boost_1_55_0/stage/lib")
@@ -34,14 +34,14 @@ include_directories( ${OPENSSL_INCLUDE_DIR} )
 LINK_DIRECTORIES( ${Boost_LIBRARY_DIRS} )
 
 SET( ALL_OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} ${SSL_EAY_RELEASE} ${LIB_EAY_RELEASE})
-add_executable( fantasybit ${SRCS} )
+#add_executable( fantasybit ${SRCS} )
 add_library(fb ${SRCS} )
 
 MESSAGE(WARNING " ssl ${OPENSSL_LIBRARIES}")
 
-SET(CPPNETLIBS cppnetlib-client-connections cppnetlib-uri cppnetlib-server-parsers)
+#SET(CPPNETLIBS cppnetlib-client-connections cppnetlib-uri cppnetlib-server-parsers)
 
-target_link_libraries(fantasybit ${FC_LIBRARY}  ${OPENSSL_LIBRARIES} nanomsg ${PROTOBUF_LIBRARY}  leveldb )
+#target_link_libraries(fantasybit ${FC_LIBRARY}  ${OPENSSL_LIBRARIES} nanomsg ${PROTOBUF_LIBRARY}  leveldb )
 #target_link_libraries(fantasybit fb ${FC_LIBRARY} nanomsg ${PROTOBUF_LIBRARY} ) 
         
 	
