@@ -9,6 +9,7 @@
 #include "FantasyAgent.h"
 #include "Processor.h"
 #include <iostream>
+#include "Node.h"
 
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
@@ -50,7 +51,6 @@ bool FantasyAgent::makeGenesis()
 	return true;
 }
 
-	
 bool FantasyAgent::beOracle()
 {
 #ifdef NO_ORACLE_CHECK_TESTING	
@@ -75,6 +75,62 @@ bool FantasyAgent::beOracle()
 				m_oracle = pk;
 		}
 	}
+}
+
+
+Block FantasyAgent::makeNewBlockAsDataAgent(const DataTransition &dt)
+{
+	Block b{};
+	
+	if (!amDataAgent()) {
+		if (!beDataAgent()) {
+			fbutils::LogFalse(std::string("cant makeNewBlockAsDataAgent am not agent"));
+			return b;
+		}
+	}
+
+	auto prev = Node::getlastBLock().signedhead().head();
+
+	BlockHeader bh{};
+	bh.set_version(Commissioner::BLOCK_VERSION);
+	bh.set_num(prev.num() + 1);
+	bh.set_prev_id(fc::sha256::hash(prev.SerializeAsString()).str());
+	bh.set_timestamp( std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+	//todo: t
+	bh.set_generator_pk(pubKeyStr());
+	bh.set_generating_sig(fc::sha256::hash(prev.generating_sig() + bh.generator_pk()).str());
+	bh.set_basetarget(0); //todo
+	bh.set_blocktype(BlockHeader_Type_DATA);
+	bh.set_transaction_id(""); //todo: merkle root of tx 
+
+	SignedBlockHeader sbh{};
+	sbh.mutable_head()->CopyFrom(bh);
+
+	auto p = getIdSig(sbh.head().SerializeAsString(),m_oracle);
+	sbh.set_sig(p.second);
+	//todo: store block hash from p.first 
+
+	b.mutable_signedhead()->CopyFrom(sbh);
+	if (pendingTrans.size() == 0)
+		return b;
+
+	for (auto &pt : pendingTrans)
+	{
+		SignedTransaction* st2 = b.add_signed_transactions();
+		st2->CopyFrom(pt);
+	}
+
+	pendingTrans.clear();
+
+
+	//sb.set_id(p.first);	
+	//BlockProcessor bp{};
+	//bp.init();
+	//bp.process(sb);
+
+
+	return b;
+
 }
 
 Block FantasyAgent::makeNewBlockAsOracle()
@@ -111,7 +167,7 @@ Block FantasyAgent::makeNewBlockAsOracle()
 	//sb.set_id(p.first);
 	sbh.set_sig(p.second);
 
-	
+
 	//BlockProcessor bp{};
 	//bp.init();
 	//bp.process(sb);
@@ -120,7 +176,6 @@ Block FantasyAgent::makeNewBlockAsOracle()
 	return b;
 
 }
-
 
 
 

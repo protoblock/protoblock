@@ -235,7 +235,7 @@ public:
 	void stop() { running = false; }
 
 	void run()
-	{
+	{	
 		init();
 		Block sb{};
 		while (running && !isInSync())
@@ -348,16 +348,17 @@ public:
 				case TransType::PROJECTION:
 				{
 					auto pt = t.GetExtension(ProjectionTrans::proj_trans);
-					auto iter = Source::EventProjectionResult.find(pt.game_id());
+					auto iter = Source::EventProjectionResult.find(Source::PlayerTeam[pt.fpp().playerid()]);
 					if (iter != end(Source::EventProjectionResult))
 					{
-						auto pp = pt.fpp_projection();
-						iter->second.addProjection(st.fantasy_name(), pp.fantasy_player_id(), pp.points());
+						auto pp = pt.fpp();
+						iter->second.addProjection(st.fantasy_name(), pp.playerid(), pp.points());
 					}
 					break;
 				}
 				case TransType::RESULT:
 				{
+					/*todo: result is no longer a transaction - is part of data 
 					auto rt = t.GetExtension(ResultTrans::result_trans);
 					//auto iter = Source::EventProjectionResult.find(rt.game_id());
 					//if (iter == end(Source::EventProjectionResult)) {
@@ -372,6 +373,7 @@ public:
 						//auto pp = pt.fpp_projection();
 						//iter->second.addProjection(st.fantasy_name(), pp.fantasy_player_id(), pp.points());
 					}
+					*/
 					break;
 				}
 				default:

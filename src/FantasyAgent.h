@@ -25,6 +25,7 @@ class FantasyAgent
     std::future<name_transaction> fut{};
 	FantasyName client{};
 	std::vector<SignedTransaction> pendingTrans{};
+	Block prevBlock{};
 
 public:
     enum status { REQUESTED, NOTAVAILABLE, OWNED };
@@ -56,6 +57,25 @@ public:
 		fbutils::LogFalse(std::string("onSignedTransaction").append(sn.DebugString()));
 	}
 
+	void onDataTransition(const DataTransition &dt)
+	{
+		fbutils::LogFalse(std::string("onDataTransition").append(dt.DebugString()));
+
+		if (!amDataAgent())
+			if (beOracle())
+				assert(amDataAgent());
+
+		makeNewBlockAsDataAgent(dt);
+
+
+
+	}
+
+	bool amDataAgent() {
+		//Todo: fix
+		return m_oracle.get_secret() == m_priv.get_secret();
+	}
+
 	SignedTransaction makeSigned(Transaction &trans)
 	{
 		SignedTransaction st{};
@@ -66,11 +86,26 @@ public:
 		st.set_fantasy_name(client.alias);
 		return st;
 	}
+
+	template <class T>
+	Transaction toTransaction(T &t) {
+		Transaction tr{};
+		tr.MutableExtension(T::trans)->CopyFrom(t);
+		return tr;
+	}
+
+	template <class T>
+	SignedTransaction toSignedTransaction(T &t) {
+		return makeSigned(toTransaction(t));
+	}
+
 	status signPlayer(alias_t name,bool mine=false);
 
 	bool beOracle();
+	bool beDataAgent() { return beOracle();  }
 
 	Block makeNewBlockAsOracle();
+	Block makeNewBlockAsDataAgent(const DataTransition &);
 
 	fc::ecc::private_key str2priv(const std::string &in)
 	{

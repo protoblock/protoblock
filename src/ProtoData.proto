@@ -62,12 +62,13 @@ message OutData {
 //}
 
 message InData {
-	enum Type { MINENAME = 1; QUIT=2; HEARTBEAT=3; CONNECT=4; MAKE_BLOCK=5; NEWNAME=6; PROJ=7;RESULT=8;}
+	enum Type { MINENAME = 1; QUIT=2; HEARTBEAT=3; CONNECT=4; MAKE_BLOCK=5; NEWNAME=6; PROJ=7;DATA=8;}
 	required Type type = 1;
 	
 	optional string data = 2;	
 	optional string data2 = 3;	
 	optional int32 num = 4;
+	optional DataTransition data_trans=5;
   	extensions 100 to max;
 }
 
@@ -111,7 +112,8 @@ message TweetProof
 enum TransType {
 	NAME = 0;
 	PROJECTION = 1;
-	RESULT = 2;	
+	RESULT = 2;
+	DATA = 3;	
 }
 
 message Transaction {
@@ -146,7 +148,7 @@ message SignedTransaction {
 //}
 
 message BlockHeader {
-	enum Type { NORMAL=1; DATA=2;}
+	enum Type { NORMAL=1; DATA=2; }
 
 	optional int32 version = 1;
 	optional int32 num = 10;
@@ -170,7 +172,7 @@ message Block {
 
 
 	extensions 1000 to max;
-}
+ }
 
 message NodeRequest
 {
@@ -195,7 +197,7 @@ message NodeReply
 message FantasyPlayerPoints {
 	optional uint32 season = 10;	
 	optional uint32 week = 20;
-	optional uint32 playerid = 30;
+	optional string playerid = 30;
 	optional int32 points = 40;	
 }
 
@@ -211,15 +213,17 @@ message ProjectionTrans {
 }
 
 
-enum DataType {
-	SCHEDULE = 0;
-	PLAYER = 1;	
-	TEAM = 2;
-}
 
 message Data {
+	enum Type {
+		SCHEDULE = 0;
+		PLAYER = 1;	
+		TEAM = 2;
+		RESULT=3;
+	}
+
 	optional int32 version = 10;
-	optional DataType type = 20;
+	optional Type type = 20;
 	
 	extensions 100 to max;
 }
@@ -235,11 +239,11 @@ message Data {
 ////////////////////////////////////////////////////////////
 message PlayerData {
 	extend Data {
-		optional PlayerData player = 101;
+		optional PlayerData player_data = 101;
 	}
 
-	optional uint32 playerid=10;
-	optional uint32 teamid=20;
+	optional string playerid=10;
+	optional string teamid=20;
 }
 
 ////////////////////////////////////////////////////////////
@@ -253,7 +257,7 @@ message TeamData {
 		optional TeamData team_data = 111;
 	}
 
-	optional uint32 teamid=10;
+	optional string teamid=10;
 }
 
 message ResultData {
@@ -271,7 +275,7 @@ message DataTransition {
 	}
 
 	enum Type { 
-			ROSTER=1; //when cutdoen to 53 man roster 
+			ROSTER=1; //when cutdown to 53 man roster 
 			SEASONSTART=2; // before week1 - week1 projection can start
 			SEASONEND=3; //after last week of season 
 			DRAFTOVER=4; //after nfl draft
@@ -280,10 +284,38 @@ message DataTransition {
 			WEEKOVER=7; //clear all projections
 	}
 
+	enum State { 
+		PREDRAFT = 1;
+		PRESEASON = 2;
+		ROSTER53MAN = 3;
+		INSEASON = 4;
+	}
+
 	optional Type type =1;
 	optional uint32 season =10;
 	optional uint32 week = 20;
-	repeated uint32 teamid = 30;
+	repeated string teamid = 30;
 	repeated Data data = 40;
 }
 
+message GlobalState {
+	enum State { 
+		PREDRAFT = 1;
+		PRESEASON = 2;
+		ROSTER53MAN = 3;
+		INSEASON = 4;
+	}
+
+	optional State state =1;
+	optional uint32 season =10;
+}
+
+message TeamState {
+	enum State { 
+		PREGAME = 1;
+		INGAME = 2;
+	}
+
+	optional State state =1;
+	optional uint32 week =10;
+}

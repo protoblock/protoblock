@@ -14,6 +14,8 @@
 #include "tclap/CmdLine.h"
 #include <nanomsg\reqrep.h>
 #include "fb/boostLog.h"
+#include <functional>
+#include <fbutils.h>
 
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
@@ -28,6 +30,21 @@ string input(const std::string &in,char c=' ')
 	return s;
 };
 
+int input_int(std::map<int, string> in) {
+	int ii;
+
+	do {
+		for (auto &i : in) {
+			cout << i.first << ": " << i.second << endl;
+		}
+
+		cin >> ii;
+
+	} while (in.find(ii) == end(in));
+
+	return ii;
+}
+
 int input_int(const std::string &in, char c = ' ')
 {
 	cout << in << c << endl;
@@ -35,6 +52,46 @@ int input_int(const std::string &in, char c = ' ')
 	cin >> i;
 	return i;
 };
+
+bool yn(const std::string &in) {
+	cout << in << " ? y/n: ";
+	string s;
+	cin >> s;
+	return (s == "y");
+}
+
+std::map<int, string> input_DataTransition_Type() {
+	std::map<int, string> ret;
+
+	for (int i = DataTransition::Type_MIN; i < DataTransition::Type_ARRAYSIZE; i++) {
+
+		if (!DataTransition::Type_IsValid(i)) continue;
+		ret[i] = DataTransition::Type_Name(DataTransition::Type(i));
+	}
+
+	return ret;
+}
+
+
+/*
+std::map<int, string> input_Type(
+							int min, int size, 
+							function<bool(int)> isvalid, 
+							function<string(int)> name
+							) {
+	std::map<int, string> ret;
+
+	for (int i = min; i < size; i++) {
+
+		if (!isvalid(i)) continue;
+		ret[i] = name(i);
+	}
+
+	return ret;
+}
+*/
+
+
 int main(int argc, const char * argv[])
 {
 	initBoostLog();
@@ -96,7 +153,7 @@ int main(int argc, const char * argv[])
 	ss << "4" << "\t" << "block" << "\n";
 	ss << "5" << "\t" << "new name" << "\n";
 	ss << "6" << "\t" << "project" << "\n";
-	ss << "7" << "\t" << "result" << "\n";
+	ss << "7" << "\t" << "data" << "\n";
 	//ss << "8" << "\t" << "connect" << "\n";
 	//ss << "9" << "\t" << "connect" << "\n";
 
@@ -166,10 +223,69 @@ int main(int argc, const char * argv[])
 		if (in == "7")
 		{
 			indata.Clear();
-			indata.set_type(InData_Type_RESULT);
-			indata.set_data(input("game:"));
-			indata.set_data2(input("player:"));
-			indata.set_num(input_int("result:"));
+			indata.set_type(InData_Type_DATA);
+
+			DataTransition dt{};
+			//	DataTransition dt{}
+			//DataTransition::Type_Parse
+			//dt.set_type(static_cast<DataTransition_Type>(input_int(proto_enum_map<DataTransition>())));
+			dt.set_type(input_proto_enum_map<DataTransition>());
+			
+			dt.set_season(input_int("season:"));
+			dt.set_week(input_int("week:"));
+
+			while(true) {
+				string team{ input("team or na:") };
+				if (team == "na") break;
+				dt.add_teamid(team);
+			}
+
+			while (yn("add data")) {
+				Data d{};
+				d.set_type(input_proto_enum_map<Data>());
+				switch (d.type()) {
+					case Data::PLAYER:
+					{
+						PlayerData pd{};
+						pd.set_playerid(input("playerid:"));
+						pd.set_teamid(input("teamid:"));
+						d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
+					}
+					break;
+					
+					case Data::TEAM:
+					{
+						TeamData pd{};
+						pd.set_teamid(input("teamid:"));
+						d.MutableExtension(TeamData::team_data)->CopyFrom(pd);
+					}
+					break;
+
+					case Data::RESULT:
+					{
+						FantasyPlayerPoints fpp{};
+						fpp.set_season(dt.season());
+						fpp.set_week(dt.week());
+						fpp.set_playerid(input("playerid"));
+						fpp.set_points(input_int("points:"));
+
+						ResultData rd{};
+						rd.mutable_fpp()->CopyFrom(fpp);
+
+						d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
+					}
+					break;
+
+					default:
+					break;
+
+				}
+
+				Data *d2 = dt.add_data();
+				d2->CopyFrom(d);
+			}
+
+			indata.mutable_data_trans()->CopyFrom(dt);
 			Sender::Send(sock, indata);
 		}
 
@@ -178,4 +294,5 @@ int main(int argc, const char * argv[])
     
     nn_term();
 }
+
 

@@ -26,9 +26,10 @@ namespace fantasybit
 
 class Node
 {
+	static std::shared_ptr<leveldb::DB> blockchain;
+
     //nn::socket sockserv, sockgui;
 	std::auto_ptr<leveldb::DB> peers;
-	std::auto_ptr<leveldb::DB> blockchain;
 	std::auto_ptr<leveldb::DB> holdblocks;
 	std::set<std::string> peerlist{};
 	std::vector<std::string> newpeers{};
@@ -65,7 +66,7 @@ public:
 	void pendingTransactions();
 	std::string filedir(const std::string &in)
 	{
-		return ROOT_DIR + in;
+		return ROOT_DIR + in; 
 	}
 
 	static leveldb::Slice i2slice(int i)
@@ -73,6 +74,22 @@ public:
 		leveldb::Slice value((char*)&i, sizeof(int) );
 		return value;
 	}
+
+	static Block Node::getlastBLock() {
+		Block b{};
+		std::string value;
+		auto *it = blockchain->NewIterator(leveldb::ReadOptions());
+		it->SeekToLast();
+
+		if (!it->Valid()) return b;
+
+		auto str = it->value().ToString();
+
+		b.ParseFromString(str);
+		delete it;
+		return b;
+	}
+
 
 };
 

@@ -47,7 +47,7 @@ int Node::init()
 
 	leveldb::DB *db2;
 	status = leveldb::DB::Open(options, filedir("block/blockchain"), &db2);
-	blockchain.reset(db2);
+	Node::blockchain.reset(db2);
 
 	leveldb::DB *db3;
 	status = leveldb::DB::Open(options, filedir("block/holdblock"), &db3);
@@ -317,6 +317,7 @@ bool Node::getMyIp()
 	return ret;
 }
 
+
 int Node::getLastBlockNum()
 {
 	std::string value;
@@ -562,6 +563,8 @@ void Node::pendingTransactions()
 		if (!rec.receive(st)) continue;
 		LOG(lg, info) << "rec " << st.DebugString() << "\n";
 
+		//todo: send to transaction pool
+		//  only send to peers if transaction is verified 
 		if (published.find(st.id()) != end(published))
 			continue;
 
@@ -569,4 +572,8 @@ void Node::pendingTransactions()
 		published.insert(st.id());
 	}
 }
+
+decltype(Node::blockchain) Node::blockchain{};
+
+
 }	

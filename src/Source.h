@@ -13,16 +13,21 @@
 #include "fbutils.h"
 #include "FantasyName.h"
 #include <map> 
+//#include <cstint>
 
 namespace fantasybit
 {
 
+using pid_t = std::string;
+using tid_t = std::string;
+
 class Source
 {
-    Uid event;
+    Uid event;	
 	alias_t agent;
 	std::unordered_map<Uid, Int> results{}; //player,points
 	std::unordered_map<Uid, std::unordered_map<alias_t,Int>> projections{};
+
 
 public:
 	Source(const Uid &uid) : event(uid) {}
@@ -45,6 +50,8 @@ public:
 
 	static std::unordered_map<Uid, Source> EventProjectionResult;
 	static std::map < std::string, std::map<std::string, Uid>> WeeklySchedule;
+
+	static std::unordered_map<pid_t, tid_t> PlayerTeam;
 };
 
 

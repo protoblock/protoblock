@@ -22,4 +22,7 @@ decltype(Source::WeeklySchedule) Source::WeeklySchedule
 	{ "5", { { "SEA", "201410130" }, { "GB", "201410130" }, { "ATL", "201410102" }, { "NO", "201410102" } } }
 };
 
+
+decltype(Source::PlayerTeam) Source::PlayerTeam{};
+
 }

@@ -13,7 +13,9 @@
 #include "FantasyName.h"
 #include "FantasyAgent.h"
 #include <memory> 
+#include "boostLog.h"
 
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 using namespace std;
 using namespace nn;
@@ -128,18 +130,42 @@ void Server::run()
 				sender_blocks.send(sb);
 				break;
 			}
-			case InData_Type_NEWNAME:
-				agent->resetPrivateKey();
+			case InData_Type_NEWNAME: 
+			{
 				claimName(indata.data(), false);
-				break;
+
+				/*
+				agent->resetPrivateKey();
+				NameTrans nt{};
+				nt.set_fantasy_name(indata.data());
+				nt.set_public_key(agent->pubKeyStr());
+				auto ret = agent->signPlayer(nt.fantasy_name());
+				if (ret == MyNameStatus::notavil) {
+					LOG(lg, info) << " name not avail " << nt.fantasy_name();
+				}
+				auto st = agent->toSignedTransaction(nt);
+				agent->onSignedTransaction(st);
+				sender_trans.send(st);
+
+				OutData o;
+				o.set_type(OutData_Type::OutData_Type_MYFANTASYNAME);
+				MyFantasyName mfn;
+				mfn.set_name(nt.fantasy_name());
+				mfn.set_status(ret);
+				*/
+
+			}
+			break;
 			case InData_Type_PROJ:
 				{
 				FantasyPlayerPoints fpp{};
-				fpp.set_fantasy_player_id(indata.data2());
+				fpp.set_playerid(indata.data2());
 				fpp.set_points(indata.num());
+
+				//todo: set season, week 
+
 				ProjectionTrans pj{};
-				pj.set_game_id(indata.data());
-				pj.mutable_fpp_projection()->CopyFrom(fpp);
+				pj.mutable_fpp()->CopyFrom(fpp);
 
 				Transaction trans{};
 				trans.set_version(Commissioner::TRANS_VERSION);
@@ -151,23 +177,19 @@ void Server::run()
 
 				}
 				break;
-			case InData_Type_RESULT:
+			case InData_Type_DATA:
 				{
-				FantasyPlayerPoints fpp{};
-				fpp.set_fantasy_player_id(indata.data2());
-				fpp.set_points(indata.num());
-				ResultTrans rj{};
-				rj.set_game_id(indata.data());
-				FantasyPlayerPoints *fpp2 = rj.add_fpp_results();
-				fpp2->CopyFrom(fpp);
-
+				/*
+				//todo: results as dataagent 
 				Transaction trans{};
 				trans.set_version(Commissioner::TRANS_VERSION);
-				trans.set_type(TransType::RESULT);
-				trans.MutableExtension(ResultTrans::result_trans)->CopyFrom(rj);
+				trans.set_type(TransType::DATA);
+				trans.MutableExtension(DataTransition::data_trans)->CopyFrom(indata.data_trans());
 				SignedTransaction sn = agent->makeSigned(trans);
 				agent->onSignedTransaction(sn);
-				sender_trans.send(sn);
+				*/
+					auto block = agent->makeNewBlockAsDataAgent(indata.data_trans());
+					sender_blocks.send(block);
 				}
 				break;
             default:
