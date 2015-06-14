@@ -15,36 +15,14 @@
 #include <memory> 
 #include "boostLog.h"
 
+//#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __FUNCTION__)
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 
 using namespace std;
 using namespace nn;
 namespace fantasybit
 {
-
-void verify(const string priv_key,const NameTransaction &nt)
-{
-    fc::sha256 f2{priv_key};
-    fc::ecc::private_key pk{fc::ecc::private_key::regenerate(f2)};
-    //pk.verify(, nt.sig())
-    
-    name_transaction nt2(fc::sha224(nt.prev_id()));
-    nt2.name_hash = nt.hash();
-    //std::copy(begin(nt.public_key()),end(nt.public_key()),begin(nt2.pubkey));
-	nt2.pubkey = Commissioner::str2pk(nt.public_key());
-    nt2.nonce = nt.nonce();
-    nt2.utc_sec = fc::time_point_sec{nt.utc_sec()};
-    //std::copy(begin(nt.sig()),end(nt.sig()),begin(nt2.sig));
-	nt2.sig = Commissioner::str2sig(nt.sig());
-	bool ver = pk.verify(nt2.digest(),nt2.sig);
-
-#ifdef TRACE
-    cout << "priv_key{"<<priv_key<<"}\n hash " << nt.hash() << "\n";
-    cout << "sig verify=" << ver <<
-            " hit " << difficulty(nt2.id()) <<
-            " target " << Commissioner::target(difficulty(nt2.prev)) << "\n\n";
-#endif
-}
 
 void Server::init()
 {
@@ -53,19 +31,13 @@ void Server::init()
     map<string,MyFantasyName> bestsecret{};
     Secret secret{};
     secret.set_private_key(priv_key);
-
+	 
     if ( read.good() )
     while (read.ReadNext(secret))
     {
-        cout << secret.DebugString() << "\n";
+        LOG(lg,info) << "read from file" << secret.DebugString();
         if ( secret.has_myfantasyname() )
-        {
-            if ( secret.private_key() == "" && secret.myfantasyname().has_nametransaction()
-                    && priv_key != "")
-                verify(priv_key,secret.myfantasyname().nametransaction());
-            else
-                verify(secret.private_key(),secret.myfantasyname().nametransaction());
-            
+        {           
             if ( bestsecret.find(secret.myfantasyname().name()) == end(bestsecret))
                 bestsecret[secret.myfantasyname().name()] = secret.myfantasyname();
             else if ( secret.myfantasyname().status() >
@@ -79,17 +51,18 @@ void Server::init()
             priv_key = secret.private_key();
     }
 
-#ifdef TRACE
     for(auto p :bestsecret)
-        cout << p.second.DebugString() << "\n" ;
+		LOG(lg, trace) << "Bestsecret: " << p.first << " "  << p.second.DebugString();
+#ifdef TRACE
+
 #endif
 
     OutData o;
     o.set_type( OutData_Type::OutData_Type_MYFANTASYNAME);
     
     if ( priv_key != "")
-        agent.reset(new FantasyAgent{fc::sha256{priv_key}});
-        
+		agent.reset(new FantasyAgent{ fc::sha256{ priv_key }, secret.myfantasyname().name() });
+
     if ( bestsecret.size() == 0)
     {
         secret.set_private_key(agent->getSecret());
@@ -115,24 +88,16 @@ void Server::run()
     {
         rec.receive(indata);
       
+		LOG(lg, trace) << "indata: " << InData_Type_Name(indata.type());
+
         switch (indata.type())
         {
-            case InData_Type_MINENAME:
-                claimName(indata.data(),true);
-                break;
             case InData_Type_QUIT:
                 stop();
                 break;
-			case InData_Type_MAKE_BLOCK:
-				//agent->makeGenesis();
-			{
-				Block sb = agent->makeNewBlockAsOracle();
-				sender_blocks.send(sb);
-				break;
-			}
 			case InData_Type_NEWNAME: 
 			{
-				claimName(indata.data(), false);
+				claimName(indata.data());
 
 				/*
 				agent->resetPrivateKey();
@@ -199,13 +164,12 @@ void Server::run()
     }
 }
 
-void Server::claimName(const std::string &name,bool mine)
+void Server::claimName(const std::string &name)
 {
-    //FantasyName me;
-    //agent fa{true};
-    
-    cout << "Server::mine  {" << Commissioner::hashmineindex() << "}\n";
-    auto ret = agent->signPlayer(name,mine);
+
+    auto ret = agent->signPlayer(name);
+
+	LOG(lg, info) << "claimName(" << name << ") " << to_string(ret);
 
     OutData o;
     o.set_type( OutData_Type::OutData_Type_MYFANTASYNAME);
@@ -216,62 +180,18 @@ void Server::claimName(const std::string &name,bool mine)
     {
         case FantasyAgent::REQUESTED:
             {
+
                 mfn.set_status(MyNameStatus::requested);
                 o.mutable_myfantasyname()->CopyFrom(mfn);
                 sender.send(o);
             
 				NameTrans nametrans{};
 				NameProof np{};
-				if (!mine)
-				{
-					np.set_type(NameProof_Type_ORACLE);
-					nametrans.set_public_key(agent->pubKeyStr());
-					nametrans.set_fantasy_name(name);
-					nametrans.mutable_proof()->CopyFrom(np);
-				}
-				else
-				{
-					name_transaction nt = agent->getRequested();
-					cout << "Server::after mine  {" << ret << "}\n";
+				np.set_type(NameProof_Type_ORACLE);
+				nametrans.set_public_key(agent->pubKeyStr());
+				nametrans.set_fantasy_name(name);
+				nametrans.mutable_proof()->CopyFrom(np);
 
-					if (!running)
-					{
-						if (difficulty(nt.id()) < Commissioner::target(difficulty(nt.prev)))
-							return;
-					}
-
-					fc::ecc::public_key pk{ nt.pubkey };
-					if (!pk.verify(nt.digest(), nt.sig))
-						cout << "error key not verfied \n";
-					else {
-						mfn.set_status(MyNameStatus::found);
-						NamePOW nt2;
-						nt2.set_hash(nt.name_hash);
-						nt2.set_public_key(Commissioner::pk2str(nt.pubkey));
-						nt2.set_nonce(nt.nonce);
-						nt2.set_utc_sec(nt.utc_sec.sec_since_epoch());
-						nt2.set_prev_id(nt.prev.str());
-						nt2.set_sig(Commissioner::sig2str(nt.sig));
-						nt2.set_sigid(nt.sigid());
-						mfn.mutable_nametransaction()->CopyFrom(nt2);
-
-						Writer<Secret> writer{ "secret.out", ios::app };
-						Secret secret{};
-						secret.set_private_key(agent->getSecret());
-						secret.mutable_myfantasyname()->CopyFrom(mfn);
-						writer(secret);
-
-						o.mutable_myfantasyname()->CopyFrom(mfn);
-						sender.send(o);
-
-						np.set_type(NameProof_Type_POW);
-						np.MutableExtension(NamePOW::name_pow)->CopyFrom(nt2);
-						nametrans.set_public_key(agent->pubKeyStr());
-						nametrans.set_fantasy_name(name);
-						nametrans.mutable_proof()->CopyFrom(np);
-
-					}
-				}
 				Transaction trans{};
 				trans.set_version(Commissioner::TRANS_VERSION);
 				trans.set_type(TransType::NAME);
@@ -279,6 +199,16 @@ void Server::claimName(const std::string &name,bool mine)
 				SignedTransaction sn = agent->makeSigned(trans);
 				agent->onSignedTransaction(sn);
 				sender_trans.send(sn);
+
+				Writer<Secret> writer{ ROOT_DIR + "secret.out", ios::app };
+				Secret secret{};
+				secret.set_private_key(agent->getSecret());
+				secret.mutable_myfantasyname()->CopyFrom(mfn);
+				secret.mutable_nametran()->CopyFrom(nametrans);
+				writer(secret);
+
+				LOG(lg, info) << "saving secret to file " << secret.DebugString();
+
             }
             break;
         case FantasyAgent::NOTAVAILABLE:

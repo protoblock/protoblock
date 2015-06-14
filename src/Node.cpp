@@ -53,6 +53,10 @@ int Node::init()
 	status = leveldb::DB::Open(options, filedir("block/holdblock"), &db3);
 	holdblocks.reset(db3);
 
+	leveldb::DB *db4;
+	status = leveldb::DB::Open(options, filedir("tx/txpool"), &db4);
+	Node::txpool.reset(db4);
+
 	current_hight = getLastBlockNum();
 	if (current_hight == 0)
 	{	
@@ -163,7 +167,7 @@ bool Node::doHandshake(const std::string &inp)
 	NodeReply reply{};
 	reqhs.set_type(NodeRequest_Type_HANDSHAKE);
 	bool isconnected = false;
-	nn::socket peer{ AF_SP, NN_PAIR };
+	nn::socket peer{ AF_SP, NN_REQ };
 	int timeout = 10000;
 	peer.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
 	peer.setsockopt(NN_SOL_SOCKET, NN_SNDTIMEO, &timeout, sizeof(timeout));
@@ -341,8 +345,10 @@ void Node::syncService()
 		myhight = getLastBlockNum();
 	}
 
-	nn::socket blockreply{ AF_SP, NN_PAIR };
-	//auto lid = blockreply.bind("inproc://syncserv");
+	//nn::socket blockreply{ AF_SP, NN_PAIR };
+	nn::socket blockreply{ AF_SP, NN_REP };
+
+	auto lid = blockreply.bind("inproc://syncserv");
 	auto eid = blockreply.bind("tcp://*:8125");
 	Receiver rec{ blockreply };
 	Sender snd{ blockreply };
@@ -412,9 +418,10 @@ void Node::syncService()
 			{
 				std::string stime(fc::time_point::now());
 
-				if (nodereq.myip() != myip)
+				if (nodereq.has_myip() && nodereq.myip() != myip && nodereq.myip() != "")
 					peers->Put(leveldb::WriteOptions(), nodereq.myip(), stime);
-				else if (nodereq.myhost() != myhost)
+				
+				else if (nodereq.has_myhost() && nodereq.myhost() != myhost && nodereq.myhost() != "")
 					peers->Put(leveldb::WriteOptions(), nodereq.myhost(), stime);
 
 				{
@@ -446,7 +453,7 @@ void Node::syncRequest()
 	std::string pre{ "tcp://" };
 	std::string po{ ":8125" };
 
-	nn::socket blockrequest{ AF_SP, NN_PAIR };
+	nn::socket blockrequest{ AF_SP, NN_REQ };
 	for (auto &p : higherpeers)
 		blockrequest.connect((pre + p + po).c_str());
 
@@ -529,6 +536,9 @@ void Node::runLive()
 				std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 				blockchain->Put(leveldb::WriteOptions(), snum, sb.SerializeAsString());
 			}
+
+			Node::ClearTx(sb);
+
 		}
 
 		snd.send(sb);
@@ -561,19 +571,29 @@ void Node::pendingTransactions()
 	while (running_live)
 	{
 		if (!rec.receive(st)) continue;
-		LOG(lg, info) << "rec " << st.DebugString() << "\n";
+		LOG(lg, info) << "rec tx hash " << st.id();
 
 		//todo: send to transaction pool
 		//  only send to peers if transaction is verified 
 		if (published.find(st.id()) != end(published))
 			continue;
 
+		Node::txpool->Put(leveldb::WriteOptions(), st.id(), st.SerializeAsString());
 		snd.send(st);
 		published.insert(st.id());
+		LOG(lg, info) << "put txpool " << st.DebugString();
 	}
 }
 
+void Node::ClearTx(const Block &b) {
+	for (const auto &st : b.signed_transactions()) {
+		Node::txpool->Delete(leveldb::WriteOptions(), st.id());
+	}
+}
+
+
 decltype(Node::blockchain) Node::blockchain{};
+decltype(Node::txpool) Node::txpool{};
 
 
 }	

@@ -162,39 +162,5 @@ uint64_t  FantasyName::name_hash( const std::string& n )
   return fc::city_hash64( (char*)&h, sizeof(h) );
 }
 
-nameid_t name_transaction::id() const
-{
-    nameid_t::encoder enc;
-    fc::raw::pack(enc,name_hash);
-    fc::raw::pack(enc,pubkey);
-    fc::raw::pack(enc,nonce);
-    fc::raw::pack(enc,utc_sec);
-    fc::raw::pack(enc,prev);
-    return enc.result();
-}
-
-signedid_t name_transaction::sigid() const
-{
-    nameid_t::encoder enc;
-    fc::raw::pack(enc,name_hash);
-    fc::raw::pack(enc,pubkey);
-    fc::raw::pack(enc,nonce);
-    fc::raw::pack(enc,utc_sec);
-    fc::raw::pack(enc,prev);
-    fc::raw::pack(enc,sig);
-    return fc::ripemd160::hash(enc.result());
-}
-
-fc::sha256 name_transaction::digest() const
-{	
-    return fc::sha256::hash(id());
-}
-
-
-fc::sha256 name_transaction::sigdigest() const
-{
-    return fc::sha256::hash(sigid());
-}
-
 
 }

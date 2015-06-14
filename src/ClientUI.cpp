@@ -146,7 +146,7 @@ void ClientUI::process_server(const OutData &data)
                 myname = data.myfantasyname();
 				if (havegui)
 				{
-					LOG(lg, trace) << "to gui ";
+					LOG(lg, trace) << "sending to gui ";
 					int n = Sender::Send(sockgui, data);// , NN_DONTWAIT);
 					LOG(lg, trace) << "sent " << n << "bytes to gui ";
 				}
@@ -159,12 +159,9 @@ void ClientUI::process_server(const OutData &data)
 
 void ClientUI::process_gui(const InData &data)
 {
-    cout << data.DebugString() << "***** process_gui\n";
+	LOG(lg, trace) << "from gui: " << data.DebugString();
     switch ( data.type())
     {
-        case InData_Type_MINENAME:
-            Sender::Send(sockserv,data);
-            break;
         case InData_Type_QUIT:
             Sender::Send(sockserv,data);
             running = false;

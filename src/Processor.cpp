@@ -24,14 +24,6 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 	auto proof = nt.proof();
 	switch (proof.type())
 	{
-		case NameProof_Type_POW:
-		{
-			auto pow = proof.GetExtension(NamePOW::name_pow);
-			//TODO verify pow
-			return true;
-		}
-		break;
-
 		case NameProof_Type_TWEET:
 		{
 			auto tp = proof.GetExtension(TweetProof::tweet_proof);

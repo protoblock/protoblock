@@ -57,35 +57,6 @@ struct FantasyName
     static hash_t  name_hash( const alias_t& n );
 };
 
-using nameid_t = fc::sha224;
-using signedid_t = fc::ripemd160;
-using nonce_t = int32_t;
-struct name_transaction
-{
-	name_transaction() {}
-	name_transaction(nameid_t p) : name_hash(0),nonce(0),prev(p) {}
-    hash_t name_hash;
-    pubkey_t pubkey;
-    nonce_t nonce;
-    fc::time_point_sec utc_sec;	
-    nameid_t prev;
-    fc::ecc::signature sig;
-    nameid_t id() const;
-    fc::sha256 digest() const;
-	signedid_t sigid() const;
-    fc::sha256 sigdigest() const;
-};
-
-
-
-/*
-NameTransaction convert_name_transaction(const name_transaction &nt)
-{
-    NameTransaction namet;
-    return namet;
-}
-*/
-
 
 /*
 class KeyPair

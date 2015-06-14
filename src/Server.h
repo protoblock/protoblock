@@ -55,7 +55,7 @@ private:
     
     void init();
 protected:
-    void claimName(const std::string &name,bool mine);
+    void claimName(const std::string &name);
 };
 
 class

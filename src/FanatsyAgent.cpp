@@ -15,14 +15,12 @@
 
 namespace fantasybit {
 
-FantasyAgent::status FantasyAgent::signPlayer(alias_t name,bool mine)
+FantasyAgent::status FantasyAgent::signPlayer(alias_t name)
 {
     status ret = NOTAVAILABLE;
    
     if ( Commissioner::isAliasAvailable(name) )
     {
-		if ( mine ) 
-			fut = std::async(&Commissioner::generateName, &comish, name, m_priv.get_public_key() );
         ret = REQUESTED;	
 		client.alias = name;
 		client.pubkey = m_priv.get_public_key().serialize();
@@ -38,6 +36,7 @@ FantasyAgent::status FantasyAgent::signPlayer(alias_t name,bool mine)
         
     return ret;
 }
+
 //static SignedBlock makeGenesisBlock() {
 bool FantasyAgent::makeGenesis()
 {
@@ -70,11 +69,19 @@ bool FantasyAgent::beOracle()
 			return false;
 		if (read.ReadNext(oracle))
 		{
+			LOG(lg, trace) << "oracle.private_key()" << oracle.private_key();
 			auto pk = str2priv(oracle.private_key());
 			if (pk.get_public_key() == Commissioner::GENESIS_PUB_KEY)
+			{
 				m_oracle = pk;
+				m_priv = m_oracle;
+			}
+			else return false;
 		}
+		else return false;
 	}
+
+	return true;
 }
 
 
@@ -111,6 +118,23 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const DataTransition &dt)
 	//todo: store block hash from p.first 
 
 	b.mutable_signedhead()->CopyFrom(sbh);
+
+
+
+	leveldb::ReadOptions options;
+	options.snapshot = Node::txpool->GetSnapshot();
+	leveldb::Iterator *iter = Node::txpool->NewIterator(options);
+
+	SignedTransaction st{};
+	for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
+		
+		st.ParseFromString(iter->value().ToString());
+
+		SignedTransaction* st2 = b.add_signed_transactions();
+		st2->CopyFrom(st);
+	}
+
+	/*
 	if (pendingTrans.size() == 0)
 		return b;
 
@@ -121,6 +145,9 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const DataTransition &dt)
 	}
 
 	pendingTrans.clear();
+	*/
+	delete iter;
+	Node::txpool->ReleaseSnapshot(options.snapshot);
 
 
 	//sb.set_id(p.first);	

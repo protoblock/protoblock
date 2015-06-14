@@ -14,15 +14,14 @@
 #include "DataPersist.h"
 
 #include "boostLog.h"
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+#define LOGH(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 namespace fantasybit
 {
 
 class FantasyAgent
 {
-    fc::ecc::private_key m_priv,m_oracle;
-    std::future<name_transaction> fut{};
+    fc::ecc::private_key m_priv, m_oracle;
 	FantasyName client{};
 	std::vector<SignedTransaction> pendingTrans{};
 	Block prevBlock{};
@@ -31,16 +30,18 @@ public:
     enum status { REQUESTED, NOTAVAILABLE, OWNED };
     Commissioner comish{};
     
-    FantasyAgent(const fc::sha256& secret)
+    FantasyAgent(const fc::sha256& secret, const std::string &name)
     {
         m_priv = fc::ecc::private_key::regenerate(secret);
-		LOG(lg, trace) << "have secret ";
+		client.alias = name;
+		client.pubkey = m_priv.get_public_key().serialize();
 
+		LOGH(lg, trace) << "have secret ";
     }
 		
     FantasyAgent(bool generate = true) : m_priv()
     {
-		LOG(lg, trace) << "generate=" << generate;
+		LOGH(lg, trace) << "generate=" << generate;
 
         if ( generate )
             m_priv = m_priv.generate();
@@ -66,9 +67,6 @@ public:
 				assert(amDataAgent());
 
 		makeNewBlockAsDataAgent(dt);
-
-
-
 	}
 
 	bool amDataAgent() {
@@ -99,7 +97,7 @@ public:
 		return makeSigned(toTransaction(t));
 	}
 
-	status signPlayer(alias_t name,bool mine=false);
+	status signPlayer(alias_t name);
 
 	bool beOracle();
 	bool beDataAgent() { return beOracle();  }
@@ -111,13 +109,7 @@ public:
 	{
 		return fc::ecc::private_key::regenerate(fc::sha256{ in });
 	}
-    name_transaction getRequested()
-    {
-        auto nt = fut.get();
-        nt.sig =  m_priv.sign(nt.digest());
-        return nt;
-    }
-    
+   
     void kill()
     {
         comish.stop();

@@ -16,12 +16,12 @@ namespace fantasybit
 {
 
 template<class T>
-class Data
+class Datat
 {
     T data;
     alias_t alias;
 public:
-    Data(T t) : data(t) {}
+    Datat(T t) : data(t) {}
     
     Bits getStake() {
         Bits stake{0};

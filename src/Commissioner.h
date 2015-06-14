@@ -24,14 +24,11 @@ public:
 	Commissioner() {
 	}
 
-    name_transaction generateName(alias_t,pubkey_t) ;
-
-	nameid_t lastId() const { return m_genesis_id; }
     void stop() { running = false; }
     static std::unordered_map<pubkey_t,std::shared_ptr<FantasyName>> FantasyNames;
     static std::map<hash_t,pubkey_t> Aliases;
 			
-    static nameid_t m_genesis_id;
+	//static std::string m_genesis_id;
 	static fc::ecc::public_key_data GENESIS_PUB_KEY;
     static bool isAliasAvailable(alias_t alias)
     {
@@ -64,123 +61,75 @@ public:
 		return pfn;
 	}
     
-    static uint64_t target(uint64_t in) { return std::max(in,Commissioner::min_difficulty); }
-  
-	/***********************************************************
-	type: MYFANTASYNAME
-	myfantasyname{
-		name: "FantasyAgent"
-		status : found
-		   nametransaction{
-				hash: 10576213825162658308
-				public_key : "mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"
-				nonce : 57428892
-				utc_sec : 1408989677
-				prev_id : "00000000000000000000000000000000000000000000000000000000"
-				sig : "iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m"
-				sigid : "19cacff77cae784ada296272e43b6dd6f22975d1"
-			}
-	}
-	*************************************************************/
-    static name_transaction createGenesisName()
-    {
-		name_transaction genesis(nameid_t{ "00000000000000000000000000000000000000000000000000000000" });
-		genesis.name_hash = 10576213825162658308;// FantasyName::name_hash("FantasyAgent");
-		genesis.pubkey = Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
-		genesis.utc_sec = fc::time_point_sec(1408989677);// = fc::time_point_sec(fc::time_point::from_iso_string("20140401T134233")); // 1408989677
-		genesis.nonce = 57428892;
-		genesis.sig = Commissioner::str2sig(std::string("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m"));
-		
-		assert(Commissioner::verify(genesis.sig,genesis.digest(),genesis.pubkey));
-
-		GENESIS_PUB_KEY = genesis.pubkey;
- 
-        return genesis;
-    };	
-	
 	//static SignedBlock GenesisBlock;
-
-	static Block makeGenesisBlock() 
-	{
-		NamePOW namepow{};
-		namepow.set_hash(10576213825162658308);
-		namepow.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
-		namepow.set_nonce(57428892);
-		namepow.set_utc_sec(1408989677);
-		namepow.set_prev_id("00000000000000000000000000000000000000000000000000000000");
-		namepow.set_sig("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m");
-		namepow.set_sigid("19cacff77cae784ada296272e43b6dd6f22975d1");
-
+	static SignedTransaction makeGenesisName() {
+		//make and sign "FantasyAgent" name transaction
 		NameProof nameproof{};
-		nameproof.set_type(NameProof_Type_POW);
-		nameproof.MutableExtension(NamePOW::name_pow)->CopyFrom(namepow);
-		NameTrans nametrans{};		
-		nametrans.set_public_key(namepow.public_key());
+		nameproof.set_type(NameProof_Type_ORACLE);
+
+		NameTrans nametrans{};
+		nametrans.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
 		nametrans.set_fantasy_name("FantasyAgent");
 		nametrans.mutable_proof()->CopyFrom(nameproof);
 
 		Transaction trans{};
 		trans.set_version(1);
 		trans.set_type(TransType::NAME);
-		//[fantasybit.NameTrans.name_trans]
 		trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
 		SignedTransaction st{};
 		st.mutable_trans()->CopyFrom(trans);
-		st.set_id("1071841561af1f1a813138c0c5bbfb4b86fe3140931e46427ed1c65eb57b9e00");
-		st.set_sig("iKZWEMRo3DFGtFoGz65j5h3EecfsjLRKMBhPpiZQthhuNJaGf62fUxaCARKY149WsxtRm7JuwUXQsvs1Jqf6G46ChNNYp2TX5Z");
+		st.set_id("4ebd75db20bab394d28d6bdd2740d075aeb4ea4f5222cc50e6e3f5e6d3901b0e");
+		st.set_sig("iKkkiYsL3fadfz6KoM7Rs3SGsyyG2vmxVtxRKEBU9nsbnQQLjJxFtJ7iCPT4xMZcm41Q8aJByJZiaF2qde1Q7YdzvtRdWwxDFD");
 		st.set_fantasy_name("FantasyAgent");
 
+		return st;
+	}
+
+	static Block makeGenesisBlock() 
+	{
+		Block b{};
+		auto gtrans = Commissioner::makeGenesisName();
+
 		BlockHeader bh{};
-		bh.set_prev_id("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-		bh.set_num(GENESIS_NUM);
-		bh.set_version(BLOCK_VERSION);
+		bh.set_version(1);
+		bh.set_num(1);
+		bh.set_prev_id("0000000000000000000000000000000000000000000000000000000000000000");
+
+		//1433116800  June 1 2015 00:00 UTC 
+		//auto time = fc::time_point_sec(fc::time_point::from_iso_string("20150601T000000")).sec_since_epoch();
+		bh.set_timestamp(1433116800);
+
+		bh.set_generator_pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+
+		//fc::sha256::hash(bh.generator_pk()).str());
+		bh.set_generating_sig("33319199662b78c55f0def95399a67d6dda4dc920958b7209dc65da2dbc01801"); 
+
+		bh.set_basetarget(0); //todo
+		bh.set_blocktype(BlockHeader_Type_NORMAL);
+
+		//merkle root - single transaction 
+		//auto root = fc::sha256::hash(gtrans.id() + gtrans.id()).str();
+		bh.set_transaction_id("5d8147106af959c07fb4dbcabc4602135824ab5f0be5dd8a36275914de333b8e"); 
 
 		SignedBlockHeader sbh{};
 		sbh.mutable_head()->CopyFrom(bh);
-		sbh.set_sig("iKx1CJLr1acFbuCAeEB5i7EtRiD9jgMvuLhJ2zyafLbNpafmJMpLtiue7Uar6aurCKh6SixCVp9MGbova6wkBosKdPFXtvcgVM");
 
-		Block b{};
+		//auto p = agent.getIdSig(sbh.head().SerializeAsString());
+		sbh.set_sig("iKkkiYqRdeNyz4cuTZ9BhyXLRxFcrFxtYzqfUjPRkf4FFivNvjCnNGhGoU2oDX5raGZrKiQUTUNDP2XU2te6k2TppqNmfB5EfH");
+
+		//auto genesisblockhash = p.first; "aa5ee9a1667e86f23b0c16cef9c7721403ca1bab7545073b20bc5f3385a34b99"
+
 		b.mutable_signedhead()->CopyFrom(sbh);
-		SignedTransaction* st2 = b.add_signed_transactions();
-		st2->CopyFrom(st);
+		b.add_signed_transactions()->CopyFrom(gtrans);
 
-		//sb.set_id("aec9aebf9e4f4392fb1beb15345b74588a779be8359e08a8902f0ebb872ef6fd");
-
-		//std::cout << sb.DebugString();
-		//Commissioner::GenesisBlock = sb;
 		return b;
 	}
 
 	static const int BLOCK_VERSION = 1;
 	static const int TRANS_VERSION = 1;
 	static const int GENESIS_NUM = 1;
-
-    static std::vector<name_transaction> createGenesisChild()
-    {
-        return std::vector<name_transaction>{};
-    }
     
-    static int hashmineindex()
-    {
-#ifdef EASY_TEST_MINING
-        return 2;
-#else
-        return 3;
-#endif
-    }
-    
-    static fc::sha224 max_hash() {
-        fc::sha224 mining_hash{};
-        char* tmpPtr = (char*)&mining_hash;
-        memset( tmpPtr, 0xff, sizeof(mining_hash) );
-        for (int i=0;i<hashmineindex();++i)
-            tmpPtr[i] = 0;
-        tmpPtr[hashmineindex()] = 0xff;
-        return mining_hash;
-    }
-    
-    static uint64_t min_difficulty;
 
 	static bool verify(const fc::ecc::signature &sig, const fc::sha256 &digest, pubkey_t& pk)
 	{

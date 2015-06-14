@@ -31,6 +31,9 @@
 #include <assert.h>
 #include <string>
 #include "MsgSock.h"
+#include "boostLog.h"
+
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 
 namespace fantasybit
@@ -257,6 +260,7 @@ public:
 	{
 		mRecorder.init();
 		if (!mRecorder.isValid()) {
+			LOG(lg, info) << "mRecorder not valid! ";
 			mRecorder.closeAll();
 			fc::remove_all(ROOT_DIR + "index/");
 			mRecorder.init();
@@ -264,18 +268,28 @@ public:
 
 		lastidprocessed =  mRecorder.getLastBlockId();
 
-		if (!isInSync() )
+		if (!isInSync()) {
+			LOG(lg, info) << "! isInSync lastidprocessed " << lastidprocessed;
 			GetInSync(lastidprocessed + 1, realHeight);
+		}
+		else 
+			LOG(lg, info) << "lastidprocessed " << lastidprocessed;
+
 	}
 
 	bool isInSync()
 	{
 		NodeRequest nrq{};
 		nrq.set_type(NodeRequest_Type_HIGHT_REQUEST);
+		LOG(lg, trace) << "send " << NodeRequest_Type_Name(nrq.type());
 		syncradio.first.send(nrq);
 		NodeReply nrp{};
-		if (!syncradio.second.receive(nrp))
+		if (!syncradio.second.receive(nrp)) {
+			LOG(lg, error) << "!syncradio.second.receive(nrp) ";
 			return true;
+		}
+
+		LOG(lg, info) << "rec " << nrp.DebugString();
 
 		realHeight = nrp.hight();
 		return (realHeight == lastidprocessed);
@@ -284,18 +298,33 @@ public:
 
 	void GetInSync(int start,int end)
 	{
+		LOG(lg, info) << "GetInSync from " << start << " to " << end;
+
 		int lastid = start;
 		while (true)
 		{
 			NodeRequest nrq{};
 			nrq.set_type(NodeRequest_Type_BLOCK_REQUEST);
 			nrq.set_num(lastid);
+			LOG(lg, trace) << "send " << nrq.DebugString();
 			syncradio.first.send(nrq);
 			Block sb{};
-			if (!syncradio.second.receive(sb)) break;
+			if (!syncradio.second.receive(sb)) {
+				LOG(lg, error) << "!syncradio.second.receive(sb) ";
+				break;
+			}
 
-			if (sb.signedhead().head().num() != lastid) break;
-			process(sb);
+			LOG(lg, trace) << "rec " << sb.DebugString();
+
+			if (sb.signedhead().head().num() != lastid) {
+				LOG(lg, error) << "sb.signedhead().head().num() != lastid " << lastid;
+				break;
+			}
+
+			if (!process(sb)) {
+				LOG(lg, error) << "!process(sb) ";
+				break;
+			}
 			if (end == lastid) break;
 			lastid++;
 		}
@@ -303,21 +332,29 @@ public:
 
 	bool process(Block &sblock)
 	{
-		if (!verifySignedBlock(sblock)) return false;
+		LOG(lg, trace) << "process: " << sblock.DebugString();
+
+		if (!verifySignedBlock(sblock)) {
+			LOG(lg, error) << "verifySignedBlock failed! ";
+			return false;
+		}
 
 		mRecorder.startBlock(sblock.signedhead().head().num());
 		for (const auto &st : sblock.signed_transactions())
 		{
 			Transaction t{ st.trans() };
+			LOG(lg, trace) << "processing tx " << t.DebugString();// TransType_Name(t.type());
 
 			fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
 			if (digest.str() != st.id()) {
-				fbutils::LogFalse(std::string("Processor::process signed transaction hash error digest ").append(st.DebugString()));
+				LOG(lg, error) << "digest.str() != st.id() ";
+				//fbutils::LogFalse(std::string("Processor::process signed transaction hash error digest ").append(st.DebugString()));
 				continue;
 			}
 
 			if (t.version() != Commissioner::TRANS_VERSION) {
-				fbutils::LogFalse(std::string("Processor::process wrong transaction version ").append(st.DebugString()));
+				LOG(lg, error) << "t.version() != Commissioner::TRANS_VERSION";
+				//fbutils::LogFalse(std::string("Processor::process wrong transaction version ").append(st.DebugString()));
 				continue;
 			}
 
@@ -333,13 +370,17 @@ public:
 					Commissioner::Aliases.emplace(pfn->hash(), pfn->pubkey);
 					Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
 				}
+				else {
+					LOG(lg, error) << "!verify_name ";
+				}
 
 				continue;
 			}
 
 			if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
 			{
-				fbutils::LogFalse(std::string("Processor::process cant verify trans sig").append(st.DebugString()));
+				LOG(lg, error) << "!Commissioner::verifyByName";
+				//fbutils::LogFalse(std::string("Processor::process cant verify trans sig").append(st.DebugString()));
 				continue;
 			}
 

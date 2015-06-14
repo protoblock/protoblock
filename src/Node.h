@@ -26,7 +26,6 @@ namespace fantasybit
 
 class Node
 {
-	static std::shared_ptr<leveldb::DB> blockchain;
 
     //nn::socket sockserv, sockgui;
 	std::auto_ptr<leveldb::DB> peers;
@@ -90,10 +89,11 @@ public:
 		return b;
 	}
 
+	static void ClearTx(const Block &);
+	static std::shared_ptr<leveldb::DB> blockchain;
+	static std::shared_ptr<leveldb::DB> txpool;
 
 };
-
-
 
 static std::string SEED_NODE("162.254.27.226");
 static std::string SEED_HOST("Jets");
