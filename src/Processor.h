@@ -66,10 +66,15 @@ public:
 		options.create_if_missing = true;
 		leveldb::Status status;
 		status = leveldb::DB::Open(options, filedir("blockstatus"), &blockstatus);
+		assert(status.ok());
 		status = leveldb::DB::Open(options, filedir("namehashpub"), &namehashpub);
+		assert(status.ok());
 		status = leveldb::DB::Open(options, filedir("pubfantasyname"), &pubfantasyname);
+		assert(status.ok());
 		status = leveldb::DB::Open(options, filedir("pubbalance"), &pubbalance);
+		assert(status.ok());
 		status = leveldb::DB::Open(options, filedir("gameids"), &gamesids);
+		assert(status.ok());
 		//status = leveldb::DB::Open(options, filedir("projections"), &pubbalance);
 		//status = leveldb::DB::Open(options, filedir("last-projections"), &pubbalance);
 		leveldb::Iterator* it = gamesids->NewIterator(leveldb::ReadOptions());
@@ -89,7 +94,25 @@ public:
 		if (!status.ok())
 			lastBlock =  0;
 		else 
-			lastBlock = *(reinterpret_cast<const int *>(value.c_str()));
+			lastBlock = *(reinterpret_cast<const int *>(value.data()));
+
+		it = namehashpub->NewIterator(leveldb::ReadOptions());
+		std::string fname;
+		for (it->SeekToFirst(); it->Valid(); it->Next()) {
+			if (pubfantasyname->Get(leveldb::ReadOptions(), it->value(), &fname).IsNotFound())
+				continue;
+			auto pfn = Commissioner::makeName(fname, it->value().ToString());
+			Commissioner::Aliases.emplace(pfn->hash(), pfn->pubkey);
+			Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+			uint64_t newval = 0;
+			std::string temp;
+			if (pubbalance->Get(leveldb::ReadOptions(), it->value(), &temp).IsNotFound())
+				continue;
+			
+			newval = *(reinterpret_cast<const uint64_t *>(temp.data()));
+			pfn->addBalance(newval);
+		}
+		delete it;
 	}
 
 	void startBlock(int num) 
@@ -113,7 +136,7 @@ public:
 		if (blockstatus->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound())
 			return false; 
 
-		int num = *(reinterpret_cast<const int *>(value.c_str()));
+		int num = *(reinterpret_cast<const int *>(value.data()));
 		return num < 0;
 	}
 
@@ -178,13 +201,15 @@ public:
 
 		if (pubbalance->Get(leveldb::ReadOptions(), pubkey, &temp).ok())
 		{
-			newval = *(reinterpret_cast<uint64_t *>(&temp));
+			newval = *(reinterpret_cast<const uint64_t *>(temp.data()));
 		}
 
 		add += newval;
 		leveldb::Slice bval((char*)&add, sizeof(uint64_t));
 		pubbalance->Put(leveldb::WriteOptions(), pubkey, bval);
-
+		auto it = Commissioner::FantasyNames.find(Commissioner::str2pk(pubkey));
+		if (it != end(Commissioner::FantasyNames))
+			it->second->addBalance(add);
 	}
 
 	std::string filedir(const std::string &in)
@@ -369,6 +394,8 @@ public:
 					auto pfn = Commissioner::makeName(nt.fantasy_name(), nt.public_key());
 					Commissioner::Aliases.emplace(pfn->hash(), pfn->pubkey);
 					Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+					LOG(lg, error) << "verified! " << FantasyName::name_hash(nt.fantasy_name());
+
 				}
 				else {
 					LOG(lg, error) << "!verify_name ";

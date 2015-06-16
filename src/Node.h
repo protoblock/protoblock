@@ -33,6 +33,7 @@ class Node
 	std::set<std::string> peerlist{};
 	std::vector<std::string> newpeers{};
 	std::vector<std::string> connected{};
+	std::vector<std::string> newconnected{};
 	std::vector<std::string> higherpeers{};
 	NodeRequest reqhs{};
 
@@ -89,6 +90,7 @@ public:
 		return b;
 	}
 
+	bool behind_nat = true;
 	static void ClearTx(const Block &);
 	static std::shared_ptr<leveldb::DB> blockchain;
 	static std::shared_ptr<leveldb::DB> txpool;

@@ -138,7 +138,7 @@ message Block {
 
 message NodeRequest
 {
-	enum Type { HANDSHAKE=1; BLOCK_REQUEST=2; HIGHT_REQUEST=3; }
+	enum Type { HANDSHAKE=1; BLOCK_REQUEST=2; HIGHT_REQUEST=3; NAT_TEST=4;}
 	optional Type type = 10;
 	optional string myip=20;
 	optional int32 num=30;

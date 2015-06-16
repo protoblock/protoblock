@@ -145,11 +145,12 @@ inline bool BlockHeader_Type_Parse(
 enum NodeRequest_Type {
   NodeRequest_Type_HANDSHAKE = 1,
   NodeRequest_Type_BLOCK_REQUEST = 2,
-  NodeRequest_Type_HIGHT_REQUEST = 3
+  NodeRequest_Type_HIGHT_REQUEST = 3,
+  NodeRequest_Type_NAT_TEST = 4
 };
 bool NodeRequest_Type_IsValid(int value);
 const NodeRequest_Type NodeRequest_Type_Type_MIN = NodeRequest_Type_HANDSHAKE;
-const NodeRequest_Type NodeRequest_Type_Type_MAX = NodeRequest_Type_HIGHT_REQUEST;
+const NodeRequest_Type NodeRequest_Type_Type_MAX = NodeRequest_Type_NAT_TEST;
 const int NodeRequest_Type_Type_ARRAYSIZE = NodeRequest_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* NodeRequest_Type_descriptor();
@@ -1815,6 +1816,7 @@ class NodeRequest : public ::google::protobuf::Message {
   static const Type HANDSHAKE = NodeRequest_Type_HANDSHAKE;
   static const Type BLOCK_REQUEST = NodeRequest_Type_BLOCK_REQUEST;
   static const Type HIGHT_REQUEST = NodeRequest_Type_HIGHT_REQUEST;
+  static const Type NAT_TEST = NodeRequest_Type_NAT_TEST;
   static inline bool Type_IsValid(int value) {
     return NodeRequest_Type_IsValid(value);
   }

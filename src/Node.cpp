@@ -162,13 +162,18 @@ void Node::runHandShake()
 bool Node::doHandshake(const std::string &inp)
 {
 	LOG(lg, info) << " dohandshake " << inp << "\n";
+	nn::socket natbind{ AF_SP, NN_PAIR };
+	natbind.bind("tcp://*:8130");
+	int timeout = 6000;
+	natbind.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
+
 	std::string pre{ "tcp://" };
 	std::string po{ ":8125" };
 	NodeReply reply{};
 	reqhs.set_type(NodeRequest_Type_HANDSHAKE);
 	bool isconnected = false;
 	nn::socket peer{ AF_SP, NN_REQ };
-	int timeout = 10000;
+	timeout = 5000;
 	peer.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
 	peer.setsockopt(NN_SOL_SOCKET, NN_SNDTIMEO, &timeout, sizeof(timeout));
 
@@ -206,6 +211,21 @@ bool Node::doHandshake(const std::string &inp)
 					newpeers.push_back(i);
 				}
 			}
+
+			if (behind_nat)
+			{
+				LOG(lg, info) << "out NAT test";
+				reqhs.set_type(NodeRequest_Type_NAT_TEST);
+				if (Sender::Send(peer, reqhs) > 0) {
+					if (Receiver::Receive(peer, reply)) {
+						if (Receiver::Receive(natbind, reqhs)) {
+							behind_nat = false;
+						}
+					}
+				}
+				LOG(lg, info) << "behind_nat " << behind_nat;
+
+			}
 		}
 	}
 	peer.shutdown(id);
@@ -235,14 +255,18 @@ bool Node::getMyIp()
 	{  
 		boost::asio::io_service io_service;
 
+		LOG(lg, info) << ".";
+
 		// Get a list of endpoints corresponding to the server name.
 		tcp::resolver resolver(io_service);
 		tcp::resolver::query query("checkip.dyndns.org", "http");
 		tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+		LOG(lg, info) << ".";
 
 		// Try each endpoint until we successfully establish a connection.
 		tcp::socket socket(io_service);
 		boost::asio::connect(socket, endpoint_iterator);
+		LOG(lg, info) << ".";
 
 		// Form the request. We specify the "Connection: close" header so that the
 		// server will close the socket after transmitting the response. This will
@@ -254,15 +278,18 @@ bool Node::getMyIp()
 		//request_stream << "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)\r\n";
 		request_stream << "Accept: */*\r\n";
 		request_stream << "Connection: close\r\n\r\n";
+		LOG(lg, info) << ".";
 
 		// Send the request.
 		boost::asio::write(socket, request);
+		LOG(lg, info) << ".";
 
 		// Read the response status line. The response streambuf will automatically
 		// grow to accommodate the entire line. The growth may be limited by passing
 		// a maximum size to the streambuf constructor.
 		boost::asio::streambuf response;
 		boost::asio::read_until(socket, response, "\r\n");
+		LOG(lg, info) << ".";
 
 		// Check that response is OK.
 		std::istream response_stream(&response);
@@ -283,6 +310,8 @@ bool Node::getMyIp()
 			return 1;
 		}
 
+		LOG(lg, info) << ".";
+
 		// Read the response headers, which are terminated by a blank line.
 		boost::asio::read_until(socket, response, "\r\n\r\n");
 
@@ -292,6 +321,7 @@ bool Node::getMyIp()
 			LOG(lg, info) << header << "\n";
 		LOG(lg, info) << "\n";
 
+		LOG(lg, info) << ".";
 
 		std::string body;
 		std::getline(response_stream, body);
@@ -305,6 +335,7 @@ bool Node::getMyIp()
 		// Write whatever content we already have to output.
 		if (response.size() > 0)
 			std::cout << &response;
+		LOG(lg, info) << ".";
 
 		// Read until EOF, writing data to output as we go.
 		boost::system::error_code error;
@@ -313,9 +344,13 @@ bool Node::getMyIp()
 			std::cout << &response;
 		if (error != boost::asio::error::eof)
 			throw boost::system::system_error(error);
+		LOG(lg, info) << ".";
+
 	}
 	catch (...)
 	{
+		LOG(lg, error) << ".";
+
 
 	}
 	return ret;
@@ -359,8 +394,10 @@ void Node::syncService()
 	{
 		LOG(lg, trace) << "syncService try receive";
 
-		if (!rec.receive(nodereq))
+		if (!rec.receive(nodereq)) {
+			LOG(lg, error) << "!syncService receive";
 			break;
+		}
 
 		LOG(lg, info) << "received " << nodereq.DebugString() << "\n";
 
@@ -418,11 +455,17 @@ void Node::syncService()
 			{
 				std::string stime(fc::time_point::now());
 
-				if (nodereq.has_myip() && nodereq.myip() != myip && nodereq.myip() != "")
+				if (nodereq.has_myip() && nodereq.myip() != myip && nodereq.myip() != "") {
 					peers->Put(leveldb::WriteOptions(), nodereq.myip(), stime);
+					std::lock_guard<std::mutex> lockg{ connected_mutex };
+					newconnected.push_back(nodereq.myip());
+				}
 				
-				else if (nodereq.has_myhost() && nodereq.myhost() != myhost && nodereq.myhost() != "")
+				else if (nodereq.has_myhost() && nodereq.myhost() != myhost && nodereq.myhost() != "") {
 					peers->Put(leveldb::WriteOptions(), nodereq.myhost(), stime);
+					std::lock_guard<std::mutex> lockg{ connected_mutex };
+					newconnected.push_back(nodereq.myhost());
+				}
 
 				{
 					std::lock_guard<std::mutex> lg{ blockchain_mutex };
@@ -438,6 +481,20 @@ void Node::syncService()
 				}
 				if ( snd.send(noderep) > 0 )
 					LOG(lg, info) << "send " << noderep.DebugString() << "\n";
+				break;
+			}
+			case NodeRequest_Type_NAT_TEST:
+			{
+				LOG(lg, info) << "NAT test for: " << nodereq.myip();
+				snd.send(noderep);
+				std::this_thread::sleep_for(std::chrono::seconds{ 1 });
+				std::string pre{ "tcp://" };
+				std::string po{ ":8130" };
+				nn::socket peer{ AF_SP, NN_PAIR };
+				int id = peer.connect((pre + nodereq.myip() + po).c_str());
+				int timeout = 10000;
+				peer.setsockopt(NN_SOL_SOCKET, NN_SNDTIMEO, &timeout, sizeof(timeout));
+				Sender::Send(peer, nodereq);
 				break;
 			}
 			default:
@@ -548,20 +605,30 @@ void Node::runLive()
 
 void Node::pendingTransactions()
 {
+	bool nat = behind_nat && connected.size() > 0;
 	std::string pre{ "tcp://" };
 	std::string po{ ":8127" };
+	std::string po2{ ":8128" };
+
 	std::set<std::string> published{};
-	nn::socket translivesub{ AF_SP, NN_SUB };
+	nn::socket translivepub{ AF_SP, NN_PUB };
+	nn::socket translivesub{ AF_SP, NN_SUB};
 	translivesub.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0);
+	int timeout = 10000;
+	translivesub.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
 	{
 		std::lock_guard<std::mutex> lockg{ connected_mutex };
-		for (auto &p : connected)
+		for (auto &p : connected) {
 			translivesub.connect((pre + p + po).c_str());
+			if (nat) translivepub.connect((pre + p + po2).c_str());
+		}
 	}
 	translivesub.connect("inproc://newlocaltrans");
 
-	nn::socket translivepub{ AF_SP, NN_PUB };
-	translivepub.bind((pre + "*" + po).c_str());
+	if (!nat)	{
+		translivesub.bind((pre + "*" + po2).c_str());
+		translivepub.bind((pre + "*" + po).c_str());
+	}
 	translivepub.bind("inproc://pubtrans");
 
 	Sender snd{ translivepub };
@@ -570,7 +637,15 @@ void Node::pendingTransactions()
 
 	while (running_live)
 	{
-		if (!rec.receive(st)) continue;
+		if (!rec.receive(st)) {
+			std::this_thread::sleep_for(std::chrono::seconds{ 1 });
+			std::lock_guard<std::mutex> lockg{ connected_mutex };
+			for (auto &p : newconnected) {
+				translivesub.connect((pre + p + po).c_str());
+			}
+			newconnected.clear();
+			continue;
+		}
 		LOG(lg, info) << "rec tx hash " << st.id();
 
 		//todo: send to transaction pool

@@ -43,9 +43,14 @@ struct FantasyName
 {
     pubkey_t pubkey;
     alias_t  alias;  
+	Bits balance{ 0 };
     
-    Bits getBalance() { return 0; }
+    Bits getBalance() { return balance; }
     
+	void addBalance(Bits b) {
+		balance.add(b);
+
+	}
     hash_t hash() const {
         return name_hash(alias);
     }

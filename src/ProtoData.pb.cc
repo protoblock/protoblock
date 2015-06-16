@@ -666,49 +666,50 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "sig\030\036 \001(\t\"\201\001\n\005Block\0221\n\nsignedhead\030\n \001(\0132"
     "\035.fantasybit.SignedBlockHeader\022:\n\023signed"
     "_transactions\030\024 \003(\0132\035.fantasybit.SignedT"
-    "ransaction*\t\010\350\007\020\200\200\200\200\002\"\241\001\n\013NodeRequest\022*\n"
+    "ransaction*\t\010\350\007\020\200\200\200\200\002\"\257\001\n\013NodeRequest\022*\n"
     "\004type\030\n \001(\0162\034.fantasybit.NodeRequest.Typ"
     "e\022\014\n\004myip\030\024 \001(\t\022\013\n\003num\030\036 \001(\005\022\016\n\006myhost\030("
-    " \001(\t\";\n\004Type\022\r\n\tHANDSHAKE\020\001\022\021\n\rBLOCK_REQ"
-    "UEST\020\002\022\021\n\rHIGHT_REQUEST\020\003\"\'\n\tNodeReply\022\r"
-    "\n\005hight\030\n \001(\005\022\013\n\003ips\030\024 \003(\t\"U\n\023FantasyPla"
-    "yerPoints\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022"
-    "\020\n\010playerid\030\036 \001(\t\022\016\n\006points\030( \001(\005\"\212\001\n\017Pr"
-    "ojectionTrans\022,\n\003fpp\030\n \001(\0132\037.fantasybit."
-    "FantasyPlayerPoints2I\n\nproj_trans\022\027.fant"
-    "asybit.Transaction\030\311\001 \001(\0132\033.fantasybit.P"
-    "rojectionTrans\"~\n\004Data\022\017\n\007version\030\n \001(\005\022"
-    "#\n\004type\030\024 \001(\0162\025.fantasybit.Data.Type\"6\n\004"
-    "Type\022\014\n\010SCHEDULE\020\000\022\n\n\006PLAYER\020\001\022\010\n\004TEAM\020\002"
-    "\022\n\n\006RESULT\020\003*\010\010d\020\200\200\200\200\002\"m\n\nPlayerData\022\020\n\010"
-    "playerid\030\n \001(\t\022\016\n\006teamid\030\024 \001(\t2=\n\013player"
-    "_data\022\020.fantasybit.Data\030e \001(\0132\026.fantasyb"
-    "it.PlayerData\"U\n\010TeamData\022\016\n\006teamid\030\n \001("
-    "\t29\n\tteam_data\022\020.fantasybit.Data\030o \001(\0132\024"
-    ".fantasybit.TeamData\"z\n\nResultData\022,\n\003fp"
-    "p\030\n \001(\0132\037.fantasybit.FantasyPlayerPoints"
-    "2>\n\013result_data\022\020.fantasybit.Data\030\312\001 \001(\013"
-    "2\026.fantasybit.ResultData\"\213\003\n\016DataTransit"
-    "ion\022-\n\004type\030\001 \001(\0162\037.fantasybit.DataTrans"
-    "ition.Type\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r"
-    "\022\016\n\006teamid\030\036 \003(\t\022\036\n\004data\030( \003(\0132\020.fantasy"
-    "bit.Data\"m\n\004Type\022\n\n\006ROSTER\020\001\022\017\n\013SEASONST"
-    "ART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tDRAFTOVER\020\004\022\r\n\tH"
-    "EARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER\020\007\""
-    "C\n\005State\022\014\n\010PREDRAFT\020\001\022\r\n\tPRESEASON\020\002\022\017\n"
-    "\013ROSTER53MAN\020\003\022\014\n\010INSEASON\020\0042H\n\ndata_tra"
-    "ns\022\027.fantasybit.Transaction\030\313\001 \001(\0132\032.fan"
-    "tasybit.DataTransition\"\220\001\n\013GlobalState\022,"
-    "\n\005state\030\001 \001(\0162\035.fantasybit.GlobalState.S"
-    "tate\022\016\n\006season\030\n \001(\r\"C\n\005State\022\014\n\010PREDRAF"
-    "T\020\001\022\r\n\tPRESEASON\020\002\022\017\n\013ROSTER53MAN\020\003\022\014\n\010I"
-    "NSEASON\020\004\"g\n\tTeamState\022*\n\005state\030\001 \001(\0162\033."
-    "fantasybit.TeamState.State\022\014\n\004week\030\n \001(\r"
-    "\" \n\005State\022\013\n\007PREGAME\020\001\022\n\n\006INGAME\020\002*d\n\014My"
-    "NameStatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\treq"
-    "uested\020\005\022\t\n\005found\020\n\022\024\n\020transaction_sent\020"
-    "\017\022\r\n\tconfirmed\020\024*;\n\tTransType\022\010\n\004NAME\020\000\022"
-    "\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003", 3357);
+    " \001(\t\"I\n\004Type\022\r\n\tHANDSHAKE\020\001\022\021\n\rBLOCK_REQ"
+    "UEST\020\002\022\021\n\rHIGHT_REQUEST\020\003\022\014\n\010NAT_TEST\020\004\""
+    "\'\n\tNodeReply\022\r\n\005hight\030\n \001(\005\022\013\n\003ips\030\024 \003(\t"
+    "\"U\n\023FantasyPlayerPoints\022\016\n\006season\030\n \001(\r\022"
+    "\014\n\004week\030\024 \001(\r\022\020\n\010playerid\030\036 \001(\t\022\016\n\006point"
+    "s\030( \001(\005\"\212\001\n\017ProjectionTrans\022,\n\003fpp\030\n \001(\013"
+    "2\037.fantasybit.FantasyPlayerPoints2I\n\npro"
+    "j_trans\022\027.fantasybit.Transaction\030\311\001 \001(\0132"
+    "\033.fantasybit.ProjectionTrans\"~\n\004Data\022\017\n\007"
+    "version\030\n \001(\005\022#\n\004type\030\024 \001(\0162\025.fantasybit"
+    ".Data.Type\"6\n\004Type\022\014\n\010SCHEDULE\020\000\022\n\n\006PLAY"
+    "ER\020\001\022\010\n\004TEAM\020\002\022\n\n\006RESULT\020\003*\010\010d\020\200\200\200\200\002\"m\n\n"
+    "PlayerData\022\020\n\010playerid\030\n \001(\t\022\016\n\006teamid\030\024"
+    " \001(\t2=\n\013player_data\022\020.fantasybit.Data\030e "
+    "\001(\0132\026.fantasybit.PlayerData\"U\n\010TeamData\022"
+    "\016\n\006teamid\030\n \001(\t29\n\tteam_data\022\020.fantasybi"
+    "t.Data\030o \001(\0132\024.fantasybit.TeamData\"z\n\nRe"
+    "sultData\022,\n\003fpp\030\n \001(\0132\037.fantasybit.Fanta"
+    "syPlayerPoints2>\n\013result_data\022\020.fantasyb"
+    "it.Data\030\312\001 \001(\0132\026.fantasybit.ResultData\"\213"
+    "\003\n\016DataTransition\022-\n\004type\030\001 \001(\0162\037.fantas"
+    "ybit.DataTransition.Type\022\016\n\006season\030\n \001(\r"
+    "\022\014\n\004week\030\024 \001(\r\022\016\n\006teamid\030\036 \003(\t\022\036\n\004data\030("
+    " \003(\0132\020.fantasybit.Data\"m\n\004Type\022\n\n\006ROSTER"
+    "\020\001\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tDR"
+    "AFTOVER\020\004\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022"
+    "\014\n\010WEEKOVER\020\007\"C\n\005State\022\014\n\010PREDRAFT\020\001\022\r\n\t"
+    "PRESEASON\020\002\022\017\n\013ROSTER53MAN\020\003\022\014\n\010INSEASON"
+    "\020\0042H\n\ndata_trans\022\027.fantasybit.Transactio"
+    "n\030\313\001 \001(\0132\032.fantasybit.DataTransition\"\220\001\n"
+    "\013GlobalState\022,\n\005state\030\001 \001(\0162\035.fantasybit"
+    ".GlobalState.State\022\016\n\006season\030\n \001(\r\"C\n\005St"
+    "ate\022\014\n\010PREDRAFT\020\001\022\r\n\tPRESEASON\020\002\022\017\n\013ROST"
+    "ER53MAN\020\003\022\014\n\010INSEASON\020\004\"g\n\tTeamState\022*\n\005"
+    "state\030\001 \001(\0162\033.fantasybit.TeamState.State"
+    "\022\014\n\004week\030\n \001(\r\" \n\005State\022\013\n\007PREGAME\020\001\022\n\n\006"
+    "INGAME\020\002*d\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007no"
+    "tavil\020\002\022\r\n\trequested\020\005\022\t\n\005found\020\n\022\024\n\020tra"
+    "nsaction_sent\020\017\022\r\n\tconfirmed\020\024*;\n\tTransT"
+    "ype\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020"
+    "\002\022\010\n\004DATA\020\003", 3371);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -4795,6 +4796,7 @@ bool NodeRequest_Type_IsValid(int value) {
     case 1:
     case 2:
     case 3:
+    case 4:
       return true;
     default:
       return false;
@@ -4805,6 +4807,7 @@ bool NodeRequest_Type_IsValid(int value) {
 const NodeRequest_Type NodeRequest::HANDSHAKE;
 const NodeRequest_Type NodeRequest::BLOCK_REQUEST;
 const NodeRequest_Type NodeRequest::HIGHT_REQUEST;
+const NodeRequest_Type NodeRequest::NAT_TEST;
 const NodeRequest_Type NodeRequest::Type_MIN;
 const NodeRequest_Type NodeRequest::Type_MAX;
 const int NodeRequest::Type_ARRAYSIZE;
