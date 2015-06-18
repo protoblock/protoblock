@@ -12,7 +12,7 @@
 #include <QObject>
 #include <nn.hpp>
 #include <MsgSock.h>
-#include <fb/ProtoData.pb.h>
+#include <ProtoData.pb.h>
 #include <string>
 #include <QTimer>
 #include <QEvent>

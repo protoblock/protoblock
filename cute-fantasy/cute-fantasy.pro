@@ -19,6 +19,6 @@ HEADERS  += sfgui.h client.h nn.hpp
 
 FORMS    += sfgui.ui
 
-LIBS += -L"$$_PRO_FILE_PWD_/../lib/" -lnanomsg -lfb -lprotobuf
+LIBS += -L"$$_PRO_FILE_PWD_/../lib/" -lnanomsg -lfb -llibprotobuf
 INCLUDEPATH += "$$_PRO_FILE_PWD_/../include/"
 INCLUDEPATH += "$$_PRO_FILE_PWD_/../src/"

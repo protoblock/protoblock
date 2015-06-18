@@ -7,7 +7,7 @@
 //
 #include "sfgui.h"
 #include "client.h"
-#include <fb/ProtoData.pb.h>
+#include <ProtoData.pb.h>
 #include "ui_sfgui.h"
 #include <QDateTime>
 #include <QClipboard>
@@ -41,43 +41,7 @@ void sfGUI::fromServer(const OutData &in)
     {
         ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
         m_state = SNAPSHOT;
-        if ( in.has_myfantasyname() )
-        {
-            switch ( in.myfantasyname().status())
-            {
-                case none:
-                    break;
-                case notavil:
-                    ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + "not available.");
-                    break;
-                case requested:
-                    ui->textBrowser->append("previous try for: " + QString::fromStdString(in.myfantasyname().name()) + ", was aborted. please retry");
-                    ui->fantasyname->setText(in.myfantasyname().name().c_str());
-                    break;
-                case found:
-                    ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", already found." );
-                    //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
-                    m_state = FOUND;
-                    m_namestatus.CopyFrom(in.myfantasyname());
-                    ui->fantasyname->setText(in.myfantasyname().name().c_str());
-                case transaction_sent:
-                    ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", found, pending confirmation." );
-                    //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
-                    m_state = FOUND;
-                    m_namestatus.CopyFrom(in.myfantasyname());
-                    ui->fantasyname->setText(in.myfantasyname().name().c_str());
-                    break;
-                case confirmed:
-                    ui->textBrowser->append(QString::fromStdString(in.myfantasyname().name()) + ", confirmed!" );
-                    //ui->textBrowser->append(QString::fromStdString(in.myfantasyname().nametransaction().DebugString()));
-                    m_state = CONFIRMED;
-                    m_namestatus.CopyFrom(in.myfantasyname());
-                    ui->fantasyname->setText(in.myfantasyname().name().c_str());
-                    break;
-                default:
-                    break;
-            }
-        }
+
         updatestatic();
     }
     else if ( in.type() != OutData_Type_SNAPSHOT  || (m_state == REQUESTED || m_state == MINING))

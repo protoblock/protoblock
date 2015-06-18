@@ -9,7 +9,7 @@
 #define SFGUI_H
 
 #include <QWidget>
-#include <fb/ProtoData.pb.h>
+#include <ProtoData.pb.h>
 #include <QThread>
 #include <QString>
 

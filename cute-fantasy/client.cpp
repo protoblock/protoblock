@@ -9,7 +9,7 @@
 #include <nanomsg/pair.h>
 #include <MsgSock.h>
 #include <string>
-#include <fb/ProtoData.pb.h>
+#include <ProtoData.pb.h>
 #include <QtDebug>
 #include <QProcess>>
 #include <QCoreApplication>
