@@ -26,13 +26,13 @@ public:
 
     void stop() { running = false; }
     static std::unordered_map<pubkey_t,std::shared_ptr<FantasyName>> FantasyNames;
-    static std::map<hash_t,pubkey_t> Aliases;
+    static std::map<hash_t,pubkey_t> Hash2Pk;
 			
 	//static std::string m_genesis_id;
 	static fc::ecc::public_key_data GENESIS_PUB_KEY;
     static bool isAliasAvailable(alias_t alias)
     {
-        return Commissioner::Aliases.find(FantasyName::name_hash(alias)) == end(Commissioner::Aliases);
+		return Commissioner::Hash2Pk.find(FantasyName::name_hash(alias)) == end(Commissioner::Hash2Pk);
     }
     
     static std::shared_ptr<FantasyName> getName(const pubkey_t &pub  ) {
@@ -43,8 +43,8 @@ public:
     }
 
 	static std::shared_ptr<FantasyName> getName(const hash_t &hash) {
-		auto iter = Aliases.find(hash);
-		if (iter == end(Aliases)) return nullptr;
+		auto iter = Hash2Pk.find(hash);
+		if (iter == end(Hash2Pk)) return nullptr;
 
 		return getName(iter->second);
 	}
@@ -143,8 +143,8 @@ public:
 
 	static bool verifyByName(const fc::ecc::signature &sig, const fc::sha256 &digest,const std::string &fn)
 	{
-		auto iter = Aliases.find(FantasyName::name_hash(fn));
-		if (iter == Aliases.end()) 
+		auto iter = Hash2Pk.find(FantasyName::name_hash(fn));
+		if (iter == Hash2Pk.end())
 			return fbutils::LogFalse(std::string("cant find fantasyname").append(fn));
 		
 		return verify(sig, digest, iter->second);

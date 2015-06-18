@@ -19,7 +19,7 @@ namespace fantasybit {
 
 using namespace std;
 
-NameValuePairs<double> DistribuePointsAvg::distribute(const Int result , const std::string &agent) const
+NameValuePairs<double> DistribuePointsAvg::distribute(const Int64 result, const std::string &agent) const
 {
 	NameValuePairs<double> award{};
 	if (projections.size() == 0) {
@@ -32,14 +32,14 @@ NameValuePairs<double> DistribuePointsAvg::distribute(const Int result , const s
     diffs.reserve(projections.size());
     
     for(const auto& pair : projections) {
-        Int diff = abs(result-pair.second);
+		Int diff = abs((int64_t)result - (int64_t)pair.second);
         mean+=diff;
         diffs.emplace_back(diff);
     }
   
     mean /= projections.size();
     
-    Int maxdiff = min((Int)lround(mean),result);
+	Int maxdiff = min((Int64)lround(mean), result);
     
     Int sum = accumulate(begin(diffs), end(diffs), 0,
         [maxdiff,result](const Int sum,const Int val)
@@ -51,7 +51,7 @@ NameValuePairs<double> DistribuePointsAvg::distribute(const Int result , const s
 
 	double total = 0.0;
     for (const auto& pair : projections) {
-        Int diff = abs(result-pair.second);
+		Int diff = abs((int64_t)result - (int64_t)pair.second);
 		if (diff < maxdiff)
 		{
 			double amount = (result - diff)*payout;

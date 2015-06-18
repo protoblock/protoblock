@@ -58,6 +58,7 @@ public:
 		fbutils::LogFalse(std::string("onSignedTransaction").append(sn.DebugString()));
 	}
 
+	/*
 	void onDataTransition(const DataTransition &dt)
 	{
 		fbutils::LogFalse(std::string("onDataTransition").append(dt.DebugString()));
@@ -68,6 +69,7 @@ public:
 
 		makeNewBlockAsDataAgent(dt);
 	}
+	*/
 
 	bool amDataAgent() {
 		//Todo: fix
@@ -103,7 +105,7 @@ public:
 	bool beDataAgent() { return beOracle();  }
 
 	Block makeNewBlockAsOracle();
-	Block makeNewBlockAsDataAgent(const DataTransition &);
+	Block makeNewBlockAsDataAgent(const SignedTransaction &);
 
 	fc::ecc::private_key str2priv(const std::string &in)
 	{

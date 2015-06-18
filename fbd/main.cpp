@@ -62,6 +62,51 @@ void init()
 
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
+
+void makegenesistransblock() {
+	/*
+	FantasyAgent agent{};
+	agent.beOracle();
+
+	Block b{}; 
+
+	auto time = fc::time_point_sec(fc::time_point::from_iso_string("20150601T000000")).sec_since_epoch();
+
+	auto gtrans = Commissioner::makeGenesisName();
+	//merkle root - single transaction 
+	auto root = fc::sha256::hash(gtrans.id() + gtrans.id()).str();
+
+	BlockHeader bh{};
+	bh.set_version(1);
+	bh.set_num(1);
+	bh.set_prev_id("0000000000000000000000000000000000000000000000000000000000000000");
+	bh.set_timestamp(time);
+
+	bh.set_generator_pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+	bh.set_generating_sig(fc::sha256::hash(bh.generator_pk()).str());
+	bh.set_basetarget(0); //todo
+	bh.set_blocktype(BlockHeader_Type_NORMAL);
+	bh.set_transaction_id(root); //todo: merkle root of tx 
+
+	SignedBlockHeader sbh{};
+	sbh.mutable_head()->CopyFrom(bh);
+
+	auto p = agent.getIdSig(sbh.head().SerializeAsString());
+	sbh.set_sig(p.second);
+
+	auto genesisblockhash = p.first;
+
+	b.mutable_signedhead()->CopyFrom(sbh);
+
+	b.add_signed_transactions()->CopyFrom(gtrans);
+
+
+	/*
+	cout << "===============================\n"
+		<< sn.SerializeAsString()
+		<< "\n=============================\n";
+/**/
+}
 int main(int argc, const char * argv[])
 {
 	initBoostLog(); 
@@ -103,21 +148,21 @@ int main(int argc, const char * argv[])
 	node.init();
 	node.runHandShake();
 
+	string delta_address{ "inproc://deltaserver" };
+
 	string server_address{ "inproc://rcpserver" };
 	Server server{ server_address };;
 
 	string gui_address{ "ipc:///tmp/fantasygui.ipc" };
-	ClientUI client{ server_address, gui_address };
-
+	ClientUI client{ server_address, gui_address, delta_address };
 
 	thread servert{ &Server::run, &server };
 	thread clientt{ &ClientUI::run, &client };
 
-
 	thread syncRequest_{ &Node::syncRequest, &node };
 	thread syncService_{ &Node::syncService, &node };
-
-	BlockProcessor processor{};
+	
+	BlockProcessor processor{ delta_address };
 	thread processor_{ &BlockProcessor::run, &processor };
 
 	thread runLive_{ &Node::runLive, &node };
@@ -187,31 +232,6 @@ int main2(int argc, const char * argv[])
 
     cmd.parse( argc, argv );
 
- 
-    if ( mine.isSet() )
-    {
-        //for(auto n : names)
-        for(int i=0; i < minecount.getValue(); i++ )
-        {
-        FantasyAgent fa{};
-        std::chrono::time_point<std::chrono::system_clock> start, end;
-        start = std::chrono::system_clock::now();
-        std::time_t start_time = std::chrono::system_clock::to_time_t(start);
-        std::cout << " started computation at " << std::ctime(&start_time);
-        
-        fa.signPlayer(mineName.getValue());
-        auto nt = fa.getRequested();
-        
-        end = std::chrono::system_clock::now();
-        std::chrono::duration<double> elapsed_seconds = end-start;
-        std::time_t end_time = std::chrono::system_clock::to_time_t(end);
- 
-        std::cout << " finished computation at " << std::ctime(&end_time)
-             << "elapsed time: " << elapsed_seconds.count() / 60 << " minutes\n";
-        }
-        return 0;
-    }
-
 	if (tcp.isSet())
 		address = "tcp://192.168.1.27:3000";// +ip.getValue() + ":" + tcpPort.getValue();
     else
@@ -232,7 +252,7 @@ int main2(int argc, const char * argv[])
 	Server server{ server_address} ;;
     
     string gui_address{address};
-    ClientUI client{server_address,gui_address};
+    ClientUI client{server_address,gui_address,""};
     
     
     thread servert{&Server::run,&server};
@@ -243,6 +263,7 @@ int main2(int argc, const char * argv[])
     nn_term();
     servert.join();
      
+	return 0;
 }
 
 

@@ -40,7 +40,7 @@ uint64_t difficulty( const fc::sha224& hash_value )
 fc::ecc::public_key_data Commissioner::GENESIS_PUB_KEY
 { Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa")) };
 std::unordered_map<pubkey_t,std::shared_ptr<FantasyName>> Commissioner::FantasyNames{};
-std::map<hash_t,pubkey_t> Commissioner::Aliases{};
+std::map<hash_t,pubkey_t> Commissioner::Hash2Pk{};
 //SignedBlock Commissioner::GenesisBlock{};
 //Commissioner::makeGenesisBlock();
 

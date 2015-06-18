@@ -27,7 +27,7 @@ public:
         Bits stake{0};
 
         do {
-            stake.add(Commissioner::FantasyNames[Commissioner::Aliases[alias]].getBalance());
+            stake.add(Commissioner::FantasyNames[Commissioner::Hash2Pk[alias]].getBalance());
         } while ( !decrypt());
             
         return stake;

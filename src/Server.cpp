@@ -143,7 +143,8 @@ void Server::run()
 				}
 				break;
 			case InData_Type_DATA:
-				{
+			{
+
 				/*
 				//todo: results as dataagent 
 				Transaction trans{};
@@ -153,10 +154,17 @@ void Server::run()
 				SignedTransaction sn = agent->makeSigned(trans);
 				agent->onSignedTransaction(sn);
 				*/
-					auto block = agent->makeNewBlockAsDataAgent(indata.data_trans());
-					sender_blocks.send(block);
-				}
+				Transaction trans{};
+				trans.set_version(Commissioner::TRANS_VERSION);
+				trans.set_type(TransType::DATA);
+				trans.MutableExtension(DataTransition::data_trans)->CopyFrom(indata.data_trans());
+				SignedTransaction sn = agent->makeSigned(trans);
+
+				auto block = agent->makeNewBlockAsDataAgent(sn);
+				sender_blocks.send(block);
 				break;
+
+			}
             default:
                 break;
         }

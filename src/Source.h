@@ -51,7 +51,13 @@ public:
 	static std::unordered_map<Uid, Source> EventProjectionResult;
 	static std::map < std::string, std::map<std::string, Uid>> WeeklySchedule;
 
-	static std::unordered_map<pid_t, tid_t> PlayerTeam;
+	//static std::unordered_map<pid_t, tid_t> PlayerTeam;
+	static std::unordered_map<std::string, std::string> PlayerTeam;
+	static std::map<std::string, std::unordered_set<std::string>> TeamPlayers;
+};
+
+struct FantasyProjections {
+	static std::unordered_map<std::string, std::unordered_map<std::string,uint64_t>> Projections;
 };
 
 

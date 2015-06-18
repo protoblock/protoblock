@@ -38,6 +38,7 @@ FantasyAgent::status FantasyAgent::signPlayer(alias_t name)
 }
 
 //static SignedBlock makeGenesisBlock() {
+/*
 bool FantasyAgent::makeGenesis()
 {
 	LOG(lg, trace) << "genesis ";
@@ -49,6 +50,7 @@ bool FantasyAgent::makeGenesis()
 	bp.process(sb);
 	return true;
 }
+*/
 
 bool FantasyAgent::beOracle()
 {
@@ -85,7 +87,7 @@ bool FantasyAgent::beOracle()
 }
 
 
-Block FantasyAgent::makeNewBlockAsDataAgent(const DataTransition &dt)
+Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt)
 {
 	Block b{};
 	
@@ -119,13 +121,15 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const DataTransition &dt)
 
 	b.mutable_signedhead()->CopyFrom(sbh);
 
+	SignedTransaction st{};
+	SignedTransaction* st2 = b.add_signed_transactions();
+	st2->CopyFrom(dt);
 
 
 	leveldb::ReadOptions options;
 	options.snapshot = Node::txpool->GetSnapshot();
 	leveldb::Iterator *iter = Node::txpool->NewIterator(options);
 
-	SignedTransaction st{};
 	for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
 		
 		st.ParseFromString(iter->value().ToString());

@@ -24,11 +24,13 @@ namespace fantasybit
 
 class ClientUI
 {
-    nn::socket sockserv, sockgui;
+    nn::socket sockserv, sockgui, sockdelta;
 public:
-    ClientUI(std::string addrserv,std::string addrgui)
-        : sockserv{AF_SP, NN_PAIR}, sockgui{AF_SP, NN_PAIR}
+    ClientUI(std::string addrserv,std::string addrgui,std::string addrdelta)
+		: sockserv{ AF_SP, NN_PAIR }, sockgui{ AF_SP, NN_PAIR }, sockdelta{AF_SP, NN_PAIR}
     {
+		sockdelta.bind(addrdelta.c_str());
+		LOG(lg, trace) << "connect server" << addrserv;
 
         sockserv.connect(addrserv.c_str());
 		LOG(lg, trace) << "connect server" << addrserv;
@@ -48,11 +50,16 @@ private:
     void init();
 protected:
     MyFantasyName myname{};
+	DeltaData delta_snap{};
+	DeltaData delta_update{};
     
-    void process_server(const OutData &);
-    void process_gui(const InData &);
+    bool process_server(const OutData &);
+    bool process_gui(const InData &);
+	bool process_delta(DeltaData &, DeltaData &);
     void snapshot_gui();
     bool havegui;
+	void to_gui(const DeltaData &delt);
+
 };
 
 }
