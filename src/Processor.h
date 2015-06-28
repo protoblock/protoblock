@@ -113,6 +113,23 @@ public:
 			pfn->addBalance(newval);
 		}
 		delete it;
+
+		initProjections();
+	}
+
+	void initProjections() {
+		auto *it = projections->NewIterator(leveldb::ReadOptions());
+		for (it->SeekToFirst(); it->Valid(); it->Next()) {
+
+			auto str = it->key().ToString();
+			int pos =  str.find_first_of(':');
+			auto nflplayer = str.substr(0, pos);
+			auto fantasyname = str.substr(pos + 1);
+
+			uint64_t bal = *(reinterpret_cast<const uint64_t *>(it->value().data()));
+
+			FantasyProjections::Projections[nflplayer][fantasyname] = bal;
+		}
 	}
 
 	DeltaData DeltaSnap() {
@@ -128,7 +145,7 @@ public:
 
 		dd.mutable_globalstate()->CopyFrom(GetGlobalState());
 
-		/*
+		
 		TeamState ts{};
 		auto it = state->NewIterator(leveldb::ReadOptions());
 		for (it->SeekToFirst(); it->Valid(); it->Next()) {
@@ -138,14 +155,13 @@ public:
 			auto *p = dd.add_teamstates();
 			p->CopyFrom(ts);
 		}
-		*/
 
 		//std::unordered_map<std::string, std::string> PlayerTeam{};
 		//std::map<std::string, std::unordered_set<std::string>> TeamPlayers{};
 
 		Data d{};
 		PlayerData pd{};
-		auto it = players->NewIterator(leveldb::ReadOptions());
+		it = players->NewIterator(leveldb::ReadOptions());
 		for (it->SeekToFirst(); it->Valid(); it->Next()) {
 			pd.ParseFromString(it->value().ToString());
 			d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
@@ -155,6 +171,7 @@ public:
 			Source::PlayerTeam.emplace(pd.playerid(), pd.teamid());
 		}
 
+		d.Clear();
 		TeamData td{};
 		it = teams->NewIterator(leveldb::ReadOptions());
 		for (it->SeekToFirst(); it->Valid(); it->Next()) {
@@ -164,11 +181,13 @@ public:
 			p->CopyFrom(d);
 		}
 
+		/*
 		for (auto tps : Source::TeamPlayers) {
 			auto ts = GetTeamState(tps.first);
 			auto *p = dd.add_teamstates();
 			p->CopyFrom(ts);
 		}
+		*/
 
 		return dd;
 	}
@@ -251,7 +270,7 @@ public:
 	{
 		std::string value;
 		if (blockstatus->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound())
-			return false; 
+			return true; 
 
 		int num = *(reinterpret_cast<const int *>(value.data()));
 		return num < 0;
@@ -286,10 +305,10 @@ public:
 		std::string fn{ fname };
 
 		projections->Put(leveldb::WriteOptions(), key.append(":").append(fname), bval);
-		auto iter = FantasyProjections::Projections.find(key);
+		auto iter = FantasyProjections::Projections.find(fpp.playerid());
 		if (iter == end(FantasyProjections::Projections)) {
 			//FantasyProjections::Projections.insert(key, { fn, bal });
-			FantasyProjections::Projections[key][fn] = bal;
+			FantasyProjections::Projections[fpp.playerid()][fn] = bal;
 		}
 		else
 			iter->second[fname] = bal;	
@@ -384,7 +403,11 @@ public:
 			GetInSync(lastidprocessed + 1, realHeight);
 
 		seen_insync = true;
-		Sender::Send(delasrv,mRecorder.DeltaSnap());
+		LOG(lg, info) << "mRecorder not valid! ";
+
+		auto ds = mRecorder.DeltaSnap();
+		LOG(lg, trace) << "sending DeltaSnap" << ds.DebugString();
+		Sender::Send(delasrv,ds);
 
 		while (running)
 		{
@@ -397,7 +420,8 @@ public:
 				process(sb);
 		}
 	}
-		
+
+
 	void init() 
 	{
 		int count = 0;
@@ -498,7 +522,9 @@ public:
 		lastidprocessed = mRecorder.endBlock(sblock.signedhead().head().num());
 		//sblock.block().head().num());
 
-		Sender::Send(delasrv, outDelta);
+		LOG(lg, trace) << " outDelta " << outDelta.DebugString();
+		if (seen_insync)
+			Sender::Send(delasrv, outDelta);
 		outDelta.Clear();
 		return true;
 	}
@@ -561,13 +587,13 @@ public:
 					ttd = d.GetExtension(TeamData::team_data);
 					mRecorder.OnTeamData(ttd);
 					break;
-				case Data_Type_RESULT:
-				{
+				case Data_Type_RESULT: {
 					rd = d.GetExtension(ResultData::result_data);
 
 					//	auto it = FantasyProjections::Projections.find(rd.fpp().playerid());
 					//	if (it == end(FantasyProjections::Projections))
 
+					LOG(lg, info) << " process result " << rd.fpp().DebugString();
 					auto namevalpair = FantasyProjections::Projections[rd.fpp().playerid()];
 					DistribuePointsAvg dist(namevalpair);
 					auto rewards = dist.distribute(rd.fpp().points(), blocksigner);
@@ -578,7 +604,7 @@ public:
 						mRecorder.addBalance(Commissioner::pk2str(fn->pubkey), reward);
 						LOG(lg, trace) << " reward " << fn->alias << " with "
 							<< nr.second << " bal " << fn->getBalance().amount();
-
+							
 						FantasyPlayer fp{};
 						fp.set_name(fn->alias);
 						fp.set_bits(reward);
@@ -760,8 +786,8 @@ public:
 			case TransType::PROJECTION:
 			{
 				auto pt = t.GetExtension(ProjectionTrans::proj_trans);
+				LOG(lg, trace) << st.fantasy_name() << "new projection " << pt.DebugString();
 				mRecorder.addProjection(st.fantasy_name(), pt.fpp());
-				LOG(lg, trace) << "new projection ";
 				break;
 			}
 

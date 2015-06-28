@@ -23,7 +23,7 @@ void ClientUI::init()
 {
 	LOG(lg, trace) << "init havegui = true";
 
-    havegui = true;
+    havegui = false;
     
     myname.set_status(MyNameStatus::none);
     myname.set_name("");
@@ -37,7 +37,7 @@ void ClientUI::run()
 	const int RECEIVE_DELTA_BREAK_COUNT = 500;
 	const int RECEIVE_BREAK_LOOP_COUNT = 50;
     const int GUI_TIMEOUT_SECONDS = 120;
-    const int LONG_NAP_SECONDS = 30;
+    const int LONG_NAP_SECONDS = 5;
     const int SHORT_SLEEP_MILLIS = 1000;
  
     Receiver server{sockserv};
@@ -54,7 +54,7 @@ void ClientUI::run()
     int scount = -1;
     int gcount = -1;
 	int dcount = -1;
-    bool first=true;
+    bool first = true;
 	bool have_data = false; 
 	bool gui_heartbeat = false;
 
@@ -74,19 +74,29 @@ void ClientUI::run()
 			if (++scount >= RECEIVE_BREAK_LOOP_COUNT)
 				break;
 			std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
+
+			outdata.Clear();
 		}
 
 		while (deltas.receive(deltadata, NN_DONTWAIT)) { 
+			LOG(lg, trace) << "after RECEIVE " << deltadata.DebugString();
 			process_delta(deltadata, delta_update);
+			LOG(lg, trace) << "after process  " << deltadata.DebugString();
+
 			if (++dcount >= RECEIVE_DELTA_BREAK_COUNT)
 				break;
 
-			std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
+			std::this_thread::sleep_for(std::chrono::milliseconds{ 100 });
 		}
 
 		if (dcount >= 0 ) { //have new data
-			to_gui(delta_update);
+			if (!first) {
+				LOG(lg, trace) << "!first sending " << delta_update.DebugString();
+
+				to_gui(delta_update);
+			}
 			process_delta(delta_update, delta_snap);
+
 			have_data = true;
 		}
 		else if (scount >= 0)
@@ -96,26 +106,25 @@ void ClientUI::run()
         if ( first && have_data)
         {
 			LOG(lg, trace) << "first time - snapshot_gui ";
-
             snapshot_gui();
             first = false;
         }
  
 		while (gui.receive(indata, NN_DONTWAIT) )
         {
-			LOG(lg, trace) << "received from gui " << indata.DebugString();
+			//LOG(lg, trace) << "received from gui " << indata.DebugString();
 
             if ( !havegui )
             {
-				LOG(lg, trace) << "snapshot_gui ";
+				//LOG(lg, trace) << "!havegui snapshot_gui ";
 
                 havegui = true;
-                snapshot_gui();
+                //snapshot_gui();
             }
             start = std::chrono::system_clock::now();
 			gui_heartbeat = process_gui(indata);
 
-			LOG(lg, trace) << "processed from gui ";
+			//LOG(lg, trace) << "processed from gui ";
 			if (++gcount >= RECEIVE_BREAK_LOOP_COUNT)
 				break;
 			std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
@@ -172,19 +181,21 @@ bool ClientUI::process_server(const OutData &data)
 bool ClientUI::process_gui(const InData &data)
 {
 	bool ret = false; 
-	LOG(lg, trace) << "from gui: " << data.DebugString();
-    switch ( data.type())
+	if (data.type() != InData_Type_HEARTBEAT)
+		LOG(lg, trace) << "from gui: " << data.DebugString();
+
+	switch ( data.type())
     {
         case InData_Type_QUIT:
             Sender::Send(sockserv,data);
             running = false;
             break;
-        case InData_Type_CONNECT:
+        case InData_Type_CONNECT:	
             snapshot_gui();
             break;
         case InData_Type_HEARTBEAT:
 			delta_update.set_type(DeltaData_Type_HEARTBEAT);
-			ret = true;
+			ret = true;	
             break;
 		case InData_Type_MAKE_BLOCK:
 			Sender::Send(sockserv, data);
@@ -198,12 +209,17 @@ bool ClientUI::process_gui(const InData &data)
 
 void ClientUI::snapshot_gui() 
 {
+	LOG(lg, trace) << "snapshot_gui sending " << delta_snap.DebugString();
+
     to_gui(delta_snap);
 }
 
 bool ClientUI::process_delta(DeltaData &data,DeltaData &delta_update)
 {
-	LOG(lg, trace) << "delatr " << data.DebugString();
+	//LOG(lg, trace) << "delatr " << data.DebugString();
+	if (data.has_myfantasyname())
+		delta_update.mutable_myfantasyname()->CopyFrom(data.myfantasyname());
+
 	if (data.has_globalstate())
 		delta_update.mutable_globalstate()->CopyFrom(data.globalstate());
 
@@ -217,9 +233,9 @@ bool ClientUI::process_delta(DeltaData &data,DeltaData &delta_update)
 		tt->CopyFrom(t);
 	}
 
-	for (const auto &t : data.teamstates()) {
-		auto *tt = delta_update.add_teamstates();
-		tt->CopyFrom(t);
+	for (const auto &t : data.datas()) {
+		auto *dd = delta_update.add_datas();
+		dd->CopyFrom(t);
 	}
 
 	data.Clear();

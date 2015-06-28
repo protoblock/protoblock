@@ -29,6 +29,9 @@ public:
     ClientUI(std::string addrserv,std::string addrgui,std::string addrdelta)
 		: sockserv{ AF_SP, NN_PAIR }, sockgui{ AF_SP, NN_PAIR }, sockdelta{AF_SP, NN_PAIR}
     {
+		int timeout = 5000;
+		sockserv.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
+
 		sockdelta.bind(addrdelta.c_str());
 		LOG(lg, trace) << "connect server" << addrserv;
 
