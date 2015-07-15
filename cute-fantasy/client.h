@@ -28,10 +28,10 @@ class Client : public QObject
     Receiver receiver;
     QTimer * timer, *timer2;
     InData indata{};
-    OutData outdata{};
+    DeltaData outdata{};
     InData hbdata{};
 public:
-    explicit Client(const std::string &,const std::string &,QObject *parent = 0);
+    explicit Client(const std::string &,QObject *parent = 0);
 
     virtual bool event(QEvent *ev);
 
@@ -41,7 +41,7 @@ public:
     }
 
 signals:
-    void onData(const OutData &data);
+    void onData(const DeltaData &data);
     void doPoll();
 
 public slots:

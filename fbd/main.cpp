@@ -113,9 +113,25 @@ int main(int argc, const char * argv[])
 
 	CmdLine cmd("fantasybit ", ' ', "0.1");
 
-	//SwitchArg push("c", "connect/push", "push/connest and not pull/bind", false);
-	//cmd.add(push);
+	SwitchArg reset("r", "reset", "clear all data and start from scratch", false);
+	cmd.add(reset);
+
+	SwitchArg Reset("R", "resetexit", "clear all data and start from scratch", false);
+	cmd.add(Reset);
+
 	cmd.parse(argc, argv);
+
+	if (reset.isSet() || Reset.isSet()) {
+		fc::remove_all(ROOT_DIR + "index/");
+		fc::remove_all(ROOT_DIR + "block/");
+		fc::remove_all(ROOT_DIR + "node/");
+		fc::remove_all(ROOT_DIR + "tx/");
+
+		fc::remove(ROOT_DIR + "secret.out");
+
+		if (Reset.isSet())
+			return 0;
+	}
 
 	/*
 	nn::socket s1(AF_SP, NN_PAIR);

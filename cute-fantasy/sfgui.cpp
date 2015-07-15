@@ -17,9 +17,6 @@ using namespace fantasybit;
 sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
 {
     ui->setupUi(this);
-    m_state = CONNECTING;
-    m_namestatus.set_name("");
-    m_namestatus.set_status(none);
     //QObject::connect(this, SIGNAL(on_flash()), this, SLOT(flashing()) );
     ui->textBrowser->append(QCoreApplication::applicationDirPath());
 }
@@ -31,90 +28,53 @@ void sfGUI::flashing()
 }
 */
 
-void sfGUI::fromServer(const OutData &in)
+void sfGUI::fromServer(const DeltaData &in)
 {
-    if ( in.type() == OutData_Type_HEARTBEAT )
+    if ( in.type() == DeltaData_Type_HEARTBEAT )
     {
         ui->textBrowser->insertPlainText(".");
+        deltaData.CopyFrom(in);
+        updatedelta();
     }
-    else if ( in.type() == OutData_Type_SNAPSHOT && m_state == CONNECTING )
+    else if ( in.type() == DeltaData_Type_SNAPSHOT)
     {
-        ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
-        m_state = SNAPSHOT;
+        if ( !snapData.has_type() ) {
+            ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
 
-        updatestatic();
-    }
-    else if ( in.type() != OutData_Type_SNAPSHOT  || (m_state == REQUESTED || m_state == MINING))
-    {
-        m_namestatus.CopyFrom(in.myfantasyname());
-        switch ( in.myfantasyname().status())
-        {
-            case notavil:
-                m_state = SNAPSHOT;
-                ui->textBrowser->append(QDateTime::currentDateTime().toString() + QString::fromStdString(in.myfantasyname().name()) + "not available.");
-                break;
-            case requested:
-                m_state = MINING;
-                ui->textBrowser->append(QDateTime::currentDateTime().toString() + " mining for: " + QString::fromStdString(in.myfantasyname().name()));
-                ui->textBrowser->append("please be patient. process can take 1 to 6 hours.");
-                break;
-            case found:
-                ui->textBrowser->append(QDateTime::currentDateTime().toString() + QString::fromStdString(in.myfantasyname().name()) + ", found!" );
-                m_state = FOUND;
-                break;
-            default:
-                break;
+            ui->message->setText("Live: ");
+            ui->fantasyname->setEnabled(true);
+            ui->generate->setEnabled(true);
         }
-        updatestatic();
+
+        snapData.CopyFrom(in);
+        updatesnap();
     }
 
-    //ui->textBrowser->append(QString::fromStdString(in.DebugString()));
+    ui->textBrowser->append(QString::fromStdString(in.DebugString()));
 }
 /**/
 
-void sfGUI::updatestatic()
+void sfGUI::updatesnap()
 {
-    if ( m_state == SNAPSHOT )
-    {
-        ui->message->setText("Generate your own fantasy name: ");
-        ui->fantasyname->setEnabled(true);
-        ui->generate->setEnabled(true);
-        ui->progressBar->setValue(10);
+    if ( snapData.myfantasyname().status() != MyNameStatus::none ) {
+        ui->fantasyname->setText(QString::fromStdString(snapData.myfantasyname().name()));
+        ui->fantasynamestatus->setText("Fantasy Name Status: " +
+            QString::fromStdString(MyNameStatus_Name(snapData.myfantasyname().status())));
     }
-    else if ( m_state == REQUESTED )
-    {
-        ui->message->setText("Requested " + ui->fantasyname->text());
-        ui->fantasyname->setEnabled(false);
-        ui->generate->setEnabled(false);
-        ui->progressBar->setValue(20);
-    }
-    else if ( m_state == MINING )
-    {
-        ui->message->setText("Generating " + ui->fantasyname->text() + "...");
-        ui->fantasyname->setEnabled(false);
-        ui->generate->setEnabled(false);
-        ui->progressBar->setValue(40);
-    }
-    else if ( m_state == FOUND )
-    {
-        ui->message->setText(ui->fantasyname->text() + " found! Please share your proof-of-work ");
-        ui->fantasyname->setEnabled(false);
-        ui->generate->setEnabled(false);
-        ui->progressBar->setValue(80);
-        ui->copy->setEnabled(true);
-        ui->proofofwork->setEnabled(true);
-        ui->proofofwork->setText(m_namestatus.DebugString().c_str());
-    }
-    else if ( m_state == CONFIRMED )
-    {
-        ui->message->setText(ui->fantasyname->text() + "confirmed.");
-        ui->fantasyname->setEnabled(false);
-        ui->generate->setEnabled(false);
-        ui->progressBar->setValue(100);
-        ui->copy->setEnabled(true);
-        ui->proofofwork->setEnabled(true);
-        ui->proofofwork->setText(m_namestatus.DebugString().c_str());
-    }
+
+
+    ui->message->setText(QString::fromStdString(
+               "Live: " +
+                GlobalState_State_Name(snapData.globalstate().state()) +
+                " " +
+                std::to_string(snapData.globalstate().season())
+                ));
+
+}
+
+void sfGUI::updatedelta()
+{
+
 }
 
 sfGUI::~sfGUI()
@@ -125,20 +85,21 @@ sfGUI::~sfGUI()
 
 void fantasybit::sfGUI::on_generate_clicked()
 {
+
     if ( ui->fantasyname->text() == "") return;
 
     ui->textBrowser->append(QDateTime::currentDateTime().toString() + " requesting: " + ui->fantasyname->text());
 
-    indata.set_type(InData_Type_MINENAME);
+    indata.set_type(InData_Type_NEWNAME);
     indata.set_data(ui->fantasyname->text().toStdString());
-    m_state = REQUESTED;
-    updatestatic();
 
     emit fromGUI(indata);
 }
 
+
 void fantasybit::sfGUI::on_copy_clicked()
 {
+    /*
     QClipboard *clipboard = QApplication::clipboard();
     if ( ui->twitter->isChecked() )
     {
@@ -158,4 +119,6 @@ void fantasybit::sfGUI::on_copy_clicked()
         clipboard->setText(ui->proofofwork->toPlainText());
         ui->message->setText("Proof copied to clipboard");
     }
+    */
 }
+

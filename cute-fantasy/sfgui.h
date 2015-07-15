@@ -24,17 +24,18 @@ class sfGUI : public QWidget
 {
     Q_OBJECT
 
-    enum State { CONNECTING, SNAPSHOT, REQUESTED, MINING, FOUND, CONFIRMED };
+    enum State { CONNECTING, LIVE };
     //MyNameStatus m_status;
-    State m_state;
-    MyFantasyName m_namestatus{};
+    //State m_state;
+    //MyFantasyName m_namestatus{};
     InData indata{};
+    DeltaData snapData{}, deltaData{};
 public:
     explicit sfGUI(QWidget *parent = 0);
     ~sfGUI();
 
 public slots:
-    void fromServer(const OutData &in);// {}
+    void fromServer(const DeltaData &in);// {}
 
     //void fromServer(const fantasybit::OutData &in);
 private slots:
@@ -59,7 +60,9 @@ signals:
 
 private:
     Ui::sfGUI *ui;
-    void updatestatic();
+    void updatesnap();
+    void updatedelta();
+
 };
 
 }

@@ -16,15 +16,18 @@
 #include "fb/boostLog.h"
 #include <functional>
 #include <fbutils.h>
+#include <thread>
+#include <future>
+
 
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 using namespace std;
 using namespace fantasybit;
 using namespace TCLAP;
-string input(const std::string &in,char c=' ')
+string input(const std::string &in)
 {
-	cout << in << c << endl;
+	cout << in << " " << endl;
 	string s;
 	cin >> s;
 	return s;
@@ -98,6 +101,7 @@ int main(int argc, const char * argv[])
 
     std::string address{};
 
+	/*
     CmdLine cmd("fantasybit ", ' ', "0.1");
 
     ValueArg<string> tcpPort("p","port","use tcp for GUI",false,"31200","port number");
@@ -115,13 +119,12 @@ int main(int argc, const char * argv[])
         address = "tcp://127.0.0.1:" + tcpPort.getValue();
     else
         address = "ipc:///tmp/" + ipcSuf.getValue() + ".ipc";
-
+	*/
 
 	address = "ipc:///tmp/fantasygui.ipc";
     cout << " using " << address << endl;
 	LOG(lg, trace) << " address " << address;
 
-    string in;
 
 	/*
 	nn::socket sock2{ AF_SP, NN_REP };
@@ -143,13 +146,12 @@ int main(int argc, const char * argv[])
     Receiver ui{sock};
     
     InData indata{};
-    OutData outdata{};
+    DeltaData outdata{};
     
 
 	stringstream ss{};
 	ss << "1" << "\t" << "connect" << "\n";
 	ss << "2" << "\t" << "receive" << "\n";
-	ss << "3" << "\t" << "mine" << "\n";
 	ss << "4" << "\t" << "block" << "\n";
 	ss << "5" << "\t" << "new name" << "\n";
 	ss << "6" << "\t" << "project" << "\n";
@@ -161,9 +163,36 @@ int main(int argc, const char * argv[])
 	ss << "exit" << "\t" << "quit" << "\n";
 
 	string commands = ss.str();
-    while ( "exit" != (in = input(commands)) )
+	string in{};
+
+	std::future<string> fut{};
+
+    while ( "exit" != in ) 
     { 
 		indata.Clear();
+
+		fut = std::async(&input, commands);
+
+		do {
+			if (ui.receive(outdata, NN_DONTWAIT))
+			{
+				LOG(lg, trace) << outdata.DebugString();
+				outdata.Clear();
+			}
+			else {
+				std::this_thread::sleep_for(std::chrono::milliseconds{ 1000 });
+
+				indata.set_type(InData_Type_HEARTBEAT);
+				Sender::Send(sock, indata);
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds{ 1000 });
+
+		} while (std::future_status::timeout == fut.wait_for(std::chrono::seconds(1)));
+
+		//LOG(lg, info) << fut.valid();
+		in = fut.get();
+
+
         if ( in == "1")
         {
             indata.set_type(InData_Type_CONNECT);
@@ -174,33 +203,19 @@ int main(int argc, const char * argv[])
 
         }
         if ( in == "2") {
-
             indata.set_type(InData_Type_HEARTBEAT);
             Sender::Send(sock,indata);
-            
-            outdata.Clear();
-            while ( ui.receive(outdata,NN_DONTWAIT) )
-                cout << outdata.DebugString() << " \n";
-        }
+	    }
+
+
         
-        if ( in == "3") {
-            if ( "exit" == (in = input("name"))) break;
-            indata.Clear();
-            indata.set_type(InData_Type_MINENAME);
-            indata.set_data(in);
-            Sender::Send(sock,indata);
-        }
         if ( in == "99")
         {
             indata.set_type(InData_Type_QUIT);
             Sender::Send(sock,indata);
             break;
         }
-		if (in == "4")
-		{
-			indata.set_type(InData_Type_MAKE_BLOCK);
-			Sender::Send(sock, indata);
-		}
+
 
 		if (in == "5")
 		{
@@ -215,7 +230,6 @@ int main(int argc, const char * argv[])
 		{
 			indata.Clear();
 			indata.set_type(InData_Type_PROJ);
-			indata.set_data(input("game:"));
 			indata.set_data2(input("player:"));
 			indata.set_num(input_int("proj:"));
 			Sender::Send(sock, indata);

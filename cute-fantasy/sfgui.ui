@@ -34,7 +34,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="fantasynamestatus">
        <property name="font">
         <font>
          <pointsize>14</pointsize>
@@ -80,13 +80,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Proof of work</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QCheckBox" name="twitter">
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>
@@ -110,32 +103,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item>
-    <widget class="QTextBrowser" name="proofofwork">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="autoFillBackground">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QProgressBar" name="progressBar">
-     <property name="maximum">
-      <number>100</number>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-    </widget>
    </item>
    <item>
     <widget class="QTextBrowser" name="textBrowser"/>

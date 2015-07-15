@@ -46,14 +46,14 @@ namespace fantasybit
 //using ldbP = std::unique_ptr < leveldb::DB > ;
 class BlockRecorder 
 {
-	leveldb::DB *blockstatus;
-	leveldb::DB *namehashpub;
-	leveldb::DB *pubfantasyname;
-	leveldb::DB *pubbalance;
-	leveldb::DB *state;
-	leveldb::DB *players;
-	leveldb::DB *teams;
-	leveldb::DB *projections;
+	leveldb::DB *blockstatus;  // lastblock -> status // last block processed 
+	leveldb::DB *namehashpub;  // FantasyName::Hash -> public_key  
+	leveldb::DB *pubfantasyname; // public_key ->FantasyName 
+	leveldb::DB *pubbalance; // public_key -> fantasybit balance
+	leveldb::DB *state; // GlobalState and TeamState
+	leveldb::DB *players; // NFL playerid -> PlayerData
+	leveldb::DB *teams; // NFL teamid -> TeamData
+	leveldb::DB *projections; // playerid:FantasyName -> projection
 
 	//leveldb::DB *gamesids;
 	//leveldb::DB *projections;
