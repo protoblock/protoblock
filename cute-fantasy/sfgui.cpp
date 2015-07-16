@@ -19,6 +19,12 @@ sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
     ui->setupUi(this);
     //QObject::connect(this, SIGNAL(on_flash()), this, SLOT(flashing()) );
     ui->textBrowser->append(QCoreApplication::applicationDirPath());
+
+   ui->myTeamsStatesTableView->setModel(&myTeamsStateTableModel);
+   ui->myPlayersDataTableView->setModel(&myPlayerDataTableModel);
+   ui->myTeamsDataTableView->setModel(&myTeamDataTableModel);
+   ui->myFantasyPlayersTableView->setModel(&myFantasyPlayerTableModel);
+
 }
 
 /*
@@ -69,7 +75,6 @@ void sfGUI::updatesnap()
                 " " +
                 std::to_string(snapData.globalstate().season())
                 ));
-
 }
 
 void sfGUI::updatedelta()
@@ -122,3 +127,30 @@ void fantasybit::sfGUI::on_copy_clicked()
     */
 }
 
+void fantasybit::sfGUI::refreshViews(const DeltaData &in){
+    if (in.type() != DeltaData_Type_SNAPSHOT) return;
+    myCurrentSnapShot.fromDeltaData(in);
+    ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
+
+    myTeamsStateTableModel.removeAll();
+    myPlayerDataTableModel.removeAll();
+    myTeamDataTableModel.removeAll();
+    myFantasyPlayerTableModel.removeAll();
+
+    ui->myFantasyNameLE->setText(myCurrentSnapShot.fantasyName);
+    ui->mySeasonLE->setText(myCurrentSnapShot.globalStateModel.seasonString());
+    ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
+
+
+    for(int i=0;i< myCurrentSnapShot.teamStates.count();i++)
+        myTeamsStateTableModel.addItem(&myCurrentSnapShot.teamStates[i]);    
+
+    for(int i=0;i< myCurrentSnapShot.players.count();i++)
+        myPlayerDataTableModel.addItem(&myCurrentSnapShot.players[i]);
+
+    for(int i=0;i< myCurrentSnapShot.teams.count();i++)
+        myTeamDataTableModel.addItem(&myCurrentSnapShot.teams[i]);
+
+    for(int i=0;i< myCurrentSnapShot.fantasyPlayers.count();i++)
+        myFantasyPlayerTableModel.addItem(&myCurrentSnapShot.fantasyPlayers[i]);
+}

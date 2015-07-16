@@ -12,6 +12,7 @@
 #include <ProtoData.pb.h>
 #include <QThread>
 #include <QString>
+#include "models.h"
 
 namespace Ui {
 class sfGUI;
@@ -36,6 +37,7 @@ public:
 
 public slots:
     void fromServer(const DeltaData &in);// {}
+    void refreshViews(const DeltaData &in);
 
     //void fromServer(const fantasybit::OutData &in);
 private slots:
@@ -62,6 +64,16 @@ private:
     Ui::sfGUI *ui;
     void updatesnap();
     void updatedelta();
+    /**
+     * @brief myCurrentSnapShot : contains last snapshot data
+     */
+    SnapShotViewModel myCurrentSnapShot;
+
+    //the following models will hold data shown by the table views.
+    TeamStateTableModel myTeamsStateTableModel;
+    PlayerDataTableModel myPlayerDataTableModel;
+    TeamDataTableModel myTeamDataTableModel;
+    FantasyPlayerTableModel myFantasyPlayerTableModel;
 
 };
 

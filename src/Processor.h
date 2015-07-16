@@ -25,7 +25,7 @@
 
 
 #include "nn.hpp"
-#include "nn.h"
+#include <nanomsg\nn.h>
 #include <nanomsg\reqrep.h>
 #include <nanomsg/pair.h>
 #include <nanomsg\pubsub.h>
