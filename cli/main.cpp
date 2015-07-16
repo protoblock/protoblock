@@ -9,11 +9,11 @@
 #include <string>
 #include "nn.hpp"
 #include <nanomsg/pair.h>
-#include <fb/MsgSock.h>
+#include <MsgSock.h>
 #include "ProtoData.pb.h"
 #include "tclap/CmdLine.h"
 #include <nanomsg\reqrep.h>
-#include "fb/boostLog.h"
+#include "boostLog.h"
 #include <functional>
 #include <fbutils.h>
 #include <thread>
@@ -137,6 +137,7 @@ int main(int argc, const char * argv[])
 	reply.set_hight(0);
 	Sender::Send(sock2,reply);
 	*/
+
     nn::socket sock{AF_SP, NN_PAIR};
 	int con = sock.connect(address.c_str());
 	//"ipc:///tmp/fantasygui.ipc");
@@ -150,17 +151,13 @@ int main(int argc, const char * argv[])
     
 
 	stringstream ss{};
-	ss << "1" << "\t" << "connect" << "\n";
-	ss << "2" << "\t" << "receive" << "\n";
-	ss << "4" << "\t" << "block" << "\n";
-	ss << "5" << "\t" << "new name" << "\n";
-	ss << "6" << "\t" << "project" << "\n";
-	ss << "7" << "\t" << "data" << "\n";
-	//ss << "8" << "\t" << "connect" << "\n";
-	//ss << "9" << "\t" << "connect" << "\n";
-
-	ss << "99" << "\t" << "disonnect" << "\n";
-	ss << "exit" << "\t" << "quit" << "\n";
+	ss << "1" << "\t" << "Send connect - Gets Snapshot" << "\n";
+	ss << "2" << "\t" << "Send heartbeat - Gets Delta" << "\n";
+	ss << "5" << "\t" << "Claim your FantasyName" << "\n";
+	ss << "6" << "\t" << "Make a Projection" << "\n";
+	ss << "7" << "\t" << "DataTransition and Make Block (DataAgent)" << "\n";
+	ss << "99" << "\t" << "Send Quit and exit" << "\n";
+	ss << "exit" << "\t" << "Exit" << "\n";
 
 	string commands = ss.str();
 	string in{};
@@ -219,7 +216,7 @@ int main(int argc, const char * argv[])
 
 		if (in == "5")
 		{
-			if ("exit" == (in = input("name"))) break;
+			if ("exit" == (in = input("FantasyName"))) break;
 			indata.Clear();
 			indata.set_type(InData_Type_NEWNAME);
 			indata.set_data(in);
@@ -230,8 +227,8 @@ int main(int argc, const char * argv[])
 		{
 			indata.Clear();
 			indata.set_type(InData_Type_PROJ);
-			indata.set_data2(input("player:"));
-			indata.set_num(input_int("proj:"));
+			indata.set_data2(input("PlayerId:"));
+			indata.set_num(input_int("Projection:"));
 			Sender::Send(sock, indata);
 		}
 		if (in == "7")
@@ -245,16 +242,17 @@ int main(int argc, const char * argv[])
 			//dt.set_type(static_cast<DataTransition_Type>(input_int(proto_enum_map<DataTransition>())));
 			dt.set_type(input_proto_enum_map<DataTransition>());
 			
-			dt.set_season(input_int("season:"));
-			dt.set_week(input_int("week:"));
+			dt.set_season(input_int("Season:"));
+			dt.set_week(input_int("Week:"));
 
-			while(true) {
-				string team{ input("team or na:") };
-				if (team == "na") break;
-				dt.add_teamid(team);
-			}
+			if (dt.type() == DataTransition_Type_GAMESTART)
+				while(true) {
+					string team{ input("TeamId or done:") };
+					if (team == "done") break;
+					dt.add_teamid(team);
+				}
 
-			while (yn("add data")) {
+			while (yn("Add New Team or Player Data")) {
 				Data d{};
 				d.set_type(input_proto_enum_map<Data>());
 				switch (d.type()) {
@@ -280,8 +278,8 @@ int main(int argc, const char * argv[])
 						FantasyPlayerPoints fpp{};
 						fpp.set_season(dt.season());
 						fpp.set_week(dt.week());
-						fpp.set_playerid(input("playerid"));
-						fpp.set_points(input_int("points:"));
+						fpp.set_playerid(input("playerid:"));
+						fpp.set_points(input_int("result:"));
 
 						ResultData rd{};
 						rd.mutable_fpp()->CopyFrom(fpp);
