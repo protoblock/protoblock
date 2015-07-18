@@ -21,7 +21,8 @@ SOURCES += \
     $$PWD/splashdialog.cpp \
     $$PWD/statuswidget.cpp \
     $$PWD/decorable.cpp \
-    $$PWD/descriptable.cpp
+    $$PWD/descriptable.cpp \
+    $$PWD/singleapplication.cpp
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \
@@ -60,7 +61,8 @@ HEADERS += \
     $$PWD/tlistmodel.h \
     $$PWD/decorable.h \
     $$PWD/descriptable.h \
-    $$PWD/globals.h
+    $$PWD/globals.h \
+    $$PWD/singleapplication.h
 
 FORMS += \
     $$PWD/sfgui.ui \
@@ -68,5 +70,6 @@ FORMS += \
     $$PWD/gamesoftheweekdialog.ui \
     $$PWD/splashdialog.ui \
     $$PWD/statuswidget.ui
+
 
 

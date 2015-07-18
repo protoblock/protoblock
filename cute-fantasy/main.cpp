@@ -7,16 +7,16 @@
 //
 
 #include "sfgui.h"
-#include <QApplication>
 #include "client.h"
 #include <iostream>
+#include "singleapplication.h"
+#include "gamesoftheweekdialog.h"
 
 using namespace fantasybit;
 int main(int argc, char *argv[])
 {
+    SingleApplication a(argc, argv);
     std::string ipc{"ipc:///tmp/fantasygui.ipc"};
-    QApplication a(argc, argv);
-
     qRegisterMetaType<DeltaData>("DeltaData");
     qRegisterMetaType<InData>("InData");
     sfGUI widget;
@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
 
     clientthread.start();
     widget.show();
-
+//    GamesOfTheWeekDialog dlg;
+//    dlg.show();
     return a.exec();
 }
