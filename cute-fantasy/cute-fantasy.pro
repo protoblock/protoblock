@@ -22,6 +22,7 @@ CONFIG += c++11
 BOOST_DIR = ./../../paperfootball/boost
 
 INCLUDEPATH += ./../include
+INCLUDEPATH += ./../include/nanomsg
 INCLUDEPATH += $${BOOST_DIR}
 INCLUDEPATH += ./../src
 

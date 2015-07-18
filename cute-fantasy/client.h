@@ -37,7 +37,7 @@ public:
 
     ~Client()
     {
-        nn::term();
+        //nn::term();
     }
 
 signals:

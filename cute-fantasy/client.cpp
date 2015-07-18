@@ -74,6 +74,7 @@ void Client::heartbeat()
 
 void Client::quit()
 {
-    indata.set_type(InData_Type_QUIT);
-    Sender::Send(sock,indata);
+    //indata.set_type(InData_Type_QUIT);
+    //Sender::Send(sock,indata);
+    //nn::term();
 }
