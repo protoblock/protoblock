@@ -164,6 +164,7 @@ public:
 		it = players->NewIterator(leveldb::ReadOptions());
 		for (it->SeekToFirst(); it->Valid(); it->Next()) {
 			pd.ParseFromString(it->value().ToString());
+			d.set_type(Data_Type::Data_Type_PLAYER);
 			d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
 			auto *p = dd.add_datas();
 			p->CopyFrom(d);
@@ -176,6 +177,7 @@ public:
 		it = teams->NewIterator(leveldb::ReadOptions());
 		for (it->SeekToFirst(); it->Valid(); it->Next()) {
 			td.ParseFromString(it->value().ToString());
+			d.set_type(Data_Type::Data_Type_TEAM);
 			d.MutableExtension(TeamData::team_data)->CopyFrom(td);
 			auto *p = dd.add_datas();
 			p->CopyFrom(d);

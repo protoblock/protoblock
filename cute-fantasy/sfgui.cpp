@@ -128,16 +128,17 @@ void fantasybit::sfGUI::on_copy_clicked()
 }
 
 void fantasybit::sfGUI::refreshViews(const DeltaData &in){
-    if (in.type() != DeltaData_Type_SNAPSHOT) return;
+    if (in.type() == DeltaData_Type_SNAPSHOT) {
+        myTeamsStateTableModel.removeAll();
+        myPlayerDataTableModel.removeAll();
+        myTeamDataTableModel.removeAll();
+        myFantasyPlayerTableModel.removeAll();
+    }
+
     myCurrentSnapShot.fromDeltaData(in);
     ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
-
-    myTeamsStateTableModel.removeAll();
-    myPlayerDataTableModel.removeAll();
-    myTeamDataTableModel.removeAll();
-    myFantasyPlayerTableModel.removeAll();
-
     ui->myFantasyNameLE->setText(myCurrentSnapShot.fantasyName);
+    ui->myBalance->setText(QString::number(myCurrentSnapShot.fantasyNameBalance));
     ui->mySeasonLE->setText(myCurrentSnapShot.globalStateModel.seasonString());
     ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
 

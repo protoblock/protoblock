@@ -171,8 +171,7 @@ public:
 
     PlayerDataViewModel(const  ::fantasybit::Data & copy) {
         if (copy.type() != Data_Type_PLAYER) return;
-        PlayerData playerData;
-        playerData.CopyFrom(copy);
+        PlayerData playerData = copy.GetExtension(PlayerData::player_data);
         myPlayerId = QString::fromStdString(playerData.playerid());
         myTeamId = QString::fromStdString(playerData.teamid());
     }
@@ -240,8 +239,7 @@ public:
 
     TeamDataViewModel(const  ::fantasybit::Data & copy) {
         if (copy.type() != Data_Type_TEAM) return;
-        TeamData teamData;
-        teamData.CopyFrom(copy);
+        TeamData teamData = copy.GetExtension(TeamData::team_data);
         myTeamId = QString::fromStdString(teamData.teamid());
     }
 
@@ -386,6 +384,8 @@ public:
 class SnapShotViewModel {
 public:
     QString fantasyName;
+    quint64 fantasyNameBalance;
+
     GlobalStateViewModel globalStateModel;
     QList<TeamDataViewModel> teams;
     QList<TeamStateViewModel> teamStates;
@@ -399,14 +399,17 @@ public:
     ~SnapShotViewModel(){}
 
     void fromDeltaData(const DeltaData & data) {
-        //clear snapshot data
-        fantasyName = "";
-        globalStateModel.setSeason(0);
-        //globalStateModel.setState(STATE_UNKNOWN);
-        teams.clear();
-        teamStates.clear();
-        players.clear();
-        fantasyPlayers.clear();
+        if (data.type() == DeltaData_Type_SNAPSHOT) {
+            //clear snapshot data
+            fantasyName = "";
+            fantasyNameBalance = 0;
+            globalStateModel.setSeason(0);
+            //globalStateModel.setState(STATE_UNKNOWN);
+            teams.clear();
+            teamStates.clear();
+            players.clear();
+            fantasyPlayers.clear();
+        }
 
         if (data.has_myfantasyname())
             fantasyName = QString::fromStdString(data.myfantasyname().name());
@@ -414,7 +417,7 @@ public:
         if (data.has_globalstate())
             globalStateModel.copyFrom(data.globalstate());
 
-        for (const ::fantasybit::Data &t : data.datas()) {
+        for (auto t : data.datas()) {
             if (t.type() == ::fantasybit::Data_Type_TEAM)
                 teams.append(TeamDataViewModel(t));
             else
@@ -426,7 +429,12 @@ public:
             teamStates.append(TeamStateViewModel(t));
 
         for (const auto &t : data.players())
+        {
+            if ( t.name() == fantasyName.toStdString() ) {
+                fantasyNameBalance = t.bits();
+            }
             fantasyPlayers.append(FantasyPlayerViewModel(t));
+        }
     }
 };
 
