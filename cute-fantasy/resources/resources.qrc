@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/team2015">
+        <file>Team.2015.json</file>
+    </qresource>
+</RCC>

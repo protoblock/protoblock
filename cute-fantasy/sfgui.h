@@ -13,7 +13,8 @@
 #include <QThread>
 #include <QString>
 #include "models.h"
-
+#include "teamsloader.h"
+#include "spinboxdelegate.h"
 namespace Ui {
 class sfGUI;
 }
@@ -49,6 +50,18 @@ private slots:
     //void flashing();
 
 
+    void on_myTeamsCmb_currentIndexChanged(int index);
+
+    void on_myAddScoringLineButton_clicked();
+
+
+
+    void on_mySendProjectionsButton_clicked();
+
+    void on_mySendResultsButton_clicked();
+
+    void on_myDeleteAllRowsButton_clicked();
+
 protected:
     virtual void closeEvent(QCloseEvent *)
     {
@@ -62,6 +75,7 @@ signals:
 
 private:
     Ui::sfGUI *ui;
+
     void updatesnap();
     void updatedelta();
     /**
@@ -74,6 +88,11 @@ private:
     PlayerDataTableModel myPlayerDataTableModel;
     TeamDataTableModel myTeamDataTableModel;
     FantasyPlayerTableModel myFantasyPlayerTableModel;
+    ScoringTableModel myScoringTableModel;
+    QList<TeamLoader::JsonTeam> myPreloadedTeams;
+    SpinBoxDelegate myDelegate;
+    QMutex myMutex;
+
 
 };
 

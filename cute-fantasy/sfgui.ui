@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>656</width>
-    <height>530</height>
+    <width>826</width>
+    <height>571</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <property name="whatsThis">
    <string/>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
+  <layout class="QGridLayout" name="gridLayout_5">
    <item row="0" column="0">
     <widget class="QLabel" name="message">
      <property name="font">
@@ -31,385 +31,404 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QCheckBox" name="twitter">
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>twitter</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="copy">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Copy</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="1" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QSplitter" name="splitter">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <widget class="QFrame" name="frame">
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_9">
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Last snapshot</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="mySnapshotTimestamp"/>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <layout class="QVBoxLayout" name="verticalLayout_11">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
-            <string>Last snapshot</string>
+            <string>Fantasy Name </string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="mySnapshotTimestamp"/>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <layout class="QVBoxLayout" name="verticalLayout_11">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <widget class="QLabel" name="label">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Fantasy Name </string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <layout class="QVBoxLayout" name="verticalLayout_9">
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_9">
-               <item>
-                <widget class="QLabel" name="label_10">
-                 <property name="text">
-                  <string>Name</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="myFantasyNameLE"/>
-               </item>
-              </layout>
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>Name</string>
+               </property>
+              </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_10">
-               <item>
-                <widget class="QLabel" name="label_11">
-                 <property name="text">
-                  <string>Balance</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="myBalance"/>
-               </item>
-              </layout>
+              <widget class="QLineEdit" name="myFantasyNameLE"/>
              </item>
             </layout>
            </item>
-          </layout>
-         </item>
-         <item row="1" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
-            <widget class="QLabel" name="label_6">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Global State</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QVBoxLayout" name="verticalLayout_10">
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_6">
-               <item>
-                <widget class="QLabel" name="label_7">
-                 <property name="text">
-                  <string>Season</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="mySeasonLE"/>
-               </item>
-              </layout>
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>Balance</string>
+               </property>
+              </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_7">
-               <item>
-                <widget class="QLabel" name="label_8">
-                 <property name="text">
-                  <string>State</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="myGlobalStateLE"/>
-               </item>
-              </layout>
+              <widget class="QLineEdit" name="myBalance"/>
              </item>
             </layout>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="0" colspan="2">
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Teams States</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTableView" name="myTeamsStatesTableView">
-             <property name="font">
-              <font>
-               <pointsize>8</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="tabKeyNavigation">
-              <bool>false</bool>
-             </property>
-             <property name="showDropIndicator" stdset="0">
-              <bool>false</bool>
-             </property>
-             <property name="dragDropOverwriteMode">
-              <bool>false</bool>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-             <property name="showGrid">
-              <bool>false</bool>
-             </property>
-             <property name="cornerButtonEnabled">
-              <bool>false</bool>
-             </property>
-             <attribute name="horizontalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Teams Data</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTableView" name="myTeamsDataTableView">
-             <property name="font">
-              <font>
-               <pointsize>8</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="tabKeyNavigation">
-              <bool>false</bool>
-             </property>
-             <property name="showDropIndicator" stdset="0">
-              <bool>false</bool>
-             </property>
-             <property name="dragDropOverwriteMode">
-              <bool>false</bool>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-             <property name="showGrid">
-              <bool>false</bool>
-             </property>
-             <property name="cornerButtonEnabled">
-              <bool>false</bool>
-             </property>
-             <attribute name="horizontalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="3" column="0" colspan="2">
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>Players Data</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTableView" name="myPlayersDataTableView">
-             <property name="font">
-              <font>
-               <pointsize>8</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="tabKeyNavigation">
-              <bool>false</bool>
-             </property>
-             <property name="showDropIndicator" stdset="0">
-              <bool>false</bool>
-             </property>
-             <property name="dragDropOverwriteMode">
-              <bool>false</bool>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-             <property name="showGrid">
-              <bool>false</bool>
-             </property>
-             <property name="cornerButtonEnabled">
-              <bool>false</bool>
-             </property>
-             <attribute name="horizontalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="3" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <item>
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>Fantasy Players</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTableView" name="myFantasyPlayersTableView">
-             <property name="font">
-              <font>
-               <pointsize>8</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="tabKeyNavigation">
-              <bool>false</bool>
-             </property>
-             <property name="showDropIndicator" stdset="0">
-              <bool>false</bool>
-             </property>
-             <property name="dragDropOverwriteMode">
-              <bool>false</bool>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-             <property name="showGrid">
-              <bool>false</bool>
-             </property>
-             <property name="cornerButtonEnabled">
-              <bool>false</bool>
-             </property>
-             <attribute name="horizontalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="verticalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
-            </widget>
            </item>
           </layout>
          </item>
         </layout>
-       </widget>
-       <widget class="QTextBrowser" name="textBrowser">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>80</height>
-         </size>
-        </property>
-       </widget>
-      </widget>
-     </item>
-     <item>
+       </item>
+       <item row="1" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_8">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Global State</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <widget class="QLabel" name="label_7">
+               <property name="text">
+                <string>Season</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="mySeasonLE"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>State</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="myGlobalStateLE"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Teams States</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="myTeamsStatesTableView">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="tabKeyNavigation">
+            <bool>false</bool>
+           </property>
+           <property name="showDropIndicator" stdset="0">
+            <bool>false</bool>
+           </property>
+           <property name="dragDropOverwriteMode">
+            <bool>false</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <property name="cornerButtonEnabled">
+            <bool>false</bool>
+           </property>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Teams Data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="myTeamsDataTableView">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="tabKeyNavigation">
+            <bool>false</bool>
+           </property>
+           <property name="showDropIndicator" stdset="0">
+            <bool>false</bool>
+           </property>
+           <property name="dragDropOverwriteMode">
+            <bool>false</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <property name="cornerButtonEnabled">
+            <bool>false</bool>
+           </property>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Players Data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="myPlayersDataTableView">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="tabKeyNavigation">
+            <bool>false</bool>
+           </property>
+           <property name="showDropIndicator" stdset="0">
+            <bool>false</bool>
+           </property>
+           <property name="dragDropOverwriteMode">
+            <bool>false</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <property name="cornerButtonEnabled">
+            <bool>false</bool>
+           </property>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Fantasy Players</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="myFantasyPlayersTableView">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="tabKeyNavigation">
+            <bool>false</bool>
+           </property>
+           <property name="showDropIndicator" stdset="0">
+            <bool>false</bool>
+           </property>
+           <property name="dragDropOverwriteMode">
+            <bool>false</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <property name="cornerButtonEnabled">
+            <bool>false</bool>
+           </property>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QFrame" name="frame_2">
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="mySendProjectionsButton">
+         <property name="text">
+          <string>Send As Projection</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="6">
+        <widget class="QTableView" name="myScoringTableView"/>
+       </item>
+       <item row="2" column="4" colspan="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>198</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <widget class="QPushButton" name="mySendResultsButton">
+         <property name="text">
+          <string>Send as Results</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" colspan="3">
+        <widget class="QComboBox" name="myPlayersCmb"/>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QComboBox" name="myTeamsCmb"/>
+       </item>
+       <item row="0" column="5">
+        <widget class="QPushButton" name="myAddScoringLineButton">
+         <property name="text">
+          <string>+</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="myDeleteAllRowsButton">
+         <property name="text">
+          <string>Delete All Rows</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <layout class="QGridLayout" name="gridLayout_4">
+     <item row="0" column="0">
       <widget class="QLabel" name="fantasynamestatus">
        <property name="font">
         <font>
@@ -430,7 +449,7 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLineEdit" name="fantasyname">
@@ -451,11 +470,72 @@
        </item>
       </layout>
      </item>
+     <item row="2" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QCheckBox" name="twitter">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>twitter</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="copy">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Copy</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
     </layout>
    </item>
+   <item row="3" column="0">
+    <widget class="QDockWidget" name="dockWidget">
+     <property name="features">
+      <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+     </property>
+     <property name="allowedAreas">
+      <set>Qt::BottomDockWidgetArea</set>
+     </property>
+     <property name="windowTitle">
+      <string>Log</string>
+     </property>
+     <widget class="QWidget" name="dockWidgetContents">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QTextBrowser" name="textBrowser">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>80</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
   </layout>
+  <zorder>splitter</zorder>
   <zorder>message</zorder>
-  <zorder></zorder>
+  <zorder>dockWidget</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

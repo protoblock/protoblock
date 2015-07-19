@@ -22,12 +22,15 @@ SOURCES += \
     $$PWD/statuswidget.cpp \
     $$PWD/decorable.cpp \
     $$PWD/descriptable.cpp \
-    $$PWD/singleapplication.cpp
+    $$PWD/singleapplication.cpp \
+    $$PWD/teamsloader.cpp \
+    $$PWD/spinboxdelegate.cpp
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \
     $$PWD/../src/ProtoData.proto \
-    $$PWD/../src/sf.sm
+    $$PWD/../src/sf.sm \
+    $$PWD/../resources/Team.2015.json
 
 HEADERS += \
     $$PWD/../src/boostLog.h \
@@ -62,7 +65,9 @@ HEADERS += \
     $$PWD/decorable.h \
     $$PWD/descriptable.h \
     $$PWD/globals.h \
-    $$PWD/singleapplication.h
+    $$PWD/singleapplication.h \
+    $$PWD/teamsloader.h \
+    $$PWD/spinboxdelegate.h
 
 FORMS += \
     $$PWD/sfgui.ui \
@@ -70,6 +75,9 @@ FORMS += \
     $$PWD/gamesoftheweekdialog.ui \
     $$PWD/splashdialog.ui \
     $$PWD/statuswidget.ui
+
+RESOURCES += \
+    $$PWD/resources/resources.qrc
 
 
 
