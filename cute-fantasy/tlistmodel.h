@@ -70,6 +70,10 @@ public:
   bool isAutoDelete() { return myIsAutoDeleteModelElements; }
   void setAutoDelete(bool on) { myIsAutoDeleteModelElements = on;}
 
+
+  void setEditable(bool on) { myEditable = on;}
+
+
   int   rowCount(const QModelIndex & parent = QModelIndex() ) const
   {
     Q_UNUSED(parent);
@@ -131,20 +135,27 @@ public:
   {
     if (index.row() >= 0 && index.row() < myList.size()
         && (role == Qt::EditRole || role == Qt::DisplayRole)) {
-      X  * value = vvalue.value<X*>();
-      myList.replace(index.row(),value);
+      if (!index.isValid()) return false;
+      TListModel<X> * me = (TListModel<X> *) this;
+      X * value = myList.at(index.row());
+      if (value==NULL) return false;
+      setDataFromColumn(value,index,vvalue,role);
       emit dataChanged(index, index);
       return true;
     }
     return false;
   }
 
+
   Qt::ItemFlags flags(const QModelIndex &index) const
   {
     if (!index.isValid())
       return QAbstractItemModel::flags(index);//TODO | Qt::ItemIsDropEnabled;
 
-    return QAbstractItemModel::flags(index);// TODO implement Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+    if (myEditable)
+      return QAbstractItemModel::flags(index)| Qt::ItemIsEditable;
+    else
+      return QAbstractItemModel::flags(index);// TODO implement Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
   }
 
   bool insertRows(int row, int count, const QModelIndex &parent)
@@ -258,6 +269,9 @@ protected :
     return QVariant();
   }
 
+  virtual void setDataFromColumn(X* /*data*/, const QModelIndex &/*index*/,const QVariant &/*vvalue*/,int /*role*/){}
+
+
   virtual int getColumnCount(){
     return 1;
   }
@@ -266,6 +280,7 @@ protected :
 private:
   QStringList myHorizontalHeaders;
   bool myIsAutoDeleteModelElements;
+  bool myEditable;
 };
 
 #endif // TLISTMODEL_H

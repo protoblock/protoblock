@@ -137,7 +137,7 @@ public:
     headers << "Week"<<"Team Id"<< "Team State";
     setHorizontalHeaders(headers);
   }
-
+protected:
   QVariant getColumnDisplayData(quint32 column,TeamStateViewModel * data){
     if (data==NULL) return QVariant();
     if( column ==0)
@@ -206,7 +206,7 @@ public:
     headers << "Team Id"<< "Player Id";
     setHorizontalHeaders(headers);
   }
-
+protected:
   QVariant getColumnDisplayData(quint32 column,PlayerDataViewModel * data){
     if (data==NULL) return QVariant();
     if( column ==0)
@@ -301,7 +301,7 @@ public:
     headers << "Team Id";
     setHorizontalHeaders(headers);
   }
-
+protected:
   QVariant getColumnDisplayData(quint32 column,TeamDataViewModel * data){
     if (data==NULL) return QVariant();
     if( column ==0)
@@ -366,7 +366,7 @@ public:
     headers << "F. Player Name" << "Bits";
     setHorizontalHeaders(headers);
   }
-
+protected:
   QVariant getColumnDisplayData(quint32 column,FantasyPlayerViewModel * data){
     if (data==NULL) return QVariant();
     if( column ==0)
@@ -436,6 +436,71 @@ public:
             fantasyPlayers.append(FantasyPlayerViewModel(t));
         }
     }
+};
+
+
+
+class ScoringModelView :public Descriptable, public Decorable{
+public:
+    int myScore;
+    QString myTeamId;
+    QString myTeamName;
+    QString myPlayerId;    
+    ScoringModelView(){}
+    ScoringModelView(const QString & teamId,
+                     const QString & teamName,
+                     const QString & playerId,int score=0){
+        myScore = score;
+        myTeamId= teamId;
+        myTeamName= teamName;
+        myPlayerId= playerId;
+    }
+    ScoringModelView(ScoringModelView & copy){
+        myScore = copy.myScore;
+        myTeamId= copy.myTeamId;
+        myTeamName= copy.myTeamName;
+        myPlayerId= copy.myPlayerId;
+
+    }
+};
+
+Q_DECLARE_METATYPE(ScoringModelView*)
+
+class ScoringTableModel : public TListModel<ScoringModelView> {
+
+public:
+  ScoringTableModel(): TListModel<ScoringModelView>(NULL) {
+    initialize();
+  }
+  ~ScoringTableModel() {}
+
+  void initialize(){
+    QStringList  headers;
+    headers << "Team" << "PlayerId" << "Proj/Result";
+    setHorizontalHeaders(headers);
+  }
+
+protected:
+  QVariant getColumnDisplayData(quint32 column,ScoringModelView * data){
+    if (data==NULL) return QVariant();
+    if( column ==0)
+      return data->myTeamName;
+    if( column ==1)
+      return data->myPlayerId;
+    if( column ==2)
+      return data->myScore;
+    return QVariant();
+
+  }
+  int getColumnCount(){
+    return 3;
+  }
+  void setDataFromColumn(ScoringModelView* data, const QModelIndex &index,const QVariant &vvalue,int role){
+    if (index.column() >= getColumnCount()) return;
+    //only allow edition of the score
+    if (index.column()==2)
+        data->myScore = vvalue.toInt();
+  }
 };
 
 

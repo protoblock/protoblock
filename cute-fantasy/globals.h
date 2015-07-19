@@ -5,5 +5,8 @@
 #define DELETE_AND_NULLIFY(X)   if (X) { delete X; X = NULL; }
 #endif
 
+
+
+
 #endif // GLOBALS_H
 

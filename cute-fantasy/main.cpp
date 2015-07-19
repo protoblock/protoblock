@@ -7,11 +7,13 @@
 //
 
 #include "sfgui.h"
-#include <QApplication>
 #include "client.h"
 #include <iostream>
+#include "singleapplication.h"
+#include "gamesoftheweekdialog.h"
 #include "Node.h"
 #include "Server.h"
+
 #include "ClientUI.h"
 #include "Processor.h"
 
@@ -67,6 +69,7 @@ int main(int argc, char *argv[])
     clientthread.start();
     widget.show();
     int ret = a.exec();
+//    dlg.show();
 
 
     clientui.stop();
