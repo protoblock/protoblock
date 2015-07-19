@@ -45,9 +45,7 @@ HEADERS += \
     $$PWD/../src/ProtoData.pb.h \
     $$PWD/../src/Server.h \
     $$PWD/../src/Source.h \
-    $$PWD/nn.hpp \
     $$PWD/client.h \
-    $$PWD/nn.hpp \
     $$PWD/sfgui.h \
     $$PWD/cli.h \
     $$PWD/fantasynamesetupdialog.h \
