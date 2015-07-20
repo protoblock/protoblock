@@ -10,3 +10,7 @@ src/CMakeFiles/
 src/CMakecache.txt
 src/Makefile
 *.DS_Store
+/build-cute-fantasy-Desktop_Qt_5_5_0_MSVC2013_64bit-Debug/*.Debug
+/cute-fantasy/Makefile.Debug
+/cute-fantasy/Makefile.Release
+/cute-fantasy/debug/*.obj
