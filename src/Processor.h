@@ -130,6 +130,7 @@ public:
 
 			FantasyProjections::Projections[nflplayer][fantasyname] = bal;
 		}
+        delete it;
 	}
 
 	DeltaData DeltaSnap() {
@@ -181,6 +182,7 @@ public:
 			d.MutableExtension(TeamData::team_data)->CopyFrom(td);
 			auto *p = dd.add_datas();
 			p->CopyFrom(d);
+            Source::TeamIds.insert(td.teamid());
 		}
 
 		/*
@@ -193,6 +195,7 @@ public:
 
 		return dd;
 	}
+
 
 	void OnGlobalState(const GlobalState &gs) {
 		state->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
@@ -240,6 +243,7 @@ public:
 
 	void OnTeamData(const TeamData &gs) {
 		teams->Put(leveldb::WriteOptions(), gs.teamid(), gs.SerializeAsString());
+        Source::TeamIds.insert(gs.teamid());
 	}
 
 	TeamData GetTeamData(const std::string &pid) {
@@ -652,6 +656,7 @@ public:
 				}
 				mGlobalState.set_state(GlobalState_State_INSEASON);
 				mRecorder.OnGlobalState(mGlobalState);
+                setPreGameWeek(1);
 				outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
 			}
 			break;
@@ -722,6 +727,8 @@ public:
 				outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
 			}
 
+            setPreGameWeek(newweek);
+            /*
 			for (auto t : indt.teamid()) {
 				auto ts = mRecorder.GetTeamState(t);
 				ts.set_state(TeamState_State_PREGAME);
@@ -730,6 +737,7 @@ public:
 				mRecorder.OnTeamState(ts);
 				outDelta.add_teamstates()->CopyFrom(ts);
 			}
+            */
 
 			mRecorder.clearProjections();
 			break;
@@ -813,6 +821,18 @@ public:
 		}
 	}
 	
+    void setPreGameWeek(int week) {
+        TeamState ts{};
+        ts.set_state(TeamState_State_PREGAME);
+        ts.set_week(week);
+
+        for ( auto id : Source::TeamIds) {
+            ts.set_teamid(id);
+            mRecorder.OnTeamState(ts);
+            outDelta.add_teamstates()->CopyFrom(ts);
+        }
+    }
+
 	static bool verifySignedBlock(Block &sblock)
 	{
 		if (sblock.signedhead().head().version() != Commissioner::BLOCK_VERSION)

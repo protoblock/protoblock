@@ -49,9 +49,7 @@ HEADERS += \
     $$PWD/../src/ProtoData.pb.h \
     $$PWD/../src/Server.h \
     $$PWD/../src/Source.h \
-    $$PWD/nn.hpp \
     $$PWD/client.h \
-    $$PWD/nn.hpp \
     $$PWD/sfgui.h \
     $$PWD/cli.h \
     $$PWD/fantasynamesetupdialog.h \
@@ -67,7 +65,8 @@ HEADERS += \
     $$PWD/globals.h \
     $$PWD/singleapplication.h \
     $$PWD/teamsloader.h \
-    $$PWD/spinboxdelegate.h
+    $$PWD/spinboxdelegate.h \
+    $$PWD/playerloader.h
 
 FORMS += \
     $$PWD/sfgui.ui \

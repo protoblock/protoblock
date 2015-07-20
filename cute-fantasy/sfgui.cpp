@@ -10,6 +10,7 @@
 #include <ProtoData.pb.h>
 #include "ui_sfgui.h"
 #include "teamsloader.h"
+#include "playerloader.h"
 
 #include <QDateTime>
 #include <QClipboard>
@@ -33,8 +34,18 @@ sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
    myScoringTableModel.setAutoDelete(true);
 
    TeamLoader teamLoader;
+   PlayerLoader playerLoader;
    QString error ;
    bool success = teamLoader.loadTeamsFromJsonFile(myPreloadedTeams,error);
+   if (!success)
+       QMessageBox::critical(this,"Loading teams from JSon File",error);
+
+   success = playerLoader.loadPlayersFromJsonFile(myPreloadedPlayers,error);
+   if (!success)
+       QMessageBox::critical(this,"Loading players from JSon File",error);
+
+
+   /*
     if (!success)
         QMessageBox::critical(this,"Loading teams from JSon File",error);
     else {
@@ -43,7 +54,16 @@ sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
             ui->myTeamsCmb->addItem(team.myKey +":"+  team.myFullName, QVariant(team.myKey));
         }
     }
+    */
 
+    for (int i = DataTransition::Type_MIN; i < DataTransition::Type_ARRAYSIZE; i++) {
+
+        if (!DataTransition::Type_IsValid(i)) continue;
+
+        ui->dataTransitionCombo->addItem(
+                    QString::fromStdString(DataTransition::Type_Name(DataTransition::Type(i))),
+                                         QVariant(i));
+    }
 
 
 }
@@ -78,6 +98,8 @@ void sfGUI::fromServer(const DeltaData &in)
     }
 
     ui->textBrowser->append(QString::fromStdString(in.DebugString()));
+
+    refreshViews(in);
 }
 /**/
 
@@ -171,8 +193,10 @@ void fantasybit::sfGUI::refreshViews(const DeltaData &in){
     for(int i=0;i< myCurrentSnapShot.players.count();i++)
         myPlayerDataTableModel.addItem(&myCurrentSnapShot.players[i]);
 
-    for(int i=0;i< myCurrentSnapShot.teams.count();i++)
+    for(int i=0;i< myCurrentSnapShot.teams.count();i++) {
         myTeamDataTableModel.addItem(&myCurrentSnapShot.teams[i]);
+        ui->myTeamsCmb->addItem(myCurrentSnapShot.teams[i].teamId(), QVariant(myCurrentSnapShot.teams[i].teamId()));
+    }
 
     for(int i=0;i< myCurrentSnapShot.fantasyPlayers.count();i++)
         myFantasyPlayerTableModel.addItem(&myCurrentSnapShot.fantasyPlayers[i]);
@@ -218,6 +242,14 @@ void fantasybit::sfGUI::on_myAddScoringLineButton_clicked()
 
 }
 
+void fantasybit::sfGUI::on_myAddTeam_clicked()
+{
+    if (ui->myTeamsCmb->currentData().isValid() )
+    {
+        ui->teamStartList->addItem(ui->myTeamsCmb->currentData().toString());
+        myTeamTransitions.append(ui->myTeamsCmb->currentData().toString());
+    }
+}
 
 
 void fantasybit::sfGUI::on_mySendProjectionsButton_clicked()
@@ -229,48 +261,71 @@ void fantasybit::sfGUI::on_mySendProjectionsButton_clicked()
         indata.set_num(scoring->myScore);
         emit fromGUI(indata);
     }
-
 }
 
 void fantasybit::sfGUI::on_mySendResultsButton_clicked()
 {
-    foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
-                    indata.Clear();
-                    indata.set_type(InData_Type_HEARTBEAT);
+    DataTransition dt{};
 
-                    DataTransition dt{};
-                    dt.set_type(DataTransition_Type_WEEKOVER);
-                    dt.set_season(myCurrentSnapShot.globalStateModel.season());
-                    //get the week received with the team
-                    quint32 week =0;
-                    foreach (TeamStateViewModel * data,myTeamsStateTableModel.list()) {
-                        if (data->teamId().trimmed().toUpper()==scoring->myTeamId.trimmed().toUpper()){
-                            week =  data->week();
-                            break;
-                        }
-                    }
-                    dt.set_week(week);
+    dt.set_type(static_cast<DataTransition_Type>(ui->dataTransitionCombo->currentData().toInt()));
+    dt.set_season(ui->seasonBox->value());
+    dt.set_week(ui->weekBox->value());
 
-                    Data d{};
-                    d.set_type(Data::RESULT);
-                    ::fantasybit::FantasyPlayerPoints fpp{};
-                    fpp.set_season(myCurrentSnapShot.globalStateModel.season());
-                    fpp.set_week(dt.week());
-                    fpp.set_playerid(scoring->myPlayerId.toStdString());
-                    fpp.set_points(scoring->myScore);
-                    ResultData rd{};
-                    rd.mutable_fpp()->CopyFrom(fpp);
-
-                    d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
-                    Data *d2 = dt.add_data();
-                    d2->CopyFrom(d);
-                    indata.mutable_data_trans()->CopyFrom(dt);
-                    emit fromGUI(indata);
+    for (auto st :  myTeamTransitions) {
+        dt.add_teamid(st.toStdString());
     }
 
+    foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
+        Data d{};
+        d.set_type(Data::RESULT);
+        ::fantasybit::FantasyPlayerPoints fpp{};
+        fpp.set_season(dt.season());
+        fpp.set_week(dt.week());
+        fpp.set_playerid(scoring->myPlayerId.toStdString());
+        fpp.set_points(scoring->myScore);
+        ResultData rd{};
+        rd.mutable_fpp()->CopyFrom(fpp);
+
+        d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
+        Data *d2 = dt.add_data();
+        d2->CopyFrom(d);
+    }
+
+    if ( ui->allTeams->isChecked() ) {
+        Data d{};
+        d.set_type(Data::TEAM);
+        TeamData td{};
+        for ( auto t : myPreloadedTeams ) {
+            td.set_teamid(t.myKey.toStdString());
+            d.MutableExtension(TeamData::team_data)->CopyFrom(td);
+            Data *d2 = dt.add_data();
+            d2->CopyFrom(d);
+        }
+    }
+
+    if ( ui->allPLayers->isChecked() ) {
+        Data d{};
+        d.set_type(Data::PLAYER);
+        PlayerData td{};
+        for ( auto t : myPreloadedPlayers ) {
+            td.set_teamid(t.Team.toStdString());
+            td.set_playerid(t.PlayerID.toStdString());
+            d.MutableExtension(PlayerData::player_data)->CopyFrom(td);
+            Data *d2 = dt.add_data();
+            d2->CopyFrom(d);
+        }
+    }
+
+    indata.set_type(InData_Type_DATA);
+    indata.mutable_data_trans()->CopyFrom(dt);
+
+    emit fromGUI(indata);
 }
 
 void fantasybit::sfGUI::on_myDeleteAllRowsButton_clicked()
 {
     myScoringTableModel.removeAll();
+    myTeamTransitions.clear();
+    ui->teamStartList->clear();
 }
+

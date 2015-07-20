@@ -22,6 +22,7 @@
 using namespace fantasybit;
 int main(int argc, char *argv[])
 {
+    initBoostLog();
     string gui_address{ "ipc:///tmp/fantasygui.ipc" };
 
 
@@ -62,7 +63,7 @@ int main(int argc, char *argv[])
     QObject::connect(&clientthread, SIGNAL(finished()), client, SLOT(deleteLater()));
     QObject::connect(&widget,SIGNAL(fromGUI(InData)), client, SLOT(toServer(InData)));
     QObject::connect(client, SIGNAL(onData(DeltaData)), &widget, SLOT(fromServer(DeltaData)) );
-    QObject::connect(client, SIGNAL(onData(DeltaData)), &widget, SLOT(refreshViews(DeltaData)) );
+    //QObject::connect(client, SIGNAL(onData(DeltaData)), &widget, SLOT(refreshViews(DeltaData)) );
     QObject::connect(&widget, SIGNAL(onClose()), client, SLOT(quit()) );
 
 
