@@ -54,6 +54,8 @@ public:
 	//static std::unordered_map<pid_t, tid_t> PlayerTeam;
 	static std::unordered_map<std::string, std::string> PlayerTeam;
 	static std::map<std::string, std::unordered_set<std::string>> TeamPlayers;
+
+    static std::set<std::string> TeamIds;
 };
 
 struct FantasyProjections {

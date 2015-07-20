@@ -14,6 +14,7 @@
 #include <QString>
 #include "models.h"
 #include "teamsloader.h"
+#include "playerloader.h"
 #include "spinboxdelegate.h"
 namespace Ui {
 class sfGUI;
@@ -54,13 +55,13 @@ private slots:
 
     void on_myAddScoringLineButton_clicked();
 
-
-
     void on_mySendProjectionsButton_clicked();
 
     void on_mySendResultsButton_clicked();
 
     void on_myDeleteAllRowsButton_clicked();
+
+    void on_myAddTeam_clicked();
 
 protected:
     virtual void closeEvent(QCloseEvent *)
@@ -90,6 +91,8 @@ private:
     FantasyPlayerTableModel myFantasyPlayerTableModel;
     ScoringTableModel myScoringTableModel;
     QList<TeamLoader::JsonTeam> myPreloadedTeams;
+    QList<PlayerLoader::JsonPlayer> myPreloadedPlayers;
+    QList<QString> myTeamTransitions;
     SpinBoxDelegate myDelegate;
     QMutex myMutex;
 

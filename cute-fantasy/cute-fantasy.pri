@@ -65,7 +65,8 @@ HEADERS += \
     $$PWD/globals.h \
     $$PWD/singleapplication.h \
     $$PWD/teamsloader.h \
-    $$PWD/spinboxdelegate.h
+    $$PWD/spinboxdelegate.h \
+    $$PWD/playerloader.h
 
 FORMS += \
     $$PWD/sfgui.ui \

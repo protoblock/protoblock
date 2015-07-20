@@ -25,6 +25,7 @@ decltype(Source::WeeklySchedule) Source::WeeklySchedule
 
 decltype(Source::PlayerTeam) Source::PlayerTeam{};
 decltype(Source::TeamPlayers) Source::TeamPlayers{};
+decltype(Source::TeamIds) Source::TeamIds{};
 
 decltype(FantasyProjections::Projections) FantasyProjections::Projections{};
 
