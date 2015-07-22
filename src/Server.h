@@ -44,6 +44,8 @@ public:
     }
     
     void run();
+    void runit();
+
     void stop()
     {
         running = false;

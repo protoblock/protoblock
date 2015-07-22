@@ -34,7 +34,8 @@ class Node
 	std::vector<std::string> newpeers{};
 	std::vector<std::string> connected{};
 	std::vector<std::string> newconnected{};
-	std::vector<std::string> higherpeers{};
+    std::vector<std::string> newconnected2{};
+    std::vector<std::string> higherpeers{};
 	NodeRequest reqhs{};
 
 	std::string myip{};
@@ -60,11 +61,17 @@ public:
 	void runHandShake();
     int init();
 	bool getMyIp();
-	void syncService();
-	void syncRequest();
-	void runLive();
-	void pendingTransactions();
-	std::string filedir(const std::string &in)
+    void dosyncService();
+    void dosyncRequest();
+    void dorunLive();
+    void dopendingTransactions();
+    void syncService();
+    void syncRequest();
+    void runLive();
+    void pendingTransactions();
+    void CheckOrphanBlocks();
+
+    std::string filedir(const std::string &in)
 	{
 		return ROOT_DIR + in; 
 	}

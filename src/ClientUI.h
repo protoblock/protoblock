@@ -43,6 +43,8 @@ public:
 
     }
     void run();
+    void runit();
+
     void stop()
     {
         running = false;
@@ -50,19 +52,6 @@ public:
     
 private:
     volatile bool running = true;
-    void init();
-protected:
-    MyFantasyName myname{};
-	DeltaData delta_snap{};
-	DeltaData delta_update{};
-    
-    bool process_server(const OutData &);
-    bool process_gui(const InData &);
-	bool process_delta(DeltaData &, DeltaData &);
-    void snapshot_gui();
-    bool havegui;
-	void to_gui(const DeltaData &delt);
-
 };
 
 }

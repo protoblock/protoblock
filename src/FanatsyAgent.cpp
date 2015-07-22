@@ -55,6 +55,8 @@ bool FantasyAgent::makeGenesis()
 bool FantasyAgent::beOracle()
 {
 #ifdef NO_ORACLE_CHECK_TESTING	
+    LOG(lg,info) << " no oracle test";
+
 	m_oracle = m_priv;
 	Commissioner::GENESIS_PUB_KEY = m_oracle.get_public_key()	;
 	m_oracle = m_priv;
@@ -62,25 +64,37 @@ bool FantasyAgent::beOracle()
 #endif	
 
 	if (Commissioner::GENESIS_PUB_KEY == m_priv.get_public_key().serialize())
+    {
+        LOG(lg,info) << " is oracle key";
 		m_oracle = m_priv;
+    }
 	else
 	{
 		Secret oracle{};
 		Reader<Secret> read{ ROOT_DIR + "oracle.txt" };
-		if (!read.good())
+        if (!read.good()) {
+            LOG(lg,warning) << " no oracle.txt";
 			return false;
+        }
 		if (read.ReadNext(oracle))
 		{
 			LOG(lg, trace) << "oracle.private_key()" << oracle.private_key();
 			auto pk = str2priv(oracle.private_key());
 			if (pk.get_public_key() == Commissioner::GENESIS_PUB_KEY)
 			{
+                LOG(lg,info) << " is Commissioner::GENESIS_PUB_KEY";
 				m_oracle = pk;
 				m_priv = m_oracle;
 			}
-			else return false;
+            else {
+                LOG(lg,warning) << " is NOT Commissioner::GENESIS_PUB_KEY";
+                return false;
+            }
 		}
-		else return false;
+        else {
+            LOG(lg,error) << " bad read oracle.txt";
+            return false;
+        }
 	}
 
 	return true;
@@ -92,11 +106,14 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt)
 	Block b{};
 	
 	if (!amDataAgent()) {
+        LOG(lg,warning) << "am not DataAgent - try tp beDataAgent";
+
 		if (!beDataAgent()) {
-			fbutils::LogFalse(std::string("cant makeNewBlockAsDataAgent am not agent"));
+            LOG(lg,error) << "cant makeNewBlockAsDataAgent am not agent";
 			return b;
 		}
 	}
+    LOG(lg,info) << "I am DataAgent";
 
 	auto prev = Node::getlastBLock().signedhead().head();
 

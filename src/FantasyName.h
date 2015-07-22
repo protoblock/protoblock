@@ -19,6 +19,8 @@
 #include <fc/crypto/ripemd160.hpp>
 #include <fc/time.hpp>
 #include "ProtoData.pb.h"
+#include <fc/crypto/base58.hpp>
+
 
 namespace fantasybit
 {
@@ -45,12 +47,16 @@ struct FantasyName
     alias_t  alias;  
 	Bits balance{ 0 };
     
-    Bits getBalance() { return balance; }
+    Bits getBalance() const { return balance; }
     
 	void addBalance(Bits b) {
 		balance.add(b);
-
 	}
+
+    void newBalance(Bits b) {
+        balance = b;
+    }
+
     hash_t hash() const {
         return name_hash(alias);
     }
@@ -59,7 +65,13 @@ struct FantasyName
         return hash() == name_hash(that);
     }
     
-    static hash_t  name_hash( const alias_t& n );
+    std::string ToString() const {
+      return "alias(" + alias + ") hash(" + std::to_string(hash()) + ") pk(" +
+              fc::to_base58(pubkey.data, pubkey.size()) + ") balance(" +
+              std::to_string(getBalance().amount()) + ")";
+    }
+
+    static hash_t name_hash( const alias_t& n );
 };
 
 

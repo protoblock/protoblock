@@ -26,6 +26,7 @@ namespace fantasybit
 
 void Server::init()
 {
+    //if ( agent)
 	Reader<Secret> read{ ROOT_DIR + "secret.out" };
     string priv_key{""};
     map<string,MyFantasyName> bestsecret{};
@@ -35,7 +36,19 @@ void Server::init()
     if ( read.good() )
     while (read.ReadNext(secret))
     {
-        LOG(lg,info) << "read from file" << secret.DebugString();
+        LOG(lg,info) << "read from file";
+
+        if ( FantasyAgent::AmFantasyAgent(Commissioner::privStr2Pub(secret.private_key())))
+        {
+            LOG(lg,info) << "AmFantasyAgent";
+            MyFantasyName agent{};
+            agent.set_name(Commissioner::FantasyAgentName());
+            agent.set_status(confirmed);
+            secret.mutable_myfantasyname()->CopyFrom(agent);
+            priv_key = secret.private_key();
+            bestsecret[secret.myfantasyname().name()] = secret.myfantasyname();
+            break;
+        }
         if ( secret.has_myfantasyname() )
         {           
             if ( bestsecret.find(secret.myfantasyname().name()) == end(bestsecret))
@@ -53,9 +66,6 @@ void Server::init()
 
     for(auto p :bestsecret)
 		LOG(lg, trace) << "Bestsecret: " << p.first << " "  << p.second.DebugString();
-#ifdef TRACE
-
-#endif
 
     OutData o;
     o.set_type( OutData_Type::OutData_Type_MYFANTASYNAME);
@@ -80,15 +90,26 @@ void Server::init()
 
 void Server::run()
 {
+    try {
+        runit();
+    }
+    catch (std::exception &e)
+    {
+        LOG(lg,fatal) <<  e.what();
+        return;
+    }
+}
+
+void Server::runit() {
     init();
 
     Receiver rec{sock};
     InData indata;
     while (running)
     {
-        rec.receive(indata);
+        if (!rec.receive(indata)) continue;
       
-		LOG(lg, trace) << "indata: " << InData_Type_Name(indata.type());
+        LOG(lg, trace) << "indata: " << InData_Type_Name(indata.type());
 
         switch (indata.type())
         {

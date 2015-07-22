@@ -390,6 +390,7 @@ public:
     QList<TeamDataViewModel> teams;
     QList<TeamStateViewModel> teamStates;
     QList<PlayerDataViewModel> players;
+    //QMap<QString,FantasyPlayerViewModel> fantasyPlayers;
     QList<FantasyPlayerViewModel> fantasyPlayers;
 
     SnapShotViewModel(){}
@@ -433,7 +434,10 @@ public:
             if ( t.name() == fantasyName.toStdString() ) {
                 fantasyNameBalance = t.bits();
             }
+//            fantasyPlayers[QString::fromStdString(t.name())] =
+  //                  FantasyPlayerViewModel(t);
             fantasyPlayers.append(FantasyPlayerViewModel(t));
+
         }
     }
 };

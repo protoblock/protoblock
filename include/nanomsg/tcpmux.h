@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012 Martin Sustrik  All rights reserved.
+    Copyright (c) 2014 Martin Sustrik  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"),
@@ -20,20 +20,16 @@
     IN THE SOFTWARE.
 */
 
-#ifndef PUBSUB_H_INCLUDED
-#define PUBSUB_H_INCLUDED
+#ifndef TCPMUX_H_INCLUDED
+#define TCPMUX_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define NN_PROTO_PUBSUB 2
+#define NN_TCPMUX -5
 
-#define NN_PUB (NN_PROTO_PUBSUB * 16 + 0)
-#define NN_SUB (NN_PROTO_PUBSUB * 16 + 1)
-
-#define NN_SUB_SUBSCRIBE 1
-#define NN_SUB_UNSUBSCRIBE 2
+#define NN_TCPMUX_NODELAY 1
 
 #ifdef __cplusplus
 }
