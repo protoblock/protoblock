@@ -156,12 +156,12 @@ void fantasybit::sfGUI::on_copy_clicked()
 
 void fantasybit::sfGUI::refreshViews(const DeltaData &in){
     //QMutexLocker locker(&myMutex);
-    if (in.type() == DeltaData_Type_SNAPSHOT) {
-        myTeamsStateTableModel.removeAll();
-        myPlayerDataTableModel.removeAll();
-        myTeamDataTableModel.removeAll();
-        myFantasyPlayerTableModel.removeAll();
-    }
+//    if (in.type() == DeltaData_Type_SNAPSHOT) {
+//        myTeamsStateTableModel.removeAll();
+//        myPlayerDataTableModel.removeAll();
+//        myTeamDataTableModel.removeAll();
+//        myFantasyPlayerTableModel.removeAll();
+//    }
 
     myCurrentSnapShot.fromDeltaData(in);
     ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
@@ -171,20 +171,21 @@ void fantasybit::sfGUI::refreshViews(const DeltaData &in){
     ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
 
 
-    for(int i=0;i< myCurrentSnapShot.teamStates.count();i++)
-        myTeamsStateTableModel.addItem(&myCurrentSnapShot.teamStates[i]);
+    foreach(QString key,myCurrentSnapShot.teamStates.uniqueKeys())
+        myTeamsStateTableModel.setItemValue(key,myCurrentSnapShot.teamStates[key]);
 
 
-    for(int i=0;i< myCurrentSnapShot.players.count();i++)
-        myPlayerDataTableModel.addItem(&myCurrentSnapShot.players[i]);
+    foreach(QString key,myCurrentSnapShot.players.uniqueKeys())
+        myPlayerDataTableModel.setItemValue(key,myCurrentSnapShot.players[key]);
 
-    for(int i=0;i< myCurrentSnapShot.teams.count();i++) {
-        myTeamDataTableModel.addItem(&myCurrentSnapShot.teams[i]);
-        ui->myTeamsCmb->addItem(myCurrentSnapShot.teams[i].teamId(), QVariant(myCurrentSnapShot.teams[i].teamId()));
+
+    foreach(QString key,myCurrentSnapShot.teams.uniqueKeys()) {
+        myTeamDataTableModel.setItemValue(key,myCurrentSnapShot.teams[key]);
+        ui->myTeamsCmb->addItem(key, QVariant(myCurrentSnapShot.teams[key].teamId()));
     }
 
-    for(int i=0;i< myCurrentSnapShot.fantasyPlayers.count();i++) {
-        myFantasyPlayerTableModel.addItem(&myCurrentSnapShot.fantasyPlayers[i]);
+    foreach(QString key,myCurrentSnapShot.fantasyPlayers.uniqueKeys()) {
+        myFantasyPlayerTableModel.setItemValue(key,myCurrentSnapShot.fantasyPlayers[key]);
     }
         /*
     for(auto it = myCurrentSnapShot.fantasyPlayers.begin();
