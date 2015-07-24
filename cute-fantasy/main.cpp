@@ -168,10 +168,3 @@ int main(int argc, char *argv[])
     }
 }
 
-        domain(argc, argv);
-    }
-    catch (...) {
-        return -1;
-    }
-}
-
