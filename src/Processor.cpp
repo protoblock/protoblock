@@ -7,6 +7,8 @@
 //
 
 #include  "Processor.h"
+#include "boostLog.h"
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 namespace fantasybit
 {
@@ -17,8 +19,11 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 	auto iter = Commissioner::Hash2Pk.find(FantasyName::name_hash(nt.fantasy_name()));
 	if (iter != end(Commissioner::Hash2Pk)) {
 		auto fn = Commissioner::FantasyNames[iter->second]->alias;
-		return fbutils::LogFalse(std::string("Processor::process failure: FantasyName(").append(fn + ")  hash already used use.\n")
-										.append(st.DebugString()));
+        LOG(lg,error) << std::string("Processor::process failure: FantasyName(").
+                        append(fn + ")  hash already used use.\n")
+                        .append(st.DebugString());
+
+        return false;
 	}
 
 	auto proof = nt.proof();
@@ -40,10 +45,14 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 #ifdef NO_ORACLE_CHECK_TESTING
 			if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
 #endif
+            {
+                LOG(lg,error) << std::string("Processor::process name proof oracle failed")
+                                 .append(st.DebugString());
 
-				return fbutils::LogFalse(std::string("Processor::process name proof oracle failed").append(st.DebugString()));
-
-			return true;
+                return false;
+            }
+            else
+                return true;
 		}
 		break;
 

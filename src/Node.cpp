@@ -181,12 +181,12 @@ bool Node::doHandshake(const std::string &inp)
 {
     LOG(lg, info) << " dohandshake " << inp;
 	nn::socket natbind{ AF_SP, NN_PAIR };
-	natbind.bind("tcp://*:8130");
+    natbind.bind(("tcp://*" + PORT_HAND).c_str());
 	int timeout = 6000;
 	natbind.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
 
 	std::string pre{ "tcp://" };
-	std::string po{ ":8125" };
+    std::string po{ PORT_SYNC_SERV };
 	NodeReply reply{};
 	reqhs.set_type(NodeRequest_Type_HANDSHAKE);
 	bool isconnected = false;
@@ -432,7 +432,7 @@ void Node::dosyncService() {
 	nn::socket blockreply{ AF_SP, NN_REP };
 
 	auto lid = blockreply.bind("inproc://syncserv");
-	auto eid = blockreply.bind("tcp://*:8125");
+    auto eid = blockreply.bind(("tcp://*" + PORT_SYNC_SERV).c_str()  );
 	Receiver rec{ blockreply };
 	Sender snd{ blockreply };
 	NodeRequest nodereq{};
@@ -571,8 +571,8 @@ void Node::dosyncService() {
                     break;
                 }
 
-				std::string pre{ "tcp://" };
-				std::string po{ ":8130" };
+                std::string pre{ "tcp://" };
+                std::string po{ PORT_HAND };
 				nn::socket peer{ AF_SP, NN_PAIR };
                 std::string natpeertest = (pre + nodereq.myip() + po);
                 int id = peer.connect(natpeertest.c_str());
@@ -605,7 +605,7 @@ void Node::syncRequest()
 
 void Node::dosyncRequest() {
 	std::string pre{ "tcp://" };
-	std::string po{ ":8125" };
+    std::string po{ PORT_SYNC_SERV };
 
 	nn::socket blockrequest{ AF_SP, NN_REQ };
 	for (auto &p : higherpeers)
@@ -675,7 +675,7 @@ void Node::dorunLive() {
 		myhight = getLastBlockNum();
 	}
 	std::string pre{ "tcp://" };
-	std::string po{ ":8126" };
+    std::string po{ PORT_LIVE_BLOCK };
 	std::set<int> published{};
     nn::socket blockslivesub{ AF_SP, NN_SUB };
 	blockslivesub.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0);
@@ -789,8 +789,8 @@ void Node::pendingTransactions()
 void Node::dopendingTransactions() {
 	bool nat = behind_nat && connected.size() > 0;
 	std::string pre{ "tcp://" };
-	std::string po{ ":8127" };
-	std::string po2{ ":8128" };
+    std::string po{ PORT_LIVE_TX };
+    std::string po2{ PORT_LIVE_TX_NAT };
 
 	std::set<std::string> published{};
 	nn::socket translivepub{ AF_SP, NN_PUB };

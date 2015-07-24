@@ -106,6 +106,7 @@ int domain(int argc, char *argv[]) {
 
 
 
+
     qRegisterMetaType<DeltaData>("DeltaData");
     qRegisterMetaType<InData>("InData");
 
@@ -160,6 +161,13 @@ int main(int argc, char *argv[])
     initBoostLog();
 
     try {
+        domain(argc, argv);
+    }
+    catch (...) {
+        return -1;
+    }
+}
+
         domain(argc, argv);
     }
     catch (...) {

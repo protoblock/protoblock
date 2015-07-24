@@ -203,6 +203,11 @@ void fantasybit::sfGUI::refreshViews(const DeltaData &in){
         it!= myCurrentSnapShot.fantasyPlayers.end(); ++it)
         myFantasyPlayerTableModel.addItem(it->());
         */
+        /*
+    for(auto it = myCurrentSnapShot.fantasyPlayers.begin();
+        it!= myCurrentSnapShot.fantasyPlayers.end(); ++it)
+        myFantasyPlayerTableModel.addItem(it->());
+        */
 }
 
 void fantasybit::sfGUI::on_myTeamsCmb_currentIndexChanged(int index)

@@ -439,7 +439,7 @@ public:
 
 class BlockProcessor
 {
-	BlockRecorder mRecorder{};
+    BlockRecorder mRecorder;
 	bool verify_name(const SignedTransaction &, const NameTrans &, const fc::ecc::signature&, const fc::sha256 &);
 	NodeRequest nodereq{};
 	NodeReply noderep{};
@@ -457,7 +457,8 @@ class BlockProcessor
 	GlobalState mGlobalState{};
 public:
 	volatile bool running = true;
-	BlockProcessor(std::string deltaserveraddr) :
+    BlockProcessor(std::string deltaserveraddr, BlockRecorder &recorder = BlockRecorder{}) :
+        mRecorder{recorder},
 		delasrv{ AF_SP, NN_PAIR },
 		syncserv{ AF_SP, NN_REQ },
 		syncradio{ std::make_pair(Sender(syncserv), Receiver(syncserv)) } ,
@@ -540,6 +541,15 @@ public:
             if (!running) {
                 LOG(lg,warning) <<  " !running";
                 return;
+            }
+
+            if (sb.signedhead().head().num() == lastidprocessed + 1) {
+                LOG(lg, trace) << "received live block" << lastidprocessed + 1;
+                if (!process(sb))
+                    LOG(lg,error) <<  " !process live block";
+                else
+                    LOG(lg,trace) <<  " YES processed live block";
+            }
             }
 
             if (sb.signedhead().head().num() == lastidprocessed + 1) {
@@ -796,7 +806,7 @@ public:
                             LOG(lg, error) << "cant find name" << nr.first;
                             continue;
                         }
-						uint64_t reward = static_cast<uint64_t>(nr.second);
+                        uint64_t reward = static_cast<uint64_t>(nr.second * 100.0);
 						mRecorder.addBalance(Commissioner::pk2str(fn->pubkey), reward);
 						LOG(lg, trace) << " reward " << fn->alias << " with "
 							<< nr.second << " bal " << fn->getBalance().amount();
