@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012-2014 250bpm s.r.o.  All rights reserved.
+    Copyright (c) 2012-2014 Martin Sustrik  All rights reserved.
     Copyright (c) 2013 GoPivotal, Inc.  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -53,14 +53,6 @@ extern "C" {
 #   endif
 #endif
 
-/*  Inline functions are everywhere, but MSVC requires underscores           */
-#if defined _WIN32
-#  define NN_INLINE static __inline
-#else
-#  define NN_INLINE static inline
-#endif
-
-
 /******************************************************************************/
 /*  ABI versioning support.                                                   */
 /******************************************************************************/
@@ -74,7 +66,7 @@ extern "C" {
 #define NN_VERSION_CURRENT 2
 
 /*  The latest revision of the current interface. */
-#define NN_VERSION_REVISION 0
+#define NN_VERSION_REVISION 1
 
 /*  How many past interface versions are still supported. */
 #define NN_VERSION_AGE 2
@@ -214,6 +206,7 @@ NN_EXPORT const char *nn_symbol (int i, int *value);
 #define NN_NS_FLAG 10
 #define NN_NS_ERROR 11
 #define NN_NS_LIMIT 12
+#define NN_NS_EVENT 13
 
 /*  Constants that are returned in `type` member of nn_symbol_properties      */
 #define NN_TYPE_NONE 0
@@ -290,41 +283,31 @@ struct nn_cmsghdr {
     int cmsg_type;
 };
 
-/*  Internal function. Not to be used directly.                               */
-/*  Use NN_CMSG_NEXTHDR macro instead.                                        */
-NN_INLINE struct nn_cmsghdr *nn_cmsg_nexthdr_ (const struct nn_msghdr *mhdr,
-    const struct nn_cmsghdr *cmsg)
-{
-    size_t sz;
+/*  Internal stuff. Not to be used directly.                                  */
+NN_EXPORT  struct nn_cmsghdr *nn_cmsg_nxthdr_ (
+    const struct nn_msghdr *mhdr,
+    const struct nn_cmsghdr *cmsg);
+#define NN_CMSG_ALIGN_(len) \
+    (((len) + sizeof (size_t) - 1) & (size_t) ~(sizeof (size_t) - 1))
 
-    sz = sizeof (struct nn_cmsghdr) + cmsg->cmsg_len;
-    if (((char*) cmsg) - ((char*) mhdr->msg_control) + sz >=
-           mhdr->msg_controllen)
-        return NULL;
-    return (struct nn_cmsghdr*) (((char*) cmsg) + sz);
-}
+/* POSIX-defined msghdr manipulation. */
 
 #define NN_CMSG_FIRSTHDR(mhdr) \
-    ((mhdr)->msg_controllen >= sizeof (struct nn_cmsghdr) \
-    ? (struct nn_cmsghdr*) (mhdr)->msg_control : (struct nn_cmsghdr*) NULL)
+    nn_cmsg_nxthdr_ ((struct nn_msghdr*) (mhdr), NULL)
 
-#define NN_CMSG_NXTHDR(mhdr,cmsg) \
-    nn_cmsg_nexthdr_ ((struct nn_msghdr*) (mhdr), (struct nn_cmsghdr*) (cmsg))
+#define NN_CMSG_NXTHDR(mhdr, cmsg) \
+    nn_cmsg_nxthdr_ ((struct nn_msghdr*) (mhdr), (struct nn_cmsghdr*) (cmsg))
 
 #define NN_CMSG_DATA(cmsg) \
     ((unsigned char*) (((struct nn_cmsghdr*) (cmsg)) + 1))
 
-/*  Helper macro. Not to be used directly.                                    */
-#define NN_CMSG_ALIGN(len) \
-    (((len) + sizeof (size_t) - 1) & (size_t) ~(sizeof (size_t) - 1))
-
-/* Extensions to POSIX defined by RFC3542.                                    */
+/* Extensions to POSIX defined by RFC 3542.                                   */
 
 #define NN_CMSG_SPACE(len) \
-    (NN_CMSG_ALIGN (len) + NN_CMSG_ALIGN (sizeof (struct nn_cmsghdr)))
+    (NN_CMSG_ALIGN_ (len) + NN_CMSG_ALIGN_ (sizeof (struct nn_cmsghdr)))
 
 #define NN_CMSG_LEN(len) \
-    (NN_CMSG_ALIGN (sizeof (struct nn_cmsghdr)) + (len))
+    (NN_CMSG_ALIGN_ (sizeof (struct nn_cmsghdr)) + (len))
 
 /*  SP address families.                                                      */
 #define AF_SP 1
@@ -356,6 +339,10 @@ NN_INLINE struct nn_cmsghdr *nn_cmsg_nexthdr_ (const struct nn_msghdr *mhdr,
 
 /*  Send/recv options.                                                        */
 #define NN_DONTWAIT 1
+
+/*  Ancillary data.                                                           */
+#define PROTO_SP 1
+#define SP_HDR 1
 
 NN_EXPORT int nn_socket (int domain, int protocol);
 NN_EXPORT int nn_close (int s);
@@ -391,6 +378,12 @@ NN_EXPORT int nn_poll (struct nn_pollfd *fds, int nfds, int timeout);
 /******************************************************************************/
 
 NN_EXPORT int nn_device (int s1, int s2);
+
+/******************************************************************************/
+/*  Built-in support for multiplexers.                                        */
+/******************************************************************************/
+
+NN_EXPORT int nn_tcpmuxd (int port);
 
 #ifdef __cplusplus
 }

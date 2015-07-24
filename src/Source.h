@@ -56,6 +56,9 @@ public:
 	static std::map<std::string, std::unordered_set<std::string>> TeamPlayers;
 
     static std::set<std::string> TeamIds;
+    //teamid -> week,isInGame
+    static std::unordered_map<std::string, std::pair<int,bool>> TeamWeek;
+
 };
 
 struct FantasyProjections {

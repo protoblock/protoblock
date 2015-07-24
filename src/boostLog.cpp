@@ -21,6 +21,8 @@ namespace fantasybit
 			// This makes the sink to write log records that look like this:
 			// 1: <normal> A normal severity message
 			// 2: <error> An error severity message
+            keywords::auto_flush = true,
+
 			keywords::format =
 			(
 			expr::stream

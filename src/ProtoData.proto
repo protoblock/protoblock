@@ -139,7 +139,12 @@ message Block {
 
 
 	extensions 1000 to max;
- }
+}
+
+message LiveWire {
+        optional Block block = 10;
+        repeated SignedTransaction transaction = 20;
+}
 
 message NodeRequest
 {

@@ -194,6 +194,7 @@ int main(int argc, const char * argv[])
 	syncService_.join();
 	runLive_.join();
 	pendingTransactions_.join();
+	processor_.join();
 
 	return 0;
 }

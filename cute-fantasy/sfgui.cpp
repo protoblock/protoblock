@@ -77,53 +77,34 @@ void sfGUI::flashing()
 
 void sfGUI::fromServer(const DeltaData &in)
 {
-    if ( in.type() == DeltaData_Type_HEARTBEAT )
-    {
-        ui->textBrowser->insertPlainText(".");
-        deltaData.CopyFrom(in);
-        updatedelta();
-    }
-    else if ( in.type() == DeltaData_Type_SNAPSHOT)
-    {
-        if ( !snapData.has_type() ) {
-            ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
+    if ( first ) {
+        first = false;
+        ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
 
-            ui->message->setText("Live: ");
-            ui->fantasyname->setEnabled(true);
-            ui->generate->setEnabled(true);
-        }
-
-        snapData.CopyFrom(in);
-        updatesnap();
+        ui->message->setText("Live: ");
+        ui->fantasyname->setEnabled(true);
+        ui->generate->setEnabled(true);
     }
 
     ui->textBrowser->append(QString::fromStdString(in.DebugString()));
 
+    if ( in.myfantasyname().status() != MyNameStatus::none ) {
+        ui->fantasyname->setText(QString::fromStdString(in.myfantasyname().name()));
+        ui->fantasynamestatus->setText("Fantasy Name Status: " +
+            QString::fromStdString(MyNameStatus_Name(in.myfantasyname().status())));
+    }
+
+    if ( in.has_globalstate() )
+        ui->message->setText(QString::fromStdString(
+                   "Live: " +
+                    GlobalState_State_Name(in.globalstate().state()) +
+                    " " +
+                    std::to_string(in.globalstate().season())
+                    ));
+
     refreshViews(in);
 }
 /**/
-
-void sfGUI::updatesnap()
-{
-    if ( snapData.myfantasyname().status() != MyNameStatus::none ) {
-        ui->fantasyname->setText(QString::fromStdString(snapData.myfantasyname().name()));
-        ui->fantasynamestatus->setText("Fantasy Name Status: " +
-            QString::fromStdString(MyNameStatus_Name(snapData.myfantasyname().status())));
-    }
-
-
-    ui->message->setText(QString::fromStdString(
-               "Live: " +
-                GlobalState_State_Name(snapData.globalstate().state()) +
-                " " +
-                std::to_string(snapData.globalstate().season())
-                ));
-}
-
-void sfGUI::updatedelta()
-{
-
-}
 
 sfGUI::~sfGUI()
 {
@@ -133,6 +114,7 @@ sfGUI::~sfGUI()
 
 void fantasybit::sfGUI::on_generate_clicked()
 {
+    try {
 
     if ( ui->fantasyname->text() == "") return;
 
@@ -142,6 +124,8 @@ void fantasybit::sfGUI::on_generate_clicked()
     indata.set_data(ui->fantasyname->text().toStdString());
 
     emit fromGUI(indata);
+    }
+    catch (...) {}
 }
 
 
@@ -172,12 +156,12 @@ void fantasybit::sfGUI::on_copy_clicked()
 
 void fantasybit::sfGUI::refreshViews(const DeltaData &in){
     //QMutexLocker locker(&myMutex);
-    if (in.type() == DeltaData_Type_SNAPSHOT) {
-        myTeamsStateTableModel.removeAll();
-        myPlayerDataTableModel.removeAll();
-        myTeamDataTableModel.removeAll();
-        myFantasyPlayerTableModel.removeAll();
-    }
+//    if (in.type() == DeltaData_Type_SNAPSHOT) {
+//        myTeamsStateTableModel.removeAll();
+//        myPlayerDataTableModel.removeAll();
+//        myTeamDataTableModel.removeAll();
+//        myFantasyPlayerTableModel.removeAll();
+//    }
 
     myCurrentSnapShot.fromDeltaData(in);
     ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
@@ -187,24 +171,32 @@ void fantasybit::sfGUI::refreshViews(const DeltaData &in){
     ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
 
 
-    for(int i=0;i< myCurrentSnapShot.teamStates.count();i++)
-        myTeamsStateTableModel.addItem(&myCurrentSnapShot.teamStates[i]);    
+    foreach(QString key,myCurrentSnapShot.teamStates.uniqueKeys())
+        myTeamsStateTableModel.setItemValue(key,myCurrentSnapShot.teamStates[key]);
 
-    for(int i=0;i< myCurrentSnapShot.players.count();i++)
-        myPlayerDataTableModel.addItem(&myCurrentSnapShot.players[i]);
 
-    for(int i=0;i< myCurrentSnapShot.teams.count();i++) {
-        myTeamDataTableModel.addItem(&myCurrentSnapShot.teams[i]);
-        ui->myTeamsCmb->addItem(myCurrentSnapShot.teams[i].teamId(), QVariant(myCurrentSnapShot.teams[i].teamId()));
+    foreach(QString key,myCurrentSnapShot.players.uniqueKeys())
+        myPlayerDataTableModel.setItemValue(key,myCurrentSnapShot.players[key]);
+
+
+    foreach(QString key,myCurrentSnapShot.teams.uniqueKeys()) {
+        myTeamDataTableModel.setItemValue(key,myCurrentSnapShot.teams[key]);
+        ui->myTeamsCmb->addItem(key, QVariant(myCurrentSnapShot.teams[key].teamId()));
     }
 
-    for(int i=0;i< myCurrentSnapShot.fantasyPlayers.count();i++)
-        myFantasyPlayerTableModel.addItem(&myCurrentSnapShot.fantasyPlayers[i]);
+    foreach(QString key,myCurrentSnapShot.fantasyPlayers.uniqueKeys()) {
+        myFantasyPlayerTableModel.setItemValue(key,myCurrentSnapShot.fantasyPlayers[key]);
+    }
+        /*
+    for(auto it = myCurrentSnapShot.fantasyPlayers.begin();
+        it!= myCurrentSnapShot.fantasyPlayers.end(); ++it)
+        myFantasyPlayerTableModel.addItem(it->());
+        */
 }
 
 void fantasybit::sfGUI::on_myTeamsCmb_currentIndexChanged(int index)
 {
-   QString teamKey =  ui->myTeamsCmb->itemData(index).toString();
+   QString teamKey = ui->myTeamsCmb->itemData(index).toString();
    //reload players combo
    ui->myPlayersCmb->clear();
    foreach(PlayerDataViewModel * player, myPlayerDataTableModel.list()){

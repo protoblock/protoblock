@@ -20,20 +20,29 @@
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 using namespace fantasybit;
-int main(int argc, char *argv[])
-{
+
+int domain(int argc, char *argv[]) {
+
     initBoostLog();
-    string gui_address{ "ipc:///tmp/fantasygui.ipc" };
+    string gui_address{ "inproc://fantasygui" };
 
 
     Node node{};
     //node.getMyIp();
-    node.init();
-    node.runHandShake();
 
-    string delta_address{ "ipc://deltaserver" };
+    try {
+        node.init();
+        node.runHandShake();
+    }
+    catch (std::exception &e)
+    {
+        LOG(lg,fatal) <<  e.what();
+        return -1;
+    }
 
-    string server_address{ "ipc://rcpserver" };
+    string delta_address{ "inproc://deltaserver" };
+
+    string server_address{ "inproc://rcpserver" };
     Server server{ server_address };;
 
     ClientUI clientui{ server_address, gui_address, delta_address };
@@ -70,22 +79,21 @@ int main(int argc, char *argv[])
     clientthread.start();
     widget.show();
     int ret = a.exec();
+
+
+    //QThread::sleep(5);
 //    dlg.show();
 
 
     clientui.stop();
-    nn::term();
+    //nn::term();
    /**/
     server.stop();
-
-   LOG(lg, debug) << " 4 ";
-
     node.stop();
-    LOG(lg, debug) << " 5 ";
-
     processor.stop();
-    //nn::term();
-    LOG(lg, debug) << " 6 ";
+    nn::term();
+
+    //QThread::sleep(5);
 
     clientt.join();
     servert.join();
@@ -96,3 +104,14 @@ int main(int argc, char *argv[])
 
     return ret;
 }
+
+int main(int argc, char *argv[])
+{
+    try {
+        domain(argc, argv);
+    }
+    catch (...) {
+        return -1;
+    }
+}
+

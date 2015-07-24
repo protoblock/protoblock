@@ -4,6 +4,7 @@
 #include <QStandardItemModel>
 #include <ProtoData.pb.h>
 #include "tlistmodel.h"
+#include "tkeyedlist.h"
 
 using namespace fantasybit;
 
@@ -124,10 +125,10 @@ public:
 
 Q_DECLARE_METATYPE(TeamStateViewModel*)
 
-class TeamStateTableModel : public TListModel<TeamStateViewModel> {
+class TeamStateTableModel : public TKeyedListModel<QString,TeamStateViewModel> {
 
 public:
-  TeamStateTableModel(): TListModel<TeamStateViewModel>(NULL) {
+  TeamStateTableModel(): TKeyedListModel<QString,TeamStateViewModel>(NULL) {
     initialize();
   }
   ~TeamStateTableModel() {}
@@ -193,10 +194,10 @@ public:
 
 Q_DECLARE_METATYPE(PlayerDataViewModel*)
 
-class PlayerDataTableModel : public TListModel<PlayerDataViewModel> {
+class PlayerDataTableModel : public TKeyedListModel<QString,PlayerDataViewModel> {
 
 public:
-  PlayerDataTableModel(): TListModel<PlayerDataViewModel>(NULL) {
+  PlayerDataTableModel(): TKeyedListModel<QString,PlayerDataViewModel>(NULL) {
     initialize();
   }
   ~PlayerDataTableModel() {}
@@ -288,10 +289,10 @@ public:
 Q_DECLARE_METATYPE(TeamDataViewModel*)
 
 
-class TeamDataTableModel : public TListModel<TeamDataViewModel> {
+class TeamDataTableModel : public TKeyedListModel<QString,TeamDataViewModel> {
 
 public:
-  TeamDataTableModel(): TListModel<TeamDataViewModel>(NULL) {
+  TeamDataTableModel(): TKeyedListModel<QString,TeamDataViewModel>(NULL) {
     initialize();
   }
   ~TeamDataTableModel() {}
@@ -353,10 +354,10 @@ public:
 
 Q_DECLARE_METATYPE(FantasyPlayerViewModel*)
 
-class FantasyPlayerTableModel : public TListModel<FantasyPlayerViewModel> {
+class FantasyPlayerTableModel : public TKeyedListModel<QString,FantasyPlayerViewModel> {
 
 public:
-  FantasyPlayerTableModel(): TListModel<FantasyPlayerViewModel>(NULL) {
+  FantasyPlayerTableModel(): TKeyedListModel<QString,FantasyPlayerViewModel>(NULL) {
     initialize();
   }
   ~FantasyPlayerTableModel() {}
@@ -387,10 +388,10 @@ public:
     quint64 fantasyNameBalance;
 
     GlobalStateViewModel globalStateModel;
-    QList<TeamDataViewModel> teams;
-    QList<TeamStateViewModel> teamStates;
-    QList<PlayerDataViewModel> players;
-    QList<FantasyPlayerViewModel> fantasyPlayers;
+    QMap<QString,TeamDataViewModel> teams;
+    QMap<QString,TeamStateViewModel> teamStates;
+    QMap<QString,PlayerDataViewModel> players;
+    QMap<QString,FantasyPlayerViewModel> fantasyPlayers;
 
     SnapShotViewModel(){}
 
@@ -399,17 +400,17 @@ public:
     ~SnapShotViewModel(){}
 
     void fromDeltaData(const DeltaData & data) {
-        if (data.type() == DeltaData_Type_SNAPSHOT) {
-            //clear snapshot data
-            fantasyName = "";
-            fantasyNameBalance = 0;
-            globalStateModel.setSeason(0);
-            //globalStateModel.setState(STATE_UNKNOWN);
-            teams.clear();
-            teamStates.clear();
-            players.clear();
-            fantasyPlayers.clear();
-        }
+//        if (data.type() == DeltaData_Type_SNAPSHOT) {
+//            //clear snapshot data
+//            fantasyName = "";
+//            fantasyNameBalance = 0;
+//            globalStateModel.setSeason(0);
+//            //globalStateModel.setState(STATE_UNKNOWN);
+//            teams.clear();
+//            teamStates.clear();
+//            players.clear();
+//            fantasyPlayers.clear();
+//        }
 
         if (data.has_myfantasyname())
             fantasyName = QString::fromStdString(data.myfantasyname().name());
@@ -418,22 +419,32 @@ public:
             globalStateModel.copyFrom(data.globalstate());
 
         for (auto t : data.datas()) {
-            if (t.type() == ::fantasybit::Data_Type_TEAM)
-                teams.append(TeamDataViewModel(t));
+            if (t.type() == ::fantasybit::Data_Type_TEAM) {
+                TeamDataViewModel viewModel(t);
+                teams.insert(viewModel.teamId(),viewModel);
+            }
             else
-            if (t.type() == ::fantasybit::Data_Type_PLAYER)
-                players.append(PlayerDataViewModel(t));
+            if (t.type() == ::fantasybit::Data_Type_PLAYER){
+                PlayerDataViewModel viewModel(t);
+                players.insert(viewModel.playerId(),viewModel);
+            }
         }
 
-        for (const auto &t : data.teamstates())
-            teamStates.append(TeamStateViewModel(t));
+        for (const auto &t : data.teamstates()){
+            TeamStateViewModel viewModel(t);
+            teamStates.insert(viewModel.teamId(),viewModel);
+        }
 
         for (const auto &t : data.players())
         {
             if ( t.name() == fantasyName.toStdString() ) {
                 fantasyNameBalance = t.bits();
             }
-            fantasyPlayers.append(FantasyPlayerViewModel(t));
+//            fantasyPlayers[QString::fromStdString(t.name())] =
+  //                  FantasyPlayerViewModel(t);
+            FantasyPlayerViewModel viewModel(t);
+            fantasyPlayers.insert(viewModel.playerName(),viewModel);
+
         }
     }
 };

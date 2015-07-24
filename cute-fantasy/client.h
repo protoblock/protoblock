@@ -47,9 +47,9 @@ signals:
 public slots:
     void toServer(const InData &in);
     void pollServer();
-    void heartbeat();
     void start();
     void quit();
+    void dostart();
 };
 
 }

@@ -60,16 +60,18 @@ public:
 		pfn->pubkey = str2pk(pubkey);
 		return pfn;
 	}
-    
-	//static SignedBlock GenesisBlock;
-	static SignedTransaction makeGenesisName() {
-		//make and sign "FantasyAgent" name transaction
+
+    static std::string FantasyAgentName() { return "FantasyAgent"; }
+
+    //static SignedBlock GenesisBlock;
+    static SignedTransaction makeGenesisName() {
+        //make and sign "FantasyAgent" name transaction
 		NameProof nameproof{};
 		nameproof.set_type(NameProof_Type_ORACLE);
 
 		NameTrans nametrans{};
 		nametrans.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
-		nametrans.set_fantasy_name("FantasyAgent");
+        nametrans.set_fantasy_name("FantasyAgent");
 		nametrans.mutable_proof()->CopyFrom(nameproof);
 
 		Transaction trans{};
@@ -154,6 +156,11 @@ public:
 	{
 		return fc::to_base58(pk.data, pk.size());
 	}
+
+    static fc::ecc::public_key_data privStr2Pub(const std::string &priv_key) {
+        auto pk = fc::sha256{ priv_key };
+        return fc::ecc::private_key::regenerate(pk).get_public_key().serialize();
+    }
 
 	static pubkey_t str2pk(const std::string &str)
 	{

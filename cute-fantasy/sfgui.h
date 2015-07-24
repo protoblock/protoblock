@@ -32,7 +32,8 @@ class sfGUI : public QWidget
     //State m_state;
     //MyFantasyName m_namestatus{};
     InData indata{};
-    DeltaData snapData{}, deltaData{};
+    //DeltaData snapData{}, deltaData{};
+    bool first = true;
 public:
     explicit sfGUI(QWidget *parent = 0);
     ~sfGUI();

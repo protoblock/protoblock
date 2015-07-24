@@ -23,7 +23,7 @@
 #ifndef NN_HPP_INCLUDED
 #define NN_HPP_INCLUDED
 
-#include <nanomsg/nn.h>
+#include <nn.h>
 
 #include <cassert>
 #include <cstring>
@@ -38,6 +38,22 @@
 
 namespace nn
 {
+    //bool termed = false;
+    inline void term ()
+    {
+        //termed = true;
+        nn_term ();
+    }
+
+    inline bool is_err()
+    {
+        int i = nn_errno();
+        return !( nn_slow(i == EAGAIN ));
+       //     return false;
+
+       // return nn_slow(i != ETERM);
+    }
+
 
     class exception : public std::exception
     {
@@ -141,7 +157,7 @@ namespace nn
         {
             int rc = nn_send (s, buf, len, flags);
             if (nn_slow (rc < 0)) {
-                if (nn_slow (nn_errno () != EAGAIN))
+                if (is_err())
                     throw nn::exception ();
                 return -1;
             }
@@ -152,7 +168,7 @@ namespace nn
         {
             int rc = nn_recv (s, buf, len, flags);
             if (nn_slow (rc < 0)) {
-                if (nn_slow (nn_errno () != EAGAIN))
+                if (is_err())
                     throw nn::exception ();
                 return -1;
             }
@@ -163,7 +179,7 @@ namespace nn
         {
             int rc = nn_sendmsg (s, msghdr, flags);
             if (nn_slow (rc < 0)) {
-                if (nn_slow (nn_errno () != EAGAIN))
+                if (is_err())
                     throw nn::exception ();
                 return -1;
             }
@@ -174,7 +190,7 @@ namespace nn
         {
             int rc = nn_recvmsg (s, msghdr, flags);
             if (nn_slow (rc < 0)) {
-                if (nn_slow (nn_errno () != EAGAIN))
+                if (is_err())
                     throw nn::exception ();
                 return -1;
             }
@@ -190,12 +206,7 @@ namespace nn
         void operator = (const socket&);
     };
 
-    inline void term ()
-    {
-        nn_term ();
-    }
-
-}
+ }
 
 #undef nn_slow
 

@@ -28,5 +28,6 @@ decltype(Source::TeamPlayers) Source::TeamPlayers{};
 decltype(Source::TeamIds) Source::TeamIds{};
 
 decltype(FantasyProjections::Projections) FantasyProjections::Projections{};
+decltype(Source::TeamWeek) Source::TeamWeek{};
 
 }

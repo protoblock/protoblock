@@ -1,13 +1,13 @@
-// tlistmodel.h
+// tkeyedlistmodel.h
 // Written by: Moez Bouselmi
 //
-// This file contains a definition for the template class TListModel which can be used
+// This file contains a definition for the template class TKeyedList which can be used
 // to quickly obtain an editable Model from a simple QList.
 // The model can be also edited by using a simple calls as :
 // void addItem(X item);
 //   bool removeItem(X item);
 // and get the model synchronized.
-// The TListModel check wether the X is Descriptable (see descriptable.h)or Decorable
+// The TKeyedList check wether the X is Descriptable (see descriptable.h)or Decorable
 // (see decorable.h) instance to provide the views using the model information about
 // these roles :
 //
@@ -16,12 +16,12 @@
 //   Qt::WhatsThisRole
 //   Qt::DisplayRole
 
-// usage constraint X must have a default constructor
+// usage constraint X must have a default constructor and a copy contructor and  assignement operator
 
-#ifndef TLISTMODEL_H
-#define TLISTMODEL_H
+#ifndef TKEYEDLISTMODEL_H
+#define TKEYEDLISTMODEL_H
 
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 #include <QList>
 #include <QPixmap>
 #include <QPoint>
@@ -34,37 +34,41 @@
 
 using namespace std;
 //X must have a default constructor
-template <class X>
-class TListModel : public QAbstractTableModel {
+template <typename TKey,class X>
+class TKeyedListModel : public QAbstractTableModel {
 
 public:
-  explicit TListModel(QObject *parent =0, bool autoDelete = false)
+  explicit TKeyedListModel(QObject *parent =0, bool autoDelete = false)
     : QAbstractTableModel(parent)
   { myIsAutoDeleteModelElements = autoDelete; }
 
-  ~TListModel(){
+  ~TKeyedListModel(){
     if (myIsAutoDeleteModelElements){
       qDeleteAll(myList.begin(),myList.end());
       qDebug("TList items deleted");
     }
   }
 
-  TListModel (const TListModel& copy,QObject *parent =0): QAbstractTableModel(parent){
+  TKeyedListModel (const TKeyedListModel& copy,QObject *parent =0): QAbstractTableModel(parent){
     myList.append(copy.list());
+    myKeyMap = copy.myKeyMap;
     myIsAutoDeleteModelElements = copy.isAutoDelete();
   }
 
-  TListModel<X> &operator=(const TListModel<X> & other){
-    TListModel<X> * newModel = new TListModel<X>(other.list());
+  TKeyedListModel<TKey,X> &operator=(const TKeyedListModel<TKey,X> & other){
+    TKeyedListModel<TKey,X> * newModel = new TKeyedListModel<TKey,X>(other);
     myIsAutoDeleteModelElements = other.isAutoDelete();
     return *newModel ;
   }
 
 
-  TListModel(QList<X*> data, QObject *parent =0)
+  TKeyedListModel(QMap<TKey,X*> data, QObject *parent =0)
     : QAbstractTableModel(parent)
   {
-    myList.append(data);    
+      foreach(TKey key,data.keys()){
+            myKeyMap.insert(key,data.value(key));
+            myList.append(data.value(key));
+      }
   }
 
   bool isAutoDelete() { return myIsAutoDeleteModelElements; }
@@ -83,7 +87,7 @@ public:
   int   columnCount(const QModelIndex & parent = QModelIndex() ) const
   {
     Q_UNUSED(parent);
-    TListModel<X> * me = (TListModel<X> *) this;
+    TKeyedListModel<TKey,X> * me = (TKeyedListModel<TKey,X> *) this;
     return me->getColumnCount();
   }
 
@@ -103,7 +107,7 @@ public:
 
     if (index.row() >= myList.size() || index.row() < 0)
       return QVariant();
-    TListModel<X> * me = (TListModel<X> *) this;
+    TKeyedListModel<TKey,X> * me = (TKeyedListModel<TKey,X> *) this;
 
     if (role == Qt::DisplayRole) {
         X * value = myList.at(index.row());
@@ -136,7 +140,7 @@ public:
     if (index.row() >= 0 && index.row() < myList.size()
         && (role == Qt::EditRole || role == Qt::DisplayRole)) {
       if (!index.isValid()) return false;
-      TListModel<X> * me = (TListModel<X> *) this;
+      TKeyedListModel<TKey,X> * me = (TKeyedListModel<TKey,X> *) this;
       X * value = myList.at(index.row());
       if (value==NULL) return false;
       setDataFromColumn(value,index,vvalue,role);
@@ -188,22 +192,30 @@ public:
     return true;
   }
 
-  void addItem(X * item) {
-    if (item == NULL) return;
-    int count = myList.count();    
-    insertRows(count,1,QModelIndex());
-    myList.replace(count,item);
-  }
-  
-  bool removeItem(X * item){
-    if (item == NULL) return false;
-    if (!myList.contains(item)) return false;
-    int row = myList.indexOf(item);    
-    removeRows(row,1,QModelIndex());
-    return true;
+
+  bool setItemValue(const TKey & key,const X & value){
+      X* oldItem = myKeyMap.value(key,NULL);
+      if (oldItem == NULL){
+          //we're going to add the item to the list
+          addItem(key,new X(value));
+      }
+      else {
+          *oldItem = value;
+          int row = myList.indexOf(oldItem);
+          emit dataChanged(index(row,1),index(row,0));
+      }
+      return true;
   }
 
-  void removeAll(){    
+  X * takeItem(const TKey & key){
+     X * item = myKeyMap.value(key,NULL);
+     if (item == NULL) return NULL;
+     int row = myList.indexOf(item);
+     removeRows(row,1,QModelIndex());
+     return item;
+  }
+
+  void removeAll(){
 
     QList<X*> list;
     list.append(myList);
@@ -212,23 +224,28 @@ public:
       if (myIsAutoDeleteModelElements)
         DELETE_AND_NULLIFY(item);
     }
+    myKeyMap.clear();
   }
 
   QList<X*>  list() const {
     return myList;
   }
 
+  QList<TKey> keys() const{
+      return myKeyMap.keys();
+  }
+
   QVariant headerData(int section, Qt::Orientation orientation, int role) const {
-    TListModel<X> * me = (TListModel<X> *) this;
+    TKeyedListModel<TKey,X> * me = (TKeyedListModel<TKey,X> *) this;
     if (section >= me->getColumnCount()) return QVariant();
     if (orientation != Qt::Horizontal) return QVariant();
     if (role != Qt::DisplayRole) return QVariant();
-    if (section >= myHorizontalHeaders.count()) return QVariant();    
+    if (section >= myHorizontalHeaders.count()) return QVariant();
     return myHorizontalHeaders.at(section);
   }
 
   bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role){
-    TListModel<X> * me = (TListModel<X> *) this;
+    TKeyedListModel<TKey,X> * me = (TKeyedListModel<TKey,X> *) this;
     if (section >= me->getColumnCount()) return false;
     if (orientation != Qt::Horizontal) return false;
     if (role != Qt::DisplayRole) return false;
@@ -241,7 +258,7 @@ public:
 protected :
 
   void setHorizontalHeaders(const QStringList  &  headers){
-    myHorizontalHeaders.clear();    
+    myHorizontalHeaders.clear();
     int i=0;
     foreach (QString header, headers){
       myHorizontalHeaders.append("");
@@ -278,11 +295,20 @@ protected :
     return 1;
   }
 
-  QList<X*> myList;
+   QList<X*> myList;
+   QMap<TKey,X*> myKeyMap;
 private:
+   void addItem(const TKey & key,X * item) {
+     if (item == NULL) return;
+     int count = myList.count();
+     insertRows(count,1,QModelIndex());
+     myList.replace(count,item);
+     myKeyMap.insert(key,item);
+   }
+
   QStringList myHorizontalHeaders;
   bool myIsAutoDeleteModelElements;
   bool myEditable;
-};
+}; 
 
-#endif // TLISTMODEL_H
+#endif // TKEYEDLISTMODEL_H

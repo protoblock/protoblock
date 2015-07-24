@@ -76,6 +76,10 @@ public:
 		return m_oracle.get_secret() == m_priv.get_secret();
 	}
 
+    static bool AmFantasyAgent(fc::ecc::public_key_data pubkey) {
+        return Commissioner::GENESIS_PUB_KEY == pubkey;
+    }
+
 	SignedTransaction makeSigned(Transaction &trans)
 	{
 		SignedTransaction st{};

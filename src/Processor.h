@@ -91,31 +91,49 @@ public:
 
 		std::string value;
 		status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);
-		if (!status.ok())
+        if (!status.ok()) {
 			lastBlock =  0;
-		else 
+            LOG(lg,warning) << "!ok no blocks";
+        }
+        else {
 			lastBlock = *(reinterpret_cast<const int *>(value.data()));
-
-		auto *it = namehashpub->NewIterator(leveldb::ReadOptions());
-		std::string fname;
-		for (it->SeekToFirst(); it->Valid(); it->Next()) {
-			if (pubfantasyname->Get(leveldb::ReadOptions(), it->value(), &fname).IsNotFound())
-				continue;
-			auto pfn = Commissioner::makeName(fname, it->value().ToString());
-			Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
-			Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
-			uint64_t newval = 0;
-			std::string temp;
-			if (pubbalance->Get(leveldb::ReadOptions(), it->value(), &temp).IsNotFound())
-				continue;
-			
-			newval = *(reinterpret_cast<const uint64_t *>(temp.data()));
-			pfn->addBalance(newval);
-		}
-		delete it;
-
-		initProjections();
+            LOG(lg,info) << "lastBLock: " << lastBlock;
+        }
 	}
+
+    void initAllData() {
+        initFantasyNames();
+        initProjections();
+        initData();
+    }
+
+    void initFantasyNames() {
+        auto *it = namehashpub->NewIterator(leveldb::ReadOptions());
+        std::string fname;
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            if (pubfantasyname->Get(leveldb::ReadOptions(), it->value(), &fname).IsNotFound()) {
+                LOG(lg,warning) << it->value().ToString()
+                                << " found namehash but NO fantasyname ";
+                continue;
+            }
+
+            auto pfn = Commissioner::makeName(fname, it->value().ToString());
+            Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
+            Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+            uint64_t newval = 0;
+            std::string temp;
+            if (pubbalance->Get(leveldb::ReadOptions(), it->value(), &temp).IsNotFound())
+            {
+                LOG(lg,warning) << "nno bal " << pfn->ToString();
+                continue;
+            }
+
+            newval = *(reinterpret_cast<const uint64_t *>(temp.data()));
+            pfn->addBalance(newval);
+            LOG(lg,trace) << pfn->ToString();
+        }
+        delete it;
+    }
 
 	void initProjections() {
 		auto *it = projections->NewIterator(leveldb::ReadOptions());
@@ -129,9 +147,40 @@ public:
 			uint64_t bal = *(reinterpret_cast<const uint64_t *>(it->value().data()));
 
 			FantasyProjections::Projections[nflplayer][fantasyname] = bal;
+            LOG(lg,trace) << str << ":" << bal;
 		}
         delete it;
 	}
+
+    void initData() {
+        PlayerData pd{};
+        auto it = players->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            pd.ParseFromString(it->value().ToString());
+            (Source::TeamPlayers[pd.teamid()]).insert(pd.playerid());
+            Source::PlayerTeam.emplace(pd.playerid(), pd.teamid());
+            LOG(lg,trace) << "Player:" << pd.playerid() << ":" << pd.teamid();
+        }
+
+        TeamData td{};
+        it = teams->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            td.ParseFromString(it->value().ToString());
+            Source::TeamIds.insert(td.teamid());
+            LOG(lg,trace) << td.teamid();
+        }
+
+        TeamState ts{};
+        it = state->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            if (it->key().ToString() == "globalstate")
+                continue;
+            ts.ParseFromString(it->value().ToString());
+            Source::TeamWeek[ts.teamid()] =
+                    std::make_pair(ts.week(), ts.state() == TeamState::INGAME);
+            LOG(lg,trace) << ts.teamid() << " " << ts.state() << " week" << ts.week();
+        }
+    }
 
 	DeltaData DeltaSnap() {
 		DeltaData dd{};
@@ -145,7 +194,6 @@ public:
 		}
 
 		dd.mutable_globalstate()->CopyFrom(GetGlobalState());
-
 		
 		TeamState ts{};
 		auto it = state->NewIterator(leveldb::ReadOptions());
@@ -199,6 +247,7 @@ public:
 
 	void OnGlobalState(const GlobalState &gs) {
 		state->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
+        LOG(lg,trace) << gs.DebugString();
 	}
 
 	GlobalState GetGlobalState() {
@@ -207,20 +256,28 @@ public:
 		if (state->Get(leveldb::ReadOptions(), "globalstate", &temp).ok()) {
 			gs.ParseFromString(temp);
 		}
+        else {
+            LOG(lg,error) << "No GlobalState";
+        }
 
 		return gs;
 	}
 
 	void OnTeamState(const TeamState &gs) {
 		state->Put(leveldb::WriteOptions(), gs.teamid(), gs.SerializeAsString());
-	}
+        Source::TeamWeek[gs.teamid()] = std::make_pair(gs.week(), gs.state() == TeamState::INGAME);
+        LOG(lg,trace) << gs.DebugString();
+    }
 
 	TeamState GetTeamState(const std::string &teamid) {
 		TeamState gs{};
 		std::string temp;
 		if (state->Get(leveldb::ReadOptions(),teamid, &temp).ok()) {
-			gs.ParseFromString(temp);
+            gs.ParseFromString(temp);
 		}
+        else {
+            LOG(lg,error) << teamid << ": No TeamState";
+        }
 
 		return gs;
 	}
@@ -229,6 +286,7 @@ public:
 		players->Put(leveldb::WriteOptions(), gs.playerid(), gs.SerializeAsString());
 		Source::PlayerTeam[gs.playerid()] = gs.teamid();
 		(Source::TeamPlayers[gs.teamid()]).insert(gs.playerid());
+        LOG(lg,trace) << gs.DebugString();
 	}
 
 	PlayerData GetPlayerData(const std::string &pid) {
@@ -237,6 +295,7 @@ public:
 		if (players->Get(leveldb::ReadOptions(), pid, &temp).ok()) {
 			gs.ParseFromString(temp);
 		}
+        else LOG(lg,error) << pid << " no PlayerData";
 
 		return gs;
 	}
@@ -244,6 +303,7 @@ public:
 	void OnTeamData(const TeamData &gs) {
 		teams->Put(leveldb::WriteOptions(), gs.teamid(), gs.SerializeAsString());
         Source::TeamIds.insert(gs.teamid());
+        LOG(lg,trace) << gs.DebugString();
 	}
 
 	TeamData GetTeamData(const std::string &pid) {
@@ -252,6 +312,7 @@ public:
 		if (teams->Get(leveldb::ReadOptions(), pid, &temp).ok()) {
 			gs.ParseFromString(temp);
 		}
+        else LOG(lg,error) << pid << ": no TeamData";
 
 		return gs;
 	}
@@ -262,6 +323,7 @@ public:
 		leveldb::Slice value((char*)&num, sizeof(int));
 		blockstatus->Put(write_sync, "processing", value);
 		blockstatus->Put(leveldb::WriteOptions(), "lastblock", value);
+        LOG(lg,info) << "starting block: " << num;
 	}
 
 	int endBlock(int num)
@@ -269,6 +331,7 @@ public:
 		int none = -1;
 		leveldb::Slice value((char*)&none, sizeof(int));
 		blockstatus->Put(write_sync, "processing", value);
+        LOG(lg,info) << "end block: " << num;
 		return num;
 	}
 
@@ -300,6 +363,8 @@ public:
 			leveldb::Slice bval((char*)&bal, sizeof(uint64_t));
 			pubbalance->Put(leveldb::WriteOptions(), pubkey, bval);
 		}
+
+        LOG(lg,trace) << name << ":" << hash << ":" << pubkey;
 	}
 
 	void addProjection(const std::string &fname, const FantasyPlayerPoints &fpp)
@@ -318,6 +383,8 @@ public:
 		}
 		else
 			iter->second[fname] = bal;	
+
+        LOG(lg,trace) << "proj: " << key << ":" << fname << ":" << bal;
 	}
 
 	void clearProjections() {
@@ -326,24 +393,29 @@ public:
 			projections->Delete(leveldb::WriteOptions(), it->key());
 
 		FantasyProjections::Projections.clear();
+        LOG(lg,trace) << " clearProjections ";
 	}
 
 	void addBalance(std::string &pubkey,uint64_t add)
 	{
-		uint64_t newval = 0;
+        uint64_t curr = 0;
 		std::string temp;
 
 		if (pubbalance->Get(leveldb::ReadOptions(), pubkey, &temp).ok())
 		{
-			newval = *(reinterpret_cast<const uint64_t *>(temp.data()));
+            curr = *(reinterpret_cast<const uint64_t *>(temp.data()));
 		}
 
-		add += newval;
-		leveldb::Slice bval((char*)&add, sizeof(uint64_t));
+        LOG(lg,trace) << pubkey << " bal " << curr << "+" << add;
+
+        uint64_t newval = curr + add;
+        leveldb::Slice bval((char*)&newval, sizeof(uint64_t));
 		pubbalance->Put(leveldb::WriteOptions(), pubkey, bval);
 		auto it = Commissioner::FantasyNames.find(Commissioner::str2pk(pubkey));
 		if (it != end(Commissioner::FantasyNames))
 			it->second->addBalance(add);
+        else
+            LOG(lg,error) << " cant find FantasyName";
 	}
 
 	std::string filedir(const std::string &in)
@@ -396,20 +468,50 @@ public:
 		delasrv.connect(deltaserveraddr.c_str());
 		syncservid = syncserv.connect("inproc://syncserv");
 		subblock.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0);
+        int timeout = 60000;
+        subblock.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
+
 		subblock.connect("inproc://pubblock");
 	}
 
-	void stop() { running = false; }
+    void stop() {
+        running = false;
+        LOG(lg,info) << "stop";
+    }
 
-	void run()
-	{	
+    void run() {
+        try {
+            runit();
+        }
+        catch (std::exception &e)
+        {
+            LOG(lg,fatal) <<  e.what();
+            return;
+        }
+    }
+
+    void runit() {
+        LOG(lg,info) << "run";
+
 		init();
+        if (!running) {
+            LOG(lg,warning) <<  " !running";
+            return;
+        }
+
 		Block sb{};
-		while (running && !isInSync())
-			GetInSync(lastidprocessed + 1, realHeight);
+        while (running && !isInSync()) {
+            LOG(lg, info) << "!in sync last" << lastidprocessed << " real " << realHeight;
+            GetInSync(lastidprocessed + 1, realHeight);
+        }
+
+        if (!running) {
+            LOG(lg,warning) <<  " !running";
+            return;
+        }
 
 		seen_insync = true;
-		LOG(lg, info) << "mRecorder not valid! ";
+        LOG(lg, info) << "YES in sync last" << lastidprocessed << " real " << realHeight;
 
 		auto ds = mRecorder.DeltaSnap();
 		LOG(lg, trace) << "sending DeltaSnap" << ds.DebugString();
@@ -417,14 +519,39 @@ public:
 
 		while (running)
 		{
-			if (!rec_block.receive(sb)) continue;
+            LOG(lg, trace) << "waiting for live block" << lastidprocessed + 1;
+            if (!rec_block.receive(sb)) {
+                LOG(lg, trace) << "timedout";
 
-			if (sb.signedhead().head().num() > lastidprocessed + 1)
+                while (running && !isInSync()) {
+                    LOG(lg, info) << "!in sync last" << lastidprocessed << " real " << realHeight;
+                    GetInSync(lastidprocessed + 1, realHeight);
+                }
+            }
+            else {
+                LOG(lg,info) << "Received live block" << sb.signedhead().head().num();
+            }
+
+            if (sb.signedhead().head().num() > lastidprocessed + 1) {
+                LOG(lg,info) << "gap in block num last" << lastidprocessed;
 				GetInSync(lastidprocessed + 1, sb.signedhead().head().num());
-			
-			if (sb.signedhead().head().num() == lastidprocessed + 1)
-				process(sb);
+            }
+
+            if (!running) {
+                LOG(lg,warning) <<  " !running";
+                return;
+            }
+
+            if (sb.signedhead().head().num() == lastidprocessed + 1) {
+                LOG(lg, trace) << "received live block" << lastidprocessed + 1;
+                if (!process(sb))
+                    LOG(lg,error) <<  " !process live block";
+                else
+                    LOG(lg,trace) <<  " YES processed live block";
+            }
 		}
+
+        LOG(lg,info) <<  "ok !running";
 	}
 
 
@@ -432,11 +559,12 @@ public:
 	{
 		int count = 0;
 		mRecorder.init();
-		while (!mRecorder.isValid()) {
+        while (!mRecorder.isValid() && running) {
 			LOG(lg, info) << "mRecorder not valid! ";
 			mRecorder.closeAll();
 			fc::remove_all(ROOT_DIR + "index/");
-			mRecorder.init();
+            LOG(lg, info) << "delete all leveldb, should have nothing";
+            mRecorder.init();
 			if (count++ >= 5 && !mRecorder.isValid()) {
 				std::string sfatal{ "mRecorder not valid after 5 tries " };
 				LOG(lg, fatal) << sfatal;
@@ -444,67 +572,95 @@ public:
 			}
 		}
 
+        if (!running) return;
+
+        mRecorder.initAllData();
+        LOG(lg, info) << "YES mRecorder is valid";
+
 		lastidprocessed =  mRecorder.getLastBlockId();
 		mGlobalState = mRecorder.GetGlobalState();
 
-		if (!isInSync()) {
-			LOG(lg, info) << "! isInSync lastidprocessed " << lastidprocessed;
-			GetInSync(lastidprocessed + 1, realHeight);
-		}
-		else 
-			LOG(lg, info) << "lastidprocessed " << lastidprocessed;
+        LOG(lg, info) << "last: " << lastidprocessed << "globalstate " <<
+                         mGlobalState.DebugString();
+
+        if (!isInSync()) {
+            LOG(lg, info) << "! isInSync lastidprocessed " << lastidprocessed << "real " << realHeight;
+            GetInSync(lastidprocessed + 1, realHeight);
+        }
+        else
+            LOG(lg, info) << "YES in sync lastidprocessed " << lastidprocessed;
 
 	}
 
 	bool isInSync()
 	{
-		NodeRequest nrq{};
-		nrq.set_type(NodeRequest_Type_HIGHT_REQUEST);
-		LOG(lg, trace) << "send " << NodeRequest_Type_Name(nrq.type());
-		syncradio.first.send(nrq);
-		NodeReply nrp{};
-		if (!syncradio.second.receive(nrp)) {
-			LOG(lg, error) << "!syncradio.second.receive(nrp) ";
-			return true;
-		}
+        while (running) {
+            //std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
 
-		LOG(lg, info) << "rec " << nrp.DebugString();
+            NodeRequest nrq{};
+            nrq.set_type(NodeRequest_Type_HIGHT_REQUEST);
+            nrq.set_num(lastidprocessed);
+            LOG(lg, trace) << "check in sync send " << NodeRequest_Type_Name(nrq.type());
+            if ( syncradio.first.send(nrq) <= 0) {
+                LOG(lg,error) << " sync radio send timeout";
+                continue;
+            }
 
-		realHeight = nrp.hight();
-		return (realHeight == lastidprocessed);
+            NodeReply nrp{};
+            if (!syncradio.second.receive(nrp)) {
+                LOG(lg, error) << "!syncradio.second.receive(nrp) ";
+                continue;
+            }
 
+            LOG(lg, info) << "rec " << nrp.DebugString();
+
+            realHeight = nrp.hight();
+
+            if ( realHeight < lastidprocessed ) {
+                std::string sfatal{ "real < last" };
+                LOG(lg,warning) << " real < last " << realHeight << " < " << lastidprocessed;
+                //throw sfatal;
+            }
+            break;
+        }
+        return (realHeight == lastidprocessed);
 	}
 
-	void GetInSync(int start,int end)
+    void GetInSync(int start,int end)
 	{
 		LOG(lg, info) << "GetInSync from " << start << " to " << end;
 
 		int lastid = start;
-		while (true)
+        while (running)
 		{
 			NodeRequest nrq{};
 			nrq.set_type(NodeRequest_Type_BLOCK_REQUEST);
 			nrq.set_num(lastid);
 			LOG(lg, trace) << "send " << nrq.DebugString();
-			syncradio.first.send(nrq);
+            if ( syncradio.first.send(nrq) <= 0 ) {
+                LOG(lg,error) << " syncradio send timeout ";
+                continue;
+            }
 			Block sb{};
 			if (!syncradio.second.receive(sb)) {
 				LOG(lg, error) << "!syncradio.second.receive(sb) ";
-				break;
+                continue;
 			}
 
 			LOG(lg, trace) << "rec " << sb.DebugString();
 
 			if (sb.signedhead().head().num() != lastid) {
 				LOG(lg, error) << "sb.signedhead().head().num() != lastid " << lastid;
-				break;
+                continue;
 			}
 
 			if (!process(sb)) {
 				LOG(lg, error) << "!process(sb) ";
-				break;
+                continue;
 			}
-			if (end == lastid) break;
+            if (end == lastid)
+                break;
+
 			lastid++;
 		}
 	}
@@ -529,6 +685,7 @@ public:
 		//sblock.block().head().num());
 
 		LOG(lg, trace) << " outDelta " << outDelta.DebugString();
+
 		if (seen_insync)
 			Sender::Send(delasrv, outDelta);
 		outDelta.Clear();
@@ -569,6 +726,31 @@ public:
 	};
 	*/
 
+    bool isInWeekGame(const std::string &id, int week ) {
+        auto it = Source::TeamWeek.find(id);
+        if ( it == end(Source::TeamWeek) )
+            return false;
+
+        return  (it->second.first == week ) && (it->second.second);
+    }
+
+    bool sanity(const FantasyPlayerPoints &fpp) {
+        if ( !fpp.has_season() || !fpp.has_week()
+             || !fpp.has_playerid() || !fpp.has_points() )
+            return false;
+
+        if ( fpp.season() != mGlobalState.season() ) return false;
+
+        auto it = Source::PlayerTeam.find(fpp.playerid());
+        if (it == end(Source::PlayerTeam))
+            return false;
+
+        return isInWeekGame(it->second,fpp.week());
+    }
+
+
+    //std::unordered_map<std::string,TeamState> mTeamStates{}
+
 	//process data array from DataTransition transaction
 	void process(decltype(DataTransition::default_instance().data()) in, 
 				const std::string &blocksigner )  {
@@ -596,6 +778,10 @@ public:
 				case Data_Type_RESULT: {
 					rd = d.GetExtension(ResultData::result_data);
 
+                    if ( !sanity(rd.fpp()) ) {
+                        LOG(lg, error) << " invalid result skipping" << rd.DebugString();
+                        break;
+                    }
 					//	auto it = FantasyProjections::Projections.find(rd.fpp().playerid());
 					//	if (it == end(FantasyProjections::Projections))
 
@@ -606,6 +792,10 @@ public:
 
 					for (auto nr : rewards) {
 						auto fn = Commissioner::getName(nr.first);
+                        if ( fn == nullptr ) {
+                            LOG(lg, error) << "cant find name" << nr.first;
+                            continue;
+                        }
 						uint64_t reward = static_cast<uint64_t>(nr.second);
 						mRecorder.addBalance(Commissioner::pk2str(fn->pubkey), reward);
 						LOG(lg, trace) << " reward " << fn->alias << " with "
@@ -701,7 +891,7 @@ public:
 			break;
 		case DataTransition_Type_GAMESTART:
 			for (auto t : indt.teamid()) {
-				auto ts = mRecorder.GetTeamState(t);
+                auto ts = mRecorder.GetTeamState(t);
 				ts.set_state(TeamState_State_INGAME);
 				ts.set_week(indt.week());
 				ts.set_teamid(t);
@@ -762,6 +952,11 @@ public:
 			return false;
 		}
 
+        if ( st.fantasy_name() == "") {
+            LOG(lg, error) << " Blank FantasyName";
+            return false;;
+        }
+
 		fc::ecc::signature sig = Commissioner::str2sig(st.sig());
 		if (t.type() == TransType::NAME) {
 			auto nt = t.GetExtension(NameTrans::name_trans);
@@ -808,7 +1003,7 @@ public:
 				auto pfn = Commissioner::makeName(nt.fantasy_name(), nt.public_key());
 				Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
 				Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
-				LOG(lg, error) << "verified! " << FantasyName::name_hash(nt.fantasy_name());
+                LOG(lg, info) << "verified " << FantasyName::name_hash(nt.fantasy_name());
 				FantasyPlayer fp{};
 				fp.set_name(nt.fantasy_name());
 				fp.set_bits(0);
@@ -833,11 +1028,15 @@ public:
         }
     }
 
-	static bool verifySignedBlock(Block &sblock)
+    static bool verifySignedBlock(const Block &sblock)
 	{
-		if (sblock.signedhead().head().version() != Commissioner::BLOCK_VERSION)
-			return fbutils::LogFalse(std::string("Processor::process wrong block version ").append(sblock.DebugString()));
+        LOG(lg,trace) << sblock.DebugString();
 
+		if (sblock.signedhead().head().version() != Commissioner::BLOCK_VERSION)
+        {
+            LOG(lg,error) << " !verifySignedBlock wrong block version! ";
+            return false;
+        }
 		fc::sha256 digest = fc::sha256::hash(sblock.signedhead().head().SerializeAsString());
 		//if (digest.str() != sblock.signedhead().id())
 		//	return
@@ -850,10 +1049,44 @@ public:
 #ifdef NO_ORACLE_CHECK_TESTING
 			if (!Commissioner::GENESIS_NUM == sblock.block().head().num())
 #endif
-				return fbutils::LogFalse(std::string("Processor::process only oracle can sign blocks!! ").append(sblock.DebugString()));
+            {
+                LOG(lg,error) << " Invalid Block Signer!";
+                return false;
+            }
 
-		return true;
+        return true;
 	}
+
+    static bool verifySignedTransaction(const SignedTransaction &st) {
+        LOG(lg,trace) << st.DebugString();
+
+        if (st.trans().version() != Commissioner::TRANS_VERSION)
+        {
+            LOG(lg,error) << " !verifySignedTransaction wrong trans version! ";
+            return false;
+        }
+
+        fc::sha256 digest = fc::sha256::hash(st.trans().SerializeAsString());
+        if (digest.str() != st.id()) {
+            LOG(lg, error) << "digest.str() != st.id() ";
+            return false;
+        }
+
+        if ( st.fantasy_name() == "") {
+            LOG(lg, error) << " Blank FantasyName";
+            return false;;
+        }
+
+        fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+        if (st.trans().type() != TransType::NAME)
+            if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
+            {
+                LOG(lg, error) << "!Commissioner::verifyByName";
+                return false;;
+            }
+
+        return true;
+    }
 };
 
 }

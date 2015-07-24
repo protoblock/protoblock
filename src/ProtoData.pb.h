@@ -47,6 +47,7 @@ class SignedTransaction;
 class BlockHeader;
 class SignedBlockHeader;
 class Block;
+class LiveWire;
 class NodeRequest;
 class NodeReply;
 class FantasyPlayerPoints;
@@ -1854,6 +1855,103 @@ class Block : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Block* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class LiveWire : public ::google::protobuf::Message {
+ public:
+  LiveWire();
+  virtual ~LiveWire();
+
+  LiveWire(const LiveWire& from);
+
+  inline LiveWire& operator=(const LiveWire& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const LiveWire& default_instance();
+
+  void Swap(LiveWire* other);
+
+  // implements Message ----------------------------------------------
+
+  LiveWire* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const LiveWire& from);
+  void MergeFrom(const LiveWire& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.Block block = 10;
+  inline bool has_block() const;
+  inline void clear_block();
+  static const int kBlockFieldNumber = 10;
+  inline const ::fantasybit::Block& block() const;
+  inline ::fantasybit::Block* mutable_block();
+  inline ::fantasybit::Block* release_block();
+  inline void set_allocated_block(::fantasybit::Block* block);
+
+  // repeated .fantasybit.SignedTransaction transaction = 20;
+  inline int transaction_size() const;
+  inline void clear_transaction();
+  static const int kTransactionFieldNumber = 20;
+  inline const ::fantasybit::SignedTransaction& transaction(int index) const;
+  inline ::fantasybit::SignedTransaction* mutable_transaction(int index);
+  inline ::fantasybit::SignedTransaction* add_transaction();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >&
+      transaction() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >*
+      mutable_transaction();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.LiveWire)
+ private:
+  inline void set_has_block();
+  inline void clear_has_block();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::Block* block_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction > transaction_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static LiveWire* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -5093,6 +5191,73 @@ Block::signed_transactions() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >*
 Block::mutable_signed_transactions() {
   return &signed_transactions_;
+}
+
+// -------------------------------------------------------------------
+
+// LiveWire
+
+// optional .fantasybit.Block block = 10;
+inline bool LiveWire::has_block() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LiveWire::set_has_block() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LiveWire::clear_has_block() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LiveWire::clear_block() {
+  if (block_ != NULL) block_->::fantasybit::Block::Clear();
+  clear_has_block();
+}
+inline const ::fantasybit::Block& LiveWire::block() const {
+  return block_ != NULL ? *block_ : *default_instance_->block_;
+}
+inline ::fantasybit::Block* LiveWire::mutable_block() {
+  set_has_block();
+  if (block_ == NULL) block_ = new ::fantasybit::Block;
+  return block_;
+}
+inline ::fantasybit::Block* LiveWire::release_block() {
+  clear_has_block();
+  ::fantasybit::Block* temp = block_;
+  block_ = NULL;
+  return temp;
+}
+inline void LiveWire::set_allocated_block(::fantasybit::Block* block) {
+  delete block_;
+  block_ = block;
+  if (block) {
+    set_has_block();
+  } else {
+    clear_has_block();
+  }
+}
+
+// repeated .fantasybit.SignedTransaction transaction = 20;
+inline int LiveWire::transaction_size() const {
+  return transaction_.size();
+}
+inline void LiveWire::clear_transaction() {
+  transaction_.Clear();
+}
+inline const ::fantasybit::SignedTransaction& LiveWire::transaction(int index) const {
+  return transaction_.Get(index);
+}
+inline ::fantasybit::SignedTransaction* LiveWire::mutable_transaction(int index) {
+  return transaction_.Mutable(index);
+}
+inline ::fantasybit::SignedTransaction* LiveWire::add_transaction() {
+  return transaction_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >&
+LiveWire::transaction() const {
+  return transaction_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >*
+LiveWire::mutable_transaction() {
+  return &transaction_;
 }
 
 // -------------------------------------------------------------------
