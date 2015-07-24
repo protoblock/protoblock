@@ -136,7 +136,7 @@ public:
     if (index.row() >= 0 && index.row() < myList.size()
         && (role == Qt::EditRole || role == Qt::DisplayRole)) {
       if (!index.isValid()) return false;
-      //TListModel<X> * me = (TListModel<X> *) this;
+      TListModel<X> * me = (TListModel<X> *) this;
       X * value = myList.at(index.row());
       if (value==NULL) return false;
       setDataFromColumn(value,index,vvalue,role);

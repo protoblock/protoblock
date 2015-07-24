@@ -15,17 +15,55 @@
 #include "gamesoftheweekdialog.h"
 #include "Node.h"
 #include "Server.h"
-
+#include "Processor.h"
 #include "ClientUI.h"
 #include "Processor.h"
+
+#include <QtSql/QSql>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlDriver>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
 
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 using namespace fantasybit;
 
+
+bool createConnection(){
+    // needs libmysql.dll
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+
+    db.setHostName("162.254.27.178");
+    db.setPort(3306);
+    db.setDatabaseName("satoshifantasy");
+    db.setUserName("datafeed");
+    db.setPassword("s@tof@nt@sy6#1");
+    if (!db.open()) {
+         qDebug() << "Database error occurred :" << db.lastError().databaseText();
+        return false;
+    }
+
+    QSqlQuery qsql = db.exec("INSERT INTO fantasyteam_copy (fantasyteam, fantasybits, stake) VALUES('jaytest', 0, 0)");
+    if ( !qsql.isActive() )
+    {
+        bool ret = qsql.exec("UPDATE fantasyteam_copy set fantasybits=10200, stake=fantasybits where fantasyteam='jaytest'");
+        LOG(lg,info) << " exec ret " << ret;
+    }
+    db.close();
+    return true;
+}
+
 int domain(int argc, char *argv[]) {
 
-    initBoostLog();
+    QApplication a(argc, argv);
+
+    if (! createConnection()) {
+        LOG(lg,error) << "db errror";
+        return -1;
+    }
+
     string gui_address{ "inproc://fantasygui" };
 
 
@@ -41,6 +79,9 @@ int domain(int argc, char *argv[]) {
         LOG(lg,fatal) <<  e.what();
         return -1;
     }
+
+    //BlockRecorder mRecorder{};
+
 
     string delta_address{ "inproc://deltaserver" };
 
@@ -62,7 +103,8 @@ int domain(int argc, char *argv[]) {
     thread pendingTransactions_{ &Node::pendingTransactions, &node };
 
     //std::string ipc{"ipc:///tmp/fantasygui.ipc"};
-    QApplication a(argc, argv);
+
+
 
     qRegisterMetaType<DeltaData>("DeltaData");
     qRegisterMetaType<InData>("InData");
@@ -115,6 +157,8 @@ int domain(int argc, char *argv[]) {
 
 int main(int argc, char *argv[])
 {
+    initBoostLog();
+
     try {
         domain(argc, argv);
     }

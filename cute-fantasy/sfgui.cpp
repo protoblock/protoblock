@@ -88,19 +88,6 @@ void sfGUI::fromServer(const DeltaData &in)
 
     ui->textBrowser->append(QString::fromStdString(in.DebugString()));
 
-    if ( in.myfantasyname().status() != MyNameStatus::none ) {
-        ui->fantasyname->setText(QString::fromStdString(in.myfantasyname().name()));
-        ui->fantasynamestatus->setText("Fantasy Name Status: " +
-            QString::fromStdString(MyNameStatus_Name(in.myfantasyname().status())));
-    }
-
-    if ( in.has_globalstate() )
-        ui->message->setText(QString::fromStdString(
-                   "Live: " +
-                    GlobalState_State_Name(in.globalstate().state()) +
-                    " " +
-                    std::to_string(in.globalstate().season())
-                    ));
 
     refreshViews(in);
 }
@@ -155,13 +142,44 @@ void fantasybit::sfGUI::on_copy_clicked()
 }
 
 void fantasybit::sfGUI::refreshViews(const DeltaData &in){
+    //QMutexLocker locker(&myMutex);
+//    if (in.type() == DeltaData_Type_SNAPSHOT) {
+//        myTeamsStateTableModel.removeAll();
+//        myPlayerDataTableModel.removeAll();
+//        myTeamDataTableModel.removeAll();
+//        myFantasyPlayerTableModel.removeAll();
+//    }
 
     myCurrentSnapShot.fromDeltaData(in);
+
+    ui->message->setText(QString::fromStdString(
+               "Live: " +
+                GlobalState_State_Name(myCurrentSnapShot.globalStateModel.state()) +
+                " " +
+                std::to_string(myCurrentSnapShot.globalStateModel.season()) +
+                " Week "
+                +
+                std::to_string(myCurrentSnapShot.week)
+                ));
+
+
     ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
-    ui->myFantasyNameLE->setText(myCurrentSnapShot.fantasyName);
-    ui->myBalance->setText(QString::number(myCurrentSnapShot.fantasyNameBalance));
     ui->mySeasonLE->setText(myCurrentSnapShot.globalStateModel.seasonString());
     ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
+    ui->weekBox->setValue(myCurrentSnapShot.week);
+
+
+    ui->fantasyname->setText(myCurrentSnapShot.fantasyName);
+    if ( myCurrentSnapShot.fantasyName != "") {
+        //ui->fantasyname->setText(QString::fromStdString(in.myfantasyname().name()));
+        ui->fantasynamestatus->setText("Fantasy Name Status: " +
+            QString::fromStdString(MyNameStatus_Name(myCurrentSnapShot.myNameStatus)));
+    }
+
+    if ( myCurrentSnapShot.myNameStatus == MyNameStatus::confirmed) {
+        ui->myFantasyNameLE->setText(myCurrentSnapShot.fantasyName);
+        ui->myBalance->setText(QString::number(myCurrentSnapShot.fantasyNameBalance));
+    }
 
 
     foreach(QString key,myCurrentSnapShot.teamStates.uniqueKeys())
@@ -180,6 +198,11 @@ void fantasybit::sfGUI::refreshViews(const DeltaData &in){
     foreach(QString key,myCurrentSnapShot.fantasyPlayers.uniqueKeys()) {
         myFantasyPlayerTableModel.setItemValue(key,myCurrentSnapShot.fantasyPlayers[key]);
     }   
+        /*
+    for(auto it = myCurrentSnapShot.fantasyPlayers.begin();
+        it!= myCurrentSnapShot.fantasyPlayers.end(); ++it)
+        myFantasyPlayerTableModel.addItem(it->());
+        */
 }
 
 void fantasybit::sfGUI::on_myTeamsCmb_currentIndexChanged(int index)
@@ -289,7 +312,7 @@ void fantasybit::sfGUI::on_mySendResultsButton_clicked()
         PlayerData td{};
         for ( auto t : myPreloadedPlayers ) {
             td.set_teamid(t.Team.toStdString());
-            td.set_playerid(t.PlayerID.toStdString());
+            td.set_playerid(t.Name.toStdString());
             d.MutableExtension(PlayerData::player_data)->CopyFrom(td);
             Data *d2 = dt.add_data();
             d2->CopyFrom(d);

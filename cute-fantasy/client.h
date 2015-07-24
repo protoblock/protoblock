@@ -17,15 +17,13 @@
 #include <QTimer>
 #include <QEvent>
 
-
 namespace fantasybit
 {
 
 class Client : public QObject
 {
-    Q_OBJECT
-
     std::string address;
+    Q_OBJECT
     nn::socket sock;
     Receiver receiver;
     QTimer * timer, *timer2;
@@ -34,7 +32,9 @@ class Client : public QObject
     InData hbdata{};
 public:
     explicit Client(const std::string &,QObject *parent = 0);
+
     virtual bool event(QEvent *ev);
+
     ~Client()
     {
         //nn::term();

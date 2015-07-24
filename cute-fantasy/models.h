@@ -135,17 +135,17 @@ public:
 
   void initialize(){
     QStringList  headers;
-    headers << "Week"<<"Team Id"<< "Team State";
+    headers << "NFL Team"<< "Status"<<"Week";
     setHorizontalHeaders(headers);
   }
 protected:
   QVariant getColumnDisplayData(quint32 column,TeamStateViewModel * data){
     if (data==NULL) return QVariant();
-    if( column ==0)
-      return data->week();
-    if( column ==1)
-      return data->teamId();
     if( column ==2)
+      return data->week();
+    if( column ==0)
+      return data->teamId();
+    if( column ==1)
       return data->teamStateString();
     return QVariant();
 
@@ -364,7 +364,7 @@ public:
 
   void initialize(){
     QStringList  headers;
-    headers << "F. Player Name" << "Bits";
+    headers << "FantasyName" << "FantsyBits";
     setHorizontalHeaders(headers);
   }
 protected:
@@ -385,7 +385,9 @@ protected:
 class SnapShotViewModel {
 public:
     QString fantasyName;
-    quint64 fantasyNameBalance;
+    quint64 fantasyNameBalance = 0;
+    int     week = 1;
+    MyNameStatus myNameStatus = MyNameStatus::none;
 
     GlobalStateViewModel globalStateModel;
     QMap<QString,TeamDataViewModel> teams;
@@ -400,8 +402,8 @@ public:
     ~SnapShotViewModel(){}
 
     void fromDeltaData(const DeltaData & data) {
-//        if (data.type() == DeltaData_Type_SNAPSHOT) {
-//            //clear snapshot data
+ //       if (data.type() == DeltaData_Type_SNAPSHOT) {
+             //clear snapshot data
 //            fantasyName = "";
 //            fantasyNameBalance = 0;
 //            globalStateModel.setSeason(0);
@@ -412,8 +414,10 @@ public:
 //            fantasyPlayers.clear();
 //        }
 
-        if (data.has_myfantasyname())
+        if (data.has_myfantasyname()) {
             fantasyName = QString::fromStdString(data.myfantasyname().name());
+            myNameStatus = data.myfantasyname().status();
+        }
 
         if (data.has_globalstate())
             globalStateModel.copyFrom(data.globalstate());
@@ -433,17 +437,27 @@ public:
         for (const auto &t : data.teamstates()){
             TeamStateViewModel viewModel(t);
             teamStates.insert(viewModel.teamId(),viewModel);
+            if ( t.week() > week) week = t.week();
         }
 
         for (const auto &t : data.players())
         {
-            if ( t.name() == fantasyName.toStdString() ) {
-                fantasyNameBalance = t.bits();
-            }
 //            fantasyPlayers[QString::fromStdString(t.name())] =
   //                  FantasyPlayerViewModel(t);
+            auto it = fantasyPlayers.find(QString::fromStdString(t.name()));
+            quint64 curr = 0;
+            if ( it != fantasyPlayers.end() )
+                curr = it->bits();
+
             FantasyPlayerViewModel viewModel(t);
+            viewModel.setBits(viewModel.bits() + curr);
+            //ToDo - update database
             fantasyPlayers.insert(viewModel.playerName(),viewModel);
+            if ( viewModel.playerName() == fantasyName ) {
+                myNameStatus = MyNameStatus::confirmed;
+                fantasyNameBalance = viewModel.bits();
+            }
+
 
         }
     }
