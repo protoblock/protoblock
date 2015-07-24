@@ -550,15 +550,6 @@ public:
                 else
                     LOG(lg,trace) <<  " YES processed live block";
             }
-            }
-
-            if (sb.signedhead().head().num() == lastidprocessed + 1) {
-                LOG(lg, trace) << "received live block" << lastidprocessed + 1;
-                if (!process(sb))
-                    LOG(lg,error) <<  " !process live block";
-                else
-                    LOG(lg,trace) <<  " YES processed live block";
-            }
 		}
 
         LOG(lg,info) <<  "ok !running";
