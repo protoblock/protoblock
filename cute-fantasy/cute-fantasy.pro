@@ -8,6 +8,19 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 
+
+DEFINES += FBWIN
+
+#comment this line to generate
+DEFINES += DATAAGENTGUI
+
+contains(DEFINES, DATAAGENTGUI){
+TARGET = cute-fantasy-agent
+}
+else{
+TARGET = cute-fantasy
+}
+
 TARGET = cute-fantasy
 TEMPLATE = app
 
@@ -26,7 +39,9 @@ INCLUDEPATH += ./../include/nanomsg
 INCLUDEPATH += $${BOOST_DIR}
 INCLUDEPATH += ./../src
 
-DEFINES += FBWIN
+
+
+
 
 CONFIG(debug, debug|release) {
     LIBS += -lfc_debug
@@ -52,7 +67,7 @@ LIBS += -llibprotobuf
 LIBS += -lnanomsg
 LIBS += -lboost_log-vc120-1_55
 LIBS += -lboost_date_time-vc120-1_55
-LIBS +=  -llibeay32 -lssleay32
+LIBS += -llibeay32 -lssleay32
 
 
 include (./cute-fantasy.pri)

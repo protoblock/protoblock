@@ -24,13 +24,14 @@ SOURCES += \
     $$PWD/descriptable.cpp \
     $$PWD/singleapplication.cpp \
     $$PWD/teamsloader.cpp \
-    $$PWD/spinboxdelegate.cpp
+    $$PWD/spinboxdelegate.cpp \
+    $$PWD/dataagentui.cpp \
+    $$PWD/fantasyplayerui.cpp
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \
     $$PWD/../src/ProtoData.proto \
-    $$PWD/../src/sf.sm \
-    $$PWD/../resources/Team.2015.json
+    $$PWD/../src/sf.sm
 
 HEADERS += \
     $$PWD/../src/boostLog.h \
@@ -67,14 +68,20 @@ HEADERS += \
     $$PWD/teamsloader.h \
     $$PWD/spinboxdelegate.h \
     $$PWD/playerloader.h \
-    $$PWD/tkeyedlist.h
+    $$PWD/tkeyedlist.h \
+    $$PWD/dataagentui.h \
+    $$PWD/fantasyplayerui.h
 
 FORMS += \
     $$PWD/sfgui.ui \
     $$PWD/fantasynamesetupdialog.ui \
     $$PWD/gamesoftheweekdialog.ui \
     $$PWD/splashdialog.ui \
-    $$PWD/statuswidget.ui
+    $$PWD/statuswidget.ui \
+    $$PWD/Form.ui \
+    $$PWD/step2.ui \
+    $$PWD/dataagentui.ui \
+    $$PWD/fantasyplayerui.ui
 
 RESOURCES += \
     $$PWD/resources/resources.qrc

@@ -1,16 +1,11 @@
-//
-//  sfgui.cpp
-//  cute-fantasy
-//
-//  Created by Jay Berg on 4/8/14.
-//
-//
-#include "sfgui.h"
-#include "client.h"
-#include <ProtoData.pb.h>
-#include "ui_sfgui.h"
+#include "dataagentui.h"
+#include "ui_dataagentui.h"
+#include "DataAgentUI.h" 
+#include "ui_DataAgentUI.h"
 #include "teamsloader.h"
 #include "playerloader.h"
+
+#include <ProtoData.pb.h>
 
 #include <QDateTime>
 #include <QClipboard>
@@ -18,16 +13,16 @@
 
 using namespace fantasybit;
 
-sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
+DataAgentUI::DataAgentUI(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::DataAgentUI)
 {
-    ui->setupUi(this);
-    //QObject::connect(this, SIGNAL(on_flash()), this, SLOT(flashing()) );
-    ui->textBrowser->append(QCoreApplication::applicationDirPath());
-
-   ui->myTeamsStatesTableView->setModel(&myTeamsStateTableModel);
-   ui->myPlayersDataTableView->setModel(&myPlayerDataTableModel);
-   ui->myTeamsDataTableView->setModel(&myTeamDataTableModel);
-   ui->myFantasyPlayersTableView->setModel(&myFantasyPlayerTableModel);
+    ui->setupUi(this);    
+  //  //ui->textBrowser->append(QCoreApplication::applicationDirPath());
+//   ui->myTeamsStatesTableView->setModel(&myTeamsStateTableModel);
+//   ui->myPlayersDataTableView->setModel(&myPlayerDataTableModel);
+//   ui->myTeamsDataTableView->setModel(&myTeamDataTableModel);
+//   ui->myFantasyPlayersTableView->setModel(&myFantasyPlayerTableModel);
    ui->myScoringTableView->setItemDelegateForColumn(2,&myDelegate);
    myScoringTableModel.setEditable(true);
    ui->myScoringTableView->setModel(&myScoringTableModel);
@@ -43,7 +38,6 @@ sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
    success = playerLoader.loadPlayersFromJsonFile(myPreloadedPlayers,error);
    if (!success)
        QMessageBox::critical(this,"Loading players from JSon File",error);
-
 
    /*
     if (!success)
@@ -65,28 +59,30 @@ sfGUI::sfGUI(QWidget *parent) : QWidget(parent), ui(new Ui::sfGUI)
                                          QVariant(i));
     }
 
-
+    //ui->myStatusLabel->setSyncStatus("Connecting...");
+    //client->start();
+    ui->myStatusLabel->setSyncStatus("Connected...");
 }
 
-/*
-void sfGUI::flashing()
+DataAgentUI::~DataAgentUI()
 {
-    ui->progressBar->setVisible(true);
+    delete ui;
 }
-*/
 
-void sfGUI::fromServer(const DeltaData &in)
+void DataAgentUI::fromServer(const DeltaData &in)
 {
     if ( first ) {
         first = false;
-        ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
-
-        ui->message->setText("Live: ");
+        //ui->textBrowser->append(QDateTime::currentDateTime().toString() + " Connected");
+        ui->myStatusLabel->setStatusMessage("Connected");
+        ui->myStatusLabel->setSyncStatus("Live");
+        //ui->message->setText("Live: ");
         ui->fantasyname->setEnabled(true);
         ui->generate->setEnabled(true);
     }
 
-    ui->textBrowser->append(QString::fromStdString(in.DebugString()));
+    //ui->textBrowser->append(QString::fromStdString(in.DebugString()));
+    ui->myStatusLabel->setSyncStatus("Sync...");
 
     if ( in.myfantasyname().status() != MyNameStatus::none ) {
         ui->fantasyname->setText(QString::fromStdString(in.myfantasyname().name()));
@@ -94,32 +90,35 @@ void sfGUI::fromServer(const DeltaData &in)
             QString::fromStdString(MyNameStatus_Name(in.myfantasyname().status())));
     }
 
-    if ( in.has_globalstate() )
-        ui->message->setText(QString::fromStdString(
-                   "Live: " +
-                    GlobalState_State_Name(in.globalstate().state()) +
-                    " " +
-                    std::to_string(in.globalstate().season())
-                    ));
+    if ( in.has_globalstate() ) {
+        ui->myStatusLabel->setSyncStatus("Live");
+        ui->myStatusLabel->setStatusMessage(QString::fromStdString(
+                                                 GlobalState_State_Name(in.globalstate().state()) +
+                                                 " " +
+                                                 std::to_string(in.globalstate().season())
+                                                 ));
+
+//        ui->message->setText(QString::fromStdString(
+//                   "Live: " +
+//                    GlobalState_State_Name(in.globalstate().state()) +
+//                    " " +
+//                    std::to_string(in.globalstate().season())
+//                    ));
+    }
 
     refreshViews(in);
-}
-/**/
-
-sfGUI::~sfGUI()
-{
-    delete ui;
+    ui->myStatusLabel->setSyncStatus("Live");
 }
 
 
-void fantasybit::sfGUI::on_generate_clicked()
+void DataAgentUI::on_generate_clicked()
 {
     try {
 
     if ( ui->fantasyname->text() == "") return;
 
-    ui->textBrowser->append(QDateTime::currentDateTime().toString() + " requesting: " + ui->fantasyname->text());
-
+    //ui->textBrowser->append(QDateTime::currentDateTime().toString() + " requesting: " + ui->fantasyname->text());
+    ui->myStatusLabel->setStatusMessage(QDateTime::currentDateTime().toString() + " requesting: " + ui->fantasyname->text());
     indata.set_type(InData_Type_NEWNAME);
     indata.set_data(ui->fantasyname->text().toStdString());
 
@@ -129,7 +128,7 @@ void fantasybit::sfGUI::on_generate_clicked()
 }
 
 
-void fantasybit::sfGUI::on_copy_clicked()
+void DataAgentUI::on_copy_clicked()
 {
     /*
     QClipboard *clipboard = QApplication::clipboard();
@@ -154,14 +153,14 @@ void fantasybit::sfGUI::on_copy_clicked()
     */
 }
 
-void fantasybit::sfGUI::refreshViews(const DeltaData &in){
+void DataAgentUI::refreshViews(const DeltaData &in){
 
     myCurrentSnapShot.fromDeltaData(in);
-    ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
-    ui->myFantasyNameLE->setText(myCurrentSnapShot.fantasyName);
-    ui->myBalance->setText(QString::number(myCurrentSnapShot.fantasyNameBalance));
-    ui->mySeasonLE->setText(myCurrentSnapShot.globalStateModel.seasonString());
-    ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
+//    ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
+//    ui->myFantasyNameLE->setText(myCurrentSnapShot.fantasyName);
+//    ui->myBalance->setText(QString::number(myCurrentSnapShot.fantasyNameBalance));
+//    ui->mySeasonLE->setText(myCurrentSnapShot.globalStateModel.seasonString());
+//    ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
 
 
     foreach(QString key,myCurrentSnapShot.teamStates.uniqueKeys())
@@ -179,10 +178,10 @@ void fantasybit::sfGUI::refreshViews(const DeltaData &in){
 
     foreach(QString key,myCurrentSnapShot.fantasyPlayers.uniqueKeys()) {
         myFantasyPlayerTableModel.setItemValue(key,myCurrentSnapShot.fantasyPlayers[key]);
-    }   
+    }
 }
 
-void fantasybit::sfGUI::on_myTeamsCmb_currentIndexChanged(int index)
+void DataAgentUI::on_myTeamsCmb_currentIndexChanged(int index)
 {
    QString teamKey = ui->myTeamsCmb->itemData(index).toString();
    //reload players combo
@@ -193,7 +192,7 @@ void fantasybit::sfGUI::on_myTeamsCmb_currentIndexChanged(int index)
    }
 }
 
-void fantasybit::sfGUI::on_myAddScoringLineButton_clicked()
+void DataAgentUI::on_myAddScoringLineButton_clicked()
 {
     if (ui->myTeamsCmb->currentData().isValid() &&
             ui->myPlayersCmb->currentData().isValid()){
@@ -222,7 +221,7 @@ void fantasybit::sfGUI::on_myAddScoringLineButton_clicked()
 
 }
 
-void fantasybit::sfGUI::on_myAddTeam_clicked()
+void DataAgentUI::on_myAddTeam_clicked()
 {
     if (ui->myTeamsCmb->currentData().isValid() )
     {
@@ -232,18 +231,18 @@ void fantasybit::sfGUI::on_myAddTeam_clicked()
 }
 
 
-void fantasybit::sfGUI::on_mySendProjectionsButton_clicked()
-{
-    foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
-        indata.Clear();
-        indata.set_type(InData_Type_PROJ);
-        indata.set_data2(scoring->myPlayerId.toStdString());
-        indata.set_num(scoring->myScore);
-        emit fromGUI(indata);
-    }
-}
+//void DataAgentUI::on_mySendProjectionsButton_clicked()
+//{
+//    foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
+//        indata.Clear();
+//        indata.set_type(InData_Type_PROJ);
+//        indata.set_data2(scoring->myPlayerId.toStdString());
+//        indata.set_num(scoring->myScore);
+//        emit fromGUI(indata);
+//    }
+//}
 
-void fantasybit::sfGUI::on_mySendResultsButton_clicked()
+void DataAgentUI::on_mySendResultsButton_clicked()
 {
     DataTransition dt{};
 
@@ -302,10 +301,9 @@ void fantasybit::sfGUI::on_mySendResultsButton_clicked()
     emit fromGUI(indata);
 }
 
-void fantasybit::sfGUI::on_myDeleteAllRowsButton_clicked()
+void DataAgentUI::on_myDeleteAllRowsButton_clicked()
 {
     myScoringTableModel.removeAll();
     myTeamTransitions.clear();
     ui->teamStartList->clear();
 }
-

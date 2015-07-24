@@ -6,6 +6,8 @@
 //
 //
 
+#include "dataagentui.h"
+#include "fantasyplayerui.h"
 #include "sfgui.h"
 #include "client.h"
 #include <iostream>
@@ -64,7 +66,14 @@ int domain(int argc, char *argv[]) {
 
     qRegisterMetaType<DeltaData>("DeltaData");
     qRegisterMetaType<InData>("InData");
-    sfGUI widget;
+
+
+    //sfGUI widget;
+#ifdef DATAAGENTGUI
+    DataAgentUI widget;
+#else
+    FantasyPlayerUI widget;
+#endif
 
     QThread clientthread;
     Client *client = new Client {gui_address};
@@ -100,8 +109,7 @@ int domain(int argc, char *argv[]) {
     syncRequest_.join();
     syncService_.join();
     runLive_.join();
-    pendingTransactions_.join();
-
+    pendingTransactions_.join();    
     return ret;
 }
 
