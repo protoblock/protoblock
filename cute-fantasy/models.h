@@ -451,6 +451,7 @@ public:
 
             FantasyPlayerViewModel viewModel(t);
             viewModel.setBits(viewModel.bits() + curr);
+            //ToDo - update database
             fantasyPlayers.insert(viewModel.playerName(),viewModel);
             if ( viewModel.playerName() == fantasyName ) {
                 myNameStatus = MyNameStatus::confirmed;
