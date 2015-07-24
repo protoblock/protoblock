@@ -36,8 +36,15 @@ namespace fantasybit {
 	using Signature = std::string;
 
 #ifdef FBWIN
-	static std::string ROOT_DIR("C:/fantasybit/");
+    static std::string ROOT_DIR("C:/fantasybit/");
 #endif
+
+    static std::string PORT_HAND(":8130");
+    static std::string PORT_SYNC_SERV(":8125");
+    static std::string PORT_LIVE_BLOCK(":8126");
+    static std::string PORT_LIVE_TX(":8127");
+    static std::string PORT_LIVE_TX_NAT(":8127");
+
 
 
 
