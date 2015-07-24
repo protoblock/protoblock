@@ -17,7 +17,7 @@ DEFINES += FBWIN
 contains(DEFINES, DATAAGENTGUI){
 TARGET = cute-fantasy-agent
 }
-else{
+!contains(DEFINES, DATAAGENTGUI){
 TARGET = cute-fantasy
 }
 TEMPLATE = app
