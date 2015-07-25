@@ -42,6 +42,7 @@ bool createConnection(){
     db.setPassword("s@tof@nt@sy6#1");
     if (!db.open()) {
          qDebug() << "Database error occurred :" << db.lastError().databaseText();
+         LOG(lg,error) << "db errror :"<< db.lastError().databaseText().toStdString();
         return false;
     }
 
@@ -59,10 +60,10 @@ int domain(int argc, char *argv[]) {
 
     QApplication a(argc, argv);
 
-    if (! createConnection()) {
-        LOG(lg,error) << "db errror";
-        return -1;
-    }
+//    if (! createConnection()) {
+//        LOG(lg,error) << "db errror";
+//        return -1;
+//    }
 
     string gui_address{ "inproc://fantasygui" };
 
