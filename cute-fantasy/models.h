@@ -494,7 +494,12 @@ public:
 
             FantasyPlayerViewModel viewModel(t);
             viewModel.setBits(viewModel.bits() + curr);
+
+#ifdef DATAAGENTGUI
+    #ifdef DATAAGENT_UPDATEDB
             updateDB(&viewModel);
+    #endif
+#endif
             fantasyPlayers.insert(viewModel.playerName(),viewModel);
             if ( viewModel.playerName() == fantasyName ) {
                 myNameStatus = MyNameStatus::confirmed;

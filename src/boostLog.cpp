@@ -17,7 +17,7 @@ namespace fantasybit
 	{
 		logging::add_file_log
 			(
-			keywords::file_name = ROOT_DIR + "boostlog.log",
+            keywords::file_name = GET_ROOT_DIR() + "boostlog.log",
 			// This makes the sink to write log records that look like this:
 			// 1: <normal> A normal severity message
 			// 2: <error> An error severity message

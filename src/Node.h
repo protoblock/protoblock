@@ -73,7 +73,7 @@ public:
 
     std::string filedir(const std::string &in)
 	{
-		return ROOT_DIR + in; 
+        return GET_ROOT_DIR() + in;
 	}
 
 	static leveldb::Slice i2slice(int i)

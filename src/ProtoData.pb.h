@@ -865,14 +865,14 @@ class InData : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 num() const;
   inline void set_num(::google::protobuf::int32 value);
 
-  // optional .fantasybit.DataTransition data_trans = 5;
-  inline bool has_data_trans() const;
-  inline void clear_data_trans();
-  static const int kDataTransFieldNumber = 5;
-  inline const ::fantasybit::DataTransition& data_trans() const;
-  inline ::fantasybit::DataTransition* mutable_data_trans();
-  inline ::fantasybit::DataTransition* release_data_trans();
-  inline void set_allocated_data_trans(::fantasybit::DataTransition* data_trans);
+  // optional .fantasybit.DataTransition trans = 5;
+  inline bool has_trans() const;
+  inline void clear_trans();
+  static const int kTransFieldNumber = 5;
+  inline const ::fantasybit::DataTransition& trans() const;
+  inline ::fantasybit::DataTransition* mutable_trans();
+  inline ::fantasybit::DataTransition* release_trans();
+  inline void set_allocated_trans(::fantasybit::DataTransition* trans);
 
   GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(InData)
   // @@protoc_insertion_point(class_scope:fantasybit.InData)
@@ -885,8 +885,8 @@ class InData : public ::google::protobuf::Message {
   inline void clear_has_data2();
   inline void set_has_num();
   inline void clear_has_num();
-  inline void set_has_data_trans();
-  inline void clear_has_data_trans();
+  inline void set_has_trans();
+  inline void clear_has_trans();
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
@@ -896,7 +896,7 @@ class InData : public ::google::protobuf::Message {
   int type_;
   ::google::protobuf::int32 num_;
   ::std::string* data2_;
-  ::fantasybit::DataTransition* data_trans_;
+  ::fantasybit::DataTransition* trans_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
@@ -2945,10 +2945,10 @@ class DataTransition : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Data >*
       mutable_data();
 
-  static const int kDataTransFieldNumber = 203;
+  static const int kTransFieldNumber = 203;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::DataTransition >, 11, false >
-    data_trans;
+    trans;
   // @@protoc_insertion_point(class_scope:fantasybit.DataTransition)
  private:
   inline void set_has_type();
@@ -3997,41 +3997,41 @@ inline void InData::set_num(::google::protobuf::int32 value) {
   num_ = value;
 }
 
-// optional .fantasybit.DataTransition data_trans = 5;
-inline bool InData::has_data_trans() const {
+// optional .fantasybit.DataTransition trans = 5;
+inline bool InData::has_trans() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void InData::set_has_data_trans() {
+inline void InData::set_has_trans() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void InData::clear_has_data_trans() {
+inline void InData::clear_has_trans() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void InData::clear_data_trans() {
-  if (data_trans_ != NULL) data_trans_->::fantasybit::DataTransition::Clear();
-  clear_has_data_trans();
+inline void InData::clear_trans() {
+  if (trans_ != NULL) trans_->::fantasybit::DataTransition::Clear();
+  clear_has_trans();
 }
-inline const ::fantasybit::DataTransition& InData::data_trans() const {
-  return data_trans_ != NULL ? *data_trans_ : *default_instance_->data_trans_;
+inline const ::fantasybit::DataTransition& InData::trans() const {
+  return trans_ != NULL ? *trans_ : *default_instance_->trans_;
 }
-inline ::fantasybit::DataTransition* InData::mutable_data_trans() {
-  set_has_data_trans();
-  if (data_trans_ == NULL) data_trans_ = new ::fantasybit::DataTransition;
-  return data_trans_;
+inline ::fantasybit::DataTransition* InData::mutable_trans() {
+  set_has_trans();
+  if (trans_ == NULL) trans_ = new ::fantasybit::DataTransition;
+  return trans_;
 }
-inline ::fantasybit::DataTransition* InData::release_data_trans() {
-  clear_has_data_trans();
-  ::fantasybit::DataTransition* temp = data_trans_;
-  data_trans_ = NULL;
+inline ::fantasybit::DataTransition* InData::release_trans() {
+  clear_has_trans();
+  ::fantasybit::DataTransition* temp = trans_;
+  trans_ = NULL;
   return temp;
 }
-inline void InData::set_allocated_data_trans(::fantasybit::DataTransition* data_trans) {
-  delete data_trans_;
-  data_trans_ = data_trans;
-  if (data_trans) {
-    set_has_data_trans();
+inline void InData::set_allocated_trans(::fantasybit::DataTransition* trans) {
+  delete trans_;
+  trans_ = trans;
+  if (trans) {
+    set_has_trans();
   } else {
-    clear_has_data_trans();
+    clear_has_trans();
   }
 }
 

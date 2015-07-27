@@ -420,7 +420,7 @@ public:
 
 	std::string filedir(const std::string &in)
 	{
-		return ROOT_DIR + "index/" + in;
+        return GET_ROOT_DIR() + "index/" + in;
 	}
 
 	void closeAll()
@@ -563,7 +563,7 @@ public:
         while (!mRecorder.isValid() && running) {
 			LOG(lg, info) << "mRecorder not valid! ";
 			mRecorder.closeAll();
-			fc::remove_all(ROOT_DIR + "index/");
+            fc::remove_all(GET_ROOT_DIR() + "index/");
             LOG(lg, info) << "delete all leveldb, should have nothing";
             mRecorder.init();
 			if (count++ >= 5 && !mRecorder.isValid()) {
@@ -706,7 +706,7 @@ public:
 			return false;
 		}
 
-		auto dt = st.trans().GetExtension(DataTransition::data_trans);
+        auto dt = st.trans().GetExtension(DataTransition::trans);
 		if (dt.data_size() > 0)
 			process(dt.data(), st.fantasy_name());
 
@@ -873,7 +873,7 @@ public:
 			break;
 
 		case DataTransition_Type_DRAFTOVER:
-			if (mGlobalState.state() != GlobalState_State_PRESEASON)
+            if (mGlobalState.state() != GlobalState_State_PREDRAFT)
 				LOG(lg, warning) << indt.type() << " baad transition for current state " << mGlobalState.state();
 
 			{

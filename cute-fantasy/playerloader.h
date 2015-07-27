@@ -67,8 +67,11 @@ public:
                  || player.FantasyPosition == "TE"
                  || player.FantasyPosition == "K"
                     )
-                if ( player.DepthOrder > 0 && player.DepthOrder < 3)
+                //if ( player.DepthOrder > 0 && player.DepthOrder < 3)
+                {
                     result.append(player);
+                    //qDebug() << "{" << player.PlayerID << "," << player.Team << "},";
+                }
         }
         return true;
     }

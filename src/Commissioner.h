@@ -63,6 +63,7 @@ public:
 
     static std::string FantasyAgentName() { return "FantasyAgent"; }
 
+
     //static SignedBlock GenesisBlock;
     static SignedTransaction makeGenesisName() {
         //make and sign "FantasyAgent" name transaction
@@ -88,42 +89,97 @@ public:
 		return st;
 	}
 
+    static Transaction GenesisTransition() {
+        DataTransition dt{};
+
+        dt.set_type(DataTransition_Type_DRAFTOVER);
+        dt.set_season(2015);
+        dt.set_week(1);
+
+        Data d{};
+        d.set_type(Data::TEAM);
+        TeamData td{};
+        for ( auto t : GET_GENESIS_NFL_TEAMS() ) {
+            td.set_teamid(t);
+            d.MutableExtension(TeamData::team_data)->CopyFrom(td);
+            Data *d2 = dt.add_data();
+            d2->CopyFrom(d);
+        }
+
+        d.Clear();
+        d.set_type(Data::PLAYER);
+        PlayerData pd{};
+        for ( auto t : GET_GENESIS_NFL_PLAYERS() ) {
+            pd.set_teamid(t.second);
+            pd.set_playerid(t.first);
+            d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
+            Data *d2 = dt.add_data();
+            d2->CopyFrom(d);
+        }
+
+        Transaction trans{};
+        trans.set_version(1);
+        trans.set_type(TransType::DATA);
+        trans.MutableExtension(DataTransition::trans)->CopyFrom(dt);
+        return trans;
+    }
+
+    static SignedTransaction makeGenesisTransition() {
+        SignedTransaction st{};
+        st.mutable_trans()->CopyFrom(GenesisTransition());
+        st.set_id("9792644b12d72d0d76019dab91cbcddf71a54a9ea46acf5fa206f4db1d276a3b");
+        st.set_sig("iKkki472jcQ8tKtr75dV8i5Aei4dSuudRQL4R2YX9bT3erRgnQ27cJh9hoefTU8rp3GVCPNxCGM1epkUKAW9cmwiTsDVW38bSw");
+        st.set_fantasy_name("FantasyAgent");
+        return st;
+    }
+
+    static BlockHeader GenesisBlockHeader() {
+        auto gtrans = Commissioner::makeGenesisName();
+        auto gtransition = Commissioner::makeGenesisTransition();
+
+        BlockHeader bh{};
+        bh.set_version(1);
+        bh.set_num(1);
+        bh.set_prev_id("0000000000000000000000000000000000000000000000000000000000000000");
+
+        //1433116800  June 1 2015 00:00 UTC
+        //auto time = fc::time_point_sec(fc::time_point::from_iso_string("20150601T000000")).sec_since_epoch();
+        bh.set_timestamp(1433116800);
+
+        bh.set_generator_pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+
+        //fc::sha256::hash(bh.generator_pk()).str());
+        bh.set_generating_sig("33319199662b78c55f0def95399a67d6dda4dc920958b7209dc65da2dbc01801");
+
+        bh.set_basetarget(0); //todo
+        bh.set_blocktype(BlockHeader_Type_DATA);
+
+        //merkle root - two transactions
+        //auto root = fc::sha256::hash(gtransition.id() + gtrans.id()).str();
+        bh.set_transaction_id("9720ef3cc5fd74c429a65b02199bcd74a1ab1942bcf5ef89edccfb66981c9d10");
+
+        return bh;
+    }
+
 	static Block makeGenesisBlock() 
 	{
+        auto gtrans = Commissioner::makeGenesisName();
+        auto gtransition = Commissioner::makeGenesisTransition();
+
+        auto bh = GenesisBlockHeader();
 		Block b{};
-		auto gtrans = Commissioner::makeGenesisName();
-
-		BlockHeader bh{};
-		bh.set_version(1);
-		bh.set_num(1);
-		bh.set_prev_id("0000000000000000000000000000000000000000000000000000000000000000");
-
-		//1433116800  June 1 2015 00:00 UTC 
-		//auto time = fc::time_point_sec(fc::time_point::from_iso_string("20150601T000000")).sec_since_epoch();
-		bh.set_timestamp(1433116800);
-
-		bh.set_generator_pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
-
-		//fc::sha256::hash(bh.generator_pk()).str());
-		bh.set_generating_sig("33319199662b78c55f0def95399a67d6dda4dc920958b7209dc65da2dbc01801"); 
-
-		bh.set_basetarget(0); //todo
-		bh.set_blocktype(BlockHeader_Type_NORMAL);
-
-		//merkle root - single transaction 
-		//auto root = fc::sha256::hash(gtrans.id() + gtrans.id()).str();
-		bh.set_transaction_id("5d8147106af959c07fb4dbcabc4602135824ab5f0be5dd8a36275914de333b8e"); 
 
 		SignedBlockHeader sbh{};
 		sbh.mutable_head()->CopyFrom(bh);
 
 		//auto p = agent.getIdSig(sbh.head().SerializeAsString());
-		sbh.set_sig("iKkkiYqRdeNyz4cuTZ9BhyXLRxFcrFxtYzqfUjPRkf4FFivNvjCnNGhGoU2oDX5raGZrKiQUTUNDP2XU2te6k2TppqNmfB5EfH");
+        sbh.set_sig("iKZWEJXwTRmfX8HYEAFfohcsArUk2a76faYE6jSMtVVKhzPXk89QC24eDuigNj6b1WcX28JHiFhWkEBm79akAZ7Q1UvnKdh5z7");
 
-		//auto genesisblockhash = p.first; "aa5ee9a1667e86f23b0c16cef9c7721403ca1bab7545073b20bc5f3385a34b99"
+        //auto genesisblockhash = p.first;  "4f15942fc7cc2e418ee6d3f6bb4f0ef34d49863b21458d7445110783c8dcfd99"
 
 		b.mutable_signedhead()->CopyFrom(sbh);
-		b.add_signed_transactions()->CopyFrom(gtrans);
+        b.add_signed_transactions()->CopyFrom(gtransition);
+        b.add_signed_transactions()->CopyFrom(gtrans);
 
 		return b;
 	}
@@ -180,6 +236,16 @@ public:
 		fc::from_base58(str, sig.data, sig.size());
 		return sig;
 	}
+
+    static std::set<std::string> GENESIS_NFL_TEAMS;
+    static std::set<std::pair<std::string,std::string>> GENESIS_NFL_PLAYERS;
+    static std::set<std::string> GET_GENESIS_NFL_TEAMS() {
+        return GENESIS_NFL_TEAMS;
+    }
+
+    static std::set<std::pair<std::string,std::string>> GET_GENESIS_NFL_PLAYERS(){
+        return GENESIS_NFL_PLAYERS;
+    }
 
 	//static std::string DATA_DIR("data");
 	//static std::string DB_DIR("db");

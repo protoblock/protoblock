@@ -12,7 +12,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
 DEFINES += FBWIN
 
 #comment this line to generate
-DEFINES += DATAAGENTGUI
+#DEFINES += DATAAGENTGUI
+DEFINES += Jay2015PrePreSeasonTestDemo
 
 contains(DEFINES, DATAAGENTGUI){
 TARGET = cute-fantasy-agent

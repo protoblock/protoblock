@@ -27,7 +27,7 @@ namespace fantasybit
 void Server::init()
 {
     //if ( agent)
-	Reader<Secret> read{ ROOT_DIR + "secret.out" };
+    Reader<Secret> read{ GET_ROOT_DIR() + "secret.out" };
     string priv_key{""};
     map<string,MyFantasyName> bestsecret{};
     Secret secret{};
@@ -73,12 +73,23 @@ void Server::init()
     if ( priv_key != "")
 		agent.reset(new FantasyAgent{ fc::sha256{ priv_key }, secret.myfantasyname().name() });
 
+    /*
+    if ( agent->beDataAgent() ) {
+        auto gbh = Commissioner::GenesisBlockHeader();
+        auto st = agent->getIdSig(gbh.SerializeAsString());
+        LOG(lg,info) << st.first << "\n" << st.second;
+        //uint8_t *byt = new uint8_t[st.ByteSize()]
+        //st.SerializeWithCachedSizesToArray(byt);
+        //LOG(lg,info) << st.SerializeAsString();
+    }
+    */
+
     if ( bestsecret.size() == 0)
     {
         secret.set_private_key(agent->getSecret());
         
         sender.send(o);
-		Writer<Secret> writer{ ROOT_DIR + "secret.out", ios::trunc };
+        Writer<Secret> writer{ GET_ROOT_DIR() + "secret.out", ios::trunc };
         writer(secret);
     }
     else for ( const auto& pair : bestsecret)
@@ -171,14 +182,14 @@ void Server::runit() {
 				Transaction trans{};
 				trans.set_version(Commissioner::TRANS_VERSION);
 				trans.set_type(TransType::DATA);
-				trans.MutableExtension(DataTransition::data_trans)->CopyFrom(indata.data_trans());
+                trans.MutableExtension(DataTransition::trans)->CopyFrom(indata.trans());
 				SignedTransaction sn = agent->makeSigned(trans);
 				agent->onSignedTransaction(sn);
 				*/
 				Transaction trans{};
 				trans.set_version(Commissioner::TRANS_VERSION);
 				trans.set_type(TransType::DATA);
-				trans.MutableExtension(DataTransition::data_trans)->CopyFrom(indata.data_trans());
+                trans.MutableExtension(DataTransition::trans)->CopyFrom(indata.trans());
 				SignedTransaction sn = agent->makeSigned(trans);
 
 				auto block = agent->makeNewBlockAsDataAgent(sn);
@@ -196,6 +207,7 @@ void Server::runit() {
 void Server::claimName(const std::string &name)
 {
 
+    agent->resetPrivateKey();
     auto ret = agent->signPlayer(name);
 
 	LOG(lg, info) << "claimName(" << name << ") " << to_string(ret);
@@ -229,7 +241,7 @@ void Server::claimName(const std::string &name)
 				agent->onSignedTransaction(sn);
 				sender_trans.send(sn);
 
-				Writer<Secret> writer{ ROOT_DIR + "secret.out", ios::app };
+                Writer<Secret> writer{ GET_ROOT_DIR() + "secret.out", ios::app };
 				Secret secret{};
 				secret.set_private_key(agent->getSecret());
 				secret.mutable_myfantasyname()->CopyFrom(mfn);

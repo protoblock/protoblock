@@ -270,6 +270,7 @@ void DataAgentUI::on_mySendResultsButton_clicked()
         d2->CopyFrom(d);
     }
 
+    /*
     if ( ui->allTeams->isChecked() ) {
         Data d{};
         d.set_type(Data::TEAM);
@@ -288,15 +289,16 @@ void DataAgentUI::on_mySendResultsButton_clicked()
         PlayerData td{};
         for ( auto t : myPreloadedPlayers ) {
             td.set_teamid(t.Team.toStdString());
-            td.set_playerid(t.PlayerID.toStdString());
+            td.set_playerid(t.Name.toStdString());
             d.MutableExtension(PlayerData::player_data)->CopyFrom(td);
             Data *d2 = dt.add_data();
             d2->CopyFrom(d);
         }
     }
+    */
 
     indata.set_type(InData_Type_DATA);
-    indata.mutable_data_trans()->CopyFrom(dt);
+    indata.mutable_trans()->CopyFrom(dt);
 
     emit fromGUI(indata);
 }

@@ -301,7 +301,7 @@
 //                d2->CopyFrom(d);
 //            }
 
-//            indata.mutable_data_trans()->CopyFrom(dt);
+//            indata.mutable_trans()->CopyFrom(dt);
 //            Sender::Send(sock, indata);
 //        }
 

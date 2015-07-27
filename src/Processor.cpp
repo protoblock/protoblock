@@ -26,6 +26,18 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
         return false;
 	}
 
+    auto pk = Commissioner::str2pk(nt.public_key());
+    auto iter2 = Commissioner::FantasyNames.find(pk);
+    if ( iter2 != end(Commissioner::FantasyNames)) {
+
+        LOG(lg,error) << std::string("verfiy_name failure: FantasyName(").
+                        append(nt.fantasy_name() + ")  pubkey already n use") +
+                         iter2->second->ToString();
+                        //.append(st.DebugString());
+
+        return false;
+    }
+
 	auto proof = nt.proof();
 	switch (proof.type())
 	{

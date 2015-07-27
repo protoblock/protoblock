@@ -96,8 +96,8 @@ int Node::init()
 	{
 		if (SEED_NODE != myip)
 			peers->Put(leveldb::WriteOptions(), SEED_NODE, "0");
-		if (SEED_HOST != myhost)
-			peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
+        //if (SEED_HOST != myhost)
+        //	peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
 	}
 	delete it;
 
@@ -127,7 +127,7 @@ void Node::runHandShake()
 	if (peerlist.find(SEED_HOST) == peerlist.end()) {
 		LOG(lg, info) << "add seed host";
 		//if (SEED_NODE != myip)
-		peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
+        //peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
 		//else if (peerlist.find(SEED_HOST) == peerlist.end()) {
 		//	peers->Put(leveldb::WriteOptions(), SEED_HOST, "0");
 		//}
@@ -181,12 +181,12 @@ bool Node::doHandshake(const std::string &inp)
 {
     LOG(lg, info) << " dohandshake " << inp;
 	nn::socket natbind{ AF_SP, NN_PAIR };
-    natbind.bind(("tcp://*" + PORT_HAND).c_str());
+    natbind.bind(("tcp://*" + FB_PORT(PORT_HAND)).c_str());
 	int timeout = 6000;
 	natbind.setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &timeout, sizeof(timeout));
 
 	std::string pre{ "tcp://" };
-    std::string po{ PORT_SYNC_SERV };
+    std::string po{ FB_PORT(PORT_SYNC_SERV) };
 	NodeReply reply{};
 	reqhs.set_type(NodeRequest_Type_HANDSHAKE);
 	bool isconnected = false;
@@ -244,7 +244,7 @@ bool Node::doHandshake(const std::string &inp)
             if (behind_nat) {
                 reqhs.set_type(NodeRequest_Type_NAT_TEST);
                 LOG(lg, info) << "out NAT test. sending" << reqhs.DebugString();
-                if (!Sender::Send(peer, reqhs) > 0)
+                if (Sender::Send(peer, reqhs) <= 0)
                     LOG(lg, warning) << "send error/timeout";
                 else {
                     if (!Receiver::Receive(peer, reply))
@@ -264,8 +264,10 @@ bool Node::doHandshake(const std::string &inp)
 				LOG(lg, info) << "after behind_nat " << behind_nat;
 			}
 		}
-	}
-	peer.shutdown(id);
+    }
+
+    peer.shutdown(id);
+
 	return isconnected;
 }
 
@@ -432,7 +434,7 @@ void Node::dosyncService() {
 	nn::socket blockreply{ AF_SP, NN_REP };
 
 	auto lid = blockreply.bind("inproc://syncserv");
-    auto eid = blockreply.bind(("tcp://*" + PORT_SYNC_SERV).c_str()  );
+    auto eid = blockreply.bind(("tcp://*" + FB_PORT(PORT_SYNC_SERV)).c_str()  );
 	Receiver rec{ blockreply };
 	Sender snd{ blockreply };
 	NodeRequest nodereq{};
@@ -572,7 +574,7 @@ void Node::dosyncService() {
                 }
 
                 std::string pre{ "tcp://" };
-                std::string po{ PORT_HAND };
+                std::string po{ FB_PORT(PORT_HAND) };
 				nn::socket peer{ AF_SP, NN_PAIR };
                 std::string natpeertest = (pre + nodereq.myip() + po);
                 int id = peer.connect(natpeertest.c_str());
@@ -605,7 +607,7 @@ void Node::syncRequest()
 
 void Node::dosyncRequest() {
 	std::string pre{ "tcp://" };
-    std::string po{ PORT_SYNC_SERV };
+    std::string po{ FB_PORT(PORT_SYNC_SERV) };
 
 	nn::socket blockrequest{ AF_SP, NN_REQ };
 	for (auto &p : higherpeers)
@@ -675,7 +677,7 @@ void Node::dorunLive() {
 		myhight = getLastBlockNum();
 	}
 	std::string pre{ "tcp://" };
-    std::string po{ PORT_LIVE_BLOCK };
+    std::string po{ FB_PORT(PORT_LIVE_BLOCK) };
 	std::set<int> published{};
     nn::socket blockslivesub{ AF_SP, NN_SUB };
 	blockslivesub.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0);
@@ -789,8 +791,8 @@ void Node::pendingTransactions()
 void Node::dopendingTransactions() {
 	bool nat = behind_nat && connected.size() > 0;
 	std::string pre{ "tcp://" };
-    std::string po{ PORT_LIVE_TX };
-    std::string po2{ PORT_LIVE_TX_NAT };
+    std::string po{ FB_PORT(PORT_LIVE_TX) };
+    std::string po2{ FB_PORT(PORT_LIVE_TX_NAT) };
 
 	std::set<std::string> published{};
 	nn::socket translivepub{ AF_SP, NN_PUB };
@@ -822,7 +824,10 @@ void Node::dopendingTransactions() {
 		if (!rec.receive(st)) {
 			std::this_thread::sleep_for(std::chrono::seconds{ 1 });
 			std::lock_guard<std::mutex> lockg{ connected_mutex };
+            if ( newconnected.size() <= 0 )
+                continue;
 			for (auto &p : newconnected) {
+                LOG(lg, info) << "newconnected! " << p;
 				translivesub.connect((pre + p + po).c_str());
 			}
             newconnected2 = newconnected;

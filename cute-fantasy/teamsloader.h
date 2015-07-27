@@ -71,8 +71,10 @@ public:
             QJsonObject teamData = data.toObject();
             QString errorParsingObject;
             JsonTeam team = getTeamFromJsonObject(teamData,errorParsingObject);
-            if (errorParsingObject.isEmpty())
+            if (errorParsingObject.isEmpty()) {
                 result.append(team);
+                //qDebug() << "{" << team.myPlayerID << "," << team.myKey << "},";
+            }
             else
                 errorMessage += "\n Error parsing json object : "+ errorParsingObject;
         }

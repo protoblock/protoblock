@@ -30,7 +30,7 @@
 
 using namespace fantasybit;
 
-
+/*
 bool createConnection(){
     // needs libmysql.dll
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
@@ -43,8 +43,6 @@ bool createConnection(){
     if (!db.open()) {
          LOG(lg,error) << "Database error occurred :" << db.lastError().databaseText().toStdString();
          LOG(lg,error) << "db errror :"<< db.lastError().databaseText().toStdString();
-return true;
-#endif
         return true;
     }
 
@@ -57,6 +55,7 @@ return true;
     db.close();
     return true;
 }
+*/
 
 int domain(int argc, char *argv[]) {
 
@@ -163,6 +162,7 @@ int domain(int argc, char *argv[]) {
 
 int main(int argc, char *argv[])
 {
+    //Jay2015PrePreSeasonTestDemo();
     initBoostLog();
 
     try {

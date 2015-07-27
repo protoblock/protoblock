@@ -35,19 +35,49 @@ namespace fantasybit {
 
 	using Signature = std::string;
 
+#ifdef Jay2015PrePreSeasonTestDemo
 #ifdef FBWIN
-    static std::string ROOT_DIR("C:/fantasybit/");
+    static std::string ROOT_DIR_("C:/fantasybit-internal/");
 #endif
 
-    static std::string PORT_HAND(":8130");
-    static std::string PORT_SYNC_SERV(":8125");
-    static std::string PORT_LIVE_BLOCK(":8126");
-    static std::string PORT_LIVE_TX(":8127");
-    static std::string PORT_LIVE_TX_NAT(":8127");
+    static int PORT_HAND = 9130;
+    static int PORT_SYNC_SERV = 9125;
+    static int PORT_LIVE_BLOCK = 9126;
+    static int PORT_LIVE_TX = 9127;
+    static int PORT_LIVE_TX_NAT = 9128;
+#else
 
+#ifdef FBWIN
+    static std::string ROOT_DIR_("C:/fantasybit/");
+#endif
 
+    static int PORT_HAND = 8130;
+    static int PORT_SYNC_SERV = 8125;
+    static int PORT_LIVE_BLOCK = 8126;
+    static int PORT_LIVE_TX = 8127;
+    static int PORT_LIVE_TX_NAT = 8128;
 
+#endif
 
+    static std::string GET_ROOT_DIR() {
+        return ROOT_DIR_;
+    }
+
+    static std::string FB_PORT(int port) {
+        return std::string(":").append(std::to_string(port));
+    }
+
+    /*
+    static void Jay2015PrePreSeasonTestDemo()
+    {
+        ROOT_DIR_ = "C:/fantasybit-internal/";
+        PORT_HAND += 1000;
+        PORT_SYNC_SERV += 1000;
+        PORT_LIVE_BLOCK += 1000;
+        PORT_LIVE_TX += 1000;
+        PORT_LIVE_TX_NAT += 1000;
+    }
+*/
 	static struct fbutils
 	{
 		static bool LogFalse(std::string &in)
