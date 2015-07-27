@@ -42,7 +42,7 @@ bool createConnection(){
     db.setPassword("s@tof@nt@sy6#1");
     if (!db.open()) {
          LOG(lg,error) << "Database error occurred :" << db.lastError().databaseText().toStdString();
-#ifdef DATAAGENTGUI
+         LOG(lg,error) << "db errror :"<< db.lastError().databaseText().toStdString();
 return true;
 #endif
         return true;
@@ -63,10 +63,10 @@ int domain(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
 #ifdef DATAAGENTGUI
-    if (! createConnection()) {
-        LOG(lg,error) << "db errror";
-        return -1;
-    }
+//    if (! createConnection()) {
+//        LOG(lg,error) << "db errror";
+//        return -1;
+//    }
 #endif
 
     string gui_address{ "inproc://fantasygui" };
