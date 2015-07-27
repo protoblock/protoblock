@@ -41,8 +41,11 @@ bool createConnection(){
     db.setUserName("datafeed");
     db.setPassword("s@tof@nt@sy6#1");
     if (!db.open()) {
-         qDebug() << "Database error occurred :" << db.lastError().databaseText();
-        return false;
+         LOG(lg,error) << "Database error occurred :" << db.lastError().databaseText().toStdString();
+#ifdef DATAAGENTGUI
+return true;
+#endif
+        return true;
     }
 
     QSqlQuery qsql = db.exec("INSERT INTO fantasyteam_copy (fantasyteam, fantasybits, stake) VALUES('jaytest', 0, 0)");
@@ -59,10 +62,12 @@ int domain(int argc, char *argv[]) {
 
     QApplication a(argc, argv);
 
+#ifdef DATAAGENTGUI
     if (! createConnection()) {
         LOG(lg,error) << "db errror";
         return -1;
     }
+#endif
 
     string gui_address{ "inproc://fantasygui" };
 
