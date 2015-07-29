@@ -367,6 +367,7 @@ void DemoUI::on_mySendProjectionsButton_clicked()
             indata.set_data2(scoring->myPlayerId.toStdString());
             indata.set_num(scoring->myScore);
             scoring->myScoreState = GameProjectionModelView::Sent;
+            scoringTableView->repaint();
             emit fromGUI(indata);
         }
 
