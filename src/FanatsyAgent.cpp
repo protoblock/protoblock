@@ -22,15 +22,14 @@ FantasyAgent::status FantasyAgent::signPlayer(alias_t name)
     if ( Commissioner::isAliasAvailable(name) )
     {
         ret = REQUESTED;	
-		client.alias = name;
-		client.pubkey = m_priv.get_public_key().serialize();
+        client = std::make_unique<FantasyName>(name,m_priv.get_public_key().serialize());
     }
     else if ( auto p = Commissioner::getName(m_priv.get_public_key()) )
     {
         if ( p->isAlias(name) )
         {
             ret = OWNED;
-            client = *p;
+            client = std::make_unique<FantasyName>(*p);
         }
     }
         

@@ -44,8 +44,9 @@ std::map<hash_t,pubkey_t> Commissioner::Hash2Pk{};
 //SignedBlock Commissioner::GenesisBlock{};
 //Commissioner::makeGenesisBlock();
 
+std::recursive_mutex Commissioner::name_mutex{};
 
-decltype(Commissioner::GENESIS_NFL_TEAMS) Commissioner::GENESIS_NFL_TEAMS{
+decltype(Commissioner::GENESIS_NFL_TEAMS) Commissioner::GENESIS_NFL_TEAMS {
     "ARI" ,
     "ATL" ,
     "BAL" ,

@@ -22,7 +22,7 @@ namespace fantasybit
 class FantasyAgent
 {
     fc::ecc::private_key m_priv, m_oracle;
-	FantasyName client{};
+    std::unique_ptr<FantasyName> client{nullptr};
 	std::vector<SignedTransaction> pendingTrans{};
 	Block prevBlock{};
 
@@ -33,10 +33,8 @@ public:
     FantasyAgent(const fc::sha256& secret, const std::string &name)
     {
         m_priv = fc::ecc::private_key::regenerate(secret);
-		client.alias = name;
-		client.pubkey = m_priv.get_public_key().serialize();
-
-		LOGH(lg, trace) << "have secret ";
+        client = std::make_unique<FantasyName> (name,m_priv.get_public_key().serialize());
+        LOGH(lg, trace) << "have secret " << client->ToString();
     }
 		
     FantasyAgent(bool generate = true) : m_priv()
@@ -87,7 +85,7 @@ public:
 		auto p = getIdSig(trans.SerializeAsString());
 		st.set_id(p.first);
 		st.set_sig(p.second);
-		st.set_fantasy_name(client.alias);
+        st.set_fantasy_name(client->alias());
 		return st;
 	}
 
@@ -111,16 +109,12 @@ public:
 	Block makeNewBlockAsOracle();
 	Block makeNewBlockAsDataAgent(const SignedTransaction &);
 
-	fc::ecc::private_key str2priv(const std::string &in)
+    static fc::ecc::private_key str2priv(const std::string &in)
 	{
 		return fc::ecc::private_key::regenerate(fc::sha256{ in });
 	}
    
-    void kill()
-    {
-        comish.stop();
-    }
-    
+
     std::string getSecret() const
     {
         return m_priv.get_secret().str();

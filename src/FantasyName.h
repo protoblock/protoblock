@@ -20,6 +20,10 @@
 #include <fc/time.hpp>
 #include "ProtoData.pb.h"
 #include <fc/crypto/base58.hpp>
+#include <mutex>
+#include <thread>
+
+#define alias_t std::string
 
 
 namespace fantasybit
@@ -38,37 +42,57 @@ public:
 };
 
 using pubkey_t = fc::ecc::public_key_data;
-using alias_t = std::string;
 using hash_t = uint64_t;
 
 struct FantasyName
 {
-    pubkey_t pubkey;
-    alias_t  alias;  
-	Bits balance{ 0 };
+private:
+    alias_t  mAlias;
+    pubkey_t mPubkey;
+    Bits balance;
+    std::recursive_mutex bal_mutex{};
+public:
+    FantasyName(const alias_t &inalias, const pubkey_t &inpubkey)
+        : mAlias(inalias) , mPubkey(inpubkey) , balance (0) {}
     
-    Bits getBalance() const { return balance; }
+    FantasyName ( const FantasyName &in )
+        : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance) {}
+
+    Int64 getBalance()  {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        return balance.amount();
+    }
     
 	void addBalance(Bits b) {
-		balance.add(b);
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        balance.add(b);
 	}
 
     void newBalance(Bits b) {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         balance = b;
     }
 
     hash_t hash() const {
-        return name_hash(alias);
+        return name_hash(alias());
     }
     
+    pubkey_t pubkey() const {
+        return mPubkey;
+    }
+
+    std::string alias() const {
+        return mAlias;
+    }
+
     bool isAlias(const alias_t &that) const {
         return hash() == name_hash(that);
     }
     
-    std::string ToString() const {
-      return "alias(" + alias + ") hash(" + std::to_string(hash()) + ") pk(" +
-              fc::to_base58(pubkey.data, pubkey.size()) + ") balance(" +
-              std::to_string(getBalance().amount()) + ")";
+    std::string ToString() {
+      return "alias(" + alias() + ") hash(" + std::to_string(hash()) + ") pk(" +
+              fc::to_base58(pubkey().data, pubkey().size()) + ") balance(" +
+              std::to_string(getBalance()) + ")";
     }
 
     static hash_t name_hash( const alias_t& n );

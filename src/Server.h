@@ -49,7 +49,6 @@ public:
     void stop()
     {
         running = false;
-        agent->kill();
     }
 private:
     volatile bool running = true;

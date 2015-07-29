@@ -192,7 +192,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InData, data_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InData, data2_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InData, num_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InData, trans_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InData, data_trans_),
   };
   InData_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -709,91 +709,91 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "a\022&\n\004type\030\001 \002(\0162\030.fantasybit.OutData.Typ"
     "e\0220\n\rmyfantasyname\030\002 \001(\0132\031.fantasybit.My"
     "FantasyName\"6\n\004Type\022\021\n\rMYFANTASYNAME\020\001\022\014"
-    "\n\010SNAPSHOT\020\002\022\r\n\tHEARTBEAT\020\003*\010\010d\020\200\200\200\200\002\"\373\001"
+    "\n\010SNAPSHOT\020\002\022\r\n\tHEARTBEAT\020\003*\010\010d\020\200\200\200\200\002\"\200\002"
     "\n\006InData\022%\n\004type\030\001 \002(\0162\027.fantasybit.InDa"
     "ta.Type\022\014\n\004data\030\002 \001(\t\022\r\n\005data2\030\003 \001(\t\022\013\n\003"
-    "num\030\004 \001(\005\022)\n\005trans\030\005 \001(\0132\032.fantasybit.Da"
-    "taTransition\"k\n\004Type\022\014\n\010MINENAME\020\001\022\010\n\004QU"
-    "IT\020\002\022\r\n\tHEARTBEAT\020\003\022\013\n\007CONNECT\020\004\022\016\n\nMAKE"
-    "_BLOCK\020\005\022\013\n\007NEWNAME\020\006\022\010\n\004PROJ\020\007\022\010\n\004DATA\020"
-    "\010*\010\010d\020\200\200\200\200\002\"h\n\tNameProof\022(\n\004type\030\001 \001(\0162\032"
-    ".fantasybit.NameProof.Type\"&\n\004Type\022\007\n\003PO"
-    "W\020\001\022\t\n\005TWEET\020\002\022\n\n\006ORACLE\020\003*\t\010\310\001\020\200\200\200\200\002\"`\n"
-    "\nTweetProof\022\r\n\005tweet\030\n \001(\t2C\n\013tweet_proo"
-    "f\022\025.fantasybit.NameProof\030\311\001 \001(\0132\026.fantas"
-    "ybit.TweetProof\"M\n\013Transaction\022\017\n\007versio"
-    "n\030\001 \001(\005\022#\n\004type\030\002 \001(\0162\025.fantasybit.Trans"
-    "Type*\010\010d\020\200\200\200\200\002\"\240\001\n\tNameTrans\022\024\n\014fantasy_"
-    "name\030\n \001(\t\022\022\n\npublic_key\030\024 \001(\014\022$\n\005proof\030"
-    "\036 \001(\0132\025.fantasybit.NameProof2C\n\nname_tra"
-    "ns\022\027.fantasybit.Transaction\030\310\001 \001(\0132\025.fan"
-    "tasybit.NameTrans\"j\n\021SignedTransaction\022&"
-    "\n\005trans\030\n \001(\0132\027.fantasybit.Transaction\022\n"
-    "\n\002id\030\024 \001(\014\022\013\n\003sig\030\036 \001(\014\022\024\n\014fantasy_name\030"
-    "( \001(\t\"\370\001\n\013BlockHeader\022\017\n\007version\030\001 \001(\005\022\013"
-    "\n\003num\030\n \001(\005\022\017\n\007prev_id\030\024 \001(\014\022\021\n\ttimestam"
-    "p\030\025 \001(\005\022\024\n\014generator_pk\030\036 \001(\014\022\026\n\016generat"
-    "ing_sig\030( \001(\014\022\022\n\nbasetarget\0302 \001(\005\022/\n\tblo"
-    "cktype\030< \001(\0162\034.fantasybit.BlockHeader.Ty"
-    "pe\022\026\n\016transaction_id\030F \001(\014\"\034\n\004Type\022\n\n\006NO"
-    "RMAL\020\001\022\010\n\004DATA\020\002\"G\n\021SignedBlockHeader\022%\n"
-    "\004head\030\n \001(\0132\027.fantasybit.BlockHeader\022\013\n\003"
-    "sig\030\036 \001(\t\"\201\001\n\005Block\0221\n\nsignedhead\030\n \001(\0132"
-    "\035.fantasybit.SignedBlockHeader\022:\n\023signed"
-    "_transactions\030\024 \003(\0132\035.fantasybit.SignedT"
-    "ransaction*\t\010\350\007\020\200\200\200\200\002\"`\n\010LiveWire\022 \n\005blo"
-    "ck\030\n \001(\0132\021.fantasybit.Block\0222\n\013transacti"
-    "on\030\024 \003(\0132\035.fantasybit.SignedTransaction\""
-    "\257\001\n\013NodeRequest\022*\n\004type\030\n \001(\0162\034.fantasyb"
-    "it.NodeRequest.Type\022\014\n\004myip\030\024 \001(\t\022\013\n\003num"
-    "\030\036 \001(\005\022\016\n\006myhost\030( \001(\t\"I\n\004Type\022\r\n\tHANDSH"
-    "AKE\020\001\022\021\n\rBLOCK_REQUEST\020\002\022\021\n\rHIGHT_REQUES"
-    "T\020\003\022\014\n\010NAT_TEST\020\004\"\'\n\tNodeReply\022\r\n\005hight\030"
-    "\n \001(\005\022\013\n\003ips\030\024 \003(\t\"U\n\023FantasyPlayerPoint"
-    "s\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022\020\n\010playe"
-    "rid\030\036 \001(\t\022\016\n\006points\030( \001(\005\"\212\001\n\017Projection"
-    "Trans\022,\n\003fpp\030\n \001(\0132\037.fantasybit.FantasyP"
-    "layerPoints2I\n\nproj_trans\022\027.fantasybit.T"
-    "ransaction\030\311\001 \001(\0132\033.fantasybit.Projectio"
-    "nTrans\"~\n\004Data\022\017\n\007version\030\n \001(\005\022#\n\004type\030"
-    "\024 \001(\0162\025.fantasybit.Data.Type\"6\n\004Type\022\014\n\010"
-    "SCHEDULE\020\000\022\n\n\006PLAYER\020\001\022\010\n\004TEAM\020\002\022\n\n\006RESU"
-    "LT\020\003*\010\010d\020\200\200\200\200\002\"m\n\nPlayerData\022\020\n\010playerid"
-    "\030\n \001(\t\022\016\n\006teamid\030\024 \001(\t2=\n\013player_data\022\020."
-    "fantasybit.Data\030e \001(\0132\026.fantasybit.Playe"
-    "rData\"U\n\010TeamData\022\016\n\006teamid\030\n \001(\t29\n\ttea"
-    "m_data\022\020.fantasybit.Data\030o \001(\0132\024.fantasy"
-    "bit.TeamData\"z\n\nResultData\022,\n\003fpp\030\n \001(\0132"
-    "\037.fantasybit.FantasyPlayerPoints2>\n\013resu"
-    "lt_data\022\020.fantasybit.Data\030\312\001 \001(\0132\026.fanta"
-    "sybit.ResultData\"\301\002\n\016DataTransition\022-\n\004t"
-    "ype\030\001 \001(\0162\037.fantasybit.DataTransition.Ty"
-    "pe\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022\016\n\006team"
-    "id\030\036 \003(\t\022\036\n\004data\030( \003(\0132\020.fantasybit.Data"
-    "\"m\n\004Type\022\n\n\006ROSTER\020\001\022\017\n\013SEASONSTART\020\002\022\r\n"
-    "\tSEASONEND\020\003\022\r\n\tDRAFTOVER\020\004\022\r\n\tHEARTBEAT"
-    "\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER\020\0072C\n\005trans"
-    "\022\027.fantasybit.Transaction\030\313\001 \001(\0132\032.fanta"
-    "sybit.DataTransition\"\220\001\n\013GlobalState\022,\n\005"
-    "state\030\001 \001(\0162\035.fantasybit.GlobalState.Sta"
-    "te\022\016\n\006season\030\n \001(\r\"C\n\005State\022\014\n\010PREDRAFT\020"
-    "\001\022\r\n\tPRESEASON\020\002\022\017\n\013ROSTER53MAN\020\003\022\014\n\010INS"
-    "EASON\020\004\"w\n\tTeamState\022*\n\005state\030\001 \001(\0162\033.fa"
-    "ntasybit.TeamState.State\022\014\n\004week\030\n \001(\r\022\016"
-    "\n\006teamid\030\024 \001(\t\" \n\005State\022\013\n\007PREGAME\020\001\022\n\n\006"
-    "INGAME\020\002\"\275\002\n\tDeltaData\022(\n\004type\030\001 \001(\0162\032.f"
-    "antasybit.DeltaData.Type\0220\n\rmyfantasynam"
-    "e\030\002 \001(\0132\031.fantasybit.MyFantasyName\022,\n\013gl"
-    "obalstate\030\n \001(\0132\027.fantasybit.GlobalState"
-    "\022)\n\nteamstates\030\024 \003(\0132\025.fantasybit.TeamSt"
-    "ate\022\037\n\005datas\030\036 \003(\0132\020.fantasybit.Data\022*\n\007"
-    "players\030( \003(\0132\031.fantasybit.FantasyPlayer"
-    "\"#\n\004Type\022\014\n\010SNAPSHOT\020\002\022\r\n\tHEARTBEAT\020\003*\t\010"
-    "\350\007\020\200\200\200\200\002*d\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007no"
-    "tavil\020\002\022\r\n\trequested\020\005\022\t\n\005found\020\n\022\024\n\020tra"
-    "nsaction_sent\020\017\022\r\n\tconfirmed\020\024*;\n\tTransT"
-    "ype\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020"
-    "\002\022\010\n\004DATA\020\003", 3771);
+    "num\030\004 \001(\005\022.\n\ndata_trans\030\005 \001(\0132\032.fantasyb"
+    "it.DataTransition\"k\n\004Type\022\014\n\010MINENAME\020\001\022"
+    "\010\n\004QUIT\020\002\022\r\n\tHEARTBEAT\020\003\022\013\n\007CONNECT\020\004\022\016\n"
+    "\nMAKE_BLOCK\020\005\022\013\n\007NEWNAME\020\006\022\010\n\004PROJ\020\007\022\010\n\004"
+    "DATA\020\010*\010\010d\020\200\200\200\200\002\"h\n\tNameProof\022(\n\004type\030\001 "
+    "\001(\0162\032.fantasybit.NameProof.Type\"&\n\004Type\022"
+    "\007\n\003POW\020\001\022\t\n\005TWEET\020\002\022\n\n\006ORACLE\020\003*\t\010\310\001\020\200\200\200"
+    "\200\002\"`\n\nTweetProof\022\r\n\005tweet\030\n \001(\t2C\n\013tweet"
+    "_proof\022\025.fantasybit.NameProof\030\311\001 \001(\0132\026.f"
+    "antasybit.TweetProof\"M\n\013Transaction\022\017\n\007v"
+    "ersion\030\001 \001(\005\022#\n\004type\030\002 \001(\0162\025.fantasybit."
+    "TransType*\010\010d\020\200\200\200\200\002\"\240\001\n\tNameTrans\022\024\n\014fan"
+    "tasy_name\030\n \001(\t\022\022\n\npublic_key\030\024 \001(\014\022$\n\005p"
+    "roof\030\036 \001(\0132\025.fantasybit.NameProof2C\n\nnam"
+    "e_trans\022\027.fantasybit.Transaction\030\310\001 \001(\0132"
+    "\025.fantasybit.NameTrans\"j\n\021SignedTransact"
+    "ion\022&\n\005trans\030\n \001(\0132\027.fantasybit.Transact"
+    "ion\022\n\n\002id\030\024 \001(\014\022\013\n\003sig\030\036 \001(\014\022\024\n\014fantasy_"
+    "name\030( \001(\t\"\370\001\n\013BlockHeader\022\017\n\007version\030\001 "
+    "\001(\005\022\013\n\003num\030\n \001(\005\022\017\n\007prev_id\030\024 \001(\014\022\021\n\ttim"
+    "estamp\030\025 \001(\005\022\024\n\014generator_pk\030\036 \001(\014\022\026\n\016ge"
+    "nerating_sig\030( \001(\014\022\022\n\nbasetarget\0302 \001(\005\022/"
+    "\n\tblocktype\030< \001(\0162\034.fantasybit.BlockHead"
+    "er.Type\022\026\n\016transaction_id\030F \001(\014\"\034\n\004Type\022"
+    "\n\n\006NORMAL\020\001\022\010\n\004DATA\020\002\"G\n\021SignedBlockHead"
+    "er\022%\n\004head\030\n \001(\0132\027.fantasybit.BlockHeade"
+    "r\022\013\n\003sig\030\036 \001(\t\"\201\001\n\005Block\0221\n\nsignedhead\030\n"
+    " \001(\0132\035.fantasybit.SignedBlockHeader\022:\n\023s"
+    "igned_transactions\030\024 \003(\0132\035.fantasybit.Si"
+    "gnedTransaction*\t\010\350\007\020\200\200\200\200\002\"`\n\010LiveWire\022 "
+    "\n\005block\030\n \001(\0132\021.fantasybit.Block\0222\n\013tran"
+    "saction\030\024 \003(\0132\035.fantasybit.SignedTransac"
+    "tion\"\257\001\n\013NodeRequest\022*\n\004type\030\n \001(\0162\034.fan"
+    "tasybit.NodeRequest.Type\022\014\n\004myip\030\024 \001(\t\022\013"
+    "\n\003num\030\036 \001(\005\022\016\n\006myhost\030( \001(\t\"I\n\004Type\022\r\n\tH"
+    "ANDSHAKE\020\001\022\021\n\rBLOCK_REQUEST\020\002\022\021\n\rHIGHT_R"
+    "EQUEST\020\003\022\014\n\010NAT_TEST\020\004\"\'\n\tNodeReply\022\r\n\005h"
+    "ight\030\n \001(\005\022\013\n\003ips\030\024 \003(\t\"U\n\023FantasyPlayer"
+    "Points\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022\020\n\010"
+    "playerid\030\036 \001(\t\022\016\n\006points\030( \001(\005\"\212\001\n\017Proje"
+    "ctionTrans\022,\n\003fpp\030\n \001(\0132\037.fantasybit.Fan"
+    "tasyPlayerPoints2I\n\nproj_trans\022\027.fantasy"
+    "bit.Transaction\030\311\001 \001(\0132\033.fantasybit.Proj"
+    "ectionTrans\"~\n\004Data\022\017\n\007version\030\n \001(\005\022#\n\004"
+    "type\030\024 \001(\0162\025.fantasybit.Data.Type\"6\n\004Typ"
+    "e\022\014\n\010SCHEDULE\020\000\022\n\n\006PLAYER\020\001\022\010\n\004TEAM\020\002\022\n\n"
+    "\006RESULT\020\003*\010\010d\020\200\200\200\200\002\"m\n\nPlayerData\022\020\n\010pla"
+    "yerid\030\n \001(\t\022\016\n\006teamid\030\024 \001(\t2=\n\013player_da"
+    "ta\022\020.fantasybit.Data\030e \001(\0132\026.fantasybit."
+    "PlayerData\"U\n\010TeamData\022\016\n\006teamid\030\n \001(\t29"
+    "\n\tteam_data\022\020.fantasybit.Data\030o \001(\0132\024.fa"
+    "ntasybit.TeamData\"z\n\nResultData\022,\n\003fpp\030\n"
+    " \001(\0132\037.fantasybit.FantasyPlayerPoints2>\n"
+    "\013result_data\022\020.fantasybit.Data\030\312\001 \001(\0132\026."
+    "fantasybit.ResultData\"\306\002\n\016DataTransition"
+    "\022-\n\004type\030\001 \001(\0162\037.fantasybit.DataTransiti"
+    "on.Type\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022\016\n"
+    "\006teamid\030\036 \003(\t\022\036\n\004data\030( \003(\0132\020.fantasybit"
+    ".Data\"m\n\004Type\022\n\n\006ROSTER\020\001\022\017\n\013SEASONSTART"
+    "\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tDRAFTOVER\020\004\022\r\n\tHEAR"
+    "TBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER\020\0072H\n\n"
+    "data_trans\022\027.fantasybit.Transaction\030\313\001 \001"
+    "(\0132\032.fantasybit.DataTransition\"\220\001\n\013Globa"
+    "lState\022,\n\005state\030\001 \001(\0162\035.fantasybit.Globa"
+    "lState.State\022\016\n\006season\030\n \001(\r\"C\n\005State\022\014\n"
+    "\010PREDRAFT\020\001\022\r\n\tPRESEASON\020\002\022\017\n\013ROSTER53MA"
+    "N\020\003\022\014\n\010INSEASON\020\004\"w\n\tTeamState\022*\n\005state\030"
+    "\001 \001(\0162\033.fantasybit.TeamState.State\022\014\n\004we"
+    "ek\030\n \001(\r\022\016\n\006teamid\030\024 \001(\t\" \n\005State\022\013\n\007PRE"
+    "GAME\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDeltaData\022(\n\004type"
+    "\030\001 \001(\0162\032.fantasybit.DeltaData.Type\0220\n\rmy"
+    "fantasyname\030\002 \001(\0132\031.fantasybit.MyFantasy"
+    "Name\022,\n\013globalstate\030\n \001(\0132\027.fantasybit.G"
+    "lobalState\022)\n\nteamstates\030\024 \003(\0132\025.fantasy"
+    "bit.TeamState\022\037\n\005datas\030\036 \003(\0132\020.fantasybi"
+    "t.Data\022*\n\007players\030( \003(\0132\031.fantasybit.Fan"
+    "tasyPlayer\"#\n\004Type\022\014\n\010SNAPSHOT\020\002\022\r\n\tHEAR"
+    "TBEAT\020\003*\t\010\350\007\020\200\200\200\200\002*d\n\014MyNameStatus\022\010\n\004no"
+    "ne\020\001\022\013\n\007notavil\020\002\022\r\n\trequested\020\005\022\t\n\005foun"
+    "d\020\n\022\024\n\020transaction_sent\020\017\022\r\n\tconfirmed\020\024"
+    "*;\n\tTransType\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022"
+    "\n\n\006RESULT\020\002\022\010\n\004DATA\020\003", 3781);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -2117,7 +2117,7 @@ const int InData::kTypeFieldNumber;
 const int InData::kDataFieldNumber;
 const int InData::kData2FieldNumber;
 const int InData::kNumFieldNumber;
-const int InData::kTransFieldNumber;
+const int InData::kDataTransFieldNumber;
 #endif  // !_MSC_VER
 
 InData::InData()
@@ -2126,7 +2126,7 @@ InData::InData()
 }
 
 void InData::InitAsDefaultInstance() {
-  trans_ = const_cast< ::fantasybit::DataTransition*>(&::fantasybit::DataTransition::default_instance());
+  data_trans_ = const_cast< ::fantasybit::DataTransition*>(&::fantasybit::DataTransition::default_instance());
 }
 
 InData::InData(const InData& from)
@@ -2141,7 +2141,7 @@ void InData::SharedCtor() {
   data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   data2_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   num_ = 0;
-  trans_ = NULL;
+  data_trans_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2157,7 +2157,7 @@ void InData::SharedDtor() {
     delete data2_;
   }
   if (this != default_instance_) {
-    delete trans_;
+    delete data_trans_;
   }
 }
 
@@ -2197,8 +2197,8 @@ void InData::Clear() {
       }
     }
     num_ = 0;
-    if (has_trans()) {
-      if (trans_ != NULL) trans_->::fantasybit::DataTransition::Clear();
+    if (has_data_trans()) {
+      if (data_trans_ != NULL) data_trans_->::fantasybit::DataTransition::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2277,17 +2277,17 @@ bool InData::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(42)) goto parse_trans;
+        if (input->ExpectTag(42)) goto parse_data_trans;
         break;
       }
 
-      // optional .fantasybit.DataTransition trans = 5;
+      // optional .fantasybit.DataTransition data_trans = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_trans:
+         parse_data_trans:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_trans()));
+               input, mutable_data_trans()));
         } else {
           goto handle_uninterpreted;
         }
@@ -2347,10 +2347,10 @@ void InData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->num(), output);
   }
 
-  // optional .fantasybit.DataTransition trans = 5;
-  if (has_trans()) {
+  // optional .fantasybit.DataTransition data_trans = 5;
+  if (has_data_trans()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->trans(), output);
+      5, this->data_trans(), output);
   }
 
   // Extension range [100, 536870912)
@@ -2396,11 +2396,11 @@ void InData::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->num(), target);
   }
 
-  // optional .fantasybit.DataTransition trans = 5;
-  if (has_trans()) {
+  // optional .fantasybit.DataTransition data_trans = 5;
+  if (has_data_trans()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        5, this->trans(), target);
+        5, this->data_trans(), target);
   }
 
   // Extension range [100, 536870912)
@@ -2445,11 +2445,11 @@ int InData::ByteSize() const {
           this->num());
     }
 
-    // optional .fantasybit.DataTransition trans = 5;
-    if (has_trans()) {
+    // optional .fantasybit.DataTransition data_trans = 5;
+    if (has_data_trans()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->trans());
+          this->data_trans());
     }
 
   }
@@ -2493,8 +2493,8 @@ void InData::MergeFrom(const InData& from) {
     if (from.has_num()) {
       set_num(from.num());
     }
-    if (from.has_trans()) {
-      mutable_trans()->::fantasybit::DataTransition::MergeFrom(from.trans());
+    if (from.has_data_trans()) {
+      mutable_data_trans()->::fantasybit::DataTransition::MergeFrom(from.data_trans());
     }
   }
   _extensions_.MergeFrom(from._extensions_);
@@ -2516,8 +2516,8 @@ void InData::CopyFrom(const InData& from) {
 bool InData::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
-  if (has_trans()) {
-    if (!this->trans().IsInitialized()) return false;
+  if (has_data_trans()) {
+    if (!this->data_trans().IsInitialized()) return false;
   }
 
   if (!_extensions_.IsInitialized()) return false;  return true;
@@ -2529,7 +2529,7 @@ void InData::Swap(InData* other) {
     std::swap(data_, other->data_);
     std::swap(data2_, other->data2_);
     std::swap(num_, other->num_);
-    std::swap(trans_, other->trans_);
+    std::swap(data_trans_, other->data_trans_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -7690,11 +7690,11 @@ const int DataTransition::kDataFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
-const int DataTransition::kTransFieldNumber;
+const int DataTransition::kDataTransFieldNumber;
 #endif
 ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
     ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::DataTransition >, 11, false >
-  DataTransition::trans(kTransFieldNumber, ::fantasybit::DataTransition::default_instance());
+  DataTransition::data_trans(kDataTransFieldNumber, ::fantasybit::DataTransition::default_instance());
 DataTransition::DataTransition()
   : ::google::protobuf::Message() {
   SharedCtor();

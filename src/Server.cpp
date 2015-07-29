@@ -29,14 +29,15 @@ void Server::init()
     //if ( agent)
     Reader<Secret> read{ GET_ROOT_DIR() + "secret.out" };
     string priv_key{""};
-    map<string,MyFantasyName> bestsecret{};
+    map<string,Secret> bestsecret{};
     Secret secret{};
     secret.set_private_key(priv_key);
 	 
+    string usename{""};
     if ( read.good() )
     while (read.ReadNext(secret))
     {
-        LOG(lg,info) << "read from file";
+        LOG(lg,info) << "read from file" << secret.DebugString();
 
         if ( FantasyAgent::AmFantasyAgent(Commissioner::privStr2Pub(secret.private_key())))
         {
@@ -46,17 +47,18 @@ void Server::init()
             agent.set_status(confirmed);
             secret.mutable_myfantasyname()->CopyFrom(agent);
             priv_key = secret.private_key();
-            bestsecret[secret.myfantasyname().name()] = secret.myfantasyname();
+            bestsecret[secret.myfantasyname().name()] = secret;
             break;
         }
         if ( secret.has_myfantasyname() )
-        {           
+        {
+            usename = secret.myfantasyname().name();
             if ( bestsecret.find(secret.myfantasyname().name()) == end(bestsecret))
-                bestsecret[secret.myfantasyname().name()] = secret.myfantasyname();
+                bestsecret[secret.myfantasyname().name()] = secret;
             else if ( secret.myfantasyname().status() >
-                        bestsecret[secret.myfantasyname().name()].status())
+                        bestsecret[secret.myfantasyname().name()].myfantasyname().status())
             {
-                bestsecret[secret.myfantasyname().name()] = secret.myfantasyname();
+                bestsecret[secret.myfantasyname().name()] = secret;
                 priv_key = secret.private_key();
             }
         }
@@ -67,11 +69,21 @@ void Server::init()
     for(auto p :bestsecret)
 		LOG(lg, trace) << "Bestsecret: " << p.first << " "  << p.second.DebugString();
 
+    if ( usename != "") {
+        secret = bestsecret[usename];
+        priv_key = secret.private_key();
+    }
+
     OutData o;
     o.set_type( OutData_Type::OutData_Type_MYFANTASYNAME);
     
-    if ( priv_key != "")
+    if ( priv_key != "") {
+        auto pr = FantasyAgent::str2priv(priv_key);
+        auto pkstr = Commissioner::pk2str(pr.get_public_key().serialize());
+        LOG(lg, trace) << "Using Priv " << priv_key << " gets pub " << pkstr;
+
 		agent.reset(new FantasyAgent{ fc::sha256{ priv_key }, secret.myfantasyname().name() });
+    }
 
     /*
     if ( agent->beDataAgent() ) {
@@ -94,7 +106,7 @@ void Server::init()
     }
     else for ( const auto& pair : bestsecret)
     {
-        o.mutable_myfantasyname()->CopyFrom(pair.second);
+        o.mutable_myfantasyname()->CopyFrom(pair.second.myfantasyname());
         sender.send(o);
     }
 }
@@ -189,7 +201,7 @@ void Server::runit() {
 				Transaction trans{};
 				trans.set_version(Commissioner::TRANS_VERSION);
 				trans.set_type(TransType::DATA);
-                trans.MutableExtension(DataTransition::trans)->CopyFrom(indata.trans());
+                trans.MutableExtension(DataTransition::data_trans)->CopyFrom(indata.data_trans());
 				SignedTransaction sn = agent->makeSigned(trans);
 
 				auto block = agent->makeNewBlockAsDataAgent(sn);

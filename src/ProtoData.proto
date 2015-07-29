@@ -50,7 +50,7 @@ message InData {
 	optional string data = 2;	
 	optional string data2 = 3;	
 	optional int32 num = 4;
-        optional DataTransition trans=5;
+        optional DataTransition data_trans=5;
   	extensions 100 to max;
 }
 
@@ -243,7 +243,7 @@ message ResultData {
 
 message DataTransition {
 	extend Transaction {
-                optional DataTransition trans = 203;
+                optional DataTransition data_trans = 203;
 	}
 
 	enum Type { 

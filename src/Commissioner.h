@@ -12,6 +12,9 @@
 #include "FantasyName.h"
 #include <fc/crypto/base58.hpp>
 #include <iostream>
+#include "boostLog.h"
+
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 namespace fantasybit {
 
@@ -20,22 +23,38 @@ uint64_t difficulty( const fc::sha224& hash_value );
 class Commissioner
 {
     volatile bool running = true;
+    static std::unordered_map<pubkey_t,std::shared_ptr<FantasyName>> FantasyNames;
+    static std::map<hash_t,pubkey_t> Hash2Pk;
+
+
 public:
 	Commissioner() {
 	}
 
-    void stop() { running = false; }
-    static std::unordered_map<pubkey_t,std::shared_ptr<FantasyName>> FantasyNames;
-    static std::map<hash_t,pubkey_t> Hash2Pk;
+    static std::recursive_mutex name_mutex;
+
+    //void stop() { running = false; }
 			
 	//static std::string m_genesis_id;
 	static fc::ecc::public_key_data GENESIS_PUB_KEY;
     static bool isAliasAvailable(alias_t alias)
     {
+        std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
 		return Commissioner::Hash2Pk.find(FantasyName::name_hash(alias)) == end(Commissioner::Hash2Pk);
+    }
+
+
+    static std::vector<std::shared_ptr<FantasyName>> GetFantasyNames() {
+        std::vector<std::shared_ptr<FantasyName>> names;
+
+        for (auto p : FantasyNames)
+            names.emplace_back(p.second);
+
+        return names;
     }
     
     static std::shared_ptr<FantasyName> getName(const pubkey_t &pub  ) {
+        std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
         auto iter = Commissioner::FantasyNames.find(pub);
         if ( iter == end(Commissioner::FantasyNames) ) return nullptr;
         
@@ -43,6 +62,7 @@ public:
     }
 
 	static std::shared_ptr<FantasyName> getName(const hash_t &hash) {
+        std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
 		auto iter = Hash2Pk.find(hash);
 		if (iter == end(Hash2Pk)) return nullptr;
 
@@ -50,14 +70,27 @@ public:
 	}
 
 	static std::shared_ptr<FantasyName> getName(const alias_t &alias) {
+        std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
 		return getName(FantasyName::name_hash(alias));
 	}
 
+
+    static std::shared_ptr<FantasyName> AddName(const alias_t &alias, const std::string &pubkey)
+    {
+        auto pfn = makeName(alias,pubkey);
+        {
+            std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
+            Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey());
+            Commissioner::FantasyNames.emplace(pfn->pubkey(), pfn);
+        }
+        return pfn;
+
+    }
+
 	static std::shared_ptr<FantasyName> makeName(const alias_t &alias, const std::string &pubkey)
 	{
-		auto pfn = std::make_shared < FantasyName >();
-		pfn->alias = alias;
-		pfn->pubkey = str2pk(pubkey);
+        auto pk  = str2pk(pubkey);
+        auto pfn = std::make_shared< FantasyName >(alias,pk);
 		return pfn;
 	}
 
@@ -120,7 +153,7 @@ public:
         Transaction trans{};
         trans.set_version(1);
         trans.set_type(TransType::DATA);
-        trans.MutableExtension(DataTransition::trans)->CopyFrom(dt);
+        trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
         return trans;
     }
 
@@ -201,11 +234,18 @@ public:
 
 	static bool verifyByName(const fc::ecc::signature &sig, const fc::sha256 &digest,const std::string &fn)
 	{
+        std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
 		auto iter = Hash2Pk.find(FantasyName::name_hash(fn));
-		if (iter == Hash2Pk.end())
-			return fbutils::LogFalse(std::string("cant find fantasyname").append(fn));
-		
-		return verify(sig, digest, iter->second);
+        if (iter == Hash2Pk.end()) {
+            LOG(lg,error) << "cant find fantasyname: " << fn;
+            return false;
+        }
+        else {
+            auto ret = verify(sig, digest, iter->second);
+            if ( !ret )
+                LOG(lg,error)  << "!verify(sig, digest, iter->second)";
+            return ret;
+        }
 	}
 
 	static std::string pk2str(pubkey_t &pk)

@@ -16,23 +16,20 @@ namespace fantasybit
 bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &nt, 
 	const fc::ecc::signature& sig, const fc::sha256 &digest) { 
 
-	auto iter = Commissioner::Hash2Pk.find(FantasyName::name_hash(nt.fantasy_name()));
-	if (iter != end(Commissioner::Hash2Pk)) {
-		auto fn = Commissioner::FantasyNames[iter->second]->alias;
+    if ( !Commissioner::isAliasAvailable(nt.fantasy_name()) )
+    {
         LOG(lg,error) << std::string("Processor::process failure: FantasyName(").
-                        append(fn + ")  hash already used use.\n")
-                        .append(st.DebugString());
-
+                        append(nt.fantasy_name() + ")  hash already used ");
         return false;
-	}
+    }
+
 
     auto pk = Commissioner::str2pk(nt.public_key());
-    auto iter2 = Commissioner::FantasyNames.find(pk);
-    if ( iter2 != end(Commissioner::FantasyNames)) {
-
+    auto name = Commissioner::getName(pk);
+    if ( name != nullptr ) {
         LOG(lg,error) << std::string("verfiy_name failure: FantasyName(").
                         append(nt.fantasy_name() + ")  pubkey already n use") +
-                         iter2->second->ToString();
+                         name->ToString();
                         //.append(st.DebugString());
 
         return false;

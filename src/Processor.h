@@ -111,26 +111,27 @@ public:
         auto *it = namehashpub->NewIterator(leveldb::ReadOptions());
         std::string fname;
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
-            if (pubfantasyname->Get(leveldb::ReadOptions(), it->value(), &fname).IsNotFound()) {
+            if (pubfantasyname->Get(leveldb::ReadOptions(), it->value(), &fname)
+                    .IsNotFound()) {
                 LOG(lg,warning) << it->value().ToString()
                                 << " found namehash but NO fantasyname ";
                 continue;
             }
 
-            auto pfn = Commissioner::makeName(fname, it->value().ToString());
-            Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
-            Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+            auto pfn = Commissioner::AddName(fname, it->value().ToString());
             uint64_t newval = 0;
             std::string temp;
             if (pubbalance->Get(leveldb::ReadOptions(), it->value(), &temp).IsNotFound())
             {
                 LOG(lg,warning) << "nno bal " << pfn->ToString();
-                continue;
             }
+            else {
 
-            newval = *(reinterpret_cast<const uint64_t *>(temp.data()));
-            pfn->addBalance(newval);
+                newval = *(reinterpret_cast<const uint64_t *>(temp.data()));
+                pfn->addBalance(newval);
+            }
             LOG(lg,trace) << pfn->ToString();
+
         }
         delete it;
     }
@@ -186,9 +187,11 @@ public:
 		DeltaData dd{};
 
 		FantasyPlayer fp{};
-		for (auto pp : Commissioner::FantasyNames) {
-			fp.set_name(pp.second->alias);
-			fp.set_bits(pp.second->getBalance().amount());
+
+        for (auto pp : Commissioner::GetFantasyNames()) {
+            LOG(lg,trace) << pp->ToString();
+            fp.set_name(pp->alias());
+            fp.set_bits(pp->getBalance());
 			auto *p = dd.add_players();
 			p->CopyFrom(fp);
 		}
@@ -411,9 +414,11 @@ public:
         uint64_t newval = curr + add;
         leveldb::Slice bval((char*)&newval, sizeof(uint64_t));
 		pubbalance->Put(leveldb::WriteOptions(), pubkey, bval);
-		auto it = Commissioner::FantasyNames.find(Commissioner::str2pk(pubkey));
-		if (it != end(Commissioner::FantasyNames))
-			it->second->addBalance(add);
+
+        auto it = Commissioner::getName(Commissioner::str2pk(pubkey));
+
+        if (it != nullptr)
+            it->addBalance(add);
         else
             LOG(lg,error) << " cant find FantasyName";
 	}
@@ -687,9 +692,9 @@ public:
 
 		LOG(lg, trace) << " outDelta " << outDelta.DebugString();
 
-		if (seen_insync)
-			Sender::Send(delasrv, outDelta);
-		outDelta.Clear();
+        //if (seen_insync)
+        Sender::Send(delasrv, outDelta);
+        outDelta.Clear();
 		return true;
 	}
 
@@ -706,7 +711,7 @@ public:
 			return false;
 		}
 
-        auto dt = st.trans().GetExtension(DataTransition::trans);
+        auto dt = st.trans().GetExtension(DataTransition::data_trans);
 		if (dt.data_size() > 0)
 			process(dt.data(), st.fantasy_name());
 
@@ -798,12 +803,12 @@ public:
                             continue;
                         }
                         uint64_t reward = static_cast<uint64_t>(nr.second * 100.0);
-						mRecorder.addBalance(Commissioner::pk2str(fn->pubkey), reward);
-						LOG(lg, trace) << " reward " << fn->alias << " with "
-							<< nr.second << " bal " << fn->getBalance().amount();
+                        mRecorder.addBalance(Commissioner::pk2str(fn->pubkey()), reward);
+                        LOG(lg, trace) << " reward " << fn->alias() << " with "
+                            << nr.second << " bal " << fn->getBalance();
 							
 						FantasyPlayer fp{};
-						fp.set_name(fn->alias);
+                        fp.set_name(fn->alias());
 						fp.set_bits(reward);
 						outDelta.add_players()->CopyFrom(fp);
 					}
@@ -1001,9 +1006,7 @@ public:
 			{
 				auto nt = t.GetExtension(NameTrans::name_trans);
 				mRecorder.recordName(FantasyName::name_hash(nt.fantasy_name()), nt.public_key(), nt.fantasy_name());
-				auto pfn = Commissioner::makeName(nt.fantasy_name(), nt.public_key());
-				Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
-				Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+                Commissioner::AddName(nt.fantasy_name(), nt.public_key());
                 LOG(lg, info) << "verified " << FantasyName::name_hash(nt.fantasy_name());
 				FantasyPlayer fp{};
 				fp.set_name(nt.fantasy_name());
@@ -1083,6 +1086,9 @@ public:
             if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
             {
                 LOG(lg, error) << "!Commissioner::verifyByName";
+                LOG(lg, error) << "sig :" << st.sig();
+                LOG(lg, error) << "st.fantasy_name() :" << st.fantasy_name();
+
                 return false;;
             }
 

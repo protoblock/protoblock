@@ -325,7 +325,7 @@ void fantasybit::sfGUI::on_mySendResultsButton_clicked()
     }
 
     indata.set_type(InData_Type_DATA);
-    indata.mutable_trans()->CopyFrom(dt);
+    indata.mutable_data_trans()->CopyFrom(dt);
 
     emit fromGUI(indata);
 }
