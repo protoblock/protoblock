@@ -43,6 +43,19 @@ DemoUI::DemoUI(QWidget *parent) : QWidget(parent), ui(new Ui::DemoUI)
     if (!success)
         QMessageBox::critical(this,"Loading players from JSon File",error);
 
+    PlayerLoader::JsonPlayer jp{};
+    jp.FantasyPosition = "DEF";
+    jp.DepthPosition = "DEF";
+    jp.DepthOrder = 1;
+    for ( auto t : myPreloadedTeams) {
+        jp.Name = t.myFullName;
+        jp.PlayerID = t.myPlayerID;
+        jp.Team = t.myKey;
+
+        myPreloadedPlayers.append(jp);
+        PlayerLoader::CachePlayer(jp);
+    }
+
     ui->myGamesTabWidget->clear();
 
     //force load week 1

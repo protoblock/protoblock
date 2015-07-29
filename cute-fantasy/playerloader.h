@@ -75,19 +75,24 @@ public:
                  || player.FantasyPosition == "WR"
                  || player.FantasyPosition == "TE"
                  || player.FantasyPosition == "K"
+                 //|| player.FantasyPosition == "DEF"//not in this file
                     )
                 //if ( player.DepthOrder > 0 && player.DepthOrder < 3)
                 {
                     result.append(player);
-                    myPlayerInfoCache[player.PlayerID] =
-                            QPair<QString,QString>(player.Name,player.FantasyPosition);
-                    myTeamsPlayers.insert(player.Team,player.PlayerID);
-
+                    CachePlayer(player);
                     //qDebug() << "{" << player.PlayerID << "," << player.Team << "},";
                 }
         }
         return true;
     }
+
+
+   static void CachePlayer(JsonPlayer player) {
+       myPlayerInfoCache[player.PlayerID] =
+               QPair<QString,QString>(player.Name,player.FantasyPosition);
+       myTeamsPlayers.insert(player.Team,player.PlayerID);
+   }
 
 
    JsonPlayer getPlayerFromJsonObject(QJsonObject & jsonObject,QString & /*errorParsingObject*/) const{
