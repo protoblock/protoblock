@@ -184,6 +184,45 @@ void DemoUI::refreshViews(const DeltaData &in){
 
     if (weekChanged)
       loadWeekUIElements(myCurrentSnapShot.week);
+    else {
+        //check the games that have transitted and freeze them
+        for(int i=0; i< ui->myGamesTabWidget->count();i++){
+            QWidget * tabWidget = ui->myGamesTabWidget->widget(i);
+            QObjectUserData * data = tabWidget->userData(0);
+            TabData * tabTeamData = dynamic_cast<TabData *>(data);
+            if (tabTeamData == NULL) continue; //should never happen
+            TeamState_State gameState = getCurrentGameState(tabTeamData->myHomeTeam,tabTeamData->myAwayTeam);
+            //we need to update ui and freez projection when game state change
+            if (gameState == tabTeamData->myGameState) continue;
+            tabTeamData->myGameState = gameState;
+            QTableView * scoringTableView  = dynamic_cast<QTableView*>(tabWidget);
+            if (scoringTableView==NULL) continue; //shouldn't happen
+            GameProjectionTableModel * model = dynamic_cast<GameProjectionTableModel *>(scoringTableView->model());
+            if (model ==NULL) continue; //shouldn't happen
+            if (gameState == TeamState_State_PREGAME) {
+               scoringTableView->setItemDelegateForColumn(3,&myDelegate);
+               ui->myGamesTabWidget->tabBar()->setTabTextColor(i,QColor(Qt::darkGreen));
+            }
+            else {
+                model->setEditable(false);
+                ui->myGamesTabWidget->tabBar()->setTabTextColor(i,QColor(Qt::darkRed));
+            }
+        }
+    }
+}
+
+TeamState_State DemoUI::getCurrentGameState(const QString & homeTeam, const QString & awayTeam) {
+    int homeTeamState = myTeamsStateTableModel.getTeamState(homeTeam);
+    int awayTeamState = myTeamsStateTableModel.getTeamState(awayTeam);
+    TeamState_State gameState = TeamState_State_PREGAME;
+
+    if (!(homeTeamState == ::TeamState_State_PREGAME &&
+          awayTeamState == ::TeamState_State_PREGAME
+         )){
+        gameState = TeamState_State_INGAME;
+    }
+
+    return gameState;
 }
 
 
@@ -193,12 +232,11 @@ void DemoUI::loadWeekUIElements(int week){
      for(int i = 0; i < games.size(); ++i) {
          //check if we have a 2 team states for the teams in the scheduled game read from static resources
           ScheduleLoader::JsonSchedule game =  games[i];
-//          if (!(myTeamsStateTableModel.containTeam(game.HomeTeam)&&
-//               myTeamsStateTableModel.containTeam(game.AwayTeam))){
-//              continue;
-//          }
 
-         GameProjectionTableModel * gameProjectionTableModel = new GameProjectionTableModel();
+          TeamState_State gameState = getCurrentGameState(game.HomeTeam,game.AwayTeam);
+
+          GameProjectionTableModel * gameProjectionTableModel = new GameProjectionTableModel();
+          gameProjectionTableModel->setEditable(true);
          //add players
          QList<QString>  homePlayers = PlayerLoader::getTeamPlayers(game.HomeTeam);
          QList<QString>  awayPlayers = PlayerLoader::getTeamPlayers(game.AwayTeam);
@@ -221,13 +259,22 @@ void DemoUI::loadWeekUIElements(int week){
 
 
          QTableView * scoringTableView = new QTableView(ui->myGamesTabWidget);
-         scoringTableView->setItemDelegateForColumn(3,&myDelegate);
-
+         scoringTableView->setUserData(0,new TabData(game.HomeTeam,game.AwayTeam,gameState));
          scoringTableView->setObjectName(game.GameKey);
-         gameProjectionTableModel->setEditable(true);
+         //gameProjectionTableModel->setEditable(true);
          scoringTableView->setModel(gameProjectionTableModel);
          int index = ui->myGamesTabWidget->addTab(scoringTableView,
                                                   game.HomeTeam + " vs " + game.AwayTeam);
+
+         if (gameState == TeamState_State_PREGAME) {
+            scoringTableView->setItemDelegateForColumn(3,&myDelegate);
+            ui->myGamesTabWidget->tabBar()->setTabTextColor(index,QColor(Qt::darkGreen));
+         }
+         else {
+             gameProjectionTableModel->setEditable(false);
+             ui->myGamesTabWidget->tabBar()->setTabTextColor(index,QColor(Qt::darkRed));
+         }
+
          myGameProjectionTableModels.append(gameProjectionTableModel);
 
      }
@@ -290,6 +337,31 @@ void DemoUI::on_myAddTeam_clicked()
 
 void DemoUI::on_mySendProjectionsButton_clicked()
 {
+
+    for(int i=0; i< ui->myGamesTabWidget->count();i++){
+        QWidget * tabWidget = ui->myGamesTabWidget->widget(i);
+        QObjectUserData * data = tabWidget->userData(0);
+        TabData * tabTeamData = dynamic_cast<TabData *>(data);
+        if (tabTeamData == NULL) continue; //should never happen
+        if (tabTeamData->myGameState != TeamState_State_PREGAME) continue;
+        QTableView * scoringTableView  = dynamic_cast<QTableView*>(tabWidget);
+        if (scoringTableView==NULL) continue; //shouldn't happen
+        GameProjectionTableModel * model = dynamic_cast<GameProjectionTableModel *>(scoringTableView->model());
+        if (model ==NULL) continue; //shouldn't happen
+        foreach(GameProjectionModelView * scoring,model->list() ) {
+            indata.Clear();
+            indata.set_type(InData_Type_PROJ);
+            indata.set_data2(scoring->myPlayerId.toStdString());
+            indata.set_num(scoring->myScore);
+            scoring->myScoreState = GameProjectionModelView::Sent;
+            emit fromGUI(indata);
+        }
+
+    }
+
+
+
+
     /*
     foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
         indata.Clear();

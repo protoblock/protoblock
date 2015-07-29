@@ -111,7 +111,7 @@ public:
         case TeamState_State_PREGAME: return "PREGAME";
         case TeamState_State_INGAME : return "INGAME";
         default:
-            return "Team Satet Unknown";
+            return "Team State Unknown";
         }
     }
 
@@ -140,6 +140,22 @@ public:
   }
   ~TeamStateTableModel() {}
 
+  /**
+   * @brief getTeamState : returns -1 for unknown team state, the team state enum integer value otherwise.
+   * @param teamId : the team we're looking for its state.
+   * @return returns -1 for unknown team state, the team state enum integer value otherwise.
+   */
+  int getTeamState(const QString & teamId) const {
+      foreach(TeamStateViewModel * item,myList){
+          if (item->teamId().trimmed().toUpper()== teamId.trimmed().toUpper()) {
+          if (item->teamStateString() == "Team State Unknown") return -1;
+          return (int) item->teamState();
+          }
+          continue;
+      }
+      return -1;
+  }
+
   void initialize(){
     QStringList  headers;
     headers << "NFL Team"<< "Status"<<"Week";
@@ -157,6 +173,7 @@ protected:
     return QVariant();
 
   }
+
   int getColumnCount(){
     return 3;
   }
@@ -611,7 +628,6 @@ public:
 
     Q_DECLARE_FLAGS(ProjectionFlags, ProjectionFlag)
 
-
     void setProjectionFlag( ProjectionFlag flag, bool on ) {
         if ( bool( myProjectionFlag & flag ) == on )
             return;
@@ -628,11 +644,13 @@ public:
 
 
 
+    ScoreState myScoreState = NonScored;
     QString myTeamId;
     QString myPlayerId;
     QString myPlayerName;
     QString myPos;
     int myScore;
+
 
     GameProjectionModelView(){
 
@@ -700,11 +718,20 @@ protected:
 
   }
 
+  QVariant getColumnDecorateData(uint column, GameProjectionModelView *value){
+      if (column !=3) return QVariant();
+      if (value->myScore !=0 && value->myScoreState != GameProjectionModelView::Sent)
+          return QPixmap(":/icons/scored.png");
+      if (value->myScore !=0 && value->myScoreState == GameProjectionModelView::Sent)
+          return QPixmap(":/icons/scoresent.png");
+      return QVariant();
+  }
+
   int getColumnCount(){
     return 4;
   }
-  void setDataFromColumn(ScoringModelView* data, const QModelIndex &index,const QVariant &vvalue,int role){
-    if (index.column() >= getColumnCount()) return;
+  void setDataFromColumn(GameProjectionModelView * data, const QModelIndex & index, const QVariant &vvalue, int role){
+      if (index.column() >= getColumnCount()) return;
     //only allow edition of the score
     if (index.column()==3)
         data->myScore = vvalue.toInt();

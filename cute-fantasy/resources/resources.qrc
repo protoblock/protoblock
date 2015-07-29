@@ -6,4 +6,8 @@
     <qresource prefix="/fantasy2015">
         <file>Player.2015.json</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>scored.png</file>
+        <file>scoresent.png</file>
+    </qresource>
 </RCC>

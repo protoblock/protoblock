@@ -52,6 +52,7 @@ private:
     void updatedelta();
     void clearScheduleUI();
     void loadWeekUIElements(int week);
+    TeamState_State getCurrentGameState(const QString & homeTeam, const QString & awayTeam);
     /**
      * @brief myCurrentSnapShot : contains last snapshot data
      */
@@ -69,5 +70,21 @@ private:
     SpinBoxDelegate myDelegate;    
 
 };
+
+
+class TabData :  public QObjectUserData {
+public :
+    TabData(): QObjectUserData(){
+        myGameState = TeamState_State_PREGAME;
+    }
+    TabData(const QString& homeTeam,const QString& awayTeam, TeamState_State value): QObjectUserData(){
+        myGameState = value;
+        myHomeTeam = homeTeam;
+        myAwayTeam = awayTeam;
+    }
+    QString myHomeTeam;
+    QString myAwayTeam;
+    TeamState_State myGameState;
+ };
 
 #endif // DEMOUI_H
