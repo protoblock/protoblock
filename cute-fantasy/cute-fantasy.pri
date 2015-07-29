@@ -27,7 +27,9 @@ SOURCES += \
     $$PWD/spinboxdelegate.cpp \
     $$PWD/dataagentui.cpp \
     $$PWD/fantasyplayerui.cpp \
-    $$PWD/demoui.cpp
+    $$PWD/demoui.cpp \
+    $$PWD/playerloader.cpp \
+    $$PWD/models.cpp
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \

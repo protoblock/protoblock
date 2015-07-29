@@ -66,7 +66,7 @@ private:
     ScoringTableModel myScoringTableModel;
     QList<TeamLoader::JsonTeam> myPreloadedTeams;
     QList<PlayerLoader::JsonPlayer> myPreloadedPlayers;
-    QList<ScheduleLoader::JsonSchedule> myPreloadedSchedule;
+    QMultiMap<int,ScheduleLoader::JsonSchedule> myPreloadedSchedule;
     QList<QString> myTeamTransitions;
     SpinBoxDelegate myDelegate;
 };

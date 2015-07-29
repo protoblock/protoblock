@@ -1,16 +1,18 @@
 #ifndef MODELS_H
 #define MODELS_H
 
-#include <QStandardItemModel>
 #include <ProtoData.pb.h>
 #include "tlistmodel.h"
 #include "tkeyedlist.h"
 
+
+#include <QStandardItemModel>
 #include <QtSql/QSql>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
+#include <QFlags>
 
 using namespace fantasybit;
 
@@ -578,15 +580,63 @@ protected:
 
 
 class GameProjectionModelView :public Descriptable, public Decorable{
+
+
 public:
-    int myScore;
+
+    /**
+     * @brief The ScoreState enum : reflect the score state in the ui.
+     */
+    enum ScoreState {
+        NonScored, //score not set by the user (initial state).
+        Scored, //user sets a score but didn't marked for sending
+        ReadyToSend,// user set the score and marked the score to be sent for
+                    // next send projection action. User can revert the score state
+                    //
+        Sent //score sent previously during the user session.
+
+    };
+
+
+    /**
+     * @brief The ProjectionFlag enum :
+     */
+    enum ProjectionFlag {
+        ProjectionNormalState = 0x0,
+        PlayerJustSwitchedTeam = 0x1,
+        PlayerInjured = 0x2,
+        PlayerAbsent = 0x4,
+        GameStarted = 0x8
+    };
+
+    Q_DECLARE_FLAGS(ProjectionFlags, ProjectionFlag)
+
+
+    void setProjectionFlag( ProjectionFlag flag, bool on ) {
+        if ( bool( myProjectionFlag & flag ) == on )
+            return;
+
+        if ( on )
+            myProjectionFlag |= flag;
+        else
+            myProjectionFlag &= ~flag;
+    }
+
+    bool testProjectionFlag(ProjectionFlag flag) const{
+        return myProjectionFlag & flag;
+    }
+
+
+
     QString myTeamId;
     QString myPlayerId;
     QString myPlayerName;
     QString myPos;
+    int myScore;
 
+    GameProjectionModelView(){
 
-    GameProjectionModelView(){}
+    }
     GameProjectionModelView(const QString & teamId,
                             const QString & playerName,
                             const QString & pos,
@@ -603,10 +653,21 @@ public:
         myTeamId= copy.myTeamId;
         myPlayerId= copy.myPlayerId;
         myPlayerName = copy.myPlayerName;
+
     }
+
+    void loadPlayerInfo();
+
+    private:
+    ProjectionFlags myProjectionFlag;
+    bool myPlayerInfoLoaded = false;
 };
 
 Q_DECLARE_METATYPE(GameProjectionModelView*)
+Q_DECLARE_OPERATORS_FOR_FLAGS(GameProjectionModelView::ProjectionFlags)
+
+
+
 
 class GameProjectionTableModel : public TListModel<GameProjectionModelView> {
 
@@ -622,20 +683,23 @@ public:
     setHorizontalHeaders(headers);
   }
 
-protected:
+protected:  
   QVariant getColumnDisplayData(quint32 column,GameProjectionModelView * data){
     if (data==NULL) return QVariant();
+    //load player info once
+    data->loadPlayerInfo();
     if( column ==0)
       return data->myTeamId;
     if( column ==1)
-      return data->myPlayerName;
+        return data->myPlayerName;
     if( column ==2)
-      return data->myPos;
+        return data->myPos;
     if ( column == 3)
       return data->myScore;
     return QVariant();
 
   }
+
   int getColumnCount(){
     return 4;
   }
@@ -645,6 +709,8 @@ protected:
     if (index.column()==3)
         data->myScore = vvalue.toInt();
   }
+
+
 };
 
 

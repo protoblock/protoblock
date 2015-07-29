@@ -24,7 +24,7 @@ public:
     ScheduleLoader(){}
     ~ScheduleLoader(){}
 
-    bool loadSchedulesFromJsonFile(QList<JsonSchedule> & result,
+    bool loadSchedulesFromJsonFile(QMultiMap<int,JsonSchedule> & result,
                                QString & errorMessage){
 
         qDebug() << " loading~";
@@ -63,7 +63,7 @@ public:
             }
 
             if (Schedule.SeasonType == 1)
-                result.append(Schedule);
+                result.insert(Schedule.Week,Schedule);
         }
         return true;
     }

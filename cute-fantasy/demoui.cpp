@@ -21,56 +21,34 @@ using namespace fantasybit;
 DemoUI::DemoUI(QWidget *parent) : QWidget(parent), ui(new Ui::DemoUI)
 {
     ui->setupUi(this);
-    //QObject::connect(this, SIGNAL(on_flash()), this, SLOT(flashing()) );
     ui->textBrowser->append(QCoreApplication::applicationDirPath());
+    ui->myFantasyPlayersTableView->setModel(&myFantasyPlayerTableModel);
 
-   //ui->myTeamsStatesTableView->setModel(&myTeamsStateTableModel);
-   //ui->myPlayersDataTableView->setModel(&myPlayerDataTableModel);
-   //ui->myTeamsDataTableView->setModel(&myTeamDataTableModel);
-   ui->myFantasyPlayersTableView->setModel(&myFantasyPlayerTableModel);
+    TeamLoader teamLoader;
+    PlayerLoader playerLoader;
+    ScheduleLoader scheduleLoader;
 
-   TeamLoader teamLoader;
-   PlayerLoader playerLoader;
-   ScheduleLoader scheduleLoader;
+    QString error ;
+    bool success = teamLoader.loadTeamsFromJsonFile(myPreloadedTeams,error);
+    if (!success)
+        QMessageBox::critical(this,"Loading teams from JSon File",error);
 
-   QString error ;
-   bool success = teamLoader.loadTeamsFromJsonFile(myPreloadedTeams,error);
-   if (!success)
-       QMessageBox::critical(this,"Loading teams from JSon File",error);
+    success = playerLoader.loadPlayersFromJsonFile(myPreloadedPlayers,error);
+    if (!success)
+        QMessageBox::critical(this,"Loading players from JSon File",error);
 
-   success = playerLoader.loadPlayersFromJsonFile(myPreloadedPlayers,error);
-   if (!success)
-       QMessageBox::critical(this,"Loading players from JSon File",error);
+    qDebug() << " about to start schedule";
 
-   qDebug() << " about to start schedule";
+    success = scheduleLoader.loadSchedulesFromJsonFile(myPreloadedSchedule,error);
+    if (!success)
+        QMessageBox::critical(this,"Loading players from JSon File",error);
 
-   success = scheduleLoader.loadSchedulesFromJsonFile(myPreloadedSchedule,error);
-   if (!success)
-       QMessageBox::critical(this,"Loading players from JSon File",error);
+    ui->myGamesTabWidget->clear();
 
-   ui->myGamesTabWidget->clear();
+    //force load week 1
+    this->loadWeekUIElements(1);
 
-   QTableView *myScoringTableView;
-   GameProjectionTableModel *myGameProjectionTableModel;
-   for ( auto games : myPreloadedSchedule) {
-       if ( games.Week != 1 ) continue;
-       myGameProjectionTableModel = new GameProjectionTableModel();
-       myScoringTableView = new QTableView(ui->myGamesTabWidget);
-       myScoringTableView->setObjectName(games.GameKey);
-       myGameProjectionTableModel->setEditable(true);
-       myScoringTableView->setModel(myGameProjectionTableModel);
-
-       int index = ui->myGamesTabWidget->addTab(myScoringTableView,
-                        games.HomeTeam + "vs" + games.AwayTeam);
-
-       myGameProjectionTableModels.append(myGameProjectionTableModel);
-
-   }
-
-   //ui->myScoringTableView->setItemDelegateForColumn(2,&myDelegate);
-   //myScoringTableModel.setAutoDelete(true);
-
-   /*
+    /*
     if (!success)
         QMessageBox::critical(this,"Loading teams from JSon File",error);
     else {
@@ -118,14 +96,14 @@ void DemoUI::on_generate_clicked()
 {
     try {
 
-    if ( ui->fantasyname->text() == "") return;
+        if ( ui->fantasyname->text() == "") return;
 
-    ui->textBrowser->append(QDateTime::currentDateTime().toString() + " requesting: " + ui->fantasyname->text());
+        ui->textBrowser->append(QDateTime::currentDateTime().toString() + " requesting: " + ui->fantasyname->text());
 
-    indata.set_type(InData_Type_NEWNAME);
-    indata.set_data(ui->fantasyname->text().toStdString());
+        indata.set_type(InData_Type_NEWNAME);
+        indata.set_data(ui->fantasyname->text().toStdString());
 
-    emit fromGUI(indata);
+        emit fromGUI(indata);
     }
     catch (...) {}
 }
@@ -134,24 +112,27 @@ void DemoUI::on_generate_clicked()
 
 void DemoUI::refreshViews(const DeltaData &in){
     //QMutexLocker locker(&myMutex);
-//    if (in.type() == DeltaData_Type_SNAPSHOT) {
-//        myTeamsStateTableModel.removeAll();
-//        myPlayerDataTableModel.removeAll();
-//        myTeamDataTableModel.removeAll();
-//        myDemoTableModel.removeAll();
-//    }
+    //    if (in.type() == DeltaData_Type_SNAPSHOT) {
+    //        myTeamsStateTableModel.removeAll();
+    //        myPlayerDataTableModel.removeAll();
+    //        myTeamDataTableModel.removeAll();
+    //        myDemoTableModel.removeAll();
+    //    }
 
+    int previousWeek = myCurrentSnapShot.week;
+    bool weekChanged = false;
     myCurrentSnapShot.fromDeltaData(in);
+    weekChanged = previousWeek != myCurrentSnapShot.week;
 
     ui->message->setText(QString::fromStdString(
-               "Live: " +
-                GlobalState_State_Name(myCurrentSnapShot.globalStateModel.state()) +
-                " " +
-                std::to_string(myCurrentSnapShot.globalStateModel.season()) +
-                " Week "
-                +
-                std::to_string(myCurrentSnapShot.week)
-                ));
+                             "Live: " +
+                             GlobalState_State_Name(myCurrentSnapShot.globalStateModel.state()) +
+                             " " +
+                             std::to_string(myCurrentSnapShot.globalStateModel.season()) +
+                             " Week "
+                             +
+                             std::to_string(myCurrentSnapShot.week)
+                             ));
 
 
     //ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
@@ -164,7 +145,7 @@ void DemoUI::refreshViews(const DeltaData &in){
     if ( myCurrentSnapShot.fantasyName != "") {
         //ui->fantasyname->setText(QString::fromStdString(in.myfantasyname().name()));
         ui->fantasynamestatus->setText("Fantasy Name Status: " +
-            QString::fromStdString(MyNameStatus_Name(myCurrentSnapShot.myNameStatus)));
+                                       QString::fromStdString(MyNameStatus_Name(myCurrentSnapShot.myNameStatus)));
     }
 
     if ( myCurrentSnapShot.myNameStatus == MyNameStatus::confirmed) {
@@ -189,16 +170,67 @@ void DemoUI::refreshViews(const DeltaData &in){
     foreach(QString key,myCurrentSnapShot.fantasyPlayers.uniqueKeys()) {
         myFantasyPlayerTableModel.setItemValue(key,myCurrentSnapShot.fantasyPlayers[key]);
     }
-        /*
-    for(auto it = myCurrentSnapShot.fantasyPlayers.begin();
-        it!= myCurrentSnapShot.fantasyPlayers.end(); ++it)
-        myDemoTableModel.addItem(it->());
-        */
-        /*
-    for(auto it = myCurrentSnapShot.fantasyPlayers.begin();
-        it!= myCurrentSnapShot.fantasyPlayers.end(); ++it)
-        myDemoTableModel.addItem(it->());
-        */
+
+    // refresh current games schedule and user projections
+    // check 1 : Season Changed  => not worrying about that now.
+    // check 2 : Week Changed  => 1- purge all projection ui , reload new schedule with new games and tabs
+    //                           2- refresh team-players association and player availability => not to worry about that now)
+
+    // check 3 : player changed team or absent from game => remove current projection
+    // check 4 : One or many game states have changed
+
+
+    // game transition (pregame => ingame) freeze projections of the game.
+
+    if (weekChanged)
+      loadWeekUIElements(myCurrentSnapShot.week);
+}
+
+
+void DemoUI::loadWeekUIElements(int week){
+    this->clearScheduleUI();
+     QList<ScheduleLoader::JsonSchedule> games = myPreloadedSchedule.values(week);
+     for(int i = 0; i < games.size(); ++i) {
+         //check if we have a 2 team states for the teams in the scheduled game read from static resources
+          ScheduleLoader::JsonSchedule game =  games[i];
+//          if (!(myTeamsStateTableModel.containTeam(game.HomeTeam)&&
+//               myTeamsStateTableModel.containTeam(game.AwayTeam))){
+//              continue;
+//          }
+
+         GameProjectionTableModel * gameProjectionTableModel = new GameProjectionTableModel();
+         //add players
+         QList<QString>  homePlayers = PlayerLoader::getTeamPlayers(game.HomeTeam);
+         QList<QString>  awayPlayers = PlayerLoader::getTeamPlayers(game.AwayTeam);
+
+         for(int i=0;i< homePlayers.size();i++){
+             GameProjectionModelView * projection = new GameProjectionModelView();
+             projection->myPlayerId = homePlayers[i];
+             projection->myTeamId = game.HomeTeam;
+             projection->myScore = 0;
+             gameProjectionTableModel->addItem(projection);
+         }
+
+         for(int i=0;i< awayPlayers.size();i++){
+             GameProjectionModelView * projection = new GameProjectionModelView();
+             projection->myPlayerId = awayPlayers[i];
+             projection->myTeamId = game.AwayTeam;
+             projection->myScore = 0;
+             gameProjectionTableModel->addItem(projection);
+         }
+
+
+         QTableView * scoringTableView = new QTableView(ui->myGamesTabWidget);
+         scoringTableView->setItemDelegateForColumn(3,&myDelegate);
+
+         scoringTableView->setObjectName(game.GameKey);
+         gameProjectionTableModel->setEditable(true);
+         scoringTableView->setModel(gameProjectionTableModel);
+         int index = ui->myGamesTabWidget->addTab(scoringTableView,
+                                                  game.HomeTeam + " vs " + game.AwayTeam);
+         myGameProjectionTableModels.append(gameProjectionTableModel);
+
+     }
 }
 
 /*
@@ -337,5 +369,27 @@ void DemoUI::on_myDeleteAllRowsButton_clicked()
     myTeamTransitions.clear();
     ui->teamStartList->clear();
     */
+}
+
+
+void DemoUI::clearScheduleUI(){
+    //safely deconnect models from the view
+    for(int i =0;i< ui->myGamesTabWidget->count();i++){
+        QTableView * scoringTableView = dynamic_cast<QTableView *>(ui->myGamesTabWidget->widget(i));
+        if (scoringTableView != NULL)
+            scoringTableView->setModel(NULL);
+    }
+    //remove tabs
+    ui->myGamesTabWidget->clear();
+
+    //delete the game projection models data and emtpy the weekly schedule model
+    QMutableListIterator<GameProjectionTableModel *> it(myGameProjectionTableModels);
+    while (it.hasNext()){
+               GameProjectionTableModel * gameProjectionTableModel = it.next();
+               gameProjectionTableModel->setAutoDelete(true);
+               gameProjectionTableModel->removeAll();
+               it.remove();
+               delete gameProjectionTableModel;
+    }
 }
 

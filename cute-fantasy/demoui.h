@@ -8,6 +8,7 @@
 #include <ProtoData.pb.h>
 
 
+
 #include "teamsloader.h"
 #include "playerloader.h"
 #include "spinboxdelegate.h"
@@ -27,6 +28,7 @@ class DemoUI : public QWidget
 public:
     explicit DemoUI(QWidget *parent = 0);
     ~DemoUI();
+
 public slots:
     void fromServer(const DeltaData &in);
     void refreshViews(const DeltaData &in);
@@ -48,6 +50,8 @@ private:
     Ui::DemoUI *ui;
     void updatesnap();
     void updatedelta();
+    void clearScheduleUI();
+    void loadWeekUIElements(int week);
     /**
      * @brief myCurrentSnapShot : contains last snapshot data
      */
@@ -60,9 +64,10 @@ private:
     QList<GameProjectionTableModel *> myGameProjectionTableModels;
     QList<TeamLoader::JsonTeam> myPreloadedTeams;
     QList<PlayerLoader::JsonPlayer> myPreloadedPlayers;
-    QList<ScheduleLoader::JsonSchedule> myPreloadedSchedule;
+    QMultiMap<int,ScheduleLoader::JsonSchedule> myPreloadedSchedule;
     QList<QString> myTeamTransitions;
-    SpinBoxDelegate myDelegate;
+    SpinBoxDelegate myDelegate;    
+
 };
 
 #endif // DEMOUI_H

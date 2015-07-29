@@ -1,16 +1,25 @@
 #ifndef PLAYERLOADER
 #define PLAYERLOADER
+
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
 #include "models.h"
 #include <QFile>
 
-
 class PlayerLoader
 {
-public:
 
+public:
+    static QPair<QString,QString> getPlayerInfo(const QString & playerId)  {
+        QPair<QString,QString> info = PlayerLoader::myPlayerInfoCache.value(playerId);
+        if (info.first =="")  info.first = "Unknown Player";
+        return info;
+    }
+
+    static QList<QString> getTeamPlayers(const QString& teamID)   {
+        return PlayerLoader::myTeamsPlayers.values(teamID);
+    }
 
     struct JsonPlayer {
         QString PlayerID;//  ARI,
@@ -77,7 +86,7 @@ public:
     }
 
 
-   JsonPlayer getPlayerFromJsonObject(QJsonObject & jsonObject,QString & errorParsingObject) const{
+   JsonPlayer getPlayerFromJsonObject(QJsonObject & jsonObject,QString & /*errorParsingObject*/) const{
       JsonPlayer jsonPlayer;
       jsonPlayer.PlayerID=jsonObject.value("PlayerID").toString();
       jsonPlayer.Team=jsonObject.value("Team").toString();
@@ -87,10 +96,18 @@ public:
       jsonPlayer.DepthPosition=jsonObject.value("DepthPosition").toString();
       QString str = jsonObject.value("DepthOrder").toString();
       jsonPlayer.DepthOrder=str.toInt();
+      myPlayerInfoCache[jsonPlayer.PlayerID] = QPair<QString,QString>(jsonPlayer.Name,jsonPlayer.FantasyPosition);
+      myTeamsPlayers.insert(jsonPlayer.Team,jsonPlayer.PlayerID);
       return jsonPlayer;
    }
 
+private:
+   static QHash<QString, QPair<QString,QString> > myPlayerInfoCache;
+   static QMultiHash<QString,QString> myTeamsPlayers;   
 };
+
+
+
 
 #endif // PLAYERLOADER
 
