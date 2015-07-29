@@ -79,6 +79,10 @@ public:
                 //if ( player.DepthOrder > 0 && player.DepthOrder < 3)
                 {
                     result.append(player);
+                    myPlayerInfoCache[player.PlayerID] =
+                            QPair<QString,QString>(player.Name,player.FantasyPosition);
+                    myTeamsPlayers.insert(player.Team,player.PlayerID);
+
                     //qDebug() << "{" << player.PlayerID << "," << player.Team << "},";
                 }
         }
@@ -96,8 +100,6 @@ public:
       jsonPlayer.DepthPosition=jsonObject.value("DepthPosition").toString();
       QString str = jsonObject.value("DepthOrder").toString();
       jsonPlayer.DepthOrder=str.toInt();
-      myPlayerInfoCache[jsonPlayer.PlayerID] = QPair<QString,QString>(jsonPlayer.Name,jsonPlayer.FantasyPosition);
-      myTeamsPlayers.insert(jsonPlayer.Team,jsonPlayer.PlayerID);
       return jsonPlayer;
    }
 
