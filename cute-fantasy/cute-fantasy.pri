@@ -26,7 +26,8 @@ SOURCES += \
     $$PWD/teamsloader.cpp \
     $$PWD/spinboxdelegate.cpp \
     $$PWD/dataagentui.cpp \
-    $$PWD/fantasyplayerui.cpp
+    $$PWD/fantasyplayerui.cpp \
+    $$PWD/demoui.cpp
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \
@@ -70,7 +71,9 @@ HEADERS += \
     $$PWD/playerloader.h \
     $$PWD/tkeyedlist.h \
     $$PWD/dataagentui.h \
-    $$PWD/fantasyplayerui.h
+    $$PWD/fantasyplayerui.h \
+    $$PWD/scheduleloader.h \
+    $$PWD/demoui.h
 
 FORMS += \
     $$PWD/sfgui.ui \
@@ -79,9 +82,9 @@ FORMS += \
     $$PWD/splashdialog.ui \
     $$PWD/statuswidget.ui \
     $$PWD/Form.ui \
-    $$PWD/step2.ui \
     $$PWD/dataagentui.ui \
-    $$PWD/fantasyplayerui.ui
+    $$PWD/fantasyplayerui.ui \
+    $$PWD/demoui.ui
 
 RESOURCES += \
     $$PWD/resources/resources.qrc

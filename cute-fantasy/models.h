@@ -577,5 +577,76 @@ protected:
 };
 
 
+class GameProjectionModelView :public Descriptable, public Decorable{
+public:
+    int myScore;
+    QString myTeamId;
+    QString myPlayerId;
+    QString myPlayerName;
+    QString myPos;
+
+
+    GameProjectionModelView(){}
+    GameProjectionModelView(const QString & teamId,
+                            const QString & playerName,
+                            const QString & pos,
+                            const QString & playerId,
+                            int score=0){
+        myScore = score;
+        myTeamId= teamId;
+        myPlayerId= playerId;
+        myPlayerName = playerName;
+        myPos = pos;
+    }
+    GameProjectionModelView(GameProjectionModelView & copy){
+        myScore = copy.myScore;
+        myTeamId= copy.myTeamId;
+        myPlayerId= copy.myPlayerId;
+        myPlayerName = copy.myPlayerName;
+    }
+};
+
+Q_DECLARE_METATYPE(GameProjectionModelView*)
+
+class GameProjectionTableModel : public TListModel<GameProjectionModelView> {
+
+public:
+  GameProjectionTableModel(): TListModel<GameProjectionModelView>(NULL) {
+    initialize();
+  }
+  ~GameProjectionTableModel() {}
+
+  void initialize(){
+    QStringList  headers;
+    headers << "Team" << "Player" << "Pos" << "Projection";
+    setHorizontalHeaders(headers);
+  }
+
+protected:
+  QVariant getColumnDisplayData(quint32 column,GameProjectionModelView * data){
+    if (data==NULL) return QVariant();
+    if( column ==0)
+      return data->myTeamId;
+    if( column ==1)
+      return data->myPlayerName;
+    if( column ==2)
+      return data->myPos;
+    if ( column == 3)
+      return data->myScore;
+    return QVariant();
+
+  }
+  int getColumnCount(){
+    return 4;
+  }
+  void setDataFromColumn(ScoringModelView* data, const QModelIndex &index,const QVariant &vvalue,int role){
+    if (index.column() >= getColumnCount()) return;
+    //only allow edition of the score
+    if (index.column()==3)
+        data->myScore = vvalue.toInt();
+  }
+};
+
+
 #endif // MODELS_H
 

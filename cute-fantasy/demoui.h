@@ -1,5 +1,5 @@
-#ifndef FANTASYPLAYERUI_H
-#define FANTASYPLAYERUI_H
+#ifndef DEMOUI_H
+#define DEMOUI_H
 
 #include <QWidget>
 #include <QThread>
@@ -15,18 +15,18 @@
 #include "scheduleloader.h"
 
 namespace Ui {
-class FantasyPlayerUI;
+class DemoUI;
 }
 
-class FantasyPlayerUI : public QWidget
+class DemoUI : public QWidget
 {
     Q_OBJECT
     enum State { CONNECTING, LIVE };
     InData indata{};
     bool first = true;
 public:
-    explicit FantasyPlayerUI(QWidget *parent = 0);
-    ~FantasyPlayerUI();
+    explicit DemoUI(QWidget *parent = 0);
+    ~DemoUI();
 public slots:
     void fromServer(const DeltaData &in);
     void refreshViews(const DeltaData &in);
@@ -42,16 +42,10 @@ private slots:
 
     void on_myDeleteAllRowsButton_clicked();
 
-    void on_myAddScoringLineButton_clicked();
-
     void on_generate_clicked();
 
-    void on_copy_clicked();
-
-    void on_myTeamsCmb_currentIndexChanged(int index);
-
 private:
-    Ui::FantasyPlayerUI *ui;
+    Ui::DemoUI *ui;
     void updatesnap();
     void updatedelta();
     /**
@@ -63,7 +57,7 @@ private:
     PlayerDataTableModel myPlayerDataTableModel;
     TeamDataTableModel myTeamDataTableModel;
     FantasyPlayerTableModel myFantasyPlayerTableModel;
-    ScoringTableModel myScoringTableModel;
+    QList<GameProjectionTableModel *> myGameProjectionTableModels;
     QList<TeamLoader::JsonTeam> myPreloadedTeams;
     QList<PlayerLoader::JsonPlayer> myPreloadedPlayers;
     QList<ScheduleLoader::JsonSchedule> myPreloadedSchedule;
@@ -71,4 +65,4 @@ private:
     SpinBoxDelegate myDelegate;
 };
 
-#endif // FANTASYPLAYERUI_H
+#endif // DEMOUI_H

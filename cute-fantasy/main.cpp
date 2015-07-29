@@ -6,8 +6,14 @@
 //
 //
 
+#ifdef DATAAGENTGUI
 #include "dataagentui.h"
+#elif Jay2015PrePreSeasonTestDemo
+#include "demoui.h"
+#else
 #include "fantasyplayerui.h"
+#endif
+
 #include "sfgui.h"
 #include "client.h"
 #include <iostream>
@@ -118,6 +124,8 @@ int domain(int argc, char *argv[]) {
     //sfGUI widget;
 #ifdef DATAAGENTGUI
     DataAgentUI widget;
+#elif Jay2015PrePreSeasonTestDemo
+    DemoUI widget;
 #else
     FantasyPlayerUI widget;
 #endif
@@ -160,10 +168,50 @@ int domain(int argc, char *argv[]) {
     return ret;
 }
 
+int domain2(int argc, char *argv[]) {
+    string gui_address{ "inproc://fantasygui" };
+
+    QApplication a(argc, argv);
+
+
+    qRegisterMetaType<DeltaData>("DeltaData");
+    qRegisterMetaType<InData>("InData");
+
+
+#ifdef DATAAGENTGUI
+    DataAgentUI widget;
+#elif Jay2015PrePreSeasonTestDemo
+    DemoUI widget;
+#else
+    FantasyPlayerUI widget;
+#endif
+
+
+    QThread clientthread;
+    Client *client = new Client {gui_address};
+    client->moveToThread(&clientthread);
+    QObject::connect(&clientthread, SIGNAL(finished()), client, SLOT(deleteLater()));
+    QObject::connect(&widget,SIGNAL(fromGUI(InData)), client, SLOT(toServer(InData)));
+    QObject::connect(client, SIGNAL(onData(DeltaData)), &widget, SLOT(fromServer(DeltaData)) );
+    //QObject::connect(client, SIGNAL(onData(DeltaData)), &widget, SLOT(refreshViews(DeltaData)) );
+    QObject::connect(&widget, SIGNAL(onClose()), client, SLOT(quit()) );
+
+    qDebug() << "testing";
+    QDateTime qdt = QDateTime::fromString("9/10/2015 8:30:00 PM","M/d/yyyy h:mm:ss AP");
+    qDebug() << qdt.toString();
+    qDebug() << qdt.isValid();
+    clientthread.start();
+    widget.show();
+    int ret = a.exec();
+
+    return ret;
+}
+
 int main(int argc, char *argv[])
 {
     //Jay2015PrePreSeasonTestDemo();
     initBoostLog();
+
 
     try {
         domain(argc, argv);

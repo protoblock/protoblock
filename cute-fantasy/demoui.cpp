@@ -1,14 +1,14 @@
 //
-//  FantasyPlayerUI.cpp
+//  DemoUI.cpp
 //  cute-fantasy
 //
 //  Created by Jay Berg on 4/8/14.
 //
 //
-#include "fantasyplayerui.h"
+#include "demoui.h"
 #include "client.h"
 #include <ProtoData.pb.h>
-#include "ui_fantasyplayerui.h"
+#include "ui_demoui.h"
 #include "teamsloader.h"
 #include "playerloader.h"
 
@@ -18,20 +18,16 @@
 
 using namespace fantasybit;
 
-FantasyPlayerUI::FantasyPlayerUI(QWidget *parent) : QWidget(parent), ui(new Ui::FantasyPlayerUI)
+DemoUI::DemoUI(QWidget *parent) : QWidget(parent), ui(new Ui::DemoUI)
 {
     ui->setupUi(this);
     //QObject::connect(this, SIGNAL(on_flash()), this, SLOT(flashing()) );
     ui->textBrowser->append(QCoreApplication::applicationDirPath());
 
-   ui->myTeamsStatesTableView->setModel(&myTeamsStateTableModel);
-   ui->myPlayersDataTableView->setModel(&myPlayerDataTableModel);
-   ui->myTeamsDataTableView->setModel(&myTeamDataTableModel);
+   //ui->myTeamsStatesTableView->setModel(&myTeamsStateTableModel);
+   //ui->myPlayersDataTableView->setModel(&myPlayerDataTableModel);
+   //ui->myTeamsDataTableView->setModel(&myTeamDataTableModel);
    ui->myFantasyPlayersTableView->setModel(&myFantasyPlayerTableModel);
-   ui->myScoringTableView->setItemDelegateForColumn(2,&myDelegate);
-   myScoringTableModel.setEditable(true);
-   ui->myScoringTableView->setModel(&myScoringTableModel);
-   myScoringTableModel.setAutoDelete(true);
 
    TeamLoader teamLoader;
    PlayerLoader playerLoader;
@@ -52,6 +48,27 @@ FantasyPlayerUI::FantasyPlayerUI(QWidget *parent) : QWidget(parent), ui(new Ui::
    if (!success)
        QMessageBox::critical(this,"Loading players from JSon File",error);
 
+   ui->myGamesTabWidget->clear();
+
+   QTableView *myScoringTableView;
+   GameProjectionTableModel *myGameProjectionTableModel;
+   for ( auto games : myPreloadedSchedule) {
+       if ( games.Week != 1 ) continue;
+       myGameProjectionTableModel = new GameProjectionTableModel();
+       myScoringTableView = new QTableView(ui->myGamesTabWidget);
+       myScoringTableView->setObjectName(games.GameKey);
+       myGameProjectionTableModel->setEditable(true);
+       myScoringTableView->setModel(myGameProjectionTableModel);
+
+       int index = ui->myGamesTabWidget->addTab(myScoringTableView,
+                        games.HomeTeam + "vs" + games.AwayTeam);
+
+       myGameProjectionTableModels.append(myGameProjectionTableModel);
+
+   }
+
+   //ui->myScoringTableView->setItemDelegateForColumn(2,&myDelegate);
+   //myScoringTableModel.setAutoDelete(true);
 
    /*
     if (!success)
@@ -64,26 +81,16 @@ FantasyPlayerUI::FantasyPlayerUI(QWidget *parent) : QWidget(parent), ui(new Ui::
     }
     */
 
-    for (int i = DataTransition::Type_MIN; i < DataTransition::Type_ARRAYSIZE; i++) {
-
-        if (!DataTransition::Type_IsValid(i)) continue;
-
-        ui->dataTransitionCombo->addItem(
-                    QString::fromStdString(DataTransition::Type_Name(DataTransition::Type(i))),
-                                         QVariant(i));
-    }
-
-
 }
 
 /*
-void FantasyPlayerUI::flashing()
+void DemoUI::flashing()
 {
     ui->progressBar->setVisible(true);
 }
 */
 
-void FantasyPlayerUI::fromServer(const DeltaData &in)
+void DemoUI::fromServer(const DeltaData &in)
 {
     if ( first ) {
         first = false;
@@ -101,13 +108,13 @@ void FantasyPlayerUI::fromServer(const DeltaData &in)
 }
 /**/
 
-FantasyPlayerUI::~FantasyPlayerUI()
+DemoUI::~DemoUI()
 {
     delete ui;
 }
 
 
-void FantasyPlayerUI::on_generate_clicked()
+void DemoUI::on_generate_clicked()
 {
     try {
 
@@ -124,38 +131,14 @@ void FantasyPlayerUI::on_generate_clicked()
 }
 
 
-void FantasyPlayerUI::on_copy_clicked()
-{
-    /*
-    QClipboard *clipboard = QApplication::clipboard();
-    if ( ui->twitter->isChecked() )
-    {
-        QString tweet("@satoshifantsy (");
-        tweet += m_namestatus.name().c_str();
-        tweet += ") (";
-        tweet += QString::number(m_namestatus.nametransaction().hash()),
-        tweet += ") (";
-        tweet += m_namestatus.nametransaction().sigid().c_str();
-        tweet += ")";
-        ui->proofofwork->append(tweet);
-        clipboard->setText(tweet);
-        ui->message->setText("Proof copied to clipboard, please paste ad tweet");
-    }
-    else
-    {
-        clipboard->setText(ui->proofofwork->toPlainText());
-        ui->message->setText("Proof copied to clipboard");
-    }
-    */
-}
 
-void FantasyPlayerUI::refreshViews(const DeltaData &in){
+void DemoUI::refreshViews(const DeltaData &in){
     //QMutexLocker locker(&myMutex);
 //    if (in.type() == DeltaData_Type_SNAPSHOT) {
 //        myTeamsStateTableModel.removeAll();
 //        myPlayerDataTableModel.removeAll();
 //        myTeamDataTableModel.removeAll();
-//        myFantasyPlayerTableModel.removeAll();
+//        myDemoTableModel.removeAll();
 //    }
 
     myCurrentSnapShot.fromDeltaData(in);
@@ -171,10 +154,10 @@ void FantasyPlayerUI::refreshViews(const DeltaData &in){
                 ));
 
 
-    ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
-    ui->mySeasonLE->setText(myCurrentSnapShot.globalStateModel.seasonString());
-    ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
-    ui->weekBox->setValue(myCurrentSnapShot.week);
+    //ui->mySnapshotTimestamp->setText(QDateTime::currentDateTime().toString(Qt::ISODate));
+    //ui->mySeasonLE->setText(myCurrentSnapShot.globalStateModel.seasonString());
+    //ui->myGlobalStateLE->setText(myCurrentSnapShot.globalStateModel.stateString());
+    //ui->weekBox->setValue(myCurrentSnapShot.week);
 
 
     ui->fantasyname->setText(myCurrentSnapShot.fantasyName);
@@ -186,7 +169,7 @@ void FantasyPlayerUI::refreshViews(const DeltaData &in){
 
     if ( myCurrentSnapShot.myNameStatus == MyNameStatus::confirmed) {
         ui->myFantasyNameLE->setText(myCurrentSnapShot.fantasyName);
-        ui->myBalance->setText(QString::number(myCurrentSnapShot.fantasyNameBalance));
+        ui->myBalance->display(QString::number(myCurrentSnapShot.fantasyNameBalance));
     }
 
 
@@ -200,7 +183,7 @@ void FantasyPlayerUI::refreshViews(const DeltaData &in){
 
     foreach(QString key,myCurrentSnapShot.teams.uniqueKeys()) {
         myTeamDataTableModel.setItemValue(key,myCurrentSnapShot.teams[key]);
-        ui->myTeamsCmb->addItem(key, QVariant(myCurrentSnapShot.teams[key].teamId()));
+        //ui->myTeamsCmb->addItem(key, QVariant(myCurrentSnapShot.teams[key].teamId()));
     }
 
     foreach(QString key,myCurrentSnapShot.fantasyPlayers.uniqueKeys()) {
@@ -209,16 +192,17 @@ void FantasyPlayerUI::refreshViews(const DeltaData &in){
         /*
     for(auto it = myCurrentSnapShot.fantasyPlayers.begin();
         it!= myCurrentSnapShot.fantasyPlayers.end(); ++it)
-        myFantasyPlayerTableModel.addItem(it->());
+        myDemoTableModel.addItem(it->());
         */
         /*
     for(auto it = myCurrentSnapShot.fantasyPlayers.begin();
         it!= myCurrentSnapShot.fantasyPlayers.end(); ++it)
-        myFantasyPlayerTableModel.addItem(it->());
+        myDemoTableModel.addItem(it->());
         */
 }
 
-void FantasyPlayerUI::on_myTeamsCmb_currentIndexChanged(int index)
+/*
+void DemoUI::on_myTeamsCmb_currentIndexChanged(int index)
 {
    QString teamKey = ui->myTeamsCmb->itemData(index).toString();
    //reload players combo
@@ -228,8 +212,9 @@ void FantasyPlayerUI::on_myTeamsCmb_currentIndexChanged(int index)
         ui->myPlayersCmb->addItem(player->playerId(),QVariant(player->playerId()));
    }
 }
-
-void FantasyPlayerUI::on_myAddScoringLineButton_clicked()
+*/
+/*
+void DemoUI::on_myAddScoringLineButton_clicked()
 {
     if (ui->myTeamsCmb->currentData().isValid() &&
             ui->myPlayersCmb->currentData().isValid()){
@@ -257,9 +242,10 @@ void FantasyPlayerUI::on_myAddScoringLineButton_clicked()
         QMessageBox::critical(this,"Cute Fantasy","Please select a team and a player before adding a new line!");
 
 }
+*/
 
 /*
-void FantasyPlayerUI::on_myAddTeam_clicked()
+void DemoUI::on_myAddTeam_clicked()
 {
     if (ui->myTeamsCmb->currentData().isValid() )
     {
@@ -270,8 +256,9 @@ void FantasyPlayerUI::on_myAddTeam_clicked()
 
 */
 
-void FantasyPlayerUI::on_mySendProjectionsButton_clicked()
+void DemoUI::on_mySendProjectionsButton_clicked()
 {
+    /*
     foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
         indata.Clear();
         indata.set_type(InData_Type_PROJ);
@@ -279,10 +266,11 @@ void FantasyPlayerUI::on_mySendProjectionsButton_clicked()
         indata.set_num(scoring->myScore);
         emit fromGUI(indata);
     }
+    */
 }
 
 /*
-void FantasyPlayerUI::on_mySendResultsButton_clicked()
+void DemoUI::on_mySendResultsButton_clicked()
 {
     DataTransition dt{};
 
@@ -297,7 +285,7 @@ void FantasyPlayerUI::on_mySendResultsButton_clicked()
     foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
         Data d{};
         d.set_type(Data::RESULT);
-        ::fantasybit::FantasyPlayerPoints fpp{};
+        ::fantasybit::DemoPoints fpp{};
         fpp.set_season(dt.season());
         fpp.set_week(dt.week());
         fpp.set_playerid(scoring->myPlayerId.toStdString());
@@ -342,10 +330,12 @@ void FantasyPlayerUI::on_mySendResultsButton_clicked()
 }
 */
 
-void FantasyPlayerUI::on_myDeleteAllRowsButton_clicked()
+void DemoUI::on_myDeleteAllRowsButton_clicked()
 {
+    /*
     myScoringTableModel.removeAll();
     myTeamTransitions.clear();
     ui->teamStartList->clear();
+    */
 }
 

@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/team2015">
         <file>Team.2015.json</file>
+        <file>Schedule.2015.json</file>
     </qresource>
     <qresource prefix="/fantasy2015">
         <file>Player.2015.json</file>
