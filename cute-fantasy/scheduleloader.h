@@ -63,6 +63,8 @@ public:
             }
 
             if (Schedule.SeasonType == 1)
+                if ( Schedule.AwayTeam == "NYJ" || Schedule.AwayTeam == "NYG"
+                     || Schedule.HomeTeam == "NYJ" || Schedule.HomeTeam == "NYG")
                 result.insert(Schedule.Week,Schedule);
         }
         return true;

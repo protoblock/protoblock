@@ -59,7 +59,7 @@ DemoUI::DemoUI(QWidget *parent) : QWidget(parent), ui(new Ui::DemoUI)
     ui->myGamesTabWidget->clear();
 
     //force load week 1
-    this->loadWeekUIElements(1);
+    //this->loadWeekUIElements(1);
 
     /*
     if (!success)
@@ -135,7 +135,7 @@ void DemoUI::refreshViews(const DeltaData &in){
     int previousWeek = myCurrentSnapShot.week;
     bool weekChanged = false;
     myCurrentSnapShot.fromDeltaData(in);
-    weekChanged = previousWeek != myCurrentSnapShot.week;
+    weekChanged = (previousWeek != myCurrentSnapShot.week) ;
 
     ui->message->setText(QString::fromStdString(
                              "Live: " +
@@ -162,8 +162,12 @@ void DemoUI::refreshViews(const DeltaData &in){
     }
 
     if ( myCurrentSnapShot.myNameStatus == MyNameStatus::confirmed) {
+        ui->mySendProjectionsButton->setEnabled(true);
         ui->myFantasyNameLE->setText(myCurrentSnapShot.fantasyName);
         ui->myBalance->display(QString::number(myCurrentSnapShot.fantasyNameBalance));
+    }
+    else if ( myCurrentSnapShot.myNameStatus == MyNameStatus::requested) {
+        ui->mySendProjectionsButton->setEnabled(true);
     }
 
 
@@ -362,6 +366,7 @@ void DemoUI::on_mySendProjectionsButton_clicked()
         GameProjectionTableModel * model = dynamic_cast<GameProjectionTableModel *>(scoringTableView->model());
         if (model ==NULL) continue; //shouldn't happen
         foreach(GameProjectionModelView * scoring,model->list() ) {
+            if ( scoring->myScore < 1) continue;
             indata.Clear();
             indata.set_type(InData_Type_PROJ);
             indata.set_data2(scoring->myPlayerId.toStdString());

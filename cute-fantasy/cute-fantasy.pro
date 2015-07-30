@@ -13,6 +13,8 @@ DEFINES += FBWIN
 
 #comment this line to generate
 #DEFINES += DATAAGENTGUI
+#DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
+
 DEFINES += Jay2015PrePreSeasonTestDemo
 
 contains(DEFINES, DATAAGENTGUI){

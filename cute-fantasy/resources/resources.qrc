@@ -9,5 +9,6 @@
     <qresource prefix="/icons">
         <file>scored.png</file>
         <file>scoresent.png</file>
+        <file>logoherring.png</file>
     </qresource>
 </RCC>

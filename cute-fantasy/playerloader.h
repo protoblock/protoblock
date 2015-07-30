@@ -70,19 +70,20 @@ public:
                 continue;
             }
 
+
             if (    player.FantasyPosition == "QB"
                  || player.FantasyPosition == "RB"
                  || player.FantasyPosition == "WR"
                  || player.FantasyPosition == "TE"
                  || player.FantasyPosition == "K"
                  //|| player.FantasyPosition == "DEF"//not in this file
-                    )
-                //if ( player.DepthOrder > 0 && player.DepthOrder < 3)
+                    ) {
+                if ( player.DepthOrder == 1 ) //> 0 && player.DepthOrder < 3)
                 {
                     result.append(player);
                     CachePlayer(player);
                     //qDebug() << "{" << player.PlayerID << "," << player.Team << "},";
-                }
+                }}
         }
         return true;
     }

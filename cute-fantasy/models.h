@@ -410,7 +410,7 @@ class SnapShotViewModel {
 public:
     QString fantasyName;
     quint64 fantasyNameBalance = 0;
-    int     week = 1;
+    int     week = 0;
     MyNameStatus myNameStatus = MyNameStatus::none;
 
     GlobalStateViewModel globalStateModel;

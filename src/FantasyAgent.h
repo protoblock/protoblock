@@ -69,6 +69,10 @@ public:
 	}
 	*/
 
+    bool HaveClient() {
+        return client != nullptr;
+    }
+
 	bool amDataAgent() {
 		//Todo: fix
 		return m_oracle.get_secret() == m_priv.get_secret();

@@ -141,7 +141,7 @@ void Server::runit() {
                 break;
 			case InData_Type_NEWNAME: 
 			{
-				claimName(indata.data());
+                claimName(indata.data());
 
 				/*
 				agent->resetPrivateKey();
@@ -167,6 +167,10 @@ void Server::runit() {
 			break;
 			case InData_Type_PROJ:
 				{
+                if ( !agent->HaveClient() ) {
+                    LOG(lg,error) << "cant make projection without a FantasyName";
+                    break;
+                }
 				FantasyPlayerPoints fpp{};
 				fpp.set_playerid(indata.data2());
 				fpp.set_points(indata.num());

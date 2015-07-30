@@ -65,6 +65,8 @@ bool createConnection(){
 
 int domain(int argc, char *argv[]) {
 
+    LOG(lg,trace) << GET_ROOT_DIR();
+
     QApplication a(argc, argv);
 
 #ifdef DATAAGENTGUI
@@ -196,10 +198,6 @@ int domain2(int argc, char *argv[]) {
     //QObject::connect(client, SIGNAL(onData(DeltaData)), &widget, SLOT(refreshViews(DeltaData)) );
     QObject::connect(&widget, SIGNAL(onClose()), client, SLOT(quit()) );
 
-    qDebug() << "testing";
-    QDateTime qdt = QDateTime::fromString("9/10/2015 8:30:00 PM","M/d/yyyy h:mm:ss AP");
-    qDebug() << qdt.toString();
-    qDebug() << qdt.isValid();
     clientthread.start();
     widget.show();
     int ret = a.exec();

@@ -35,16 +35,16 @@ namespace fantasybit {
 
 	using Signature = std::string;
 
-#ifdef Jay2015PrePreSeasonTestDemo
+#if defined(Jay2015PrePreSeasonTestDemo) || defined(DATAAGENTGUIJay2015PrePreSeasonTestDemo)
 #ifdef FBWIN
-    static std::string ROOT_DIR_("C:/fantasybit-internal/");
+    static std::string ROOT_DIR_("C:/fantasybit-internal2/");
 #endif
 
-    static int PORT_HAND = 9130;
-    static int PORT_SYNC_SERV = 9125;
-    static int PORT_LIVE_BLOCK = 9126;
-    static int PORT_LIVE_TX = 9127;
-    static int PORT_LIVE_TX_NAT = 9128;
+    static int PORT_HAND = 10130;
+    static int PORT_SYNC_SERV = 10125;
+    static int PORT_LIVE_BLOCK = 10126;
+    static int PORT_LIVE_TX = 10127;
+    static int PORT_LIVE_TX_NAT = 10128;
 #else
 
 #ifdef FBWIN
