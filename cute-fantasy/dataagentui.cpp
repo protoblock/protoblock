@@ -10,8 +10,11 @@
 #include <QDateTime>
 #include <QClipboard>
 #include <QItemEditorFactory>
+#include "boostLog.h"
 
 using namespace fantasybit;
+
+#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 DataAgentUI::DataAgentUI(QWidget *parent) :
     QWidget(parent),
@@ -303,9 +306,47 @@ void DataAgentUI::on_mySendResultsButton_clicked()
     emit fromGUI(indata);
 }
 
+void DataAgentUI::on_mySendResultsHack_clicked()
+{
+    DataTransition dt{};
+
+    dt.set_type(DataTransition::HEARTBEAT);
+    dt.set_season(ui->seasonBox->value());
+    dt.set_week(ui->weekBox->value());
+
+    for (auto st :  myTeamTransitions) {
+        for ( auto p : myPreloadedPlayers) {
+            if ( p.Team != st)
+                continue;
+
+            Data d{};
+            d.set_type(Data::RESULT);
+            ::fantasybit::FantasyPlayerPoints fpp{};
+            fpp.set_season(dt.season());
+            fpp.set_week(dt.week());
+            fpp.set_playerid(p.PlayerID.toStdString());
+            fpp.set_points(15);
+            ResultData rd{};
+            rd.mutable_fpp()->CopyFrom(fpp);
+
+            d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
+            Data *d2 = dt.add_data();
+            d2->CopyFrom(d);
+
+        }
+    }
+
+    indata.set_type(InData_Type_DATA);
+    indata.mutable_data_trans()->CopyFrom(dt);
+
+    LOG(lg,trace) << " hack " << indata.DebugString();
+    emit fromGUI(indata);
+}
+
 void DataAgentUI::on_myDeleteAllRowsButton_clicked()
 {
     myScoringTableModel.removeAll();
     myTeamTransitions.clear();
     ui->teamStartList->clear();
 }
+
