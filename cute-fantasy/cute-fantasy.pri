@@ -29,7 +29,8 @@ SOURCES += \
     $$PWD/fantasyplayerui.cpp \
     $$PWD/demoui.cpp \
     $$PWD/playerloader.cpp \
-    $$PWD/models.cpp
+    $$PWD/models.cpp \         
+    $$PWD/RestFullCall.cpp
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \
@@ -75,15 +76,15 @@ HEADERS += \
     $$PWD/dataagentui.h \
     $$PWD/fantasyplayerui.h \
     $$PWD/scheduleloader.h \
-    $$PWD/demoui.h
+    $$PWD/demoui.h \
+    $$PWD/RestFullCall.h
 
 FORMS += \
     $$PWD/sfgui.ui \
     $$PWD/fantasynamesetupdialog.ui \
     $$PWD/gamesoftheweekdialog.ui \
     $$PWD/splashdialog.ui \
-    $$PWD/statuswidget.ui \
-    $$PWD/Form.ui \
+    $$PWD/statuswidget.ui \   
     $$PWD/dataagentui.ui \
     $$PWD/fantasyplayerui.ui \
     $$PWD/demoui.ui
