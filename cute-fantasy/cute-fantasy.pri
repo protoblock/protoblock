@@ -13,6 +13,7 @@ SOURCES += \
     $$PWD/../src/ProtoData.pb.cc \
     $$PWD/../src/Server.cpp \
     $$PWD/../src/Source.cpp \
+    $$PWD/../src/coreapi.cpp \
     $$PWD/client.cpp \
     $$PWD/main.cpp \
     $$PWD/sfgui.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     $$PWD/../src/ProtoData.pb.h \
     $$PWD/../src/Server.h \
     $$PWD/../src/Source.h \
+    $$PWD/../src/corapi.h \
     $$PWD/client.h \
     $$PWD/sfgui.h \
     $$PWD/cli.h \

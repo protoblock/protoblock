@@ -50,6 +50,8 @@ private slots:
     void on_myTeamsCmb_currentIndexChanged(int index);
     void on_copy_clicked();
 
+    void on_mySendResultsHack_clicked();
+
 private:
     Ui::DataAgentUI *ui;
     void updatesnap();
