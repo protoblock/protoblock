@@ -24,7 +24,7 @@
 #include "Processor.h"
 #include "ClientUI.h"
 #include "Processor.h"
-
+#include "LAPIWorker.h"
 #include <QtSql/QSql>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlDriver>
@@ -205,17 +205,38 @@ int domain2(int argc, char *argv[]) {
     return ret;
 }
 
+#include "TestCoreGUIForm.h"
+#include <QWaitCondition>
+QWaitCondition waitForGUI;
+int domain1(int argc, char *argv[]){
+
+    QApplication a(argc, argv);
+    ThreadedObject<MainLAPIWorker> coreApi;
+    coreApi.thread()->connect(coreApi.thread(),
+                                 SIGNAL(started()),
+                                 coreApi.object(),
+                                 SLOT(startPoint()));
+
+    coreApi.thread()->start();
+    TestCoreGUIForm form(coreApi.object(),&waitForGUI);
+    form.show();
+    return a.exec();
+}
+
+
 int main(int argc, char *argv[])
 {
     //Jay2015PrePreSeasonTestDemo();
-    initBoostLog();
+    //initBoostLog();
 
 
     try {
-        domain(argc, argv);
+        domain1(argc, argv);
     }
     catch (...) {
         return -1;
     }
 }
+
+
 

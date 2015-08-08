@@ -1,7 +1,7 @@
 #include "coreapi.h"
 
-CoreApi::CoreApi()
-{
+//CoreApi::CoreApi()
+//{
 
-}
+//}
 

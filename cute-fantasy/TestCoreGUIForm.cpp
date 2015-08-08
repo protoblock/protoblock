@@ -1,0 +1,43 @@
+#include "TestCoreGUIForm.h"
+#include "ui_TestCoreGUIForm.h"
+#include <QWaitCondition>
+TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWaitCondition * wait,QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::TestCoreGUIForm)
+{
+    ui->setupUi(this);
+    //notify the APIThread that WE the main form are alive
+    wait->wakeAll();
+    myCoreInstance = coreInstance;
+    //connect the png request to the write slot that handles it
+    QObject::connect(this,SIGNAL(requestPong(QVariant)),myCoreInstance,SLOT(processGUIRequest(QVariant)));
+    //listen to notifcation from Core
+    QObject::connect(myCoreInstance,SIGNAL(sendNotificationWithData(QVariant)),this,SLOT(handleNotificationOrResponse(QVariant)));
+
+}
+
+TestCoreGUIForm::~TestCoreGUIForm()
+{
+    delete ui;
+}
+
+void TestCoreGUIForm::on_pushButton_clicked()
+{
+ emit requestPong(QString("PING"));
+// we expect pong later
+}
+
+
+void TestCoreGUIForm::handleNotificationOrResponse(const QVariant & data){
+    switch (data.type()) {
+    case  QVariant::String:
+        ui->textBrowser->append(QString("we received a notif w/string %1").arg(data.toString()));
+        break;
+    case  QVariant::Int:
+        ui->textBrowser->append(QString("we received a notif w/an integer %1").arg(data.toInt()));
+        break;
+    default:
+        ui->textBrowser->append(QString("we received a notif w/ data type %1").arg(data.typeName()));
+        break;
+    }
+}

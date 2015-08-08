@@ -31,7 +31,9 @@ SOURCES += \
     $$PWD/demoui.cpp \
     $$PWD/playerloader.cpp \
     $$PWD/models.cpp \         
-    $$PWD/RestFullCall.cpp
+    $$PWD/RestFullCall.cpp \
+    $$PWD/LAPIWorker.cpp \
+    $$PWD/TestCoreGUIForm.cpp
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \
@@ -79,7 +81,9 @@ HEADERS += \
     $$PWD/fantasyplayerui.h \
     $$PWD/scheduleloader.h \
     $$PWD/demoui.h \
-    $$PWD/RestFullCall.h
+    $$PWD/RestFullCall.h \
+    $$PWD/LAPIWorker.h \
+    $$PWD/TestCoreGUIForm.h
 
 FORMS += \
     $$PWD/sfgui.ui \
@@ -89,7 +93,8 @@ FORMS += \
     $$PWD/statuswidget.ui \   
     $$PWD/dataagentui.ui \
     $$PWD/fantasyplayerui.ui \
-    $$PWD/demoui.ui
+    $$PWD/demoui.ui \
+    $$PWD/TestCoreGUIForm.ui
 
 RESOURCES += \
     $$PWD/resources/resources.qrc
