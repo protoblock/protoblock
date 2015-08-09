@@ -13,6 +13,7 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWaitCondition * 
     QObject::connect(this,SIGNAL(requestPong(QVariant)),myCoreInstance,SLOT(processGUIRequest(QVariant)));
     //listen to notifcation from Core
     QObject::connect(myCoreInstance,SIGNAL(sendNotificationWithData(QVariant)),this,SLOT(handleNotificationOrResponse(QVariant)));
+    QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
 
 }
 
@@ -36,8 +37,16 @@ void TestCoreGUIForm::handleNotificationOrResponse(const QVariant & data){
     case  QVariant::Int:
         ui->textBrowser->append(QString("we received a notif w/an integer %1").arg(data.toInt()));
         break;
+    case  QVariant::ByteArray:
+        ui->textBrowser->append(QString("we received a notif w/an byte array %1").arg(QString(data.toByteArray())));
+        break;
     default:
         ui->textBrowser->append(QString("we received a notif w/ data type %1").arg(data.typeName()));
         break;
     }
+}
+
+void TestCoreGUIForm::on_pushButton_2_clicked()
+{
+ emit requestPlayersForWeek(1);
 }

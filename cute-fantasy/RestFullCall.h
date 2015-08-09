@@ -13,7 +13,9 @@ class RestfullCall : public QObject
 {
     Q_OBJECT
 public:
-    RestfullCall(){}
+    RestfullCall(){
+        myCurrentNetworkReply = NULL;
+    }
     void restFullSynchrounousCallWithRawPostData(const QUrl & url,QByteArray & postData,const QString & contentType){
         QNetworkRequest request;
         restNetworkStatus();
@@ -21,6 +23,20 @@ public:
         request.setHeader(QNetworkRequest::ContentTypeHeader,contentType);
         request.setHeader(QNetworkRequest::ContentLengthHeader,postData.length());
         myCurrentNetworkReply = myNetworkManager.post(request,postData);
+        waitForReply();
+        myCurrentNetworkReply->deleteLater();
+        processReplyData();
+    }
+
+
+    void restFullSynchrounousCallGet(const QUrl & url,const QString & header,const QString & headerData){
+        QNetworkRequest request;
+        restNetworkStatus();
+        request.setUrl(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+        request.setRawHeader(QString("Ocp-Apim-Subscription-Key").toUtf8(),
+                             QString("e9941289786443bd983c79a6c9f0b6cf").toUtf8());
+        myCurrentNetworkReply = myNetworkManager.get(request);
         waitForReply();
         myCurrentNetworkReply->deleteLater();
         processReplyData();
@@ -39,10 +55,12 @@ public:
         processReplyData();
     }
 
+    QByteArray lastReply() { return myLastRepliedData; }
+
+
 protected:
     virtual void processReplyData(){
-        //do something with  myLastRepliedData
-
+        qDebug("response : %s",myLastRepliedData.data());
     }
 
 private slots:
@@ -95,8 +113,8 @@ private:
                 &loop, SLOT(quit()));
         connect(myCurrentNetworkReply, SIGNAL(error(QNetworkReply::NetworkError)),
                 &loop, SLOT(quit()));
-        connect(myCurrentNetworkReply, SIGNAL(readyRead()),
-                &loop, SLOT(quit()));
+//        connect(myCurrentNetworkReply, SIGNAL(readyRead()),
+//                &loop, SLOT(quit()));
         loop.exec();
     }
 

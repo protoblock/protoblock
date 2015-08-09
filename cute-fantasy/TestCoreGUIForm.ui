@@ -36,6 +36,19 @@
     <string>send ping and expect pong</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>50</y>
+     <width>141</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>request current games</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
