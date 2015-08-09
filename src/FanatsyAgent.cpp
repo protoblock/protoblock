@@ -11,30 +11,65 @@
 #include <iostream>
 #include "Node.h"
 
+using namespace std;
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 namespace fantasybit {
 
-FantasyAgent::status FantasyAgent::signPlayer(alias_t name)
-{
+FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
     status ret = NOTAVAILABLE;
    
-    if ( Commissioner::isAliasAvailable(name) )
-    {
-        ret = REQUESTED;	
-        client = std::make_unique<FantasyName>(name,m_priv.get_public_key().serialize());
+    if ( Commissioner::isAliasAvailable(name) ) {
+		for (auto fn : m_secrets) {
+			if (fn.fantasy_name() == name) {
+				m_priv = fc::ecc::private_key::generate();
+				client = std::make_unique<FantasyName>(name, (*m_priv).get_public_key().serialize());
+				ret = AVAIL;
+				LOG(lg, info) << "name available, already have it in secret file " << name;
+			}
+		}
+
+		if (ret != AVAIL) {
+			m_priv = fc::ecc::private_key::generate();
+			client = std::make_unique<FantasyName>(name, (*m_priv).get_public_key().serialize());
+
+			Writer<Secret> writer{ GET_ROOT_DIR() + secretfilename, ios::app };
+			Secret2 secret{};
+			secret.set_private_key(getSecret());
+			secret.set_public_key(pubKeyStr());
+			secret.set_fantasy_name(name);
+			writer(secret);
+			LOG(lg, info) << "name available saving secret to file " << name;
+		}
+
     }
-    else if ( auto p = Commissioner::getName(m_priv.get_public_key()) )
-    {
-        if ( p->isAlias(name) )
-        {
-            ret = OWNED;
-            client = std::make_unique<FantasyName>(*p);
+    //lets see if I already have the keys for this name
+    else for ( auto fn : m_secrets) {
+        if ( FantasyName::name_hash(fn.fantasy_name()) == FantasyName::name_hash(name)) {
+            if ( auto p = Commissioner::getName(name) ) {
+                if ( p->pubkey() == Commissioner::str2pk(fn.public_key()) ) {
+                    ret = OWNED;
+                    m_priv = str2priv(fn.private_key());
+                    client = std::make_unique<FantasyName>(*p);
+                    if ( AmFantasyAgent(p->pubkey()))
+                        m_oracle = m_priv;
+                    LOG(lg, info) << "I already own it " << name;
+                }
+                else
+                    LOG(lg, warning) << "I have wrong pub" << name;
+
+            }
+            else
+                LOG(lg, warning) << "Cant find name?" << name;
         }
     }
-        
+
+    if ( ret == NOTAVAILABLE )
+        LOG(lg, info) << "name not avaiable" << name;
+
     return ret;
 }
+
 
 //static SignedBlock makeGenesisBlock() {
 /*
@@ -51,57 +86,67 @@ bool FantasyAgent::makeGenesis()
 }
 */
 
-bool FantasyAgent::beOracle()
-{
+bool FantasyAgent::beDataAgent() {
 #ifdef NO_ORACLE_CHECK_TESTING	
     LOG(lg,info) << " no oracle test";
 
+    if ( !m_priv )
+        m_priv = fc::ecc::private_key::generate();
+
+    if ( !HaveClient() )
+        client = std::make_unique<FantasyName>
+                ("NO_ORACLE_CHECK_TESTING",m_priv.get_public_key().serialize());
+
 	m_oracle = m_priv;
-	Commissioner::GENESIS_PUB_KEY = m_oracle.get_public_key()	;
-	m_oracle = m_priv;
+    Commissioner::GENESIS_PUB_KEY = m_oracle.get_public_key();
 	return true;
 #endif	
 
-	if (Commissioner::GENESIS_PUB_KEY == m_priv.get_public_key().serialize())
-    {
+    bool ret = false;
+
+    if (AmFantasyAgent(pubKey())) {
         LOG(lg,info) << " is oracle key";
 		m_oracle = m_priv;
+        ret = true;
     }
-	else
-	{
-		Secret oracle{};
-        Reader<Secret> read{ GET_ROOT_DIR() + "oracle.txt" };
-        if (!read.good()) {
+    else for ( auto fn : m_secrets) {
+        if ( AmFantasyAgent(fn.public_key())) {
+            LOG(lg,info) << " found agent key";
+            m_priv = str2priv(fn.private_key());
+            m_oracle = m_priv;
+            client = std::make_unique<FantasyName>
+                    (Commissioner::FantasyAgentName(),(*m_priv).get_public_key());
+            ret = true;
+            break;
+        }
+    }
+
+    if (!ret) {
+        Secret2 oracle{};
+        Reader<Secret2> read{ GET_ROOT_DIR() + "oracle.txt" };
+        if (!read.good())
             LOG(lg,warning) << " no oracle.txt";
-			return false;
-        }
-		if (read.ReadNext(oracle))
-		{
-			LOG(lg, trace) << "oracle.private_key()" << oracle.private_key();
-			auto pk = str2priv(oracle.private_key());
-			if (pk.get_public_key() == Commissioner::GENESIS_PUB_KEY)
-			{
-                LOG(lg,info) << " is Commissioner::GENESIS_PUB_KEY";
-				m_oracle = pk;
-				m_priv = m_oracle;
-			}
-            else {
-                LOG(lg,warning) << " is NOT Commissioner::GENESIS_PUB_KEY";
-                return false;
+        else if (read.ReadNext(oracle)) {
+            if (AmFantasyAgent(oracle.public_key())) {
+                LOG(lg,info) << " have oracle.txt";
+                m_priv = str2priv(oracle.private_key());
+                m_oracle = m_priv;
+                client = std::make_unique<FantasyName>
+                        (Commissioner::FantasyAgentName(),(*m_priv).get_public_key());
+                ret = true;
             }
+            else
+                LOG(lg,warning) << "oracle is NOT Commissioner::GENESIS_PUB_KEY";
 		}
-        else {
+        else
             LOG(lg,error) << " bad read oracle.txt";
-            return false;
-        }
 	}
 
-	return true;
+    return ret;
 }
 
 
-Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt)
-{
+Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt) {
 	Block b{};
 	
 	if (!amDataAgent()) {
@@ -131,7 +176,7 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt)
 	SignedBlockHeader sbh{};
 	sbh.mutable_head()->CopyFrom(bh);
 
-	auto p = getIdSig(sbh.head().SerializeAsString(),m_oracle);
+    auto p = getIdSig(sbh.head().SerializeAsString(),*m_oracle);
 	sbh.set_sig(p.second);
 	//todo: store block hash from p.first 
 
@@ -179,9 +224,8 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt)
 	return b;
 
 }
-
-Block FantasyAgent::makeNewBlockAsOracle()
-{
+/*
+Block FantasyAgent::makeNewBlockAsOracle() {
 	Block b{};
 
 	if (pendingTrans.size() == 0)
@@ -223,7 +267,6 @@ Block FantasyAgent::makeNewBlockAsOracle()
 	return b;
 
 }
-
 
 
 /*

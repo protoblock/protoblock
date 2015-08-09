@@ -37,6 +37,7 @@ void protobuf_ShutdownFile_ProtoData_2eproto();
 class MyFantasyName;
 class FantasyPlayer;
 class Secret;
+class Secret2;
 class OutData;
 class InData;
 class NameProof;
@@ -618,6 +619,123 @@ class Secret : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Secret* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Secret2 : public ::google::protobuf::Message {
+ public:
+  Secret2();
+  virtual ~Secret2();
+
+  Secret2(const Secret2& from);
+
+  inline Secret2& operator=(const Secret2& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Secret2& default_instance();
+
+  void Swap(Secret2* other);
+
+  // implements Message ----------------------------------------------
+
+  Secret2* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Secret2& from);
+  void MergeFrom(const Secret2& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string fantasy_name = 10;
+  inline bool has_fantasy_name() const;
+  inline void clear_fantasy_name();
+  static const int kFantasyNameFieldNumber = 10;
+  inline const ::std::string& fantasy_name() const;
+  inline void set_fantasy_name(const ::std::string& value);
+  inline void set_fantasy_name(const char* value);
+  inline void set_fantasy_name(const char* value, size_t size);
+  inline ::std::string* mutable_fantasy_name();
+  inline ::std::string* release_fantasy_name();
+  inline void set_allocated_fantasy_name(::std::string* fantasy_name);
+
+  // optional string private_key = 20;
+  inline bool has_private_key() const;
+  inline void clear_private_key();
+  static const int kPrivateKeyFieldNumber = 20;
+  inline const ::std::string& private_key() const;
+  inline void set_private_key(const ::std::string& value);
+  inline void set_private_key(const char* value);
+  inline void set_private_key(const char* value, size_t size);
+  inline ::std::string* mutable_private_key();
+  inline ::std::string* release_private_key();
+  inline void set_allocated_private_key(::std::string* private_key);
+
+  // optional string public_key = 30;
+  inline bool has_public_key() const;
+  inline void clear_public_key();
+  static const int kPublicKeyFieldNumber = 30;
+  inline const ::std::string& public_key() const;
+  inline void set_public_key(const ::std::string& value);
+  inline void set_public_key(const char* value);
+  inline void set_public_key(const char* value, size_t size);
+  inline ::std::string* mutable_public_key();
+  inline ::std::string* release_public_key();
+  inline void set_allocated_public_key(::std::string* public_key);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Secret2)
+ private:
+  inline void set_has_fantasy_name();
+  inline void clear_has_fantasy_name();
+  inline void set_has_private_key();
+  inline void clear_has_private_key();
+  inline void set_has_public_key();
+  inline void clear_has_public_key();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* fantasy_name_;
+  ::std::string* private_key_;
+  ::std::string* public_key_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Secret2* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2289,6 +2407,13 @@ class FantasyPlayerPoints : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 points() const;
   inline void set_points(::google::protobuf::int32 value);
 
+  // optional float result = 50;
+  inline bool has_result() const;
+  inline void clear_result();
+  static const int kResultFieldNumber = 50;
+  inline float result() const;
+  inline void set_result(float value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyPlayerPoints)
  private:
   inline void set_has_season();
@@ -2299,6 +2424,8 @@ class FantasyPlayerPoints : public ::google::protobuf::Message {
   inline void clear_has_playerid();
   inline void set_has_points();
   inline void clear_has_points();
+  inline void set_has_result();
+  inline void clear_has_result();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -2306,9 +2433,10 @@ class FantasyPlayerPoints : public ::google::protobuf::Message {
   ::google::protobuf::uint32 week_;
   ::std::string* playerid_;
   ::google::protobuf::int32 points_;
+  float result_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -3740,6 +3868,220 @@ inline void Secret::set_allocated_nametran(::fantasybit::NameTrans* nametran) {
     set_has_nametran();
   } else {
     clear_has_nametran();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// Secret2
+
+// optional string fantasy_name = 10;
+inline bool Secret2::has_fantasy_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Secret2::set_has_fantasy_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Secret2::clear_has_fantasy_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Secret2::clear_fantasy_name() {
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_->clear();
+  }
+  clear_has_fantasy_name();
+}
+inline const ::std::string& Secret2::fantasy_name() const {
+  return *fantasy_name_;
+}
+inline void Secret2::set_fantasy_name(const ::std::string& value) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(value);
+}
+inline void Secret2::set_fantasy_name(const char* value) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(value);
+}
+inline void Secret2::set_fantasy_name(const char* value, size_t size) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Secret2::mutable_fantasy_name() {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  return fantasy_name_;
+}
+inline ::std::string* Secret2::release_fantasy_name() {
+  clear_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = fantasy_name_;
+    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Secret2::set_allocated_fantasy_name(::std::string* fantasy_name) {
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete fantasy_name_;
+  }
+  if (fantasy_name) {
+    set_has_fantasy_name();
+    fantasy_name_ = fantasy_name;
+  } else {
+    clear_has_fantasy_name();
+    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string private_key = 20;
+inline bool Secret2::has_private_key() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Secret2::set_has_private_key() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Secret2::clear_has_private_key() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Secret2::clear_private_key() {
+  if (private_key_ != &::google::protobuf::internal::kEmptyString) {
+    private_key_->clear();
+  }
+  clear_has_private_key();
+}
+inline const ::std::string& Secret2::private_key() const {
+  return *private_key_;
+}
+inline void Secret2::set_private_key(const ::std::string& value) {
+  set_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    private_key_ = new ::std::string;
+  }
+  private_key_->assign(value);
+}
+inline void Secret2::set_private_key(const char* value) {
+  set_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    private_key_ = new ::std::string;
+  }
+  private_key_->assign(value);
+}
+inline void Secret2::set_private_key(const char* value, size_t size) {
+  set_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    private_key_ = new ::std::string;
+  }
+  private_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Secret2::mutable_private_key() {
+  set_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    private_key_ = new ::std::string;
+  }
+  return private_key_;
+}
+inline ::std::string* Secret2::release_private_key() {
+  clear_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = private_key_;
+    private_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Secret2::set_allocated_private_key(::std::string* private_key) {
+  if (private_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete private_key_;
+  }
+  if (private_key) {
+    set_has_private_key();
+    private_key_ = private_key;
+  } else {
+    clear_has_private_key();
+    private_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string public_key = 30;
+inline bool Secret2::has_public_key() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Secret2::set_has_public_key() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Secret2::clear_has_public_key() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Secret2::clear_public_key() {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    public_key_->clear();
+  }
+  clear_has_public_key();
+}
+inline const ::std::string& Secret2::public_key() const {
+  return *public_key_;
+}
+inline void Secret2::set_public_key(const ::std::string& value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void Secret2::set_public_key(const char* value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void Secret2::set_public_key(const char* value, size_t size) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Secret2::mutable_public_key() {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  return public_key_;
+}
+inline ::std::string* Secret2::release_public_key() {
+  clear_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = public_key_;
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Secret2::set_allocated_public_key(::std::string* public_key) {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete public_key_;
+  }
+  if (public_key) {
+    set_has_public_key();
+    public_key_ = public_key;
+  } else {
+    clear_has_public_key();
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -5657,6 +5999,28 @@ inline ::google::protobuf::int32 FantasyPlayerPoints::points() const {
 inline void FantasyPlayerPoints::set_points(::google::protobuf::int32 value) {
   set_has_points();
   points_ = value;
+}
+
+// optional float result = 50;
+inline bool FantasyPlayerPoints::has_result() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void FantasyPlayerPoints::set_has_result() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void FantasyPlayerPoints::clear_has_result() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void FantasyPlayerPoints::clear_result() {
+  result_ = 0;
+  clear_has_result();
+}
+inline float FantasyPlayerPoints::result() const {
+  return result_;
+}
+inline void FantasyPlayerPoints::set_result(float value) {
+  set_has_result();
+  result_ = value;
 }
 
 // -------------------------------------------------------------------
