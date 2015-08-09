@@ -30,6 +30,13 @@ message Secret
     optional NameTrans nametran = 10;
 } 	
 
+message Secret2
+{
+    optional string fantasy_name = 10;
+    optional string private_key = 20;
+    optional string public_key = 30;
+}
+
 message OutData {
 	enum Type { MYFANTASYNAME = 1; SNAPSHOT = 2; HEARTBEAT=3; }
 	required Type type = 1;
@@ -170,7 +177,8 @@ message FantasyPlayerPoints {
 	optional uint32 season = 10;	
 	optional uint32 week = 20;
 	optional string playerid = 30;
-	optional int32 points = 40;	
+        optional int32 points = 40;
+        optional float result = 50;
 }
 
 ////////////////////////////////////////////////////////////
