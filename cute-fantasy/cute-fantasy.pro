@@ -15,7 +15,7 @@ DEFINES += FBWIN
 #DEFINES += DATAAGENTGUI
 #DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 
-DEFINES += Jay2015PrePreSeasonTestDemo
+#DEFINES += Jay2015PrePreSeasonTestDemo
 
 contains(DEFINES, DATAAGENTGUI){
 TARGET = cute-fantasy-agent
@@ -64,7 +64,7 @@ CONFIG(release, debug|release) {
 }
 
 UI_DIR = ./tmp/UI
-RCC_DIR = ./GeneratedFiles
+RCC_DIR = ./xGeneratedFiles
 
 LIBS += -L./../lib
 LIBS += -L$${BOOST_DIR}/lib64-msvc-12.0
@@ -77,4 +77,10 @@ LIBS += -llibeay32 -lssleay32
 
 
 include (./cute-fantasy.pri)
+
+HEADERS += \
+    NodeWorker.h
+
+SOURCES += \
+    NodeWorker.cpp
 

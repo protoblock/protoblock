@@ -159,7 +159,7 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt) {
 	}
     LOG(lg,info) << "I am DataAgent";
 
-	auto prev = Node::getlastBLock().signedhead().head();
+    auto prev = Node::getlastLocalBlock().signedhead().head();
 
 	BlockHeader bh{};
 	bh.set_version(Commissioner::BLOCK_VERSION);
