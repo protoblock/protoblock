@@ -19,7 +19,7 @@
 #include <iostream>
 #include "singleapplication.h"
 #include "gamesoftheweekdialog.h"
-#include "Node.h"
+#include "PeerNode.h"
 #include "Processor.h"
 #include "ClientUI.h"
 #include "Processor.h"
@@ -78,7 +78,7 @@ int domain(int argc, char *argv[]) {
 #ifdef DATAAGENTGUI
     DataAgentUI widget;
 #elif Jay2015PrePreSeasonTestDemo
-    DemoUI widget;
+        DemoUI widget;
 #else
     FantasyPlayerUI widget;
 #endif

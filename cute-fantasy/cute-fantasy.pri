@@ -8,7 +8,6 @@ SOURCES += \
     $$PWD/../src/FantasyName.cpp \
     $$PWD/../src/Generator.cpp \
     $$PWD/../src/MsgSock.cpp \
-    $$PWD/../src/Node.cpp \
     $$PWD/../src/Processor.cpp \
     $$PWD/../src/ProtoData.pb.cc \
     $$PWD/../src/Source.cpp \
@@ -29,9 +28,11 @@ SOURCES += \
     $$PWD/demoui.cpp \
     $$PWD/playerloader.cpp \
     $$PWD/models.cpp \
+    $$PWD/RestFullCall.cpp \
     $$PWD/LAPIWorker.cpp \
     $$PWD/TestCoreGUIForm.cpp \
-    $$PWD/RestFullCall.cpp
+    $$PWD/NodeWorker.cpp \
+    $$PWD/../src/PeerNode.cpp
 
 
 DISTFILES += \
@@ -51,7 +52,6 @@ HEADERS += \
     $$PWD/../src/fbutils.h \
     $$PWD/../src/Generator.h \
     $$PWD/../src/MsgSock.h \
-    $$PWD/../src/Node.h \
     $$PWD/../src/Processor.h \
     $$PWD/../src/ProtoData.pb.h \
     $$PWD/../src/Source.h \
@@ -78,9 +78,11 @@ HEADERS += \
     $$PWD/fantasyplayerui.h \
     $$PWD/scheduleloader.h \
     $$PWD/demoui.h \
+    $$PWD/RestFullCall.h \
     $$PWD/LAPIWorker.h \
     $$PWD/TestCoreGUIForm.h \
-    $$PWD/RestFullCall.h
+    $$PWD/NodeWorker.h \
+    $$PWD/../src/PeerNode.h
 
 FORMS += \
     $$PWD/sfgui.ui \
@@ -89,7 +91,6 @@ FORMS += \
     $$PWD/splashdialog.ui \
     $$PWD/statuswidget.ui \
     $$PWD/Form.ui \
-    $$PWD/dataagentui.ui \
     $$PWD/fantasyplayerui.ui \
     $$PWD/demoui.ui \
     $$PWD/TestCoreGUIForm.ui

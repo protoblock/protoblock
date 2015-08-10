@@ -2,26 +2,24 @@
 #define NODEWORKER_H
 
 #include <QObject>
-#include <QSharedDataPointer>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
+//#include <QSharedDataPointer>
+//#include <QNetworkAccessManager>
+//#include <QNetworkReply>
 #include <QEventLoop>
-#include <QRunnable>
+//#include <QRunnable>
 #include <QApplication>
-#include <QWaitCondition>
-#include "globals.h"
-#include "Node.h"
-#include <QTimer.h>
-#include <algorithm>
+//#include <QWaitCondition>
+//#include "globals.h"
+#include "PeerNode.h"
+//#include <QTimer.h>
+//#include <algorithm>
 
 
 class NodeWorker : public QObject
 {
     Q_OBJECT
 public:
-    NodeWorker() {
-    }
-    //QObject * parent=0):QObject(parent){}
+    NodeWorker(QObject * parent=0);
     fantasybit::Node node;
 
 signals:
@@ -30,22 +28,8 @@ signals:
 
 public slots:
 
-    void init(){
-        qDebug("NodeWorker Thread started");
-
-        if ( node.Sync() )
-            emit InSync(node.getLastLocalBlockNum());
-    }
-
-    void TryNext() {
-        auto gnum = node.getLastGlobalBlockNum();
-        if ( !gnum )
-            qDebug("Error getLastGlobalBlockNum");
-        else {
-            emit SeenBlock(*gnum);
-            node.SyncTo(*gnum);
-        }
-    }
+    void init();
+    void TryNext();
 };
 
 

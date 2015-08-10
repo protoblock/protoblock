@@ -6,7 +6,7 @@
 //
 //
 
-#include "Node.h"
+#include "PeerNode.h"
 #include "ProtoData.pb.h"
 #include <iostream>
 #include "MsgSock.h"
@@ -144,6 +144,61 @@ void Node::setLastGlobalBlockNum(int mylastglobalheight) {
     std::lock_guard<std::mutex> lockg{ blockchain_mutex };
     GlobalHeight = mylastglobalheight;
 }
+
+
+std::string Node::filedir(const std::string &in)
+{
+    return GET_ROOT_DIR() + in;
+}
+
+leveldb::Slice Node::i2slice(int i)
+{
+    leveldb::Slice value((char*)&i, sizeof(int) );
+    return value;
+}
+
+Block Node::getlastLocalBlock() {
+    Block b{};
+    std::string value;
+    auto *it = blockchain->NewIterator(leveldb::ReadOptions());
+    it->SeekToLast();
+
+    if (!it->Valid()) {
+        //ToDo fc optional
+        return b;
+    }
+
+    auto str = it->value().ToString();
+
+    b.ParseFromString(str);
+    delete it;
+    return b;
+}
+
+fc::optional<Block> Node::getLocalBlock(int num) {
+    fc::optional<Block> block;
+    if ( getLastLocalBlockNum() < num )
+        return block;
+
+    std::string value;
+    leveldb::Slice snum((char*)&num, sizeof(int));
+    if (blockchain->Get(leveldb::ReadOptions(), snum, &value).IsNotFound()) {
+        LOG(lg,warning) << "block not found " << num;
+        //ToDo
+        return block;
+    }
+
+    block = Block{};
+
+    (*block).ParseFromString(value);
+    return block;
+}
+
+fc::optional<Block> Node::getGlobalBlock(int num) {
+    fc::optional<Block> block;
+    return block;
+}
+
 
 decltype(Node::blockchain) Node::blockchain{};
 decltype(Node::blockchain) Node::txpool{};

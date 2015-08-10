@@ -39,6 +39,7 @@ public:
         QObject::connect(timer,SIGNAL(timeout()),this,SLOT(Timer()));
 
         QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
+        //QObject::connect(this,SIGNAL(GetNext()),qApp,SLOT(aboutQt()));
         //QObject::connect(timer,SIGNAL(timeout()),myNodeWorker,SLOT(Timer()));
 
         node.thread()->start();
@@ -114,7 +115,7 @@ public slots:
         emit sendNotificationWithData(QVariant("We notify you that something happened"));
     } 
 
-    void InSync(int num) {
+    void OnInSync(int num) {
         numto = num;
         emit ProcessNext();
     }
@@ -163,7 +164,7 @@ public slots:
             count++;
             emit GetNext();
             emit ProcessNext();
-            int interval = std::max(intervalmax,count*intervalstart);
+            int interval = std::min(intervalmax,count*intervalstart);
             timer->start(interval);
         }
 
