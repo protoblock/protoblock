@@ -9,12 +9,116 @@
 #include "FantasyAgent.h"
 #include "Processor.h"
 #include <iostream>
-#include "Node.h"
+#include "PeerNode.h"
+#include "Commissioner.h"
+#include <utility>
+#include "DataPersist.h"
+#include <fc/optional.hpp>
+#include "boostLog.h"
+#include "FantasyName.h"
+
+
 
 using namespace std;
 #define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
 
 namespace fantasybit {
+
+FantasyAgent::FantasyAgent() : client{nullptr} {
+    Reader<Secret2> read{ GET_ROOT_DIR() +  secretfilename};
+    if ( !read.good() )
+        return;
+
+    Secret2 secret{};
+    while (read.ReadNext(secret)) {
+        m_secrets.push_back(secret);
+        LOG(lg,info) << secret.fantasy_name() << " have key";
+        if ( AmFantasyAgent(secret.public_key())) {
+            m_oracle = str2priv(secret.private_key());
+            LOG(lg,info) << " is oracle key";
+        }
+    }
+}
+
+std::multimap<std::string,std::string> FantasyAgent::getMyNames() {
+    std::multimap<std::string,std::string> ret;
+    for ( auto s2 : m_secrets ) {
+        ret.emplace(s2.fantasy_name(),s2.public_key());
+    }
+
+    return ret;
+}
+
+void FantasyAgent::onSignedTransaction(SignedTransaction &sn)
+{
+    pendingTrans.emplace_back(sn);
+    LOG(lg,trace) << sn.DebugString();
+}
+
+bool FantasyAgent::HaveClient() {
+    return client != nullptr;
+}
+
+bool FantasyAgent::amDataAgent() {
+    //Todo: fix
+    if (m_oracle && m_priv)
+        return (*m_oracle).get_secret() == (*m_priv).get_secret();
+    else
+        return false;
+}
+
+bool FantasyAgent::AmFantasyAgent(fc::ecc::public_key_data pubkey) {
+    return Commissioner::GENESIS_PUB_KEY == pubkey;
+}
+
+bool FantasyAgent::AmFantasyAgent(std::string pubkey) {
+    return Commissioner::GENESIS_PUB_KEY == Commissioner::str2pk(pubkey);
+}
+
+SignedTransaction FantasyAgent::makeSigned(Transaction &trans)
+{
+    SignedTransaction st{};
+    st.mutable_trans()->CopyFrom(trans);
+    auto p = getIdSig(trans.SerializeAsString());
+    st.set_id(p.first);
+    st.set_sig(p.second);
+    st.set_fantasy_name(client->alias());
+    return st;
+}
+
+
+std::string FantasyAgent::getSecret() const {
+    return m_priv ? (*m_priv).get_secret().str() : "";
+}
+
+fc::ecc::public_key_data FantasyAgent::pubKey() {
+    return (*m_priv).get_public_key();
+}
+
+std::string FantasyAgent::pubKeyStr() {
+    return m_priv ?
+                Commissioner::pk2str((*m_priv).get_public_key().serialize())
+              : "";
+}
+
+
+std::pair<std::string, std::string> FantasyAgent::getIdSig(std::string &in) {
+    return m_priv ? getIdSig(in, *m_priv)
+                   :  std::make_pair("","");
+}
+
+
+std::pair<std::string, std::string>
+FantasyAgent::getIdSig(std::string &in, fc::ecc::private_key &pk) {
+    fc::sha256 sha = fc::sha256::hash( in );
+    return make_pair(sha.str(), Commissioner::sig2str(pk.sign(sha)));
+}
+
+fc::ecc::private_key FantasyAgent::str2priv(const std::string &in) {
+    return fc::ecc::private_key::regenerate(fc::sha256{ in });
+}
+
+
 
 FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
     status ret = NOTAVAILABLE;

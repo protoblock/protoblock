@@ -24,7 +24,7 @@ namespace fantasybit {
 	//forwards
 	struct FantasyName;
 
-	using Int = int_fast32_t;
+    using Int = int;
 	using Uid = std::string;// uint_least64_t;
 	using Int64 = uint64_t;
 	using MapS2I = std::map < std::string, Int > ;
@@ -78,15 +78,6 @@ namespace fantasybit {
         PORT_LIVE_TX_NAT += 1000;
     }
 */
-	static struct fbutils
-	{
-		static bool LogFalse(std::string &in)
-		{
-			std::cout << in << "\n";
-			return false;
-		}
-
-	};
 
 	template < typename T >
 	std::map<int, std::string> proto_enum_map() {

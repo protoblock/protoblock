@@ -298,7 +298,7 @@ message TeamState {
 message DeltaData {
 	enum Type { SNAPSHOT = 2; HEARTBEAT=3; }
 	optional Type type=1;
- 	optional MyFantasyName myfantasyname = 2;
+ 	repeated MyFantasyName myfantasyname = 2;
 	optional GlobalState globalstate = 10;
   	repeated TeamState teamstates = 20;
   	repeated Data datas = 30;

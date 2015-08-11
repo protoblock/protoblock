@@ -63,8 +63,10 @@ public:
             }
 
             if (Schedule.SeasonType == 1)
+#ifdef Jay2015PrePreSeasonTestDemo
                 if ( Schedule.AwayTeam == "NYJ" || Schedule.AwayTeam == "NYG"
                      || Schedule.HomeTeam == "NYJ" || Schedule.HomeTeam == "NYG")
+#endif
                 result.insert(Schedule.Week,Schedule);
         }
         return true;

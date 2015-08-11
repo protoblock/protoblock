@@ -32,7 +32,8 @@ SOURCES += \
     $$PWD/LAPIWorker.cpp \
     $$PWD/TestCoreGUIForm.cpp \
     $$PWD/NodeWorker.cpp \
-    $$PWD/../src/PeerNode.cpp
+    $$PWD/../src/PeerNode.cpp \
+    $$PWD/../src/blockrecorder.cpp
 
 
 DISTFILES += \
@@ -82,7 +83,8 @@ HEADERS += \
     $$PWD/LAPIWorker.h \
     $$PWD/TestCoreGUIForm.h \
     $$PWD/NodeWorker.h \
-    $$PWD/../src/PeerNode.h
+    $$PWD/../src/PeerNode.h \
+    $$PWD/../src/blockrecorder.h
 
 FORMS += \
     $$PWD/sfgui.ui \

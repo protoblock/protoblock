@@ -28,8 +28,6 @@
 namespace fantasybit
 {
 
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
-
 class Node
 {
 	int current_hight = 0;

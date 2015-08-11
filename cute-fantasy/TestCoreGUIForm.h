@@ -1,8 +1,10 @@
 #ifndef TESTCOREGUIFORM_H
 #define TESTCOREGUIFORM_H
 
+#include <QObject>
 #include <QWidget>
 #include "LAPIWorker.h"
+
 namespace Ui {
 class TestCoreGUIForm;
 }
@@ -20,6 +22,8 @@ signals:
     void requestPlayersForWeek(int week);
 public slots:
     void handleNotificationOrResponse(const QVariant & data);
+    void GoLive();
+    void NewData(const fantasybit::DeltaData &);
 private slots:
     void on_pushButton_clicked();
 

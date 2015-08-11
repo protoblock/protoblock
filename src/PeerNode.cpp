@@ -21,7 +21,7 @@
 #include <fc/time.hpp>
 #include "Processor.h"
 #include "boostLog.h"
-
+#include "Commissioner.h"
 
 using namespace std;
 	
@@ -49,6 +49,7 @@ Node::Node() {
     {
         LOG(lg, info) << "no blocks - making Genesis";
 
+        current_hight = 1;
         Block sb{Commissioner::makeGenesisBlock()};
         leveldb::Slice value((char*)&current_hight, sizeof(int));
         blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());

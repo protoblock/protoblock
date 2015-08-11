@@ -1,10 +1,14 @@
 #include "TestCoreGUIForm.h"
 #include "ui_TestCoreGUIForm.h"
 #include <QWaitCondition>
+
+
 TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWaitCondition * wait,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TestCoreGUIForm)
 {
+    qRegisterMetaType<fantasybit::DeltaData>("DeltaData");
+
     ui->setupUi(this);
     //notify the APIThread that WE the main form are alive
     wait->wakeAll();
@@ -14,6 +18,9 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWaitCondition * 
     //listen to notifcation from Core
     QObject::connect(myCoreInstance,SIGNAL(sendNotificationWithData(QVariant)),this,SLOT(handleNotificationOrResponse(QVariant)));
     QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
+
+    QObject::connect(myCoreInstance,SIGNAL(OnLive()),this,SLOT(GoLive()));
+    QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
 
 }
 
@@ -26,6 +33,14 @@ void TestCoreGUIForm::on_pushButton_clicked()
 {
  emit requestPong(QString("PING"));
 // we expect pong later
+}
+
+void TestCoreGUIForm::GoLive() {
+
+}
+
+void TestCoreGUIForm::NewData(const fantasybit::DeltaData &) {
+
 }
 
 

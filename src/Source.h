@@ -62,7 +62,7 @@ public:
 };
 
 struct FantasyProjections {
-	static std::unordered_map<std::string, std::unordered_map<std::string,uint64_t>> Projections;
+    static std::unordered_map<std::string, std::unordered_map<std::string,int>> Projections;
 };
 
 

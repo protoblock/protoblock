@@ -15,7 +15,9 @@
 #include "NodeWorker.h"
 #include <QTimer.h>
 #include <algorithm>
-
+#include "Processor.h"
+#include "FantasyAgent.h"
+#include "ProtoData.pb.h"
 
 extern QWaitCondition waitForGUI;
 class MainLAPIWorker : public QObject
@@ -25,7 +27,6 @@ public:
     MainLAPIWorker(QObject * parent=0):  QObject(parent)
     {
         timer = new QTimer(this);
-        ThreadedObject<NodeWorker> node;
         node.thread()->connect(node.thread(),
                                 SIGNAL(started()),
                                 node.object(),
@@ -44,6 +45,8 @@ public:
 
         node.thread()->start();
     }
+    ThreadedObject<NodeWorker> node;
+
 private:
     int intervalmax = 60000;
     int intervalstart = 500;
@@ -55,24 +58,34 @@ private:
     int numto = std::numeric_limits<int>::max();
     bool amlive = false;
     QTimer * timer;
+    fantasybit::BlockProcessor processor;
+    fantasybit::FantasyAgent agent{};
+    //DeltaData deltadata;
 public:
     ~MainLAPIWorker(){}
 
-    bool Process(fantasybit::Block &b) {
-        return true;
-    }
 
     void GoLive() {
-        //emit OnLive(deltasnap);
-        //deltasnap.clear();
+        emit OnLive();
         numto = 0;
+        intervalstart = 500;
         timer->start(intervalstart);
+
+        //ToDo: convert names with a status OnLive()
+        QMultiMap<QString,QString> qm{};
+        for(auto p : agent.getMyNames()) {
+            qm.insertMulti(QString::fromStdString(p.first),
+                           QString::fromStdString(p.second));
+        }
+
     }
 
 signals:
     void sendNotificationWithData(const QVariant & notificationData);
     void ProcessNext();
     void GetNext();
+    void OnData(const fantasybit::DeltaData &);
+    void OnLive();
 
 public slots:
     void processGUIRequest(const QVariant & requestData){
@@ -86,7 +99,6 @@ public slots:
         }
         */
     }
-
 
     void getPlayers(int ){
         QUrl url("http://api.nfldata.apiphany.com/nfl/v2/JSON/AreAnyGamesInProgress");
@@ -111,32 +123,45 @@ public slots:
         mutex.lock();
         waitForGUI.wait(&mutex);
         //send one way notification
+        last_block = processor.init();
+        if ( last_block < 0 ) {
+            //emit OnError();
+            last_block = 0;
+        }
+
+
+
+        //emit sendNotificationWithData(QVariant(qm));
+
+        intervalstart = 5000;
         timer->start(intervalstart);
-        emit sendNotificationWithData(QVariant("We notify you that something happened"));
     } 
 
     void OnInSync(int num) {
         numto = num;
+        intervalstart = 2000;
         emit ProcessNext();
     }
 
     void ProcessBlock() {
         auto b = fantasybit::Node::getLocalBlock(last_block+1);
-        if (b) {
-            count = pcount = 0;
-            if ( Process(*b) ) {
-                last_block++;
-                if ( !amlive ) {
-                    if ( last_block >= numto ) {
-                        amlive = true;
-                        GoLive();
-                    }
-                    emit ProcessNext();
-                }
+        if (!b) {
+            //emit OnError();
+            return;
+        }
+        if ( !Process(*b) ) return;
+
+        count = pcount = 0;
+        if ( !amlive && last_block < numto )
+            emit ProcessNext(); //catching up
+        else {
+            doNewDelta();
+            if ( !amlive ) {
+                amlive = true;
+                GoLive();
             }
         }
     }
-
 
     void OnSeenBlock(int num) {
         if (amlive)
@@ -169,6 +194,32 @@ public slots:
         }
 
     }
+
+private:
+    bool Process(fantasybit::Block &b) {
+        int last = processor.process(b);
+        if ( last == -1 ) {
+            //emit OnError();
+            timer->start(5000);
+            return false;
+        }
+        if ( last != last_block+1) {
+            //emit OnError
+            //should never be here
+            return false;
+        }
+
+        last_block = last;
+        return true;
+    }
+
+
+    void doNewDelta() {
+        auto deltasnap = processor.GetandClear();
+        qDebug(deltasnap.DebugString().c_str());
+        emit OnData(deltasnap);
+    }
+
 };
 
 

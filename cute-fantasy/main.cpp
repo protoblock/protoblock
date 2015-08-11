@@ -60,18 +60,14 @@ int domain(int argc, char *argv[]) {
 
     ClientUI clientui{ server_address, gui_address, delta_address };
 
-    thread clientt{ &ClientUI::run, &clientui };
-
-    BlockProcessor processor{ delta_address };
-    thread processor_{ &BlockProcessor::run, &processor };
 
     //std::string ipc{"ipc:///tmp/fantasygui.ipc"};
 
 
 
 
-    qRegisterMetaType<DeltaData>("DeltaData");
-    qRegisterMetaType<InData>("InData");
+    //qRegisterMetaType<DeltaData>("DeltaData");
+    //qRegisterMetaType<InData>("InData");
 
 
     //sfGUI widget;
@@ -149,7 +145,7 @@ int domain2(int argc, char *argv[]) {
 #include <QWaitCondition>
 QWaitCondition waitForGUI;
 int domain1(int argc, char *argv[]){
-
+    initBoostLog();
     QApplication a(argc, argv);
     ThreadedObject<MainLAPIWorker> coreApi;
     coreApi.thread()->connect(coreApi.thread(),

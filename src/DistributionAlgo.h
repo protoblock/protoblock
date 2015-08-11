@@ -20,16 +20,16 @@ class DistributionAlgo {};
 class DistributePoints : public DistributionAlgo
 {
 public:
-	DistributePoints(const NameValuePairs<Int64> &p) : projections(p) {}
+    DistributePoints(const NameValuePairs<int> &p) : projections(p) {}
     
 protected:
-	NameValuePairs<Int64> projections;
+    NameValuePairs<int> projections;
 };
 
 struct DistribuePointsAvg : DistributePoints
 {
-	DistribuePointsAvg(const NameValuePairs<Int64> &p) : DistributePoints(p) {}
-	NameValuePairs<double> distribute(const Int64 result, const std::string &agent) const;
+    DistribuePointsAvg(const NameValuePairs<int> &p) : DistributePoints(p) {}
+    NameValuePairs<int> distribute(const double result, const std::string &agent) const;
 };
 
 
