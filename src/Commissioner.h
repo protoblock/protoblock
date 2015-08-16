@@ -12,9 +12,9 @@
 #include "FantasyName.h"
 #include <fc/crypto/base58.hpp>
 #include <iostream>
-#include "boostLog.h"
 
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
+
 
 namespace fantasybit {
 
@@ -237,13 +237,13 @@ public:
         std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
 		auto iter = Hash2Pk.find(FantasyName::name_hash(fn));
         if (iter == Hash2Pk.end()) {
-            LOG(lg,error) << "cant find fantasyname: " << fn;
+            qCritical() << "cant find fantasyname: " << fn;
             return false;
         }
         else {
             auto ret = verify(sig, digest, iter->second);
             if ( !ret )
-                LOG(lg,error)  << "!verify(sig, digest, iter->second)";
+                qCritical()  << "!verify(sig, digest, iter->second)";
             return ret;
         }
 	}

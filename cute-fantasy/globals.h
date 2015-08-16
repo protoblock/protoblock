@@ -1,32 +1,25 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <QThread>
-
 #ifndef DELETE_AND_NULLIFY
 #define DELETE_AND_NULLIFY(X)   if (X) { delete X; X = NULL; }
 #endif
 
-template <class T>
-class ThreadedObject {
-public:
-    ThreadedObject(){
-        myObjectInstance.moveToThread(&myWorkerThread);
-    }
-    ~ThreadedObject(){
-        if (myWorkerThread.isRunning())
-            myWorkerThread.quit();
-        myWorkerThread.wait();//AKA join
-    }
-
-    T * object() { return & myObjectInstance; }
-    QThread * thread()  { return & myWorkerThread; }
-
-protected :
-    QThread myWorkerThread;
-    T myObjectInstance;
-};
+#ifndef APP_SETTINGS
+#define APP_SETTINGS
+#define ORGANIZATION_NAME "Satoshi Fantasy LLC"
+#define ORGANIZATION_DOMAIN "satoshifantasy.com"
+#define APPLICATION_NAME "Cute Fantasy"
+#endif
 
 
-#endif // GLOBALS_H
+//#include "boostLog.h"
+
+//#ifndef BOOST_LOG
+//#define BOOST_LOG
+//#define LOG(logger, severity) LOGIT(logger, severity,  FILE, LINE, FUNCTION)
+//#endif
+#endif
+
+
 

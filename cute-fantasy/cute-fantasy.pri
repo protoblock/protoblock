@@ -1,5 +1,4 @@
 SOURCES += \
-    $$PWD/../src/boostLog.cpp \
     $$PWD/../src/ClientUI.cpp \
     $$PWD/../src/Commissioner.cpp \
     $$PWD/../src/Data.cpp \
@@ -23,17 +22,33 @@ SOURCES += \
     $$PWD/singleapplication.cpp \
     $$PWD/teamsloader.cpp \
     $$PWD/spinboxdelegate.cpp \
-    $$PWD/dataagentui.cpp \
-    $$PWD/fantasyplayerui.cpp \
+#    $$PWD/dataagentui.cpp \
+#    $$PWD/fantasyplayerui.cpp \
     $$PWD/demoui.cpp \
     $$PWD/playerloader.cpp \
-    $$PWD/models.cpp \
     $$PWD/RestFullCall.cpp \
     $$PWD/LAPIWorker.cpp \
     $$PWD/TestCoreGUIForm.cpp \
     $$PWD/NodeWorker.cpp \
     $$PWD/../src/PeerNode.cpp \
-    $$PWD/../src/blockrecorder.cpp
+    $$PWD/../src/blockrecorder.cpp \
+    $$PWD/platform.cpp \
+    $$PWD/appsettings.cpp \
+    $$PWD/teamstateviewmodel.cpp \
+    $$PWD/teamstatetablemodel.cpp \
+    $$PWD/globalstateviewmodel.cpp \
+    $$PWD/playerdataviewmodel.cpp \
+    $$PWD/playerdatatablemodel.cpp \
+    $$PWD/teamdataviewmodel.cpp \
+    $$PWD/teamdatatablemodel.cpp \
+    $$PWD/fantasyplayerviewmodel.cpp \
+    $$PWD/fantasyplayertablemodel.cpp \
+    $$PWD/snapshotviewmodel.cpp \
+    $$PWD/scoringmodelview.cpp \
+    $$PWD/scoringtablemodel.cpp \
+    $$PWD/gameprojectionmodelview.cpp \
+    $$PWD/gameprojectiontablemodel.cpp \
+    $$PWD/core.cpp
 
 
 DISTFILES += \
@@ -42,7 +57,6 @@ DISTFILES += \
     $$PWD/../src/sf.sm
 
 HEADERS += \
-    $$PWD/../src/boostLog.h \
     $$PWD/../src/ClientUI.h \
     $$PWD/../src/Commissioner.h \
     $$PWD/../src/Data.h \
@@ -63,9 +77,7 @@ HEADERS += \
     $$PWD/gamesoftheweekdialog.h \
     $$PWD/splashdialog.h \
     $$PWD/statuswidget.h \
-    $$PWD/models.h \
     $$PWD/tlistmodel.h \
-    $$PWD/models.h \
     $$PWD/tlistmodel.h \
     $$PWD/decorable.h \
     $$PWD/descriptable.h \
@@ -75,8 +87,8 @@ HEADERS += \
     $$PWD/spinboxdelegate.h \
     $$PWD/playerloader.h \
     $$PWD/tkeyedlist.h \
-    $$PWD/dataagentui.h \
-    $$PWD/fantasyplayerui.h \
+#    $$PWD/dataagentui.h \
+#    $$PWD/fantasyplayerui.h \
     $$PWD/scheduleloader.h \
     $$PWD/demoui.h \
     $$PWD/RestFullCall.h \
@@ -84,7 +96,27 @@ HEADERS += \
     $$PWD/TestCoreGUIForm.h \
     $$PWD/NodeWorker.h \
     $$PWD/../src/PeerNode.h \
-    $$PWD/../src/blockrecorder.h
+    $$PWD/../src/blockrecorder.h \
+    $$PWD/threadedqobject.h \
+    $$PWD/platform.h \
+    $$PWD/genericsingleton.h \
+    $$PWD/appsettings.h \
+    $$PWD/teamstateviewmodel.h \
+    $$PWD/teamstatetablemodel.h \
+    $$PWD/globalstateviewmodel.h \
+    $$PWD/playerdataviewmodel.h \
+    $$PWD/playerdatatablemodel.h \
+    $$PWD/teamdataviewmodel.h \
+    $$PWD/teamdatatablemodel.h \
+    $$PWD/fantasyplayerviewmodel.h \
+    $$PWD/fantasyplayertablemodel.h \
+    $$PWD/snapshotviewmodel.h \
+    $$PWD/scoringmodelview.h \
+    $$PWD/scoringtablemodel.h \
+    $$PWD/gameprojectionmodelview.h \
+    $$PWD/gameprojectiontablemodel.h \
+    $$PWD/viewmodels.h \
+    $$PWD/core.h
 
 FORMS += \
     $$PWD/sfgui.ui \

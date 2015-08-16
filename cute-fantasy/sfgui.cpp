@@ -99,7 +99,7 @@ sfGUI::~sfGUI()
 }
 
 
-void fantasybit::sfGUI::on_generate_clicked()
+void sfGUI::on_generate_clicked()
 {
     try {
 
@@ -116,7 +116,7 @@ void fantasybit::sfGUI::on_generate_clicked()
 }
 
 
-void fantasybit::sfGUI::on_copy_clicked()
+void sfGUI::on_copy_clicked()
 {
     /*
     QClipboard *clipboard = QApplication::clipboard();
@@ -141,7 +141,7 @@ void fantasybit::sfGUI::on_copy_clicked()
     */
 }
 
-void fantasybit::sfGUI::refreshViews(const DeltaData &in){
+void sfGUI::refreshViews(const DeltaData &in){
     //QMutexLocker locker(&myMutex);
 //    if (in.type() == DeltaData_Type_SNAPSHOT) {
 //        myTeamsStateTableModel.removeAll();
@@ -210,7 +210,7 @@ void fantasybit::sfGUI::refreshViews(const DeltaData &in){
         */
 }
 
-void fantasybit::sfGUI::on_myTeamsCmb_currentIndexChanged(int index)
+void sfGUI::on_myTeamsCmb_currentIndexChanged(int index)
 {
    QString teamKey = ui->myTeamsCmb->itemData(index).toString();
    //reload players combo
@@ -221,7 +221,7 @@ void fantasybit::sfGUI::on_myTeamsCmb_currentIndexChanged(int index)
    }
 }
 
-void fantasybit::sfGUI::on_myAddScoringLineButton_clicked()
+void sfGUI::on_myAddScoringLineButton_clicked()
 {
     if (ui->myTeamsCmb->currentData().isValid() &&
             ui->myPlayersCmb->currentData().isValid()){
@@ -250,7 +250,7 @@ void fantasybit::sfGUI::on_myAddScoringLineButton_clicked()
 
 }
 
-void fantasybit::sfGUI::on_myAddTeam_clicked()
+void sfGUI::on_myAddTeam_clicked()
 {
     if (ui->myTeamsCmb->currentData().isValid() )
     {
@@ -260,7 +260,7 @@ void fantasybit::sfGUI::on_myAddTeam_clicked()
 }
 
 
-void fantasybit::sfGUI::on_mySendProjectionsButton_clicked()
+void sfGUI::on_mySendProjectionsButton_clicked()
 {
     foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
         indata.Clear();
@@ -271,7 +271,7 @@ void fantasybit::sfGUI::on_mySendProjectionsButton_clicked()
     }
 }
 
-void fantasybit::sfGUI::on_mySendResultsButton_clicked()
+void sfGUI::on_mySendResultsButton_clicked()
 {
     DataTransition dt{};
 
@@ -286,7 +286,7 @@ void fantasybit::sfGUI::on_mySendResultsButton_clicked()
     foreach(ScoringModelView * scoring,myScoringTableModel.list() ) {
         Data d{};
         d.set_type(Data::RESULT);
-        ::fantasybit::FantasyPlayerPoints fpp{};
+        ::FantasyPlayerPoints fpp{};
         fpp.set_season(dt.season());
         fpp.set_week(dt.week());
         fpp.set_playerid(scoring->myPlayerId.toStdString());
@@ -330,7 +330,7 @@ void fantasybit::sfGUI::on_mySendResultsButton_clicked()
     emit fromGUI(indata);
 }
 
-void fantasybit::sfGUI::on_myDeleteAllRowsButton_clicked()
+void sfGUI::on_myDeleteAllRowsButton_clicked()
 {
     myScoringTableModel.removeAll();
     myTeamTransitions.clear();

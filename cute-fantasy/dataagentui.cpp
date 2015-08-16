@@ -10,11 +10,11 @@
 #include <QDateTime>
 #include <QClipboard>
 #include <QItemEditorFactory>
-#include "boostLog.h"
+
 
 using namespace fantasybit;
 
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 
 DataAgentUI::DataAgentUI(QWidget *parent) :
     QWidget(parent),
@@ -339,7 +339,7 @@ void DataAgentUI::on_mySendResultsHack_clicked()
     indata.set_type(InData_Type_DATA);
     indata.mutable_data_trans()->CopyFrom(dt);
 
-    LOG(lg,trace) << " hack " << indata.DebugString();
+    qDebug() << " hack " << indata.DebugString();
     emit fromGUI(indata);
 }
 

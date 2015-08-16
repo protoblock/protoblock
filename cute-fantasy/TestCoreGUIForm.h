@@ -9,13 +9,13 @@ namespace Ui {
 class TestCoreGUIForm;
 }
 
-class QWaitCondition;
+
 class TestCoreGUIForm : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit TestCoreGUIForm(MainLAPIWorker * coreInstance,QWaitCondition * wait,QWidget *parent = 0);
+    explicit TestCoreGUIForm(MainLAPIWorker * coreInstance,QWidget *parent = 0);
     ~TestCoreGUIForm();
 signals:
     void requestPong(const QVariant & data);

@@ -14,9 +14,7 @@
 #include <algorithm>
 #include <numeric>
 #include <assert.h>
-#include "boostLog.h"
-
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+#include "globals.h"
 
 namespace fantasybit {
 
@@ -27,7 +25,8 @@ NameValuePairs<int>
 {
     NameValuePairs<int> award{};
 	if (projections.size() == 0) {
-        LOG(lg, info) << "no projections agent " << agent << " gets balance " << result;
+        //LOG(lg, info) << "no projections agent " << agent << " gets balance " << result;
+        qInfo() << "no projections agent " << agent << " gets balance " << result;
         award[agent] = result * 100.0;
 		return award;
 	}
@@ -42,15 +41,15 @@ NameValuePairs<int>
         mean+=diff;
         diffs.emplace_back(diff);
 
-		LOG(lg, trace) << pair.first << " projection " << pair.second << " diff " << diff;
+        qInfo() << pair.first << " projection " << pair.second << " diff " << diff;
     }
   
     mean /= projections.size();
-	LOG(lg, trace) << "mean " << mean;
+    qInfo() << "mean " << mean;
 
     
     double maxdiff = min(mean, result);
-    LOG(lg, trace) << " maxdiff " << maxdiff;
+    qInfo() << " maxdiff " << maxdiff;
 
     
     double sum = accumulate(begin(diffs), end(diffs), 0,
@@ -63,7 +62,7 @@ NameValuePairs<int>
         
     double payout = result / sum;
 
-    LOG(lg, trace) << " sum " << sum << " payout " << payout;
+    qInfo() << " sum " << sum << " payout " << payout;
 
 	double total = 0.0;
     for (const auto& pair : projections) {
@@ -73,20 +72,20 @@ NameValuePairs<int>
 			double amount = (result - diff)*payout;
             award[pair.first] = amount * 100.0;
 			total += amount;
-			LOG(lg, trace) << pair.first << " projection " << pair.second << " award " << amount;
+            qInfo() << pair.first << " projection " << pair.second << " award " << amount;
 		}
 		else 
-			LOG(lg, trace) << pair.first << " projection " << pair.second << "no award ";
+            qInfo() << pair.first << " projection " << pair.second << "no award ";
     }
 
     if (result < total) {
-        LOG(lg,error) << "gave out to much";
+        qCritical() << "gave out to much";
     }
     else {
         double leftover = result - total;
         if (leftover > 0.00001) {
             award[agent] = leftover;
-            LOG(lg, trace) << "agent " << agent << " leftovers " << leftover;
+            qDebug() << "agent " << agent << " leftovers " << leftover;
 
         }
     }

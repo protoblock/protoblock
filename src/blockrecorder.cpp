@@ -1,12 +1,13 @@
 #include <blockrecorder.h>
-#include "boostLog.h"
+
 #include "ProtoData.pb.h"
 #include <leveldb/db.h>
 #include "Commissioner.h"
 #include "Source.h"
 
 
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
+
 
 
 using namespace fantasybit ;
@@ -39,11 +40,11 @@ void BlockRecorder::init()
     status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);
     if (!status.ok()) {
         lastBlock =  0;
-        LOG(lg,warning) << "!ok no blocks";
+        qWarning() << "!ok no blocks";
     }
     else {
         lastBlock = *(reinterpret_cast<const int *>(value.data()));
-        LOG(lg,info) << "lastBLock: " << lastBlock;
+        qInfo() << "lastBLock: " << lastBlock;
     }
 }
 
@@ -59,7 +60,7 @@ void BlockRecorder::initFantasyNames() {
     for (it->SeekToFirst(); it->Valid(); it->Next()) {
         if (pubfantasyname->Get(leveldb::ReadOptions(), it->value(), &fname)
                 .IsNotFound()) {
-            LOG(lg,warning) << it->value().ToString()
+            qWarning() << it->value().ToString()
                             << " found namehash but NO fantasyname ";
             continue;
         }
@@ -69,14 +70,14 @@ void BlockRecorder::initFantasyNames() {
         std::string temp;
         if (pubbalance->Get(leveldb::ReadOptions(), it->value(), &temp).IsNotFound())
         {
-            LOG(lg,warning) << "nno bal " << pfn->ToString();
+            qWarning() << "nno bal " << pfn->ToString();
         }
         else {
 
             newval = *(reinterpret_cast<const uint64_t *>(temp.data()));
             pfn->addBalance(newval);
         }
-        LOG(lg,trace) << pfn->ToString();
+        qDebug() << pfn->ToString();
 
     }
     delete it;
@@ -94,7 +95,7 @@ void BlockRecorder::initProjections() {
         uint64_t bal = *(reinterpret_cast<const uint64_t *>(it->value().data()));
 
         FantasyProjections::Projections[nflplayer][fantasyname] = bal;
-        LOG(lg,trace) << str << ":" << bal;
+        qDebug() << str << ":" << bal;
     }
     delete it;
 }
@@ -106,7 +107,7 @@ void BlockRecorder::initData() {
         pd.ParseFromString(it->value().ToString());
         (Source::TeamPlayers[pd.teamid()]).insert(pd.playerid());
         Source::PlayerTeam.emplace(pd.playerid(), pd.teamid());
-        LOG(lg,trace) << "Player:" << pd.playerid() << ":" << pd.teamid();
+        qDebug() << "Player:" << pd.playerid() << ":" << pd.teamid();
     }
 
     TeamData td{};
@@ -114,7 +115,7 @@ void BlockRecorder::initData() {
     for (it->SeekToFirst(); it->Valid(); it->Next()) {
         td.ParseFromString(it->value().ToString());
         Source::TeamIds.insert(td.teamid());
-        LOG(lg,trace) << td.teamid();
+        qDebug() << td.teamid();
     }
 
     TeamState ts{};
@@ -125,7 +126,7 @@ void BlockRecorder::initData() {
         ts.ParseFromString(it->value().ToString());
         Source::TeamWeek[ts.teamid()] =
                 std::make_pair(ts.week(), ts.state() == TeamState::INGAME);
-        LOG(lg,trace) << ts.teamid() << " " << ts.state() << " week" << ts.week();
+        qDebug() << ts.teamid() << " " << ts.state() << " week" << ts.week();
     }
 }
 
@@ -135,7 +136,7 @@ DeltaData BlockRecorder::DeltaSnap() {
     FantasyPlayer fp{};
 
     for (auto pp : Commissioner::GetFantasyNames()) {
-        LOG(lg,trace) << pp->ToString();
+        qDebug() << pp->ToString();
         fp.set_name(pp->alias());
         fp.set_bits(pp->getBalance());
         auto *p = dd.add_players();
@@ -195,7 +196,7 @@ DeltaData BlockRecorder::DeltaSnap() {
 
 void BlockRecorder::OnGlobalState(const GlobalState &gs) {
     state->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
-    LOG(lg,trace) << gs.DebugString();
+    qDebug() << gs.DebugString();
 }
 
 GlobalState BlockRecorder::GetGlobalState() {
@@ -205,7 +206,7 @@ GlobalState BlockRecorder::GetGlobalState() {
         gs.ParseFromString(temp);
     }
     else {
-        LOG(lg,error) << "No GlobalState";
+        qCritical() << "No GlobalState";
     }
 
     return gs;
@@ -214,7 +215,7 @@ GlobalState BlockRecorder::GetGlobalState() {
 void BlockRecorder::OnTeamState(const TeamState &gs) {
     state->Put(leveldb::WriteOptions(), gs.teamid(), gs.SerializeAsString());
     Source::TeamWeek[gs.teamid()] = std::make_pair(gs.week(), gs.state() == TeamState::INGAME);
-    LOG(lg,trace) << gs.DebugString();
+    qDebug() << gs.DebugString();
 }
 
 TeamState BlockRecorder::GetTeamState(const std::string &teamid) {
@@ -224,7 +225,7 @@ TeamState BlockRecorder::GetTeamState(const std::string &teamid) {
         gs.ParseFromString(temp);
     }
     else {
-        LOG(lg,error) << teamid << ": No TeamState";
+        qCritical() << teamid << ": No TeamState";
     }
 
     return gs;
@@ -234,7 +235,7 @@ void BlockRecorder::OnPlayerData(const PlayerData &gs) {
     players->Put(leveldb::WriteOptions(), gs.playerid(), gs.SerializeAsString());
     Source::PlayerTeam[gs.playerid()] = gs.teamid();
     (Source::TeamPlayers[gs.teamid()]).insert(gs.playerid());
-    LOG(lg,trace) << gs.DebugString();
+    qDebug() << gs.DebugString();
 }
 
 PlayerData BlockRecorder::GetPlayerData(const std::string &pid) {
@@ -243,7 +244,7 @@ PlayerData BlockRecorder::GetPlayerData(const std::string &pid) {
     if (players->Get(leveldb::ReadOptions(), pid, &temp).ok()) {
         gs.ParseFromString(temp);
     }
-    else LOG(lg,error) << pid << " no PlayerData";
+    else qCritical() << pid << " no PlayerData";
 
     return gs;
 }
@@ -251,7 +252,7 @@ PlayerData BlockRecorder::GetPlayerData(const std::string &pid) {
 void BlockRecorder::OnTeamData(const TeamData &gs) {
     teams->Put(leveldb::WriteOptions(), gs.teamid(), gs.SerializeAsString());
     Source::TeamIds.insert(gs.teamid());
-    LOG(lg,trace) << gs.DebugString();
+    qDebug() << gs.DebugString();
 }
 
 TeamData BlockRecorder::GetTeamData(const std::string &pid) {
@@ -260,7 +261,7 @@ TeamData BlockRecorder::GetTeamData(const std::string &pid) {
     if (teams->Get(leveldb::ReadOptions(), pid, &temp).ok()) {
         gs.ParseFromString(temp);
     }
-    else LOG(lg,error) << pid << ": no TeamData";
+    else qCritical() << pid << ": no TeamData";
 
     return gs;
 }
@@ -270,7 +271,7 @@ void BlockRecorder::startBlock(int num)
     leveldb::Slice value((char*)&num, sizeof(int));
     blockstatus->Put(write_sync, "processing", value);
     blockstatus->Put(leveldb::WriteOptions(), "lastblock", value);
-    LOG(lg,info) << "starting block: " << num;
+    qInfo() << "starting block: " << num;
 }
 
 int BlockRecorder::endBlock(int num)
@@ -278,7 +279,7 @@ int BlockRecorder::endBlock(int num)
     int none = -1;
     leveldb::Slice value((char*)&none, sizeof(int));
     blockstatus->Put(write_sync, "processing", value);
-    LOG(lg,info) << "end block: " << num;
+    qInfo() << "end block: " << num;
     return num;
 }
 
@@ -311,7 +312,7 @@ void BlockRecorder::recordName(const hash_t &hash,const std::string &pubkey,cons
         pubbalance->Put(leveldb::WriteOptions(), pubkey, bval);
     }
 
-    LOG(lg,trace) << name << ":" << hash << ":" << pubkey;
+    qDebug() << name << ":" <<  hash << ":" << pubkey;
 }
 
 void BlockRecorder::addProjection(const std::string &fname, const FantasyPlayerPoints &fpp)
@@ -331,7 +332,7 @@ void BlockRecorder::addProjection(const std::string &fname, const FantasyPlayerP
     else
         iter->second[fname] = bal;
 
-    LOG(lg,trace) << "proj: " << key << ":" << fname << ":" << bal;
+    qDebug() << "proj: " << key << ":" << fname << ":" << bal;
 }
 
 void BlockRecorder::clearProjections() {
@@ -340,7 +341,7 @@ void BlockRecorder::clearProjections() {
         projections->Delete(leveldb::WriteOptions(), it->key());
 
     FantasyProjections::Projections.clear();
-    LOG(lg,trace) << " clearProjections ";
+    qDebug() << " clearProjections ";
 }
 
 void BlockRecorder::addBalance(std::string &pubkey,uint64_t add)
@@ -353,7 +354,7 @@ void BlockRecorder::addBalance(std::string &pubkey,uint64_t add)
         curr = *(reinterpret_cast<const uint64_t *>(temp.data()));
     }
 
-    LOG(lg,trace) << pubkey << " bal " << curr << "+" << add;
+    qDebug() << pubkey << " bal " << curr << "+" << add;
 
     uint64_t newval = curr + add;
     leveldb::Slice bval((char*)&newval, sizeof(uint64_t));
@@ -364,7 +365,7 @@ void BlockRecorder::addBalance(std::string &pubkey,uint64_t add)
     if (it != nullptr)
         it->addBalance(add);
     else
-        LOG(lg,error) << " cant find FantasyName";
+        qCritical() << " cant find FantasyName";
 }
 
 std::string BlockRecorder::filedir(const std::string &in)

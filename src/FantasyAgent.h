@@ -26,6 +26,7 @@ class FantasyAgent
 
     std::vector<Secret2> m_secrets;
     std::string secretfilename = "secret2.out";
+
 public:
     enum status { AVAIL, NOTAVAILABLE, OWNED };
     
@@ -65,7 +66,7 @@ public:
     std::string getSecret() const ;
     fc::ecc::public_key_data pubKey();
 
-    std::string pubKeyStr() ;
+    std::string pubKeyStr();
 
     std::pair<std::string, std::string> getIdSig(std::string &in);
 

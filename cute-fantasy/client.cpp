@@ -10,8 +10,8 @@
 #include <MsgSock.h>
 #include <string>
 #include <ProtoData.pb.h>
-#include <QtDebug>
-#include <QProcess>>
+#include <QDebug>
+#include <QProcess>
 #include <QCoreApplication>
 #include <iostream>
 

@@ -17,6 +17,8 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include "core.h"
+
 
 namespace fantasybit {
 
@@ -36,9 +38,9 @@ namespace fantasybit {
 	using Signature = std::string;
 
 #if defined(Jay2015PrePreSeasonTestDemo) || defined(DATAAGENTGUIJay2015PrePreSeasonTestDemo)
-#ifdef FBWIN
-    static std::string ROOT_DIR_("C:/fantasybit-internal2/");
-#endif
+//#ifdef FBWIN
+//    static std::string ROOT_DIR_("C:/fantasybit-internal2/");
+//#endif
 
     static int PORT_HAND = 10130;
     static int PORT_SYNC_SERV = 10125;
@@ -47,20 +49,20 @@ namespace fantasybit {
     static int PORT_LIVE_TX_NAT = 10128;
 #else
 
-#ifdef FBWIN
-    static std::string ROOT_DIR_("C:/fantasybit/");
-#endif
+//#ifdef FBWIN
+//    static std::string ROOT_DIR_("C:/fantasybit/");
+//#endif
 
-    static int PORT_HAND = 8130;
-    static int PORT_SYNC_SERV = 8125;
-    static int PORT_LIVE_BLOCK = 8126;
-    static int PORT_LIVE_TX = 8127;
-    static int PORT_LIVE_TX_NAT = 8128;
+//    static int PORT_HAND = 8130;
+//    static int PORT_SYNC_SERV = 8125;
+//    static int PORT_LIVE_BLOCK = 8126;
+//    static int PORT_LIVE_TX = 8127;
+//    static int PORT_LIVE_TX_NAT = 8128;
 
 #endif
 
     static std::string GET_ROOT_DIR() {
-        return ROOT_DIR_;
+        return Core::getRootDir();
     }
 
     static std::string FB_PORT(int port) {

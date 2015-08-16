@@ -11,7 +11,12 @@
 #include "teamsloader.h"
 #include "playerloader.h"
 #include "spinboxdelegate.h"
-#include "models.h"
+#include "snapshotviewmodel.h"
+#include "teamstatetablemodel.h"
+#include "playerdatatablemodel.h"
+#include "teamdatatablemodel.h"
+#include "fantasyplayertablemodel.h"
+#include "scoringtablemodel.h"
 #include "scheduleloader.h"
 
 namespace Ui {

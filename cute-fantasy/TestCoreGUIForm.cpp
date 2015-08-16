@@ -3,7 +3,7 @@
 #include <QWaitCondition>
 
 
-TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWaitCondition * wait,QWidget *parent) :
+TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TestCoreGUIForm)
 {
@@ -11,7 +11,7 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWaitCondition * 
 
     ui->setupUi(this);
     //notify the APIThread that WE the main form are alive
-    wait->wakeAll();
+    Core::waitForGUI.wakeAll();
     myCoreInstance = coreInstance;
     //connect the png request to the write slot that handles it
     QObject::connect(this,SIGNAL(requestPong(QVariant)),myCoreInstance,SLOT(processGUIRequest(QVariant)));

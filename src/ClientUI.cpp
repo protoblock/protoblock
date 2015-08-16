@@ -12,7 +12,7 @@
 #include "MsgSock.h"
 #include <thread>
 
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 
 using namespace std;
 using namespace nn;

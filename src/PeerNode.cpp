@@ -20,18 +20,15 @@
 #include <set>
 #include <fc/time.hpp>
 #include "Processor.h"
-#include "boostLog.h"
 #include "Commissioner.h"
 
 using namespace std;
 	
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
-
 namespace fantasybit
 {
 
 Node::Node() {
-    LOG(lg, trace) << "init node";
+    qDebug() << "init node";
     leveldb::Options options;
     options.create_if_missing = true;
     leveldb::Status status;
@@ -47,7 +44,7 @@ Node::Node() {
     current_hight = getLastLocalBlockNum();
     if (current_hight == 0)
     {
-        LOG(lg, info) << "no blocks - making Genesis";
+        qInfo() <<  "no blocks - making Genesis";
 
         current_hight = 1;
         Block sb{Commissioner::makeGenesisBlock()};
@@ -58,13 +55,13 @@ Node::Node() {
 
     //assert(getLastBlockNum() > 0);
 
-    LOG(lg, info) << " current_hight " << current_hight;
+    qInfo() <<  " current_hight " << current_hight;
 }
 
 bool Node::Sync() {
     fc::optional<int> gh = getLastGlobalBlockNum();
     if ( !gh ) {
-        LOG(lg,error) << " no getLastGlobalBlockNum";
+        qCritical() << " no getLastGlobalBlockNum";
         return false;
     }
 
@@ -78,24 +75,24 @@ bool Node::SyncTo(int gh) {
 
         fc::optional<Block> sb = getGlobalBlock(current_hight+1);
         if ( !sb ) {
-            LOG(lg,error) << " no getGlobalBlockNum" << current_hight+1;
+            qCritical() << " no getGlobalBlockNum" << current_hight+1;
             return false;
         }
 
-        LOG(lg, info) << "received " << (*sb).DebugString();
+        qInfo() <<  "received " << (*sb).DebugString();
 
         if (!BlockProcessor::verifySignedBlock(*sb)) {
-            LOG(lg,error) << " !BlockProcessor::verifySignedBlock(sb) ";
+            qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
             return false; ;
         }
 
         if ((*sb).signedhead().head().num() > current_hight + 1) {
-            LOG(lg,error) << "sb.signedhead().head().num() > current_hight + 1";
+            qCritical() << "sb.signedhead().head().num() > current_hight + 1";
             return false; ;
         }
 
         if ((*sb).signedhead().head().num() == current_hight + 1) {
-            LOG(lg,info) << "Received next " << current_hight+1;
+            qInfo() << "Received next " << current_hight+1;
             int myhight = current_hight+1;
             leveldb::Slice snum((char*)&myhight, sizeof(int));
             blockchain->Put(leveldb::WriteOptions(), snum, (*sb).SerializeAsString());
@@ -106,7 +103,7 @@ bool Node::SyncTo(int gh) {
             //CheckOrphanBlocks();
         }
         else if ( (*sb).signedhead().head().num() > current_hight+1){
-            LOG(lg,warning) << "Received gap in block " << (*sb).signedhead().head().num();
+            qWarning() << "Received gap in block " << (*sb).signedhead().head().num();
         }
     }
 
@@ -184,7 +181,7 @@ fc::optional<Block> Node::getLocalBlock(int num) {
     std::string value;
     leveldb::Slice snum((char*)&num, sizeof(int));
     if (blockchain->Get(leveldb::ReadOptions(), snum, &value).IsNotFound()) {
-        LOG(lg,warning) << "block not found " << num;
+        qWarning() << "block not found " << num;
         //ToDo
         return block;
     }

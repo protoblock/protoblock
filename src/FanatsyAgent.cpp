@@ -14,13 +14,12 @@
 #include <utility>
 #include "DataPersist.h"
 #include <fc/optional.hpp>
-#include "boostLog.h"
 #include "FantasyName.h"
 
 
 
 using namespace std;
-#define LOG(logger, severity) LOGIT(logger, severity,  __FILE__, __LINE__, __FUNCTION__)
+
 
 namespace fantasybit {
 
@@ -32,10 +31,10 @@ FantasyAgent::FantasyAgent() : client{nullptr} {
     Secret2 secret{};
     while (read.ReadNext(secret)) {
         m_secrets.push_back(secret);
-        LOG(lg,info) << secret.fantasy_name() << " have key";
+        qInfo() << secret.fantasy_name() << " have key";
         if ( AmFantasyAgent(secret.public_key())) {
             m_oracle = str2priv(secret.private_key());
-            LOG(lg,info) << " is oracle key";
+            qInfo() << " is oracle key";
         }
     }
 }
@@ -52,7 +51,7 @@ std::multimap<std::string,std::string> FantasyAgent::getMyNames() {
 void FantasyAgent::onSignedTransaction(SignedTransaction &sn)
 {
     pendingTrans.emplace_back(sn);
-    LOG(lg,trace) << sn.DebugString();
+    qDebug() << sn.DebugString();
 }
 
 bool FantasyAgent::HaveClient() {
@@ -129,7 +128,8 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 				m_priv = fc::ecc::private_key::generate();
 				client = std::make_unique<FantasyName>(name, (*m_priv).get_public_key().serialize());
 				ret = AVAIL;
-				LOG(lg, info) << "name available, already have it in secret file " << name;
+                //LOG(lg, info) << "name available, already have it in secret file " << name;
+                qInfo() <<"name available, already have it in secret file " << name;
 			}
 		}
 
@@ -143,7 +143,8 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 			secret.set_public_key(pubKeyStr());
 			secret.set_fantasy_name(name);
 			writer(secret);
-			LOG(lg, info) << "name available saving secret to file " << name;
+            //LOG(lg, info) << "name available saving secret to file " << name;
+            qInfo() << "name available saving secret to file " << name;
 		}
 
     }
@@ -157,19 +158,24 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
                     client = std::make_unique<FantasyName>(*p);
                     if ( AmFantasyAgent(p->pubkey()))
                         m_oracle = m_priv;
-                    LOG(lg, info) << "I already own it " << name;
+                    //LOG(lg, info) << "I already own it " << name;
+                    qInfo()<< "I already own it " << name;
                 }
-                else
-                    LOG(lg, warning) << "I have wrong pub" << name;
+                else {
+                    qInfo() << "I have wrong pub" << name;
+                    //LOG(lg, warning) << "I have wrong pub" << name;
+                }
 
             }
-            else
-                LOG(lg, warning) << "Cant find name?" << name;
+            else {
+                //LOG(lg, warning) << "Cant find name?" << name;
+                qInfo() << "Cant find name?" << name;
+            }
         }
     }
 
     if ( ret == NOTAVAILABLE )
-        LOG(lg, info) << "name not avaiable" << name;
+        qInfo() << "name not avaiable" << name;
 
     return ret;
 }
@@ -192,7 +198,7 @@ bool FantasyAgent::makeGenesis()
 
 bool FantasyAgent::beDataAgent() {
 #ifdef NO_ORACLE_CHECK_TESTING	
-    LOG(lg,info) << " no oracle test";
+    qInfo() << " no oracle test";
 
     if ( !m_priv )
         m_priv = fc::ecc::private_key::generate();
@@ -209,13 +215,13 @@ bool FantasyAgent::beDataAgent() {
     bool ret = false;
 
     if (AmFantasyAgent(pubKey())) {
-        LOG(lg,info) << " is oracle key";
+        qInfo() << " is oracle key";
 		m_oracle = m_priv;
         ret = true;
     }
     else for ( auto fn : m_secrets) {
         if ( AmFantasyAgent(fn.public_key())) {
-            LOG(lg,info) << " found agent key";
+            qInfo() << " found agent key";
             m_priv = str2priv(fn.private_key());
             m_oracle = m_priv;
             client = std::make_unique<FantasyName>
@@ -229,10 +235,10 @@ bool FantasyAgent::beDataAgent() {
         Secret2 oracle{};
         Reader<Secret2> read{ GET_ROOT_DIR() + "oracle.txt" };
         if (!read.good())
-            LOG(lg,warning) << " no oracle.txt";
+            qWarning() << " no oracle.txt";
         else if (read.ReadNext(oracle)) {
             if (AmFantasyAgent(oracle.public_key())) {
-                LOG(lg,info) << " have oracle.txt";
+                qInfo() << " have oracle.txt";
                 m_priv = str2priv(oracle.private_key());
                 m_oracle = m_priv;
                 client = std::make_unique<FantasyName>
@@ -240,10 +246,10 @@ bool FantasyAgent::beDataAgent() {
                 ret = true;
             }
             else
-                LOG(lg,warning) << "oracle is NOT Commissioner::GENESIS_PUB_KEY";
+                qWarning() << "oracle is NOT Commissioner::GENESIS_PUB_KEY";
 		}
         else
-            LOG(lg,error) << " bad read oracle.txt";
+            qCritical() << " bad read oracle.txt";
 	}
 
     return ret;
@@ -254,14 +260,14 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt) {
 	Block b{};
 	
 	if (!amDataAgent()) {
-        LOG(lg,warning) << "am not DataAgent - try tp beDataAgent";
+        qWarning() << "am not DataAgent - try tp beDataAgent";
 
 		if (!beDataAgent()) {
-            LOG(lg,error) << "cant makeNewBlockAsDataAgent am not agent";
+            qCritical() << "cant makeNewBlockAsDataAgent am not agent";
 			return b;
 		}
 	}
-    LOG(lg,info) << "I am DataAgent";
+    qInfo() << "I am DataAgent";
 
     auto prev = Node::getlastLocalBlock().signedhead().head();
 
