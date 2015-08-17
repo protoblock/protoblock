@@ -48,13 +48,16 @@ SOURCES += \
     $$PWD/scoringtablemodel.cpp \
     $$PWD/gameprojectionmodelview.cpp \
     $$PWD/gameprojectiontablemodel.cpp \
-    $$PWD/core.cpp
+    $$PWD/core.cpp \
+    $$PWD/../src/StaticData.pb.cc \
+    $$PWD/../src/StatusData.pb.cc
 
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \
     $$PWD/../src/ProtoData.proto \
-    $$PWD/../src/sf.sm
+    $$PWD/../src/StaticData.proto \
+    $$PWD/../src/StatusData.proto
 
 HEADERS += \
     $$PWD/../src/ClientUI.h \
@@ -116,7 +119,9 @@ HEADERS += \
     $$PWD/gameprojectionmodelview.h \
     $$PWD/gameprojectiontablemodel.h \
     $$PWD/viewmodels.h \
-    $$PWD/core.h
+    $$PWD/core.h \
+    $$PWD/../src/StaticData.pb.h \
+    $$PWD/../src/StatusData.pb.h
 
 FORMS += \
     $$PWD/sfgui.ui \

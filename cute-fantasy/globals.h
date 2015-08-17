@@ -13,7 +13,7 @@
 #endif
 
 #define qInfo QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC).noDebug
-
+#include "qdebug.h""
 
 //#include "boostLog.h"
 

@@ -5,67 +5,54 @@
 //  Created by Jay Berg on 3/25/14.
 //
 //
-
 #ifndef __fantasybit__Data__
 #define __fantasybit__Data__
 
-#include "FantasyName.h"
-#include "Commissioner.h"
+#include "StaticData.pb.h"
+#include "StatusData.pb.h"
+#include <unordered_set>
+
+#include <leveldb/db.h>
 
 namespace fantasybit
 {
 
-template<class T>
-class Datat
-{
-    T data;
-    alias_t alias;
+struct GameRoster {
+    GameInfo info;
+    GameStatus::Status  status;
+    std::vector<PlayerBase> homeroster;
+    std::vector<PlayerBase> awayroster;
+
+};
+
+class Data {
+    leveldb::DB *staticstore;
+    leveldb::DB *statusstore;
+
+    leveldb::WriteOptions write_sync{};
+
+    std::map<std::string, std::unordered_set<std::string>> MyTeamRoster;
+    std::map<std::string, PlayerStatus> MyPlayerStatus;
+
 public:
-    Datat(T t) : data(t) {}
-    
-    Bits getStake() {
-        Bits stake{0};
+    Data();
+    void init();
+    void AddNewPlayer(std::string playerid, const PlayerBase &);
+    void AddNewWeeklySchedule(int week, const WeeklySchedule &);
+    void AddGameResult(std::string &gameid, const GameResult&);
 
-        do {
-            stake.add(Commissioner::FantasyNames[Commissioner::Hash2Pk[alias]].getBalance());
-        } while ( !decrypt());
-            
-        return stake;
-    }
-    
-    bool verify(Bits min) {
-        return getStake() >= min;
-    }
-    
-private:
-    bool decrypt() {
-        if ( data.isRaw() ) return true;
-        
-        //ToDo:
-        //decript data
-        //get alias
-        //set data
-        return false;
-    }
+    //void AddTeamDepth(const TeamDepth &);
+    void UpdatePlayerStatus(std::string &playerid, const PlayerStatus &);
+    //void UpdatePlayerStatus(std::string playerid, const PlayerGameStatus &);
+
+    void UpdateGameStatus(std::string &gameid, const GameStatus &gs);
+
+    std::vector<GameRoster> GetWeeklyGameRosters(int week);
+    std::vector<PlayerBase> GetTeamRoster(const std::string &teamid);
+
+    std::string filedir(const std::string &in);
+
 };
-
-
-struct predict
-{
-    alias_t id;
-    Uid player;
-    int8_t weak;
-    int8_t projection;
-    Int nonce;
-
-    Signature sig;
-    void sign()
-    {
-    }
-    
-};
-
-
 
 }
 
