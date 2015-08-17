@@ -1,0 +1,14 @@
+package fantasybit;
+
+message FantasyNameBal {
+	optional string name = 10;
+	optional string public_key = 20;
+	optional uint64 bits = 30;
+}
+
+message FantasyBitAword {
+	optional string name = 10;
+	optional int32 proj = 20;
+	optional uint64 aword = 30;
+}
+

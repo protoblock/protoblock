@@ -64,7 +64,9 @@ SOURCES += \
     $$PWD/client.cpp \
     $$PWD/dataagentui.cpp \
     $$PWD/fantasyplayerui.cpp \
-    $$PWD/sfgui.cpp
+    $$PWD/sfgui.cpp \
+    $$PWD/../src/NameData.cpp \
+    $$PWD/../generated/NameData.pb.cc
 
 
 DISTFILES += \
@@ -74,7 +76,8 @@ DISTFILES += \
     $$PWD/../src/StatusData.proto \
     $$PWD/../proto/ProtoData.proto \
     $$PWD/../proto/StaticData.proto \
-    $$PWD/../proto/StatusData.proto
+    $$PWD/../proto/StatusData.proto \
+    $$PWD/../proto/NameData.proto
 
 HEADERS += \
     $$PWD/../src/Commissioner.h \
@@ -147,7 +150,9 @@ HEADERS += \
     $$PWD/client.h \
     $$PWD/dataagentui.h \
     $$PWD/fantasyplayerui.h \
-    $$PWD/sfgui.h
+    $$PWD/sfgui.h \
+    $$PWD/../src/NameData.h \
+    $$PWD/../generated/NameData.pb.h
 
 FORMS += \
     $$PWD/fantasynamesetupdialog.ui \
