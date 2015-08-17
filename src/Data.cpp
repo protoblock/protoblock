@@ -83,8 +83,9 @@ vector<GameRoster> Data::GetWeeklyGameRosters(int week) {
     }
 }
 
-std::vector<PlayerBase> Data::GetTeamRoster(const std::string &teamid) {
-    std::vector<PlayerBase> vpb{};
+std::unordered_map<std::string,PlayerDetail>
+        Data::GetTeamRoster(const std::string &teamid) {
+    std::unordered_map<std::string,PlayerDetail> vpb{};
     auto teamroster = MyTeamRoster[teamid];
     string temp;
     for ( auto p : teamroster) {
@@ -94,9 +95,11 @@ std::vector<PlayerBase> Data::GetTeamRoster(const std::string &teamid) {
             continue;
         if ( !statusstore->Get(leveldb::ReadOptions(), p, &temp).ok() )
             continue;
-        PlayerBase pb;
-        pb.ParseFromString(temp);
-        vpb.push_back(pb);
+        PlayerDetail pd;
+        pd.base.ParseFromString(temp);
+        pd.team_status = ps.status();
+        pd.game_status = PlayerGameStatus::IN;
+        vpb[p] = pd;
     }
     return vpb;
 }

@@ -11,17 +11,24 @@
 #include "StaticData.pb.h"
 #include "StatusData.pb.h"
 #include <unordered_set>
+#include <unordered_map>
 
 #include <leveldb/db.h>
 
 namespace fantasybit
 {
 
+struct PlayerDetail {
+    PlayerBase base;
+    PlayerStatus::Status team_status;
+    PlayerGameStatus game_status;
+};
+
 struct GameRoster {
     GameInfo info;
     GameStatus::Status  status;
-    std::vector<PlayerBase> homeroster;
-    std::vector<PlayerBase> awayroster;
+    std::unordered_map<std::string,PlayerDetail> homeroster;
+    std::unordered_map<std::string,PlayerDetail> awayroster;
 
 };
 
@@ -48,7 +55,8 @@ public:
     void UpdateGameStatus(std::string &gameid, const GameStatus &gs);
 
     std::vector<GameRoster> GetWeeklyGameRosters(int week);
-    std::vector<PlayerBase> GetTeamRoster(const std::string &teamid);
+    std::unordered_map<std::string,PlayerDetail>
+            GetTeamRoster(const std::string &teamid);
 
     std::string filedir(const std::string &in);
 

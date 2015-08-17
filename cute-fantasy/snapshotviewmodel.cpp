@@ -61,9 +61,9 @@ void SnapShotViewModel::fromDeltaData(const DeltaData & data) {
 //            fantasyPlayers.clear();
 //        }
 
-    if (data.has_myfantasyname()) {
-        fantasyName = QString::fromStdString(data.myfantasyname().name());
-        myNameStatus = data.myfantasyname().status();
+    if (data.myfantasyname_size() > 0 ) {
+        fantasyName = QString::fromStdString(data.myfantasyname(0).name());
+        myNameStatus = data.myfantasyname(0).status();
     }
 
     if (data.has_globalstate())

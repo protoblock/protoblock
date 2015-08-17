@@ -3440,14 +3440,17 @@ class DeltaData : public ::google::protobuf::Message {
   inline ::fantasybit::DeltaData_Type type() const;
   inline void set_type(::fantasybit::DeltaData_Type value);
 
-  // optional .fantasybit.MyFantasyName myfantasyname = 2;
-  inline bool has_myfantasyname() const;
+  // repeated .fantasybit.MyFantasyName myfantasyname = 2;
+  inline int myfantasyname_size() const;
   inline void clear_myfantasyname();
   static const int kMyfantasynameFieldNumber = 2;
-  inline const ::fantasybit::MyFantasyName& myfantasyname() const;
-  inline ::fantasybit::MyFantasyName* mutable_myfantasyname();
-  inline ::fantasybit::MyFantasyName* release_myfantasyname();
-  inline void set_allocated_myfantasyname(::fantasybit::MyFantasyName* myfantasyname);
+  inline const ::fantasybit::MyFantasyName& myfantasyname(int index) const;
+  inline ::fantasybit::MyFantasyName* mutable_myfantasyname(int index);
+  inline ::fantasybit::MyFantasyName* add_myfantasyname();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::MyFantasyName >&
+      myfantasyname() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::MyFantasyName >*
+      mutable_myfantasyname();
 
   // optional .fantasybit.GlobalState globalstate = 10;
   inline bool has_globalstate() const;
@@ -3499,8 +3502,6 @@ class DeltaData : public ::google::protobuf::Message {
  private:
   inline void set_has_type();
   inline void clear_has_type();
-  inline void set_has_myfantasyname();
-  inline void clear_has_myfantasyname();
   inline void set_has_globalstate();
   inline void clear_has_globalstate();
 
@@ -3508,7 +3509,7 @@ class DeltaData : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::fantasybit::MyFantasyName* myfantasyname_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::MyFantasyName > myfantasyname_;
   ::fantasybit::GlobalState* globalstate_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::TeamState > teamstates_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::Data > datas_;
@@ -6709,42 +6710,29 @@ inline void DeltaData::set_type(::fantasybit::DeltaData_Type value) {
   type_ = value;
 }
 
-// optional .fantasybit.MyFantasyName myfantasyname = 2;
-inline bool DeltaData::has_myfantasyname() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void DeltaData::set_has_myfantasyname() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void DeltaData::clear_has_myfantasyname() {
-  _has_bits_[0] &= ~0x00000002u;
+// repeated .fantasybit.MyFantasyName myfantasyname = 2;
+inline int DeltaData::myfantasyname_size() const {
+  return myfantasyname_.size();
 }
 inline void DeltaData::clear_myfantasyname() {
-  if (myfantasyname_ != NULL) myfantasyname_->::fantasybit::MyFantasyName::Clear();
-  clear_has_myfantasyname();
+  myfantasyname_.Clear();
 }
-inline const ::fantasybit::MyFantasyName& DeltaData::myfantasyname() const {
-  return myfantasyname_ != NULL ? *myfantasyname_ : *default_instance_->myfantasyname_;
+inline const ::fantasybit::MyFantasyName& DeltaData::myfantasyname(int index) const {
+  return myfantasyname_.Get(index);
 }
-inline ::fantasybit::MyFantasyName* DeltaData::mutable_myfantasyname() {
-  set_has_myfantasyname();
-  if (myfantasyname_ == NULL) myfantasyname_ = new ::fantasybit::MyFantasyName;
+inline ::fantasybit::MyFantasyName* DeltaData::mutable_myfantasyname(int index) {
+  return myfantasyname_.Mutable(index);
+}
+inline ::fantasybit::MyFantasyName* DeltaData::add_myfantasyname() {
+  return myfantasyname_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::MyFantasyName >&
+DeltaData::myfantasyname() const {
   return myfantasyname_;
 }
-inline ::fantasybit::MyFantasyName* DeltaData::release_myfantasyname() {
-  clear_has_myfantasyname();
-  ::fantasybit::MyFantasyName* temp = myfantasyname_;
-  myfantasyname_ = NULL;
-  return temp;
-}
-inline void DeltaData::set_allocated_myfantasyname(::fantasybit::MyFantasyName* myfantasyname) {
-  delete myfantasyname_;
-  myfantasyname_ = myfantasyname;
-  if (myfantasyname) {
-    set_has_myfantasyname();
-  } else {
-    clear_has_myfantasyname();
-  }
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::MyFantasyName >*
+DeltaData::mutable_myfantasyname() {
+  return &myfantasyname_;
 }
 
 // optional .fantasybit.GlobalState globalstate = 10;
