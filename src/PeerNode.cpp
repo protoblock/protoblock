@@ -9,7 +9,7 @@
 #include "PeerNode.h"
 #include "ProtoData.pb.h"
 #include <iostream>
-#include "MsgSock.h"
+//#include "MsgSock.h"
 #include <thread>
 
 #include <iostream>

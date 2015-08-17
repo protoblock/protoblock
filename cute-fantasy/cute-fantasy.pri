@@ -1,18 +1,14 @@
 SOURCES += \
-    $$PWD/../src/ClientUI.cpp \
     $$PWD/../src/Commissioner.cpp \
     $$PWD/../src/Data.cpp \
     $$PWD/../src/DistributionAlgo.cpp \
     $$PWD/../src/FanatsyAgent.cpp \
     $$PWD/../src/FantasyName.cpp \
     $$PWD/../src/Generator.cpp \
-    $$PWD/../src/MsgSock.cpp \
     $$PWD/../src/Processor.cpp \
     $$PWD/../src/ProtoData.pb.cc \
     $$PWD/../src/Source.cpp \
-    $$PWD/client.cpp \
     $$PWD/main.cpp \
-    $$PWD/sfgui.cpp \
     $$PWD/fantasynamesetupdialog.cpp \
     $$PWD/gamesoftheweekdialog.cpp \
     $$PWD/splashdialog.cpp \
@@ -60,7 +56,6 @@ DISTFILES += \
     $$PWD/../src/StatusData.proto
 
 HEADERS += \
-    $$PWD/../src/ClientUI.h \
     $$PWD/../src/Commissioner.h \
     $$PWD/../src/Data.h \
     $$PWD/../src/DataPersist.h \
@@ -69,12 +64,9 @@ HEADERS += \
     $$PWD/../src/FantasyName.h \
     $$PWD/../src/fbutils.h \
     $$PWD/../src/Generator.h \
-    $$PWD/../src/MsgSock.h \
     $$PWD/../src/Processor.h \
     $$PWD/../src/ProtoData.pb.h \
     $$PWD/../src/Source.h \
-    $$PWD/client.h \
-    $$PWD/sfgui.h \
     $$PWD/cli.h \
     $$PWD/fantasynamesetupdialog.h \
     $$PWD/gamesoftheweekdialog.h \
@@ -124,7 +116,6 @@ HEADERS += \
     $$PWD/../src/StatusData.pb.h
 
 FORMS += \
-    $$PWD/sfgui.ui \
     $$PWD/fantasynamesetupdialog.ui \
     $$PWD/gamesoftheweekdialog.ui \
     $$PWD/splashdialog.ui \
