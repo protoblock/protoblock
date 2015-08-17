@@ -27,9 +27,9 @@ public:
     NameData();
     void init();
     void AddNewName(const std::string &pubkey,const std::string &name);
-    void AddBalance(uint64_t amount);
+    void AddBalance(const std::string name,uint64_t amount);
 
-    void AddProjection(const std::string &name, const std::string player, uint32_t proj);
+    void AddProjection(const std::string &name, const std::string &player, uint32_t proj);
 
     std::string filedir(const std::string &in);
 };

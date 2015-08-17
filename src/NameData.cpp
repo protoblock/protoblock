@@ -34,8 +34,8 @@ void NameData::AddNewName(const std::string &pubkey,const std::string &name) {
 
     auto hash = FantasyName::name_hash(name);
 
-    leveldb::Slice hkey((char*)&hash, sizeof(decltype(FantasyName::name_hash)));
-    namestore->Put(write_sync, hkey, fn.SerializeToString());
+    leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+    namestore->Put(write_sync, hkey, fn.SerializeAsString());
 
     qDebug() << fn.DebugString();
 }
@@ -44,8 +44,7 @@ void NameData::AddBalance(const std::string name, uint64_t amount) {
     auto hash = FantasyName::name_hash(name);
 
     string temp;
-    leveldb::Slice hkey((char*)&hash, sizeof(dectype(FantasyName::name_hash)));
-    namestore->Get(write_sync, hkey, fn.SerializeToString());
+    leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
     if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {
         qWarning() << "cant name to add balance" << name.c_str();
         return;
@@ -53,7 +52,7 @@ void NameData::AddBalance(const std::string name, uint64_t amount) {
     FantasyNameBal fn{};
     fn.ParseFromString(temp);
     fn.set_bits(fn.bits() + amount);
-    namestore->Put(write_sync, hkey, fn.SerializeToString());
+    namestore->Put(write_sync, hkey, fn.SerializeAsString());
 
     qDebug() << fn.DebugString();
 }
@@ -62,7 +61,7 @@ void NameData::AddProjection(const string &name, const string &player,
                              uint32_t proj) {
     leveldb::Slice bval((char*)&proj, sizeof(uint32_t));
     string key(name + ":" + player);
-    projections->Put(leveldb::WriteOptions(), key, bval);
+    projstore->Put(leveldb::WriteOptions(), key, bval);
     auto m = FantasyNameProjections[name];
     m[player] = proj;
     m = PlayerIDProjections[player];
@@ -71,6 +70,6 @@ void NameData::AddProjection(const string &name, const string &player,
 }
 
 
-std::string Data::filedir(const std::string &in) {
+std::string NameData::filedir(const std::string &in) {
     return GET_ROOT_DIR() + "index/" + in;
 }
