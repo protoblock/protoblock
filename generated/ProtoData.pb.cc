@@ -810,7 +810,7 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "tate\022\014\n\004week\030\n \001(\r\022\016\n\006teamid\030\024 \001(\t\" \n\005St"
     "ate\022\013\n\007PREGAME\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDeltaDa"
     "ta\022(\n\004type\030\001 \001(\0162\032.fantasybit.DeltaData."
-    "Type\0220\n\rmyfantasyname\030\002 \001(\0132\031.fantasybit"
+    "Type\0220\n\rmyfantasyname\030\002 \003(\0132\031.fantasybit"
     ".MyFantasyName\022,\n\013globalstate\030\n \001(\0132\027.fa"
     "ntasybit.GlobalState\022)\n\nteamstates\030\024 \003(\013"
     "2\025.fantasybit.TeamState\022\037\n\005datas\030\036 \003(\0132\020"
@@ -9125,7 +9125,6 @@ DeltaData::DeltaData()
 }
 
 void DeltaData::InitAsDefaultInstance() {
-  myfantasyname_ = const_cast< ::fantasybit::MyFantasyName*>(&::fantasybit::MyFantasyName::default_instance());
   globalstate_ = const_cast< ::fantasybit::GlobalState*>(&::fantasybit::GlobalState::default_instance());
 }
 
@@ -9138,7 +9137,6 @@ DeltaData::DeltaData(const DeltaData& from)
 void DeltaData::SharedCtor() {
   _cached_size_ = 0;
   type_ = 2;
-  myfantasyname_ = NULL;
   globalstate_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -9149,7 +9147,6 @@ DeltaData::~DeltaData() {
 
 void DeltaData::SharedDtor() {
   if (this != default_instance_) {
-    delete myfantasyname_;
     delete globalstate_;
   }
 }
@@ -9179,13 +9176,11 @@ void DeltaData::Clear() {
   _extensions_.Clear();
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     type_ = 2;
-    if (has_myfantasyname()) {
-      if (myfantasyname_ != NULL) myfantasyname_->::fantasybit::MyFantasyName::Clear();
-    }
     if (has_globalstate()) {
       if (globalstate_ != NULL) globalstate_->::fantasybit::GlobalState::Clear();
     }
   }
+  myfantasyname_.Clear();
   teamstates_.Clear();
   datas_.Clear();
   players_.Clear();
@@ -9219,16 +9214,17 @@ bool DeltaData::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .fantasybit.MyFantasyName myfantasyname = 2;
+      // repeated .fantasybit.MyFantasyName myfantasyname = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_myfantasyname:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_myfantasyname()));
+                input, add_myfantasyname()));
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(18)) goto parse_myfantasyname;
         if (input->ExpectTag(82)) goto parse_globalstate;
         break;
       }
@@ -9321,10 +9317,10 @@ void DeltaData::SerializeWithCachedSizes(
       1, this->type(), output);
   }
 
-  // optional .fantasybit.MyFantasyName myfantasyname = 2;
-  if (has_myfantasyname()) {
+  // repeated .fantasybit.MyFantasyName myfantasyname = 2;
+  for (int i = 0; i < this->myfantasyname_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->myfantasyname(), output);
+      2, this->myfantasyname(i), output);
   }
 
   // optional .fantasybit.GlobalState globalstate = 10;
@@ -9369,11 +9365,11 @@ void DeltaData::SerializeWithCachedSizes(
       1, this->type(), target);
   }
 
-  // optional .fantasybit.MyFantasyName myfantasyname = 2;
-  if (has_myfantasyname()) {
+  // repeated .fantasybit.MyFantasyName myfantasyname = 2;
+  for (int i = 0; i < this->myfantasyname_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->myfantasyname(), target);
+        2, this->myfantasyname(i), target);
   }
 
   // optional .fantasybit.GlobalState globalstate = 10;
@@ -9425,13 +9421,6 @@ int DeltaData::ByteSize() const {
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
     }
 
-    // optional .fantasybit.MyFantasyName myfantasyname = 2;
-    if (has_myfantasyname()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->myfantasyname());
-    }
-
     // optional .fantasybit.GlobalState globalstate = 10;
     if (has_globalstate()) {
       total_size += 1 +
@@ -9440,6 +9429,14 @@ int DeltaData::ByteSize() const {
     }
 
   }
+  // repeated .fantasybit.MyFantasyName myfantasyname = 2;
+  total_size += 1 * this->myfantasyname_size();
+  for (int i = 0; i < this->myfantasyname_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->myfantasyname(i));
+  }
+
   // repeated .fantasybit.TeamState teamstates = 20;
   total_size += 2 * this->teamstates_size();
   for (int i = 0; i < this->teamstates_size(); i++) {
@@ -9491,15 +9488,13 @@ void DeltaData::MergeFrom(const ::google::protobuf::Message& from) {
 
 void DeltaData::MergeFrom(const DeltaData& from) {
   GOOGLE_CHECK_NE(&from, this);
+  myfantasyname_.MergeFrom(from.myfantasyname_);
   teamstates_.MergeFrom(from.teamstates_);
   datas_.MergeFrom(from.datas_);
   players_.MergeFrom(from.players_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_type()) {
       set_type(from.type());
-    }
-    if (from.has_myfantasyname()) {
-      mutable_myfantasyname()->::fantasybit::MyFantasyName::MergeFrom(from.myfantasyname());
     }
     if (from.has_globalstate()) {
       mutable_globalstate()->::fantasybit::GlobalState::MergeFrom(from.globalstate());
@@ -9533,7 +9528,7 @@ bool DeltaData::IsInitialized() const {
 void DeltaData::Swap(DeltaData* other) {
   if (other != this) {
     std::swap(type_, other->type_);
-    std::swap(myfantasyname_, other->myfantasyname_);
+    myfantasyname_.Swap(&other->myfantasyname_);
     std::swap(globalstate_, other->globalstate_);
     teamstates_.Swap(&other->teamstates_);
     datas_.Swap(&other->datas_);

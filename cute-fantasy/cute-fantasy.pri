@@ -6,7 +6,6 @@ SOURCES += \
     $$PWD/../src/FantasyName.cpp \
     $$PWD/../src/Generator.cpp \
     $$PWD/../src/Processor.cpp \
-    $$PWD/../src/ProtoData.pb.cc \
     $$PWD/../src/Source.cpp \
     $$PWD/main.cpp \
     $$PWD/fantasynamesetupdialog.cpp \
@@ -45,15 +44,37 @@ SOURCES += \
     $$PWD/gameprojectionmodelview.cpp \
     $$PWD/gameprojectiontablemodel.cpp \
     $$PWD/core.cpp \
-    $$PWD/../src/StaticData.pb.cc \
-    $$PWD/../src/StatusData.pb.cc
+    $$PWD/../generated/ProtoData.pb.cc \
+    $$PWD/../generated/StaticData.pb.cc \
+    $$PWD/../generated/StatusData.pb.cc \
+    $$PWD/debug/moc_client.cpp \
+    $$PWD/debug/moc_demoui.cpp \
+    $$PWD/debug/moc_fantasynamesetupdialog.cpp \
+    $$PWD/debug/moc_gamesoftheweekdialog.cpp \
+    $$PWD/debug/moc_LAPIWorker.cpp \
+    $$PWD/debug/moc_NodeWorker.cpp \
+    $$PWD/debug/moc_RestFullCall.cpp \
+    $$PWD/debug/moc_sfgui.cpp \
+    $$PWD/debug/moc_singleapplication.cpp \
+    $$PWD/debug/moc_spinboxdelegate.cpp \
+    $$PWD/debug/moc_splashdialog.cpp \
+    $$PWD/debug/moc_statuswidget.cpp \
+    $$PWD/debug/moc_TestCoreGUIForm.cpp \
+    $$PWD/GeneratedFiles/qrc_resources.cpp \
+    $$PWD/client.cpp \
+    $$PWD/dataagentui.cpp \
+    $$PWD/fantasyplayerui.cpp \
+    $$PWD/sfgui.cpp
 
 
 DISTFILES += \
     $$PWD/../src/DataTrans.proto \
     $$PWD/../src/ProtoData.proto \
     $$PWD/../src/StaticData.proto \
-    $$PWD/../src/StatusData.proto
+    $$PWD/../src/StatusData.proto \
+    $$PWD/../proto/ProtoData.proto \
+    $$PWD/../proto/StaticData.proto \
+    $$PWD/../proto/StatusData.proto
 
 HEADERS += \
     $$PWD/../src/Commissioner.h \
@@ -65,7 +86,6 @@ HEADERS += \
     $$PWD/../src/fbutils.h \
     $$PWD/../src/Generator.h \
     $$PWD/../src/Processor.h \
-    $$PWD/../src/ProtoData.pb.h \
     $$PWD/../src/Source.h \
     $$PWD/cli.h \
     $$PWD/fantasynamesetupdialog.h \
@@ -112,8 +132,22 @@ HEADERS += \
     $$PWD/gameprojectiontablemodel.h \
     $$PWD/viewmodels.h \
     $$PWD/core.h \
-    $$PWD/../src/StaticData.pb.h \
-    $$PWD/../src/StatusData.pb.h
+    $$PWD/../generated/ProtoData.pb.h \
+    $$PWD/../generated/StaticData.pb.h \
+    $$PWD/../generated/StatusData.pb.h \
+    $$PWD/tmp/ui/ui_demoui.h \
+    $$PWD/tmp/ui/ui_fantasynamesetupdialog.h \
+    $$PWD/tmp/ui/ui_fantasyplayerui.h \
+    $$PWD/tmp/ui/ui_Form.h \
+    $$PWD/tmp/ui/ui_gamesoftheweekdialog.h \
+    $$PWD/tmp/ui/ui_sfgui.h \
+    $$PWD/tmp/ui/ui_splashdialog.h \
+    $$PWD/tmp/ui/ui_statuswidget.h \
+    $$PWD/tmp/ui/ui_TestCoreGUIForm.h \
+    $$PWD/client.h \
+    $$PWD/dataagentui.h \
+    $$PWD/fantasyplayerui.h \
+    $$PWD/sfgui.h
 
 FORMS += \
     $$PWD/fantasynamesetupdialog.ui \
