@@ -6,10 +6,13 @@
 //
 //
 
-#include "NameData.h"
-#include "qdebug.h"
+#include <QDebug>
 #include <vector>
+#include "NameData.h"
 #include "fbutils.h"
+#include "FantasyName.h"
+#include "leveldb/slice.h"
+
 
 using namespace std;
 using namespace fantasybit;
@@ -31,7 +34,7 @@ void NameData::AddNewName(const std::string &pubkey,const std::string &name) {
 
     auto hash = FantasyName::name_hash(name);
 
-    leveldb::Slice hkey((char*)&hash, sizeof(dectype(FantasyName::name_hash)));
+    leveldb::Slice hkey((char*)&hash, sizeof(decltype(FantasyName::name_hash)));
     namestore->Put(write_sync, hkey, fn.SerializeToString());
 
     qDebug() << fn.DebugString();

@@ -16,10 +16,7 @@ SOURCES += \
     $$PWD/descriptable.cpp \
     $$PWD/singleapplication.cpp \
     $$PWD/teamsloader.cpp \
-    $$PWD/spinboxdelegate.cpp \
-#    $$PWD/dataagentui.cpp \
-#    $$PWD/fantasyplayerui.cpp \
-    $$PWD/demoui.cpp \
+    $$PWD/spinboxdelegate.cpp \    
     $$PWD/playerloader.cpp \
     $$PWD/RestFullCall.cpp \
     $$PWD/LAPIWorker.cpp \
@@ -46,34 +43,12 @@ SOURCES += \
     $$PWD/core.cpp \
     $$PWD/../generated/ProtoData.pb.cc \
     $$PWD/../generated/StaticData.pb.cc \
-    $$PWD/../generated/StatusData.pb.cc \
-    $$PWD/debug/moc_client.cpp \
-    $$PWD/debug/moc_demoui.cpp \
-    $$PWD/debug/moc_fantasynamesetupdialog.cpp \
-    $$PWD/debug/moc_gamesoftheweekdialog.cpp \
-    $$PWD/debug/moc_LAPIWorker.cpp \
-    $$PWD/debug/moc_NodeWorker.cpp \
-    $$PWD/debug/moc_RestFullCall.cpp \
-    $$PWD/debug/moc_sfgui.cpp \
-    $$PWD/debug/moc_singleapplication.cpp \
-    $$PWD/debug/moc_spinboxdelegate.cpp \
-    $$PWD/debug/moc_splashdialog.cpp \
-    $$PWD/debug/moc_statuswidget.cpp \
-    $$PWD/debug/moc_TestCoreGUIForm.cpp \
-    $$PWD/GeneratedFiles/qrc_resources.cpp \
-    $$PWD/client.cpp \
-    $$PWD/dataagentui.cpp \
-    $$PWD/fantasyplayerui.cpp \
-    $$PWD/sfgui.cpp \
+    $$PWD/../generated/StatusData.pb.cc \        
     $$PWD/../src/NameData.cpp \
     $$PWD/../generated/NameData.pb.cc
 
 
 DISTFILES += \
-    $$PWD/../src/DataTrans.proto \
-    $$PWD/../src/ProtoData.proto \
-    $$PWD/../src/StaticData.proto \
-    $$PWD/../src/StatusData.proto \
     $$PWD/../proto/ProtoData.proto \
     $$PWD/../proto/StaticData.proto \
     $$PWD/../proto/StatusData.proto \
@@ -90,7 +65,6 @@ HEADERS += \
     $$PWD/../src/Generator.h \
     $$PWD/../src/Processor.h \
     $$PWD/../src/Source.h \
-    $$PWD/cli.h \
     $$PWD/fantasynamesetupdialog.h \
     $$PWD/gamesoftheweekdialog.h \
     $$PWD/splashdialog.h \
@@ -105,10 +79,7 @@ HEADERS += \
     $$PWD/spinboxdelegate.h \
     $$PWD/playerloader.h \
     $$PWD/tkeyedlist.h \
-#    $$PWD/dataagentui.h \
-#    $$PWD/fantasyplayerui.h \
-    $$PWD/scheduleloader.h \
-    $$PWD/demoui.h \
+    $$PWD/scheduleloader.h \    
     $$PWD/RestFullCall.h \
     $$PWD/LAPIWorker.h \
     $$PWD/TestCoreGUIForm.h \
@@ -137,20 +108,7 @@ HEADERS += \
     $$PWD/core.h \
     $$PWD/../generated/ProtoData.pb.h \
     $$PWD/../generated/StaticData.pb.h \
-    $$PWD/../generated/StatusData.pb.h \
-    $$PWD/tmp/ui/ui_demoui.h \
-    $$PWD/tmp/ui/ui_fantasynamesetupdialog.h \
-    $$PWD/tmp/ui/ui_fantasyplayerui.h \
-    $$PWD/tmp/ui/ui_Form.h \
-    $$PWD/tmp/ui/ui_gamesoftheweekdialog.h \
-    $$PWD/tmp/ui/ui_sfgui.h \
-    $$PWD/tmp/ui/ui_splashdialog.h \
-    $$PWD/tmp/ui/ui_statuswidget.h \
-    $$PWD/tmp/ui/ui_TestCoreGUIForm.h \
-    $$PWD/client.h \
-    $$PWD/dataagentui.h \
-    $$PWD/fantasyplayerui.h \
-    $$PWD/sfgui.h \
+    $$PWD/../generated/StatusData.pb.h \        
     $$PWD/../src/NameData.h \
     $$PWD/../generated/NameData.pb.h
 
@@ -159,9 +117,7 @@ FORMS += \
     $$PWD/gamesoftheweekdialog.ui \
     $$PWD/splashdialog.ui \
     $$PWD/statuswidget.ui \
-    $$PWD/Form.ui \
-    $$PWD/fantasyplayerui.ui \
-    $$PWD/demoui.ui \
+    $$PWD/Form.ui \        
     $$PWD/TestCoreGUIForm.ui
 
 RESOURCES += \
