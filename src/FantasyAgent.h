@@ -13,6 +13,7 @@
 #include <fc/crypto/elliptic.hpp>
 #include "ProtoData.pb.h"
 #include "FantasyName.h"
+#include <map>
 
 namespace fantasybit
 {
@@ -33,6 +34,8 @@ public:
     FantasyAgent();
 
     std::multimap<std::string,std::string> getMyNames();
+    std::map<std::string,MyFantasyName> getMyNamesStatus();
+
 	bool makeGenesis();
     void onSignedTransaction(SignedTransaction &sn);
     bool HaveClient();

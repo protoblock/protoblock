@@ -23,9 +23,9 @@ namespace {
 const ::google::protobuf::Descriptor* FantasyNameBal_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   FantasyNameBal_reflection_ = NULL;
-const ::google::protobuf::Descriptor* FantasyBitAword_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* FantasyBitAward_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  FantasyBitAword_reflection_ = NULL;
+  FantasyBitAward_reflection_ = NULL;
 
 }  // namespace
 
@@ -53,23 +53,23 @@ void protobuf_AssignDesc_NameData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FantasyNameBal));
-  FantasyBitAword_descriptor_ = file->message_type(1);
-  static const int FantasyBitAword_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAword, name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAword, proj_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAword, aword_),
+  FantasyBitAward_descriptor_ = file->message_type(1);
+  static const int FantasyBitAward_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAward, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAward, proj_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAward, award_),
   };
-  FantasyBitAword_reflection_ =
+  FantasyBitAward_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      FantasyBitAword_descriptor_,
-      FantasyBitAword::default_instance_,
-      FantasyBitAword_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAword, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAword, _unknown_fields_),
+      FantasyBitAward_descriptor_,
+      FantasyBitAward::default_instance_,
+      FantasyBitAward_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAward, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitAward, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(FantasyBitAword));
+      sizeof(FantasyBitAward));
 }
 
 namespace {
@@ -85,7 +85,7 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     FantasyNameBal_descriptor_, &FantasyNameBal::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    FantasyBitAword_descriptor_, &FantasyBitAword::default_instance());
+    FantasyBitAward_descriptor_, &FantasyBitAward::default_instance());
 }
 
 }  // namespace
@@ -93,8 +93,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void protobuf_ShutdownFile_NameData_2eproto() {
   delete FantasyNameBal::default_instance_;
   delete FantasyNameBal_reflection_;
-  delete FantasyBitAword::default_instance_;
-  delete FantasyBitAword_reflection_;
+  delete FantasyBitAward::default_instance_;
+  delete FantasyBitAward_reflection_;
 }
 
 void protobuf_AddDesc_NameData_2eproto() {
@@ -106,14 +106,14 @@ void protobuf_AddDesc_NameData_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\016NameData.proto\022\nfantasybit\"@\n\016FantasyN"
     "ameBal\022\014\n\004name\030\n \001(\t\022\022\n\npublic_key\030\024 \001(\t"
-    "\022\014\n\004bits\030\036 \001(\004\"<\n\017FantasyBitAword\022\014\n\004nam"
-    "e\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\r\n\005aword\030\036 \001(\004", 156);
+    "\022\014\n\004bits\030\036 \001(\004\"<\n\017FantasyBitAward\022\014\n\004nam"
+    "e\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\r\n\005award\030\036 \001(\004", 156);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NameData.proto", &protobuf_RegisterTypes);
   FantasyNameBal::default_instance_ = new FantasyNameBal();
-  FantasyBitAword::default_instance_ = new FantasyBitAword();
+  FantasyBitAward::default_instance_ = new FantasyBitAward();
   FantasyNameBal::default_instance_->InitAsDefaultInstance();
-  FantasyBitAword::default_instance_->InitAsDefaultInstance();
+  FantasyBitAward::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_NameData_2eproto);
 }
 
@@ -449,38 +449,38 @@ void FantasyNameBal::Swap(FantasyNameBal* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int FantasyBitAword::kNameFieldNumber;
-const int FantasyBitAword::kProjFieldNumber;
-const int FantasyBitAword::kAwordFieldNumber;
+const int FantasyBitAward::kNameFieldNumber;
+const int FantasyBitAward::kProjFieldNumber;
+const int FantasyBitAward::kAwardFieldNumber;
 #endif  // !_MSC_VER
 
-FantasyBitAword::FantasyBitAword()
+FantasyBitAward::FantasyBitAward()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void FantasyBitAword::InitAsDefaultInstance() {
+void FantasyBitAward::InitAsDefaultInstance() {
 }
 
-FantasyBitAword::FantasyBitAword(const FantasyBitAword& from)
+FantasyBitAward::FantasyBitAward(const FantasyBitAward& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void FantasyBitAword::SharedCtor() {
+void FantasyBitAward::SharedCtor() {
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   proj_ = 0;
-  aword_ = GOOGLE_ULONGLONG(0);
+  award_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-FantasyBitAword::~FantasyBitAword() {
+FantasyBitAward::~FantasyBitAward() {
   SharedDtor();
 }
 
-void FantasyBitAword::SharedDtor() {
+void FantasyBitAward::SharedDtor() {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
@@ -488,28 +488,28 @@ void FantasyBitAword::SharedDtor() {
   }
 }
 
-void FantasyBitAword::SetCachedSize(int size) const {
+void FantasyBitAward::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* FantasyBitAword::descriptor() {
+const ::google::protobuf::Descriptor* FantasyBitAward::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return FantasyBitAword_descriptor_;
+  return FantasyBitAward_descriptor_;
 }
 
-const FantasyBitAword& FantasyBitAword::default_instance() {
+const FantasyBitAward& FantasyBitAward::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_NameData_2eproto();
   return *default_instance_;
 }
 
-FantasyBitAword* FantasyBitAword::default_instance_ = NULL;
+FantasyBitAward* FantasyBitAward::default_instance_ = NULL;
 
-FantasyBitAword* FantasyBitAword::New() const {
-  return new FantasyBitAword;
+FantasyBitAward* FantasyBitAward::New() const {
+  return new FantasyBitAward;
 }
 
-void FantasyBitAword::Clear() {
+void FantasyBitAward::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_name()) {
       if (name_ != &::google::protobuf::internal::kEmptyString) {
@@ -517,13 +517,13 @@ void FantasyBitAword::Clear() {
       }
     }
     proj_ = 0;
-    aword_ = GOOGLE_ULONGLONG(0);
+    award_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool FantasyBitAword::MergePartialFromCodedStream(
+bool FantasyBitAward::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -557,19 +557,19 @@ bool FantasyBitAword::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(240)) goto parse_aword;
+        if (input->ExpectTag(240)) goto parse_award;
         break;
       }
 
-      // optional uint64 aword = 30;
+      // optional uint64 award = 30;
       case 30: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_aword:
+         parse_award:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &aword_)));
-          set_has_aword();
+                 input, &award_)));
+          set_has_award();
         } else {
           goto handle_uninterpreted;
         }
@@ -593,7 +593,7 @@ bool FantasyBitAword::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void FantasyBitAword::SerializeWithCachedSizes(
+void FantasyBitAward::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // optional string name = 10;
   if (has_name()) {
@@ -609,9 +609,9 @@ void FantasyBitAword::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(20, this->proj(), output);
   }
 
-  // optional uint64 aword = 30;
-  if (has_aword()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->aword(), output);
+  // optional uint64 award = 30;
+  if (has_award()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->award(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -620,7 +620,7 @@ void FantasyBitAword::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* FantasyBitAword::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* FantasyBitAward::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // optional string name = 10;
   if (has_name()) {
@@ -637,9 +637,9 @@ void FantasyBitAword::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(20, this->proj(), target);
   }
 
-  // optional uint64 aword = 30;
-  if (has_aword()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->aword(), target);
+  // optional uint64 award = 30;
+  if (has_award()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->award(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -649,7 +649,7 @@ void FantasyBitAword::SerializeWithCachedSizes(
   return target;
 }
 
-int FantasyBitAword::ByteSize() const {
+int FantasyBitAward::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -667,11 +667,11 @@ int FantasyBitAword::ByteSize() const {
           this->proj());
     }
 
-    // optional uint64 aword = 30;
-    if (has_aword()) {
+    // optional uint64 award = 30;
+    if (has_award()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->aword());
+          this->award());
     }
 
   }
@@ -686,10 +686,10 @@ int FantasyBitAword::ByteSize() const {
   return total_size;
 }
 
-void FantasyBitAword::MergeFrom(const ::google::protobuf::Message& from) {
+void FantasyBitAward::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const FantasyBitAword* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const FantasyBitAword*>(
+  const FantasyBitAward* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const FantasyBitAward*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -698,7 +698,7 @@ void FantasyBitAword::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void FantasyBitAword::MergeFrom(const FantasyBitAword& from) {
+void FantasyBitAward::MergeFrom(const FantasyBitAward& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_name()) {
@@ -707,46 +707,46 @@ void FantasyBitAword::MergeFrom(const FantasyBitAword& from) {
     if (from.has_proj()) {
       set_proj(from.proj());
     }
-    if (from.has_aword()) {
-      set_aword(from.aword());
+    if (from.has_award()) {
+      set_award(from.award());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void FantasyBitAword::CopyFrom(const ::google::protobuf::Message& from) {
+void FantasyBitAward::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void FantasyBitAword::CopyFrom(const FantasyBitAword& from) {
+void FantasyBitAward::CopyFrom(const FantasyBitAward& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool FantasyBitAword::IsInitialized() const {
+bool FantasyBitAward::IsInitialized() const {
 
   return true;
 }
 
-void FantasyBitAword::Swap(FantasyBitAword* other) {
+void FantasyBitAward::Swap(FantasyBitAward* other) {
   if (other != this) {
     std::swap(name_, other->name_);
     std::swap(proj_, other->proj_);
-    std::swap(aword_, other->aword_);
+    std::swap(award_, other->award_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::google::protobuf::Metadata FantasyBitAword::GetMetadata() const {
+::google::protobuf::Metadata FantasyBitAward::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = FantasyBitAword_descriptor_;
-  metadata.reflection = FantasyBitAword_reflection_;
+  metadata.descriptor = FantasyBitAward_descriptor_;
+  metadata.reflection = FantasyBitAward_reflection_;
   return metadata;
 }
 

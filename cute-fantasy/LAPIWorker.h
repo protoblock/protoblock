@@ -8,7 +8,8 @@
 #include "FantasyAgent.h"
 #include "Processor.h"
 #include "FantasyAgent.h"
-
+#include "NameData.h"
+#include "Data.h"
 
 class MainLAPIWorker : public QObject
 {
@@ -24,9 +25,12 @@ class MainLAPIWorker : public QObject
     int numto = std::numeric_limits<int>::max();
     bool amlive = false;
     QTimer * timer;
-    fantasybit::BlockProcessor processor;
     fantasybit::FantasyAgent agent{};
-    //DeltaData deltadata;
+    fantasybit::DataData data;
+    fantasybit::NameData namedata;
+    fantasybit::BlockProcessor processor;
+
+    fantasybit::DeltaData deltadata{};
 
 public:
     MainLAPIWorker(QObject * parent=0);
@@ -40,7 +44,8 @@ signals:
     void ProcessNext();
     void GetNext();
     void OnData(const fantasybit::DeltaData &);
-    void OnLive();
+    void OnLive(const fantasybit::DeltaData &);
+    void SubscribeLive();
 
 public slots:
 

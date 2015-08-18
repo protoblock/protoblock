@@ -12,7 +12,7 @@
 #include "fbutils.h"
 #include "FantasyName.h"
 #include "leveldb/slice.h"
-
+#include "Commissioner.h"
 
 using namespace std;
 using namespace fantasybit;
@@ -26,7 +26,7 @@ void NameData::init() {
     status = leveldb::DB::Open(options, filedir("namestore"), &namestore);
 }
 
-void NameData::AddNewName(const std::string &pubkey,const std::string &name) {
+void NameData::AddNewName(const std::string &name,const std::string &pubkey) {
     FantasyNameBal fn{};
     fn.set_name(name);
     fn.set_public_key(pubkey);
@@ -38,6 +38,9 @@ void NameData::AddNewName(const std::string &pubkey,const std::string &name) {
     namestore->Put(write_sync, hkey, fn.SerializeAsString());
 
     qDebug() << fn.DebugString();
+
+    Commissioner::AddName(name,pubkey);
+    OnFantasyName(name);
 }
 
 void NameData::AddBalance(const std::string name, uint64_t amount) {
@@ -67,7 +70,17 @@ void NameData::AddProjection(const string &name, const string &player,
     m = PlayerIDProjections[player];
     m[name] = proj;
     qDebug() << "proj: " << key << ":" << proj;
+    OnProjection(name,player,proj);
 }
+
+void NameData::OnProjection(const std::string &name, const std::string &player, uint32_t proj) {
+
+}
+
+void NameData::OnFantasyName(const std::string name) {
+
+}
+
 
 
 std::string NameData::filedir(const std::string &in) {

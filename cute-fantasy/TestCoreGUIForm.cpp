@@ -7,7 +7,7 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
     QWidget(parent),
     ui(new Ui::TestCoreGUIForm)
 {
-    qRegisterMetaType<fantasybit::DeltaData>("DeltaData");
+    qRegisterMetaType<fantasybit::GlobalState>("GlobalState");
 
     ui->setupUi(this);
     //notify the APIThread that WE the main form are alive
@@ -19,7 +19,7 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
     QObject::connect(myCoreInstance,SIGNAL(sendNotificationWithData(QVariant)),this,SLOT(handleNotificationOrResponse(QVariant)));
     QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
 
-    QObject::connect(myCoreInstance,SIGNAL(OnLive()),this,SLOT(GoLive()));
+    QObject::connect(myCoreInstance,SIGNAL(OnLive(DeltaData)),this,SLOT(GoLive(DeltaData)));
     QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
 
 }

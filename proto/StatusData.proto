@@ -38,3 +38,17 @@ message TeamDepth {
     repeated string te = 40;
     repeated string k = 50;
 }
+
+
+message GlobalState {
+    enum State {
+        PREDRAFT = 1;
+        PRESEASON = 2;
+        ROSTER53MAN = 3;
+        INSEASON = 4;
+    }
+
+    optional State state =1;
+    optional uint32 season =10;
+    optional uint32 week = 20;
+}

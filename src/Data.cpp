@@ -14,7 +14,7 @@
 using namespace std;
 using namespace fantasybit;
 
-void Data::init() {
+void DataData::init() {
     write_sync.sync = true;
     leveldb::Options options;
     options.create_if_missing = true;
@@ -22,38 +22,87 @@ void Data::init() {
 
     status = leveldb::DB::Open(options, filedir("staticstore"), &staticstore);
     status = leveldb::DB::Open(options, filedir("statusstore"), &statusstore);
+
 }
 
-void Data::AddNewPlayer(std::string playerid, const PlayerBase &pb) {
+void DataData::AddNewPlayer(std::string playerid, const PlayerBase &pb) {
     staticstore->Put(write_sync, playerid, pb.SerializeAsString());
     qDebug() << QString::fromStdString(pb.DebugString());
 }
 
-void Data::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
+void DataData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
     string key = "scheduleweek:" + to_string(week);
     staticstore->Put(write_sync, key, ws.SerializeAsString());
     qDebug() << QString::fromStdString(ws.DebugString());
 }
 
-void Data::AddGameResult(std::string &gameid, const GameResult&gs) {
+void DataData::AddGameResult(const std::string &gameid, const GameResult&gs) {
     string key = "gameresult:" + gameid;
     staticstore->Put(write_sync, key, gs.SerializeAsString());
     qDebug() << QString::fromStdString(gs.DebugString());
 }
 
-void Data::UpdatePlayerStatus(std::string &playerid, const PlayerStatus &ps) {
+void DataData::UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &ps) {
     statusstore->Put(write_sync, playerid, ps.SerializeAsString());
     qDebug() << QString::fromStdString(ps.DebugString());
-    //OnStatusChanged
+
+    auto it = MyPlayerStatus.find(playerid);
+    if ( it == end(MyPlayerStatus)) {
+        MyPlayerStatus[playerid] = ps;
+        OnNewPlayer(playerid);
+        if ( ps.has_teamid())
+            OnPlayerSign(playerid,ps.teamid());
+    }
+    else {
+        auto old = it->second;
+        MyPlayerStatus[playerid] = ps;
+
+        if ( old.has_teamid() ) {
+            if ( ps.has_teamid() ) {
+                if ( old.teamid() != ps.teamid()) {
+                    OnPlayerTrade(playerid,old.teamid(),ps.teamid());
+                }
+                if ( ps.has_status() ) {
+                    if ( !old.has_status() )
+                        OnPlayerStatus(playerid,ps);
+                    else if ( old.status() != ps.status())
+                        OnPlayerStatus(playerid,ps);
+                }
+            }
+            else {
+                OnPlayerRelease(playerid,old.teamid());
+            }
+        }
+        else if ( ps.has_teamid() )
+            OnPlayerSign(playerid,ps.teamid());
+    }
 }
 
-void Data::UpdateGameStatus(std::string &gameid, const GameStatus &gs) {
+void DataData::OnNewPlayer(const std::string &pid) {}
+
+void DataData::OnPlayerTrade(const std::string &pid, const std::string &tid,
+                         const std::string &ntid) {
+    removePlayerTeam(pid,tid);
+    addPlayerTeam(pid,ntid);
+}
+
+void DataData::OnPlayerRelease(const std::string &pid, const std::string &tid) {
+    removePlayerTeam(pid,tid);
+}
+
+void DataData::OnPlayerSign(const std::string &pid, const std::string &tid) {
+    addPlayerTeam(pid,tid);
+}
+
+void DataData::OnPlayerStatus(const std::string &pid,PlayerStatus ps) {}
+
+void DataData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs) {
     string key = "gamestatus:" + gameid;
     statusstore->Put(write_sync, key, gs.SerializeAsString());
     qDebug() << QString::fromStdString(gs.DebugString());
 }
 
-vector<GameRoster> Data::GetWeeklyGameRosters(int week) {
+vector<GameRoster> DataData::GetWeeklyGameRosters(int week) {
     vector<GameRoster> gr{};
     WeeklySchedule ws{};
     string temp;
@@ -84,7 +133,7 @@ vector<GameRoster> Data::GetWeeklyGameRosters(int week) {
 }
 
 std::unordered_map<std::string,PlayerDetail>
-        Data::GetTeamRoster(const std::string &teamid) {
+        DataData::GetTeamRoster(const std::string &teamid) {
     std::unordered_map<std::string,PlayerDetail> vpb{};
     auto teamroster = MyTeamRoster[teamid];
     string temp;
@@ -104,7 +153,26 @@ std::unordered_map<std::string,PlayerDetail>
     return vpb;
 }
 
+GlobalState DataData::GetGlobalState() {
+    GlobalState gs{};
+    std::string temp;
+    if (statusstore->Get(leveldb::ReadOptions(), "globalstate", &temp).ok()) {
+        gs.ParseFromString(temp);
+    }
+    else {
+        qCritical() << "No GlobalState";
+    }
 
-std::string Data::filedir(const std::string &in) {
+    return gs;
+}
+
+void DataData::OnGlobalState(const GlobalState &gs) {
+    statusstore->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
+    qDebug() << gs.DebugString();
+}
+
+void DataData::OnGameStart(const std::string &gameid, const GameStatus &gs) {}
+
+std::string DataData::filedir(const std::string &in) {
     return GET_ROOT_DIR() + "index/" + in;
 }

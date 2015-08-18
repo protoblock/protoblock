@@ -70,7 +70,7 @@ void SnapShotViewModel::fromDeltaData(const DeltaData & data) {
         globalStateModel.copyFrom(data.globalstate());
 
     for (auto t : data.datas()) {
-        if (t.type() == ::fantasybit::Data_Type_TEAM) {
+        if (true){//TODO t.type() == ::fantasybit::Data_Type_TEAM) {
             TeamDataViewModel viewModel(t);
             teams.insert(viewModel.teamId(),viewModel);
         }

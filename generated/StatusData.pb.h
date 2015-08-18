@@ -37,6 +37,7 @@ void protobuf_ShutdownFile_StatusData_2eproto();
 class PlayerStatus;
 class GameStatus;
 class TeamDepth;
+class GlobalState;
 
 enum PlayerStatus_Status {
   PlayerStatus_Status_ACTIVE = 0,
@@ -79,6 +80,27 @@ inline bool GameStatus_Status_Parse(
     const ::std::string& name, GameStatus_Status* value) {
   return ::google::protobuf::internal::ParseNamedEnum<GameStatus_Status>(
     GameStatus_Status_descriptor(), name, value);
+}
+enum GlobalState_State {
+  GlobalState_State_PREDRAFT = 1,
+  GlobalState_State_PRESEASON = 2,
+  GlobalState_State_ROSTER53MAN = 3,
+  GlobalState_State_INSEASON = 4
+};
+bool GlobalState_State_IsValid(int value);
+const GlobalState_State GlobalState_State_State_MIN = GlobalState_State_PREDRAFT;
+const GlobalState_State GlobalState_State_State_MAX = GlobalState_State_INSEASON;
+const int GlobalState_State_State_ARRAYSIZE = GlobalState_State_State_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* GlobalState_State_descriptor();
+inline const ::std::string& GlobalState_State_Name(GlobalState_State value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    GlobalState_State_descriptor(), value);
+}
+inline bool GlobalState_State_Parse(
+    const ::std::string& name, GlobalState_State* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<GlobalState_State>(
+    GlobalState_State_descriptor(), name, value);
 }
 enum PlayerGameStatus {
   OUT = 0,
@@ -498,6 +520,134 @@ class TeamDepth : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static TeamDepth* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class GlobalState : public ::google::protobuf::Message {
+ public:
+  GlobalState();
+  virtual ~GlobalState();
+
+  GlobalState(const GlobalState& from);
+
+  inline GlobalState& operator=(const GlobalState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GlobalState& default_instance();
+
+  void Swap(GlobalState* other);
+
+  // implements Message ----------------------------------------------
+
+  GlobalState* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const GlobalState& from);
+  void MergeFrom(const GlobalState& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef GlobalState_State State;
+  static const State PREDRAFT = GlobalState_State_PREDRAFT;
+  static const State PRESEASON = GlobalState_State_PRESEASON;
+  static const State ROSTER53MAN = GlobalState_State_ROSTER53MAN;
+  static const State INSEASON = GlobalState_State_INSEASON;
+  static inline bool State_IsValid(int value) {
+    return GlobalState_State_IsValid(value);
+  }
+  static const State State_MIN =
+    GlobalState_State_State_MIN;
+  static const State State_MAX =
+    GlobalState_State_State_MAX;
+  static const int State_ARRAYSIZE =
+    GlobalState_State_State_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  State_descriptor() {
+    return GlobalState_State_descriptor();
+  }
+  static inline const ::std::string& State_Name(State value) {
+    return GlobalState_State_Name(value);
+  }
+  static inline bool State_Parse(const ::std::string& name,
+      State* value) {
+    return GlobalState_State_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.GlobalState.State state = 1;
+  inline bool has_state() const;
+  inline void clear_state();
+  static const int kStateFieldNumber = 1;
+  inline ::fantasybit::GlobalState_State state() const;
+  inline void set_state(::fantasybit::GlobalState_State value);
+
+  // optional uint32 season = 10;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 10;
+  inline ::google::protobuf::uint32 season() const;
+  inline void set_season(::google::protobuf::uint32 value);
+
+  // optional uint32 week = 20;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 20;
+  inline ::google::protobuf::uint32 week() const;
+  inline void set_week(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.GlobalState)
+ private:
+  inline void set_has_state();
+  inline void clear_has_state();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int state_;
+  ::google::protobuf::uint32 season_;
+  ::google::protobuf::uint32 week_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StatusData_2eproto();
+  friend void protobuf_AssignDesc_StatusData_2eproto();
+  friend void protobuf_ShutdownFile_StatusData_2eproto();
+
+  void InitAsDefaultInstance();
+  static GlobalState* default_instance_;
+};
 // ===================================================================
 
 
@@ -871,6 +1021,77 @@ TeamDepth::mutable_k() {
   return &k_;
 }
 
+// -------------------------------------------------------------------
+
+// GlobalState
+
+// optional .fantasybit.GlobalState.State state = 1;
+inline bool GlobalState::has_state() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GlobalState::set_has_state() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GlobalState::clear_has_state() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GlobalState::clear_state() {
+  state_ = 1;
+  clear_has_state();
+}
+inline ::fantasybit::GlobalState_State GlobalState::state() const {
+  return static_cast< ::fantasybit::GlobalState_State >(state_);
+}
+inline void GlobalState::set_state(::fantasybit::GlobalState_State value) {
+  assert(::fantasybit::GlobalState_State_IsValid(value));
+  set_has_state();
+  state_ = value;
+}
+
+// optional uint32 season = 10;
+inline bool GlobalState::has_season() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void GlobalState::set_has_season() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void GlobalState::clear_has_season() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void GlobalState::clear_season() {
+  season_ = 0u;
+  clear_has_season();
+}
+inline ::google::protobuf::uint32 GlobalState::season() const {
+  return season_;
+}
+inline void GlobalState::set_season(::google::protobuf::uint32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional uint32 week = 20;
+inline bool GlobalState::has_week() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void GlobalState::set_has_week() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void GlobalState::clear_has_week() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void GlobalState::clear_week() {
+  week_ = 0u;
+  clear_has_week();
+}
+inline ::google::protobuf::uint32 GlobalState::week() const {
+  return week_;
+}
+inline void GlobalState::set_week(::google::protobuf::uint32 value) {
+  set_has_week();
+  week_ = value;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -887,6 +1108,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::PlayerStatus_Statu
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::GameStatus_Status>() {
   return ::fantasybit::GameStatus_Status_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::GlobalState_State>() {
+  return ::fantasybit::GlobalState_State_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::PlayerGameStatus>() {

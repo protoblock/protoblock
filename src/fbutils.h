@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include "core.h"
 
+#define QTD QString::fromStdString
 
 namespace fantasybit {
 

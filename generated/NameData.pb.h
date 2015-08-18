@@ -34,7 +34,7 @@ void protobuf_AssignDesc_NameData_2eproto();
 void protobuf_ShutdownFile_NameData_2eproto();
 
 class FantasyNameBal;
-class FantasyBitAword;
+class FantasyBitAward;
 
 // ===================================================================
 
@@ -150,14 +150,14 @@ class FantasyNameBal : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class FantasyBitAword : public ::google::protobuf::Message {
+class FantasyBitAward : public ::google::protobuf::Message {
  public:
-  FantasyBitAword();
-  virtual ~FantasyBitAword();
+  FantasyBitAward();
+  virtual ~FantasyBitAward();
 
-  FantasyBitAword(const FantasyBitAword& from);
+  FantasyBitAward(const FantasyBitAward& from);
 
-  inline FantasyBitAword& operator=(const FantasyBitAword& from) {
+  inline FantasyBitAward& operator=(const FantasyBitAward& from) {
     CopyFrom(from);
     return *this;
   }
@@ -171,17 +171,17 @@ class FantasyBitAword : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const FantasyBitAword& default_instance();
+  static const FantasyBitAward& default_instance();
 
-  void Swap(FantasyBitAword* other);
+  void Swap(FantasyBitAward* other);
 
   // implements Message ----------------------------------------------
 
-  FantasyBitAword* New() const;
+  FantasyBitAward* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FantasyBitAword& from);
-  void MergeFrom(const FantasyBitAword& from);
+  void CopyFrom(const FantasyBitAward& from);
+  void MergeFrom(const FantasyBitAward& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -223,26 +223,26 @@ class FantasyBitAword : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 proj() const;
   inline void set_proj(::google::protobuf::int32 value);
 
-  // optional uint64 aword = 30;
-  inline bool has_aword() const;
-  inline void clear_aword();
-  static const int kAwordFieldNumber = 30;
-  inline ::google::protobuf::uint64 aword() const;
-  inline void set_aword(::google::protobuf::uint64 value);
+  // optional uint64 award = 30;
+  inline bool has_award() const;
+  inline void clear_award();
+  static const int kAwardFieldNumber = 30;
+  inline ::google::protobuf::uint64 award() const;
+  inline void set_award(::google::protobuf::uint64 value);
 
-  // @@protoc_insertion_point(class_scope:fantasybit.FantasyBitAword)
+  // @@protoc_insertion_point(class_scope:fantasybit.FantasyBitAward)
  private:
   inline void set_has_name();
   inline void clear_has_name();
   inline void set_has_proj();
   inline void clear_has_proj();
-  inline void set_has_aword();
-  inline void clear_has_aword();
+  inline void set_has_award();
+  inline void clear_has_award();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* name_;
-  ::google::protobuf::uint64 aword_;
+  ::google::protobuf::uint64 award_;
   ::google::protobuf::int32 proj_;
 
   mutable int _cached_size_;
@@ -253,7 +253,7 @@ class FantasyBitAword : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_NameData_2eproto();
 
   void InitAsDefaultInstance();
-  static FantasyBitAword* default_instance_;
+  static FantasyBitAward* default_instance_;
 };
 // ===================================================================
 
@@ -426,56 +426,56 @@ inline void FantasyNameBal::set_bits(::google::protobuf::uint64 value) {
 
 // -------------------------------------------------------------------
 
-// FantasyBitAword
+// FantasyBitAward
 
 // optional string name = 10;
-inline bool FantasyBitAword::has_name() const {
+inline bool FantasyBitAward::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void FantasyBitAword::set_has_name() {
+inline void FantasyBitAward::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void FantasyBitAword::clear_has_name() {
+inline void FantasyBitAward::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void FantasyBitAword::clear_name() {
+inline void FantasyBitAward::clear_name() {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     name_->clear();
   }
   clear_has_name();
 }
-inline const ::std::string& FantasyBitAword::name() const {
+inline const ::std::string& FantasyBitAward::name() const {
   return *name_;
 }
-inline void FantasyBitAword::set_name(const ::std::string& value) {
+inline void FantasyBitAward::set_name(const ::std::string& value) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
-inline void FantasyBitAword::set_name(const char* value) {
+inline void FantasyBitAward::set_name(const char* value) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
-inline void FantasyBitAword::set_name(const char* value, size_t size) {
+inline void FantasyBitAward::set_name(const char* value, size_t size) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* FantasyBitAword::mutable_name() {
+inline ::std::string* FantasyBitAward::mutable_name() {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   return name_;
 }
-inline ::std::string* FantasyBitAword::release_name() {
+inline ::std::string* FantasyBitAward::release_name() {
   clear_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -485,7 +485,7 @@ inline ::std::string* FantasyBitAword::release_name() {
     return temp;
   }
 }
-inline void FantasyBitAword::set_allocated_name(::std::string* name) {
+inline void FantasyBitAward::set_allocated_name(::std::string* name) {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
@@ -499,47 +499,47 @@ inline void FantasyBitAword::set_allocated_name(::std::string* name) {
 }
 
 // optional int32 proj = 20;
-inline bool FantasyBitAword::has_proj() const {
+inline bool FantasyBitAward::has_proj() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void FantasyBitAword::set_has_proj() {
+inline void FantasyBitAward::set_has_proj() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void FantasyBitAword::clear_has_proj() {
+inline void FantasyBitAward::clear_has_proj() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void FantasyBitAword::clear_proj() {
+inline void FantasyBitAward::clear_proj() {
   proj_ = 0;
   clear_has_proj();
 }
-inline ::google::protobuf::int32 FantasyBitAword::proj() const {
+inline ::google::protobuf::int32 FantasyBitAward::proj() const {
   return proj_;
 }
-inline void FantasyBitAword::set_proj(::google::protobuf::int32 value) {
+inline void FantasyBitAward::set_proj(::google::protobuf::int32 value) {
   set_has_proj();
   proj_ = value;
 }
 
-// optional uint64 aword = 30;
-inline bool FantasyBitAword::has_aword() const {
+// optional uint64 award = 30;
+inline bool FantasyBitAward::has_award() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void FantasyBitAword::set_has_aword() {
+inline void FantasyBitAward::set_has_award() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void FantasyBitAword::clear_has_aword() {
+inline void FantasyBitAward::clear_has_award() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void FantasyBitAword::clear_aword() {
-  aword_ = GOOGLE_ULONGLONG(0);
-  clear_has_aword();
+inline void FantasyBitAward::clear_award() {
+  award_ = GOOGLE_ULONGLONG(0);
+  clear_has_award();
 }
-inline ::google::protobuf::uint64 FantasyBitAword::aword() const {
-  return aword_;
+inline ::google::protobuf::uint64 FantasyBitAward::award() const {
+  return award_;
 }
-inline void FantasyBitAword::set_aword(::google::protobuf::uint64 value) {
-  set_has_aword();
-  aword_ = value;
+inline void FantasyBitAward::set_award(::google::protobuf::uint64 value) {
+  set_has_award();
+  award_ = value;
 }
 
 

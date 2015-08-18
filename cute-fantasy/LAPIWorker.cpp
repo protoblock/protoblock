@@ -9,7 +9,8 @@
 #include "core.h"
 
 
-MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent)
+MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
+    data{}, namedata{}, processor(data,namedata)
 {
     timer = new QTimer(this);
     node.thread()->connect(node.thread(),
@@ -26,20 +27,25 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent)
     QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
     //QObject::connect(this,SIGNAL(GetNext()),qApp,SLOT(aboutQt()));
     //QObject::connect(timer,SIGNAL(timeout()),myNodeWorker,SLOT(Timer()));
+    QObject::connect(this,SIGNAL(SubscribeLive()),&data,SLOT(OnSubscribeLive()));
+    QObject::connect(this,SIGNAL(SubscribeLive()),&namedata,SLOT(OnSubscribeLive()));
+    QObject::connect(this,SIGNAL(SubscribeLive()),&processor,SLOT(OnSubscribeLive()));
+
 }
 
 void MainLAPIWorker::GoLive() {
-    emit OnLive();
     numto = 0;
     intervalstart = 500;
     timer->start(intervalstart);
 
     //ToDo: convert names with a status OnLive()
-    QMultiMap<QString,QString> qm{};
-    for(auto p : agent.getMyNames()) {
-        qm.insertMulti(QString::fromStdString(p.first),
-                       QString::fromStdString(p.second));
+    for(auto p : agent.getMyNamesStatus()) {
+        deltadata.add_myfantasyname()->CopyFrom(p.second);
     }
+    deltadata.mutable_globalstate()->CopyFrom(data.GetGlobalState());
+
+    emit OnLive(deltadata);
+    emit SubscribeLive();
 
 }
 
@@ -55,15 +61,21 @@ void MainLAPIWorker::processGUIRequest(const QVariant & requestData){
         */
 }
 
-void MainLAPIWorker::getPlayers(int ){
+void MainLAPIWorker::getPlayers(int week){
+    if ( amlive ) {
+        auto allgames = data.GetWeeklyGameRosters(week);
+        //emit sendNotificationWithData(allgames);
+    }
+    /*
     QUrl url("http://api.nfldata.apiphany.com/nfl/v2/JSON/AreAnyGamesInProgress");
     RestfullCall rest;
     rest.moveToThread(QThread::currentThread());
     rest.restFullSynchrounousCallGet(url,"","");
-    emit sendNotificationWithData(QVariant(rest.lastReply()));
+    */
 }
 
 void MainLAPIWorker::startPoint(){
+
     qDebug("Main Core Thread started");
     QMutex mutex;
     mutex.lock();
@@ -158,7 +170,7 @@ bool MainLAPIWorker::Process(fantasybit::Block &b) {
 }
 
 void MainLAPIWorker::doNewDelta() {
-    auto deltasnap = processor.GetandClear();
-    qDebug(deltasnap.DebugString().c_str());
-    emit OnData(deltasnap);
+    //auto deltasnap = processor.GetandClear();
+    //qDebug(deltasnap.DebugString().c_str());
+    //emit OnData(deltasnap);
 }
