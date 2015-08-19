@@ -58,3 +58,4 @@ LIBS += -lLevelDB  \
 include(./boost-includes.pri)
 include (./cute-fantasy.pri)
 
+

@@ -45,7 +45,12 @@ SOURCES += \
     $$PWD/../generated/StaticData.pb.cc \
     $$PWD/../generated/StatusData.pb.cc \        
     $$PWD/../src/NameData.cpp \
-    $$PWD/../generated/NameData.pb.cc
+    $$PWD/../generated/NameData.pb.cc \
+    $$PWD/mainwindow.cpp \
+    $$PWD/playerprojectionwidget.cpp \
+    $$PWD/currentweekwidget.cpp \
+    $$PWD/previousweekwidget.cpp \
+    $$PWD/nextweekwidget.cpp
 
 
 DISTFILES += \
@@ -110,7 +115,12 @@ HEADERS += \
     $$PWD/../generated/StaticData.pb.h \
     $$PWD/../generated/StatusData.pb.h \        
     $$PWD/../src/NameData.h \
-    $$PWD/../generated/NameData.pb.h
+    $$PWD/../generated/NameData.pb.h \
+    $$PWD/mainwindow.h \
+    $$PWD/playerprojectionwidget.h \
+    $$PWD/currentweekwidget.h \
+    $$PWD/previousweekwidget.h \
+    $$PWD/nextweekwidget.h
 
 FORMS += \
     $$PWD/fantasynamesetupdialog.ui \
@@ -118,7 +128,12 @@ FORMS += \
     $$PWD/splashdialog.ui \
     $$PWD/statuswidget.ui \
     $$PWD/Form.ui \        
-    $$PWD/TestCoreGUIForm.ui
+    $$PWD/TestCoreGUIForm.ui \
+    $$PWD/mainwindow.ui \
+    $$PWD/playerprojectionwidget.ui \
+    $$PWD/currentweekwidget.ui \
+    $$PWD/previousweekwidget.ui \
+    $$PWD/nextweekwidget.ui
 
 RESOURCES += \
     $$PWD/resources/resources.qrc
