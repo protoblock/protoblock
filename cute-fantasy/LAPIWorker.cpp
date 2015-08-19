@@ -30,6 +30,9 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(this,SIGNAL(SubscribeLive()),&data,SLOT(OnSubscribeLive()));
     QObject::connect(this,SIGNAL(SubscribeLive()),&namedata,SLOT(OnSubscribeLive()));
     QObject::connect(this,SIGNAL(SubscribeLive()),&processor,SLOT(OnSubscribeLive()));
+    QObject::connect(processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
+    QObject::connect(processor,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
+    QObject::connect(this,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
 
 }
 

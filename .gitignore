@@ -14,3 +14,6 @@ src/Makefile
 /cute-fantasy/Makefile.Debug
 /cute-fantasy/Makefile.Release
 /cute-fantasy/debug/*.obj
+/include/nanomsg-xxx
+/debugbin
+cute_fantasy/debug 
