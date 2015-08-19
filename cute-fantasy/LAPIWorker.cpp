@@ -8,6 +8,7 @@
 #include "ProtoData.pb.h"
 #include "core.h"
 
+using namespace fantasybit;
 
 MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     data{}, namedata{}, processor(data,namedata)
@@ -27,12 +28,36 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
     //QObject::connect(this,SIGNAL(GetNext()),qApp,SLOT(aboutQt()));
     //QObject::connect(timer,SIGNAL(timeout()),myNodeWorker,SLOT(Timer()));
-    QObject::connect(this,SIGNAL(SubscribeLive()),&data,SLOT(OnSubscribeLive()));
-    QObject::connect(this,SIGNAL(SubscribeLive()),&namedata,SLOT(OnSubscribeLive()));
-    QObject::connect(this,SIGNAL(SubscribeLive()),&processor,SLOT(OnSubscribeLive()));
-    QObject::connect(processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
-    QObject::connect(processor,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
-    QObject::connect(this,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
+    QObject::connect(this,SIGNAL(Live(bool)),&data,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(Live(bool)),&namedata,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(Live(bool)),&processor,SLOT(OnLive(bool)));
+    QObject::connect(&processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
+    QObject::connect(&processor,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
+    QObject::connect(this,SIGNAL(WeekStart(int)),&data,SLOT(OnWeekStart(int)));
+
+    QObject::connect(&data,SIGNAL(PlayerChange(std::string)),
+                     this,SLOT(OnPlayerChange(std::string)));
+
+    QObject::connect(&data,SIGNAL(TeamPlus(std::string ntid,std::string)),
+                     this,SLOT(OnTeamPlus(std::string ntid,std::string )));
+
+    QObject::connect(&data,SIGNAL(TeamMinus(std::string ntid,std::string )),
+                     this,SLOT(OnTeamMinus(std::string ntid,std::string )));
+
+    QObject::connect(&data,SIGNAL(GameStart(std::string)),
+                     this,SLOT(OnGameStart(std::string)));
+
+    QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
+                     this,SLOT(OnGlobalStateChange(GlobalState)));
+
+    QObject::connect(&namedata,SIGNAL(FantasyNameFound(std::string)),
+                     this,SLOT(OnFoundName(std::string)));
+
+    QObject::connect(&data,SIGNAL(ProjectionLive(FantasyBitProj)),
+                     this,SLOT(OnProjLive(FantasyBitProj)));
+
+    QObject::connect(&data,SIGNAL(FantasyNameBalance(FantasyNameBal)),
+                     this,SLOT(OnNameBal(FantasyNameBal)));
 
 }
 
@@ -42,7 +67,11 @@ void MainLAPIWorker::GoLive() {
     timer->start(intervalstart);
 
     //ToDo: convert names with a status OnLive()
-    for(auto p : agent.getMyNamesStatus()) {
+    myfantasynames = agent.getMyNamesStatus();
+    for(auto p : myfantasynames) {
+        if ( p.second.status() < MyNameStatus::confirmed )
+            namedata.Subscribe(p.first);
+
         deltadata.add_myfantasyname()->CopyFrom(p.second);
     }
     deltadata.mutable_globalstate()->CopyFrom(data.GetGlobalState());
@@ -64,9 +93,9 @@ void MainLAPIWorker::processGUIRequest(const QVariant & requestData){
         */
 }
 
-void MainLAPIWorker::getPlayers(int week){
+void MainLAPIWorker::getLivePlayers(int week){
     if ( amlive ) {
-        auto allgames = data.GetWeeklyGameRosters(week);
+        auto allgames = data.GetLiveWeekGameRosters();
         //emit sendNotificationWithData(allgames);
     }
     /*
@@ -177,3 +206,19 @@ void MainLAPIWorker::doNewDelta() {
     //qDebug(deltasnap.DebugString().c_str());
     //emit OnData(deltasnap);
 }
+
+void MainLAPIWorker::OnPlayerChange(std::string) {}
+
+void MainLAPIWorker::OnFoundName(std::string &name) {
+    auto it = myfantasynames.find(name);
+    if ( it != end(myfantasynames)) {
+        it->second.set_status(MyNameStatus::confirmed);
+        emit NameStatus(it->second);
+    }
+}
+
+void MainLAPIWorker::OnProjLive(fantasybit::FantasyBitProj &proj) {
+    emit LiveProj(proj);
+}
+
+void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal &) {}

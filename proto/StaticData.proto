@@ -61,7 +61,7 @@ message PlayerResult {
     repeated FantasyBitAward fantaybitaward = 60;
 }
 
-message GameResult {
+message     GameResult {
     optional string  gameid = 1;
     repeated PlayerResult home_result = 10;
     repeated PlayerResult away_result = 20;

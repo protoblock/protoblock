@@ -13,6 +13,7 @@
 #include "NameData.pb.h"
 #include <leveldb/db.h>
 #include <unordered_map>
+#include <set>
 namespace fantasybit
 {
 
@@ -29,25 +30,42 @@ class NameData : public QObject {
             std::unordered_map<std::string,int>> FantasyNameProjections;
     std::unordered_map<std::string,
             std::unordered_map<std::string,int>> PlayerIDProjections;
+
+    std::set<std::string> mSubscribed{};
     bool amlive = false;
+    int week = 0;
+
+signals:
+    void ProjectionLive(FantasyBitProj &);
+    void FantasyNameFound(std::string &);
+    void FantasyNameBalance(FantasyNameBal &);
+
 public slots:
-    void OnSubscribeLive() {
+    void OnLive(bool subscribe) {
         amlive = true;
     }
+
+    void OnWeekOver(int week);
+    void OnWeekStart(int week);
+
 
 public:
     NameData() {}
     void init();
-    void AddNewName(const std::string &pubkey,const std::string &name);
+    void AddNewName(std::string name, std::string pubkey);
     void AddBalance(const std::string name,uint64_t amount);
 
     void AddProjection(const std::string &name, const std::string &player, uint32_t proj);
     void OnProjection(const std::string &name, const std::string &player, uint32_t proj);
-    void OnFantasyName(const std::string name);
+    void OnFantasyName(std::string &name);
+    void OnFantasyNameBalance(FantasyNameBal &fn);
 
-    std::unordered_map<std::string,int> GetProjById(const std::string &pid) {
-        return PlayerIDProjections[pid];
-    }
+
+    std::unordered_map<std::string,int> GetProjById(const std::string &pid);
+    std::unordered_map<std::string,int> GetProjByName(const std::string &nm);
+
+    void Subscribe(std::string );
+    void UnSubscribe(std::string );
 
     std::string filedir(const std::string &in);
 };

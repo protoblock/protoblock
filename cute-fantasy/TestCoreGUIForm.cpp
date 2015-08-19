@@ -8,6 +8,9 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
     ui(new Ui::TestCoreGUIForm)
 {
     qRegisterMetaType<fantasybit::GlobalState>("GlobalState");
+    qRegisterMetaType<fantasybit::MyFantasyName>("MyFantasyName");
+    qRegisterMetaType<fantasybit::FantasyBitProj>("FantasyBitProj");
+
 
     ui->setupUi(this);
     //notify the APIThread that WE the main form are alive
@@ -29,8 +32,10 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
     QObject::connect(this,SIGNAL(SubscribeMyProjTx(QString)),myCoreInstance,SLOT(OnSubProj(QString)));
     QObject::connect(this,SIGNAL(SubscribeAwards(QString)),myCoreInstance,SLOT(OnSubBits(QString)));
 
-    QObject::connect(myCoreInstance,SIGNAL(NameStatus(QVariant)),this,SLOT(OnNameStaus(QVariant)));
-    QObject::connect(myCoreInstance,SIGNAL(LiveProj(QVariant)),this,SLOT(OnProjAck(QVariant)));
+    QObject::connect(myCoreInstance,SIGNAL(NameStatus(fantasybit::MyFantasyName)),
+                     this,SLOT(OnNameStaus(fantasybit::MyFantasyName)));
+    QObject::connect(myCoreInstance,SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
+                     this,SLOT(OnProjAck(fantasybit::FantasyBitProj)));
     QObject::connect(myCoreInstance,SIGNAL(NewAward(QVariant)),this,SLOT(OnAward(QVariant)));
 
     //state

@@ -40,6 +40,12 @@ public slots:
         amlive = true;
     }
 
+signals:
+    void WeekStart(int);
+    void WeekOver(int);
+    void InvalidState(int);
+
+
 public:
     BlockProcessor(DataData &data, NameData &namedata) : mData(data), mNameData(namedata) {}
     int init();
@@ -55,11 +61,14 @@ public:
     void processTxfrom(const Block &b,int start = 0);
     static bool verifySignedBlock(const Block &sblock);
     static bool verifySignedTransaction(const SignedTransaction &st);
-    void OnWeekStart(int);
-    void OnWeekOver(int);
     void processResultProj(PlayerResult& playerresult,
                            std::unordered_map<std::string,int> &proj,
                            const std::string &blocksigner);
+
+    void BlockProcessor::OnWeekOver(int week);
+
+    void BlockProcessor::OnWeekStart(int week);
+
 
 };
 

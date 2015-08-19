@@ -12,3 +12,8 @@ message FantasyBitAward {
         optional uint64 award = 30;
 }
 
+message FantasyBitProj {
+        optional string name = 10;
+        optional int32 proj = 20;
+        optional string playerid = 30;
+}

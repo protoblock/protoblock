@@ -6,11 +6,17 @@
 
 namespace fantasybit {
 
-class BlockRecorder
-{
+class BlockRecorder {
+
     leveldb::DB *blockstatus;  // lastblock -> status // last block processed
     leveldb::WriteOptions write_sync{};
     int lastBlock = 0;
+
+public slots:
+
+signals:
+    //void BadState(int);
+
 public:
 
     void init();

@@ -10,6 +10,9 @@
 #include "FantasyAgent.h"
 #include "NameData.h"
 #include "Data.h"
+#include "NameData.pb.h"
+#include "StaticData.pb.h"
+#include "StatusData.pb.h"
 
 class MainLAPIWorker : public QObject
 {
@@ -31,6 +34,7 @@ class MainLAPIWorker : public QObject
     fantasybit::BlockProcessor processor;
 
     fantasybit::DeltaData deltadata{};
+    std::map<std::string,fantasybit::MyFantasyName> myfantasynames{};
 
 public:
     MainLAPIWorker(QObject * parent=0);
@@ -46,12 +50,16 @@ signals:
     void OnData(const fantasybit::DeltaData &);
     void OnLive(const fantasybit::DeltaData &);
     void SubscribeLive();
+    void NameStatus(const fantasybit::MyFantasyName &);
+    void LiveProj(fantasybit::FantasyBitProj &);
+
+
 
 public slots:
 
     void processGUIRequest(const QVariant & requestData);
 
-    void getPlayers(int );
+    void getLivePlayers(int );
 
     void startPoint();
 
@@ -63,7 +71,12 @@ public slots:
 
     void Timer();
 
-private:
+    void OnPlayerChange(std::string);
+    void OnFoundName(std::string &);
+    void OnProjLive(fantasybit::FantasyBitProj &);
+    void OnNameBal(fantasybit::FantasyNameBal &);
+
+    private:
 
     bool Process(fantasybit::Block &b);
 

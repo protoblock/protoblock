@@ -5,6 +5,7 @@
 //  Created by Jay Berg on 8/24/14.
 //
 //
+
 #include <utility>
 #include "Commissioner.h"
 #include "ProtoData.pb.h"
@@ -27,6 +28,7 @@ namespace fantasybit
 int BlockProcessor::init() {
     mRecorder.init();
     if (!mRecorder.isValid() ) {
+        emit InvalidState(mRecorder.getLastBlockId());
         qInfo() <<  "mRecorder not valid! ";
         mRecorder.closeAll();
         fc::remove_all(Core::getRootDir() + "index/");
@@ -34,6 +36,7 @@ int BlockProcessor::init() {
         mRecorder.init();
         if (!mRecorder.isValid() ) {
             qInfo() <<  "mRecorder not valid! ";
+            InvalidState(mRecorder.getLastBlockId());
             return -1;
         }
     }
@@ -282,6 +285,16 @@ void BlockProcessor::process(const DataTransition &indt) {
         break;
     case DataTransition_Type_HEARTBEAT:
         //todo: deal w data in this msg
+        if (mGlobalState.season() != indt.season()) {
+            qWarning() << "wrong season! " << indt.DebugString();
+            //mGlobalState.set_season(indt.season());
+        }
+
+        if (mGlobalState.week() != indt.week()) {
+            qWarning() << "wrong week! " << indt.DebugString();
+            //mGlobalState.set_week(indt.week());
+        }
+
         break;
     case DataTransition_Type_GAMESTART:
         for (auto t : indt.gamedata()) {
@@ -390,9 +403,11 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 }
 
 void BlockProcessor::OnWeekOver(int week) {
+    emit WeekOver(week);
 }
 
 void BlockProcessor::OnWeekStart(int week) {
+    emit WeekStart(week);
 }
 
 bool BlockProcessor::verifySignedBlock(const Block &sblock)

@@ -43,6 +43,7 @@ class DataData : public QObject {
     leveldb::DB *statusstore;
 
     leveldb::WriteOptions write_sync{};
+    int week = 0;
 
     std::map<std::string, std::unordered_set<std::string>> MyTeamRoster;
     std::map<std::string, PlayerStatus> MyPlayerStatus;
@@ -57,11 +58,22 @@ class DataData : public QObject {
         tr.insert(pid);
     }
 
-    bool amlive = false;
+    int amlive = false;
+
+signals:
+    void PlayerChange(std::string pid);
+    void TeamPlus(std::string ntid,std::string pid);
+    void TeamMinus(std::string tid,std::string pid);
+    void GameStart(std::string);
+    void GlobalStateChange(GlobalState);
+
 public slots:
-    void OnSubscribeLive() {
+    void OnLive(bool subscribe) {
         amlive = true;
     }
+
+    void OnWeekOver(int week);
+    void OnWeekStart(int week);
 
 public:
     DataData() {}
@@ -78,9 +90,12 @@ public:
 
     void OnGameStart(const std::string &gameid, const GameStatus &gs);
 
-    std::vector<GameRoster> GetWeeklyGameRosters(int week);
+    std::vector<GameRoster> GetLiveWeekGameRosters();
     std::unordered_map<std::string,PlayerDetail>
             GetTeamRoster(const std::string &teamid);
+
+    GameStatus GetUpdatedGameStatus(std::string id);
+    WeeklySchedule GetWeeklySchedule(int week,bool updates = true);
 
     GlobalState GetGlobalState();
 
