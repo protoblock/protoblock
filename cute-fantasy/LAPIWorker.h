@@ -13,6 +13,8 @@
 #include "NameData.pb.h"
 #include "StaticData.pb.h"
 #include "StatusData.pb.h"
+#include "ProtoData.pb.h"
+#include <vector>
 
 class MainLAPIWorker : public QObject
 {
@@ -35,7 +37,7 @@ class MainLAPIWorker : public QObject
 
     fantasybit::DeltaData deltadata{};
     std::map<std::string,fantasybit::MyFantasyName> myfantasynames{};
-
+    fantasybit::MyFantasyName myCurrentName{};
 public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}
@@ -48,16 +50,18 @@ signals:
     void ProcessNext();
     void GetNext();
     void OnData(const fantasybit::DeltaData &);
-    void OnLive(const fantasybit::DeltaData &);
+    void OnLive();
     void SubscribeLive();
     void NameStatus(const fantasybit::MyFantasyName &);
     void LiveProj(fantasybit::FantasyBitProj &);
-
+    void OnMyNames(std::vector<fantasybit::MyFantasyName> &);
 
 
 public slots:
 
     void processGUIRequest(const QVariant & requestData);
+
+    void OnGetMyNames();
 
     void getLivePlayers(int );
 
@@ -76,7 +80,11 @@ public slots:
     void OnProjLive(fantasybit::FantasyBitProj &);
     void OnNameBal(fantasybit::FantasyNameBal &);
 
-    private:
+    void OnUseName(QString);
+    void OnClaimName(QString);
+
+    void OnProjTX(fantasybit::FantasyBitProj);
+private:
 
     bool Process(fantasybit::Block &b);
 

@@ -181,14 +181,14 @@ message FantasyPlayerPoints {
 // ProjectionTrans used to make projections 
 ////////////////////////////////////////////////////////////
 message ProjectionTrans {
-	extend Transaction {
-		optional ProjectionTrans proj_trans = 201;
-	}
+    extend Transaction {
+        optional ProjectionTrans proj_trans = 201;
+    }
 
-        optional uint32 season = 10;
-        optional uint32 week = 20;
-        optional string playerid = 30;
-        optional int32 points = 40;
+    optional uint32 season = 10;
+    optional uint32 week = 20;
+    optional string playerid = 30;
+    optional int32 points = 40;
 }
 
 

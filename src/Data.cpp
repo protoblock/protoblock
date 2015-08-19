@@ -265,7 +265,7 @@ GlobalState DataData::GetGlobalState() {
     return gs;
 }
 
-void DataData::OnGlobalState(const GlobalState &gs) {
+void DataData::OnGlobalState(GlobalState &gs) {
     statusstore->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
     qDebug() << gs.DebugString();
     if ( amlive )

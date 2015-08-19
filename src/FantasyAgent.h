@@ -60,6 +60,8 @@ public:
 
     status signPlayer(std::string name);
 
+    status useName(std::string name);
+
     //bool beOracle();
     bool beDataAgent();// { return beOracle();  }
 
@@ -77,6 +79,10 @@ public:
     getIdSig(std::string &in, fc::ecc::private_key &pk) ;
 
     static fc::ecc::private_key str2priv(const std::string &in);
+
+    MyFantasyName FantasyAgent::getCurrentNamesStatus();
+
+    bool FantasyAgent::UseName(std::string name);
 
 };
 

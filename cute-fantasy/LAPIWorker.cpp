@@ -7,7 +7,10 @@
 #include <algorithm>
 #include "ProtoData.pb.h"
 #include "core.h"
+#include <vector>
+#include "Commissioner.h"
 
+using namespace std;
 using namespace fantasybit;
 
 MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
@@ -66,6 +69,8 @@ void MainLAPIWorker::GoLive() {
     intervalstart = 500;
     timer->start(intervalstart);
 
+    OnGetMyNames();
+    /*
     //ToDo: convert names with a status OnLive()
     myfantasynames = agent.getMyNamesStatus();
     for(auto p : myfantasynames) {
@@ -75,8 +80,8 @@ void MainLAPIWorker::GoLive() {
         deltadata.add_myfantasyname()->CopyFrom(p.second);
     }
     deltadata.mutable_globalstate()->CopyFrom(data.GetGlobalState());
-
-    emit OnLive(deltadata);
+    */
+    emit OnLive();
     emit SubscribeLive();
 
 }
@@ -222,3 +227,91 @@ void MainLAPIWorker::OnProjLive(fantasybit::FantasyBitProj &proj) {
 }
 
 void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal &) {}
+
+void MainLAPIWorker::OnGetMyNames() {
+    vector<MyFantasyName> my;
+    myfantasynames = agent.getMyNamesStatus();
+    for(auto p : myfantasynames) {
+        if ( !amlive )
+        if ( p.second.status() < MyNameStatus::confirmed )
+            namedata.Subscribe(p.first);
+
+        my.push_back(p.second);
+    }
+
+    emit OnMyNames(my);
+}
+
+void MainLAPIWorker::OnUseName(QString name) {
+    myCurrentName.set_name(name.toStdString());
+    myCurrentName.set_status(MyNameStatus::none);
+
+
+    auto it = myfantasynames.find(name.toStdString());
+    if ( it == end(myfantasynames)) {
+        myfantasynames = agent.getMyNamesStatus();
+        it = myfantasynames.find(name.toStdString());
+    }
+
+    if ( it != end(myfantasynames)) {
+        if ( agent.UseName(myCurrentName.name()) ) {
+            myCurrentName = it->second;
+        }
+    }
+
+    if ( myCurrentName.status() < MyNameStatus::confirmed)
+        namedata.Subscribe(myCurrentName.name());
+
+    emit NameStatus(myCurrentName);
+}
+
+void MainLAPIWorker::OnClaimName(QString name) {
+    if ( !amlive ) return;
+
+    myCurrentName.set_name(name.toStdString());
+    myCurrentName.set_status(MyNameStatus::none);
+
+    auto ret = agent.signPlayer(name.toStdString());
+
+    switch ( ret ) {
+        case FantasyAgent::AVAIL:
+            myCurrentName.set_status(MyNameStatus::requested);
+        break;
+        case FantasyAgent::NOTAVAILABLE:
+            myCurrentName.set_status(MyNameStatus::notavil);
+        break;
+        case FantasyAgent::OWNED:
+            myCurrentName.set_status(MyNameStatus::confirmed);
+        break;
+    }
+
+    if ( myCurrentName.status() == MyNameStatus::requested)
+        namedata.Subscribe(myCurrentName.name());
+
+    emit NameStatus(myCurrentName);
+}
+
+void MainLAPIWorker::OnProjTX(FantasyBitProj inp) {
+    if ( !amlive ) return;
+
+    if ( !agent.HaveClient() ) return;
+
+    ProjectionTrans pj{};
+    pj.set_playerid(inp.playerid());
+    pj.set_points(inp.proj());
+
+    auto gs = data.GetGlobalState();
+    pj.set_week(gs.week());
+    pj.set_season(gs.season());
+
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::PROJECTION);
+    trans.MutableExtension(ProjectionTrans::proj_trans)->CopyFrom(pj);
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+
+    namedata.Subscribe(myCurrentName.name());
+
+}
+

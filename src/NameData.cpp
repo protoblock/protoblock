@@ -122,8 +122,8 @@ void NameData::OnProjection(const std::string &name, const std::string &player,
 }
 
 void NameData::OnFantasyName(std::string &name) {
-    if ( !amlive )
-        return;
+    //if ( !amlive )
+    //    return;
 
     if ( mSubscribed.find(name) != end(mSubscribed))
         emit FantasyNameFound(name);

@@ -81,6 +81,33 @@ std::map<string,MyFantasyName> FantasyAgent::getMyNamesStatus() {
     return ret;
 }
 
+MyFantasyName FantasyAgent::getCurrentNamesStatus() {
+    MyFantasyName fn{};
+    fn.set_status(MyNameStatus::none);
+
+    if ( !HaveClient()) return fn;
+
+    fn.set_name(client->alias());
+
+    auto fname = Commissioner::getName(client->pubkey());
+    if ( fname == nullptr ) {
+        if ( Commissioner::isAliasAvailable(fn.name()))
+            fn.set_status(MyNameStatus::requested);
+        else
+            fn.set_status(MyNameStatus::notavil);
+    }
+    else if ( fname->alias() == fn.name() )
+        fn.set_status(MyNameStatus::confirmed);
+    else if ( FantasyName::name_hash(fn.name()) == fname->hash() ) {
+        fn.set_status(MyNameStatus::confirmed);
+        fn.set_name(fname->alias());
+    }
+    else
+        fn.set_status(MyNameStatus::none);
+
+    return fn;
+}
+
 void FantasyAgent::onSignedTransaction(SignedTransaction &sn)
 {
     pendingTrans.emplace_back(sn);
@@ -148,6 +175,21 @@ FantasyAgent::getIdSig(std::string &in, fc::ecc::private_key &pk) {
 
 fc::ecc::private_key FantasyAgent::str2priv(const std::string &in) {
     return fc::ecc::private_key::regenerate(fc::sha256{ in });
+}
+
+
+bool FantasyAgent::UseName(std::string name) {
+
+    for ( auto s : m_secrets ) {
+        if ( s.fantasy_name() == name ) {
+            m_priv = str2priv(s.private_key());
+            client = std::make_unique<FantasyName>
+                    (name, (*m_priv).get_public_key().serialize());
+            return true;
+        }
+    }
+
+    return false;
 }
 
 

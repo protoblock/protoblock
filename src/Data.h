@@ -65,7 +65,7 @@ signals:
     void TeamPlus(std::string ntid,std::string pid);
     void TeamMinus(std::string tid,std::string pid);
     void GameStart(std::string);
-    void GlobalStateChange(GlobalState);
+    void GlobalStateChange(GlobalState &);
 
 public slots:
     void OnLive(bool subscribe) {
@@ -99,7 +99,7 @@ public:
 
     GlobalState GetGlobalState();
 
-    void OnGlobalState(const GlobalState &gs);
+    void OnGlobalState(GlobalState &gs);
 
     void OnNewPlayer(const std::string &pid);
     void OnPlayerTrade(const std::string &pid, const std::string &tid, const std::string &ntid);

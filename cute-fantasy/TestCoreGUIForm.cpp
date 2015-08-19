@@ -10,6 +10,7 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
     qRegisterMetaType<fantasybit::GlobalState>("GlobalState");
     qRegisterMetaType<fantasybit::MyFantasyName>("MyFantasyName");
     qRegisterMetaType<fantasybit::FantasyBitProj>("FantasyBitProj");
+    qRegisterMetaType<std::vector<fantasybit::MyFantasyName>>("Vector_MyFantasyName");
 
 
     ui->setupUi(this);
@@ -22,11 +23,15 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
     QObject::connect(myCoreInstance,SIGNAL(sendNotificationWithData(QVariant)),this,SLOT(handleNotificationOrResponse(QVariant)));
     QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
 
-    QObject::connect(myCoreInstance,SIGNAL(OnLive(DeltaData)),this,SLOT(GoLive(DeltaData)));
+    QObject::connect(myCoreInstance,SIGNAL(OnLive()),this,SLOT(GoLive()));
     QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
 
 
     //name
+    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
+    QObject::connect(myCoreInstance,SIGNAL(OnMyNames(std::vector<fantasybit::MyFantasyName> &)),
+                     this,SLOT(OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &)));
+
     QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myCoreInstance,SLOT(OnUseName(QString)));
     QObject::connect(this,SIGNAL(SubscribeMyNameTx(QString)),myCoreInstance,SLOT(OnSubName(QString)));
     QObject::connect(this,SIGNAL(SubscribeMyProjTx(QString)),myCoreInstance,SLOT(OnSubProj(QString)));
@@ -66,7 +71,9 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
     QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
 
     //PUT
-    QObject::connect(this,SIGNAL(NewProjection(QVariant)),myCoreInstance,SLOT(OnProjTX(QVariant)));
+    QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
+                     myCoreInstance,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
+
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myCoreInstance,SLOT(OnClaimName(QString)));
 
 
@@ -113,4 +120,7 @@ void TestCoreGUIForm::handleNotificationOrResponse(const QVariant & data){
 void TestCoreGUIForm::on_pushButton_2_clicked()
 {
  emit requestPlayersForWeek(1);
+}
+
+void TestCoreGUIForm::OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &) {
 }
