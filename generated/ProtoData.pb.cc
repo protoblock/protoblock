@@ -66,9 +66,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Block_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Block_reflection_ = NULL;
-const ::google::protobuf::Descriptor* LiveWire_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  LiveWire_reflection_ = NULL;
 const ::google::protobuf::Descriptor* NodeRequest_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   NodeRequest_reflection_ = NULL;
@@ -89,9 +86,9 @@ const ::google::protobuf::EnumDescriptor* Data_Type_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* PlayerData_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   PlayerData_reflection_ = NULL;
-const ::google::protobuf::Descriptor* TeamData_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* GameData_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  TeamData_reflection_ = NULL;
+  GameData_reflection_ = NULL;
 const ::google::protobuf::Descriptor* ResultData_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ResultData_reflection_ = NULL;
@@ -99,10 +96,6 @@ const ::google::protobuf::Descriptor* DataTransition_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DataTransition_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor_ = NULL;
-const ::google::protobuf::Descriptor* GlobalState_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  GlobalState_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* GlobalState_State_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* TeamState_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   TeamState_reflection_ = NULL;
@@ -364,23 +357,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Block));
-  LiveWire_descriptor_ = file->message_type(14);
-  static const int LiveWire_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LiveWire, block_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LiveWire, transaction_),
-  };
-  LiveWire_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      LiveWire_descriptor_,
-      LiveWire::default_instance_,
-      LiveWire_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LiveWire, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LiveWire, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(LiveWire));
-  NodeRequest_descriptor_ = file->message_type(15);
+  NodeRequest_descriptor_ = file->message_type(14);
   static const int NodeRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeRequest, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeRequest, myip_),
@@ -399,7 +376,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NodeRequest));
   NodeRequest_Type_descriptor_ = NodeRequest_descriptor_->enum_type(0);
-  NodeReply_descriptor_ = file->message_type(16);
+  NodeReply_descriptor_ = file->message_type(15);
   static const int NodeReply_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeReply, hight_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeReply, ips_),
@@ -415,7 +392,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NodeReply));
-  FantasyPlayerPoints_descriptor_ = file->message_type(17);
+  FantasyPlayerPoints_descriptor_ = file->message_type(16);
   static const int FantasyPlayerPoints_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyPlayerPoints, season_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyPlayerPoints, week_),
@@ -434,9 +411,12 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FantasyPlayerPoints));
-  ProjectionTrans_descriptor_ = file->message_type(18);
-  static const int ProjectionTrans_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTrans, fpp_),
+  ProjectionTrans_descriptor_ = file->message_type(17);
+  static const int ProjectionTrans_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTrans, season_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTrans, week_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTrans, playerid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTrans, points_),
   };
   ProjectionTrans_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -449,7 +429,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjectionTrans));
-  Data_descriptor_ = file->message_type(19);
+  Data_descriptor_ = file->message_type(18);
   static const int Data_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, type_),
@@ -466,10 +446,12 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Data));
   Data_Type_descriptor_ = Data_descriptor_->enum_type(0);
-  PlayerData_descriptor_ = file->message_type(20);
-  static const int PlayerData_offsets_[2] = {
+  PlayerData_descriptor_ = file->message_type(19);
+  static const int PlayerData_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerData, playerid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerData, teamid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerData, player_base_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerData, player_status_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerData, player_game_status_),
   };
   PlayerData_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -482,24 +464,25 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PlayerData));
-  TeamData_descriptor_ = file->message_type(21);
-  static const int TeamData_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamData, teamid_),
+  GameData_descriptor_ = file->message_type(20);
+  static const int GameData_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameData, gameid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameData, status_),
   };
-  TeamData_reflection_ =
+  GameData_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      TeamData_descriptor_,
-      TeamData::default_instance_,
-      TeamData_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamData, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamData, _unknown_fields_),
+      GameData_descriptor_,
+      GameData::default_instance_,
+      GameData_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameData, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameData, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(TeamData));
-  ResultData_descriptor_ = file->message_type(22);
+      sizeof(GameData));
+  ResultData_descriptor_ = file->message_type(21);
   static const int ResultData_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResultData, fpp_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResultData, game_result_),
   };
   ResultData_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -512,12 +495,12 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ResultData));
-  DataTransition_descriptor_ = file->message_type(23);
+  DataTransition_descriptor_ = file->message_type(22);
   static const int DataTransition_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, season_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, week_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, teamid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, gamedata_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, data_),
   };
   DataTransition_reflection_ =
@@ -532,24 +515,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DataTransition));
   DataTransition_Type_descriptor_ = DataTransition_descriptor_->enum_type(0);
-  GlobalState_descriptor_ = file->message_type(24);
-  static const int GlobalState_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, state_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, season_),
-  };
-  GlobalState_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      GlobalState_descriptor_,
-      GlobalState::default_instance_,
-      GlobalState_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(GlobalState));
-  GlobalState_State_descriptor_ = GlobalState_descriptor_->enum_type(0);
-  TeamState_descriptor_ = file->message_type(25);
+  TeamState_descriptor_ = file->message_type(23);
   static const int TeamState_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamState, state_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamState, week_),
@@ -567,7 +533,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TeamState));
   TeamState_State_descriptor_ = TeamState_descriptor_->enum_type(0);
-  DeltaData_descriptor_ = file->message_type(26);
+  DeltaData_descriptor_ = file->message_type(24);
   static const int DeltaData_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeltaData, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeltaData, myfantasyname_),
@@ -631,8 +597,6 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Block_descriptor_, &Block::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    LiveWire_descriptor_, &LiveWire::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     NodeRequest_descriptor_, &NodeRequest::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     NodeReply_descriptor_, &NodeReply::default_instance());
@@ -645,13 +609,11 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     PlayerData_descriptor_, &PlayerData::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    TeamData_descriptor_, &TeamData::default_instance());
+    GameData_descriptor_, &GameData::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ResultData_descriptor_, &ResultData::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     DataTransition_descriptor_, &DataTransition::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    GlobalState_descriptor_, &GlobalState::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TeamState_descriptor_, &TeamState::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -689,8 +651,6 @@ void protobuf_ShutdownFile_ProtoData_2eproto() {
   delete SignedBlockHeader_reflection_;
   delete Block::default_instance_;
   delete Block_reflection_;
-  delete LiveWire::default_instance_;
-  delete LiveWire_reflection_;
   delete NodeRequest::default_instance_;
   delete NodeRequest_reflection_;
   delete NodeReply::default_instance_;
@@ -703,14 +663,12 @@ void protobuf_ShutdownFile_ProtoData_2eproto() {
   delete Data_reflection_;
   delete PlayerData::default_instance_;
   delete PlayerData_reflection_;
-  delete TeamData::default_instance_;
-  delete TeamData_reflection_;
+  delete GameData::default_instance_;
+  delete GameData_reflection_;
   delete ResultData::default_instance_;
   delete ResultData_reflection_;
   delete DataTransition::default_instance_;
   delete DataTransition_reflection_;
-  delete GlobalState::default_instance_;
-  delete GlobalState_reflection_;
   delete TeamState::default_instance_;
   delete TeamState_reflection_;
   delete DeltaData::default_instance_;
@@ -723,104 +681,106 @@ void protobuf_AddDesc_ProtoData_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  ::fantasybit::protobuf_AddDesc_StaticData_2eproto();
+  ::fantasybit::protobuf_AddDesc_StatusData_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\017ProtoData.proto\022\nfantasybit\"G\n\rMyFanta"
-    "syName\022\014\n\004name\030\001 \001(\t\022(\n\006status\030\002 \001(\0162\030.f"
-    "antasybit.MyNameStatus\"+\n\rFantasyPlayer\022"
-    "\014\n\004name\030\n \001(\t\022\014\n\004bits\030\024 \001(\004\"x\n\006Secret\022\023\n"
-    "\013private_key\030\001 \002(\t\0220\n\rmyfantasyname\030\002 \001("
-    "\0132\031.fantasybit.MyFantasyName\022\'\n\010nametran"
-    "\030\n \001(\0132\025.fantasybit.NameTrans\"H\n\007Secret2"
-    "\022\024\n\014fantasy_name\030\n \001(\t\022\023\n\013private_key\030\024 "
-    "\001(\t\022\022\n\npublic_key\030\036 \001(\t\"\245\001\n\007OutData\022&\n\004t"
-    "ype\030\001 \002(\0162\030.fantasybit.OutData.Type\0220\n\rm"
-    "yfantasyname\030\002 \001(\0132\031.fantasybit.MyFantas"
-    "yName\"6\n\004Type\022\021\n\rMYFANTASYNAME\020\001\022\014\n\010SNAP"
-    "SHOT\020\002\022\r\n\tHEARTBEAT\020\003*\010\010d\020\200\200\200\200\002\"\200\002\n\006InDa"
-    "ta\022%\n\004type\030\001 \002(\0162\027.fantasybit.InData.Typ"
-    "e\022\014\n\004data\030\002 \001(\t\022\r\n\005data2\030\003 \001(\t\022\013\n\003num\030\004 "
-    "\001(\005\022.\n\ndata_trans\030\005 \001(\0132\032.fantasybit.Dat"
-    "aTransition\"k\n\004Type\022\014\n\010MINENAME\020\001\022\010\n\004QUI"
-    "T\020\002\022\r\n\tHEARTBEAT\020\003\022\013\n\007CONNECT\020\004\022\016\n\nMAKE_"
-    "BLOCK\020\005\022\013\n\007NEWNAME\020\006\022\010\n\004PROJ\020\007\022\010\n\004DATA\020\010"
-    "*\010\010d\020\200\200\200\200\002\"h\n\tNameProof\022(\n\004type\030\001 \001(\0162\032."
-    "fantasybit.NameProof.Type\"&\n\004Type\022\007\n\003POW"
-    "\020\001\022\t\n\005TWEET\020\002\022\n\n\006ORACLE\020\003*\t\010\310\001\020\200\200\200\200\002\"`\n\n"
-    "TweetProof\022\r\n\005tweet\030\n \001(\t2C\n\013tweet_proof"
-    "\022\025.fantasybit.NameProof\030\311\001 \001(\0132\026.fantasy"
-    "bit.TweetProof\"M\n\013Transaction\022\017\n\007version"
-    "\030\001 \001(\005\022#\n\004type\030\002 \001(\0162\025.fantasybit.TransT"
-    "ype*\010\010d\020\200\200\200\200\002\"\240\001\n\tNameTrans\022\024\n\014fantasy_n"
-    "ame\030\n \001(\t\022\022\n\npublic_key\030\024 \001(\014\022$\n\005proof\030\036"
-    " \001(\0132\025.fantasybit.NameProof2C\n\nname_tran"
-    "s\022\027.fantasybit.Transaction\030\310\001 \001(\0132\025.fant"
-    "asybit.NameTrans\"j\n\021SignedTransaction\022&\n"
-    "\005trans\030\n \001(\0132\027.fantasybit.Transaction\022\n\n"
-    "\002id\030\024 \001(\014\022\013\n\003sig\030\036 \001(\014\022\024\n\014fantasy_name\030("
-    " \001(\t\"\370\001\n\013BlockHeader\022\017\n\007version\030\001 \001(\005\022\013\n"
-    "\003num\030\n \001(\005\022\017\n\007prev_id\030\024 \001(\014\022\021\n\ttimestamp"
-    "\030\025 \001(\005\022\024\n\014generator_pk\030\036 \001(\014\022\026\n\016generati"
-    "ng_sig\030( \001(\014\022\022\n\nbasetarget\0302 \001(\005\022/\n\tbloc"
-    "ktype\030< \001(\0162\034.fantasybit.BlockHeader.Typ"
-    "e\022\026\n\016transaction_id\030F \001(\014\"\034\n\004Type\022\n\n\006NOR"
-    "MAL\020\001\022\010\n\004DATA\020\002\"G\n\021SignedBlockHeader\022%\n\004"
-    "head\030\n \001(\0132\027.fantasybit.BlockHeader\022\013\n\003s"
-    "ig\030\036 \001(\t\"\201\001\n\005Block\0221\n\nsignedhead\030\n \001(\0132\035"
-    ".fantasybit.SignedBlockHeader\022:\n\023signed_"
-    "transactions\030\024 \003(\0132\035.fantasybit.SignedTr"
-    "ansaction*\t\010\350\007\020\200\200\200\200\002\"`\n\010LiveWire\022 \n\005bloc"
-    "k\030\n \001(\0132\021.fantasybit.Block\0222\n\013transactio"
-    "n\030\024 \003(\0132\035.fantasybit.SignedTransaction\"\257"
-    "\001\n\013NodeRequest\022*\n\004type\030\n \001(\0162\034.fantasybi"
-    "t.NodeRequest.Type\022\014\n\004myip\030\024 \001(\t\022\013\n\003num\030"
-    "\036 \001(\005\022\016\n\006myhost\030( \001(\t\"I\n\004Type\022\r\n\tHANDSHA"
-    "KE\020\001\022\021\n\rBLOCK_REQUEST\020\002\022\021\n\rHIGHT_REQUEST"
-    "\020\003\022\014\n\010NAT_TEST\020\004\"\'\n\tNodeReply\022\r\n\005hight\030\n"
-    " \001(\005\022\013\n\003ips\030\024 \003(\t\"e\n\023FantasyPlayerPoints"
-    "\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022\020\n\010player"
-    "id\030\036 \001(\t\022\016\n\006points\030( \001(\005\022\016\n\006result\0302 \001(\002"
-    "\"\212\001\n\017ProjectionTrans\022,\n\003fpp\030\n \001(\0132\037.fant"
-    "asybit.FantasyPlayerPoints2I\n\nproj_trans"
-    "\022\027.fantasybit.Transaction\030\311\001 \001(\0132\033.fanta"
-    "sybit.ProjectionTrans\"~\n\004Data\022\017\n\007version"
-    "\030\n \001(\005\022#\n\004type\030\024 \001(\0162\025.fantasybit.Data.T"
-    "ype\"6\n\004Type\022\014\n\010SCHEDULE\020\000\022\n\n\006PLAYER\020\001\022\010\n"
-    "\004TEAM\020\002\022\n\n\006RESULT\020\003*\010\010d\020\200\200\200\200\002\"m\n\nPlayerD"
-    "ata\022\020\n\010playerid\030\n \001(\t\022\016\n\006teamid\030\024 \001(\t2=\n"
-    "\013player_data\022\020.fantasybit.Data\030e \001(\0132\026.f"
-    "antasybit.PlayerData\"U\n\010TeamData\022\016\n\006team"
-    "id\030\n \001(\t29\n\tteam_data\022\020.fantasybit.Data\030"
-    "o \001(\0132\024.fantasybit.TeamData\"z\n\nResultDat"
-    "a\022,\n\003fpp\030\n \001(\0132\037.fantasybit.FantasyPlaye"
-    "rPoints2>\n\013result_data\022\020.fantasybit.Data"
-    "\030\312\001 \001(\0132\026.fantasybit.ResultData\"\306\002\n\016Data"
-    "Transition\022-\n\004type\030\001 \001(\0162\037.fantasybit.Da"
-    "taTransition.Type\022\016\n\006season\030\n \001(\r\022\014\n\004wee"
-    "k\030\024 \001(\r\022\016\n\006teamid\030\036 \003(\t\022\036\n\004data\030( \003(\0132\020."
-    "fantasybit.Data\"m\n\004Type\022\n\n\006ROSTER\020\001\022\017\n\013S"
-    "EASONSTART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tDRAFTOVER"
-    "\020\004\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEK"
-    "OVER\020\0072H\n\ndata_trans\022\027.fantasybit.Transa"
-    "ction\030\313\001 \001(\0132\032.fantasybit.DataTransition"
-    "\"\220\001\n\013GlobalState\022,\n\005state\030\001 \001(\0162\035.fantas"
-    "ybit.GlobalState.State\022\016\n\006season\030\n \001(\r\"C"
-    "\n\005State\022\014\n\010PREDRAFT\020\001\022\r\n\tPRESEASON\020\002\022\017\n\013"
-    "ROSTER53MAN\020\003\022\014\n\010INSEASON\020\004\"w\n\tTeamState"
-    "\022*\n\005state\030\001 \001(\0162\033.fantasybit.TeamState.S"
-    "tate\022\014\n\004week\030\n \001(\r\022\016\n\006teamid\030\024 \001(\t\" \n\005St"
-    "ate\022\013\n\007PREGAME\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDeltaDa"
-    "ta\022(\n\004type\030\001 \001(\0162\032.fantasybit.DeltaData."
-    "Type\0220\n\rmyfantasyname\030\002 \003(\0132\031.fantasybit"
-    ".MyFantasyName\022,\n\013globalstate\030\n \001(\0132\027.fa"
-    "ntasybit.GlobalState\022)\n\nteamstates\030\024 \003(\013"
-    "2\025.fantasybit.TeamState\022\037\n\005datas\030\036 \003(\0132\020"
-    ".fantasybit.Data\022*\n\007players\030( \003(\0132\031.fant"
-    "asybit.FantasyPlayer\"#\n\004Type\022\014\n\010SNAPSHOT"
-    "\020\002\022\r\n\tHEARTBEAT\020\003*\t\010\350\007\020\200\200\200\200\002*d\n\014MyNameSt"
-    "atus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequested"
-    "\020\005\022\t\n\005found\020\n\022\024\n\020transaction_sent\020\017\022\r\n\tc"
-    "onfirmed\020\024*;\n\tTransType\022\010\n\004NAME\020\000\022\016\n\nPRO"
-    "JECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003", 3871);
+    "\n\017ProtoData.proto\022\nfantasybit\032\020StaticDat"
+    "a.proto\032\020StatusData.proto\"G\n\rMyFantasyNa"
+    "me\022\014\n\004name\030\001 \001(\t\022(\n\006status\030\002 \001(\0162\030.fanta"
+    "sybit.MyNameStatus\"+\n\rFantasyPlayer\022\014\n\004n"
+    "ame\030\n \001(\t\022\014\n\004bits\030\024 \001(\004\"x\n\006Secret\022\023\n\013pri"
+    "vate_key\030\001 \002(\t\0220\n\rmyfantasyname\030\002 \001(\0132\031."
+    "fantasybit.MyFantasyName\022\'\n\010nametran\030\n \001"
+    "(\0132\025.fantasybit.NameTrans\"H\n\007Secret2\022\024\n\014"
+    "fantasy_name\030\n \001(\t\022\023\n\013private_key\030\024 \001(\t\022"
+    "\022\n\npublic_key\030\036 \001(\t\"\245\001\n\007OutData\022&\n\004type\030"
+    "\001 \002(\0162\030.fantasybit.OutData.Type\0220\n\rmyfan"
+    "tasyname\030\002 \001(\0132\031.fantasybit.MyFantasyNam"
+    "e\"6\n\004Type\022\021\n\rMYFANTASYNAME\020\001\022\014\n\010SNAPSHOT"
+    "\020\002\022\r\n\tHEARTBEAT\020\003*\010\010d\020\200\200\200\200\002\"\200\002\n\006InData\022%"
+    "\n\004type\030\001 \002(\0162\027.fantasybit.InData.Type\022\014\n"
+    "\004data\030\002 \001(\t\022\r\n\005data2\030\003 \001(\t\022\013\n\003num\030\004 \001(\005\022"
+    ".\n\ndata_trans\030\005 \001(\0132\032.fantasybit.DataTra"
+    "nsition\"k\n\004Type\022\014\n\010MINENAME\020\001\022\010\n\004QUIT\020\002\022"
+    "\r\n\tHEARTBEAT\020\003\022\013\n\007CONNECT\020\004\022\016\n\nMAKE_BLOC"
+    "K\020\005\022\013\n\007NEWNAME\020\006\022\010\n\004PROJ\020\007\022\010\n\004DATA\020\010*\010\010d"
+    "\020\200\200\200\200\002\"h\n\tNameProof\022(\n\004type\030\001 \001(\0162\032.fant"
+    "asybit.NameProof.Type\"&\n\004Type\022\007\n\003POW\020\001\022\t"
+    "\n\005TWEET\020\002\022\n\n\006ORACLE\020\003*\t\010\310\001\020\200\200\200\200\002\"`\n\nTwee"
+    "tProof\022\r\n\005tweet\030\n \001(\t2C\n\013tweet_proof\022\025.f"
+    "antasybit.NameProof\030\311\001 \001(\0132\026.fantasybit."
+    "TweetProof\"M\n\013Transaction\022\017\n\007version\030\001 \001"
+    "(\005\022#\n\004type\030\002 \001(\0162\025.fantasybit.TransType*"
+    "\010\010d\020\200\200\200\200\002\"\240\001\n\tNameTrans\022\024\n\014fantasy_name\030"
+    "\n \001(\t\022\022\n\npublic_key\030\024 \001(\014\022$\n\005proof\030\036 \001(\013"
+    "2\025.fantasybit.NameProof2C\n\nname_trans\022\027."
+    "fantasybit.Transaction\030\310\001 \001(\0132\025.fantasyb"
+    "it.NameTrans\"j\n\021SignedTransaction\022&\n\005tra"
+    "ns\030\n \001(\0132\027.fantasybit.Transaction\022\n\n\002id\030"
+    "\024 \001(\014\022\013\n\003sig\030\036 \001(\014\022\024\n\014fantasy_name\030( \001(\t"
+    "\"\370\001\n\013BlockHeader\022\017\n\007version\030\001 \001(\005\022\013\n\003num"
+    "\030\n \001(\005\022\017\n\007prev_id\030\024 \001(\014\022\021\n\ttimestamp\030\025 \001"
+    "(\005\022\024\n\014generator_pk\030\036 \001(\014\022\026\n\016generating_s"
+    "ig\030( \001(\014\022\022\n\nbasetarget\0302 \001(\005\022/\n\tblocktyp"
+    "e\030< \001(\0162\034.fantasybit.BlockHeader.Type\022\026\n"
+    "\016transaction_id\030F \001(\014\"\034\n\004Type\022\n\n\006NORMAL\020"
+    "\001\022\010\n\004DATA\020\002\"G\n\021SignedBlockHeader\022%\n\004head"
+    "\030\n \001(\0132\027.fantasybit.BlockHeader\022\013\n\003sig\030\036"
+    " \001(\t\"\201\001\n\005Block\0221\n\nsignedhead\030\n \001(\0132\035.fan"
+    "tasybit.SignedBlockHeader\022:\n\023signed_tran"
+    "sactions\030\024 \003(\0132\035.fantasybit.SignedTransa"
+    "ction*\t\010\350\007\020\200\200\200\200\002\"\257\001\n\013NodeRequest\022*\n\004type"
+    "\030\n \001(\0162\034.fantasybit.NodeRequest.Type\022\014\n\004"
+    "myip\030\024 \001(\t\022\013\n\003num\030\036 \001(\005\022\016\n\006myhost\030( \001(\t\""
+    "I\n\004Type\022\r\n\tHANDSHAKE\020\001\022\021\n\rBLOCK_REQUEST\020"
+    "\002\022\021\n\rHIGHT_REQUEST\020\003\022\014\n\010NAT_TEST\020\004\"\'\n\tNo"
+    "deReply\022\r\n\005hight\030\n \001(\005\022\013\n\003ips\030\024 \003(\t\"e\n\023F"
+    "antasyPlayerPoints\022\016\n\006season\030\n \001(\r\022\014\n\004we"
+    "ek\030\024 \001(\r\022\020\n\010playerid\030\036 \001(\t\022\016\n\006points\030( \001"
+    "(\005\022\016\n\006result\0302 \001(\002\"\234\001\n\017ProjectionTrans\022\016"
+    "\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022\020\n\010playerid"
+    "\030\036 \001(\t\022\016\n\006points\030( \001(\0052I\n\nproj_trans\022\027.f"
+    "antasybit.Transaction\030\311\001 \001(\0132\033.fantasybi"
+    "t.ProjectionTrans\"~\n\004Data\022\017\n\007version\030\n \001"
+    "(\005\022#\n\004type\030\024 \001(\0162\025.fantasybit.Data.Type\""
+    "6\n\004Type\022\014\n\010SCHEDULE\020\000\022\n\n\006PLAYER\020\001\022\010\n\004GAM"
+    "E\020\002\022\n\n\006RESULT\020\003*\010\010d\020\200\200\200\200\002\"\365\001\n\nPlayerData"
+    "\022\020\n\010playerid\030\n \001(\t\022+\n\013player_base\030\024 \001(\0132"
+    "\026.fantasybit.PlayerBase\022/\n\rplayer_status"
+    "\030\036 \001(\0132\030.fantasybit.PlayerStatus\0228\n\022play"
+    "er_game_status\030( \001(\0162\034.fantasybit.Player"
+    "GameStatus2=\n\013player_data\022\020.fantasybit.D"
+    "ata\030e \001(\0132\026.fantasybit.PlayerData\"}\n\010Gam"
+    "eData\022\016\n\006gameid\030\n \001(\t\022&\n\006status\030\024 \001(\0132\026."
+    "fantasybit.GameStatus29\n\tgame_data\022\020.fan"
+    "tasybit.Data\030o \001(\0132\024.fantasybit.GameData"
+    "\"y\n\nResultData\022+\n\013game_result\030\n \001(\0132\026.fa"
+    "ntasybit.GameResult2>\n\013result_data\022\020.fan"
+    "tasybit.Data\030\312\001 \001(\0132\026.fantasybit.ResultD"
+    "ata\"\336\002\n\016DataTransition\022-\n\004type\030\001 \001(\0162\037.f"
+    "antasybit.DataTransition.Type\022\016\n\006season\030"
+    "\n \001(\r\022\014\n\004week\030\024 \001(\r\022&\n\010gamedata\030\036 \003(\0132\024."
+    "fantasybit.GameData\022\036\n\004data\030( \003(\0132\020.fant"
+    "asybit.Data\"m\n\004Type\022\n\n\006ROSTER\020\001\022\017\n\013SEASO"
+    "NSTART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tDRAFTOVER\020\004\022\r"
+    "\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER"
+    "\020\0072H\n\ndata_trans\022\027.fantasybit.Transactio"
+    "n\030\313\001 \001(\0132\032.fantasybit.DataTransition\"w\n\t"
+    "TeamState\022*\n\005state\030\001 \001(\0162\033.fantasybit.Te"
+    "amState.State\022\014\n\004week\030\n \001(\r\022\016\n\006teamid\030\024 "
+    "\001(\t\" \n\005State\022\013\n\007PREGAME\020\001\022\n\n\006INGAME\020\002\"\275\002"
+    "\n\tDeltaData\022(\n\004type\030\001 \001(\0162\032.fantasybit.D"
+    "eltaData.Type\0220\n\rmyfantasyname\030\002 \003(\0132\031.f"
+    "antasybit.MyFantasyName\022,\n\013globalstate\030\n"
+    " \001(\0132\027.fantasybit.GlobalState\022)\n\nteamsta"
+    "tes\030\024 \003(\0132\025.fantasybit.TeamState\022\037\n\005data"
+    "s\030\036 \003(\0132\020.fantasybit.Data\022*\n\007players\030( \003"
+    "(\0132\031.fantasybit.FantasyPlayer\"#\n\004Type\022\014\n"
+    "\010SNAPSHOT\020\002\022\r\n\tHEARTBEAT\020\003*\t\010\350\007\020\200\200\200\200\002*d\n"
+    "\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\t"
+    "requested\020\005\022\t\n\005found\020\n\022\024\n\020transaction_se"
+    "nt\020\017\022\r\n\tconfirmed\020\024*;\n\tTransType\022\010\n\004NAME"
+    "\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003", 3880);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -837,17 +797,15 @@ void protobuf_AddDesc_ProtoData_2eproto() {
   BlockHeader::default_instance_ = new BlockHeader();
   SignedBlockHeader::default_instance_ = new SignedBlockHeader();
   Block::default_instance_ = new Block();
-  LiveWire::default_instance_ = new LiveWire();
   NodeRequest::default_instance_ = new NodeRequest();
   NodeReply::default_instance_ = new NodeReply();
   FantasyPlayerPoints::default_instance_ = new FantasyPlayerPoints();
   ProjectionTrans::default_instance_ = new ProjectionTrans();
   Data::default_instance_ = new Data();
   PlayerData::default_instance_ = new PlayerData();
-  TeamData::default_instance_ = new TeamData();
+  GameData::default_instance_ = new GameData();
   ResultData::default_instance_ = new ResultData();
   DataTransition::default_instance_ = new DataTransition();
-  GlobalState::default_instance_ = new GlobalState();
   TeamState::default_instance_ = new TeamState();
   DeltaData::default_instance_ = new DeltaData();
   MyFantasyName::default_instance_->InitAsDefaultInstance();
@@ -872,7 +830,6 @@ void protobuf_AddDesc_ProtoData_2eproto() {
   BlockHeader::default_instance_->InitAsDefaultInstance();
   SignedBlockHeader::default_instance_->InitAsDefaultInstance();
   Block::default_instance_->InitAsDefaultInstance();
-  LiveWire::default_instance_->InitAsDefaultInstance();
   NodeRequest::default_instance_->InitAsDefaultInstance();
   NodeReply::default_instance_->InitAsDefaultInstance();
   FantasyPlayerPoints::default_instance_->InitAsDefaultInstance();
@@ -887,11 +844,11 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     &::fantasybit::Data::default_instance(),
     101, 11, false, false,
     &::fantasybit::PlayerData::default_instance());
-  TeamData::default_instance_->InitAsDefaultInstance();
+  GameData::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
     &::fantasybit::Data::default_instance(),
     111, 11, false, false,
-    &::fantasybit::TeamData::default_instance());
+    &::fantasybit::GameData::default_instance());
   ResultData::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
     &::fantasybit::Data::default_instance(),
@@ -902,7 +859,6 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     &::fantasybit::Transaction::default_instance(),
     203, 11, false, false,
     &::fantasybit::DataTransition::default_instance());
-  GlobalState::default_instance_->InitAsDefaultInstance();
   TeamState::default_instance_->InitAsDefaultInstance();
   DeltaData::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_ProtoData_2eproto);
@@ -5510,265 +5466,6 @@ void Block::Swap(Block* other) {
 
 // ===================================================================
 
-#ifndef _MSC_VER
-const int LiveWire::kBlockFieldNumber;
-const int LiveWire::kTransactionFieldNumber;
-#endif  // !_MSC_VER
-
-LiveWire::LiveWire()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void LiveWire::InitAsDefaultInstance() {
-  block_ = const_cast< ::fantasybit::Block*>(&::fantasybit::Block::default_instance());
-}
-
-LiveWire::LiveWire(const LiveWire& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void LiveWire::SharedCtor() {
-  _cached_size_ = 0;
-  block_ = NULL;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-LiveWire::~LiveWire() {
-  SharedDtor();
-}
-
-void LiveWire::SharedDtor() {
-  if (this != default_instance_) {
-    delete block_;
-  }
-}
-
-void LiveWire::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* LiveWire::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return LiveWire_descriptor_;
-}
-
-const LiveWire& LiveWire::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_ProtoData_2eproto();
-  return *default_instance_;
-}
-
-LiveWire* LiveWire::default_instance_ = NULL;
-
-LiveWire* LiveWire::New() const {
-  return new LiveWire;
-}
-
-void LiveWire::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_block()) {
-      if (block_ != NULL) block_->::fantasybit::Block::Clear();
-    }
-  }
-  transaction_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool LiveWire::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .fantasybit.Block block = 10;
-      case 10: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_block()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(162)) goto parse_transaction;
-        break;
-      }
-
-      // repeated .fantasybit.SignedTransaction transaction = 20;
-      case 20: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_transaction:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_transaction()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(162)) goto parse_transaction;
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void LiveWire::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .fantasybit.Block block = 10;
-  if (has_block()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      10, this->block(), output);
-  }
-
-  // repeated .fantasybit.SignedTransaction transaction = 20;
-  for (int i = 0; i < this->transaction_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      20, this->transaction(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* LiveWire::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // optional .fantasybit.Block block = 10;
-  if (has_block()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        10, this->block(), target);
-  }
-
-  // repeated .fantasybit.SignedTransaction transaction = 20;
-  for (int i = 0; i < this->transaction_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        20, this->transaction(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int LiveWire::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .fantasybit.Block block = 10;
-    if (has_block()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->block());
-    }
-
-  }
-  // repeated .fantasybit.SignedTransaction transaction = 20;
-  total_size += 2 * this->transaction_size();
-  for (int i = 0; i < this->transaction_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->transaction(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void LiveWire::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const LiveWire* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const LiveWire*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void LiveWire::MergeFrom(const LiveWire& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  transaction_.MergeFrom(from.transaction_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_block()) {
-      mutable_block()->::fantasybit::Block::MergeFrom(from.block());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void LiveWire::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void LiveWire::CopyFrom(const LiveWire& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool LiveWire::IsInitialized() const {
-
-  if (has_block()) {
-    if (!this->block().IsInitialized()) return false;
-  }
-  for (int i = 0; i < transaction_size(); i++) {
-    if (!this->transaction(i).IsInitialized()) return false;
-  }
-  return true;
-}
-
-void LiveWire::Swap(LiveWire* other) {
-  if (other != this) {
-    std::swap(block_, other->block_);
-    transaction_.Swap(&other->transaction_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata LiveWire::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = LiveWire_descriptor_;
-  metadata.reflection = LiveWire_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
 const ::google::protobuf::EnumDescriptor* NodeRequest_Type_descriptor() {
   protobuf_AssignDescriptorsOnce();
   return NodeRequest_Type_descriptor_;
@@ -6802,7 +6499,10 @@ void FantasyPlayerPoints::Swap(FantasyPlayerPoints* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int ProjectionTrans::kFppFieldNumber;
+const int ProjectionTrans::kSeasonFieldNumber;
+const int ProjectionTrans::kWeekFieldNumber;
+const int ProjectionTrans::kPlayeridFieldNumber;
+const int ProjectionTrans::kPointsFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -6817,7 +6517,6 @@ ProjectionTrans::ProjectionTrans()
 }
 
 void ProjectionTrans::InitAsDefaultInstance() {
-  fpp_ = const_cast< ::fantasybit::FantasyPlayerPoints*>(&::fantasybit::FantasyPlayerPoints::default_instance());
 }
 
 ProjectionTrans::ProjectionTrans(const ProjectionTrans& from)
@@ -6828,7 +6527,10 @@ ProjectionTrans::ProjectionTrans(const ProjectionTrans& from)
 
 void ProjectionTrans::SharedCtor() {
   _cached_size_ = 0;
-  fpp_ = NULL;
+  season_ = 0u;
+  week_ = 0u;
+  playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  points_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -6837,8 +6539,10 @@ ProjectionTrans::~ProjectionTrans() {
 }
 
 void ProjectionTrans::SharedDtor() {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
   if (this != default_instance_) {
-    delete fpp_;
   }
 }
 
@@ -6865,9 +6569,14 @@ ProjectionTrans* ProjectionTrans::New() const {
 
 void ProjectionTrans::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_fpp()) {
-      if (fpp_ != NULL) fpp_->::fantasybit::FantasyPlayerPoints::Clear();
+    season_ = 0u;
+    week_ = 0u;
+    if (has_playerid()) {
+      if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+        playerid_->clear();
+      }
     }
+    points_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -6879,12 +6588,63 @@ bool ProjectionTrans::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .fantasybit.FantasyPlayerPoints fpp = 10;
+      // optional uint32 season = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &season_)));
+          set_has_season();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(160)) goto parse_week;
+        break;
+      }
+
+      // optional uint32 week = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_week:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &week_)));
+          set_has_week();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(242)) goto parse_playerid;
+        break;
+      }
+
+      // optional string playerid = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_fpp()));
+         parse_playerid:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_playerid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->playerid().data(), this->playerid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(320)) goto parse_points;
+        break;
+      }
+
+      // optional int32 points = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_points:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &points_)));
+          set_has_points();
         } else {
           goto handle_uninterpreted;
         }
@@ -6910,10 +6670,28 @@ bool ProjectionTrans::MergePartialFromCodedStream(
 
 void ProjectionTrans::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .fantasybit.FantasyPlayerPoints fpp = 10;
-  if (has_fpp()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      10, this->fpp(), output);
+  // optional uint32 season = 10;
+  if (has_season()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(10, this->season(), output);
+  }
+
+  // optional uint32 week = 20;
+  if (has_week()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->week(), output);
+  }
+
+  // optional string playerid = 30;
+  if (has_playerid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->playerid().data(), this->playerid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      30, this->playerid(), output);
+  }
+
+  // optional int32 points = 40;
+  if (has_points()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(40, this->points(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -6924,11 +6702,29 @@ void ProjectionTrans::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ProjectionTrans::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .fantasybit.FantasyPlayerPoints fpp = 10;
-  if (has_fpp()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        10, this->fpp(), target);
+  // optional uint32 season = 10;
+  if (has_season()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(10, this->season(), target);
+  }
+
+  // optional uint32 week = 20;
+  if (has_week()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->week(), target);
+  }
+
+  // optional string playerid = 30;
+  if (has_playerid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->playerid().data(), this->playerid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        30, this->playerid(), target);
+  }
+
+  // optional int32 points = 40;
+  if (has_points()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(40, this->points(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -6942,11 +6738,32 @@ int ProjectionTrans::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .fantasybit.FantasyPlayerPoints fpp = 10;
-    if (has_fpp()) {
+    // optional uint32 season = 10;
+    if (has_season()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->fpp());
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->season());
+    }
+
+    // optional uint32 week = 20;
+    if (has_week()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->week());
+    }
+
+    // optional string playerid = 30;
+    if (has_playerid()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->playerid());
+    }
+
+    // optional int32 points = 40;
+    if (has_points()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->points());
     }
 
   }
@@ -6976,8 +6793,17 @@ void ProjectionTrans::MergeFrom(const ::google::protobuf::Message& from) {
 void ProjectionTrans::MergeFrom(const ProjectionTrans& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_fpp()) {
-      mutable_fpp()->::fantasybit::FantasyPlayerPoints::MergeFrom(from.fpp());
+    if (from.has_season()) {
+      set_season(from.season());
+    }
+    if (from.has_week()) {
+      set_week(from.week());
+    }
+    if (from.has_playerid()) {
+      set_playerid(from.playerid());
+    }
+    if (from.has_points()) {
+      set_points(from.points());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -7002,7 +6828,10 @@ bool ProjectionTrans::IsInitialized() const {
 
 void ProjectionTrans::Swap(ProjectionTrans* other) {
   if (other != this) {
-    std::swap(fpp_, other->fpp_);
+    std::swap(season_, other->season_);
+    std::swap(week_, other->week_);
+    std::swap(playerid_, other->playerid_);
+    std::swap(points_, other->points_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -7039,7 +6868,7 @@ bool Data_Type_IsValid(int value) {
 #ifndef _MSC_VER
 const Data_Type Data::SCHEDULE;
 const Data_Type Data::PLAYER;
-const Data_Type Data::TEAM;
+const Data_Type Data::GAME;
 const Data_Type Data::RESULT;
 const Data_Type Data::Type_MIN;
 const Data_Type Data::Type_MAX;
@@ -7320,7 +7149,9 @@ void Data::Swap(Data* other) {
 
 #ifndef _MSC_VER
 const int PlayerData::kPlayeridFieldNumber;
-const int PlayerData::kTeamidFieldNumber;
+const int PlayerData::kPlayerBaseFieldNumber;
+const int PlayerData::kPlayerStatusFieldNumber;
+const int PlayerData::kPlayerGameStatusFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -7335,6 +7166,8 @@ PlayerData::PlayerData()
 }
 
 void PlayerData::InitAsDefaultInstance() {
+  player_base_ = const_cast< ::fantasybit::PlayerBase*>(&::fantasybit::PlayerBase::default_instance());
+  player_status_ = const_cast< ::fantasybit::PlayerStatus*>(&::fantasybit::PlayerStatus::default_instance());
 }
 
 PlayerData::PlayerData(const PlayerData& from)
@@ -7346,7 +7179,9 @@ PlayerData::PlayerData(const PlayerData& from)
 void PlayerData::SharedCtor() {
   _cached_size_ = 0;
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  player_base_ = NULL;
+  player_status_ = NULL;
+  player_game_status_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -7358,10 +7193,9 @@ void PlayerData::SharedDtor() {
   if (playerid_ != &::google::protobuf::internal::kEmptyString) {
     delete playerid_;
   }
-  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
-    delete teamid_;
-  }
   if (this != default_instance_) {
+    delete player_base_;
+    delete player_status_;
   }
 }
 
@@ -7393,11 +7227,13 @@ void PlayerData::Clear() {
         playerid_->clear();
       }
     }
-    if (has_teamid()) {
-      if (teamid_ != &::google::protobuf::internal::kEmptyString) {
-        teamid_->clear();
-      }
+    if (has_player_base()) {
+      if (player_base_ != NULL) player_base_->::fantasybit::PlayerBase::Clear();
     }
+    if (has_player_status()) {
+      if (player_status_ != NULL) player_status_->::fantasybit::PlayerStatus::Clear();
+    }
+    player_game_status_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -7421,20 +7257,52 @@ bool PlayerData::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(162)) goto parse_teamid;
+        if (input->ExpectTag(162)) goto parse_player_base;
         break;
       }
 
-      // optional string teamid = 20;
+      // optional .fantasybit.PlayerBase player_base = 20;
       case 20: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_teamid:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_teamid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->teamid().data(), this->teamid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+         parse_player_base:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_player_base()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(242)) goto parse_player_status;
+        break;
+      }
+
+      // optional .fantasybit.PlayerStatus player_status = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_player_status:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_player_status()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(320)) goto parse_player_game_status;
+        break;
+      }
+
+      // optional .fantasybit.PlayerGameStatus player_game_status = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_player_game_status:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::fantasybit::PlayerGameStatus_IsValid(value)) {
+            set_player_game_status(static_cast< ::fantasybit::PlayerGameStatus >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(40, value);
+          }
         } else {
           goto handle_uninterpreted;
         }
@@ -7469,13 +7337,22 @@ void PlayerData::SerializeWithCachedSizes(
       10, this->playerid(), output);
   }
 
-  // optional string teamid = 20;
-  if (has_teamid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->teamid().data(), this->teamid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      20, this->teamid(), output);
+  // optional .fantasybit.PlayerBase player_base = 20;
+  if (has_player_base()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      20, this->player_base(), output);
+  }
+
+  // optional .fantasybit.PlayerStatus player_status = 30;
+  if (has_player_status()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      30, this->player_status(), output);
+  }
+
+  // optional .fantasybit.PlayerGameStatus player_game_status = 40;
+  if (has_player_game_status()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      40, this->player_game_status(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -7496,14 +7373,24 @@ void PlayerData::SerializeWithCachedSizes(
         10, this->playerid(), target);
   }
 
-  // optional string teamid = 20;
-  if (has_teamid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->teamid().data(), this->teamid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        20, this->teamid(), target);
+  // optional .fantasybit.PlayerBase player_base = 20;
+  if (has_player_base()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        20, this->player_base(), target);
+  }
+
+  // optional .fantasybit.PlayerStatus player_status = 30;
+  if (has_player_status()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        30, this->player_status(), target);
+  }
+
+  // optional .fantasybit.PlayerGameStatus player_game_status = 40;
+  if (has_player_game_status()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      40, this->player_game_status(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -7524,11 +7411,24 @@ int PlayerData::ByteSize() const {
           this->playerid());
     }
 
-    // optional string teamid = 20;
-    if (has_teamid()) {
+    // optional .fantasybit.PlayerBase player_base = 20;
+    if (has_player_base()) {
       total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->teamid());
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->player_base());
+    }
+
+    // optional .fantasybit.PlayerStatus player_status = 30;
+    if (has_player_status()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->player_status());
+    }
+
+    // optional .fantasybit.PlayerGameStatus player_game_status = 40;
+    if (has_player_game_status()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->player_game_status());
     }
 
   }
@@ -7561,8 +7461,14 @@ void PlayerData::MergeFrom(const PlayerData& from) {
     if (from.has_playerid()) {
       set_playerid(from.playerid());
     }
-    if (from.has_teamid()) {
-      set_teamid(from.teamid());
+    if (from.has_player_base()) {
+      mutable_player_base()->::fantasybit::PlayerBase::MergeFrom(from.player_base());
+    }
+    if (from.has_player_status()) {
+      mutable_player_status()->::fantasybit::PlayerStatus::MergeFrom(from.player_status());
+    }
+    if (from.has_player_game_status()) {
+      set_player_game_status(from.player_game_status());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -7588,7 +7494,9 @@ bool PlayerData::IsInitialized() const {
 void PlayerData::Swap(PlayerData* other) {
   if (other != this) {
     std::swap(playerid_, other->playerid_);
-    std::swap(teamid_, other->teamid_);
+    std::swap(player_base_, other->player_base_);
+    std::swap(player_status_, other->player_status_);
+    std::swap(player_game_status_, other->player_game_status_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -7607,95 +7515,116 @@ void PlayerData::Swap(PlayerData* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int TeamData::kTeamidFieldNumber;
+const int GameData::kGameidFieldNumber;
+const int GameData::kStatusFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
-const int TeamData::kTeamDataFieldNumber;
+const int GameData::kGameDataFieldNumber;
 #endif
 ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
-    ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::TeamData >, 11, false >
-  TeamData::team_data(kTeamDataFieldNumber, ::fantasybit::TeamData::default_instance());
-TeamData::TeamData()
+    ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GameData >, 11, false >
+  GameData::game_data(kGameDataFieldNumber, ::fantasybit::GameData::default_instance());
+GameData::GameData()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void TeamData::InitAsDefaultInstance() {
+void GameData::InitAsDefaultInstance() {
+  status_ = const_cast< ::fantasybit::GameStatus*>(&::fantasybit::GameStatus::default_instance());
 }
 
-TeamData::TeamData(const TeamData& from)
+GameData::GameData(const GameData& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void TeamData::SharedCtor() {
+void GameData::SharedCtor() {
   _cached_size_ = 0;
-  teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  status_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-TeamData::~TeamData() {
+GameData::~GameData() {
   SharedDtor();
 }
 
-void TeamData::SharedDtor() {
-  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
-    delete teamid_;
+void GameData::SharedDtor() {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    delete gameid_;
   }
   if (this != default_instance_) {
+    delete status_;
   }
 }
 
-void TeamData::SetCachedSize(int size) const {
+void GameData::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* TeamData::descriptor() {
+const ::google::protobuf::Descriptor* GameData::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return TeamData_descriptor_;
+  return GameData_descriptor_;
 }
 
-const TeamData& TeamData::default_instance() {
+const GameData& GameData::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_ProtoData_2eproto();
   return *default_instance_;
 }
 
-TeamData* TeamData::default_instance_ = NULL;
+GameData* GameData::default_instance_ = NULL;
 
-TeamData* TeamData::New() const {
-  return new TeamData;
+GameData* GameData::New() const {
+  return new GameData;
 }
 
-void TeamData::Clear() {
+void GameData::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_teamid()) {
-      if (teamid_ != &::google::protobuf::internal::kEmptyString) {
-        teamid_->clear();
+    if (has_gameid()) {
+      if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+        gameid_->clear();
       }
+    }
+    if (has_status()) {
+      if (status_ != NULL) status_->::fantasybit::GameStatus::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool TeamData::MergePartialFromCodedStream(
+bool GameData::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string teamid = 10;
+      // optional string gameid = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_teamid()));
+                input, this->mutable_gameid()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->teamid().data(), this->teamid().length(),
+            this->gameid().data(), this->gameid().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_status;
+        break;
+      }
+
+      // optional .fantasybit.GameStatus status = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_status:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_status()));
         } else {
           goto handle_uninterpreted;
         }
@@ -7719,15 +7648,21 @@ bool TeamData::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void TeamData::SerializeWithCachedSizes(
+void GameData::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string teamid = 10;
-  if (has_teamid()) {
+  // optional string gameid = 10;
+  if (has_gameid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->teamid().data(), this->teamid().length(),
+      this->gameid().data(), this->gameid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      10, this->teamid(), output);
+      10, this->gameid(), output);
+  }
+
+  // optional .fantasybit.GameStatus status = 20;
+  if (has_status()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      20, this->status(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -7736,16 +7671,23 @@ void TeamData::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* TeamData::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* GameData::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string teamid = 10;
-  if (has_teamid()) {
+  // optional string gameid = 10;
+  if (has_gameid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->teamid().data(), this->teamid().length(),
+      this->gameid().data(), this->gameid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        10, this->teamid(), target);
+        10, this->gameid(), target);
+  }
+
+  // optional .fantasybit.GameStatus status = 20;
+  if (has_status()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        20, this->status(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -7755,15 +7697,22 @@ void TeamData::SerializeWithCachedSizes(
   return target;
 }
 
-int TeamData::ByteSize() const {
+int GameData::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string teamid = 10;
-    if (has_teamid()) {
+    // optional string gameid = 10;
+    if (has_gameid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->teamid());
+          this->gameid());
+    }
+
+    // optional .fantasybit.GameStatus status = 20;
+    if (has_status()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->status());
     }
 
   }
@@ -7778,10 +7727,10 @@ int TeamData::ByteSize() const {
   return total_size;
 }
 
-void TeamData::MergeFrom(const ::google::protobuf::Message& from) {
+void GameData::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const TeamData* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const TeamData*>(
+  const GameData* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const GameData*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -7790,47 +7739,51 @@ void TeamData::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void TeamData::MergeFrom(const TeamData& from) {
+void GameData::MergeFrom(const GameData& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_teamid()) {
-      set_teamid(from.teamid());
+    if (from.has_gameid()) {
+      set_gameid(from.gameid());
+    }
+    if (from.has_status()) {
+      mutable_status()->::fantasybit::GameStatus::MergeFrom(from.status());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void TeamData::CopyFrom(const ::google::protobuf::Message& from) {
+void GameData::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void TeamData::CopyFrom(const TeamData& from) {
+void GameData::CopyFrom(const GameData& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool TeamData::IsInitialized() const {
+bool GameData::IsInitialized() const {
 
   return true;
 }
 
-void TeamData::Swap(TeamData* other) {
+void GameData::Swap(GameData* other) {
   if (other != this) {
-    std::swap(teamid_, other->teamid_);
+    std::swap(gameid_, other->gameid_);
+    std::swap(status_, other->status_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::google::protobuf::Metadata TeamData::GetMetadata() const {
+::google::protobuf::Metadata GameData::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = TeamData_descriptor_;
-  metadata.reflection = TeamData_reflection_;
+  metadata.descriptor = GameData_descriptor_;
+  metadata.reflection = GameData_reflection_;
   return metadata;
 }
 
@@ -7838,7 +7791,7 @@ void TeamData::Swap(TeamData* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int ResultData::kFppFieldNumber;
+const int ResultData::kGameResultFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -7853,7 +7806,7 @@ ResultData::ResultData()
 }
 
 void ResultData::InitAsDefaultInstance() {
-  fpp_ = const_cast< ::fantasybit::FantasyPlayerPoints*>(&::fantasybit::FantasyPlayerPoints::default_instance());
+  game_result_ = const_cast< ::fantasybit::GameResult*>(&::fantasybit::GameResult::default_instance());
 }
 
 ResultData::ResultData(const ResultData& from)
@@ -7864,7 +7817,7 @@ ResultData::ResultData(const ResultData& from)
 
 void ResultData::SharedCtor() {
   _cached_size_ = 0;
-  fpp_ = NULL;
+  game_result_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -7874,7 +7827,7 @@ ResultData::~ResultData() {
 
 void ResultData::SharedDtor() {
   if (this != default_instance_) {
-    delete fpp_;
+    delete game_result_;
   }
 }
 
@@ -7901,8 +7854,8 @@ ResultData* ResultData::New() const {
 
 void ResultData::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_fpp()) {
-      if (fpp_ != NULL) fpp_->::fantasybit::FantasyPlayerPoints::Clear();
+    if (has_game_result()) {
+      if (game_result_ != NULL) game_result_->::fantasybit::GameResult::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -7915,12 +7868,12 @@ bool ResultData::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .fantasybit.FantasyPlayerPoints fpp = 10;
+      // optional .fantasybit.GameResult game_result = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_fpp()));
+               input, mutable_game_result()));
         } else {
           goto handle_uninterpreted;
         }
@@ -7946,10 +7899,10 @@ bool ResultData::MergePartialFromCodedStream(
 
 void ResultData::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .fantasybit.FantasyPlayerPoints fpp = 10;
-  if (has_fpp()) {
+  // optional .fantasybit.GameResult game_result = 10;
+  if (has_game_result()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      10, this->fpp(), output);
+      10, this->game_result(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -7960,11 +7913,11 @@ void ResultData::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ResultData::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .fantasybit.FantasyPlayerPoints fpp = 10;
-  if (has_fpp()) {
+  // optional .fantasybit.GameResult game_result = 10;
+  if (has_game_result()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        10, this->fpp(), target);
+        10, this->game_result(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -7978,11 +7931,11 @@ int ResultData::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .fantasybit.FantasyPlayerPoints fpp = 10;
-    if (has_fpp()) {
+    // optional .fantasybit.GameResult game_result = 10;
+    if (has_game_result()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->fpp());
+          this->game_result());
     }
 
   }
@@ -8012,8 +7965,8 @@ void ResultData::MergeFrom(const ::google::protobuf::Message& from) {
 void ResultData::MergeFrom(const ResultData& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_fpp()) {
-      mutable_fpp()->::fantasybit::FantasyPlayerPoints::MergeFrom(from.fpp());
+    if (from.has_game_result()) {
+      mutable_game_result()->::fantasybit::GameResult::MergeFrom(from.game_result());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -8038,7 +7991,7 @@ bool ResultData::IsInitialized() const {
 
 void ResultData::Swap(ResultData* other) {
   if (other != this) {
-    std::swap(fpp_, other->fpp_);
+    std::swap(game_result_, other->game_result_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -8091,7 +8044,7 @@ const int DataTransition::Type_ARRAYSIZE;
 const int DataTransition::kTypeFieldNumber;
 const int DataTransition::kSeasonFieldNumber;
 const int DataTransition::kWeekFieldNumber;
-const int DataTransition::kTeamidFieldNumber;
+const int DataTransition::kGamedataFieldNumber;
 const int DataTransition::kDataFieldNumber;
 #endif  // !_MSC_VER
 
@@ -8159,7 +8112,7 @@ void DataTransition::Clear() {
     season_ = 0u;
     week_ = 0u;
   }
-  teamid_.Clear();
+  gamedata_.Clear();
   data_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -8219,25 +8172,21 @@ bool DataTransition::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(242)) goto parse_teamid;
+        if (input->ExpectTag(242)) goto parse_gamedata;
         break;
       }
 
-      // repeated string teamid = 30;
+      // repeated .fantasybit.GameData gamedata = 30;
       case 30: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_teamid:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->add_teamid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->teamid(this->teamid_size() - 1).data(),
-            this->teamid(this->teamid_size() - 1).length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+         parse_gamedata:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_gamedata()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(242)) goto parse_teamid;
+        if (input->ExpectTag(242)) goto parse_gamedata;
         if (input->ExpectTag(322)) goto parse_data;
         break;
       }
@@ -8291,13 +8240,10 @@ void DataTransition::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->week(), output);
   }
 
-  // repeated string teamid = 30;
-  for (int i = 0; i < this->teamid_size(); i++) {
-  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-    this->teamid(i).data(), this->teamid(i).length(),
-    ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      30, this->teamid(i), output);
+  // repeated .fantasybit.GameData gamedata = 30;
+  for (int i = 0; i < this->gamedata_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      30, this->gamedata(i), output);
   }
 
   // repeated .fantasybit.Data data = 40;
@@ -8330,13 +8276,11 @@ void DataTransition::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->week(), target);
   }
 
-  // repeated string teamid = 30;
-  for (int i = 0; i < this->teamid_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->teamid(i).data(), this->teamid(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+  // repeated .fantasybit.GameData gamedata = 30;
+  for (int i = 0; i < this->gamedata_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteStringToArray(30, this->teamid(i), target);
+      WriteMessageNoVirtualToArray(
+        30, this->gamedata(i), target);
   }
 
   // repeated .fantasybit.Data data = 40;
@@ -8378,11 +8322,12 @@ int DataTransition::ByteSize() const {
     }
 
   }
-  // repeated string teamid = 30;
-  total_size += 2 * this->teamid_size();
-  for (int i = 0; i < this->teamid_size(); i++) {
-    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
-      this->teamid(i));
+  // repeated .fantasybit.GameData gamedata = 30;
+  total_size += 2 * this->gamedata_size();
+  for (int i = 0; i < this->gamedata_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->gamedata(i));
   }
 
   // repeated .fantasybit.Data data = 40;
@@ -8418,7 +8363,7 @@ void DataTransition::MergeFrom(const ::google::protobuf::Message& from) {
 
 void DataTransition::MergeFrom(const DataTransition& from) {
   GOOGLE_CHECK_NE(&from, this);
-  teamid_.MergeFrom(from.teamid_);
+  gamedata_.MergeFrom(from.gamedata_);
   data_.MergeFrom(from.data_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_type()) {
@@ -8459,7 +8404,7 @@ void DataTransition::Swap(DataTransition* other) {
     std::swap(type_, other->type_);
     std::swap(season_, other->season_);
     std::swap(week_, other->week_);
-    teamid_.Swap(&other->teamid_);
+    gamedata_.Swap(&other->gamedata_);
     data_.Swap(&other->data_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -8472,285 +8417,6 @@ void DataTransition::Swap(DataTransition* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = DataTransition_descriptor_;
   metadata.reflection = DataTransition_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-const ::google::protobuf::EnumDescriptor* GlobalState_State_descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return GlobalState_State_descriptor_;
-}
-bool GlobalState_State_IsValid(int value) {
-  switch(value) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-      return true;
-    default:
-      return false;
-  }
-}
-
-#ifndef _MSC_VER
-const GlobalState_State GlobalState::PREDRAFT;
-const GlobalState_State GlobalState::PRESEASON;
-const GlobalState_State GlobalState::ROSTER53MAN;
-const GlobalState_State GlobalState::INSEASON;
-const GlobalState_State GlobalState::State_MIN;
-const GlobalState_State GlobalState::State_MAX;
-const int GlobalState::State_ARRAYSIZE;
-#endif  // _MSC_VER
-#ifndef _MSC_VER
-const int GlobalState::kStateFieldNumber;
-const int GlobalState::kSeasonFieldNumber;
-#endif  // !_MSC_VER
-
-GlobalState::GlobalState()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void GlobalState::InitAsDefaultInstance() {
-}
-
-GlobalState::GlobalState(const GlobalState& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void GlobalState::SharedCtor() {
-  _cached_size_ = 0;
-  state_ = 1;
-  season_ = 0u;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-GlobalState::~GlobalState() {
-  SharedDtor();
-}
-
-void GlobalState::SharedDtor() {
-  if (this != default_instance_) {
-  }
-}
-
-void GlobalState::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* GlobalState::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return GlobalState_descriptor_;
-}
-
-const GlobalState& GlobalState::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_ProtoData_2eproto();
-  return *default_instance_;
-}
-
-GlobalState* GlobalState::default_instance_ = NULL;
-
-GlobalState* GlobalState::New() const {
-  return new GlobalState;
-}
-
-void GlobalState::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    state_ = 1;
-    season_ = 0u;
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GlobalState::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .fantasybit.GlobalState.State state = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::fantasybit::GlobalState_State_IsValid(value)) {
-            set_state(static_cast< ::fantasybit::GlobalState_State >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(1, value);
-          }
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(80)) goto parse_season;
-        break;
-      }
-
-      // optional uint32 season = 10;
-      case 10: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_season:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &season_)));
-          set_has_season();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void GlobalState::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .fantasybit.GlobalState.State state = 1;
-  if (has_state()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      1, this->state(), output);
-  }
-
-  // optional uint32 season = 10;
-  if (has_season()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(10, this->season(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* GlobalState::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // optional .fantasybit.GlobalState.State state = 1;
-  if (has_state()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      1, this->state(), target);
-  }
-
-  // optional uint32 season = 10;
-  if (has_season()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(10, this->season(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int GlobalState::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .fantasybit.GlobalState.State state = 1;
-    if (has_state()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
-    }
-
-    // optional uint32 season = 10;
-    if (has_season()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->season());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GlobalState::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GlobalState* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GlobalState*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GlobalState::MergeFrom(const GlobalState& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_state()) {
-      set_state(from.state());
-    }
-    if (from.has_season()) {
-      set_season(from.season());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GlobalState::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GlobalState::CopyFrom(const GlobalState& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GlobalState::IsInitialized() const {
-
-  return true;
-}
-
-void GlobalState::Swap(GlobalState* other) {
-  if (other != this) {
-    std::swap(state_, other->state_);
-    std::swap(season_, other->season_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata GlobalState::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = GlobalState_descriptor_;
-  metadata.reflection = GlobalState_reflection_;
   return metadata;
 }
 

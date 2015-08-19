@@ -8,7 +8,13 @@
 #include "FantasyAgent.h"
 #include "Processor.h"
 #include "FantasyAgent.h"
-
+#include "NameData.h"
+#include "Data.h"
+#include "NameData.pb.h"
+#include "StaticData.pb.h"
+#include "StatusData.pb.h"
+#include "ProtoData.pb.h"
+#include <vector>
 
 class MainLAPIWorker : public QObject
 {
@@ -24,10 +30,14 @@ class MainLAPIWorker : public QObject
     int numto = std::numeric_limits<int>::max();
     bool amlive = false;
     QTimer * timer;
-    fantasybit::BlockProcessor processor;
     fantasybit::FantasyAgent agent{};
-    //DeltaData deltadata;
+    fantasybit::DataData data;
+    fantasybit::NameData namedata;
+    fantasybit::BlockProcessor processor;
 
+    fantasybit::DeltaData deltadata{};
+    std::map<std::string,fantasybit::MyFantasyName> myfantasynames{};
+    fantasybit::MyFantasyName myCurrentName{};
 public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}
@@ -41,12 +51,19 @@ signals:
     void GetNext();
     void OnData(const fantasybit::DeltaData &);
     void OnLive();
+    void SubscribeLive();
+    void NameStatus(const fantasybit::MyFantasyName &);
+    void LiveProj(fantasybit::FantasyBitProj &);
+    void OnMyNames(std::vector<fantasybit::MyFantasyName> &);
+
 
 public slots:
 
     void processGUIRequest(const QVariant & requestData);
 
-    void getPlayers(int );
+    void OnGetMyNames();
+
+    void getLivePlayers(int );
 
     void startPoint();
 
@@ -58,6 +75,15 @@ public slots:
 
     void Timer();
 
+    void OnPlayerChange(std::string);
+    void OnFoundName(std::string &);
+    void OnProjLive(fantasybit::FantasyBitProj &);
+    void OnNameBal(fantasybit::FantasyNameBal &);
+
+    void OnUseName(QString);
+    void OnClaimName(QString);
+
+    void OnProjTX(fantasybit::FantasyBitProj);
 private:
 
     bool Process(fantasybit::Block &b);

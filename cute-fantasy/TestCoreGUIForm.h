@@ -24,6 +24,7 @@ public slots:
     void handleNotificationOrResponse(const QVariant & data);
     void GoLive();
     void NewData(const fantasybit::DeltaData &);
+    void OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &);
 private slots:
     void on_pushButton_clicked();
 

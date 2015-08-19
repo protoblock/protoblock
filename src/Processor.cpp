@@ -5,22 +5,18 @@
 //  Created by Jay Berg on 8/24/14.
 //
 //
+
 #include <utility>
 #include "Commissioner.h"
 #include "ProtoData.pb.h"
 #include <fc/crypto/sha256.hpp>
 #include <fc/crypto/elliptic.hpp>
+#include <fc/filesystem.hpp>
 #include <algorithm>
 #include <iostream>
 #include "fbutils.h"
 #include "Source.h"
 #include "DistributionAlgo.h"
-//#include <vector>
-#include <assert.h>
-#include <string>
-//#include "MsgSock.h"
-//#include "boostLog.h"
-
 #include "blockrecorder.h"
 #include "Processor.h"
 #include "core.h"
@@ -32,6 +28,7 @@ namespace fantasybit
 int BlockProcessor::init() {
     mRecorder.init();
     if (!mRecorder.isValid() ) {
+        emit InvalidState(mRecorder.getLastBlockId());
         qInfo() <<  "mRecorder not valid! ";
         mRecorder.closeAll();
         fc::remove_all(Core::getRootDir() + "index/");
@@ -39,30 +36,21 @@ int BlockProcessor::init() {
         mRecorder.init();
         if (!mRecorder.isValid() ) {
             qInfo() <<  "mRecorder not valid! ";
+            InvalidState(mRecorder.getLastBlockId());
             return -1;
         }
     }
 
-    mRecorder.initAllData();
+    mData.init();
+    mNameData.init();
+
     qInfo() <<  "YES mRecorder is valid";
 
     lastidprocessed =  mRecorder.getLastBlockId();
-    mGlobalState = mRecorder.GetGlobalState();
-
-    qInfo() <<  "last: " << lastidprocessed << "globalstate " <<
-                     mGlobalState.DebugString();
-
-    outDelta = mRecorder.DeltaSnap();
     return lastidprocessed;
 }
 
-DeltaData BlockProcessor::GetandClear() {
-    auto hold = outDelta;
-    outDelta.Clear();
-    return hold;
-}
-
-bool BlockProcessor::process(Block &sblock) {
+int BlockProcessor::process(Block &sblock) {
     qDebug() << "process: " << sblock.DebugString();
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
@@ -76,12 +64,10 @@ bool BlockProcessor::process(Block &sblock) {
     else
         processTxfrom(sblock);
 
-
-    std::cout << " BLOCK(" << sblock.signedhead().head().num() << ") processed! \n";
+    qInfo() << " BLOCK(" << sblock.signedhead().head().num() << ") processed! ";
     lastidprocessed = mRecorder.endBlock(sblock.signedhead().head().num());
-    //sblock.block().head().num());
 
-    qDebug() << " outDelta " << outDelta.DebugString();
+    //qDebug() << " outDelta " << outDelta.DebugString();
 
     return lastidprocessed;
 }
@@ -110,6 +96,7 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
     return true;
 }
 
+/*
 bool BlockProcessor::isInWeekGame(const std::string &id, int week ) {
     auto it = Source::TeamWeek.find(id);
     if ( it == end(Source::TeamWeek) )
@@ -131,7 +118,7 @@ bool BlockProcessor::sanity(const FantasyPlayerPoints &fpp) {
 
     return isInWeekGame(it->second,fpp.week());
 }
-
+*/
 void BlockProcessor::process(decltype(DataTransition::default_instance().data()) in,
             const std::string &blocksigner )  {
 
@@ -140,65 +127,65 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
     for (const auto d : in) {
         Data *nd;
         PlayerData tpd{};
-        TeamData ttd{};
+        GameData ttd{};
         ResultData rd{};
         switch (d.type()) {
             case Data_Type_PLAYER:
-                nd = outDelta.add_datas();
-                nd->CopyFrom(d);
                 tpd = d.GetExtension(PlayerData::player_data);
-                mRecorder.OnPlayerData(tpd);
+                if ( !tpd.has_playerid() ) {
+                    qCritical() << "no playerid" + QTD(tpd.DebugString());
+                    break;
+                }
+                if ( tpd.has_player_base() )
+                    mData.AddNewPlayer(tpd.playerid(),tpd.player_base());
+                if ( tpd.has_player_status() )
+                    mData.UpdatePlayerStatus(tpd.playerid(),tpd.player_status());
+                if ( tpd.has_player_game_status() )
+                    ;//ToDo
+
                 break;
-            case Data_Type_TEAM:
-                nd = outDelta.add_datas();
-                nd->CopyFrom(d);
-                ttd = d.GetExtension(TeamData::team_data);
-                mRecorder.OnTeamData(ttd);
+            case Data_Type_GAME:
+                ttd = d.GetExtension(GameData::game_data);
+                if ( ttd.has_status() && ttd.has_gameid() )
+                    mData.UpdateGameStatus(ttd.gameid(),ttd.status());
+                else {
+                    qCritical() << "no data" + QTD(ttd.DebugString());
+                }
                 break;
             case Data_Type_RESULT: {
                 rd = d.GetExtension(ResultData::result_data);
 
+                if ( !rd.has_game_result()) {
+                    qCritical() << "no data" + QTD(ttd.DebugString());
+                    break;
+                }
+
+                /*
                 if ( !sanity(rd.fpp()) ) {
                     qCritical() << " invalid result skipping" << rd.DebugString();
                     break;
                 }
-                //	auto it = FantasyProjections::Projections.find(rd.fpp().playerid());
-                //	if (it == end(FantasyProjections::Projections))
-
-                qInfo() <<  " process result " << rd.fpp().DebugString();
-                auto namevalpair = FantasyProjections::Projections[rd.fpp().playerid()];
-                DistribuePointsAvg dist(namevalpair);
-
-                double result = 0.0;
-                if ( rd.fpp().has_result() )
-                    result = rd.fpp().result();//static_cast<int>(rd.fpp().result() * 100.0);
-                else if ( rd.fpp().has_points())
-                    result = rd.fpp().points();// * 100;
+                */
+                if( rd.game_result().home_result_size() <= 0 )
+                    qCritical() << "no home result" + QTD(rd.DebugString());
                 else {
-                    qCritical() << " no points or results found";
-                    break;
-                }
-                auto rewards = dist.distribute(result, blocksigner);
-
-                for (auto nr : rewards) {
-                    auto fn = Commissioner::getName(nr.first);
-                    if ( fn == nullptr ) {
-                        qCritical() << "cant find name" << nr.first;
-                        continue;
+                    for (auto result : rd.game_result().home_result() ) {
+                        auto proj = mNameData.GetProjById(result.playerid());
+                        processResultProj(result,proj,blocksigner);
                     }
-                    int reward = nr.second;
-                    mRecorder.addBalance(Commissioner::pk2str(fn->pubkey()), reward);
-                    qDebug() << " reward " << fn->alias() << " with "
-                        << nr.second << " bal " << fn->getBalance();
-
-                    FantasyPlayer fp{};
-                    fp.set_name(fn->alias());
-                    fp.set_bits(reward);
-                    outDelta.add_players()->CopyFrom(fp);
                 }
+
+                if( rd.game_result().away_result_size() <= 0 )
+                    qCritical() << "no away result" + QTD(rd.DebugString());
+                else
+                    for (auto result : rd.game_result().away_result() ) {
+                        auto proj = mNameData.GetProjById(result.playerid());
+                        processResultProj(result,proj,blocksigner);
+                    }
+
+                mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
                 break;
             }
-
             default:
                 qCritical() << "unexpedted type" << d.type();
                 break;
@@ -206,7 +193,29 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
     }
 }
 
+void BlockProcessor::processResultProj(PlayerResult& playerresult,
+                                       std::unordered_map<std::string,int> &proj,
+                                       const std::string &blocksigner) {
+    DistribuePointsAvg dist(proj);
+    auto rewards = dist.distribute(playerresult.result(), blocksigner);
+    //decltype(PlayerResult::default_instance().fantaybitaward())
+    PlayerResult awards;
+    for (auto r : rewards ) {
+        FantasyBitAward fba{};
+        fba.set_name(r.first);
+        auto m = proj[r.first];
+        fba.set_proj(m);
+        fba.set_award(r.second);
+        awards.add_fantaybitaward()->CopyFrom(fba);
+        mNameData.AddBalance(r.first,r.second);
+    }
+    playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
+
+
+}
+
 void BlockProcessor::process(const DataTransition &indt) {
+    auto mGlobalState = mData.GetGlobalState();
     switch (indt.type())
     {
     case DataTransition_Type_ROSTER:
@@ -220,8 +229,7 @@ void BlockProcessor::process(const DataTransition &indt) {
                 mGlobalState.set_season(indt.season());
             }
             mGlobalState.set_state(GlobalState_State_ROSTER53MAN);
-            mRecorder.OnGlobalState(mGlobalState);
-            outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
+            mData.OnGlobalState(mGlobalState);
         }
         break;
     case DataTransition_Type_SEASONSTART:
@@ -235,9 +243,8 @@ void BlockProcessor::process(const DataTransition &indt) {
                 mGlobalState.set_season(indt.season());
             }
             mGlobalState.set_state(GlobalState_State_INSEASON);
-            mRecorder.OnGlobalState(mGlobalState);
-            setPreGameWeek(1);
-            outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
+            mData.OnGlobalState(mGlobalState);
+            OnWeekStart(1);
         }
         break;
     case DataTransition_Type_SEASONEND:
@@ -256,9 +263,9 @@ void BlockProcessor::process(const DataTransition &indt) {
         mGlobalState.set_season(mGlobalState.season() + 1);
 
         mGlobalState.set_state(GlobalState_State_PREDRAFT);
-        mRecorder.OnGlobalState(mGlobalState);
+        mData.OnGlobalState(mGlobalState);
 
-        outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
+        //outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
         break;
 
     case DataTransition_Type_DRAFTOVER:
@@ -272,22 +279,27 @@ void BlockProcessor::process(const DataTransition &indt) {
                 mGlobalState.set_season(indt.season());
             }
             mGlobalState.set_state(GlobalState_State_PRESEASON);
-            mRecorder.OnGlobalState(mGlobalState);
-            outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
+            mData.OnGlobalState(mGlobalState);
+            //outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
         }
         break;
     case DataTransition_Type_HEARTBEAT:
         //todo: deal w data in this msg
+        if (mGlobalState.season() != indt.season()) {
+            qWarning() << "wrong season! " << indt.DebugString();
+            //mGlobalState.set_season(indt.season());
+        }
+
+        if (mGlobalState.week() != indt.week()) {
+            qWarning() << "wrong week! " << indt.DebugString();
+            //mGlobalState.set_week(indt.week());
+        }
+
         break;
     case DataTransition_Type_GAMESTART:
-        for (auto t : indt.teamid()) {
-            auto ts = mRecorder.GetTeamState(t);
-            ts.set_state(TeamState_State_INGAME);
-            ts.set_week(indt.week());
-            ts.set_teamid(t);
-            mRecorder.OnTeamState(ts);
-            qInfo() <<  " Kickoff for team " << t;
-            outDelta.add_teamstates()->CopyFrom(ts);
+        for (auto t : indt.gamedata()) {
+            mData.OnGameStart(t.gameid(),t.status());
+            qInfo() <<  " Kickoff for game " << t.DebugString();
         }
         break;
     case DataTransition_Type_WEEKOVER:
@@ -295,7 +307,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
 
-
+        OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
         if (indt.week() == 16) {
@@ -303,23 +315,10 @@ void BlockProcessor::process(const DataTransition &indt) {
             qInfo() <<  "season " << indt.season() << " Over ";
             mGlobalState.set_state(GlobalState_State_PRESEASON);
             mGlobalState.set_season(mGlobalState.season() + 1);
-            mRecorder.OnGlobalState(mGlobalState);
-            outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
+            mData.OnGlobalState(mGlobalState);
         }
-
-        setPreGameWeek(newweek);
-        /*
-        for (auto t : indt.teamid()) {
-            auto ts = mRecorder.GetTeamState(t);
-            ts.set_state(TeamState_State_PREGAME);
-            ts.set_week(newweek);
-            ts.set_teamid(t);
-            mRecorder.OnTeamState(ts);
-            outDelta.add_teamstates()->CopyFrom(ts);
-        }
-        */
-
-        mRecorder.clearProjections();
+        else
+            OnWeekStart(newweek);
         break;
     }
     default:
@@ -382,20 +381,19 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
         {
             auto pt = t.GetExtension(ProjectionTrans::proj_trans);
             qDebug() << st.fantasy_name() << "new projection " << pt.DebugString();
-            mRecorder.addProjection(st.fantasy_name(), pt.fpp());
+            mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
             break;
         }
 
         case TransType::NAME:
         {
             auto nt = t.GetExtension(NameTrans::name_trans);
-            mRecorder.recordName(FantasyName::name_hash(nt.fantasy_name()), nt.public_key(), nt.fantasy_name());
-            Commissioner::AddName(nt.fantasy_name(), nt.public_key());
+            mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
             qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
-            FantasyPlayer fp{};
-            fp.set_name(nt.fantasy_name());
-            fp.set_bits(0);
-            outDelta.add_players()->CopyFrom(fp);
+            //FantasyPlayer fp{};
+            //fp.set_name(nt.fantasy_name());
+            //fp.set_bits(0);
+            //outDelta.add_players()->CopyFrom(fp);
         }
         break;
         default:
@@ -404,16 +402,12 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
     }
 }
 
-void BlockProcessor::setPreGameWeek(int week) {
-    TeamState ts{};
-    ts.set_state(TeamState_State_PREGAME);
-    ts.set_week(week);
+void BlockProcessor::OnWeekOver(int week) {
+    emit WeekOver(week);
+}
 
-    for ( auto id : Source::TeamIds) {
-        ts.set_teamid(id);
-        mRecorder.OnTeamState(ts);
-        outDelta.add_teamstates()->CopyFrom(ts);
-    }
+void BlockProcessor::OnWeekStart(int week) {
+    emit WeekStart(week);
 }
 
 bool BlockProcessor::verifySignedBlock(const Block &sblock)

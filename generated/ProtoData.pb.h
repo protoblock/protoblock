@@ -25,6 +25,8 @@
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "StaticData.pb.h"
+#include "StatusData.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace fantasybit {
@@ -48,17 +50,15 @@ class SignedTransaction;
 class BlockHeader;
 class SignedBlockHeader;
 class Block;
-class LiveWire;
 class NodeRequest;
 class NodeReply;
 class FantasyPlayerPoints;
 class ProjectionTrans;
 class Data;
 class PlayerData;
-class TeamData;
+class GameData;
 class ResultData;
 class DataTransition;
-class GlobalState;
 class TeamState;
 class DeltaData;
 
@@ -170,7 +170,7 @@ inline bool NodeRequest_Type_Parse(
 enum Data_Type {
   Data_Type_SCHEDULE = 0,
   Data_Type_PLAYER = 1,
-  Data_Type_TEAM = 2,
+  Data_Type_GAME = 2,
   Data_Type_RESULT = 3
 };
 bool Data_Type_IsValid(int value);
@@ -211,27 +211,6 @@ inline bool DataTransition_Type_Parse(
     const ::std::string& name, DataTransition_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<DataTransition_Type>(
     DataTransition_Type_descriptor(), name, value);
-}
-enum GlobalState_State {
-  GlobalState_State_PREDRAFT = 1,
-  GlobalState_State_PRESEASON = 2,
-  GlobalState_State_ROSTER53MAN = 3,
-  GlobalState_State_INSEASON = 4
-};
-bool GlobalState_State_IsValid(int value);
-const GlobalState_State GlobalState_State_State_MIN = GlobalState_State_PREDRAFT;
-const GlobalState_State GlobalState_State_State_MAX = GlobalState_State_INSEASON;
-const int GlobalState_State_State_ARRAYSIZE = GlobalState_State_State_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* GlobalState_State_descriptor();
-inline const ::std::string& GlobalState_State_Name(GlobalState_State value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    GlobalState_State_descriptor(), value);
-}
-inline bool GlobalState_State_Parse(
-    const ::std::string& name, GlobalState_State* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<GlobalState_State>(
-    GlobalState_State_descriptor(), name, value);
 }
 enum TeamState_State {
   TeamState_State_PREGAME = 1,
@@ -1976,103 +1955,6 @@ class Block : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class LiveWire : public ::google::protobuf::Message {
- public:
-  LiveWire();
-  virtual ~LiveWire();
-
-  LiveWire(const LiveWire& from);
-
-  inline LiveWire& operator=(const LiveWire& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const LiveWire& default_instance();
-
-  void Swap(LiveWire* other);
-
-  // implements Message ----------------------------------------------
-
-  LiveWire* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const LiveWire& from);
-  void MergeFrom(const LiveWire& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional .fantasybit.Block block = 10;
-  inline bool has_block() const;
-  inline void clear_block();
-  static const int kBlockFieldNumber = 10;
-  inline const ::fantasybit::Block& block() const;
-  inline ::fantasybit::Block* mutable_block();
-  inline ::fantasybit::Block* release_block();
-  inline void set_allocated_block(::fantasybit::Block* block);
-
-  // repeated .fantasybit.SignedTransaction transaction = 20;
-  inline int transaction_size() const;
-  inline void clear_transaction();
-  static const int kTransactionFieldNumber = 20;
-  inline const ::fantasybit::SignedTransaction& transaction(int index) const;
-  inline ::fantasybit::SignedTransaction* mutable_transaction(int index);
-  inline ::fantasybit::SignedTransaction* add_transaction();
-  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >&
-      transaction() const;
-  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >*
-      mutable_transaction();
-
-  // @@protoc_insertion_point(class_scope:fantasybit.LiveWire)
- private:
-  inline void set_has_block();
-  inline void clear_has_block();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::fantasybit::Block* block_;
-  ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction > transaction_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_ProtoData_2eproto();
-  friend void protobuf_AssignDesc_ProtoData_2eproto();
-  friend void protobuf_ShutdownFile_ProtoData_2eproto();
-
-  void InitAsDefaultInstance();
-  static LiveWire* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class NodeRequest : public ::google::protobuf::Message {
  public:
   NodeRequest();
@@ -2501,14 +2383,38 @@ class ProjectionTrans : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .fantasybit.FantasyPlayerPoints fpp = 10;
-  inline bool has_fpp() const;
-  inline void clear_fpp();
-  static const int kFppFieldNumber = 10;
-  inline const ::fantasybit::FantasyPlayerPoints& fpp() const;
-  inline ::fantasybit::FantasyPlayerPoints* mutable_fpp();
-  inline ::fantasybit::FantasyPlayerPoints* release_fpp();
-  inline void set_allocated_fpp(::fantasybit::FantasyPlayerPoints* fpp);
+  // optional uint32 season = 10;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 10;
+  inline ::google::protobuf::uint32 season() const;
+  inline void set_season(::google::protobuf::uint32 value);
+
+  // optional uint32 week = 20;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 20;
+  inline ::google::protobuf::uint32 week() const;
+  inline void set_week(::google::protobuf::uint32 value);
+
+  // optional string playerid = 30;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 30;
+  inline const ::std::string& playerid() const;
+  inline void set_playerid(const ::std::string& value);
+  inline void set_playerid(const char* value);
+  inline void set_playerid(const char* value, size_t size);
+  inline ::std::string* mutable_playerid();
+  inline ::std::string* release_playerid();
+  inline void set_allocated_playerid(::std::string* playerid);
+
+  // optional int32 points = 40;
+  inline bool has_points() const;
+  inline void clear_points();
+  static const int kPointsFieldNumber = 40;
+  inline ::google::protobuf::int32 points() const;
+  inline void set_points(::google::protobuf::int32 value);
 
   static const int kProjTransFieldNumber = 201;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
@@ -2516,15 +2422,24 @@ class ProjectionTrans : public ::google::protobuf::Message {
     proj_trans;
   // @@protoc_insertion_point(class_scope:fantasybit.ProjectionTrans)
  private:
-  inline void set_has_fpp();
-  inline void clear_has_fpp();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+  inline void set_has_points();
+  inline void clear_has_points();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::fantasybit::FantasyPlayerPoints* fpp_;
+  ::google::protobuf::uint32 season_;
+  ::google::protobuf::uint32 week_;
+  ::std::string* playerid_;
+  ::google::protobuf::int32 points_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -2590,7 +2505,7 @@ class Data : public ::google::protobuf::Message {
   typedef Data_Type Type;
   static const Type SCHEDULE = Data_Type_SCHEDULE;
   static const Type PLAYER = Data_Type_PLAYER;
-  static const Type TEAM = Data_Type_TEAM;
+  static const Type GAME = Data_Type_GAME;
   static const Type RESULT = Data_Type_RESULT;
   static inline bool Type_IsValid(int value) {
     return Data_Type_IsValid(value);
@@ -2722,17 +2637,30 @@ class PlayerData : public ::google::protobuf::Message {
   inline ::std::string* release_playerid();
   inline void set_allocated_playerid(::std::string* playerid);
 
-  // optional string teamid = 20;
-  inline bool has_teamid() const;
-  inline void clear_teamid();
-  static const int kTeamidFieldNumber = 20;
-  inline const ::std::string& teamid() const;
-  inline void set_teamid(const ::std::string& value);
-  inline void set_teamid(const char* value);
-  inline void set_teamid(const char* value, size_t size);
-  inline ::std::string* mutable_teamid();
-  inline ::std::string* release_teamid();
-  inline void set_allocated_teamid(::std::string* teamid);
+  // optional .fantasybit.PlayerBase player_base = 20;
+  inline bool has_player_base() const;
+  inline void clear_player_base();
+  static const int kPlayerBaseFieldNumber = 20;
+  inline const ::fantasybit::PlayerBase& player_base() const;
+  inline ::fantasybit::PlayerBase* mutable_player_base();
+  inline ::fantasybit::PlayerBase* release_player_base();
+  inline void set_allocated_player_base(::fantasybit::PlayerBase* player_base);
+
+  // optional .fantasybit.PlayerStatus player_status = 30;
+  inline bool has_player_status() const;
+  inline void clear_player_status();
+  static const int kPlayerStatusFieldNumber = 30;
+  inline const ::fantasybit::PlayerStatus& player_status() const;
+  inline ::fantasybit::PlayerStatus* mutable_player_status();
+  inline ::fantasybit::PlayerStatus* release_player_status();
+  inline void set_allocated_player_status(::fantasybit::PlayerStatus* player_status);
+
+  // optional .fantasybit.PlayerGameStatus player_game_status = 40;
+  inline bool has_player_game_status() const;
+  inline void clear_player_game_status();
+  static const int kPlayerGameStatusFieldNumber = 40;
+  inline ::fantasybit::PlayerGameStatus player_game_status() const;
+  inline void set_player_game_status(::fantasybit::PlayerGameStatus value);
 
   static const int kPlayerDataFieldNumber = 101;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
@@ -2742,16 +2670,22 @@ class PlayerData : public ::google::protobuf::Message {
  private:
   inline void set_has_playerid();
   inline void clear_has_playerid();
-  inline void set_has_teamid();
-  inline void clear_has_teamid();
+  inline void set_has_player_base();
+  inline void clear_has_player_base();
+  inline void set_has_player_status();
+  inline void clear_has_player_status();
+  inline void set_has_player_game_status();
+  inline void clear_has_player_game_status();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* playerid_;
-  ::std::string* teamid_;
+  ::fantasybit::PlayerBase* player_base_;
+  ::fantasybit::PlayerStatus* player_status_;
+  int player_game_status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -2762,14 +2696,14 @@ class PlayerData : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class TeamData : public ::google::protobuf::Message {
+class GameData : public ::google::protobuf::Message {
  public:
-  TeamData();
-  virtual ~TeamData();
+  GameData();
+  virtual ~GameData();
 
-  TeamData(const TeamData& from);
+  GameData(const GameData& from);
 
-  inline TeamData& operator=(const TeamData& from) {
+  inline GameData& operator=(const GameData& from) {
     CopyFrom(from);
     return *this;
   }
@@ -2783,17 +2717,17 @@ class TeamData : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const TeamData& default_instance();
+  static const GameData& default_instance();
 
-  void Swap(TeamData* other);
+  void Swap(GameData* other);
 
   // implements Message ----------------------------------------------
 
-  TeamData* New() const;
+  GameData* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const TeamData& from);
-  void MergeFrom(const TeamData& from);
+  void CopyFrom(const GameData& from);
+  void MergeFrom(const GameData& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -2816,40 +2750,52 @@ class TeamData : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string teamid = 10;
-  inline bool has_teamid() const;
-  inline void clear_teamid();
-  static const int kTeamidFieldNumber = 10;
-  inline const ::std::string& teamid() const;
-  inline void set_teamid(const ::std::string& value);
-  inline void set_teamid(const char* value);
-  inline void set_teamid(const char* value, size_t size);
-  inline ::std::string* mutable_teamid();
-  inline ::std::string* release_teamid();
-  inline void set_allocated_teamid(::std::string* teamid);
+  // optional string gameid = 10;
+  inline bool has_gameid() const;
+  inline void clear_gameid();
+  static const int kGameidFieldNumber = 10;
+  inline const ::std::string& gameid() const;
+  inline void set_gameid(const ::std::string& value);
+  inline void set_gameid(const char* value);
+  inline void set_gameid(const char* value, size_t size);
+  inline ::std::string* mutable_gameid();
+  inline ::std::string* release_gameid();
+  inline void set_allocated_gameid(::std::string* gameid);
 
-  static const int kTeamDataFieldNumber = 111;
+  // optional .fantasybit.GameStatus status = 20;
+  inline bool has_status() const;
+  inline void clear_status();
+  static const int kStatusFieldNumber = 20;
+  inline const ::fantasybit::GameStatus& status() const;
+  inline ::fantasybit::GameStatus* mutable_status();
+  inline ::fantasybit::GameStatus* release_status();
+  inline void set_allocated_status(::fantasybit::GameStatus* status);
+
+  static const int kGameDataFieldNumber = 111;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
-      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::TeamData >, 11, false >
-    team_data;
-  // @@protoc_insertion_point(class_scope:fantasybit.TeamData)
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GameData >, 11, false >
+    game_data;
+  // @@protoc_insertion_point(class_scope:fantasybit.GameData)
  private:
-  inline void set_has_teamid();
-  inline void clear_has_teamid();
+  inline void set_has_gameid();
+  inline void clear_has_gameid();
+  inline void set_has_status();
+  inline void clear_has_status();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* teamid_;
+  ::std::string* gameid_;
+  ::fantasybit::GameStatus* status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
   friend void protobuf_ShutdownFile_ProtoData_2eproto();
 
   void InitAsDefaultInstance();
-  static TeamData* default_instance_;
+  static GameData* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2907,14 +2853,14 @@ class ResultData : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .fantasybit.FantasyPlayerPoints fpp = 10;
-  inline bool has_fpp() const;
-  inline void clear_fpp();
-  static const int kFppFieldNumber = 10;
-  inline const ::fantasybit::FantasyPlayerPoints& fpp() const;
-  inline ::fantasybit::FantasyPlayerPoints* mutable_fpp();
-  inline ::fantasybit::FantasyPlayerPoints* release_fpp();
-  inline void set_allocated_fpp(::fantasybit::FantasyPlayerPoints* fpp);
+  // optional .fantasybit.GameResult game_result = 10;
+  inline bool has_game_result() const;
+  inline void clear_game_result();
+  static const int kGameResultFieldNumber = 10;
+  inline const ::fantasybit::GameResult& game_result() const;
+  inline ::fantasybit::GameResult* mutable_game_result();
+  inline ::fantasybit::GameResult* release_game_result();
+  inline void set_allocated_game_result(::fantasybit::GameResult* game_result);
 
   static const int kResultDataFieldNumber = 202;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
@@ -2922,12 +2868,12 @@ class ResultData : public ::google::protobuf::Message {
     result_data;
   // @@protoc_insertion_point(class_scope:fantasybit.ResultData)
  private:
-  inline void set_has_fpp();
-  inline void clear_has_fpp();
+  inline void set_has_game_result();
+  inline void clear_has_game_result();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::fantasybit::FantasyPlayerPoints* fpp_;
+  ::fantasybit::GameResult* game_result_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -3045,21 +2991,17 @@ class DataTransition : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 week() const;
   inline void set_week(::google::protobuf::uint32 value);
 
-  // repeated string teamid = 30;
-  inline int teamid_size() const;
-  inline void clear_teamid();
-  static const int kTeamidFieldNumber = 30;
-  inline const ::std::string& teamid(int index) const;
-  inline ::std::string* mutable_teamid(int index);
-  inline void set_teamid(int index, const ::std::string& value);
-  inline void set_teamid(int index, const char* value);
-  inline void set_teamid(int index, const char* value, size_t size);
-  inline ::std::string* add_teamid();
-  inline void add_teamid(const ::std::string& value);
-  inline void add_teamid(const char* value);
-  inline void add_teamid(const char* value, size_t size);
-  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& teamid() const;
-  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_teamid();
+  // repeated .fantasybit.GameData gamedata = 30;
+  inline int gamedata_size() const;
+  inline void clear_gamedata();
+  static const int kGamedataFieldNumber = 30;
+  inline const ::fantasybit::GameData& gamedata(int index) const;
+  inline ::fantasybit::GameData* mutable_gamedata(int index);
+  inline ::fantasybit::GameData* add_gamedata();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::GameData >&
+      gamedata() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::GameData >*
+      mutable_gamedata();
 
   // repeated .fantasybit.Data data = 40;
   inline int data_size() const;
@@ -3090,7 +3032,7 @@ class DataTransition : public ::google::protobuf::Message {
 
   int type_;
   ::google::protobuf::uint32 season_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> teamid_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::GameData > gamedata_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::Data > data_;
   ::google::protobuf::uint32 week_;
 
@@ -3103,124 +3045,6 @@ class DataTransition : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DataTransition* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class GlobalState : public ::google::protobuf::Message {
- public:
-  GlobalState();
-  virtual ~GlobalState();
-
-  GlobalState(const GlobalState& from);
-
-  inline GlobalState& operator=(const GlobalState& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const GlobalState& default_instance();
-
-  void Swap(GlobalState* other);
-
-  // implements Message ----------------------------------------------
-
-  GlobalState* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const GlobalState& from);
-  void MergeFrom(const GlobalState& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  typedef GlobalState_State State;
-  static const State PREDRAFT = GlobalState_State_PREDRAFT;
-  static const State PRESEASON = GlobalState_State_PRESEASON;
-  static const State ROSTER53MAN = GlobalState_State_ROSTER53MAN;
-  static const State INSEASON = GlobalState_State_INSEASON;
-  static inline bool State_IsValid(int value) {
-    return GlobalState_State_IsValid(value);
-  }
-  static const State State_MIN =
-    GlobalState_State_State_MIN;
-  static const State State_MAX =
-    GlobalState_State_State_MAX;
-  static const int State_ARRAYSIZE =
-    GlobalState_State_State_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  State_descriptor() {
-    return GlobalState_State_descriptor();
-  }
-  static inline const ::std::string& State_Name(State value) {
-    return GlobalState_State_Name(value);
-  }
-  static inline bool State_Parse(const ::std::string& name,
-      State* value) {
-    return GlobalState_State_Parse(name, value);
-  }
-
-  // accessors -------------------------------------------------------
-
-  // optional .fantasybit.GlobalState.State state = 1;
-  inline bool has_state() const;
-  inline void clear_state();
-  static const int kStateFieldNumber = 1;
-  inline ::fantasybit::GlobalState_State state() const;
-  inline void set_state(::fantasybit::GlobalState_State value);
-
-  // optional uint32 season = 10;
-  inline bool has_season() const;
-  inline void clear_season();
-  static const int kSeasonFieldNumber = 10;
-  inline ::google::protobuf::uint32 season() const;
-  inline void set_season(::google::protobuf::uint32 value);
-
-  // @@protoc_insertion_point(class_scope:fantasybit.GlobalState)
- private:
-  inline void set_has_state();
-  inline void clear_has_state();
-  inline void set_has_season();
-  inline void clear_has_season();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  int state_;
-  ::google::protobuf::uint32 season_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_ProtoData_2eproto();
-  friend void protobuf_AssignDesc_ProtoData_2eproto();
-  friend void protobuf_ShutdownFile_ProtoData_2eproto();
-
-  void InitAsDefaultInstance();
-  static GlobalState* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -5538,73 +5362,6 @@ Block::mutable_signed_transactions() {
 
 // -------------------------------------------------------------------
 
-// LiveWire
-
-// optional .fantasybit.Block block = 10;
-inline bool LiveWire::has_block() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void LiveWire::set_has_block() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void LiveWire::clear_has_block() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void LiveWire::clear_block() {
-  if (block_ != NULL) block_->::fantasybit::Block::Clear();
-  clear_has_block();
-}
-inline const ::fantasybit::Block& LiveWire::block() const {
-  return block_ != NULL ? *block_ : *default_instance_->block_;
-}
-inline ::fantasybit::Block* LiveWire::mutable_block() {
-  set_has_block();
-  if (block_ == NULL) block_ = new ::fantasybit::Block;
-  return block_;
-}
-inline ::fantasybit::Block* LiveWire::release_block() {
-  clear_has_block();
-  ::fantasybit::Block* temp = block_;
-  block_ = NULL;
-  return temp;
-}
-inline void LiveWire::set_allocated_block(::fantasybit::Block* block) {
-  delete block_;
-  block_ = block;
-  if (block) {
-    set_has_block();
-  } else {
-    clear_has_block();
-  }
-}
-
-// repeated .fantasybit.SignedTransaction transaction = 20;
-inline int LiveWire::transaction_size() const {
-  return transaction_.size();
-}
-inline void LiveWire::clear_transaction() {
-  transaction_.Clear();
-}
-inline const ::fantasybit::SignedTransaction& LiveWire::transaction(int index) const {
-  return transaction_.Get(index);
-}
-inline ::fantasybit::SignedTransaction* LiveWire::mutable_transaction(int index) {
-  return transaction_.Mutable(index);
-}
-inline ::fantasybit::SignedTransaction* LiveWire::add_transaction() {
-  return transaction_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >&
-LiveWire::transaction() const {
-  return transaction_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SignedTransaction >*
-LiveWire::mutable_transaction() {
-  return &transaction_;
-}
-
-// -------------------------------------------------------------------
-
 // NodeRequest
 
 // optional .fantasybit.NodeRequest.Type type = 10;
@@ -6028,42 +5785,140 @@ inline void FantasyPlayerPoints::set_result(float value) {
 
 // ProjectionTrans
 
-// optional .fantasybit.FantasyPlayerPoints fpp = 10;
-inline bool ProjectionTrans::has_fpp() const {
+// optional uint32 season = 10;
+inline bool ProjectionTrans::has_season() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ProjectionTrans::set_has_fpp() {
+inline void ProjectionTrans::set_has_season() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ProjectionTrans::clear_has_fpp() {
+inline void ProjectionTrans::clear_has_season() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ProjectionTrans::clear_fpp() {
-  if (fpp_ != NULL) fpp_->::fantasybit::FantasyPlayerPoints::Clear();
-  clear_has_fpp();
+inline void ProjectionTrans::clear_season() {
+  season_ = 0u;
+  clear_has_season();
 }
-inline const ::fantasybit::FantasyPlayerPoints& ProjectionTrans::fpp() const {
-  return fpp_ != NULL ? *fpp_ : *default_instance_->fpp_;
+inline ::google::protobuf::uint32 ProjectionTrans::season() const {
+  return season_;
 }
-inline ::fantasybit::FantasyPlayerPoints* ProjectionTrans::mutable_fpp() {
-  set_has_fpp();
-  if (fpp_ == NULL) fpp_ = new ::fantasybit::FantasyPlayerPoints;
-  return fpp_;
+inline void ProjectionTrans::set_season(::google::protobuf::uint32 value) {
+  set_has_season();
+  season_ = value;
 }
-inline ::fantasybit::FantasyPlayerPoints* ProjectionTrans::release_fpp() {
-  clear_has_fpp();
-  ::fantasybit::FantasyPlayerPoints* temp = fpp_;
-  fpp_ = NULL;
-  return temp;
+
+// optional uint32 week = 20;
+inline bool ProjectionTrans::has_week() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ProjectionTrans::set_allocated_fpp(::fantasybit::FantasyPlayerPoints* fpp) {
-  delete fpp_;
-  fpp_ = fpp;
-  if (fpp) {
-    set_has_fpp();
-  } else {
-    clear_has_fpp();
+inline void ProjectionTrans::set_has_week() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ProjectionTrans::clear_has_week() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProjectionTrans::clear_week() {
+  week_ = 0u;
+  clear_has_week();
+}
+inline ::google::protobuf::uint32 ProjectionTrans::week() const {
+  return week_;
+}
+inline void ProjectionTrans::set_week(::google::protobuf::uint32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional string playerid = 30;
+inline bool ProjectionTrans::has_playerid() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ProjectionTrans::set_has_playerid() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ProjectionTrans::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ProjectionTrans::clear_playerid() {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    playerid_->clear();
   }
+  clear_has_playerid();
+}
+inline const ::std::string& ProjectionTrans::playerid() const {
+  return *playerid_;
+}
+inline void ProjectionTrans::set_playerid(const ::std::string& value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void ProjectionTrans::set_playerid(const char* value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void ProjectionTrans::set_playerid(const char* value, size_t size) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProjectionTrans::mutable_playerid() {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  return playerid_;
+}
+inline ::std::string* ProjectionTrans::release_playerid() {
+  clear_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = playerid_;
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProjectionTrans::set_allocated_playerid(::std::string* playerid) {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (playerid) {
+    set_has_playerid();
+    playerid_ = playerid;
+  } else {
+    clear_has_playerid();
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 points = 40;
+inline bool ProjectionTrans::has_points() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ProjectionTrans::set_has_points() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ProjectionTrans::clear_has_points() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ProjectionTrans::clear_points() {
+  points_ = 0;
+  clear_has_points();
+}
+inline ::google::protobuf::int32 ProjectionTrans::points() const {
+  return points_;
+}
+inline void ProjectionTrans::set_points(::google::protobuf::int32 value) {
+  set_has_points();
+  points_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -6189,147 +6044,214 @@ inline void PlayerData::set_allocated_playerid(::std::string* playerid) {
   }
 }
 
-// optional string teamid = 20;
-inline bool PlayerData::has_teamid() const {
+// optional .fantasybit.PlayerBase player_base = 20;
+inline bool PlayerData::has_player_base() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void PlayerData::set_has_teamid() {
+inline void PlayerData::set_has_player_base() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void PlayerData::clear_has_teamid() {
+inline void PlayerData::clear_has_player_base() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void PlayerData::clear_teamid() {
-  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
-    teamid_->clear();
-  }
-  clear_has_teamid();
+inline void PlayerData::clear_player_base() {
+  if (player_base_ != NULL) player_base_->::fantasybit::PlayerBase::Clear();
+  clear_has_player_base();
 }
-inline const ::std::string& PlayerData::teamid() const {
-  return *teamid_;
+inline const ::fantasybit::PlayerBase& PlayerData::player_base() const {
+  return player_base_ != NULL ? *player_base_ : *default_instance_->player_base_;
 }
-inline void PlayerData::set_teamid(const ::std::string& value) {
-  set_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    teamid_ = new ::std::string;
-  }
-  teamid_->assign(value);
+inline ::fantasybit::PlayerBase* PlayerData::mutable_player_base() {
+  set_has_player_base();
+  if (player_base_ == NULL) player_base_ = new ::fantasybit::PlayerBase;
+  return player_base_;
 }
-inline void PlayerData::set_teamid(const char* value) {
-  set_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    teamid_ = new ::std::string;
-  }
-  teamid_->assign(value);
+inline ::fantasybit::PlayerBase* PlayerData::release_player_base() {
+  clear_has_player_base();
+  ::fantasybit::PlayerBase* temp = player_base_;
+  player_base_ = NULL;
+  return temp;
 }
-inline void PlayerData::set_teamid(const char* value, size_t size) {
-  set_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    teamid_ = new ::std::string;
-  }
-  teamid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* PlayerData::mutable_teamid() {
-  set_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    teamid_ = new ::std::string;
-  }
-  return teamid_;
-}
-inline ::std::string* PlayerData::release_teamid() {
-  clear_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
+inline void PlayerData::set_allocated_player_base(::fantasybit::PlayerBase* player_base) {
+  delete player_base_;
+  player_base_ = player_base;
+  if (player_base) {
+    set_has_player_base();
   } else {
-    ::std::string* temp = teamid_;
-    teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
+    clear_has_player_base();
   }
 }
-inline void PlayerData::set_allocated_teamid(::std::string* teamid) {
-  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
-    delete teamid_;
-  }
-  if (teamid) {
-    set_has_teamid();
-    teamid_ = teamid;
+
+// optional .fantasybit.PlayerStatus player_status = 30;
+inline bool PlayerData::has_player_status() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void PlayerData::set_has_player_status() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void PlayerData::clear_has_player_status() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void PlayerData::clear_player_status() {
+  if (player_status_ != NULL) player_status_->::fantasybit::PlayerStatus::Clear();
+  clear_has_player_status();
+}
+inline const ::fantasybit::PlayerStatus& PlayerData::player_status() const {
+  return player_status_ != NULL ? *player_status_ : *default_instance_->player_status_;
+}
+inline ::fantasybit::PlayerStatus* PlayerData::mutable_player_status() {
+  set_has_player_status();
+  if (player_status_ == NULL) player_status_ = new ::fantasybit::PlayerStatus;
+  return player_status_;
+}
+inline ::fantasybit::PlayerStatus* PlayerData::release_player_status() {
+  clear_has_player_status();
+  ::fantasybit::PlayerStatus* temp = player_status_;
+  player_status_ = NULL;
+  return temp;
+}
+inline void PlayerData::set_allocated_player_status(::fantasybit::PlayerStatus* player_status) {
+  delete player_status_;
+  player_status_ = player_status;
+  if (player_status) {
+    set_has_player_status();
   } else {
-    clear_has_teamid();
-    teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_player_status();
   }
+}
+
+// optional .fantasybit.PlayerGameStatus player_game_status = 40;
+inline bool PlayerData::has_player_game_status() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void PlayerData::set_has_player_game_status() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void PlayerData::clear_has_player_game_status() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void PlayerData::clear_player_game_status() {
+  player_game_status_ = 0;
+  clear_has_player_game_status();
+}
+inline ::fantasybit::PlayerGameStatus PlayerData::player_game_status() const {
+  return static_cast< ::fantasybit::PlayerGameStatus >(player_game_status_);
+}
+inline void PlayerData::set_player_game_status(::fantasybit::PlayerGameStatus value) {
+  assert(::fantasybit::PlayerGameStatus_IsValid(value));
+  set_has_player_game_status();
+  player_game_status_ = value;
 }
 
 // -------------------------------------------------------------------
 
-// TeamData
+// GameData
 
-// optional string teamid = 10;
-inline bool TeamData::has_teamid() const {
+// optional string gameid = 10;
+inline bool GameData::has_gameid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void TeamData::set_has_teamid() {
+inline void GameData::set_has_gameid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void TeamData::clear_has_teamid() {
+inline void GameData::clear_has_gameid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void TeamData::clear_teamid() {
-  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
-    teamid_->clear();
+inline void GameData::clear_gameid() {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    gameid_->clear();
   }
-  clear_has_teamid();
+  clear_has_gameid();
 }
-inline const ::std::string& TeamData::teamid() const {
-  return *teamid_;
+inline const ::std::string& GameData::gameid() const {
+  return *gameid_;
 }
-inline void TeamData::set_teamid(const ::std::string& value) {
-  set_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    teamid_ = new ::std::string;
+inline void GameData::set_gameid(const ::std::string& value) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
   }
-  teamid_->assign(value);
+  gameid_->assign(value);
 }
-inline void TeamData::set_teamid(const char* value) {
-  set_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    teamid_ = new ::std::string;
+inline void GameData::set_gameid(const char* value) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
   }
-  teamid_->assign(value);
+  gameid_->assign(value);
 }
-inline void TeamData::set_teamid(const char* value, size_t size) {
-  set_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    teamid_ = new ::std::string;
+inline void GameData::set_gameid(const char* value, size_t size) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
   }
-  teamid_->assign(reinterpret_cast<const char*>(value), size);
+  gameid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* TeamData::mutable_teamid() {
-  set_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
-    teamid_ = new ::std::string;
+inline ::std::string* GameData::mutable_gameid() {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
   }
-  return teamid_;
+  return gameid_;
 }
-inline ::std::string* TeamData::release_teamid() {
-  clear_has_teamid();
-  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* GameData::release_gameid() {
+  clear_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = teamid_;
-    teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = gameid_;
+    gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void TeamData::set_allocated_teamid(::std::string* teamid) {
-  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
-    delete teamid_;
+inline void GameData::set_allocated_gameid(::std::string* gameid) {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    delete gameid_;
   }
-  if (teamid) {
-    set_has_teamid();
-    teamid_ = teamid;
+  if (gameid) {
+    set_has_gameid();
+    gameid_ = gameid;
   } else {
-    clear_has_teamid();
-    teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_gameid();
+    gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .fantasybit.GameStatus status = 20;
+inline bool GameData::has_status() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void GameData::set_has_status() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void GameData::clear_has_status() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void GameData::clear_status() {
+  if (status_ != NULL) status_->::fantasybit::GameStatus::Clear();
+  clear_has_status();
+}
+inline const ::fantasybit::GameStatus& GameData::status() const {
+  return status_ != NULL ? *status_ : *default_instance_->status_;
+}
+inline ::fantasybit::GameStatus* GameData::mutable_status() {
+  set_has_status();
+  if (status_ == NULL) status_ = new ::fantasybit::GameStatus;
+  return status_;
+}
+inline ::fantasybit::GameStatus* GameData::release_status() {
+  clear_has_status();
+  ::fantasybit::GameStatus* temp = status_;
+  status_ = NULL;
+  return temp;
+}
+inline void GameData::set_allocated_status(::fantasybit::GameStatus* status) {
+  delete status_;
+  status_ = status;
+  if (status) {
+    set_has_status();
+  } else {
+    clear_has_status();
   }
 }
 
@@ -6337,41 +6259,41 @@ inline void TeamData::set_allocated_teamid(::std::string* teamid) {
 
 // ResultData
 
-// optional .fantasybit.FantasyPlayerPoints fpp = 10;
-inline bool ResultData::has_fpp() const {
+// optional .fantasybit.GameResult game_result = 10;
+inline bool ResultData::has_game_result() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ResultData::set_has_fpp() {
+inline void ResultData::set_has_game_result() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ResultData::clear_has_fpp() {
+inline void ResultData::clear_has_game_result() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ResultData::clear_fpp() {
-  if (fpp_ != NULL) fpp_->::fantasybit::FantasyPlayerPoints::Clear();
-  clear_has_fpp();
+inline void ResultData::clear_game_result() {
+  if (game_result_ != NULL) game_result_->::fantasybit::GameResult::Clear();
+  clear_has_game_result();
 }
-inline const ::fantasybit::FantasyPlayerPoints& ResultData::fpp() const {
-  return fpp_ != NULL ? *fpp_ : *default_instance_->fpp_;
+inline const ::fantasybit::GameResult& ResultData::game_result() const {
+  return game_result_ != NULL ? *game_result_ : *default_instance_->game_result_;
 }
-inline ::fantasybit::FantasyPlayerPoints* ResultData::mutable_fpp() {
-  set_has_fpp();
-  if (fpp_ == NULL) fpp_ = new ::fantasybit::FantasyPlayerPoints;
-  return fpp_;
+inline ::fantasybit::GameResult* ResultData::mutable_game_result() {
+  set_has_game_result();
+  if (game_result_ == NULL) game_result_ = new ::fantasybit::GameResult;
+  return game_result_;
 }
-inline ::fantasybit::FantasyPlayerPoints* ResultData::release_fpp() {
-  clear_has_fpp();
-  ::fantasybit::FantasyPlayerPoints* temp = fpp_;
-  fpp_ = NULL;
+inline ::fantasybit::GameResult* ResultData::release_game_result() {
+  clear_has_game_result();
+  ::fantasybit::GameResult* temp = game_result_;
+  game_result_ = NULL;
   return temp;
 }
-inline void ResultData::set_allocated_fpp(::fantasybit::FantasyPlayerPoints* fpp) {
-  delete fpp_;
-  fpp_ = fpp;
-  if (fpp) {
-    set_has_fpp();
+inline void ResultData::set_allocated_game_result(::fantasybit::GameResult* game_result) {
+  delete game_result_;
+  game_result_ = game_result;
+  if (game_result) {
+    set_has_game_result();
   } else {
-    clear_has_fpp();
+    clear_has_game_result();
   }
 }
 
@@ -6446,48 +6368,29 @@ inline void DataTransition::set_week(::google::protobuf::uint32 value) {
   week_ = value;
 }
 
-// repeated string teamid = 30;
-inline int DataTransition::teamid_size() const {
-  return teamid_.size();
+// repeated .fantasybit.GameData gamedata = 30;
+inline int DataTransition::gamedata_size() const {
+  return gamedata_.size();
 }
-inline void DataTransition::clear_teamid() {
-  teamid_.Clear();
+inline void DataTransition::clear_gamedata() {
+  gamedata_.Clear();
 }
-inline const ::std::string& DataTransition::teamid(int index) const {
-  return teamid_.Get(index);
+inline const ::fantasybit::GameData& DataTransition::gamedata(int index) const {
+  return gamedata_.Get(index);
 }
-inline ::std::string* DataTransition::mutable_teamid(int index) {
-  return teamid_.Mutable(index);
+inline ::fantasybit::GameData* DataTransition::mutable_gamedata(int index) {
+  return gamedata_.Mutable(index);
 }
-inline void DataTransition::set_teamid(int index, const ::std::string& value) {
-  teamid_.Mutable(index)->assign(value);
+inline ::fantasybit::GameData* DataTransition::add_gamedata() {
+  return gamedata_.Add();
 }
-inline void DataTransition::set_teamid(int index, const char* value) {
-  teamid_.Mutable(index)->assign(value);
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::GameData >&
+DataTransition::gamedata() const {
+  return gamedata_;
 }
-inline void DataTransition::set_teamid(int index, const char* value, size_t size) {
-  teamid_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* DataTransition::add_teamid() {
-  return teamid_.Add();
-}
-inline void DataTransition::add_teamid(const ::std::string& value) {
-  teamid_.Add()->assign(value);
-}
-inline void DataTransition::add_teamid(const char* value) {
-  teamid_.Add()->assign(value);
-}
-inline void DataTransition::add_teamid(const char* value, size_t size) {
-  teamid_.Add()->assign(reinterpret_cast<const char*>(value), size);
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-DataTransition::teamid() const {
-  return teamid_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-DataTransition::mutable_teamid() {
-  return &teamid_;
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::GameData >*
+DataTransition::mutable_gamedata() {
+  return &gamedata_;
 }
 
 // repeated .fantasybit.Data data = 40;
@@ -6513,55 +6416,6 @@ DataTransition::data() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Data >*
 DataTransition::mutable_data() {
   return &data_;
-}
-
-// -------------------------------------------------------------------
-
-// GlobalState
-
-// optional .fantasybit.GlobalState.State state = 1;
-inline bool GlobalState::has_state() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void GlobalState::set_has_state() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void GlobalState::clear_has_state() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void GlobalState::clear_state() {
-  state_ = 1;
-  clear_has_state();
-}
-inline ::fantasybit::GlobalState_State GlobalState::state() const {
-  return static_cast< ::fantasybit::GlobalState_State >(state_);
-}
-inline void GlobalState::set_state(::fantasybit::GlobalState_State value) {
-  assert(::fantasybit::GlobalState_State_IsValid(value));
-  set_has_state();
-  state_ = value;
-}
-
-// optional uint32 season = 10;
-inline bool GlobalState::has_season() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void GlobalState::set_has_season() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void GlobalState::clear_has_season() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void GlobalState::clear_season() {
-  season_ = 0u;
-  clear_has_season();
-}
-inline ::google::protobuf::uint32 GlobalState::season() const {
-  return season_;
-}
-inline void GlobalState::set_season(::google::protobuf::uint32 value) {
-  set_has_season();
-  season_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -6884,10 +6738,6 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::Data_Type>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::DataTransition_Type>() {
   return ::fantasybit::DataTransition_Type_descriptor();
-}
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::GlobalState_State>() {
-  return ::fantasybit::GlobalState_State_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::TeamState_State>() {

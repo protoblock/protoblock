@@ -1,4 +1,5 @@
 package fantasybit;
+import "NameData.proto";
 
 message PlayerBase {
     optional string first=30;
@@ -57,10 +58,11 @@ message PlayerResult {
     optional string playerid = 20;
     optional float result = 40;
     optional Stats stats = 50;
+    repeated FantasyBitAward fantaybitaward = 60;
 }
 
-message GameResult {
-    optional int32  gameid = 1;
+message     GameResult {
+    optional string  gameid = 1;
     repeated PlayerResult home_result = 10;
     repeated PlayerResult away_result = 20;
     optional uint32 kickofftime = 30;

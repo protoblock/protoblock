@@ -9,43 +9,70 @@
 #ifndef __fantasybit__Processor__
 #define __fantasybit__Processor__
 
-#include "blockrecorder.h"
-#include <fc/filesystem.hpp>
-#include <fc/crypto/elliptic.hpp>
+#include <QObject>
 
+#include "blockrecorder.h"
+#include "Data.h"
+#include "NameData.h"
+#include <fc/crypto/sha256.hpp>
+#include <fc/crypto/elliptic.hpp>
+#include "ProtoData.pb.h"
 
 namespace fantasybit
 {
 
-class BlockProcessor
-{
+class BlockProcessor : public QObject {
+
+    Q_OBJECT
+
+
     BlockRecorder mRecorder{};
+    DataData &mData;
+    NameData &mNameData;
 	int realHeight = 0;
 	int lastidprocessed = 0;
-	DeltaData outDelta{};
-	GlobalState mGlobalState{};
-    bool verify_name(const SignedTransaction &, const NameTrans &, const fc::ecc::signature&, const fc::sha256 &);
+    //GlobalState mGlobalState{};
+    bool verify_name(const SignedTransaction &, const NameTrans &,
+                     const fc::ecc::signature&, const fc::sha256 &);
+    bool amlive = false;
+public slots:
+    void OnSubscribeLive() {
+        amlive = true;
+    }
+
+signals:
+    void WeekStart(int);
+    void WeekOver(int);
+    void InvalidState(int);
+
 
 public:
+    BlockProcessor(DataData &data, NameData &namedata) : mData(data), mNameData(namedata) {}
     int init();
 
-    DeltaData GetandClear();
-    bool process(Block &sblock);
+    int process(Block &sblock);
     bool processDataBlock(const Block &sblock);
-    bool isInWeekGame(const std::string &id, int week );
-    bool sanity(const FantasyPlayerPoints &fpp);
+    //bool isInWeekGame(const std::string &id, int week );
+    //bool sanity(const FantasyPlayerPoints &fpp);
 	void process(decltype(DataTransition::default_instance().data()) in, 
                 const std::string &blocksigner );
     void process(const DataTransition &indt);
     bool isValidTx(const SignedTransaction &st);
     void processTxfrom(const Block &b,int start = 0);
-    void setPreGameWeek(int week);
     static bool verifySignedBlock(const Block &sblock);
     static bool verifySignedTransaction(const SignedTransaction &st);
+    void processResultProj(PlayerResult& playerresult,
+                           std::unordered_map<std::string,int> &proj,
+                           const std::string &blocksigner);
+
+    void BlockProcessor::OnWeekOver(int week);
+
+    void BlockProcessor::OnWeekStart(int week);
+
+
 };
 
 }
-
 
 #endif
 

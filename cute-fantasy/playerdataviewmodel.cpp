@@ -12,7 +12,7 @@ PlayerDataViewModel::PlayerDataViewModel(const  ::fantasybit::Data & copy) {
     if (copy.type() != Data_Type_PLAYER) return;
     PlayerData playerData = copy.GetExtension(PlayerData::player_data);
     myPlayerId = QString::fromStdString(playerData.playerid());
-    myTeamId = QString::fromStdString(playerData.teamid());
+    myTeamId = QString::fromStdString(playerData.player_status().teamid());
 }
 
 PlayerDataViewModel::PlayerDataViewModel(const QString & playerId,const QString teamId) {

@@ -12,7 +12,7 @@
 #include "fbutils.h"
 #include "FantasyName.h"
 #include "leveldb/slice.h"
-
+#include "Commissioner.h"
 
 using namespace std;
 using namespace fantasybit;
@@ -24,9 +24,23 @@ void NameData::init() {
     leveldb::Status status;
 
     status = leveldb::DB::Open(options, filedir("namestore"), &namestore);
+    if ( !status.ok() ) {
+        qCritical() << " cant open " + filedir("namestore");
+        //todo emit fatal
+        return;
+    }
+
+    auto *it = namestore->NewIterator(leveldb::ReadOptions());
+    for (it->SeekToFirst(); it->Valid(); it->Next()) {
+        FantasyNameBal fn;
+        fn.ParseFromString(it->value().ToString());
+        auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
+        if ( fnp != nullptr )
+            fnp->addBalance(fn.bits());
+    }
 }
 
-void NameData::AddNewName(const std::string &pubkey,const std::string &name) {
+void NameData::AddNewName(std::string name,std::string pubkey) {
     FantasyNameBal fn{};
     fn.set_name(name);
     fn.set_public_key(pubkey);
@@ -38,6 +52,9 @@ void NameData::AddNewName(const std::string &pubkey,const std::string &name) {
     namestore->Put(write_sync, hkey, fn.SerializeAsString());
 
     qDebug() << fn.DebugString();
+
+    Commissioner::AddName(name,pubkey);
+    OnFantasyName(name);
 }
 
 void NameData::AddBalance(const std::string name, uint64_t amount) {
@@ -54,7 +71,9 @@ void NameData::AddBalance(const std::string name, uint64_t amount) {
     fn.set_bits(fn.bits() + amount);
     namestore->Put(write_sync, hkey, fn.SerializeAsString());
 
+
     qDebug() << fn.DebugString();
+    OnFantasyNameBalance(fn);
 }
 
 void NameData::AddProjection(const string &name, const string &player,
@@ -67,8 +86,71 @@ void NameData::AddProjection(const string &name, const string &player,
     m = PlayerIDProjections[player];
     m[name] = proj;
     qDebug() << "proj: " << key << ":" << proj;
+    OnProjection(name,player,proj);
 }
 
+std::unordered_map<std::string,int> NameData::GetProjById(const std::string &pid) {
+    return PlayerIDProjections[pid];
+}
+
+std::unordered_map<std::string,int> NameData::GetProjByName(const std::string &nm) {
+    return FantasyNameProjections[nm];
+}
+
+void NameData::Subscribe(std::string in) {
+    mSubscribed.insert(in);
+}
+
+void NameData::UnSubscribe(std::string in) {
+    mSubscribed.erase(in);
+}
+
+void NameData::OnProjection(const std::string &name, const std::string &player,
+                            uint32_t proj) {
+    if ( !amlive )
+        return;
+
+    if ( mSubscribed.find(name) == end(mSubscribed))
+        return;
+
+    FantasyBitProj fpj{};
+    fpj.set_name(name);
+    fpj.set_playerid(player);
+    fpj.set_proj(proj);
+
+    emit ProjectionLive(fpj);
+}
+
+void NameData::OnFantasyName(std::string &name) {
+    //if ( !amlive )
+    //    return;
+
+    if ( mSubscribed.find(name) != end(mSubscribed))
+        emit FantasyNameFound(name);
+}
+
+void NameData::OnFantasyNameBalance(FantasyNameBal &fn) {
+    if ( !amlive )
+        return;
+
+    if ( mSubscribed.find(fn.name()) != end(mSubscribed))
+        emit FantasyNameBalance(fn);
+}
+
+void NameData::OnWeekOver(int in) {
+    FantasyNameProjections.clear();
+    PlayerIDProjections.clear();
+
+    auto *it = projstore->NewIterator(leveldb::ReadOptions());
+    for (it->SeekToFirst(); it->Valid(); it->Next())
+        projstore->Delete(leveldb::WriteOptions(), it->key());
+
+    qDebug() << " clearProjections ";
+}
+
+void NameData::OnWeekStart(int in) {
+    week = in;
+}
 
 std::string NameData::filedir(const std::string &in) {
     return GET_ROOT_DIR() + "index/" + in;

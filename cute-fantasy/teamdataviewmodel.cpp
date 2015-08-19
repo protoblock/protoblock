@@ -9,9 +9,9 @@ TeamDataViewModel::TeamDataViewModel(const TeamDataViewModel& copy){
 }
 
 TeamDataViewModel::TeamDataViewModel(const  ::fantasybit::Data & copy) {
-    if (copy.type() != Data_Type_TEAM) return;
-    TeamData teamData = copy.GetExtension(TeamData::team_data);
-    myTeamId = QString::fromStdString(teamData.teamid());
+    //if (copy.type() != Data_Type_TEAM) return;
+    //TeamData teamData = copy.GetExtension(TeamData::team_data);
+    //myTeamId = QString::fromStdString(teamData.teamid());
 }
 
 bool TeamDataViewModel::operator ==(const TeamDataViewModel &other) const{

@@ -7,7 +7,11 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
     QWidget(parent),
     ui(new Ui::TestCoreGUIForm)
 {
-    qRegisterMetaType<fantasybit::DeltaData>("DeltaData");
+    qRegisterMetaType<fantasybit::GlobalState>("GlobalState");
+    qRegisterMetaType<fantasybit::MyFantasyName>("MyFantasyName");
+    qRegisterMetaType<fantasybit::FantasyBitProj>("FantasyBitProj");
+    qRegisterMetaType<std::vector<fantasybit::MyFantasyName>>("Vector_MyFantasyName");
+
 
     ui->setupUi(this);
     //notify the APIThread that WE the main form are alive
@@ -21,6 +25,58 @@ TestCoreGUIForm::TestCoreGUIForm(MainLAPIWorker *coreInstance, QWidget *parent) 
 
     QObject::connect(myCoreInstance,SIGNAL(OnLive()),this,SLOT(GoLive()));
     QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
+
+
+    //name
+    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
+    QObject::connect(myCoreInstance,SIGNAL(OnMyNames(std::vector<fantasybit::MyFantasyName> &)),
+                     this,SLOT(OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &)));
+
+    QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myCoreInstance,SLOT(OnUseName(QString)));
+    QObject::connect(this,SIGNAL(SubscribeMyNameTx(QString)),myCoreInstance,SLOT(OnSubName(QString)));
+    QObject::connect(this,SIGNAL(SubscribeMyProjTx(QString)),myCoreInstance,SLOT(OnSubProj(QString)));
+    QObject::connect(this,SIGNAL(SubscribeAwards(QString)),myCoreInstance,SLOT(OnSubBits(QString)));
+
+    QObject::connect(myCoreInstance,SIGNAL(NameStatus(fantasybit::MyFantasyName)),
+                     this,SLOT(OnNameStaus(fantasybit::MyFantasyName)));
+    QObject::connect(myCoreInstance,SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
+                     this,SLOT(OnProjAck(fantasybit::FantasyBitProj)));
+    QObject::connect(myCoreInstance,SIGNAL(NewAward(QVariant)),this,SLOT(OnAward(QVariant)));
+
+    //state
+    QObject::connect(this,SIGNAL(SubscribeGameState()),myCoreInstance,SLOT(OnSubGame()));
+
+    QObject::connect(myCoreInstance,SIGNAL(NewWeek(int)),this,SLOT(OnNewWeek(int)));
+    QObject::connect(myCoreInstance,SIGNAL(GameOver(QString)),this,SLOT(OnGameOver(QString)));
+    QObject::connect(myCoreInstance,SIGNAL(GameStart(QString)),this,SLOT(OnGameStart(QString)));
+
+
+    //data
+    QObject::connect(this,SIGNAL(SubscribePlayerData()),myCoreInstance,SLOT(OnSubPD()));
+    QObject::connect(this,SIGNAL(SubscribeScheduleData()),myCoreInstance,SLOT(OnSubSS()));
+
+    QObject::connect(this,SIGNAL(SubscribeTeamRoster()),myCoreInstance,SLOT(OnSubTeams()));
+    QObject::connect(this,SIGNAL(SubscribePlayerGameStatus()),myCoreInstance,SLOT(OnSubOut()));
+
+    QObject::connect(myCoreInstance,SIGNAL(PlayerData(QString)),this,SLOT(OnPlayerUpdate(QString)));
+    QObject::connect(myCoreInstance,SIGNAL(TimeChange(QString)),this,SLOT(OnSchedule(QString)));
+    QObject::connect(myCoreInstance,SIGNAL(TeamActicity(QString)),this,SLOT(OnTeamRoster(QString)));
+
+
+    //GET
+    QObject::connect(this,SIGNAL(GetPrevWeekData(int)),myCoreInstance,SLOT(SendWeeklyData(int)));
+    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
+
+    QObject::connect(this,SIGNAL(GetLiveProjection(QString)),myCoreInstance,SLOT(SendCurrentProj(QString)));
+    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
+
+    //PUT
+    QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
+                     myCoreInstance,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
+
+    QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myCoreInstance,SLOT(OnClaimName(QString)));
+
+
 
 }
 
@@ -64,4 +120,7 @@ void TestCoreGUIForm::handleNotificationOrResponse(const QVariant & data){
 void TestCoreGUIForm::on_pushButton_2_clicked()
 {
  emit requestPlayersForWeek(1);
+}
+
+void TestCoreGUIForm::OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &) {
 }

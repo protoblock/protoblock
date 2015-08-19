@@ -31,6 +31,10 @@ const ::google::protobuf::EnumDescriptor* GameStatus_Status_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* TeamDepth_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   TeamDepth_reflection_ = NULL;
+const ::google::protobuf::Descriptor* GlobalState_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  GlobalState_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* GlobalState_State_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* PlayerGameStatus_descriptor_ = NULL;
 
 }  // namespace
@@ -95,6 +99,24 @@ void protobuf_AssignDesc_StatusData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TeamDepth));
+  GlobalState_descriptor_ = file->message_type(3);
+  static const int GlobalState_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, state_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, season_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, week_),
+  };
+  GlobalState_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      GlobalState_descriptor_,
+      GlobalState::default_instance_,
+      GlobalState_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(GlobalState));
+  GlobalState_State_descriptor_ = GlobalState_descriptor_->enum_type(0);
   PlayerGameStatus_descriptor_ = file->enum_type(0);
 }
 
@@ -114,6 +136,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     GameStatus_descriptor_, &GameStatus::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TeamDepth_descriptor_, &TeamDepth::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    GlobalState_descriptor_, &GlobalState::default_instance());
 }
 
 }  // namespace
@@ -125,6 +149,8 @@ void protobuf_ShutdownFile_StatusData_2eproto() {
   delete GameStatus_reflection_;
   delete TeamDepth::default_instance_;
   delete TeamDepth_reflection_;
+  delete GlobalState::default_instance_;
+  delete GlobalState_reflection_;
 }
 
 void protobuf_AddDesc_StatusData_2eproto() {
@@ -143,16 +169,22 @@ void protobuf_AddDesc_StatusData_2eproto() {
     "e\030\024 \001(\r\"<\n\006Status\022\r\n\tSCHEDULED\020\000\022\013\n\007PREG"
     "AME\020\002\022\n\n\006INGAME\020\003\022\n\n\006CLOSED\020\004\"F\n\tTeamDep"
     "th\022\n\n\002qb\030\n \003(\t\022\n\n\002rb\030\024 \003(\t\022\n\n\002wr\030\036 \003(\t\022\n"
-    "\n\002te\030( \003(\t\022\t\n\001k\0302 \003(\t*+\n\020PlayerGameStatu"
-    "s\022\007\n\003OUT\020\000\022\006\n\002IN\020\001\022\006\n\002NA\020\002", 426);
+    "\n\002te\030( \003(\t\022\t\n\001k\0302 \003(\t\"\236\001\n\013GlobalState\022,\n"
+    "\005state\030\001 \001(\0162\035.fantasybit.GlobalState.St"
+    "ate\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"C\n\005Sta"
+    "te\022\014\n\010PREDRAFT\020\001\022\r\n\tPRESEASON\020\002\022\017\n\013ROSTE"
+    "R53MAN\020\003\022\014\n\010INSEASON\020\004*+\n\020PlayerGameStat"
+    "us\022\007\n\003OUT\020\000\022\006\n\002IN\020\001\022\006\n\002NA\020\002", 587);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StatusData.proto", &protobuf_RegisterTypes);
   PlayerStatus::default_instance_ = new PlayerStatus();
   GameStatus::default_instance_ = new GameStatus();
   TeamDepth::default_instance_ = new TeamDepth();
+  GlobalState::default_instance_ = new GlobalState();
   PlayerStatus::default_instance_->InitAsDefaultInstance();
   GameStatus::default_instance_->InitAsDefaultInstance();
   TeamDepth::default_instance_->InitAsDefaultInstance();
+  GlobalState::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_StatusData_2eproto);
 }
 
@@ -1152,6 +1184,325 @@ void TeamDepth::Swap(TeamDepth* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = TeamDepth_descriptor_;
   metadata.reflection = TeamDepth_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+const ::google::protobuf::EnumDescriptor* GlobalState_State_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return GlobalState_State_descriptor_;
+}
+bool GlobalState_State_IsValid(int value) {
+  switch(value) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const GlobalState_State GlobalState::PREDRAFT;
+const GlobalState_State GlobalState::PRESEASON;
+const GlobalState_State GlobalState::ROSTER53MAN;
+const GlobalState_State GlobalState::INSEASON;
+const GlobalState_State GlobalState::State_MIN;
+const GlobalState_State GlobalState::State_MAX;
+const int GlobalState::State_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int GlobalState::kStateFieldNumber;
+const int GlobalState::kSeasonFieldNumber;
+const int GlobalState::kWeekFieldNumber;
+#endif  // !_MSC_VER
+
+GlobalState::GlobalState()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void GlobalState::InitAsDefaultInstance() {
+}
+
+GlobalState::GlobalState(const GlobalState& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void GlobalState::SharedCtor() {
+  _cached_size_ = 0;
+  state_ = 1;
+  season_ = 0u;
+  week_ = 0u;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+GlobalState::~GlobalState() {
+  SharedDtor();
+}
+
+void GlobalState::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void GlobalState::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* GlobalState::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return GlobalState_descriptor_;
+}
+
+const GlobalState& GlobalState::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_StatusData_2eproto();
+  return *default_instance_;
+}
+
+GlobalState* GlobalState::default_instance_ = NULL;
+
+GlobalState* GlobalState::New() const {
+  return new GlobalState;
+}
+
+void GlobalState::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    state_ = 1;
+    season_ = 0u;
+    week_ = 0u;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool GlobalState::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .fantasybit.GlobalState.State state = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::fantasybit::GlobalState_State_IsValid(value)) {
+            set_state(static_cast< ::fantasybit::GlobalState_State >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(80)) goto parse_season;
+        break;
+      }
+
+      // optional uint32 season = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_season:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &season_)));
+          set_has_season();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(160)) goto parse_week;
+        break;
+      }
+
+      // optional uint32 week = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_week:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &week_)));
+          set_has_week();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void GlobalState::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .fantasybit.GlobalState.State state = 1;
+  if (has_state()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->state(), output);
+  }
+
+  // optional uint32 season = 10;
+  if (has_season()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(10, this->season(), output);
+  }
+
+  // optional uint32 week = 20;
+  if (has_week()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->week(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* GlobalState::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .fantasybit.GlobalState.State state = 1;
+  if (has_state()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->state(), target);
+  }
+
+  // optional uint32 season = 10;
+  if (has_season()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(10, this->season(), target);
+  }
+
+  // optional uint32 week = 20;
+  if (has_week()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->week(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int GlobalState::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .fantasybit.GlobalState.State state = 1;
+    if (has_state()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->state());
+    }
+
+    // optional uint32 season = 10;
+    if (has_season()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->season());
+    }
+
+    // optional uint32 week = 20;
+    if (has_week()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->week());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void GlobalState::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const GlobalState* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const GlobalState*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void GlobalState::MergeFrom(const GlobalState& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_state()) {
+      set_state(from.state());
+    }
+    if (from.has_season()) {
+      set_season(from.season());
+    }
+    if (from.has_week()) {
+      set_week(from.week());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void GlobalState::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void GlobalState::CopyFrom(const GlobalState& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool GlobalState::IsInitialized() const {
+
+  return true;
+}
+
+void GlobalState::Swap(GlobalState* other) {
+  if (other != this) {
+    std::swap(state_, other->state_);
+    std::swap(season_, other->season_);
+    std::swap(week_, other->week_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata GlobalState::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = GlobalState_descriptor_;
+  metadata.reflection = GlobalState_reflection_;
   return metadata;
 }
 

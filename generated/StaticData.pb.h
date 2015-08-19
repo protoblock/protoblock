@@ -24,6 +24,7 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "NameData.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace fantasybit {
@@ -1000,6 +1001,18 @@ class PlayerResult : public ::google::protobuf::Message {
   inline ::fantasybit::Stats* release_stats();
   inline void set_allocated_stats(::fantasybit::Stats* stats);
 
+  // repeated .fantasybit.FantasyBitAward fantaybitaward = 60;
+  inline int fantaybitaward_size() const;
+  inline void clear_fantaybitaward();
+  static const int kFantaybitawardFieldNumber = 60;
+  inline const ::fantasybit::FantasyBitAward& fantaybitaward(int index) const;
+  inline ::fantasybit::FantasyBitAward* mutable_fantaybitaward(int index);
+  inline ::fantasybit::FantasyBitAward* add_fantaybitaward();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward >&
+      fantaybitaward() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward >*
+      mutable_fantaybitaward();
+
   // @@protoc_insertion_point(class_scope:fantasybit.PlayerResult)
  private:
   inline void set_has_playerid();
@@ -1013,10 +1026,11 @@ class PlayerResult : public ::google::protobuf::Message {
 
   ::std::string* playerid_;
   ::fantasybit::Stats* stats_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward > fantaybitaward_;
   float result_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_StaticData_2eproto();
   friend void protobuf_AssignDesc_StaticData_2eproto();
@@ -1081,12 +1095,17 @@ class GameResult : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 gameid = 1;
+  // optional string gameid = 1;
   inline bool has_gameid() const;
   inline void clear_gameid();
   static const int kGameidFieldNumber = 1;
-  inline ::google::protobuf::int32 gameid() const;
-  inline void set_gameid(::google::protobuf::int32 value);
+  inline const ::std::string& gameid() const;
+  inline void set_gameid(const ::std::string& value);
+  inline void set_gameid(const char* value);
+  inline void set_gameid(const char* value, size_t size);
+  inline ::std::string* mutable_gameid();
+  inline ::std::string* release_gameid();
+  inline void set_allocated_gameid(::std::string* gameid);
 
   // repeated .fantasybit.PlayerResult home_result = 10;
   inline int home_result_size() const;
@@ -1128,10 +1147,10 @@ class GameResult : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* gameid_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult > home_result_;
-  ::google::protobuf::int32 gameid_;
-  ::google::protobuf::uint32 kickofftime_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult > away_result_;
+  ::google::protobuf::uint32 kickofftime_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
@@ -2376,11 +2395,36 @@ inline void PlayerResult::set_allocated_stats(::fantasybit::Stats* stats) {
   }
 }
 
+// repeated .fantasybit.FantasyBitAward fantaybitaward = 60;
+inline int PlayerResult::fantaybitaward_size() const {
+  return fantaybitaward_.size();
+}
+inline void PlayerResult::clear_fantaybitaward() {
+  fantaybitaward_.Clear();
+}
+inline const ::fantasybit::FantasyBitAward& PlayerResult::fantaybitaward(int index) const {
+  return fantaybitaward_.Get(index);
+}
+inline ::fantasybit::FantasyBitAward* PlayerResult::mutable_fantaybitaward(int index) {
+  return fantaybitaward_.Mutable(index);
+}
+inline ::fantasybit::FantasyBitAward* PlayerResult::add_fantaybitaward() {
+  return fantaybitaward_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward >&
+PlayerResult::fantaybitaward() const {
+  return fantaybitaward_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward >*
+PlayerResult::mutable_fantaybitaward() {
+  return &fantaybitaward_;
+}
+
 // -------------------------------------------------------------------
 
 // GameResult
 
-// optional int32 gameid = 1;
+// optional string gameid = 1;
 inline bool GameResult::has_gameid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2391,15 +2435,63 @@ inline void GameResult::clear_has_gameid() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void GameResult::clear_gameid() {
-  gameid_ = 0;
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    gameid_->clear();
+  }
   clear_has_gameid();
 }
-inline ::google::protobuf::int32 GameResult::gameid() const {
+inline const ::std::string& GameResult::gameid() const {
+  return *gameid_;
+}
+inline void GameResult::set_gameid(const ::std::string& value) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(value);
+}
+inline void GameResult::set_gameid(const char* value) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(value);
+}
+inline void GameResult::set_gameid(const char* value, size_t size) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* GameResult::mutable_gameid() {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
   return gameid_;
 }
-inline void GameResult::set_gameid(::google::protobuf::int32 value) {
-  set_has_gameid();
-  gameid_ = value;
+inline ::std::string* GameResult::release_gameid() {
+  clear_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gameid_;
+    gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void GameResult::set_allocated_gameid(::std::string* gameid) {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    delete gameid_;
+  }
+  if (gameid) {
+    set_has_gameid();
+    gameid_ = gameid;
+  } else {
+    clear_has_gameid();
+    gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // repeated .fantasybit.PlayerResult home_result = 10;

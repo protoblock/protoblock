@@ -1,40 +1,15 @@
 #include <blockrecorder.h>
 
-#include "ProtoData.pb.h"
 #include <leveldb/db.h>
-#include "Commissioner.h"
-#include "Source.h"
-
-
-
-
-
 
 using namespace fantasybit ;
 
-void BlockRecorder::init()
-{
+void BlockRecorder::init() {
     write_sync.sync = true;
     leveldb::Options options;
     options.create_if_missing = true;
     leveldb::Status status;
     status = leveldb::DB::Open(options, filedir("blockstatus"), &blockstatus);
-    assert(status.ok());
-    status = leveldb::DB::Open(options, filedir("namehashpub"), &namehashpub);
-    assert(status.ok());
-    status = leveldb::DB::Open(options, filedir("pubfantasyname"), &pubfantasyname);
-    assert(status.ok());
-    status = leveldb::DB::Open(options, filedir("pubbalance"), &pubbalance);
-    assert(status.ok());
-    status = leveldb::DB::Open(options, filedir("state"), &state);
-    assert(status.ok());
-    status = leveldb::DB::Open(options, filedir("players"), &players);
-    assert(status.ok());
-    status = leveldb::DB::Open(options, filedir("teams"), &teams);
-    assert(status.ok());
-    status = leveldb::DB::Open(options, filedir("projections"), &projections);
-    assert(status.ok());
-
 
     std::string value;
     status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);
@@ -48,6 +23,7 @@ void BlockRecorder::init()
     }
 }
 
+/*
 void BlockRecorder::initAllData() {
     initFantasyNames();
     initProjections();
@@ -183,17 +159,12 @@ DeltaData BlockRecorder::DeltaSnap() {
         Source::TeamIds.insert(td.teamid());
     }
 
-    /*
-    for (auto tps : Source::TeamPlayers) {
-        auto ts = GetTeamState(tps.first);
-        auto *p = dd.add_teamstates();
-        p->CopyFrom(ts);
-    }
-    */
 
     return dd;
 }
+*/
 
+/*
 void BlockRecorder::OnGlobalState(const GlobalState &gs) {
     state->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
     qDebug() << gs.DebugString();
@@ -265,17 +236,16 @@ TeamData BlockRecorder::GetTeamData(const std::string &pid) {
 
     return gs;
 }
-
-void BlockRecorder::startBlock(int num)
-{
+*/
+void BlockRecorder::startBlock(int num) {
     leveldb::Slice value((char*)&num, sizeof(int));
     blockstatus->Put(write_sync, "processing", value);
     blockstatus->Put(leveldb::WriteOptions(), "lastblock", value);
     qInfo() << "starting block: " << num;
 }
 
-int BlockRecorder::endBlock(int num)
-{
+
+int BlockRecorder::endBlock(int num) {
     int none = -1;
     leveldb::Slice value((char*)&none, sizeof(int));
     blockstatus->Put(write_sync, "processing", value);
@@ -283,8 +253,8 @@ int BlockRecorder::endBlock(int num)
     return num;
 }
 
-bool BlockRecorder::isValid()
-{
+
+bool BlockRecorder::isValid() {
     std::string value;
     if (blockstatus->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound())
         return true;
@@ -293,11 +263,12 @@ bool BlockRecorder::isValid()
     return num < 0;
 }
 
-int BlockRecorder::getLastBlockId()
-{
+
+int BlockRecorder::getLastBlockId() {
     return lastBlock;
 }
 
+/*
 void BlockRecorder::recordName(const hash_t &hash,const std::string &pubkey,const std::string &name)
 {
     leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
@@ -367,23 +338,13 @@ void BlockRecorder::addBalance(std::string &pubkey,uint64_t add)
     else
         qCritical() << " cant find FantasyName";
 }
-
-std::string BlockRecorder::filedir(const std::string &in)
-{
+*/
+std::string BlockRecorder::filedir(const std::string &in) {
     return GET_ROOT_DIR() + "index/" + in;
 }
 
-void BlockRecorder::closeAll()
-{
+void BlockRecorder::closeAll() {
     delete blockstatus;
-    delete namehashpub;
-    delete pubfantasyname;
-    delete pubbalance;
-    delete state;
-    delete players;
-    delete teams;
-    delete projections;
-
 }
 
 

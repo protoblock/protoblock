@@ -8,28 +8,64 @@
 #ifndef __fantasybit__NameData__
 #define __fantasybit__NameData__
 
+
+#include <QObject>
 #include "NameData.pb.h"
 #include <leveldb/db.h>
-
+#include <unordered_map>
+#include <set>
 namespace fantasybit
 {
 
-class NameData {
+class NameData : public QObject {
+
+    Q_OBJECT
+
     leveldb::DB *namestore;
     leveldb::DB *projstore;
 
     leveldb::WriteOptions write_sync{};
 
-    std::map<std::string, std::map<std::string,uint32_t>> FantasyNameProjections;
-    std::map<std::string, std::map<std::string,uint32_t>> PlayerIDProjections;
+    std::unordered_map<std::string,
+            std::unordered_map<std::string,int>> FantasyNameProjections;
+    std::unordered_map<std::string,
+            std::unordered_map<std::string,int>> PlayerIDProjections;
+
+    std::set<std::string> mSubscribed{};
+    bool amlive = false;
+    int week = 0;
+
+signals:
+    void ProjectionLive(FantasyBitProj &);
+    void FantasyNameFound(std::string &);
+    void FantasyNameBalance(FantasyNameBal &);
+
+public slots:
+    void OnLive(bool subscribe) {
+        amlive = true;
+    }
+
+    void OnWeekOver(int week);
+    void OnWeekStart(int week);
+
 
 public:
-    NameData();
+    NameData() {}
     void init();
-    void AddNewName(const std::string &pubkey,const std::string &name);
+    void AddNewName(std::string name, std::string pubkey);
     void AddBalance(const std::string name,uint64_t amount);
 
     void AddProjection(const std::string &name, const std::string &player, uint32_t proj);
+    void OnProjection(const std::string &name, const std::string &player, uint32_t proj);
+    void OnFantasyName(std::string &name);
+    void OnFantasyNameBalance(FantasyNameBal &fn);
+
+
+    std::unordered_map<std::string,int> GetProjById(const std::string &pid);
+    std::unordered_map<std::string,int> GetProjByName(const std::string &nm);
+
+    void Subscribe(std::string );
+    void UnSubscribe(std::string );
 
     std::string filedir(const std::string &in);
 };

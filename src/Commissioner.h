@@ -130,20 +130,21 @@ public:
         dt.set_week(1);
 
         Data d{};
-        d.set_type(Data::TEAM);
-        TeamData td{};
+        //TODOd.set_type(Data::TEAM);
+        /*TeamData td{};
         for ( auto t : GET_GENESIS_NFL_TEAMS() ) {
             td.set_teamid(t);
             d.MutableExtension(TeamData::team_data)->CopyFrom(td);
             Data *d2 = dt.add_data();
             d2->CopyFrom(d);
         }
+        */
 
         d.Clear();
         d.set_type(Data::PLAYER);
         PlayerData pd{};
         for ( auto t : GET_GENESIS_NFL_PLAYERS() ) {
-            pd.set_teamid(t.second);
+            //TODOpd.set_teamid(t.second);
             pd.set_playerid(t.first);
             d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
             Data *d2 = dt.add_data();
