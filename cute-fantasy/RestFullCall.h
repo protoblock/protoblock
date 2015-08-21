@@ -13,7 +13,7 @@
 #include <google/protobuf/message.h>
 
 
-using namespace google::protobuf;
+
 
 class RestfullClient : public QObject{
 
@@ -93,7 +93,7 @@ public:
         myBaseUrl = argBaseUrl;
     }
 
-    void postProtoMessageData(const QString & route,const QString & contentType,const Message & protoMessage){
+    void postProtoMessageData(const QString & route,const QString & contentType,const google::protobuf::Message & protoMessage){
         std::string data = protoMessage.SerializeAsString().data();
         return postRawData(route,contentType,data.data(),data.size());
     }
@@ -284,7 +284,7 @@ public:
         obj.insert("height",QJsonValue(height));
         obj.insert("blockID",QJsonValue(blockID));
         QByteArray blob(block.data(),block.size()) ;
-        obj.insert("blockID",QJsonValue(QString(blob.toBase64())));
+        obj.insert("data",QJsonValue(QString(blob.toBase64())));
         doc.setObject(obj);
         RestfullClient client(QUrl(baseUrl),ownerThread);
         client.postJasonData(route,"application/json",doc);
