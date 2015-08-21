@@ -11,9 +11,12 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <google/protobuf/message.h>
+#include <QJsonArray>
+#include "ProtoData.pb.h"
 
 
-using namespace google::protobuf;
+
+//using namespace google::protobuf;
 
 class RestfullClient : public QObject{
 
@@ -93,7 +96,7 @@ public:
         myBaseUrl = argBaseUrl;
     }
 
-    void postProtoMessageData(const QString & route,const QString & contentType,const Message & protoMessage){
+    void postProtoMessageData(const QString & route,const QString & contentType,const google::protobuf::Message & protoMessage){
         std::string data = protoMessage.SerializeAsString().data();
         return postRawData(route,contentType,data.data(),data.size());
     }
@@ -264,7 +267,7 @@ private:
 
 class RestfullService {
 public:
-    static QByteArray retrieveBlock(const QString & baseUrl,const QString route,int blockNum,QThread * ownerThread = QThread::currentThread()){
+    static fantasybit::Block retrieveBlock(const QString & baseUrl,const QString route,int blockNum,QThread * ownerThread = QThread::currentThread()){
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
         QMap<QString,QVariant> params;
@@ -273,7 +276,54 @@ public:
         QString customRoute("%1/block/%3");
         customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
-        return client.lastReply();
+
+        fantasybit::Block blk;
+        auto arrby = client.lastReply();
+        QJsonDocument ret = QJsonDocument::fromJson(arrby);
+
+
+        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+        QJsonArray qa = ret.array();
+        QJsonValueRef json = qa[0];
+
+        QString str(json.toObject().value("data").toString());
+
+        qDebug() << str;
+
+        auto arrayblock =
+                QByteArray::fromBase64(str.toUtf8());
+
+        blk.ParseFromArray(arrayblock,arrayblock.size());
+
+        return blk;
+    }
+
+    static int getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
+        RestfullClient client(QUrl(baseUrl),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        //hard coded url
+        //TODO move to settings
+        QString customRoute("block-height");
+        client.getData(customRoute,params,headers);
+
+        auto arrby = client.lastReply();
+        qDebug() << " retunr " << arrby <<"!!!";
+        QJsonDocument ret = QJsonDocument::fromJson(arrby);
+
+        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+
+        QJsonArray qa = ret.array();
+        QJsonValueRef json = qa[0];
+
+
+        //qDebug() <<
+        int hi = json.toObject().value("height").toInt();
+        //int hi = val.toInt();
+
+        return hi;
     }
 
     static QByteArray sendBlock(const QString & baseUrl,const QString route,
@@ -284,12 +334,28 @@ public:
         obj.insert("height",QJsonValue(height));
         obj.insert("blockID",QJsonValue(blockID));
         QByteArray blob(block.data(),block.size()) ;
-        obj.insert("blockID",QJsonValue(QString(blob.toBase64())));
+        obj.insert("data",QJsonValue(QString(blob.toBase64())));
         doc.setObject(obj);
         RestfullClient client(QUrl(baseUrl),ownerThread);
         client.postJasonData(route,"application/json",doc);
         return client.lastReply();
     }
+
+    static std::string getTx(const QString & baseUrl,
+                                   QThread * ownerThread = QThread::currentThread()){
+        RestfullClient client(QUrl(baseUrl),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        //hard coded url
+        //TODO move to settings
+        QString customRoute("/tx");
+        //customRoute = customRoute.arg(route).arg(blockNum);
+        client.getData(customRoute,params,headers);
+
+        return client.lastReply().toStdString();
+    }
+
+
 };
 
 #endif // RESTFULLCALL_H
