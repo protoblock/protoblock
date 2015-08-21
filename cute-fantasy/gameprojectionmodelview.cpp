@@ -1,5 +1,5 @@
 #include "gameprojectionmodelview.h"
-#include "playerloader.h"
+
 
 void GameProjectionModelView::setProjectionFlag( ProjectionFlag flag, bool on ) {
     if ( bool( myProjectionFlag & flag ) == on )
@@ -38,8 +38,8 @@ GameProjectionModelView::GameProjectionModelView(GameProjectionModelView & copy)
 }
 
 void GameProjectionModelView::loadPlayerInfo(){
-    if (myPlayerInfoLoaded) return;
-    QPair<QString,QString> playerInfo = PlayerLoader::getPlayerInfo(myPlayerId);
-    myPlayerName = playerInfo.first;
-    myPos = playerInfo.second;
+//    if (myPlayerInfoLoaded) return;
+//    QPair<QString,QString> playerInfo = PlayerLoader::getPlayerInfo(myPlayerId);
+//    myPlayerName = playerInfo.first;
+//    myPos = playerInfo.second;
 }

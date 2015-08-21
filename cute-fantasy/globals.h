@@ -12,15 +12,14 @@
 #define APPLICATION_NAME "Cute Fantasy"
 #endif
 
-#define qInfo QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC).noDebug
-#include "qdebug.h""
+#include <QDebug>
+inline QDebug operator<<(QDebug  debug ,std::string msg) {
+    static QMutex messageHandlerMutex;
+    QMutexLocker locker(&messageHandlerMutex);
+    debug << QString(msg.data());
+    return debug;
+}
 
-//#include "boostLog.h"
-
-//#ifndef BOOST_LOG
-//#define BOOST_LOG
-//#define LOG(logger, severity) LOGIT(logger, severity,  FILE, LINE, FUNCTION)
-//#endif
 #endif
 
 

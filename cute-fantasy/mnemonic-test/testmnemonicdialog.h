@@ -15,6 +15,9 @@ public:
     explicit TestMnemonicDialog(QWidget *parent = 0);
     ~TestMnemonicDialog();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::TestMnemonicDialog *ui;
 };

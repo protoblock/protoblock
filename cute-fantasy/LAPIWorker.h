@@ -15,8 +15,9 @@
 #include "StatusData.pb.h"
 #include "ProtoData.pb.h"
 #include <vector>
+#include "iresolvable.h"
 
-class MainLAPIWorker : public QObject
+class MainLAPIWorker : public QObject , public IResolvable
 {
     Q_OBJECT
 

@@ -13,8 +13,20 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        testmnemonicdialog.cpp
+        testmnemonicdialog.cpp \
+    mnemonic.cpp
 
-HEADERS  += testmnemonicdialog.h
+HEADERS  += testmnemonicdialog.h \
+    mnemonic.h
 
 FORMS    += testmnemonicdialog.ui
+
+
+INCLUDEPATH+=$$PWD/../../openssl/include
+
+
+LIBS += -L./../../lib
+
+
+LIBS += -llibeay32 \
+        -lssleay32

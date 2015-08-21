@@ -19,8 +19,8 @@
 #include "DistributionAlgo.h"
 #include "blockrecorder.h"
 #include "Processor.h"
-#include "core.h"
-
+#include "platform.h"
+#include "globals.h"
 
 
 namespace fantasybit
@@ -31,7 +31,7 @@ int BlockProcessor::init() {
         emit InvalidState(mRecorder.getLastBlockId());
         qInfo() <<  "mRecorder not valid! ";
         mRecorder.closeAll();
-        fc::remove_all(Core::getRootDir() + "index/");
+        fc::remove_all(Platform::getRootDir() + "index/");
         qInfo() <<  "delete all leveldb, should have nothing";
         mRecorder.init();
         if (!mRecorder.isValid() ) {

@@ -112,20 +112,12 @@ void MainLAPIWorker::getLivePlayers(int week){
 }
 
 void MainLAPIWorker::startPoint(){
-
-    qDebug("Main Core Thread started");
-    QMutex mutex;
-    mutex.lock();
-    qDebug("Waiting for gui to show up it's first window");
-    Core::waitForGUI.wait(&mutex);
-    //send one way notification
+    qDebug("Main Core Thread started");   
     last_block = processor.init();
     if ( last_block < 0 ) {
         //emit OnError();
         last_block = 0;
-    }
-
-    //emit sendNotificationWithData(QVariant(qm));
+    }   
 
     intervalstart = 5000;
     timer->start(intervalstart);

@@ -49,13 +49,8 @@ RCC_DIR = ./generatedfiles
 
 LIBS += -L./../lib
 LIBS += -lLevelDB  \
-        -llibprotobuf \
-        -llibeay32 \
-        -lssleay32
-
-
+        -llibprotobuf
 
 include(./boost-includes.pri)
 include (./cute-fantasy.pri)
-
-
+include (./openssl-includes.pri)
