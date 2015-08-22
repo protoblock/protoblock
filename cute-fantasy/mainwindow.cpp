@@ -13,11 +13,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //to get current week once we're Live
 
-    std::vector<fantasybit::GameRoster> roster =DataService::getGameScheduleForWeek(1);
+    //std::vector<fantasybit::GameRoster>
 
 }
 
-void MainWindow::initialize(){
+void MainWindow::initialize() {
 
     qRegisterMetaType<fantasybit::GlobalState>("GlobalState");
     qRegisterMetaType<fantasybit::MyFantasyName>("MyFantasyName");
@@ -28,13 +28,13 @@ void MainWindow::initialize(){
 //    //listen to notifcation from Core
     QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
 
-    QObject::connect(myCoreInstance,SIGNAL(OnLive()),this,SLOT(GoLive()));
-    QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
+    QObject::connect(myCoreInstance,SIGNAL(Live()),this,SLOT(GoLive()));
+    //QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
 
 
     //name
 //    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
-    QObject::connect(myCoreInstance,SIGNAL(OnMyNames(std::vector<fantasybit::MyFantasyName> &)),
+    QObject::connect(myCoreInstance,SIGNAL(MyNames(std::vector<fantasybit::MyFantasyName> &)),
                      this,SLOT(OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &)));
 
     QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myCoreInstance,SLOT(OnUseName(QString)));
@@ -152,6 +152,7 @@ void MainWindow::on_myPreviousWeek_clicked()
 }
 
 void MainWindow::GoLive(){
+    auto roster = DataService::instance()->GetCurrentWeekGameRosters();
 
 }
 

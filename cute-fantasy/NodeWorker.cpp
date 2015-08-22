@@ -24,7 +24,7 @@
         if ( node.Sync() )
             emit InSync(node.getLastLocalBlockNum());
         else
-            emit InSync(node.getLastLocalBlockNum());
+            emit BlockError(node.getLastLocalBlockNum());
 
     }
 

@@ -44,58 +44,73 @@ public:
     ~MainLAPIWorker(){}
     ThreadedQObject<NodeWorker> node;
 
-    std::vector<fantasybit::GameRoster> getWeekGameRosters(int /*week*/){
+    fantasybit::NFLStateData &NFLState() { return data; }
+
+    fantasybit::FantasyNameData &NameData() { return namedata; }
+
+    /*
+    std::vector<fantasybit::GameRoster> getWeekGameRosters(int week){
         std::vector<fantasybit::GameRoster> vector;
         vector.push_back(fantasybit::GameRoster());
         return vector;
     }
+    */
     void GoLive();
 
 signals:
 
-    void sendNotificationWithData(const QVariant & notificationData);
+    //void OnData(const fantasybit::DeltaData &);
+    //void sendNotificationWithData(const QVariant & notificationData);
+    //sync blocks
     void ProcessNext();
     void GetNext();
-    void OnData(const fantasybit::DeltaData &);
-    void OnLive();
+
+    //to data
     void SubscribeLive();
+
+
+    //to GUI
     void NameStatus(const fantasybit::MyFantasyName &);
     void LiveProj(fantasybit::FantasyBitProj &);
-    void OnMyNames(std::vector<fantasybit::MyFantasyName> &);
-
+    void MyNames(std::vector<fantasybit::MyFantasyName> &);
+    void NameBalance(fantasybit::FantasyNameBal &);
+    void PlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus> &in);
+    void OnGlobalState(fantasybit::GlobalState);
+    void Live(bool);
 
 public slots:
 
-    void processGUIRequest(const QVariant & requestData);
-
-    void OnGetMyNames();
-
-    void getLivePlayers(int );
+    //void getLivePlayers(int );
+    //void processGUIRequest(const QVariant & requestData);
 
     void startPoint();
 
     void OnInSync(int num);
-
     void ProcessBlock();
-
     void OnSeenBlock(int num);
-
     void Timer();
 
-    void OnPlayerChange(std::string);
+    //void OnPlayerChange(std::string);
+
+    //from gui
+    void OnGetMyNames();
+    void OnUseName(QString);
+
+    //tx
     void OnFoundName(std::string &);
     void OnProjLive(fantasybit::FantasyBitProj &);
-    void OnNameBal(fantasybit::FantasyNameBal &);
-
-    void OnUseName(QString);
     void OnClaimName(QString);
-
     void OnProjTX(fantasybit::FantasyBitProj);
+
+    //data
+    void OnGlobalStateChange(fantasybit::GlobalState);
+    void OnNameBal(fantasybit::FantasyNameBal &);
+    void OnPlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus>);
 private:
 
     bool Process(fantasybit::Block &b);
 
-    void doNewDelta();
+    //void doNewDelta();
 
 };
 

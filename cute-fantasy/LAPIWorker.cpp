@@ -22,30 +22,32 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
                            node.object(),
                            SLOT(init()));
     myNodeWorker = node.object();
-    node.thread()->start();
+
+    //QObject::connect(this,SIGNAL(Timer()),myNodeWorker,SLOT(TryNext()));
+    //QObject::connect(this,SIGNAL(GetNext()),qApp,SLOT(aboutQt()));
+    //QObject::connect(timer,SIGNAL(timeout()),myNodeWorker,SLOT(Timer()));
+
+
+    //block sync
     QObject::connect(myNodeWorker,SIGNAL(InSync(int)),this,SLOT(OnInSync(int)));
     QObject::connect(myNodeWorker,SIGNAL(SeenBlock(int)),this,SLOT(OnSeenBlock(int)));
-    //QObject::connect(this,SIGNAL(Timer()),myNodeWorker,SLOT(TryNext()));
     QObject::connect(this,SIGNAL(ProcessNext()),this,SLOT(ProcessBlock()));
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(Timer()));
     QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
-    //QObject::connect(this,SIGNAL(GetNext()),qApp,SLOT(aboutQt()));
-    //QObject::connect(timer,SIGNAL(timeout()),myNodeWorker,SLOT(Timer()));
+
+    //data processing
     QObject::connect(this,SIGNAL(Live(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(Live(bool)),&namedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(Live(bool)),&processor,SLOT(OnLive(bool)));
+
+    //data to data signals
     QObject::connect(&processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
-    QObject::connect(this,SIGNAL(WeekStart(int)),&data,SLOT(OnWeekStart(int)));
+    QObject::connect(&processor,SIGNAL(WeekStart(int)),&data,SLOT(OnWeekStart(int)));
 
-    QObject::connect(&data,SIGNAL(PlayerChange(std::string)),
-                     this,SLOT(OnPlayerChange(std::string)));
-
-    QObject::connect(&data,SIGNAL(TeamPlus(std::string ntid,std::string)),
-                     this,SLOT(OnTeamPlus(std::string ntid,std::string )));
-
-    QObject::connect(&data,SIGNAL(TeamMinus(std::string ntid,std::string )),
-                     this,SLOT(OnTeamMinus(std::string ntid,std::string )));
+    //delt data
+    QObject::connect(&data,SIGNAL(PlayerStatusChange(pair<string,PlayerStatus>)),
+                     this,SLOT(OnPlayerStatus(pair<string,PlayerStatus>)));
 
     QObject::connect(&data,SIGNAL(GameStart(std::string)),
                      this,SLOT(OnGameStart(std::string)));
@@ -61,7 +63,6 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
     QObject::connect(&data,SIGNAL(FantasyNameBalance(FantasyNameBal)),
                      this,SLOT(OnNameBal(FantasyNameBal)));
-
 }
 
 void MainLAPIWorker::GoLive() {
@@ -70,49 +71,14 @@ void MainLAPIWorker::GoLive() {
     timer->start(intervalstart);
 
     OnGetMyNames();
-    /*
-    //ToDo: convert names with a status OnLive()
-    myfantasynames = agent.getMyNamesStatus();
-    for(auto p : myfantasynames) {
-        if ( p.second.status() < MyNameStatus::confirmed )
-            namedata.Subscribe(p.first);
-
-        deltadata.add_myfantasyname()->CopyFrom(p.second);
-    }
-    deltadata.mutable_globalstate()->CopyFrom(data.GetGlobalState());
-    */
-    emit OnLive();
+    emit Live(true);
     emit SubscribeLive();
-
-}
-
-void MainLAPIWorker::processGUIRequest(const QVariant & requestData){
-    //GUI sent us a request process it
-    //  processing requestData
-    //and then reply back a kind of result
-    /*
-        if (requestData.type()== QVariant::String){
-            if (requestData.toString()=="PING")
-                emit sendNotificationWithData(QString("PONG"));
-        }
-        */
-}
-
-void MainLAPIWorker::getLivePlayers(int week){
-    if ( amlive ) {
-        auto allgames = data.GetLiveWeekGameRosters();
-        //emit sendNotificationWithData(allgames);
-    }
-    /*
-    QUrl url("http://api.nfldata.apiphany.com/nfl/v2/JSON/AreAnyGamesInProgress");
-    RestfullCall rest;
-    rest.moveToThread(QThread::currentThread());
-    rest.restFullSynchrounousCallGet(url,"","");
-    */
 }
 
 void MainLAPIWorker::startPoint(){
-    qDebug("Main Core Thread started");   
+    qDebug("Main Core Thread started");
+    node.thread()->start();
+
     last_block = processor.init();
     if ( last_block < 0 ) {
         //emit OnError();
@@ -123,6 +89,7 @@ void MainLAPIWorker::startPoint(){
     timer->start(intervalstart);
 }
 
+//blockchain
 void MainLAPIWorker::OnInSync(int num) {
     numto = num;
     intervalstart = 2000;
@@ -141,7 +108,7 @@ void MainLAPIWorker::ProcessBlock() {
     if ( !amlive && last_block < numto )
         emit ProcessNext(); //catching up
     else {
-        doNewDelta();
+        //doNewDelta();
         if ( !amlive ) {
             amlive = true;
             GoLive();
@@ -198,27 +165,15 @@ bool MainLAPIWorker::Process(fantasybit::Block &b) {
     return true;
 }
 
-void MainLAPIWorker::doNewDelta() {
-    //auto deltasnap = processor.GetandClear();
-    //qDebug(deltasnap.DebugString().c_str());
-    //emit OnData(deltasnap);
+
+//Data
+void MainLAPIWorker::OnPlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus> in) {
+    emit PlayerStatusChange(in);
 }
 
-void MainLAPIWorker::OnPlayerChange(std::string) {}
-
-void MainLAPIWorker::OnFoundName(std::string &name) {
-    auto it = myfantasynames.find(name);
-    if ( it != end(myfantasynames)) {
-        it->second.set_status(MyNameStatus::confirmed);
-        emit NameStatus(it->second);
-    }
+void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal &bal) {
+    emit NameBalance(bal);
 }
-
-void MainLAPIWorker::OnProjLive(fantasybit::FantasyBitProj &proj) {
-    emit LiveProj(proj);
-}
-
-void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal &) {}
 
 void MainLAPIWorker::OnGetMyNames() {
     vector<MyFantasyName> my;
@@ -231,9 +186,10 @@ void MainLAPIWorker::OnGetMyNames() {
         my.push_back(p.second);
     }
 
-    emit OnMyNames(my);
+    emit MyNames(my);
 }
 
+//from Gui
 void MainLAPIWorker::OnUseName(QString name) {
     myCurrentName.set_name(name.toStdString());
     myCurrentName.set_status(MyNameStatus::none);
@@ -257,6 +213,8 @@ void MainLAPIWorker::OnUseName(QString name) {
     emit NameStatus(myCurrentName);
 }
 
+
+//tx
 void MainLAPIWorker::OnClaimName(QString name) {
     if ( !amlive ) return;
 
@@ -307,3 +265,32 @@ void MainLAPIWorker::OnProjTX(FantasyBitProj inp) {
 
 }
 
+//tx status
+void MainLAPIWorker::OnFoundName(std::string &name) {
+    auto it = myfantasynames.find(name);
+    if ( it != end(myfantasynames)) {
+        it->second.set_status(MyNameStatus::confirmed);
+        emit NameStatus(it->second);
+    }
+}
+
+void MainLAPIWorker::OnProjLive(fantasybit::FantasyBitProj &proj) {
+    emit LiveProj(proj);
+}
+
+void MainLAPIWorker::OnGlobalStateChange(GlobalState state) {
+
+}
+
+
+/*
+//ToDo: convert names with a status OnLive()
+myfantasynames = agent.getMyNamesStatus();
+for(auto p : myfantasynames) {
+    if ( p.second.status() < MyNameStatus::confirmed )
+        namedata.Subscribe(p.first);
+
+    deltadata.add_myfantasyname()->CopyFrom(p.second);
+}
+deltadata.mutable_globalstate()->CopyFrom(data.GetGlobalState());
+*/

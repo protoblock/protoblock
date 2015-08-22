@@ -25,6 +25,7 @@ public:
 signals:
     void InSync(int height);
     void SeenBlock(int height);
+    void BlockError(int height);
 
 public slots:
 

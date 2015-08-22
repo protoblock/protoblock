@@ -13,7 +13,7 @@
 #include <google/protobuf/message.h>
 #include <QJsonArray>
 #include "ProtoData.pb.h"
-
+#include <QDebug>
 
 
 class RestfullClient : public QObject{
