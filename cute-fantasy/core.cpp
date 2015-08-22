@@ -1,21 +1,15 @@
 #include "core.h"
 #include <iostream>
-#include "LAPIWorker.h"
-#include "threadedqobject.h"
+
 
 QWaitCondition  Core::waitForGUI;
 Core::Core(){}
 void Core::bootstrap(){     
     qSetMessagePattern(Platform::settings()->getSetting(AppSettings::LogMessagePattern).toString());
-    qInstallMessageHandler(messageHandler);
-    ThreadedQObject<MainLAPIWorker> coreApi;
-    coreApi.thread()->connect(coreApi.thread(),
-                              SIGNAL(started()),
-                              coreApi.object(),
-                              SLOT(startPoint()));
-
-    coreApi.thread()->start();
-    registerNamedInstance("coreapi",coreApi.object());
+    qInstallMessageHandler(messageHandler);    
+    registerNamedInstance("coreapi",myCoreApi.object());
+    QObject::connect(myCoreApi.thread(),SIGNAL(started()),myCoreApi.object(),SLOT(startPoint()));
+    myCoreApi.thread()->start();
 }
 
 Core::~Core(){}

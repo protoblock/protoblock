@@ -6,15 +6,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-{
-
+{    
     ui->setupUi(this);
     initialize();
-
-    //to get current week once we're Live
-
-    //std::vector<fantasybit::GameRoster>
-
 }
 
 void MainWindow::initialize() {

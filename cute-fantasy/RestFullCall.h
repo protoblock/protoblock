@@ -88,8 +88,13 @@ private:
 public:
 
     RestfullClient(const QUrl & argBaseUrl,QThread * ownerThread = QThread::currentThread()){
+        myNetworkManager.setParent(this);
         if (ownerThread != QThread::currentThread())
             this->moveToThread(ownerThread);
+
+        qDebug()<< "qnm " <<this->myNetworkManager.thread();
+        qDebug()<< "this " <<this->thread();
+
         myCurrentNetworkReply = NULL;
         myBaseUrl = argBaseUrl;
     }
@@ -162,7 +167,7 @@ public:
         foreach (QString headerKey, headersMap.keys()) {
             request.setRawHeader(headerKey.toUtf8(),headersMap.value(headerKey).toUtf8());
         }
-
+        qDebug() << "rest full call" << request.url().toString();
         myCurrentNetworkReply = myNetworkManager.get(request);
         waitForReply();
         myCurrentNetworkReply->deleteLater();
@@ -173,27 +178,29 @@ public:
 
 
 protected:
-    virtual void processReplyData(){
-        qDebug("response : %s",myLastRepliedData.data());
+    virtual void processReplyData(){        
+       // qDebug("response : %s",myLastRepliedData.data());
     }
-
+signals:
+    void doneReading();
 private slots:
 
-    void finishedSlot(){}
+    void finishedSlot(){
+        qDebug() << "finsihed slot" ;
+        myLastRepliedData = myCurrentNetworkReply->readAll();
+        emit doneReading();
+    }
 
     void sslErrorsSlot(QList<QSslError> errors) {
+        qDebug() << "ssl error" ;
         myCurentSSLErrors.clear();
         myCurentSSLErrors.append(errors);
     }
 
     void networkErrorSlot(QNetworkReply::NetworkError error ) {
-        myCurrentNetworkError = error;
-    }
-
-    void slotReadyRead(){
-        myLastRepliedData.clear();
-        myLastRepliedData = myCurrentNetworkReply->readAll();
-    }
+        qDebug() << "net error" ;
+        myCurrentNetworkError = error;        
+    }    
 
 private:
     /**
@@ -213,26 +220,23 @@ private:
        */
     void waitForReply(){
         QEventLoop loop;
+        loop.moveToThread(this->thread());
+        myLastRepliedData.clear();
+        connect(myCurrentNetworkReply,SIGNAL(finished()),this, SLOT(finishedSlot()));
 
-        connect(myCurrentNetworkReply,SIGNAL(finished()),
-                this, SLOT(finishedSlot()));
+        //when done reading quit the loop
+        connect(this, SIGNAL(doneReading()),&loop, SLOT(quit()));
+
+        //when network error, report it.
         connect(myCurrentNetworkReply, SIGNAL(error(QNetworkReply::NetworkError)),
                 this, SLOT(networkErrorSlot(QNetworkReply::NetworkError)));
+
+        //when ssl error, report it.
         connect(myCurrentNetworkReply, SIGNAL(sslErrors(QList<QSslError>)),
                 this, SLOT(sslErrorsSlot(QList<QSslError>)));
-        connect(myCurrentNetworkReply, SIGNAL(readyRead()),
-                this, SLOT(slotReadyRead()));
 
-        connect(myCurrentNetworkReply,SIGNAL(finished()),
-                &loop, SLOT(quit()));
-        connect(myCurrentNetworkReply, SIGNAL(error(QNetworkReply::NetworkError)),
-                &loop, SLOT(quit()));
-//        connect(myCurrentNetworkReply, SIGNAL(readyRead()),
-//                &loop, SLOT(quit()));
-        loop.exec();
+        loop.exec();        
     }
-
-
 
 
     QNetworkAccessManager  myNetworkManager;
@@ -260,6 +264,7 @@ private:
      * @brief myBaseUrl : base url
      */
     QUrl myBaseUrl;
+
 };
 
 
@@ -298,6 +303,8 @@ public:
     }
 
     static int getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
+        qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
+
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
         QMap<QString,QVariant> params;
@@ -305,15 +312,9 @@ public:
         //TODO move to settings
         QString customRoute("block-height");
         client.getData(customRoute,params,headers);
-
-        auto arrby = client.lastReply();
-        qDebug() << " retunr " << arrby <<"!!!";
-        QJsonDocument ret = QJsonDocument::fromJson(arrby);
-
-        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
-
-
-        QJsonArray qa = ret.array();
+        auto response = client.lastReply();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+        QJsonArray qa = jsonDoc.array();
         QJsonValueRef json = qa[0];
 
 

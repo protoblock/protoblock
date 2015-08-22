@@ -7,6 +7,8 @@
 #include "platform.h"
 #include "appsettings.h"
 #include <QDebug>
+#include "threadedqobject.h"
+#include "LAPIWorker.h"
 class IResolvable;
 class Core : public GenericSingleton<Core>
 {
@@ -15,11 +17,8 @@ class Core : public GenericSingleton<Core>
 public:
     ~Core();
     static QWaitCondition waitForGUI;
-
-
-
+    ThreadedQObject<MainLAPIWorker> myCoreApi;
     void bootstrap();
-
     template <class T>
     static bool registerNamedInstance(const QString & name ,T * theInstance) {
         QMutexLocker locker(&Core::instance()->myMutex);

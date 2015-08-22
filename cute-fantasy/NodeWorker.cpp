@@ -29,6 +29,7 @@
     }
 
     void NodeWorker::TryNext() {
+        qDebug() << this->thread();
         auto gnum = node.getLastGlobalBlockNum();
         if ( !gnum )
             qDebug("Error getLastGlobalBlockNum");

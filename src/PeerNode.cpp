@@ -59,6 +59,7 @@ Node::Node() {
 }
 
 bool Node::Sync() {
+    qDebug() << "cureent thread" << QThread::currentThread();
     fc::optional<int> gh = getLastGlobalBlockNum();
     if ( !gh ) {
         qCritical() << " no getLastGlobalBlockNum";
@@ -136,6 +137,7 @@ int Node::myLastGlobalBlockNum() {
 }
 
 fc::optional<int> Node::getLastGlobalBlockNum() {
+    qDebug() << "cureent thread" << QThread::currentThread();
     int height = RestfullService::getHeight("http://192.96.159.216:4545");
     return height;
 }

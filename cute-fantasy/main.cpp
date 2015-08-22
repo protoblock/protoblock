@@ -17,7 +17,6 @@ using namespace fantasybit;
 int domain(int argc, char *argv[]){
 
     SingleApplication a(argc, argv);
-
     Core::instance()->bootstrap();
     MainWindow form;
     form.show();

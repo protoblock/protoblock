@@ -27,7 +27,6 @@ fantasybit::PlayerBase DataService::GetPlayerBase(std::string playerId) {
     return worker->NFLState().GetPlayerBase(playerId);
 }
 
-
 std::vector<std::shared_ptr<fantasybit::FantasyName>> DataService::GetLeaderBoard() {
     auto v = Commissioner::GetFantasyNames();
 
@@ -39,11 +38,13 @@ std::vector<std::shared_ptr<fantasybit::FantasyName>> DataService::GetLeaderBoar
     return v;
 }
 
+// curent week
 unordered_map<std::string,int> DataService::GetProjByName(const std::string &fname) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->NameData().GetProjByName(fname);
 }
 
+//current week
 unordered_map<std::string,int> DataService::GetProjById(const std::string &pid) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->NameData().GetProjById(pid);
