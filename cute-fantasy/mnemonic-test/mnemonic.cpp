@@ -1,6 +1,7 @@
 #include "mnemonic.h"
 #include <openssl/sha.h>
 #include <openssl/evp.h>
+#include <fc/crypto/sha256.hpp>
 
 
 QByteArray Mnemonic::test(QString & mnemonic){
@@ -27,5 +28,12 @@ bytes mnemonicToSeed(std::string mnemonic) {
     return seed;
 }
 
+bool verify() {
+    std::string in = "2db65ce84d518618bb2a0c256bab624223c8e57d92a97e83629b7e2d651cbe1b";
+    fc::ecc::private_key::regenerate(fc::sha256{ in });
+    fc::ecc::private_key::generate_from_seed(fc::sha256{ in });
+
+
+}
 
 
