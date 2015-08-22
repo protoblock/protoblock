@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <numeric>
 #include <assert.h>
-#include "globals.h"
+#include "core.h"
 
 namespace fantasybit {
 

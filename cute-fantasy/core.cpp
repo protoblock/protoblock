@@ -1,26 +1,32 @@
 #include "core.h"
 #include <iostream>
+#include "LAPIWorker.h"
+#include "threadedqobject.h"
 
 QWaitCondition  Core::waitForGUI;
-QMutex Core::messageHandlerMutex;
 Core::Core(){}
 void Core::bootstrap(){     
     qSetMessagePattern(Platform::settings()->getSetting(AppSettings::LogMessagePattern).toString());
     qInstallMessageHandler(messageHandler);
+    ThreadedQObject<MainLAPIWorker> coreApi;
+    coreApi.thread()->connect(coreApi.thread(),
+                              SIGNAL(started()),
+                              coreApi.object(),
+                              SLOT(startPoint()));
+
+    coreApi.thread()->start();
+    registerNamedInstance("coreapi",coreApi.object());
 }
 
 Core::~Core(){}
-std::string Core::getRootDir() {
-    std::string path=  Platform::settings()->getSetting(AppSettings::ApplicationStorageDir).toString().toStdString();
-    return path;
-}
+
 
 void messageHandler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &message)
 {
-
-    QMutexLocker lock(&Core::messageHandlerMutex);
+    static QMutex messageHandlerMutex;
+    QMutexLocker lock(&messageHandlerMutex);
     QString logFileName = Platform::settings()->getSetting(AppSettings::LogFilePath).toString();
     static std::ofstream  logFile(logFileName.toStdString());
     if (logFile)

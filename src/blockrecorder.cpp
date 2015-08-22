@@ -1,5 +1,5 @@
 #include <blockrecorder.h>
-
+#include <QDebug>
 #include <leveldb/db.h>
 
 using namespace fantasybit ;

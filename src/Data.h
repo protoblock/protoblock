@@ -38,7 +38,6 @@ class DataData : public QObject {
 
     Q_OBJECT
 
-
     leveldb::DB *staticstore;
     leveldb::DB *statusstore;
 

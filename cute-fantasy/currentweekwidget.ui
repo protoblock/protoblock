@@ -6,61 +6,85 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>985</width>
-    <height>586</height>
+    <width>975</width>
+    <height>685</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_4">
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTabWidget" name="myGameStateTabs">
-       <property name="currentIndex">
-        <number>2</number>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Games :</string>
        </property>
-       <property name="documentMode">
-        <bool>false</bool>
-       </property>
-       <property name="tabBarAutoHide">
-        <bool>false</bool>
-       </property>
-       <widget class="QWidget" name="myCompletedTab">
-        <attribute name="title">
-         <string>Completed</string>
-        </attribute>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <widget class="QTableView" name="myCompletedGameTableView"/>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="myInGameTab">
-        <attribute name="title">
-         <string>In Game</string>
-        </attribute>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-          <widget class="QTableView" name="myInGameTableView"/>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="myUpComingTab">
-        <attribute name="title">
-         <string>Upcoming</string>
-        </attribute>
-        <layout class="QGridLayout" name="gridLayout_3">
-         <item row="0" column="0">
-          <widget class="QTableView" name="myUpComingGamesTableView"/>
-         </item>
-        </layout>
-       </widget>
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="widget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QRadioButton" name="myCompletedGamesRb">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Completed</string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="myInGamesRb">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>In Game</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="myUpcomingGamesRb">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Upcoming</string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup</string>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTableView" name="myGamesTableView"/>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Player Card :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="PlayerProjectionWidget" name="widget" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -83,7 +107,7 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item row="1" column="0" colspan="3">
     <widget class="QFrame" name="frame">
      <property name="minimumSize">
       <size>
@@ -106,24 +130,45 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QTableView" name="myProjectionTableView"/>
-     </item>
-     <item>
-      <widget class="QTableView" name="myLeaderBaordTableView">
-       <property name="maximumSize">
-        <size>
-         <width>231</width>
-         <height>16777215</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Projection sheet :</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Leader board :</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QTableView" name="myProjectionTableView"/>
+   </item>
+   <item row="3" column="2">
+    <widget class="QTableView" name="myLeaderBaordTableView">
+     <property name="maximumSize">
+      <size>
+       <width>231</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlayerProjectionWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">playerprojectionwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

@@ -17,7 +17,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "core.h"
+#include "platform.h"
 
 #define QTD QString::fromStdString
 
@@ -63,7 +63,7 @@ namespace fantasybit {
 #endif
 
     static std::string GET_ROOT_DIR() {
-        return Core::getRootDir();
+        return Platform::getRootDir();
     }
 
     static std::string FB_PORT(int port) {

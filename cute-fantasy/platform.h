@@ -12,6 +12,7 @@ class Platform : GenericSingleton<Platform>
 public:
     ~Platform();
     static AppSettings * settings();
+    static std::string getRootDir();
 };
 
 #endif // PLATFORM_H

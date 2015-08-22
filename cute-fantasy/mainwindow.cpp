@@ -1,14 +1,147 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "LAPIWorker.h"
+#include "core.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    initialize();
+    currentWeek();
 }
+
+void MainWindow::initialize(){
+
+    qRegisterMetaType<fantasybit::GlobalState>("GlobalState");
+    qRegisterMetaType<fantasybit::MyFantasyName>("MyFantasyName");
+    qRegisterMetaType<fantasybit::FantasyBitProj>("FantasyBitProj");
+    qRegisterMetaType<std::vector<fantasybit::MyFantasyName>>("Vector_MyFantasyName");        
+    myCoreInstance = Core::resolveByName<MainLAPIWorker>("coreapi");
+
+//    //listen to notifcation from Core
+    QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
+
+    QObject::connect(myCoreInstance,SIGNAL(OnLive()),this,SLOT(GoLive()));
+    QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
+
+
+    //name
+    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
+    QObject::connect(myCoreInstance,SIGNAL(OnMyNames(std::vector<fantasybit::MyFantasyName> &)),
+                     this,SLOT(OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &)));
+
+    QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myCoreInstance,SLOT(OnUseName(QString)));
+    QObject::connect(this,SIGNAL(SubscribeMyNameTx(QString)),myCoreInstance,SLOT(OnSubName(QString)));
+    QObject::connect(this,SIGNAL(SubscribeMyProjTx(QString)),myCoreInstance,SLOT(OnSubProj(QString)));
+    QObject::connect(this,SIGNAL(SubscribeAwards(QString)),myCoreInstance,SLOT(OnSubBits(QString)));
+
+    QObject::connect(myCoreInstance,SIGNAL(NameStatus(fantasybit::MyFantasyName)),
+                     this,SLOT(OnNameStaus(fantasybit::MyFantasyName)));
+    QObject::connect(myCoreInstance,SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
+                     this,SLOT(OnProjAck(fantasybit::FantasyBitProj)));
+    QObject::connect(myCoreInstance,SIGNAL(NewAward(QVariant)),this,SLOT(OnAward(QVariant)));
+
+    //state
+    QObject::connect(this,SIGNAL(SubscribeGameState()),myCoreInstance,SLOT(OnSubGame()));
+
+    QObject::connect(myCoreInstance,SIGNAL(NewWeek(int)),this,SLOT(OnNewWeek(int)));
+    QObject::connect(myCoreInstance,SIGNAL(GameOver(QString)),this,SLOT(OnGameOver(QString)));
+    QObject::connect(myCoreInstance,SIGNAL(GameStart(QString)),this,SLOT(OnGameStart(QString)));
+
+
+    //data
+    QObject::connect(this,SIGNAL(SubscribePlayerData()),myCoreInstance,SLOT(OnSubPD()));
+    QObject::connect(this,SIGNAL(SubscribeScheduleData()),myCoreInstance,SLOT(OnSubSS()));
+
+    QObject::connect(this,SIGNAL(SubscribeTeamRoster()),myCoreInstance,SLOT(OnSubTeams()));
+    QObject::connect(this,SIGNAL(SubscribePlayerGameStatus()),myCoreInstance,SLOT(OnSubOut()));
+
+    QObject::connect(myCoreInstance,SIGNAL(PlayerData(QString)),this,SLOT(OnPlayerUpdate(QString)));
+    QObject::connect(myCoreInstance,SIGNAL(TimeChange(QString)),this,SLOT(OnSchedule(QString)));
+    QObject::connect(myCoreInstance,SIGNAL(TeamActicity(QString)),this,SLOT(OnTeamRoster(QString)));
+
+
+    //GET
+    QObject::connect(this,SIGNAL(GetPrevWeekData(int)),myCoreInstance,SLOT(SendWeeklyData(int)));
+    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
+
+    QObject::connect(this,SIGNAL(GetLiveProjection(QString)),myCoreInstance,SLOT(SendCurrentProj(QString)));
+    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
+
+    //PUT
+    QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
+                     myCoreInstance,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
+
+    QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myCoreInstance,SLOT(OnClaimName(QString)));
+}
+
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_myNextWeek_clicked()
+{
+    switch (myCurrentWeekViewMode) {
+    case CurrentWeek:
+        nextWeek();
+        ui->myNextWeek->setDisabled(true);
+        break;
+    case PreviousWeek:
+        ui->myPreviousWeek->setDisabled(false);
+        currentWeek();
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::nextWeek(){
+    myCurrentWeekViewMode = NextWeek;
+    ui->myStackedWidget->setCurrentWidget(ui->myNexWeekView);
+}
+
+void MainWindow::previousWeek() {
+    myCurrentWeekViewMode = PreviousWeek;
+    ui->myStackedWidget->setCurrentWidget(ui->myPreviousWeekView);
+}
+
+void MainWindow::currentWeek() {
+  myCurrentWeekViewMode = CurrentWeek;
+  ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekView);
+  //TODO
+}
+void MainWindow::setWeekViewMode(WeekViewMode  viewMode){
+    switch (viewMode) {
+    case CurrentWeek:
+        currentWeek();
+        break;
+    case PreviousWeek:
+        previousWeek();
+        break;
+    case NextWeek:
+        nextWeek();
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::on_myPreviousWeek_clicked()
+{
+    switch (myCurrentWeekViewMode) {
+    case CurrentWeek:
+        previousWeek();
+        ui->myPreviousWeek->setDisabled(true);
+        break;
+    case NextWeek:
+        ui->myNextWeek->setDisabled(false);
+        currentWeek();
+        break;
+    default:
+        break;
+    }
 }

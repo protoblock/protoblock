@@ -7,20 +7,13 @@ SOURCES += \
     $$PWD/../src/Generator.cpp \
     $$PWD/../src/Processor.cpp \
     $$PWD/../src/Source.cpp \
-    $$PWD/main.cpp \
-    $$PWD/fantasynamesetupdialog.cpp \
-    $$PWD/gamesoftheweekdialog.cpp \
-    $$PWD/splashdialog.cpp \
-    $$PWD/statuswidget.cpp \
+    $$PWD/main.cpp \        
     $$PWD/decorable.cpp \
     $$PWD/descriptable.cpp \
-    $$PWD/singleapplication.cpp \
-    $$PWD/teamsloader.cpp \
-    $$PWD/spinboxdelegate.cpp \    
-    $$PWD/playerloader.cpp \
+    $$PWD/singleapplication.cpp \    
+    $$PWD/spinboxdelegate.cpp \        
     $$PWD/RestFullCall.cpp \
     $$PWD/LAPIWorker.cpp \
-    $$PWD/TestCoreGUIForm.cpp \
     $$PWD/NodeWorker.cpp \
     $$PWD/../src/PeerNode.cpp \
     $$PWD/../src/blockrecorder.cpp \
@@ -50,8 +43,10 @@ SOURCES += \
     $$PWD/playerprojectionwidget.cpp \
     $$PWD/currentweekwidget.cpp \
     $$PWD/previousweekwidget.cpp \
-    $$PWD/nextweekwidget.cpp
-
+    $$PWD/nextweekwidget.cpp \
+    $$PWD/iresolvable.cpp \    
+    $$PWD/projectionstrategybase.cpp \
+    $$PWD/gamedataviewmodel.cpp
 
 DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
@@ -69,25 +64,17 @@ HEADERS += \
     $$PWD/../src/fbutils.h \
     $$PWD/../src/Generator.h \
     $$PWD/../src/Processor.h \
-    $$PWD/../src/Source.h \
-    $$PWD/fantasynamesetupdialog.h \
-    $$PWD/gamesoftheweekdialog.h \
-    $$PWD/splashdialog.h \
-    $$PWD/statuswidget.h \
+    $$PWD/../src/Source.h \         
     $$PWD/tlistmodel.h \
     $$PWD/tlistmodel.h \
     $$PWD/decorable.h \
     $$PWD/descriptable.h \
     $$PWD/globals.h \
     $$PWD/singleapplication.h \
-    $$PWD/teamsloader.h \
     $$PWD/spinboxdelegate.h \
-    $$PWD/playerloader.h \
     $$PWD/tkeyedlist.h \
-    $$PWD/scheduleloader.h \    
     $$PWD/RestFullCall.h \
     $$PWD/LAPIWorker.h \
-    $$PWD/TestCoreGUIForm.h \
     $$PWD/NodeWorker.h \
     $$PWD/../src/PeerNode.h \
     $$PWD/../src/blockrecorder.h \
@@ -104,7 +91,6 @@ HEADERS += \
     $$PWD/teamdatatablemodel.h \
     $$PWD/fantasyplayerviewmodel.h \
     $$PWD/fantasyplayertablemodel.h \
-    $$PWD/snapshotviewmodel.h \
     $$PWD/scoringmodelview.h \
     $$PWD/scoringtablemodel.h \
     $$PWD/gameprojectionmodelview.h \
@@ -120,15 +106,13 @@ HEADERS += \
     $$PWD/playerprojectionwidget.h \
     $$PWD/currentweekwidget.h \
     $$PWD/previousweekwidget.h \
-    $$PWD/nextweekwidget.h
+    $$PWD/nextweekwidget.h \
+    $$PWD/iresolvable.h \
+    $$PWD/projectionstrategybase.h \
+    $$PWD/gamedataviewmodel.h \
+    $$PWD/leaderbord.h
 
-FORMS += \
-    $$PWD/fantasynamesetupdialog.ui \
-    $$PWD/gamesoftheweekdialog.ui \
-    $$PWD/splashdialog.ui \
-    $$PWD/statuswidget.ui \
-    $$PWD/Form.ui \        
-    $$PWD/TestCoreGUIForm.ui \
+FORMS += \       
     $$PWD/mainwindow.ui \
     $$PWD/playerprojectionwidget.ui \
     $$PWD/currentweekwidget.ui \

@@ -12,10 +12,10 @@ class BlockRecorder {
     leveldb::WriteOptions write_sync{};
     int lastBlock = 0;
 
-public slots:
+//public slots:
 
-signals:
-    //void BadState(int);
+//signals:
+//    //void BadState(int);
 
 public:
 

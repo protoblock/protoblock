@@ -25,7 +25,6 @@ void Decorable::setDecoration(QRgb color ){
     p.fillRect(myPixmap.rect(),Qt::white);
     p.setPen(Qt::black);
     p.drawRoundedRect(QRectF(8,8,16,16),2,2);
-
 }
 
 void Decorable::setDecoration( const QString & name ){

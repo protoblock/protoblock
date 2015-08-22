@@ -6,37 +6,17 @@
 //
 //
 
-#ifdef DATAAGENTGUI
-#include "dataagentui.h"
-#elif Jay2015PrePreSeasonTestDemo
-#include "demoui.h"
-#else
-#include "fantasyplayerui.h"
-#endif
-
 #include "globals.h"
 #include <iostream>
 #include "singleapplication.h"
-#include "LAPIWorker.h"
-#include "threadedqobject.h"
-#include "TestCoreGUIForm.h"
+#include "mainwindow.h"
 #include "core.h"
-
-
 
 int domain(int argc, char *argv[]){
 
     SingleApplication a(argc, argv);
     Core::instance()->bootstrap();
-
-    ThreadedQObject<MainLAPIWorker> coreApi;
-    coreApi.thread()->connect(coreApi.thread(),
-                              SIGNAL(started()),
-                              coreApi.object(),
-                              SLOT(startPoint()));
-
-    coreApi.thread()->start();
-    TestCoreGUIForm form(coreApi.object());
+    MainWindow form;
     form.show();
     return a.exec();
 }
