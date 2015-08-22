@@ -4,7 +4,6 @@ SOURCES += \
     $$PWD/../src/DistributionAlgo.cpp \
     $$PWD/../src/FanatsyAgent.cpp \
     $$PWD/../src/FantasyName.cpp \
-    $$PWD/../src/Generator.cpp \
     $$PWD/../src/Processor.cpp \
     $$PWD/../src/Source.cpp \
     $$PWD/main.cpp \        
@@ -45,7 +44,6 @@ SOURCES += \
     $$PWD/previousweekwidget.cpp \
     $$PWD/nextweekwidget.cpp \
     $$PWD/iresolvable.cpp \    
-    $$PWD/projectionstrategybase.cpp \
     $$PWD/gamedataviewmodel.cpp
 
 DISTFILES += \
@@ -62,7 +60,6 @@ HEADERS += \
     $$PWD/../src/FantasyAgent.h \
     $$PWD/../src/FantasyName.h \
     $$PWD/../src/fbutils.h \
-    $$PWD/../src/Generator.h \
     $$PWD/../src/Processor.h \
     $$PWD/../src/Source.h \         
     $$PWD/tlistmodel.h \
@@ -108,7 +105,6 @@ HEADERS += \
     $$PWD/previousweekwidget.h \
     $$PWD/nextweekwidget.h \
     $$PWD/iresolvable.h \
-    $$PWD/projectionstrategybase.h \
     $$PWD/gamedataviewmodel.h \
     $$PWD/leaderbord.h
 
