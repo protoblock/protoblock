@@ -32,8 +32,8 @@ class MainLAPIWorker : public QObject , public IResolvable
     bool amlive = false;
     QTimer * timer;
     fantasybit::FantasyAgent agent{};
-    fantasybit::DataData data;
-    fantasybit::NameData namedata;
+    fantasybit::NFLStateData data;
+    fantasybit::FantasyNameData namedata;
     fantasybit::BlockProcessor processor;
 
     fantasybit::DeltaData deltadata{};
@@ -43,6 +43,12 @@ public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}
     ThreadedQObject<NodeWorker> node;
+
+    std::vector<fantasybit::GameRoster> getWeekGameRosters(int /*week*/){
+        std::vector<fantasybit::GameRoster> vector;
+        vector.push_back(fantasybit::GameRoster());
+        return vector;
+    }
     void GoLive();
 
 signals:

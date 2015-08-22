@@ -14,7 +14,7 @@
 using namespace std;
 using namespace fantasybit;
 
-void DataData::init() {
+void NFLStateData::init() {
     write_sync.sync = true;
     leveldb::Options options;
     options.create_if_missing = true;
@@ -48,18 +48,18 @@ void DataData::init() {
 
 }
 
-void DataData::AddNewPlayer(std::string playerid, const PlayerBase &pb) {
+void NFLStateData::AddNewPlayer(std::string playerid, const PlayerBase &pb) {
     staticstore->Put(write_sync, playerid, pb.SerializeAsString());
     qDebug() << QString::fromStdString(pb.DebugString());
 }
 
-void DataData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
+void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
     string key = "scheduleweek:" + to_string(week);
     staticstore->Put(write_sync, key, ws.SerializeAsString());
     qDebug() << QString::fromStdString(ws.DebugString());
 }
 
-void DataData::AddGameResult(const std::string &gameid, const GameResult&gs) {
+void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs) {
     string key = "gameresult:" + gameid;
     staticstore->Put(write_sync, key, gs.SerializeAsString());
     qDebug() << QString::fromStdString(gs.DebugString());
@@ -67,7 +67,7 @@ void DataData::AddGameResult(const std::string &gameid, const GameResult&gs) {
         emit GameResult(gameid);
 }
 
-void DataData::UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &ps) {
+void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &ps) {
     statusstore->Put(write_sync, playerid, ps.SerializeAsString());
     qDebug() << QString::fromStdString(ps.DebugString());
 
@@ -103,13 +103,13 @@ void DataData::UpdatePlayerStatus(const std::string &playerid, const PlayerStatu
     }
 }
 
-void DataData::OnNewPlayer(const std::string &pid) {
+void NFLStateData::OnNewPlayer(const std::string &pid) {
     if ( amlive )
         emit PlayerChange(pid);
 
 }
 
-void DataData::OnPlayerTrade(const std::string &pid, const std::string &tid,
+void NFLStateData::OnPlayerTrade(const std::string &pid, const std::string &tid,
                          const std::string &ntid) {
     removePlayerTeam(pid,tid);
     addPlayerTeam(pid,ntid);
@@ -120,7 +120,7 @@ void DataData::OnPlayerTrade(const std::string &pid, const std::string &tid,
     }
 }
 
-void DataData::OnPlayerRelease(const std::string &pid, const std::string &tid) {
+void NFLStateData::OnPlayerRelease(const std::string &pid, const std::string &tid) {
     removePlayerTeam(pid,tid);
     if ( amlive ) {
         emit PlayerChange(pid);
@@ -128,7 +128,7 @@ void DataData::OnPlayerRelease(const std::string &pid, const std::string &tid) {
     }
 }
 
-void DataData::OnPlayerSign(const std::string &pid, const std::string &tid) {
+void NFLStateData::OnPlayerSign(const std::string &pid, const std::string &tid) {
     addPlayerTeam(pid,tid);
     if ( amlive ) {
         emit PlayerChange(pid);
@@ -136,19 +136,19 @@ void DataData::OnPlayerSign(const std::string &pid, const std::string &tid) {
     }
 }
 
-void DataData::OnPlayerStatus(const std::string &pid,PlayerStatus ps) {
+void NFLStateData::OnPlayerStatus(const std::string &pid,PlayerStatus ps) {
     if ( amlive ) {
         emit PlayerChange(pid);
     }
 }
 
-void DataData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs) {
+void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs) {
     string key = "gamestatus:" + gameid;
     statusstore->Put(write_sync, key, gs.SerializeAsString());
     qDebug() << QString::fromStdString(gs.DebugString());
 }
 
-void DataData::OnWeekOver(int in) {
+void NFLStateData::OnWeekOver(int in) {
     //get weekly schedule
     //see if we have gameresult
     //update game to closed or scored
@@ -157,12 +157,12 @@ void DataData::OnWeekOver(int in) {
     //with team rosters and player status from players that were not scored
 }
 
-void DataData::OnWeekStart(int in) {
+void NFLStateData::OnWeekStart(int in) {
     week = in;
 }
 
 
-WeeklySchedule DataData::GetWeeklySchedule(int week,bool updates) {
+WeeklySchedule NFLStateData::GetWeeklySchedule(int week,bool updates) {
     WeeklySchedule ws{};
     string temp;
     string key = "scheduleweek:" + to_string(week);
@@ -185,7 +185,7 @@ WeeklySchedule DataData::GetWeeklySchedule(int week,bool updates) {
     return ws;
 }
 
-GameStatus DataData::GetUpdatedGameStatus(string id) {
+GameStatus NFLStateData::GetUpdatedGameStatus(string id) {
     GameStatus gs{};
     gs.set_datetime(-1);
 
@@ -199,7 +199,7 @@ GameStatus DataData::GetUpdatedGameStatus(string id) {
      }
     return gs;
 }
-vector<GameRoster> DataData::GetLiveWeekGameRosters() {
+vector<GameRoster> NFLStateData::GetLiveWeekGameRosters() {
 
     vector<GameRoster> retgr{};
     if ( !amlive ) {
@@ -232,7 +232,7 @@ vector<GameRoster> DataData::GetLiveWeekGameRosters() {
 }
 
 std::unordered_map<std::string,PlayerDetail>
-        DataData::GetTeamRoster(const std::string &teamid) {
+        NFLStateData::GetTeamRoster(const std::string &teamid) {
     std::unordered_map<std::string,PlayerDetail> vpb{};
     auto teamroster = MyTeamRoster[teamid];
     string temp;
@@ -252,7 +252,7 @@ std::unordered_map<std::string,PlayerDetail>
     return vpb;
 }
 
-GlobalState DataData::GetGlobalState() {
+GlobalState NFLStateData::GetGlobalState() {
     GlobalState gs{};
     std::string temp;
     if (statusstore->Get(leveldb::ReadOptions(), "globalstate", &temp).ok()) {
@@ -265,14 +265,14 @@ GlobalState DataData::GetGlobalState() {
     return gs;
 }
 
-void DataData::OnGlobalState(GlobalState &gs) {
+void NFLStateData::OnGlobalState(GlobalState &gs) {
     statusstore->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
     qDebug() << gs.DebugString();
     if ( amlive )
         emit GlobalStateChange(gs);
 }
 
-void DataData::OnGameStart(const std::string &gameid, const GameStatus &gs) {
+void NFLStateData::OnGameStart(const std::string &gameid, const GameStatus &gs) {
     auto mygs = gs;
     mygs.set_status(GameStatus::INGAME);
     UpdateGameStatus(gameid,gs);
@@ -280,6 +280,6 @@ void DataData::OnGameStart(const std::string &gameid, const GameStatus &gs) {
         emit GameStart(gameid);
 }
 
-std::string DataData::filedir(const std::string &in) {
+std::string NFLStateData::filedir(const std::string &in) {
     return GET_ROOT_DIR() + "index/" + in;
 }

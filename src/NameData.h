@@ -17,7 +17,7 @@
 namespace fantasybit
 {
 
-class NameData : public QObject {
+class FantasyNameData : public QObject {
 
     Q_OBJECT
 
@@ -50,7 +50,7 @@ public slots:
 
 
 public:
-    NameData() {}
+    FantasyNameData() {}
     void init();
     void AddNewName(std::string name, std::string pubkey);
     void AddBalance(const std::string name,uint64_t amount);
