@@ -21,7 +21,7 @@
 #include <fc/time.hpp>
 #include "Processor.h"
 #include "Commissioner.h"
-
+#include "RestFullCall.h"
 using namespace std;
 	
 namespace fantasybit
@@ -65,7 +65,8 @@ bool Node::Sync() {
         return false;
     }
 
-    return SyncTo(*gh);
+    if ( current_hight < global_height )
+        return SyncTo(*gh);
 }
 
 bool Node::SyncTo(int gh) {
@@ -135,7 +136,8 @@ int Node::myLastGlobalBlockNum() {
 }
 
 fc::optional<int> Node::getLastGlobalBlockNum() {
-    return 0;
+    int height = RestfullService::getHeight("http://192.96.159.216:4545");
+    return height;
 }
 
 void Node::setLastGlobalBlockNum(int mylastglobalheight) {

@@ -27,7 +27,6 @@ SOURCES += \
     $$PWD/teamdatatablemodel.cpp \
     $$PWD/fantasyplayerviewmodel.cpp \
     $$PWD/fantasyplayertablemodel.cpp \
-    $$PWD/snapshotviewmodel.cpp \
     $$PWD/scoringmodelview.cpp \
     $$PWD/scoringtablemodel.cpp \
     $$PWD/gameprojectionmodelview.cpp \

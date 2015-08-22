@@ -17,3 +17,4 @@ src/Makefile
 /include/nanomsg-xxx
 /debugbin
 cute_fantasy/debug 
+cute-fantasy/boost-includes.pri

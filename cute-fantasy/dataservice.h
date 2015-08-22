@@ -6,18 +6,30 @@
 #include "core.h"
 #include "LAPIWorker.h"
 #include "Data.h"
-#include <QMutexLocker>
+//#include <QMutexLocker>
 
-class DataService : GenericSingleton<DataService>  {
+class DataService : public GenericSingleton<DataService>  {
     friend class GenericSingleton<DataService>;
     DataService(){}
-    QMutex myMutex;
+    //QMutex myMutex;
 public:
     ~DataService(){}
-    static std::vector<fantasybit::GameRoster> getGameScheduleForWeek(int week);
-    static void getLeaderBoard(int week){}
-    static void getPlayerInfo(std::string playerId);
-    static void getTeamPlayers(std::string teamId);
+    std::vector<fantasybit::GameRoster> GetCurrentWeekGameRosters();
+
+    std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int week);
+
+    fantasybit::WeeklySchedule GetWeeklySchedule(int week);
+
+    fantasybit::PlayerBase GetPlayerBase(std::string playerId);
+
+    std::vector<std::shared_ptr<fantasybit::FantasyName>> GetLeaderBoard();
+
+    std::unordered_map<std::string,int> GetProjByName(const std::string &nm);
+
+    std::unordered_map<std::string,int> GetProjById(const std::string &pid);
+
+    //void getLeaderBoard(int week){}
+    //void getTeamPlayers(std::string teamId);
 };
 
 

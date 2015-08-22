@@ -34,15 +34,19 @@ void NFLStateData::init() {
         return;
     }
 
-    auto *it = statusstore->NewIterator(leveldb::ReadOptions());
-    for (it->SeekToFirst(); it->Valid(); it->Next()) {
-        PlayerStatus ps;
-        ps.ParseFromString(it->value().ToString());
-        MyPlayerStatus[it->key().ToString()] = ps;
-        if (ps.has_teamid()) {
-            auto itr = MyTeamRoster.find(ps.teamid());
-            if ( itr != end(MyTeamRoster))
-                itr->second.insert(it->key().ToString());
+    {
+        std::lock_guard<std::mutex> lockg{ data_mutex };
+
+        auto *it = statusstore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            PlayerStatus ps;
+            ps.ParseFromString(it->value().ToString());
+            MyPlayerStatus[it->key().ToString()] = ps;
+            if (ps.has_teamid()) {
+                auto itr = MyTeamRoster.find(ps.teamid());
+                if ( itr != end(MyTeamRoster))
+                    itr->second.insert(it->key().ToString());
+            }
         }
     }
 
@@ -52,6 +56,16 @@ void NFLStateData::AddNewPlayer(std::string playerid, const PlayerBase &pb) {
     staticstore->Put(write_sync, playerid, pb.SerializeAsString());
     qDebug() << QString::fromStdString(pb.DebugString());
 }
+
+PlayerBase NFLStateData::GetPlayerBase(std::string playerid) {
+    PlayerBase pb{};
+    string temp;
+    if ( statusstore->Get(leveldb::ReadOptions(), playerid, &temp).ok() )
+        pb.ParseFromString(temp);
+
+    return pb;
+}
+
 
 void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
     string key = "scheduleweek:" + to_string(week);
@@ -67,10 +81,21 @@ void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs)
         emit GameResult(gameid);
 }
 
+GameResult NFLStateData::GetGameResult(const std::string &gameid) {
+    string key = "gameresult:" + gameid;
+    string temp;
+    staticstore->Get(leveldb::ReadOptions(), key, &temp);
+    GameResult gs;
+    gs.ParseFromString(temp);
+    qDebug() << QString::fromStdString(gs.DebugString());
+    return gs;
+}
+
 void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &ps) {
     statusstore->Put(write_sync, playerid, ps.SerializeAsString());
     qDebug() << QString::fromStdString(ps.DebugString());
 
+    std::lock_guard<std::mutex> lockg{ data_mutex };
     auto it = MyPlayerStatus.find(playerid);
     if ( it == end(MyPlayerStatus)) {
         MyPlayerStatus[playerid] = ps;
@@ -105,8 +130,7 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
 
 void NFLStateData::OnNewPlayer(const std::string &pid) {
     if ( amlive )
-        emit PlayerChange(pid);
-
+        emit PlayerAdd(GetPlayerBase(pid));
 }
 
 void NFLStateData::OnPlayerTrade(const std::string &pid, const std::string &tid,
@@ -114,31 +138,27 @@ void NFLStateData::OnPlayerTrade(const std::string &pid, const std::string &tid,
     removePlayerTeam(pid,tid);
     addPlayerTeam(pid,ntid);
     if ( amlive ) {
-        emit PlayerChange(pid);
-        emit TeamPlus(ntid, pid);
-        emit TeamMinus(tid, pid);
+        emit PlayerStatusChange(*MyPlayerStatus.find(pid));
     }
 }
 
 void NFLStateData::OnPlayerRelease(const std::string &pid, const std::string &tid) {
     removePlayerTeam(pid,tid);
     if ( amlive ) {
-        emit PlayerChange(pid);
-        emit TeamMinus(tid, pid);
+        emit PlayerStatusChange(*MyPlayerStatus.find(pid));
     }
 }
 
 void NFLStateData::OnPlayerSign(const std::string &pid, const std::string &tid) {
     addPlayerTeam(pid,tid);
     if ( amlive ) {
-        emit PlayerChange(pid);
-        emit TeamPlus(tid, pid);
+        emit PlayerStatusChange(*MyPlayerStatus.find(pid));
     }
 }
 
 void NFLStateData::OnPlayerStatus(const std::string &pid,PlayerStatus ps) {
     if ( amlive ) {
-        emit PlayerChange(pid);
+        emit PlayerStatusChange(*MyPlayerStatus.find(pid));
     }
 }
 
@@ -149,30 +169,48 @@ void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus 
 }
 
 void NFLStateData::OnWeekOver(int in) {
-    //get weekly schedule
-    //see if we have gameresult
-    //update game to closed or scored
-    //delete gamestatus
-    //update gameresult -
-    //with team rosters and player status from players that were not scored
+    std::lock_guard<std::mutex> lockg{ data_mutex };
+
+    for (auto game : GetWeeklySchedule(in).games() ) {
+        auto gs = GetGameResult(game.id());
+
+        auto tr = GetTeamRoster(game.home());
+        for ( auto pr : gs.home_result() ) {
+            tr.erase(pr.playerid());
+        }
+        for ( auto p : tr ) {
+            PlayerResult pr{};
+            pr.set_playerid(p.first);
+            pr.set_result(0.0);
+            gs.add_home_result()->CopyFrom(pr);
+        }
+
+        tr = GetTeamRoster(game.away());
+        for ( auto pr : gs.away_result() ) {
+            tr.erase(pr.playerid());
+        }
+        for ( auto p : tr ) {
+            PlayerResult pr{};
+            pr.set_playerid(p.first);
+            pr.set_result(0.0);
+            gs.add_away_result()->CopyFrom(pr);
+        }
+
+        AddGameResult(game.id(),gs);
+        GameStatus games{};
+        games.set_datetime(gs.kickofftime());
+        games.set_status(GameStatus::CLOSED);
+        UpdateGameStatus(game.id(),games);
+    }
 }
 
 void NFLStateData::OnWeekStart(int in) {
     week = in;
 }
 
+WeeklySchedule NFLStateData::GetWeeklySchedule(int week) {
 
-WeeklySchedule NFLStateData::GetWeeklySchedule(int week,bool updates) {
-    WeeklySchedule ws{};
-    string temp;
-    string key = "scheduleweek:" + to_string(week);
-    if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-        qWarning() << "cant find schedule " << key.c_str();
-        return ws;
-    }
-    ws.ParseFromString(temp);
-
-    if ( !updates ) return ws;
+    auto ws = getWeeklyStaticSchedule(week);
     for (auto g : ws.games()) {
         GameStatus gs = GetUpdatedGameStatus(g.id());
         if ( gs.datetime() != -1)
@@ -181,6 +219,19 @@ WeeklySchedule NFLStateData::GetWeeklySchedule(int week,bool updates) {
                 g.set_time(gs.datetime());
         }
     }
+
+    return ws;
+}
+
+WeeklySchedule NFLStateData::getWeeklyStaticSchedule(int week) {
+    WeeklySchedule ws{};
+    string temp;
+    string key = "scheduleweek:" + to_string(week);
+    if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+        qWarning() << "cant find schedule " << key.c_str();
+        return ws;
+    }
+    ws.ParseFromString(temp);
 
     return ws;
 }
@@ -199,14 +250,15 @@ GameStatus NFLStateData::GetUpdatedGameStatus(string id) {
      }
     return gs;
 }
-vector<GameRoster> NFLStateData::GetLiveWeekGameRosters() {
+
+vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
 
     vector<GameRoster> retgr{};
     if ( !amlive ) {
         qWarning() << "am not live" ;
     }
 
-    WeeklySchedule ws = GetWeeklySchedule(week,false);
+    WeeklySchedule ws = getWeeklyStaticSchedule(week);
 
     for (const auto g : ws.games()) {
         GameRoster gr{};
@@ -224,15 +276,30 @@ vector<GameRoster> NFLStateData::GetLiveWeekGameRosters() {
 
         gr.homeroster = GetTeamRoster(g.home());
         gr.awayroster = GetTeamRoster(g.away());
-
         retgr.push_back(gr);
     }
 
     return retgr;
 }
 
+std::vector<fantasybit::GameResult> NFLStateData::GetPrevWeekGameResults(int week) {
+    std::vector<fantasybit::GameResult> ret{};
+    auto s = GetGlobalState();
+    if  (s.week() <= week)
+        return ret;
+
+    auto ws = GetWeeklySchedule(week);
+    for (const auto g : ws.games()) {
+        ret.push_back(GetGameResult(g.id()));
+    }
+
+    return ret;
+}
+
 std::unordered_map<std::string,PlayerDetail>
         NFLStateData::GetTeamRoster(const std::string &teamid) {
+    std::lock_guard<std::mutex> lockg{ data_mutex };
+
     std::unordered_map<std::string,PlayerDetail> vpb{};
     auto teamroster = MyTeamRoster[teamid];
     string temp;
@@ -241,8 +308,8 @@ std::unordered_map<std::string,PlayerDetail>
         if ( ps.teamid() != teamid  ||
              ps.status() != PlayerStatus::ACTIVE)
             continue;
-        if ( !statusstore->Get(leveldb::ReadOptions(), p, &temp).ok() )
-            continue;
+
+        auto pb = GetPlayerBase(p);
         PlayerDetail pd;
         pd.base.ParseFromString(temp);
         pd.team_status = ps.status();

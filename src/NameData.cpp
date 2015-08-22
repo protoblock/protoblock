@@ -70,7 +70,9 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     fn.ParseFromString(temp);
     fn.set_bits(fn.bits() + amount);
     namestore->Put(write_sync, hkey, fn.SerializeAsString());
-
+    auto fnp = Commissioner::getName(hash);
+    if ( fnp != nullptr)
+        fnp->addBalance(amount);
 
     qDebug() << fn.DebugString();
     OnFantasyNameBalance(fn);
@@ -81,19 +83,24 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
     leveldb::Slice bval((char*)&proj, sizeof(uint32_t));
     string key(name + ":" + player);
     projstore->Put(leveldb::WriteOptions(), key, bval);
-    auto m = FantasyNameProjections[name];
-    m[player] = proj;
-    m = PlayerIDProjections[player];
-    m[name] = proj;
+    {
+        std::lock_guard<std::mutex> lockg{ data_mutex };
+        auto m = FantasyNameProjections[name];
+        m[player] = proj;
+        m = PlayerIDProjections[player];
+        m[name] = proj;
+    }
     qDebug() << "proj: " << key << ":" << proj;
     OnProjection(name,player,proj);
 }
 
 std::unordered_map<std::string,int> FantasyNameData::GetProjById(const std::string &pid) {
+    std::lock_guard<std::mutex> lockg{ data_mutex };
     return PlayerIDProjections[pid];
 }
 
 std::unordered_map<std::string,int> FantasyNameData::GetProjByName(const std::string &nm) {
+    std::lock_guard<std::mutex> lockg{ data_mutex };
     return FantasyNameProjections[nm];
 }
 
@@ -138,9 +145,11 @@ void FantasyNameData::OnFantasyNameBalance(FantasyNameBal &fn) {
 }
 
 void FantasyNameData::OnWeekOver(int in) {
-    FantasyNameProjections.clear();
-    PlayerIDProjections.clear();
-
+    {
+        std::lock_guard<std::mutex> lockg{ data_mutex };
+        FantasyNameProjections.clear();
+        PlayerIDProjections.clear();
+    }
     auto *it = projstore->NewIterator(leveldb::ReadOptions());
     for (it->SeekToFirst(); it->Valid(); it->Next())
         projstore->Delete(leveldb::WriteOptions(), it->key());

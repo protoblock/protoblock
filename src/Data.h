@@ -14,7 +14,7 @@
 #include "StatusData.pb.h"
 #include <unordered_set>
 #include <unordered_map>
-
+#include <mutex>
 #include <leveldb/db.h>
 
 namespace fantasybit
@@ -43,12 +43,15 @@ class NFLStateData : public QObject {
 
     leveldb::WriteOptions write_sync{};
     int week = 0;
+    int amlive = false;
+
+    std::mutex data_mutex{};
 
 
     std::map<std::string, std::unordered_set<std::string>> MyTeamRoster;
     std::map<std::string, PlayerStatus> MyPlayerStatus;
 
-    void removePlayerTeam(const std::string &pid,const std::string &tid) {
+    void removePlayerTeam(const std::string &pid,const std::string &tid) {       
         auto tr = MyTeamRoster[tid];
         tr.erase(pid);
     }
@@ -58,20 +61,17 @@ class NFLStateData : public QObject {
         tr.insert(pid);
     }
 
-    int amlive = false;
 
 signals:
-    void PlayerChange(std::string pid);
-    void TeamPlus(std::string ntid,std::string pid);
-    void TeamMinus(std::string tid,std::string pid);
+    void PlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus>);
+    void PlayerAdd(fantasybit::PlayerBase);
     void GameStart(std::string);
-    void GlobalStateChange(GlobalState &);
+    void GlobalStateChange(GlobalState);
 
 public slots:
     void OnLive(bool subscribe) {
         amlive = true;
     }
-
     void OnWeekOver(int week);
     void OnWeekStart(int week);
 
@@ -81,6 +81,9 @@ public:
     void AddNewPlayer(const std::string playerid, const PlayerBase &);
     void AddNewWeeklySchedule(int week, const WeeklySchedule &);
     void AddGameResult(const std::string &gameid, const GameResult&);
+    GameResult GetGameResult(const std::string &gameid);
+
+    PlayerBase GetPlayerBase(std::string playerid);
 
     //void AddTeamDepth(const TeamDepth &);
     void UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &);
@@ -90,22 +93,26 @@ public:
 
     void OnGameStart(const std::string &gameid, const GameStatus &gs);
 
-    std::vector<GameRoster> GetLiveWeekGameRosters();
+    std::vector<GameRoster> GetCurrentWeekGameRosters();
+    std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int week);
+
     std::unordered_map<std::string,PlayerDetail>
             GetTeamRoster(const std::string &teamid);
 
     GameStatus GetUpdatedGameStatus(std::string id);
-    WeeklySchedule GetWeeklySchedule(int week,bool updates = true);
+    WeeklySchedule GetWeeklySchedule(int week);
 
     GlobalState GetGlobalState();
-
     void OnGlobalState(GlobalState &gs);
 
+private:
     void OnNewPlayer(const std::string &pid);
     void OnPlayerTrade(const std::string &pid, const std::string &tid, const std::string &ntid);
     void OnPlayerRelease(const std::string &pid, const std::string &tid);
     void OnPlayerSign(const std::string &pid, const std::string &tid);
     void OnPlayerStatus(const std::string &pid,PlayerStatus ps);
+
+    WeeklySchedule getWeeklyStaticSchedule(int week);
 
 
     std::string filedir(const std::string &in);

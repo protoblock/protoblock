@@ -14,6 +14,8 @@
 #include <leveldb/db.h>
 #include <unordered_map>
 #include <set>
+#include <mutex>
+
 namespace fantasybit
 {
 
@@ -34,6 +36,9 @@ class FantasyNameData : public QObject {
     std::set<std::string> mSubscribed{};
     bool amlive = false;
     int week = 0;
+
+    std::mutex data_mutex{};
+
 
 signals:
     void ProjectionLive(FantasyBitProj &);
