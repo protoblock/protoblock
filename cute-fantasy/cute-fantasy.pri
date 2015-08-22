@@ -46,7 +46,8 @@ SOURCES += \
     $$PWD/nextweekwidget.cpp \
     $$PWD/iresolvable.cpp \    
     $$PWD/projectionstrategybase.cpp \
-    $$PWD/gamedataviewmodel.cpp
+    $$PWD/gamedataviewmodel.cpp \
+    $$PWD/dataservice.cpp
 
 DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
@@ -110,7 +111,8 @@ HEADERS += \
     $$PWD/iresolvable.h \
     $$PWD/projectionstrategybase.h \
     $$PWD/gamedataviewmodel.h \
-    $$PWD/leaderbord.h
+    $$PWD/leaderbord.h \
+    $$PWD/dataservice.h
 
 FORMS += \       
     $$PWD/mainwindow.ui \

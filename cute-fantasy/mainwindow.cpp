@@ -2,14 +2,19 @@
 #include "ui_mainwindow.h"
 #include "LAPIWorker.h"
 #include "core.h"
-
+#include "dataservice.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
     initialize();
-    currentWeek();
+
+    //to get current week once we're Live
+
+    std::vector<fantasybit::GameRoster> roster =DataService::getGameScheduleForWeek(1);
+
 }
 
 void MainWindow::initialize(){
@@ -28,7 +33,7 @@ void MainWindow::initialize(){
 
 
     //name
-    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
+//    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
     QObject::connect(myCoreInstance,SIGNAL(OnMyNames(std::vector<fantasybit::MyFantasyName> &)),
                      this,SLOT(OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &)));
 
@@ -38,7 +43,7 @@ void MainWindow::initialize(){
     QObject::connect(this,SIGNAL(SubscribeAwards(QString)),myCoreInstance,SLOT(OnSubBits(QString)));
 
     QObject::connect(myCoreInstance,SIGNAL(NameStatus(fantasybit::MyFantasyName)),
-                     this,SLOT(OnNameStaus(fantasybit::MyFantasyName)));
+                     this,SLOT(OnNameStatus(fantasybit::MyFantasyName)));
     QObject::connect(myCoreInstance,SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
                      this,SLOT(OnProjAck(fantasybit::FantasyBitProj)));
     QObject::connect(myCoreInstance,SIGNAL(NewAward(QVariant)),this,SLOT(OnAward(QVariant)));
@@ -144,4 +149,20 @@ void MainWindow::on_myPreviousWeek_clicked()
     default:
         break;
     }
+}
+
+void MainWindow::GoLive(){
+
+}
+
+void MainWindow::OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> & names){
+   if (names.size()> 0){
+    fantasybit::MyFantasyName fn = names.at(names.size()-1);
+    //emit UseMyFantasyName(fn.name());
+   }
+}
+
+void MainWindow::OnNameStatus(fantasybit::MyFantasyName name){
+  myCurrentFantasyName = name;
+  //TODO myCurrentFantasyName.status()
 }

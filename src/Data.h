@@ -34,7 +34,7 @@ struct GameRoster {
 
 };
 
-class DataData : public QObject {
+class NFLStateData : public QObject {
 
     Q_OBJECT
 
@@ -43,6 +43,7 @@ class DataData : public QObject {
 
     leveldb::WriteOptions write_sync{};
     int week = 0;
+
 
     std::map<std::string, std::unordered_set<std::string>> MyTeamRoster;
     std::map<std::string, PlayerStatus> MyPlayerStatus;
@@ -75,7 +76,7 @@ public slots:
     void OnWeekStart(int week);
 
 public:
-    DataData() {}
+    NFLStateData() {}
     void init();
     void AddNewPlayer(const std::string playerid, const PlayerBase &);
     void AddNewWeeklySchedule(int week, const WeeklySchedule &);

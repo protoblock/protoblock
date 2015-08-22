@@ -17,7 +17,7 @@
 using namespace std;
 using namespace fantasybit;
 
-void NameData::init() {
+void FantasyNameData::init() {
     write_sync.sync = true;
     leveldb::Options options;
     options.create_if_missing = true;
@@ -40,7 +40,7 @@ void NameData::init() {
     }
 }
 
-void NameData::AddNewName(std::string name,std::string pubkey) {
+void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
     FantasyNameBal fn{};
     fn.set_name(name);
     fn.set_public_key(pubkey);
@@ -57,7 +57,7 @@ void NameData::AddNewName(std::string name,std::string pubkey) {
     OnFantasyName(name);
 }
 
-void NameData::AddBalance(const std::string name, uint64_t amount) {
+void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     auto hash = FantasyName::name_hash(name);
 
     string temp;
@@ -76,7 +76,7 @@ void NameData::AddBalance(const std::string name, uint64_t amount) {
     OnFantasyNameBalance(fn);
 }
 
-void NameData::AddProjection(const string &name, const string &player,
+void FantasyNameData::AddProjection(const string &name, const string &player,
                              uint32_t proj) {
     leveldb::Slice bval((char*)&proj, sizeof(uint32_t));
     string key(name + ":" + player);
@@ -89,23 +89,23 @@ void NameData::AddProjection(const string &name, const string &player,
     OnProjection(name,player,proj);
 }
 
-std::unordered_map<std::string,int> NameData::GetProjById(const std::string &pid) {
+std::unordered_map<std::string,int> FantasyNameData::GetProjById(const std::string &pid) {
     return PlayerIDProjections[pid];
 }
 
-std::unordered_map<std::string,int> NameData::GetProjByName(const std::string &nm) {
+std::unordered_map<std::string,int> FantasyNameData::GetProjByName(const std::string &nm) {
     return FantasyNameProjections[nm];
 }
 
-void NameData::Subscribe(std::string in) {
+void FantasyNameData::Subscribe(std::string in) {
     mSubscribed.insert(in);
 }
 
-void NameData::UnSubscribe(std::string in) {
+void FantasyNameData::UnSubscribe(std::string in) {
     mSubscribed.erase(in);
 }
 
-void NameData::OnProjection(const std::string &name, const std::string &player,
+void FantasyNameData::OnProjection(const std::string &name, const std::string &player,
                             uint32_t proj) {
     if ( !amlive )
         return;
@@ -121,7 +121,7 @@ void NameData::OnProjection(const std::string &name, const std::string &player,
     emit ProjectionLive(fpj);
 }
 
-void NameData::OnFantasyName(std::string &name) {
+void FantasyNameData::OnFantasyName(std::string &name) {
     //if ( !amlive )
     //    return;
 
@@ -129,7 +129,7 @@ void NameData::OnFantasyName(std::string &name) {
         emit FantasyNameFound(name);
 }
 
-void NameData::OnFantasyNameBalance(FantasyNameBal &fn) {
+void FantasyNameData::OnFantasyNameBalance(FantasyNameBal &fn) {
     if ( !amlive )
         return;
 
@@ -137,7 +137,7 @@ void NameData::OnFantasyNameBalance(FantasyNameBal &fn) {
         emit FantasyNameBalance(fn);
 }
 
-void NameData::OnWeekOver(int in) {
+void FantasyNameData::OnWeekOver(int in) {
     FantasyNameProjections.clear();
     PlayerIDProjections.clear();
 
@@ -148,10 +148,10 @@ void NameData::OnWeekOver(int in) {
     qDebug() << " clearProjections ";
 }
 
-void NameData::OnWeekStart(int in) {
+void FantasyNameData::OnWeekStart(int in) {
     week = in;
 }
 
-std::string NameData::filedir(const std::string &in) {
+std::string FantasyNameData::filedir(const std::string &in) {
     return GET_ROOT_DIR() + "index/" + in;
 }

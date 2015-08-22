@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include "FantasyName.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,10 +23,17 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
+
+signals:
+    void UseMyFantasyName(QString);
+
+public slots:
 
     void on_myNextWeek_clicked();
     void on_myPreviousWeek_clicked();
+    void GoLive();
+    void OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> & names);
+    void OnNameStatus(fantasybit::MyFantasyName name);
 
 private:
     void initialize();
@@ -40,6 +47,7 @@ private:
     Ui::MainWindow *ui;    
     int myCurrentWeek;
     WeekViewMode myCurrentWeekViewMode;
+    fantasybit::MyFantasyName myCurrentFantasyName;
 };
 
 #endif // MAINWINDOW_H
