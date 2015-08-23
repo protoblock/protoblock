@@ -51,6 +51,12 @@ Node::Node() {
         leveldb::Slice value((char*)&current_hight, sizeof(int));
         blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
         current_hight = getLastLocalBlockNum();
+
+        if (!BlockProcessor::verifySignedBlock(sb)) {
+            qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
+            return;
+        }
+
     }
 
     //assert(getLastBlockNum() > 0);
@@ -65,8 +71,9 @@ bool Node::Sync() {
         qCritical() << " no getLastGlobalBlockNum";
         return false;
     }
+    else setLastGlobalBlockNum(*gh);
 
-    if ( current_hight < global_height )
+    if ( current_hight < (*gh) )
         return SyncTo(*gh);
 }
 
