@@ -42,10 +42,8 @@ message TeamDepth {
 
 message GlobalState {
     enum State {
-        PREDRAFT = 1;
-        PRESEASON = 2;
-        ROSTER53MAN = 3;
-        INSEASON = 4;
+        OFFSEASON = 10;
+        INSEASON = 30;
     }
 
     optional State state =1;

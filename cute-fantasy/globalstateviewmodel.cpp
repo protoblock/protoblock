@@ -30,10 +30,8 @@ QString GlobalStateViewModel::seasonString() const { return QString("%1").arg(my
 
 QString GlobalStateViewModel::stateString() const {
     switch (myState) {
-    case GlobalState_State_PREDRAFT: return QString("PREDRAFT");
-    case GlobalState_State_PRESEASON: return QString("PRESEASON");
-    case GlobalState_State_ROSTER53MAN: return QString("ROSTER53MAN");
-    case GlobalState_State_INSEASON: return QString("INSEASON");
+    case GlobalState_State_OFFSEASON: return QString("Off Season");
+    case GlobalState_State_INSEASON: return QString("In Season");
     default:
         return "Season Unknown";
     }

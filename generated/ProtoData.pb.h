@@ -58,6 +58,7 @@ class Data;
 class PlayerData;
 class GameData;
 class ResultData;
+class ScheduleData;
 class DataTransition;
 class TeamState;
 class DeltaData;
@@ -189,16 +190,14 @@ inline bool Data_Type_Parse(
     Data_Type_descriptor(), name, value);
 }
 enum DataTransition_Type {
-  DataTransition_Type_ROSTER = 1,
   DataTransition_Type_SEASONSTART = 2,
   DataTransition_Type_SEASONEND = 3,
-  DataTransition_Type_DRAFTOVER = 4,
   DataTransition_Type_HEARTBEAT = 5,
   DataTransition_Type_GAMESTART = 6,
   DataTransition_Type_WEEKOVER = 7
 };
 bool DataTransition_Type_IsValid(int value);
-const DataTransition_Type DataTransition_Type_Type_MIN = DataTransition_Type_ROSTER;
+const DataTransition_Type DataTransition_Type_Type_MIN = DataTransition_Type_SEASONSTART;
 const DataTransition_Type DataTransition_Type_Type_MAX = DataTransition_Type_WEEKOVER;
 const int DataTransition_Type_Type_ARRAYSIZE = DataTransition_Type_Type_MAX + 1;
 
@@ -254,7 +253,6 @@ enum MyNameStatus {
   none = 1,
   notavil = 2,
   requested = 5,
-  found = 10,
   transaction_sent = 15,
   confirmed = 20
 };
@@ -655,22 +653,10 @@ class Secret2 : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string fantasy_name = 10;
-  inline bool has_fantasy_name() const;
-  inline void clear_fantasy_name();
-  static const int kFantasyNameFieldNumber = 10;
-  inline const ::std::string& fantasy_name() const;
-  inline void set_fantasy_name(const ::std::string& value);
-  inline void set_fantasy_name(const char* value);
-  inline void set_fantasy_name(const char* value, size_t size);
-  inline ::std::string* mutable_fantasy_name();
-  inline ::std::string* release_fantasy_name();
-  inline void set_allocated_fantasy_name(::std::string* fantasy_name);
-
-  // optional string private_key = 20;
+  // optional string private_key = 1;
   inline bool has_private_key() const;
   inline void clear_private_key();
-  static const int kPrivateKeyFieldNumber = 20;
+  static const int kPrivateKeyFieldNumber = 1;
   inline const ::std::string& private_key() const;
   inline void set_private_key(const ::std::string& value);
   inline void set_private_key(const char* value);
@@ -678,6 +664,18 @@ class Secret2 : public ::google::protobuf::Message {
   inline ::std::string* mutable_private_key();
   inline ::std::string* release_private_key();
   inline void set_allocated_private_key(::std::string* private_key);
+
+  // optional string fantasy_name = 20;
+  inline bool has_fantasy_name() const;
+  inline void clear_fantasy_name();
+  static const int kFantasyNameFieldNumber = 20;
+  inline const ::std::string& fantasy_name() const;
+  inline void set_fantasy_name(const ::std::string& value);
+  inline void set_fantasy_name(const char* value);
+  inline void set_fantasy_name(const char* value, size_t size);
+  inline ::std::string* mutable_fantasy_name();
+  inline ::std::string* release_fantasy_name();
+  inline void set_allocated_fantasy_name(::std::string* fantasy_name);
 
   // optional string public_key = 30;
   inline bool has_public_key() const;
@@ -693,17 +691,17 @@ class Secret2 : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:fantasybit.Secret2)
  private:
-  inline void set_has_fantasy_name();
-  inline void clear_has_fantasy_name();
   inline void set_has_private_key();
   inline void clear_has_private_key();
+  inline void set_has_fantasy_name();
+  inline void clear_has_fantasy_name();
   inline void set_has_public_key();
   inline void clear_has_public_key();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* fantasy_name_;
   ::std::string* private_key_;
+  ::std::string* fantasy_name_;
   ::std::string* public_key_;
 
   mutable int _cached_size_;
@@ -2887,6 +2885,104 @@ class ResultData : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class ScheduleData : public ::google::protobuf::Message {
+ public:
+  ScheduleData();
+  virtual ~ScheduleData();
+
+  ScheduleData(const ScheduleData& from);
+
+  inline ScheduleData& operator=(const ScheduleData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ScheduleData& default_instance();
+
+  void Swap(ScheduleData* other);
+
+  // implements Message ----------------------------------------------
+
+  ScheduleData* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ScheduleData& from);
+  void MergeFrom(const ScheduleData& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 week = 1;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 1;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
+  // optional .fantasybit.WeeklySchedule weekly = 10;
+  inline bool has_weekly() const;
+  inline void clear_weekly();
+  static const int kWeeklyFieldNumber = 10;
+  inline const ::fantasybit::WeeklySchedule& weekly() const;
+  inline ::fantasybit::WeeklySchedule* mutable_weekly();
+  inline ::fantasybit::WeeklySchedule* release_weekly();
+  inline void set_allocated_weekly(::fantasybit::WeeklySchedule* weekly);
+
+  static const int kScheduleDataFieldNumber = 302;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ScheduleData >, 11, false >
+    schedule_data;
+  // @@protoc_insertion_point(class_scope:fantasybit.ScheduleData)
+ private:
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_weekly();
+  inline void clear_has_weekly();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::WeeklySchedule* weekly_;
+  ::google::protobuf::int32 week_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ScheduleData* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class DataTransition : public ::google::protobuf::Message {
  public:
   DataTransition();
@@ -2940,10 +3036,8 @@ class DataTransition : public ::google::protobuf::Message {
   // nested types ----------------------------------------------------
 
   typedef DataTransition_Type Type;
-  static const Type ROSTER = DataTransition_Type_ROSTER;
   static const Type SEASONSTART = DataTransition_Type_SEASONSTART;
   static const Type SEASONEND = DataTransition_Type_SEASONEND;
-  static const Type DRAFTOVER = DataTransition_Type_DRAFTOVER;
   static const Type HEARTBEAT = DataTransition_Type_HEARTBEAT;
   static const Type GAMESTART = DataTransition_Type_GAMESTART;
   static const Type WEEKOVER = DataTransition_Type_WEEKOVER;
@@ -3700,85 +3794,15 @@ inline void Secret::set_allocated_nametran(::fantasybit::NameTrans* nametran) {
 
 // Secret2
 
-// optional string fantasy_name = 10;
-inline bool Secret2::has_fantasy_name() const {
+// optional string private_key = 1;
+inline bool Secret2::has_private_key() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Secret2::set_has_fantasy_name() {
+inline void Secret2::set_has_private_key() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Secret2::clear_has_fantasy_name() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Secret2::clear_fantasy_name() {
-  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
-    fantasy_name_->clear();
-  }
-  clear_has_fantasy_name();
-}
-inline const ::std::string& Secret2::fantasy_name() const {
-  return *fantasy_name_;
-}
-inline void Secret2::set_fantasy_name(const ::std::string& value) {
-  set_has_fantasy_name();
-  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
-    fantasy_name_ = new ::std::string;
-  }
-  fantasy_name_->assign(value);
-}
-inline void Secret2::set_fantasy_name(const char* value) {
-  set_has_fantasy_name();
-  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
-    fantasy_name_ = new ::std::string;
-  }
-  fantasy_name_->assign(value);
-}
-inline void Secret2::set_fantasy_name(const char* value, size_t size) {
-  set_has_fantasy_name();
-  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
-    fantasy_name_ = new ::std::string;
-  }
-  fantasy_name_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* Secret2::mutable_fantasy_name() {
-  set_has_fantasy_name();
-  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
-    fantasy_name_ = new ::std::string;
-  }
-  return fantasy_name_;
-}
-inline ::std::string* Secret2::release_fantasy_name() {
-  clear_has_fantasy_name();
-  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = fantasy_name_;
-    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void Secret2::set_allocated_fantasy_name(::std::string* fantasy_name) {
-  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
-    delete fantasy_name_;
-  }
-  if (fantasy_name) {
-    set_has_fantasy_name();
-    fantasy_name_ = fantasy_name;
-  } else {
-    clear_has_fantasy_name();
-    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional string private_key = 20;
-inline bool Secret2::has_private_key() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Secret2::set_has_private_key() {
-  _has_bits_[0] |= 0x00000002u;
-}
 inline void Secret2::clear_has_private_key() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void Secret2::clear_private_key() {
   if (private_key_ != &::google::protobuf::internal::kEmptyString) {
@@ -3837,6 +3861,76 @@ inline void Secret2::set_allocated_private_key(::std::string* private_key) {
   } else {
     clear_has_private_key();
     private_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string fantasy_name = 20;
+inline bool Secret2::has_fantasy_name() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Secret2::set_has_fantasy_name() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Secret2::clear_has_fantasy_name() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Secret2::clear_fantasy_name() {
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_->clear();
+  }
+  clear_has_fantasy_name();
+}
+inline const ::std::string& Secret2::fantasy_name() const {
+  return *fantasy_name_;
+}
+inline void Secret2::set_fantasy_name(const ::std::string& value) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(value);
+}
+inline void Secret2::set_fantasy_name(const char* value) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(value);
+}
+inline void Secret2::set_fantasy_name(const char* value, size_t size) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Secret2::mutable_fantasy_name() {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  return fantasy_name_;
+}
+inline ::std::string* Secret2::release_fantasy_name() {
+  clear_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = fantasy_name_;
+    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Secret2::set_allocated_fantasy_name(::std::string* fantasy_name) {
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete fantasy_name_;
+  }
+  if (fantasy_name) {
+    set_has_fantasy_name();
+    fantasy_name_ = fantasy_name;
+  } else {
+    clear_has_fantasy_name();
+    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -6299,6 +6393,70 @@ inline void ResultData::set_allocated_game_result(::fantasybit::GameResult* game
 
 // -------------------------------------------------------------------
 
+// ScheduleData
+
+// optional int32 week = 1;
+inline bool ScheduleData::has_week() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ScheduleData::set_has_week() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ScheduleData::clear_has_week() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ScheduleData::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 ScheduleData::week() const {
+  return week_;
+}
+inline void ScheduleData::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional .fantasybit.WeeklySchedule weekly = 10;
+inline bool ScheduleData::has_weekly() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ScheduleData::set_has_weekly() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ScheduleData::clear_has_weekly() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ScheduleData::clear_weekly() {
+  if (weekly_ != NULL) weekly_->::fantasybit::WeeklySchedule::Clear();
+  clear_has_weekly();
+}
+inline const ::fantasybit::WeeklySchedule& ScheduleData::weekly() const {
+  return weekly_ != NULL ? *weekly_ : *default_instance_->weekly_;
+}
+inline ::fantasybit::WeeklySchedule* ScheduleData::mutable_weekly() {
+  set_has_weekly();
+  if (weekly_ == NULL) weekly_ = new ::fantasybit::WeeklySchedule;
+  return weekly_;
+}
+inline ::fantasybit::WeeklySchedule* ScheduleData::release_weekly() {
+  clear_has_weekly();
+  ::fantasybit::WeeklySchedule* temp = weekly_;
+  weekly_ = NULL;
+  return temp;
+}
+inline void ScheduleData::set_allocated_weekly(::fantasybit::WeeklySchedule* weekly) {
+  delete weekly_;
+  weekly_ = weekly;
+  if (weekly) {
+    set_has_weekly();
+  } else {
+    clear_has_weekly();
+  }
+}
+
+// -------------------------------------------------------------------
+
 // DataTransition
 
 // optional .fantasybit.DataTransition.Type type = 1;
@@ -6312,7 +6470,7 @@ inline void DataTransition::clear_has_type() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void DataTransition::clear_type() {
-  type_ = 1;
+  type_ = 2;
   clear_has_type();
 }
 inline ::fantasybit::DataTransition_Type DataTransition::type() const {

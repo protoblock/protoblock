@@ -54,4 +54,3 @@ LIBS += -lLevelDB  \
 include(./boost-includes.pri)
 include (./cute-fantasy.pri)
 include (./openssl-includes.pri)
-include (./data-agent.pri)

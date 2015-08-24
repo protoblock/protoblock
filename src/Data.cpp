@@ -10,6 +10,7 @@
 #include "qdebug.h"
 #include <vector>
 #include "fbutils.h"
+#include "Commissioner.h"
 
 using namespace std;
 using namespace fantasybit;
@@ -326,7 +327,8 @@ GlobalState NFLStateData::GetGlobalState() {
         gs.ParseFromString(temp);
     }
     else {
-        qCritical() << "No GlobalState";
+        return Commissioner::InitialGlobalState();
+        qWarning() << "No GlobalState";
     }
 
     return gs;

@@ -38,7 +38,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     //data processing
     QObject::connect(this,SIGNAL(Live(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(Live(bool)),&namedata,SLOT(OnLive(bool)));
-    QObject::connect(this,SIGNAL(Live(bool)),&processor,SLOT(OnLive(bool)));
+    //QObject::connect(this,SIGNAL(Live(bool)),&processor,SLOT(OnLive(bool)));
 
     //data to data signals
     QObject::connect(&processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
@@ -66,8 +66,9 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 }
 
 void MainLAPIWorker::GoLive() {
+    amlive = true;
     numto = 0;
-    intervalstart = 500;
+    intervalstart = 1000;
     timer->start(intervalstart);
 
     OnGetMyNames();
@@ -91,12 +92,17 @@ void MainLAPIWorker::startPoint(){
 
 //blockchain
 void MainLAPIWorker::OnInSync(int num) {
-    numto = num;
-    intervalstart = 2000;
-    emit ProcessNext();
+    if ( !amlive && num == last_block )
+        GoLive();
+    else {
+        numto = num;
+        intervalstart = 2000;
+        emit ProcessNext();
+    }
 }
 
 void MainLAPIWorker::ProcessBlock() {
+
     auto b = fantasybit::Node::getLocalBlock(last_block+1);
     if (!b) {
         //emit OnError();
@@ -116,7 +122,7 @@ void MainLAPIWorker::ProcessBlock() {
     }
 }
 
-void MainLAPIWorker::OnSeenBlock(int num) {
+void MainLAPIWorker::OnSeenBlock(int num) {   
     if (amlive)
         numto = num;
     timer->start(intervalstart);
@@ -141,9 +147,10 @@ void MainLAPIWorker::Timer() {
     else {
         count++;
         emit GetNext();
-        emit ProcessNext();
-        int interval = std::min(intervalmax,count*intervalstart);
-        timer->start(interval);
+        //emit ProcessNext();
+        int interval = count*intervalstart*2;
+        if ( interval < intervalmax && interval > 10)
+            timer->start(interval);
     }
 
 }

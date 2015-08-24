@@ -92,6 +92,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* ResultData_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ResultData_reflection_ = NULL;
+const ::google::protobuf::Descriptor* ScheduleData_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  ScheduleData_reflection_ = NULL;
 const ::google::protobuf::Descriptor* DataTransition_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DataTransition_reflection_ = NULL;
@@ -167,8 +170,8 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       sizeof(Secret));
   Secret2_descriptor_ = file->message_type(3);
   static const int Secret2_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Secret2, fantasy_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Secret2, private_key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Secret2, fantasy_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Secret2, public_key_),
   };
   Secret2_reflection_ =
@@ -495,7 +498,23 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ResultData));
-  DataTransition_descriptor_ = file->message_type(22);
+  ScheduleData_descriptor_ = file->message_type(22);
+  static const int ScheduleData_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScheduleData, week_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScheduleData, weekly_),
+  };
+  ScheduleData_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      ScheduleData_descriptor_,
+      ScheduleData::default_instance_,
+      ScheduleData_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScheduleData, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScheduleData, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(ScheduleData));
+  DataTransition_descriptor_ = file->message_type(23);
   static const int DataTransition_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, season_),
@@ -515,7 +534,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DataTransition));
   DataTransition_Type_descriptor_ = DataTransition_descriptor_->enum_type(0);
-  TeamState_descriptor_ = file->message_type(23);
+  TeamState_descriptor_ = file->message_type(24);
   static const int TeamState_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamState, state_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamState, week_),
@@ -533,7 +552,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TeamState));
   TeamState_State_descriptor_ = TeamState_descriptor_->enum_type(0);
-  DeltaData_descriptor_ = file->message_type(24);
+  DeltaData_descriptor_ = file->message_type(25);
   static const int DeltaData_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeltaData, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeltaData, myfantasyname_),
@@ -613,6 +632,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ResultData_descriptor_, &ResultData::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    ScheduleData_descriptor_, &ScheduleData::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     DataTransition_descriptor_, &DataTransition::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TeamState_descriptor_, &TeamState::default_instance());
@@ -667,6 +688,8 @@ void protobuf_ShutdownFile_ProtoData_2eproto() {
   delete GameData_reflection_;
   delete ResultData::default_instance_;
   delete ResultData_reflection_;
+  delete ScheduleData::default_instance_;
+  delete ScheduleData_reflection_;
   delete DataTransition::default_instance_;
   delete DataTransition_reflection_;
   delete TeamState::default_instance_;
@@ -691,8 +714,8 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "ame\030\n \001(\t\022\014\n\004bits\030\024 \001(\004\"x\n\006Secret\022\023\n\013pri"
     "vate_key\030\001 \002(\t\0220\n\rmyfantasyname\030\002 \001(\0132\031."
     "fantasybit.MyFantasyName\022\'\n\010nametran\030\n \001"
-    "(\0132\025.fantasybit.NameTrans\"H\n\007Secret2\022\024\n\014"
-    "fantasy_name\030\n \001(\t\022\023\n\013private_key\030\024 \001(\t\022"
+    "(\0132\025.fantasybit.NameTrans\"H\n\007Secret2\022\023\n\013"
+    "private_key\030\001 \001(\t\022\024\n\014fantasy_name\030\024 \001(\t\022"
     "\022\n\npublic_key\030\036 \001(\t\"\245\001\n\007OutData\022&\n\004type\030"
     "\001 \002(\0162\030.fantasybit.OutData.Type\0220\n\rmyfan"
     "tasyname\030\002 \001(\0132\031.fantasybit.MyFantasyNam"
@@ -757,30 +780,33 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "\"y\n\nResultData\022+\n\013game_result\030\n \001(\0132\026.fa"
     "ntasybit.GameResult2>\n\013result_data\022\020.fan"
     "tasybit.Data\030\312\001 \001(\0132\026.fantasybit.ResultD"
-    "ata\"\336\002\n\016DataTransition\022-\n\004type\030\001 \001(\0162\037.f"
-    "antasybit.DataTransition.Type\022\016\n\006season\030"
-    "\n \001(\r\022\014\n\004week\030\024 \001(\r\022&\n\010gamedata\030\036 \003(\0132\024."
-    "fantasybit.GameData\022\036\n\004data\030( \003(\0132\020.fant"
-    "asybit.Data\"m\n\004Type\022\n\n\006ROSTER\020\001\022\017\n\013SEASO"
-    "NSTART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tDRAFTOVER\020\004\022\r"
-    "\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER"
-    "\020\0072H\n\ndata_trans\022\027.fantasybit.Transactio"
-    "n\030\313\001 \001(\0132\032.fantasybit.DataTransition\"w\n\t"
-    "TeamState\022*\n\005state\030\001 \001(\0162\033.fantasybit.Te"
-    "amState.State\022\014\n\004week\030\n \001(\r\022\016\n\006teamid\030\024 "
-    "\001(\t\" \n\005State\022\013\n\007PREGAME\020\001\022\n\n\006INGAME\020\002\"\275\002"
-    "\n\tDeltaData\022(\n\004type\030\001 \001(\0162\032.fantasybit.D"
-    "eltaData.Type\0220\n\rmyfantasyname\030\002 \003(\0132\031.f"
-    "antasybit.MyFantasyName\022,\n\013globalstate\030\n"
-    " \001(\0132\027.fantasybit.GlobalState\022)\n\nteamsta"
-    "tes\030\024 \003(\0132\025.fantasybit.TeamState\022\037\n\005data"
-    "s\030\036 \003(\0132\020.fantasybit.Data\022*\n\007players\030( \003"
-    "(\0132\031.fantasybit.FantasyPlayer\"#\n\004Type\022\014\n"
-    "\010SNAPSHOT\020\002\022\r\n\tHEARTBEAT\020\003*\t\010\350\007\020\200\200\200\200\002*d\n"
-    "\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\t"
-    "requested\020\005\022\t\n\005found\020\n\022\024\n\020transaction_se"
-    "nt\020\017\022\r\n\tconfirmed\020\024*;\n\tTransType\022\010\n\004NAME"
-    "\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003", 3880);
+    "ata\"\214\001\n\014ScheduleData\022\014\n\004week\030\001 \001(\005\022*\n\006we"
+    "ekly\030\n \001(\0132\032.fantasybit.WeeklySchedule2B"
+    "\n\rschedule_data\022\020.fantasybit.Data\030\256\002 \001(\013"
+    "2\030.fantasybit.ScheduleData\"\303\002\n\016DataTrans"
+    "ition\022-\n\004type\030\001 \001(\0162\037.fantasybit.DataTra"
+    "nsition.Type\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001"
+    "(\r\022&\n\010gamedata\030\036 \003(\0132\024.fantasybit.GameDa"
+    "ta\022\036\n\004data\030( \003(\0132\020.fantasybit.Data\"R\n\004Ty"
+    "pe\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tHE"
+    "ARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER\020\0072H"
+    "\n\ndata_trans\022\027.fantasybit.Transaction\030\313\001"
+    " \001(\0132\032.fantasybit.DataTransition\"w\n\tTeam"
+    "State\022*\n\005state\030\001 \001(\0162\033.fantasybit.TeamSt"
+    "ate.State\022\014\n\004week\030\n \001(\r\022\016\n\006teamid\030\024 \001(\t\""
+    " \n\005State\022\013\n\007PREGAME\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDe"
+    "ltaData\022(\n\004type\030\001 \001(\0162\032.fantasybit.Delta"
+    "Data.Type\0220\n\rmyfantasyname\030\002 \003(\0132\031.fanta"
+    "sybit.MyFantasyName\022,\n\013globalstate\030\n \001(\013"
+    "2\027.fantasybit.GlobalState\022)\n\nteamstates\030"
+    "\024 \003(\0132\025.fantasybit.TeamState\022\037\n\005datas\030\036 "
+    "\003(\0132\020.fantasybit.Data\022*\n\007players\030( \003(\0132\031"
+    ".fantasybit.FantasyPlayer\"#\n\004Type\022\014\n\010SNA"
+    "PSHOT\020\002\022\r\n\tHEARTBEAT\020\003*\t\010\350\007\020\200\200\200\200\002*Y\n\014MyN"
+    "ameStatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequ"
+    "ested\020\005\022\024\n\020transaction_sent\020\017\022\r\n\tconfirm"
+    "ed\020\024*;\n\tTransType\022\010\n\004NAME\020\000\022\016\n\nPROJECTIO"
+    "N\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003", 3985);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -805,6 +831,7 @@ void protobuf_AddDesc_ProtoData_2eproto() {
   PlayerData::default_instance_ = new PlayerData();
   GameData::default_instance_ = new GameData();
   ResultData::default_instance_ = new ResultData();
+  ScheduleData::default_instance_ = new ScheduleData();
   DataTransition::default_instance_ = new DataTransition();
   TeamState::default_instance_ = new TeamState();
   DeltaData::default_instance_ = new DeltaData();
@@ -854,6 +881,11 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     &::fantasybit::Data::default_instance(),
     202, 11, false, false,
     &::fantasybit::ResultData::default_instance());
+  ScheduleData::default_instance_->InitAsDefaultInstance();
+  ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
+    &::fantasybit::Data::default_instance(),
+    302, 11, false, false,
+    &::fantasybit::ScheduleData::default_instance());
   DataTransition::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
     &::fantasybit::Transaction::default_instance(),
@@ -879,7 +911,6 @@ bool MyNameStatus_IsValid(int value) {
     case 1:
     case 2:
     case 5:
-    case 10:
     case 15:
     case 20:
       return true;
@@ -1763,8 +1794,8 @@ void Secret::Swap(Secret* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Secret2::kFantasyNameFieldNumber;
 const int Secret2::kPrivateKeyFieldNumber;
+const int Secret2::kFantasyNameFieldNumber;
 const int Secret2::kPublicKeyFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1784,8 +1815,8 @@ Secret2::Secret2(const Secret2& from)
 
 void Secret2::SharedCtor() {
   _cached_size_ = 0;
-  fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   private_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -1795,11 +1826,11 @@ Secret2::~Secret2() {
 }
 
 void Secret2::SharedDtor() {
-  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
-    delete fantasy_name_;
-  }
   if (private_key_ != &::google::protobuf::internal::kEmptyString) {
     delete private_key_;
+  }
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete fantasy_name_;
   }
   if (public_key_ != &::google::protobuf::internal::kEmptyString) {
     delete public_key_;
@@ -1831,14 +1862,14 @@ Secret2* Secret2::New() const {
 
 void Secret2::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_fantasy_name()) {
-      if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
-        fantasy_name_->clear();
-      }
-    }
     if (has_private_key()) {
       if (private_key_ != &::google::protobuf::internal::kEmptyString) {
         private_key_->clear();
+      }
+    }
+    if (has_fantasy_name()) {
+      if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+        fantasy_name_->clear();
       }
     }
     if (has_public_key()) {
@@ -1857,31 +1888,31 @@ bool Secret2::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string fantasy_name = 10;
-      case 10: {
+      // optional string private_key = 1;
+      case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_fantasy_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->fantasy_name().data(), this->fantasy_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(162)) goto parse_private_key;
-        break;
-      }
-
-      // optional string private_key = 20;
-      case 20: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_private_key:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_private_key()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->private_key().data(), this->private_key().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_fantasy_name;
+        break;
+      }
+
+      // optional string fantasy_name = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_fantasy_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_fantasy_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->fantasy_name().data(), this->fantasy_name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -1925,22 +1956,22 @@ bool Secret2::MergePartialFromCodedStream(
 
 void Secret2::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string fantasy_name = 10;
-  if (has_fantasy_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->fantasy_name().data(), this->fantasy_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      10, this->fantasy_name(), output);
-  }
-
-  // optional string private_key = 20;
+  // optional string private_key = 1;
   if (has_private_key()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->private_key().data(), this->private_key().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      20, this->private_key(), output);
+      1, this->private_key(), output);
+  }
+
+  // optional string fantasy_name = 20;
+  if (has_fantasy_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->fantasy_name().data(), this->fantasy_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      20, this->fantasy_name(), output);
   }
 
   // optional string public_key = 30;
@@ -1960,24 +1991,24 @@ void Secret2::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Secret2::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string fantasy_name = 10;
-  if (has_fantasy_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->fantasy_name().data(), this->fantasy_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        10, this->fantasy_name(), target);
-  }
-
-  // optional string private_key = 20;
+  // optional string private_key = 1;
   if (has_private_key()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->private_key().data(), this->private_key().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        20, this->private_key(), target);
+        1, this->private_key(), target);
+  }
+
+  // optional string fantasy_name = 20;
+  if (has_fantasy_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->fantasy_name().data(), this->fantasy_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        20, this->fantasy_name(), target);
   }
 
   // optional string public_key = 30;
@@ -2001,18 +2032,18 @@ int Secret2::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string fantasy_name = 10;
-    if (has_fantasy_name()) {
+    // optional string private_key = 1;
+    if (has_private_key()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->fantasy_name());
+          this->private_key());
     }
 
-    // optional string private_key = 20;
-    if (has_private_key()) {
+    // optional string fantasy_name = 20;
+    if (has_fantasy_name()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->private_key());
+          this->fantasy_name());
     }
 
     // optional string public_key = 30;
@@ -2049,11 +2080,11 @@ void Secret2::MergeFrom(const ::google::protobuf::Message& from) {
 void Secret2::MergeFrom(const Secret2& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_fantasy_name()) {
-      set_fantasy_name(from.fantasy_name());
-    }
     if (from.has_private_key()) {
       set_private_key(from.private_key());
+    }
+    if (from.has_fantasy_name()) {
+      set_fantasy_name(from.fantasy_name());
     }
     if (from.has_public_key()) {
       set_public_key(from.public_key());
@@ -2081,8 +2112,8 @@ bool Secret2::IsInitialized() const {
 
 void Secret2::Swap(Secret2* other) {
   if (other != this) {
-    std::swap(fantasy_name_, other->fantasy_name_);
     std::swap(private_key_, other->private_key_);
+    std::swap(fantasy_name_, other->fantasy_name_);
     std::swap(public_key_, other->public_key_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -8009,16 +8040,273 @@ void ResultData::Swap(ResultData* other) {
 
 // ===================================================================
 
+#ifndef _MSC_VER
+const int ScheduleData::kWeekFieldNumber;
+const int ScheduleData::kWeeklyFieldNumber;
+#endif  // !_MSC_VER
+
+#ifndef _MSC_VER
+const int ScheduleData::kScheduleDataFieldNumber;
+#endif
+::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Data,
+    ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ScheduleData >, 11, false >
+  ScheduleData::schedule_data(kScheduleDataFieldNumber, ::fantasybit::ScheduleData::default_instance());
+ScheduleData::ScheduleData()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void ScheduleData::InitAsDefaultInstance() {
+  weekly_ = const_cast< ::fantasybit::WeeklySchedule*>(&::fantasybit::WeeklySchedule::default_instance());
+}
+
+ScheduleData::ScheduleData(const ScheduleData& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void ScheduleData::SharedCtor() {
+  _cached_size_ = 0;
+  week_ = 0;
+  weekly_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+ScheduleData::~ScheduleData() {
+  SharedDtor();
+}
+
+void ScheduleData::SharedDtor() {
+  if (this != default_instance_) {
+    delete weekly_;
+  }
+}
+
+void ScheduleData::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* ScheduleData::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ScheduleData_descriptor_;
+}
+
+const ScheduleData& ScheduleData::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ProtoData_2eproto();
+  return *default_instance_;
+}
+
+ScheduleData* ScheduleData::default_instance_ = NULL;
+
+ScheduleData* ScheduleData::New() const {
+  return new ScheduleData;
+}
+
+void ScheduleData::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    week_ = 0;
+    if (has_weekly()) {
+      if (weekly_ != NULL) weekly_->::fantasybit::WeeklySchedule::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool ScheduleData::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 week = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &week_)));
+          set_has_week();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(82)) goto parse_weekly;
+        break;
+      }
+
+      // optional .fantasybit.WeeklySchedule weekly = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_weekly:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_weekly()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void ScheduleData::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional int32 week = 1;
+  if (has_week()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->week(), output);
+  }
+
+  // optional .fantasybit.WeeklySchedule weekly = 10;
+  if (has_weekly()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      10, this->weekly(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* ScheduleData::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional int32 week = 1;
+  if (has_week()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->week(), target);
+  }
+
+  // optional .fantasybit.WeeklySchedule weekly = 10;
+  if (has_weekly()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        10, this->weekly(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int ScheduleData::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int32 week = 1;
+    if (has_week()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->week());
+    }
+
+    // optional .fantasybit.WeeklySchedule weekly = 10;
+    if (has_weekly()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->weekly());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ScheduleData::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const ScheduleData* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ScheduleData*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void ScheduleData::MergeFrom(const ScheduleData& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_week()) {
+      set_week(from.week());
+    }
+    if (from.has_weekly()) {
+      mutable_weekly()->::fantasybit::WeeklySchedule::MergeFrom(from.weekly());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void ScheduleData::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ScheduleData::CopyFrom(const ScheduleData& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ScheduleData::IsInitialized() const {
+
+  return true;
+}
+
+void ScheduleData::Swap(ScheduleData* other) {
+  if (other != this) {
+    std::swap(week_, other->week_);
+    std::swap(weekly_, other->weekly_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata ScheduleData::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = ScheduleData_descriptor_;
+  metadata.reflection = ScheduleData_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
 const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor() {
   protobuf_AssignDescriptorsOnce();
   return DataTransition_Type_descriptor_;
 }
 bool DataTransition_Type_IsValid(int value) {
   switch(value) {
-    case 1:
     case 2:
     case 3:
-    case 4:
     case 5:
     case 6:
     case 7:
@@ -8029,10 +8317,8 @@ bool DataTransition_Type_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const DataTransition_Type DataTransition::ROSTER;
 const DataTransition_Type DataTransition::SEASONSTART;
 const DataTransition_Type DataTransition::SEASONEND;
-const DataTransition_Type DataTransition::DRAFTOVER;
 const DataTransition_Type DataTransition::HEARTBEAT;
 const DataTransition_Type DataTransition::GAMESTART;
 const DataTransition_Type DataTransition::WEEKOVER;
@@ -8070,7 +8356,7 @@ DataTransition::DataTransition(const DataTransition& from)
 
 void DataTransition::SharedCtor() {
   _cached_size_ = 0;
-  type_ = 1;
+  type_ = 2;
   season_ = 0u;
   week_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -8108,7 +8394,7 @@ DataTransition* DataTransition::New() const {
 
 void DataTransition::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    type_ = 1;
+    type_ = 2;
     season_ = 0u;
     week_ = 0u;
   }

@@ -108,7 +108,8 @@ HEADERS += \
     $$PWD/projectionstrategybase.h \
     $$PWD/gamedataviewmodel.h \
     $$PWD/leaderbord.h \
-    $$PWD/dataservice.h
+    $$PWD/dataservice.h \
+    $$PWD/playerloader.h
 
 FORMS += \       
     $$PWD/mainwindow.ui \

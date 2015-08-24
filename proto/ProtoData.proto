@@ -33,8 +33,8 @@ message Secret
 
 message Secret2
 {
-    optional string fantasy_name = 10;
-    optional string private_key = 20;
+    optional string private_key = 1;
+    optional string fantasy_name = 20;
     optional string public_key = 30;
 }
 
@@ -237,16 +237,24 @@ message ResultData {
 }
 
 
+message ScheduleData {
+    extend Data {
+        optional ScheduleData schedule_data = 302;
+    }
+
+    optional int32 week = 1;
+    optional WeeklySchedule weekly = 10;
+}
+
+
 message DataTransition {
     extend Transaction {
         optional DataTransition data_trans = 203;
     }
 
     enum Type {
-        ROSTER=1; //when cutdown to 53 man roster
         SEASONSTART=2; // before week1 - week1 projection can start
         SEASONEND=3; //after last week of season
-        DRAFTOVER=4; //after nfl draft
         HEARTBEAT=5; //anytime
         GAMESTART=6; //list of teamids to cut off projections for week
         WEEKOVER=7; //clear all projections

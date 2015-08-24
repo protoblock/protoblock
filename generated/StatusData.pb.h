@@ -82,13 +82,12 @@ inline bool GameStatus_Status_Parse(
     GameStatus_Status_descriptor(), name, value);
 }
 enum GlobalState_State {
-  GlobalState_State_PREDRAFT = 1,
-  GlobalState_State_PRESEASON = 2,
-  GlobalState_State_ROSTER53MAN = 3,
-  GlobalState_State_INSEASON = 4
+  GlobalState_State_OFFSEASON = 10,
+  GlobalState_State_ROSTER53MAN = 20,
+  GlobalState_State_INSEASON = 30
 };
 bool GlobalState_State_IsValid(int value);
-const GlobalState_State GlobalState_State_State_MIN = GlobalState_State_PREDRAFT;
+const GlobalState_State GlobalState_State_State_MIN = GlobalState_State_OFFSEASON;
 const GlobalState_State GlobalState_State_State_MAX = GlobalState_State_INSEASON;
 const int GlobalState_State_State_ARRAYSIZE = GlobalState_State_State_MAX + 1;
 
@@ -575,8 +574,7 @@ class GlobalState : public ::google::protobuf::Message {
   // nested types ----------------------------------------------------
 
   typedef GlobalState_State State;
-  static const State PREDRAFT = GlobalState_State_PREDRAFT;
-  static const State PRESEASON = GlobalState_State_PRESEASON;
+  static const State OFFSEASON = GlobalState_State_OFFSEASON;
   static const State ROSTER53MAN = GlobalState_State_ROSTER53MAN;
   static const State INSEASON = GlobalState_State_INSEASON;
   static inline bool State_IsValid(int value) {
@@ -1036,7 +1034,7 @@ inline void GlobalState::clear_has_state() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void GlobalState::clear_state() {
-  state_ = 1;
+  state_ = 10;
   clear_has_state();
 }
 inline ::fantasybit::GlobalState_State GlobalState::state() const {
