@@ -6,7 +6,7 @@
 #include <QJsonObject>
 #include <QFile>
 #include "ProtoData.pb.h"
-
+#include <QDateTime>
 /*
 void print_hex_memory(void *mem,int size) {
   int i;
@@ -113,8 +113,8 @@ public:
     ScheduleLoader(){}
     ~ScheduleLoader(){}
 
-    std::vector<fantasybit::WeeklySchedule> loadScheduleFromJsonFile() {
-        std::vector<fantasybit::WeeklySchedule> result;
+    std::vector<fantasybit::ScheduleData> loadScheduleFromJsonFile() {
+        std::vector<fantasybit::ScheduleData> result;
 
         //hard coded resources
         QFile jsonFile(":/Schedule2015/Schedule.2015-pre.json");
@@ -134,36 +134,75 @@ public:
         if (doc.isEmpty()) {
             //errorMessage = "File seems to be empty.";
             return result;
-        }
+        }  
 
-        QJsonArray playerJsonData = doc.array();
+        //if (doc.isObject())
+        QJsonObject jo = doc.object();
+        auto vals = jo.value("weeks");
 
-        for (int i=0;i< playerJsonData.size();i++  ) {
-            QJsonValueRef data = playerJsonData[i];
-            //we are supposed to encounter a list of objects so skip values
-            if (!data.isObject()) continue;
-            QJsonObject playerData = data.toObject();
-            QString errorParsingObject;
-            fantasybit::WeeklySchedule player =
-                    getScheduleFromJsonObject(playerData,errorParsingObject);
-            if (!errorParsingObject.isEmpty()) {
-                //errorMessage += "\n Error parsing json object : "+ errorParsingObject;
-                continue;
+
+        QJsonArray wkarr = vals.toArray();
+        for (int j=0;j< wkarr.size();j++  ) {
+            fantasybit::ScheduleData sd{};
+            QJsonValueRef wkdata = wkarr[j];
+            auto wkobj = wkdata.toObject();
+            int wk = wkobj.value("number").toInt();
+            sd.set_week(wk);
+
+            fantasybit::WeeklySchedule ws{};
+            auto games = wkobj.value("games");
+            QJsonArray gmarr = games.toArray();
+            for (int i=0;i< gmarr.size();i++  ) {
+                QJsonValueRef data = gmarr[i];
+                //we are supposed to encounter a list of objects so skip values
+                if (!data.isObject()) continue;
+                QJsonObject playerData = data.toObject();
+                QString errorParsingObject;
+                fantasybit::GameInfo gi =
+                        getScheduleFromJsonObject(playerData,errorParsingObject);
+                if (!errorParsingObject.isEmpty()) {
+                    //errorMessage += "\n Error parsing json object : "+ errorParsingObject;
+                    continue;
+                }
+
+    //            QFile outfile("GenesisPLayer.txt");
+    //            outfile.open(QIODevice::WriteOnly);
+
+                ws.add_games()->CopyFrom(gi);
+
+                //outfile.writeData(player.ser)
+                //std::string ps = player.SerializeAsString();
+                //print_hex_memory((void *)ps.data(),ps.size());
             }
 
-//            QFile outfile("GenesisPLayer.txt");
-//            outfile.open(QIODevice::WriteOnly);
+            sd.mutable_weekly()->CopyFrom(ws);
 
-            //outfile.writeData(player.ser)
-            std::string ps = player.SerializeAsString();
-            //print_hex_memory((void *)ps.data(),ps.size());
-            result.push_back(player);
+            result.push_back(sd);
+
+
+
         }
+
         return result;
     }
 
-   fantasybit::WeeklySchedule getScheduleFromJsonObject(QJsonObject & jsonObject,QString & errorParsingObject) const{
-      fantasybit::WeeklySchedule pd{};
+   fantasybit::GameInfo getScheduleFromJsonObject(QJsonObject & jsonObject,QString & errorParsingObject) const{
+      fantasybit::GameInfo pd{};
+
+
+      pd.set_id(jsonObject.value("id").toString().toStdString());
+      pd.set_home(jsonObject.value("home").toString().toStdString());
+      pd.set_away(jsonObject.value("away").toString().toStdString());
+
+      auto datetime = jsonObject.value("scheduled").toString();
+
+      auto qdt = QDateTime::fromString(datetime,Qt::ISODate);
+
+      pd.set_time(qdt.toTime_t());
+
+      qDebug() << pd.DebugString();
+
+      return pd;
 
       /*
       auto pos = jsonObject.value("FantasyPosition").toString();

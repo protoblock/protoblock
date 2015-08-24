@@ -154,9 +154,19 @@ public:
             d2->CopyFrom(d);
         }
 
-        //ScheduleLoader sl{};
-        //auto weeks = sl.loadScheduleFromJsonFile();
+        ScheduleLoader sl{};
+        auto weeks = sl.loadScheduleFromJsonFile();
 
+        for ( auto sd : weeks ) {
+            d.Clear();
+            d.set_type(Data::SCHEDULE);
+
+            d.MutableExtension(ScheduleData::schedule_data)->CopyFrom(sd);
+            Data *d2 = dt.add_data();
+            d2->CopyFrom(d);
+
+        }
+        /*
         d.Clear();
         d.set_type(Data::SCHEDULE);
         ScheduleData sd{};
@@ -178,11 +188,8 @@ public:
         ws.add_games()->CopyFrom(gi);
 
         sd.mutable_weekly()->CopyFrom(ws);
-        d.MutableExtension(ScheduleData::schedule_data)->CopyFrom(sd);
-        Data *d2 = dt.add_data();
-        d2->CopyFrom(d);
 
-
+*/
         Transaction trans{};
         trans.set_version(1);
         trans.set_type(TransType::DATA);

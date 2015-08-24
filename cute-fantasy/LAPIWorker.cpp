@@ -55,6 +55,9 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
                      this,SLOT(OnGlobalStateChange(GlobalState)));
 
+    QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
+                     this,SIGNAL(GlobalStateChange(GlobalState)));
+
     QObject::connect(&namedata,SIGNAL(FantasyNameFound(std::string)),
                      this,SLOT(OnFoundName(std::string)));
 
@@ -73,7 +76,7 @@ void MainLAPIWorker::GoLive() {
 
     OnGetMyNames();
     emit Live(true);
-    emit SubscribeLive();
+    emit Live(data.GetGlobalState());
 }
 
 void MainLAPIWorker::startPoint(){
