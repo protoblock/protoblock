@@ -146,12 +146,12 @@ void MainWindow::on_myPreviousWeek_clicked()
     }
 }
 
-void MainWindow::GoLive(fantasybit::GlobalState &state){
+void MainWindow::GoLive(fantasybit::GlobalState state){
     auto roster = DataService::instance()->GetCurrentWeekGameRosters();
 
 }
 
-void MainWindow::OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> & names){
+void MainWindow::OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> names){
    if (names.size()> 0){
     fantasybit::MyFantasyName fn = names.at(names.size()-1);
     //emit UseMyFantasyName(fn.name());
