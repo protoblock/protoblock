@@ -1,0 +1,7 @@
+package fantasybit;
+
+message FantasyNameHash {
+	optional string name = 10;
+	optional uint64 hash = 30;
+}
+

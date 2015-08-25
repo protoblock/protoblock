@@ -13,24 +13,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::initialize() {
 
-    qRegisterMetaType<fantasybit::GlobalState>("GlobalState");
-    qRegisterMetaType<fantasybit::MyFantasyName>("MyFantasyName");
-    qRegisterMetaType<fantasybit::FantasyBitProj>("FantasyBitProj");
-    qRegisterMetaType<std::vector<fantasybit::MyFantasyName>>("Vector_MyFantasyName");
+    qRegisterMetaType<GlobalState>("GlobalState");
+    qRegisterMetaType<MyFantasyName>("MyFantasyName");
+    qRegisterMetaType<FantasyBitProj>("FantasyBitProj");
+    qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
     myCoreInstance = Core::resolveByName<MainLAPIWorker>("coreapi");
 
 //    //listen to notifcation from Core
     QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
 
-    QObject::connect(myCoreInstance,SIGNAL(Live(fantasybit::GlobalState)),
-                     this,SLOT(GoLive(fantasybit::GlobalState)));
+    QObject::connect(myCoreInstance,SIGNAL(Live(GlobalState)),
+                     this,SLOT(GoLive(GlobalState)));
     //QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
 
 
     //name
 //    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
-    QObject::connect(myCoreInstance,SIGNAL(MyNames(std::vector<fantasybit::MyFantasyName>)),
-                     this,SLOT(OnMyFantasyNames(std::vector<fantasybit::MyFantasyName>)));
+    QObject::connect(myCoreInstance,SIGNAL(MyNames(vector<MyFantasyName>)),
+                     this,SLOT(OnMyFantasyNames(vector<MyFantasyName>)));
 
     QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myCoreInstance,SLOT(OnUseName(QString)));
     QObject::connect(this,SIGNAL(SubscribeMyNameTx(QString)),myCoreInstance,SLOT(OnSubName(QString)));
@@ -146,19 +146,19 @@ void MainWindow::on_myPreviousWeek_clicked()
     }
 }
 
-void MainWindow::GoLive(fantasybit::GlobalState state){
+void MainWindow::GoLive(GlobalState state){
     auto roster = DataService::instance()->GetCurrentWeekGameRosters();
 
 }
 
-void MainWindow::OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> names){
+void MainWindow::OnMyFantasyNames(vector<MyFantasyName> names){
    if (names.size()> 0){
-    fantasybit::MyFantasyName fn = names.at(names.size()-1);
+    MyFantasyName fn = names.at(names.size()-1);
     //emit UseMyFantasyName(fn.name());
    }
 }
 
-void MainWindow::OnNameStatus(fantasybit::MyFantasyName name){
+void MainWindow::OnNameStatus(MyFantasyName name){
   myCurrentFantasyName = name;
   //TODO myCurrentFantasyName.status()
 }

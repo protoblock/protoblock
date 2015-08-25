@@ -7,6 +7,17 @@
 #include <QFile>
 #include "ProtoData.pb.h"
 
+void print_hex_memory(void *mem,int size) {
+  int i;
+  unsigned char *p = (unsigned char *)mem;
+  for (i=0;i<size;i++) {
+    printf("0x%02x ", p[i]);
+    if (i%16==0)
+      printf("\n");
+  }
+  printf("\n");
+}
+
 class PlayerLoader
 {
 
@@ -14,10 +25,11 @@ public:
     PlayerLoader(){}
     ~PlayerLoader(){}
 
-    bool loadPlayersFromJsonFile(QList<fantasybit::PlayerData> & result,
-                               QString & errorMessage){
+    bool loadPlayersFromJsonFile() {
+        QList<fantasybit::PlayerData> result;
+                               QString errorMessage;
         //hard coded resources
-        QFile jsonFile("C:\Users\User\Documents\work\fantasybit-2015\cute-fantasy\resources\Player.2015.json");
+        QFile jsonFile(":../Fantasy2015/Player.2015.json");
         if (!jsonFile.open(QIODevice::ReadOnly)){
             errorMessage = "Can't open the player file !";
             return false;
@@ -51,11 +63,12 @@ public:
                 continue;
             }
 
-            QFile outfile("GenesisPLayer.txt");
-            outfile.open(QIODevice::WriteOnly);
+//            QFile outfile("GenesisPLayer.txt");
+//            outfile.open(QIODevice::WriteOnly);
 
             //outfile.writeData(player.ser)
-
+            std::string ps = player.SerializeAsString();
+            print_hex_memory((void *)ps.data(),ps.size());
             result.append(player);
         }
         return true;
@@ -65,24 +78,24 @@ public:
       fantasybit::PlayerData pd{};
 
       auto pos = jsonObject.value("FantasyPosition").toString();
-      if   (! (    player.FantasyPosition == "QB"
-           || player.FantasyPosition == "RB"
-           || player.FantasyPosition == "WR"
-           || player.FantasyPosition == "TE"
-           || player.FantasyPosition == "K")) {
+      if   (! (    pos == "QB"
+           || pos == "RB"
+           || pos == "WR"
+           || pos == "TE"
+           || pos == "K")) {
           errorParsingObject = pos;
           return pd;
       }
 
-      pd.set_playerid(jsonObject.value("PlayerID").toString());
+      pd.set_playerid(jsonObject.value("PlayerID").toString().toStdString());
 
       fantasybit::PlayerBase pb{};
-      pb.set_position(jsonObject.value("FantasyPosition").toString());
-      pb.set_first(jsonObject.value("FirstName").toString());
-      pb.set_last(jsonObject.value("LastName").toString());
+      pb.set_position(jsonObject.value("FantasyPosition").toString().toStdString());
+      pb.set_first(jsonObject.value("FirstName").toString().toStdString());
+      pb.set_last(jsonObject.value("LastName").toString().toStdString());
 
       fantasybit::PlayerStatus ps{};
-      ps.set_teamid(jsonObject.value("Team").toString());
+      ps.set_teamid(jsonObject.value("Team").toString().toStdString());
 
       pd.mutable_player_base()->CopyFrom(pb);
       pd.mutable_player_status()->CopyFrom(ps);

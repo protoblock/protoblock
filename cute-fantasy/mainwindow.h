@@ -8,6 +8,7 @@ namespace Ui {
 class MainWindow;
 }
 
+using fantasybit::GlobalState;
 class MainLAPIWorker;
 class MainWindow : public QMainWindow
 {
@@ -31,7 +32,7 @@ public slots:
 
     void on_myNextWeek_clicked();
     void on_myPreviousWeek_clicked();
-    void GoLive(fantasybit::GlobalState);
+    void GoLive(GlobalState);
     void OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> names);
     void OnNameStatus(fantasybit::MyFantasyName name);
 

@@ -52,8 +52,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&data,SIGNAL(GameStart(std::string)),
                      this,SLOT(OnGameStart(std::string)));
 
-    QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
-                     this,SLOT(OnGlobalStateChange(GlobalState)));
+    //QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
+    //                 this,SLOT(OnGlobalStateChange(GlobalState)));
 
     QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
                      this,SIGNAL(GlobalStateChange(GlobalState)));
@@ -245,8 +245,21 @@ void MainLAPIWorker::OnClaimName(QString name) {
         break;
     }
 
-    if ( myCurrentName.status() == MyNameStatus::requested)
+    if ( myCurrentName.status() == MyNameStatus::requested)  {
+        NameTrans nt{};
+        nt.set_public_key(agent.pubKeyStr());
+        nt.set_fantasy_name(name.toStdString());
+
+
+        Transaction trans{};
+        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_type(TransType::NAME);
+        trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nt);
+        SignedTransaction sn = agent.makeSigned(trans);
+        agent.onSignedTransaction(sn);
+        DoPostTx(sn);
         namedata.Subscribe(myCurrentName.name());
+    }
 
     emit NameStatus(myCurrentName);
 }
@@ -270,7 +283,7 @@ void MainLAPIWorker::OnProjTX(FantasyBitProj inp) {
     trans.MutableExtension(ProjectionTrans::proj_trans)->CopyFrom(pj);
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
-
+    DoPostTx(sn);
     namedata.Subscribe(myCurrentName.name());
 
 }
@@ -288,9 +301,20 @@ void MainLAPIWorker::OnProjLive(fantasybit::FantasyBitProj &proj) {
     emit LiveProj(proj);
 }
 
-void MainLAPIWorker::OnGlobalStateChange(GlobalState state) {
 
+void MainLAPIWorker::BeOracle() {
+    if ( agent.beDataAgent() ) {
+        auto ns = agent.getCurrentNamesStatus();
+        emit NameStatus(ns);
+    }
 }
+
+void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
+    auto txstr = st.SerializeAsString();
+    RestfullClient rest(QUrl("http://192.96.159.216:4545"));
+    rest.postRawData("tx","shit",txstr.data(),txstr.size());
+}
+
 
 
 /*

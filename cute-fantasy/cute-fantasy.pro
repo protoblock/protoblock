@@ -9,7 +9,7 @@ QT       += core gui sql network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 #comment this line to generate
-#DEFINES += DATAAGENTGUI
+DEFINES += DATAAGENTGUI
 #DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
 
@@ -54,3 +54,14 @@ LIBS += -lLevelDB  \
 include(./boost-includes.pri)
 include (./cute-fantasy.pri)
 include (./openssl-includes.pri)
+
+FORMS += \
+    testingwindow.ui
+
+HEADERS += \
+    testingwindow.h \
+    dataagent.h
+
+SOURCES += \
+    testingwindow.cpp \
+    dataagent.cpp

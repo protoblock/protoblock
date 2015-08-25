@@ -173,6 +173,8 @@ FantasyAgent::getIdSig(std::string &in, fc::ecc::private_key &pk) {
     return make_pair(sha.str(), Commissioner::sig2str(pk.sign(sha)));
 }
 
+
+
 fc::ecc::private_key FantasyAgent::str2priv(const std::string &in) {
     return fc::ecc::private_key::regenerate(fc::sha256{ in });
 }
@@ -220,6 +222,7 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 			writer(secret);
             //LOG(lg, info) << "name available saving secret to file " << name;
             qInfo() << "name available saving secret to file " << name;
+            ret = AVAIL;
 		}
 
     }
@@ -289,7 +292,7 @@ bool FantasyAgent::beDataAgent() {
 
     bool ret = false;
 
-    if (AmFantasyAgent(pubKey())) {
+    if (m_priv && AmFantasyAgent(pubKey())) {
         qInfo() << " is oracle key";
 		m_oracle = m_priv;
         ret = true;
@@ -312,6 +315,10 @@ bool FantasyAgent::beDataAgent() {
         if (!read.good())
             qWarning() << " no oracle.txt";
         else if (read.ReadNext(oracle)) {
+            if ( !oracle.has_public_key() && oracle.has_private_key()) {
+                auto pk = str2priv(oracle.private_key()).get_public_key().serialize();
+                oracle.set_public_key(Commissioner::pk2str(pk));
+            }
             if (AmFantasyAgent(oracle.public_key())) {
                 qInfo() << " have oracle.txt";
                 m_priv = str2priv(oracle.private_key());

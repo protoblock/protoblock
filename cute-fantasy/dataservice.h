@@ -28,6 +28,8 @@ public:
 
     std::unordered_map<std::string,int> GetProjById(const std::string &pid);
 
+    fantasybit::GlobalState GetGlobalState();
+
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);
 };
