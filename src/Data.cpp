@@ -45,8 +45,10 @@ void NFLStateData::init() {
             MyPlayerStatus[it->key().ToString()] = ps;
             if (ps.has_teamid()) {
                 auto itr = MyTeamRoster.find(ps.teamid());
-                if ( itr != end(MyTeamRoster))
-                    itr->second.insert(it->key().ToString());
+                if ( itr == end(MyTeamRoster))
+                    MyTeamRoster[ps.teamid()] =  std::unordered_set<std::string>{};
+
+                MyTeamRoster[ps.teamid()].insert(it->key().ToString());
             }
         }
     }
@@ -206,7 +208,7 @@ void NFLStateData::OnWeekOver(int in) {
 }
 
 void NFLStateData::OnWeekStart(int in) {
-    week = in;
+    //week = in;
 }
 
 WeeklySchedule NFLStateData::GetWeeklySchedule(int week) {
@@ -248,6 +250,7 @@ GameStatus NFLStateData::GetUpdatedGameStatus(string id) {
     }
     else {
         gs.ParseFromString(temp);
+        qDebug() << temp;
      }
     return gs;
 }
@@ -259,7 +262,9 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
         qWarning() << "am not live" ;
     }
 
-    WeeklySchedule ws = getWeeklyStaticSchedule(week);
+    qDebug() << week();
+
+    WeeklySchedule ws = getWeeklyStaticSchedule(week());
 
     for (const auto g : ws.games()) {
         GameRoster gr{};
@@ -307,7 +312,7 @@ std::unordered_map<std::string,PlayerDetail>
     for ( auto p : teamroster) {
         auto ps = MyPlayerStatus[p];
         if ( ps.teamid() != teamid  ||
-             ps.status() != PlayerStatus::ACTIVE)
+             false)//ps.status() != PlayerStatus::ACTIVE)
             continue;
 
         auto pb = GetPlayerBase(p);
@@ -334,7 +339,12 @@ GlobalState NFLStateData::GetGlobalState() {
     return gs;
 }
 
-void NFLStateData::OnGlobalState(GlobalState &gs) {
+int NFLStateData::week() {
+    auto gs = GetGlobalState();
+    return gs.week();
+}
+
+void NFLStateData:: OnGlobalState(GlobalState &gs) {
     statusstore->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
     qDebug() << gs.DebugString();
     if ( amlive )

@@ -17,6 +17,8 @@
 #include <vector>
 #include "iresolvable.h"
 
+using fantasybit::GlobalState;
+using namespace fantasybit;
 class MainLAPIWorker : public QObject , public IResolvable
 {
     Q_OBJECT
@@ -39,6 +41,9 @@ class MainLAPIWorker : public QObject , public IResolvable
     //fantasybit::DeltaData deltadata{};
     std::map<std::string,fantasybit::MyFantasyName> myfantasynames{};
     fantasybit::MyFantasyName myCurrentName{};
+
+    void DoPostTx(SignedTransaction &st);
+
 public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}
@@ -47,6 +52,8 @@ public:
     fantasybit::NFLStateData &NFLState() { return data; }
 
     fantasybit::FantasyNameData &NameData() { return namedata; }
+
+    fantasybit::FantasyAgent &Agent() { return agent; }
 
     /*
     std::vector<fantasybit::GameRoster> getWeekGameRosters(int week){
@@ -71,13 +78,13 @@ signals:
 
 
     //to GUI
-    void NameStatus(const fantasybit::MyFantasyName &);
+    void NameStatus(MyFantasyName);
     void LiveProj(fantasybit::FantasyBitProj &);
     void MyNames(std::vector<fantasybit::MyFantasyName>);
     void NameBalance(fantasybit::FantasyNameBal &);
     void PlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus> &in);
-    void GlobalStateChange(fantasybit::GlobalState);
-    void Live(fantasybit::GlobalState);
+    void GlobalStateChange(GlobalState);
+    void Live(GlobalState);
 
 public slots:
 
@@ -104,9 +111,12 @@ public slots:
     void OnProjTX(fantasybit::FantasyBitProj);
 
     //data
-    void OnGlobalStateChange(fantasybit::GlobalState);
+    //void OnGlobalStateChange(fantasybit::GlobalState);
     void OnNameBal(fantasybit::FantasyNameBal &);
     void OnPlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus>);
+
+    //dataagent
+    void BeOracle();
 private:
 
     bool Process(fantasybit::Block &b);

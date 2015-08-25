@@ -49,3 +49,8 @@ unordered_map<std::string,int> DataService::GetProjById(const std::string &pid) 
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->NameData().GetProjById(pid);
 }
+
+fantasybit::GlobalState DataService::GetGlobalState() {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetGlobalState();
+}

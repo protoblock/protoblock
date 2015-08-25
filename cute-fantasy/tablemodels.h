@@ -22,8 +22,6 @@ enum class ScoreState  : int {
 };
 Q_DECLARE_METATYPE(ScoreState)
 
-
-
 enum class GamesFilter {
     Completed ,
     InGame,

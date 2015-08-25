@@ -167,7 +167,7 @@ public:
         foreach (QString headerKey, headersMap.keys()) {
             request.setRawHeader(headerKey.toUtf8(),headersMap.value(headerKey).toUtf8());
         }
-        qDebug() << "rest full call" << request.url().toString();
+        //qDebug() << "rest full call" << request.url().toString();
         myCurrentNetworkReply = myNetworkManager.get(request);
         waitForReply();
         myCurrentNetworkReply->deleteLater();
@@ -179,14 +179,14 @@ public:
 
 protected:
     virtual void processReplyData(){        
-       // qDebug("response : %s",myLastRepliedData.data());
+       //qDebug("response : %s",myLastRepliedData.data());
     }
 signals:
     void doneReading();
 private slots:
 
     void finishedSlot(){
-        qDebug() << "finsihed slot" ;
+        //qDebug() << "finsihed slot" ;
         myLastRepliedData = myCurrentNetworkReply->readAll();
         emit doneReading();
     }
@@ -302,9 +302,22 @@ public:
         return blk;
     }
 
+    static std::string getBlk(const QString & baseUrl,int blockNum,
+                                   QThread * ownerThread = QThread::currentThread()){
+        RestfullClient client(QUrl(baseUrl),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        //hard coded url
+        //TODO move to settings
+        QString customRoute = "block/" + QString::number(blockNum);
+        //customRoute = customRoute.arg(route).arg(blockNum);
+        client.getData(customRoute,params,headers);
+
+        return client.lastReply().toStdString();
+    }
+
     static int getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
-        qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
-        return 2;
+        //qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
@@ -361,6 +374,8 @@ public:
 
         return client.lastReply().toStdString();
     }
+
+
 };
 
 #endif // RESTFULLCALL_H

@@ -82,7 +82,7 @@ private:
                         "%{if-fatal}Fatal%{endif}] "
                         "<%{file}:%{line}::%{function}>"
                         "- %{message}";
-            default:
+            default:               
                 return QVariant();
             }
         }

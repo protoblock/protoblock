@@ -45,7 +45,9 @@ SOURCES += \
     $$PWD/iresolvable.cpp \    
 #    $$PWD/gamedataviewmodel.cpp \
     $$PWD/dataservice.cpp \
-    $$PWD/tablemodels.cpp
+    $$PWD/tablemodels.cpp \
+    $$PWD/dataagent.cpp \
+    $$PWD/testingwindow.cpp
 
 DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
@@ -113,14 +115,17 @@ HEADERS += \
     $$PWD/tablemodels.h \
     $$PWD/propertynames.h \
     $$PWD/datacache.h \
-    $$PWD/playerloader.h
+    $$PWD/playerloader.h \
+    $$PWD/dataagent.h \
+    $$PWD/testingwindow.h
 
 FORMS += \       
     $$PWD/mainwindow.ui \
     $$PWD/playerprojectionwidget.ui \
     $$PWD/currentweekwidget.ui \
     $$PWD/previousweekwidget.ui \
-    $$PWD/nextweekwidget.ui
+    $$PWD/nextweekwidget.ui \
+    $$PWD/testingwindow.ui
 
 RESOURCES += \
     $$PWD/resources/resources.qrc

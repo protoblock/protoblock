@@ -39,9 +39,9 @@ Node::Node() {
     status = leveldb::DB::Open(options, filedir("block/blockchain"), &db2);
     Node::blockchain.reset(db2);
 
-//    leveldb::DB *db4;
-//    status = leveldb::DB::Open(options, filedir("tx/txpool"), &db4);
-//    Node::txpool.reset(db4);
+    leveldb::DB *db4;
+    status = leveldb::DB::Open(options, filedir("tx/txpool"), &db4);
+    Node::txpool.reset(db4);
 
     current_hight = getLastLocalBlockNum();
     if (current_hight == 0)
@@ -154,7 +154,7 @@ int Node::myLastGlobalBlockNum() {
 }
 
 fc::optional<int> Node::getLastGlobalBlockNum() {
-    qDebug() << "cureent thread" << QThread::currentThread();
+    //qDebug() << "cureent thread" << QThread::currentThread();
     int height = RestfullService::getHeight("http://192.96.159.216:4545");
 
     if ( myLastGlobalBlockNum() < height )
@@ -220,18 +220,23 @@ fc::optional<Block> Node::getLocalBlock(int num) {
 fc::optional<Block> Node::getGlobalBlock(int num) {
     fc::optional<Block> block;
 
-    int height = RestfullService::getHeight("http://192.96.159.216:4545");
+    //int height = RestfullService::getHeight("http://192.96.159.216:4545");
 
-    block = RestfullService::retrieveBlock("http://192.96.159.216:4545","",num);
+    //if ( height < num ) return;
+    string bs = RestfullService::getBlk("http://192.96.159.216:4545",num);
 
+    block = Block{};
+    (*block).ParseFromString(bs);
     qInfo() << (*block).DebugString();
 
     return block;
 }
 
 
+
+
 decltype(Node::blockchain) Node::blockchain{};
-decltype(Node::blockchain) Node::txpool{};
+decltype(Node::txpool) Node::txpool{};
 
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};

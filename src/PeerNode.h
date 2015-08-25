@@ -58,6 +58,10 @@ public:
 	static std::shared_ptr<leveldb::DB> blockchain;
     static std::shared_ptr<leveldb::DB> txpool;
     static int GlobalHeight;
+    static bool addTxPool(const std::string &id, std::string &txstr)  {
+        return (txpool->Put(leveldb::WriteOptions(), id, txstr ).ok());
+
+    }
 
 };
 

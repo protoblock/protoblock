@@ -42,7 +42,7 @@ class NFLStateData : public QObject {
     leveldb::DB *statusstore;
 
     leveldb::WriteOptions write_sync{};
-    int week = 0;
+    //int week = 0;
     int amlive = false;
 
     std::mutex data_mutex{};
@@ -113,7 +113,7 @@ private:
     void OnPlayerStatus(const std::string &pid,PlayerStatus ps);
 
     WeeklySchedule getWeeklyStaticSchedule(int week);
-
+    int week();
 
     std::string filedir(const std::string &in);
 };

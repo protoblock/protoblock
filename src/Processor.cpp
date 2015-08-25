@@ -233,14 +233,15 @@ void BlockProcessor::process(const DataTransition &indt) {
             qWarning() << indt.type() << " bad transition for current state " << mGlobalState.state();
 
         {
-            qInfo() <<  indt.season() << " Season Start ";
+            qInfo() <<  indt.season() << " Season Start week" << indt.week();
             if (mGlobalState.season() != indt.season()) {
                 qWarning() << "wrong season! " << indt.DebugString();
                 mGlobalState.set_season(indt.season());
             }
+            mGlobalState.set_week(indt.week());
             mGlobalState.set_state(GlobalState_State_INSEASON);
             mData.OnGlobalState(mGlobalState);
-            OnWeekStart(1);
+            OnWeekStart(indt.week());
         }
         break;
     case DataTransition_Type_SEASONEND:
