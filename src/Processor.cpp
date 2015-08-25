@@ -186,8 +186,18 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
                 break;
             }
+            case Data_Type_SCHEDULE: {
+                auto sd = d.GetExtension(ScheduleData::schedule_data);
+                if ( sd.has_week() && sd.has_weekly() )
+                    mData.AddNewWeeklySchedule(sd.week(),sd.weekly());
+                else {
+                    qCritical() << "no data" + QTD(sd.DebugString());
+                }
+                break;
+            }
+
             default:
-                qCritical() << "unexpedted type" << d.type();
+                qWarning() << "unexpedted type" << d.type();
                 break;
         }
     }
@@ -218,23 +228,9 @@ void BlockProcessor::process(const DataTransition &indt) {
     auto mGlobalState = mData.GetGlobalState();
     switch (indt.type())
     {
-    case DataTransition_Type_ROSTER:
-        if (mGlobalState.state() != GlobalState_State_PRESEASON)
-            qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-
-        {
-            qInfo() <<  "53 man roster Transition!";
-            if (mGlobalState.season() != indt.season()) {
-                qWarning() << "wrong season! " << indt.DebugString();
-                mGlobalState.set_season(indt.season());
-            }
-            mGlobalState.set_state(GlobalState_State_ROSTER53MAN);
-            mData.OnGlobalState(mGlobalState);
-        }
-        break;
     case DataTransition_Type_SEASONSTART:
-        if (mGlobalState.state() != GlobalState_State_ROSTER53MAN)
-            qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
+        if (mGlobalState.state() != GlobalState_State_OFFSEASON)
+            qWarning() << indt.type() << " bad transition for current state " << mGlobalState.state();
 
         {
             qInfo() <<  indt.season() << " Season Start ";
@@ -262,27 +258,12 @@ void BlockProcessor::process(const DataTransition &indt) {
 
         mGlobalState.set_season(mGlobalState.season() + 1);
 
-        mGlobalState.set_state(GlobalState_State_PREDRAFT);
+        mGlobalState.set_state(GlobalState_State_OFFSEASON);
         mData.OnGlobalState(mGlobalState);
 
         //outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
         break;
 
-    case DataTransition_Type_DRAFTOVER:
-        if (mGlobalState.state() != GlobalState_State_PREDRAFT)
-            qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-
-        {
-            qInfo() <<  indt.season() << " nfl Draft over ";
-            if (mGlobalState.season() != indt.season()) {
-                qWarning() << "wrong season! " << indt.DebugString();
-                mGlobalState.set_season(indt.season());
-            }
-            mGlobalState.set_state(GlobalState_State_PRESEASON);
-            mData.OnGlobalState(mGlobalState);
-            //outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
-        }
-        break;
     case DataTransition_Type_HEARTBEAT:
         //todo: deal w data in this msg
         if (mGlobalState.season() != indt.season()) {
@@ -313,7 +294,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         if (indt.week() == 16) {
             newweek = 1;
             qInfo() <<  "season " << indt.season() << " Over ";
-            mGlobalState.set_state(GlobalState_State_PRESEASON);
+            mGlobalState.set_state(GlobalState_State_OFFSEASON);
             mGlobalState.set_season(mGlobalState.season() + 1);
             mData.OnGlobalState(mGlobalState);
         }

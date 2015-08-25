@@ -13,7 +13,7 @@
 #include <fc/crypto/base58.hpp>
 #include <iostream>
 
-
+#include <../cute-fantasy/playerloader.h>
 
 
 namespace fantasybit {
@@ -125,9 +125,9 @@ public:
     static Transaction GenesisTransition() {
         DataTransition dt{};
 
-        dt.set_type(DataTransition_Type_DRAFTOVER);
+        dt.set_type(DataTransition_Type_HEARTBEAT);
         dt.set_season(2015);
-        dt.set_week(1);
+        dt.set_week(0);
 
         Data d{};
         //TODOd.set_type(Data::TEAM);
@@ -140,36 +140,93 @@ public:
         }
         */
 
+        PlayerLoader pl{};
+
+        auto players = pl.loadPlayersFromJsonFile();
+
         d.Clear();
         d.set_type(Data::PLAYER);
-        PlayerData pd{};
-        for ( auto t : GET_GENESIS_NFL_PLAYERS() ) {
+        //PlayerData pd{};
+        for ( auto pd : players ) {
             //TODOpd.set_teamid(t.second);
-            pd.set_playerid(t.first);
             d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
             Data *d2 = dt.add_data();
             d2->CopyFrom(d);
         }
 
+        ScheduleLoader sl{};
+        auto weeks = sl.loadScheduleFromJsonFile();
+
+        for ( auto sd : weeks ) {
+            d.Clear();
+            d.set_type(Data::SCHEDULE);
+
+            d.MutableExtension(ScheduleData::schedule_data)->CopyFrom(sd);
+            Data *d2 = dt.add_data();
+            d2->CopyFrom(d);
+
+        }
+        /*
+        d.Clear();
+        d.set_type(Data::SCHEDULE);
+        ScheduleData sd{};
+        WeeklySchedule ws{};
+        sd.set_week(3);
+
+        GameInfo gi{};
+        gi.set_id("201500320");
+        gi.set_home("NO");
+        gi.set_away("HOU");
+        gi.set_time(1440964800); //8/30  4:pm edt
+        ws.add_games()->CopyFrom(gi);
+
+        gi.Clear();
+        gi.set_id("201500323");
+        gi.set_home("ARZ");
+        gi.set_away("OAK");
+        gi.set_time(1440979200); //8/30  4:pm edt
+        ws.add_games()->CopyFrom(gi);
+
+        sd.mutable_weekly()->CopyFrom(ws);
+
+*/
         Transaction trans{};
         trans.set_version(1);
         trans.set_type(TransType::DATA);
         trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
+
+        auto ds = trans.DebugString();
+        qInfo() << " xxxx ";
+        qInfo() << ds;
+
         return trans;
+    }
+
+    static GlobalState InitialGlobalState () {
+        GlobalState gs{};
+        gs.set_season(2015);
+        gs.set_state(GlobalState::OFFSEASON);
+        gs.set_week(0);
+
+        return gs;
     }
 
     static SignedTransaction makeGenesisTransition() {
         SignedTransaction st{};
-        st.mutable_trans()->CopyFrom(GenesisTransition());
-        st.set_id("9792644b12d72d0d76019dab91cbcddf71a54a9ea46acf5fa206f4db1d276a3b");
+
+        Transaction tx = GenesisTransition();
+        st.mutable_trans()->CopyFrom(tx);
+
+        st.set_id(HashIt(tx.SerializeAsString()));
+        //st.set_id("9792644b12d72d0d76019dab91cbcddf71a54a9ea46acf5fa206f4db1d276a3b");
         st.set_sig("iKkki472jcQ8tKtr75dV8i5Aei4dSuudRQL4R2YX9bT3erRgnQ27cJh9hoefTU8rp3GVCPNxCGM1epkUKAW9cmwiTsDVW38bSw");
         st.set_fantasy_name("FantasyAgent");
         return st;
     }
 
     static BlockHeader GenesisBlockHeader() {
-        auto gtrans = Commissioner::makeGenesisName();
-        auto gtransition = Commissioner::makeGenesisTransition();
+        //auto gtrans = Commissioner::makeGenesisName();
+        //auto gtransition = Commissioner::makeGenesisTransition();
 
         BlockHeader bh{};
         bh.set_version(1);
@@ -217,6 +274,10 @@ public:
 
 		return b;
 	}
+
+    static std::string HashIt(std::string &in) {
+        return fc::sha256::hash( in ).str();
+    }
 
 	static const int BLOCK_VERSION = 1;
 	static const int TRANS_VERSION = 1;

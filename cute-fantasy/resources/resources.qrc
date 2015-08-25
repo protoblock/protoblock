@@ -4,4 +4,11 @@
         <file>scoresent.png</file>
         <file>logoherring.png</file>
     </qresource>
+    <qresource prefix="/Fantasy2015">
+        <file>Player.2015.json</file>
+    </qresource>
+    <qresource prefix="/Schedule2015">
+        <file>Schedule.2015-pre.json</file>
+        <file>Schedule.2015-reg.json</file>
+    </qresource>
 </RCC>

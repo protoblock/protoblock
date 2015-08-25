@@ -12,33 +12,27 @@ MainWindow::MainWindow(QWidget *parent) :
     initialize();
 }
 
-void MainWindow::initialize() {         
-    //resolve the core thread object
+void MainWindow::initialize() {
     myCoreInstance = Core::resolveByName<MainLAPIWorker>("coreapi");
-
     //wake up core thread
     Core::instance()->guiIsAwake();
-
     if (myCoreInstance == NULL)  {
         qDebug() << "coreapi is not resolved";
         setDisabled(true);
         return;
     }
-
-
-
-
-
     //QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
 
-    QObject::connect(myCoreInstance,SIGNAL(Live()),this,SLOT(GoLive()));
-
+    QObject::connect(myCoreInstance,SIGNAL(Live(fantasybit::GlobalState)),
+                     this,SLOT(GoLive(fantasybit::GlobalState)));
+    //QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
 
 
     //name
-    //QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
-    QObject::connect(myCoreInstance,SIGNAL(MyNames(std::vector<fantasybit::MyFantasyName> &)),
-                     this,SLOT(OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> &)));
+//    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
+    QObject::connect(myCoreInstance,SIGNAL(MyNames(std::vector<fantasybit::MyFantasyName>)),
+                     this,SLOT(OnMyFantasyNames(std::vector<fantasybit::MyFantasyName>)));
+
 
     QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myCoreInstance,SLOT(OnUseName(QString)));
     QObject::connect(this,SIGNAL(SubscribeMyNameTx(QString)),myCoreInstance,SLOT(OnSubName(QString)));
@@ -154,12 +148,13 @@ void MainWindow::on_myPreviousWeek_clicked()
     }
 }
 
-void MainWindow::GoLive(){
-//  ui->myCurrentWeekWidget->setCurrentWeekData();
-//  ui->myPreviousWeekWidget->setWeekData(2);
+
+
+void MainWindow::GoLive(fantasybit::GlobalState /*state*/){
+    auto roster = DataService::instance()->GetCurrentWeekGameRosters();
 }
 
-void MainWindow::OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> & names){
+void MainWindow::OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> names){
    if (names.size()> 0){
     fantasybit::MyFantasyName fn = names.at(names.size()-1);
     //emit UseMyFantasyName(fn.name());

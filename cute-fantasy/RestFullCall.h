@@ -92,8 +92,8 @@ public:
         if (ownerThread != QThread::currentThread())
             this->moveToThread(ownerThread);
 
-        qDebug()<< "qnm " <<this->myNetworkManager.thread();
-        qDebug()<< "this " <<this->thread();
+        //qDebug()<< "qnm " <<this->myNetworkManager.thread();
+        //qDebug()<< "this " <<this->thread();
 
         myCurrentNetworkReply = NULL;
         myBaseUrl = argBaseUrl;
@@ -315,7 +315,14 @@ public:
         client.getData(customRoute,params,headers);
         auto response = client.lastReply();
         QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+
+        if ( jsonDoc.isEmpty() || jsonDoc.isNull() || jsonDoc.isObject())
+            return 1;
+
         QJsonArray qa = jsonDoc.array();
+        if ( qa.size() < 1 )
+            return 1;
+
         QJsonValueRef json = qa[0];
 
 

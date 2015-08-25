@@ -112,7 +112,8 @@ HEADERS += \
     $$PWD/dataservice.h \
     $$PWD/tablemodels.h \
     $$PWD/propertynames.h \
-    $$PWD/datacache.h
+    $$PWD/datacache.h \
+    $$PWD/playerloader.h
 
 FORMS += \       
     $$PWD/mainwindow.ui \

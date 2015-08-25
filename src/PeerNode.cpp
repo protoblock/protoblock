@@ -22,6 +22,8 @@
 #include "Processor.h"
 #include "Commissioner.h"
 #include "RestFullCall.h"
+
+#include "globals.h"
 using namespace std;
 	
 namespace fantasybit
@@ -48,9 +50,20 @@ Node::Node() {
 
         current_hight = 1;
         Block sb{Commissioner::makeGenesisBlock()};
+
+        qInfo() <<  "|" << QTD(sb.DebugString()) << "|";
+
+        qInfo() <<  "done";
+
         leveldb::Slice value((char*)&current_hight, sizeof(int));
         blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
         current_hight = getLastLocalBlockNum();
+
+        if (!BlockProcessor::verifySignedBlock(sb)) {
+            qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
+            return;
+        }
+
     }
 
     //assert(getLastBlockNum() > 0);
@@ -65,9 +78,13 @@ bool Node::Sync() {
         qCritical() << " no getLastGlobalBlockNum";
         return false;
     }
+    else setLastGlobalBlockNum(*gh);
 
-    if ( current_hight < global_height )
+    qInfo() << " global height " << *gh;
+    if ( current_hight < (*gh) )
         return SyncTo(*gh);
+    else
+        return true;
 }
 
 bool Node::SyncTo(int gh) {
@@ -139,6 +156,10 @@ int Node::myLastGlobalBlockNum() {
 fc::optional<int> Node::getLastGlobalBlockNum() {
     qDebug() << "cureent thread" << QThread::currentThread();
     int height = RestfullService::getHeight("http://192.96.159.216:4545");
+
+    if ( myLastGlobalBlockNum() < height )
+        setLastGlobalBlockNum(height);
+
     return height;
 }
 
@@ -198,6 +219,13 @@ fc::optional<Block> Node::getLocalBlock(int num) {
 
 fc::optional<Block> Node::getGlobalBlock(int num) {
     fc::optional<Block> block;
+
+    int height = RestfullService::getHeight("http://192.96.159.216:4545");
+
+    block = RestfullService::retrieveBlock("http://192.96.159.216:4545","",num);
+
+    qInfo() << (*block).DebugString();
+
     return block;
 }
 

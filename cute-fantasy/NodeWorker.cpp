@@ -21,10 +21,15 @@
     void NodeWorker::init(){
         qDebug("NodeWorker Thread started");
 
-        if ( node.Sync() )
-            emit InSync(node.getLastLocalBlockNum());
+        bool ret = node.Sync();
+        int last = node.getLastLocalBlockNum();
+
+        if ( last > hi ) hi = last;
+
+        if ( ret )
+            emit InSync(last);
         else
-            emit BlockError(node.getLastLocalBlockNum());
+            emit BlockError(last);
 
     }
 
@@ -34,7 +39,10 @@
         if ( !gnum )
             qDebug("Error getLastGlobalBlockNum");
         else {
-            emit SeenBlock(*gnum);
-            node.SyncTo(*gnum);
+            if ( *gnum > hi ) {
+                hi = *gnum;
+                emit SeenBlock(*gnum);
+                node.SyncTo(*gnum);
+            }
         }
     }

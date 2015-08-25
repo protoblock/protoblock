@@ -36,7 +36,7 @@ class MainLAPIWorker : public QObject , public IResolvable
     fantasybit::FantasyNameData namedata;
     fantasybit::BlockProcessor processor;
 
-    fantasybit::DeltaData deltadata{};
+    //fantasybit::DeltaData deltadata{};
     std::map<std::string,fantasybit::MyFantasyName> myfantasynames{};
     fantasybit::MyFantasyName myCurrentName{};
 public:
@@ -67,16 +67,17 @@ signals:
 
     //to data
     void SubscribeLive();
+    void Live(bool);
 
 
     //to GUI
     void NameStatus(const fantasybit::MyFantasyName &);
     void LiveProj(fantasybit::FantasyBitProj &);
-    void MyNames(std::vector<fantasybit::MyFantasyName> &);
+    void MyNames(std::vector<fantasybit::MyFantasyName>);
     void NameBalance(fantasybit::FantasyNameBal &);
     void PlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus> &in);
-    void OnGlobalState(fantasybit::GlobalState);
-    void Live(bool);
+    void GlobalStateChange(fantasybit::GlobalState);
+    void Live(fantasybit::GlobalState);
 
 public slots:
 

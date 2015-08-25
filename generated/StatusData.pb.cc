@@ -169,12 +169,12 @@ void protobuf_AddDesc_StatusData_2eproto() {
     "e\030\024 \001(\r\"<\n\006Status\022\r\n\tSCHEDULED\020\000\022\013\n\007PREG"
     "AME\020\002\022\n\n\006INGAME\020\003\022\n\n\006CLOSED\020\004\"F\n\tTeamDep"
     "th\022\n\n\002qb\030\n \003(\t\022\n\n\002rb\030\024 \003(\t\022\n\n\002wr\030\036 \003(\t\022\n"
-    "\n\002te\030( \003(\t\022\t\n\001k\0302 \003(\t\"\236\001\n\013GlobalState\022,\n"
+    "\n\002te\030( \003(\t\022\t\n\001k\0302 \003(\t\"\220\001\n\013GlobalState\022,\n"
     "\005state\030\001 \001(\0162\035.fantasybit.GlobalState.St"
-    "ate\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"C\n\005Sta"
-    "te\022\014\n\010PREDRAFT\020\001\022\r\n\tPRESEASON\020\002\022\017\n\013ROSTE"
-    "R53MAN\020\003\022\014\n\010INSEASON\020\004*+\n\020PlayerGameStat"
-    "us\022\007\n\003OUT\020\000\022\006\n\002IN\020\001\022\006\n\002NA\020\002", 587);
+    "ate\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"5\n\005Sta"
+    "te\022\r\n\tOFFSEASON\020\n\022\017\n\013ROSTER53MAN\020\024\022\014\n\010IN"
+    "SEASON\020\036*+\n\020PlayerGameStatus\022\007\n\003OUT\020\000\022\006\n"
+    "\002IN\020\001\022\006\n\002NA\020\002", 573);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StatusData.proto", &protobuf_RegisterTypes);
   PlayerStatus::default_instance_ = new PlayerStatus();
@@ -1196,10 +1196,9 @@ const ::google::protobuf::EnumDescriptor* GlobalState_State_descriptor() {
 }
 bool GlobalState_State_IsValid(int value) {
   switch(value) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
+    case 10:
+    case 20:
+    case 30:
       return true;
     default:
       return false;
@@ -1207,8 +1206,7 @@ bool GlobalState_State_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const GlobalState_State GlobalState::PREDRAFT;
-const GlobalState_State GlobalState::PRESEASON;
+const GlobalState_State GlobalState::OFFSEASON;
 const GlobalState_State GlobalState::ROSTER53MAN;
 const GlobalState_State GlobalState::INSEASON;
 const GlobalState_State GlobalState::State_MIN;
@@ -1237,7 +1235,7 @@ GlobalState::GlobalState(const GlobalState& from)
 
 void GlobalState::SharedCtor() {
   _cached_size_ = 0;
-  state_ = 1;
+  state_ = 10;
   season_ = 0u;
   week_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1275,7 +1273,7 @@ GlobalState* GlobalState::New() const {
 
 void GlobalState::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    state_ = 1;
+    state_ = 10;
     season_ = 0u;
     week_ = 0u;
   }

@@ -18,6 +18,8 @@
 class NodeWorker : public QObject
 {
     Q_OBJECT
+
+    int hi = 0;
 public:
     NodeWorker(QObject * parent=0);
     fantasybit::Node node;
