@@ -51,16 +51,25 @@ public:
 
   TKeyedListModel (const TKeyedListModel& copy,QObject *parent =0): QAbstractTableModel(parent){
     myList.append(copy.list());
-    myKeyMap = copy.myKeyMap;
-    myIsAutoDeleteModelElements = copy.isAutoDelete();
+    myKeyMap = QMap<TKey,X*>(copy.myKeyMap);
+    myIsAutoDeleteModelElements = copy.myIsAutoDeleteModelElements;
+    myHorizontalHeaders = copy.myHorizontalHeaders;
+    myEditableColumnsState = copy.myEditableColumnsState;
   }
 
-  TKeyedListModel<TKey,X> &operator=(const TKeyedListModel<TKey,X> & other){
-    TKeyedListModel<TKey,X> * newModel = new TKeyedListModel<TKey,X>(other);
-    myIsAutoDeleteModelElements = other.isAutoDelete();
-    return *newModel ;
+  TKeyedListModel<TKey,X> &operator=(const TKeyedListModel<TKey,X> & other) // copy assignment
+  {
+      if (this != &other) {
+          //clear old elements
+          myKeyMap = QMap<TKey,X*>(copy.myKeyMap);
+          removeAll();
+          myList.append(copy.list());
+          myIsAutoDeleteModelElements = copy.isAutoDelete();
+          myHorizontalHeaders = copy.horizontalHeaders();
+          myEditableColumnsState = copy.myEditableColumnsState;
+      }
+      return *this;
   }
-
 
   TKeyedListModel(QMap<TKey,X*> data, QObject *parent =0)
     : QAbstractTableModel(parent)
@@ -72,14 +81,18 @@ public:
   }
 
   bool isAutoDelete() { return myIsAutoDeleteModelElements; }
+
   void setAutoDelete(bool on) { myIsAutoDeleteModelElements = on;}
 
+  QStringList horizontalHeaders() const { return horizontalHeaders(); }
 
-  void setEditable(bool on) { myEditable = on;}
+  void setEditable(int column,bool on) {
+      if (column >= getColumnCount()) return;
+      if (column >= myEditableColumnsState.keys().size()) return;
+      myEditableColumnsState[column] = on;
+  }
 
-
-  int   rowCount(const QModelIndex & parent = QModelIndex() ) const
-  {
+  int   rowCount(const QModelIndex & parent = QModelIndex() ) const {
     Q_UNUSED(parent);
     return myList.size();
   }
@@ -150,13 +163,12 @@ public:
     return false;
   }
 
-
   Qt::ItemFlags flags(const QModelIndex &index) const
   {
     if (!index.isValid())
       return QAbstractItemModel::flags(index);//TODO | Qt::ItemIsDropEnabled;
 
-    if (myEditable)
+    if (myEditableColumnsState.value(index.column()))
       return QAbstractItemModel::flags(index)| Qt::ItemIsEditable;
     else
       return QAbstractItemModel::flags(index);// TODO implement Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
@@ -192,7 +204,6 @@ public:
     return true;
   }
 
-
   bool setItemValue(const TKey & key,const X & value){
       X* oldItem = myKeyMap.value(key,NULL);
       if (oldItem == NULL){
@@ -207,24 +218,50 @@ public:
       return true;
   }
 
+  template <typename PROPNAME>
+  bool updateItemProperty(const TKey & key,const QVariant & value){
+      X* oldItem = myKeyMap.value(key,NULL);
+      if (oldItem == NULL){
+         //we're going to add the item to the list
+          X * newItem = new X();
+          newItem->attachProperty<PROPNAME>(value);
+          addItem(key,newItem);
+      }
+      else {
+          oldItem->attachProperty<PROPNAME>(value);
+          int row = myList.indexOf(oldItem);
+          emit dataChanged(index(row,1),index(row,0));
+      }
+      return true;
+  }
+
+
   X * takeItem(const TKey & key){
-     X * item = myKeyMap.value(key,NULL);
+     X * item = myKeyMap.value(key,NULL);     
      if (item == NULL) return NULL;
+     myKeyMap.remove(key);
      int row = myList.indexOf(item);
      removeRows(row,1,QModelIndex());
      return item;
   }
 
-  void removeAll(){
+  X* itemByKey(const TKey & key){
+      X * item = myKeyMap.value(key,NULL);
+      return item;
+  }
 
-    QList<X*> list;
-    list.append(myList);
-    foreach(X* item,list) {
-      removeItem(item);
-      if (myIsAutoDeleteModelElements)
-        DELETE_AND_NULLIFY(item);
+  void emiDataChanged(const TKey & key){
+      X* item = myKeyMap.value(key,NULL);
+      if (item == NULL) return;
+      int row = myList.indexOf(item);
+      emit dataChanged(index(row,1),index(row,0));
+  }
+
+  void removeAll(){
+    foreach(const TKey & key , myKeyMap.keys()){
+        X* item = takeItem(key);
+        if (myIsAutoDeleteModelElements) DELETE_AND_NULLIFY(item);
     }
-    myKeyMap.clear();
   }
 
   QList<X*>  list() const {
@@ -308,7 +345,7 @@ private:
 
   QStringList myHorizontalHeaders;
   bool myIsAutoDeleteModelElements;
-  bool myEditable;
+  QMap<int,bool> myEditableColumnsState;
 }; 
 
 #endif // TKEYEDLISTMODEL_H

@@ -2,11 +2,8 @@
 #define GAMEPROJECTIONMODELVIEW_H
 
 #include "viewmodels.h"
-#include <QFlags>
-#include <QMetaType>
 
-class GameProjectionModelView :public Descriptable, public Decorable{
-
+class GameProjectionModelView :public Descriptable, public Decorable {
 
 public:
 
@@ -20,53 +17,41 @@ public:
         // next send projection action. User can revert the score state
         //
         Sent //score sent previously during the user session.
-
-    };
-
-
-    /**
-     * @brief The ProjectionFlag enum :
-     */
-    enum ProjectionFlag {
-        ProjectionNormalState = 0x0,
-        PlayerJustSwitchedTeam = 0x1,
-        PlayerInjured = 0x2,
-        PlayerAbsent = 0x4,
-        GameStarted = 0x8
-    };
-
-    Q_DECLARE_FLAGS(ProjectionFlags, ProjectionFlag)
-
-    void setProjectionFlag( ProjectionFlag flag, bool on );
-
-    bool testProjectionFlag(ProjectionFlag flag) const;
-
-
+    };    
 
     ScoreState myScoreState = NonScored;
+    PlayerStatus::Status myPlayerTeamStatus;
+    PlayerGameStatus myPlayerGameStatus;
     QString myTeamId;
     QString myPlayerId;
-    QString myPlayerName;
+    QString myPlayerFirstName;
+    QString myPlayerLastName;
     QString myPos;
     int myScore;
 
-
     GameProjectionModelView();
+    ~GameProjectionModelView();
     GameProjectionModelView(const QString & teamId,
-                            const QString & playerName,
+                            const QString & playerFirstName,
+                            const QString & playerLastName,
                             const QString & pos,
                             const QString & playerId,
+                            PlayerStatus::Status playerTeamStatus,
+                            PlayerGameStatus playerGameStatus,
                             int score=0);
-    GameProjectionModelView(GameProjectionModelView & copy);
+    GameProjectionModelView(const GameProjectionModelView & copy);
 
     void loadPlayerInfo();
 
-private:
-    ProjectionFlags myProjectionFlag;
+    void setProjection(int projection){
+        myScore = projection;
+        myScoreState = Scored;
+    }
+
+private:   
     bool myPlayerInfoLoaded = false;
 };
 
 Q_DECLARE_METATYPE(GameProjectionModelView*)
-Q_DECLARE_OPERATORS_FOR_FLAGS(GameProjectionModelView::ProjectionFlags)
 
 #endif // GAMEPROJECTIONMODELVIEW_H

@@ -304,6 +304,7 @@ public:
 
     static int getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
         qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
+        return 2;
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
@@ -353,8 +354,6 @@ public:
 
         return client.lastReply().toStdString();
     }
-
-
 };
 
 #endif // RESTFULLCALL_H

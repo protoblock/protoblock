@@ -27,9 +27,6 @@ public:
     std::unordered_map<std::string,int> GetProjByName(const std::string &nm);
 
     std::unordered_map<std::string,int> GetProjById(const std::string &pid);
-
-    //void getLeaderBoard(int week){}
-    //void getTeamPlayers(std::string teamId);
 };
 
 

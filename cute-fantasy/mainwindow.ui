@@ -93,7 +93,7 @@
     <item row="2" column="0" colspan="5">
      <widget class="QStackedWidget" name="myStackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="myPreviousWeekView">
        <layout class="QGridLayout" name="gridLayout_2">
