@@ -12,6 +12,10 @@
 #define APPLICATION_NAME "Cute Fantasy"
 #endif
 
+#define QT_LOGGING_TO_CONSOLE
+
+
+
 #include <QDebug>
 inline QDebug operator<<(QDebug  debug ,std::string msg) {
     static QMutex messageHandlerMutex;

@@ -18,19 +18,7 @@ SOURCES += \
     $$PWD/../src/blockrecorder.cpp \
     $$PWD/platform.cpp \
     $$PWD/appsettings.cpp \
-#    $$PWD/teamstateviewmodel.cpp \
-#    $$PWD/teamstatetablemodel.cpp \
-#    $$PWD/globalstateviewmodel.cpp \
-#    $$PWD/playerdataviewmodel.cpp \
-#    $$PWD/playerdatatablemodel.cpp \
-#    $$PWD/teamdataviewmodel.cpp \
-#    $$PWD/teamdatatablemodel.cpp \
-#    $$PWD/fantasyplayerviewmodel.cpp \
-#    $$PWD/fantasyplayertablemodel.cpp \
-#    $$PWD/scoringmodelview.cpp \
-#    $$PWD/scoringtablemodel.cpp \
-#    $$PWD/gameprojectionmodelview.cpp \
-#    $$PWD/gameprojectiontablemodel.cpp \
+    $$PWD/playerdataviewmodel.cpp \
     $$PWD/core.cpp \
     $$PWD/../generated/ProtoData.pb.cc \
     $$PWD/../generated/StaticData.pb.cc \
@@ -43,7 +31,6 @@ SOURCES += \
     $$PWD/previousweekwidget.cpp \
     $$PWD/nextweekwidget.cpp \
     $$PWD/iresolvable.cpp \    
-#    $$PWD/gamedataviewmodel.cpp \
     $$PWD/dataservice.cpp \
     $$PWD/tablemodels.cpp \
     $$PWD/dataagent.cpp \
@@ -82,19 +69,6 @@ HEADERS += \
     $$PWD/platform.h \
     $$PWD/genericsingleton.h \
     $$PWD/appsettings.h \
-#    $$PWD/teamstateviewmodel.h \
-#    $$PWD/teamstatetablemodel.h \
-#    $$PWD/globalstateviewmodel.h \
-#    $$PWD/playerdataviewmodel.h \
-#    $$PWD/playerdatatablemodel.h \
-#    $$PWD/teamdataviewmodel.h \
-#    $$PWD/teamdatatablemodel.h \
-#    $$PWD/fantasyplayerviewmodel.h \
-#    $$PWD/fantasyplayertablemodel.h \
-#    $$PWD/scoringmodelview.h \
-#    $$PWD/scoringtablemodel.h \
-#    $$PWD/gameprojectionmodelview.h \
-#    $$PWD/gameprojectiontablemodel.h \
     $$PWD/viewmodels.h \
     $$PWD/core.h \
     $$PWD/../generated/ProtoData.pb.h \
@@ -104,13 +78,12 @@ HEADERS += \
     $$PWD/../generated/NameData.pb.h \
     $$PWD/mainwindow.h \
     $$PWD/playerprojectionwidget.h \
+    $$PWD/playerdataviewmodel.h \
     $$PWD/currentweekwidget.h \
     $$PWD/previousweekwidget.h \
     $$PWD/nextweekwidget.h \
     $$PWD/iresolvable.h \
     $$PWD/projectionstrategybase.h \
-#    $$PWD/gamedataviewmodel.h \
-#    $$PWD/leaderbord.h \
     $$PWD/dataservice.h \
     $$PWD/tablemodels.h \
     $$PWD/propertynames.h \

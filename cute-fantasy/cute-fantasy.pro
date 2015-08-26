@@ -36,6 +36,8 @@ CONFIG(debug, debug|release) {
     contains(DEFINES, DATAAGENTGUI){ DESTDIR = ./../debugbinagent }
 }
 
+
+
 CONFIG(release, debug|release) {
     LIBS += -L./../lib
     LIBS += -lfc_release
