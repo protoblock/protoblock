@@ -6,145 +6,95 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>357</width>
-    <height>411</height>
+    <width>220</width>
+    <height>277</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="myPlayerNameLabel">
-         <property name="text">
-          <string>JOHN DOE</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="myPlayerNumberLabel">
-         <property name="text">
-          <string>#12</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="myPlayerPosLabel">
-         <property name="text">
-          <string>QB</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="1" column="0" rowspan="5">
-      <widget class="QLabel" name="label">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>210</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>210</height>
-        </size>
-       </property>
+    <widget class="QLabel" name="myPlayerImageLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>210</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>IMAGE</string>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="myPlayerNameLabel">
        <property name="text">
-        <string>IMAGE</string>
+        <string>JOHN DOE</string>
        </property>
-       <property name="scaledContents">
-        <bool>true</bool>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="myPlayerPosLabel">
+       <property name="text">
+        <string>QB</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
+      <widget class="QLabel" name="myPlayerNumberLabel">
+       <property name="text">
+        <string>#12</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="2">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Football Team </string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Age:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="myPlayerAgeLabel">
-         <property name="text">
-          <string>26</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="3" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>Height :</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="myPlayerHeightLabel">
-         <property name="text">
-          <string>6-4</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Weight:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="myPlayerHeightLabel_2">
-         <property name="text">
-          <string>240</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="5" column="1">
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
+     <item row="3" column="0" colspan="2">
+      <widget class="QLabel" name="myPlayerAgeLabel">
+       <property name="text">
+        <string>Age : 26</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>98</height>
-        </size>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="2">
+      <widget class="QLabel" name="myPlayerHeightLabel">
+       <property name="text">
+        <string>Height : 6-4</string>
        </property>
-      </spacer>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="2">
+      <widget class="QLabel" name="myPlayerHeightLabel_2">
+       <property name="text">
+        <string>Weight : 240</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item row="1" column="0" colspan="2">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QStackedWidget" name="myProjectionStyles">
        <property name="currentIndex">
-        <number>5</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="myQBProjectionStyle"/>
        <widget class="QWidget" name="myRBProjectionStyle"/>
@@ -155,24 +105,20 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <item>
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>Projection :</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="myProjectionLabel">
-           <property name="text">
-            <string>calculated points</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>Projection :</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="myCalculatedPointLE">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer">
@@ -190,7 +136,7 @@
        <item>
         <widget class="QPushButton" name="pushButton_2">
          <property name="text">
-          <string>Add to projection sheet</string>
+          <string>save</string>
          </property>
         </widget>
        </item>

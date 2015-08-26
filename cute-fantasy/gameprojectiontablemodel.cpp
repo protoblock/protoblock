@@ -1,8 +1,9 @@
 #include "gameprojectiontablemodel.h"
 
-GameProjectionTableModel::GameProjectionTableModel(): TListModel<GameProjectionModelView>(NULL) {
+GameProjectionTableModel::GameProjectionTableModel(): TKeyedListModel<QString,GameProjectionModelView>(NULL) {
     initialize();
 }
+
 GameProjectionTableModel::~GameProjectionTableModel() {}
 
 void GameProjectionTableModel::initialize(){
@@ -11,7 +12,6 @@ void GameProjectionTableModel::initialize(){
     setHorizontalHeaders(headers);
 }
 
-
 QVariant GameProjectionTableModel::getColumnDisplayData(quint32 column,GameProjectionModelView * data){
     if (data==NULL) return QVariant();
     //load player info once
@@ -19,7 +19,7 @@ QVariant GameProjectionTableModel::getColumnDisplayData(quint32 column,GameProje
     if( column ==0)
         return data->myTeamId;
     if( column ==1)
-        return data->myPlayerName;
+        return data->myPlayerFirstName + " "+ data->myPlayerLastName;
     if( column ==2)
         return data->myPos;
     if ( column == 3)
@@ -40,10 +40,10 @@ QVariant GameProjectionTableModel::getColumnDecorateData(uint column, GameProjec
 int GameProjectionTableModel::getColumnCount(){
     return 4;
 }
+
 void GameProjectionTableModel::setDataFromColumn(GameProjectionModelView * data, const QModelIndex & index, const QVariant &vvalue, int role){
     if (index.column() >= getColumnCount()) return;
     //only allow edition of the score
     if (index.column()==3)
         data->myScore = vvalue.toInt();
 }
-

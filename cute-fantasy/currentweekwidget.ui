@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
-    <height>685</height>
+    <width>965</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,7 +74,7 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="1" colspan="2">
+   <item row="0" column="1">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
       <widget class="QLabel" name="label_2">
@@ -84,26 +84,28 @@
       </widget>
      </item>
      <item>
-      <widget class="PlayerProjectionWidget" name="widget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="PlayerProjectionWidget" name="myPlayerWidget" native="true">
        <property name="minimumSize">
         <size>
-         <width>281</width>
-         <height>271</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>281</width>
-         <height>271</height>
+         <width>300</width>
+         <height>210</height>
         </size>
        </property>
       </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="2">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Leader board :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableView" name="myLeaderBaordTableView"/>
      </item>
     </layout>
    </item>
@@ -129,32 +131,19 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Projection sheet :</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Leader board :</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QTableView" name="myProjectionTableView"/>
-   </item>
-   <item row="3" column="2">
-    <widget class="QTableView" name="myLeaderBaordTableView">
-     <property name="maximumSize">
-      <size>
-       <width>231</width>
-       <height>16777215</height>
-      </size>
-     </property>
-    </widget>
+   <item row="2" column="0" colspan="3">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Projection sheet :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableView" name="myProjectionTableView"/>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

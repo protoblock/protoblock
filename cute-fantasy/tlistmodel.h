@@ -51,15 +51,23 @@ public:
 
   TListModel (const TListModel& copy,QObject *parent =0): QAbstractTableModel(parent){
     myList.append(copy.list());
-    myIsAutoDeleteModelElements = copy.isAutoDelete();
+    myIsAutoDeleteModelElements = copy.myIsAutoDeleteModelElements;
+    myEditableColumnsState = copy.myEditableColumnsState;
+    myHorizontalHeaders = copy.myHorizontalHeaders;
   }
 
-  TListModel<X> &operator=(const TListModel<X> & other){
-    TListModel<X> * newModel = new TListModel<X>(other.list());
-    myIsAutoDeleteModelElements = other.isAutoDelete();
-    return *newModel ;
+  TListModel<X> &operator=(const TListModel<X> & other) // copy assignment
+  {
+      if (this != &other) {
+          //clear old elements
+          removeAll();
+          myList.append(copy.list());
+          myIsAutoDeleteModelElements = copy.isAutoDelete();
+          myHorizontalHeaders = copy.horizontalHeaders();
+          myEditableColumnsState = copy.myEditableColumnsState;
+      }
+      return *this;
   }
-
 
   TListModel(QList<X*> data, QObject *parent =0)
     : QAbstractTableModel(parent)
@@ -70,8 +78,14 @@ public:
   bool isAutoDelete() { return myIsAutoDeleteModelElements; }
   void setAutoDelete(bool on) { myIsAutoDeleteModelElements = on;}
 
+  QStringList horizontalHeaders() const { return horizontalHeaders(); }
 
-  void setEditable(bool on) { myEditable = on;}
+
+  void setEditable(int column,bool on) {
+      if (column >= getColumnCount()) return;
+      if (column >= myEditableColumnsState.keys().size()) return;
+      myEditableColumnsState[column] = on;
+  }
 
 
   int   rowCount(const QModelIndex & parent = QModelIndex() ) const
@@ -152,7 +166,7 @@ public:
     if (!index.isValid())
       return QAbstractItemModel::flags(index);//TODO | Qt::ItemIsDropEnabled;
 
-    if (myEditable)
+    if (myEditableColumnsState.value(index.column()))
       return QAbstractItemModel::flags(index)| Qt::ItemIsEditable;
     else
       return QAbstractItemModel::flags(index);// TODO implement Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
@@ -282,7 +296,7 @@ protected :
 private:
   QStringList myHorizontalHeaders;
   bool myIsAutoDeleteModelElements;
-  bool myEditable;
+  QMap<int,bool> myEditableColumnsState;
 };
 
 #endif // TLISTMODEL_H

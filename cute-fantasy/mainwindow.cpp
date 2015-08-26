@@ -3,6 +3,7 @@
 #include "LAPIWorker.h"
 #include "core.h"
 #include "dataservice.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -12,15 +13,19 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::initialize() {
-
     qRegisterMetaType<GlobalState>("GlobalState");
     qRegisterMetaType<MyFantasyName>("MyFantasyName");
     qRegisterMetaType<FantasyBitProj>("FantasyBitProj");
     qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
     myCoreInstance = Core::resolveByName<MainLAPIWorker>("coreapi");
-
-//    //listen to notifcation from Core
-    QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
+    //wake up core thread
+    Core::instance()->guiIsAwake();
+    if (myCoreInstance == NULL)  {
+        qDebug() << "coreapi is not resolved";
+        setDisabled(true);
+        return;
+    }
+    //QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
 
     QObject::connect(myCoreInstance,SIGNAL(Live(GlobalState)),
                      this,SLOT(GoLive(GlobalState)));
@@ -31,6 +36,7 @@ void MainWindow::initialize() {
 //    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
     QObject::connect(myCoreInstance,SIGNAL(MyNames(vector<MyFantasyName>)),
                      this,SLOT(OnMyFantasyNames(vector<MyFantasyName>)));
+
 
     QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myCoreInstance,SLOT(OnUseName(QString)));
     QObject::connect(this,SIGNAL(SubscribeMyNameTx(QString)),myCoreInstance,SLOT(OnSubName(QString)));
@@ -58,17 +64,17 @@ void MainWindow::initialize() {
     QObject::connect(this,SIGNAL(SubscribeTeamRoster()),myCoreInstance,SLOT(OnSubTeams()));
     QObject::connect(this,SIGNAL(SubscribePlayerGameStatus()),myCoreInstance,SLOT(OnSubOut()));
 
-    QObject::connect(myCoreInstance,SIGNAL(PlayerData(QString)),this,SLOT(OnPlayerUpdate(QString)));
-    QObject::connect(myCoreInstance,SIGNAL(TimeChange(QString)),this,SLOT(OnSchedule(QString)));
-    QObject::connect(myCoreInstance,SIGNAL(TeamActicity(QString)),this,SLOT(OnTeamRoster(QString)));
+//    QObject::connect(myCoreInstance,SIGNAL(PlayerData(QString)),this,SLOT(OnPlayerUpdate(QString)));
+//    QObject::connect(myCoreInstance,SIGNAL(TimeChange(QString)),this,SLOT(OnSchedule(QString)));
+//    QObject::connect(myCoreInstance,SIGNAL(TeamActicity(QString)),this,SLOT(OnTeamRoster(QString)));
 
 
     //GET
-    QObject::connect(this,SIGNAL(GetPrevWeekData(int)),myCoreInstance,SLOT(SendWeeklyData(int)));
-    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
+//    QObject::connect(this,SIGNAL(GetPrevWeekData(int)),myCoreInstance,SLOT(SendWeeklyData(int)));
+//    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
 
-    QObject::connect(this,SIGNAL(GetLiveProjection(QString)),myCoreInstance,SLOT(SendCurrentProj(QString)));
-    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
+//    QObject::connect(this,SIGNAL(GetLiveProjection(QString)),myCoreInstance,SLOT(SendCurrentProj(QString)));
+//    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
 
     //PUT
     QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
@@ -147,8 +153,10 @@ void MainWindow::on_myPreviousWeek_clicked()
 }
 
 void MainWindow::GoLive(GlobalState state){
-    auto roster = DataService::instance()->GetCurrentWeekGameRosters();
 
+
+void MainWindow::GoLive(fantasybit::GlobalState /*state*/){
+    auto roster = DataService::instance()->GetCurrentWeekGameRosters();
 }
 
 void MainWindow::OnMyFantasyNames(vector<MyFantasyName> names){
@@ -162,3 +170,25 @@ void MainWindow::OnNameStatus(MyFantasyName name){
   myCurrentFantasyName = name;
   //TODO myCurrentFantasyName.status()
 }
+
+
+void MainWindow::OnProjAck(fantasybit::FantasyBitProj){
+
+}
+
+void MainWindow::OnAward(QVariant){
+
+}
+
+void MainWindow::OnNewWeek(int){
+
+}
+
+void MainWindow::OnGameOver(QString){
+
+}
+
+void MainWindow::OnGameStart(QString){
+
+}
+

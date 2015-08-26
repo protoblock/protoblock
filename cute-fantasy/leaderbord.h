@@ -17,9 +17,12 @@ public:
 
     }
 
-    LeaderBaordViewModel & operator=(LeaderBaordViewModel const & src) {
-        myFantasyName = src.myFantasyName;
-        myBalance = src.myBalance;
+    LeaderBaordViewModel & operator=(const LeaderBaordViewModel & src) {
+        if( this != &src){
+            myFantasyName = src.myFantasyName;
+            myBalance = src.myBalance;
+        }
+        return *this;
     }
 
     bool operator==(LeaderBaordViewModel const & rhs) {
@@ -56,9 +59,8 @@ public:
 
     ~LeaderBaordViewModelTableModel() {}
 
-
-
 protected:
+
     QVariant getColumnDisplayData(quint32 column,LeaderBaordViewModel * data) {
         if (data==NULL) return QVariant();
         if( column ==0)
@@ -68,13 +70,15 @@ protected:
         return QVariant();
 
     }
+
     int getColumnCount() {
         return 2;
     }
+
 private:
+
     void initialize() {
         QStringList  headers;
-
         headers << "FantasyName";
         headers << "Balance";
         setHorizontalHeaders(headers);
@@ -82,4 +86,3 @@ private:
 };
 
 #endif // LEADERBORD_H
-

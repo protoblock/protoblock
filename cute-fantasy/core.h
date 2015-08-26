@@ -13,12 +13,19 @@ class IResolvable;
 class Core : public GenericSingleton<Core>
 {
     friend class GenericSingleton<Core>;
-    Core();
+
+    Core();    
+
 public:
-    ~Core();
-    static QWaitCondition waitForGUI;
-    ThreadedQObject<MainLAPIWorker> myCoreApi;
+
+    ~Core();   
+
     void bootstrap();
+
+    void guiIsAwake();
+
+    void waitForGui();
+
     template <class T>
     static bool registerNamedInstance(const QString & name ,T * theInstance) {
         QMutexLocker locker(&Core::instance()->myMutex);
@@ -51,9 +58,14 @@ public:
         IResolvable * theInstance = instance()->myNamedResolvableInstance.value(name.toLatin1(),NULL);
         return static_cast<T*>(theInstance);
         }
+
 private:
+
     QMap<QString,IResolvable *> myNamedResolvableInstance;
+    QWaitCondition myWaitForGUI;
     QMutex myMutex;
+    QMutex myWaitForGuiMutex;
+    ThreadedQObject<MainLAPIWorker> myCoreApi;
 
 };
 
