@@ -3,6 +3,7 @@
 #include "LAPIWorker.h"
 #include "core.h"
 #include "dataservice.h"
+#include "datacache.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,10 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::initialize() {
-    qRegisterMetaType<GlobalState>("GlobalState");
-    qRegisterMetaType<MyFantasyName>("MyFantasyName");
-    qRegisterMetaType<FantasyBitProj>("FantasyBitProj");
-    qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
     myCoreInstance = Core::resolveByName<MainLAPIWorker>("coreapi");
     //wake up core thread
     Core::instance()->guiIsAwake();
@@ -150,19 +147,18 @@ void MainWindow::on_myPreviousWeek_clicked()
     default:
         break;
     }
-}
-
-void MainWindow::GoLive(GlobalState state){
+} 
 
 
-void MainWindow::GoLive(fantasybit::GlobalState /*state*/){
-    auto roster = DataService::instance()->GetCurrentWeekGameRosters();
+void MainWindow::GoLive(fantasybit::GlobalState state){
+   myGlobalState = state;
 }
 
 void MainWindow::OnMyFantasyNames(vector<MyFantasyName> names){
    if (names.size()> 0){
-    MyFantasyName fn = names.at(names.size()-1);
-    //emit UseMyFantasyName(fn.name());
+    myCurrentFantasyName = names.at(names.size()-1);
+    ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState,myCurrentFantasyName.name());
+    emit UseMyFantasyName(myCurrentFantasyName.name().data());
    }
 }
 

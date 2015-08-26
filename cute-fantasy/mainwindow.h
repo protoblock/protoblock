@@ -49,7 +49,7 @@ public slots:
 
     void on_myNextWeek_clicked(); 
     void on_myPreviousWeek_clicked();
-    void GoLive(GlobalState);
+    void GoLive(GlobalState state);
     void OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> names);
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj);
