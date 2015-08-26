@@ -12,7 +12,6 @@
 #define APPLICATION_NAME "Cute Fantasy"
 #endif
 
-
 #include <QDebug>
 inline QDebug operator<<(QDebug  debug ,std::string msg) {
     static QMutex messageHandlerMutex;

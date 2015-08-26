@@ -17,7 +17,7 @@ PlayerDataViewModel::PlayerDataViewModel(const PlayerDataViewModel & copy){
     myPlayerAge = copy.myPlayerAge;
     myPlayerPictureLink = copy.myPlayerPictureLink;
     myPlayerPicture = copy.myPlayerPicture;
-} 
+}
 
 PlayerDataViewModel::PlayerDataViewModel(const QString & playerId,const QString teamId) {
     myPlayerId = playerId;

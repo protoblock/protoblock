@@ -23,7 +23,8 @@ public:
 
     ~PlayerDataViewModel();
 
-    PlayerDataViewModel(const PlayerDataViewModel & copy); 
+    PlayerDataViewModel(const PlayerDataViewModel & copy);
+
 
     PlayerDataViewModel(const QString & playerId,const QString teamId);
 

@@ -163,7 +163,7 @@ void MainWindow::OnMyFantasyNames(vector<MyFantasyName> names){
 }
 
 void MainWindow::OnNameStatus(MyFantasyName name){
-  myCurrentFantasyName = name;
+//  myCurrentFantasyName = name;
   //TODO myCurrentFantasyName.status()
 }
 
