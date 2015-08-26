@@ -37,8 +37,9 @@ namespace PropertyNames {
 
     template<typename Name>
     static const char * naturalName() {
-        QString result= QString(Name::name()).replace('_',' ');
-        return result.toLatin1().constData();
+        //QString result= QString(Name::name()).replace('_',' ');
+        //return result.toLatin1().constData();
+        return Name::name();
     }
 }
 
