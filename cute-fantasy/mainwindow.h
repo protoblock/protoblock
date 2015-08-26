@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "FantasyName.h"
-
+#include <vector>
 
 namespace Ui {
 class MainWindow;
@@ -14,6 +14,9 @@ class MainLAPIWorker;
 class CurrentWeekWidget;
 class NextWeekWidget;
 class PreviousWeekWidget;
+
+using namespace std;
+using namespace fantasybit;
 
 
 class MainWindow : public QMainWindow
@@ -41,7 +44,7 @@ signals:
     void SubscribeScheduleData();
     void SubscribeTeamRoster();
     void SubscribePlayerGameStatus();
-    void NewProjection(fantasybit::FantasyBitProj);
+    void NewProjection(FantasyBitProj &);
     void ClaimFantasyName(QString);
 
 public slots:
@@ -49,7 +52,7 @@ public slots:
     void on_myNextWeek_clicked(); 
     void on_myPreviousWeek_clicked();
     void GoLive(GlobalState state);
-    void OnMyFantasyNames(std::vector<fantasybit::MyFantasyName> names);
+    void OnMyFantasyNames(vector<MyFantasyName> names);
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj);
     void OnAward(QVariant);

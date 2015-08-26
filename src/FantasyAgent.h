@@ -66,7 +66,7 @@ public:
     bool beDataAgent();// { return beOracle();  }
 
     //Block makeNewBlockAsOracle();
-	Block makeNewBlockAsDataAgent(const SignedTransaction &);
+    Block makeNewBlockAsDataAgent(const SignedTransaction &, fc::optional<BlockHeader>);
 
     std::string getSecret() const ;
     fc::ecc::public_key_data pubKey();

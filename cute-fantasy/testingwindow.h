@@ -33,6 +33,8 @@ signals:
 public slots:
     void GoLive(GlobalState);
     void OnNameStatus(MyFantasyName);
+    void OnMyFantasyNames(vector<MyFantasyName> &);
+    void OnNewWeek(int);
 
 private slots:
     void on_beoracle_clicked();

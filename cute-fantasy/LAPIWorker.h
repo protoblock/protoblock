@@ -19,6 +19,7 @@
 
 using fantasybit::GlobalState;
 using namespace fantasybit;
+using namespace std;
 class MainLAPIWorker : public QObject , public IResolvable
 {
     Q_OBJECT
@@ -79,12 +80,15 @@ signals:
 
     //to GUI
     void NameStatus(MyFantasyName);
-    void LiveProj(fantasybit::FantasyBitProj &);
-    void MyNames(std::vector<fantasybit::MyFantasyName>);
+    void LiveProj(FantasyBitProj &);
+    void MyNames(vector<MyFantasyName>);
     void NameBalance(fantasybit::FantasyNameBal &);
-    void PlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus> &in);
+    void PlayerStatusChange(std::pair<string,PlayerStatus> &in);
     void GlobalStateChange(GlobalState);
     void Live(GlobalState);
+    void NewWeek(int);
+    void GameStart(string);
+    void BlockError(int last);
 
 public slots:
 
@@ -97,6 +101,7 @@ public slots:
     void ProcessBlock();
     void OnSeenBlock(int num);
     void Timer();
+    void OnBlockError(int last);
 
     //void OnPlayerChange(std::string);
 
@@ -105,10 +110,10 @@ public slots:
     void OnUseName(QString);
 
     //tx
-    void OnFoundName(std::string &);
-    void OnProjLive(fantasybit::FantasyBitProj &);
+    void OnFoundName(string);
+    void OnProjLive(FantasyBitProj &);
     void OnClaimName(QString);
-    void OnProjTX(fantasybit::FantasyBitProj);
+    void OnProjTX(FantasyBitProj &);
 
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);

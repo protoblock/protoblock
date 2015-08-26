@@ -40,18 +40,18 @@ void MainWindow::initialize() {
     QObject::connect(this,SIGNAL(SubscribeMyProjTx(QString)),myCoreInstance,SLOT(OnSubProj(QString)));
     QObject::connect(this,SIGNAL(SubscribeAwards(QString)),myCoreInstance,SLOT(OnSubBits(QString)));
 
-    QObject::connect(myCoreInstance,SIGNAL(NameStatus(fantasybit::MyFantasyName)),
-                     this,SLOT(OnNameStatus(fantasybit::MyFantasyName)));
-    QObject::connect(myCoreInstance,SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
-                     this,SLOT(OnProjAck(fantasybit::FantasyBitProj)));
+    QObject::connect(myCoreInstance,SIGNAL(NameStatus(MyFantasyName)),
+                     this,SLOT(OnNameStatus(MyFantasyName)));
+    QObject::connect(myCoreInstance,SIGNAL(LiveProj(FantasyBitProj)),
+                     this,SLOT(OnProjAck(FantasyBitProj)));
     QObject::connect(myCoreInstance,SIGNAL(NewAward(QVariant)),this,SLOT(OnAward(QVariant)));
 
     //state
     QObject::connect(this,SIGNAL(SubscribeGameState()),myCoreInstance,SLOT(OnSubGame()));
 
     QObject::connect(myCoreInstance,SIGNAL(NewWeek(int)),this,SLOT(OnNewWeek(int)));
-    QObject::connect(myCoreInstance,SIGNAL(GameOver(QString)),this,SLOT(OnGameOver(QString)));
-    QObject::connect(myCoreInstance,SIGNAL(GameStart(QString)),this,SLOT(OnGameStart(QString)));
+    QObject::connect(myCoreInstance,SIGNAL(GameOver(string)),this,SLOT(OnGameOver(string)));
+    QObject::connect(myCoreInstance,SIGNAL(GameStart(string)),this,SLOT(OnGameStart(string)));
 
 
     //data
@@ -74,8 +74,8 @@ void MainWindow::initialize() {
 //    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
 
     //PUT
-    QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
-                     myCoreInstance,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
+    QObject::connect(this,SIGNAL(NewProjection(FantasyBitProj)),
+                     myCoreInstance,SLOT(OnProjTX(FantasyBitProj)));
 
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myCoreInstance,SLOT(OnClaimName(QString)));
 }

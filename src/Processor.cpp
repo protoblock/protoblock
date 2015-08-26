@@ -51,7 +51,7 @@ int BlockProcessor::init() {
 }
 
 int BlockProcessor::process(Block &sblock) {
-    qDebug() << "process: " << sblock.DebugString();
+    qDebug() << "process: " << sblock.signedhead().head().num();
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
         qCritical() << "verifySignedBlock failed! ";
@@ -289,18 +289,25 @@ void BlockProcessor::process(const DataTransition &indt) {
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
 
+        if ( indt.week() != mGlobalState.week())
+            qWarning() << indt.type() << " wrong week" << mGlobalState.week() << indt.week();
+
         OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
         if (indt.week() == 16) {
-            newweek = 1;
+            newweek = 0;
             qInfo() <<  "season " << indt.season() << " Over ";
             mGlobalState.set_state(GlobalState_State_OFFSEASON);
             mGlobalState.set_season(mGlobalState.season() + 1);
+            mGlobalState.set_week(0);
             mData.OnGlobalState(mGlobalState);
         }
-        else
+        else {
+            mGlobalState.set_week(newweek);
+            mData.OnGlobalState(mGlobalState);
             OnWeekStart(newweek);
+        }
         break;
     }
     default:
@@ -331,8 +338,10 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
     fc::ecc::signature sig = Commissioner::str2sig(st.sig());
     if (t.type() == TransType::NAME) {
         auto nt = t.GetExtension(NameTrans::name_trans);
-        if (!verify_name(st, nt, sig, digest))
+        if (!verify_name(st, nt, sig, digest)) {
+            qInfo() << " !verify name";
             return false;
+        }
     }
 
     else if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
@@ -355,7 +364,10 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 
         qDebug() << "processing tx " << t.DebugString();// TransType_Name(t.type());
 
-        if (!isValidTx(st)) continue;
+        if (!isValidTx(st)) {
+            qDebug() << " imvalid tx";
+            continue;
+        }
 
         switch (t.type())
         {
@@ -508,7 +520,7 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 		break;
 
 		default:
-			return false;
+            return true;
 			break;
 	}
 	/*

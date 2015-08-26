@@ -17,12 +17,33 @@ using namespace std;
 
 namespace fantasybit {
 
+
 Block Commissioner::makeGenesisBlock() {
     Block b{};
-    Reader<Block> reader{ ":/gensis/genesisAlpha.out"};//GET_ROOT_DIR() + "genesisAlpha.out"};
-    reader.ReadNext(b);
+
+    /*
+    uint32_t sz = sizeof(genesis_data);
+
+    b.ParseFromArray(genesis_data,sizeof(genesis_data));
 
     return b;
+
+    b.ParseFromArray(genesis_data,sizeof(genesis_data));
+
+    return b;
+*/
+    Reader<Block> reader{GET_ROOT_DIR() + "genesisAlpha.out"};
+    if ( !reader.good() )
+        qCritical() << " No genesis ";
+    else
+        if ( !reader.ReadNext(b) )
+            qCritical() << " No genesis ";
+
+    return b;
+
+
+
+
 
     auto gtrans = Commissioner::makeGenesisName();
     auto gtransition = Commissioner::makeGenesisTransition();
@@ -1036,3 +1057,4 @@ decltype(Commissioner::GENESIS_NFL_PLAYERS) Commissioner::GENESIS_NFL_PLAYERS{
 };
 
 }
+

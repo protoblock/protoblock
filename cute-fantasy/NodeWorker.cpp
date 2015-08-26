@@ -42,7 +42,10 @@
             if ( *gnum > hi ) {
                 hi = *gnum;
                 emit SeenBlock(*gnum);
-                node.SyncTo(*gnum);
+                if ( !node.SyncTo(*gnum) ) {
+                    int last = node.getLastLocalBlockNum();
+                    emit BlockError(last);
+                }
             }
         }
     }

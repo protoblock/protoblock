@@ -26,12 +26,24 @@ TestingWindow::~TestingWindow()
     delete ui;
 }
 void TestingWindow::initialize() {
+    myCoreInstance = Core::resolveByName<MainLAPIWorker>("coreapi");
+    //wake up core thread
+    Core::instance()->guiIsAwake();
+    if (myCoreInstance == NULL)  {
+        qDebug() << "coreapi is not resolved";
+        setDisabled(true);
+        return;
+    }
+
+/*
     qRegisterMetaType<GlobalState>("GlobalState");
     qRegisterMetaType<MyFantasyName>("MyFantasyName");
     qRegisterMetaType<fantasybit::FantasyBitProj>("FantasyBitProj");
     qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
+*/
 
-    myCoreInstance = Core::resolveByName<MainLAPIWorker>("coreapi");
+    QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(GlobalState)),
+                     this,SLOT(GoLive(GlobalState)));
 
     QObject::connect(myCoreInstance,SIGNAL(Live(GlobalState)),
                      this,SLOT(GoLive(GlobalState)));
@@ -44,6 +56,12 @@ void TestingWindow::initialize() {
 
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myCoreInstance,SLOT(OnClaimName(QString)));
 
+    QObject::connect(myCoreInstance,SIGNAL(MyNames(vector<MyFantasyName>)),
+                     this,SLOT(OnMyFantasyNames(vector<MyFantasyName>)));
+
+    QObject::connect(myCoreInstance,SIGNAL(NewWeek(int)),this,SLOT(OnNewWeek(int)));
+
+    //GlobalStateChange(GlobalState);
     for (int i = DataTransition::Type_MIN; i < DataTransition::Type_ARRAYSIZE; i++) {
 
         if (!DataTransition::Type_IsValid(i)) continue;
@@ -68,9 +86,16 @@ void TestingWindow::GoLive(GlobalState gs) {
     ui->globalstate->setText(QString::fromStdString(GlobalState::State_Name(gs.state())));
 }
 
+void TestingWindow::OnNewWeek(int week) {
+    ui->week->setText(QString::number(week));
+}
 
 void TestingWindow::OnNameStatus(MyFantasyName name) {
     ui->FantassyNameIn->setText(QString::fromStdString(name.name()));
+}
+
+void TestingWindow::OnMyFantasyNames(vector<MyFantasyName> &in) {
+    qDebug() << in.size();
 }
 
 void TestingWindow::on_beoracle_clicked()

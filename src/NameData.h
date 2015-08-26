@@ -16,6 +16,7 @@
 #include <set>
 #include <mutex>
 
+using std::string;
 namespace fantasybit
 {
 
@@ -42,7 +43,7 @@ class FantasyNameData : public QObject {
 
 signals:
     void ProjectionLive(FantasyBitProj &);
-    void FantasyNameFound(std::string &);
+    void FantasyNameFound(string);
     void FantasyNameBalance(FantasyNameBal &);
 
 public slots:

@@ -31,6 +31,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     //block sync
     QObject::connect(myNodeWorker,SIGNAL(InSync(int)),this,SLOT(OnInSync(int)));
     QObject::connect(myNodeWorker,SIGNAL(SeenBlock(int)),this,SLOT(OnSeenBlock(int)));
+    QObject::connect(myNodeWorker,SIGNAL(BlockError(int)),this,SLOT(OnBlockError(int)));
+
     QObject::connect(this,SIGNAL(ProcessNext()),this,SLOT(ProcessBlock()));
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(Timer()));
     QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
@@ -44,13 +46,15 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),&data,SLOT(OnWeekStart(int)));
+    QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
+
 
     //delt data
     QObject::connect(&data,SIGNAL(PlayerStatusChange(pair<string,PlayerStatus>)),
                      this,SLOT(OnPlayerStatus(pair<string,PlayerStatus>)));
 
-    QObject::connect(&data,SIGNAL(GameStart(std::string)),
-                     this,SLOT(OnGameStart(std::string)));
+    QObject::connect(&data,SIGNAL(GameStart(string)),
+                     this,SIGNAL(GameStart(string)));
 
     //QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
     //                 this,SLOT(OnGlobalStateChange(GlobalState)));
@@ -58,13 +62,13 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
                      this,SIGNAL(GlobalStateChange(GlobalState)));
 
-    QObject::connect(&namedata,SIGNAL(FantasyNameFound(std::string)),
-                     this,SLOT(OnFoundName(std::string)));
+    QObject::connect(&namedata,SIGNAL(FantasyNameFound(string)),
+                     this,SLOT(OnFoundName(string)));
 
-    QObject::connect(&data,SIGNAL(ProjectionLive(FantasyBitProj)),
+    QObject::connect(&namedata,SIGNAL(ProjectionLive(FantasyBitProj)),
                      this,SLOT(OnProjLive(FantasyBitProj)));
 
-    QObject::connect(&data,SIGNAL(FantasyNameBalance(FantasyNameBal)),
+    QObject::connect(&namedata,SIGNAL(FantasyNameBalance(FantasyNameBal)),
                      this,SLOT(OnNameBal(FantasyNameBal)));
 }
 
@@ -130,6 +134,11 @@ void MainLAPIWorker::OnSeenBlock(int num) {
         numto = num;
     timer->start(intervalstart);
     count = bcount = 0;
+}
+
+void MainLAPIWorker::OnBlockError(int last) {
+    numto = last;
+    emit BlockError(last);
 }
 
 void MainLAPIWorker::Timer() {
@@ -264,7 +273,7 @@ void MainLAPIWorker::OnClaimName(QString name) {
     emit NameStatus(myCurrentName);
 }
 
-void MainLAPIWorker::OnProjTX(FantasyBitProj inp) {
+void MainLAPIWorker::OnProjTX(FantasyBitProj &inp) {
     if ( !amlive ) return;
 
     if ( !agent.HaveClient() ) return;
@@ -289,7 +298,7 @@ void MainLAPIWorker::OnProjTX(FantasyBitProj inp) {
 }
 
 //tx status
-void MainLAPIWorker::OnFoundName(std::string &name) {
+void MainLAPIWorker::OnFoundName(string name) {
     auto it = myfantasynames.find(name);
     if ( it != end(myfantasynames)) {
         it->second.set_status(MyNameStatus::confirmed);

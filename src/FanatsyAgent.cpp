@@ -338,7 +338,7 @@ bool FantasyAgent::beDataAgent() {
 }
 
 
-Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt) {
+Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt, fc::optional<BlockHeader> myprev) {
 	Block b{};
 	
 	if (!amDataAgent()) {
@@ -352,6 +352,9 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt) {
     qInfo() << "I am DataAgent";
 
     auto prev = Node::getlastLocalBlock().signedhead().head();
+    if ( myprev )
+        if ( (*myprev).num() > prev.num() )
+            prev = *myprev;
 
 	BlockHeader bh{};
 	bh.set_version(Commissioner::BLOCK_VERSION);
@@ -416,6 +419,8 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt) {
 	return b;
 
 }
+
+
 /*
 Block FantasyAgent::makeNewBlockAsOracle() {
 	Block b{};

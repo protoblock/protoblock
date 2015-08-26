@@ -368,7 +368,7 @@ public:
         QMap<QString,QVariant> params;
         //hard coded url
         //TODO move to settings
-        QString customRoute("/tx");
+        QString customRoute("tx");
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
 

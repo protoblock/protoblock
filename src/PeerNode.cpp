@@ -96,24 +96,31 @@ bool Node::Sync() {
 bool Node::SyncTo(int gh) {
     global_height = gh;
 
+    int count = 0;
     while ( current_hight < global_height ) {
 
+        if (count > 50) return false;
+
+        qDebug() << current_hight << global_height;
         fc::optional<Block> sb = getGlobalBlock(current_hight+1);
         if ( !sb ) {
             qCritical() << " no getGlobalBlockNum" << current_hight+1;
-            return false;
+            QThread::currentThread()->sleep(100 * count++);
+            continue;
+
         }
 
-        qInfo() <<  "received " << (*sb).DebugString();
+        qInfo() <<  "received " << (*sb).signedhead().head().num();
 
         if (!BlockProcessor::verifySignedBlock(*sb)) {
-            qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
-            return false; ;
+            qCritical() << " !SyncTo::verifySignedBlock(sb) ";
+            QThread::currentThread()->sleep(100 * count++);
+            continue;
         }
 
         if ((*sb).signedhead().head().num() > current_hight + 1) {
             qCritical() << "sb.signedhead().head().num() > current_hight + 1";
-            return false; ;
+            //return false; ;
         }
 
         if ((*sb).signedhead().head().num() == current_hight + 1) {
@@ -123,6 +130,7 @@ bool Node::SyncTo(int gh) {
             blockchain->Put(leveldb::WriteOptions(), snum, (*sb).SerializeAsString());
             current_hight = current_hight+1;
 
+            count = 0;
             //Node::ClearTx(*sb);
 
             //CheckOrphanBlocks();

@@ -38,6 +38,7 @@ class NFLStateData : public QObject {
 
     Q_OBJECT
 
+    leveldb::DB *playerstore;
     leveldb::DB *staticstore;
     leveldb::DB *statusstore;
 
@@ -92,6 +93,7 @@ public:
     void UpdateGameStatus(const std::string &gameid, const GameStatus &gs);
 
     void OnGameStart(const std::string &gameid, const GameStatus &gs);
+    bool GetGameResult(const std::string &gameid, GameResult &result);
 
     std::vector<GameRoster> GetCurrentWeekGameRosters();
     std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int week);

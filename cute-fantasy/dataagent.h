@@ -23,6 +23,8 @@ public:
     SignedTransaction signTx(Transaction &tx);
     Block makeNewBlockAsDataAgent(const SignedTransaction &);
 
+    fc::optional<BlockHeader> mLastBlock;
+
 };
 
 #endif // DATAAGENT_H

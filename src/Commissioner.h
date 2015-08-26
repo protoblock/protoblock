@@ -254,9 +254,6 @@ public:
 	//static std::string DB_DIR("db");
 };
 
-
-
-
 }
 
 #endif /* defined(__fantasybit__Comissioner__) */
@@ -298,3 +295,4 @@ SignedBlock
 	sig : "iKkkiYr6vYFtkRtxCeWQvu7iZ9oFdLwrpRe1P3XYUwZz3BvBuwiufWTFj1JSRJ3d1zjvp9W2whNVTWtT5Jxtn1ByyiW3qQYMyy"
 }
 *********************************************************************************************************************************/
+
