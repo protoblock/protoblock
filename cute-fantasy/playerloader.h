@@ -7,6 +7,10 @@
 #include <QFile>
 #include "ProtoData.pb.h"
 #include <QDateTime>
+#include "RestFullCall.h"
+#include <QByteArray>
+#include "Commissioner.h"
+#include <QDebug>
 /*
 void print_hex_memory(void *mem,int size) {
   int i;
@@ -26,8 +30,7 @@ public:
     PlayerLoader(){}
     ~PlayerLoader(){}
 
-    std::vector<fantasybit::PlayerData> loadPlayersFromJsonFile() {
-        std::vector<fantasybit::PlayerData> result;
+    std::vector<fantasybit::PlayerData> loadPlayersFromJsonFile() { std::vector<fantasybit::PlayerData> result;
 
         //hard coded resources
         QFile jsonFile(":/Fantasy2015/Player.2015.json");
@@ -233,7 +236,101 @@ public:
 
 };
 
+class PlayerLoaderTR {
+    QString uribase = "http://api.sportradar.us/nfl-b1/teams";
+    QString uritail = "/roster.json?api_key=2uqzuwdrgkpzkhbfumzrg8gn";
 
+    QString makeroute(std::string team) {
+        return QString::fromStdString(team) + uritail;
+    }
+
+
+public:
+    std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar() {
+        std::vector<fantasybit::PlayerData> result;
+
+        RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/teams/"));
+
+        for ( auto team : fantasybit::Commissioner::GENESIS_NFL_TEAMS) {
+            QThread::currentThread()->msleep(1000);
+            auto route = makeroute(team);
+            QMap<QString,QString>  headers;
+            QMap<QString,QVariant> params;
+            //params.insert("api_key","2uqzuwdrgkpzkhbfumzrg8gn");
+
+            qDebug() << uribase << route;
+            rest.getData(route,params,headers);
+            auto resp = rest.lastReply();
+
+            qDebug() << resp;
+            QJsonDocument ret = QJsonDocument::fromJson(resp);
+            qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+            QJsonObject jo = ret.object();
+            auto vals = jo.value("players");
+            QJsonArray parr = vals.toArray();
+
+            for (int i=0;i< parr.size();i++  ) {
+                QJsonValueRef data = parr[i];
+
+                QJsonObject playerData = data.toObject();
+                QString errorParsingObject;
+                fantasybit::PlayerData player =
+                        getPlayerFromJsonObject(playerData,team,errorParsingObject);
+
+                if ( errorParsingObject != "" ) continue;
+                result.push_back(player);
+            }
+
+        }
+
+        return result;
+    }
+
+    fantasybit::PlayerData getPlayerFromJsonObject(QJsonObject & jsonObject,std::string team,QString & errorParsingObject) const{
+       fantasybit::PlayerData pd{};
+
+       auto pos = jsonObject.value("position").toString();
+       if   (! (pos == "QB"
+            || pos == "RB"
+            || pos == "WR"
+            || pos == "TE"
+            || pos == "K"
+            || pos == "FB")) {
+           errorParsingObject = pos;
+           return pd;
+       }
+
+       if ( pos == "FB")
+           pos = "RB";
+
+       pd.set_playerid(jsonObject.value("id").toString().toStdString());
+
+       fantasybit::PlayerBase pb{};
+       pb.set_position(pos.toStdString());
+       pb.set_first(jsonObject.value("name_first").toString().toStdString());
+       pb.set_last(jsonObject.value("name_last").toString().toStdString());
+
+       fantasybit::PlayerStatus ps{};
+       ps.set_teamid(team);
+/*
+       enum PlayerStatus_Status {
+         PlayerStatus_Status_ACTIVE = 0,
+         PlayerStatus_Status_INACTIVE = 1,
+         PlayerStatus_Status_OTHER = 3,
+         PlayerStatus_Status_FA = 4
+       };
+*/
+       auto status = jsonObject.value("status").toString();
+       ps.set_status(status == "ACT" ? fantasybit::PlayerStatus_Status_ACTIVE : fantasybit::PlayerStatus_Status_INACTIVE);
+
+       pd.mutable_player_base()->CopyFrom(pb);
+       pd.mutable_player_status()->CopyFrom(ps);
+
+       return pd;
+    }
+
+};
 
 #endif // PLAYERLOADER
 

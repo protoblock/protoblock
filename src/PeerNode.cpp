@@ -22,6 +22,8 @@
 #include "Processor.h"
 #include "Commissioner.h"
 #include "RestFullCall.h"
+#include "DataPersist.h"
+
 
 #include "globals.h"
 using namespace std;
@@ -51,6 +53,10 @@ Node::Node() {
         current_hight = 1;
         Block sb{Commissioner::makeGenesisBlock()};
 
+        {
+        //    Writer<Block> writer{ GET_ROOT_DIR() + "genesisAlpha.out", ios::app };
+        //    writer(sb);
+        }
         qInfo() <<  "|" << QTD(sb.DebugString()) << "|";
 
         qInfo() <<  "done";
