@@ -75,7 +75,7 @@ signals:
 
     //to data
     void SubscribeLive();
-    void Live(bool);
+    void LiveData(bool);
 
 
     //to GUI
@@ -85,7 +85,7 @@ signals:
     void NameBalance(fantasybit::FantasyNameBal &);
     void PlayerStatusChange(std::pair<string,PlayerStatus> &in);
     void GlobalStateChange(GlobalState);
-    void Live(GlobalState);
+    void LiveGui(GlobalState);
     void NewWeek(int);
     void GameStart(string);
     void BlockError(int last);

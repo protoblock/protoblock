@@ -22,15 +22,10 @@ void MainWindow::initialize() {
         setDisabled(true);
         return;
     }
-    //QObject::connect(this,SIGNAL(requestPlayersForWeek(int)),myCoreInstance,SLOT(getPlayers(int)));
 
-    QObject::connect(myCoreInstance,SIGNAL(Live(GlobalState)),
+    QObject::connect(myCoreInstance,SIGNAL(LiveGui(GlobalState)),
                      this,SLOT(GoLive(GlobalState)));
-    //QObject::connect(myCoreInstance,SIGNAL(OnData(DeltaData)),this,SLOT(NewData(DeltaData)));
 
-
-    //name
-//    QObject::connect(this,SIGNAL(GetMyFantasyNames()),myCoreInstance,SLOT(OnGetMyNames()));
     QObject::connect(myCoreInstance,SIGNAL(MyNames(vector<MyFantasyName>)),
                      this,SLOT(OnMyFantasyNames(vector<MyFantasyName>)));
 

@@ -38,8 +38,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
 
     //data processing
-    QObject::connect(this,SIGNAL(Live(bool)),&data,SLOT(OnLive(bool)));
-    QObject::connect(this,SIGNAL(Live(bool)),&namedata,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(LiveData(bool)),&data,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
     //QObject::connect(this,SIGNAL(Live(bool)),&processor,SLOT(OnLive(bool)));
 
     //data to data signals
@@ -79,8 +79,8 @@ void MainLAPIWorker::GoLive() {
     timer->start(intervalstart);
 
     OnGetMyNames();
-    emit Live(true);
-    emit Live(data.GetGlobalState());
+    emit LiveData(true);
+    emit LiveGui(data.GetGlobalState());
 }
 
 void MainLAPIWorker::startPoint(){
