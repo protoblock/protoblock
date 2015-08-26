@@ -81,7 +81,6 @@ void MainLAPIWorker::GoLive() {
 
 void MainLAPIWorker::startPoint(){
     qDebug("Main Core Thread started");
-    Core::instance()->waitForGui();
     node.thread()->start();
 
     last_block = processor.init();

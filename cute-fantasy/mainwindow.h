@@ -3,8 +3,7 @@
 
 #include <QMainWindow>
 #include "FantasyName.h"
-#include "Data.h"
-
+#include "globalstateviewmodel.h"
 
 namespace Ui {
 class MainWindow;
@@ -73,7 +72,7 @@ private:
     int myCurrentWeek;
     WeekViewMode myCurrentWeekViewMode;
     fantasybit::MyFantasyName myCurrentFantasyName;
-    fantasybit::GlobalState myGlobalState;
+    GlobalState myGlobalState;    
 
 };
 
