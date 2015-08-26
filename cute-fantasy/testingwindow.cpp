@@ -18,7 +18,7 @@ TestingWindow::TestingWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initialize();
-
+    Core::instance()->guiIsAwake();
 }
 
 TestingWindow::~TestingWindow()

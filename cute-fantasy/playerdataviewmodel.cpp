@@ -17,14 +17,7 @@ PlayerDataViewModel::PlayerDataViewModel(const PlayerDataViewModel & copy){
     myPlayerAge = copy.myPlayerAge;
     myPlayerPictureLink = copy.myPlayerPictureLink;
     myPlayerPicture = copy.myPlayerPicture;
-}
-
-PlayerDataViewModel::PlayerDataViewModel(const  ::fantasybit::Data & copy) {
-    if (copy.type() != Data_Type_PLAYER) return;
-    PlayerData playerData = copy.GetExtension(PlayerData::player_data);
-    myPlayerId = QString::fromStdString(playerData.playerid());
-    myTeamId = QString(playerData.player_status().teamid().data());
-}
+} 
 
 PlayerDataViewModel::PlayerDataViewModel(const QString & playerId,const QString teamId) {
     myPlayerId = playerId;

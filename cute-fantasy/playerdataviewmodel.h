@@ -23,9 +23,7 @@ public:
 
     ~PlayerDataViewModel();
 
-    PlayerDataViewModel(const PlayerDataViewModel & copy);
-
-    PlayerDataViewModel(const  ::fantasybit::Data & copy);
+    PlayerDataViewModel(const PlayerDataViewModel & copy); 
 
     PlayerDataViewModel(const QString & playerId,const QString teamId);
 
