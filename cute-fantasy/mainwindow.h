@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "FantasyName.h"
 #include <vector>
+#include "waitmodaldialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -44,15 +45,15 @@ signals:
     void SubscribeScheduleData();
     void SubscribeTeamRoster();
     void SubscribePlayerGameStatus();
-    void NewProjection(FantasyBitProj &);
+    void NewProjection(fantasybit::FantasyBitProj &);
     void ClaimFantasyName(QString);
 
 public slots:
 
     void on_myNextWeek_clicked(); 
     void on_myPreviousWeek_clicked();
-    void GoLive(GlobalState state);
-    void OnMyFantasyNames(vector<MyFantasyName> names);
+    void GoLive(fantasybit::GlobalState state);
+    void OnMyFantasyNames(vector<fantasybit::MyFantasyName> names);
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj);
     void OnAward(QVariant);
@@ -62,20 +63,27 @@ public slots:
     void OnGameStart(QString);
 
 
+private slots:
+    void on_myFantasyNamesCombo_currentIndexChanged(int index);
+
+    void on_myFantasyNamesCombo_currentTextChanged(const QString &name);
+
 private:
     void initialize();
+    void initDefaultGuiDisplay();
 
     void nextWeek();
     void previousWeek();
     void currentWeek();
 
     void setWeekViewMode(WeekViewMode  viewMode);
-    MainLAPIWorker *  myCoreInstance;
+    MainLAPIWorker *  myLAPIWorker;
     Ui::MainWindow *ui;    
     int myCurrentWeek;
     WeekViewMode myCurrentWeekViewMode;
     fantasybit::MyFantasyName myCurrentFantasyName;
-    GlobalState myGlobalState;    
+    GlobalState myGlobalState;
+    WaitModalDialog myWaitDialog;
 
 };
 

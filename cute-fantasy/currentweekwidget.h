@@ -17,8 +17,11 @@ class CurrentWeekWidget : public QWidget
 public:
 
     explicit CurrentWeekWidget(QWidget *parent = 0);
-    ~CurrentWeekWidget();    
-    void setCurrentWeekData(GlobalState state, const string fantasyPlayerId);
+    ~CurrentWeekWidget();
+    void setCurrentWeekData(GlobalState state);
+
+public slots:
+    void onUserSwitchFantasyName(const std::string fantasyPlayerId);
 
 private slots:
 
@@ -27,7 +30,9 @@ private slots:
     void on_myUpcomingGamesRb_toggled(bool checked);
 
 private:
-    Ui::CurrentWeekWidget *ui;    
+
+    void updateCurrentFantasyPlayerProjections();
+    Ui::CurrentWeekWidget *ui;
     GameTableModel  myGameTableModel{WeekDisplayType::CurrentWeek};
     GameViewFilterProxyModel myGameModelFilter;
     LeaderBoardTableModel myLeaderBoardModel{WeekDisplayType::CurrentWeek};

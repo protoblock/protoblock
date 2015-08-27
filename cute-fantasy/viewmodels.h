@@ -15,7 +15,7 @@ using namespace fantasybit;
 
 
 
-class ViewModel : Decorable , public Descriptable {
+class ViewModel : public Decorable , public Descriptable {
 
 public:
 
@@ -57,13 +57,14 @@ public:
 
     template <typename T>
     T propertyValue(const QString& propertyName){
-        return myProperties.value(propertyName).value<T>();
+        return qvariant_cast<T>(myProperties.value(propertyName));
+
     }
 
 
     template <typename T,typename PROPNAME>
     T propertyValue(){
-        return myProperties.value(PROPNAME::name()).value<T>();
+        return qvariant_cast<T>(myProperties.value(PROPNAME::name()));
     }
 
     template <typename PROPNAME>

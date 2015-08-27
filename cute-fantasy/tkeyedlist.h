@@ -153,7 +153,7 @@ public:
     if (index.row() >= 0 && index.row() < myList.size()
         && (role == Qt::EditRole || role == Qt::DisplayRole)) {
       if (!index.isValid()) return false;
-      TKeyedListModel<TKey,X> * me = (TKeyedListModel<TKey,X> *) this;
+      //TKeyedListModel<TKey,X> * me = (TKeyedListModel<TKey,X> *) this;
       X * value = myList.at(index.row());
       if (value==NULL) return false;
       setDataFromColumn(value,index,vvalue,role);

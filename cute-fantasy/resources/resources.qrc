@@ -3,6 +3,8 @@
         <file>scored.png</file>
         <file>scoresent.png</file>
         <file>logoherring.png</file>
+        <file>loading.gif</file>
+        <file>waitingprogress.gif</file>
     </qresource>
     <qresource prefix="/Fantasy2015">
         <file>Player.2015.json</file>

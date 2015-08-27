@@ -3,15 +3,15 @@
 
 
 Core::Core(){}
-void Core::bootstrap(){     
+void Core::bootstrap(){
+
+    qRegisterMetaType<fantasybit::GlobalState>("fantasybit::GlobalState");
+    qRegisterMetaType<fantasybit::MyFantasyName>("fantasybit::MyFantasyName");
+    qRegisterMetaType<fantasybit::FantasyBitProj>("fantasybit::FantasyBitProj");
+    qRegisterMetaType<vector<fantasybit::MyFantasyName>>("vector<fantasybit::MyFantasyName>");
+
     qSetMessagePattern(Platform::settings()->getSetting(AppSettings::LogMessagePattern).toString());
-    qInstallMessageHandler(messageHandler);    
-
-    qRegisterMetaType<GlobalState>("GlobalState");
-    qRegisterMetaType<MyFantasyName>("MyFantasyName");
-    qRegisterMetaType<fantasybit::FantasyBitProj>("FantasyBitProj");
-    qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
-
+    qInstallMessageHandler(messageHandler);
     registerNamedInstance("coreapi",myCoreApi.object());
     QObject::connect(myCoreApi.thread(),SIGNAL(started()),myCoreApi.object(),SLOT(startPoint()));
     myCoreApi.thread()->start();
