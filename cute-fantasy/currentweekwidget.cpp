@@ -145,7 +145,7 @@ void CurrentWeekWidget::onUserSwitchFantasyName(const std::string fantasyPlayerI
 
 void CurrentWeekWidget::updateCurrentFantasyPlayerProjections(){
     //update to recent projection projection and mark them a sent
-    auto  recentProjections = DataService::instance()->GetProjById(myFantasyName);
+    auto  recentProjections = DataService::instance()->GetProjByName(myFantasyName);
     for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
         myProjectionsModel.updateItemProperty<PropertyNames::Projection>(it->first.data(),it->second);
         myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(it->first.data(),(int) ScoreState::Sent);

@@ -133,7 +133,7 @@ bool Node::SyncTo(int gh) {
             current_hight = current_hight+1;
 
             count = 0;
-            //Node::ClearTx(*sb);
+                Node::ClearTx(*sb);
 
             //CheckOrphanBlocks();
         }
@@ -249,6 +249,11 @@ fc::optional<Block> Node::getGlobalBlock(int num) {
 }
 
 
+void Node::ClearTx(const Block &b) {
+    for (const auto &st : b.signed_transactions()) {
+        Node::txpool->Delete(leveldb::WriteOptions(), st.id());
+    }
+}
 
 
 decltype(Node::blockchain) Node::blockchain{};

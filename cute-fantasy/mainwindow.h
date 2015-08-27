@@ -30,16 +30,16 @@ public:
 
 signals:
 
-    void SubscribeGameState();
+    //void SubscribeGameState();
     void UseMyFantasyName(QString);        
-    void SubscribeMyNameTx(QString);
-    void SubscribeMyProjTx(QString);
-    void SubscribeAwards(QString);
-    void SubscribePlayerData();
-    void SubscribeScheduleData();
-    void SubscribeTeamRoster();
-    void SubscribePlayerGameStatus();
-    void NewProjection(fantasybit::FantasyBitProj &);
+    //void SubscribeMyNameTx(QString);
+    //void SubscribeMyProjTx(QString);
+    //void SubscribeAwards(QString);
+    //void SubscribePlayerData();
+    //void SubscribeScheduleData();
+    //void SubscribeTeamRoster();
+    //void SubscribePlayerGameStatus();
+    void NewProjection(fantasybit::FantasyBitProj);
     void ClaimFantasyName(QString);
 
 public slots:
@@ -50,10 +50,11 @@ public slots:
     void OnMyFantasyNames(vector<fantasybit::MyFantasyName> names);
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj);
-    void OnAward(QVariant);
+    //void OnAward(QVariant);
+    void OnNameBalance(fantasybit::FantasyNameBal &);
     void OnNewWeek(int);
-    void OnGameOver(QString);
-    void OnGameStart(QString);
+    void OnGameOver(string);
+    void OnGameStart(string);
 
 
 private slots:

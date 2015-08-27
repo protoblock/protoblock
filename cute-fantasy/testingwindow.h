@@ -33,7 +33,7 @@ signals:
 public slots:
     void GoLive(fantasybit::GlobalState);
     void OnNameStatus(fantasybit::MyFantasyName);
-    void OnMyFantasyNames(vector<fantasybit::MyFantasyName> &);
+    void OnMyFantasyNames(vector<fantasybit::MyFantasyName> );
     void OnNewWeek(int);
 
 private slots:

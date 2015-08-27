@@ -39,18 +39,19 @@ void MainWindow::initialize() {
 
 
     QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myLAPIWorker,SLOT(OnUseName(QString)));
-    QObject::connect(this,SIGNAL(SubscribeMyNameTx(QString)),myLAPIWorker,SLOT(OnSubName(QString)));
-    QObject::connect(this,SIGNAL(SubscribeMyProjTx(QString)),myLAPIWorker,SLOT(OnSubProj(QString)));
-    QObject::connect(this,SIGNAL(SubscribeAwards(QString)),myLAPIWorker,SLOT(OnSubBits(QString)));
+    //QObject::connect(this,SIGNAL(SubscribeMyNameTx(QString)),myLAPIWorker,SLOT(OnSubName(QString)));
+    //QObject::connect(this,SIGNAL(SubscribeMyProjTx(QString)),myLAPIWorker,SLOT(OnSubProj(QString)));
+    //QObject::connect(this,SIGNAL(SubscribeAwards(QString)),myLAPIWorker,SLOT(OnSubBits(QString)));
 
     QObject::connect(myLAPIWorker,SIGNAL(NameStatus(fantasybit::MyFantasyName)),
                      this,SLOT(OnNameStatus(fantasybit::MyFantasyName)));
     QObject::connect(myLAPIWorker,SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
                      this,SLOT(OnProjAck(fantasybit::FantasyBitProj)));
-    QObject::connect(myLAPIWorker,SIGNAL(NewAward(QVariant)),this,SLOT(OnAward(QVariant)));
+    QObject::connect(myLAPIWorker,SIGNAL(NameBal(fantasybit::FantasyNameBal &)),
+                     this,SLOT(OnNameBalance(fantasybit::FantasyNameBal &)));
 
     //state
-    QObject::connect(this,SIGNAL(SubscribeGameState()),myLAPIWorker,SLOT(OnSubGame()));
+    //QObject::connect(this,SIGNAL(SubscribeGameState()),myLAPIWorker,SLOT(OnSubGame()));
 
     QObject::connect(myLAPIWorker,SIGNAL(NewWeek(int)),this,SLOT(OnNewWeek(int)));
     QObject::connect(myLAPIWorker,SIGNAL(GameOver(string)),this,SLOT(OnGameOver(string)));
@@ -58,11 +59,11 @@ void MainWindow::initialize() {
 
 
     //data
-    QObject::connect(this,SIGNAL(SubscribePlayerData()),myLAPIWorker,SLOT(OnSubPD()));
-    QObject::connect(this,SIGNAL(SubscribeScheduleData()),myLAPIWorker,SLOT(OnSubSS()));
+    //QObject::connect(this,SIGNAL(SubscribePlayerData()),myLAPIWorker,SLOT(OnSubPD()));
+    //QObject::connect(this,SIGNAL(SubscribeScheduleData()),myLAPIWorker,SLOT(OnSubSS()));
 
-    QObject::connect(this,SIGNAL(SubscribeTeamRoster()),myLAPIWorker,SLOT(OnSubTeams()));
-    QObject::connect(this,SIGNAL(SubscribePlayerGameStatus()),myLAPIWorker,SLOT(OnSubOut()));
+    //QObject::connect(this,SIGNAL(SubscribeTeamRoster()),myLAPIWorker,SLOT(OnSubTeams()));
+    //QObject::connect(this,SIGNAL(SubscribePlayerGameStatus()),myLAPIWorker,SLOT(OnSubOut()));
 
 //    QObject::connect(myCoreInstance,SIGNAL(PlayerData(QString)),this,SLOT(OnPlayerUpdate(QString)));
 //    QObject::connect(myCoreInstance,SIGNAL(TimeChange(QString)),this,SLOT(OnSchedule(QString)));
@@ -241,7 +242,7 @@ void MainWindow::OnProjAck(fantasybit::FantasyBitProj){
 
 }
 
-void MainWindow::OnAward(QVariant){
+void MainWindow::OnNameBalance(fantasybit::FantasyNameBal &) {
 
 }
 
@@ -249,11 +250,11 @@ void MainWindow::OnNewWeek(int){
 
 }
 
-void MainWindow::OnGameOver(QString){
+void MainWindow::OnGameOver(string){
 
 }
 
-void MainWindow::OnGameStart(QString){
+void MainWindow::OnGameStart(string){
 
 }
 

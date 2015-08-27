@@ -29,14 +29,16 @@ void FantasyNameData::init() {
         //todo emit fatal
         return;
     }
-
-    auto *it = namestore->NewIterator(leveldb::ReadOptions());
-    for (it->SeekToFirst(); it->Valid(); it->Next()) {
-        FantasyNameBal fn;
-        fn.ParseFromString(it->value().ToString());
-        auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
-        if ( fnp != nullptr )
-            fnp->addBalance(fn.bits());
+    else {
+        auto it = namestore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            FantasyNameBal fn;
+            fn.ParseFromString(it->value().ToString());
+            auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
+            if ( fnp != nullptr )
+                fnp->addBalance(fn.bits());
+        }
+        delete it;
     }
 
     status = leveldb::DB::Open(options, filedir("projstore"), &projstore);
@@ -45,7 +47,23 @@ void FantasyNameData::init() {
         //todo emit fatal shit
         return;
     }
+    else {
+        auto it = projstore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            auto str = it->key().ToString();
+            int pos =  str.find_first_of(':');
+            auto fantasyname = str.substr(0, pos);
+            auto nflplayer = str.substr(pos + 1);
+            uint32_t proj = *(reinterpret_cast<const uint32_t *>(it->value().data()));
 
+            auto m = FantasyNameProjections[fantasyname];
+            m[nflplayer] = proj;
+            m = PlayerIDProjections[nflplayer];
+            m[nflplayer] = proj;
+
+        }
+        delete it;
+    }
 
 }
 

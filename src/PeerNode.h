@@ -54,7 +54,7 @@ public:
     static void Node::setLastGlobalBlockNum(int num);
     static std::mutex blockchain_mutex;
 
-    //static void ClearTx(const Block &);
+    static void ClearTx(const Block &);
 	static std::shared_ptr<leveldb::DB> blockchain;
     static std::shared_ptr<leveldb::DB> txpool;
     static int GlobalHeight;

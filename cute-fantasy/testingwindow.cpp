@@ -42,7 +42,7 @@ void TestingWindow::initialize() {
     qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
 */
 
-    QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(fantasybitGlobalState)),
+    QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(fantasybit::GlobalState)),
                      this,SLOT(GoLive(fantasybit::GlobalState)));
 
     QObject::connect(myCoreInstance,SIGNAL(LiveGui(fantasybit::GlobalState)),
@@ -107,7 +107,7 @@ void TestingWindow::OnNameStatus(MyFantasyName name) {
     ui->FantassyNameIn->setText(QString::fromStdString(name.name()));
 }
 
-void TestingWindow::OnMyFantasyNames(vector<MyFantasyName> &in) {
+void TestingWindow::OnMyFantasyNames(vector<MyFantasyName> in) {
     qDebug() << in.size();
 }
 

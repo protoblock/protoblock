@@ -74,13 +74,13 @@ signals:
     void GetNext();
 
     //to data
-    void SubscribeLive();
+    //void SubscribeLive();
     void LiveData(bool);
 
 
     //to GUI
     void NameStatus(fantasybit::MyFantasyName);
-    void LiveProj(fantasybit::FantasyBitProj &);
+    void LiveProj(fantasybit::FantasyBitProj);
     void MyNames(vector<fantasybit::MyFantasyName>);
     void NameBalance(fantasybit::FantasyNameBal &);
     void PlayerStatusChange(std::pair<string,PlayerStatus> &in);
@@ -88,6 +88,8 @@ signals:
     void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
     void GameStart(string);
+    void GameOver(string);
+
     void BlockError(int last);
 
 public slots:

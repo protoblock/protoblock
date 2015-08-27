@@ -24,6 +24,7 @@ message GameStatus {
         SCHEDULED = 0;
         PREGAME = 2;
         INGAME = 3;
+        POSTGAME = 5;
         CLOSED = 4;
     }
 
