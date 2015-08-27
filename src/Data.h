@@ -70,7 +70,7 @@ signals:
     void PlayerStatusChange(pair<string,PlayerStatus>);
     void PlayerAdd(PlayerBase);
     void GameStart(string);
-    void GlobalStateChange(GlobalState);
+    void GlobalStateChange(fantasybit::GlobalState);
     void NewGameResult(string);
 
 public slots:

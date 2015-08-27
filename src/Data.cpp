@@ -85,8 +85,17 @@ PlayerBase NFLStateData::GetPlayerBase(std::string playerid) {
 
 void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
     string key = "scheduleweek:" + to_string(week);
-    staticstore->Put(write_sync, key, ws.SerializeAsString());
+    if ( !staticstore->Put(write_sync, key, ws.SerializeAsString()).ok()) {
+        qWarning() << " error writing schecule";
+        return;
+    }
     qDebug() << QString::fromStdString(ws.DebugString());
+    GameStatus gs{};
+    gs.set_status(GameStatus::SCHEDULED);
+
+    for ( auto gi : ws.games() )
+        UpdateGameStatus(gi.id(),gs);
+
 }
 
 void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs) {
@@ -385,7 +394,7 @@ int NFLStateData::week() {
     return gs.week();
 }
 
-void NFLStateData:: OnGlobalState(GlobalState &gs) {
+void NFLStateData:: OnGlobalState(fantasybit::GlobalState &gs) {
     statusstore->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
     qDebug() << gs.DebugString();
     if ( amlive )
