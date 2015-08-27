@@ -64,11 +64,12 @@ enum GameStatus_Status {
   GameStatus_Status_SCHEDULED = 0,
   GameStatus_Status_PREGAME = 2,
   GameStatus_Status_INGAME = 3,
+  GameStatus_Status_POSTGAME = 5,
   GameStatus_Status_CLOSED = 4
 };
 bool GameStatus_Status_IsValid(int value);
 const GameStatus_Status GameStatus_Status_Status_MIN = GameStatus_Status_SCHEDULED;
-const GameStatus_Status GameStatus_Status_Status_MAX = GameStatus_Status_CLOSED;
+const GameStatus_Status GameStatus_Status_Status_MAX = GameStatus_Status_POSTGAME;
 const int GameStatus_Status_Status_ARRAYSIZE = GameStatus_Status_Status_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* GameStatus_Status_descriptor();
@@ -83,7 +84,6 @@ inline bool GameStatus_Status_Parse(
 }
 enum GlobalState_State {
   GlobalState_State_OFFSEASON = 10,
-  GlobalState_State_ROSTER53MAN = 20,
   GlobalState_State_INSEASON = 30
 };
 bool GlobalState_State_IsValid(int value);
@@ -302,6 +302,7 @@ class GameStatus : public ::google::protobuf::Message {
   static const Status SCHEDULED = GameStatus_Status_SCHEDULED;
   static const Status PREGAME = GameStatus_Status_PREGAME;
   static const Status INGAME = GameStatus_Status_INGAME;
+  static const Status POSTGAME = GameStatus_Status_POSTGAME;
   static const Status CLOSED = GameStatus_Status_CLOSED;
   static inline bool Status_IsValid(int value) {
     return GameStatus_Status_IsValid(value);
@@ -575,7 +576,6 @@ class GlobalState : public ::google::protobuf::Message {
 
   typedef GlobalState_State State;
   static const State OFFSEASON = GlobalState_State_OFFSEASON;
-  static const State ROSTER53MAN = GlobalState_State_ROSTER53MAN;
   static const State INSEASON = GlobalState_State_INSEASON;
   static inline bool State_IsValid(int value) {
     return GlobalState_State_IsValid(value);
