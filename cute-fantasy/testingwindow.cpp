@@ -45,7 +45,7 @@ void TestingWindow::initialize() {
     QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(GlobalState)),
                      this,SLOT(GoLive(GlobalState)));
 
-    QObject::connect(myCoreInstance,SIGNAL(Live(GlobalState)),
+    QObject::connect(myCoreInstance,SIGNAL(LiveGui(GlobalState)),
                      this,SLOT(GoLive(GlobalState)));
 
     QObject::connect(myCoreInstance,SIGNAL(NameStatus(MyFantasyName)),
@@ -84,10 +84,23 @@ void TestingWindow::GoLive(GlobalState gs) {
     ui->season->setText(QString::number(gs.season()));
     ui->week->setText(QString::number(gs.week()));
     ui->globalstate->setText(QString::fromStdString(GlobalState::State_Name(gs.state())));
+    if ( gs.has_week() && gs.week() > 0 )
+        OnNewWeek(gs.week());
 }
 
 void TestingWindow::OnNewWeek(int week) {
     ui->week->setText(QString::number(week));
+    ui->gameID->clear();
+
+    auto weekly =  DataService::instance()->GetWeeklySchedule(week);
+    //ui->game->clear();
+
+    for ( auto g : weekly.games()) {
+        ui->gameID->addItem(QString::fromStdString(g.away() + "@" +g.home()),
+                          QString::fromStdString(g.id()));
+
+    }
+
 }
 
 void TestingWindow::OnNameStatus(MyFantasyName name) {
@@ -108,7 +121,6 @@ void TestingWindow::on_weeks_activated(int index)
    qDebug() <<  index;
    ui->game->clear();
    ui->team->clear();
-   //ui->game->clear();
    if ( index < 1 ) {
        return;
    }
@@ -174,18 +186,20 @@ void TestingWindow::on_team_activated(const QString &arg1)
         bool home = "home" == ui->team->currentData();
 
         ui->player->clear();
-        mRewards.clear();
+        mResult.clear();
         for ( auto pr : home ? result.home_result() : result.away_result()) {
             auto pbase = DataService::instance()->GetPlayerBase(pr.playerid());
             ui->player->addItem(QString::fromStdString(pbase.last() + ", " + pbase.first() +
                                                        " :" + pbase.position()),
                                 QString::fromStdString(pr.playerid()));
-            mRewards[pr.playerid()] = pr.fantaybitaward();
+            mResult[pr.playerid()] = pr;
+            qDebug() << pr.playerid() << pr.DebugString();
+
         }
     }
     else {
 
-        mRewards.clear();
+        mResult.clear();
 
         qDebug() << "live on_team_activated on game" << ui->game->currentData().toString();
 
@@ -222,9 +236,21 @@ void TestingWindow::on_player_activated(const QString &arg1)
     if ( ui->weeks->currentIndex() > realweek())
         return;
     else if (ui->weeks->currentIndex() < realweek()) {
-        for ( auto fba :  mRewards[arg1.toStdString()]) {
+        std::string str = ui->player->currentData().toString().toStdString();
+        qDebug() << str;
+        auto it = mResult.find(str);
+        if ( it != mResult.end())
+            ui->awards->addItem(QString::fromStdString(it->second.DebugString()));
+/*
+        for ( auto fba : it->second) {
+//              mRewards[ui->player->currentData().toString().toStdString()]) {
             ui->awards->addItem(QString::fromStdString(fba.DebugString()));
         }
+        else
+            for ( auto kk : mRewards)
+                for ( auto jj : kk.second )
+                qDebug() << kk.first << jj.DebugString();
+                */
     }
     else {
         auto pd = mPlayerDetail[ui->player->currentData().toString().toStdString()];
@@ -238,13 +264,31 @@ void TestingWindow::on_player_activated(const QString &arg1)
     }
 }
 
-
 void TestingWindow::on_SendBlock_clicked()
 {
         DataTransition dt{};
         dt.set_type(static_cast<DataTransition_Type>(ui->transitions->currentData().toInt()));
         dt.set_season(2015);
         dt.set_week(ui->weeks->currentIndex());
+
+        if ( dt.type() == DataTransition_Type_GAMESTART) {
+            GameData gd{};
+            gd.set_gameid(ui->gameID->currentData().toString().toStdString());
+            GameStatus gs{};
+            gs.set_status(GameStatus::INGAME);
+            gd.mutable_status()->CopyFrom(gs);
+            dt.add_gamedata()->CopyFrom(gd);
+        }
+        Data d{};
+        d.set_type(Data_Type_RESULT);
+        for ( auto gr : mStagedGameResult ) {
+            ResultData rd{};
+            rd.mutable_game_result()->CopyFrom(gr.second);
+            d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
+            dt.add_data()->CopyFrom(d);
+            qDebug() << rd.DebugString();
+        }
+        mStagedGameResult.clear();
 
         Transaction trans{};
         trans.set_version(Commissioner::TRANS_VERSION);
@@ -341,8 +385,56 @@ void TestingWindow::on_GetTx_clicked()
     Node::addTxPool(st.id(), txstr);
 }
 
-
 int TestingWindow::realweek() {
     return ui->week->text().toInt();
 }
 
+
+void TestingWindow::on_GetGameResult_clicked()
+{
+    string gid = ui->gameID->currentData().toString().toStdString();
+
+    ui->staging_data->clear();
+
+    auto itg = mGames.find(gid);
+    if ( itg == end(mGames)) {
+        qDebug() << "cant find" << gid;
+        return;
+    }
+
+    GameResult result;
+    auto rsp =  mStagedGameResult.find(gid);
+    if ( rsp != mStagedGameResult.end() )
+        result = rsp->second;
+    else {
+        result = dataagent::instance()->getGameResult(realweek(),itg->second);
+        mStagedGameResult[gid] = result;
+    }
+
+    for (auto pr : result.home_result()) {
+        auto itt = mPlayerDetail.find(pr.playerid());
+
+        if ( itt != end(mPlayerDetail)) {
+            PlayerDetail *it = &(itt->second);
+            std::string st = itg->second.home() + " " + it->base.last()
+            + ", "  + it->base.first() + " : " + it->base.position() +
+            pr.stats().ostats().DebugString();
+
+            ui->staging_data->addItem(QString::fromStdString(st));
+         }
+    }
+
+    for (auto pr : result.away_result()) {
+        auto itt = mPlayerDetail.find(pr.playerid());
+        if ( itt != end(mPlayerDetail)) {
+            PlayerDetail *it = &(itt->second);
+
+            std::string st = itg->second.away() + " " + it->base.last()
+            + ", "  + it->base.first() + " : " + it->base.position() +
+            pr.stats().ostats().DebugString();
+
+            ui->staging_data->addItem(QString::fromStdString(st));
+         }
+    }
+
+}

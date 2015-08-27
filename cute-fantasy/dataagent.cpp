@@ -15,3 +15,13 @@ Block dataagent::makeNewBlockAsDataAgent(const SignedTransaction &st) {
     return b;
 }
 
+GameResult dataagent::getGameResult(int week, GameInfo &gi ) {
+    GameResult gr{};
+    vector<GameInfo> v = { gi };
+    auto vg = gameloader.loadGameStatsFromTradeRadar(week,v);
+    if ( vg.size() > 0 )
+        gr = vg[0];
+
+    return gr;
+
+}

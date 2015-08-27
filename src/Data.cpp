@@ -91,10 +91,12 @@ void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
 
 void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs) {
     string key = "gameresult:" + gameid;
-    staticstore->Put(write_sync, key, gs.SerializeAsString());
-    qDebug() << QString::fromStdString(gs.DebugString());
+    if (!staticstore->Put(write_sync, key, gs.SerializeAsString()).ok()) {
+        qWarning() << "cant add gameresult" << gameid;
+    }
+    qDebug() << key << QString::fromStdString(gs.DebugString());
     if ( amlive )
-        emit GameResult(gameid);
+        emit NewGameResult(gameid);
 }
 
 bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) {
@@ -186,8 +188,9 @@ void NFLStateData::OnPlayerStatus(const std::string &pid,PlayerStatus ps) {
 
 void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs) {
     string key = "gamestatus:" + gameid;
-    statusstore->Put(write_sync, key, gs.SerializeAsString());
-    qDebug() << QString::fromStdString(gs.DebugString());
+    if (!statusstore->Put(write_sync, key, gs.SerializeAsString()).ok())
+        qWarning() << "!ok" << "cant update status";
+    qDebug() << key << QString::fromStdString(gs.DebugString());
 }
 
 void NFLStateData::OnWeekOver(int in) {
@@ -280,7 +283,7 @@ GameStatus NFLStateData::GetUpdatedGameStatus(string id) {
     }
     else {
         gs.ParseFromString(temp);
-        qDebug() << temp;
+        qDebug() << key << gs.DebugString();
      }
     return gs;
 }

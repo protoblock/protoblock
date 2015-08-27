@@ -117,8 +117,8 @@ public slots:
 
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
-    void OnNameBal(fantasybit::FantasyNameBal &);
-    void OnPlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus>);
+    void OnNameBal(FantasyNameBal &);
+    void OnPlayerStatusChange(pair<string,PlayerStatus>);
 
     //dataagent
     void BeOracle();
