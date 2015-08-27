@@ -61,7 +61,7 @@ public:
     void processTxfrom(const Block &b,int start = 0);
     static bool verifySignedBlock(const Block &sblock);
     static bool verifySignedTransaction(const SignedTransaction &st);
-    void processResultProj(PlayerResult& playerresult,
+    void processResultProj(PlayerResult* playerresult,
                            std::unordered_map<std::string,int> &proj,
                            const std::string &blocksigner);
 

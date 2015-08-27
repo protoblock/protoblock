@@ -169,19 +169,30 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if( rd.game_result().home_result_size() <= 0 )
                     qCritical() << "no home result" + QTD(rd.DebugString());
                 else {
-                    for (auto result : rd.game_result().home_result() ) {
-                        auto proj = mNameData.GetProjById(result.playerid());
-                        processResultProj(result,proj,blocksigner);
+                    for ( int i =0; i < rd.game_result().home_result_size(); i++) {
+                        auto proj = mNameData.GetProjById(rd.game_result().home_result(i).playerid());
+                        processResultProj(rd.mutable_game_result()->mutable_home_result(i)
+                                          ,proj,blocksigner);
                     }
                 }
 
                 if( rd.game_result().away_result_size() <= 0 )
                     qCritical() << "no away result" + QTD(rd.DebugString());
                 else
-                    for (auto result : rd.game_result().away_result() ) {
-                        auto proj = mNameData.GetProjById(result.playerid());
-                        processResultProj(result,proj,blocksigner);
+                    //for (auto result : rd.game_result().away_result() ) {
+                    for ( int i =0; i < rd.game_result().away_result_size(); i++) {
+                        auto proj = mNameData.GetProjById(rd.game_result().away_result(i).playerid());
+                        processResultProj(rd.mutable_game_result()->mutable_away_result(i),
+                                          proj,blocksigner);
+                        //result.mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
+                        //rd.mutable_game_result()->
+                        //        mutable_away_result(i)->mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
+                        qDebug() << rd.game_result().away_result(i).playerid()
+                                 << rd.game_result().away_result(i).fantaybitaward_size();
                     }
+
+                //for (auto result : rd.game_result().away_result() )
+                //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
                 break;
@@ -203,9 +214,11 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
     }
 }
 
-void BlockProcessor::processResultProj(PlayerResult& playerresult,
+
+void BlockProcessor::processResultProj(PlayerResult* playerresultP,
                                        std::unordered_map<std::string,int> &proj,
                                        const std::string &blocksigner) {
+    auto &playerresult = *playerresultP;
     DistribuePointsAvg dist(proj);
     if ( !playerresult.has_result() && playerresult.has_stats()) {
         //auto calc = CalcResults(playerresult.stats());
@@ -225,8 +238,7 @@ void BlockProcessor::processResultProj(PlayerResult& playerresult,
         mNameData.AddBalance(r.first,r.second);
     }
     playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
-
-
+    //return awards;
 }
 
 void BlockProcessor::process(const DataTransition &indt) {
