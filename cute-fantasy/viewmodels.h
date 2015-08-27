@@ -72,6 +72,11 @@ public:
         return myProperties.value(PROPNAME::name());
     }
 
+    template <typename PROPNAME>
+    bool hasProperty(){
+        return hasProperty(PROPNAME::name());
+    }
+
     bool hasProperty(const QString& propertyName){
         return myProperties.keys().contains(propertyName);
     }

@@ -3,20 +3,31 @@
 #include "dataservice.h"
 #include "propertynames.h"
 #include "datacache.h"
+#include "viewmodels.h"
+#include "core.h"
 
 CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CurrentWeekWidget)
 {
     ui->setupUi(this);    
-    ui->myGamesTableView->setModel(&myGameTableModel);
+    MainLAPIWorker * theLAPIWorker = Core::resolveByName<MainLAPIWorker>("coreapi");
+
+    if (theLAPIWorker!=NULL)
+    QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
+                     theLAPIWorker,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
+
+    myGameModelFilter.setGameStatusFilter(GamesFilter::Upcoming);
+    myGameModelFilter.setDynamicSortFilter(true);
     myGameModelFilter.setSourceModel(&myGameTableModel);
+    ui->myGamesTableView->setModel(&myGameModelFilter);
     ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());
     ui->myProjectionTableView->setModel(&myProjectionsModel);
     //start with upcoming games filter
     ui->myUpcomingGamesRb->setChecked(true);
     myCurrentWeekDataLoaded = false;
     myCurrentWeek = -1;    
+    ui->myProjectionTableView->setItemDelegateForColumn(5,&myProjectionDelegate);
 }
 
 CurrentWeekWidget::~CurrentWeekWidget()
@@ -29,8 +40,10 @@ void CurrentWeekWidget::on_myCompletedGamesRb_toggled(bool checked)
     if (checked)
         if (myGameModelFilter.filter()== GamesFilter::Completed)
             return;
-        else
+        else {
             myGameModelFilter.setGameStatusFilter(GamesFilter::Completed);
+            ui->myGamesTableView->repaint();
+        }
 }
 
 void CurrentWeekWidget::on_myInGamesRb_toggled(bool checked)
@@ -38,8 +51,10 @@ void CurrentWeekWidget::on_myInGamesRb_toggled(bool checked)
     if (checked)
         if (myGameModelFilter.filter()== GamesFilter::InGame)
             return;
-        else
+        else {
             myGameModelFilter.setGameStatusFilter(GamesFilter::InGame);
+            ui->myGamesTableView->repaint();
+        }
 }
 
 void CurrentWeekWidget::on_myUpcomingGamesRb_toggled(bool checked)
@@ -47,8 +62,10 @@ void CurrentWeekWidget::on_myUpcomingGamesRb_toggled(bool checked)
     if (checked)
         if (myGameModelFilter.filter()== GamesFilter::Upcoming)
             return;
-        else
+        else {
             myGameModelFilter.setGameStatusFilter(GamesFilter::Upcoming);
+            ui->myGamesTableView->repaint();
+        }
 }
 
 
@@ -106,17 +123,17 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
 
 void CurrentWeekWidget::onUserSwitchFantasyName(const std::string fantasyPlayerId){
     //do nothing if the received name is the old one
-    if (myFantasyPlayerId == fantasyPlayerId) return;
+    if (myFantasyName == fantasyPlayerId) return;
 
     //case when we received a name in the app start
-    if (myFantasyPlayerId=="" && fantasyPlayerId != "" ){
-        myFantasyPlayerId = fantasyPlayerId;
+    if (myFantasyName=="" && fantasyPlayerId != "" ){
+        myFantasyName = fantasyPlayerId;
         updateCurrentFantasyPlayerProjections();
     }
 
     //case when we switched fantasy names
-    if (myFantasyPlayerId!="" && myFantasyPlayerId != fantasyPlayerId){
-        myFantasyPlayerId = fantasyPlayerId;
+    if (myFantasyName!="" && myFantasyName != fantasyPlayerId){
+        myFantasyName = fantasyPlayerId;
         //reset all projections to 0
         foreach(QString playerId,myProjectionsModel.keys()){
             myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
@@ -128,7 +145,7 @@ void CurrentWeekWidget::onUserSwitchFantasyName(const std::string fantasyPlayerI
 
 void CurrentWeekWidget::updateCurrentFantasyPlayerProjections(){
     //update to recent projection projection and mark them a sent
-    auto  recentProjections = DataService::instance()->GetProjById(myFantasyPlayerId);
+    auto  recentProjections = DataService::instance()->GetProjById(myFantasyName);
     for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
         myProjectionsModel.updateItemProperty<PropertyNames::Projection>(it->first.data(),it->second);
         myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(it->first.data(),(int) ScoreState::Sent);
@@ -136,3 +153,20 @@ void CurrentWeekWidget::updateCurrentFantasyPlayerProjections(){
 }
 
 
+
+void CurrentWeekWidget::on_mySendProjectionButton_clicked()
+{
+    if (myCurrentWeek == myGlobalState.week()){
+        for( auto  playerId : myProjectionsModel.keys() ){
+                ViewModel * item = myProjectionsModel.itemByKey(playerId);
+                if (item == NULL) continue;
+                int projection = item->propertyValue<PropertyNames::Projection>().toInt();
+                if (projection == 0) continue;
+                FantasyBitProj fProj;
+                fProj.set_name(myFantasyName);
+                fProj.set_proj(projection);
+                fProj.set_playerid(playerId.toStdString());
+                emit NewProjection(fProj);
+    }
+}
+}

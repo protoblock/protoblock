@@ -21,8 +21,9 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->mySeasonLabel->setText("Unknown Season");
     ui->myWeekLabel->setText("Unknown Week #");
     ui->myPreviousWeek->setEnabled(false);
-    ui->myNextWeek->setEnabled(true);
+    ui->myNextWeek->setEnabled(false);
     ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekWidget);
+    myCurrentWeek =-1;
     //ui->myStatusbar->addWidget(); TODO animated label
 }
 
@@ -82,16 +83,16 @@ void MainWindow::initialize() {
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myLAPIWorker,SLOT(OnClaimName(QString)));
 
     //wait for going live
-    myWaitDialog.init(":/icons/waitingprogress.gif",120,"syncing...");
+    myWaitDialog.init(":/icons/waitingprogress.gif",120000,"Syncing...");
     QObject::connect(myLAPIWorker,SIGNAL(LiveGui(fantasybit::GlobalState)),&myWaitDialog,SLOT(stopAndClose()));
     //wake up core thread
     Core::instance()->guiIsAwake();
+    //myWaitDialog.startExec();
     if (myLAPIWorker == NULL)  {
         qDebug() << "coreapi is not resolved";
         setDisabled(true);
         return;
     }
-   // myWaitDialog.startExec();
 }
 
 
@@ -102,76 +103,70 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_myNextWeek_clicked()
 {
-    switch (myCurrentWeekViewMode) {
-    case CurrentWeek:
-        nextWeek();
-        ui->myNextWeek->setDisabled(true);
-        break;
-    case PreviousWeek:
-        ui->myPreviousWeek->setDisabled(false);
-        currentWeek();
-        break;
-    default:
-        break;
-    }
+   navigateToWeek(myCurrentWeek+1);
 }
 
-void MainWindow::nextWeek(){
-    myCurrentWeekViewMode = NextWeek;
+void MainWindow::nextWeek(){   
     ui->myStackedWidget->setCurrentWidget(ui->myNexWeekView);
+    ui->myNextWeekWidget->setWeekData(myCurrentWeek);
 }
 
-void MainWindow::previousWeek() {
-    myCurrentWeekViewMode = PreviousWeek;
-    ui->myStackedWidget->setCurrentWidget(ui->myPreviousWeekView);
+void MainWindow::previousWeek() {    
+    ui->myStackedWidget->setCurrentWidget(ui->myPreviousWeekView);    
+    ui->myPreviousWeekWidget->setWeekData(myCurrentWeek);
 }
 
-void MainWindow::currentWeek() {
-  myCurrentWeekViewMode = CurrentWeek;
-  ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekView);
-  //TODO
+void MainWindow::currentWeek() { 
+  ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekView); 
 }
-void MainWindow::setWeekViewMode(WeekViewMode  viewMode){
-    switch (viewMode) {
-    case CurrentWeek:
-        currentWeek();
-        break;
-    case PreviousWeek:
-        previousWeek();
-        break;
-    case NextWeek:
-        nextWeek();
-        break;
-    default:
-        break;
-    }
-}
+
 
 void MainWindow::on_myPreviousWeek_clicked()
 {
-    switch (myCurrentWeekViewMode) {
-    case CurrentWeek:
-        previousWeek();
-        ui->myPreviousWeek->setDisabled(true);
-        break;
-    case NextWeek:
-        ui->myNextWeek->setDisabled(false);
-        currentWeek();
-        break;
-    default:
-        break;
-    }
+    navigateToWeek(myCurrentWeek-1);
 }
 
 void MainWindow::GoLive(fantasybit::GlobalState state){
-   myGlobalState = state;
+   myGlobalState = state;   
+   QString seasonLabel = "%1 %2";
+   QString seasonType;
+   switch (state.state() ) {
+     case GlobalState_State_INSEASON :
+          seasonType ="in Season";
+       break;
+   case GlobalState_State_OFFSEASON :
+       seasonType = "Off Season";
+       break;
+   default:
+       break;
+   }
+   seasonLabel = seasonLabel.arg(seasonType).arg(myGlobalState.season());
+   ui->mySeasonLabel->setText(seasonLabel);
+
    //load roaster for current week
    ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState);
+   navigateToWeek(myGlobalState.week());
+
+}
+void MainWindow::navigateToWeek(int week)
+{
+    myCurrentWeek = week;
+    QString currentWeekNotice = myGlobalState.week()==myCurrentWeek?" (Current week) ":"";
+    ui->myWeekLabel->setText(QString("Week #%1").arg(myCurrentWeek)+currentWeekNotice);
+    ui->myPreviousWeek->setDisabled(myCurrentWeek==1);
+    ui->myNextWeek->setDisabled(myCurrentWeek==12);
+    if (myCurrentWeek==myGlobalState.week())
+        currentWeek();
+    else if (myCurrentWeek < myGlobalState.week())
+         previousWeek();
+    else
+        nextWeek();
 }
 
 void MainWindow::OnMyFantasyNames(vector<fantasybit::MyFantasyName> names){
    if (names.size()> 0){
     for(int i=0;i<names.size();i++){
+
        MyFantasyName fName = names.at(i);
        QString stringName = QString(fName.name().data());
        //QVariant itemData = QVariant::fromValue(fName);
@@ -198,15 +193,16 @@ void MainWindow::OnNameStatus(MyFantasyName name){
 
     fantasybit::MyNameStatus newStatus = name.status();
 
+    MyFantasyName cachedName = ui->myFantasyNamesCombo->itemData(nameIndex).value<MyFantasyName>();
+    fantasybit::MyNameStatus oldStatus = cachedName.status();
+
     //should never happen
-    if (newStatus == fantasybit::none ||newStatus == fantasybit::none){
+    if (newStatus == fantasybit::none ||oldStatus == fantasybit::none){
         qDebug() << "we received an unexpected FantasyName status : " << newStatus;
         return;
     }
 
 
-    MyFantasyName cachedName = ui->myFantasyNamesCombo->itemData(nameIndex).value<MyFantasyName>();
-    fantasybit::MyNameStatus oldStatus = cachedName.status();
     bool isCurrent = myCurrentFantasyName.name()== name.name();
 
     //always update the cached FantasyName in th combo
@@ -282,11 +278,19 @@ void MainWindow::on_myFantasyNamesCombo_currentIndexChanged(int index)
     default:
         break;
     }
+    ui->myCurrentWeekWidget->onUserSwitchFantasyName(myCurrentFantasyName.name());
     emit UseMyFantasyName(QString(myCurrentFantasyName.name().data()));
 }
 
 void MainWindow::on_myFantasyNamesCombo_currentTextChanged(const QString &name)
 {
+    if (myAddNamesPending) return;
+}
+
+void MainWindow::on_myFantasyNamesCombo_editTextChanged(const QString &name)
+{
+    if (myAddNamesPending) return;
+    myAddNamesPending = true;
     QVariant cachedName = ui->myFantasyNamesCombo->itemData(ui->myFantasyNamesCombo->currentIndex());
     if (!cachedName.isValid()){
         MyFantasyName newName;
@@ -295,4 +299,5 @@ void MainWindow::on_myFantasyNamesCombo_currentTextChanged(const QString &name)
         ui->myFantasyNamesCombo->setItemData(ui->myFantasyNamesCombo->currentIndex(),QVariant::fromValue(newName));
         emit ClaimFantasyName(name);
     }
+    myAddNamesPending = false;
 }

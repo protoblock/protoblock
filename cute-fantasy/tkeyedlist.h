@@ -40,7 +40,10 @@ class TKeyedListModel : public QAbstractTableModel {
 public:
   explicit TKeyedListModel(QObject *parent =0, bool autoDelete = false)
     : QAbstractTableModel(parent)
-  { myIsAutoDeleteModelElements = autoDelete; }
+  {
+        myIsAutoDeleteModelElements = autoDelete;
+
+    }
 
   ~TKeyedListModel(){
     if (myIsAutoDeleteModelElements){
@@ -55,6 +58,7 @@ public:
     myIsAutoDeleteModelElements = copy.myIsAutoDeleteModelElements;
     myHorizontalHeaders = copy.myHorizontalHeaders;
     myEditableColumnsState = copy.myEditableColumnsState;
+
   }
 
   TKeyedListModel<TKey,X> &operator=(const TKeyedListModel<TKey,X> & other) // copy assignment
@@ -78,6 +82,7 @@ public:
             myKeyMap.insert(key,data.value(key));
             myList.append(data.value(key));
       }
+
   }
 
   bool isAutoDelete() { return myIsAutoDeleteModelElements; }
@@ -87,8 +92,6 @@ public:
   QStringList horizontalHeaders() const { return horizontalHeaders(); }
 
   void setEditable(int column,bool on) {
-      if (column >= getColumnCount()) return;
-      if (column >= myEditableColumnsState.keys().size()) return;
       myEditableColumnsState[column] = on;
   }
 
@@ -168,7 +171,7 @@ public:
     if (!index.isValid())
       return QAbstractItemModel::flags(index);//TODO | Qt::ItemIsDropEnabled;
 
-    if (myEditableColumnsState.value(index.column()))
+    if (myEditableColumnsState.value(index.column(),false))
       return QAbstractItemModel::flags(index)| Qt::ItemIsEditable;
     else
       return QAbstractItemModel::flags(index);// TODO implement Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;

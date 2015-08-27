@@ -24,7 +24,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QTableView" name="myGamesTableView"/>
+      <widget class="QTableView" name="myGamesTableView">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -59,7 +69,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QTableView" name="myLeaderBaordTableView"/>
+      <widget class="QTableView" name="myLeaderBaordTableView">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -95,7 +115,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QTableView" name="myProjectionTableView"/>
+      <widget class="QTableView" name="myProjectionTableView">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectItems</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

@@ -20,6 +20,9 @@ public:
     ~CurrentWeekWidget();
     void setCurrentWeekData(GlobalState state);
 
+signals:
+    void NewProjection(fantasybit::FantasyBitProj);
+
 public slots:
     void onUserSwitchFantasyName(const std::string fantasyPlayerId);
 
@@ -28,6 +31,8 @@ private slots:
     void on_myCompletedGamesRb_toggled(bool checked);
     void on_myInGamesRb_toggled(bool checked);
     void on_myUpcomingGamesRb_toggled(bool checked);
+
+    void on_mySendProjectionButton_clicked();
 
 private:
 
@@ -39,10 +44,11 @@ private:
     ProjectionSheetTableModel myProjectionsModel {WeekDisplayType::CurrentWeek};
     bool myCurrentWeekDataLoaded;
     int myCurrentWeek;
-    std::string myFantasyPlayerId;
+    std::string myFantasyName;
     GlobalState myGlobalState;
     std::vector<fantasybit::GameRoster> myGameRosters;
     std::vector< std::shared_ptr<fantasybit::FantasyName> > myLeaderBoardData;
+    SpinBoxDelegate myProjectionDelegate;
 };
 
 #endif // CURRENTWEEKWIDGET_H

@@ -43,7 +43,7 @@ void NFLStateData::init() {
     }
 
     {
-        std::lock_guard<std::mutex> lockg{ data_mutex };
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
         auto *it = playerstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
@@ -117,7 +117,7 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
     statusstore->Put(write_sync, playerid, ps.SerializeAsString());
     qDebug() << QString::fromStdString(ps.DebugString());
 
-    std::lock_guard<std::mutex> lockg{ data_mutex };
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
     auto it = MyPlayerStatus.find(playerid);
     if ( it == end(MyPlayerStatus)) {
         MyPlayerStatus[playerid] = ps;
@@ -191,7 +191,7 @@ void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus 
 }
 
 void NFLStateData::OnWeekOver(int in) {
-    std::lock_guard<std::mutex> lockg{ data_mutex };
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
     auto ws = GetWeeklySchedule(in);
     for (auto game : ws.games() ) {
@@ -336,7 +336,7 @@ std::vector<fantasybit::GameResult> NFLStateData::GetPrevWeekGameResults(int wee
 
 std::unordered_map<std::string,PlayerDetail>
         NFLStateData::GetTeamRoster(const std::string &teamid) {
-    std::lock_guard<std::mutex> lockg{ data_mutex };
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
     qDebug() << "get team roster" << teamid;
     std::unordered_map<std::string,PlayerDetail> vpb{};

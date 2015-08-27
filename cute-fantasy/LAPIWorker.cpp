@@ -108,6 +108,7 @@ void MainLAPIWorker::OnInSync(int num) {
     }
 }
 
+#include <QAbstractEventDispatcher>
 void MainLAPIWorker::ProcessBlock() {
 
     auto b = fantasybit::Node::getLocalBlock(last_block+1);
@@ -119,7 +120,11 @@ void MainLAPIWorker::ProcessBlock() {
 
     count = pcount = 0;
     if ( !amlive && last_block < numto )
-        emit ProcessNext(); //catching up
+    {
+        //emit ProcessNext(); //catching up
+        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::WaitForMoreEvents);
+        ProcessNext();
+    }
     else {
         //doNewDelta();
         if ( !amlive ) {
@@ -273,7 +278,7 @@ void MainLAPIWorker::OnClaimName(QString name) {
     emit NameStatus(myCurrentName);
 }
 
-void MainLAPIWorker::OnProjTX(fantasybit::FantasyBitProj &inp) {
+void MainLAPIWorker::OnProjTX(fantasybit::FantasyBitProj inp) {
     if ( !amlive ) return;
 
     if ( !agent.HaveClient() ) return;
@@ -321,7 +326,7 @@ void MainLAPIWorker::BeOracle() {
 void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
     auto txstr = st.SerializeAsString();
     RestfullClient rest(QUrl("http://192.96.159.216:4545"));
-    rest.postRawData("tx","shit",txstr.data(),txstr.size());
+    rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()));
 }
 
 

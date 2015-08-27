@@ -4,7 +4,7 @@
 #include <QDateTime>
 #include "viewmodels.h"
 #include "propertynames.h"
-
+#include "spinboxdelegate.h"
 using namespace PropertyNames;
 
 enum class WeekDisplayType : int {
@@ -48,12 +48,10 @@ protected:
         case WeekDisplayType::CurrentWeek: {
             if (data==NULL) return QVariant();
             if( column ==0)
-                return data->propertyValue<PropertyNames::Game_ID>();
-            if( column ==1)
                 return data->propertyValue<PropertyNames::Game_Time>();
-            if( column ==2)
+            if( column ==1)
                 return data->propertyValue<PropertyNames::Home>();
-            if( column ==3)
+            if( column ==2)
                 return data->propertyValue<PropertyNames::Away>();
             return QVariant();
 
@@ -61,24 +59,20 @@ protected:
         case WeekDisplayType::PreviousWeek: {
             if (data==NULL) return QVariant();
             if( column ==0)
-                return data->propertyValue<PropertyNames::Game_ID>();
-            if( column ==1)
                 return data->propertyValue<PropertyNames::Kickoff_Time>();
-            if( column ==2)
+            if( column ==1)
                 return data->propertyValue<PropertyNames::Home>();
-            if( column ==3)
+            if( column ==2)
                 return data->propertyValue<PropertyNames::Away>();
             return QVariant();
 
         }
         case WeekDisplayType::UpcomingWeek: {
             if( column ==0)
-                return data->propertyValue<PropertyNames::Game_ID>();
-            if( column ==1)
                 return data->propertyValue<PropertyNames::Game_Time>();
-            if( column ==2)
+            if( column ==1)
                 return data->propertyValue<PropertyNames::Home>();
-            if( column ==3)
+            if( column ==2)
                 return data->propertyValue<PropertyNames::Away>();
             return QVariant();
 
@@ -90,9 +84,9 @@ protected:
 
     int getColumnCount() {
         switch (myGameTableType) {
-        case WeekDisplayType::CurrentWeek:  return 4;
-        case WeekDisplayType::PreviousWeek: return 4;
-        case WeekDisplayType::UpcomingWeek: return 4;
+        case WeekDisplayType::CurrentWeek:  return 3;
+        case WeekDisplayType::PreviousWeek: return 3;
+        case WeekDisplayType::UpcomingWeek: return 3;
         }
     }
 
@@ -100,9 +94,9 @@ private:
     void initialize() {
         QStringList  headers;
         switch (myGameTableType) {
-        case WeekDisplayType::CurrentWeek:  headers << naturalName<Game_ID>()<< "Time" << "Home" << "Away"; break;
-        case WeekDisplayType::PreviousWeek: headers << naturalName<Game_ID>() << naturalName<Kickoff_Time>() << "Home" << "Away"; break;
-        case WeekDisplayType::UpcomingWeek: headers << naturalName<Game_ID>() << "Time" << "Home" << "Away"; break;
+        case WeekDisplayType::CurrentWeek:  headers << "Time" << "Home" << "Away"; break;
+        case WeekDisplayType::PreviousWeek: headers << naturalName<Kickoff_Time>() << "Home" << "Away"; break;
+        case WeekDisplayType::UpcomingWeek: headers << "Time" << "Home" << "Away"; break;
         }
         setHorizontalHeaders(headers);
     }
@@ -250,17 +244,26 @@ protected:
         }
     }
 
+    void setDataFromColumn(ViewModel* data, const QModelIndex & index,const QVariant & vvalue,int /*role*/){
+        if (index.column()==5)
+            data->attachProperty<PropertyNames::Projection>(vvalue);
+    }
+
 private:
     void initialize() {
         QStringList  headers;
         switch (myDisplayType) {
         case WeekDisplayType::CurrentWeek:  headers << "Player Name" << "Pos"
                                                     <<"Team"<<"Game Status"<< "Team Status"
-                                                   << "Projection"  ; break;
+                                                   << "Projection"  ;
+            setEditable(5,true);
+            break;
         case WeekDisplayType::PreviousWeek: headers << "Player Name" << "Pos"
                                                     <<"Team" << "Result"; break;
         case WeekDisplayType::UpcomingWeek: headers << "Player Name" << "Pos"
-                                                    <<"Team" << "Projection"; break;
+                                                    <<"Team" << "Projection";
+
+            break;
         }
         setHorizontalHeaders(headers);
     }
@@ -302,29 +305,36 @@ protected:
         ViewModel * item = model->getItemByIndex(index);
         if (item == NULL) return true;
 
-        if (!item->hasProperty("Game Status")) return true;
-        GameStatus_Status gameStatus = (GameStatus_Status) item->propertyValue("Game Status").toInt();
+        if (!item->hasProperty<PropertyNames::Game_Status>()) return true;
+        QString str;
+
+        GameStatus_Status gameStatus = (GameStatus_Status) item->propertyValue<PropertyNames::Game_Status>().toInt();
+
+
+        qDebug() << item->propertyValue<PropertyNames::Home>().toString()
+                 << item->propertyValue<PropertyNames::Away>().toString()
+                 << "gameStatus :" <<str;
 
         if (myGamesFilter == GamesFilter::Completed)
             return gameStatus== GameStatus_Status_CLOSED;
 
         if (myGamesFilter == GamesFilter::Upcoming)
-            return (gameStatus== GameStatus_Status_SCHEDULED) ||
+            return (gameStatus== GameStatus_Status_SCHEDULED)||
                     (gameStatus== GameStatus_Status_PREGAME);
 
         if (myGamesFilter == GamesFilter::InGame)
             return gameStatus == GameStatus_Status_INGAME;
     }
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const {
-        GameTableModel * model  = dynamic_cast<GameTableModel *>(sourceModel());
-        if (model==NULL) return true;
-        ViewModel * leftItem = model->getItemByIndex(left);
-        if (leftItem == NULL)  return true;
-        ViewModel * rightItem = model->getItemByIndex(right);
-        if (rightItem == NULL)  return true;
-        return leftItem->propertyValue("Game_Time")
-                < rightItem->propertyValue("Game_Time");
-    }
+    //    bool lessThan(const QModelIndex &left, const QModelIndex &right) const {
+    //        GameTableModel * model  = dynamic_cast<GameTableModel *>(sourceModel());
+    //        if (model==NULL) return true;
+    //        ViewModel * leftItem = model->getItemByIndex(left);
+    //        if (leftItem == NULL)  return true;
+    //        ViewModel * rightItem = model->getItemByIndex(right);
+    //        if (rightItem == NULL)  return true;
+    //        return leftItem->propertyValue("Game_Time")
+    //                < rightItem->propertyValue("Game_Time");
+    //    }
 
 private:
     GamesFilter myGamesFilter;

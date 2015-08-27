@@ -23,13 +23,7 @@ using namespace fantasybit;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-public:
-
-    enum WeekViewMode {
-        PreviousWeek,
-        CurrentWeek,
-        NextWeek
-    };
+public:    
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -57,7 +51,6 @@ public slots:
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj);
     void OnAward(QVariant);
-
     void OnNewWeek(int);
     void OnGameOver(QString);
     void OnGameStart(QString);
@@ -65,8 +58,9 @@ public slots:
 
 private slots:
     void on_myFantasyNamesCombo_currentIndexChanged(int index);
-
     void on_myFantasyNamesCombo_currentTextChanged(const QString &name);
+
+    void on_myFantasyNamesCombo_editTextChanged(const QString &arg1);
 
 private:
     void initialize();
@@ -75,15 +69,16 @@ private:
     void nextWeek();
     void previousWeek();
     void currentWeek();
+    void navigateToWeek(int week);
 
-    void setWeekViewMode(WeekViewMode  viewMode);
+
     MainLAPIWorker *  myLAPIWorker;
     Ui::MainWindow *ui;    
-    int myCurrentWeek;
-    WeekViewMode myCurrentWeekViewMode;
+    int myCurrentWeek;    
     fantasybit::MyFantasyName myCurrentFantasyName;
     GlobalState myGlobalState;
     WaitModalDialog myWaitDialog;
+    bool myAddNamesPending= false;
 
 };
 

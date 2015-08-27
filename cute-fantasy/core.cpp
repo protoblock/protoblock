@@ -32,7 +32,7 @@ void messageHandler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &message)
 {
-    static QMutex messageHandlerMutex;
+    static QMutex messageHandlerMutex ;
     QMutexLocker lock(&messageHandlerMutex);
     QString logFileName = Platform::settings()->getSetting(AppSettings::LogFilePath).toString();
     static std::ofstream  logFile(logFileName.toStdString());

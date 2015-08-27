@@ -70,7 +70,17 @@
       </layout>
      </item>
      <item>
-      <widget class="QTableView" name="myGamesTableView"/>
+      <widget class="QTableView" name="myGamesTableView">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -105,7 +115,20 @@
       </widget>
      </item>
      <item>
-      <widget class="QTableView" name="myLeaderBaordTableView"/>
+      <widget class="QTableView" name="myLeaderBaordTableView">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
+      </widget>
      </item>
     </layout>
    </item>
@@ -129,6 +152,19 @@
      <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
      </property>
+     <widget class="QPushButton" name="mySendProjectionButton">
+      <property name="geometry">
+       <rect>
+        <x>834</x>
+        <y>20</y>
+        <width>91</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Send Projection</string>
+      </property>
+     </widget>
     </widget>
    </item>
    <item row="2" column="0" colspan="3">
@@ -141,7 +177,20 @@
       </widget>
      </item>
      <item>
-      <widget class="QTableView" name="myProjectionTableView"/>
+      <widget class="QTableView" name="myProjectionTableView">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectItems</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+      </widget>
      </item>
     </layout>
    </item>

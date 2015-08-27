@@ -39,8 +39,9 @@ class TListModel : public QAbstractTableModel {
 
 public:
   explicit TListModel(QObject *parent =0, bool autoDelete = false)
-    : QAbstractTableModel(parent)
-  { myIsAutoDeleteModelElements = autoDelete; }
+    : QAbstractTableModel(parent) {
+        myIsAutoDeleteModelElements = autoDelete;         
+    }
 
   ~TListModel(){
     if (myIsAutoDeleteModelElements){
@@ -72,7 +73,8 @@ public:
   TListModel(QList<X*> data, QObject *parent =0)
     : QAbstractTableModel(parent)
   {
-    myList.append(data);    
+    myList.append(data);
+
   }
 
   bool isAutoDelete() { return myIsAutoDeleteModelElements; }
@@ -81,9 +83,7 @@ public:
   QStringList horizontalHeaders() const { return horizontalHeaders(); }
 
 
-  void setEditable(int column,bool on) {
-      if (column >= getColumnCount()) return;
-      if (column >= myEditableColumnsState.keys().size()) return;
+  void setEditable(int column,bool on) {     
       myEditableColumnsState[column] = on;
   }
 
@@ -166,7 +166,7 @@ public:
     if (!index.isValid())
       return QAbstractItemModel::flags(index);//TODO | Qt::ItemIsDropEnabled;
 
-    if (myEditableColumnsState.value(index.column()))
+    if (myEditableColumnsState.value(index.column(),false))
       return QAbstractItemModel::flags(index)| Qt::ItemIsEditable;
     else
       return QAbstractItemModel::flags(index);// TODO implement Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;

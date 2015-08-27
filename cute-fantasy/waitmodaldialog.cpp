@@ -56,27 +56,3 @@ void WaitModalDialog::stopAndClose(){
   if (myTimer.isActive()) myTimer.stop();
   accept(); 
 }
-
-
-bool WaitModalDialog::eventFilter(QObject *obj, QEvent *event){
-//  switch (event->type()){
-//    case Par3EventType::Log :
-//      if (myShowLogMessage) {
-//        LogEvent  * logEvent = dynamic_cast<LogEvent*>(event);
-//        if (logEvent !=NULL)
-//          setMessage(logEvent->message());
-//      }
-//      break;
-//    case Par3EventType::ProgressUpdate :
-//      if (myShowProgressMessage) {
-//        ProgressNotifyEvent * progressNotifyEvent = dynamic_cast<ProgressNotifyEvent*>(event);
-//        if (progressNotifyEvent!=NULL)
-//          setMessage(progressNotifyEvent->message());
-//      }
-//      break;
-
-//  }
-  return QDialog::eventFilter(obj,event);
-}
-
-
