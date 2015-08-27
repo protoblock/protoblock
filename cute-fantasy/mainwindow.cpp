@@ -215,10 +215,13 @@ void MainWindow::OnNameStatus(MyFantasyName name){
         switch (newStatus) {
         case fantasybit::confirmed:
             ui->myFantasyNameStatusLabel->setText("Confirmed");
+            break;
         case fantasybit::requested:
             ui->myFantasyNameStatusLabel->setText("Requested");
+            break;
         case fantasybit::notavil:
             ui->myFantasyNameStatusLabel->setText("Not Available");
+            break;
         default:
             myCurrentFantasyName = name;
             break;

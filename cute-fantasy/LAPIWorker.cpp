@@ -79,8 +79,11 @@ void MainLAPIWorker::GoLive() {
     timer->start(intervalstart);
 
     OnGetMyNames();
+    qDebug() << "emit LiveData(true)";
     emit LiveData(true);
     emit LiveGui(data.GetGlobalState());
+    qDebug() << "emit LiveGui(data.GetGlobalState())" << data.GetGlobalState().DebugString();
+
 }
 
 void MainLAPIWorker::startPoint(){
@@ -119,10 +122,10 @@ void MainLAPIWorker::ProcessBlock() {
     if ( !Process(*b) ) return;
 
     count = pcount = 0;
-    if ( !amlive && last_block < numto )
+    if (!amlive && last_block < numto )
     {
         //emit ProcessNext(); //catching up
-        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::WaitForMoreEvents);
+        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
         ProcessNext();
     }
     else {
@@ -147,6 +150,7 @@ void MainLAPIWorker::OnBlockError(int last) {
 }
 
 void MainLAPIWorker::Timer() {
+    //qDebug() << " Timer ";
     bcount++;
     pcount++;
     if ( !amlive ) {
@@ -203,13 +207,14 @@ void MainLAPIWorker::OnGetMyNames() {
     vector<MyFantasyName> my;
     myfantasynames = agent.getMyNamesStatus();
     for(auto p : myfantasynames) {
-        if ( !amlive )
+        if ( amlive )
         if ( p.second.status() < MyNameStatus::confirmed )
             namedata.Subscribe(p.first);
 
         my.push_back(p.second);
     }
 
+    qDebug() << " MyNames(my)";
     emit MyNames(my);
 }
 
@@ -234,6 +239,7 @@ void MainLAPIWorker::OnUseName(QString name) {
     if ( myCurrentName.status() < MyNameStatus::confirmed)
         namedata.Subscribe(myCurrentName.name());
 
+    qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
     emit NameStatus(myCurrentName);
 }
 
@@ -271,10 +277,11 @@ void MainLAPIWorker::OnClaimName(QString name) {
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nt);
         SignedTransaction sn = agent.makeSigned(trans);
         agent.onSignedTransaction(sn);
-        DoPostTx(sn);
         namedata.Subscribe(myCurrentName.name());
+        DoPostTx(sn);
     }
 
+    qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
     emit NameStatus(myCurrentName);
 }
 
@@ -304,10 +311,22 @@ void MainLAPIWorker::OnProjTX(fantasybit::FantasyBitProj inp) {
 
 //tx status
 void MainLAPIWorker::OnFoundName(string name) {
+    if (myCurrentName.name() == name)
+        myCurrentName.set_status(MyNameStatus::confirmed);
+
     auto it = myfantasynames.find(name);
+    if ( it == end(myfantasynames)) {
+        myfantasynames = agent.getMyNamesStatus();
+        it = myfantasynames.find(name);
+    }
+
     if ( it != end(myfantasynames)) {
         it->second.set_status(MyNameStatus::confirmed);
+        qDebug() << "NameStatus(it->second)" << it->second.DebugString();
         emit NameStatus(it->second);
+    }
+    else {
+        qWarning() << "it != end(myfantasynames)";
     }
 }
 
