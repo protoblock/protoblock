@@ -45,7 +45,7 @@ void TestingWindow::initialize() {
     QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(GlobalState)),
                      this,SLOT(GoLive(GlobalState)));
 
-    QObject::connect(myCoreInstance,SIGNAL(Live(GlobalState)),
+    QObject::connect(myCoreInstance,SIGNAL(LiveGui(GlobalState)),
                      this,SLOT(GoLive(GlobalState)));
 
     QObject::connect(myCoreInstance,SIGNAL(NameStatus(MyFantasyName)),

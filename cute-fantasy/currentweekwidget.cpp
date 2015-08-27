@@ -16,7 +16,7 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     //start with upcoming games filter
     ui->myUpcomingGamesRb->setChecked(true);
     myCurrentWeekDataLoaded = false;
-    myCurrentWeek = -1;
+    myCurrentWeek = -1;    
 }
 
 CurrentWeekWidget::~CurrentWeekWidget()
@@ -52,12 +52,10 @@ void CurrentWeekWidget::on_myUpcomingGamesRb_toggled(bool checked)
 }
 
 
-void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state,const std::string fantasyPlayerId){
+void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
 
-  if (myCurrentWeek == myGlobalState.week() &&
-      myFantasyPlayerId == fantasyPlayerId) return;
+  if (myCurrentWeek == myGlobalState.week()) return;
   myGlobalState = state;
-  myFantasyPlayerId = fantasyPlayerId;
   myCurrentWeek = myGlobalState.week();
 
   std::vector<fantasybit::GameRoster> myGameRosters = DataService::instance()->GetCurrentWeekGameRosters();
@@ -83,6 +81,7 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state,const s
           myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
           myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,playerDetails.team_status);
           myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,playerDetails.game_status);
+          myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);
           myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
       }
 
@@ -98,17 +97,42 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state,const s
           myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
           myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,playerDetails.team_status);
           myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,playerDetails.game_status);
+          myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);
           myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
       }
-  }
-
-  //update to recent projection projection and mark them a sent
-  auto  recentProjections = DataService::instance()->GetProjById(myFantasyPlayerId);
-  for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
-      myProjectionsModel.updateItemProperty<PropertyNames::Projection>(it->first.data(),it->second);
-      myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(it->first.data(),(int) ScoreState::Sent);
   }  
 }
 
+
+void CurrentWeekWidget::onUserSwitchFantasyName(const std::string fantasyPlayerId){
+    //do nothing if the received name is the old one
+    if (myFantasyPlayerId == fantasyPlayerId) return;
+
+    //case when we received a name in the app start
+    if (myFantasyPlayerId=="" && fantasyPlayerId != "" ){
+        myFantasyPlayerId = fantasyPlayerId;
+        updateCurrentFantasyPlayerProjections();
+    }
+
+    //case when we switched fantasy names
+    if (myFantasyPlayerId!="" && myFantasyPlayerId != fantasyPlayerId){
+        myFantasyPlayerId = fantasyPlayerId;
+        //reset all projections to 0
+        foreach(QString playerId,myProjectionsModel.keys()){
+            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
+            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);
+        }
+        updateCurrentFantasyPlayerProjections();
+    }
+}
+
+void CurrentWeekWidget::updateCurrentFantasyPlayerProjections(){
+    //update to recent projection projection and mark them a sent
+    auto  recentProjections = DataService::instance()->GetProjById(myFantasyPlayerId);
+    for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
+        myProjectionsModel.updateItemProperty<PropertyNames::Projection>(it->first.data(),it->second);
+        myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(it->first.data(),(int) ScoreState::Sent);
+    }
+}
 
 

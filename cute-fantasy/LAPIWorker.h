@@ -79,13 +79,13 @@ signals:
 
 
     //to GUI
-    void NameStatus(MyFantasyName);
-    void LiveProj(FantasyBitProj &);
-    void MyNames(vector<MyFantasyName>);
+    void NameStatus(fantasybit::MyFantasyName);
+    void LiveProj(fantasybit::FantasyBitProj &);
+    void MyNames(vector<fantasybit::MyFantasyName>);
     void NameBalance(fantasybit::FantasyNameBal &);
     void PlayerStatusChange(std::pair<string,PlayerStatus> &in);
-    void GlobalStateChange(GlobalState);
-    void LiveGui(GlobalState);
+    void GlobalStateChange(fantasybit::GlobalState);
+    void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
     void GameStart(string);
     void BlockError(int last);
@@ -111,9 +111,9 @@ public slots:
 
     //tx
     void OnFoundName(string);
-    void OnProjLive(FantasyBitProj &);
+    void OnProjLive(fantasybit::FantasyBitProj &);
     void OnClaimName(QString);
-    void OnProjTX(FantasyBitProj &);
+    void OnProjTX(fantasybit::FantasyBitProj &);
 
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);

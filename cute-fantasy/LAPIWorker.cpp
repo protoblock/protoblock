@@ -273,7 +273,7 @@ void MainLAPIWorker::OnClaimName(QString name) {
     emit NameStatus(myCurrentName);
 }
 
-void MainLAPIWorker::OnProjTX(FantasyBitProj &inp) {
+void MainLAPIWorker::OnProjTX(fantasybit::FantasyBitProj &inp) {
     if ( !amlive ) return;
 
     if ( !agent.HaveClient() ) return;

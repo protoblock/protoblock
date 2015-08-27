@@ -73,5 +73,9 @@ void messageHandler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &message);
 
+Q_DECLARE_METATYPE(fantasybit::GlobalState)
+Q_DECLARE_METATYPE(fantasybit::MyFantasyName)
+Q_DECLARE_METATYPE(fantasybit::FantasyBitProj)
+Q_DECLARE_METATYPE(vector<fantasybit::MyFantasyName>)
 
 #endif // CORE_H

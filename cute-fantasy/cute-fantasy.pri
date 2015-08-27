@@ -34,7 +34,9 @@ SOURCES += \
     $$PWD/dataservice.cpp \
     $$PWD/tablemodels.cpp \
     $$PWD/dataagent.cpp \
-    $$PWD/testingwindow.cpp
+    $$PWD/testingwindow.cpp \
+    $$PWD/waitmodaldialog.cpp \
+    $$PWD/animationandmessagewidget.cpp
 
 DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
@@ -90,7 +92,9 @@ HEADERS += \
     $$PWD/datacache.h \
     $$PWD/playerloader.h \
     $$PWD/dataagent.h \
-    $$PWD/testingwindow.h
+    $$PWD/testingwindow.h \
+    $$PWD/waitmodaldialog.h \
+    $$PWD/animationandmessagewidget.h
 
 FORMS += \       
     $$PWD/mainwindow.ui \
@@ -98,7 +102,9 @@ FORMS += \
     $$PWD/currentweekwidget.ui \
     $$PWD/previousweekwidget.ui \
     $$PWD/nextweekwidget.ui \
-    $$PWD/testingwindow.ui
+    $$PWD/testingwindow.ui \
+    $$PWD/waitmodaldialog.ui \
+    $$PWD/animationandmessagewidget.ui
 
 RESOURCES += \
     $$PWD/resources/resources.qrc

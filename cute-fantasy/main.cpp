@@ -5,17 +5,23 @@
 //  Created by Jay Berg on 4/8/14.
 //
 //
-
 #include "globals.h"
 #include <iostream>
 #include "singleapplication.h"
 #include "mainwindow.h"
 #include "core.h"
-#include "PeerNode.h"
-#include "playerloader.h"
 #include "testingwindow.h"
+#include <QMetaType>
 
-using namespace fantasybit;
+//using namespace fantasybit;
+
+//Q_DECLARE_METATYPE(fantasybit::GlobalState)
+//Q_DECLARE_METATYPE(fantasybit::MyFantasyName)
+//Q_DECLARE_METATYPE(fantasybit::FantasyBitProj)
+//Q_DECLARE_METATYPE(vector<fantasybit::MyFantasyName>)
+
+
+
 int domain(int argc, char *argv[]){
     SingleApplication a(argc, argv);
 

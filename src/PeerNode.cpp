@@ -61,14 +61,16 @@ Node::Node() {
 
         qInfo() <<  "done";
 
-        leveldb::Slice value((char*)&current_hight, sizeof(int));
-        blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
-        current_hight = getLastLocalBlockNum();
-
         if (!BlockProcessor::verifySignedBlock(sb)) {
             qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
             return;
         }
+
+
+        leveldb::Slice value((char*)&current_hight, sizeof(int));
+        blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
+        current_hight = getLastLocalBlockNum();
+
 
     }
 
