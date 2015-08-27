@@ -57,6 +57,8 @@ private slots:
 
     void on_team_activated(const QString &arg1);
 
+    void on_GetGameResult_clicked();
+
 private:
     MainLAPIWorker *  myCoreInstance;
     std::unordered_map<string,GameInfo> mGames;
@@ -64,8 +66,14 @@ private:
     std::unordered_map<string,GameRoster> mGameRoster;
     std::unordered_map<string,PlayerDetail> mPlayerDetail;
 
+    std::unordered_map<string,GameResult> mStagedGameResult;
 
-    std::unordered_map<string,::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward>> mRewards;
+
+    std::unordered_map<string,::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward>>
+    mRewards;
+
+    std::unordered_map<string,PlayerResult>
+    mResult;
 
     int realweek() ;
 

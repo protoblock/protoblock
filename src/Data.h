@@ -16,6 +16,9 @@
 #include <unordered_map>
 #include <mutex>
 #include <leveldb/db.h>
+#include <utility>
+
+using namespace std;
 
 namespace fantasybit
 {
@@ -64,10 +67,11 @@ class NFLStateData : public QObject {
 
 
 signals:
-    void PlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus>);
-    void PlayerAdd(fantasybit::PlayerBase);
-    void GameStart(std::string);
+    void PlayerStatusChange(pair<string,PlayerStatus>);
+    void PlayerAdd(PlayerBase);
+    void GameStart(string);
     void GlobalStateChange(GlobalState);
+    void NewGameResult(string);
 
 public slots:
     void OnLive(bool subscribe) {
@@ -81,7 +85,7 @@ public:
     void init();
     void AddNewPlayer(const std::string playerid, const PlayerBase &);
     void AddNewWeeklySchedule(int week, const WeeklySchedule &);
-    void AddGameResult(const std::string &gameid, const GameResult&);
+    void AddGameResult(const string &gameid, const GameResult&);
     GameResult GetGameResult(const std::string &gameid);
 
     PlayerBase GetPlayerBase(std::string playerid);

@@ -11,6 +11,9 @@
 #include <QByteArray>
 #include "Commissioner.h"
 #include <QDebug>
+#include "StaticData.pb.h"
+#include "DistributionAlgo.h"
+
 /*
 void print_hex_memory(void *mem,int size) {
   int i;
@@ -23,6 +26,9 @@ void print_hex_memory(void *mem,int size) {
   printf("\n");
 }
 */
+
+using namespace std;
+using namespace fantasybit;
 class PlayerLoader
 {
 
@@ -330,6 +336,192 @@ public:
        return pd;
     }
 
+};
+ 
+class GameStatsLoader {
+    QString uribase = "http://api.sportradar.us/nfl-b1/2015";
+    QString uritail = "/statistics.json?api_key=2uqzuwdrgkpzkhbfumzrg8gn";
+        
+    
+    QString makeroute(int week, string home, string away) {
+        string inr = preregpost 
+                        + "/" + to_string(week) 
+                        + "/" + away 
+                        + "/" + home; 
+        
+                
+        return QString::fromStdString(inr) + uritail;
+                
+    }
+
+    string preregpost;
+public:
+    GameStatsLoader(string seasontype) {
+        preregpost = seasontype;
+    }
+    
+    GameStatsLoader() {
+        preregpost = "PRE";
+    }
+    
+    std::vector<fantasybit::GameResult> 
+                loadGameStatsFromTradeRadar(int week,vector<GameInfo> &games) {
+        std::vector<fantasybit::GameResult> result;
+
+        RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/2015"));
+
+        for ( auto game : games) {
+            QThread::currentThread()->msleep(1000);
+
+            auto route = makeroute(week,game.home(),game.away());
+            QMap<QString,QString>  headers;
+            QMap<QString,QVariant> params;
+            //params.insert("api_key","2uqzuwdrgkpzkhbfumzrg8gn");
+
+            qDebug() << uribase << route;
+            rest.getData(route,params,headers);
+            auto resp = rest.lastReply();
+
+            qDebug() << resp;
+            QJsonDocument ret = QJsonDocument::fromJson(resp);
+            qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+            QJsonObject jo = ret.object();
+
+            //std::map<QString,Stats> homestats{};
+            //std::map<QString,Stats> awaystats{};
+            
+            GameResult gr{};
+            gr.set_gameid(jo.value("id").toString().toStdString());
+            for ( auto tm : {QString("home_team"), QString("away_team")}) {
+
+                auto playerresults = ( tm == "home_team" ) ?
+                            gr.mutable_home_result() : gr.mutable_away_result();
+
+                auto vals = jo.value(tm).toObject().value("statistics");
+                auto sobj = vals.toObject();
+                QJsonArray rush = sobj.value("rushing")
+                        .toObject().value("players").toArray();
+
+                QJsonArray pass = sobj.value("passing")
+                        .toObject().value("players").toArray();
+
+                QJsonArray rec = sobj.value("receiving")
+                        .toObject().value("players").toArray();
+
+                std::map<QString,Stats> tstats{};
+
+                //for ( auto tstats : {homestats, awaystats}) {
+                map<string,QJsonArray> mp = { {"rush", rush}, {"pass", pass}, {"rec",rec}};
+                for ( auto rpsp : mp ) {
+                    auto rps = rpsp.second;
+                    for ( int i=0;i<rps.size();i++) {
+                        QJsonValueRef data = rps[i];
+                        QJsonObject odata = data.toObject();
+                        auto id = odata.value("id").toString();
+                        auto it = tstats.find(id);
+                        if ( it == end(tstats))
+                            tstats[id] = Stats{};
+
+                        Ostats * ostat = tstats[id].mutable_ostats();
+                        getStats(ostat,rpsp.first,odata);
+                    }
+                }
+
+                for ( auto pstats : tstats) {
+                    PlayerResult pr{};
+                    pr.set_playerid(pstats.first.toStdString());
+                    pr.mutable_stats()->CopyFrom(pstats.second);
+                    pr.set_result(CalcResults(pstats.second));
+                    playerresults->Add()->CopyFrom(pr);
+                }
+            }
+            result.push_back(gr);
+        }
+
+        return result;
+    }
+
+    double CalcResults(const Stats &stats) {
+        int ret = 0;
+        double iret = 0;
+
+        if ( stats.has_ostats() ) {
+            auto os = stats.ostats();
+            if ( os.has_passtd())
+                ret += 400 * os.passtd();
+
+            if ( os.has_rushtd() )
+                ret += 600 * os.rushtd();
+
+            if ( os.has_rectd() )
+                ret += 600 *  os.rectd();
+
+            if ( os.has_passyds() )
+               ret += 5 *  os.passyds();
+
+            if ( os.has_recyds() )
+                ret += 10 *  os.recyds();
+
+            if (  os.has_rushyds() )
+                ret += 10 *  os.rushyds();
+
+            if ( os.has_rec() )
+                ret += 100 * os.rec();
+
+            if ( os.has_pint() )
+                ret += -100 * os.pint();
+
+            if ( os.has_twopt() )
+                ret += 200 * os.twopt();
+
+            if (os.has_onept())
+                ret += 200 *  os.onept();
+        }
+        else return 0.0;
+
+        iret = (double)ret / 100.0;
+        return iret;
+    }
+
+    void getStats(Ostats *ostat,std::string type,QJsonObject & jsonObject) const {
+
+       auto yds = jsonObject.value("yds");
+       int y = yds.toInt();
+       if (y != 0) {
+           if ( type == "pass")
+               ostat->set_passyds(y);
+           else if ( type == "rush")
+               ostat->set_rushyds(y);
+           else if ( type == "rec")
+               ostat->set_recyds(y);
+       }
+
+       auto td = jsonObject.value("td");
+       int t = td.toInt();
+       if (t > 0) {
+           if ( type == "pass")
+               ostat->set_passtd(t);
+           else if ( type == "rush")
+               ostat->set_rushtd(t);
+           else if ( type == "rec")
+               ostat->set_rectd(t);
+       }
+
+       if ( type == "rec" ) {
+           auto rec = jsonObject.value("rec");
+           int r = rec.toInt();
+           if ( r > 0 )
+               ostat->set_rec(r);
+       }
+       else if ( type == "pass" ) {
+           auto rec = jsonObject.value("int");
+           int r = rec.toInt();
+           if ( r > 0 )
+               ostat->set_pint(r);
+       }
+
+    }
 };
 
 #endif // PLAYERLOADER

@@ -191,7 +191,7 @@ bool MainLAPIWorker::Process(fantasybit::Block &b) {
 
 
 //Data
-void MainLAPIWorker::OnPlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus> in) {
+void MainLAPIWorker::OnPlayerStatusChange(pair<string,PlayerStatus> in) {
     emit PlayerStatusChange(in);
 }
 

@@ -207,6 +207,11 @@ void BlockProcessor::processResultProj(PlayerResult& playerresult,
                                        std::unordered_map<std::string,int> &proj,
                                        const std::string &blocksigner) {
     DistribuePointsAvg dist(proj);
+    if ( !playerresult.has_result() && playerresult.has_stats()) {
+        //auto calc = CalcResults(playerresult.stats());
+        //playerresult.set_result(calc);
+    }
+
     auto rewards = dist.distribute(playerresult.result(), blocksigner);
     //decltype(PlayerResult::default_instance().fantaybitaward())
     PlayerResult awards;
