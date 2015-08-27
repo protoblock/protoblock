@@ -42,22 +42,22 @@ void TestingWindow::initialize() {
     qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
 */
 
-    QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(GlobalState)),
-                     this,SLOT(GoLive(GlobalState)));
+    QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(fantasybitGlobalState)),
+                     this,SLOT(GoLive(fantasybit::GlobalState)));
 
-    QObject::connect(myCoreInstance,SIGNAL(LiveGui(GlobalState)),
-                     this,SLOT(GoLive(GlobalState)));
+    QObject::connect(myCoreInstance,SIGNAL(LiveGui(fantasybit::GlobalState)),
+                     this,SLOT(GoLive(fantasybit::GlobalState)));
 
-    QObject::connect(myCoreInstance,SIGNAL(NameStatus(MyFantasyName)),
-                     this,SLOT(OnNameStatus(MyFantasyName)));
+    QObject::connect(myCoreInstance,SIGNAL(NameStatus(fantasybit::MyFantasyName)),
+                     this,SLOT(OnNameStatus(fantasybit::MyFantasyName)));
 
     QObject::connect(this,SIGNAL(BeOracle()),
                      myCoreInstance,SLOT(BeOracle()));
 
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myCoreInstance,SLOT(OnClaimName(QString)));
 
-    QObject::connect(myCoreInstance,SIGNAL(MyNames(vector<MyFantasyName>)),
-                     this,SLOT(OnMyFantasyNames(vector<MyFantasyName>)));
+    QObject::connect(myCoreInstance,SIGNAL(MyNames(vector<fantasybit::MyFantasyName>)),
+                     this,SLOT(OnMyFantasyNames(vector<fantasybit::MyFantasyName>)));
 
     QObject::connect(myCoreInstance,SIGNAL(NewWeek(int)),this,SLOT(OnNewWeek(int)));
 

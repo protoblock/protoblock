@@ -31,9 +31,9 @@ signals:
     void ClaimFantasyName(QString);
 
 public slots:
-    void GoLive(GlobalState);
-    void OnNameStatus(MyFantasyName);
-    void OnMyFantasyNames(vector<MyFantasyName> &);
+    void GoLive(fantasybit::GlobalState);
+    void OnNameStatus(fantasybit::MyFantasyName);
+    void OnMyFantasyNames(vector<fantasybit::MyFantasyName> &);
     void OnNewWeek(int);
 
 private slots:
