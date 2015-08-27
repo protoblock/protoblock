@@ -38,7 +38,7 @@ class FantasyNameData : public QObject {
     bool amlive = false;
     int week = 0;
 
-    std::mutex data_mutex{};
+    std::recursive_mutex data_mutex{};
 
 
 signals:

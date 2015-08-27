@@ -84,7 +84,7 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
     string key(name + ":" + player);
     projstore->Put(leveldb::WriteOptions(), key, bval);
     {
-        std::lock_guard<std::mutex> lockg{ data_mutex };
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
         auto m = FantasyNameProjections[name];
         m[player] = proj;
         m = PlayerIDProjections[player];
@@ -95,12 +95,12 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
 }
 
 std::unordered_map<std::string,int> FantasyNameData::GetProjById(const std::string &pid) {
-    std::lock_guard<std::mutex> lockg{ data_mutex };
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
     return PlayerIDProjections[pid];
 }
 
 std::unordered_map<std::string,int> FantasyNameData::GetProjByName(const std::string &nm) {
-    std::lock_guard<std::mutex> lockg{ data_mutex };
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
     return FantasyNameProjections[nm];
 }
 
@@ -146,7 +146,7 @@ void FantasyNameData::OnFantasyNameBalance(FantasyNameBal &fn) {
 
 void FantasyNameData::OnWeekOver(int in) {
     {
-        std::lock_guard<std::mutex> lockg{ data_mutex };
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
         FantasyNameProjections.clear();
         PlayerIDProjections.clear();
     }

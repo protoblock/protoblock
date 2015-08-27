@@ -49,7 +49,7 @@ class NFLStateData : public QObject {
     //int week = 0;
     int amlive = false;
 
-    std::mutex data_mutex{};
+    std::recursive_mutex data_mutex{};
 
 
     std::map<std::string, std::unordered_set<std::string>> MyTeamRoster;
