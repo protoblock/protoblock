@@ -27,7 +27,9 @@ public:
         if (found == myGamesResultCache.end()){
             vector<fantasybit::GameResult>results = DataService::instance()->GetPrevWeekGameResults(week);
             pair<uint,vector<fantasybit::GameResult>> pair(week,results);
-            myGamesResultCache.insert(pair);            
+            myGamesResultCache.insert(pair);
+            for(const fantasybit::GameResult & result : results)
+                weekResults.push_back(result);
         }
         else {   //found add them to referenced vector
             weekResults.clear();
