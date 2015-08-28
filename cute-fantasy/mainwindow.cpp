@@ -135,6 +135,7 @@ void MainWindow::GlobalStateChange(fantasybit::GlobalState state){
             (myGlobalState.week() == 0 &&
              state.week() > 0 ) )
         GoLive(state);
+
 }
 
 void MainWindow::GoLive(fantasybit::GlobalState state){
@@ -156,12 +157,10 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
 
     //load roaster for current week
     if ( myGlobalState.week() > 0) {
+        DataCache::instance()->refreshLeaderboard();
         ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState);
         navigateToWeek(myGlobalState.week());
     }
-
-    DataCache::instance()->refreshLeaderboard();
-
 }
 void MainWindow::navigateToWeek(int week)
 {
@@ -259,16 +258,16 @@ void MainWindow::OnNameBalance(fantasybit::FantasyNameBal & balance) {
  qDebug()<< "received balance for " << balance.name() << " : " << balance.bits();
 }
 
-void MainWindow::OnNewWeek(int){
+void MainWindow::OnNewWeek(int week){
 
 }
 
-void MainWindow::OnGameOver(string){
-
+void MainWindow::OnGameOver(string gameId){
+ ui->myCurrentWeekWidget->onGameOver(gameId);
 }
 
-void MainWindow::OnGameStart(string){
-
+void MainWindow::OnGameStart(string gameId){
+  ui->myCurrentWeekWidget->onGameStart(gameId);
 }
 
 

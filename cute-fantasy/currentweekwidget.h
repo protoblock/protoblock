@@ -20,6 +20,10 @@ public:
     ~CurrentWeekWidget();
     void setCurrentWeekData(GlobalState state);
 
+    void onGameOver(string gameId);
+    void onGameStart(string gameId);
+
+
 signals:
     void NewProjection(fantasybit::FantasyBitProj);
 
@@ -47,6 +51,11 @@ private:
     GlobalState myGlobalState;
     std::vector<fantasybit::GameRoster> myGameRosters;    
     SpinBoxDelegate myProjectionDelegate;
+
+
+
+
+
 };
 
 #endif // CURRENTWEEKWIDGET_H
