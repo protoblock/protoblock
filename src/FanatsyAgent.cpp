@@ -385,7 +385,6 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt, fc::opt
 	leveldb::ReadOptions options;
 	options.snapshot = Node::txpool->GetSnapshot();
 	leveldb::Iterator *iter = Node::txpool->NewIterator(options);
-
 	for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
 		
 		st.ParseFromString(iter->value().ToString());
@@ -393,6 +392,9 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt, fc::opt
 		SignedTransaction* st2 = b.add_signed_transactions();
 		st2->CopyFrom(st);
 	}
+    delete iter;
+    Node::txpool->ReleaseSnapshot(options.snapshot);
+
 
 	/*
 	if (pendingTrans.size() == 0)
@@ -406,8 +408,6 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt, fc::opt
 
 	pendingTrans.clear();
 	*/
-	delete iter;
-	Node::txpool->ReleaseSnapshot(options.snapshot);
 
 
 	//sb.set_id(p.first);	

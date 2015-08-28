@@ -150,8 +150,10 @@ int Node::getLastLocalBlockNum() {
     auto *it = blockchain->NewIterator(leveldb::ReadOptions());
     it->SeekToLast();
 
-    if (!it->Valid()) return 0;
-
+    if (!it->Valid()) {
+        delete it;
+        return 0;
+    }
     auto slice = it->key();
 
     int num = *(reinterpret_cast<const int *>(slice.data()));
@@ -204,6 +206,7 @@ Block Node::getlastLocalBlock() {
 
     if (!it->Valid()) {
         //ToDo fc optional
+        delete it;
         return b;
     }
 
@@ -256,8 +259,8 @@ void Node::ClearTx(const Block &b) {
 }
 
 
-decltype(Node::blockchain) Node::blockchain{};
-decltype(Node::txpool) Node::txpool{};
+decltype(Node::blockchain) Node::blockchain;
+decltype(Node::txpool) Node::txpool;
 
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};

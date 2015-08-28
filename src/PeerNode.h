@@ -23,7 +23,7 @@
 //#include "boostLog.h"
 #include <leveldb/db.h>
 #include "ProtoData.pb.h"
-
+#include <memory>
 
 namespace fantasybit
 {

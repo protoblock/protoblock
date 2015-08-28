@@ -21,21 +21,27 @@ void NFLStateData::init() {
     options.create_if_missing = true;
     leveldb::Status status;
 
-    status = leveldb::DB::Open(options, filedir("staticstore"), &staticstore);
+    leveldb::DB *db1;
+    status = leveldb::DB::Open(options, filedir("staticstore"), &db1);
+    staticstore.reset(db1);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("staticstore");
         //todo emit fatal
         return;
     }
 
-    status = leveldb::DB::Open(options, filedir("statusstore"), &statusstore);
+    leveldb::DB *db2;
+    status = leveldb::DB::Open(options, filedir("statusstore"), &db2);
+    statusstore.reset(db2);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("statusstore");
         //todo emit fatal
         return;
     }
 
-    status = leveldb::DB::Open(options, filedir("playerstore"), &playerstore);
+    leveldb::DB *db3;
+    status = leveldb::DB::Open(options, filedir("playerstore"), &db3);
+    playerstore.reset(db3);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("playerstore");
         //todo emit fatal
@@ -64,6 +70,7 @@ void NFLStateData::init() {
                 MyTeamRoster[ps.teamid()].insert(it->key().ToString());
             }
         }
+        delete it;
     }
 
 }

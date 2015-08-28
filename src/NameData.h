@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <set>
 #include <mutex>
+#include <memory>
 
 using std::string;
 namespace fantasybit
@@ -24,8 +25,8 @@ class FantasyNameData : public QObject {
 
     Q_OBJECT
 
-    leveldb::DB *namestore;
-    leveldb::DB *projstore;
+    std::shared_ptr<leveldb::DB> namestore;
+    std::shared_ptr<leveldb::DB> projstore;
 
     leveldb::WriteOptions write_sync{};
 
@@ -66,6 +67,8 @@ public:
     void OnFantasyName(std::string &name);
     void OnFantasyNameBalance(FantasyNameBal &fn);
 
+    //ToDo: the place to store game time IN/OUt status of NFL player
+    //void UpdatePlayerGameStatus(const std::string &player, PlayerGameStatus status);
 
     std::unordered_map<std::string,int> GetProjById(const std::string &pid);
     std::unordered_map<std::string,int> GetProjByName(const std::string &nm);
