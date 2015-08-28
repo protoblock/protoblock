@@ -148,6 +148,13 @@
     <item row="7" column="9" colspan="3">
      <widget class="QListWidget" name="awards"/>
     </item>
+    <item row="6" column="3">
+     <widget class="QCheckBox" name="allgames">
+      <property name="text">
+       <string> All games</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">

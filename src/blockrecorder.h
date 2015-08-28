@@ -8,7 +8,7 @@ namespace fantasybit {
 
 class BlockRecorder {
 
-    leveldb::DB *blockstatus;  // lastblock -> status // last block processed
+    std::auto_ptr<leveldb::DB> blockstatus;  // lastblock -> status // last block processed
     leveldb::WriteOptions write_sync{};
     int lastBlock = 0;
 

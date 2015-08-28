@@ -61,8 +61,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     //QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
     //                 this,SLOT(OnGlobalStateChange(GlobalState)));
 
-    QObject::connect(&data,SIGNAL(GlobalStateChange(GlobalState)),
-                     this,SIGNAL(GlobalStateChange(GlobalState)));
+    QObject::connect(&data,SIGNAL(GlobalStateChange(fantasybit::GlobalState)),
+                     this,SIGNAL(GlobalStateChange(fantasybit::GlobalState)));
 
     QObject::connect(&namedata,SIGNAL(FantasyNameFound(string)),
                      this,SLOT(OnFoundName(string)));

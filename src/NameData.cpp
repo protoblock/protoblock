@@ -23,14 +23,16 @@ void FantasyNameData::init() {
     options.create_if_missing = true;
     leveldb::Status status;
 
-    status = leveldb::DB::Open(options, filedir("namestore"), &namestore);     
+    leveldb::DB *db1;
+    status = leveldb::DB::Open(options, filedir("namestore"), &db1);
+    namestore.reset(db1);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("namestore");
         //todo emit fatal
         return;
     }
     else {
-        auto it = namestore->NewIterator(leveldb::ReadOptions());
+        auto *it = namestore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             FantasyNameBal fn;
             fn.ParseFromString(it->value().ToString());
@@ -41,14 +43,16 @@ void FantasyNameData::init() {
         delete it;
     }
 
-    status = leveldb::DB::Open(options, filedir("projstore"), &projstore);
+    leveldb::DB *db2;
+    status = leveldb::DB::Open(options, filedir("projstore"), &db2);
+    projstore.reset(db2);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("projstore");
         //todo emit fatal shit
         return;
     }
     else {
-        auto it = projstore->NewIterator(leveldb::ReadOptions());
+        auto *it = projstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             auto str = it->key().ToString();
             int pos =  str.find_first_of(':');
@@ -180,7 +184,7 @@ void FantasyNameData::OnWeekOver(int in) {
     auto *it = projstore->NewIterator(leveldb::ReadOptions());
     for (it->SeekToFirst(); it->Valid(); it->Next())
         projstore->Delete(leveldb::WriteOptions(), it->key());
-
+    delete it;
     qDebug() << " clearProjections ";
 }
 

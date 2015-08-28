@@ -33,6 +33,9 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(LiveGui(fantasybit::GlobalState)),
                      this,SLOT(GoLive(fantasybit::GlobalState)));
 
+    QObject::connect(myLAPIWorker,SIGNAL(GlobalStateChange(fantasybit::GlobalState)),
+                     this,SLOT(GlobalStateChange(fantasybit::GlobalState)));
+
     QObject::connect(myLAPIWorker,SIGNAL(MyNames(vector<fantasybit::MyFantasyName>)),
                      this,SLOT(OnMyFantasyNames(vector<fantasybit::MyFantasyName>)));
 
@@ -126,6 +129,14 @@ void MainWindow::on_myPreviousWeek_clicked()
     navigateToWeek(myCurrentWeek-1);
 }
 
+void MainWindow::GlobalStateChange(fantasybit::GlobalState state){
+    if ((myGlobalState.state() == GlobalState_State_OFFSEASON &&
+         state.state() == GlobalState_State_INSEASON ) ||
+         (myGlobalState.week() == 0 &&
+          state.week() > 0 ) )
+        GoLive(state);
+}
+
 void MainWindow::GoLive(fantasybit::GlobalState state){
    myGlobalState = state;   
    QString seasonLabel = "%1 %2";
@@ -144,8 +155,10 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
    ui->mySeasonLabel->setText(seasonLabel);
 
    //load roaster for current week
-   ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState);
-   navigateToWeek(myGlobalState.week());
+   if ( myGlobalState.week() > 0) {
+        ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState);
+        navigateToWeek(myGlobalState.week());
+   }
 
    DataCache::instance()->refreshLeaderboard();
 

@@ -21,21 +21,27 @@ void NFLStateData::init() {
     options.create_if_missing = true;
     leveldb::Status status;
 
-    status = leveldb::DB::Open(options, filedir("staticstore"), &staticstore);
+    leveldb::DB *db1;
+    status = leveldb::DB::Open(options, filedir("staticstore"), &db1);
+    staticstore.reset(db1);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("staticstore");
         //todo emit fatal
         return;
     }
 
-    status = leveldb::DB::Open(options, filedir("statusstore"), &statusstore);
+    leveldb::DB *db2;
+    status = leveldb::DB::Open(options, filedir("statusstore"), &db2);
+    statusstore.reset(db2);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("statusstore");
         //todo emit fatal
         return;
     }
 
-    status = leveldb::DB::Open(options, filedir("playerstore"), &playerstore);
+    leveldb::DB *db3;
+    status = leveldb::DB::Open(options, filedir("playerstore"), &db3);
+    playerstore.reset(db3);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("playerstore");
         //todo emit fatal
@@ -64,6 +70,7 @@ void NFLStateData::init() {
                 MyTeamRoster[ps.teamid()].insert(it->key().ToString());
             }
         }
+        delete it;
     }
 
 }
@@ -85,8 +92,17 @@ PlayerBase NFLStateData::GetPlayerBase(std::string playerid) {
 
 void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
     string key = "scheduleweek:" + to_string(week);
-    staticstore->Put(write_sync, key, ws.SerializeAsString());
+    if ( !staticstore->Put(write_sync, key, ws.SerializeAsString()).ok()) {
+        qWarning() << " error writing schecule";
+        return;
+    }
     qDebug() << QString::fromStdString(ws.DebugString());
+    GameStatus gs{};
+    gs.set_status(GameStatus::SCHEDULED);
+
+    for ( auto gi : ws.games() )
+        UpdateGameStatus(gi.id(),gs);
+
 }
 
 void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs) {
@@ -385,7 +401,7 @@ int NFLStateData::week() {
     return gs.week();
 }
 
-void NFLStateData:: OnGlobalState(GlobalState &gs) {
+void NFLStateData:: OnGlobalState(fantasybit::GlobalState &gs) {
     statusstore->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
     qDebug() << gs.DebugString();
     if ( amlive )

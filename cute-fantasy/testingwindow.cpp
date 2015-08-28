@@ -273,11 +273,20 @@ void TestingWindow::on_SendBlock_clicked()
 
         if ( dt.type() == DataTransition_Type_GAMESTART) {
             GameData gd{};
-            gd.set_gameid(ui->gameID->currentData().toString().toStdString());
             GameStatus gs{};
             gs.set_status(GameStatus::INGAME);
-            gd.mutable_status()->CopyFrom(gs);
-            dt.add_gamedata()->CopyFrom(gd);
+            if ( ui->allgames->isChecked() ) {
+                for ( auto i =0; i<ui->gameID->count(); i++) {
+                    gd.set_gameid(ui->gameID->itemData(i).toString().toStdString());
+                    gd.mutable_status()->CopyFrom(gs);
+                    dt.add_gamedata()->CopyFrom(gd);
+                }
+            }
+            else {
+                gd.set_gameid(ui->gameID->currentData().toString().toStdString());
+                gd.mutable_status()->CopyFrom(gs);
+                dt.add_gamedata()->CopyFrom(gd);
+            }
         }
         Data d{};
         d.set_type(Data_Type_RESULT);

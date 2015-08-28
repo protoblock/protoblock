@@ -17,6 +17,7 @@
 #include <mutex>
 #include <leveldb/db.h>
 #include <utility>
+#include <memory>
 
 using namespace std;
 
@@ -41,9 +42,9 @@ class NFLStateData : public QObject {
 
     Q_OBJECT
 
-    leveldb::DB *playerstore;
-    leveldb::DB *staticstore;
-    leveldb::DB *statusstore;
+    std::shared_ptr<leveldb::DB> playerstore;
+    std::shared_ptr<leveldb::DB> staticstore;
+    std::shared_ptr<leveldb::DB> statusstore;
 
     leveldb::WriteOptions write_sync{};
     //int week = 0;
@@ -70,7 +71,7 @@ signals:
     void PlayerStatusChange(pair<string,PlayerStatus>);
     void PlayerAdd(PlayerBase);
     void GameStart(string);
-    void GlobalStateChange(GlobalState);
+    void GlobalStateChange(fantasybit::GlobalState);
     void NewGameResult(string);
 
 public slots:

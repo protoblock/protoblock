@@ -257,7 +257,8 @@ protected:
                  << "gameStatus :" <<str;
 
         if (myGamesFilter == GamesFilter::Completed)
-            return gameStatus== GameStatus_Status_CLOSED;
+            return (gameStatus== GameStatus_Status_CLOSED) ||
+                    (gameStatus== GameStatus_Status_POSTGAME);
 
         if (myGamesFilter == GamesFilter::Upcoming)
             return (gameStatus== GameStatus_Status_SCHEDULED)||

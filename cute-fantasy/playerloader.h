@@ -449,7 +449,8 @@ public:
         if ( stats.has_ostats() ) {
             auto os = stats.ostats();
             if ( os.has_passtd())
-                ret += 400 * os.passtd();
+                ret += 400 * os.passtd(); //PAssing Yards (QB)
+
 
             if ( os.has_rushtd() )
                 ret += 600 * os.rushtd();
