@@ -160,3 +160,35 @@ void CurrentWeekWidget::on_mySendProjectionButton_clicked() {
         }
     }
 }
+
+void CurrentWeekWidget::onGameOver(string gameId){
+    myGameTableModel.removeAll();
+
+    myGameRosters = DataService::instance()->GetCurrentWeekGameRosters();
+
+    for(const fantasybit::GameRoster & game  : myGameRosters) {
+        // add game
+        QString gameId = game.info.id().data();
+        myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
+        myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
+        myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.info.time()));
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,game.status);
+    }
+}
+void CurrentWeekWidget::onGameStart(string gameId){
+    myGameTableModel.removeAll();
+    myGameRosters = DataService::instance()->GetCurrentWeekGameRosters();
+    for(const fantasybit::GameRoster & game  : myGameRosters) {
+        // add game
+        QString gameId = game.info.id().data();
+        myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
+        myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
+        myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.info.time()));
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,game.status);
+    }
+}
+
+
+

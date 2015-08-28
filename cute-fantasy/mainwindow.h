@@ -72,7 +72,6 @@ private:
     void currentWeek();
     void navigateToWeek(int week);
 
-
     MainLAPIWorker *  myLAPIWorker;
     Ui::MainWindow *ui;    
     int myCurrentWeek;    
