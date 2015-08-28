@@ -60,14 +60,12 @@ void FantasyNameData::init() {
             auto nflplayer = str.substr(pos + 1);
             uint32_t proj = *(reinterpret_cast<const uint32_t *>(it->value().data()));
 
-            auto m = FantasyNameProjections[fantasyname];
-            m[nflplayer] = proj;
-            m = PlayerIDProjections[nflplayer];
-            m[nflplayer] = proj;
-
+            FantasyNameProjections[fantasyname].insert(make_pair(nflplayer,proj));
+            PlayerIDProjections[nflplayer].insert(make_pair(fantasyname,proj));
         }
         delete it;
     }
+
 
 }
 
@@ -111,18 +109,31 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
 
 void FantasyNameData::AddProjection(const string &name, const string &player,
                              uint32_t proj) {
+
+
+
     leveldb::Slice bval((char*)&proj, sizeof(uint32_t));
     string key(name + ":" + player);
-    projstore->Put(leveldb::WriteOptions(), key, bval);
+    if (!projstore->Put(leveldb::WriteOptions(), key, bval).ok())
+        qWarning() << " error writing proj" << player << name << proj;
+    else
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
-        auto m = FantasyNameProjections[name];
-        m[player] = proj;
-        m = PlayerIDProjections[player];
-        m[name] = proj;
+        FantasyNameProjections[name].insert(make_pair(player,proj));
+        PlayerIDProjections[player].insert(make_pair(name,proj));
     }
     qDebug() << "proj: " << key << ":" << proj;
     OnProjection(name,player,proj);
+
+    /*
+    dump(FantasyNameProjections);
+    qDebug() << " ============== ";
+    dump(PlayerIDProjections);
+    qDebug() << " ============== ";
+    dump(GetProjByName(name));
+    qDebug() << " ============== ";
+    dump(GetProjById(player));
+    */
 }
 
 std::unordered_map<std::string,int> FantasyNameData::GetProjById(const std::string &pid) {
@@ -151,7 +162,7 @@ void FantasyNameData::OnProjection(const std::string &name, const std::string &p
     if ( mSubscribed.find(name) == end(mSubscribed))
         return;
 
-    FantasyBitProj fpj{};
+    fantasybit::FantasyBitProj fpj{};
     fpj.set_name(name);
     fpj.set_playerid(player);
     fpj.set_proj(proj);
@@ -194,4 +205,24 @@ void FantasyNameData::OnWeekStart(int in) {
 
 std::string FantasyNameData::filedir(const std::string &in) {
     return GET_ROOT_DIR() + "index/" + in;
+}
+
+void FantasyNameData::dump(mapmapi &mm) {
+    for ( auto fn : mm ) {
+        qDebug() << fn.first;
+        dump ( fn.second );
+    }
+}
+
+void FantasyNameData::dump(std::unordered_map<std::string,int> &m) {
+    for ( auto pa : m)
+        qDebug() << pa.first << pa.second;
+
+}
+
+void FantasyNameData::dumpProj() {
+    qDebug() << "--FantasyNameProjections--";
+    dump(FantasyNameProjections);
+    qDebug() << "--PlayerIDProjections--";
+    dump(PlayerIDProjections);
 }

@@ -68,7 +68,7 @@ class NFLStateData : public QObject {
 
 
 signals:
-    void PlayerStatusChange(pair<string,PlayerStatus>);
+    void PlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
     void PlayerAdd(PlayerBase);
     void GameStart(string);
     void GlobalStateChange(fantasybit::GlobalState);

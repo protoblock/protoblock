@@ -48,12 +48,12 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&processor,SIGNAL(WeekStart(int)),&data,SLOT(OnWeekStart(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
 
-    QObject::connect(&processor,SIGNAL(NewGameResult(string)),this,SIGNAL(GameOver(string)));
+    QObject::connect(&data,SIGNAL(NewGameResult(string)),this,SIGNAL(GameOver(string)));
 
 
     //delt data
-    QObject::connect(&data,SIGNAL(PlayerStatusChange(pair<string,PlayerStatus>)),
-                     this,SLOT(OnPlayerStatus(pair<string,PlayerStatus>)));
+    QObject::connect(&data,SIGNAL(PlayerStatusChange(pair<string,fantasybit::PlayerStatus>)),
+                     this,SIGNAL(PlayerStatusChange(pair<string,fantasybit::PlayerStatus>)));
 
     QObject::connect(&data,SIGNAL(GameStart(string)),
                      this,SIGNAL(GameStart(string)));
@@ -67,11 +67,11 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&namedata,SIGNAL(FantasyNameFound(string)),
                      this,SLOT(OnFoundName(string)));
 
-    QObject::connect(&namedata,SIGNAL(ProjectionLive(FantasyBitProj)),
-                     this,SLOT(OnProjLive(FantasyBitProj)));
+    QObject::connect(&namedata,SIGNAL(ProjectionLive(fantasybit::FantasyBitProj)),
+                     this,SLOT(OnProjLive(fantasybit::FantasyBitProj)));
 
-    QObject::connect(&namedata,SIGNAL(FantasyNameBalance(FantasyNameBal)),
-                     this,SLOT(OnNameBal(FantasyNameBal)));
+    QObject::connect(&namedata,SIGNAL(FantasyNameBalance(fantasybit::FantasyNameBal&)),
+                     this,SIGNAL(NameBal(fantasybit::FantasyNameBal&)));
 }
 
 void MainLAPIWorker::GoLive() {
@@ -195,15 +195,16 @@ bool MainLAPIWorker::Process(fantasybit::Block &b) {
     return true;
 }
 
-
+/*
 //Data
-void MainLAPIWorker::OnPlayerStatusChange(pair<string,PlayerStatus> in) {
+void MainLAPIWorker::OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus> in) {
     emit PlayerStatusChange(in);
 }
 
 void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal &bal) {
     emit NameBalance(bal);
 }
+*/
 
 void MainLAPIWorker::OnGetMyNames() {
     vector<MyFantasyName> my;
@@ -332,7 +333,7 @@ void MainLAPIWorker::OnFoundName(string name) {
     }
 }
 
-void MainLAPIWorker::OnProjLive(fantasybit::FantasyBitProj &proj) {
+void MainLAPIWorker::OnProjLive(fantasybit::FantasyBitProj proj) {
     emit LiveProj(proj);
 }
 
