@@ -49,7 +49,7 @@ void MainWindow::initialize() {
                      this,SLOT(OnNameStatus(fantasybit::MyFantasyName)));
     QObject::connect(myLAPIWorker,SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
                      this,SLOT(OnProjAck(fantasybit::FantasyBitProj)));
-    QObject::connect(myLAPIWorker,SIGNAL(NameBalance(fantasybit::FantasyNameBal&)),
+    QObject::connect(myLAPIWorker,SIGNAL(NameBal(fantasybit::FantasyNameBal&)),
                      this,SLOT(OnNameBalance(fantasybit::FantasyNameBal&)));
 
     //state
@@ -90,7 +90,7 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(LiveGui(fantasybit::GlobalState)),&myWaitDialog,SLOT(stopAndClose()));
     //wake up core thread
     Core::instance()->guiIsAwake();
-    myWaitDialog.startExec();
+    //myWaitDialog.startExec();
     if (myLAPIWorker == NULL)  {
         qDebug() << "coreapi is not resolved";
         setDisabled(true);

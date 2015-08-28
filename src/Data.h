@@ -57,13 +57,13 @@ class NFLStateData : public QObject {
     std::map<std::string, PlayerStatus> MyPlayerStatus;
 
     void removePlayerTeam(const std::string &pid,const std::string &tid) {       
-        auto tr = MyTeamRoster[tid];
-        tr.erase(pid);
+
+        MyTeamRoster[tid].erase(pid);
     }
 
     void addPlayerTeam(const std::string &pid,const std::string &tid) {
-        auto tr = MyTeamRoster[tid];
-        tr.insert(pid);
+
+        MyTeamRoster[tid].insert(pid);
     }
 
 
