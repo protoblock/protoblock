@@ -239,6 +239,18 @@ public:
       return true;
   }
 
+  template <typename PROPNAME>
+  bool itemPropertyValue(const TKey & key,QVariant & value){
+      X* item = myKeyMap.value(key,NULL);
+      if (item == NULL){
+          return false;
+      }
+      else {
+          value = item->propertyValue<PROPNAME>();
+          return true;
+      }
+  }
+
 
   X * takeItem(const TKey & key){
      X * item = myKeyMap.value(key,NULL);     

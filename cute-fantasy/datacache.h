@@ -27,13 +27,14 @@ public:
         if (found == myGamesResultCache.end()){
             vector<fantasybit::GameResult>results = DataService::instance()->GetPrevWeekGameResults(week);
             pair<uint,vector<fantasybit::GameResult>> pair(week,results);
-            myGamesResultCache.insert(pair);
+            myGamesResultCache.insert(pair);            
         }
         else {   //found add them to referenced vector
             weekResults.clear();
             for(const fantasybit::GameResult & result : found->second)
                 weekResults.push_back(result);
         }
+
     }
 
     void refreshLeaderboard(){
@@ -43,7 +44,7 @@ public:
         for(std::shared_ptr<fantasybit::FantasyName> & fPlayer  : myLeaderBoardData) {
             QString fantasyPlayerName = fPlayer->alias().data();
             myLeaderBoardTableModel.updateItemProperty<PropertyNames::Fantasy_Name>(fantasyPlayerName,fantasyPlayerName);
-            myLeaderBoardTableModel.updateItemProperty<PropertyNames::Fantasy_Name>(fantasyPlayerName,fPlayer->getBalance());
+            myLeaderBoardTableModel.updateItemProperty<PropertyNames::Balance>(fantasyPlayerName,fPlayer->getBalance());
         }
         myLeaderboardDataUpdated = true;
     }

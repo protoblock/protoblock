@@ -1,14 +1,14 @@
 #include "spinboxdelegate.h"
 #include <QSpinBox>
 
-
 SpinBoxDelegate::SpinBoxDelegate(QObject *parent)
     : QStyledItemDelegate(parent){}
 
 QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
-    const QStyleOptionViewItem &/* option */,
+    const QStyleOptionViewItem & /*option*/ ,
     const QModelIndex &/* index */) const {
     QSpinBox *editor = new QSpinBox(parent);
+    //PlayerProjectionWidget *editor = new PlayerProjectionWidget(parent);
     editor->setFrame(false);
     editor->setMinimum(0);
     editor->setMaximum(100);
@@ -19,7 +19,6 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 void SpinBoxDelegate::setEditorData(QWidget *editor,
                                     const QModelIndex &index) const {
     int value = index.model()->data(index, Qt::EditRole).toInt();
-
     QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
     spinBox->setValue(value);
 }
@@ -29,7 +28,6 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
     QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
     spinBox->interpretText();
     int value = spinBox->value();
-
     model->setData(index, value, Qt::EditRole);
 }
 

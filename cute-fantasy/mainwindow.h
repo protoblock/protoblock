@@ -52,7 +52,7 @@ public slots:
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj);
     //void OnAward(QVariant);
-    void OnNameBalance(fantasybit::FantasyNameBal &);
+    void OnNameBalance(fantasybit::FantasyNameBal &balance);
     void OnNewWeek(int);
     void OnGameOver(string);
     void OnGameStart(string);
@@ -60,9 +60,8 @@ public slots:
 
 private slots:
     void on_myFantasyNamesCombo_currentIndexChanged(int index);
-    void on_myFantasyNamesCombo_currentTextChanged(const QString &name);
 
-    void on_myFantasyNamesCombo_editTextChanged(const QString &arg1);
+    void on_myClaimFantasyNameButton_clicked();
 
 private:
     void initialize();

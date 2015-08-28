@@ -41,12 +41,11 @@ private:
     GameTableModel  myGameTableModel{WeekDisplayType::CurrentWeek};
     GameViewFilterProxyModel myGameModelFilter;    
     ProjectionSheetTableModel myProjectionsModel {WeekDisplayType::CurrentWeek};
-    bool myCurrentWeekDataLoaded;
+
     int myCurrentWeek;
     std::string myFantasyName;
     GlobalState myGlobalState;
-    std::vector<fantasybit::GameRoster> myGameRosters;
-    std::vector< std::shared_ptr<fantasybit::FantasyName> > myLeaderBoardData;
+    std::vector<fantasybit::GameRoster> myGameRosters;    
     SpinBoxDelegate myProjectionDelegate;
 };
 

@@ -23,6 +23,8 @@ void PreviousWeekWidget::setWeekData(int week){
     if (myCurrentWeek == week) return;
     myCurrentWeek = week;
      DataCache::instance()->getGameResult(week,myGamesResults);
+     myGameTableModel.removeAll();
+     myProjectionsModel.removeAll();
 
     //fill game status
     for(const fantasybit::GameResult & game  : myGamesResults) {
@@ -31,7 +33,7 @@ void PreviousWeekWidget::setWeekData(int week){
         QString homeTeamId,awayTeamId;
         DataCache::instance()->getGameTeamsIdsByWeek(myCurrentWeek,homeTeamId,awayTeamId);
         myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
-        myGameTableModel.updateItemProperty<PropertyNames::Kickoff_Time>(gameId,QDateTime::fromMSecsSinceEpoch(game.kickofftime()));
+        myGameTableModel.updateItemProperty<PropertyNames::Kickoff_Time>(gameId,QDateTime::fromTime_t(game.kickofftime()));
         myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,homeTeamId);
         myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,awayTeamId);
 
