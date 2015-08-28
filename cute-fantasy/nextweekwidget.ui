@@ -6,38 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>857</width>
-    <height>551</height>
+    <width>743</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Games :</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QTableView" name="myGamesTableView">
-       <property name="selectionMode">
-        <enum>QAbstractItemView::SingleSelection</enum>
-       </property>
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectRows</enum>
-       </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="0" column="1">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
@@ -59,53 +35,28 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="2">
-    <layout class="QVBoxLayout" name="verticalLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Leader board :</string>
+        <string>Games :</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTableView" name="myLeaderBaordTableView">
+      <widget class="QListView" name="myGamesListView">
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
        </property>
        <property name="selectionBehavior">
         <enum>QAbstractItemView::SelectRows</enum>
        </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
       </widget>
      </item>
     </layout>
    </item>
    <item row="1" column="0" colspan="3">
-    <widget class="QFrame" name="frame">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>60</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>60</height>
-      </size>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Sunken</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="3">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
       <widget class="QLabel" name="label_3">

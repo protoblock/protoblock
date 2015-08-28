@@ -24,13 +24,12 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myNextWeek->setEnabled(false);
     ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekWidget);
     myCurrentWeek =-1;
+    ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());
     //ui->myStatusbar->addWidget(); TODO animated label
 }
 
 void MainWindow::initialize() {
     myLAPIWorker = Core::resolveByName<MainLAPIWorker>("coreapi");
-
-
     QObject::connect(myLAPIWorker,SIGNAL(LiveGui(fantasybit::GlobalState)),
                      this,SLOT(GoLive(fantasybit::GlobalState)));
 
@@ -147,6 +146,8 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
    //load roaster for current week
    ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState);
    navigateToWeek(myGlobalState.week());
+
+   DataCache::instance()->refreshLeaderboard();
 
 }
 void MainWindow::navigateToWeek(int week)

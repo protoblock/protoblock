@@ -8,8 +8,7 @@ NextWeekWidget::NextWeekWidget(QWidget *parent) :
     ui(new Ui::NextWeekWidget)
 {
     ui->setupUi(this);
-    ui->myGamesTableView->setModel(&myGameTableModel);
-    ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());
+    ui->myGamesListView->setModel(&myGameTableModel);
     ui->myProjectionTableView->setModel(&myProjectionsModel);
     myCurrentWeek = -1;
 }

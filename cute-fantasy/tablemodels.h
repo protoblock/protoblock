@@ -43,51 +43,30 @@ public:
 protected:
 
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
-
+        if (data==NULL) return QVariant();
+        if (column !=0) return QVariant();
+        QString text = QString("%1 @ %2 - %3");
+        QString home,away,gametime,strISODateTime;
+        home =data->propertyValue<PropertyNames::Home>().toString();
+        away =data->propertyValue<PropertyNames::Away>().toString();
         switch (myGameTableType) {
-        case WeekDisplayType::CurrentWeek: {
-            if (data==NULL) return QVariant();
-            if( column ==0)
-                return data->propertyValue<PropertyNames::Game_Time>();
-            if( column ==1)
-                return data->propertyValue<PropertyNames::Home>();
-            if( column ==2)
-                return data->propertyValue<PropertyNames::Away>();
-            return QVariant();
-
-        }
-        case WeekDisplayType::PreviousWeek: {
-            if (data==NULL) return QVariant();
-            if( column ==0)
-                return data->propertyValue<PropertyNames::Kickoff_Time>();
-            if( column ==1)
-                return data->propertyValue<PropertyNames::Home>();
-            if( column ==2)
-                return data->propertyValue<PropertyNames::Away>();
-            return QVariant();
-
-        }
-        case WeekDisplayType::UpcomingWeek: {
-            if( column ==0)
-                return data->propertyValue<PropertyNames::Game_Time>();
-            if( column ==1)
-                return data->propertyValue<PropertyNames::Home>();
-            if( column ==2)
-                return data->propertyValue<PropertyNames::Away>();
-            return QVariant();
-
-        }
+        case WeekDisplayType::CurrentWeek:
+        case WeekDisplayType::UpcomingWeek :
+            strISODateTime = data->propertyValue<PropertyNames::Game_Time>().toString();
+            break;
+        case WeekDisplayType::PreviousWeek:
+            strISODateTime = data->propertyValue<PropertyNames::Kickoff_Time>().toString();
+            break;
         default:
             return QVariant();
         }
+        QDateTime  dt = QDateTime::fromString(strISODateTime,Qt::ISODate);
+        gametime = dt.toString("ddd HH:MM");
+        return text.arg(home).arg(away).arg(gametime);
     }
 
     int getColumnCount() {
-        switch (myGameTableType) {
-        case WeekDisplayType::CurrentWeek:  return 3;
-        case WeekDisplayType::PreviousWeek: return 3;
-        case WeekDisplayType::UpcomingWeek: return 3;
-        }
+        return 1;
     }
 
 private:
@@ -109,8 +88,7 @@ class   LeaderBoardTableModel :
 
 public:
 
-    LeaderBoardTableModel(WeekDisplayType displayType) : TKeyedListModel<QString,ViewModel>(NULL){
-        myDisplayType = displayType;
+    LeaderBoardTableModel(): TKeyedListModel<QString,ViewModel>(NULL){
         initialize();
     }
     ~LeaderBoardTableModel() {}
@@ -119,59 +97,22 @@ protected:
 
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
 
-        switch (myDisplayType) {
-        case WeekDisplayType::CurrentWeek: {
-            if (data==NULL) return QVariant();
-            if( column ==0)
-                return data->propertyValue<PropertyNames::Fantasy_Name>();
-            if( column ==1)
-                return data->propertyValue<PropertyNames::Balance>();
-            return QVariant();
-
-        }
-        case WeekDisplayType::PreviousWeek: {
-            if (data==NULL) return QVariant();
-            if( column ==0)
-                return data->propertyValue<PropertyNames::Fantasy_Name>();
-            if( column ==1)
-                return data->propertyValue<PropertyNames::Balance>();
-            return QVariant();
-
-        }
-        case WeekDisplayType::UpcomingWeek: {
-            if (data==NULL) return QVariant();
-            if( column ==0)
-                return data->propertyValue<PropertyNames::Fantasy_Name>();
-            if( column ==1)
-                return data->propertyValue<PropertyNames::Balance>();
-            return QVariant();
-
-        }
-        default:
-            return QVariant();
-        }
+        if (data==NULL) return QVariant();
+        if( column ==0)
+            return data->propertyValue<PropertyNames::Fantasy_Name>();
+        if( column ==1)
+            return data->propertyValue<PropertyNames::Balance>();
+        return QVariant();
     }
 
-    int getColumnCount() {
-        switch (myDisplayType) {
-        case WeekDisplayType::CurrentWeek:  return 2;
-        case WeekDisplayType::PreviousWeek: return 2;
-        case WeekDisplayType::UpcomingWeek: return 2;
-        }
-    }
+    int getColumnCount() { return 2; }
 
 private:
     void initialize() {
-        QStringList  headers;
-        switch (myDisplayType) {
-        case WeekDisplayType::CurrentWeek:  headers << "Player" << "Balance"; break;
-        case WeekDisplayType::PreviousWeek: headers << "Player" << "Balance"; break;
-        case WeekDisplayType::UpcomingWeek: headers << "Player" << "Balance"; break;
-        }
+        QStringList headers;
+        headers << "Player" << "Balance";
         setHorizontalHeaders(headers);
     }
-
-    WeekDisplayType myDisplayType;
 };
 
 class   ProjectionSheetTableModel :

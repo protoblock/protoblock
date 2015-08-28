@@ -15,7 +15,7 @@ class DataCache : public GenericSingleton<DataCache>
     std::unordered_map<uint,std::vector<fantasybit::GameResult>> myGamesResultCache;
     std::unordered_map<uint,fantasybit::WeeklySchedule> myWeeklySchedulesCache;
     std::vector<std::shared_ptr<fantasybit::FantasyName>> myLeaderBoardData;
-    LeaderBoardTableModel myLeaderBoardTableModel{WeekDisplayType::CurrentWeek};
+    LeaderBoardTableModel myLeaderBoardTableModel;
     bool myLeaderboardDataUpdated = false;
 
 public:

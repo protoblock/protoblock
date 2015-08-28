@@ -39,8 +39,7 @@ private:
     void updateCurrentFantasyPlayerProjections();
     Ui::CurrentWeekWidget *ui;
     GameTableModel  myGameTableModel{WeekDisplayType::CurrentWeek};
-    GameViewFilterProxyModel myGameModelFilter;
-    LeaderBoardTableModel myLeaderBoardModel{WeekDisplayType::CurrentWeek};
+    GameViewFilterProxyModel myGameModelFilter;    
     ProjectionSheetTableModel myProjectionsModel {WeekDisplayType::CurrentWeek};
     bool myCurrentWeekDataLoaded;
     int myCurrentWeek;

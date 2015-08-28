@@ -20,8 +20,7 @@ public:
 private:
     Ui::PreviousWeekWidget *ui;
     int myWeekNumber = -1;
-    GameTableModel  myGameTableModel{WeekDisplayType::PreviousWeek};
-    LeaderBoardTableModel myLeaderBoardModel{WeekDisplayType::PreviousWeek};
+    GameTableModel  myGameTableModel{WeekDisplayType::PreviousWeek};    
     ProjectionSheetTableModel myProjectionsModel {WeekDisplayType::PreviousWeek};
     int myCurrentWeek;
     std::vector<GameResult> myGamesResults;

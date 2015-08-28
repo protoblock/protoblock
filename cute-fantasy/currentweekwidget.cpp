@@ -20,8 +20,7 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     myGameModelFilter.setGameStatusFilter(GamesFilter::Upcoming);
     myGameModelFilter.setDynamicSortFilter(true);
     myGameModelFilter.setSourceModel(&myGameTableModel);
-    ui->myGamesTableView->setModel(&myGameModelFilter);
-    ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());
+    ui->myGamesListView->setModel(&myGameModelFilter);
     ui->myProjectionTableView->setModel(&myProjectionsModel);
     //start with upcoming games filter
     ui->myUpcomingGamesRb->setChecked(true);
@@ -42,7 +41,7 @@ void CurrentWeekWidget::on_myCompletedGamesRb_toggled(bool checked)
             return;
         else {
             myGameModelFilter.setGameStatusFilter(GamesFilter::Completed);
-            ui->myGamesTableView->repaint();
+            ui->myGamesListView->repaint();
         }
 }
 
@@ -53,7 +52,7 @@ void CurrentWeekWidget::on_myInGamesRb_toggled(bool checked)
             return;
         else {
             myGameModelFilter.setGameStatusFilter(GamesFilter::InGame);
-            ui->myGamesTableView->repaint();
+            ui->myGamesListView->repaint();
         }
 }
 
@@ -64,7 +63,7 @@ void CurrentWeekWidget::on_myUpcomingGamesRb_toggled(bool checked)
             return;
         else {
             myGameModelFilter.setGameStatusFilter(GamesFilter::Upcoming);
-            ui->myGamesTableView->repaint();
+            ui->myGamesListView->repaint();
         }
 }
 
