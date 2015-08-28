@@ -30,8 +30,9 @@ class FantasyNameData : public QObject {
 
     leveldb::WriteOptions write_sync{};
 
-    std::unordered_map<std::string,
-            std::unordered_map<std::string,int>> FantasyNameProjections;
+    typedef std::unordered_map<std::string,std::unordered_map<std::string,int>> mapmapi;
+
+    mapmapi FantasyNameProjections;
     std::unordered_map<std::string,
             std::unordered_map<std::string,int>> PlayerIDProjections;
 
@@ -43,9 +44,9 @@ class FantasyNameData : public QObject {
 
 
 signals:
-    void ProjectionLive(FantasyBitProj &);
+    void ProjectionLive(fantasybit::FantasyBitProj);
     void FantasyNameFound(string);
-    void FantasyNameBalance(FantasyNameBal &);
+    void FantasyNameBalance(fantasybit::FantasyNameBal&);
 
 public slots:
     void OnLive(bool subscribe) {
@@ -77,6 +78,13 @@ public:
     void UnSubscribe(std::string );
 
     std::string filedir(const std::string &in);
+
+    void dump(mapmapi &mm);
+
+    void dump(std::unordered_map<std::string,int> &m);
+
+    void dumpProj();
+
 };
 
 }

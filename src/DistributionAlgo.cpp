@@ -51,15 +51,31 @@ NameValuePairs<int>
     double maxdiff = min(mean, result);
     qInfo() << " maxdiff " << maxdiff;
 
+
+    double sum = 0.0;
+    for ( double d : diffs) {
+        if ( d <= maxdiff ) {
+            sum = sum + (result - d);
+        }
+    }
+
+    if (sum == 0.0) {
+        qInfo() << "no projections within 100% " << agent << " gets balance " << result;
+        award[agent] = result * 100.0;
+        return award;
+    }
+
+    /*
     
-    double sum = accumulate(begin(diffs), end(diffs), 0,
-        [maxdiff,result](const double sum,const double val)
+    double sum2 = accumulate(begin(diffs), end(diffs), 0,
+        [maxdiff,result](const double insum,const double val)
         {
-            return sum + ((val <= maxdiff) ? result-val : 0.0);
+            return insum + ((val <= maxdiff) ? (result-val) : 0.0);
         });
 
+    qInfo() << " sum " << sum << " sum2" << sum2;
+    */
 
-        
     double payout = result / sum;
 
     qInfo() << " sum " << sum << " payout " << payout;

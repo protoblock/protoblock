@@ -82,8 +82,8 @@ signals:
     void NameStatus(fantasybit::MyFantasyName);
     void LiveProj(fantasybit::FantasyBitProj);
     void MyNames(vector<fantasybit::MyFantasyName>);
-    void NameBalance(fantasybit::FantasyNameBal &);
-    void PlayerStatusChange(std::pair<string,PlayerStatus> &in);
+    void NameBal(fantasybit::FantasyNameBal&);
+    void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
     void GlobalStateChange(fantasybit::GlobalState);
     void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
@@ -113,14 +113,14 @@ public slots:
 
     //tx
     void OnFoundName(string);
-    void OnProjLive(fantasybit::FantasyBitProj &);
+    void OnProjLive(fantasybit::FantasyBitProj);
     void OnClaimName(QString);
     void OnProjTX(fantasybit::FantasyBitProj);
 
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
-    void OnNameBal(FantasyNameBal &);
-    void OnPlayerStatusChange(pair<string,PlayerStatus>);
+    //void OnNameBal(fantasybit::FantasyNameBal &);
+    //void OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
 
     //dataagent
     void BeOracle();
