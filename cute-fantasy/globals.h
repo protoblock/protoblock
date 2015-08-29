@@ -10,7 +10,7 @@
 #define APP_SETTINGS
 #define ORGANIZATION_NAME "Satoshi Fantasy LLC"
 #define ORGANIZATION_DOMAIN "satoshifantasy.com"
-#define APPLICATION_NAME "Cute Fantasy"
+#define APPLICATION_NAME "trading football"
 #endif
 
 

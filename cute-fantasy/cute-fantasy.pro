@@ -17,7 +17,7 @@ contains(DEFINES, DATAAGENTGUI){
 TARGET = cute-fantasy-agent
 }
 !contains(DEFINES, DATAAGENTGUI){
-TARGET = cute-fantasy
+TARGET = tradingfootball
 }
 
 TEMPLATE = app
