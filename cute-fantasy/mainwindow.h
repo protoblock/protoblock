@@ -55,7 +55,7 @@ public slots:
     void OnNewWeek(int);
     void OnGameOver(string);
     void OnGameStart(string);
-    void OnPlayerStatusChange(pair<string, PlayerStatus> in);
+    void OnPlayerStatusChange(pair<string, fantasybit::PlayerStatus> in);
 
 
 private slots:

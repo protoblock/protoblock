@@ -247,7 +247,7 @@ void MainWindow::OnNameStatus(MyFantasyName name){
 
     //always update the cached FantasyName in th combo
     ui->myFantasyNamesCombo->setItemData(nameIndex,QVariant::fromValue(name));
-
+     myCurrentFantasyName = name;
     if (isCurrent){
 
         // update the status label if we received an update on the current name
@@ -303,6 +303,8 @@ void MainWindow::OnGameStart(string gameId){
 
 void MainWindow::on_myFantasyNamesCombo_currentIndexChanged(int index)
 {
+    if (myAddNamesPending) return;
+
     QVariant vFname = ui->myFantasyNamesCombo->itemData(index);
     MyFantasyName choosenFantasyName = vFname.value<MyFantasyName>();
     if (choosenFantasyName.name() == myCurrentFantasyName.name()) return;
@@ -336,16 +338,16 @@ void MainWindow::on_myFantasyNamesCombo_currentIndexChanged(int index)
 
 void MainWindow::on_myClaimFantasyNameButton_clicked()
 {
-    if (myAddNamesPending) return;
-    myAddNamesPending = true;
     MyFantasyName newName;
     newName.set_status(fantasybit::none);
     QString name = ui->myClamNewNameLE->text().trimmed();
     newName.set_name(name.toStdString());
+    myAddNamesPending = true;
     ui->myFantasyNamesCombo->addItem(name,qVariantFromValue(newName));
+    myAddNamesPending = false;
     emit ClaimFantasyName(name);
     ui->myClamNewNameLE->setText("");
-    myAddNamesPending = false;}
+}
 
 void MainWindow::OnPlayerStatusChange(pair<string, fantasybit::PlayerStatus> in){
    ui->myCurrentWeekWidget->OnPlayerStatusChange(in);
