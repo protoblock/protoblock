@@ -83,7 +83,7 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 
 [Run]
 Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; StatusMsg: "Installing VC Redist..."
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall runascurrentuser skipifsilent 64bit; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 
 [Dirs]
 Name: "{app}\bearer"
@@ -93,7 +93,3 @@ Name: "{app}\platforms"
 Name: "{app}\storage"
 Name: "{app}\translations"
 
-[Registry] 
-Root: "HKLM"; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers\";
-ValueType: String; ValueName: "{app}\cute-fantasy.exe"; ValueData: "RUNASADMIN";
-Flags: uninsdeletekeyifempty uninsdeletevalue; MinVersion: 0,6.1
