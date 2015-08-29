@@ -146,10 +146,10 @@ void MainWindow::GlobalStateChange(fantasybit::GlobalState state){
         if (myGlobalState.week()== state.week()-1 ) {
             DataCache::instance()->refreshLeaderboard();
             ui->myCurrentWeekWidget->setCurrentWeekData(state);
-            navigateToWeek(myGlobalState.week());
+            navigateToWeek(state.week());
                 if (!myLeaderBoardTimer.isActive()) myLeaderBoardTimer.start();
 
-            //myGlobalState = state;
+            myGlobalState = state;
 
     }
 
@@ -163,10 +163,10 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
     QString seasonType;
     switch (state.state() ) {
     case GlobalState_State_INSEASON :
-        seasonType ="in Season";
+        seasonType ="Pre-Season";
         break;
     case GlobalState_State_OFFSEASON :
-        seasonType = "Off Season";
+        seasonType = "No Season";
         break;
     default:
         break;
