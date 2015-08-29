@@ -22,6 +22,8 @@ public:
 
     void onGameOver(string gameId);
     void onGameStart(string gameId);
+    void OnPlayerStatusChange(pair<string, PlayerStatus> in);
+    void OnProjAck(fantasybit::FantasyBitProj projection);
 
 
 signals:

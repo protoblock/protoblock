@@ -10,7 +10,10 @@ void Core::bootstrap(){
     qRegisterMetaType<fantasybit::FantasyBitProj>("fantasybit::FantasyBitProj");
     qRegisterMetaType<vector<fantasybit::MyFantasyName>>("vector<fantasybit::MyFantasyName>");
     qRegisterMetaType<pair<string,fantasybit::PlayerStatus>>("pair<string,fantasybit::PlayerStatus>");
+    qRegisterMetaType<fantasybit::PlayerStatus>("fantasybit::PlayerStatus");
     qRegisterMetaType<pair<string,fantasybit::FantasyNameBal>>("pair<string,fantasybit::FantasyNameBal>");
+    qRegisterMetaType<fantasybit::GameStatus_Status>("fantasybit::GameStatus_Status");
+
     qRegisterMetaType<string>("string");
     qSetMessagePattern(Platform::settings()->getSetting(AppSettings::LogMessagePattern).toString());
     qInstallMessageHandler(messageHandler);

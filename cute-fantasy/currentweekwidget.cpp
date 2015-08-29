@@ -81,8 +81,8 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
                                               qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,
                                               qVariantFromValue<PlayerGameStatus>(playerDetails.game_status));
-            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId, 0.0);
-            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
+            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId, 0);
+            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,QVariant::fromValue(ScoreState::NonScored));
         }
 
         //add away players
@@ -100,8 +100,8 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
                                                                                 qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,
                                                                                      qVariantFromValue<PlayerGameStatus>(playerDetails.game_status));
-            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0.0);
-            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
+            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);
+            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,QVariant::fromValue(ScoreState::NonScored));
         }
     }
     invalidateFilters();
@@ -122,7 +122,7 @@ void CurrentWeekWidget::onUserSwitchFantasyName(const std::string fantasyPlayerI
         myFantasyName = fantasyPlayerId;
         //reset all projections to 0
         foreach(QString playerId,myProjectionsModel.keys()){
-            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
+            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,QVariant::fromValue(ScoreState::NonScored));
             myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);
         }
         updateCurrentFantasyPlayerProjections();
@@ -134,7 +134,7 @@ void CurrentWeekWidget::updateCurrentFantasyPlayerProjections(){
     auto  recentProjections = DataService::instance()->GetProjByName(myFantasyName);
     for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
         myProjectionsModel.updateItemProperty<PropertyNames::Projection>(it->first.data(),it->second);
-        myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(it->first.data(),(int) ScoreState::Sent);
+        myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(it->first.data(),QVariant::fromValue(ScoreState::Sent));
     }
 }
 
@@ -149,7 +149,7 @@ void CurrentWeekWidget::on_mySendProjectionButton_clicked() {
             fProj.set_name(myFantasyName);
             fProj.set_proj(projection);
             fProj.set_playerid(playerId.toStdString());
-            item->attachProperty<PropertyNames::ProjectionStatus>((int) ScoreState::Sent);
+            item->attachProperty<PropertyNames::ProjectionStatus>(QVariant::fromValue(ScoreState::Sent));
             emit NewProjection(fProj);
         }
     }
@@ -159,24 +159,27 @@ void CurrentWeekWidget::onGameOver(string gameId){
     myGameTableModel.updateItemProperty<PropertyNames::Game_Status>
             (gameId.data(),qVariantFromValue<GameStatus_Status>(fantasybit::GameStatus_Status_POSTGAME));
   invalidateFilters();
-   qDebug() << "Game over";
+   qDebug() << "Game over " << gameId;
 }
 void CurrentWeekWidget::onGameStart(string gameId){
     myGameTableModel.updateItemProperty<PropertyNames::Game_Status>
             (gameId.data(),qVariantFromValue<GameStatus_Status>(fantasybit::GameStatus_Status_INGAME));
    invalidateFilters();
-   qDebug() << "Game Start";
+   qDebug() << "Game Start " << gameId;
 }
 
 void CurrentWeekWidget::on_myLockedGamesRb_toggled(bool checked) {
     if (!checked) return;
+    myProjectionDelegate.setEnableProjection(false);
     myGameModelFilter.setGameStatusFilter(GamesFilter::LockedGames);
     myProjectionFilterProxy.data()->invalidate();
+
 }
 
 void CurrentWeekWidget::on_myOpenGamesRb_toggled(bool checked)
 {
     if (!checked) return;
+    myProjectionDelegate.setEnableProjection(true);
     myGameModelFilter.setGameStatusFilter(GamesFilter::OpenGames);
      myProjectionFilterProxy.data()->invalidate();
 }
@@ -185,4 +188,16 @@ void CurrentWeekWidget::invalidateFilters(){
     myGameModelFilter.invalidate();
     myProjectionFilterProxy.data()->enable();
     myProjectionFilterProxy.data()->invalidate();
+}
+
+void CurrentWeekWidget::OnPlayerStatusChange(pair<string,PlayerStatus>   in){
+ QString playerId = in.first.data(); 
+ myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId, QVariant::fromValue(in.second.status()));
+ myProjectionFilterProxy.data()->invalidate();
+}
+
+void CurrentWeekWidget::OnProjAck(fantasybit::FantasyBitProj projection){
+    QString playerId = projection.playerid().data();
+    //bug what if the player change the projection he have sent before the ack gets to us??
+    myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId, QVariant::fromValue(ScoreState::Sent));
 }

@@ -57,6 +57,9 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(GameOver(string)),this,SLOT(OnGameOver(string)));
     QObject::connect(myLAPIWorker,SIGNAL(GameStart(string)),this,SLOT(OnGameStart(string)));
 
+     //Player Status Change
+     QObject::connect(myLAPIWorker,SIGNAL(PlayerStatusChange(pair<string,fantasybit::PlayerStatus>)),
+                      this,SLOT(OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus>)));
 
     //data
     //QObject::connect(this,SIGNAL(SubscribePlayerData()),myLAPIWorker,SLOT(OnSubPD()));
@@ -215,6 +218,7 @@ void MainWindow::OnMyFantasyNames(vector<fantasybit::MyFantasyName> names){
 
 void MainWindow::OnNameStatus(MyFantasyName name){
 
+    qDebug() << "OnNameStatus :" << name.name();
     // get cached FanatasyName from the combox box whicch
     // serves as a model store here using itemData property.
     // this is an exact match case sensitive search
@@ -272,13 +276,16 @@ void MainWindow::OnNameStatus(MyFantasyName name){
     }
 }
 
-
-void MainWindow::OnProjAck(fantasybit::FantasyBitProj){
+void MainWindow::OnProjAck(fantasybit::FantasyBitProj projection){
     qDebug() << "OnProjAck :";
+    if (projection.name()==myCurrentFantasyName.name())
+        ui->myCurrentWeekWidget->OnProjAck(projection);
 }
 
 void MainWindow::OnNameBalance(fantasybit::FantasyNameBal & balance) {
     qDebug()<< "received balance for " << balance.name() << " : " << balance.bits();
+    if (myCurrentFantasyName.name()==balance.name())
+        ui->myBalanceText->setText(QString("%1").arg(balance.bits()));
 }
 
 void MainWindow::OnNewWeek(int week){
@@ -286,7 +293,7 @@ void MainWindow::OnNewWeek(int week){
 }
 
 void MainWindow::OnGameOver(string gameId){
-    //ui->myCurrentWeekWidget->onGameOver(gameId);
+    qDebug() << "OnGameOver :" << gameId;
 }
 
 void MainWindow::OnGameStart(string gameId){
@@ -339,4 +346,8 @@ void MainWindow::on_myClaimFantasyNameButton_clicked()
     emit ClaimFantasyName(name);
     ui->myClamNewNameLE->setText("");
     myAddNamesPending = false;
+}
+
+void MainWindow::OnPlayerStatusChange(pair<string, PlayerStatus> in){
+   ui->myCurrentWeekWidget->OnPlayerStatusChange(in);
 }
