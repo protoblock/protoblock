@@ -64,7 +64,7 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
         myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
         myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
         myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.info.time()));
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,fromTime_t_toFantasyString(game.info.time()));
         myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,game.status);
         //add home players
         for(const auto& player : game.homeroster) {
@@ -161,7 +161,7 @@ void CurrentWeekWidget::onGameOver(string gameId){
         myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
         myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
         myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.info.time()));
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,fromTime_t_toFantasyString(game.info.time()));
         myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,game.status);
     }
     invalidateFilters();
@@ -175,7 +175,7 @@ void CurrentWeekWidget::onGameStart(string gameId){
         myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
         myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
         myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.info.time()));
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,fromTime_t_toFantasyString(game.info.time()));
         myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,game.status);
     }
     invalidateFilters();

@@ -31,7 +31,7 @@ void NextWeekWidget::setWeekData(int week){
         QString  awayTeamId= game.away().data();
 
         myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.time()));
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,fromTime_t_toFantasyString(game.time()));
         myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,homeTeamId);
         myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,awayTeamId);
 
