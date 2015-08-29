@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>645</width>
-    <height>393</height>
+    <width>784</width>
+    <height>545</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,38 +27,12 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QRadioButton" name="myCompletedGamesRb">
+       <widget class="QRadioButton" name="myOpenGamesRb">
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Completed</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">buttonGroup</string>
-        </attribute>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="myUpcomingGamesRb">
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Upcoming</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">buttonGroup</string>
-        </attribute>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QRadioButton" name="myInGamesRb">
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>In Game</string>
+         <string>Open</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -68,10 +42,23 @@
         </attribute>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="myLockedGamesRb">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Locked</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">buttonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
        <widget class="QListView" name="myGamesListView">
         <property name="selectionMode">
-         <enum>QAbstractItemView::SingleSelection</enum>
+         <enum>QAbstractItemView::MultiSelection</enum>
         </property>
         <property name="selectionBehavior">
          <enum>QAbstractItemView::SelectRows</enum>
@@ -87,7 +74,66 @@
       <string>Projection sheet</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="0">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Filter by position :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="myPositionComboBox">
+        <item>
+         <property name="text">
+          <string>ALL</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>QB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>RB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>WR</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>TE</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DEF</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>414</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="0" colspan="3">
        <widget class="QTableView" name="myProjectionTableView">
         <property name="selectionMode">
          <enum>QAbstractItemView::SingleSelection</enum>
@@ -103,7 +149,7 @@
         </attribute>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="2" column="0" colspan="3">
        <widget class="QPushButton" name="mySendProjectionButton">
         <property name="text">
          <string>Send Projection</string>

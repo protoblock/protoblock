@@ -74,7 +74,7 @@ private:
 
     MainLAPIWorker *  myLAPIWorker;
     Ui::MainWindow *ui;    
-    int myCurrentWeek;    
+    uint myCurrentWeek;
     fantasybit::MyFantasyName myCurrentFantasyName;
     GlobalState myGlobalState;
     WaitModalDialog myWaitDialog;

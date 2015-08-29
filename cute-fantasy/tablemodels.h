@@ -22,10 +22,11 @@ enum class ScoreState  : int {
 };
 Q_DECLARE_METATYPE(ScoreState)
 
+
+
 enum class GamesFilter {
-    Completed ,
-    InGame,
-    Upcoming,
+    LockedGames,
+    OpenGames,
     All
 };
 
@@ -38,7 +39,7 @@ public:
         myGameTableType = gameTableType;
         initialize();
     }
-    ~GameTableModel() {}
+    ~GameTableModel() {}    
 
 protected:
 
@@ -182,6 +183,7 @@ protected:
         case WeekDisplayType::CurrentWeek:  return 6;
         case WeekDisplayType::PreviousWeek: return 4;
         case WeekDisplayType::UpcomingWeek: return 4;
+        default: return 0;
         }
     }
 
@@ -234,54 +236,144 @@ public:
         return myGamesFilter;
     }
 
+
+    static bool testGameStatus(GamesFilter filter,GameStatus_Status gameStatus){
+        if (filter == GamesFilter::All) return true;
+        if (filter == GamesFilter::LockedGames)
+            return (gameStatus== GameStatus_Status_CLOSED) ||
+                    (gameStatus== GameStatus_Status_POSTGAME) ||
+                    (gameStatus== GameStatus_Status_INGAME);
+
+        if (filter == GamesFilter::OpenGames)
+            return (gameStatus== GameStatus_Status_SCHEDULED)||
+                    (gameStatus== GameStatus_Status_PREGAME);
+        return false;
+    }
+
+
+
 protected:
     //filtering
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         if (myGamesFilter == GamesFilter::All)
             return true;
-
         GameTableModel * model = dynamic_cast<GameTableModel *>(sourceModel());
         if (model==NULL) return true;
         QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
         ViewModel * item = model->getItemByIndex(index);
         if (item == NULL) return true;
-
         if (!item->hasProperty<PropertyNames::Game_Status>()) return true;
-        QString str;
-
-        GameStatus_Status gameStatus = (GameStatus_Status) item->propertyValue<PropertyNames::Game_Status>().toInt();
-
-
-        qDebug() << item->propertyValue<PropertyNames::Home>().toString()
-                 << item->propertyValue<PropertyNames::Away>().toString()
-                 << "gameStatus :" <<str;
-
-        if (myGamesFilter == GamesFilter::Completed)
-            return (gameStatus== GameStatus_Status_CLOSED) ||
-                    (gameStatus== GameStatus_Status_POSTGAME);
-
-        if (myGamesFilter == GamesFilter::Upcoming)
-            return (gameStatus== GameStatus_Status_SCHEDULED)||
-                    (gameStatus== GameStatus_Status_PREGAME);
-
-        if (myGamesFilter == GamesFilter::InGame)
-            return gameStatus == GameStatus_Status_INGAME;
-    }
-    //    bool lessThan(const QModelIndex &left, const QModelIndex &right) const {
-    //        GameTableModel * model  = dynamic_cast<GameTableModel *>(sourceModel());
-    //        if (model==NULL) return true;
-    //        ViewModel * leftItem = model->getItemByIndex(left);
-    //        if (leftItem == NULL)  return true;
-    //        ViewModel * rightItem = model->getItemByIndex(right);
-    //        if (rightItem == NULL)  return true;
-    //        return leftItem->propertyValue("Game_Time")
-    //                < rightItem->propertyValue("Game_Time");
-    //    }
+        GameStatus_Status gameStatus = (GameStatus_Status) item->propertyValue<PropertyNames::Game_Status>().toInt();        
+        return testGameStatus(myGamesFilter,gameStatus);
+    }    
 
 private:
     GamesFilter myGamesFilter;
-
 };
+
+#include <QComboBox>
+#include <QItemSelectionModel>
+class ProjectionsViewFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+    QComboBox * myPositionCombobox;
+    GameViewFilterProxyModel  * myGameModelProxy;
+    QItemSelectionModel * mySelectedGames;
+
+public:
+
+    ProjectionsViewFilterProxyModel(QComboBox * positionCombobox = NULL,
+                                    GameViewFilterProxyModel  * gameModelProxy= NULL,
+                                    QItemSelectionModel * gameSelectionModel=NULL,
+                                    QObject *parent = 0)
+        : QSortFilterProxyModel(parent)
+    {
+        myPositionCombobox = positionCombobox;
+        myGameModelProxy = gameModelProxy;
+        if (myGameModelProxy != NULL) mySelectedGames = gameSelectionModel;
+    }
+    void bindFilter(){
+        if (myPositionCombobox!=NULL){
+            QObject::connect(myPositionCombobox,
+                             SIGNAL(currentTextChanged(QString)),
+                             this,SLOT(invalidate()));
+        }
+
+        if (myGameModelProxy!=NULL){
+            QObject::connect(myGameModelProxy,
+                             SIGNAL(modelReset()),
+                             this,SLOT(invalidate()));
+        }
+
+        if (mySelectedGames!=NULL){
+            QObject::connect(mySelectedGames,
+                             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                             this,SLOT(invalidate()));
+        }
+    }
+
+protected:
+    //filtering
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
+
+        ProjectionSheetTableModel * model = dynamic_cast<ProjectionSheetTableModel *>(sourceModel());
+        if (model==NULL) return true;
+        QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+        ViewModel * item = model->getItemByIndex(index);
+        if (item == NULL) return true;
+        QString gameId = item->propertyValue<PropertyNames::Game_ID>().toString();
+
+        if (gameId=="")  return false;
+
+
+        if (myPositionCombobox!=NULL){
+            //get current postion from position combo box
+            QString position= myPositionCombobox->currentText().trimmed().toUpper();
+            if (position != "ALL"){
+                QString playerPosition=item->propertyValue<PropertyNames::Position>().toString();
+                if (playerPosition != position)
+                    return false;
+            }
+        }
+
+        if (myGameModelProxy!=NULL){
+            GamesFilter gameFilter = myGameModelProxy->filter();
+            if (gameFilter != GamesFilter::All) {
+            GameTableModel * allGames = dynamic_cast<GameTableModel *>(myGameModelProxy->sourceModel());
+            if (allGames==NULL) return false;
+            QVariant vvalue;
+            GameStatus_Status gameStatus;
+            bool propertyFound = allGames->itemPropertyValue<PropertyNames::Game_Status>(gameId,vvalue);
+            if (!propertyFound) return false;
+            gameStatus = qvariant_cast<GameStatus_Status>(vvalue);
+            if (!GameViewFilterProxyModel::testGameStatus(gameFilter,gameStatus))
+                return false;
+            }
+        }
+
+        if (mySelectedGames!=NULL){
+              QModelIndexList selectionList = mySelectedGames->selectedIndexes();
+              if (selectionList.count()> 0){
+                  GameTableModel * allGames = dynamic_cast<GameTableModel *>(myGameModelProxy->sourceModel());
+                  if (allGames==NULL) return false;                  
+              for(int i=0;i<selectionList.count();i++){
+                  QModelIndex sourceIndex =  myGameModelProxy->mapToSource(selectionList.at(i));
+                  ViewModel * game = allGames->getItemByIndex(sourceIndex);
+                  if (game == NULL) return false;
+                  QString selectedGameId = game->propertyValue<PropertyNames::Game_ID>().toString();
+                  if (selectedGameId != gameId)
+                      return false;
+                  else
+                      return true;
+              }
+        }
+         return true;
+        }
+        return true;
+    }
+};
+
 
 #endif // TABLEMODELS_H
 

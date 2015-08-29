@@ -30,32 +30,27 @@ signals:
 public slots:
     void onUserSwitchFantasyName(const std::string fantasyPlayerId);
 
-private slots:
-
-    void on_myCompletedGamesRb_toggled(bool checked);
-    void on_myInGamesRb_toggled(bool checked);
-    void on_myUpcomingGamesRb_toggled(bool checked);
+private slots:    
 
     void on_mySendProjectionButton_clicked();
+    void on_myLockedGamesRb_toggled(bool checked);
+    void on_myOpenGamesRb_toggled(bool checked);
 
 private:
 
     void updateCurrentFantasyPlayerProjections();
+    void invalidateFilters();
     Ui::CurrentWeekWidget *ui;
     GameTableModel  myGameTableModel{WeekDisplayType::CurrentWeek};
     GameViewFilterProxyModel myGameModelFilter;    
     ProjectionSheetTableModel myProjectionsModel {WeekDisplayType::CurrentWeek};
-
+    QScopedPointer<ProjectionsViewFilterProxyModel> myProjectionFilterProxy;
+    QItemSelectionModel myGamesSelectionModel;
     int myCurrentWeek;
     std::string myFantasyName;
     GlobalState myGlobalState;
     std::vector<fantasybit::GameRoster> myGameRosters;    
     SpinBoxDelegate myProjectionDelegate;
-
-
-
-
-
 };
 
 #endif // CURRENTWEEKWIDGET_H
