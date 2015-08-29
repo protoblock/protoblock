@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::initDefaultGuiDisplay(){
     ui->myFantasyNameStatusLabel->setText("None");
-    //ui->myBalanceText->setText("Unknown");
     ui->mySeasonLabel->setText("Unknown Season");
     ui->myWeekLabel->setText("Unknown Week #");
     ui->myPreviousWeek->setEnabled(false);
@@ -25,7 +24,6 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekWidget);
     myCurrentWeek =-1;
     ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());
-    //ui->myStatusbar->addWidget(); TODO animated label
 }
 
 void MainWindow::initialize() {
@@ -88,6 +86,12 @@ void MainWindow::initialize() {
     //wait for going live
     myWaitDialog.init(":/icons/waitingprogress.gif",120000,"Syncing...");
     QObject::connect(myLAPIWorker,SIGNAL(LiveGui(fantasybit::GlobalState)),&myWaitDialog,SLOT(stopAndClose()));
+
+    //leader timed refresh
+    myLeaderBoardTimer.setInterval(AppSettings::getSetting(AppSettings::LeaderBoardRefreshInterval).toInt()*60000);
+    QObject::connect(&myLeaderBoardTimer,SIGNAL(timeout()),
+                     this,SLOT(refreshLeaderBoard()));
+
     //wake up core thread
     Core::instance()->guiIsAwake();
     //myWaitDialog.startExec();
@@ -135,10 +139,16 @@ void MainWindow::GlobalStateChange(fantasybit::GlobalState state){
             (myGlobalState.week() == 0 &&
              state.week() > 0 ) )
         GoLive(state);
+    else {
+        if (myGlobalState.week()== state.week()-1 )
+            GoLive(state);
+    }
 
+    qDebug() << "GlobalStateChange : " << "state week :" << state.week()  << "myGlobalState.week():" <<myGlobalState.week() ;
 }
 
 void MainWindow::GoLive(fantasybit::GlobalState state){
+    myIamLive = true;
     myGlobalState = state;
     QString seasonLabel = "%1 %2";
     QString seasonType;
@@ -160,8 +170,15 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
         DataCache::instance()->refreshLeaderboard();
         ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState);
         navigateToWeek(myGlobalState.week());
+        if (!myLeaderBoardTimer.isActive()) myLeaderBoardTimer.start();
     }
+    qDebug() << "glolive"  ;
 }
+
+void MainWindow::refreshLeaderBoard(){
+    DataCache::instance()->refreshLeaderboard();
+}
+
 void MainWindow::navigateToWeek(int week)
 {
     myCurrentWeek = week;
@@ -251,23 +268,23 @@ void MainWindow::OnNameStatus(MyFantasyName name){
 
 
 void MainWindow::OnProjAck(fantasybit::FantasyBitProj){
-
+    qDebug() << "OnProjAck :";
 }
 
 void MainWindow::OnNameBalance(fantasybit::FantasyNameBal & balance) {
- qDebug()<< "received balance for " << balance.name() << " : " << balance.bits();
+    qDebug()<< "received balance for " << balance.name() << " : " << balance.bits();
 }
 
 void MainWindow::OnNewWeek(int week){
-
+    qDebug() << "OnNewWeek :" << week;
 }
 
 void MainWindow::OnGameOver(string gameId){
- ui->myCurrentWeekWidget->onGameOver(gameId);
+    //ui->myCurrentWeekWidget->onGameOver(gameId);
 }
 
 void MainWindow::OnGameStart(string gameId){
-  ui->myCurrentWeekWidget->onGameStart(gameId);
+    ui->myCurrentWeekWidget->onGameStart(gameId);
 }
 
 

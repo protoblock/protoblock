@@ -60,8 +60,8 @@ public slots:
 
 private slots:
     void on_myFantasyNamesCombo_currentIndexChanged(int index);
-
     void on_myClaimFantasyNameButton_clicked();
+    void refreshLeaderBoard();
 
 private:
     void initialize();
@@ -79,6 +79,17 @@ private:
     GlobalState myGlobalState;
     WaitModalDialog myWaitDialog;
     bool myAddNamesPending= false;
+    QTimer myLeaderBoardTimer;
+
+private :
+    bool myIamLive = false;
+public:
+    void setIamLive(bool  argIamLiveValue) {
+        myIamLive = argIamLiveValue;
+    }
+    bool IamLive(){
+        return myIamLive;
+    }
 
 };
 
