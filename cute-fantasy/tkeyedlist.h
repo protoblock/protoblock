@@ -228,7 +228,7 @@ public:
          //we're going to add the item to the list
           X * newItem = new X();
           newItem->attachProperty<PROPNAME>(value);
-          addItem(key,newItem);          
+          addItem(key,newItem);
       }
       else {
           oldItem->attachProperty<PROPNAME>(value);

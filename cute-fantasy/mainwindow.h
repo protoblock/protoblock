@@ -27,7 +27,6 @@ public:
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
 signals:
 
     //void SubscribeGameState();
@@ -50,12 +49,13 @@ public slots:
     void GlobalStateChange(fantasybit::GlobalState state);
     void OnMyFantasyNames(vector<fantasybit::MyFantasyName> names);
     void OnNameStatus(fantasybit::MyFantasyName name);
-    void OnProjAck(fantasybit::FantasyBitProj);
+    void OnProjAck(fantasybit::FantasyBitProj projection);
     //void OnAward(QVariant);
     void OnNameBalance(fantasybit::FantasyNameBal &balance);
     void OnNewWeek(int);
     void OnGameOver(string);
     void OnGameStart(string);
+    void OnPlayerStatusChange(pair<string, PlayerStatus> in);
 
 
 private slots:
@@ -79,18 +79,8 @@ private:
     GlobalState myGlobalState;
     WaitModalDialog myWaitDialog;
     bool myAddNamesPending= false;
-    QTimer myLeaderBoardTimer;
-
-private :
+    QTimer myLeaderBoardTimer; 
     bool myIamLive = false;
-public:
-    void setIamLive(bool  argIamLiveValue) {
-        myIamLive = argIamLiveValue;
-    }
-    bool IamLive(){
-        return myIamLive;
-    }
-
 };
 
 #endif // MAINWINDOW_H

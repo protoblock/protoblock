@@ -12,7 +12,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
     editor->setFrame(false);
     editor->setMinimum(0);
     editor->setMaximum(100);
-
+    editor->setEnabled(myEnableProjection);
     return editor;
 }
 

@@ -128,6 +128,19 @@ public:
 
 protected:
 
+    QVariant getColumnDecorateData(uint column, ViewModel *value){
+      if (myDisplayType== WeekDisplayType::CurrentWeek && column== 5){
+          int proj = value->propertyValue<PropertyNames::Projection>().toInt();
+
+          ScoreState scoreState = qvariant_cast<ScoreState>(value->propertyValue<PropertyNames::ProjectionStatus>());
+          if (scoreState== ScoreState::Scored)
+                  return QPixmap(":/icons/scored.png");
+          if (scoreState== ScoreState::Sent)
+              return QPixmap(":/icons/scoresent.png");
+      }
+      return QVariant();
+    }
+
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
 
         switch (myDisplayType) {
@@ -144,7 +157,7 @@ protected:
             if( column ==4)
                 return tr(data->propertyValue<fantasybit::PlayerGameStatus,PropertyNames::Player_Game_Status>());
             if( column ==5)
-                return data->propertyValue<PropertyNames::Projection>().toDouble();
+                return data->propertyValue<PropertyNames::Projection>();
             return QVariant();
 
         }
@@ -156,7 +169,7 @@ protected:
             if( column ==2)
                 return data->propertyValue<PropertyNames::Team_ID>();
             if( column ==3)
-                return data->propertyValue<PropertyNames::Result>().toDouble();
+                return data->propertyValue<PropertyNames::Result>();
             return QVariant();
 
         }
@@ -169,7 +182,7 @@ protected:
             if( column ==2)
                 return data->propertyValue<PropertyNames::Team_ID>();
             if( column ==3)
-                return data->propertyValue<PropertyNames::Projection>().toDouble();
+                return data->propertyValue<PropertyNames::Projection>();
             return QVariant();
 
         }
