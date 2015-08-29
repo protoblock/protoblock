@@ -139,9 +139,15 @@ void MainWindow::GlobalStateChange(fantasybit::GlobalState state){
             (myGlobalState.week() == 0 &&
              state.week() > 0 ) )
         GoLive(state);
-    else {
-        if (myGlobalState.week()== state.week()-1 )
-            GoLive(state);
+    else
+        if (myGlobalState.week()== state.week()-1 ) {
+            DataCache::instance()->refreshLeaderboard();
+            ui->myCurrentWeekWidget->setCurrentWeekData(state);
+            navigateToWeek(myGlobalState.week());
+                if (!myLeaderBoardTimer.isActive()) myLeaderBoardTimer.start();
+
+            //myGlobalState = state;
+
     }
 
     qDebug() << "GlobalStateChange : " << "state week :" << state.week()  << "myGlobalState.week():" <<myGlobalState.week() ;
@@ -229,7 +235,7 @@ void MainWindow::OnNameStatus(MyFantasyName name){
     //should never happen
     if (newStatus == fantasybit::none ||oldStatus == fantasybit::none){
         qDebug() << "we received an unexpected FantasyName status : " << newStatus;
-        return;
+        //return;
     }
 
 

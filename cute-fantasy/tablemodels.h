@@ -57,7 +57,7 @@ protected:
             gametime = data->propertyValue<PropertyNames::Game_Time>().toString();
             break;
         case WeekDisplayType::PreviousWeek:
-            gametime = data->propertyValue<PropertyNames::Kickoff_Time>().toString();
+            gametime = data->propertyValue<PropertyNames::Game_Time>().toString();
             break;
         default:
             return QVariant();
@@ -75,7 +75,7 @@ private:
         QStringList  headers;
         switch (myGameTableType) {
         case WeekDisplayType::CurrentWeek:  headers << "Time" << "Home" << "Away"; break;
-        case WeekDisplayType::PreviousWeek: headers << naturalName<Kickoff_Time>() << "Home" << "Away"; break;
+        case WeekDisplayType::PreviousWeek: headers << "Time" << "Home" << "Away"; break;
         case WeekDisplayType::UpcomingWeek: headers << "Time" << "Home" << "Away"; break;
         }
         setHorizontalHeaders(headers);

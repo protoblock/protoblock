@@ -24,6 +24,8 @@ private:
     ProjectionSheetTableModel myProjectionsModel {WeekDisplayType::PreviousWeek};
     int myCurrentWeek;
     std::vector<GameResult> myGamesResults;
+    fantasybit::WeeklySchedule myWeeklySchedule;
+
 };
 
 #endif // PREVIOUSWEEKWIDGET_H
