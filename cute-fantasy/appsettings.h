@@ -27,7 +27,8 @@ public:
         PortLiveBlock,
         PortLiveTx,
         PortLiveTxNat,
-        LogMessagePattern
+        LogMessagePattern,
+        LeaderBoardRefreshInterval
     };
 
 private:
@@ -49,6 +50,7 @@ private:
         case PortLiveTx: return "portlivetx";
         case PortLiveTxNat: return "portlivetxnat";
         case LogMessagePattern: return "logmessagepattern";
+        case LeaderBoardRefreshInterval : return "leaderboardrefreshinterval";
         default:
             return "";
         }
@@ -82,6 +84,7 @@ private:
                         "%{if-fatal}Fatal%{endif}] "
                         "<%{file}:%{line}::%{function}>"
                         "- %{message}";
+            case LeaderBoardRefreshInterval: return 5;
             default:               
                 return QVariant();
             }

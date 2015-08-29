@@ -17,7 +17,7 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
                          theLAPIWorker,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
 
     //set game filter
-    myGameModelFilter.setGameStatusFilter(GamesFilter::All);
+    myGameModelFilter.setGameStatusFilter(GamesFilter::OpenGames);
     myGameModelFilter.setDynamicSortFilter(true);
     myGameModelFilter.setSourceModel(&myGameTableModel);
     ui->myGamesListView->setModel(&myGameModelFilter);
@@ -51,6 +51,7 @@ CurrentWeekWidget::~CurrentWeekWidget() {
 void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
 
     if (myCurrentWeek == myGlobalState.week()) return;
+    myProjectionFilterProxy.data()->disable();
     myGlobalState = state;
     myCurrentWeek = myGlobalState.week();
     myGameTableModel.removeAll();
@@ -65,7 +66,7 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
         myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
         myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
         myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.info.time()));
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,game.status);
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,qVariantFromValue<GameStatus_Status>(game.status));
         //add home players
         for(const auto& player : game.homeroster) {
             QString playerId = player.first.data();
@@ -77,9 +78,11 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
             myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,game.info.home().data());
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerName);
             myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,playerDetails.team_status);
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,playerDetails.game_status);
-            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);
+            myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,
+                                                                                qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
+            myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,
+                                                                                     qVariantFromValue<PlayerGameStatus>(playerDetails.game_status));
+            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId, 0.0);
             myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
         }
 
@@ -94,9 +97,11 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
             myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,game.info.away().data());
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerName);
             myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,playerDetails.team_status);
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,playerDetails.game_status);
-            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);
+            myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,
+                                                                                qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
+            myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,
+                                                                                     qVariantFromValue<PlayerGameStatus>(playerDetails.game_status));
+            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0.0);
             myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,(int) ScoreState::NonScored);
         }
     }
@@ -139,70 +144,46 @@ void CurrentWeekWidget::on_mySendProjectionButton_clicked() {
         for( auto  playerId : myProjectionsModel.keys() ){
             ViewModel * item = myProjectionsModel.itemByKey(playerId);
             if (item == NULL) continue;
-            int projection = item->propertyValue<PropertyNames::Projection>().toInt();
+            int projection = item->propertyValue<PropertyNames::Projection>().toDouble();
             if (projection == 0) continue;
             FantasyBitProj fProj;
             fProj.set_name(myFantasyName);
             fProj.set_proj(projection);
             fProj.set_playerid(playerId.toStdString());
+            item->attachProperty<PropertyNames::ProjectionStatus>((int) ScoreState::Sent);
             emit NewProjection(fProj);
         }
     }
 }
 
 void CurrentWeekWidget::onGameOver(string gameId){
-    myGameTableModel.removeAll();
-
-    myGameRosters = DataService::instance()->GetCurrentWeekGameRosters();
-
-    for(const fantasybit::GameRoster & game  : myGameRosters) {
-        // add game
-        QString gameId = game.info.id().data();
-        myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
-        myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.info.time()));
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,game.status);
-    }
-    invalidateFilters();
+    myGameTableModel.updateItemProperty<PropertyNames::Game_Status>
+            (gameId.data(),qVariantFromValue<GameStatus_Status>(fantasybit::GameStatus_Status_POSTGAME));
+  invalidateFilters();
+   qDebug() << "Game over";
 }
 void CurrentWeekWidget::onGameStart(string gameId){
-    myGameTableModel.removeAll();
-    myGameRosters = DataService::instance()->GetCurrentWeekGameRosters();
-    for(const fantasybit::GameRoster & game  : myGameRosters) {
-        // add game
-        QString gameId = game.info.id().data();
-        myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
-        myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,QDateTime::fromTime_t(game.info.time()));
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,game.status);
-    }
-    invalidateFilters();
+    myGameTableModel.updateItemProperty<PropertyNames::Game_Status>
+            (gameId.data(),qVariantFromValue<GameStatus_Status>(fantasybit::GameStatus_Status_INGAME));
+   invalidateFilters();
+   qDebug() << "Game Start";
 }
 
 void CurrentWeekWidget::on_myLockedGamesRb_toggled(bool checked) {
-    if (checked)
-        if (myGameModelFilter.filter()== GamesFilter::LockedGames)
-            return;
-        else {
-            myGameModelFilter.setGameStatusFilter(GamesFilter::LockedGames);
-            invalidateFilters();
-        }
+    if (!checked) return;
+    myGameModelFilter.setGameStatusFilter(GamesFilter::LockedGames);
+    myProjectionFilterProxy.data()->invalidate();
 }
 
 void CurrentWeekWidget::on_myOpenGamesRb_toggled(bool checked)
 {
-    if (checked)
-        if (myGameModelFilter.filter()== GamesFilter::OpenGames)
-            return;
-        else {
-            myGameModelFilter.setGameStatusFilter(GamesFilter::OpenGames);
-            invalidateFilters();
-        }
+    if (!checked) return;
+    myGameModelFilter.setGameStatusFilter(GamesFilter::OpenGames);
+     myProjectionFilterProxy.data()->invalidate();
 }
 
 void CurrentWeekWidget::invalidateFilters(){
     myGameModelFilter.invalidate();
+    myProjectionFilterProxy.data()->enable();
     myProjectionFilterProxy.data()->invalidate();
 }

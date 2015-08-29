@@ -38,7 +38,7 @@
          <bool>true</bool>
         </property>
         <attribute name="buttonGroup">
-         <string notr="true">buttonGroup</string>
+         <string notr="true">myGamesOptionsGroup</string>
         </attribute>
        </widget>
       </item>
@@ -51,14 +51,14 @@
          <string>Locked</string>
         </property>
         <attribute name="buttonGroup">
-         <string notr="true">buttonGroup</string>
+         <string notr="true">myGamesOptionsGroup</string>
         </attribute>
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
        <widget class="QListView" name="myGamesListView">
         <property name="selectionMode">
-         <enum>QAbstractItemView::MultiSelection</enum>
+         <enum>QAbstractItemView::SingleSelection</enum>
         </property>
         <property name="selectionBehavior">
          <enum>QAbstractItemView::SelectRows</enum>
@@ -164,6 +164,6 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
+  <buttongroup name="myGamesOptionsGroup"/>
  </buttongroups>
 </ui>

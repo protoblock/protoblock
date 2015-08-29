@@ -140,11 +140,11 @@ protected:
             if( column ==2)
                 return data->propertyValue<PropertyNames::Team_ID>();
             if( column ==3)
-                return data->propertyValue<fantasybit::PlayerStatus_Status,PropertyNames::Player_Status>();
+                return tr(data->propertyValue<fantasybit::PlayerStatus_Status,PropertyNames::Player_Status>());
             if( column ==4)
-                return data->propertyValue<fantasybit::PlayerGameStatus,PropertyNames::Player_Game_Status>();
+                return tr(data->propertyValue<fantasybit::PlayerGameStatus,PropertyNames::Player_Game_Status>());
             if( column ==5)
-                return data->propertyValue<PropertyNames::Projection>();
+                return data->propertyValue<PropertyNames::Projection>().toDouble();
             return QVariant();
 
         }
@@ -156,7 +156,7 @@ protected:
             if( column ==2)
                 return data->propertyValue<PropertyNames::Team_ID>();
             if( column ==3)
-                return data->propertyValue<PropertyNames::Result>();
+                return data->propertyValue<PropertyNames::Result>().toDouble();
             return QVariant();
 
         }
@@ -169,7 +169,7 @@ protected:
             if( column ==2)
                 return data->propertyValue<PropertyNames::Team_ID>();
             if( column ==3)
-                return data->propertyValue<PropertyNames::Projection>();
+                return data->propertyValue<PropertyNames::Projection>().toDouble();
             return QVariant();
 
         }
@@ -210,6 +210,26 @@ private:
         }
         setHorizontalHeaders(headers);
     }
+
+    QString tr(fantasybit::PlayerGameStatus playerGameStatus){
+        switch (playerGameStatus) {
+        case OUT : return "OUT";
+        case IN : return "IN";
+        case NA : return "NA";
+        default: return "?";
+        }
+    }
+
+    QString tr(fantasybit::PlayerStatus_Status playerStatus){
+        switch(playerStatus){
+        case fantasybit::PlayerStatus_Status_ACTIVE : return "ACTIVE";
+        case fantasybit::PlayerStatus_Status_INACTIVE : return "INACTIVE";
+        case fantasybit::PlayerStatus_Status_OTHER : return "OTHER";
+        case fantasybit::PlayerStatus_Status_FA : return "FA";
+        default: return "?";
+        }
+    }
+
 
     WeekDisplayType myDisplayType;
 };
@@ -264,7 +284,8 @@ protected:
         if (item == NULL) return true;
         if (!item->hasProperty<PropertyNames::Game_Status>()) return true;
         GameStatus_Status gameStatus = (GameStatus_Status) item->propertyValue<PropertyNames::Game_Status>().toInt();        
-        return testGameStatus(myGamesFilter,gameStatus);
+        bool result = testGameStatus(myGamesFilter,gameStatus);
+        return result;
     }    
 
 private:
@@ -280,6 +301,7 @@ class ProjectionsViewFilterProxyModel : public QSortFilterProxyModel
     QComboBox * myPositionCombobox;
     GameViewFilterProxyModel  * myGameModelProxy;
     QItemSelectionModel * mySelectedGames;
+    bool myIsEnabled = true;
 
 public:
 
@@ -293,6 +315,19 @@ public:
         myGameModelProxy = gameModelProxy;
         if (myGameModelProxy != NULL) mySelectedGames = gameSelectionModel;
     }
+
+    bool isEnabled(){
+        return myIsEnabled;
+    }
+
+    void disable(){
+        myIsEnabled = false;
+    }
+
+    void enable(){
+        myIsEnabled = true;
+    }
+
     void bindFilter(){
         if (myPositionCombobox!=NULL){
             QObject::connect(myPositionCombobox,
@@ -316,7 +351,7 @@ public:
 protected:
     //filtering
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
-
+        if (!myIsEnabled) return true;
         ProjectionSheetTableModel * model = dynamic_cast<ProjectionSheetTableModel *>(sourceModel());
         if (model==NULL) return true;
         QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
@@ -353,12 +388,15 @@ protected:
         }
 
         if (mySelectedGames!=NULL){
-              QModelIndexList selectionList = mySelectedGames->selectedIndexes();
+              QItemSelection filteredSelection = mySelectedGames->selection();
+              QItemSelection sourceSelection = myGameModelProxy->mapSelectionToSource(filteredSelection);
+
+              QModelIndexList selectionList = sourceSelection.indexes();
               if (selectionList.count()> 0){
                   GameTableModel * allGames = dynamic_cast<GameTableModel *>(myGameModelProxy->sourceModel());
                   if (allGames==NULL) return false;                  
               for(int i=0;i<selectionList.count();i++){
-                  QModelIndex sourceIndex =  myGameModelProxy->mapToSource(selectionList.at(i));
+                  QModelIndex sourceIndex = selectionList.at(i);
                   ViewModel * game = allGames->getItemByIndex(sourceIndex);
                   if (game == NULL) return false;
                   QString selectedGameId = game->propertyValue<PropertyNames::Game_ID>().toString();

@@ -184,8 +184,8 @@ public:
 
     beginInsertRows(QModelIndex(), row, row + count - 1);
 
-    for (int r = 0; r < count; ++r)
-      myList.insert(row, NULL);
+//    for (int r = 0; r < count; ++r)
+//      myList.insert(row, NULL);
 
     endInsertRows();
 
@@ -227,9 +227,8 @@ public:
       if (oldItem == NULL){
          //we're going to add the item to the list
           X * newItem = new X();
-
           newItem->attachProperty<PROPNAME>(value);
-          addItem(key,newItem);
+          addItem(key,newItem);          
       }
       else {
           oldItem->attachProperty<PROPNAME>(value);
@@ -354,9 +353,10 @@ private:
    void addItem(const TKey & key,X * item) {
      if (item == NULL) return;
      int count = myList.count();
+     myKeyMap.insert(key,item);
+     myList.append(item);
      insertRows(count,1,QModelIndex());
      myList.replace(count,item);
-     myKeyMap.insert(key,item);
    }
 
   QStringList myHorizontalHeaders;

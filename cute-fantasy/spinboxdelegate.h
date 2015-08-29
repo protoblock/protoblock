@@ -20,6 +20,16 @@ public:
 
     void updateEditorGeometry(QWidget *editor,
         const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+private :
+    bool myEnableProjection;
+public:
+    void setEnableProjection(bool  argEnableProjectionValue) {
+        myEnableProjection = argEnableProjectionValue;
+    }
+    bool EnableProjection(){
+        return myEnableProjection;
+    }
 };
 
 #endif // SPINBOXDELEGATE_H
