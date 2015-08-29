@@ -249,6 +249,7 @@ void MainWindow::OnNameStatus(MyFantasyName name){
     ui->myFantasyNamesCombo->setItemData(nameIndex,QVariant::fromValue(name));
      myCurrentFantasyName = name;
     if (isCurrent){
+        myCurrentFantasyName = name;
 
         // update the status label if we received an update on the current name
         // and update the  class member myCurrentFantasyName

@@ -10,8 +10,9 @@
 #define APP_SETTINGS
 #define ORGANIZATION_NAME "Satoshi Fantasy LLC"
 #define ORGANIZATION_DOMAIN "satoshifantasy.com"
-#define APPLICATION_NAME "trading football"
+#define APPLICATION_NAME "Trading Football"
 #endif
+
 
 
 #include <QDebug>
