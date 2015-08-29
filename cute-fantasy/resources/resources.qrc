@@ -13,7 +13,4 @@
         <file>Schedule.2015-pre.json</file>
         <file>Schedule.2015-reg.json</file>
     </qresource>
-    <qresource prefix="/genesis">
-        <file>genesisAlpha.out</file>
-    </qresource>
 </RCC>

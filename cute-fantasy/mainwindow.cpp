@@ -339,9 +339,8 @@ void MainWindow::on_myClaimFantasyNameButton_clicked()
     ui->myFantasyNamesCombo->addItem(name,qVariantFromValue(newName));
     emit ClaimFantasyName(name);
     ui->myClamNewNameLE->setText("");
-    myAddNamesPending = false;
-}
+    myAddNamesPending = false;}
 
-void MainWindow::OnPlayerStatusChange(pair<string, PlayerStatus> in){
+void MainWindow::OnPlayerStatusChange(pair<string, fantasybit::PlayerStatus> in){
    ui->myCurrentWeekWidget->OnPlayerStatusChange(in);
 }
