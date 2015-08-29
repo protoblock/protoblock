@@ -159,14 +159,12 @@ void CurrentWeekWidget::on_mySendProjectionButton_clicked() {
 void CurrentWeekWidget::onGameOver(string gameId){
     myGameTableModel.updateItemProperty<PropertyNames::Game_Status>
             (gameId.data(),qVariantFromValue<GameStatus_Status>(fantasybit::GameStatus_Status_POSTGAME));
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,fromTime_t_toFantasyString(game.info.time()));
   invalidateFilters();
    qDebug() << "Game over";
 }
 void CurrentWeekWidget::onGameStart(string gameId){
     myGameTableModel.updateItemProperty<PropertyNames::Game_Status>
             (gameId.data(),qVariantFromValue<GameStatus_Status>(fantasybit::GameStatus_Status_INGAME));
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,fromTime_t_toFantasyString(game.info.time()));
    invalidateFilters();
    qDebug() << "Game Start";
 }
