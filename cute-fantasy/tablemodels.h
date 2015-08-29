@@ -48,22 +48,22 @@ protected:
         if (column !=0) return QVariant();
         QString text = QString("%1 @ %2 - %3");
         QString home,away;
-        QDateTime gametime;
+        QString gametime;
         home =data->propertyValue<PropertyNames::Home>().toString();
         away =data->propertyValue<PropertyNames::Away>().toString();
         switch (myGameTableType) {
         case WeekDisplayType::CurrentWeek:
         case WeekDisplayType::UpcomingWeek :
-            gametime = data->propertyValue<PropertyNames::Game_Time>().toDateTime();
+            gametime = data->propertyValue<PropertyNames::Game_Time>().toString();
             break;
         case WeekDisplayType::PreviousWeek:
-            gametime = data->propertyValue<PropertyNames::Kickoff_Time>().toDateTime();
+            gametime = data->propertyValue<PropertyNames::Kickoff_Time>().toString();
             break;
         default:
             return QVariant();
         }
 
-        return text.arg(home).arg(away).arg(gametime.toString("ddd HH:MM"));
+        return text.arg(home).arg(away).arg(gametime);//dateTime_toFantasyString(gametime));
     }
 
     int getColumnCount() {

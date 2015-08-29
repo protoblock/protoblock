@@ -48,7 +48,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&processor,SIGNAL(WeekStart(int)),&data,SLOT(OnWeekStart(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
 
-    QObject::connect(&data,SIGNAL(NewGameResult(string)),this,SIGNAL(GameOver(string)));
+    //QObject::connect(&data,SIGNAL(NewGameResult(string)),this,SIGNAL(GameOver(string)));
 
 
     //delt data

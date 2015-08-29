@@ -403,6 +403,7 @@ void TestingWindow::on_GetGameResult_clicked()
 {
     string gid = ui->gameID->currentData().toString().toStdString();
 
+    ui->gameID->removeItem(ui->gameID->currentIndex());
     ui->staging_data->clear();
 
     auto itg = mGames.find(gid);
