@@ -51,6 +51,8 @@ LIBS += -L./../lib
 LIBS += -lLevelDB  \
         -llibprotobuf
 
+RC_FILE = cute-fantasy.rc
+
 include(./boost-includes.pri)
 include (./cute-fantasy.pri)
 include (./openssl-includes.pri)
