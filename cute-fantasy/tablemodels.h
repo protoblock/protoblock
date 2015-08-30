@@ -111,7 +111,7 @@ protected:
 private:
     void initialize() {
         QStringList headers;
-        headers << "Player" << "Balance";
+        headers << "FantasyName" << "FantasyBits";
         setHorizontalHeaders(headers);
     }
 };
@@ -129,10 +129,11 @@ public:
 protected:
 
     QVariant getColumnDecorateData(uint column, ViewModel *value){
-      if (myDisplayType== WeekDisplayType::CurrentWeek && column== 5){
+      if (myDisplayType== WeekDisplayType::CurrentWeek && column==4){
           int proj = value->propertyValue<PropertyNames::Projection>().toInt();
 
-          ScoreState scoreState = qvariant_cast<ScoreState>(value->propertyValue<PropertyNames::ProjectionStatus>());
+          ScoreState scoreState = qvariant_cast<ScoreState>
+                  (value->propertyValue<PropertyNames::ProjectionStatus>());
           if (scoreState== ScoreState::Scored)
                   return QPixmap(":/icons/scored.png");
           if (scoreState== ScoreState::Sent)
@@ -154,9 +155,9 @@ protected:
                 return data->propertyValue<PropertyNames::Team_ID>();
             if( column ==3)
                 return tr(data->propertyValue<fantasybit::PlayerStatus_Status,PropertyNames::Player_Status>());
+//            if( column ==4)
+//                return tr(data->propertyValue<fantasybit::PlayerGameStatus,PropertyNames::Player_Game_Status>());
             if( column ==4)
-                return tr(data->propertyValue<fantasybit::PlayerGameStatus,PropertyNames::Player_Game_Status>());
-            if( column ==5)
                 return data->propertyValue<PropertyNames::Projection>();
             return QVariant();
 
@@ -193,7 +194,7 @@ protected:
 
     int getColumnCount() {
         switch (myDisplayType) {
-        case WeekDisplayType::CurrentWeek:  return 6;
+        case WeekDisplayType::CurrentWeek:  return 5;
         case WeekDisplayType::PreviousWeek: return 4;
         case WeekDisplayType::UpcomingWeek: return 4;
         default: return 0;
@@ -201,7 +202,7 @@ protected:
     }
 
     void setDataFromColumn(ViewModel* data, const QModelIndex & index,const QVariant & vvalue,int /*role*/){
-        if (index.column()==5)
+        if (index.column()==4)
             data->attachProperty<PropertyNames::Projection>(vvalue);
     }
 
@@ -210,12 +211,13 @@ private:
         QStringList  headers;
         switch (myDisplayType) {
         case WeekDisplayType::CurrentWeek:  headers << "Player Name" << "Pos"
-                                                    <<"Team"<<"Game Status"<< "Team Status"
+                                                    <<"Team"<<"Roster"
                                                    << "Projection"  ;
-            setEditable(5,true);
+            setEditable(4,true);
             break;
         case WeekDisplayType::PreviousWeek: headers << "Player Name" << "Pos"
-                                                    <<"Team" << "Result"; break;
+                                                    <<"Team" << "Result";
+            break;
         case WeekDisplayType::UpcomingWeek: headers << "Player Name" << "Pos"
                                                     <<"Team" << "Projection";
 

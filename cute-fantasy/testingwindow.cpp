@@ -34,6 +34,8 @@ void TestingWindow::initialize() {
         setDisabled(true);
         return;
     }
+    timer = new QTimer(this);
+
 
 /*
     qRegisterMetaType<GlobalState>("GlobalState");
@@ -41,6 +43,8 @@ void TestingWindow::initialize() {
     qRegisterMetaType<fantasybit::FantasyBitProj>("FantasyBitProj");
     qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
 */
+    QObject::connect(timer,SIGNAL(timeout()),this,SLOT(Timer()));
+
 
     QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(fantasybit::GlobalState)),
                      this,SLOT(GoLive(fantasybit::GlobalState)));
@@ -84,8 +88,10 @@ void TestingWindow::GoLive(GlobalState gs) {
     ui->season->setText(QString::number(gs.season()));
     ui->week->setText(QString::number(gs.week()));
     ui->globalstate->setText(QString::fromStdString(GlobalState::State_Name(gs.state())));
-    if ( gs.has_week() && gs.week() > 0 )
+    if ( gs.has_week() && gs.week() > 0 ) {
         OnNewWeek(gs.week());
+        emit BeOracle();
+    }
 }
 
 void TestingWindow::OnNewWeek(int week) {
@@ -379,6 +385,48 @@ void TestingWindow::on_claimname_clicked()
     emit ClaimFantasyName(ui->FantassyNameIn->text());
 }
 
+void TestingWindow::Timer() {
+
+    int count = 0;
+    while(true) {
+        auto txstr = RestfullService::getTx("http://192.96.159.216:4545");
+
+        SignedTransaction st{};
+        if ( !st.ParseFromString(txstr) )
+            break;
+
+
+        count++;
+
+        ui->staging_tx->addItem(QString::fromStdString(st.DebugString()));
+
+        st.id();
+        Node::addTxPool(st.id(), txstr);
+    }
+
+    if (count < 1) return;
+
+    DataTransition dt{};
+    dt.set_type(DataTransition_Type_HEARTBEAT);
+    dt.set_season(2015);
+    dt.set_week(realweek());
+
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::DATA);
+    trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
+    auto sn = dataagent::instance()->signTx(trans);
+
+    Block b = dataagent::instance()->makeNewBlockAsDataAgent(sn);
+
+    auto bs = b.SerializeAsString();
+    RestfullClient rest(QUrl("http://192.96.159.216:4545"));
+    rest.postRawData("block/"+QString::number(b.signedhead().head().num()),"xxx",bs.data(),bs.size());
+
+    ui->staging_tx->clear();
+
+}
+
 void TestingWindow::on_GetTx_clicked()
 {
     auto txstr = RestfullService::getTx("http://192.96.159.216:4545");
@@ -446,5 +494,61 @@ void TestingWindow::on_GetGameResult_clicked()
             ui->staging_data->addItem(QString::fromStdString(st));
          }
     }
+
+}
+
+#include <QtSql/QSql>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlDriver>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
+void TestingWindow::on_updatelb_clicked()
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+
+    db.setHostName("192.96.159.216");
+    db.setPort(3306);
+    db.setDatabaseName("dev_satoshifantasy");
+    db.setUserName("root");
+    db.setPassword("fantasyf00tball!");
+    bool success = true;
+    if (!db.open()) {
+         qDebug() << "Database error occurred :" << db.lastError().databaseText();
+         //LogIt(db.lastError().databaseText().toStdString());
+        return;
+    }
+
+    auto leaderBoardData = DataService::instance()->GetLeaderBoard();
+
+
+    for (auto pn : leaderBoardData) {
+        QSqlQuery insertQuery(db);
+        insertQuery.prepare("INSERT INTO fantasyteam(fantasyteam, fantasybits, stake) VALUES(:player_name,:bits,:bits)");
+        insertQuery.bindValue(":player_name",QString::fromStdString(pn->alias()));
+        insertQuery.bindValue(":bits",pn->getBalance());
+
+        if ( !insertQuery.exec() )
+        {
+            QSqlQuery updateQuery(db);
+            updateQuery.prepare("UPDATE fantasyteam set fantasybits= :bits, stake= :bits where fantasyteam= :player_name");
+            insertQuery.bindValue(":player_name",QString::fromStdString(pn->alias()));
+            insertQuery.bindValue(":bits",pn->getBalance());
+            if (!updateQuery.exec()) {
+                //LOG(lg,info) << " exec ret " << updateQuery.lastError().databaseText();
+                success= false;
+            }
+        }
+    }
+    db.close();
+
+}
+
+void TestingWindow::on_rundataagent_toggled(bool checked)
+{
+    if ( !checked )
+        timer->stop();
+    else
+        timer->start(5000);
 
 }

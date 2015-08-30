@@ -24,6 +24,7 @@ public:
 
     void initialize();
 
+    QTimer * timer;
 
 signals:
     void UseMyFantasyName(QString);
@@ -35,7 +36,7 @@ public slots:
     void OnNameStatus(fantasybit::MyFantasyName);
     void OnMyFantasyNames(vector<fantasybit::MyFantasyName> );
     void OnNewWeek(int);
-
+    void Timer();
 private slots:
     void on_beoracle_clicked();
 
@@ -58,6 +59,10 @@ private slots:
     void on_team_activated(const QString &arg1);
 
     void on_GetGameResult_clicked();
+
+    void on_updatelb_clicked();
+
+    void on_rundataagent_toggled(bool checked);
 
 private:
     MainLAPIWorker *  myCoreInstance;

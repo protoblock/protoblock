@@ -14,148 +14,354 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="9">
-     <widget class="QLabel" name="week">
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="5" colspan="2">
-     <widget class="QComboBox" name="player"/>
-    </item>
-    <item row="0" column="0">
-     <widget class="QComboBox" name="weeks"/>
-    </item>
-    <item row="0" column="7">
-     <widget class="QLabel" name="season">
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="8">
-     <widget class="QLabel" name="week_3">
-      <property name="text">
-       <string>Week</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="4">
-     <widget class="QComboBox" name="pos"/>
-    </item>
-    <item row="5" column="1" colspan="4">
-     <widget class="QComboBox" name="myfantasynames"/>
-    </item>
-    <item row="0" column="11">
-     <widget class="QLabel" name="globalstate">
-      <property name="text">
-       <string>No State</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="3" colspan="3">
-     <widget class="QComboBox" name="fantasynames"/>
-    </item>
-    <item row="4" column="1" colspan="2">
-     <widget class="QLineEdit" name="FantassyNameIn"/>
-    </item>
-    <item row="4" column="0">
-     <widget class="QPushButton" name="claimname">
-      <property name="text">
-       <string>Claim Name</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="6">
-     <widget class="QPushButton" name="Clone">
-      <property name="text">
-       <string>Clone</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QPushButton" name="beoracle">
-      <property name="text">
-       <string>Be Oracle</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="10">
-     <widget class="QLabel" name="Live">
-      <property name="text">
-       <string>Not Live</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QComboBox" name="gameID"/>
-    </item>
-    <item row="5" column="6" colspan="2">
-     <widget class="QPushButton" name="projectit">
-      <property name="text">
-       <string>Project</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0">
-     <widget class="QPushButton" name="GetGameResult">
-      <property name="text">
-       <string>Get Results</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="0" colspan="4">
-     <widget class="QListWidget" name="staging_data"/>
-    </item>
-    <item row="8" column="3">
-     <widget class="QPushButton" name="SendBlock">
-      <property name="text">
-       <string>SendBlock</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="5">
-     <widget class="QLineEdit" name="projection"/>
-    </item>
-    <item row="6" column="4">
-     <widget class="QPushButton" name="GetTx">
-      <property name="text">
-       <string>GetTx</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="4" colspan="4">
-     <widget class="QListWidget" name="staging_tx"/>
-    </item>
-    <item row="8" column="0">
-     <widget class="QComboBox" name="transitions"/>
-    </item>
-    <item row="6" column="10">
-     <widget class="QPushButton" name="result">
-      <property name="text">
-       <string>RESULT</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QComboBox" name="team"/>
-    </item>
-    <item row="0" column="1" colspan="2">
-     <widget class="QComboBox" name="game"/>
-    </item>
-    <item row="7" column="9" colspan="3">
-     <widget class="QListWidget" name="awards"/>
-    </item>
-    <item row="6" column="3">
-     <widget class="QCheckBox" name="allgames">
-      <property name="text">
-       <string> All games</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <widget class="QLabel" name="week">
+    <property name="geometry">
+     <rect>
+      <x>589</x>
+      <y>9</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="player">
+    <property name="geometry">
+     <rect>
+      <x>353</x>
+      <y>9</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="weeks">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>9</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="season">
+    <property name="geometry">
+     <rect>
+      <x>544</x>
+      <y>9</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="week_3">
+    <property name="geometry">
+     <rect>
+      <x>556</x>
+      <y>9</y>
+      <width>27</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Week</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="pos">
+    <property name="geometry">
+     <rect>
+      <x>272</x>
+      <y>9</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="myfantasynames">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>65</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="globalstate">
+    <property name="geometry">
+     <rect>
+      <x>718</x>
+      <y>9</y>
+      <width>42</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>No State</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="fantasynames">
+    <property name="geometry">
+     <rect>
+      <x>191</x>
+      <y>36</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="FantassyNameIn">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>36</y>
+      <width>95</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="claimname">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>35</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Claim Name</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Clone">
+    <property name="geometry">
+     <rect>
+      <x>463</x>
+      <y>35</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clone</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="beoracle">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>64</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Be Oracle</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Live">
+    <property name="geometry">
+     <rect>
+      <x>637</x>
+      <y>9</y>
+      <width>39</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Not Live</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="gameID">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>94</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="projectit">
+    <property name="geometry">
+     <rect>
+      <x>463</x>
+      <y>64</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Project</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="GetGameResult">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>93</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Get Results</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="staging_data">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>122</y>
+      <width>256</width>
+      <height>192</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="SendBlock">
+    <property name="geometry">
+     <rect>
+      <x>191</x>
+      <y>456</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SendBlock</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="projection">
+    <property name="geometry">
+     <rect>
+      <x>353</x>
+      <y>65</y>
+      <width>104</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="GetTx">
+    <property name="geometry">
+     <rect>
+      <x>272</x>
+      <y>93</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>GetTx</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="staging_tx">
+    <property name="geometry">
+     <rect>
+      <x>272</x>
+      <y>122</y>
+      <width>256</width>
+      <height>192</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="transitions">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>457</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="result">
+    <property name="geometry">
+     <rect>
+      <x>637</x>
+      <y>93</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RESULT</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="team">
+    <property name="geometry">
+     <rect>
+      <x>191</x>
+      <y>9</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="game">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>9</y>
+      <width>69</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="awards">
+    <property name="geometry">
+     <rect>
+      <x>589</x>
+      <y>122</y>
+      <width>172</width>
+      <height>328</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="allgames">
+    <property name="geometry">
+     <rect>
+      <x>191</x>
+      <y>96</y>
+      <width>71</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string> All games</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="updatelb">
+    <property name="geometry">
+     <rect>
+      <x>353</x>
+      <y>93</y>
+      <width>104</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>UpdateLeaderBoard</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="rundataagent">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>70</y>
+      <width>71</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RUN</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

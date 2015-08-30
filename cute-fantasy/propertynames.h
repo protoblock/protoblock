@@ -33,6 +33,7 @@ namespace PropertyNames {
     ENUMITEM(Player_Game_Status)
     ENUMITEM(Projection)
     ENUMITEM(ProjectionStatus)
+    ENUMITEM(KnownProjection)
     ENUMITEM(Result)
 
     template<typename Name>
