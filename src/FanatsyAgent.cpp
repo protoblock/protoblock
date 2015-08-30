@@ -214,12 +214,13 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 			m_priv = fc::ecc::private_key::generate();
 			client = std::make_unique<FantasyName>(name, (*m_priv).get_public_key().serialize());
 
-			Writer<Secret> writer{ GET_ROOT_DIR() + secretfilename, ios::app };
+            Writer<Secret2> writer{ GET_ROOT_DIR() + secretfilename, ios::app };
 			Secret2 secret{};
 			secret.set_private_key(getSecret());
 			secret.set_public_key(pubKeyStr());
 			secret.set_fantasy_name(name);
 			writer(secret);
+            m_secrets.push_back(secret);
             //LOG(lg, info) << "name available saving secret to file " << name;
             qInfo() << "name available saving secret to file " << name;
             ret = AVAIL;

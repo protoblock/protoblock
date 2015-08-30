@@ -86,7 +86,7 @@ Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; StatusMsg: "Installing VC Redist..."
+Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; StatusMsg: "Installing Microsoft Visual C++ 2010 x64 Redistributable..."
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall runascurrentuser skipifsilent 64bit; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 
 [Dirs]

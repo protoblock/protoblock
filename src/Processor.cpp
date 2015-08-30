@@ -171,6 +171,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 else {
                     for ( int i =0; i < rd.game_result().home_result_size(); i++) {
                         auto proj = mNameData.GetProjById(rd.game_result().home_result(i).playerid());
+                        if ( proj.size() == 0 )
+                            continue;
+
                         processResultProj(rd.mutable_game_result()->mutable_home_result(i)
                                           ,proj,blocksigner);
                     }
@@ -182,6 +185,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     //for (auto result : rd.game_result().away_result() ) {
                     for ( int i =0; i < rd.game_result().away_result_size(); i++) {
                         auto proj = mNameData.GetProjById(rd.game_result().away_result(i).playerid());
+                        if ( proj.size() == 0 )
+                            continue;
                         processResultProj(rd.mutable_game_result()->mutable_away_result(i),
                                           proj,blocksigner);
                         //result.mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
@@ -390,6 +395,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
         {
         case TransType::PROJECTION:
         {
+            //if ( )
             auto pt = t.GetExtension(ProjectionTrans::proj_trans);
             qDebug() << st.fantasy_name() << "new projection " << pt.DebugString();
             mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());

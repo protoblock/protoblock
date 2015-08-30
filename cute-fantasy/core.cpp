@@ -37,16 +37,19 @@ void messageHandler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &message)
 {
+
     static QMutex messageHandlerMutex ;
     QMutexLocker lock(&messageHandlerMutex);
     QString logFileName = Platform::settings()->getSetting(AppSettings::LogFilePath).toString();
-    static std::ofstream  logFile(logFileName.toStdString());
+    static std::ofstream  logFile(logFileName.toStdString(),std::ofstream::app);
     if (logFile)
         logFile << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
+
 #ifdef QT_DEBUG    
-    std::cerr  << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
+ //   std::cerr  << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
 
 #endif
 
+    /**/
 }
 
