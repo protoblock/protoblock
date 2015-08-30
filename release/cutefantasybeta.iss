@@ -80,6 +80,7 @@ Source: "translations\qt_sk.qm"; DestDir: "{app}\translations"; Flags: ignorever
 Source: "translations\qt_uk.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
 Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: sqldrivers\qsqlmysqld.dll; DestDir: {app}\sqldrivers; Flags: ignoreversion; 
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -87,7 +88,7 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 
 [Run]
 Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; StatusMsg: "Installing Microsoft Visual C++ 2010 x64 Redistributable..."
-Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall runascurrentuser skipifsilent 64bit; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
+Filename: {app}\{#MyAppExeName}; Flags: nowait postinstall skipifsilent 64bit RunAsOriginalUser; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; 
 
 [Dirs]
 Name: "{app}\bearer"
@@ -96,4 +97,5 @@ Name: "{app}\imageformats"
 Name: "{app}\platforms"
 Name: "{app}\storage"
 Name: "{app}\translations"
-
+Name: "{app}\sqldrivers"; 
+Name: "{app}\translations";
