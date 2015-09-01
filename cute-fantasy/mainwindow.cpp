@@ -80,9 +80,9 @@ void MainWindow::initialize() {
     //    QObject::connect(this,SIGNAL(GetLiveProjection(QString)),myCoreInstance,SLOT(SendCurrentProj(QString)));
     //    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
 
-    //PUT
-    QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
-                     myLAPIWorker,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
+    //PUT.
+    //QObject::connect(this,SIGNAL(NewProjection(vector<fantasybit::FantasyBitProj>)),
+    //                 myLAPIWorker,SLOT(OnProjTX(vector<fantasybit::FantasyBitProj>)));
 
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myLAPIWorker,SLOT(OnClaimName(QString)));
 

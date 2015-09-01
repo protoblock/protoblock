@@ -7,7 +7,8 @@ void Core::bootstrap(){
 
     qRegisterMetaType<fantasybit::GlobalState>("fantasybit::GlobalState");
     qRegisterMetaType<fantasybit::MyFantasyName>("fantasybit::MyFantasyName");
-    qRegisterMetaType<fantasybit::FantasyBitProj>("fantasybit::FantasyBitProj");
+    //qRegisterMetaType<fantasybit::FantasyBitProj>("fantasybit::FantasyBitProj");
+    qRegisterMetaType<vector<fantasybit::FantasyBitProj>>("vector<fantasybit::FantasyBitProj>");
     qRegisterMetaType<vector<fantasybit::MyFantasyName>>("vector<fantasybit::MyFantasyName>");
     qRegisterMetaType<pair<string,fantasybit::PlayerStatus>>("pair<string,fantasybit::PlayerStatus>");
     qRegisterMetaType<fantasybit::PlayerStatus>("fantasybit::PlayerStatus");

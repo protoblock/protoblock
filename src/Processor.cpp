@@ -393,9 +393,16 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 
         switch (t.type())
         {
+        case TransType::PROJECTION_BLOCK: {
+            auto ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
+            qDebug() << st.fantasy_name() << "new projection block" << ptb.DebugString();
+            for (auto pt : ptb.player_points() )
+                mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
+
+        }
+
         case TransType::PROJECTION:
         {
-            //if ( )
             auto pt = t.GetExtension(ProjectionTrans::proj_trans);
             qDebug() << st.fantasy_name() << "new projection " << pt.DebugString();
             mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());

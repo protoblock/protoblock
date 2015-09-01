@@ -289,23 +289,47 @@ void MainLAPIWorker::OnClaimName(QString name) {
     emit NameStatus(myCurrentName);
 }
 
-void MainLAPIWorker::OnProjTX(fantasybit::FantasyBitProj inp) {
+void MainLAPIWorker::OnProjTX(vector<fantasybit::FantasyBitProj> vinp) {
     if ( !amlive ) return;
 
     if ( !agent.HaveClient() ) return;
 
-    ProjectionTrans pj{};
-    pj.set_playerid(inp.playerid());
-    pj.set_points(inp.proj());
-
-    auto gs = data.GetGlobalState();
-    pj.set_week(gs.week());
-    pj.set_season(gs.season());
-
     Transaction trans{};
-    trans.set_version(Commissioner::TRANS_VERSION);
-    trans.set_type(TransType::PROJECTION);
-    trans.MutableExtension(ProjectionTrans::proj_trans)->CopyFrom(pj);
+
+    if ( vinp.size() == 0) return;
+    if ( vinp.size() == 1) {
+        FantasyBitProj &inp = vinp[0];
+        ProjectionTrans pj{};
+        pj.set_playerid(inp.playerid());
+        pj.set_points(inp.proj());
+
+        auto gs = data.GetGlobalState();
+        pj.set_week(gs.week());
+        pj.set_season(gs.season());
+
+        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_type(TransType::PROJECTION);
+        trans.MutableExtension(ProjectionTrans::proj_trans)->CopyFrom(pj);
+    }
+    else {
+        ProjectionTransBlock pj{};
+
+        auto gs = data.GetGlobalState();
+        pj.set_week(gs.week());
+        pj.set_season(gs.season());
+
+        for (auto fbj : vinp ) {
+            PlayerPoints pp;
+            pp.set_playerid(fbj.playerid());
+            pp.set_points(fbj.proj());
+            pj.add_player_points()->CopyFrom(pp);
+        }
+
+        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_type(TransType::PROJECTION_BLOCK);
+        trans.MutableExtension(ProjectionTransBlock::proj_trans_block)->CopyFrom(pj);
+    }
+
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
     DoPostTx(sn);

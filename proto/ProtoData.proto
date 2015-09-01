@@ -89,6 +89,7 @@ enum TransType {
 	PROJECTION = 1;
 	RESULT = 2;
 	DATA = 3;	
+        PROJECTION_BLOCK = 4;
 }
 
 message Transaction {
@@ -189,6 +190,21 @@ message ProjectionTrans {
     optional uint32 week = 20;
     optional string playerid = 30;
     optional int32 points = 40;
+}
+
+message PlayerPoints {
+    optional string playerid = 30;
+    optional int32 points = 40;
+}
+
+message ProjectionTransBlock {
+    extend Transaction {
+        optional ProjectionTransBlock proj_trans_block = 211;
+    }
+
+    optional uint32 season = 10;
+    optional uint32 week = 20;
+    repeated PlayerPoints player_points = 30;
 }
 
 

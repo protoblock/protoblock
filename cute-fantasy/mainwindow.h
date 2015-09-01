@@ -38,7 +38,7 @@ signals:
     //void SubscribeScheduleData();
     //void SubscribeTeamRoster();
     //void SubscribePlayerGameStatus();
-    void NewProjection(fantasybit::FantasyBitProj);
+    //void NewProjection(vector<fantasybit::FantasyBitProj>);
     void ClaimFantasyName(QString);
 
 public slots:

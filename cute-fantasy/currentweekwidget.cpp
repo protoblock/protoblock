@@ -13,8 +13,8 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     MainLAPIWorker * theLAPIWorker = Core::resolveByName<MainLAPIWorker>("coreapi");
 
     if (theLAPIWorker!=NULL)
-        QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
-                         theLAPIWorker,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
+        QObject::connect(this,SIGNAL(NewProjection(vector<fantasybit::FantasyBitProj>)),
+                         theLAPIWorker,SLOT(OnProjTX(vector<fantasybit::FantasyBitProj>)));
 
     //set game filter
     myGameModelFilter.setGameStatusFilter(GamesFilter::OpenGames);
@@ -150,7 +150,9 @@ void CurrentWeekWidget::updateCurrentFantasyPlayerProjections(){
 }
 
 void CurrentWeekWidget::on_mySendProjectionButton_clicked() {
+    std::unordered_map<string,vector<FantasyBitProj>> projbygame{};
     if (myCurrentWeek == myGlobalState.week()){
+        //ProjectionTransBlock  ptb{};
         for( auto  playerId : myProjectionsModel.keys() ){
             ViewModel * item = myProjectionsModel.itemByKey(playerId);
             if (item == NULL)
@@ -169,15 +171,24 @@ void CurrentWeekWidget::on_mySendProjectionButton_clicked() {
             if ( knownprojection == projection)
                 continue;
 
-            FantasyBitProj fProj;
-            fProj.set_name(myFantasyName);
-            fProj.set_proj(projection);
-            fProj.set_playerid(playerId.toStdString());
-            item->attachProperty<PropertyNames::ProjectionStatus>(QVariant::fromValue(ScoreState::Sent));
-            emit NewProjection(fProj);
+            auto gameid = item->propertyValue<PropertyNames::Game_ID>().toString().toStdString();
 
+
+            vector<FantasyBitProj> &vproj = projbygame[gameid];
+
+            FantasyBitProj fproj;
+            fproj.set_name(myFantasyName);
+            fproj.set_proj(projection);
+            fproj.set_playerid(playerId.toStdString());
+            vproj.push_back(fproj);
+
+            item->attachProperty<PropertyNames::ProjectionStatus>(QVariant::fromValue(ScoreState::Sent));
         }
     }
+
+    for ( auto &vg : projbygame)
+        emit NewProjection(vg.second);
+
 }
 
 void CurrentWeekWidget::onGameOver(string gameId){
