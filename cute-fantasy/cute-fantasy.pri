@@ -41,7 +41,8 @@ DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
     $$PWD/../proto/StaticData.proto \
     $$PWD/../proto/StatusData.proto \
-    $$PWD/../proto/NameData.proto
+    $$PWD/../proto/NameData.proto \
+    $$PWD/../proto/ApiData.proto
 
 HEADERS += \
     $$PWD/../src/Commissioner.h \

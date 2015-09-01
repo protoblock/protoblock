@@ -9,7 +9,7 @@ QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 #comment this line to generate
-#DEFINES += DATAAGENTGUI
+DEFINES += DATAAGENTGUI
 #DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
 
@@ -57,3 +57,9 @@ RC_FILE = cute-fantasy.rc
 include(./boost-includes.pri)
 include (./cute-fantasy.pri)
 include (./openssl-includes.pri)
+
+HEADERS += \
+    ../generated/ApiData.pb.h
+
+SOURCES += \
+    ../generated/ApiData.pb.cc

@@ -440,7 +440,7 @@ void TestingWindow::Timer() {
 
     auto bs = b.SerializeAsString();
     RestfullClient rest(QUrl("http://192.96.159.216:4545"));
-    rest.postRawData("block/"+QString::number(b.signedhead().head().num()),"xxx",bs.data(),bs.size());
+    rest.postRawData("block/"+QString::number(b.signedhead().head().num()),"xxx",bs.data(),bs.size(),true);
 
     ui->staging_tx->clear();
 
@@ -590,7 +590,7 @@ void TestingWindow::on_SendBlock_clicked() {
 
     RestfullClient rest(QUrl("http://192.96.159.216:4545"));
     //rest.postRawData("block/"+QString::number(b.signedhead().head().num()),"xxx",mStagedBlock.data(),mStagedBlock.size());
-    rest.postRawData("block/"+QString::number(mStagedBlockNum),"xxx",mStagedBlock.data(),mStagedBlock.size());
+    rest.postRawData("block/"+QString::number(mStagedBlockNum),"xxx",mStagedBlock.data(),mStagedBlock.size(),true);
 
     ui->rundataagent->setEnabled(true);
     ui->StageBlock->setEnabled(true);

@@ -21,7 +21,8 @@
 #include "Processor.h"
 #include "platform.h"
 #include "globals.h"
-
+#include "ApiData.pb.h"
+#include "RestFullCall.h"
 
 namespace fantasybit
 {
@@ -200,6 +201,44 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+                Distribution dist{};
+                dist.set_gameid(rd.game_result().gameid());
+                auto gs = mData.GetGlobalState();
+                dist.set_season(gs.season());
+                dist.set_week(gs.week());
+
+                auto gi = mData.GetGameInfo(dist.gameid());
+                dist.set_teamid(gi.home());
+                for ( auto res : rd.game_result().home_result()) {
+                    dist.set_playerid(res.playerid());
+                    dist.set_result(res.result());
+
+                    for ( auto fba : res.fantaybitaward()) {
+                        dist.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
+                        dist.set_proj(fba.proj());
+                        dist.set_award(fba.award());
+                        emit new_dataDistribution(dist);
+
+                        auto ds = dist.SerializeAsString();
+                        RestfullClient rest(QUrl("http://192.96.159.216:4545"));
+                        rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()),true);
+
+                    }
+                }
+
+                dist.set_teamid(gi.away());
+                for ( auto res : rd.game_result().away_result()) {
+                    dist.set_playerid(res.playerid());
+                    dist.set_result(res.result());
+
+                    for ( auto fba : res.fantaybitaward()) {
+                        dist.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
+                        dist.set_proj(fba.proj());
+                        dist.set_award(fba.award());
+                        emit new_dataDistribution(dist);
+                    }
+                }
+
                 break;
             }
             case Data_Type_SCHEDULE: {

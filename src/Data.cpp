@@ -73,6 +73,29 @@ void NFLStateData::init() {
         delete it;
     }
 
+    {
+        for (int i=1; i<=17;i++) {
+            string key = "scheduleweek:" + to_string(i);
+            string temp;
+            if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+                qWarning() << "cant find schedule " << key.c_str();
+                break;
+            }
+            WeeklySchedule ws;
+            ws.ParseFromString(temp);
+
+            for ( auto game : ws.games()) {
+                MyGameInfo[game.id()] = game;
+            }
+        }
+
+    }
+
+}
+
+GameInfo NFLStateData::GetGameInfo(string gameid) {
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+    return MyGameInfo[gameid];
 }
 
 void NFLStateData::AddNewPlayer(std::string playerid, const PlayerBase &pb) {
@@ -100,8 +123,14 @@ void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
     GameStatus gs{};
     gs.set_status(GameStatus::SCHEDULED);
 
-    for ( auto gi : ws.games() )
-        UpdateGameStatus(gi.id(),gs);
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+
+        for ( auto game : ws.games()) {
+            MyGameInfo[game.id()] = game;
+            UpdateGameStatus(game.id(),gs);
+        }
+    }
 
 }
 
@@ -412,6 +441,8 @@ void NFLStateData::OnGameStart(const std::string &gameid, const GameStatus &gs) 
     auto mygs = gs;
     mygs.set_status(GameStatus::INGAME);
     UpdateGameStatus(gameid,gs);
+
+    //TeamLocked[]
     if ( amlive )
         emit GameStart(gameid);
 }

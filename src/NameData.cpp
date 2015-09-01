@@ -13,6 +13,8 @@
 #include "FantasyName.h"
 #include "leveldb/slice.h"
 #include "Commissioner.h"
+#include "ApiData.pb.h"
+#include "RestFullCall.h"
 
 using namespace std;
 using namespace fantasybit;
@@ -82,8 +84,9 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
 
     qDebug() << fn.DebugString();
 
-    Commissioner::AddName(name,pubkey);
-    OnFantasyName(name);
+    auto fnp = Commissioner::AddName(name,pubkey);
+    if ( fnp  != nullptr)
+        OnFantasyName(fnp);
 }
 
 void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
@@ -170,9 +173,23 @@ void FantasyNameData::OnProjection(const std::string &name, const std::string &p
     emit ProjectionLive(fpj);
 }
 
-void FantasyNameData::OnFantasyName(std::string &name) {
+void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
     //if ( !amlive )
     //    return;
+
+    auto name = fn->alias();
+
+#ifdef DATAAGENTGUI
+    FantasyNameHash fnh{};
+    fnh.set_name(name);
+    fnh.set_hash(fn->hash());
+    emit new_dataFantasyNameHash(fnh);
+
+    auto fnhstr = fnh.SerializeAsString();
+    //RestfullClient rest(QUrl("http://192.96.159.216:4545"));
+    //rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()),true);
+
+#endif
 
     if ( mSubscribed.find(name) != end(mSubscribed))
         emit FantasyNameFound(name);

@@ -101,7 +101,7 @@ public:
 
     void postProtoMessageData(const QString & route,const QString & contentType,const google::protobuf::Message & protoMessage){
         std::string data = protoMessage.SerializeAsString().data();
-        return postRawData(route,contentType,data.data(),data.size());
+        return postRawData(route,contentType,data.data(),data.size(),true);
     }
 
     void postRawData(const QString & route,const QString & contentType,const QByteArray & postData){
@@ -115,13 +115,20 @@ public:
         processReplyData();
     }
 
-    void postRawData(const QString & route,const QString & contentType,const char * data,int size){
+    void postRawData(const QString & route,const QString & contentType,const char * data,int size, bool wait){
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
         PostDataDecorator decorator(&myNetworkManager,&request);
         myCurrentNetworkReply = decorator.postBinaryData(contentType,data,size);
-        waitForReply();
+        if  ( wait )
+            waitForReply();
+        else {
+           if ( myCurrentNetworkReply->isFinished()) {
+               myLastRepliedData = myCurrentNetworkReply->readAll();
+               qDebug("response : %s",myLastRepliedData.data());
+           }
+        }
         myCurrentNetworkReply->deleteLater();
         processReplyData();
     }
@@ -218,6 +225,26 @@ private:
        * @brief waitForReply : loop while waiting for asynchronus network reply to be available.
        * or a network error to happen.
        */
+    void setupForReply(){
+        QEventLoop loop;
+        loop.moveToThread(this->thread());
+        myLastRepliedData.clear();
+        connect(myCurrentNetworkReply,SIGNAL(finished()),this, SLOT(finishedSlot()));
+
+        //when done reading quit the loop
+        connect(this, SIGNAL(doneReading()),&loop, SLOT(quit()));
+
+        //when network error, report it.
+        connect(myCurrentNetworkReply, SIGNAL(error(QNetworkReply::NetworkError)),
+                this, SLOT(networkErrorSlot(QNetworkReply::NetworkError)));
+
+        //when ssl error, report it.
+        connect(myCurrentNetworkReply, SIGNAL(sslErrors(QList<QSslError>)),
+                this, SLOT(sslErrorsSlot(QList<QSslError>)));
+
+        loop.exec();
+    }
+
     void waitForReply(){
         QEventLoop loop;
         loop.moveToThread(this->thread());
@@ -235,9 +262,8 @@ private:
         connect(myCurrentNetworkReply, SIGNAL(sslErrors(QList<QSslError>)),
                 this, SLOT(sslErrorsSlot(QList<QSslError>)));
 
-        loop.exec();        
+        loop.exec();
     }
-
 
     QNetworkAccessManager  myNetworkManager;
     /**
