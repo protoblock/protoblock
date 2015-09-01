@@ -4,17 +4,18 @@
 #
 #-------------------------------------------------
 
-QT       += core sql gui network
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 #comment this line to generate
-#DEFINES += DATAAGENTGUI
+DEFINES += DATAAGENTGUI
 #DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
 
 contains(DEFINES, DATAAGENTGUI){
 TARGET = cute-fantasy-agent
+QT += sql
 }
 !contains(DEFINES, DATAAGENTGUI){
 TARGET = tradingfootball

@@ -44,6 +44,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
     //data to data signals
     QObject::connect(&processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
+    QObject::connect(&processor,SIGNAL(WeekOver(int)),&namedata,SLOT(OnWeekOver(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),&data,SLOT(OnWeekStart(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
@@ -353,7 +354,7 @@ void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
 
 
 
-/*
+/*ys
 //ToDo: convert names with a status OnLive()
 myfantasynames = agent.getMyNamesStatus();
 for(auto p : myfantasynames) {

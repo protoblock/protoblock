@@ -530,12 +530,14 @@ void TestingWindow::on_updatelb_clicked()
 
         if ( !insertQuery.exec() )
         {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+
             QSqlQuery updateQuery(db);
             updateQuery.prepare("UPDATE fantasyteam set fantasybits= :bits, stake= :bits where fantasyteam= :player_name");
-            insertQuery.bindValue(":player_name",QString::fromStdString(pn->alias()));
-            insertQuery.bindValue(":bits",pn->getBalance());
+            updateQuery.bindValue(":player_name",QString::fromStdString(pn->alias()));
+            updateQuery.bindValue(":bits",pn->getBalance());
             if (!updateQuery.exec()) {
-                //LOG(lg,info) << " exec ret " << updateQuery.lastError().databaseText();
+                qDebug() << " exec ret " << updateQuery.lastError().databaseText();
                 success= false;
             }
         }
