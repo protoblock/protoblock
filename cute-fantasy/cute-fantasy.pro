@@ -28,17 +28,14 @@ INCLUDEPATH += ./../include
 INCLUDEPATH += ./../generated
 INCLUDEPATH += ./../src
 
-CONFIG(debug, debug|release) {
-    LIBS += -lfc_debug
+CONFIG(debug, debug|release) {    
     DESTDIR = ./../debugbin
     MOC_DIR = ./debug
     OBJECTS_DIR = ./debug
     contains(DEFINES, DATAAGENTGUI){ DESTDIR = ./../debugbinagent }
 }
 
-CONFIG(release, debug|release) {
-    LIBS += -L./../lib
-    LIBS += -lfc_release
+CONFIG(release, debug|release) {    
     DESTDIR = ./../bin
     MOC_DIR = ./release
     OBJECTS_DIR = ./release
@@ -47,12 +44,43 @@ CONFIG(release, debug|release) {
 UI_DIR = ./tmp/ui
 RCC_DIR = ./generatedfiles
 
-LIBS += -L./../lib
-LIBS += -lLevelDB  \
-        -llibprotobuf
 
-RC_FILE = cute-fantasy.rc
+unix {
+    macx {
+      LIBS+= -L./../libosx64
+    } else {
 
-include(./boost-includes.pri)
+    }
+}
+
+win32 {
+    contains(QMAKE_TARGET.arch, x86_64) {
+        # x86_64 build
+        message("x86_64 build")
+        LIBS+= -L./../libwin64
+        RC_FILE = cute-fantasy.rc
+    } else {
+        # x86 build
+
+    }
+}
+
+
+CONFIG(debug, debug|release) {
+   LIBS+= -llibprotobufd \
+          -lleveldbd \
+          -llibeay32d \
+          -lssleay32d \
+          -lfcd
+
+}
+CONFIG(release, debug|release) {
+   LIBS+= -llibprotobuf \
+          -lleveldb \
+          -llibeay32 \
+          -lssleay32 \
+          -lfc
+}
+
+include (./boost-includes.pri)
 include (./cute-fantasy.pri)
-include (./openssl-includes.pri)

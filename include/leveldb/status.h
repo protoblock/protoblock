@@ -54,11 +54,18 @@ class Status {
   // Returns true iff the status indicates a NotFound error.
   bool IsNotFound() const { return code() == kNotFound; }
 
+  // Returns true iff the status indicates a Corruption error.
+  bool IsCorruption() const { return code() == kCorruption; }
+
+  // Returns true iff the status indicates an IOError.
+  bool IsIOError() const { return code() == kIOError; }
+
   // Return a string representation of this status suitable for printing.
   // Returns the string "OK" for success.
   std::string ToString() const;
 
- private:
+  // b14 hack: expose internal code to allow error code translation
+ public:
   // OK status has a NULL state_.  Otherwise, state_ is a new[] array
   // of the following form:
   //    state_[0..3] == length of message
@@ -95,6 +102,6 @@ inline void Status::operator=(const Status& s) {
   }
 }
 
-}
+}  // namespace leveldb
 
 #endif  // STORAGE_LEVELDB_INCLUDE_STATUS_H_

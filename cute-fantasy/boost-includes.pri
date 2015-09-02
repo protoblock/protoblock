@@ -5,6 +5,25 @@
 #    BOOST_DIR path.
 BOOST_DIR = C:\Users\moez\Documents\GitHub\paperfootball\boost
 #BOOST_DIR = C:\Users\User\Documents\work\paperfootball\boost
-LIBS += -L$${BOOST_DIR}/lib64-msvc-12.0
-LIBS += -lboost_log-vc120-1_55
-INCLUDEPATH += $${BOOST_DIR}
+
+
+unix {
+    macx {
+
+    } else {
+
+    }
+}
+win32 {
+
+    contains(QMAKE_TARGET.arch, x86_64) {
+        LIBS += -L$${BOOST_DIR}/lib64-msvc-12.0
+        LIBS += -lboost_log-vc120-1_55
+        INCLUDEPATH += $${BOOST_DIR}
+    } else {
+
+    }
+}
+
+
+

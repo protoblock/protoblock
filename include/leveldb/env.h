@@ -13,9 +13,10 @@
 #ifndef STORAGE_LEVELDB_INCLUDE_ENV_H_
 #define STORAGE_LEVELDB_INCLUDE_ENV_H_
 
-#include <cstdarg>
 #include <string>
 #include <vector>
+#include <thread>
+#include <stdarg.h>
 #include <stdint.h>
 #include "leveldb/status.h"
 
@@ -39,6 +40,13 @@ class Env {
   //
   // The result of Default() belongs to leveldb and must never be deleted.
   static Env* Default();
+
+  // use this call to deallocate memory when you know you no longer need it
+  // totally not thread safe but needed to prevent memory analyzers from crying
+  static void UnsafeDeallocate();
+
+  // needed if you want to set affinity or adjust thread priority
+  virtual std::thread::native_handle_type GetBackgroundThreadHandle() = 0;
 
   // Create a brand new sequentially-readable file with the specified name.
   // On success, stores a pointer to the new file in *result and returns OK.
@@ -125,10 +133,6 @@ class Env {
       void (*function)(void* arg),
       void* arg) = 0;
 
-  // Start a new thread, invoking "function(arg)" within the new thread.
-  // When "function(arg)" returns, the thread will be destroyed.
-  virtual void StartThread(void (*function)(void* arg), void* arg) = 0;
-
   // *path is set to a temporary directory that can be used for testing. It may
   // or many not have just been created. The directory may or may not differ
   // between runs of the same process, but subsequent calls will return the
@@ -142,7 +146,7 @@ class Env {
   // useful for computing deltas of time.
   virtual uint64_t NowMicros() = 0;
 
-  // Sleep/delay the thread for the perscribed number of micro-seconds.
+  // Sleep/delay the thread for the prescribed number of micro-seconds.
   virtual void SleepForMicroseconds(int micros) = 0;
 
  private:
@@ -160,6 +164,8 @@ class SequentialFile {
   // Read up to "n" bytes from the file.  "scratch[0..n-1]" may be
   // written by this routine.  Sets "*result" to the data that was
   // read (including if fewer than "n" bytes were successfully read).
+  // May set "*result" to point at data in "scratch[0..n-1]", so
+  // "scratch[0..n-1]" must be live when "*result" is used.
   // If an error was encountered, returns a non-OK status.
   //
   // REQUIRES: External synchronization
@@ -173,6 +179,11 @@ class SequentialFile {
   //
   // REQUIRES: External synchronization
   virtual Status Skip(uint64_t n) = 0;
+
+ private:
+  // No copying allowed
+  SequentialFile(const SequentialFile&);
+  void operator=(const SequentialFile&);
 };
 
 // A file abstraction for randomly reading the contents of a file.
@@ -184,12 +195,19 @@ class RandomAccessFile {
   // Read up to "n" bytes from the file starting at "offset".
   // "scratch[0..n-1]" may be written by this routine.  Sets "*result"
   // to the data that was read (including if fewer than "n" bytes were
-  // successfully read).  If an error was encountered, returns a
-  // non-OK status.
+  // successfully read).  May set "*result" to point at data in
+  // "scratch[0..n-1]", so "scratch[0..n-1]" must be live when
+  // "*result" is used.  If an error was encountered, returns a non-OK
+  // status.
   //
   // Safe for concurrent use by multiple threads.
   virtual Status Read(uint64_t offset, size_t n, Slice* result,
                       char* scratch) const = 0;
+
+ private:
+  // No copying allowed
+  RandomAccessFile(const RandomAccessFile&);
+  void operator=(const RandomAccessFile&);
 };
 
 // A file abstraction for sequential writing.  The implementation
@@ -258,12 +276,16 @@ extern Status ReadFileToString(Env* env, const std::string& fname,
 // functionality of another Env.
 class EnvWrapper : public Env {
  public:
-  // Initialize an EnvWrapper that delegates all calls to *target
-  explicit EnvWrapper(Env* target) : target_(target) { }
+  // Initialize an EnvWrapper that delegates all calls to *t
+  explicit EnvWrapper(Env* t) : target_(t) { }
   virtual ~EnvWrapper();
 
   // Return the target to which this Env forwards all calls
   Env* target() const { return target_; }
+
+  std::thread::native_handle_type GetBackgroundThreadHandle() {
+    return target_->GetBackgroundThreadHandle();
+  }
 
   // The following text is boilerplate that forwards all methods to target()
   Status NewSequentialFile(const std::string& f, SequentialFile** r) {
@@ -295,9 +317,7 @@ class EnvWrapper : public Env {
   void Schedule(void (*f)(void*), void* a) {
     return target_->Schedule(f, a);
   }
-  void StartThread(void (*f)(void*), void* a) {
-    return target_->StartThread(f, a);
-  }
+ 
   virtual Status GetTestDirectory(std::string* path) {
     return target_->GetTestDirectory(path);
   }
@@ -314,6 +334,6 @@ class EnvWrapper : public Env {
   Env* target_;
 };
 
-}
+}  // namespace leveldb
 
 #endif  // STORAGE_LEVELDB_INCLUDE_ENV_H_
