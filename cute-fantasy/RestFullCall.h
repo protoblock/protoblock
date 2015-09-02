@@ -167,7 +167,7 @@ public:
         return true;
     }
 
-    void postStringData(const QString & route,const QString & contentType,const QString & text,
+    bool postStringData(const QString & route,const QString & contentType,const QString & text,
                         RestfullCallTextEncoding encoding){
         QNetworkRequest request;
         restNetworkStatus();
@@ -198,7 +198,7 @@ public:
             request.setRawHeader(headerKey.toUtf8(),headersMap.value(headerKey).toUtf8());
         }
 
-        if (myNetworkManager->networkAccessible()==QNetworkAccessManager::Accessible){
+        if (myNetworkManager.networkAccessible()==QNetworkAccessManager::Accessible){
             myCurrentNetworkReply = myNetworkManager.get(request);
             waitForReply();
             return true;
