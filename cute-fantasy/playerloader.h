@@ -371,7 +371,6 @@ public:
         RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/2015"));
 
         for ( auto game : games) {
-            QThread::currentThread()->msleep(1000);
 
             auto route = makeroute(week,game.home(),game.away());
             QMap<QString,QString>  headers;

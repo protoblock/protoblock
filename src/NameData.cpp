@@ -200,6 +200,7 @@ void FantasyNameData::OnWeekOver(int in) {
 }
 
 void FantasyNameData::OnWeekStart(int in) {
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
     week = in;
 }
 

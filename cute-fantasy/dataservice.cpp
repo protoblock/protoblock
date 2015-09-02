@@ -32,7 +32,8 @@ std::vector<std::shared_ptr<fantasybit::FantasyName>> DataService::GetLeaderBoar
 
     std::sort(v.begin(), v.end(),
         [](shared_ptr<FantasyName> f1, shared_ptr<FantasyName> f2){
-            return f2->getBalance() < f1->getBalance();
+            return (f2->getBalance() == f1->getBalance()) ? (f1->hash() < f2->hash() ) :
+                                                       (f2->getBalance() < f1->getBalance());
         });
 
     return v;

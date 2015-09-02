@@ -115,7 +115,7 @@ public slots:
     void OnFoundName(string);
     void OnProjLive(fantasybit::FantasyBitProj);
     void OnClaimName(QString);
-    void OnProjTX(fantasybit::FantasyBitProj);
+    void OnProjTX(vector<fantasybit::FantasyBitProj>vinp);
 
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);

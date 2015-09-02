@@ -64,6 +64,8 @@ private slots:
 
     void on_rundataagent_toggled(bool checked);
 
+    void on_StageBlock_clicked();
+
 private:
     MainLAPIWorker *  myCoreInstance;
     std::unordered_map<string,GameInfo> mGames;
@@ -80,6 +82,8 @@ private:
     std::unordered_map<string,PlayerResult>
     mResult;
 
+    std::string mStagedBlock;
+    int mStagedBlockNum;
     int realweek() ;
 
     Ui::TestingWindow *ui;

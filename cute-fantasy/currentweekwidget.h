@@ -27,7 +27,7 @@ public:
 
 
 signals:
-    void NewProjection(fantasybit::FantasyBitProj);
+    void NewProjection(vector<fantasybit::FantasyBitProj>);
 
 public slots:
     void onUserSwitchFantasyName(const std::string fantasyPlayerId);

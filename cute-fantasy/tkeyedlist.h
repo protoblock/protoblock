@@ -95,6 +95,11 @@ public:
       myEditableColumnsState[column] = on;
   }
 
+  void setBold(int column,bool on) {
+      myBoldColumnsState[column] = on;
+  }
+
+
   int   rowCount(const QModelIndex & parent = QModelIndex() ) const {
     Q_UNUSED(parent);
     return myList.size();
@@ -146,6 +151,15 @@ public:
     if (role == Qt::EditRole) {
       X  * value = myList.at(index.row());
       return me->getColumnDisplayData(index.column(),value);
+    }
+
+    if ( role == Qt::FontRole ) {
+       if ( myBoldColumnsState.value(index.column(),false) )
+       {
+           QFont boldFont;
+           boldFont.setBold(true);
+           return boldFont;
+       }
     }
 
     return QVariant();
@@ -362,6 +376,8 @@ private:
   QStringList myHorizontalHeaders;
   bool myIsAutoDeleteModelElements;
   QMap<int,bool> myEditableColumnsState;
+  QMap<int,bool> myBoldColumnsState;
+
 }; 
 
 #endif // TKEYEDLISTMODEL_H

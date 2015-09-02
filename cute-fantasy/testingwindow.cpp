@@ -8,6 +8,7 @@
 #include "RestFullCall.h"
 #include "Commissioner.h"
 #include <unordered_map>
+#include <leveldb/db.h>
 
 using namespace std;
 using namespace fantasybit;
@@ -270,8 +271,22 @@ void TestingWindow::on_player_activated(const QString &arg1)
     }
 }
 
-void TestingWindow::on_SendBlock_clicked()
+
+void TestingWindow::on_StageBlock_clicked()
 {
+        if ( !ui->StageBlock->isEnabled() )
+            return;
+
+        if ( ui->rundataagent->isChecked() ) {
+            timer->stop();
+            ui->rundataagent->setChecked(false);
+            return;
+        }
+        else {
+            ui->rundataagent->setEnabled(false);
+            ui->StageBlock->setEnabled(false);
+        }
+
         DataTransition dt{};
         dt.set_type(static_cast<DataTransition_Type>(ui->transitions->currentData().toInt()));
         dt.set_season(2015);
@@ -316,9 +331,13 @@ void TestingWindow::on_SendBlock_clicked()
         //RestfullService::sendBlock("http://192.96.159.216:4545","block",b.signedhead().head().num(),
         //                           "",b.SerializeAsString());
 
-        auto bs = b.SerializeAsString();
-        RestfullClient rest(QUrl("http://192.96.159.216:4545"));
-        rest.postRawData("block/"+QString::number(b.signedhead().head().num()),"xxx",bs.data(),bs.size());
+        mStagedBlockNum = b.signedhead().head().num();
+        mStagedBlock = b.SerializeAsString();
+        leveldb::Slice snum((char*)&mStagedBlockNum, sizeof(int));
+        Node::blockchain->Put(leveldb::WriteOptions(), snum, mStagedBlock);
+
+        ui->SendBlock->setEnabled(true);
+
 
         /*
         auto prev = Node::getlastLocalBlock().signedhead().head();
@@ -530,12 +549,14 @@ void TestingWindow::on_updatelb_clicked()
 
         if ( !insertQuery.exec() )
         {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+
             QSqlQuery updateQuery(db);
             updateQuery.prepare("UPDATE fantasyteam set fantasybits= :bits, stake= :bits where fantasyteam= :player_name");
-            insertQuery.bindValue(":player_name",QString::fromStdString(pn->alias()));
-            insertQuery.bindValue(":bits",pn->getBalance());
+            updateQuery.bindValue(":player_name",QString::fromStdString(pn->alias()));
+            updateQuery.bindValue(":bits",pn->getBalance());
             if (!updateQuery.exec()) {
-                //LOG(lg,info) << " exec ret " << updateQuery.lastError().databaseText();
+                qDebug() << " exec ret " << updateQuery.lastError().databaseText();
                 success= false;
             }
         }
@@ -550,5 +571,28 @@ void TestingWindow::on_rundataagent_toggled(bool checked)
         timer->stop();
     else
         timer->start(5000);
+
+}
+
+void TestingWindow::on_SendBlock_clicked() {
+    if (!ui->SendBlock->isEnabled())
+        return;
+    if (ui->rundataagent->isEnabled())
+        return;
+
+    if ( ui->rundataagent->isChecked())
+        return;
+
+    if ( timer->isActive() )
+        return;
+
+    ui->SendBlock->setEnabled(false);
+
+    RestfullClient rest(QUrl("http://192.96.159.216:4545"));
+    //rest.postRawData("block/"+QString::number(b.signedhead().head().num()),"xxx",mStagedBlock.data(),mStagedBlock.size());
+    rest.postRawData("block/"+QString::number(mStagedBlockNum),"xxx",mStagedBlock.data(),mStagedBlock.size());
+
+    ui->rundataagent->setEnabled(true);
+    ui->StageBlock->setEnabled(true);
 
 }

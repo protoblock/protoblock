@@ -80,9 +80,9 @@ void MainWindow::initialize() {
     //    QObject::connect(this,SIGNAL(GetLiveProjection(QString)),myCoreInstance,SLOT(SendCurrentProj(QString)));
     //    QObject::connect(this,SIGNAL(RefershLive(int)),myCoreInstance,SLOT(SendLiveSnap(int)));
 
-    //PUT
-    QObject::connect(this,SIGNAL(NewProjection(fantasybit::FantasyBitProj)),
-                     myLAPIWorker,SLOT(OnProjTX(fantasybit::FantasyBitProj)));
+    //PUT.
+    //QObject::connect(this,SIGNAL(NewProjection(vector<fantasybit::FantasyBitProj>)),
+    //                 myLAPIWorker,SLOT(OnProjTX(vector<fantasybit::FantasyBitProj>)));
 
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myLAPIWorker,SLOT(OnClaimName(QString)));
 
@@ -194,7 +194,7 @@ void MainWindow::navigateToWeek(int week)
     QString currentWeekNotice = myGlobalState.week()==myCurrentWeek?" (Current week) ":"";
     ui->myWeekLabel->setText(QString("Week #%1").arg(myCurrentWeek)+currentWeekNotice);
     ui->myPreviousWeek->setDisabled(myCurrentWeek==1);
-    ui->myNextWeek->setDisabled(myCurrentWeek==12);
+    ui->myNextWeek->setDisabled(myCurrentWeek==4);
     if (myCurrentWeek==myGlobalState.week())
         currentWeek();
     else if (myCurrentWeek < myGlobalState.week())
@@ -210,9 +210,18 @@ void MainWindow::OnMyFantasyNames(vector<fantasybit::MyFantasyName> names){
             QString stringName = QString(fName.name().data());
             //QVariant itemData = QVariant::fromValue(fName);
             QVariant itemData= qVariantFromValue(fName);
+            myAddNamesPending = true;
+
             ui->myFantasyNamesCombo->insertItem(i,stringName,itemData);
+            myAddNamesPending = false;
+
         }
+        myAddNamesPending = true;
         ui->myFantasyNamesCombo->setCurrentIndex(names.size()-1);
+        myAddNamesPending = false;
+
+        on_myFantasyNamesCombo_currentIndexChanged(names.size()-1);
+
     }
 }
 
@@ -221,7 +230,7 @@ void MainWindow::OnNameStatus(MyFantasyName name){
     qDebug() << "OnNameStatus :" << name.name();
     // get cached FanatasyName from the combox box whicch
     // serves as a model store here using itemData property.
-    // this is an exact match case sensitive search
+    // this is an exact match case sensitive sear`ch
     int nameIndex = ui->myFantasyNamesCombo->findText(QString(name.name().data()));
 
 
@@ -274,11 +283,17 @@ void MainWindow::OnNameStatus(MyFantasyName name){
         if (oldStatus == fantasybit::none && newStatus == fantasybit::confirmed){
             ui->myCurrentWeekWidget->onUserSwitchFantasyName(myCurrentFantasyName.name());
         }
+
+        QVariant balance;
+        QString fname = myCurrentFantasyName.name().data();
+        DataCache::instance()->leaderBoardModel().itemPropertyValue<PropertyNames::Balance>(fname,balance);
+        ui->myBalanceText->setText(QString("%1").arg(balance.toDouble()));
+
     }
 }
 
 void MainWindow::OnProjAck(fantasybit::FantasyBitProj projection){
-    qDebug() << "OnProjAck :";
+    qDebug() << "OnProjAck :" << projection.DebugString();
     if (projection.name()==myCurrentFantasyName.name())
         ui->myCurrentWeekWidget->OnProjAck(projection);
 }

@@ -10,7 +10,26 @@ PreviousWeekWidget::PreviousWeekWidget(QWidget *parent) :
     ui->setupUi(this);
     ui->myGamesListView->setModel(&myGameTableModel);
     ui->myProjectionTableView->setModel(&myProjectionsModel);
+
+    //myGameModelFilter.setGameStatusFilter(GamesFilter::All);
+    //myGameModelFilter.setDynamicSortFilter(true);
+    //myGameModelFilter.setSourceModel(&myGameTableModel);
+    //ui->myGamesListView->setModel(&myGameTableModel);
+
+    //myGamesSelectionModel.setModel(&myGameTableModel);
+    //ui->myGamesListView->setSelectionModel(&myGamesSelectionModel);
+
+    //myProjectionFilterProxy.reset(new ProjectionsViewFilterProxyModel
+    //               (ui->myPositionComboBox, NULL,&myGamesSelectionModel));
+    //myProjectionFilterProxy.data()->setSourceModel(&myProjectionsModel);
+    //myProjectionFilterProxy.data()->setDynamicSortFilter(true);
+    //ui->myProjectionTableView->setModel(myProjectionFilterProxy.data());
+
+    //init projection filters
+    //myProjectionFilterProxy.data()->bindFilter();
+
     myCurrentWeek = -1;
+
 }
 
 PreviousWeekWidget::~PreviousWeekWidget()
@@ -24,6 +43,9 @@ void PreviousWeekWidget::setWeekData(int week){
 
     if (myCurrentWeek == week) return;
     std::unordered_map<std::string,GameInfo> myGameInfos{};
+
+    //myGameTableModel.removeAll();
+    //myProjectionsModel.removeAll();
 
     myCurrentWeek = week;
     DataCache::instance()->getWeeklySchedule(week,myWeeklySchedule);
@@ -66,11 +88,61 @@ void PreviousWeekWidget::setWeekData(int week){
             QString playerFullName = QString(pb.first().data()) + " " + QString(pb.last().data());
 
             QString playerId = playerResult.playerid().data();
+            myProjectionsModel.updateItemProperty<PropertyNames::Game_ID>(playerId,game.gameid().data());
             myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,pb.position().data());
             myProjectionsModel.updateItemProperty<PropertyNames::Player_ID>(playerId,playerId);
             myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,homeTeamId);
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerFullName);
             myProjectionsModel.updateItemProperty<PropertyNames::Result>(playerId,playerResult.result());
+            if ( playerId,playerResult.stats().ostats().has_passtd() )
+            myProjectionsModel.updateItemProperty<PropertyNames::PassTD>(playerId,playerResult.stats().ostats().passtd());
+            if ( playerId,playerResult.stats().ostats().passyds() )
+            myProjectionsModel.updateItemProperty<PropertyNames::PassYd>(playerId,playerResult.stats().ostats().passyds());
+            if ( playerId,playerResult.stats().ostats().has_rushtd() )
+            myProjectionsModel.updateItemProperty<PropertyNames::RushTD>(playerId,playerResult.stats().ostats().rushtd());
+            if ( playerId,playerResult.stats().ostats().has_rushyds() )
+            myProjectionsModel.updateItemProperty<PropertyNames::RushYd>(playerId,playerResult.stats().ostats().rushyds());
+            if ( playerId,playerResult.stats().ostats().has_rectd() )
+            myProjectionsModel.updateItemProperty<PropertyNames::RecTD>(playerId,playerResult.stats().ostats().rectd());
+            if ( playerId,playerResult.stats().ostats().has_recyds() )
+            myProjectionsModel.updateItemProperty<PropertyNames::RecYd>(playerId,playerResult.stats().ostats().recyds());
+            if ( playerId,playerResult.stats().ostats().has_rec() )
+            myProjectionsModel.updateItemProperty<PropertyNames::Rec>(playerId,playerResult.stats().ostats().rec());
+            if ( playerId,playerResult.stats().ostats().has_pint() )
+            myProjectionsModel.updateItemProperty<PropertyNames::Int>(playerId,playerResult.stats().ostats().pint());
+            if ( playerId,playerResult.stats().ostats().has_fumble() )
+            myProjectionsModel.updateItemProperty<PropertyNames::Fum>(playerId,playerResult.stats().ostats().fumble());
+            if ( playerId,playerResult.stats().ostats().has_twopt() )
+            myProjectionsModel.updateItemProperty<PropertyNames::_2Pt>(playerId,playerResult.stats().ostats().twopt());
+            //kicker
+            QString fgs;
+            auto sz = playerResult.stats().kstats().fg_size();
+            if ( sz >0 ) {
+                fgs = QString::number(playerResult.stats().kstats().fg(1));
+                for (int i=1; i<sz ;i++)
+                    fgs.append(",%1").arg(playerResult.stats().kstats().fg(i));
+            }
+
+            myProjectionsModel.updateItemProperty<PropertyNames::FG>(playerId,fgs);
+            if ( playerId,playerResult.stats().kstats().has_pa() )
+            myProjectionsModel.updateItemProperty<PropertyNames::PAT>(playerId,playerResult.stats().kstats().pa());
+
+            //defense
+            if ( playerId,playerResult.stats().dstats().has_ptsa() )
+            myProjectionsModel.updateItemProperty<PropertyNames::PtsA>(playerId,playerResult.stats().dstats().ptsa());
+            if ( playerId,playerResult.stats().dstats().has_deftd() )
+            myProjectionsModel.updateItemProperty<PropertyNames::D_TD>(playerId,playerResult.stats().dstats().deftd());
+            if ( playerId,playerResult.stats().dstats().has_sacks() )
+            myProjectionsModel.updateItemProperty<PropertyNames::Sack>(playerId,playerResult.stats().dstats().sacks());
+            if ( playerId,playerResult.stats().dstats().has_turnovers() )
+            myProjectionsModel.updateItemProperty<PropertyNames::TA>(playerId,playerResult.stats().dstats().turnovers());
+            if ( playerId,playerResult.stats().dstats().has_sfty() )
+            myProjectionsModel.updateItemProperty<PropertyNames::SFTY>(playerId,playerResult.stats().dstats().sfty());
+            if ( playerId,playerResult.stats().dstats().has_twopt() )
+            myProjectionsModel.updateItemProperty<PropertyNames::D2pt>(playerId,playerResult.stats().dstats().twopt());
+            if ( playerId,playerResult.stats().dstats().has_onept() )
+            myProjectionsModel.updateItemProperty<PropertyNames::D1pt>(playerId,playerResult.stats().dstats().onept());
+
         }
 
         //add away players reults
@@ -82,11 +154,66 @@ void PreviousWeekWidget::setWeekData(int week){
             QString playerFullName = QString(pb.first().data()) + " " + QString(pb.last().data());
 
             QString playerId = playerResult.playerid().data();
+            myProjectionsModel.updateItemProperty<PropertyNames::Game_ID>(playerId,game.gameid().data());
             myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,pb.position().data());
             myProjectionsModel.updateItemProperty<PropertyNames::Player_ID>(playerId,playerId);
             myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,awayTeamId);
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerFullName);
             myProjectionsModel.updateItemProperty<PropertyNames::Result>(playerId,playerResult.result());
+            if ( playerId,playerResult.stats().ostats().has_passtd() )
+            myProjectionsModel.updateItemProperty<PropertyNames::PassTD>(playerId,playerResult.stats().ostats().passtd());
+            if ( playerId,playerResult.stats().ostats().passyds() )
+            myProjectionsModel.updateItemProperty<PropertyNames::PassYd>(playerId,playerResult.stats().ostats().passyds());
+            if ( playerId,playerResult.stats().ostats().has_rushtd() )
+            myProjectionsModel.updateItemProperty<PropertyNames::RushTD>(playerId,playerResult.stats().ostats().rushtd());
+            if ( playerId,playerResult.stats().ostats().has_rushyds() )
+            myProjectionsModel.updateItemProperty<PropertyNames::RushYd>(playerId,playerResult.stats().ostats().rushyds());
+            if ( playerId,playerResult.stats().ostats().has_rectd() )
+            myProjectionsModel.updateItemProperty<PropertyNames::RecTD>(playerId,playerResult.stats().ostats().rectd());
+            if ( playerId,playerResult.stats().ostats().has_recyds() )
+            myProjectionsModel.updateItemProperty<PropertyNames::RecYd>(playerId,playerResult.stats().ostats().recyds());
+            if ( playerId,playerResult.stats().ostats().has_rec() )
+            myProjectionsModel.updateItemProperty<PropertyNames::Rec>(playerId,playerResult.stats().ostats().rec());
+            if ( playerId,playerResult.stats().ostats().has_pint() )
+            myProjectionsModel.updateItemProperty<PropertyNames::Int>(playerId,playerResult.stats().ostats().pint());
+            if ( playerId,playerResult.stats().ostats().has_fumble() )
+            myProjectionsModel.updateItemProperty<PropertyNames::Fum>(playerId,playerResult.stats().ostats().fumble());
+            if ( playerId,playerResult.stats().ostats().has_twopt() )
+            myProjectionsModel.updateItemProperty<PropertyNames::_2Pt>(playerId,playerResult.stats().ostats().twopt());
+            //kicker
+            QString fgs;
+            auto sz = playerResult.stats().kstats().fg_size();
+            if ( sz >0 ) {
+                fgs = QString::number(playerResult.stats().kstats().fg(1));
+                for (int i=1; i<sz ;i++)
+                    fgs.append(",%1").arg(playerResult.stats().kstats().fg(i));
+            }
+
+            myProjectionsModel.updateItemProperty<PropertyNames::FG>(playerId,fgs);
+            if ( playerId,playerResult.stats().kstats().has_pa() )
+            myProjectionsModel.updateItemProperty<PropertyNames::PAT>(playerId,playerResult.stats().kstats().pa());
+
+            //defense
+            if ( playerId,playerResult.stats().dstats().has_ptsa() )
+            myProjectionsModel.updateItemProperty<PropertyNames::PtsA>(playerId,playerResult.stats().dstats().ptsa());
+            if ( playerId,playerResult.stats().dstats().has_deftd() )
+            myProjectionsModel.updateItemProperty<PropertyNames::D_TD>(playerId,playerResult.stats().dstats().deftd());
+            if ( playerId,playerResult.stats().dstats().has_sacks() )
+            myProjectionsModel.updateItemProperty<PropertyNames::Sack>(playerId,playerResult.stats().dstats().sacks());
+            if ( playerId,playerResult.stats().dstats().has_turnovers() )
+            myProjectionsModel.updateItemProperty<PropertyNames::TA>(playerId,playerResult.stats().dstats().turnovers());
+            if ( playerId,playerResult.stats().dstats().has_sfty() )
+            myProjectionsModel.updateItemProperty<PropertyNames::SFTY>(playerId,playerResult.stats().dstats().sfty());
+            if ( playerId,playerResult.stats().dstats().has_twopt() )
+            myProjectionsModel.updateItemProperty<PropertyNames::D2pt>(playerId,playerResult.stats().dstats().twopt());
+            if ( playerId,playerResult.stats().dstats().has_onept() )
+            myProjectionsModel.updateItemProperty<PropertyNames::D1pt>(playerId,playerResult.stats().dstats().onept());
+
         }
     }
+    //invalidateFilters();
+    ui->myProjectionTableView->resizeColumnsToContents();
+    ui->myProjectionTableView->selectColumn(4);
+
 }
+
