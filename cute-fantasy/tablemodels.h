@@ -163,14 +163,54 @@ protected:
 
         }
         case WeekDisplayType::PreviousWeek: {
-            if( column ==0)
+            int i = 0;
+            if( column ==i++)
                 return data->propertyValue<PropertyNames::Player_Name>();
-            if( column ==1)
+            if( column ==i++)
                 return data->propertyValue<PropertyNames::Position>();
-            if( column ==2)
+            if( column ==i++)
                 return data->propertyValue<PropertyNames::Team_ID>();
-            if( column ==3)
+            if( column ==i++)
                 return data->propertyValue<PropertyNames::Result>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::PassTD>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::PassYd>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::RushTD>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::RushYd>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::RecTD>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::RecYd>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::Rec>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::Int>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::Fum>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::_2Pt>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::FG>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::FGyd>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::D_TD>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::Sack>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::TA>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::SFTY>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::D2pt>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::D1pt>();
+            if( column ==i++)
+                return data->propertyValue<PropertyNames::PtsA>();
+
             return QVariant();
 
         }
@@ -195,7 +235,7 @@ protected:
     int getColumnCount() {
         switch (myDisplayType) {
         case WeekDisplayType::CurrentWeek:  return 5;
-        case WeekDisplayType::PreviousWeek: return 4;
+        case WeekDisplayType::PreviousWeek: return 22;
         case WeekDisplayType::UpcomingWeek: return 4;
         default: return 0;
         }
@@ -215,8 +255,30 @@ private:
                                                    << "Projection"  ;
             setEditable(4,true);
             break;
-        case WeekDisplayType::PreviousWeek: headers << "Player Name" << "Pos"
-                                                    <<"Team" << "Result";
+        case WeekDisplayType::PreviousWeek: headers << "Player Name"
+                                                    << "    Pos     "
+                                                    << " Team "
+                                                   <<  "Result"
+                                                    << "PassTD"
+                                                    << "PassYd"
+                                                    << "RushTD"
+                                                    << "RushYd"
+                                                    << "RecTD"
+                                                    << "RecYd"
+                                                    << " Rec "
+                                                    << " Int "
+                                                    << " Fum "
+                                                    << " 2Pt "
+                                                    << " PAT "
+                                                    << " FG  "
+                                                    << "DefTD"
+                                                    << "Sack"
+                                                    << " TO "
+                                                    << "SFTY"
+                                                    << "Def2pt"
+                                                    << "Def1pt"
+                                                    << "PtsAlw";
+            setBold(3,true);
             break;
         case WeekDisplayType::UpcomingWeek: headers << "Player Name" << "Pos"
                                                     <<"Team" << "Projection";

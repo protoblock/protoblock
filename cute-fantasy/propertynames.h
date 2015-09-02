@@ -35,6 +35,29 @@ namespace PropertyNames {
     ENUMITEM(ProjectionStatus)
     ENUMITEM(KnownProjection)
     ENUMITEM(Result)
+    ENUMITEM(PassTD)
+    ENUMITEM(PassYd)
+    ENUMITEM(RushTD)
+    ENUMITEM(RushYd)
+    ENUMITEM(RecTD)
+    ENUMITEM(RecYd)
+    ENUMITEM(Rec)
+    ENUMITEM(Int)
+    ENUMITEM(Fum)
+    ENUMITEM(_2Pt)
+    ENUMITEM(PAT)
+    ENUMITEM(FG)
+    ENUMITEM(FGyd)
+    ENUMITEM(D_TD)
+    ENUMITEM(Sack)
+    ENUMITEM(TA)
+    ENUMITEM(SFTY)
+    ENUMITEM(D2pt)
+    ENUMITEM(D1pt)
+    ENUMITEM(PtsA)
+
+
+
 
     template<typename Name>
     static const char * naturalName() {
