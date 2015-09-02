@@ -63,7 +63,7 @@ protected:
             return QVariant();
         }
 
-        return text.arg(home).arg(away).arg(gametime);//dateTime_toFantasyString(gametime));
+        return text.arg(away).arg(home).arg(gametime);//dateTime_toFantasyString(gametime));
     }
 
     int getColumnCount() {
