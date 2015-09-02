@@ -15,7 +15,6 @@
 
 #include <string>
 #include <vector>
-#include <thread>
 #include <stdarg.h>
 #include <stdint.h>
 #include "leveldb/status.h"
@@ -40,13 +39,6 @@ class Env {
   //
   // The result of Default() belongs to leveldb and must never be deleted.
   static Env* Default();
-
-  // use this call to deallocate memory when you know you no longer need it
-  // totally not thread safe but needed to prevent memory analyzers from crying
-  static void UnsafeDeallocate();
-
-  // needed if you want to set affinity or adjust thread priority
-  virtual std::thread::native_handle_type GetBackgroundThreadHandle() = 0;
 
   // Create a brand new sequentially-readable file with the specified name.
   // On success, stores a pointer to the new file in *result and returns OK.
@@ -132,6 +124,10 @@ class Env {
   virtual void Schedule(
       void (*function)(void* arg),
       void* arg) = 0;
+
+  // Start a new thread, invoking "function(arg)" within the new thread.
+  // When "function(arg)" returns, the thread will be destroyed.
+  virtual void StartThread(void (*function)(void* arg), void* arg) = 0;
 
   // *path is set to a temporary directory that can be used for testing. It may
   // or many not have just been created. The directory may or may not differ
@@ -283,10 +279,6 @@ class EnvWrapper : public Env {
   // Return the target to which this Env forwards all calls
   Env* target() const { return target_; }
 
-  std::thread::native_handle_type GetBackgroundThreadHandle() {
-    return target_->GetBackgroundThreadHandle();
-  }
-
   // The following text is boilerplate that forwards all methods to target()
   Status NewSequentialFile(const std::string& f, SequentialFile** r) {
     return target_->NewSequentialFile(f, r);
@@ -317,7 +309,9 @@ class EnvWrapper : public Env {
   void Schedule(void (*f)(void*), void* a) {
     return target_->Schedule(f, a);
   }
- 
+  void StartThread(void (*f)(void*), void* a) {
+    return target_->StartThread(f, a);
+  }
   virtual Status GetTestDirectory(std::string* path) {
     return target_->GetTestDirectory(path);
   }

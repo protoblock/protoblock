@@ -14,6 +14,7 @@
 #define STORAGE_LEVELDB_INCLUDE_STATUS_H_
 
 #include <string>
+#include <stdint.h>
 #include "leveldb/slice.h"
 
 namespace leveldb {
@@ -64,8 +65,7 @@ class Status {
   // Returns the string "OK" for success.
   std::string ToString() const;
 
-  // b14 hack: expose internal code to allow error code translation
- public:
+ private:
   // OK status has a NULL state_.  Otherwise, state_ is a new[] array
   // of the following form:
   //    state_[0..3] == length of message
