@@ -35,7 +35,8 @@ SOURCES += \
     $$PWD/tablemodels.cpp \
     $$PWD/dataagent.cpp \
     $$PWD/waitmodaldialog.cpp \
-    $$PWD/animationandmessagewidget.cpp
+    $$PWD/animationandmessagewidget.cpp \
+    $$PWD/../src/mnemonic.cpp
 
 DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
@@ -93,7 +94,8 @@ HEADERS += \
     $$PWD/playerloader.h \
     $$PWD/dataagent.h \
     $$PWD/waitmodaldialog.h \
-    $$PWD/animationandmessagewidget.h
+    $$PWD/animationandmessagewidget.h \
+    $$PWD/../src/mnemonic.h
 
 FORMS += \       
     $$PWD/mainwindow.ui \

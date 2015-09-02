@@ -40,6 +40,7 @@ class MyFantasyName;
 class FantasyPlayer;
 class Secret;
 class Secret2;
+class Secret3;
 class OutData;
 class InData;
 class NameProof;
@@ -716,6 +717,138 @@ class Secret2 : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Secret2* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Secret3 : public ::google::protobuf::Message {
+ public:
+  Secret3();
+  virtual ~Secret3();
+
+  Secret3(const Secret3& from);
+
+  inline Secret3& operator=(const Secret3& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Secret3& default_instance();
+
+  void Swap(Secret3* other);
+
+  // implements Message ----------------------------------------------
+
+  Secret3* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Secret3& from);
+  void MergeFrom(const Secret3& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string private_key = 1;
+  inline bool has_private_key() const;
+  inline void clear_private_key();
+  static const int kPrivateKeyFieldNumber = 1;
+  inline const ::std::string& private_key() const;
+  inline void set_private_key(const ::std::string& value);
+  inline void set_private_key(const char* value);
+  inline void set_private_key(const char* value, size_t size);
+  inline ::std::string* mutable_private_key();
+  inline ::std::string* release_private_key();
+  inline void set_allocated_private_key(::std::string* private_key);
+
+  // optional string mnemonic_key = 3;
+  inline bool has_mnemonic_key() const;
+  inline void clear_mnemonic_key();
+  static const int kMnemonicKeyFieldNumber = 3;
+  inline const ::std::string& mnemonic_key() const;
+  inline void set_mnemonic_key(const ::std::string& value);
+  inline void set_mnemonic_key(const char* value);
+  inline void set_mnemonic_key(const char* value, size_t size);
+  inline ::std::string* mutable_mnemonic_key();
+  inline ::std::string* release_mnemonic_key();
+  inline void set_allocated_mnemonic_key(::std::string* mnemonic_key);
+
+  // optional string fantasy_name = 20;
+  inline bool has_fantasy_name() const;
+  inline void clear_fantasy_name();
+  static const int kFantasyNameFieldNumber = 20;
+  inline const ::std::string& fantasy_name() const;
+  inline void set_fantasy_name(const ::std::string& value);
+  inline void set_fantasy_name(const char* value);
+  inline void set_fantasy_name(const char* value, size_t size);
+  inline ::std::string* mutable_fantasy_name();
+  inline ::std::string* release_fantasy_name();
+  inline void set_allocated_fantasy_name(::std::string* fantasy_name);
+
+  // optional string public_key = 30;
+  inline bool has_public_key() const;
+  inline void clear_public_key();
+  static const int kPublicKeyFieldNumber = 30;
+  inline const ::std::string& public_key() const;
+  inline void set_public_key(const ::std::string& value);
+  inline void set_public_key(const char* value);
+  inline void set_public_key(const char* value, size_t size);
+  inline ::std::string* mutable_public_key();
+  inline ::std::string* release_public_key();
+  inline void set_allocated_public_key(::std::string* public_key);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Secret3)
+ private:
+  inline void set_has_private_key();
+  inline void clear_has_private_key();
+  inline void set_has_mnemonic_key();
+  inline void clear_has_mnemonic_key();
+  inline void set_has_fantasy_name();
+  inline void clear_has_fantasy_name();
+  inline void set_has_public_key();
+  inline void clear_has_public_key();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* private_key_;
+  ::std::string* mnemonic_key_;
+  ::std::string* fantasy_name_;
+  ::std::string* public_key_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Secret3* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -4201,6 +4334,290 @@ inline ::std::string* Secret2::release_public_key() {
   }
 }
 inline void Secret2::set_allocated_public_key(::std::string* public_key) {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete public_key_;
+  }
+  if (public_key) {
+    set_has_public_key();
+    public_key_ = public_key;
+  } else {
+    clear_has_public_key();
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// Secret3
+
+// optional string private_key = 1;
+inline bool Secret3::has_private_key() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Secret3::set_has_private_key() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Secret3::clear_has_private_key() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Secret3::clear_private_key() {
+  if (private_key_ != &::google::protobuf::internal::kEmptyString) {
+    private_key_->clear();
+  }
+  clear_has_private_key();
+}
+inline const ::std::string& Secret3::private_key() const {
+  return *private_key_;
+}
+inline void Secret3::set_private_key(const ::std::string& value) {
+  set_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    private_key_ = new ::std::string;
+  }
+  private_key_->assign(value);
+}
+inline void Secret3::set_private_key(const char* value) {
+  set_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    private_key_ = new ::std::string;
+  }
+  private_key_->assign(value);
+}
+inline void Secret3::set_private_key(const char* value, size_t size) {
+  set_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    private_key_ = new ::std::string;
+  }
+  private_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Secret3::mutable_private_key() {
+  set_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    private_key_ = new ::std::string;
+  }
+  return private_key_;
+}
+inline ::std::string* Secret3::release_private_key() {
+  clear_has_private_key();
+  if (private_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = private_key_;
+    private_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Secret3::set_allocated_private_key(::std::string* private_key) {
+  if (private_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete private_key_;
+  }
+  if (private_key) {
+    set_has_private_key();
+    private_key_ = private_key;
+  } else {
+    clear_has_private_key();
+    private_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string mnemonic_key = 3;
+inline bool Secret3::has_mnemonic_key() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Secret3::set_has_mnemonic_key() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Secret3::clear_has_mnemonic_key() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Secret3::clear_mnemonic_key() {
+  if (mnemonic_key_ != &::google::protobuf::internal::kEmptyString) {
+    mnemonic_key_->clear();
+  }
+  clear_has_mnemonic_key();
+}
+inline const ::std::string& Secret3::mnemonic_key() const {
+  return *mnemonic_key_;
+}
+inline void Secret3::set_mnemonic_key(const ::std::string& value) {
+  set_has_mnemonic_key();
+  if (mnemonic_key_ == &::google::protobuf::internal::kEmptyString) {
+    mnemonic_key_ = new ::std::string;
+  }
+  mnemonic_key_->assign(value);
+}
+inline void Secret3::set_mnemonic_key(const char* value) {
+  set_has_mnemonic_key();
+  if (mnemonic_key_ == &::google::protobuf::internal::kEmptyString) {
+    mnemonic_key_ = new ::std::string;
+  }
+  mnemonic_key_->assign(value);
+}
+inline void Secret3::set_mnemonic_key(const char* value, size_t size) {
+  set_has_mnemonic_key();
+  if (mnemonic_key_ == &::google::protobuf::internal::kEmptyString) {
+    mnemonic_key_ = new ::std::string;
+  }
+  mnemonic_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Secret3::mutable_mnemonic_key() {
+  set_has_mnemonic_key();
+  if (mnemonic_key_ == &::google::protobuf::internal::kEmptyString) {
+    mnemonic_key_ = new ::std::string;
+  }
+  return mnemonic_key_;
+}
+inline ::std::string* Secret3::release_mnemonic_key() {
+  clear_has_mnemonic_key();
+  if (mnemonic_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = mnemonic_key_;
+    mnemonic_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Secret3::set_allocated_mnemonic_key(::std::string* mnemonic_key) {
+  if (mnemonic_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete mnemonic_key_;
+  }
+  if (mnemonic_key) {
+    set_has_mnemonic_key();
+    mnemonic_key_ = mnemonic_key;
+  } else {
+    clear_has_mnemonic_key();
+    mnemonic_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string fantasy_name = 20;
+inline bool Secret3::has_fantasy_name() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Secret3::set_has_fantasy_name() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Secret3::clear_has_fantasy_name() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Secret3::clear_fantasy_name() {
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_->clear();
+  }
+  clear_has_fantasy_name();
+}
+inline const ::std::string& Secret3::fantasy_name() const {
+  return *fantasy_name_;
+}
+inline void Secret3::set_fantasy_name(const ::std::string& value) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(value);
+}
+inline void Secret3::set_fantasy_name(const char* value) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(value);
+}
+inline void Secret3::set_fantasy_name(const char* value, size_t size) {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  fantasy_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Secret3::mutable_fantasy_name() {
+  set_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    fantasy_name_ = new ::std::string;
+  }
+  return fantasy_name_;
+}
+inline ::std::string* Secret3::release_fantasy_name() {
+  clear_has_fantasy_name();
+  if (fantasy_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = fantasy_name_;
+    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Secret3::set_allocated_fantasy_name(::std::string* fantasy_name) {
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete fantasy_name_;
+  }
+  if (fantasy_name) {
+    set_has_fantasy_name();
+    fantasy_name_ = fantasy_name;
+  } else {
+    clear_has_fantasy_name();
+    fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string public_key = 30;
+inline bool Secret3::has_public_key() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Secret3::set_has_public_key() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Secret3::clear_has_public_key() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Secret3::clear_public_key() {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    public_key_->clear();
+  }
+  clear_has_public_key();
+}
+inline const ::std::string& Secret3::public_key() const {
+  return *public_key_;
+}
+inline void Secret3::set_public_key(const ::std::string& value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void Secret3::set_public_key(const char* value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void Secret3::set_public_key(const char* value, size_t size) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Secret3::mutable_public_key() {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  return public_key_;
+}
+inline ::std::string* Secret3::release_public_key() {
+  clear_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = public_key_;
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Secret3::set_allocated_public_key(::std::string* public_key) {
   if (public_key_ != &::google::protobuf::internal::kEmptyString) {
     delete public_key_;
   }

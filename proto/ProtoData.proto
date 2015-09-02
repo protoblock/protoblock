@@ -38,6 +38,15 @@ message Secret2
     optional string public_key = 30;
 }
 
+message Secret3
+{
+    optional string private_key = 1;
+    optional string mnemonic_key = 3;
+    optional string fantasy_name = 20;
+    optional string public_key = 30;
+}
+
+
 message OutData {
 	enum Type { MYFANTASYNAME = 1; SNAPSHOT = 2; HEARTBEAT=3; }
 	required Type type = 1;
