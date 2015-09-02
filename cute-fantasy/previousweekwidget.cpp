@@ -10,6 +10,7 @@ PreviousWeekWidget::PreviousWeekWidget(QWidget *parent) :
     ui->setupUi(this);
     ui->myGamesListView->setModel(&myGameTableModel);
     ui->myProjectionTableView->setModel(&myProjectionsModel);
+    ui->myProjectionTableView->resizeColumnsToContents();
     myCurrentWeek = -1;
 }
 
@@ -71,6 +72,37 @@ void PreviousWeekWidget::setWeekData(int week){
             myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,homeTeamId);
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerFullName);
             myProjectionsModel.updateItemProperty<PropertyNames::Result>(playerId,playerResult.result());
+            myProjectionsModel.updateItemProperty<PropertyNames::PassTD>(playerId,playerResult.stats().ostats().passtd());
+            myProjectionsModel.updateItemProperty<PropertyNames::PassYd>(playerId,playerResult.stats().ostats().passyds());
+            myProjectionsModel.updateItemProperty<PropertyNames::RushTD>(playerId,playerResult.stats().ostats().rushtd());
+            myProjectionsModel.updateItemProperty<PropertyNames::RushYd>(playerId,playerResult.stats().ostats().rushyds());
+            myProjectionsModel.updateItemProperty<PropertyNames::RecTD>(playerId,playerResult.stats().ostats().rectd());
+            myProjectionsModel.updateItemProperty<PropertyNames::RecYd>(playerId,playerResult.stats().ostats().recyds());
+            myProjectionsModel.updateItemProperty<PropertyNames::Rec>(playerId,playerResult.stats().ostats().rec());
+            myProjectionsModel.updateItemProperty<PropertyNames::Int>(playerId,playerResult.stats().ostats().pint());
+            myProjectionsModel.updateItemProperty<PropertyNames::Fum>(playerId,playerResult.stats().ostats().fumble());
+            myProjectionsModel.updateItemProperty<PropertyNames::_2Pt>(playerId,playerResult.stats().ostats().twopt());
+            //kicker
+            QString fgs;
+            auto sz = playerResult.stats().kstats().fg_size();
+            if ( sz >0 ) {
+                fgs = QString::number(playerResult.stats().kstats().fg(1));
+                for (int i=1; i<sz ;i++)
+                    fgs.append(",%1").arg(playerResult.stats().kstats().fg(i));
+            }
+
+            myProjectionsModel.updateItemProperty<PropertyNames::FG>(playerId,fgs);
+            myProjectionsModel.updateItemProperty<PropertyNames::PAT>(playerId,playerResult.stats().kstats().pa());
+
+            //defense
+            myProjectionsModel.updateItemProperty<PropertyNames::PtsA>(playerId,playerResult.stats().dstats().ptsa());
+            myProjectionsModel.updateItemProperty<PropertyNames::D_TD>(playerId,playerResult.stats().dstats().deftd());
+            myProjectionsModel.updateItemProperty<PropertyNames::Sack>(playerId,playerResult.stats().dstats().sacks());
+            myProjectionsModel.updateItemProperty<PropertyNames::TA>(playerId,playerResult.stats().dstats().turnovers());
+            myProjectionsModel.updateItemProperty<PropertyNames::SFTY>(playerId,playerResult.stats().dstats().sfty());
+            myProjectionsModel.updateItemProperty<PropertyNames::D2pt>(playerId,playerResult.stats().dstats().twopt());
+            myProjectionsModel.updateItemProperty<PropertyNames::D1pt>(playerId,playerResult.stats().dstats().onept());
+
         }
 
         //add away players reults
@@ -87,6 +119,37 @@ void PreviousWeekWidget::setWeekData(int week){
             myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,awayTeamId);
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerFullName);
             myProjectionsModel.updateItemProperty<PropertyNames::Result>(playerId,playerResult.result());
+            myProjectionsModel.updateItemProperty<PropertyNames::PassTD>(playerId,playerResult.stats().ostats().passtd());
+            myProjectionsModel.updateItemProperty<PropertyNames::PassYd>(playerId,playerResult.stats().ostats().passyds());
+            myProjectionsModel.updateItemProperty<PropertyNames::RushTD>(playerId,playerResult.stats().ostats().rushtd());
+            myProjectionsModel.updateItemProperty<PropertyNames::RushYd>(playerId,playerResult.stats().ostats().rushyds());
+            myProjectionsModel.updateItemProperty<PropertyNames::RecTD>(playerId,playerResult.stats().ostats().rectd());
+            myProjectionsModel.updateItemProperty<PropertyNames::RecYd>(playerId,playerResult.stats().ostats().recyds());
+            myProjectionsModel.updateItemProperty<PropertyNames::Rec>(playerId,playerResult.stats().ostats().rec());
+            myProjectionsModel.updateItemProperty<PropertyNames::Int>(playerId,playerResult.stats().ostats().pint());
+            myProjectionsModel.updateItemProperty<PropertyNames::Fum>(playerId,playerResult.stats().ostats().fumble());
+            myProjectionsModel.updateItemProperty<PropertyNames::_2Pt>(playerId,playerResult.stats().ostats().twopt());
+            //kicker
+            QString fgs;
+            auto sz = playerResult.stats().kstats().fg_size();
+            if ( sz >0 ) {
+                fgs = QString::number(playerResult.stats().kstats().fg(1));
+                for (int i=1; i<sz ;i++)
+                    fgs.append(",%1").arg(playerResult.stats().kstats().fg(i));
+            }
+
+            myProjectionsModel.updateItemProperty<PropertyNames::FG>(playerId,fgs);
+            myProjectionsModel.updateItemProperty<PropertyNames::PAT>(playerId,playerResult.stats().kstats().pa());
+
+            //defense
+            myProjectionsModel.updateItemProperty<PropertyNames::PtsA>(playerId,playerResult.stats().dstats().ptsa());
+            myProjectionsModel.updateItemProperty<PropertyNames::D_TD>(playerId,playerResult.stats().dstats().deftd());
+            myProjectionsModel.updateItemProperty<PropertyNames::Sack>(playerId,playerResult.stats().dstats().sacks());
+            myProjectionsModel.updateItemProperty<PropertyNames::TA>(playerId,playerResult.stats().dstats().turnovers());
+            myProjectionsModel.updateItemProperty<PropertyNames::SFTY>(playerId,playerResult.stats().dstats().sfty());
+            myProjectionsModel.updateItemProperty<PropertyNames::D2pt>(playerId,playerResult.stats().dstats().twopt());
+            myProjectionsModel.updateItemProperty<PropertyNames::D1pt>(playerId,playerResult.stats().dstats().onept());
+
         }
     }
 }

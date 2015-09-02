@@ -194,7 +194,7 @@ void MainWindow::navigateToWeek(int week)
     QString currentWeekNotice = myGlobalState.week()==myCurrentWeek?" (Current week) ":"";
     ui->myWeekLabel->setText(QString("Week #%1").arg(myCurrentWeek)+currentWeekNotice);
     ui->myPreviousWeek->setDisabled(myCurrentWeek==1);
-    ui->myNextWeek->setDisabled(myCurrentWeek==12);
+    ui->myNextWeek->setDisabled(myCurrentWeek==4);
     if (myCurrentWeek==myGlobalState.week())
         currentWeek();
     else if (myCurrentWeek < myGlobalState.week())
