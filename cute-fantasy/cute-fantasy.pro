@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core sql gui network
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,6 +15,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 contains(DEFINES, DATAAGENTGUI){
 TARGET = cute-fantasy-agent
+QT += sql
 }
 !contains(DEFINES, DATAAGENTGUI){
 TARGET = tradingfootball
@@ -69,16 +70,16 @@ win32 {
 CONFIG(debug, debug|release) {
    LIBS+= -llibprotobufd \
           -lleveldbd \
-          -llibeay32d \
-          -lssleay32d \
+          -llibeay32mdd \
+          -lssleay32mdd \
           -lfcd
 
 }
 CONFIG(release, debug|release) {
    LIBS+= -llibprotobuf \
           -lleveldb \
-          -llibeay32 \
-          -lssleay32 \
+          -llibeay32md \
+          -lssleay32md \
           -lfc
 }
 

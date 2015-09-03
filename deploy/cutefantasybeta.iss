@@ -20,13 +20,14 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\tradingfootball
 DefaultGroupName={#MyAppName}
 OutputDir=..\installer
 OutputBaseFilename=tradingfootball-beta-setup
 Compression=lzma
 SolidCompression=yes
 WizardImageFile=TRADINGFOOTBALL.bmp
+PrivilegesRequired=none
+DefaultDirName={code:DefDirRoot}\tradingfootball
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -37,50 +38,22 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "tradingfootball.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D3Dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "libEGLd.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "msvcp120d.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "msvcr120d.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "libGLESV2d.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "opengl32sw.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Qt5Cored.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Qt5Guid.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Qt5Networkd.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Qt5Svgd.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Qt5Widgetsd.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bearer\qgenericbearerd.dll"; DestDir: "{app}\bearer"; Flags: ignoreversion
-Source: "bearer\qnativewifibearerd.dll"; DestDir: "{app}\bearer"; Flags: ignoreversion
-Source: "iconengines\qsvgicond.dll"; DestDir: "{app}\iconengines"; Flags: ignoreversion
-Source: "imageformats\qddsd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qgifd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qicnsd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qicod.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qjp2d.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qjpegd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qmngd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qsvgd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qtgad.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qtiffd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qwbmpd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "imageformats\qwebpd.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "platforms\qwindowsd.dll"; DestDir: "{app}\platforms"; Flags: ignoreversion
 Source: "storage\genesisAlpha.out"; DestDir: "{app}\storage"; Flags: ignoreversion
-Source: "translations\qt_ca.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_cs.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_de.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_fi.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_fr.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_hu.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_it.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_ja.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_ko.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_lv.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_ru.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_sk.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
-Source: "translations\qt_uk.qm"; DestDir: "{app}\translations"; Flags: ignoreversion
 Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
-Source: "libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: sqldrivers\qsqlmysqld.dll; DestDir: {app}\sqldrivers; Flags: ignoreversion; 
+Source: "libeay32md.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "msvcr120.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ssleay32md.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "vcredist_x64.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "storage\genesisAlpha.out"; DestDir: "{app}\storage"
+Source: "platforms\qwindows.dll"; DestDir: "{app}\platforms"
+Source: "imageformats\qgif.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
+Source: "bearer\qgenericbearer.dll"; DestDir: "{app}\bearer"
+Source: "bearer\qnativewifibearer.dll"; DestDir: "{app}\bearer"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -92,10 +65,19 @@ Filename: {app}\{#MyAppExeName}; Flags: nowait postinstall skipifsilent 64bit Ru
 
 [Dirs]
 Name: "{app}\bearer"
-Name: "{app}\iconengines"
 Name: "{app}\imageformats"
 Name: "{app}\platforms"
 Name: "{app}\storage"
-Name: "{app}\translations"
-Name: "{app}\sqldrivers"; 
-Name: "{app}\translations";
+[Code]
+function IsRegularUser(): Boolean;
+begin
+Result := not (IsAdminLoggedOn or IsPowerUserLoggedOn);
+end;
+
+function DefDirRoot(Param: String): String;
+begin
+if IsRegularUser then
+Result := ExpandConstant('{localappdata}')
+else
+Result := ExpandConstant('{pf}')
+end;
