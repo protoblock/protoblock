@@ -186,7 +186,7 @@ public:
 
 protected:
     virtual void processReplyData(){        
-       //qDebug("response : %s",myLastRepliedData.data());
+       qDebug("response : %s",myLastRepliedData.data());
     }
 signals:
     void doneReading();

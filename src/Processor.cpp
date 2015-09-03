@@ -220,7 +220,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         emit new_dataDistribution(dist);
 
                         auto ds = dist.SerializeAsString();
-                        RestfullClient rest(QUrl("http://192.96.159.216:4545"));
+
+                        RestfullClient rest(QUrl("https://api.trading.football:9854"));
                         rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()),true);
 
                     }

@@ -186,8 +186,8 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
     emit new_dataFantasyNameHash(fnh);
 
     auto fnhstr = fnh.SerializeAsString();
-    //RestfullClient rest(QUrl("http://192.96.159.216:4545"));
-    //rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()),true);
+    RestfullClient rest(QUrl("https://api.trading.football:9854"));
+    rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()),true);
 
 #endif
 
