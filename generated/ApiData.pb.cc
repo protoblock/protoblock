@@ -39,16 +39,16 @@ void protobuf_AssignDesc_ApiData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameHash, hash_),
   };
   FantasyNameHash_reflection_ =
-    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+    new ::google::protobuf::internal::GeneratedMessageReflection(
       FantasyNameHash_descriptor_,
       FantasyNameHash::default_instance_,
       FantasyNameHash_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameHash, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameHash, _unknown_fields_),
       -1,
-      -1,
-      sizeof(FantasyNameHash),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameHash, _internal_metadata_),
-      -1);
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(FantasyNameHash));
 }
 
 namespace {
@@ -62,7 +62,7 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      FantasyNameHash_descriptor_, &FantasyNameHash::default_instance());
+    FantasyNameHash_descriptor_, &FantasyNameHash::default_instance());
 }
 
 }  // namespace
@@ -95,16 +95,6 @@ struct StaticDescriptorInitializer_ApiData_2eproto {
   }
 } static_descriptor_initializer_ApiData_2eproto_;
 
-namespace {
-
-static void MergeFromFail(int line) GOOGLE_ATTRIBUTE_COLD;
-static void MergeFromFail(int line) {
-  GOOGLE_CHECK(false) << __FILE__ << ":" << line;
-}
-
-}  // namespace
-
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -113,7 +103,7 @@ const int FantasyNameHash::kHashFieldNumber;
 #endif  // !_MSC_VER
 
 FantasyNameHash::FantasyNameHash()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:fantasybit.FantasyNameHash)
 }
@@ -122,8 +112,7 @@ void FantasyNameHash::InitAsDefaultInstance() {
 }
 
 FantasyNameHash::FantasyNameHash(const FantasyNameHash& from)
-  : ::google::protobuf::Message(),
-    _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:fantasybit.FantasyNameHash)
@@ -132,7 +121,7 @@ FantasyNameHash::FantasyNameHash(const FantasyNameHash& from)
 void FantasyNameHash::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   hash_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -143,7 +132,9 @@ FantasyNameHash::~FantasyNameHash() {
 }
 
 void FantasyNameHash::SharedDtor() {
-  name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -165,25 +156,21 @@ const FantasyNameHash& FantasyNameHash::default_instance() {
 
 FantasyNameHash* FantasyNameHash::default_instance_ = NULL;
 
-FantasyNameHash* FantasyNameHash::New(::google::protobuf::Arena* arena) const {
-  FantasyNameHash* n = new FantasyNameHash;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
+FantasyNameHash* FantasyNameHash::New() const {
+  return new FantasyNameHash;
 }
 
 void FantasyNameHash::Clear() {
-  if (_has_bits_[0 / 32] & 3u) {
+  if (_has_bits_[0 / 32] & 3) {
     if (has_name()) {
-      name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        name_->clear();
+      }
     }
     hash_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  if (_internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->Clear();
-  }
+  mutable_unknown_fields()->Clear();
 }
 
 bool FantasyNameHash::MergePartialFromCodedStream(
@@ -204,7 +191,7 @@ bool FantasyNameHash::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "fantasybit.FantasyNameHash.name");
+            "name");
         } else {
           goto handle_unusual;
         }
@@ -257,7 +244,7 @@ void FantasyNameHash::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.FantasyNameHash.name");
+      "name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       10, this->name(), output);
   }
@@ -267,7 +254,7 @@ void FantasyNameHash::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->hash(), output);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
@@ -282,7 +269,7 @@ void FantasyNameHash::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.FantasyNameHash.name");
+      "name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         10, this->name(), target);
@@ -293,7 +280,7 @@ void FantasyNameHash::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->hash(), target);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -304,7 +291,7 @@ void FantasyNameHash::SerializeWithCachedSizes(
 int FantasyNameHash::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & 3u) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     // optional string name = 10;
     if (has_name()) {
       total_size += 1 +
@@ -320,7 +307,7 @@ int FantasyNameHash::ByteSize() const {
     }
 
   }
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
@@ -332,10 +319,10 @@ int FantasyNameHash::ByteSize() const {
 }
 
 void FantasyNameHash::MergeFrom(const ::google::protobuf::Message& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const FantasyNameHash* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const FantasyNameHash>(
-          &from);
+  GOOGLE_CHECK_NE(&from, this);
+  const FantasyNameHash* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const FantasyNameHash*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -344,19 +331,16 @@ void FantasyNameHash::MergeFrom(const ::google::protobuf::Message& from) {
 }
 
 void FantasyNameHash::MergeFrom(const FantasyNameHash& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_name()) {
-      set_has_name();
-      name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+      set_name(from.name());
     }
     if (from.has_hash()) {
       set_hash(from.hash());
     }
   }
-  if (from._internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
 void FantasyNameHash::CopyFrom(const ::google::protobuf::Message& from) {
@@ -377,15 +361,13 @@ bool FantasyNameHash::IsInitialized() const {
 }
 
 void FantasyNameHash::Swap(FantasyNameHash* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void FantasyNameHash::InternalSwap(FantasyNameHash* other) {
-  name_.Swap(&other->name_);
-  std::swap(hash_, other->hash_);
-  std::swap(_has_bits_[0], other->_has_bits_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  std::swap(_cached_size_, other->_cached_size_);
+  if (other != this) {
+    std::swap(name_, other->name_);
+    std::swap(hash_, other->hash_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
 }
 
 ::google::protobuf::Metadata FantasyNameHash::GetMetadata() const {
@@ -396,87 +378,6 @@ void FantasyNameHash::InternalSwap(FantasyNameHash* other) {
   return metadata;
 }
 
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// FantasyNameHash
-
-// optional string name = 10;
-bool FantasyNameHash::has_name() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-void FantasyNameHash::set_has_name() {
-  _has_bits_[0] |= 0x00000001u;
-}
-void FantasyNameHash::clear_has_name() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-void FantasyNameHash::clear_name() {
-  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_name();
-}
- const ::std::string& FantasyNameHash::name() const {
-  // @@protoc_insertion_point(field_get:fantasybit.FantasyNameHash.name)
-  return name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- void FantasyNameHash::set_name(const ::std::string& value) {
-  set_has_name();
-  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:fantasybit.FantasyNameHash.name)
-}
- void FantasyNameHash::set_name(const char* value) {
-  set_has_name();
-  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:fantasybit.FantasyNameHash.name)
-}
- void FantasyNameHash::set_name(const char* value, size_t size) {
-  set_has_name();
-  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:fantasybit.FantasyNameHash.name)
-}
- ::std::string* FantasyNameHash::mutable_name() {
-  set_has_name();
-  // @@protoc_insertion_point(field_mutable:fantasybit.FantasyNameHash.name)
-  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- ::std::string* FantasyNameHash::release_name() {
-  clear_has_name();
-  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- void FantasyNameHash::set_allocated_name(::std::string* name) {
-  if (name != NULL) {
-    set_has_name();
-  } else {
-    clear_has_name();
-  }
-  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:fantasybit.FantasyNameHash.name)
-}
-
-// optional uint64 hash = 30;
-bool FantasyNameHash::has_hash() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-void FantasyNameHash::set_has_hash() {
-  _has_bits_[0] |= 0x00000002u;
-}
-void FantasyNameHash::clear_has_hash() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-void FantasyNameHash::clear_hash() {
-  hash_ = GOOGLE_ULONGLONG(0);
-  clear_has_hash();
-}
- ::google::protobuf::uint64 FantasyNameHash::hash() const {
-  // @@protoc_insertion_point(field_get:fantasybit.FantasyNameHash.hash)
-  return hash_;
-}
- void FantasyNameHash::set_hash(::google::protobuf::uint64 value) {
-  set_has_hash();
-  hash_ = value;
-  // @@protoc_insertion_point(field_set:fantasybit.FantasyNameHash.hash)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
 

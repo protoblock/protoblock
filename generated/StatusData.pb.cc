@@ -52,16 +52,16 @@ void protobuf_AssignDesc_StatusData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, status_),
   };
   PlayerStatus_reflection_ =
-    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+    new ::google::protobuf::internal::GeneratedMessageReflection(
       PlayerStatus_descriptor_,
       PlayerStatus::default_instance_,
       PlayerStatus_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, _unknown_fields_),
       -1,
-      -1,
-      sizeof(PlayerStatus),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, _internal_metadata_),
-      -1);
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(PlayerStatus));
   PlayerStatus_Status_descriptor_ = PlayerStatus_descriptor_->enum_type(0);
   GameStatus_descriptor_ = file->message_type(1);
   static const int GameStatus_offsets_[2] = {
@@ -69,16 +69,16 @@ void protobuf_AssignDesc_StatusData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameStatus, datetime_),
   };
   GameStatus_reflection_ =
-    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+    new ::google::protobuf::internal::GeneratedMessageReflection(
       GameStatus_descriptor_,
       GameStatus::default_instance_,
       GameStatus_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameStatus, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameStatus, _unknown_fields_),
       -1,
-      -1,
-      sizeof(GameStatus),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameStatus, _internal_metadata_),
-      -1);
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(GameStatus));
   GameStatus_Status_descriptor_ = GameStatus_descriptor_->enum_type(0);
   TeamDepth_descriptor_ = file->message_type(2);
   static const int TeamDepth_offsets_[5] = {
@@ -89,16 +89,16 @@ void protobuf_AssignDesc_StatusData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamDepth, k_),
   };
   TeamDepth_reflection_ =
-    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+    new ::google::protobuf::internal::GeneratedMessageReflection(
       TeamDepth_descriptor_,
       TeamDepth::default_instance_,
       TeamDepth_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamDepth, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamDepth, _unknown_fields_),
       -1,
-      -1,
-      sizeof(TeamDepth),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamDepth, _internal_metadata_),
-      -1);
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(TeamDepth));
   GlobalState_descriptor_ = file->message_type(3);
   static const int GlobalState_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, state_),
@@ -106,16 +106,16 @@ void protobuf_AssignDesc_StatusData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, week_),
   };
   GlobalState_reflection_ =
-    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+    new ::google::protobuf::internal::GeneratedMessageReflection(
       GlobalState_descriptor_,
       GlobalState::default_instance_,
       GlobalState_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, _unknown_fields_),
       -1,
-      -1,
-      sizeof(GlobalState),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GlobalState, _internal_metadata_),
-      -1);
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(GlobalState));
   GlobalState_State_descriptor_ = GlobalState_descriptor_->enum_type(0);
   PlayerGameStatus_descriptor_ = file->enum_type(0);
 }
@@ -131,13 +131,13 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      PlayerStatus_descriptor_, &PlayerStatus::default_instance());
+    PlayerStatus_descriptor_, &PlayerStatus::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      GameStatus_descriptor_, &GameStatus::default_instance());
+    GameStatus_descriptor_, &GameStatus::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      TeamDepth_descriptor_, &TeamDepth::default_instance());
+    TeamDepth_descriptor_, &TeamDepth::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      GlobalState_descriptor_, &GlobalState::default_instance());
+    GlobalState_descriptor_, &GlobalState::default_instance());
 }
 
 }  // namespace
@@ -210,16 +210,6 @@ bool PlayerGameStatus_IsValid(int value) {
 }
 
 
-namespace {
-
-static void MergeFromFail(int line) GOOGLE_ATTRIBUTE_COLD;
-static void MergeFromFail(int line) {
-  GOOGLE_CHECK(false) << __FILE__ << ":" << line;
-}
-
-}  // namespace
-
-
 // ===================================================================
 
 const ::google::protobuf::EnumDescriptor* PlayerStatus_Status_descriptor() {
@@ -253,7 +243,7 @@ const int PlayerStatus::kStatusFieldNumber;
 #endif  // !_MSC_VER
 
 PlayerStatus::PlayerStatus()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:fantasybit.PlayerStatus)
 }
@@ -262,8 +252,7 @@ void PlayerStatus::InitAsDefaultInstance() {
 }
 
 PlayerStatus::PlayerStatus(const PlayerStatus& from)
-  : ::google::protobuf::Message(),
-    _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:fantasybit.PlayerStatus)
@@ -272,7 +261,7 @@ PlayerStatus::PlayerStatus(const PlayerStatus& from)
 void PlayerStatus::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  teamid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   status_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -283,7 +272,9 @@ PlayerStatus::~PlayerStatus() {
 }
 
 void PlayerStatus::SharedDtor() {
-  teamid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (teamid_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete teamid_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -305,25 +296,21 @@ const PlayerStatus& PlayerStatus::default_instance() {
 
 PlayerStatus* PlayerStatus::default_instance_ = NULL;
 
-PlayerStatus* PlayerStatus::New(::google::protobuf::Arena* arena) const {
-  PlayerStatus* n = new PlayerStatus;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
+PlayerStatus* PlayerStatus::New() const {
+  return new PlayerStatus;
 }
 
 void PlayerStatus::Clear() {
-  if (_has_bits_[0 / 32] & 3u) {
+  if (_has_bits_[0 / 32] & 3) {
     if (has_teamid()) {
-      teamid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+      if (teamid_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        teamid_->clear();
+      }
     }
     status_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  if (_internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->Clear();
-  }
+  mutable_unknown_fields()->Clear();
 }
 
 bool PlayerStatus::MergePartialFromCodedStream(
@@ -344,7 +331,7 @@ bool PlayerStatus::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->teamid().data(), this->teamid().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "fantasybit.PlayerStatus.teamid");
+            "teamid");
         } else {
           goto handle_unusual;
         }
@@ -402,7 +389,7 @@ void PlayerStatus::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->teamid().data(), this->teamid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.PlayerStatus.teamid");
+      "teamid");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       20, this->teamid(), output);
   }
@@ -413,7 +400,7 @@ void PlayerStatus::SerializeWithCachedSizes(
       30, this->status(), output);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
@@ -428,7 +415,7 @@ void PlayerStatus::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->teamid().data(), this->teamid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.PlayerStatus.teamid");
+      "teamid");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         20, this->teamid(), target);
@@ -440,7 +427,7 @@ void PlayerStatus::SerializeWithCachedSizes(
       30, this->status(), target);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -451,7 +438,7 @@ void PlayerStatus::SerializeWithCachedSizes(
 int PlayerStatus::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & 3u) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     // optional string teamid = 20;
     if (has_teamid()) {
       total_size += 2 +
@@ -466,7 +453,7 @@ int PlayerStatus::ByteSize() const {
     }
 
   }
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
@@ -478,10 +465,10 @@ int PlayerStatus::ByteSize() const {
 }
 
 void PlayerStatus::MergeFrom(const ::google::protobuf::Message& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const PlayerStatus* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const PlayerStatus>(
-          &from);
+  GOOGLE_CHECK_NE(&from, this);
+  const PlayerStatus* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const PlayerStatus*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -490,19 +477,16 @@ void PlayerStatus::MergeFrom(const ::google::protobuf::Message& from) {
 }
 
 void PlayerStatus::MergeFrom(const PlayerStatus& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_teamid()) {
-      set_has_teamid();
-      teamid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.teamid_);
+      set_teamid(from.teamid());
     }
     if (from.has_status()) {
       set_status(from.status());
     }
   }
-  if (from._internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
 void PlayerStatus::CopyFrom(const ::google::protobuf::Message& from) {
@@ -523,15 +507,13 @@ bool PlayerStatus::IsInitialized() const {
 }
 
 void PlayerStatus::Swap(PlayerStatus* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void PlayerStatus::InternalSwap(PlayerStatus* other) {
-  teamid_.Swap(&other->teamid_);
-  std::swap(status_, other->status_);
-  std::swap(_has_bits_[0], other->_has_bits_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  std::swap(_cached_size_, other->_cached_size_);
+  if (other != this) {
+    std::swap(teamid_, other->teamid_);
+    std::swap(status_, other->status_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
 }
 
 ::google::protobuf::Metadata PlayerStatus::GetMetadata() const {
@@ -542,88 +524,6 @@ void PlayerStatus::InternalSwap(PlayerStatus* other) {
   return metadata;
 }
 
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// PlayerStatus
-
-// optional string teamid = 20;
-bool PlayerStatus::has_teamid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-void PlayerStatus::set_has_teamid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-void PlayerStatus::clear_has_teamid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-void PlayerStatus::clear_teamid() {
-  teamid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_teamid();
-}
- const ::std::string& PlayerStatus::teamid() const {
-  // @@protoc_insertion_point(field_get:fantasybit.PlayerStatus.teamid)
-  return teamid_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- void PlayerStatus::set_teamid(const ::std::string& value) {
-  set_has_teamid();
-  teamid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:fantasybit.PlayerStatus.teamid)
-}
- void PlayerStatus::set_teamid(const char* value) {
-  set_has_teamid();
-  teamid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:fantasybit.PlayerStatus.teamid)
-}
- void PlayerStatus::set_teamid(const char* value, size_t size) {
-  set_has_teamid();
-  teamid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:fantasybit.PlayerStatus.teamid)
-}
- ::std::string* PlayerStatus::mutable_teamid() {
-  set_has_teamid();
-  // @@protoc_insertion_point(field_mutable:fantasybit.PlayerStatus.teamid)
-  return teamid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- ::std::string* PlayerStatus::release_teamid() {
-  clear_has_teamid();
-  return teamid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- void PlayerStatus::set_allocated_teamid(::std::string* teamid) {
-  if (teamid != NULL) {
-    set_has_teamid();
-  } else {
-    clear_has_teamid();
-  }
-  teamid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), teamid);
-  // @@protoc_insertion_point(field_set_allocated:fantasybit.PlayerStatus.teamid)
-}
-
-// optional .fantasybit.PlayerStatus.Status status = 30;
-bool PlayerStatus::has_status() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-void PlayerStatus::set_has_status() {
-  _has_bits_[0] |= 0x00000002u;
-}
-void PlayerStatus::clear_has_status() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-void PlayerStatus::clear_status() {
-  status_ = 0;
-  clear_has_status();
-}
- ::fantasybit::PlayerStatus_Status PlayerStatus::status() const {
-  // @@protoc_insertion_point(field_get:fantasybit.PlayerStatus.status)
-  return static_cast< ::fantasybit::PlayerStatus_Status >(status_);
-}
- void PlayerStatus::set_status(::fantasybit::PlayerStatus_Status value) {
-  assert(::fantasybit::PlayerStatus_Status_IsValid(value));
-  set_has_status();
-  status_ = value;
-  // @@protoc_insertion_point(field_set:fantasybit.PlayerStatus.status)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
@@ -660,7 +560,7 @@ const int GameStatus::kDatetimeFieldNumber;
 #endif  // !_MSC_VER
 
 GameStatus::GameStatus()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:fantasybit.GameStatus)
 }
@@ -669,8 +569,7 @@ void GameStatus::InitAsDefaultInstance() {
 }
 
 GameStatus::GameStatus(const GameStatus& from)
-  : ::google::protobuf::Message(),
-    _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:fantasybit.GameStatus)
@@ -710,32 +609,28 @@ const GameStatus& GameStatus::default_instance() {
 
 GameStatus* GameStatus::default_instance_ = NULL;
 
-GameStatus* GameStatus::New(::google::protobuf::Arena* arena) const {
-  GameStatus* n = new GameStatus;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
+GameStatus* GameStatus::New() const {
+  return new GameStatus;
 }
 
 void GameStatus::Clear() {
-#define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<GameStatus*>(16)->f)
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<GameStatus*>(16)->f) - \
+   reinterpret_cast<char*>(16))
 
-#define ZR_(first, last) do {\
-  ::memset(&first, 0,\
-           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
-} while (0)
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
 
   ZR_(status_, datetime_);
 
-#undef ZR_HELPER_
+#undef OFFSET_OF_FIELD_
 #undef ZR_
 
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  if (_internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->Clear();
-  }
+  mutable_unknown_fields()->Clear();
 }
 
 bool GameStatus::MergePartialFromCodedStream(
@@ -818,7 +713,7 @@ void GameStatus::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->datetime(), output);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
@@ -839,7 +734,7 @@ void GameStatus::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->datetime(), target);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -850,7 +745,7 @@ void GameStatus::SerializeWithCachedSizes(
 int GameStatus::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & 3u) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     // optional .fantasybit.GameStatus.Status status = 10;
     if (has_status()) {
       total_size += 1 +
@@ -865,7 +760,7 @@ int GameStatus::ByteSize() const {
     }
 
   }
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
@@ -877,10 +772,10 @@ int GameStatus::ByteSize() const {
 }
 
 void GameStatus::MergeFrom(const ::google::protobuf::Message& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const GameStatus* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const GameStatus>(
-          &from);
+  GOOGLE_CHECK_NE(&from, this);
+  const GameStatus* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const GameStatus*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -889,7 +784,7 @@ void GameStatus::MergeFrom(const ::google::protobuf::Message& from) {
 }
 
 void GameStatus::MergeFrom(const GameStatus& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_status()) {
       set_status(from.status());
@@ -898,9 +793,7 @@ void GameStatus::MergeFrom(const GameStatus& from) {
       set_datetime(from.datetime());
     }
   }
-  if (from._internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
 void GameStatus::CopyFrom(const ::google::protobuf::Message& from) {
@@ -921,15 +814,13 @@ bool GameStatus::IsInitialized() const {
 }
 
 void GameStatus::Swap(GameStatus* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void GameStatus::InternalSwap(GameStatus* other) {
-  std::swap(status_, other->status_);
-  std::swap(datetime_, other->datetime_);
-  std::swap(_has_bits_[0], other->_has_bits_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  std::swap(_cached_size_, other->_cached_size_);
+  if (other != this) {
+    std::swap(status_, other->status_);
+    std::swap(datetime_, other->datetime_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
 }
 
 ::google::protobuf::Metadata GameStatus::GetMetadata() const {
@@ -940,59 +831,6 @@ void GameStatus::InternalSwap(GameStatus* other) {
   return metadata;
 }
 
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// GameStatus
-
-// optional .fantasybit.GameStatus.Status status = 10;
-bool GameStatus::has_status() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-void GameStatus::set_has_status() {
-  _has_bits_[0] |= 0x00000001u;
-}
-void GameStatus::clear_has_status() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-void GameStatus::clear_status() {
-  status_ = 0;
-  clear_has_status();
-}
- ::fantasybit::GameStatus_Status GameStatus::status() const {
-  // @@protoc_insertion_point(field_get:fantasybit.GameStatus.status)
-  return static_cast< ::fantasybit::GameStatus_Status >(status_);
-}
- void GameStatus::set_status(::fantasybit::GameStatus_Status value) {
-  assert(::fantasybit::GameStatus_Status_IsValid(value));
-  set_has_status();
-  status_ = value;
-  // @@protoc_insertion_point(field_set:fantasybit.GameStatus.status)
-}
-
-// optional uint32 datetime = 20;
-bool GameStatus::has_datetime() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-void GameStatus::set_has_datetime() {
-  _has_bits_[0] |= 0x00000002u;
-}
-void GameStatus::clear_has_datetime() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-void GameStatus::clear_datetime() {
-  datetime_ = 0u;
-  clear_has_datetime();
-}
- ::google::protobuf::uint32 GameStatus::datetime() const {
-  // @@protoc_insertion_point(field_get:fantasybit.GameStatus.datetime)
-  return datetime_;
-}
- void GameStatus::set_datetime(::google::protobuf::uint32 value) {
-  set_has_datetime();
-  datetime_ = value;
-  // @@protoc_insertion_point(field_set:fantasybit.GameStatus.datetime)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
@@ -1005,7 +843,7 @@ const int TeamDepth::kKFieldNumber;
 #endif  // !_MSC_VER
 
 TeamDepth::TeamDepth()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:fantasybit.TeamDepth)
 }
@@ -1014,8 +852,7 @@ void TeamDepth::InitAsDefaultInstance() {
 }
 
 TeamDepth::TeamDepth(const TeamDepth& from)
-  : ::google::protobuf::Message(),
-    _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:fantasybit.TeamDepth)
@@ -1054,12 +891,8 @@ const TeamDepth& TeamDepth::default_instance() {
 
 TeamDepth* TeamDepth::default_instance_ = NULL;
 
-TeamDepth* TeamDepth::New(::google::protobuf::Arena* arena) const {
-  TeamDepth* n = new TeamDepth;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
+TeamDepth* TeamDepth::New() const {
+  return new TeamDepth;
 }
 
 void TeamDepth::Clear() {
@@ -1069,9 +902,7 @@ void TeamDepth::Clear() {
   te_.Clear();
   k_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  if (_internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->Clear();
-  }
+  mutable_unknown_fields()->Clear();
 }
 
 bool TeamDepth::MergePartialFromCodedStream(
@@ -1094,7 +925,7 @@ bool TeamDepth::MergePartialFromCodedStream(
             this->qb(this->qb_size() - 1).data(),
             this->qb(this->qb_size() - 1).length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "fantasybit.TeamDepth.qb");
+            "qb");
         } else {
           goto handle_unusual;
         }
@@ -1113,7 +944,7 @@ bool TeamDepth::MergePartialFromCodedStream(
             this->rb(this->rb_size() - 1).data(),
             this->rb(this->rb_size() - 1).length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "fantasybit.TeamDepth.rb");
+            "rb");
         } else {
           goto handle_unusual;
         }
@@ -1132,7 +963,7 @@ bool TeamDepth::MergePartialFromCodedStream(
             this->wr(this->wr_size() - 1).data(),
             this->wr(this->wr_size() - 1).length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "fantasybit.TeamDepth.wr");
+            "wr");
         } else {
           goto handle_unusual;
         }
@@ -1151,7 +982,7 @@ bool TeamDepth::MergePartialFromCodedStream(
             this->te(this->te_size() - 1).data(),
             this->te(this->te_size() - 1).length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "fantasybit.TeamDepth.te");
+            "te");
         } else {
           goto handle_unusual;
         }
@@ -1170,7 +1001,7 @@ bool TeamDepth::MergePartialFromCodedStream(
             this->k(this->k_size() - 1).data(),
             this->k(this->k_size() - 1).length(),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "fantasybit.TeamDepth.k");
+            "k");
         } else {
           goto handle_unusual;
         }
@@ -1206,55 +1037,55 @@ void TeamDepth::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:fantasybit.TeamDepth)
   // repeated string qb = 10;
   for (int i = 0; i < this->qb_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->qb(i).data(), this->qb(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.qb");
+  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    this->qb(i).data(), this->qb(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE,
+    "qb");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       10, this->qb(i), output);
   }
 
   // repeated string rb = 20;
   for (int i = 0; i < this->rb_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->rb(i).data(), this->rb(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.rb");
+  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    this->rb(i).data(), this->rb(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE,
+    "rb");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       20, this->rb(i), output);
   }
 
   // repeated string wr = 30;
   for (int i = 0; i < this->wr_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->wr(i).data(), this->wr(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.wr");
+  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    this->wr(i).data(), this->wr(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE,
+    "wr");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       30, this->wr(i), output);
   }
 
   // repeated string te = 40;
   for (int i = 0; i < this->te_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->te(i).data(), this->te(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.te");
+  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    this->te(i).data(), this->te(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE,
+    "te");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       40, this->te(i), output);
   }
 
   // repeated string k = 50;
   for (int i = 0; i < this->k_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->k(i).data(), this->k(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.k");
+  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    this->k(i).data(), this->k(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE,
+    "k");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       50, this->k(i), output);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
@@ -1269,7 +1100,7 @@ void TeamDepth::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->qb(i).data(), this->qb(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.qb");
+      "qb");
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(10, this->qb(i), target);
   }
@@ -1279,7 +1110,7 @@ void TeamDepth::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->rb(i).data(), this->rb(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.rb");
+      "rb");
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(20, this->rb(i), target);
   }
@@ -1289,7 +1120,7 @@ void TeamDepth::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->wr(i).data(), this->wr(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.wr");
+      "wr");
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(30, this->wr(i), target);
   }
@@ -1299,7 +1130,7 @@ void TeamDepth::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->te(i).data(), this->te(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.te");
+      "te");
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(40, this->te(i), target);
   }
@@ -1309,12 +1140,12 @@ void TeamDepth::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->k(i).data(), this->k(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "fantasybit.TeamDepth.k");
+      "k");
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(50, this->k(i), target);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -1360,7 +1191,7 @@ int TeamDepth::ByteSize() const {
       this->k(i));
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
@@ -1372,10 +1203,10 @@ int TeamDepth::ByteSize() const {
 }
 
 void TeamDepth::MergeFrom(const ::google::protobuf::Message& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const TeamDepth* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const TeamDepth>(
-          &from);
+  GOOGLE_CHECK_NE(&from, this);
+  const TeamDepth* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const TeamDepth*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -1384,15 +1215,13 @@ void TeamDepth::MergeFrom(const ::google::protobuf::Message& from) {
 }
 
 void TeamDepth::MergeFrom(const TeamDepth& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  GOOGLE_CHECK_NE(&from, this);
   qb_.MergeFrom(from.qb_);
   rb_.MergeFrom(from.rb_);
   wr_.MergeFrom(from.wr_);
   te_.MergeFrom(from.te_);
   k_.MergeFrom(from.k_);
-  if (from._internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
 void TeamDepth::CopyFrom(const ::google::protobuf::Message& from) {
@@ -1413,18 +1242,16 @@ bool TeamDepth::IsInitialized() const {
 }
 
 void TeamDepth::Swap(TeamDepth* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void TeamDepth::InternalSwap(TeamDepth* other) {
-  qb_.UnsafeArenaSwap(&other->qb_);
-  rb_.UnsafeArenaSwap(&other->rb_);
-  wr_.UnsafeArenaSwap(&other->wr_);
-  te_.UnsafeArenaSwap(&other->te_);
-  k_.UnsafeArenaSwap(&other->k_);
-  std::swap(_has_bits_[0], other->_has_bits_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  std::swap(_cached_size_, other->_cached_size_);
+  if (other != this) {
+    qb_.Swap(&other->qb_);
+    rb_.Swap(&other->rb_);
+    wr_.Swap(&other->wr_);
+    te_.Swap(&other->te_);
+    k_.Swap(&other->k_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
 }
 
 ::google::protobuf::Metadata TeamDepth::GetMetadata() const {
@@ -1435,280 +1262,6 @@ void TeamDepth::InternalSwap(TeamDepth* other) {
   return metadata;
 }
 
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// TeamDepth
-
-// repeated string qb = 10;
-int TeamDepth::qb_size() const {
-  return qb_.size();
-}
-void TeamDepth::clear_qb() {
-  qb_.Clear();
-}
- const ::std::string& TeamDepth::qb(int index) const {
-  // @@protoc_insertion_point(field_get:fantasybit.TeamDepth.qb)
-  return qb_.Get(index);
-}
- ::std::string* TeamDepth::mutable_qb(int index) {
-  // @@protoc_insertion_point(field_mutable:fantasybit.TeamDepth.qb)
-  return qb_.Mutable(index);
-}
- void TeamDepth::set_qb(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:fantasybit.TeamDepth.qb)
-  qb_.Mutable(index)->assign(value);
-}
- void TeamDepth::set_qb(int index, const char* value) {
-  qb_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:fantasybit.TeamDepth.qb)
-}
- void TeamDepth::set_qb(int index, const char* value, size_t size) {
-  qb_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:fantasybit.TeamDepth.qb)
-}
- ::std::string* TeamDepth::add_qb() {
-  return qb_.Add();
-}
- void TeamDepth::add_qb(const ::std::string& value) {
-  qb_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:fantasybit.TeamDepth.qb)
-}
- void TeamDepth::add_qb(const char* value) {
-  qb_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:fantasybit.TeamDepth.qb)
-}
- void TeamDepth::add_qb(const char* value, size_t size) {
-  qb_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:fantasybit.TeamDepth.qb)
-}
- const ::google::protobuf::RepeatedPtrField< ::std::string>&
-TeamDepth::qb() const {
-  // @@protoc_insertion_point(field_list:fantasybit.TeamDepth.qb)
-  return qb_;
-}
- ::google::protobuf::RepeatedPtrField< ::std::string>*
-TeamDepth::mutable_qb() {
-  // @@protoc_insertion_point(field_mutable_list:fantasybit.TeamDepth.qb)
-  return &qb_;
-}
-
-// repeated string rb = 20;
-int TeamDepth::rb_size() const {
-  return rb_.size();
-}
-void TeamDepth::clear_rb() {
-  rb_.Clear();
-}
- const ::std::string& TeamDepth::rb(int index) const {
-  // @@protoc_insertion_point(field_get:fantasybit.TeamDepth.rb)
-  return rb_.Get(index);
-}
- ::std::string* TeamDepth::mutable_rb(int index) {
-  // @@protoc_insertion_point(field_mutable:fantasybit.TeamDepth.rb)
-  return rb_.Mutable(index);
-}
- void TeamDepth::set_rb(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:fantasybit.TeamDepth.rb)
-  rb_.Mutable(index)->assign(value);
-}
- void TeamDepth::set_rb(int index, const char* value) {
-  rb_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:fantasybit.TeamDepth.rb)
-}
- void TeamDepth::set_rb(int index, const char* value, size_t size) {
-  rb_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:fantasybit.TeamDepth.rb)
-}
- ::std::string* TeamDepth::add_rb() {
-  return rb_.Add();
-}
- void TeamDepth::add_rb(const ::std::string& value) {
-  rb_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:fantasybit.TeamDepth.rb)
-}
- void TeamDepth::add_rb(const char* value) {
-  rb_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:fantasybit.TeamDepth.rb)
-}
- void TeamDepth::add_rb(const char* value, size_t size) {
-  rb_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:fantasybit.TeamDepth.rb)
-}
- const ::google::protobuf::RepeatedPtrField< ::std::string>&
-TeamDepth::rb() const {
-  // @@protoc_insertion_point(field_list:fantasybit.TeamDepth.rb)
-  return rb_;
-}
- ::google::protobuf::RepeatedPtrField< ::std::string>*
-TeamDepth::mutable_rb() {
-  // @@protoc_insertion_point(field_mutable_list:fantasybit.TeamDepth.rb)
-  return &rb_;
-}
-
-// repeated string wr = 30;
-int TeamDepth::wr_size() const {
-  return wr_.size();
-}
-void TeamDepth::clear_wr() {
-  wr_.Clear();
-}
- const ::std::string& TeamDepth::wr(int index) const {
-  // @@protoc_insertion_point(field_get:fantasybit.TeamDepth.wr)
-  return wr_.Get(index);
-}
- ::std::string* TeamDepth::mutable_wr(int index) {
-  // @@protoc_insertion_point(field_mutable:fantasybit.TeamDepth.wr)
-  return wr_.Mutable(index);
-}
- void TeamDepth::set_wr(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:fantasybit.TeamDepth.wr)
-  wr_.Mutable(index)->assign(value);
-}
- void TeamDepth::set_wr(int index, const char* value) {
-  wr_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:fantasybit.TeamDepth.wr)
-}
- void TeamDepth::set_wr(int index, const char* value, size_t size) {
-  wr_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:fantasybit.TeamDepth.wr)
-}
- ::std::string* TeamDepth::add_wr() {
-  return wr_.Add();
-}
- void TeamDepth::add_wr(const ::std::string& value) {
-  wr_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:fantasybit.TeamDepth.wr)
-}
- void TeamDepth::add_wr(const char* value) {
-  wr_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:fantasybit.TeamDepth.wr)
-}
- void TeamDepth::add_wr(const char* value, size_t size) {
-  wr_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:fantasybit.TeamDepth.wr)
-}
- const ::google::protobuf::RepeatedPtrField< ::std::string>&
-TeamDepth::wr() const {
-  // @@protoc_insertion_point(field_list:fantasybit.TeamDepth.wr)
-  return wr_;
-}
- ::google::protobuf::RepeatedPtrField< ::std::string>*
-TeamDepth::mutable_wr() {
-  // @@protoc_insertion_point(field_mutable_list:fantasybit.TeamDepth.wr)
-  return &wr_;
-}
-
-// repeated string te = 40;
-int TeamDepth::te_size() const {
-  return te_.size();
-}
-void TeamDepth::clear_te() {
-  te_.Clear();
-}
- const ::std::string& TeamDepth::te(int index) const {
-  // @@protoc_insertion_point(field_get:fantasybit.TeamDepth.te)
-  return te_.Get(index);
-}
- ::std::string* TeamDepth::mutable_te(int index) {
-  // @@protoc_insertion_point(field_mutable:fantasybit.TeamDepth.te)
-  return te_.Mutable(index);
-}
- void TeamDepth::set_te(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:fantasybit.TeamDepth.te)
-  te_.Mutable(index)->assign(value);
-}
- void TeamDepth::set_te(int index, const char* value) {
-  te_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:fantasybit.TeamDepth.te)
-}
- void TeamDepth::set_te(int index, const char* value, size_t size) {
-  te_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:fantasybit.TeamDepth.te)
-}
- ::std::string* TeamDepth::add_te() {
-  return te_.Add();
-}
- void TeamDepth::add_te(const ::std::string& value) {
-  te_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:fantasybit.TeamDepth.te)
-}
- void TeamDepth::add_te(const char* value) {
-  te_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:fantasybit.TeamDepth.te)
-}
- void TeamDepth::add_te(const char* value, size_t size) {
-  te_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:fantasybit.TeamDepth.te)
-}
- const ::google::protobuf::RepeatedPtrField< ::std::string>&
-TeamDepth::te() const {
-  // @@protoc_insertion_point(field_list:fantasybit.TeamDepth.te)
-  return te_;
-}
- ::google::protobuf::RepeatedPtrField< ::std::string>*
-TeamDepth::mutable_te() {
-  // @@protoc_insertion_point(field_mutable_list:fantasybit.TeamDepth.te)
-  return &te_;
-}
-
-// repeated string k = 50;
-int TeamDepth::k_size() const {
-  return k_.size();
-}
-void TeamDepth::clear_k() {
-  k_.Clear();
-}
- const ::std::string& TeamDepth::k(int index) const {
-  // @@protoc_insertion_point(field_get:fantasybit.TeamDepth.k)
-  return k_.Get(index);
-}
- ::std::string* TeamDepth::mutable_k(int index) {
-  // @@protoc_insertion_point(field_mutable:fantasybit.TeamDepth.k)
-  return k_.Mutable(index);
-}
- void TeamDepth::set_k(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:fantasybit.TeamDepth.k)
-  k_.Mutable(index)->assign(value);
-}
- void TeamDepth::set_k(int index, const char* value) {
-  k_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:fantasybit.TeamDepth.k)
-}
- void TeamDepth::set_k(int index, const char* value, size_t size) {
-  k_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:fantasybit.TeamDepth.k)
-}
- ::std::string* TeamDepth::add_k() {
-  return k_.Add();
-}
- void TeamDepth::add_k(const ::std::string& value) {
-  k_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:fantasybit.TeamDepth.k)
-}
- void TeamDepth::add_k(const char* value) {
-  k_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:fantasybit.TeamDepth.k)
-}
- void TeamDepth::add_k(const char* value, size_t size) {
-  k_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:fantasybit.TeamDepth.k)
-}
- const ::google::protobuf::RepeatedPtrField< ::std::string>&
-TeamDepth::k() const {
-  // @@protoc_insertion_point(field_list:fantasybit.TeamDepth.k)
-  return k_;
-}
- ::google::protobuf::RepeatedPtrField< ::std::string>*
-TeamDepth::mutable_k() {
-  // @@protoc_insertion_point(field_mutable_list:fantasybit.TeamDepth.k)
-  return &k_;
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
@@ -1740,7 +1293,7 @@ const int GlobalState::kWeekFieldNumber;
 #endif  // !_MSC_VER
 
 GlobalState::GlobalState()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   // @@protoc_insertion_point(constructor:fantasybit.GlobalState)
 }
@@ -1749,8 +1302,7 @@ void GlobalState::InitAsDefaultInstance() {
 }
 
 GlobalState::GlobalState(const GlobalState& from)
-  : ::google::protobuf::Message(),
-    _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:fantasybit.GlobalState)
@@ -1791,35 +1343,31 @@ const GlobalState& GlobalState::default_instance() {
 
 GlobalState* GlobalState::default_instance_ = NULL;
 
-GlobalState* GlobalState::New(::google::protobuf::Arena* arena) const {
-  GlobalState* n = new GlobalState;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
+GlobalState* GlobalState::New() const {
+  return new GlobalState;
 }
 
 void GlobalState::Clear() {
-#define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<GlobalState*>(16)->f)
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<GlobalState*>(16)->f) - \
+   reinterpret_cast<char*>(16))
 
-#define ZR_(first, last) do {\
-  ::memset(&first, 0,\
-           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
-} while (0)
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
 
-  if (_has_bits_[0 / 32] & 7u) {
+  if (_has_bits_[0 / 32] & 7) {
     ZR_(season_, week_);
     state_ = 10;
   }
 
-#undef ZR_HELPER_
+#undef OFFSET_OF_FIELD_
 #undef ZR_
 
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  if (_internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->Clear();
-  }
+  mutable_unknown_fields()->Clear();
 }
 
 bool GlobalState::MergePartialFromCodedStream(
@@ -1922,7 +1470,7 @@ void GlobalState::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->week(), output);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
@@ -1948,7 +1496,7 @@ void GlobalState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->week(), target);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
@@ -1959,7 +1507,7 @@ void GlobalState::SerializeWithCachedSizes(
 int GlobalState::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & 7u) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     // optional .fantasybit.GlobalState.State state = 1;
     if (has_state()) {
       total_size += 1 +
@@ -1981,7 +1529,7 @@ int GlobalState::ByteSize() const {
     }
 
   }
-  if (_internal_metadata_.have_unknown_fields()) {
+  if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
@@ -1993,10 +1541,10 @@ int GlobalState::ByteSize() const {
 }
 
 void GlobalState::MergeFrom(const ::google::protobuf::Message& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const GlobalState* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const GlobalState>(
-          &from);
+  GOOGLE_CHECK_NE(&from, this);
+  const GlobalState* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const GlobalState*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -2005,7 +1553,7 @@ void GlobalState::MergeFrom(const ::google::protobuf::Message& from) {
 }
 
 void GlobalState::MergeFrom(const GlobalState& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_state()) {
       set_state(from.state());
@@ -2017,9 +1565,7 @@ void GlobalState::MergeFrom(const GlobalState& from) {
       set_week(from.week());
     }
   }
-  if (from._internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
 void GlobalState::CopyFrom(const ::google::protobuf::Message& from) {
@@ -2040,16 +1586,14 @@ bool GlobalState::IsInitialized() const {
 }
 
 void GlobalState::Swap(GlobalState* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void GlobalState::InternalSwap(GlobalState* other) {
-  std::swap(state_, other->state_);
-  std::swap(season_, other->season_);
-  std::swap(week_, other->week_);
-  std::swap(_has_bits_[0], other->_has_bits_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  std::swap(_cached_size_, other->_cached_size_);
+  if (other != this) {
+    std::swap(state_, other->state_);
+    std::swap(season_, other->season_);
+    std::swap(week_, other->week_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
 }
 
 ::google::protobuf::Metadata GlobalState::GetMetadata() const {
@@ -2060,83 +1604,6 @@ void GlobalState::InternalSwap(GlobalState* other) {
   return metadata;
 }
 
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// GlobalState
-
-// optional .fantasybit.GlobalState.State state = 1;
-bool GlobalState::has_state() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-void GlobalState::set_has_state() {
-  _has_bits_[0] |= 0x00000001u;
-}
-void GlobalState::clear_has_state() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-void GlobalState::clear_state() {
-  state_ = 10;
-  clear_has_state();
-}
- ::fantasybit::GlobalState_State GlobalState::state() const {
-  // @@protoc_insertion_point(field_get:fantasybit.GlobalState.state)
-  return static_cast< ::fantasybit::GlobalState_State >(state_);
-}
- void GlobalState::set_state(::fantasybit::GlobalState_State value) {
-  assert(::fantasybit::GlobalState_State_IsValid(value));
-  set_has_state();
-  state_ = value;
-  // @@protoc_insertion_point(field_set:fantasybit.GlobalState.state)
-}
-
-// optional uint32 season = 10;
-bool GlobalState::has_season() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-void GlobalState::set_has_season() {
-  _has_bits_[0] |= 0x00000002u;
-}
-void GlobalState::clear_has_season() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-void GlobalState::clear_season() {
-  season_ = 0u;
-  clear_has_season();
-}
- ::google::protobuf::uint32 GlobalState::season() const {
-  // @@protoc_insertion_point(field_get:fantasybit.GlobalState.season)
-  return season_;
-}
- void GlobalState::set_season(::google::protobuf::uint32 value) {
-  set_has_season();
-  season_ = value;
-  // @@protoc_insertion_point(field_set:fantasybit.GlobalState.season)
-}
-
-// optional uint32 week = 20;
-bool GlobalState::has_week() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-void GlobalState::set_has_week() {
-  _has_bits_[0] |= 0x00000004u;
-}
-void GlobalState::clear_has_week() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-void GlobalState::clear_week() {
-  week_ = 0u;
-  clear_has_week();
-}
- ::google::protobuf::uint32 GlobalState::week() const {
-  // @@protoc_insertion_point(field_get:fantasybit.GlobalState.week)
-  return week_;
-}
- void GlobalState::set_week(::google::protobuf::uint32 value) {
-  set_has_week();
-  week_ = value;
-  // @@protoc_insertion_point(field_set:fantasybit.GlobalState.week)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
 
