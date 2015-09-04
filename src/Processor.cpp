@@ -57,6 +57,9 @@ int BlockProcessor::process(Block &sblock) {
         qCritical() << "verifySignedBlock failed! ";
         return -1;
     }
+    else {
+        qInfo() << "yes verifySignedBlock " <<  sblock.signedhead().head().num();
+    }
 
     mRecorder.startBlock(sblock.signedhead().head().num());
     if (sblock.signedhead().head().blocktype() == BlockHeader::Type::BlockHeader_Type_DATA)
@@ -398,6 +401,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             qDebug() << st.fantasy_name() << "new projection block" << ptb.DebugString();
             for (auto pt : ptb.player_points() )
                 mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
+
+            break;
 
         }
 

@@ -21,7 +21,7 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myWeekLabel->setText("Unknown Week #");
     ui->myPreviousWeek->setEnabled(false);
     ui->myNextWeek->setEnabled(false);
-    ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekWidget);
+    ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekView);
     myCurrentWeek =-1;
     ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());
 }
