@@ -1,5 +1,6 @@
 #include "core.h"
 #include <iostream>
+#include "ApiData.pb.h"
 
 
 Core::Core(){}
@@ -14,6 +15,8 @@ void Core::bootstrap(){
     qRegisterMetaType<fantasybit::PlayerStatus>("fantasybit::PlayerStatus");
     qRegisterMetaType<pair<string,fantasybit::FantasyNameBal>>("pair<string,fantasybit::FantasyNameBal>");
     qRegisterMetaType<fantasybit::GameStatus_Status>("fantasybit::GameStatus_Status");
+    qRegisterMetaType<fantasybit::Distribution>("fantasybit::Distribution");
+    qRegisterMetaType<fantasybit::FantasyNameHash>("fantasybit::FantasyNameHash");
 
     qRegisterMetaType<string>("string");
     qSetMessagePattern(Platform::settings()->getSetting(AppSettings::LogMessagePattern).toString());

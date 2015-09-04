@@ -373,6 +373,7 @@ void MainLAPIWorker::BeOracle() {
 void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
     auto txstr = st.SerializeAsString();
     RestfullClient rest(QUrl("https://stagingapi.trading.football:4545"));
+    rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()),true);
     rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()));
 }
 

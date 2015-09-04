@@ -55,6 +55,9 @@ class NFLStateData : public QObject {
 
     std::map<std::string, std::unordered_set<std::string>> MyTeamRoster;
     std::map<std::string, PlayerStatus> MyPlayerStatus;
+    std::map<std::string, GameInfo> MyGameInfo;
+
+    //std::map<std::string, bool> TeamLocked;
 
     void removePlayerTeam(const std::string &pid,const std::string &tid) {       
 
@@ -111,6 +114,9 @@ public:
 
     GlobalState GetGlobalState();
     void OnGlobalState(GlobalState &gs);
+
+    GameInfo GetGameInfo(string gameid);
+
 
 private:
     void OnNewPlayer(const std::string &pid);

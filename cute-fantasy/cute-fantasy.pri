@@ -35,13 +35,15 @@ SOURCES += \
     $$PWD/tablemodels.cpp \
     $$PWD/dataagent.cpp \
     $$PWD/waitmodaldialog.cpp \
-    $$PWD/animationandmessagewidget.cpp
+    $$PWD/animationandmessagewidget.cpp \
+    $$PWD/../src/mnemonic.cpp
 
 DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
     $$PWD/../proto/StaticData.proto \
     $$PWD/../proto/StatusData.proto \
-    $$PWD/../proto/NameData.proto
+    $$PWD/../proto/NameData.proto \
+    $$PWD/../proto/ApiData.proto
 
 HEADERS += \
     $$PWD/../src/Commissioner.h \
@@ -92,7 +94,8 @@ HEADERS += \
     $$PWD/playerloader.h \
     $$PWD/dataagent.h \
     $$PWD/waitmodaldialog.h \
-    $$PWD/animationandmessagewidget.h
+    $$PWD/animationandmessagewidget.h \
+    $$PWD/../src/mnemonic.h
 
 FORMS += \       
     $$PWD/mainwindow.ui \

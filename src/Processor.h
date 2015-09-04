@@ -17,6 +17,7 @@
 #include <fc/crypto/sha256.hpp>
 #include <fc/crypto/elliptic.hpp>
 #include "ProtoData.pb.h"
+#include "ApiData.pb.h"
 
 namespace fantasybit
 {
@@ -43,7 +44,8 @@ public slots:
 signals:
     void WeekStart(int);
     void WeekOver(int);
-    void InvalidState(int);
+    void InvalidState(int);   
+    void new_dataDistribution(fantasybit::Distribution);
 
 
 public:
@@ -66,9 +68,7 @@ public:
                            const std::string &blocksigner);
 
     void BlockProcessor::OnWeekOver(int week);
-
     void BlockProcessor::OnWeekStart(int week);
-
 
 };
 

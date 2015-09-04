@@ -15,6 +15,8 @@
 #include "FantasyName.h"
 #include <map>
 
+using namespace std;
+
 namespace fantasybit
 {
 
@@ -25,8 +27,9 @@ class FantasyAgent
 	std::vector<SignedTransaction> pendingTrans{};
 	Block prevBlock{};
 
-    std::vector<Secret2> m_secrets;
-    std::string secretfilename = "secret2.out";
+    std::vector<Secret3> m_secrets;
+    std::string secretfilename3 = "secret3.out";
+    std::string secretfilename2 = "secret2.out";
 
 public:
     enum status { AVAIL, NOTAVAILABLE, OWNED };
@@ -58,6 +61,8 @@ public:
 		return makeSigned(toTransaction(t));
 	}
 
+    bool testIt(Secret3 secret);
+
     status signPlayer(std::string name);
 
     status useName(std::string name);
@@ -83,6 +88,14 @@ public:
     MyFantasyName FantasyAgent::getCurrentNamesStatus();
 
     bool FantasyAgent::UseName(std::string name);
+
+    static pair<fc::ecc::private_key,string> FantasyAgent::makePrivMnemonic();
+    static fc::ecc::private_key FantasyAgent::fromMnemonic(const string &in);
+
+    std::pair<fc::sha256, fc::ecc::signature>
+    FantasyAgent::getRawIdSig(std::string &in, fc::ecc::private_key &pk) ;
+
+
 
 };
 

@@ -16,6 +16,8 @@
 #include <set>
 #include <mutex>
 #include <memory>
+#include "ApiData.pb.h"
+#include "FantasyName.h"
 
 using std::string;
 namespace fantasybit
@@ -47,6 +49,7 @@ signals:
     void ProjectionLive(fantasybit::FantasyBitProj);
     void FantasyNameFound(string);
     void FantasyNameBalance(fantasybit::FantasyNameBal&);
+    void new_dataFantasyNameHash(fantasybit::FantasyNameHash);
 
 public slots:
     void OnLive(bool subscribe) {
@@ -65,7 +68,8 @@ public:
 
     void AddProjection(const std::string &name, const std::string &player, uint32_t proj);
     void OnProjection(const std::string &name, const std::string &player, uint32_t proj);
-    void OnFantasyName(std::string &name);
+    void OnFantasyName(std::shared_ptr<FantasyName> fn);
+
     void OnFantasyNameBalance(FantasyNameBal &fn);
 
     //ToDo: the place to store game time IN/OUt status of NFL player
