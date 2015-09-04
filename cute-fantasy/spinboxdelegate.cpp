@@ -1,8 +1,13 @@
 #include "spinboxdelegate.h"
 #include <QSpinBox>
+#include <QDebug>
 
 SpinBoxDelegate::SpinBoxDelegate(QObject *parent)
-    : QStyledItemDelegate(parent){}
+    : QStyledItemDelegate(parent){
+    myEnabled = true;
+     qDebug()<< " ctor " ;
+
+}
 
 QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
     const QStyleOptionViewItem & /*option*/ ,
@@ -12,7 +17,8 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
     editor->setFrame(false);
     editor->setMinimum(0);
     editor->setMaximum(100);
-    editor->setEnabled(myEnableProjection);
+    qDebug()<< " myEnabled " << myEnabled;
+    editor->setEnabled(myEnabled);
     return editor;
 }
 

@@ -33,13 +33,13 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     ui->myProjectionTableView->setModel(myProjectionFilterProxy.data());
 
     //start with upcoming games filter
-    ui->myOpenGamesRb->setChecked(true);
+    ui->myOpenGamesRb->setChecked(true);    
 
     //init projection filters
     myProjectionFilterProxy.data()->bindFilter();
 
     myCurrentWeek = -1;
-    ui->myProjectionTableView->setItemDelegateForColumn(5,&myProjectionDelegate);
+    ui->myProjectionTableView->setItemDelegateForColumn(4,&myProjectionDelegate);
 }
 
 CurrentWeekWidget::~CurrentWeekWidget() {
@@ -206,7 +206,7 @@ void CurrentWeekWidget::onGameStart(string gameId){
 
 void CurrentWeekWidget::on_myLockedGamesRb_toggled(bool checked) {
     if (!checked) return;
-    myProjectionDelegate.setEnableProjection(false);
+    setProjectionEnabled(false);
     myGameModelFilter.setGameStatusFilter(GamesFilter::LockedGames);
     myProjectionFilterProxy.data()->invalidate();
 
@@ -215,7 +215,7 @@ void CurrentWeekWidget::on_myLockedGamesRb_toggled(bool checked) {
 void CurrentWeekWidget::on_myOpenGamesRb_toggled(bool checked)
 {
     if (!checked) return;
-    myProjectionDelegate.setEnableProjection(true);
+    setProjectionEnabled(true);
     myGameModelFilter.setGameStatusFilter(GamesFilter::OpenGames);
      myProjectionFilterProxy.data()->invalidate();
 }
@@ -246,4 +246,10 @@ void CurrentWeekWidget::OnProjAck(fantasybit::FantasyBitProj projection){
     myProjectionsModel.updateItemProperty<PropertyNames::KnownProjection>(playerId,projection.proj());
     myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,projection.proj());
     myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId, QVariant::fromValue(ScoreState::Scored));
+}
+
+
+void CurrentWeekWidget::setProjectionEnabled(bool on){
+    ui->mySendProjectionButton->setEnabled(on);
+    myProjectionDelegate.setEnabled(on);
 }

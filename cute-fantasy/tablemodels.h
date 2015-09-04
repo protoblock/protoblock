@@ -126,6 +126,12 @@ public:
     }
     ~ProjectionSheetTableModel() {}
 
+    QVariant columnData(uint column,const QModelIndex & index){
+        ViewModel *value = getItemByIndex(index);
+        if (value == NULL) return QVariant();
+        return getColumnDecorateData(column,value);
+    }
+
 protected:
 
     QVariant getColumnDecorateData(uint column, ViewModel *value){
@@ -466,23 +472,26 @@ protected:
         }
 
         if (mySelectedGames!=NULL){
+
               QItemSelection filteredSelection = mySelectedGames->selection();
               QItemSelection sourceSelection;
+
               if (myGameModelProxy != NULL)
                 sourceSelection = myGameModelProxy->mapSelectionToSource(filteredSelection);
               else
                   sourceSelection= filteredSelection;
 
-              QModelIndexList selectionList = sourceSelection.indexes();
+              QModelIndexList selectionList = sourceSelection.indexes();              
               if (selectionList.count()> 0){
-
                   GameTableModel * allGames;
+
                   if (myGameModelProxy==NULL)
                     allGames = dynamic_cast<GameTableModel *>(mySelectedGames->model());
                   else
-                      allGames = dynamic_cast<GameTableModel *>(myGameModelProxy->sourceModel()
-                                                                );
+                      allGames = dynamic_cast<GameTableModel *>(myGameModelProxy->sourceModel());
+
                   if (allGames==NULL) return false;                  
+
               for(int i=0;i<selectionList.count();i++){
                   QModelIndex sourceIndex = selectionList.at(i);
                   ViewModel * game = allGames->getItemByIndex(sourceIndex);
@@ -498,6 +507,23 @@ protected:
         }
         return true;
     }
+
+//    bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const{
+
+
+//    }
+
+//    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const{
+//        ProjectionSheetTableModel * model = dynamic_cast<ProjectionSheetTableModel *>(sourceModel());
+//        if (model==NULL) return false;
+//        QVariant lefData = model->columnData(source_left.column(),source_left);
+//        QVariant rightData = model->columnData(source_right.column(),source_right);
+//        if (lefData.isNull())  return true;
+//        if (rightData.isNull())  return false;
+//        if (lefData.type()!=rightData.type()) return false;
+//        return lefData < rightData;
+//    }
+
 };
 
 
