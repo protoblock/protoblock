@@ -78,8 +78,8 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
    LIBS+= -llibprotobuf \
           -lleveldb \
-          -llibeay32md \
-          -lssleay32md \
+          -llibeay32 \
+          -lssleay32 \
           -lfc
 }
 

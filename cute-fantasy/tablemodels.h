@@ -391,6 +391,7 @@ public:
         myPositionCombobox = positionCombobox;
         myGameModelProxy = gameModelProxy;
         if (myGameModelProxy != NULL) mySelectedGames = gameSelectionModel;
+        mySelectedGames = gameSelectionModel;
     }
 
     bool isEnabled(){
@@ -466,11 +467,21 @@ protected:
 
         if (mySelectedGames!=NULL){
               QItemSelection filteredSelection = mySelectedGames->selection();
-              QItemSelection sourceSelection = myGameModelProxy->mapSelectionToSource(filteredSelection);
+              QItemSelection sourceSelection;
+              if (myGameModelProxy != NULL)
+                sourceSelection = myGameModelProxy->mapSelectionToSource(filteredSelection);
+              else
+                  sourceSelection= filteredSelection;
 
               QModelIndexList selectionList = sourceSelection.indexes();
               if (selectionList.count()> 0){
-                  GameTableModel * allGames = dynamic_cast<GameTableModel *>(myGameModelProxy->sourceModel());
+
+                  GameTableModel * allGames;
+                  if (myGameModelProxy==NULL)
+                    allGames = dynamic_cast<GameTableModel *>(mySelectedGames->model());
+                  else
+                      allGames = dynamic_cast<GameTableModel *>(myGameModelProxy->sourceModel()
+                                                                );
                   if (allGames==NULL) return false;                  
               for(int i=0;i<selectionList.count();i++){
                   QModelIndex sourceIndex = selectionList.at(i);

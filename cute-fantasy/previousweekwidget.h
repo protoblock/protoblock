@@ -22,10 +22,11 @@ private:
     int myWeekNumber = -1;
     GameTableModel  myGameTableModel{WeekDisplayType::PreviousWeek};    
     ProjectionSheetTableModel myProjectionsModel {WeekDisplayType::PreviousWeek};
+    QItemSelectionModel myGamesSelectionModel;
+    QScopedPointer<ProjectionsViewFilterProxyModel> myProjectionFilterProxy;
     int myCurrentWeek;
     std::vector<GameResult> myGamesResults;
     fantasybit::WeeklySchedule myWeeklySchedule;
-
 };
 
 #endif // PREVIOUSWEEKWIDGET_H

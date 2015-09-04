@@ -1,6 +1,6 @@
 // Protocol Buffers - Google's data interchange format
 // Copyright 2008 Google Inc.  All rights reserved.
-// https://developers.google.com/protocol-buffers/
+// http://code.google.com/p/protobuf/
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -42,6 +42,7 @@
 #include <string>
 #include <vector>
 #include <google/protobuf/stubs/common.h>
+// TODO(jasonh): some people seem to rely on protobufs to include this for them!
 
 namespace google {
 namespace protobuf {
@@ -52,7 +53,7 @@ namespace protobuf {
   }
   namespace internal {
     class WireFormat;               // wire_format.h
-    class MessageSetFieldSkipperUsingCord;
+    class UnknownFieldSetFieldSkipperUsingCord;
                                     // extension_set_heavy.cc
   }
 
@@ -138,7 +139,7 @@ class LIBPROTOBUF_EXPORT UnknownFieldSet {
   bool ParseFromZeroCopyStream(io::ZeroCopyInputStream* input);
   bool ParseFromArray(const void* data, int size);
   inline bool ParseFromString(const string& data) {
-    return ParseFromArray(data.data(), static_cast<int>(data.size()));
+    return ParseFromArray(data.data(), data.size());
   }
 
  private:
@@ -201,12 +202,9 @@ class LIBPROTOBUF_EXPORT UnknownField {
   // Make a deep copy of any pointers in this UnknownField.
   void DeepCopy();
 
-  // Set the wire type of this UnknownField. Should only be used when this
-  // UnknownField is being created.
-  inline void SetType(Type type);
 
-  uint32 number_;
-  uint32 type_;
+  unsigned int number_ : 29;
+  unsigned int type_   : 3;
   union {
     uint64 varint_;
     uint32 fixed32_;
@@ -236,7 +234,7 @@ inline void UnknownFieldSet::Swap(UnknownFieldSet* x) {
 }
 
 inline int UnknownFieldSet::field_count() const {
-  return (fields_ == NULL) ? 0 : static_cast<int>(fields_->size());
+  return (fields_ == NULL) ? 0 : fields_->size();
 }
 inline const UnknownField& UnknownFieldSet::field(int index) const {
   return (*fields_)[index];
@@ -256,61 +254,56 @@ inline UnknownField::Type UnknownField::type() const {
   return static_cast<Type>(type_);
 }
 
-inline uint64 UnknownField::varint() const {
-  assert(type() == TYPE_VARINT);
+inline uint64 UnknownField::varint () const {
+  assert(type_ == TYPE_VARINT);
   return varint_;
 }
 inline uint32 UnknownField::fixed32() const {
-  assert(type() == TYPE_FIXED32);
+  assert(type_ == TYPE_FIXED32);
   return fixed32_;
 }
 inline uint64 UnknownField::fixed64() const {
-  assert(type() == TYPE_FIXED64);
+  assert(type_ == TYPE_FIXED64);
   return fixed64_;
 }
 inline const string& UnknownField::length_delimited() const {
-  assert(type() == TYPE_LENGTH_DELIMITED);
+  assert(type_ == TYPE_LENGTH_DELIMITED);
   return *length_delimited_.string_value_;
 }
 inline const UnknownFieldSet& UnknownField::group() const {
-  assert(type() == TYPE_GROUP);
+  assert(type_ == TYPE_GROUP);
   return *group_;
 }
 
 inline void UnknownField::set_varint(uint64 value) {
-  assert(type() == TYPE_VARINT);
+  assert(type_ == TYPE_VARINT);
   varint_ = value;
 }
 inline void UnknownField::set_fixed32(uint32 value) {
-  assert(type() == TYPE_FIXED32);
+  assert(type_ == TYPE_FIXED32);
   fixed32_ = value;
 }
 inline void UnknownField::set_fixed64(uint64 value) {
-  assert(type() == TYPE_FIXED64);
+  assert(type_ == TYPE_FIXED64);
   fixed64_ = value;
 }
 inline void UnknownField::set_length_delimited(const string& value) {
-  assert(type() == TYPE_LENGTH_DELIMITED);
+  assert(type_ == TYPE_LENGTH_DELIMITED);
   length_delimited_.string_value_->assign(value);
 }
 inline string* UnknownField::mutable_length_delimited() {
-  assert(type() == TYPE_LENGTH_DELIMITED);
+  assert(type_ == TYPE_LENGTH_DELIMITED);
   return length_delimited_.string_value_;
 }
 inline UnknownFieldSet* UnknownField::mutable_group() {
-  assert(type() == TYPE_GROUP);
+  assert(type_ == TYPE_GROUP);
   return group_;
 }
 
 inline int UnknownField::GetLengthDelimitedSize() const {
-  GOOGLE_DCHECK_EQ(TYPE_LENGTH_DELIMITED, type());
-  return static_cast<int>(length_delimited_.string_value_->size());
+  GOOGLE_DCHECK_EQ(TYPE_LENGTH_DELIMITED, type_);
+  return length_delimited_.string_value_->size();
 }
-
-inline void UnknownField::SetType(Type type) {
-  type_ = type;
-}
-
 
 }  // namespace protobuf
 

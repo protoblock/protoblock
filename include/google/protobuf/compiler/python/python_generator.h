@@ -1,6 +1,6 @@
 // Protocol Buffers - Google's data interchange format
 // Copyright 2008 Google Inc.  All rights reserved.
-// https://developers.google.com/protocol-buffers/
+// http://code.google.com/p/protobuf/
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -94,11 +94,8 @@ class LIBPROTOC_EXPORT Generator : public CodeGenerator {
   void PrintNestedDescriptors(const Descriptor& containing_descriptor) const;
 
   void PrintMessages() const;
-  void PrintMessage(const Descriptor& message_descriptor, const string& prefix,
-                    vector<string>* to_register) const;
-  void PrintNestedMessages(const Descriptor& containing_descriptor,
-                           const string& prefix,
-                           vector<string>* to_register) const;
+  void PrintMessage(const Descriptor& message_descriptor) const;
+  void PrintNestedMessages(const Descriptor& containing_descriptor) const;
 
   void FixForeignFieldsInDescriptors() const;
   void FixForeignFieldsInDescriptor(
@@ -108,8 +105,6 @@ class LIBPROTOC_EXPORT Generator : public CodeGenerator {
                                const FieldDescriptor& field,
                                const string& python_dict_name) const;
   void AddMessageToFileDescriptor(const Descriptor& descriptor) const;
-  void AddEnumToFileDescriptor(const EnumDescriptor& descriptor) const;
-  void AddExtensionToFileDescriptor(const FieldDescriptor& descriptor) const;
   string FieldReferencingExpression(const Descriptor* containing_type,
                                     const FieldDescriptor& field,
                                     const string& python_dict_name) const;

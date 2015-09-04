@@ -1,6 +1,6 @@
 // Protocol Buffers - Google's data interchange format
 // Copyright 2008 Google Inc.  All rights reserved.
-// https://developers.google.com/protocol-buffers/
+// http://code.google.com/p/protobuf/
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -46,11 +46,7 @@
 #ifndef GOOGLE_PROTOBUF_REPEATED_FIELD_H__
 #define GOOGLE_PROTOBUF_REPEATED_FIELD_H__
 
-#ifdef _MSC_VER
-// This is required for min/max on VS2013 only.
 #include <algorithm>
-#endif
-
 #include <string>
 #include <iterator>
 #include <google/protobuf/stubs/common.h>
@@ -76,22 +72,6 @@ static const int kMinRepeatedFieldAllocationSize = 4;
 
 // A utility function for logging that doesn't need any template types.
 void LogIndexOutOfBounds(int index, int size);
-
-template <typename Iter>
-inline int CalculateReserve(Iter begin, Iter end, std::forward_iterator_tag) {
-  return std::distance(begin, end);
-}
-
-template <typename Iter>
-inline int CalculateReserve(Iter begin, Iter end, std::input_iterator_tag) {
-  return -1;
-}
-
-template <typename Iter>
-inline int CalculateReserve(Iter begin, Iter end) {
-  typedef typename std::iterator_traits<Iter>::iterator_category Category;
-  return CalculateReserve(begin, end, Category());
-}
 }  // namespace internal
 
 
@@ -110,7 +90,6 @@ class RepeatedField {
 
   RepeatedField& operator=(const RepeatedField& other);
 
-  bool empty() const;
   int size() const;
 
   const Element& Get(int index) const;
@@ -141,11 +120,6 @@ class RepeatedField {
   void AddAlreadyReserved(const Element& value);
   Element* AddAlreadyReserved();
   int Capacity() const;
-
-  // Like STL resize.  Uses value to fill appended elements.
-  // Like Truncate() if new_size <= size(), otherwise this is
-  // O(new_size - size()).
-  void Resize(int new_size, const Element& value);
 
   // Gets the underlying array.  This pointer is possibly invalidated by
   // any add or remove operation.
@@ -271,7 +245,6 @@ class LIBPROTOBUF_EXPORT RepeatedPtrFieldBase {
   template <typename TypeHandler>
   void Destroy();
 
-  bool empty() const;
   int size() const;
 
   template <typename TypeHandler>
@@ -336,6 +309,8 @@ class LIBPROTOBUF_EXPORT RepeatedPtrFieldBase {
   typename TypeHandler::Type* ReleaseCleared();
 
  private:
+  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(RepeatedPtrFieldBase);
+
   static const int kInitialSize = 0;
 
   void** elements_;
@@ -351,8 +326,6 @@ class LIBPROTOBUF_EXPORT RepeatedPtrFieldBase {
   static inline const typename TypeHandler::Type* cast(const void* element) {
     return reinterpret_cast<const typename TypeHandler::Type*>(element);
   }
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(RepeatedPtrFieldBase);
 };
 
 template <typename GenericType>
@@ -410,7 +383,7 @@ class LIBPROTOBUF_EXPORT StringTypeHandlerBase {
   static void Clear(string* value) { value->clear(); }
   static void Merge(const string& from, string* to) { *to = from; }
   static const Type& default_instance() {
-    return ::google::protobuf::internal::GetEmptyString();
+    return ::google::protobuf::internal::kEmptyString;
   }
 };
 
@@ -437,7 +410,6 @@ class RepeatedPtrField : public internal::RepeatedPtrFieldBase {
 
   RepeatedPtrField& operator=(const RepeatedPtrField& other);
 
-  bool empty() const;
   int size() const;
 
   const Element& Get(int index) const;
@@ -596,16 +568,8 @@ inline RepeatedField<Element>::RepeatedField(Iter begin, const Iter& end)
   : elements_(NULL),
     current_size_(0),
     total_size_(kInitialSize) {
-  int reserve = internal::CalculateReserve(begin, end);
-  if (reserve != -1) {
-    Reserve(reserve);
-    for (; begin != end; ++begin) {
-      AddAlreadyReserved(*begin);
-    }
-  } else {
-    for (; begin != end; ++begin) {
-      Add(*begin);
-    }
+  for (; begin != end; ++begin) {
+    Add(*begin);
   }
 }
 
@@ -620,11 +584,6 @@ RepeatedField<Element>::operator=(const RepeatedField& other) {
   if (this != &other)
     CopyFrom(other);
   return *this;
-}
-
-template <typename Element>
-inline bool RepeatedField<Element>::empty() const {
-  return current_size_ == 0;
 }
 
 template <typename Element>
@@ -649,33 +608,20 @@ inline Element* RepeatedField<Element>::AddAlreadyReserved() {
   return &elements_[current_size_++];
 }
 
-template<typename Element>
-inline void RepeatedField<Element>::Resize(int new_size, const Element& value) {
-  GOOGLE_DCHECK_GE(new_size, 0);
-  if (new_size > size()) {
-    Reserve(new_size);
-    std::fill(&elements_[current_size_], &elements_[new_size], value);
-  }
-  current_size_ = new_size;
-}
-
 template <typename Element>
 inline const Element& RepeatedField<Element>::Get(int index) const {
-  GOOGLE_DCHECK_GE(index, 0);
   GOOGLE_DCHECK_LT(index, size());
   return elements_[index];
 }
 
 template <typename Element>
 inline Element* RepeatedField<Element>::Mutable(int index) {
-  GOOGLE_DCHECK_GE(index, 0);
   GOOGLE_DCHECK_LT(index, size());
   return elements_ + index;
 }
 
 template <typename Element>
 inline void RepeatedField<Element>::Set(int index, const Element& value) {
-  GOOGLE_DCHECK_GE(index, 0);
   GOOGLE_DCHECK_LT(index, size());
   elements_[index] = value;
 }
@@ -726,7 +672,6 @@ inline void RepeatedField<Element>::Clear() {
 
 template <typename Element>
 inline void RepeatedField<Element>::MergeFrom(const RepeatedField& other) {
-  GOOGLE_CHECK_NE(&other, this);
   if (other.current_size_ != 0) {
     Reserve(current_size_ + other.current_size_);
     CopyArray(elements_ + current_size_, other.elements_, other.current_size_);
@@ -736,7 +681,6 @@ inline void RepeatedField<Element>::MergeFrom(const RepeatedField& other) {
 
 template <typename Element>
 inline void RepeatedField<Element>::CopyFrom(const RepeatedField& other) {
-  if (&other == this) return;
   Clear();
   MergeFrom(other);
 }
@@ -770,8 +714,7 @@ void RepeatedField<Element>::Swap(RepeatedField* other) {
 
 template <typename Element>
 void RepeatedField<Element>::SwapElements(int index1, int index2) {
-  using std::swap;  // enable ADL with fallback
-  swap(elements_[index1], elements_[index2]);
+  std::swap(elements_[index1], elements_[index2]);
 }
 
 template <typename Element>
@@ -871,10 +814,6 @@ void RepeatedPtrFieldBase::Destroy() {
   delete [] elements_;
 }
 
-inline bool RepeatedPtrFieldBase::empty() const {
-  return current_size_ == 0;
-}
-
 inline int RepeatedPtrFieldBase::size() const {
   return current_size_;
 }
@@ -882,7 +821,6 @@ inline int RepeatedPtrFieldBase::size() const {
 template <typename TypeHandler>
 inline const typename TypeHandler::Type&
 RepeatedPtrFieldBase::Get(int index) const {
-  GOOGLE_DCHECK_GE(index, 0);
   GOOGLE_DCHECK_LT(index, size());
   return *cast<TypeHandler>(elements_[index]);
 }
@@ -891,7 +829,6 @@ RepeatedPtrFieldBase::Get(int index) const {
 template <typename TypeHandler>
 inline typename TypeHandler::Type*
 RepeatedPtrFieldBase::Mutable(int index) {
-  GOOGLE_DCHECK_GE(index, 0);
   GOOGLE_DCHECK_LT(index, size());
   return cast<TypeHandler>(elements_[index]);
 }
@@ -902,8 +839,8 @@ inline typename TypeHandler::Type* RepeatedPtrFieldBase::Add() {
     return cast<TypeHandler>(elements_[current_size_++]);
   }
   if (allocated_size_ == total_size_) Reserve(total_size_ + 1);
-  typename TypeHandler::Type* result = TypeHandler::New();
   ++allocated_size_;
+  typename TypeHandler::Type* result = TypeHandler::New();
   elements_[current_size_++] = result;
   return result;
 }
@@ -924,7 +861,6 @@ void RepeatedPtrFieldBase::Clear() {
 
 template <typename TypeHandler>
 inline void RepeatedPtrFieldBase::MergeFrom(const RepeatedPtrFieldBase& other) {
-  GOOGLE_CHECK_NE(&other, this);
   Reserve(current_size_ + other.current_size_);
   for (int i = 0; i < other.current_size_; i++) {
     TypeHandler::Merge(other.template Get<TypeHandler>(i), Add<TypeHandler>());
@@ -933,7 +869,6 @@ inline void RepeatedPtrFieldBase::MergeFrom(const RepeatedPtrFieldBase& other) {
 
 template <typename TypeHandler>
 inline void RepeatedPtrFieldBase::CopyFrom(const RepeatedPtrFieldBase& other) {
-  if (&other == this) return;
   RepeatedPtrFieldBase::Clear<TypeHandler>();
   RepeatedPtrFieldBase::MergeFrom<TypeHandler>(other);
 }
@@ -966,8 +901,7 @@ RepeatedPtrFieldBase::data() const {
 }
 
 inline void RepeatedPtrFieldBase::SwapElements(int index1, int index2) {
-  using std::swap;  // enable ADL with fallback
-  swap(elements_[index1], elements_[index2]);
+  std::swap(elements_[index1], elements_[index2]);
 }
 
 template <typename TypeHandler>
@@ -1067,8 +1001,7 @@ inline RepeatedPtrField<Element>::RepeatedPtrField() {}
 
 template <typename Element>
 inline RepeatedPtrField<Element>::RepeatedPtrField(
-    const RepeatedPtrField& other)
-    : RepeatedPtrFieldBase() {
+    const RepeatedPtrField& other) {
   CopyFrom(other);
 }
 
@@ -1076,10 +1009,6 @@ template <typename Element>
 template <typename Iter>
 inline RepeatedPtrField<Element>::RepeatedPtrField(
     Iter begin, const Iter& end) {
-  int reserve = internal::CalculateReserve(begin, end);
-  if (reserve != -1) {
-    Reserve(reserve);
-  }
   for (; begin != end; ++begin) {
     *Add() = *begin;
   }
@@ -1096,11 +1025,6 @@ inline RepeatedPtrField<Element>& RepeatedPtrField<Element>::operator=(
   if (this != &other)
     CopyFrom(other);
   return *this;
-}
-
-template <typename Element>
-inline bool RepeatedPtrField<Element>::empty() const {
-  return RepeatedPtrFieldBase::empty();
 }
 
 template <typename Element>
@@ -1258,10 +1182,6 @@ class RepeatedPtrIterator
   typedef std::iterator<
           std::random_access_iterator_tag, Element> superclass;
 
-  // Shadow the value_type in std::iterator<> because const_iterator::value_type
-  // needs to be T, not const T.
-  typedef typename remove_const<Element>::type value_type;
-
   // Let the compiler know that these are type names, so we don't have to
   // write "typename" in front of them everywhere.
   typedef typename superclass::reference reference;
@@ -1352,10 +1272,6 @@ class RepeatedPtrOverPtrsIterator
   typedef RepeatedPtrOverPtrsIterator<Element, VoidPtr> iterator;
   typedef std::iterator<
           std::random_access_iterator_tag, Element*> superclass;
-
-  // Shadow the value_type in std::iterator<> because const_iterator::value_type
-  // needs to be T, not const T.
-  typedef typename remove_const<Element*>::type value_type;
 
   // Let the compiler know that these are type names, so we don't have to
   // write "typename" in front of them everywhere.

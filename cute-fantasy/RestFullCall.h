@@ -75,8 +75,10 @@ private:
 
             myRequest->setHeader(QNetworkRequest::ContentTypeHeader,contentType);
             myRequest->setHeader(QNetworkRequest::ContentLengthHeader,postData.length());
-            if (myNam->networkAccessible()==QNetworkAccessManager::Accessible)
+            if (myNam->networkAccessible()==QNetworkAccessManager::Accessible){
+                qDebug() << "Post : " << myRequest->url().toDisplayString();
                 return myNam->post(*myRequest,postData);
+            }
             else {
                 qDebug()<< "No network connection !";
                 return NULL;
@@ -126,7 +128,6 @@ public:
         //when disconnected exit a probable current waiting loop
         connect(&myNetworkManager, SIGNAL(networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility)),
                 this, SLOT(networkAccessibleChangedSlot(QNetworkAccessManager::NetworkAccessibility)));
-
     }
 
     bool postProtoMessageData(const QString & route,const QString & contentType,const google::protobuf::Message & protoMessage){
@@ -138,7 +139,7 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
-        PostDataDecorator decorator(&myNetworkManager,&request);
+        PostDataDecorator decorator(&myNetworkManager,&request);        
         myCurrentNetworkReply = decorator.postBinaryData(contentType,postData);
         if (myCurrentNetworkReply == NULL) return false;
         waitForReply();
@@ -149,7 +150,7 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
-        PostDataDecorator decorator(&myNetworkManager,&request);
+        PostDataDecorator decorator(&myNetworkManager,&request);        
         myCurrentNetworkReply = decorator.postBinaryData(contentType,data,size);
         if (myCurrentNetworkReply == NULL) return false;
         waitForReply();
@@ -160,7 +161,7 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
-        PostDataDecorator decorator(&myNetworkManager,&request);
+        PostDataDecorator decorator(&myNetworkManager,&request);        
         myCurrentNetworkReply = decorator.postJsonData(contentType,jsonDoc);
         if (myCurrentNetworkReply == NULL) return false;
         waitForReply();
@@ -198,6 +199,7 @@ public:
             request.setRawHeader(headerKey.toUtf8(),headersMap.value(headerKey).toUtf8());
         }
 
+        qDebug() << "Get : " << request.url().toDisplayString();
         if (myNetworkManager.networkAccessible()==QNetworkAccessManager::Accessible){
             myCurrentNetworkReply = myNetworkManager.get(request);
             waitForReply();
@@ -235,11 +237,13 @@ signals:
 private slots:
 
     void finishedSlot(QNetworkReply* reply){
-        if (reply != NULL)
+        qDebug() << "finishedSlot";
+        if (reply != NULL){
             myLastRepliedData = reply->readAll();
+            reply->deleteLater();
+        }
         else
             qDebug() << "null reply";
-
         emit doneReading();
     }
 
@@ -258,10 +262,11 @@ private slots:
 
             if (redirection.isValid()) //no action is taken we're always allowing redirection
                 qDebug() << "server redirection : " << redirection.toString() ;
-            else
+            else {
                 qDebug() << "net error : " << myCurrentNetworkReply->errorString();
+                //the finsihed signal will follow
+            }
         }
-
         myCurrentNetworkError = error;
     }
 
@@ -289,7 +294,7 @@ private:
        */
     void waitForReply(){
         myLastRepliedData.clear();
-        //when network error, report it.
+        //when network error, report it and exit wait loop.
         if (myCurrentNetworkReply != NULL) {
             connect(myCurrentNetworkReply, SIGNAL(error(QNetworkReply::NetworkError)),
                     this, SLOT(networkErrorSlot(QNetworkReply::NetworkError)));

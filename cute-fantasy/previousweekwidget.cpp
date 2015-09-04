@@ -8,28 +8,24 @@ PreviousWeekWidget::PreviousWeekWidget(QWidget *parent) :
     ui(new Ui::PreviousWeekWidget)
 {
     ui->setupUi(this);
+
+    //set game view model
     ui->myGamesListView->setModel(&myGameTableModel);
-    ui->myProjectionTableView->setModel(&myProjectionsModel);
 
-    //myGameModelFilter.setGameStatusFilter(GamesFilter::All);
-    //myGameModelFilter.setDynamicSortFilter(true);
-    //myGameModelFilter.setSourceModel(&myGameTableModel);
-    //ui->myGamesListView->setModel(&myGameTableModel);
+    //set game selection model
+    myGamesSelectionModel.setModel(&myGameTableModel);
+    ui->myGamesListView->setSelectionModel(&myGamesSelectionModel);
 
-    //myGamesSelectionModel.setModel(&myGameTableModel);
-    //ui->myGamesListView->setSelectionModel(&myGamesSelectionModel);
-
-    //myProjectionFilterProxy.reset(new ProjectionsViewFilterProxyModel
-    //               (ui->myPositionComboBox, NULL,&myGamesSelectionModel));
-    //myProjectionFilterProxy.data()->setSourceModel(&myProjectionsModel);
-    //myProjectionFilterProxy.data()->setDynamicSortFilter(true);
-    //ui->myProjectionTableView->setModel(myProjectionFilterProxy.data());
-
-    //init projection filters
-    //myProjectionFilterProxy.data()->bindFilter();
+    //set projection filter
+    myProjectionFilterProxy.reset(new ProjectionsViewFilterProxyModel(ui->myPositionComboBox,NULL,&myGamesSelectionModel));
+    myProjectionFilterProxy.data()->setSourceModel(&myProjectionsModel);
+    myProjectionFilterProxy.data()->setDynamicSortFilter(true);
+    ui->myProjectionTableView->setModel(myProjectionFilterProxy.data());
 
     myCurrentWeek = -1;
 
+    //init projection filters
+    myProjectionFilterProxy.data()->bindFilter();
 }
 
 PreviousWeekWidget::~PreviousWeekWidget()
