@@ -70,8 +70,8 @@ win32 {
 CONFIG(debug, debug|release) {
    LIBS+= -llibprotobufd \
           -lleveldbd \
-          -llibeay32mdd \
-          -lssleay32mdd \
+          -llibeay32md \
+          -lssleay32md \
           -lfcd
 
 }

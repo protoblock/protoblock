@@ -14,7 +14,7 @@
 #include <QJsonArray>
 #include "ProtoData.pb.h"
 #include <QDebug>
-
+#include <sstream>
 
 /**
  * @brief The RestfullClient class : This is NOT a thread safe class.
@@ -389,26 +389,14 @@ public:
         QMap<QString,QVariant> params;
         //hard coded url
         //TODO move to settings
-        QString customRoute("block-height");
+        QString customRoute("block-height");      
         client.getData(customRoute,params,headers);
         auto response = client.lastReply();
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
-
-        if ( jsonDoc.isEmpty() || jsonDoc.isNull() || jsonDoc.isObject())
-            return 1;
-
-        QJsonArray qa = jsonDoc.array();
-        if ( qa.size() < 1 )
-            return 1;
-
-        QJsonValueRef json = qa[0];
-
-
-        //qDebug() <<
-        int hi = json.toObject().value("height").toInt();
-        //int hi = val.toInt();
-
-        return hi;
+        QString str( response );
+        str.remove("\"");
+        //int i = to_string(i);
+        int i = str.toInt();
+        return i;
     }
 
     static QByteArray sendBlock(const QString & baseUrl,const QString route,
