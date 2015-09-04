@@ -237,11 +237,13 @@ signals:
 private slots:
 
     void finishedSlot(QNetworkReply* reply){
-        if (reply != NULL)
+        qDebug() << "finishedSlot";
+        if (reply != NULL){
             myLastRepliedData = reply->readAll();
+            reply->deleteLater();
+        }
         else
             qDebug() << "null reply";
-
         emit doneReading();
     }
 
@@ -262,10 +264,9 @@ private slots:
                 qDebug() << "server redirection : " << redirection.toString() ;
             else {
                 qDebug() << "net error : " << myCurrentNetworkReply->errorString();
-                myEventLoop.quit();
+                //the finsihed signal will follow
             }
         }
-
         myCurrentNetworkError = error;
     }
 
