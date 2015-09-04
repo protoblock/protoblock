@@ -173,7 +173,7 @@ int Node::myLastGlobalBlockNum() {
 
 fc::optional<int> Node::getLastGlobalBlockNum() {
     //qDebug() << "cureent thread" << QThread::currentThread();
-    int height = RestfullService::getHeight("http://192.96.159.216:4545");
+    int height = RestfullService::getHeight("https://stagingapi.trading.football:4545");
 
     if ( myLastGlobalBlockNum() < height )
         setLastGlobalBlockNum(height);
