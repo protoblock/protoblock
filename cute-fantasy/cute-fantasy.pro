@@ -70,16 +70,16 @@ win32 {
 CONFIG(debug, debug|release) {
    LIBS+= -llibprotobufd \
           -lleveldbd \
-          -llibeay32mdd \
-          -lssleay32mdd \
+          -llibeay32 \
+          -lssleay32 \
           -lfcd
 
 }
 CONFIG(release, debug|release) {
    LIBS+= -llibprotobuf \
           -lleveldb \
-          -llibeay32md \
-          -lssleay32md \
+          -llibeay32 \
+          -lssleay32 \
           -lfc
 }
 
