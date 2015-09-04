@@ -352,7 +352,6 @@ const int PlayerBase::kPositionFieldNumber;
 PlayerBase::PlayerBase()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.PlayerBase)
 }
 
 void PlayerBase::InitAsDefaultInstance() {
@@ -362,31 +361,28 @@ PlayerBase::PlayerBase(const PlayerBase& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.PlayerBase)
 }
 
 void PlayerBase::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  first_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  last_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  position_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  first_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  last_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  position_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 PlayerBase::~PlayerBase() {
-  // @@protoc_insertion_point(destructor:fantasybit.PlayerBase)
   SharedDtor();
 }
 
 void PlayerBase::SharedDtor() {
-  if (first_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (first_ != &::google::protobuf::internal::kEmptyString) {
     delete first_;
   }
-  if (last_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (last_ != &::google::protobuf::internal::kEmptyString) {
     delete last_;
   }
-  if (position_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (position_ != &::google::protobuf::internal::kEmptyString) {
     delete position_;
   }
   if (this != default_instance_) {
@@ -415,19 +411,19 @@ PlayerBase* PlayerBase::New() const {
 }
 
 void PlayerBase::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_first()) {
-      if (first_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      if (first_ != &::google::protobuf::internal::kEmptyString) {
         first_->clear();
       }
     }
     if (has_last()) {
-      if (last_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      if (last_ != &::google::protobuf::internal::kEmptyString) {
         last_->clear();
       }
     }
     if (has_position()) {
-      if (position_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      if (position_ != &::google::protobuf::internal::kEmptyString) {
         position_->clear();
       }
     }
@@ -438,25 +434,21 @@ void PlayerBase::Clear() {
 
 bool PlayerBase::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.PlayerBase)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional string first = 30;
       case 30: {
-        if (tag == 242) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_first()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->first().data(), this->first().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "first");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(322)) goto parse_last;
         break;
@@ -464,16 +456,16 @@ bool PlayerBase::MergePartialFromCodedStream(
 
       // optional string last = 40;
       case 40: {
-        if (tag == 322) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_last:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_last()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->last().data(), this->last().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "last");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(402)) goto parse_position;
         break;
@@ -481,27 +473,26 @@ bool PlayerBase::MergePartialFromCodedStream(
 
       // optional string position = 50;
       case 50: {
-        if (tag == 402) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_position:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_position()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->position().data(), this->position().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "position");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -509,45 +500,36 @@ bool PlayerBase::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.PlayerBase)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.PlayerBase)
-  return false;
 #undef DO_
 }
 
 void PlayerBase::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.PlayerBase)
   // optional string first = 30;
   if (has_first()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->first().data(), this->first().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "first");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       30, this->first(), output);
   }
 
   // optional string last = 40;
   if (has_last()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->last().data(), this->last().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "last");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       40, this->last(), output);
   }
 
   // optional string position = 50;
   if (has_position()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->position().data(), this->position().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "position");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       50, this->position(), output);
   }
 
@@ -555,18 +537,15 @@ void PlayerBase::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.PlayerBase)
 }
 
 ::google::protobuf::uint8* PlayerBase::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.PlayerBase)
   // optional string first = 30;
   if (has_first()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->first().data(), this->first().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "first");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         30, this->first(), target);
@@ -574,10 +553,9 @@ void PlayerBase::SerializeWithCachedSizes(
 
   // optional string last = 40;
   if (has_last()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->last().data(), this->last().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "last");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         40, this->last(), target);
@@ -585,10 +563,9 @@ void PlayerBase::SerializeWithCachedSizes(
 
   // optional string position = 50;
   if (has_position()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->position().data(), this->position().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "position");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         50, this->position(), target);
@@ -598,7 +575,6 @@ void PlayerBase::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.PlayerBase)
   return target;
 }
 
@@ -716,7 +692,6 @@ const int GameInfo::kTimeFieldNumber;
 GameInfo::GameInfo()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.GameInfo)
 }
 
 void GameInfo::InitAsDefaultInstance() {
@@ -726,32 +701,29 @@ GameInfo::GameInfo(const GameInfo& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.GameInfo)
 }
 
 void GameInfo::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  home_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  away_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  home_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  away_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   time_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 GameInfo::~GameInfo() {
-  // @@protoc_insertion_point(destructor:fantasybit.GameInfo)
   SharedDtor();
 }
 
 void GameInfo::SharedDtor() {
-  if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (id_ != &::google::protobuf::internal::kEmptyString) {
     delete id_;
   }
-  if (home_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (home_ != &::google::protobuf::internal::kEmptyString) {
     delete home_;
   }
-  if (away_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (away_ != &::google::protobuf::internal::kEmptyString) {
     delete away_;
   }
   if (this != default_instance_) {
@@ -780,19 +752,19 @@ GameInfo* GameInfo::New() const {
 }
 
 void GameInfo::Clear() {
-  if (_has_bits_[0 / 32] & 15) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_id()) {
-      if (id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      if (id_ != &::google::protobuf::internal::kEmptyString) {
         id_->clear();
       }
     }
     if (has_home()) {
-      if (home_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      if (home_ != &::google::protobuf::internal::kEmptyString) {
         home_->clear();
       }
     }
     if (has_away()) {
-      if (away_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      if (away_ != &::google::protobuf::internal::kEmptyString) {
         away_->clear();
       }
     }
@@ -804,25 +776,21 @@ void GameInfo::Clear() {
 
 bool GameInfo::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.GameInfo)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional string id = 10;
       case 10: {
-        if (tag == 82) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_id()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->id().data(), this->id().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "id");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(162)) goto parse_home;
         break;
@@ -830,16 +798,16 @@ bool GameInfo::MergePartialFromCodedStream(
 
       // optional string home = 20;
       case 20: {
-        if (tag == 162) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_home:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_home()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->home().data(), this->home().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "home");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(242)) goto parse_away;
         break;
@@ -847,16 +815,16 @@ bool GameInfo::MergePartialFromCodedStream(
 
       // optional string away = 30;
       case 30: {
-        if (tag == 242) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_away:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_away()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->away().data(), this->away().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "away");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(320)) goto parse_time;
         break;
@@ -864,25 +832,25 @@ bool GameInfo::MergePartialFromCodedStream(
 
       // optional uint32 time = 40;
       case 40: {
-        if (tag == 320) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_time:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &time_)));
           set_has_time();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -890,45 +858,36 @@ bool GameInfo::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.GameInfo)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.GameInfo)
-  return false;
 #undef DO_
 }
 
 void GameInfo::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.GameInfo)
   // optional string id = 10;
   if (has_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->id().data(), this->id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "id");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       10, this->id(), output);
   }
 
   // optional string home = 20;
   if (has_home()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->home().data(), this->home().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "home");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       20, this->home(), output);
   }
 
   // optional string away = 30;
   if (has_away()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->away().data(), this->away().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "away");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       30, this->away(), output);
   }
 
@@ -941,18 +900,15 @@ void GameInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.GameInfo)
 }
 
 ::google::protobuf::uint8* GameInfo::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.GameInfo)
   // optional string id = 10;
   if (has_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->id().data(), this->id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "id");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         10, this->id(), target);
@@ -960,10 +916,9 @@ void GameInfo::SerializeWithCachedSizes(
 
   // optional string home = 20;
   if (has_home()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->home().data(), this->home().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "home");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         20, this->home(), target);
@@ -971,10 +926,9 @@ void GameInfo::SerializeWithCachedSizes(
 
   // optional string away = 30;
   if (has_away()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->away().data(), this->away().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "away");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         30, this->away(), target);
@@ -989,7 +943,6 @@ void GameInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.GameInfo)
   return target;
 }
 
@@ -1116,7 +1069,6 @@ const int WeeklySchedule::kByesFieldNumber;
 WeeklySchedule::WeeklySchedule()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.WeeklySchedule)
 }
 
 void WeeklySchedule::InitAsDefaultInstance() {
@@ -1126,17 +1078,14 @@ WeeklySchedule::WeeklySchedule(const WeeklySchedule& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.WeeklySchedule)
 }
 
 void WeeklySchedule::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 WeeklySchedule::~WeeklySchedule() {
-  // @@protoc_insertion_point(destructor:fantasybit.WeeklySchedule)
   SharedDtor();
 }
 
@@ -1175,22 +1124,19 @@ void WeeklySchedule::Clear() {
 
 bool WeeklySchedule::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.WeeklySchedule)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated .fantasybit.GameInfo games = 10;
       case 10: {
-        if (tag == 82) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_games:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_games()));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(82)) goto parse_games;
         if (input->ExpectTag(162)) goto parse_byes;
@@ -1199,29 +1145,28 @@ bool WeeklySchedule::MergePartialFromCodedStream(
 
       // repeated string byes = 20;
       case 20: {
-        if (tag == 162) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_byes:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->add_byes()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->byes(this->byes_size() - 1).data(),
             this->byes(this->byes_size() - 1).length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "byes");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(162)) goto parse_byes;
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -1229,18 +1174,12 @@ bool WeeklySchedule::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.WeeklySchedule)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.WeeklySchedule)
-  return false;
 #undef DO_
 }
 
 void WeeklySchedule::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.WeeklySchedule)
   // repeated .fantasybit.GameInfo games = 10;
   for (int i = 0; i < this->games_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -1249,10 +1188,9 @@ void WeeklySchedule::SerializeWithCachedSizes(
 
   // repeated string byes = 20;
   for (int i = 0; i < this->byes_size(); i++) {
-  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
     this->byes(i).data(), this->byes(i).length(),
-    ::google::protobuf::internal::WireFormat::SERIALIZE,
-    "byes");
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
       20, this->byes(i), output);
   }
@@ -1261,12 +1199,10 @@ void WeeklySchedule::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.WeeklySchedule)
 }
 
 ::google::protobuf::uint8* WeeklySchedule::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.WeeklySchedule)
   // repeated .fantasybit.GameInfo games = 10;
   for (int i = 0; i < this->games_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -1276,10 +1212,9 @@ void WeeklySchedule::SerializeWithCachedSizes(
 
   // repeated string byes = 20;
   for (int i = 0; i < this->byes_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->byes(i).data(), this->byes(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "byes");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(20, this->byes(i), target);
   }
@@ -1288,7 +1223,6 @@ void WeeklySchedule::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.WeeklySchedule)
   return target;
 }
 
@@ -1386,7 +1320,6 @@ const int Kstats::kFgFieldNumber;
 Kstats::Kstats()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.Kstats)
 }
 
 void Kstats::InitAsDefaultInstance() {
@@ -1396,7 +1329,6 @@ Kstats::Kstats(const Kstats& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.Kstats)
 }
 
 void Kstats::SharedCtor() {
@@ -1406,7 +1338,6 @@ void Kstats::SharedCtor() {
 }
 
 Kstats::~Kstats() {
-  // @@protoc_insertion_point(destructor:fantasybit.Kstats)
   SharedDtor();
 }
 
@@ -1437,7 +1368,9 @@ Kstats* Kstats::New() const {
 }
 
 void Kstats::Clear() {
-  pa_ = 0;
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    pa_ = 0;
+  }
   fg_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1445,23 +1378,20 @@ void Kstats::Clear() {
 
 bool Kstats::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.Kstats)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional int32 pa = 10;
       case 10: {
-        if (tag == 80) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &pa_)));
           set_has_pa();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(160)) goto parse_fg;
         break;
@@ -1469,29 +1399,31 @@ bool Kstats::MergePartialFromCodedStream(
 
       // repeated int32 fg = 20;
       case 20: {
-        if (tag == 160) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_fg:
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  2, 160, input, this->mutable_fg())));
-        } else if (tag == 162) {
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_LENGTH_DELIMITED) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, this->mutable_fg())));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(160)) goto parse_fg;
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -1499,18 +1431,12 @@ bool Kstats::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.Kstats)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.Kstats)
-  return false;
 #undef DO_
 }
 
 void Kstats::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.Kstats)
   // optional int32 pa = 10;
   if (has_pa()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(10, this->pa(), output);
@@ -1526,12 +1452,10 @@ void Kstats::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.Kstats)
 }
 
 ::google::protobuf::uint8* Kstats::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.Kstats)
   // optional int32 pa = 10;
   if (has_pa()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(10, this->pa(), target);
@@ -1547,7 +1471,6 @@ void Kstats::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.Kstats)
   return target;
 }
 
@@ -1658,7 +1581,6 @@ const int Dstats::kPtsaFieldNumber;
 Dstats::Dstats()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.Dstats)
 }
 
 void Dstats::InitAsDefaultInstance() {
@@ -1668,7 +1590,6 @@ Dstats::Dstats(const Dstats& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.Dstats)
 }
 
 void Dstats::SharedCtor() {
@@ -1684,7 +1605,6 @@ void Dstats::SharedCtor() {
 }
 
 Dstats::~Dstats() {
-  // @@protoc_insertion_point(destructor:fantasybit.Dstats)
   SharedDtor();
 }
 
@@ -1715,46 +1635,35 @@ Dstats* Dstats::New() const {
 }
 
 void Dstats::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<Dstats*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 127) {
-    ZR_(twopt_, ptsa_);
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    twopt_ = 0;
+    onept_ = 0;
+    deftd_ = 0;
+    sfty_ = 0;
+    turnovers_ = 0;
+    sacks_ = 0;
+    ptsa_ = 0;
   }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool Dstats::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.Dstats)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional int32 twopt = 100;
       case 100: {
-        if (tag == 800) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &twopt_)));
           set_has_twopt();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(880)) goto parse_onept;
         break;
@@ -1762,14 +1671,15 @@ bool Dstats::MergePartialFromCodedStream(
 
       // optional int32 onept = 110;
       case 110: {
-        if (tag == 880) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_onept:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &onept_)));
           set_has_onept();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(960)) goto parse_deftd;
         break;
@@ -1777,14 +1687,15 @@ bool Dstats::MergePartialFromCodedStream(
 
       // optional int32 deftd = 120;
       case 120: {
-        if (tag == 960) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_deftd:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &deftd_)));
           set_has_deftd();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(1040)) goto parse_sfty;
         break;
@@ -1792,14 +1703,15 @@ bool Dstats::MergePartialFromCodedStream(
 
       // optional int32 sfty = 130;
       case 130: {
-        if (tag == 1040) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_sfty:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &sfty_)));
           set_has_sfty();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(1120)) goto parse_turnovers;
         break;
@@ -1807,14 +1719,15 @@ bool Dstats::MergePartialFromCodedStream(
 
       // optional int32 turnovers = 140;
       case 140: {
-        if (tag == 1120) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_turnovers:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &turnovers_)));
           set_has_turnovers();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(1200)) goto parse_sacks;
         break;
@@ -1822,14 +1735,15 @@ bool Dstats::MergePartialFromCodedStream(
 
       // optional int32 sacks = 150;
       case 150: {
-        if (tag == 1200) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_sacks:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &sacks_)));
           set_has_sacks();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(1280)) goto parse_ptsa;
         break;
@@ -1837,25 +1751,25 @@ bool Dstats::MergePartialFromCodedStream(
 
       // optional int32 ptsa = 160;
       case 160: {
-        if (tag == 1280) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_ptsa:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &ptsa_)));
           set_has_ptsa();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -1863,18 +1777,12 @@ bool Dstats::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.Dstats)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.Dstats)
-  return false;
 #undef DO_
 }
 
 void Dstats::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.Dstats)
   // optional int32 twopt = 100;
   if (has_twopt()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(100, this->twopt(), output);
@@ -1914,12 +1822,10 @@ void Dstats::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.Dstats)
 }
 
 ::google::protobuf::uint8* Dstats::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.Dstats)
   // optional int32 twopt = 100;
   if (has_twopt()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(100, this->twopt(), target);
@@ -1959,7 +1865,6 @@ void Dstats::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.Dstats)
   return target;
 }
 
@@ -2128,7 +2033,6 @@ const int Ostats::kOneptFieldNumber;
 Ostats::Ostats()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.Ostats)
 }
 
 void Ostats::InitAsDefaultInstance() {
@@ -2138,7 +2042,6 @@ Ostats::Ostats(const Ostats& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.Ostats)
 }
 
 void Ostats::SharedCtor() {
@@ -2158,7 +2061,6 @@ void Ostats::SharedCtor() {
 }
 
 Ostats::~Ostats() {
-  // @@protoc_insertion_point(destructor:fantasybit.Ostats)
   SharedDtor();
 }
 
@@ -2189,47 +2091,41 @@ Ostats* Ostats::New() const {
 }
 
 void Ostats::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<Ostats*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 255) {
-    ZR_(passyds_, pint_);
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    passyds_ = 0;
+    passtd_ = 0;
+    rushyds_ = 0;
+    rushtd_ = 0;
+    recyds_ = 0;
+    rectd_ = 0;
+    rec_ = 0;
+    pint_ = 0;
   }
-  ZR_(fumble_, onept_);
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    fumble_ = 0;
+    twopt_ = 0;
+    onept_ = 0;
+  }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool Ostats::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.Ostats)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional int32 passyds = 10;
       case 10: {
-        if (tag == 80) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &passyds_)));
           set_has_passyds();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(160)) goto parse_passtd;
         break;
@@ -2237,14 +2133,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 passtd = 20;
       case 20: {
-        if (tag == 160) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_passtd:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &passtd_)));
           set_has_passtd();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(240)) goto parse_rushyds;
         break;
@@ -2252,14 +2149,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 rushyds = 30;
       case 30: {
-        if (tag == 240) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_rushyds:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &rushyds_)));
           set_has_rushyds();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(320)) goto parse_rushtd;
         break;
@@ -2267,14 +2165,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 rushtd = 40;
       case 40: {
-        if (tag == 320) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_rushtd:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &rushtd_)));
           set_has_rushtd();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(400)) goto parse_recyds;
         break;
@@ -2282,14 +2181,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 recyds = 50;
       case 50: {
-        if (tag == 400) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_recyds:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &recyds_)));
           set_has_recyds();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(480)) goto parse_rectd;
         break;
@@ -2297,14 +2197,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 rectd = 60;
       case 60: {
-        if (tag == 480) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_rectd:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &rectd_)));
           set_has_rectd();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(560)) goto parse_rec;
         break;
@@ -2312,14 +2213,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 rec = 70;
       case 70: {
-        if (tag == 560) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_rec:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &rec_)));
           set_has_rec();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(640)) goto parse_pint;
         break;
@@ -2327,14 +2229,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 pint = 80;
       case 80: {
-        if (tag == 640) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_pint:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &pint_)));
           set_has_pint();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(720)) goto parse_fumble;
         break;
@@ -2342,14 +2245,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 fumble = 90;
       case 90: {
-        if (tag == 720) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_fumble:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &fumble_)));
           set_has_fumble();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(800)) goto parse_twopt;
         break;
@@ -2357,14 +2261,15 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 twopt = 100;
       case 100: {
-        if (tag == 800) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_twopt:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &twopt_)));
           set_has_twopt();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(880)) goto parse_onept;
         break;
@@ -2372,25 +2277,25 @@ bool Ostats::MergePartialFromCodedStream(
 
       // optional int32 onept = 110;
       case 110: {
-        if (tag == 880) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_onept:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &onept_)));
           set_has_onept();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -2398,18 +2303,12 @@ bool Ostats::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.Ostats)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.Ostats)
-  return false;
 #undef DO_
 }
 
 void Ostats::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.Ostats)
   // optional int32 passyds = 10;
   if (has_passyds()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(10, this->passyds(), output);
@@ -2469,12 +2368,10 @@ void Ostats::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.Ostats)
 }
 
 ::google::protobuf::uint8* Ostats::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.Ostats)
   // optional int32 passyds = 10;
   if (has_passyds()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(10, this->passyds(), target);
@@ -2534,7 +2431,6 @@ void Ostats::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.Ostats)
   return target;
 }
 
@@ -2743,7 +2639,6 @@ const int Stats::kKstatsFieldNumber;
 Stats::Stats()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.Stats)
 }
 
 void Stats::InitAsDefaultInstance() {
@@ -2756,7 +2651,6 @@ Stats::Stats(const Stats& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.Stats)
 }
 
 void Stats::SharedCtor() {
@@ -2768,7 +2662,6 @@ void Stats::SharedCtor() {
 }
 
 Stats::~Stats() {
-  // @@protoc_insertion_point(destructor:fantasybit.Stats)
   SharedDtor();
 }
 
@@ -2802,7 +2695,7 @@ Stats* Stats::New() const {
 }
 
 void Stats::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_ostats()) {
       if (ostats_ != NULL) ostats_->::fantasybit::Ostats::Clear();
     }
@@ -2819,21 +2712,18 @@ void Stats::Clear() {
 
 bool Stats::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.Stats)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional .fantasybit.Ostats ostats = 10;
       case 10: {
-        if (tag == 82) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_ostats()));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(162)) goto parse_dstats;
         break;
@@ -2841,12 +2731,13 @@ bool Stats::MergePartialFromCodedStream(
 
       // optional .fantasybit.Dstats dstats = 20;
       case 20: {
-        if (tag == 162) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_dstats:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_dstats()));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(242)) goto parse_kstats;
         break;
@@ -2854,23 +2745,23 @@ bool Stats::MergePartialFromCodedStream(
 
       // optional .fantasybit.Kstats kstats = 30;
       case 30: {
-        if (tag == 242) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_kstats:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_kstats()));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -2878,18 +2769,12 @@ bool Stats::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.Stats)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.Stats)
-  return false;
 #undef DO_
 }
 
 void Stats::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.Stats)
   // optional .fantasybit.Ostats ostats = 10;
   if (has_ostats()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -2912,12 +2797,10 @@ void Stats::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.Stats)
 }
 
 ::google::protobuf::uint8* Stats::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.Stats)
   // optional .fantasybit.Ostats ostats = 10;
   if (has_ostats()) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -2943,7 +2826,6 @@ void Stats::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.Stats)
   return target;
 }
 
@@ -3061,7 +2943,6 @@ const int PlayerResult::kFantaybitawardFieldNumber;
 PlayerResult::PlayerResult()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.PlayerResult)
 }
 
 void PlayerResult::InitAsDefaultInstance() {
@@ -3072,25 +2953,22 @@ PlayerResult::PlayerResult(const PlayerResult& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.PlayerResult)
 }
 
 void PlayerResult::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   result_ = 0;
   stats_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 PlayerResult::~PlayerResult() {
-  // @@protoc_insertion_point(destructor:fantasybit.PlayerResult)
   SharedDtor();
 }
 
 void PlayerResult::SharedDtor() {
-  if (playerid_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
     delete playerid_;
   }
   if (this != default_instance_) {
@@ -3120,9 +2998,9 @@ PlayerResult* PlayerResult::New() const {
 }
 
 void PlayerResult::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_playerid()) {
-      if (playerid_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      if (playerid_ != &::google::protobuf::internal::kEmptyString) {
         playerid_->clear();
       }
     }
@@ -3138,25 +3016,21 @@ void PlayerResult::Clear() {
 
 bool PlayerResult::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.PlayerResult)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional string playerid = 20;
       case 20: {
-        if (tag == 162) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_playerid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->playerid().data(), this->playerid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "playerid");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(325)) goto parse_result;
         break;
@@ -3164,14 +3038,15 @@ bool PlayerResult::MergePartialFromCodedStream(
 
       // optional float result = 40;
       case 40: {
-        if (tag == 325) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_result:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &result_)));
           set_has_result();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(402)) goto parse_stats;
         break;
@@ -3179,12 +3054,13 @@ bool PlayerResult::MergePartialFromCodedStream(
 
       // optional .fantasybit.Stats stats = 50;
       case 50: {
-        if (tag == 402) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_stats:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_stats()));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(482)) goto parse_fantaybitaward;
         break;
@@ -3192,24 +3068,24 @@ bool PlayerResult::MergePartialFromCodedStream(
 
       // repeated .fantasybit.FantasyBitAward fantaybitaward = 60;
       case 60: {
-        if (tag == 482) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_fantaybitaward:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_fantaybitaward()));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(482)) goto parse_fantaybitaward;
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -3217,25 +3093,18 @@ bool PlayerResult::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.PlayerResult)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.PlayerResult)
-  return false;
 #undef DO_
 }
 
 void PlayerResult::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.PlayerResult)
   // optional string playerid = 20;
   if (has_playerid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->playerid().data(), this->playerid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "playerid");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       20, this->playerid(), output);
   }
 
@@ -3260,18 +3129,15 @@ void PlayerResult::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.PlayerResult)
 }
 
 ::google::protobuf::uint8* PlayerResult::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.PlayerResult)
   // optional string playerid = 20;
   if (has_playerid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->playerid().data(), this->playerid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "playerid");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         20, this->playerid(), target);
@@ -3300,7 +3166,6 @@ void PlayerResult::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.PlayerResult)
   return target;
 }
 
@@ -3426,7 +3291,6 @@ const int GameResult::kKickofftimeFieldNumber;
 GameResult::GameResult()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:fantasybit.GameResult)
 }
 
 void GameResult::InitAsDefaultInstance() {
@@ -3436,24 +3300,21 @@ GameResult::GameResult(const GameResult& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:fantasybit.GameResult)
 }
 
 void GameResult::SharedCtor() {
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   kickofftime_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 GameResult::~GameResult() {
-  // @@protoc_insertion_point(destructor:fantasybit.GameResult)
   SharedDtor();
 }
 
 void GameResult::SharedDtor() {
-  if (gameid_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
     delete gameid_;
   }
   if (this != default_instance_) {
@@ -3482,9 +3343,9 @@ GameResult* GameResult::New() const {
 }
 
 void GameResult::Clear() {
-  if (_has_bits_[0 / 32] & 9) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_gameid()) {
-      if (gameid_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      if (gameid_ != &::google::protobuf::internal::kEmptyString) {
         gameid_->clear();
       }
     }
@@ -3498,25 +3359,21 @@ void GameResult::Clear() {
 
 bool GameResult::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:fantasybit.GameResult)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
+  while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional string gameid = 1;
       case 1: {
-        if (tag == 10) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_gameid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->gameid().data(), this->gameid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "gameid");
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(82)) goto parse_home_result;
         break;
@@ -3524,12 +3381,13 @@ bool GameResult::MergePartialFromCodedStream(
 
       // repeated .fantasybit.PlayerResult home_result = 10;
       case 10: {
-        if (tag == 82) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_home_result:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_home_result()));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(82)) goto parse_home_result;
         if (input->ExpectTag(162)) goto parse_away_result;
@@ -3538,12 +3396,13 @@ bool GameResult::MergePartialFromCodedStream(
 
       // repeated .fantasybit.PlayerResult away_result = 20;
       case 20: {
-        if (tag == 162) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_away_result:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_away_result()));
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
         if (input->ExpectTag(162)) goto parse_away_result;
         if (input->ExpectTag(240)) goto parse_kickofftime;
@@ -3552,25 +3411,25 @@ bool GameResult::MergePartialFromCodedStream(
 
       // optional uint32 kickofftime = 30;
       case 30: {
-        if (tag == 240) {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_kickofftime:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &kickofftime_)));
           set_has_kickofftime();
         } else {
-          goto handle_unusual;
+          goto handle_uninterpreted;
         }
-        if (input->ExpectAtEnd()) goto success;
+        if (input->ExpectAtEnd()) return true;
         break;
       }
 
       default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
+          return true;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -3578,25 +3437,18 @@ bool GameResult::MergePartialFromCodedStream(
       }
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:fantasybit.GameResult)
   return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:fantasybit.GameResult)
-  return false;
 #undef DO_
 }
 
 void GameResult::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:fantasybit.GameResult)
   // optional string gameid = 1;
   if (has_gameid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->gameid().data(), this->gameid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "gameid");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       1, this->gameid(), output);
   }
 
@@ -3621,18 +3473,15 @@ void GameResult::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:fantasybit.GameResult)
 }
 
 ::google::protobuf::uint8* GameResult::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.GameResult)
   // optional string gameid = 1;
   if (has_gameid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->gameid().data(), this->gameid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "gameid");
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->gameid(), target);
@@ -3661,7 +3510,6 @@ void GameResult::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.GameResult)
   return target;
 }
 
