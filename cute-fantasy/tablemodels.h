@@ -390,7 +390,8 @@ public:
     {
         myPositionCombobox = positionCombobox;
         myGameModelProxy = gameModelProxy;
-        if (myGameModelProxy != NULL) mySelectedGames = gameSelectionModel;
+        //if (myGameModelProxy != NULL) mySelectedGames = gameSelectionModel;
+        mySelectedGames = gameSelectionModel;
     }
 
     bool isEnabled(){
