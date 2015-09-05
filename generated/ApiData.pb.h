@@ -189,13 +189,6 @@ class Distribution : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 fantasy_nameid = 1;
-  inline bool has_fantasy_nameid() const;
-  inline void clear_fantasy_nameid();
-  static const int kFantasyNameidFieldNumber = 1;
-  inline ::google::protobuf::int32 fantasy_nameid() const;
-  inline void set_fantasy_nameid(::google::protobuf::int32 value);
-
   // optional string gameid = 2;
   inline bool has_gameid() const;
   inline void clear_gameid();
@@ -207,18 +200,6 @@ class Distribution : public ::google::protobuf::Message {
   inline ::std::string* mutable_gameid();
   inline ::std::string* release_gameid();
   inline void set_allocated_gameid(::std::string* gameid);
-
-  // optional string playerid = 3;
-  inline bool has_playerid() const;
-  inline void clear_playerid();
-  static const int kPlayeridFieldNumber = 3;
-  inline const ::std::string& playerid() const;
-  inline void set_playerid(const ::std::string& value);
-  inline void set_playerid(const char* value);
-  inline void set_playerid(const char* value, size_t size);
-  inline ::std::string* mutable_playerid();
-  inline ::std::string* release_playerid();
-  inline void set_allocated_playerid(::std::string* playerid);
 
   // optional string teamid = 4;
   inline bool has_teamid() const;
@@ -246,6 +227,25 @@ class Distribution : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 week() const;
   inline void set_week(::google::protobuf::int32 value);
 
+  // optional int32 fantasy_nameid = 1;
+  inline bool has_fantasy_nameid() const;
+  inline void clear_fantasy_nameid();
+  static const int kFantasyNameidFieldNumber = 1;
+  inline ::google::protobuf::int32 fantasy_nameid() const;
+  inline void set_fantasy_nameid(::google::protobuf::int32 value);
+
+  // optional string playerid = 3;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 3;
+  inline const ::std::string& playerid() const;
+  inline void set_playerid(const ::std::string& value);
+  inline void set_playerid(const char* value);
+  inline void set_playerid(const char* value, size_t size);
+  inline ::std::string* mutable_playerid();
+  inline ::std::string* release_playerid();
+  inline void set_allocated_playerid(::std::string* playerid);
+
   // optional int32 proj = 7;
   inline bool has_proj() const;
   inline void clear_proj();
@@ -269,18 +269,18 @@ class Distribution : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:fantasybit.Distribution)
  private:
-  inline void set_has_fantasy_nameid();
-  inline void clear_has_fantasy_nameid();
   inline void set_has_gameid();
   inline void clear_has_gameid();
-  inline void set_has_playerid();
-  inline void clear_has_playerid();
   inline void set_has_teamid();
   inline void clear_has_teamid();
   inline void set_has_season();
   inline void clear_has_season();
   inline void set_has_week();
   inline void clear_has_week();
+  inline void set_has_fantasy_nameid();
+  inline void clear_has_fantasy_nameid();
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
   inline void set_has_proj();
   inline void clear_has_proj();
   inline void set_has_award();
@@ -291,11 +291,11 @@ class Distribution : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* gameid_;
+  ::std::string* teamid_;
+  ::google::protobuf::int32 season_;
+  ::google::protobuf::int32 week_;
   ::std::string* playerid_;
   ::google::protobuf::int32 fantasy_nameid_;
-  ::google::protobuf::int32 season_;
-  ::std::string* teamid_;
-  ::google::protobuf::int32 week_;
   ::google::protobuf::int32 proj_;
   float award_;
   float result_;
@@ -413,37 +413,15 @@ inline void FantasyNameHash::set_hash(::google::protobuf::uint64 value) {
 
 // Distribution
 
-// optional int32 fantasy_nameid = 1;
-inline bool Distribution::has_fantasy_nameid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Distribution::set_has_fantasy_nameid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Distribution::clear_has_fantasy_nameid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Distribution::clear_fantasy_nameid() {
-  fantasy_nameid_ = 0;
-  clear_has_fantasy_nameid();
-}
-inline ::google::protobuf::int32 Distribution::fantasy_nameid() const {
-  return fantasy_nameid_;
-}
-inline void Distribution::set_fantasy_nameid(::google::protobuf::int32 value) {
-  set_has_fantasy_nameid();
-  fantasy_nameid_ = value;
-}
-
 // optional string gameid = 2;
 inline bool Distribution::has_gameid() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void Distribution::set_has_gameid() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void Distribution::clear_has_gameid() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void Distribution::clear_gameid() {
   if (gameid_ != &::google::protobuf::internal::kEmptyString) {
@@ -505,85 +483,15 @@ inline void Distribution::set_allocated_gameid(::std::string* gameid) {
   }
 }
 
-// optional string playerid = 3;
-inline bool Distribution::has_playerid() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Distribution::set_has_playerid() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Distribution::clear_has_playerid() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void Distribution::clear_playerid() {
-  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
-    playerid_->clear();
-  }
-  clear_has_playerid();
-}
-inline const ::std::string& Distribution::playerid() const {
-  return *playerid_;
-}
-inline void Distribution::set_playerid(const ::std::string& value) {
-  set_has_playerid();
-  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
-    playerid_ = new ::std::string;
-  }
-  playerid_->assign(value);
-}
-inline void Distribution::set_playerid(const char* value) {
-  set_has_playerid();
-  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
-    playerid_ = new ::std::string;
-  }
-  playerid_->assign(value);
-}
-inline void Distribution::set_playerid(const char* value, size_t size) {
-  set_has_playerid();
-  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
-    playerid_ = new ::std::string;
-  }
-  playerid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* Distribution::mutable_playerid() {
-  set_has_playerid();
-  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
-    playerid_ = new ::std::string;
-  }
-  return playerid_;
-}
-inline ::std::string* Distribution::release_playerid() {
-  clear_has_playerid();
-  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = playerid_;
-    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void Distribution::set_allocated_playerid(::std::string* playerid) {
-  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
-    delete playerid_;
-  }
-  if (playerid) {
-    set_has_playerid();
-    playerid_ = playerid;
-  } else {
-    clear_has_playerid();
-    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
 // optional string teamid = 4;
 inline bool Distribution::has_teamid() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void Distribution::set_has_teamid() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void Distribution::clear_has_teamid() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void Distribution::clear_teamid() {
   if (teamid_ != &::google::protobuf::internal::kEmptyString) {
@@ -647,13 +555,13 @@ inline void Distribution::set_allocated_teamid(::std::string* teamid) {
 
 // optional int32 season = 5;
 inline bool Distribution::has_season() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void Distribution::set_has_season() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void Distribution::clear_has_season() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void Distribution::clear_season() {
   season_ = 0;
@@ -669,13 +577,13 @@ inline void Distribution::set_season(::google::protobuf::int32 value) {
 
 // optional int32 week = 6;
 inline bool Distribution::has_week() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void Distribution::set_has_week() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void Distribution::clear_has_week() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void Distribution::clear_week() {
   week_ = 0;
@@ -687,6 +595,98 @@ inline ::google::protobuf::int32 Distribution::week() const {
 inline void Distribution::set_week(::google::protobuf::int32 value) {
   set_has_week();
   week_ = value;
+}
+
+// optional int32 fantasy_nameid = 1;
+inline bool Distribution::has_fantasy_nameid() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Distribution::set_has_fantasy_nameid() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Distribution::clear_has_fantasy_nameid() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Distribution::clear_fantasy_nameid() {
+  fantasy_nameid_ = 0;
+  clear_has_fantasy_nameid();
+}
+inline ::google::protobuf::int32 Distribution::fantasy_nameid() const {
+  return fantasy_nameid_;
+}
+inline void Distribution::set_fantasy_nameid(::google::protobuf::int32 value) {
+  set_has_fantasy_nameid();
+  fantasy_nameid_ = value;
+}
+
+// optional string playerid = 3;
+inline bool Distribution::has_playerid() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Distribution::set_has_playerid() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Distribution::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Distribution::clear_playerid() {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    playerid_->clear();
+  }
+  clear_has_playerid();
+}
+inline const ::std::string& Distribution::playerid() const {
+  return *playerid_;
+}
+inline void Distribution::set_playerid(const ::std::string& value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void Distribution::set_playerid(const char* value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void Distribution::set_playerid(const char* value, size_t size) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Distribution::mutable_playerid() {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  return playerid_;
+}
+inline ::std::string* Distribution::release_playerid() {
+  clear_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = playerid_;
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Distribution::set_allocated_playerid(::std::string* playerid) {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (playerid) {
+    set_has_playerid();
+    playerid_ = playerid;
+  } else {
+    clear_has_playerid();
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // optional int32 proj = 7;

@@ -93,6 +93,16 @@ void NFLStateData::init() {
 
 }
 
+void NFLStateData::closeAll() {
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+    MyTeamRoster.clear();
+    MyPlayerStatus.clear();
+    MyGameInfo.clear();
+    playerstore.reset();
+    staticstore.reset();
+    statusstore.reset();
+}
+
 GameInfo NFLStateData::GetGameInfo(string gameid) {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
     return MyGameInfo[gameid];

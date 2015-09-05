@@ -30,7 +30,7 @@ bytes mnemonicToSeed(const string& mnemonic) {
     if (!PKCS5_PBKDF2_HMAC(mnemonic.c_str(), mnemonic.length(),
             (const unsigned char*) MNEMONIC_SALT, strlen(MNEMONIC_SALT),
             MNEMONIC_PBKDF2_ITERATIONS, EVP_sha512(), seed.size(), seed.data())) {
-        throw invalid_argument("Error deriving seed from mnemonic");
+        throw MnemonicException("Error deriving seed from mnemonic");
     }
 
     return seed;
@@ -52,11 +52,11 @@ bytes decodeMnemonic(const string& mnemonic) {
     mnemonic_words words { istream_iterator<string> { iss }, istream_iterator<string> { } };
 
     if (words.size() % 3 != 0) {
-        throw invalid_argument("Mnemonic words must be multiple of 3");
+        throw MnemonicLengthException("Mnemonic words must be multiple of 3");
     }
 
     if (words.size() == 0) {
-        throw invalid_argument("Mnemonic is empty");
+        throw MnemonicLengthException("Mnemonic is empty");
     }
 
     int concatLenBits = words.size() * 11;
@@ -67,7 +67,7 @@ bytes decodeMnemonic(const string& mnemonic) {
         uint index = std::distance(wordlist.begin(),
                 std::find(wordlist.begin(), wordlist.end(), word));
         if (index == wordlist.size()) {
-            throw invalid_argument("Invalid mnemonic word: " + word);
+            throw MnemonicWordException("Invalid mnemonic word: " + word);
         }
 
         // Set the next 11 bits to the value of the index.
@@ -98,7 +98,7 @@ bytes decodeMnemonic(const string& mnemonic) {
     // Check all the checksum bits.
     for (int i = 0; i < checksumLengthBits; ++i) {
         if (concatBits[entropyLengthBits + i] != hashBits[i]) {
-            throw invalid_argument("Invalid mnemonic checksum");
+            throw MnemonicChecksumException("Invalid mnemonic checksum");
         }
     }
 
@@ -107,11 +107,11 @@ bytes decodeMnemonic(const string& mnemonic) {
 
 string encodeToMnemonic(bytes& data) {
     if (data.size() % 4 != 0) {
-        throw invalid_argument("Entropy length not multiple of 32 bits.");
+        throw MnemonicLengthException("Entropy length not multiple of 32 bits.");
     }
 
     if (data.size() == 0) {
-        throw invalid_argument("Entropy is empty.");
+        throw MnemonicLengthException("Entropy is empty.");
     }
 
     // We take initial entropy of ENT bits and compute its

@@ -63,6 +63,7 @@ public slots:
 public:
     FantasyNameData() {}
     void init();
+    void closeAll();
     void AddNewName(std::string name, std::string pubkey);
     void AddBalance(const std::string name,uint64_t amount);
 

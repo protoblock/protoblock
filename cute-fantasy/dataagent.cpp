@@ -8,10 +8,11 @@ SignedTransaction dataagent::signTx(Transaction &tx) {
     return worker->Agent().makeSigned(tx);
 }
 
-Block dataagent::makeNewBlockAsDataAgent(const SignedTransaction &st) {
+fc::optional<Block> dataagent::makeNewBlockAsDataAgent(Transaction &st) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
-    Block b = worker->Agent().makeNewBlockAsDataAgent(st,mLastBlock);
-    mLastBlock = b.signedhead().head();
+    auto b = worker->Agent().makeNewBlockAsDataAgent(st,mLastBlock);
+    if (b)
+        mLastBlock = (*b).signedhead().head();
     return b;
 }
 
@@ -25,3 +26,10 @@ GameResult dataagent::getGameResult(int week, GameInfo &gi ) {
     return gr;
 
 }
+
+MyFantasyName dataagent::importMnemonic(string in) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->Agent().UseMnemonic(in);
+
+}
+

@@ -54,12 +54,12 @@ void protobuf_AssignDesc_ApiData_2eproto() {
       sizeof(FantasyNameHash));
   Distribution_descriptor_ = file->message_type(1);
   static const int Distribution_offsets_[9] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, fantasy_nameid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, gameid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, teamid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, season_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, week_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, fantasy_nameid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, proj_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, award_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, result_),
@@ -111,9 +111,9 @@ void protobuf_AddDesc_ApiData_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\rApiData.proto\022\nfantasybit\"-\n\017FantasyNa"
     "meHash\022\014\n\004name\030\n \001(\t\022\014\n\004hash\030\036 \001(\004\"\243\001\n\014D"
-    "istribution\022\026\n\016fantasy_nameid\030\001 \001(\005\022\016\n\006g"
-    "ameid\030\002 \001(\t\022\020\n\010playerid\030\003 \001(\t\022\016\n\006teamid\030"
-    "\004 \001(\t\022\016\n\006season\030\005 \001(\005\022\014\n\004week\030\006 \001(\005\022\014\n\004p"
+    "istribution\022\016\n\006gameid\030\002 \001(\t\022\016\n\006teamid\030\004 "
+    "\001(\t\022\016\n\006season\030\005 \001(\005\022\014\n\004week\030\006 \001(\005\022\026\n\016fan"
+    "tasy_nameid\030\001 \001(\005\022\020\n\010playerid\030\003 \001(\t\022\014\n\004p"
     "roj\030\007 \001(\005\022\r\n\005award\030\010 \001(\002\022\016\n\006result\030\t \001(\002", 240);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ApiData.proto", &protobuf_RegisterTypes);
@@ -399,12 +399,12 @@ void FantasyNameHash::Swap(FantasyNameHash* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Distribution::kFantasyNameidFieldNumber;
 const int Distribution::kGameidFieldNumber;
-const int Distribution::kPlayeridFieldNumber;
 const int Distribution::kTeamidFieldNumber;
 const int Distribution::kSeasonFieldNumber;
 const int Distribution::kWeekFieldNumber;
+const int Distribution::kFantasyNameidFieldNumber;
+const int Distribution::kPlayeridFieldNumber;
 const int Distribution::kProjFieldNumber;
 const int Distribution::kAwardFieldNumber;
 const int Distribution::kResultFieldNumber;
@@ -426,12 +426,12 @@ Distribution::Distribution(const Distribution& from)
 
 void Distribution::SharedCtor() {
   _cached_size_ = 0;
-  fantasy_nameid_ = 0;
   gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   season_ = 0;
   week_ = 0;
+  fantasy_nameid_ = 0;
+  playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   proj_ = 0;
   award_ = 0;
   result_ = 0;
@@ -446,11 +446,11 @@ void Distribution::SharedDtor() {
   if (gameid_ != &::google::protobuf::internal::kEmptyString) {
     delete gameid_;
   }
-  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
-    delete playerid_;
-  }
   if (teamid_ != &::google::protobuf::internal::kEmptyString) {
     delete teamid_;
+  }
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
   }
   if (this != default_instance_) {
   }
@@ -479,15 +479,9 @@ Distribution* Distribution::New() const {
 
 void Distribution::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    fantasy_nameid_ = 0;
     if (has_gameid()) {
       if (gameid_ != &::google::protobuf::internal::kEmptyString) {
         gameid_->clear();
-      }
-    }
-    if (has_playerid()) {
-      if (playerid_ != &::google::protobuf::internal::kEmptyString) {
-        playerid_->clear();
       }
     }
     if (has_teamid()) {
@@ -497,6 +491,12 @@ void Distribution::Clear() {
     }
     season_ = 0;
     week_ = 0;
+    fantasy_nameid_ = 0;
+    if (has_playerid()) {
+      if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+        playerid_->clear();
+      }
+    }
     proj_ = 0;
     award_ = 0;
   }
@@ -813,25 +813,11 @@ int Distribution::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional int32 fantasy_nameid = 1;
-    if (has_fantasy_nameid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->fantasy_nameid());
-    }
-
     // optional string gameid = 2;
     if (has_gameid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->gameid());
-    }
-
-    // optional string playerid = 3;
-    if (has_playerid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->playerid());
     }
 
     // optional string teamid = 4;
@@ -853,6 +839,20 @@ int Distribution::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->week());
+    }
+
+    // optional int32 fantasy_nameid = 1;
+    if (has_fantasy_nameid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->fantasy_nameid());
+    }
+
+    // optional string playerid = 3;
+    if (has_playerid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->playerid());
     }
 
     // optional int32 proj = 7;
@@ -901,14 +901,8 @@ void Distribution::MergeFrom(const ::google::protobuf::Message& from) {
 void Distribution::MergeFrom(const Distribution& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_fantasy_nameid()) {
-      set_fantasy_nameid(from.fantasy_nameid());
-    }
     if (from.has_gameid()) {
       set_gameid(from.gameid());
-    }
-    if (from.has_playerid()) {
-      set_playerid(from.playerid());
     }
     if (from.has_teamid()) {
       set_teamid(from.teamid());
@@ -918,6 +912,12 @@ void Distribution::MergeFrom(const Distribution& from) {
     }
     if (from.has_week()) {
       set_week(from.week());
+    }
+    if (from.has_fantasy_nameid()) {
+      set_fantasy_nameid(from.fantasy_nameid());
+    }
+    if (from.has_playerid()) {
+      set_playerid(from.playerid());
     }
     if (from.has_proj()) {
       set_proj(from.proj());
@@ -953,12 +953,12 @@ bool Distribution::IsInitialized() const {
 
 void Distribution::Swap(Distribution* other) {
   if (other != this) {
-    std::swap(fantasy_nameid_, other->fantasy_nameid_);
     std::swap(gameid_, other->gameid_);
-    std::swap(playerid_, other->playerid_);
     std::swap(teamid_, other->teamid_);
     std::swap(season_, other->season_);
     std::swap(week_, other->week_);
+    std::swap(fantasy_nameid_, other->fantasy_nameid_);
+    std::swap(playerid_, other->playerid_);
     std::swap(proj_, other->proj_);
     std::swap(award_, other->award_);
     std::swap(result_, other->result_);

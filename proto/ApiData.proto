@@ -5,3 +5,14 @@ message FantasyNameHash {
 	optional uint64 hash = 30;
 }
 
+message Distribution {
+	optional string gameid = 2;
+	optional string teamid = 4;
+	optional int32 season = 5;
+	optional int32 week = 6;
+        optional int32 fantasy_nameid = 1;
+        optional string playerid = 3;
+        optional int32 proj = 7;
+        optional float award = 8;
+        optional float result = 9;
+}

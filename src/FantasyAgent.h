@@ -72,7 +72,8 @@ public:
 
     //Block makeNewBlockAsOracle();
     Block makeNewBlockAsDataAgent(const SignedTransaction &, fc::optional<BlockHeader>);
-
+    fc::optional<Block> FantasyAgent::makeNewBlockAsDataAgent(Transaction &tdt,
+                                                fc::optional<BlockHeader> myprev);
     std::string getSecret() const ;
     fc::ecc::public_key_data pubKey();
 
@@ -95,6 +96,7 @@ public:
     std::pair<fc::sha256, fc::ecc::signature>
     FantasyAgent::getRawIdSig(std::string &in, fc::ecc::private_key &pk) ;
 
+    MyFantasyName UseMnemonic(std::string mn, bool store=true);
 
 
 };

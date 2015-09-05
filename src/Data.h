@@ -87,6 +87,8 @@ public slots:
 public:
     NFLStateData() {}
     void init();
+    void closeAll();
+
     void AddNewPlayer(const std::string playerid, const PlayerBase &);
     void AddNewWeeklySchedule(int week, const WeeklySchedule &);
     void AddGameResult(const string &gameid, const GameResult&);

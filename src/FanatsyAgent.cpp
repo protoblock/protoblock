@@ -26,17 +26,6 @@ namespace fantasybit {
 FantasyAgent::FantasyAgent() : client{nullptr} {
     Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename3};
     if ( !read.good() ) {
-        Reader<Secret3> read2{ GET_ROOT_DIR() +  secretfilename2};
-        if ( !read2.good())
-            return;
-        Secret3 secret{};
-        while (read2.ReadNext(secret)) {
-
-            m_secrets.push_back(secret);
-            qInfo() << secret.fantasy_name() << " have key";
-
-        }
-
         return;
     }
 
@@ -176,9 +165,8 @@ bool FantasyAgent::AmFantasyAgent(std::string pubkey) {
     return Commissioner::GENESIS_PUB_KEY == Commissioner::str2pk(pubkey);
 }
 
-SignedTransaction FantasyAgent::makeSigned(Transaction &trans)
-{
-    SignedTransaction st{};
+SignedTransaction FantasyAgent::makeSigned(Transaction &trans) {
+   SignedTransaction st{};
     st.mutable_trans()->CopyFrom(trans);
     auto p = getIdSig(trans.SerializeAsString());
     st.set_id(p.first);
@@ -226,6 +214,41 @@ fc::ecc::private_key FantasyAgent::str2priv(const std::string &in) {
     return fc::ecc::private_key::regenerate(fc::sha256{ in });
 }
 
+MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
+
+    MyFantasyName mfn{};
+    mfn.set_status(MyNameStatus::none);
+    m_priv = fromMnemonic(mn);
+    auto pk = pubKey();
+    auto fn = Commissioner::getName(pk);
+    if ( !fn ) {
+        qInfo() << "name not found from mnemonic";
+        return mfn;
+    }
+
+    string name = fn->alias();
+    qInfo() << "name found" << fn->ToString();
+
+    client = std::make_unique<FantasyName>(name, (*m_priv).get_public_key().serialize());
+
+    mfn.set_status(MyNameStatus::confirmed);
+    mfn.set_name(name);
+
+    Secret3 secret{};
+    secret.set_private_key(getSecret());
+    secret.set_public_key(pubKeyStr());
+    secret.set_fantasy_name(name);
+    if ( store ) {
+        Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename3, ios::app };
+        secret.set_mnemonic_key(mn);
+        writer(secret);
+    }
+    m_secrets.push_back(secret);
+    qInfo() << "name available saving secret to file " << name;
+
+    return mfn;
+}
+
 
 bool FantasyAgent::UseName(std::string name) {
 
@@ -242,23 +265,18 @@ bool FantasyAgent::UseName(std::string name) {
 }
 
 pair<fc::ecc::private_key,string> FantasyAgent::makePrivMnemonic() {
-    auto priv = fc::ecc::private_key::generate();
-    auto secstr = priv.get_secret().str();
-    string m_mnemonic = createMnemonic((uint8_t*)secstr.data(),secstr.size());
-
+    auto priv = fc::ecc::private_key::generate();   
+    string m_mnemonic = createMnemonic((uint8_t*)priv.get_secret().data());
     return make_pair(fromMnemonic(m_mnemonic),m_mnemonic);
 }
 
-
 fc::ecc::private_key FantasyAgent::fromMnemonic(const string &in) {
     auto hseed = mnemonicToSeed(in);
-    string buf;
-    for ( auto b : hseed) {
-        buf.push_back(b);
-    }
-    return  fc::ecc::private_key::regenerate(fc::sha256::hash(buf));
+    fc::sha256 secret;
+    // 32 bytes is 256bits
+    memcpy(secret.data(), hseed.data(), 32);
+    return  fc::ecc::private_key::regenerate(secret);
 }
-
 
 FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
     status ret = NOTAVAILABLE;
@@ -288,6 +306,7 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 			secret.set_public_key(pubKeyStr());
 			secret.set_fantasy_name(name);
 			writer(secret);
+            secret.clear_mnemonic_key();
             m_secrets.push_back(secret);
             //LOG(lg, info) << "name available saving secret to file " << name;
             qInfo() << "name available saving secret to file " << name;
@@ -404,6 +423,27 @@ bool FantasyAgent::beDataAgent() {
 	}
 
     return ret;
+}
+
+fc::optional<Block> FantasyAgent::makeNewBlockAsDataAgent(Transaction &tdt,
+                                            fc::optional<BlockHeader> myprev) {
+
+    fc::optional<Block> b;
+    if (!amDataAgent()) {
+        qWarning() << "am not DataAgent - try tp beDataAgent";
+
+        if (!beDataAgent()) {
+            qCritical() << "cant makeNewBlockAsDataAgent am not agent";
+            return b;
+        }
+    }
+    qInfo() << "I am DataAgent";
+
+    auto dt = makeSigned(tdt);
+
+    b = makeNewBlockAsDataAgent(dt,myprev);
+    return b;
+
 }
 
 

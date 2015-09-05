@@ -23,7 +23,7 @@
 #include "Commissioner.h"
 #include "RestFullCall.h"
 #include "DataPersist.h"
-
+#include "leveldb/write_batch.h"
 
 #include "globals.h"
 using namespace std;
@@ -57,7 +57,7 @@ Node::Node() {
         //    Writer<Block> writer{ GET_ROOT_DIR() + "genesisAlpha.out", ios::app };
         //    writer(sb);
         }
-        qInfo() <<  "|" << QTD(sb.DebugString()) << "|";
+        //qInfo() <<  "|" << QTD(sb.DebugString()) << "|";
 
         qInfo() <<  "done";
 
@@ -79,6 +79,20 @@ Node::Node() {
     qInfo() <<  " current_hight " << current_hight;
 }
 
+
+void Node::BackSync(int to) {
+
+    leveldb::WriteBatch batch;
+    for ( int i=getLastLocalBlockNum();i>to;i--) {
+        leveldb::Slice key((char*)&i, sizeof(int));
+        batch.Delete(key);
+    }
+    auto s = blockchain->Write(leveldb::WriteOptions(), &batch);
+
+    current_hight = getLastLocalBlockNum();
+
+}
+
 bool Node::Sync() {
     qDebug() << "cureent thread" << QThread::currentThread();
     fc::optional<int> gh = getLastGlobalBlockNum();
@@ -91,6 +105,9 @@ bool Node::Sync() {
     qInfo() << " global height " << *gh;
     if ( current_hight < (*gh) )
         return SyncTo(*gh);
+    else if ( current_hight > (*gh) && current_hight > 1 ) {
+        return false;
+    }
     else
         return true;
 }
@@ -133,7 +150,7 @@ bool Node::SyncTo(int gh) {
             current_hight = current_hight+1;
 
             count = 0;
-                Node::ClearTx(*sb);
+            Node::ClearTx(*sb);
 
             //CheckOrphanBlocks();
         }
@@ -173,7 +190,11 @@ int Node::myLastGlobalBlockNum() {
 
 fc::optional<int> Node::getLastGlobalBlockNum() {
     //qDebug() << "cureent thread" << QThread::currentThread();
+
+    //return 20;
+    qDebug() << " calling rest height";
     int height = RestfullService::getHeight("https://stagingapi.trading.football:4545");
+    qDebug() << " after rest height" << height;
 
     if ( myLastGlobalBlockNum() < height )
         setLastGlobalBlockNum(height);
@@ -242,11 +263,15 @@ fc::optional<Block> Node::getGlobalBlock(int num) {
     //int height = RestfullService::getHeight("http://192.96.159.216:4545");
 
     //if ( height < num ) return;
-    string bs = RestfullService::getBlk("http://192.96.159.216:4545",num);
+    string bs = RestfullService::getBlk(PAPIURL.data(),num);
+    Block bb{};
+    bb.ParseFromString(bs);
+    qInfo() << bb.SerializeAsString().size() << bb.DebugString();
+
 
     block = Block{};
     (*block).ParseFromString(bs);
-    qInfo() << (*block).DebugString();
+    qInfo() << bs.size() << (*block).DebugString();
 
     return block;
 }

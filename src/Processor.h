@@ -70,6 +70,8 @@ public:
     void BlockProcessor::OnWeekOver(int week);
     void BlockProcessor::OnWeekStart(int week);
 
+    void hardReset();
+
 };
 
 }

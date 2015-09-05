@@ -26,6 +26,15 @@
 
 namespace fantasybit
 {
+
+void BlockProcessor::hardReset() {
+    mRecorder.closeAll();
+    mData.closeAll();
+    mNameData.closeAll();
+
+    fc::remove_all(Platform::getRootDir() + "index/");
+}
+
 int BlockProcessor::init() {
     mRecorder.init();
     if (!mRecorder.isValid() ) {
@@ -204,6 +213,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+//#ifdef DATAAGENTWRITENAMES
                 Distribution dist{};
                 dist.set_gameid(rd.game_result().gameid());
                 auto gs = mData.GetGlobalState();
@@ -224,8 +234,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                         auto ds = dist.SerializeAsString();
 
-                        RestfullClient rest(QUrl("https://api.trading.football:9854"));
-                        rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()),true);
+                        RestfullClient rest(QUrl("https://stagingapi.trading.football:9854"));
+                        rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
 
                     }
                 }
@@ -240,9 +250,14 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         dist.set_proj(fba.proj());
                         dist.set_award(fba.award());
                         emit new_dataDistribution(dist);
+                        auto ds = dist.SerializeAsString();
+
+                        RestfullClient rest(QUrl("https://stagingapi.trading.football:9854"));
+                        rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
+
                     }
                 }
-
+//#endif
                 break;
             }
             case Data_Type_SCHEDULE: {

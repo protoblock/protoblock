@@ -37,6 +37,7 @@ public:
 
     bool Sync();
     bool SyncTo(int);
+    void BackSync(int to);
 
     fc::optional<int> getLastGlobalBlockNum();
 

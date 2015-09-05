@@ -23,6 +23,7 @@ SOURCES += \
     $$PWD/../generated/ProtoData.pb.cc \
     $$PWD/../generated/StaticData.pb.cc \
     $$PWD/../generated/StatusData.pb.cc \        
+    $$PWD/../generated/ApiData.pb.cc \
     $$PWD/../src/NameData.cpp \
     $$PWD/../generated/NameData.pb.cc \
     $$PWD/mainwindow.cpp \
@@ -75,6 +76,7 @@ HEADERS += \
     $$PWD/playerdataviewmodel.h \
     $$PWD/viewmodels.h \
     $$PWD/core.h \
+    $$PWD/../generated/ApiData.pb.h \
     $$PWD/../generated/ProtoData.pb.h \
     $$PWD/../generated/StaticData.pb.h \
     $$PWD/../generated/StatusData.pb.h \        
@@ -111,11 +113,8 @@ RESOURCES += \
 
 
 contains(DEFINES, DATAAGENTGUI){
-SOURCES += $$PWD/testingwindow.cpp
-
-FORMS += $$PWD/testingwindow.ui
-
-HEADERS += $$PWD/testingwindow.h
-
+    SOURCES += $$PWD/testingwindow.cpp
+    FORMS += $$PWD/testingwindow.ui
+    HEADERS += $$PWD/testingwindow.h
 }
 

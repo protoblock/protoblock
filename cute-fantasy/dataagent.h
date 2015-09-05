@@ -22,9 +22,10 @@ public:
     void oracleSign();
 
     SignedTransaction signTx(Transaction &tx);
-    Block makeNewBlockAsDataAgent(const SignedTransaction &);
+    fc::optional<Block> makeNewBlockAsDataAgent(Transaction &);
     GameResult getGameResult(int week, GameInfo &gi );
 
+    MyFantasyName importMnemonic(string in);
     fc::optional<BlockHeader> mLastBlock;
     GameStatsLoader gameloader;
 };

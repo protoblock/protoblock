@@ -71,6 +71,17 @@ void FantasyNameData::init() {
 
 }
 
+void FantasyNameData::closeAll() {
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+    bool amlive = false;
+    int week = 0;
+    mSubscribed.clear();
+    PlayerIDProjections.clear();
+    FantasyNameProjections.clear();
+    namestore.reset();
+    projstore.reset();
+}
+
 void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
     FantasyNameBal fn{};
     fn.set_name(name);
@@ -179,7 +190,7 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
 
     auto name = fn->alias();
 
-#ifdef DATAAGENTGUI
+#ifdef DATAAGENTWRITENAMES
     FantasyNameHash fnh{};
     fnh.set_name(name);
     fnh.set_hash(fn->hash());
@@ -187,7 +198,7 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
 
     auto fnhstr = fnh.SerializeAsString();
     RestfullClient rest(QUrl("https://api.trading.football:9854"));
-    rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()),true);
+    rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()));
 
 #endif
 

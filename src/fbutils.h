@@ -23,7 +23,10 @@
 
 namespace fantasybit {
 
-	//#define NO_ORACLE_CHECK_TESTING 
+    static std::string PAPIURL = "https://stagingapi.trading.football:4545";
+    static std::string LAPIURL = "https://stagingapi.trading.football:9854";
+
+    //#define NO_ORACLE_CHECK_TESTING
 	//forwards
 	struct FantasyName;
 
