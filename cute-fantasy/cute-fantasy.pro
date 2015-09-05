@@ -10,15 +10,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 #comment this line to generate
 DEFINES += DATAAGENTGUI
+#DEFINES += DATAAGENTWRITENAMES
 #DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
 
 contains(DEFINES, DATAAGENTGUI){
-TARGET = cute-fantasy-agent
-QT += sql
+    TARGET = cute-fantasy-agent
+    QT += sql
 }
 !contains(DEFINES, DATAAGENTGUI){
-TARGET = tradingfootball
+    TARGET = tradingfootball
 }
 
 TEMPLATE = app
@@ -36,7 +37,6 @@ CONFIG(debug, debug|release) {
     contains(DEFINES, DATAAGENTGUI){ DESTDIR = ./../debugbinagent }
 }
 
-CONFIG(release, debug|release) {    
 CONFIG(release, debug|release) {
     LIBS += -L./../lib
     LIBS += -lfc_release
@@ -88,9 +88,3 @@ CONFIG(release, debug|release) {
 
 include (./boost-includes.pri)
 include (./cute-fantasy.pri)
-
-HEADERS += \
-    ../generated/ApiData.pb.h
-
-SOURCES += \
-    ../generated/ApiData.pb.cc
