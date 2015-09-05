@@ -15,7 +15,7 @@
 #include "DataPersist.h"
 #include <fc/optional.hpp>
 #include "FantasyName.h"
-
+#include "mnemonic.h"
 
 
 using namespace std;
@@ -24,19 +24,61 @@ using namespace std;
 namespace fantasybit {
 
 FantasyAgent::FantasyAgent() : client{nullptr} {
-    Reader<Secret2> read{ GET_ROOT_DIR() +  secretfilename};
-    if ( !read.good() )
-        return;
+    Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename3};
+    if ( !read.good() ) {
+        Reader<Secret3> read2{ GET_ROOT_DIR() +  secretfilename2};
+        if ( !read2.good())
+            return;
+        Secret3 secret{};
+        while (read2.ReadNext(secret)) {
 
-    Secret2 secret{};
+            m_secrets.push_back(secret);
+            qInfo() << secret.fantasy_name() << " have key";
+
+        }
+
+        return;
+    }
+
+    Secret3 secret{};
     while (read.ReadNext(secret)) {
+        if ( !testIt(secret) ) {
+            qCritical() << " secret verify fail" << secret.fantasy_name();
+            continue;
+        }
+
+        if ( secret.has_mnemonic_key() )
+            secret.clear_mnemonic_key();
+
         m_secrets.push_back(secret);
+
         qInfo() << secret.fantasy_name() << " have key";
         if ( AmFantasyAgent(secret.public_key())) {
             m_oracle = str2priv(secret.private_key());
             qInfo() << " is oracle key";
         }
     }
+}
+
+bool FantasyAgent::testIt(Secret3 secret) {
+    auto mnpriv = fromMnemonic(secret.mnemonic_key());
+
+    string in = "sdfsfsdfs80999nbb b^&%#^  *(*& 65  \\00xx  *(&(54cV f" + secret.SerializeAsString();
+    auto idsig1 = getRawIdSig(in,mnpriv);
+    auto idsig2 = getRawIdSig(in,str2priv(secret.private_key()));
+
+    auto pubk1 = mnpriv.get_public_key().serialize();
+    auto pubk2 = Commissioner::privStr2Pub(secret.private_key());
+
+    for ( auto h : {idsig1.second, idsig2.second}) {
+        for ( auto s : {idsig1.first, idsig2.first})
+            for ( auto p : {pubk1, pubk2})
+
+        if ( !Commissioner::verify(h,s,p) )
+            return false;
+    }
+
+    return true;
 }
 
 std::multimap<std::string,std::string> FantasyAgent::getMyNames() {
@@ -173,6 +215,11 @@ FantasyAgent::getIdSig(std::string &in, fc::ecc::private_key &pk) {
     return make_pair(sha.str(), Commissioner::sig2str(pk.sign(sha)));
 }
 
+std::pair<fc::sha256, fc::ecc::signature>
+FantasyAgent::getRawIdSig(std::string &in, fc::ecc::private_key &pk) {
+    fc::sha256 sha = fc::sha256::hash( in );
+    return make_pair(sha, pk.sign(sha));
+}
 
 
 fc::ecc::private_key FantasyAgent::str2priv(const std::string &in) {
@@ -194,6 +241,23 @@ bool FantasyAgent::UseName(std::string name) {
     return false;
 }
 
+pair<fc::ecc::private_key,string> FantasyAgent::makePrivMnemonic() {
+    auto priv = fc::ecc::private_key::generate();
+    auto secstr = priv.get_secret().str();
+    string m_mnemonic = createMnemonic((uint8_t*)secstr.data(),secstr.size());
+
+    return make_pair(fromMnemonic(m_mnemonic),m_mnemonic);
+}
+
+
+fc::ecc::private_key FantasyAgent::fromMnemonic(const string &in) {
+    auto hseed = mnemonicToSeed(in);
+    string buf;
+    for ( auto b : hseed) {
+        buf.push_back(b);
+    }
+    return  fc::ecc::private_key::regenerate(fc::sha256::hash(buf));
+}
 
 
 FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
@@ -202,7 +266,7 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
     if ( Commissioner::isAliasAvailable(name) ) {
 		for (auto fn : m_secrets) {
 			if (fn.fantasy_name() == name) {
-				m_priv = fc::ecc::private_key::generate();
+                m_priv = str2priv(fn.private_key());
 				client = std::make_unique<FantasyName>(name, (*m_priv).get_public_key().serialize());
 				ret = AVAIL;
                 //LOG(lg, info) << "name available, already have it in secret file " << name;
@@ -211,12 +275,16 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 		}
 
 		if (ret != AVAIL) {
-			m_priv = fc::ecc::private_key::generate();
+
+            auto pm = makePrivMnemonic();
+            m_priv = pm.first;
+            auto m_mnemonic = pm.second;
 			client = std::make_unique<FantasyName>(name, (*m_priv).get_public_key().serialize());
 
-            Writer<Secret2> writer{ GET_ROOT_DIR() + secretfilename, ios::app };
-			Secret2 secret{};
+            Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename3, ios::app };
+            Secret3 secret{};
 			secret.set_private_key(getSecret());
+            secret.set_mnemonic_key(m_mnemonic);
 			secret.set_public_key(pubKeyStr());
 			secret.set_fantasy_name(name);
 			writer(secret);
