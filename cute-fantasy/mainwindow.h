@@ -5,6 +5,7 @@
 #include "FantasyName.h"
 #include <vector>
 #include "waitmodaldialog.h"
+#include "spinboxdelegate.h"
 
 namespace Ui {
 class MainWindow;
@@ -56,12 +57,15 @@ public slots:
     void OnGameOver(string);
     void OnGameStart(string);
     void OnPlayerStatusChange(pair<string, fantasybit::PlayerStatus> in);
+    void onSendFantasyNameProjection(QString fantasyName);
+    void leaderboardCliked(const QModelIndex & index);
 
 
 private slots:
     void on_myFantasyNamesCombo_currentIndexChanged(int index);
     void on_myClaimFantasyNameButton_clicked();
     void refreshLeaderBoard();
+
 
 private:
     void initialize();
@@ -81,6 +85,7 @@ private:
     bool myAddNamesPending= false;
     QTimer myLeaderBoardTimer; 
     bool myIamLive = false;
+    SendFantasyPlayerButtonDelegate mySendFPlayerDelegate;
 };
 
 #endif // MAINWINDOW_H

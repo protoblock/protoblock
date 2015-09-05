@@ -23,7 +23,9 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myNextWeek->setEnabled(false);
     ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekView);
     myCurrentWeek =-1;
+    ui->myLeaderBaordTableView->setItemDelegateForColumn(0,&mySendFPlayerDelegate);
     ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());
+
 }
 
 void MainWindow::initialize() {
@@ -95,6 +97,12 @@ void MainWindow::initialize() {
     QObject::connect(&myLeaderBoardTimer,SIGNAL(timeout()),
                      this,SLOT(refreshLeaderBoard()));
 
+    //send fantasyname's projection when user click on the action button
+    QObject::connect(&mySendFPlayerDelegate,SIGNAL(sendProjection(QString)),
+                     this,SLOT(onSendFantasyNameProjection(QString)));
+
+    QObject::connect(ui->myLeaderBaordTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(leaderboardCliked(QModelIndex)));
+
     //wake up core thread
     Core::instance()->guiIsAwake();
     //myWaitDialog.startExec();
@@ -116,17 +124,20 @@ void MainWindow::on_myNextWeek_clicked()
     navigateToWeek(myCurrentWeek+1);
 }
 
-void MainWindow::nextWeek(){   
+void MainWindow::nextWeek(){
+    DataCache::instance()->leaderBoardModel().setColumnVisible("Action",false);
     ui->myStackedWidget->setCurrentWidget(ui->myNexWeekView);
     ui->myNextWeekWidget->setWeekData(myCurrentWeek);
 }
 
 void MainWindow::previousWeek() {    
+    DataCache::instance()->leaderBoardModel().setColumnVisible("Action",false);
     ui->myStackedWidget->setCurrentWidget(ui->myPreviousWeekView);
     ui->myPreviousWeekWidget->setWeekData(myCurrentWeek);
 }
 
 void MainWindow::currentWeek() { 
+    DataCache::instance()->leaderBoardModel().setColumnVisible("Action",true);
     ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekView);
 }
 
@@ -186,6 +197,8 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
 
 void MainWindow::refreshLeaderBoard(){
     DataCache::instance()->refreshLeaderboard();
+    foreach(QString fantasyName,DataCache::instance()->leaderBoardModel().keys())
+      ui->myCurrentWeekWidget->refreshFantasyNamesProjections(fantasyName);
 }
 
 void MainWindow::navigateToWeek(int week)
@@ -367,4 +380,21 @@ void MainWindow::on_myClaimFantasyNameButton_clicked()
 
 void MainWindow::OnPlayerStatusChange(pair<string, fantasybit::PlayerStatus> in){
    ui->myCurrentWeekWidget->OnPlayerStatusChange(in);
+}
+
+void MainWindow::onSendFantasyNameProjection(QString fantasyName){
+    ui->myCurrentWeekWidget->onSendFantasyNameProjection(fantasyName.toStdString());
+}
+
+
+void MainWindow::leaderboardCliked(const QModelIndex &index){
+    LeaderBoardTableModel * leaderboardModel = & DataCache::instance()->leaderBoardModel();
+    if (leaderboardModel!=NULL){
+        ViewModel * data =leaderboardModel->getItemByIndex(index);
+        if (data !=NULL) {
+          QString fantasyName = data->propertyValue<QString,PropertyNames::Fantasy_Name>();
+          ui->myCurrentWeekWidget->toggleFantasyNameColumn(fantasyName);
+        }
+
+    }
 }

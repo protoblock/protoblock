@@ -253,3 +253,65 @@ void CurrentWeekWidget::setProjectionEnabled(bool on){
     ui->mySendProjectionButton->setEnabled(on);
     myProjectionDelegate.setEnabled(on);
 }
+
+void CurrentWeekWidget::toggleFantasyNameColumn(const QString & fantasyName){
+    if (!myProjectionsModel.hasColumn(fantasyName))
+    {
+        //refresheing is done when leaderboard model refresh
+        std::unordered_map<std::string,int> theOtherGuyProjection = DataService::instance()->GetProjByName(fantasyName.toStdString());
+        for (std::pair<std::string,int> elem : theOtherGuyProjection){
+            std::string playerId = elem.first;
+            int projection = elem.second;
+            if (projection == 0)  continue;
+            myProjectionsModel.updateItemProperty(fantasyName,QString(playerId.data()),projection);
+        }
+    }
+
+    if (myProjectionsModel.hasColumn(fantasyName)){
+        bool isVisible = myProjectionsModel.isColumnVisible(fantasyName);
+        myProjectionsModel.setColumnVisible(fantasyName,!isVisible);
+    }
+    else {        
+        myProjectionsModel.appendColumn(fantasyName,true);
+    }
+}
+
+void CurrentWeekWidget::onSendFantasyNameProjection(const std::string & fantasyName){
+    std::unordered_map<std::string,int> theOtherGuyProjection = DataService::instance()->GetProjByName(fantasyName);
+    std::unordered_map<string,vector<FantasyBitProj>> projbygame{};
+    for (std::pair<std::string,int> elem : theOtherGuyProjection){
+        std::string playerId = elem.first;
+        int projection = elem.second;
+        if (projection == 0)  continue;
+        QVariant vGameId;
+        bool found =myProjectionsModel.itemPropertyValue<PropertyNames::Game_ID>(QString(playerId.data()),vGameId);
+        if (!found) continue;
+        QString gameId = vGameId.toString();
+        if (gameId.isEmpty()) continue;
+
+        vector<FantasyBitProj> &vproj = projbygame[gameId.toStdString()];
+
+        FantasyBitProj fproj;
+        fproj.set_name(myFantasyName);
+        fproj.set_proj(projection);
+        fproj.set_playerid(playerId);
+        vproj.push_back(fproj);
+    }
+    for ( auto &vg : projbygame)
+        emit NewProjection(vg.second);
+}
+
+
+void CurrentWeekWidget::refreshFantasyNamesProjections(const QString & fantasyName){
+    if (!myProjectionsModel.hasColumn(fantasyName)) return;
+    //refresheing is done when leaderboard model refresh
+    std::unordered_map<std::string,int> theOtherGuyProjection = DataService::instance()->GetProjByName(fantasyName.toStdString());
+    for (std::pair<std::string,int> elem : theOtherGuyProjection){
+        std::string playerId = elem.first;
+        int projection = elem.second;
+        if (projection == 0)  continue;
+        myProjectionsModel.updateItemProperty(fantasyName,QString(playerId.data()),projection);
+    }
+}
+
+

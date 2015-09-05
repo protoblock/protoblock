@@ -32,4 +32,49 @@ private :
     bool myEnabled;
 };
 
+//#include <QPushButton>
+
+//class SendPlayerProjectionButton : public QPushButton {
+//    Q_OBJECT
+//public:
+//    SendPlayerProjectionButton(QWidget * parent=0):QPushButton(parent){
+//        QObject::connect(this,SIGNAL(clicked(bool)),this,SLOT(onClicked()));
+//    }
+
+//    void setFantasyName(const QString & argFantasyNameValue) {
+//        myFantasyName = argFantasyNameValue;
+//    }
+//    QString FantasyName() const {
+//        return myFantasyName;
+//    }
+//signals:
+//    void sendProjection(QString fantasyName);
+//public slots:
+//  void onClicked(){
+//      emit sendProjection(myFantasyName);
+//  }
+
+//private:
+//    QString myFantasyName;
+
+//};
+
+#include <QItemDelegate>
+class SendFantasyPlayerButtonDelegate : public QItemDelegate
+{
+    Q_OBJECT
+
+public:
+    SendFantasyPlayerButtonDelegate(QObject *parent = 0);
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
+private:
+    QString getCurrentFanatsyName(QAbstractItemModel *model,const QModelIndex &index) const;
+
+signals:
+    void sendProjection(QString fantasyName);
+
+};
+
+
 #endif // SPINBOXDELEGATE_H

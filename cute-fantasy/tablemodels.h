@@ -106,18 +106,21 @@ protected:
         return QVariant();
     }
 
-    int getColumnCount() { return 2; }
+    //int getColumnCount() { return 2; }
 
 private:
     void initialize() {
         QStringList headers;
         headers << "FantasyName" << "FantasyBits";
-        setHorizontalHeaders(headers);
+        setHorizontalHeaders(headers);       
     }
 };
 
+#include <QSet>
 class   ProjectionSheetTableModel :
         public TKeyedListModel<QString,ViewModel> {
+
+    QSet<QString> myExtraColumns;
 
 public:
     ProjectionSheetTableModel(WeekDisplayType displayType) : TKeyedListModel<QString,ViewModel>(NULL){
@@ -165,7 +168,11 @@ protected:
 //                return tr(data->propertyValue<fantasybit::PlayerGameStatus,PropertyNames::Player_Game_Status>());
             if( column ==4)
                 return data->propertyValue<PropertyNames::Projection>();
-            return QVariant();
+
+            QString fantasyName = this->getVisibleColumnHeader(column);
+            if (fantasyName.isEmpty())  return QVariant();
+            QVariant projection = data->propertyValue(fantasyName);
+            return projection;
 
         }
         case WeekDisplayType::PreviousWeek: {
@@ -238,14 +245,14 @@ protected:
         }
     }
 
-    int getColumnCount() {
-        switch (myDisplayType) {
-        case WeekDisplayType::CurrentWeek:  return 5;
-        case WeekDisplayType::PreviousWeek: return 22;
-        case WeekDisplayType::UpcomingWeek: return 4;
-        default: return 0;
-        }
-    }
+//    int getColumnCount() {
+//        switch (myDisplayType) {
+//        case WeekDisplayType::CurrentWeek:  return 5;
+//        case WeekDisplayType::PreviousWeek: return 22;
+//        case WeekDisplayType::UpcomingWeek: return 4;
+//        default: return 0;
+//        }
+//    }
 
     void setDataFromColumn(ViewModel* data, const QModelIndex & index,const QVariant & vvalue,int /*role*/){
         if (index.column()==4)
