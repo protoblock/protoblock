@@ -19,24 +19,28 @@ public:
     explicit CurrentWeekWidget(QWidget *parent = 0);
     ~CurrentWeekWidget();
     void setCurrentWeekData(GlobalState state);
-
     void onGameOver(string gameId);
     void onGameStart(string gameId);
     void OnPlayerStatusChange(pair<string, PlayerStatus> in);
     void OnProjAck(fantasybit::FantasyBitProj projection);
+    void toggleFantasyNameColumn(const QString & fantasyName);
+    void onSendFantasyNameProjection(const std::string & fantasyName);
+    void refreshFantasyNamesProjections(const QString & fantasyName);
 
 
 signals:
+
     void NewProjection(vector<fantasybit::FantasyBitProj>);
 
 public slots:
+
     void onUserSwitchFantasyName(const std::string fantasyPlayerId);
 
 private slots:    
 
     void on_mySendProjectionButton_clicked();
     void on_myLockedGamesRb_toggled(bool checked);
-    void on_myOpenGamesRb_toggled(bool checked);
+    void on_myOpenGamesRb_toggled(bool checked);    
 
 private:
 
