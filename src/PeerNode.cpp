@@ -31,7 +31,9 @@ using namespace std;
 namespace fantasybit
 {
 
-Node::Node() {
+Node::Node() { }
+void Node::init() {
+
     qDebug() << "init node";
     leveldb::Options options;
     options.create_if_missing = true;
@@ -46,6 +48,8 @@ Node::Node() {
     Node::txpool.reset(db4);
 
     current_hight = getLastLocalBlockNum();
+    qInfo() <<  "current_hight" << current_hight;
+
     if (current_hight == 0)
     {
         qInfo() <<  "no blocks - making Genesis";

@@ -66,6 +66,8 @@ private slots:
 
     void on_StageBlock_clicked();
 
+    void on_nmeonic_clicked();
+
 private:
     MainLAPIWorker *  myCoreInstance;
     std::unordered_map<string,GameInfo> mGames;
@@ -85,6 +87,10 @@ private:
     std::string mStagedBlock;
     int mStagedBlockNum;
     int realweek() ;
+
+    bool sendStageBlock() ;
+    bool makeStageBlock(DataTransition &dt);
+
 
     Ui::TestingWindow *ui;
 };

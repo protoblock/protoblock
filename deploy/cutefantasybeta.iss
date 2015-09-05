@@ -40,14 +40,14 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "tradingfootball.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "storage\genesisAlpha.out"; DestDir: "{app}\storage"; Flags: ignoreversion
 Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
-Source: "libeay32md.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "msvcr120.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ssleay32md.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "vcredist_x64.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "storage\genesisAlpha.out"; DestDir: "{app}\storage"
 Source: "platforms\qwindows.dll"; DestDir: "{app}\platforms"

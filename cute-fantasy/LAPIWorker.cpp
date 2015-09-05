@@ -32,6 +32,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(myNodeWorker,SIGNAL(InSync(int)),this,SLOT(OnInSync(int)));
     QObject::connect(myNodeWorker,SIGNAL(SeenBlock(int)),this,SLOT(OnSeenBlock(int)));
     QObject::connect(myNodeWorker,SIGNAL(BlockError(int)),this,SLOT(OnBlockError(int)));
+    QObject::connect(myNodeWorker,SIGNAL(ResetIndex()),this,SLOT(ResetIndex()));
 
     QObject::connect(this,SIGNAL(ProcessNext()),this,SLOT(ProcessBlock()));
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(Timer()));
@@ -92,6 +93,7 @@ void MainLAPIWorker::GoLive() {
 void MainLAPIWorker::startPoint(){
     qDebug("Main Core Thread started");
     Core::instance()->waitForGui();
+    myNodeWorker->preinit();
     node.thread()->start();
     last_block = processor.init();
     if ( last_block < 0 ) {
@@ -101,6 +103,14 @@ void MainLAPIWorker::startPoint(){
 
     intervalstart = 5000;
     timer->start(intervalstart);
+}
+
+void MainLAPIWorker::ResetIndex() {
+    processor.hardReset();
+    last_block = processor.init();
+    if ( last_block < 0 ) {
+        last_block = 0;
+    }
 }
 
 //blockchain
@@ -122,14 +132,16 @@ void MainLAPIWorker::ProcessBlock() {
         //emit OnError();
         return;
     }
-    if ( !Process(*b) ) return;
-
+    if ( !Process(*b) ) {
+        qWarning() << " !Process";
+        return;
+    }
     count = pcount = 0;
     if (!amlive && last_block < numto )
     {
         //emit ProcessNext(); //catching up
         QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-        ProcessNext();
+        ProcessBlock();
     }
     else {
         //doNewDelta();
@@ -372,8 +384,8 @@ void MainLAPIWorker::BeOracle() {
 
 void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
     auto txstr = st.SerializeAsString();
-    RestfullClient rest(QUrl("https://stagingapi.trading.football:4545"));
-    rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()),true);
+    RestfullClient rest(QUrl(PAPIURL.data()));
+    //rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()));
     rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()));
 }
 

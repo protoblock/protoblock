@@ -9,6 +9,11 @@
 #include "Commissioner.h"
 #include <unordered_map>
 #include <leveldb/db.h>
+#include <QtSql/QSql>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlDriver>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
 using namespace std;
 using namespace fantasybit;
@@ -22,10 +27,10 @@ TestingWindow::TestingWindow(QWidget *parent) :
 
 }
 
-TestingWindow::~TestingWindow()
-{
+TestingWindow::~TestingWindow() {
     delete ui;
 }
+
 void TestingWindow::initialize() {
     myCoreInstance = Core::resolveByName<MainLAPIWorker>("coreapi");
     //wake up core thread
@@ -118,8 +123,7 @@ void TestingWindow::OnMyFantasyNames(vector<MyFantasyName> in) {
     qDebug() << in.size();
 }
 
-void TestingWindow::on_beoracle_clicked()
-{
+void TestingWindow::on_beoracle_clicked() {
     emit BeOracle();
 }
 
@@ -165,7 +169,6 @@ void TestingWindow::on_weeks_activated(int index)
 
    }
 }
-
 
 void TestingWindow::on_game_activated(const QString &arg1)
 {
@@ -271,9 +274,8 @@ void TestingWindow::on_player_activated(const QString &arg1)
     }
 }
 
+void TestingWindow::on_StageBlock_clicked() {
 
-void TestingWindow::on_StageBlock_clicked()
-{
         if ( !ui->StageBlock->isEnabled() )
             return;
 
@@ -320,23 +322,19 @@ void TestingWindow::on_StageBlock_clicked()
         }
         mStagedGameResult.clear();
 
-        Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
-        trans.set_type(TransType::DATA);
-        trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
-        auto sn = dataagent::instance()->signTx(trans);
 
-        Block b = dataagent::instance()->makeNewBlockAsDataAgent(sn);
+        if ( !makeStageBlock(dt)) {
+            ui->out->setText("error making block");
+            ui->StageBlock->setEnabled(true);
 
-        //RestfullService::sendBlock("http://192.96.159.216:4545","block",b.signedhead().head().num(),
-        //                           "",b.SerializeAsString());
+        }
+        else
+            ui->SendBlock->setEnabled(true);
 
-        mStagedBlockNum = b.signedhead().head().num();
-        mStagedBlock = b.SerializeAsString();
-        leveldb::Slice snum((char*)&mStagedBlockNum, sizeof(int));
-        Node::blockchain->Put(leveldb::WriteOptions(), snum, mStagedBlock);
 
-        ui->SendBlock->setEnabled(true);
+        //leveldb::Slice snum((char*)&mStagedBlockNum, sizeof(int));
+        //Node::blockchain->Put(leveldb::WriteOptions(), snum, mStagedBlock);
+
 
 
         /*
@@ -408,12 +406,12 @@ void TestingWindow::Timer() {
 
     int count = 0;
     while(true) {
-        auto txstr = RestfullService::getTx("http://192.96.159.216:4545");
+        auto txstr = RestfullService::myGetTx();
 
+        //ToDo: verify
         SignedTransaction st{};
         if ( !st.ParseFromString(txstr) )
             break;
-
 
         count++;
 
@@ -430,25 +428,20 @@ void TestingWindow::Timer() {
     dt.set_season(2015);
     dt.set_week(realweek());
 
-    Transaction trans{};
-    trans.set_version(Commissioner::TRANS_VERSION);
-    trans.set_type(TransType::DATA);
-    trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
-    auto sn = dataagent::instance()->signTx(trans);
-
-    Block b = dataagent::instance()->makeNewBlockAsDataAgent(sn);
-
-    auto bs = b.SerializeAsString();
-    RestfullClient rest(QUrl("http://192.96.159.216:4545"));
-    rest.postRawData("block/"+QString::number(b.signedhead().head().num()),"xxx",bs.data(),bs.size());
-
-    ui->staging_tx->clear();
-
+    if ( !makeStageBlock(dt) )
+        qDebug() << "error mamakeStageBlock ";
+    else if ( !sendStageBlock() )
+        qDebug() << "error sendStageBlock ";
+    else {
+        qInfo() << "sending block of tx";
+        ui->staging_tx->clear();
+    }
 }
 
 void TestingWindow::on_GetTx_clicked()
 {
-    auto txstr = RestfullService::getTx("http://192.96.159.216:4545");
+    auto txstr = RestfullService::getTx("https://stagingapi.trading.football:9854");
+
 
     SignedTransaction st{};
     if ( !st.ParseFromString(txstr) )
@@ -464,7 +457,6 @@ void TestingWindow::on_GetTx_clicked()
 int TestingWindow::realweek() {
     return ui->week->text().toInt();
 }
-
 
 void TestingWindow::on_GetGameResult_clicked()
 {
@@ -516,11 +508,6 @@ void TestingWindow::on_GetGameResult_clicked()
 
 }
 
-#include <QtSql/QSql>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlDriver>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
 
 void TestingWindow::on_updatelb_clicked()
 {
@@ -574,6 +561,7 @@ void TestingWindow::on_rundataagent_toggled(bool checked)
 
 }
 
+
 void TestingWindow::on_SendBlock_clicked() {
     if (!ui->SendBlock->isEnabled())
         return;
@@ -588,11 +576,55 @@ void TestingWindow::on_SendBlock_clicked() {
 
     ui->SendBlock->setEnabled(false);
 
-    RestfullClient rest(QUrl("http://192.96.159.216:4545"));
-    //rest.postRawData("block/"+QString::number(b.signedhead().head().num()),"xxx",mStagedBlock.data(),mStagedBlock.size());
+    if ( !sendStageBlock() )
+        qDebug() << "error sendStageBlock ";
+    else {
+        ui->rundataagent->setEnabled(true);
+        ui->StageBlock->setEnabled(true);
+    }
+}
+
+#include "DataPersist.h"
+bool TestingWindow::sendStageBlock() {
+    Block b{};
+    b.ParseFromString(mStagedBlock);
+    qDebug() << mStagedBlock.size() << "Sending" << b.DebugString() << b.SerializeAsString().size();
+    RestfullClient rest(QUrl(LAPIURL.data()));
     rest.postRawData("block/"+QString::number(mStagedBlockNum),"xxx",mStagedBlock.data(),mStagedBlock.size());
 
-    ui->rundataagent->setEnabled(true);
-    ui->StageBlock->setEnabled(true);
+    Writer<Block> write{"crap.out"};
+    write(b);
+    //TODO HANDLE ERROR
+    return true;
+}
+
+bool TestingWindow::makeStageBlock(DataTransition &dt) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::DATA);
+    trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
+    auto b = dataagent::instance()->makeNewBlockAsDataAgent(trans);
+
+    //RestfullClient rest(QUrl(PAPIURL.data()));
+    //rest.postRawData("tx","shit",trans.data(),((size_t)trans.size()));
+
+    //todo: verify block
+    if ( b )  {
+        mStagedBlockNum = (*b).signedhead().head().num();
+        mStagedBlock = (*b).SerializeAsString();
+        return true;
+    }
+    else return false;
+}
+
+
+
+
+void TestingWindow::on_nmeonic_clicked()
+{
+    auto mfn = dataagent::instance()->importMnemonic(ui->FantassyNameIn->text().toStdString());
+    ui->out->setText(QString::fromStdString(MyNameStatus_Name(mfn.status())));
+    if ( mfn.status() == MyNameStatus::confirmed)
+        ui->FantassyNameIn->setText(QString::fromStdString(mfn.name()));
 
 }

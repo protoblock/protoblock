@@ -34,7 +34,7 @@ class Node
     int global_height = 0;
 public:
     Node();
-
+    void init();
     bool Sync();
     bool SyncTo(int);
     void BackSync(int to);

@@ -15,6 +15,7 @@
 #include "ProtoData.pb.h"
 #include <QDebug>
 #include <sstream>
+#include "fbutils.h"
 
 /**
  * @brief The RestfullClient class : This is NOT a thread safe class.
@@ -227,7 +228,14 @@ public:
         return getData(route,parameters,headersMap);
     }
 
-    QByteArray lastReply() { return myLastRepliedData; }
+    QByteArray lastReply() {
+        if ( myLastRepliedData.size() > 100 )
+            qDebug() << myLastRepliedData.size();
+        else
+            qDebug() << myLastRepliedData;
+
+        return myLastRepliedData;
+    }
 
 
 signals:
@@ -383,6 +391,7 @@ public:
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
 
+
         return client.lastReply().toStdString();
     }
 
@@ -417,6 +426,10 @@ public:
         RestfullClient client(QUrl(baseUrl),ownerThread);
         client.postJasonData(route,"application/json",doc);
         return client.lastReply();
+    }
+
+    static std::string myGetTx(QThread * ownerThread = QThread::currentThread()){
+        return getTx(fantasybit::LAPIURL.data(),ownerThread);
     }
 
     static std::string getTx(const QString & baseUrl,

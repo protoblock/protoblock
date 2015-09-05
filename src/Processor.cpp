@@ -213,7 +213,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
-//#ifdef DATAAGENTWRITENAMES
+#ifdef DATAAGENTWRITENAMES
                 Distribution dist{};
                 dist.set_gameid(rd.game_result().gameid());
                 auto gs = mData.GetGlobalState();
@@ -257,7 +257,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                     }
                 }
-//#endif
+#endif
                 break;
             }
             case Data_Type_SCHEDULE: {

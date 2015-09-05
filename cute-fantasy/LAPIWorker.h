@@ -104,6 +104,7 @@ public slots:
     void OnSeenBlock(int num);
     void Timer();
     void OnBlockError(int last);
+    void ResetIndex();
 
     //void OnPlayerChange(std::string);
 

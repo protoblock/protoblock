@@ -9,7 +9,7 @@ QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 #comment this line to generate
-DEFINES += DATAAGENTGUI
+#DEFINES += DATAAGENTGUI
 #DEFINES += DATAAGENTWRITENAMES
 #DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
@@ -38,8 +38,8 @@ CONFIG(debug, debug|release) {
 }
 
 CONFIG(release, debug|release) {
-    LIBS += -L./../lib
-    LIBS += -lfc_release
+#    LIBS += -L./../lib
+#    LIBS += -lfc_release
     DESTDIR = ./../bin
     MOC_DIR = ./release
     OBJECTS_DIR = ./release

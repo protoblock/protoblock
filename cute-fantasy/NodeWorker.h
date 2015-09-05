@@ -23,11 +23,13 @@ class NodeWorker : public QObject
 public:
     NodeWorker(QObject * parent=0);
     fantasybit::Node node;
+    void preinit();
 
 signals:
     void InSync(int height);
     void SeenBlock(int height);
     void BlockError(int height);
+    void ResetIndex();
 
 public slots:
 

@@ -18,6 +18,10 @@
     }
 
 
+    void NodeWorker::preinit() {
+        node.init();
+    }
+
     void NodeWorker::init(){
         qDebug("NodeWorker Thread started");
 
@@ -28,9 +32,19 @@
 
         if ( ret )
             emit InSync(last);
-        else
-            emit BlockError(last);
+        else {
+            auto gnum = node.getLastGlobalBlockNum();
 
+            if ( last > *gnum  && last > 1 && *gnum > 1) {
+                node.BackSync(*gnum);
+                hi = node.getLastLocalBlockNum();
+                emit ResetIndex();
+                int last = node.getLastLocalBlockNum();
+                emit InSync(last);
+            }
+            else
+                emit BlockError(last);
+        }
     }
 
     void NodeWorker::TryNext() {
