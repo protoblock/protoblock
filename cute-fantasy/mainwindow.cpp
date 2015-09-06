@@ -176,14 +176,15 @@ void MainWindow::GlobalStateChange(fantasybit::GlobalState state){
 void MainWindow::GoLive(fantasybit::GlobalState state){
     myIamLive = true;
     myGlobalState = state;
-    QString seasonLabel = "%1 %2";
+    QString seasonLabel = "%1";
     QString seasonType;
     switch (state.state() ) {
     case GlobalState_State_INSEASON :
-        seasonType ="Pre-Season";
+        seasonType ="2015 NFL Season";
         break;
     case GlobalState_State_OFFSEASON :
-        seasonType = "No Season";
+        seasonType = "Off Season";
+        seasonLabel += " %2";
         break;
     default:
         break;
@@ -212,10 +213,10 @@ void MainWindow::refreshLeaderBoard(){
 void MainWindow::navigateToWeek(int week)
 {
     myCurrentWeek = week;
-    QString currentWeekNotice = myGlobalState.week()==myCurrentWeek?" (Current week) ":"";
-    ui->myWeekLabel->setText(QString("Week #%1").arg(myCurrentWeek)+currentWeekNotice);
+    QString currentWeekNotice = myGlobalState.week()==myCurrentWeek?" (live) ":"";
+    ui->myWeekLabel->setText(QString("Week %1").arg(myCurrentWeek)+currentWeekNotice);
     ui->myPreviousWeek->setDisabled(myCurrentWeek==1);
-    ui->myNextWeek->setDisabled(myCurrentWeek==4);
+    ui->myNextWeek->setDisabled(myCurrentWeek==17);
     if (myCurrentWeek==myGlobalState.week())
         currentWeek();
     else if (myCurrentWeek < myGlobalState.week())

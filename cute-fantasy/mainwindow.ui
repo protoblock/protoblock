@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_6">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QSplitter" name="splitter">
       <property name="lineWidth">
        <number>3</number>
@@ -46,7 +46,7 @@
         <property name="spacing">
          <number>0</number>
         </property>
-        <item row="0" column="0" rowspan="2">
+        <item row="0" column="0" rowspan="3">
          <widget class="QToolButton" name="myPreviousWeek">
           <property name="minimumSize">
            <size>
@@ -65,20 +65,7 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="mySeasonLabel">
-          <property name="styleSheet">
-           <string notr="true">font: 75 18pt &quot;Trebuchet MS&quot;;</string>
-          </property>
-          <property name="text">
-           <string>Season</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2" rowspan="2">
+        <item row="0" column="3" rowspan="3">
          <widget class="QToolButton" name="myNextWeek">
           <property name="minimumSize">
            <size>
@@ -97,24 +84,10 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="myWeekLabel">
-          <property name="styleSheet">
-           <string notr="true">font: 75 18pt &quot;Trebuchet MS&quot;;
-</string>
-          </property>
-          <property name="text">
-           <string>Week</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" colspan="3">
+        <item row="3" column="0" colspan="4">
          <widget class="QStackedWidget" name="myStackedWidget">
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="myPreviousWeekView">
            <layout class="QGridLayout" name="gridLayout_2">
@@ -184,6 +157,33 @@
           </widget>
          </widget>
         </item>
+        <item row="0" column="1" colspan="2">
+         <widget class="QLabel" name="myWeekLabel">
+          <property name="styleSheet">
+           <string notr="true">font: 75 18pt &quot;Trebuchet MS&quot;;
+</string>
+          </property>
+          <property name="text">
+           <string>Week</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QLabel" name="mySeasonLabel">
+          <property name="styleSheet">
+           <string notr="true">font: 75 18pt &quot;Trebuchet MS&quot;;</string>
+          </property>
+          <property name="text">
+           <string>Season</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QGroupBox" name="groupBox_2">
@@ -197,14 +197,7 @@
         <string/>
        </property>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0" colspan="3">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Current fantasy name :</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="5">
+        <item row="1" column="0" colspan="3">
          <widget class="QComboBox" name="myFantasyNamesCombo">
           <property name="minimumSize">
            <size>
@@ -226,108 +219,14 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="QLabel" name="myFantasyPlayerNamesLabel_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Fantasy name status</string>
+           <string>Fantasy Name</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
-         <widget class="QLabel" name="myFantasyNameStatusLabel">
-          <property name="text">
-           <string>fp status</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3" colspan="2">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>81</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Balance</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1" colspan="4">
-         <widget class="QLineEdit" name="myBalanceText">
-          <property name="statusTip">
-           <string>your current balance amount</string>
-          </property>
-          <property name="text">
-           <string>0</string>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="5">
-         <widget class="Line" name="line">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" colspan="3">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Claim new fantasy name :</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0" colspan="4">
-         <widget class="QLineEdit" name="myClamNewNameLE">
-          <property name="statusTip">
-           <string>Enter a new fantasy name and click claim to request a new one</string>
-          </property>
-          <property name="inputMask">
-           <string/>
-          </property>
-          <property name="placeholderText">
-           <string>type a new fantasy name</string>
-          </property>
-          <property name="clearButtonEnabled">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="4">
-         <widget class="QToolButton" name="myClaimFantasyNameButton">
-          <property name="text">
-           <string>Claim</string>
-          </property>
-          <property name="arrowType">
-           <enum>Qt::NoArrow</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0" colspan="5">
-         <widget class="Line" name="line_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0" colspan="2">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Leader board :</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="0" colspan="5">
+        <item row="4" column="0" colspan="4">
          <widget class="QTableView" name="myLeaderBaordTableView">
           <property name="frameShape">
            <enum>QFrame::Box</enum>
@@ -347,6 +246,105 @@
           <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
            <bool>true</bool>
           </attribute>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="4">
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="text">
+           <string>Leader board</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="4">
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="4">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="3">
+         <widget class="QLineEdit" name="myClamNewNameLE">
+          <property name="statusTip">
+           <string>Enter a new fantasy name and click claim to request a new one</string>
+          </property>
+          <property name="inputMask">
+           <string/>
+          </property>
+          <property name="text">
+           <string>Claim new Fantasy Name </string>
+          </property>
+          <property name="placeholderText">
+           <string>type a new fantasy name</string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Fantasy Bits:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="myFantasyNameStatusLabel">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>fp status</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="myBalanceText">
+          <property name="statusTip">
+           <string>your current balance amount</string>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="3">
+         <widget class="QToolButton" name="myClaimFantasyNameButton">
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Claim</string>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::NoArrow</enum>
+          </property>
          </widget>
         </item>
        </layout>

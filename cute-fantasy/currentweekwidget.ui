@@ -23,7 +23,7 @@
       </size>
      </property>
      <property name="title">
-      <string>Games</string>
+      <string>Schedule</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
@@ -42,6 +42,16 @@
         </attribute>
        </widget>
       </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QListView" name="myGamesListView">
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
        <widget class="QRadioButton" name="myLockedGamesRb">
         <property name="autoFillBackground">
@@ -55,92 +65,16 @@
         </attribute>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QListView" name="myGamesListView">
-        <property name="selectionMode">
-         <enum>QAbstractItemView::SingleSelection</enum>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectRows</enum>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
    <item row="0" column="1">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>Projection sheet</string>
+      <string>Player Projections</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Filter by position :</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="myPositionComboBox">
-          <item>
-           <property name="text">
-            <string>ALL</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>QB</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>RB</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>WR</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>TE</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>K</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>DEF</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="myControlMessageLabel">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
+      <item row="1" column="0" colspan="4">
        <widget class="QTableView" name="myProjectionTableView">
         <property name="selectionMode">
          <enum>QAbstractItemView::SingleSelection</enum>
@@ -156,7 +90,7 @@
         </attribute>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="2" column="0" colspan="4">
        <widget class="QPushButton" name="mySendProjectionButton">
         <property name="minimumSize">
          <size>
@@ -169,6 +103,61 @@
         </property>
         <property name="text">
          <string>Send Projection</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QComboBox" name="myPositionComboBox">
+        <item>
+         <property name="text">
+          <string>ALL</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>QB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>RB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>WR</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>TE</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>K</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DEF</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="3">
+       <widget class="QLabel" name="myControlMessageLabel">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
