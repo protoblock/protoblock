@@ -93,7 +93,6 @@ HEADERS += \
     $$PWD/tablemodels.h \
     $$PWD/propertynames.h \
     $$PWD/datacache.h \
-    $$PWD/playerloader.h \
     $$PWD/dataagent.h \
     $$PWD/waitmodaldialog.h \
     $$PWD/animationandmessagewidget.h \
@@ -113,7 +112,9 @@ RESOURCES += \
 
 
 contains(DEFINES, DATAAGENTGUI){
-    SOURCES += $$PWD/testingwindow.cpp
+    SOURCES += $$PWD/testingwindow.cpp \
+    $$PWD/playerloader.h \
+
     FORMS += $$PWD/testingwindow.ui
     HEADERS += $$PWD/testingwindow.h
 }
