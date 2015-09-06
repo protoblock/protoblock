@@ -33,44 +33,45 @@ public:
     bool isEnabled(){ return myEnabled; }
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *evt)
-    {
-        if (evt->type() == QEvent::KeyPress) {
-            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(evt);
-            if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)
-            {
-                QSpinBox * editor = dynamic_cast<QSpinBox*>(obj);
-                if (editor==NULL) return QStyledItemDelegate::eventFilter(obj,evt);
-                QVariant vIndex =  editor->property("EditedIndex");
-                QModelIndex index =  vIndex.value<QModelIndex>();
-                if (!index.isValid()) return QStyledItemDelegate::eventFilter(obj,evt);
-                QAbstractItemModel * model = const_cast<QAbstractItemModel *>(index.model());
-                if (model==NULL) return QStyledItemDelegate::eventFilter(obj,evt);
-                setModelData(editor,model,index);
-                closeEditor(editor);
-                QModelIndex  nextIndex = model->index(index.row()+1,index.column());
-                if (!nextIndex.isValid()) return true;
-                if (myTableView==NULL) return true;
-                myTableView->setCurrentIndex(nextIndex);
-                myTableView->edit(nextIndex);
-                return true;
-            }
-        }
-        if (evt->type() == QEvent::FocusOut) {
-                QSpinBox * editor = dynamic_cast<QSpinBox*>(obj);
-                if (editor==NULL) return QStyledItemDelegate::eventFilter(obj,evt);
-                QVariant vIndex =  editor->property("EditedIndex");
-                QModelIndex index =  vIndex.value<QModelIndex>();
-                if (!index.isValid()) return QStyledItemDelegate::eventFilter(obj,evt);
-                QAbstractItemModel * model = const_cast<QAbstractItemModel *>(index.model());
-                if (model==NULL) return QStyledItemDelegate::eventFilter(obj,evt);
-                setModelData(editor,model,index);
-                closeEditor(editor);
-                return true;
-        }
+//    bool eventFilter(QObject *obj, QEvent *evt)
+//    {
 
-        return QStyledItemDelegate::eventFilter(obj, evt);
-    }
+//        if (evt->type() == QEvent::KeyPress) {
+//            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(evt);
+//            if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)
+//            {
+//                QSpinBox * editor = dynamic_cast<QSpinBox*>(obj);
+//                if (editor==NULL) return QStyledItemDelegate::eventFilter(obj,evt);
+//                QVariant vIndex =  editor->property("EditedIndex");
+//                QModelIndex index =  vIndex.value<QModelIndex>();
+//                if (!index.isValid()) return QStyledItemDelegate::eventFilter(obj,evt);
+//                QAbstractItemModel * model = const_cast<QAbstractItemModel *>(index.model());
+//                if (model==NULL) return QStyledItemDelegate::eventFilter(obj,evt);
+//                setModelData(editor,model,index);
+//                closeEditor(editor);
+//                QModelIndex  nextIndex = model->index(index.row()+1,index.column());
+//                if (!nextIndex.isValid()) return true;
+//                if (myTableView==NULL) return true;
+//                myTableView->setCurrentIndex(nextIndex);
+//                myTableView->edit(nextIndex);
+//                return true;
+//            }
+//        }
+//        if (evt->type() == QEvent::FocusOut) {
+//                QSpinBox * editor = dynamic_cast<QSpinBox*>(obj);
+//                if (editor==NULL) return QStyledItemDelegate::eventFilter(obj,evt);
+//                QVariant vIndex =  editor->property("EditedIndex");
+//                QModelIndex index =  vIndex.value<QModelIndex>();
+//                if (!index.isValid()) return QStyledItemDelegate::eventFilter(obj,evt);
+//                QAbstractItemModel * model = const_cast<QAbstractItemModel *>(index.model());
+//                if (model==NULL) return QStyledItemDelegate::eventFilter(obj,evt);
+//                setModelData(editor,model,index);
+//                closeEditor(editor);
+//                return true;
+//        }
+
+//        return QStyledItemDelegate::eventFilter(obj, evt);
+//    }
 
 private :
     bool myEnabled;

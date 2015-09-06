@@ -114,7 +114,6 @@ RESOURCES += \
 contains(DEFINES, DATAAGENTGUI){
     SOURCES += $$PWD/testingwindow.cpp   
     HEADERS += $$PWD/playerloader.h
-    SOURCES += $$PWD/testingwindow.cpp
     FORMS += $$PWD/testingwindow.ui
     HEADERS += $$PWD/testingwindow.h
 }

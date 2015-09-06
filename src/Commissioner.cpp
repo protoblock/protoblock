@@ -99,7 +99,7 @@ Transaction Commissioner::GenesisTransition() {
         d2->CopyFrom(d);
     }
     */
-#ifdef DATAAGENTWRITENAMES
+#ifdef DATAAGENTWRITENAMESXX
     PlayerLoaderTR pltr{};
     auto players = pltr.loadPlayersFromTradeRadar();
 

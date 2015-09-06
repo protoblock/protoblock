@@ -102,7 +102,7 @@
          <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
         </property>
         <property name="text">
-         <string>Send Projection</string>
+         <string>Send Projections</string>
         </property>
        </widget>
       </item>
