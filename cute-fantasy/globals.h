@@ -18,7 +18,7 @@
   #ifndef BUILD_STABLE
     #define BUILD_TYPE "beta"
   #else
-    #define BUILD_TYPE
+    #define BUILD_TYPE ""
   #endif
 #endif
 
@@ -41,8 +41,6 @@
 #ifndef COPYRIGHT_DATE
     #define COPYRIGHT_DATE "2015"
 #endif
-
-
 
 
 #include <QDebug>

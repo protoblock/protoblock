@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::initDefaultGuiDisplay(){
+    setWindowTitle(appTitle());
     ui->myFantasyNameStatusLabel->setText("None");
     ui->mySeasonLabel->setText("Unknown Season");
     ui->myWeekLabel->setText("Unknown Week #");
@@ -432,7 +433,7 @@ void MainWindow::showLeaderboardContextualMenu(const QPoint & point){
     msgBox.setText(text);
     QFont font = msgBox.font();
     font.setBold(true);
-    font.setPointSize(font.pointSize()*2);
+    //font.setPointSize(font.pointSize()*1.2);
     msgBox.setFont(font);
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
     msgBox.setButtonText(QMessageBox::Yes,"Send");

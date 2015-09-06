@@ -69,7 +69,13 @@ private slots:
 private:
     void initialize();
     void initDefaultGuiDisplay();
-
+    QString appTitle() const {
+        return QString("%1 %2.%3.%4 %5").arg(APPLICATION_NAME)
+                .arg(MAJOR_VERSION)
+                .arg(MINOR_VERSION)
+                .arg(REVISION_NUMBER)
+                .arg(BUILD_TYPE);
+    }
     void nextWeek();
     void previousWeek();
     void currentWeek();

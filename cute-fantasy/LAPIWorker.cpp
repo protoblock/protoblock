@@ -76,7 +76,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
                      this,SIGNAL(NameBal(fantasybit::FantasyNameBal&)));
 
     QObject::connect(&processor,SIGNAL(onControlMessage(QString)),
-                     this,SIGNAL(onControlMessage(QString));
+                     this,SIGNAL(onControlMessage(QString)));
 
 }
 
