@@ -60,17 +60,22 @@ public slots:
     void onSendFantasyNameProjection(QString fantasyName);
     void leaderboardCliked(const QModelIndex & index);
 
-
 private slots:
     void on_myFantasyNamesCombo_currentIndexChanged(int index);
     void on_myClaimFantasyNameButton_clicked();
     void refreshLeaderBoard();
-
+    void showLeaderboardContextualMenu(const QPoint & point);
 
 private:
     void initialize();
     void initDefaultGuiDisplay();
-
+    QString appTitle() const {
+        return QString("%1 %2.%3.%4 %5").arg(APPLICATION_NAME)
+                .arg(MAJOR_VERSION)
+                .arg(MINOR_VERSION)
+                .arg(REVISION_NUMBER)
+                .arg(BUILD_TYPE);
+    }
     void nextWeek();
     void previousWeek();
     void currentWeek();
@@ -84,8 +89,7 @@ private:
     WaitModalDialog myWaitDialog;
     bool myAddNamesPending= false;
     QTimer myLeaderBoardTimer; 
-    bool myIamLive = false;
-    SendFantasyPlayerButtonDelegate mySendFPlayerDelegate;
+    bool myIamLive = false;       
 };
 
 #endif // MAINWINDOW_H

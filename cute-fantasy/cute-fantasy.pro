@@ -14,6 +14,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
 
+DEFINES += BUILD_STABLE
+
 contains(DEFINES, DATAAGENTGUI){
     TARGET = cute-fantasy-agent
     QT += sql

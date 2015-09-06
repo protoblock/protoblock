@@ -28,7 +28,8 @@ public:
         PortLiveTx,
         PortLiveTxNat,
         LogMessagePattern,
-        LeaderBoardRefreshInterval
+        LeaderBoardRefreshInterval,
+        ConfirmSendAndCopyProjections
     };
 
 private:
@@ -51,6 +52,7 @@ private:
         case PortLiveTxNat: return "portlivetxnat";
         case LogMessagePattern: return "logmessagepattern";
         case LeaderBoardRefreshInterval : return "leaderboardrefreshinterval";
+        case ConfirmSendAndCopyProjections : return "confirmsendandcopyprojections";
         default:
             return "";
         }
@@ -85,6 +87,7 @@ private:
                         "<%{file}:%{line}::%{function}>"
                         "- %{message}";
             case LeaderBoardRefreshInterval: return 5;
+            case ConfirmSendAndCopyProjections: return true;
             default:               
                 return QVariant();
             }
@@ -97,6 +100,7 @@ public:
     ~AppSettings();
 
     static QVariant getSetting(SettingsKeys settingKey);
+    static void setSetting(SettingsKeys settingKey,QVariant & value);
 };
 
 #endif // APPSETTINGS_H

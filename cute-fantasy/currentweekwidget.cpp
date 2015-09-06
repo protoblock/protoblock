@@ -39,14 +39,15 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     myProjectionFilterProxy.data()->bindFilter();
 
     myCurrentWeek = -1;
+    myProjectionDelegate.setTableView(ui->myProjectionTableView);
     ui->myProjectionTableView->setItemDelegateForColumn(4,&myProjectionDelegate);
+    //QObject::connect(&myProjectionDelegate,SIGNAL(commitData(QWidget*)),this,SLOT(onProjectionEnterPressed(QWidget *)));
+
 }
 
 CurrentWeekWidget::~CurrentWeekWidget() {
     delete ui;
 }
-
-
 
 void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
 
@@ -162,8 +163,14 @@ void CurrentWeekWidget::on_mySendProjectionButton_clicked() {
             if (projection == 0)
                 continue;
 
-            GameStatus_Status gameStatus =
-                    (GameStatus_Status) item->propertyValue<PropertyNames::Game_Status>().toInt();
+            QString gameId = item->propertyValue<PropertyNames::Game_ID>().toString();
+
+            //check game status
+            QVariant vGameStatus;
+            bool found = myGameTableModel.itemPropertyValue<PropertyNames::Game_Status>(gameId,vGameStatus);
+            if (!found)  continue;
+            GameStatus_Status gameStatus = vGameStatus.value<fantasybit::GameStatus_Status>();
+
             if ( gameStatus != GameStatus_Status_SCHEDULED && gameStatus != GameStatus_Status_PREGAME )
                 continue;
 
@@ -171,10 +178,8 @@ void CurrentWeekWidget::on_mySendProjectionButton_clicked() {
             if ( knownprojection == projection)
                 continue;
 
-            auto gameid = item->propertyValue<PropertyNames::Game_ID>().toString().toStdString();
 
-
-            vector<FantasyBitProj> &vproj = projbygame[gameid];
+            vector<FantasyBitProj> &vproj = projbygame[gameId.toStdString()];
 
             FantasyBitProj fproj;
             fproj.set_name(myFantasyName);
@@ -279,6 +284,7 @@ void CurrentWeekWidget::toggleFantasyNameColumn(const QString & fantasyName){
 void CurrentWeekWidget::onSendFantasyNameProjection(const std::string & fantasyName){
     std::unordered_map<std::string,int> theOtherGuyProjection = DataService::instance()->GetProjByName(fantasyName);
     std::unordered_map<string,vector<FantasyBitProj>> projbygame{};
+    int projectionsCount =0;
     for (std::pair<std::string,int> elem : theOtherGuyProjection){
         std::string playerId = elem.first;
         int projection = elem.second;
@@ -289,8 +295,27 @@ void CurrentWeekWidget::onSendFantasyNameProjection(const std::string & fantasyN
         QString gameId = vGameId.toString();
         if (gameId.isEmpty()) continue;
 
+
+        //check game status
+        QVariant vGameStatus;
+        found = myGameTableModel.itemPropertyValue<PropertyNames::Game_Status>(gameId,vGameStatus);
+        if (!found)  continue;
+        GameStatus_Status gameStatus = vGameStatus.value<fantasybit::GameStatus_Status>();
+
+        if ( gameStatus != GameStatus_Status_SCHEDULED && gameStatus != GameStatus_Status_PREGAME )
+            continue;
+
+        QVariant vMyProjection;
+        found = myProjectionsModel.itemPropertyValue<PropertyNames::KnownProjection>(QString(playerId.data()),vMyProjection);
+         if (found){
+            int knownprojection = vMyProjection.toInt();
+            if ( knownprojection == projection)
+                continue;
+         }
+
         vector<FantasyBitProj> &vproj = projbygame[gameId.toStdString()];
 
+        projectionsCount++;
         FantasyBitProj fproj;
         fproj.set_name(myFantasyName);
         fproj.set_proj(projection);
@@ -299,6 +324,8 @@ void CurrentWeekWidget::onSendFantasyNameProjection(const std::string & fantasyN
     }
     for ( auto &vg : projbygame)
         emit NewProjection(vg.second);
+
+     QMessageBox::information(this,APPLICATION_NAME,QString("%1 projections have been copied and sent.").arg(projectionsCount));
 }
 
 
@@ -314,4 +341,6 @@ void CurrentWeekWidget::refreshFantasyNamesProjections(const QString & fantasyNa
     }
 }
 
-
+void CurrentWeekWidget::onControlMessage(QString message){
+    ui->myControlMessageLabel->setText(message);
+}

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Trading Football</string>
+   <string/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_6">
@@ -213,7 +213,7 @@
            </size>
           </property>
           <property name="statusTip">
-           <string>Enter a new fantasy name and press enter to request a new one</string>
+           <string>switch fantasyname</string>
           </property>
           <property name="editable">
            <bool>false</bool>
@@ -289,6 +289,9 @@
         </item>
         <item row="6" column="0" colspan="4">
          <widget class="QLineEdit" name="myClamNewNameLE">
+          <property name="statusTip">
+           <string>Enter a new fantasy name and click claim to request a new one</string>
+          </property>
           <property name="inputMask">
            <string/>
           </property>

@@ -26,3 +26,9 @@ QVariant AppSettings::getSetting(SettingsKeys settingKey) {
     return settings.value(settingName);
 }
 
+void AppSettings::setSetting(SettingsKeys settingKey,QVariant & value){
+    QSettings settings;
+    QString settingName = AppSettings::instance()->translateSettingEnum(settingKey);
+    settings.setValue(settingName,value);
+}
+
