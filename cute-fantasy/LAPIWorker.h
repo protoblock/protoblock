@@ -89,6 +89,7 @@ signals:
     void NewWeek(int);
     void GameStart(string);
     void GameOver(string);
+    void onControlMessage(QString);
 
     void BlockError(int last);
 

@@ -340,3 +340,7 @@ void CurrentWeekWidget::refreshFantasyNamesProjections(const QString & fantasyNa
         myProjectionsModel.updateItemProperty(fantasyName,QString(playerId.data()),projection);
     }
 }
+
+void CurrentWeekWidget::onControlMessage(QString message){
+    ui->myControlMessageLabel->setText(message);
+}

@@ -46,6 +46,7 @@ signals:
     void WeekOver(int);
     void InvalidState(int);   
     void new_dataDistribution(fantasybit::Distribution);
+    void onControlMessage(QString);
 
 
 public:

@@ -36,7 +36,8 @@ signals:
 
 public slots:
 
-    void onUserSwitchFantasyName(const std::string fantasyPlayerId);    
+    void onUserSwitchFantasyName(const std::string fantasyPlayerId);
+    void onControlMessage(QString);
 
 
 private slots:    

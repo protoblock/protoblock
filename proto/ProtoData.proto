@@ -224,6 +224,7 @@ message Data {
         PLAYER = 1;
         GAME = 2;
         RESULT = 3;
+        MESSAGE = 4;
     }
 
     optional int32 version = 10;
@@ -315,3 +316,10 @@ message DeltaData {
   	extensions 1000 to max;
 }
 
+message MessageData {
+    extend Data {
+        optional MessageData message_data = 404;
+    }
+
+    optional string message = 10;
+}

@@ -105,6 +105,9 @@ void MainWindow::initialize() {
     QObject::connect(ui->myLeaderBaordTableView,SIGNAL(customContextMenuRequested(QPoint)),
                      this,SLOT(showLeaderboardContextualMenu(QPoint)));
 
+    QObject::connect(myLAPIWorker,SIGNAL(onControlMessage(QString)),
+                     ui->myCurrentWeekWidget,SLOT(onControlMessage(QString)));
+
     //wake up core thread
     Core::instance()->guiIsAwake();
     //myWaitDialog.startExec();
@@ -184,6 +187,8 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
     default:
         break;
     }
+
+
     seasonLabel = seasonLabel.arg(seasonType).arg(myGlobalState.season());
     ui->mySeasonLabel->setText(seasonLabel);
 
