@@ -49,7 +49,6 @@ Source: "Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ssleay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "vcredist_x64.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "storage\genesisAlpha.out"; DestDir: "{app}\storage"
 Source: "platforms\qwindows.dll"; DestDir: "{app}\platforms"
 Source: "imageformats\qgif.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
 Source: "bearer\qgenericbearer.dll"; DestDir: "{app}\bearer"
