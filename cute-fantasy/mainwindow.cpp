@@ -4,6 +4,8 @@
 #include "core.h"
 #include "dataservice.h"
 #include "datacache.h"
+#include <QCheckBox>
+#include <QSettings>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -23,9 +25,10 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myNextWeek->setEnabled(false);
     ui->myStackedWidget->setCurrentWidget(ui->myCurrentWeekView);
     myCurrentWeek =-1;
-    ui->myLeaderBaordTableView->setItemDelegateForColumn(0,&mySendFPlayerDelegate);
+    //ui->myLeaderBaordTableView->setItemDelegateForColumn(0,&mySendFPlayerDelegate);
     ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());
-
+    //myCopyProjectionsMenuAction.reset(new QAction(&myLeaderBoardMenu));
+    ui->myLeaderBaordTableView->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 void MainWindow::initialize() {
@@ -97,11 +100,10 @@ void MainWindow::initialize() {
     QObject::connect(&myLeaderBoardTimer,SIGNAL(timeout()),
                      this,SLOT(refreshLeaderBoard()));
 
-    //send fantasyname's projection when user click on the action button
-    QObject::connect(&mySendFPlayerDelegate,SIGNAL(sendProjection(QString)),
-                     this,SLOT(onSendFantasyNameProjection(QString)));
-
-    QObject::connect(ui->myLeaderBaordTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(leaderboardCliked(QModelIndex)));
+    QObject::connect(ui->myLeaderBaordTableView,SIGNAL(doubleClicked(QModelIndex)),
+                     this,SLOT(leaderboardCliked(QModelIndex)));
+    QObject::connect(ui->myLeaderBaordTableView,SIGNAL(customContextMenuRequested(QPoint)),
+                     this,SLOT(showLeaderboardContextualMenu(QPoint)));
 
     //wake up core thread
     Core::instance()->guiIsAwake();
@@ -389,12 +391,50 @@ void MainWindow::onSendFantasyNameProjection(QString fantasyName){
 
 void MainWindow::leaderboardCliked(const QModelIndex &index){
     LeaderBoardTableModel * leaderboardModel = & DataCache::instance()->leaderBoardModel();
+    QString currentFantasyName = QString(myCurrentFantasyName.name().data());
     if (leaderboardModel!=NULL){
         ViewModel * data =leaderboardModel->getItemByIndex(index);
         if (data !=NULL) {
           QString fantasyName = data->propertyValue<QString,PropertyNames::Fantasy_Name>();
+          if (fantasyName == currentFantasyName) return;
           ui->myCurrentWeekWidget->toggleFantasyNameColumn(fantasyName);
         }
-
     }
+}
+
+void MainWindow::showLeaderboardContextualMenu(const QPoint & point){
+    // we're not in the current week or in offseason
+    if (myGlobalState.state()== fantasybit::GlobalState_State_OFFSEASON) return;
+    if (myGlobalState.week()!=myCurrentWeek) return;
+    if (ui->myCurrentWeekWidget->gamesFilter()==GamesFilter::OpenGames)
+        if (ui->myCurrentWeekWidget->gameCount() ==0)
+            return;
+    QModelIndex index = ui->myLeaderBaordTableView->indexAt(point);
+    if (!index.isValid()) return;
+    ViewModel * item = DataCache::instance()->leaderBoardModel().getItemByIndex(index);
+    if (item==NULL) return;
+    QString fantasyName =item->propertyValue<QString,PropertyNames::Fantasy_Name>();
+     QString currentFantasyName = QString(myCurrentFantasyName.name().data());
+    if (fantasyName == currentFantasyName) return;
+    int result = QMessageBox::Cancel;
+
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::NoIcon);
+    msgBox.setWindowTitle(APPLICATION_NAME);
+    QString text = QString("Copy %1's projections and send them as yours %2 ?").arg(fantasyName).arg(currentFantasyName);
+    //QCheckBox * chb = new QCheckBox("Do not show this again");
+    //msgBox.setCheckBox(chb);
+    msgBox.setText(text);
+    QFont font = msgBox.font();
+    font.setBold(true);
+    font.setPointSize(font.pointSize()*2);
+    msgBox.setFont(font);
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setButtonText(QMessageBox::Yes,"Send");
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    result = msgBox.exec();
+
+    if (result== QMessageBox::Yes)
+        ui->myCurrentWeekWidget->onSendFantasyNameProjection(fantasyName.toStdString());
+
 }

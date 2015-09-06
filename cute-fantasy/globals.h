@@ -14,6 +14,36 @@
 #endif
 
 
+#ifndef BUILD_TYPE
+  #ifndef BUILD_STABLE
+    #define BUILD_TYPE "beta"
+  #else
+    #define BUILD_TYPE
+  #endif
+#endif
+
+#ifndef MAJOR_VERSION
+  #define MAJOR_VERSION  1
+#endif
+
+#ifndef MINOR_VERSION
+  #define MINOR_VERSION  0
+#endif
+
+#ifndef REVISION_NUMBER
+  #define REVISION_NUMBER 0
+#endif
+
+#ifndef BUILD_NUMBER
+  #define BUILD_NUMBER   0
+#endif
+
+#ifndef COPYRIGHT_DATE
+    #define COPYRIGHT_DATE "2015"
+#endif
+
+
+
 
 #include <QDebug>
 inline QDebug operator<<(QDebug  debug ,std::string msg) {
@@ -33,6 +63,3 @@ static QString fromTime_t_toFantasyString(uint dtt) {
 }
 
 #endif
-
-
-

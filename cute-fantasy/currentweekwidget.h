@@ -26,6 +26,8 @@ public:
     void toggleFantasyNameColumn(const QString & fantasyName);
     void onSendFantasyNameProjection(const std::string & fantasyName);
     void refreshFantasyNamesProjections(const QString & fantasyName);
+    GamesFilter gamesFilter(){ return myGameModelFilter.filter(); }
+    int gameCount(){ return myGameModelFilter.rowCount(); }
 
 
 signals:
@@ -34,7 +36,8 @@ signals:
 
 public slots:
 
-    void onUserSwitchFantasyName(const std::string fantasyPlayerId);
+    void onUserSwitchFantasyName(const std::string fantasyPlayerId);    
+
 
 private slots:    
 

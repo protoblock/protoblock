@@ -60,12 +60,11 @@ public slots:
     void onSendFantasyNameProjection(QString fantasyName);
     void leaderboardCliked(const QModelIndex & index);
 
-
 private slots:
     void on_myFantasyNamesCombo_currentIndexChanged(int index);
     void on_myClaimFantasyNameButton_clicked();
     void refreshLeaderBoard();
-
+    void showLeaderboardContextualMenu(const QPoint & point);
 
 private:
     void initialize();
@@ -84,8 +83,7 @@ private:
     WaitModalDialog myWaitDialog;
     bool myAddNamesPending= false;
     QTimer myLeaderBoardTimer; 
-    bool myIamLive = false;
-    SendFantasyPlayerButtonDelegate mySendFPlayerDelegate;
+    bool myIamLive = false;       
 };
 
 #endif // MAINWINDOW_H

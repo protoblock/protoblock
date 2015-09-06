@@ -151,6 +151,15 @@
       </item>
       <item row="2" column="0" colspan="3">
        <widget class="QPushButton" name="mySendProjectionButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>51</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
          <string>Send Projection</string>
         </property>
