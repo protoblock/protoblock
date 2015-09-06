@@ -1,3 +1,7 @@
+/**
+ * libmnemonic v1.1
+ */
+
 #ifndef MNEMONIC_H_
 #define MNEMONIC_H_
 
@@ -731,8 +735,8 @@ const mnemonic_words wordlist = {
     "haley",
     "halfback",
     "hall",
-    "hampton",
     "hamburger",
+    "hampton",
     "hand",
     "hannah",
     "happen",
@@ -1170,7 +1174,7 @@ const mnemonic_words wordlist = {
     "nachos",
     "naive",
     "namath",
-    "name,",
+    "name",
     "napkin",
     "narrow",
     "nasty",
@@ -1317,7 +1321,7 @@ const mnemonic_words wordlist = {
     "property",
     "prosper",
     "protect",
-    "proud,",
+    "proud",
     "provide",
     "public",
     "pudding",
