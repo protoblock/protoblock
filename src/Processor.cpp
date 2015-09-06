@@ -23,6 +23,7 @@
 #include "globals.h"
 #include "ApiData.pb.h"
 #include "RestFullCall.h"
+#include "fbutils.h"
 
 namespace fantasybit
 {
@@ -234,7 +235,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                         auto ds = dist.SerializeAsString();
 
-                        RestfullClient rest(QUrl("https://stagingapi.trading.football:9854"));
+                        RestfullClient rest(QUrl(LAPIURL.data()));
                         rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
 
                     }

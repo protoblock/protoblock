@@ -15,6 +15,7 @@
 #include "Commissioner.h"
 #include "ApiData.pb.h"
 #include "RestFullCall.h"
+#include "fbutils.h"
 
 using namespace std;
 using namespace fantasybit;
@@ -197,7 +198,7 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
     emit new_dataFantasyNameHash(fnh);
 
     auto fnhstr = fnh.SerializeAsString();
-    RestfullClient rest(QUrl("https://api.trading.football:9854"));
+    RestfullClient rest(QUrl(LAPIURL.data()));
     rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()));
 
 #endif

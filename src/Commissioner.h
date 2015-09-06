@@ -15,6 +15,7 @@
 
 //#include <../cute-fantasy/playerloader.h>
 
+#include "FantasyAgent.h"
 
 namespace fantasybit {
 
@@ -105,7 +106,7 @@ public:
 
 		NameTrans nametrans{};
 		nametrans.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
-        nametrans.set_fantasy_name("FantasyAgent");
+        nametrans.set_fantasy_name(FantasyAgentName());
 		nametrans.mutable_proof()->CopyFrom(nameproof);
 
 		Transaction trans{};
@@ -122,13 +123,32 @@ public:
 		return st;
 	}
 
+    static SignedTransaction makeGenesisName(FantasyAgent &agent) {
+        //make and sign "FantasyAgent" name transaction
+        NameProof nameproof{};
+        nameproof.set_type(NameProof_Type_ORACLE);
+
+        NameTrans nametrans{};
+        nametrans.set_public_key(agent.pubKeyStr());
+        nametrans.set_fantasy_name(FantasyAgentName());
+        nametrans.mutable_proof()->CopyFrom(nameproof);
+
+        Transaction trans{};
+        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_type(TransType::NAME);
+        trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
+
+        auto st = agent.makeSigned(trans);
+        return st;
+    }
+
     static Transaction GenesisTransition();
 
     static GlobalState InitialGlobalState () {
         GlobalState gs{};
         gs.set_season(2015);
-        gs.set_state(GlobalState::OFFSEASON);
-        gs.set_week(0);
+        gs.set_state(GlobalState::INSEASON);
+        gs.set_week(1);
 
         return gs;
     }
@@ -151,18 +171,22 @@ public:
         //auto gtransition = Commissioner::makeGenesisTransition();
 
         BlockHeader bh{};
-        bh.set_version(1);
+        bh.set_version(Commissioner::BLOCK_VERSION);
         bh.set_num(1);
         bh.set_prev_id("0000000000000000000000000000000000000000000000000000000000000000");
 
         //1433116800  June 1 2015 00:00 UTC
+        // 1441530192 Sept 6 2015 09:03:14 GMT
         //auto time = fc::time_point_sec(fc::time_point::from_iso_string("20150601T000000")).sec_since_epoch();
-        bh.set_timestamp(1433116800);
+        bh.set_timestamp(1441530192);
 
-        bh.set_generator_pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+        bh.set_generator_pk(pk2str(GENESIS_PUB_KEY));
+        //std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
 
-        //fc::sha256::hash(bh.generator_pk()).str());
-        bh.set_generating_sig("33319199662b78c55f0def95399a67d6dda4dc920958b7209dc65da2dbc01801");
+       // bh.set_generator_pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+
+        bh.set_generating_sig(fc::sha256::hash(bh.generator_pk()).str());
+        //bh.set_generating_sig("33319199662b78c55f0def95399a67d6dda4dc920958b7209dc65da2dbc01801");
 
         bh.set_basetarget(0); //todo
         bh.set_blocktype(BlockHeader_Type_DATA);
@@ -240,9 +264,9 @@ public:
 		return sig;
 	}
 
-    static std::set<std::string> GENESIS_NFL_TEAMS;
+    static std::vector<std::string> GENESIS_NFL_TEAMS;
     static std::set<std::pair<std::string,std::string>> GENESIS_NFL_PLAYERS;
-    static std::set<std::string> GET_GENESIS_NFL_TEAMS() {
+    static std::vector<std::string> GET_GENESIS_NFL_TEAMS() {
         return GENESIS_NFL_TEAMS;
     }
 

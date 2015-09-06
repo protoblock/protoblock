@@ -19,6 +19,7 @@ namespace fantasybit {
 
 
 Block Commissioner::makeGenesisBlock() {
+
     Block b{};
 
     /*
@@ -32,7 +33,9 @@ Block Commissioner::makeGenesisBlock() {
 
     return b;
 */
-    Reader<Block> reader{GET_ROOT_DIR() + "genesisAlpha.out"};
+
+//#ifdef true
+    Reader<Block> reader{GET_ROOT_DIR() + "genesis2015Prod.out"};
     if ( !reader.good() )
         qCritical() << " No genesis ";
     else
@@ -40,12 +43,14 @@ Block Commissioner::makeGenesisBlock() {
             qCritical() << " No genesis ";
 
     return b;
+//#endif
 
 
+    /*
+    FantasyAgent agent;
+    agent.beDataAgent();
 
-
-
-    auto gtrans = Commissioner::makeGenesisName();
+    auto gtrans = Commissioner::makeGenesisName(agent);
     auto gtransition = Commissioner::makeGenesisTransition();
 
     auto bh = GenesisBlockHeader();
@@ -53,24 +58,36 @@ Block Commissioner::makeGenesisBlock() {
     SignedBlockHeader sbh{};
     sbh.mutable_head()->CopyFrom(bh);
 
-    //auto p = agent.getIdSig(sbh.head().SerializeAsString());
-    sbh.set_sig("iKZWEJXwTRmfX8HYEAFfohcsArUk2a76faYE6jSMtVVKhzPXk89QC24eDuigNj6b1WcX28JHiFhWkEBm79akAZ7Q1UvnKdh5z7");
+    auto p = agent.getIdSig(sbh.head().SerializeAsString());
+    //sbh.set_sig("iKZWEJXwTRmfX8HYEAFfohcsArUk2a76faYE6jSMtVVKhzPXk89QC24eDuigNj6b1WcX28JHiFhWkEBm79akAZ7Q1UvnKdh5z7");
 
     //auto genesisblockhash = p.first;  "4f15942fc7cc2e418ee6d3f6bb4f0ef34d49863b21458d7445110783c8dcfd99"
 
+    sbh.set_sig(p.second);
     b.mutable_signedhead()->CopyFrom(sbh);
     b.add_signed_transactions()->CopyFrom(gtransition);
     b.add_signed_transactions()->CopyFrom(gtrans);
 
+
+*/
+
+
+/*
+    Writer<Block> reader{GET_ROOT_DIR() + "genesis2015Prod.out"};
+    if ( !reader.good() )
+        qCritical() << " cant write genesis ";
+    else
+        reader(b);
+*/
     return b;
 }
 
 Transaction Commissioner::GenesisTransition() {
     DataTransition dt{};
 
-    dt.set_type(DataTransition_Type_HEARTBEAT);
+    dt.set_type(DataTransition_Type_SEASONSTART);
     dt.set_season(2015);
-    dt.set_week(0);
+    dt.set_week(1);
 
     Data d{};
     //TODOd.set_type(Data::TEAM);
@@ -112,6 +129,13 @@ Transaction Commissioner::GenesisTransition() {
         d2->CopyFrom(d);
     }
 
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::DATA);
+    trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
+
+    return trans;
+}
 
     /*
     d.Clear();
@@ -137,17 +161,6 @@ Transaction Commissioner::GenesisTransition() {
     sd.mutable_weekly()->CopyFrom(ws);
 
 */
-    Transaction trans{};
-    trans.set_version(1);
-    trans.set_type(TransType::DATA);
-    trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
-
-    auto ds = trans.DebugString();
-    qInfo() << " xxxx ";
-    qInfo() << ds;
-
-    return trans;
-}
 
 const fc::bigint& max224()
 {

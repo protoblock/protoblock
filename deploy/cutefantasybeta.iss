@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Trading Football"
-#define MyAppVersion "Beta"
+#define MyAppVersion "2015"
 #define MyAppPublisher "Satoshi Fantasy LLC"
 #define MyAppURL "http://trading.football"
 #define MyAppExeName "tradingfootball.exe"
@@ -12,7 +12,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{5B1C2D8F-A4FE-46B8-A914-23C1A6F1872D}
+AppId={{347A0110-E3A4-457A-9B04-07610AC0FEB7}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -22,7 +22,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultGroupName={#MyAppName}
 OutputDir=..\installer
-OutputBaseFilename=tradingfootball-beta-setup
+OutputBaseFilename=tradingfootball-setup
 Compression=lzma
 SolidCompression=yes
 WizardImageFile=TRADINGFOOTBALL.bmp

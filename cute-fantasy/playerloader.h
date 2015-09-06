@@ -14,6 +14,13 @@
 #include "StaticData.pb.h"
 #include "DistributionAlgo.h"
 
+#include <QtSql/QSql>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlDriver>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
+
 /*
 void print_hex_memory(void *mem,int size) {
   int i;
@@ -29,6 +36,146 @@ void print_hex_memory(void *mem,int size) {
 
 using namespace std;
 using namespace fantasybit;
+
+
+
+struct SqlStuff {
+    QSqlDatabase db{};
+
+    SqlStuff() {
+        db = QSqlDatabase::addDatabase("QMYSQL");
+
+        db.setHostName("158.222.102.21");
+        db.setPort(3306);
+        db.setDatabaseName("tradingfootball");
+        db.setUserName("root");
+        db.setPassword("fantasyf00tball!");
+        //bool success = true;
+        if (!db.open()) {
+             qDebug() << "Database error occurred :" << db.lastError().databaseText();
+             //LogIt(db.lastError().databaseText().toStdString());
+            return;
+        }
+
+    }
+
+    void teams() {
+
+        map<int,string> teamIdKey{};
+        for (int i=0;i< Commissioner::GENESIS_NFL_TEAMS.size();i++) {
+            teamIdKey[i+1] = Commissioner::GENESIS_NFL_TEAMS[i];
+        }
+
+        for ( auto tk : teamIdKey ) {
+//        QSqlQuery query;
+            QSqlQuery insertQuery(db);
+            insertQuery.prepare("INSERT INTO team (tid, tkey) VALUES(:mid,:mkey)");
+            insertQuery.bindValue(":mid",tk.first);
+            insertQuery.bindValue(":mkey",QString::fromStdString(tk.second));
+            //insertQuery.exec();
+            if ( !insertQuery.exec() )
+            {
+                qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+                break;
+            }
+
+        }
+
+        //for ()
+        /*
+        query.exec("SELECT name, salary FROM employee WHERE salary > 50000");
+
+        while (query.next()) {
+             QString name = query.value(0).toString();
+             int salary = query.value(1).toInt();
+             qDebug() << name << salary;
+         }
+         */
+    }
+
+    void gamemap(string gameid, string id) {
+        QSqlQuery insertQuery(db);
+        insertQuery.prepare("INSERT INTO gid (feed, id, gameid) VALUES(:feed, :mid,:mgameid)");
+        insertQuery.bindValue(":feed","TRDR");
+
+        insertQuery.bindValue(":mgameid",QString::fromStdString(gameid));
+        insertQuery.bindValue(":mid",QString::fromStdString(id));
+        //insertQuery.exec();
+        if ( !insertQuery.exec() )
+        {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+        }
+
+    }
+
+    void playermap(int playerid, string id) {
+        QSqlQuery insertQuery(db);
+        insertQuery.prepare("INSERT INTO pid (feed, id, playerid) VALUES(:feed, :mid,:mplayerid)");
+        insertQuery.bindValue(":feed","TRDR");
+
+        insertQuery.bindValue(":mplayerid",playerid);
+        insertQuery.bindValue(":mid",QString::fromStdString(id));
+        //insertQuery.exec();
+        if ( !insertQuery.exec() )
+        {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+        }
+
+    }
+
+    void player(PlayerData pd) {
+        QSqlQuery insertQuery(db);
+        insertQuery.prepare
+                ("INSERT INTO player (playerid,first,last,team,pos,roster_status)"
+                 "VALUES(:pid,:f,:l,:t,:pos,:rs)");
+        insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
+        insertQuery.bindValue(":f",QString::fromStdString(pd.player_base().first()));
+        insertQuery.bindValue(":l",QString::fromStdString(pd.player_base().last()));
+        insertQuery.bindValue(":t",QString::fromStdString(pd.player_status().teamid()));
+        insertQuery.bindValue(":pos",QString::fromStdString(pd.player_base().position()));
+        if ( pd.player_status().status() == PlayerStatus::ACTIVE  ||
+             pd.player_base().position() == "DEF"
+             )
+            insertQuery.bindValue(":rs", QChar('A'));
+        else
+            insertQuery.bindValue(":rs", QChar('I'));
+
+
+        //insertQuery.exec();
+        if ( !insertQuery.exec() )
+        {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+        }
+
+    }
+
+    void playertest() {
+        //playermap(1,"ARI");
+
+        fantasybit::PlayerData pd{};
+        pd.set_playerid(to_string(1));
+        //pid[i+1] = team;
+
+        fantasybit::PlayerBase pb{};
+        pb.set_position("DEF");
+        pb.set_first("Arizona");
+        pb.set_last("Cardnals");
+
+        fantasybit::PlayerStatus ps{};
+        ps.set_teamid("ARI");
+
+        pd.mutable_player_base()->CopyFrom(pb);
+        pd.mutable_player_status()->CopyFrom(ps);
+
+        player(pd);
+
+    }
+
+    ~SqlStuff() {
+        db.close();
+    }
+};
+
 class PlayerLoader
 {
 
@@ -121,12 +268,24 @@ class ScheduleLoader
 public:
     ScheduleLoader(){}
     ~ScheduleLoader(){}
+    std::map<string,string> gid{};
 
+    map<string,int> teamIdKey{};
+    SqlStuff sqls{};
+    void Dump() {
+        for ( auto p : gid ) {
+            sqls.gamemap(p.first,p.second);
+        }
+    }
     std::vector<fantasybit::ScheduleData> loadScheduleFromJsonFile() {
         std::vector<fantasybit::ScheduleData> result;
 
+        for (int i=0;i< Commissioner::GENESIS_NFL_TEAMS.size();i++) {
+            teamIdKey[Commissioner::GENESIS_NFL_TEAMS[i]] = i+1;
+        }
+
         //hard coded resources
-        QFile jsonFile(":/Schedule2015/Schedule.2015-pre.json");
+        QFile jsonFile(":/Schedule2015/Schedule.2015-reg.json");
         if (!jsonFile.open(QIODevice::ReadOnly)){
             //errorMessage = "Can't open the player file !";
             return result;
@@ -168,7 +327,7 @@ public:
                 QJsonObject playerData = data.toObject();
                 QString errorParsingObject;
                 fantasybit::GameInfo gi =
-                        getScheduleFromJsonObject(playerData,errorParsingObject);
+                        getScheduleFromJsonObject(playerData,wk,errorParsingObject);
                 if (!errorParsingObject.isEmpty()) {
                     //errorMessage += "\n Error parsing json object : "+ errorParsingObject;
                     continue;
@@ -187,20 +346,36 @@ public:
             sd.mutable_weekly()->CopyFrom(ws);
 
             result.push_back(sd);
-
-
-
         }
 
+        Dump();
         return result;
     }
 
-   fantasybit::GameInfo getScheduleFromJsonObject(QJsonObject & jsonObject,QString & errorParsingObject) const{
+   fantasybit::GameInfo getScheduleFromJsonObject(QJsonObject & jsonObject, int wk,
+                                                  QString & errorParsingObject) {
       fantasybit::GameInfo pd{};
 
+      /*
+1500122
+year season_type(0) week(01) homeis(22)
+   */
+      string swk = to_string(wk);
+      if ( swk.size() == 1)
+          swk = "0" + swk;
 
-      pd.set_id(jsonObject.value("id").toString().toStdString());
-      pd.set_home(jsonObject.value("home").toString().toStdString());
+      string home = jsonObject.value("home").toString().toStdString();
+
+      string team = to_string(teamIdKey[home]);
+      if ( team.size() == 1)
+          team = "0" + team;
+
+      string myid("20150");
+      myid = myid.append(swk).append(team);
+      gid[myid] =  jsonObject.value("id").toString().toStdString();
+
+      pd.set_id(myid);
+      pd.set_home(home);
       pd.set_away(jsonObject.value("away").toString().toStdString());
 
       auto datetime = jsonObject.value("scheduled").toString();
@@ -213,32 +388,7 @@ public:
 
       return pd;
 
-      /*
-      auto pos = jsonObject.value("FantasyPosition").toString();
-      if   (! (    pos == "QB"
-           || pos == "RB"
-           || pos == "WR"
-           || pos == "TE"
-           || pos == "K")) {
-          errorParsingObject = pos;
-          return pd;
-      }
-
-      pd.set_playerid(jsonObject.value("PlayerID").toString().toStdString());
-
-      fantasybit::PlayerBase pb{};
-      pb.set_position(jsonObject.value("FantasyPosition").toString().toStdString());
-      pb.set_first(jsonObject.value("FirstName").toString().toStdString());
-      pb.set_last(jsonObject.value("LastName").toString().toStdString());
-
-      fantasybit::PlayerStatus ps{};
-      ps.set_teamid(jsonObject.value("Team").toString().toStdString());
-
-      pd.mutable_player_base()->CopyFrom(pb);
-      pd.mutable_player_status()->CopyFrom(ps);
-*/
-      return pd;
-   }
+    }
 
 };
 
@@ -252,12 +402,29 @@ class PlayerLoaderTR {
 
 
 public:
+    int start = 1000;
+    std::map<int,string> pid{};
+
+    std::vector<fantasybit::PlayerData> result;
+    SqlStuff sqls{};
+
+    void dump() {
+        for ( auto p : pid ) {
+            sqls.playermap(p.first,p.second);
+        }
+
+        for ( auto pd : result) {
+            sqls.player(pd);
+        }
+    }
+
     std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar() {
-        std::vector<fantasybit::PlayerData> result;
+
 
         RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/teams/"));
 
-        for ( auto team : fantasybit::Commissioner::GENESIS_NFL_TEAMS) {
+        for ( int i = 0; i < fantasybit::Commissioner::GENESIS_NFL_TEAMS.size(); i++) {
+            auto team = fantasybit::Commissioner::GENESIS_NFL_TEAMS[i];
             QThread::currentThread()->msleep(1000);
             auto route = makeroute(team);
             QMap<QString,QString>  headers;
@@ -273,6 +440,25 @@ public:
             qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
 
             QJsonObject jo = ret.object();
+            //auto vals = jo.value("name").toString();
+            fantasybit::PlayerData pd{};
+            pd.set_playerid(to_string(i+1));
+            pid[i+1] = team;
+
+            fantasybit::PlayerBase pb{};
+            pb.set_position("DEF");
+            pb.set_first(jo.value("market").toString().toStdString());
+            pb.set_last(jo.value("name").toString().toStdString());
+
+            fantasybit::PlayerStatus ps{};
+            ps.set_teamid(team);
+
+            pd.mutable_player_base()->CopyFrom(pb);
+            pd.mutable_player_status()->CopyFrom(ps);
+
+            sqls.player(pd);
+            result.push_back(pd);
+
             auto vals = jo.value("players");
             QJsonArray parr = vals.toArray();
 
@@ -290,10 +476,11 @@ public:
 
         }
 
+        dump();
         return result;
     }
 
-    fantasybit::PlayerData getPlayerFromJsonObject(QJsonObject & jsonObject,std::string team,QString & errorParsingObject) const{
+    fantasybit::PlayerData getPlayerFromJsonObject(QJsonObject & jsonObject,std::string team,QString & errorParsingObject) {
        fantasybit::PlayerData pd{};
 
        auto pos = jsonObject.value("position").toString();
@@ -310,7 +497,9 @@ public:
        if ( pos == "FB")
            pos = "RB";
 
-       pd.set_playerid(jsonObject.value("id").toString().toStdString());
+       start++;
+       pd.set_playerid(to_string(start));
+       pid[start] = jsonObject.value("id").toString().toStdString();
 
        fantasybit::PlayerBase pb{};
        pb.set_position(pos.toStdString());
