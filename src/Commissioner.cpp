@@ -10,7 +10,7 @@
 #include "FantasyName.h"
 #include <iostream> 
 #include <ctime>
-#include "playerloader.h"
+//#include "playerloader.h"
 #include "DataPersist.h"
 
 using namespace std;
@@ -99,7 +99,7 @@ Transaction Commissioner::GenesisTransition() {
         d2->CopyFrom(d);
     }
     */
-
+#ifdef DATAAGENTWRITENAMES
     PlayerLoaderTR pltr{};
     auto players = pltr.loadPlayersFromTradeRadar();
 
@@ -128,7 +128,7 @@ Transaction Commissioner::GenesisTransition() {
         Data *d2 = dt.add_data();
         d2->CopyFrom(d);
     }
-
+#endif
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::DATA);
