@@ -38,7 +38,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "tradingfootball.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "storage\genesisAlpha.out"; DestDir: "{app}\storage"; Flags: ignoreversion
+Source: "storage\genesis2015Prod.out"; DestDir: "{app}\storage"; Flags: ignoreversion
 Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
