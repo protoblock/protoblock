@@ -83,7 +83,7 @@ struct SqlStuff {
 
         //for ()
         /*
-        query.exec("SELECT name, salary FROM employee WHERE salary > 50000");
+         * CALL usp_GetPlayerID 'acf68a6a-3439-4ad6-8937-2562f4eba62b'
 
         while (query.next()) {
              QString name = query.value(0).toString();
@@ -91,6 +91,69 @@ struct SqlStuff {
              qDebug() << name << salary;
          }
          */
+    }
+
+    int getpidT(string tpid) {
+        QSqlQuery query(db);
+
+        query.prepare("SELECT playerid FROM pid p WHERE p.id = :tpid");
+        query.bindValue(":tpid",QString::fromStdString(tpid));
+
+        if ( ! query.exec() ) {
+            qDebug() << " exec ret " << query.lastError().databaseText();
+
+            return -1;
+        }
+
+        qDebug() << query.isActive() << query.isValid() <<
+                    query.first();;
+
+        auto ppid =  query.value(0);
+        int pid = ppid.toInt();
+        return pid;
+    }
+
+    int maxPid() {
+        QSqlQuery query(db);
+
+        query.prepare("SELECT max(playerid) FROM player");
+
+        if ( ! query.exec() ) {
+            qDebug() << " exec ret " << query.lastError().databaseText();
+
+            return -1;
+        }
+
+        qDebug() << query.isActive() << query.isValid() <<
+                    query.first();;
+
+        auto ppid =  query.value(0);
+        int pid = ppid.toInt();
+        return pid;
+
+    }
+
+    pair<bool,string> getPlayer(int pid) {
+        QSqlQuery query(db);
+
+        query.prepare("select team, roster_status from player where playerid = :pid");
+        query.bindValue(":pid",pid);
+        if ( ! query.exec() ) {
+            qDebug() << " exec ret " << query.lastError().databaseText();
+            return make_pair(false,"");
+        }
+
+        qDebug() << query.isActive() << query.isValid() <<
+                    query.first();;
+
+        auto myteam = query.value(0).toString();
+        //auto status = query.value(1).toChar().toString();
+        auto sv = query.value("roster_status");
+        auto svs = sv.toString();
+
+        bool active = svs == "A";
+        return make_pair(active,myteam.toStdString());
+
     }
 
     void gamemap(string gameid, string id) {
@@ -125,21 +188,39 @@ struct SqlStuff {
 
     void player(PlayerData pd) {
         QSqlQuery insertQuery(db);
-        insertQuery.prepare
+
+        if ( pd.has_player_base() ) {
+            insertQuery.prepare
                 ("INSERT INTO player (playerid,first,last,team,pos,roster_status)"
                  "VALUES(:pid,:f,:l,:t,:pos,:rs)");
-        insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
-        insertQuery.bindValue(":f",QString::fromStdString(pd.player_base().first()));
-        insertQuery.bindValue(":l",QString::fromStdString(pd.player_base().last()));
-        insertQuery.bindValue(":t",QString::fromStdString(pd.player_status().teamid()));
-        insertQuery.bindValue(":pos",QString::fromStdString(pd.player_base().position()));
-        if ( pd.player_status().status() == PlayerStatus::ACTIVE  ||
-             pd.player_base().position() == "DEF"
-             )
-            insertQuery.bindValue(":rs", QChar('A'));
-        else
-            insertQuery.bindValue(":rs", QChar('I'));
 
+            insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
+            insertQuery.bindValue(":f",QString::fromStdString(pd.player_base().first()));
+            insertQuery.bindValue(":l",QString::fromStdString(pd.player_base().last()));
+            insertQuery.bindValue(":pos",QString::fromStdString(pd.player_base().position()));
+            insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
+            insertQuery.bindValue(":t",QString::fromStdString(pd.player_status().teamid()));
+
+            if ( pd.player_status().status() == PlayerStatus::ACTIVE  ||
+                 pd.player_base().position() == "DEF"
+                 )
+                insertQuery.bindValue(":rs", QChar('A'));
+            else
+                insertQuery.bindValue(":rs", QChar('I'));
+
+        }
+        else if (pd.has_player_status()) {
+            insertQuery.prepare
+                ("UPDATE player set team = :t, roster_status = :rs where playerid = :pid");
+            insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
+            insertQuery.bindValue(":t",QString::fromStdString(pd.player_status().teamid()));
+
+            if ( pd.player_status().status() == PlayerStatus::ACTIVE )
+                insertQuery.bindValue(":rs", QChar('A'));
+            else
+                insertQuery.bindValue(":rs", QChar('I'));
+        }
+        else return;
 
         //insertQuery.exec();
         if ( !insertQuery.exec() )
@@ -168,7 +249,6 @@ struct SqlStuff {
         pd.mutable_player_status()->CopyFrom(ps);
 
         player(pd);
-
     }
 
     ~SqlStuff() {
@@ -414,12 +494,15 @@ public:
         }
 
         for ( auto pd : result) {
-            sqls.player(pd);
+           // if ( pd.has_player_base())
+                sqls.player(pd);
         }
     }
 
-    std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar() {
+    std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar(bool isgenesis = false) {
 
+        if ( !isgenesis )
+            start = sqls.maxPid();
 
         RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/teams/"));
 
@@ -441,24 +524,25 @@ public:
 
             QJsonObject jo = ret.object();
             //auto vals = jo.value("name").toString();
-            fantasybit::PlayerData pd{};
-            pd.set_playerid(to_string(i+1));
-            pid[i+1] = team;
+            if ( isgenesis ) {
+                fantasybit::PlayerData pd{};
+                pd.set_playerid(to_string(i+1));
+                pid[i+1] = team;
 
-            fantasybit::PlayerBase pb{};
-            pb.set_position("DEF");
-            pb.set_first(jo.value("market").toString().toStdString());
-            pb.set_last(jo.value("name").toString().toStdString());
+                fantasybit::PlayerBase pb{};
+                pb.set_position("DEF");
+                pb.set_first(jo.value("market").toString().toStdString());
+                pb.set_last(jo.value("name").toString().toStdString());
 
-            fantasybit::PlayerStatus ps{};
-            ps.set_teamid(team);
+                fantasybit::PlayerStatus ps{};
+                ps.set_teamid(team);
 
-            pd.mutable_player_base()->CopyFrom(pb);
-            pd.mutable_player_status()->CopyFrom(ps);
+                pd.mutable_player_base()->CopyFrom(pb);
+                pd.mutable_player_status()->CopyFrom(ps);
 
-            sqls.player(pd);
-            result.push_back(pd);
-
+                sqls.player(pd);
+                result.push_back(pd);
+            }
             auto vals = jo.value("players");
             QJsonArray parr = vals.toArray();
 
@@ -468,7 +552,7 @@ public:
                 QJsonObject playerData = data.toObject();
                 QString errorParsingObject;
                 fantasybit::PlayerData player =
-                        getPlayerFromJsonObject(playerData,team,errorParsingObject);
+                        getPlayerFromJsonObject(playerData,team,isgenesis,errorParsingObject);
 
                 if ( errorParsingObject != "" ) continue;
                 result.push_back(player);
@@ -480,7 +564,21 @@ public:
         return result;
     }
 
-    fantasybit::PlayerData getPlayerFromJsonObject(QJsonObject & jsonObject,std::string team,QString & errorParsingObject) {
+    fantasybit::PlayerData getPlayerFromJsonObject(QJsonObject & jsonObject,std::string team,bool isgenesis,
+                                                   QString & errorParsingObject) {
+
+       auto tid = jsonObject.value("id").toString().toStdString();
+
+       bool isnew;
+       int mypid;
+       if ( isgenesis )
+           isnew = true;
+       else {
+           mypid = sqls.getpidT(tid);
+           if ( mypid <= 0)
+               isnew = true;
+       }
+
        fantasybit::PlayerData pd{};
 
        auto pos = jsonObject.value("position").toString();
@@ -497,32 +595,59 @@ public:
        if ( pos == "FB")
            pos = "RB";
 
-       start++;
-       pd.set_playerid(to_string(start));
-       pid[start] = jsonObject.value("id").toString().toStdString();
-
-       fantasybit::PlayerBase pb{};
-       pb.set_position(pos.toStdString());
-       pb.set_first(jsonObject.value("name_first").toString().toStdString());
-       pb.set_last(jsonObject.value("name_last").toString().toStdString());
-
        fantasybit::PlayerStatus ps{};
-       ps.set_teamid(team);
-/*
-       enum PlayerStatus_Status {
-         PlayerStatus_Status_ACTIVE = 0,
-         PlayerStatus_Status_INACTIVE = 1,
-         PlayerStatus_Status_OTHER = 3,
-         PlayerStatus_Status_FA = 4
-       };
-*/
        auto status = jsonObject.value("status").toString();
-       ps.set_status(status == "ACT" ? fantasybit::PlayerStatus_Status_ACTIVE : fantasybit::PlayerStatus_Status_INACTIVE);
+       bool isnowactive = status == "ACT";
 
-       pd.mutable_player_base()->CopyFrom(pb);
-       pd.mutable_player_status()->CopyFrom(ps);
+       if ( isnew ) {
+            start++;
+            pd.set_playerid(to_string(start));
+            pid[start] = jsonObject.value("id").toString().toStdString();
 
-       return pd;
+
+           fantasybit::PlayerBase pb{};
+           pb.set_position(pos.toStdString());
+           pb.set_first(jsonObject.value("name_first").toString().toStdString());
+           pb.set_last(jsonObject.value("name_last").toString().toStdString());
+
+           ps.set_teamid(team);
+           ps.set_status(isnowactive ? fantasybit::PlayerStatus_Status_ACTIVE : fantasybit::PlayerStatus_Status_INACTIVE);
+
+    /*
+           enum PlayerStatus_Status {
+             PlayerStatus_Status_ACTIVE = 0,
+             PlayerStatus_Status_INACTIVE = 1,
+             PlayerStatus_Status_OTHER = 3,
+             PlayerStatus_Status_FA = 4
+           };
+    */
+
+           pd.mutable_player_base()->CopyFrom(pb);
+           pd.mutable_player_status()->CopyFrom(ps);
+
+           return pd;
+           }
+
+       else {
+           bool changed = false;
+           //know team
+           auto tps = sqls.getPlayer(mypid);
+           if ( tps.second == "" ) {
+               errorParsingObject = pos;
+               return pd;
+           }
+
+           if ( tps.second != team || tps.first != isnowactive ) {
+               ps.set_teamid(team);
+               ps.set_status(isnowactive ? fantasybit::PlayerStatus_Status_ACTIVE : fantasybit::PlayerStatus_Status_INACTIVE);
+               pd.mutable_player_status()->CopyFrom(ps);
+           }
+           else
+               errorParsingObject = pos;
+
+           return pd;
+       }
+
     }
 
 };
@@ -550,7 +675,7 @@ public:
     }
     
     GameStatsLoader() {
-        preregpost = "PRE";
+        preregpost = "REG";
     }
     
     std::vector<fantasybit::GameResult> 
@@ -630,7 +755,7 @@ public:
         return result;
     }
 
-    double CalcResults(const Stats &stats) {
+    static double CalcResults(const Stats &stats) {
         int ret = 0;
         double iret = 0;
 
@@ -667,7 +792,38 @@ public:
             if (os.has_onept())
                 ret += 200 *  os.onept();
         }
-        else return 0.0;
+        if ( stats.has_kstats() ) {
+            auto ks = stats.kstats();
+            if ( ks.has_pa() )
+                ret += 100 * ks.pa();
+            for ( auto f : ks.fg())
+                ret += 300 + 10 * ((f > 30) ? f : 0);
+        }
+        if ( stats.has_dstats() ) {
+            auto ds = stats.dstats();
+            if ( ds.has_deftd())
+                ret += 600 * ds.deftd();
+            if ( ds.has_onept())
+                ret += 200 * ds.onept();
+            if ( ds.has_ptsa()) {
+                if ( ds.ptsa() == 0)
+                    ret += 1200;
+                else if ( ds.ptsa() < 7)
+                    ret += 100;
+                else if ( ds.ptsa() < 11)
+                    ret += 800;
+            }
+            if ( ds.has_sacks())
+                ret += 100 * ds.sacks();
+            if ( ds.has_sfty())
+                ret += 500 * ds.sfty();
+            if ( ds.has_turnovers())
+                ret += 200 * ds.turnovers();
+            if ( ds.has_twopt())
+                ret += 200 * ds.twopt();
+        }
+
+        if ( ret == 0) return 0.0;
 
         iret = (double)ret / 100.0;
         return iret;

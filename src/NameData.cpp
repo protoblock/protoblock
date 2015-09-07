@@ -192,15 +192,16 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
     auto name = fn->alias();
 
 #ifdef DATAAGENTWRITENAMES
-    FantasyNameHash fnh{};
-    fnh.set_name(name);
-    fnh.set_hash(fn->hash());
-    emit new_dataFantasyNameHash(fnh);
+    if ( amlive ) {
+        FantasyNameHash fnh{};
+        fnh.set_name(name);
+        fnh.set_hash(fn->hash());
+        emit new_dataFantasyNameHash(fnh);
 
-    auto fnhstr = fnh.SerializeAsString();
-    RestfullClient rest(QUrl(LAPIURL.data()));
-    rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()));
-
+        auto fnhstr = fnh.SerializeAsString();
+        RestfullClient rest(QUrl(LAPIURL.data()));
+        rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()));
+    }
 #endif
 
     if ( mSubscribed.find(name) != end(mSubscribed))

@@ -48,7 +48,7 @@ class FantasyNameData : public QObject {
 signals:
     void ProjectionLive(fantasybit::FantasyBitProj);
     void FantasyNameFound(string);
-    void FantasyNameBalance(fantasybit::FantasyNameBal&);
+    void FantasyNameBalance(fantasybit::FantasyNameBal);
     void new_dataFantasyNameHash(fantasybit::FantasyNameHash);
 
 public slots:

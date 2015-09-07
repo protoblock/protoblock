@@ -52,7 +52,7 @@ public slots:
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj projection);
     //void OnAward(QVariant);
-    void OnNameBalance(fantasybit::FantasyNameBal &balance);
+    void OnNameBalance(fantasybit::FantasyNameBal balance);
     void OnNewWeek(int);
     void OnGameOver(string);
     void OnGameStart(string);

@@ -82,7 +82,7 @@ signals:
     void NameStatus(fantasybit::MyFantasyName);
     void LiveProj(fantasybit::FantasyBitProj);
     void MyNames(vector<fantasybit::MyFantasyName>);
-    void NameBal(fantasybit::FantasyNameBal&);
+    void NameBal(fantasybit::FantasyNameBal);
     void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
     void GlobalStateChange(fantasybit::GlobalState);
     void LiveGui(fantasybit::GlobalState);
@@ -121,7 +121,7 @@ public slots:
 
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
-    //void OnNameBal(fantasybit::FantasyNameBal &);
+    //void OnNameBal(fantasybit::FantasyNameBal);
     //void OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
 
     //dataagent

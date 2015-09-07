@@ -185,8 +185,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 else {
                     for ( int i =0; i < rd.game_result().home_result_size(); i++) {
                         auto proj = mNameData.GetProjById(rd.game_result().home_result(i).playerid());
-                        if ( proj.size() == 0 )
-                            continue;
+                        //if ( proj.size() == 0 )
+                        //    continue;
 
                         processResultProj(rd.mutable_game_result()->mutable_home_result(i)
                                           ,proj,blocksigner);
@@ -199,8 +199,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     //for (auto result : rd.game_result().away_result() ) {
                     for ( int i =0; i < rd.game_result().away_result_size(); i++) {
                         auto proj = mNameData.GetProjById(rd.game_result().away_result(i).playerid());
-                        if ( proj.size() == 0 )
-                            continue;
+                        //if ( proj.size() == 0 )
+                        //    continue;
                         processResultProj(rd.mutable_game_result()->mutable_away_result(i),
                                           proj,blocksigner);
                         //result.mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
@@ -215,6 +215,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
 #ifdef DATAAGENTWRITENAMES
+                if ( !amlive ) break;
                 Distribution dist{};
                 dist.set_gameid(rd.game_result().gameid());
                 auto gs = mData.GetGlobalState();
@@ -271,6 +272,33 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 break;
             }
 
+            case Data_Type_MESSAGE: {
+                auto msg = d.GetExtension(MessageData::message_data);
+                if ( msg.has_msg() ) {
+                    qWarning() << "Control messgae" << msg.DebugString();
+
+                    if ( !amlive )
+                        break;
+                    else
+                    if ( msg.has_gt() || msg.has_lt()) {
+                        int version =
+                                MAJOR_VERSION * 1000 +
+                                MINOR_VERSION * 100 +
+                                REVISION_NUMBER * 10+
+                                BUILD_NUMBER;
+
+                        if ( (msg.has_gt() && version > msg.gt())
+                             ||
+                              (msg.has_lt() && version < msg.lt()))
+                        onControlMessage(QString::fromStdString(msg.msg()));
+
+                    }
+                    else
+                        onControlMessage(QString::fromStdString(msg.msg()));
+
+                }
+                break;
+            }
             default:
                 qWarning() << "unexpedted type" << d.type();
                 break;

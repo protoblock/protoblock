@@ -54,7 +54,6 @@ void Node::init() {
     {
         qInfo() <<  "no blocks - making Genesis";
 
-        current_hight = 1;
         Block sb{Commissioner::makeGenesisBlock()};
 
         {
@@ -70,6 +69,7 @@ void Node::init() {
             return;
         }
 
+        current_hight = 1;
 
         leveldb::Slice value((char*)&current_hight, sizeof(int));
         blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());

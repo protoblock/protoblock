@@ -41,7 +41,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     //data processing
     QObject::connect(this,SIGNAL(LiveData(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
-    //QObject::connect(this,SIGNAL(Live(bool)),&processor,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
 
     //data to data signals
     QObject::connect(&processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
@@ -72,8 +72,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&namedata,SIGNAL(ProjectionLive(fantasybit::FantasyBitProj)),
                      this,SLOT(OnProjLive(fantasybit::FantasyBitProj)));
 
-    QObject::connect(&namedata,SIGNAL(FantasyNameBalance(fantasybit::FantasyNameBal&)),
-                     this,SIGNAL(NameBal(fantasybit::FantasyNameBal&)));
+    QObject::connect(&namedata,SIGNAL(FantasyNameBalance(fantasybit::FantasyNameBal)),
+                     this,SIGNAL(NameBal(fantasybit::FantasyNameBal)));
 
     QObject::connect(&processor,SIGNAL(onControlMessage(QString)),
                      this,SIGNAL(onControlMessage(QString)));
@@ -218,7 +218,7 @@ void MainLAPIWorker::OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus> 
     emit PlayerStatusChange(in);
 }
 
-void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal &bal) {
+void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal bal) {
     emit NameBalance(bal);
 }
 */

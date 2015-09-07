@@ -114,9 +114,9 @@ void PreviousWeekWidget::setWeekData(int week){
             QString fgs;
             auto sz = playerResult.stats().kstats().fg_size();
             if ( sz >0 ) {
-                fgs = QString::number(playerResult.stats().kstats().fg(1));
+                fgs = QString::number(playerResult.stats().kstats().fg(0));
                 for (int i=1; i<sz ;i++)
-                    fgs.append(",%1").arg(playerResult.stats().kstats().fg(i));
+                    fgs.append(QString(",%1").arg(playerResult.stats().kstats().fg(i)));
             }
 
             myProjectionsModel.updateItemProperty<PropertyNames::FG>(playerId,fgs);
@@ -136,8 +136,6 @@ void PreviousWeekWidget::setWeekData(int week){
             myProjectionsModel.updateItemProperty<PropertyNames::SFTY>(playerId,playerResult.stats().dstats().sfty());
             if ( playerId,playerResult.stats().dstats().has_twopt() )
             myProjectionsModel.updateItemProperty<PropertyNames::D2pt>(playerId,playerResult.stats().dstats().twopt());
-            if ( playerId,playerResult.stats().dstats().has_onept() )
-            myProjectionsModel.updateItemProperty<PropertyNames::D1pt>(playerId,playerResult.stats().dstats().onept());
 
         }
 
@@ -180,9 +178,9 @@ void PreviousWeekWidget::setWeekData(int week){
             QString fgs;
             auto sz = playerResult.stats().kstats().fg_size();
             if ( sz >0 ) {
-                fgs = QString::number(playerResult.stats().kstats().fg(1));
+                fgs = QString::number(playerResult.stats().kstats().fg(0));
                 for (int i=1; i<sz ;i++)
-                    fgs.append(",%1").arg(playerResult.stats().kstats().fg(i));
+                    fgs.append(QString(",%1").arg(playerResult.stats().kstats().fg(i)));
             }
 
             myProjectionsModel.updateItemProperty<PropertyNames::FG>(playerId,fgs);
@@ -202,8 +200,6 @@ void PreviousWeekWidget::setWeekData(int week){
             myProjectionsModel.updateItemProperty<PropertyNames::SFTY>(playerId,playerResult.stats().dstats().sfty());
             if ( playerId,playerResult.stats().dstats().has_twopt() )
             myProjectionsModel.updateItemProperty<PropertyNames::D2pt>(playerId,playerResult.stats().dstats().twopt());
-            if ( playerId,playerResult.stats().dstats().has_onept() )
-            myProjectionsModel.updateItemProperty<PropertyNames::D1pt>(playerId,playerResult.stats().dstats().onept());
 
         }
     }

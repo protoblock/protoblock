@@ -53,8 +53,8 @@ void MainWindow::initialize() {
                      this,SLOT(OnNameStatus(fantasybit::MyFantasyName)));
     QObject::connect(myLAPIWorker,SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
                      this,SLOT(OnProjAck(fantasybit::FantasyBitProj)));
-    QObject::connect(myLAPIWorker,SIGNAL(NameBal(fantasybit::FantasyNameBal&)),
-                     this,SLOT(OnNameBalance(fantasybit::FantasyNameBal&)));
+    QObject::connect(myLAPIWorker,SIGNAL(NameBal(fantasybit::FantasyNameBal)),
+                     this,SLOT(OnNameBalance(fantasybit::FantasyNameBal)));
 
     //state
     //QObject::connect(this,SIGNAL(SubscribeGameState()),myLAPIWorker,SLOT(OnSubGame()));
@@ -321,7 +321,7 @@ void MainWindow::OnProjAck(fantasybit::FantasyBitProj projection){
         ui->myCurrentWeekWidget->OnProjAck(projection);
 }
 
-void MainWindow::OnNameBalance(fantasybit::FantasyNameBal & balance) {
+void MainWindow::OnNameBalance(fantasybit::FantasyNameBal balance) {
     qDebug()<< "received balance for " << balance.name() << " : " << balance.bits();
     if (myCurrentFantasyName.name()==balance.name())
         ui->myBalanceText->setText(QString("%1").arg(balance.bits()));
