@@ -27,7 +27,7 @@ Compression=lzma
 SolidCompression=yes
 WizardImageFile=TRADINGFOOTBALL.bmp
 PrivilegesRequired=none
-DefaultDirName={code:DefDirRoot}\tradingfootball
+DefaultDirName={localappdata}\tradingfootball
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
