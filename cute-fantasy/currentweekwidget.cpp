@@ -344,3 +344,4 @@ void CurrentWeekWidget::refreshFantasyNamesProjections(const QString & fantasyNa
 void CurrentWeekWidget::onControlMessage(QString message){
     ui->myControlMessageLabel->setText(message);
 }
+

@@ -108,15 +108,7 @@ Transaction Commissioner::GenesisTransition() {
     //auto players = pl.loadPlayersFromJsonFile();
 
     d.Clear();
-    d.set_type(Data::PLAYER);
-    //PlayerData pd{};
-    for ( auto pd : players ) {
-        //TODOpd.set_teamid(t.second);
-        d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
-        Data *d2 = dt.add_data();
-        d2->CopyFrom(d);
-    }
-
+`
     ScheduleLoader sl{};
     auto weeks = sl.loadScheduleFromJsonFile();
 

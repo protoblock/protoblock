@@ -13,7 +13,7 @@ void Core::bootstrap(){
     qRegisterMetaType<vector<fantasybit::MyFantasyName>>("vector<fantasybit::MyFantasyName>");
     qRegisterMetaType<pair<string,fantasybit::PlayerStatus>>("pair<string,fantasybit::PlayerStatus>");
     qRegisterMetaType<fantasybit::PlayerStatus>("fantasybit::PlayerStatus");
-    qRegisterMetaType<pair<string,fantasybit::FantasyNameBal>>("pair<string,fantasybit::FantasyNameBal>");
+    qRegisterMetaType<fantasybit::FantasyNameBal>("fantasybit::FantasyNameBal");
     qRegisterMetaType<fantasybit::GameStatus_Status>("fantasybit::GameStatus_Status");
     qRegisterMetaType<fantasybit::Distribution>("fantasybit::Distribution");
     qRegisterMetaType<fantasybit::FantasyNameHash>("fantasybit::FantasyNameHash");

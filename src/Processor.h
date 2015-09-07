@@ -37,7 +37,7 @@ class BlockProcessor : public QObject {
                      const fc::ecc::signature&, const fc::sha256 &);
     bool amlive = false;
 public slots:
-    void OnSubscribeLive() {
+    void OnLive(bool) {
         amlive = true;
     }
 

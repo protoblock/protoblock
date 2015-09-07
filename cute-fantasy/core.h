@@ -81,5 +81,6 @@ Q_DECLARE_METATYPE(fantasybit::PlayerStatus)
 Q_DECLARE_METATYPE(vector<fantasybit::FantasyBitProj>)
 Q_DECLARE_METATYPE(fantasybit::Distribution)
 Q_DECLARE_METATYPE(fantasybit::FantasyNameHash)
+Q_DECLARE_METATYPE(fantasybit::FantasyNameBal)
 
 #endif // CORE_H

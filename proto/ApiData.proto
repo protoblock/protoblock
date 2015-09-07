@@ -10,7 +10,7 @@ message Distribution {
 	optional string teamid = 4;
 	optional int32 season = 5;
 	optional int32 week = 6;
-        optional int32 fantasy_nameid = 1;
+        optional uint64 fantasy_nameid = 1;
         optional string playerid = 3;
         optional int32 proj = 7;
         optional float award = 8;
