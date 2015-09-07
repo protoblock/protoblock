@@ -46,7 +46,7 @@ protected:
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
         if (data==NULL) return QVariant();
         if (column !=0) return QVariant();
-        QString text = QString("%1 @ %2 - %3");
+        QString text = QString("%1 @ %2");
         QString home,away;
         QString gametime;
         home =data->propertyValue<PropertyNames::Home>().toString();
@@ -63,7 +63,8 @@ protected:
             return QVariant();
         }
 
-        return text.arg(away).arg(home).arg(gametime);//dateTime_toFantasyString(gametime));
+        QString myt = text.arg(away).arg(home).leftJustified(9,' ');
+        return myt + QString(" - ")+ gametime;//dateTime_toFantasyString(gametime));
     }
 
     int getColumnCount() {
@@ -206,9 +207,9 @@ protected:
             if( column ==i++)
                 return data->propertyValue<PropertyNames::_2Pt>();
             if( column ==i++)
-                return data->propertyValue<PropertyNames::FG>();
+                return data->propertyValue<PropertyNames::PAT>();
             if( column ==i++)
-                return data->propertyValue<PropertyNames::FGyd>();
+                return data->propertyValue<PropertyNames::FG>();
             if( column ==i++)
                 return data->propertyValue<PropertyNames::D_TD>();
             if( column ==i++)
@@ -219,8 +220,6 @@ protected:
                 return data->propertyValue<PropertyNames::SFTY>();
             if( column ==i++)
                 return data->propertyValue<PropertyNames::D2pt>();
-            if( column ==i++)
-                return data->propertyValue<PropertyNames::D1pt>();
             if( column ==i++)
                 return data->propertyValue<PropertyNames::PtsA>();
 
@@ -289,7 +288,6 @@ private:
                                                     << " TO "
                                                     << "SFTY"
                                                     << "Def2pt"
-                                                    << "Def1pt"
                                                     << "PtsAlw";
             setBold(3,true);
             break;

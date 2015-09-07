@@ -113,7 +113,7 @@ void protobuf_AddDesc_ApiData_2eproto() {
     "meHash\022\014\n\004name\030\n \001(\t\022\014\n\004hash\030\036 \001(\004\"\243\001\n\014D"
     "istribution\022\016\n\006gameid\030\002 \001(\t\022\016\n\006teamid\030\004 "
     "\001(\t\022\016\n\006season\030\005 \001(\005\022\014\n\004week\030\006 \001(\005\022\026\n\016fan"
-    "tasy_nameid\030\001 \001(\005\022\020\n\010playerid\030\003 \001(\t\022\014\n\004p"
+    "tasy_nameid\030\001 \001(\004\022\020\n\010playerid\030\003 \001(\t\022\014\n\004p"
     "roj\030\007 \001(\005\022\r\n\005award\030\010 \001(\002\022\016\n\006result\030\t \001(\002", 240);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ApiData.proto", &protobuf_RegisterTypes);
@@ -430,7 +430,7 @@ void Distribution::SharedCtor() {
   teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   season_ = 0;
   week_ = 0;
-  fantasy_nameid_ = 0;
+  fantasy_nameid_ = GOOGLE_ULONGLONG(0);
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   proj_ = 0;
   award_ = 0;
@@ -491,7 +491,7 @@ void Distribution::Clear() {
     }
     season_ = 0;
     week_ = 0;
-    fantasy_nameid_ = 0;
+    fantasy_nameid_ = GOOGLE_ULONGLONG(0);
     if (has_playerid()) {
       if (playerid_ != &::google::protobuf::internal::kEmptyString) {
         playerid_->clear();
@@ -513,12 +513,12 @@ bool Distribution::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 fantasy_nameid = 1;
+      // optional uint64 fantasy_nameid = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &fantasy_nameid_)));
           set_has_fantasy_nameid();
         } else {
@@ -677,9 +677,9 @@ bool Distribution::MergePartialFromCodedStream(
 
 void Distribution::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional int32 fantasy_nameid = 1;
+  // optional uint64 fantasy_nameid = 1;
   if (has_fantasy_nameid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->fantasy_nameid(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->fantasy_nameid(), output);
   }
 
   // optional string gameid = 2;
@@ -742,9 +742,9 @@ void Distribution::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Distribution::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional int32 fantasy_nameid = 1;
+  // optional uint64 fantasy_nameid = 1;
   if (has_fantasy_nameid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->fantasy_nameid(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->fantasy_nameid(), target);
   }
 
   // optional string gameid = 2;
@@ -841,10 +841,10 @@ int Distribution::ByteSize() const {
           this->week());
     }
 
-    // optional int32 fantasy_nameid = 1;
+    // optional uint64 fantasy_nameid = 1;
     if (has_fantasy_nameid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->fantasy_nameid());
     }
 

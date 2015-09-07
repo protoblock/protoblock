@@ -27,29 +27,53 @@
     <item row="0" column="3">
      <widget class="QComboBox" name="pos"/>
     </item>
-    <item row="2" column="3">
-     <widget class="QCheckBox" name="rundataagent">
+    <item row="0" column="4">
+     <widget class="QComboBox" name="player"/>
+    </item>
+    <item row="0" column="7">
+     <widget class="QLabel" name="season">
       <property name="text">
-       <string>RUN</string>
+       <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1" colspan="2">
-     <widget class="QComboBox" name="gameID"/>
-    </item>
-    <item row="3" column="5">
-     <widget class="QPushButton" name="updatelb">
+    <item row="0" column="8">
+     <widget class="QLabel" name="week_3">
       <property name="text">
-       <string>UpdateLeaderBoard</string>
+       <string>Week</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="9">
-     <widget class="QPushButton" name="result">
+    <item row="0" column="9">
+     <widget class="QLabel" name="week">
       <property name="text">
-       <string>RESULT</string>
+       <string>0</string>
       </property>
      </widget>
+    </item>
+    <item row="0" column="10">
+     <widget class="QLabel" name="Live">
+      <property name="text">
+       <string>Not Live</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="11">
+     <widget class="QLabel" name="globalstate">
+      <property name="text">
+       <string>No State</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="claimname">
+      <property name="text">
+       <string>Claim Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" colspan="2">
+     <widget class="QLineEdit" name="FantassyNameIn"/>
     </item>
     <item row="1" column="4">
      <widget class="QComboBox" name="fantasynames"/>
@@ -61,22 +85,26 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="3">
-     <widget class="QCheckBox" name="allgames">
+    <item row="2" column="0">
+     <widget class="QPushButton" name="beoracle">
       <property name="text">
-       <string> All games</string>
+       <string>Be Oracle</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="4">
-     <widget class="QPushButton" name="GetTx">
+    <item row="2" column="1">
+     <widget class="QPushButton" name="nmeonic">
       <property name="text">
-       <string>GetTx</string>
+       <string>Test NM</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1" colspan="3">
-     <widget class="QLineEdit" name="FantassyNameIn"/>
+    <item row="2" column="3">
+     <widget class="QCheckBox" name="rundataagent">
+      <property name="text">
+       <string>RUN</string>
+      </property>
+     </widget>
     </item>
     <item row="2" column="4">
      <widget class="QLineEdit" name="projection"/>
@@ -95,70 +123,45 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="6">
-     <widget class="QLabel" name="season">
+    <item row="3" column="1">
+     <widget class="QComboBox" name="gameID"/>
+    </item>
+    <item row="3" column="3">
+     <widget class="QCheckBox" name="allgames">
       <property name="text">
-       <string>0</string>
+       <string> All games</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="8">
-     <widget class="QLabel" name="week">
+    <item row="3" column="4">
+     <widget class="QPushButton" name="GetTx">
       <property name="text">
-       <string>0</string>
+       <string>GetTx</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="4">
-     <widget class="QComboBox" name="player"/>
-    </item>
-    <item row="0" column="7">
-     <widget class="QLabel" name="week_3">
+    <item row="3" column="5" colspan="2">
+     <widget class="QPushButton" name="updatelb">
       <property name="text">
-       <string>Week</string>
+       <string>UpdateLeaderBoard</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="9">
-     <widget class="QLabel" name="Live">
+    <item row="3" column="10">
+     <widget class="QPushButton" name="result">
       <property name="text">
-       <string>Not Live</string>
+       <string>RESULT</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="claimname">
-      <property name="text">
-       <string>Claim Name</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QPushButton" name="beoracle">
-      <property name="text">
-       <string>Be Oracle</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QPushButton" name="nmeonic">
-      <property name="text">
-       <string>Test NM</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="10">
-     <widget class="QLabel" name="globalstate">
-      <property name="text">
-       <string>No State</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="8" colspan="3">
-     <widget class="QListWidget" name="awards"/>
+    <item row="4" column="0" colspan="3">
+     <widget class="QListWidget" name="staging_data"/>
     </item>
     <item row="4" column="3" colspan="3">
      <widget class="QListWidget" name="staging_tx"/>
+    </item>
+    <item row="4" column="6" colspan="6">
+     <widget class="QListWidget" name="awards"/>
     </item>
     <item row="5" column="0">
      <widget class="QComboBox" name="transitions"/>
@@ -180,11 +183,22 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0" colspan="3">
-     <widget class="QListWidget" name="staging_data"/>
+    <item row="5" column="3" colspan="2">
+     <widget class="QPushButton" name="Update_PLayers">
+      <property name="text">
+       <string>UPDATE PLAYERS</string>
+      </property>
+     </widget>
     </item>
-    <item row="6" column="0" colspan="3">
+    <item row="6" column="0" colspan="2">
      <widget class="QLineEdit" name="out"/>
+    </item>
+    <item row="6" column="2">
+     <widget class="QPushButton" name="MsgButton">
+      <property name="text">
+       <string>Message</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

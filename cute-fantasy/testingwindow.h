@@ -68,16 +68,22 @@ private slots:
 
     void on_nmeonic_clicked();
 
+    void on_MsgButton_clicked();
+
+    void on_Update_PLayers_clicked();
+
 private:
     MainLAPIWorker *  myCoreInstance;
     std::unordered_map<string,GameInfo> mGames;
     std::unordered_map<string,GameResult> mGameResult;
     std::unordered_map<string,GameRoster> mGameRoster;
     std::unordered_map<string,PlayerDetail> mPlayerDetail;
-
+    std::vector<PlayerData> myPlayerData;
     std::unordered_map<string,GameResult> mStagedGameResult;
+    int TestingWindow::randomNum(int num) ;
+        GameResult TestingWindow::fakeit(GameInfo &g);
 
-
+    MessageData myMessageData;
     std::unordered_map<string,::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward>>
     mRewards;
 

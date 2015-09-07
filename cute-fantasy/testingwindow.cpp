@@ -322,6 +322,14 @@ void TestingWindow::on_StageBlock_clicked() {
         }
         mStagedGameResult.clear();
 
+        d.set_type(Data_Type_MESSAGE);
+        if ( myMessageData.has_msg() ) {
+
+            d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
+            dt.add_data()->CopyFrom(d);
+            qDebug() << myMessageData.msg();
+            myMessageData.Clear();
+        }
 
         if ( !makeStageBlock(dt)) {
             ui->out->setText("error making block");
@@ -331,6 +339,15 @@ void TestingWindow::on_StageBlock_clicked() {
         else
             ui->SendBlock->setEnabled(true);
 
+
+        d.set_type(Data::PLAYER);
+        //PlayerData pd{};
+        for ( auto pd : myPlayerData ) {
+            d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
+            dt.add_data()->CopyFrom(d);
+            qDebug() << pd.DebugString();
+        }
+        myPlayerData.clear();
 
         //leveldb::Slice snum((char*)&mStagedBlockNum, sizeof(int));
         //Node::blockchain->Put(leveldb::WriteOptions(), snum, mStagedBlock);
@@ -458,6 +475,159 @@ int TestingWindow::realweek() {
     return ui->week->text().toInt();
 }
 
+
+GameResult TestingWindow::fakeit(GameInfo &g) {
+    GameRoster gamer = mGameRoster[g.id()];
+
+    GameResult gr{};
+    gr.set_gameid(g.id());
+    gr.set_kickofftime(gamer.info.time());
+
+    for (auto p : gamer.awayroster) {
+        PlayerResult pr;
+        pr.set_playerid(p.first);
+        Stats s{};
+        if ( p.second.base.position() == "QB") {
+            Ostats o;
+            o.set_passtd(randomNum(10) / 15);
+            o.set_passyds(randomNum(25) * (1+o.passtd()));
+            o.set_pint(randomNum(10) / 30);
+            o.set_fumble(randomNum(50) / 25 );
+            o.set_rushtd( randomNum(90) / 5);
+            o.set_rushyds( randomNum(0) / 6);
+            o.set_twopt( randomNum(94) / 6 );
+            s.mutable_ostats()->CopyFrom(o);
+        }
+        else if ( p.second.base.position() == "RB" ) {
+            Ostats o;
+            o.set_twopt( randomNum(94) / 6 );
+            o.set_rushtd( randomNum(80) / 5);
+            o.set_rushyds( randomNum(10) + o.rushtd() * 10);
+            o.set_rec(randomNum(50) / 7);
+            o.set_rectd(randomNum(90) / 5);
+            o.set_recyds(o.rec() * 10);
+            s.mutable_ostats()->CopyFrom(o);
+        }
+        else if ( p.second.base.position() == "WR" ) {
+            Ostats o;
+            o.set_twopt( randomNum(94) / 6 );
+            o.set_rushtd( randomNum(88) / 10);
+            o.set_rushyds( randomNum(92) + o.rushtd() * 20);
+            o.set_rectd(randomNum(80) / 5);
+            o.set_rec(randomNum(10) / 10 );
+            o.set_recyds(o.rec() * 10 + o.rectd() * 20);
+            s.mutable_ostats()->CopyFrom(o);
+        }
+        else if ( p.second.base.position() == "TE" ) {
+            Ostats o;
+            o.set_rectd(randomNum(80) / 10);
+            o.set_rec(randomNum(10) / 22);
+            o.set_recyds(o.rec() * 10 + o.rectd() * 20);
+            s.mutable_ostats()->CopyFrom(o);
+        }
+        else if ( p.second.base.position() == "K" ) {
+            Kstats k;
+            k.set_pa(randomNum(10) / 15);
+            for (int i=0;i<5;i++) {
+                int hit = (randomNum(50) / 4) * 5;
+                if ( hit == 0) break;
+
+                k.add_fg(hit);
+            }
+            s.mutable_kstats()->CopyFrom(k);
+        }
+        else if ( p.second.base.position() == "DEF") {
+            Dstats d{};
+            d.set_deftd(randomNum(90)/5);
+            d.set_ptsa(randomNum(13) / 2);
+            d.set_sacks(randomNum(50) / 4);
+            d.set_turnovers(randomNum(80)/5);
+            s.mutable_dstats()->CopyFrom(d);
+        }
+
+        pr.mutable_stats()->CopyFrom(s);
+        pr.set_result(GameStatsLoader::CalcResults(s));
+        gr.add_away_result()->CopyFrom(pr);
+    }
+
+    for (auto p : gamer.homeroster) {
+        PlayerResult pr;
+        pr.set_playerid(p.first);
+        Stats s{};
+        if ( p.second.base.position() == "QB") {
+            Ostats o;
+            o.set_passtd(randomNum(10) / 15);
+            o.set_passyds(randomNum(25) * (1+o.passtd()));
+            o.set_pint(randomNum(10) / 30);
+            o.set_fumble(randomNum(50) / 25 );
+            o.set_rushtd( randomNum(90) / 5);
+            o.set_rushyds( randomNum(0) / 6);
+            o.set_twopt( randomNum(94) / 6 );
+            s.mutable_ostats()->CopyFrom(o);
+        }
+        else if ( p.second.base.position() == "RB" ) {
+            Ostats o;
+            o.set_twopt( randomNum(94) / 6 );
+            o.set_rushtd( randomNum(80) / 5);
+            o.set_rushyds( randomNum(10) + o.rushtd() * 10);
+            o.set_rec(randomNum(50) / 7);
+            o.set_rectd(randomNum(90) / 5);
+            o.set_recyds(o.rec() * 10);
+            s.mutable_ostats()->CopyFrom(o);
+        }
+        else if ( p.second.base.position() == "WR" ) {
+            Ostats o;
+            o.set_twopt( randomNum(94) / 6 );
+            o.set_rushtd( randomNum(88) / 10);
+            o.set_rushyds( randomNum(92) + o.rushtd() * 20);
+            o.set_rectd(randomNum(80) / 5);
+            o.set_rec(randomNum(10) / 10 );
+            o.set_recyds(o.rec() * 10 + o.rectd() * 20);
+            s.mutable_ostats()->CopyFrom(o);
+        }
+        else if ( p.second.base.position() == "TE" ) {
+            Ostats o;
+            o.set_rectd(randomNum(80) / 10);
+            o.set_rec(randomNum(10) / 22);
+            o.set_recyds(o.rec() * 10 + o.rectd() * 20);
+            s.mutable_ostats()->CopyFrom(o);
+        }
+        else if ( p.second.base.position() == "K" ) {
+            Kstats k;
+            k.set_pa(randomNum(10) / 15);
+            for (int i=0;i<5;i++) {
+                int hit = (randomNum(50) / 4) * 5;
+                if ( hit == 0) break;
+
+                k.add_fg(hit);
+            }
+            s.mutable_kstats()->CopyFrom(k);
+        }
+        else if ( p.second.base.position() == "DEF") {
+            Dstats d{};
+            d.set_deftd(randomNum(90)/5);
+            d.set_ptsa(randomNum(93) / 2);
+            d.set_sacks(randomNum(50) / 4);
+            d.set_turnovers(randomNum(80)/5);
+            s.mutable_dstats()->CopyFrom(d);
+        }
+
+        pr.mutable_stats()->CopyFrom(s);
+        pr.set_result(GameStatsLoader::CalcResults(s));
+        gr.add_home_result()->CopyFrom(pr);
+    }
+
+    return gr;
+}
+
+int TestingWindow::randomNum(int num) {
+    int ret = (qrand() % 100) - num;
+    if ( ret < 0 ) ret = 0;
+
+    return ret;;
+
+}
+
 void TestingWindow::on_GetGameResult_clicked()
 {
     string gid = ui->gameID->currentData().toString().toStdString();
@@ -476,7 +646,8 @@ void TestingWindow::on_GetGameResult_clicked()
     if ( rsp != mStagedGameResult.end() )
         result = rsp->second;
     else {
-        result = dataagent::instance()->getGameResult(realweek(),itg->second);
+        //result = dataagent::instance()->getGameResult(realweek(),itg->second);
+        result = fakeit(itg->second);
         mStagedGameResult[gid] = result;
     }
 
@@ -507,7 +678,6 @@ void TestingWindow::on_GetGameResult_clicked()
     }
 
 }
-
 
 void TestingWindow::on_updatelb_clicked()
 {
@@ -560,7 +730,6 @@ void TestingWindow::on_rundataagent_toggled(bool checked)
         timer->start(5000);
 
 }
-
 
 void TestingWindow::on_SendBlock_clicked() {
     if (!ui->SendBlock->isEnabled())
@@ -617,14 +786,23 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     else return false;
 }
 
-
-
-
-void TestingWindow::on_nmeonic_clicked()
-{
+void TestingWindow::on_nmeonic_clicked() {
     auto mfn = dataagent::instance()->importMnemonic(ui->FantassyNameIn->text().toStdString());
     ui->out->setText(QString::fromStdString(MyNameStatus_Name(mfn.status())));
     if ( mfn.status() == MyNameStatus::confirmed)
         ui->FantassyNameIn->setText(QString::fromStdString(mfn.name()));
+
+}
+
+void TestingWindow::on_MsgButton_clicked() {
+
+    myMessageData.set_msg(ui->out->text().toStdString());
+}
+
+void TestingWindow::on_Update_PLayers_clicked()
+{
+    PlayerLoaderTR playerloader;
+
+    myPlayerData = playerloader.loadPlayersFromTradeRadar(false);
 
 }

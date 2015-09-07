@@ -227,12 +227,12 @@ class Distribution : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 week() const;
   inline void set_week(::google::protobuf::int32 value);
 
-  // optional int32 fantasy_nameid = 1;
+  // optional uint64 fantasy_nameid = 1;
   inline bool has_fantasy_nameid() const;
   inline void clear_fantasy_nameid();
   static const int kFantasyNameidFieldNumber = 1;
-  inline ::google::protobuf::int32 fantasy_nameid() const;
-  inline void set_fantasy_nameid(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint64 fantasy_nameid() const;
+  inline void set_fantasy_nameid(::google::protobuf::uint64 value);
 
   // optional string playerid = 3;
   inline bool has_playerid() const;
@@ -294,8 +294,8 @@ class Distribution : public ::google::protobuf::Message {
   ::std::string* teamid_;
   ::google::protobuf::int32 season_;
   ::google::protobuf::int32 week_;
+  ::google::protobuf::uint64 fantasy_nameid_;
   ::std::string* playerid_;
-  ::google::protobuf::int32 fantasy_nameid_;
   ::google::protobuf::int32 proj_;
   float award_;
   float result_;
@@ -597,7 +597,7 @@ inline void Distribution::set_week(::google::protobuf::int32 value) {
   week_ = value;
 }
 
-// optional int32 fantasy_nameid = 1;
+// optional uint64 fantasy_nameid = 1;
 inline bool Distribution::has_fantasy_nameid() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -608,13 +608,13 @@ inline void Distribution::clear_has_fantasy_nameid() {
   _has_bits_[0] &= ~0x00000010u;
 }
 inline void Distribution::clear_fantasy_nameid() {
-  fantasy_nameid_ = 0;
+  fantasy_nameid_ = GOOGLE_ULONGLONG(0);
   clear_has_fantasy_nameid();
 }
-inline ::google::protobuf::int32 Distribution::fantasy_nameid() const {
+inline ::google::protobuf::uint64 Distribution::fantasy_nameid() const {
   return fantasy_nameid_;
 }
-inline void Distribution::set_fantasy_nameid(::google::protobuf::int32 value) {
+inline void Distribution::set_fantasy_nameid(::google::protobuf::uint64 value) {
   set_has_fantasy_nameid();
   fantasy_nameid_ = value;
 }
