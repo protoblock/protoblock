@@ -76,10 +76,11 @@ public:
     }
 
     bool isColumnVisible(const QString & columnHeader){
-        for(int j=0;j<myColumnsState.size();j++)
-            if (myColumnsState[j].first == columnHeader)
-                return myColumnsState[j].second;
-        return false;
+		for (int j = 0; j < myColumnsState.size(); j++) {
+			if (myColumnsState[j].first == columnHeader)
+				return myColumnsState[j].second;
+		}
+		return false;
     }
 
     void setColumnVisible(const QString & columnHeader,bool on){
@@ -93,8 +94,12 @@ public:
         int countVisibleColumns=-1;
         for(int j=0;j<myColumnsState.size();j++){
             if (myColumnsState[j].second) countVisibleColumns++;
-            if (myColumnsState[j].first == columnHeader)
-                return countVisibleColumns;
+			if (myColumnsState[j].first == columnHeader){
+				if (myColumnsState[j].second)
+					return countVisibleColumns;
+				else
+					return -1;
+			}
         }
         return -1;
     }
