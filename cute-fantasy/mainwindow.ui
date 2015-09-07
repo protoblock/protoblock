@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>962</width>
-    <height>607</height>
+    <width>985</width>
+    <height>637</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -263,13 +263,52 @@
          </widget>
         </item>
         <item row="2" column="0" colspan="4">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="3">
+         <widget class="QLineEdit" name="myClamNewNameLE">
+          <property name="statusTip">
+           <string>Enter a new fantasy name and click claim to request a new one</string>
+          </property>
+          <property name="inputMask">
+           <string/>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Claim new Fantasy Name </string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QToolButton" name="myClaimFantasyNameButton">
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Claim</string>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::NoArrow</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="4">
          <widget class="Line" name="line">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="5" column="0">
          <widget class="QLabel" name="label">
           <property name="font">
            <font>
@@ -286,7 +325,7 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0" colspan="4">
+        <item row="6" column="0" colspan="4">
          <widget class="QTableView" name="myLeaderBaordTableView">
           <property name="frameShape">
            <enum>QFrame::Box</enum>
@@ -308,45 +347,6 @@
           </attribute>
          </widget>
         </item>
-        <item row="5" column="0" colspan="4">
-         <widget class="Line" name="line_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0" colspan="3">
-         <widget class="QLineEdit" name="myClamNewNameLE">
-          <property name="statusTip">
-           <string>Enter a new fantasy name and click claim to request a new one</string>
-          </property>
-          <property name="inputMask">
-           <string/>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="placeholderText">
-           <string>Claim new Fantasy Name </string>
-          </property>
-          <property name="clearButtonEnabled">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="3">
-         <widget class="QToolButton" name="myClaimFantasyNameButton">
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string>Claim</string>
-          </property>
-          <property name="arrowType">
-           <enum>Qt::NoArrow</enum>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
      </widget>
@@ -358,7 +358,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>962</width>
+     <width>985</width>
      <height>21</height>
     </rect>
    </property>

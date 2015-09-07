@@ -308,6 +308,7 @@ void MainWindow::OnNameStatus(MyFantasyName name){
 
         QVariant balance;
         QString fname = myCurrentFantasyName.name().data();
+        DataCache::instance()->refreshLeaderboard();
         DataCache::instance()->leaderBoardModel().itemPropertyValue<PropertyNames::Balance>(fname,balance);
         ui->myBalanceText->setText(QString("%1").arg(balance.toDouble()));
 
@@ -324,14 +325,16 @@ void MainWindow::OnNameBalance(fantasybit::FantasyNameBal & balance) {
     qDebug()<< "received balance for " << balance.name() << " : " << balance.bits();
     if (myCurrentFantasyName.name()==balance.name())
         ui->myBalanceText->setText(QString("%1").arg(balance.bits()));
+    DataCache::instance()->refreshLeaderboard();
 }
 
 void MainWindow::OnNewWeek(int week){
     qDebug() << "OnNewWeek :" << week;
+    DataCache::instance()->refreshLeaderboard();
 }
 
 void MainWindow::OnGameOver(string gameId){
-    qDebug() << "OnGameOver :" << gameId;
+    qDebug() << "OnGameOver :" << gameId;    
 }
 
 void MainWindow::OnGameStart(string gameId){

@@ -39,8 +39,7 @@ public:
 
     }
 
-    void refreshLeaderboard(){
-        if (myLeaderboardDataUpdated) return;
+    void refreshLeaderboard(){        
         myLeaderBoardData = DataService::instance()->GetLeaderBoard();
         myLeaderBoardTableModel.removeAll();
         for(std::shared_ptr<fantasybit::FantasyName> & fPlayer  : myLeaderBoardData) {
@@ -48,9 +47,14 @@ public:
             myLeaderBoardTableModel.updateItemProperty<PropertyNames::Fantasy_Name>(fantasyPlayerName,fantasyPlayerName);
             myLeaderBoardTableModel.updateItemProperty<PropertyNames::Balance>(fantasyPlayerName,fPlayer->getBalance());
         }
-        myLeaderboardDataUpdated = true;
+		myLeaderboardDataUpdated = true;
     }
-    LeaderBoardTableModel & leaderBoardModel() { return myLeaderBoardTableModel; }
+    LeaderBoardTableModel & leaderBoardModel() { 
+		//getting leaderboard model in the first call of this function 
+		// need an explicit refresh 
+		if (!myLeaderboardDataUpdated) refreshLeaderboard();
+		return myLeaderBoardTableModel; 
+	}
 
     void getWeeklySchedule(int week,fantasybit::WeeklySchedule & schedule){
         std::unordered_map<uint,fantasybit::WeeklySchedule>::const_iterator found =
