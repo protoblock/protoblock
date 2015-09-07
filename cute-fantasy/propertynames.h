@@ -47,7 +47,6 @@ namespace PropertyNames {
     ENUMITEM(_2Pt)
     ENUMITEM(PAT)
     ENUMITEM(FG)
-    ENUMITEM(FGyd)
     ENUMITEM(D_TD)
     ENUMITEM(Sack)
     ENUMITEM(TA)

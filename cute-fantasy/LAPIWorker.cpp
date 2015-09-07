@@ -355,22 +355,34 @@ void MainLAPIWorker::OnProjTX(vector<fantasybit::FantasyBitProj> vinp) {
 
 //tx status
 void MainLAPIWorker::OnFoundName(string name) {
-    if (myCurrentName.name() == name)
-        myCurrentName.set_status(MyNameStatus::confirmed);
+    if ( !myCurrentName.has_name())
+        myCurrentName.set_name(name);
 
-    auto it = myfantasynames.find(name);
-    if ( it == end(myfantasynames)) {
-        myfantasynames = agent.getMyNamesStatus();
-        it = myfantasynames.find(name);
-    }
+    if (myCurrentName.name() == name) {
+        if ( !agent.UseName(name) ) {
+            myCurrentName.set_status(MyNameStatus::notavil);
+            namedata.UnSubscribe(name);
+            emit NameStatus(myCurrentName);
+            myCurrentName.Clear();
+            return;
+        }
+        else {
+            MyFantasyName mfn = agent.getCurrentNamesStatus();
+            myCurrentName.set_status(mfn.status());
+            if (myCurrentName.status() == MyNameStatus::none )
+                myCurrentName.set_status(MyNameStatus::notavil);
+            if ( myCurrentName.status() ==  MyNameStatus::notavil ) {
+                namedata.UnSubscribe(name);
+                emit NameStatus(myCurrentName);
+                myCurrentName.Clear();
+                return;
+            }
+            else {
+                emit NameStatus(myCurrentName);
+            }
+        }
 
-    if ( it != end(myfantasynames)) {
-        it->second.set_status(MyNameStatus::confirmed);
-        qDebug() << "NameStatus(it->second)" << it->second.DebugString();
-        emit NameStatus(it->second);
-    }
-    else {
-        qWarning() << "it != end(myfantasynames)";
+        return;
     }
 }
 
