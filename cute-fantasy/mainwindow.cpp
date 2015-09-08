@@ -40,8 +40,8 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(GlobalStateChange(fantasybit::GlobalState)),
                      this,SLOT(GlobalStateChange(fantasybit::GlobalState)));
 
-    QObject::connect(myLAPIWorker,SIGNAL(MyNames(vector<fantasybit::MyFantasyName>)),
-                     this,SLOT(OnMyFantasyNames(vector<fantasybit::MyFantasyName>)));
+   // QObject::connect(myLAPIWorker,SIGNAL(MyNames(vector<fantasybit::MyFantasyName>)),
+    //                 this,SLOT(OnMyFantasyNames(vector<fantasybit::MyFantasyName>)));
 
 
     QObject::connect(this,SIGNAL(UseMyFantasyName(QString)),myLAPIWorker,SLOT(OnUseName(QString)));
@@ -225,6 +225,7 @@ void MainWindow::navigateToWeek(int week)
         nextWeek();
 }
 
+/*
 void MainWindow::OnMyFantasyNames(vector<fantasybit::MyFantasyName> names){
     if (names.size()> 0){
         for(int i=0;i<names.size();i++){
@@ -236,64 +237,49 @@ void MainWindow::OnMyFantasyNames(vector<fantasybit::MyFantasyName> names){
             myAddNamesPending = false;
 
         }        
+        myCurrentFantasyName = names.at(names.size()-1);
         ui->myFantasyNamesCombo->setCurrentIndex(names.size()-1);
+        emit UseMyFantasyName(ui->myFantasyNamesCombo->currentText());
+        qDebug() << " setting name " << ui->myFantasyNamesCombo->currentText();
+
     }
 }
+*/
 
 void MainWindow::OnNameStatus(MyFantasyName name){
 
-    qDebug() << "OnNameStatus :" << name.name();
-    // get cached FanatasyName from the combox box whicch
-    // serves as a model store here using itemData property.
-    // this is an exact match case sensitive search
-    int nameIndex = ui->myFantasyNamesCombo->findText(QString(name.name().data()));
-    QString stringName = QString(name.name().data());
-    QVariant newItemData= qVariantFromValue(name);
-    fantasybit::MyNameStatus newStatus = name.status();
-	//HACK : !!!!!!! Name comes a none right after requesting it.
-	if (newStatus == fantasybit::none) name.set_status(fantasybit::requested);
-
-    //if we receive a name that is not in the combobox
-    //(i.e we didn't  received with OnMyFantasyNames slot.
-    if (nameIndex  == -1){        
-        myAddNamesPending = true;
-        ui->myFantasyNamesCombo->addItem(stringName,newItemData);
-        myAddNamesPending = false;
-    }    
-
-    //update the cached name
-    ui->myFantasyNamesCombo->setItemData(nameIndex,qVariantFromValue(name));
-
-    //check if it's current to refresh the status label
-    bool isCurrent = myCurrentFantasyName.name()== name.name();
-
-    if (isCurrent){		
-		myCurrentFantasyName = name;
-        // update the status label if we received an update on the current name
-        // and update the  class member myCurrentFantasyName
-        switch (newStatus) {
-        case fantasybit::confirmed:
-            ui->myFantasyNameStatusLabel->setText("Confirmed");
-            break;
-        case fantasybit::requested:
-            ui->myFantasyNameStatusLabel->setText("Requested");
-            break;
-        case fantasybit::notavil:
-            ui->myFantasyNameStatusLabel->setText("Not Available");
-            break;
-        case fantasybit::transaction_sent:
-            ui->myFantasyNameStatusLabel->setText("Transaction sent");
-            break;		
-        case fantasybit::none:
-            ui->myFantasyNameStatusLabel->setText("none");
-            break;
-        }
-		DataCache::instance()->refreshLeaderboard();
-		QString fname = myCurrentFantasyName.name().data();
-		QVariant balance;
-		DataCache::instance()->leaderBoardModel().itemPropertyValue<PropertyNames::Balance>(fname, balance);
-		ui->myBalanceText->setText(QString("%1").arg(balance.toDouble()));
+    if ( myCurrentFantasyName.name() != name.name() ) {
+        myCurrentFantasyName = name;
+        QVariant balance;
+        QString fname = myCurrentFantasyName.name().data();
+        DataCache::instance()->refreshLeaderboard();
+        DataCache::instance()->leaderBoardModel().itemPropertyValue<PropertyNames::Balance>(fname,balance);
+        ui->myBalanceText->setText(QString("%1").arg(balance.toDouble()));
+        ui->myCurrentWeekWidget->onUserSwitchFantasyName(myCurrentFantasyName.name());
     }
+
+
+    ui->myClamNewNameLE->setText(name.name().data());
+
+    switch (name.status()) {
+    case fantasybit::confirmed:
+        ui->myFantasyNameStatusLabel->setText("Confirmed");
+        break;
+    case fantasybit::requested:
+        ui->myFantasyNameStatusLabel->setText("Requested");
+        break;
+    case fantasybit::notavil:
+        ui->myFantasyNameStatusLabel->setText("Not Available");
+        break;
+    case fantasybit::transaction_sent:
+        ui->myFantasyNameStatusLabel->setText("Transaction sent");
+        break;
+    case fantasybit::none:
+        ui->myFantasyNameStatusLabel->setText("none");
+        break;
+    }
+    qDebug() << "5 OnNameStatus :" << name.DebugString();
+
 }
 
 void MainWindow::OnProjAck(fantasybit::FantasyBitProj projection){
@@ -322,55 +308,22 @@ void MainWindow::OnGameStart(string gameId){
     ui->myCurrentWeekWidget->onGameStart(gameId);
 }
 
-
-void MainWindow::on_myFantasyNamesCombo_currentIndexChanged(int index)
-{
-    if (myAddNamesPending) return;
-
-    QVariant vFname = ui->myFantasyNamesCombo->itemData(index);
-    MyFantasyName choosenFantasyName = vFname.value<MyFantasyName>();    
-    myCurrentFantasyName = choosenFantasyName;
-    //update status label
-    switch (myCurrentFantasyName.status()) {
-    case fantasybit::confirmed:
-        ui->myFantasyNameStatusLabel->setText("Confirmed");
-        break;
-    case fantasybit::requested:
-        ui->myFantasyNameStatusLabel->setText("Requested");
-        break;
-    case fantasybit::notavil:
-        ui->myFantasyNameStatusLabel->setText("Not Available");
-        break;
-    case fantasybit::none:
-        ui->myFantasyNameStatusLabel->setText("None");
-        break;
-    default:
-        break;
-    }
-
-    //update balance
-    QVariant balance;
-    QString fname = myCurrentFantasyName.name().data();
-    DataCache::instance()->refreshLeaderboard();
-    DataCache::instance()->leaderBoardModel().itemPropertyValue<PropertyNames::Balance>(fname,balance);
-    ui->myBalanceText->setText(QString("%1").arg(balance.toDouble()));
-    ui->myCurrentWeekWidget->onUserSwitchFantasyName(myCurrentFantasyName.name());
-    emit UseMyFantasyName(QString(myCurrentFantasyName.name().data()));
-} 
-
 void MainWindow::on_myClaimFantasyNameButton_clicked()
 {    
     QString name = ui->myClamNewNameLE->text().trimmed();
-	ui->myClamNewNameLE->setText("");
-	MyFantasyName newName;
-	newName.set_status(fantasybit::requested);
-	newName.set_name(name.toStdString());	
-	myCurrentFantasyName = newName;
-	myAddNamesPending = true;
-    ui->myFantasyNamesCombo->addItem(name,qVariantFromValue(newName));  
-	myAddNamesPending = false;
+    if ( myCurrentFantasyName.name() != name.toStdString() ) {
+        QVariant balance;
+        DataCache::instance()->refreshLeaderboard();
+        DataCache::instance()->leaderBoardModel().itemPropertyValue<PropertyNames::Balance>(name,balance);
+        ui->myBalanceText->setText(QString("%1").arg(balance.toDouble()));
+        ui->myCurrentWeekWidget->onUserSwitchFantasyName(name.toStdString());
+    }
+
+    MyFantasyName newName;
+    newName.set_status(fantasybit::requested);
+    newName.set_name(name.toStdString());
+    myCurrentFantasyName = newName;
     emit ClaimFantasyName(name);
-	on_myFantasyNamesCombo_currentIndexChanged(ui->myFantasyNamesCombo->currentIndex());    
 }
 
 void MainWindow::OnPlayerStatusChange(pair<string, fantasybit::PlayerStatus> in){
@@ -380,7 +333,6 @@ void MainWindow::OnPlayerStatusChange(pair<string, fantasybit::PlayerStatus> in)
 void MainWindow::onSendFantasyNameProjection(QString fantasyName){
     ui->myCurrentWeekWidget->onSendFantasyNameProjection(fantasyName.toStdString());
 }
-
 
 void MainWindow::leaderboardCliked(const QModelIndex &index){
     LeaderBoardTableModel * leaderboardModel = & DataCache::instance()->leaderBoardModel();

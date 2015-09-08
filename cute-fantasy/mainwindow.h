@@ -48,7 +48,7 @@ public slots:
     void on_myPreviousWeek_clicked();
     void GoLive(fantasybit::GlobalState state);
     void GlobalStateChange(fantasybit::GlobalState state);
-    void OnMyFantasyNames(vector<fantasybit::MyFantasyName> names);
+    //void OnMyFantasyNames(vector<fantasybit::MyFantasyName> names);
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj projection);
     //void OnAward(QVariant);
@@ -61,7 +61,7 @@ public slots:
     void leaderboardCliked(const QModelIndex & index);
 
 private slots:
-    void on_myFantasyNamesCombo_currentIndexChanged(int index);
+    //void on_myFantasyNamesCombo_currentIndexChanged(int index);
     void on_myClaimFantasyNameButton_clicked();
     void refreshLeaderBoard();
     void showLeaderboardContextualMenu(const QPoint & point);
