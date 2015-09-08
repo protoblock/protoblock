@@ -351,12 +351,15 @@ void MainWindow::on_myFantasyNamesCombo_currentIndexChanged(int index)
 } 
 
 void MainWindow::on_myClaimFantasyNameButton_clicked()
-{	
-	QString name = ui->myClamNewNameLE->text().trimmed();
+{
+    QString name = ui->myClamNewNameLE->text().trimmed();
+    if (name.isEmpty()) return;
+
 	if (myFantasyNames.keys().contains(name)){
 		QMessageBox::warning(this, APPLICATION_NAME, QString("You have already claimed the name : %1").arg(name));
 		return;
 	}
+
 	qDebug() << "Claiming new name " << name;
 	ui->myClamNewNameLE->setText("");
     MyFantasyName * newName = new MyFantasyName();
