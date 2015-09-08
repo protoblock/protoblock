@@ -238,13 +238,15 @@ void MainLAPIWorker::OnGetMyNames() {
 
 
     qDebug() << " MyNames(my)";
-    //emit MyNames(my);
+    emit MyNames(my);
+	/*
     if ( my.size() > 0 )  {
         myCurrentName = my.at(my.size()-1);
         agent.UseName(myCurrentName.name());
         emit NameStatus(myCurrentName);
         namedata.Subscribe(myCurrentName.name());
     }
+	*/
 }
 
 //from Gui

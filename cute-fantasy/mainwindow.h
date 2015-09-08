@@ -48,7 +48,7 @@ public slots:
     void on_myPreviousWeek_clicked();
     void GoLive(fantasybit::GlobalState state);
     void GlobalStateChange(fantasybit::GlobalState state);
-    //void OnMyFantasyNames(vector<fantasybit::MyFantasyName> names);
+    void OnMyFantasyNames(vector<fantasybit::MyFantasyName> names);
     void OnNameStatus(fantasybit::MyFantasyName name);
     void OnProjAck(fantasybit::FantasyBitProj projection);
     //void OnAward(QVariant);
@@ -61,7 +61,7 @@ public slots:
     void leaderboardCliked(const QModelIndex & index);
 
 private slots:
-    //void on_myFantasyNamesCombo_currentIndexChanged(int index);
+    void on_myFantasyNamesCombo_currentIndexChanged(int index);
     void on_myClaimFantasyNameButton_clicked();
     void refreshLeaderBoard();
     void showLeaderboardContextualMenu(const QPoint & point);
@@ -80,6 +80,22 @@ private:
     void previousWeek();
     void currentWeek();
     void navigateToWeek(int week);
+    void setCurrentFantasyName(fantasybit::MyFantasyName * fantasyName,bool useName);
+
+	QString translateNameStatus(fantasybit::MyNameStatus status) const {
+		switch (status) {
+		case fantasybit::confirmed:
+			return QString("Confirmed");			
+		case fantasybit::requested:
+			return QString("Requested");			
+		case fantasybit::notavil:
+			return QString("Not Available");
+		case fantasybit::transaction_sent:
+			return QString("Transaction sent");			
+		case fantasybit::none:
+			return QString("none");			
+		}
+	}
 
     MainLAPIWorker *  myLAPIWorker;
     Ui::MainWindow *ui;    
@@ -89,7 +105,8 @@ private:
     WaitModalDialog myWaitDialog;
     bool myAddNamesPending= false;
     QTimer myLeaderBoardTimer; 
-    bool myIamLive = false;       
+    bool myIamLive = false;    
+	QMap<QString, fantasybit::MyFantasyName *> myFantasyNames;
 };
 
 #endif // MAINWINDOW_H
