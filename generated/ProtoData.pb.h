@@ -45,6 +45,7 @@ class OutData;
 class InData;
 class NameProof;
 class TweetProof;
+class MasterProof;
 class Transaction;
 class NameTrans;
 class SignedTransaction;
@@ -115,11 +116,12 @@ inline bool InData_Type_Parse(
 enum NameProof_Type {
   NameProof_Type_POW = 1,
   NameProof_Type_TWEET = 2,
-  NameProof_Type_ORACLE = 3
+  NameProof_Type_ORACLE = 3,
+  NameProof_Type_MASTER = 4
 };
 bool NameProof_Type_IsValid(int value);
 const NameProof_Type NameProof_Type_Type_MIN = NameProof_Type_POW;
-const NameProof_Type NameProof_Type_Type_MAX = NameProof_Type_ORACLE;
+const NameProof_Type NameProof_Type_Type_MAX = NameProof_Type_MASTER;
 const int NameProof_Type_Type_ARRAYSIZE = NameProof_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* NameProof_Type_descriptor();
@@ -1199,6 +1201,7 @@ class NameProof : public ::google::protobuf::Message {
   static const Type POW = NameProof_Type_POW;
   static const Type TWEET = NameProof_Type_TWEET;
   static const Type ORACLE = NameProof_Type_ORACLE;
+  static const Type MASTER = NameProof_Type_MASTER;
   static inline bool Type_IsValid(int value) {
     return NameProof_Type_IsValid(value);
   }
@@ -1341,6 +1344,129 @@ class TweetProof : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static TweetProof* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class MasterProof : public ::google::protobuf::Message {
+ public:
+  MasterProof();
+  virtual ~MasterProof();
+
+  MasterProof(const MasterProof& from);
+
+  inline MasterProof& operator=(const MasterProof& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MasterProof& default_instance();
+
+  void Swap(MasterProof* other);
+
+  // implements Message ----------------------------------------------
+
+  MasterProof* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MasterProof& from);
+  void MergeFrom(const MasterProof& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string season = 10;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 10;
+  inline const ::std::string& season() const;
+  inline void set_season(const ::std::string& value);
+  inline void set_season(const char* value);
+  inline void set_season(const char* value, size_t size);
+  inline ::std::string* mutable_season();
+  inline ::std::string* release_season();
+  inline void set_allocated_season(::std::string* season);
+
+  // optional int32 week = 20;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 20;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
+  // optional int32 timestamp = 21;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 21;
+  inline ::google::protobuf::int32 timestamp() const;
+  inline void set_timestamp(::google::protobuf::int32 value);
+
+  // optional .fantasybit.SignedTransaction new_oracle_name = 66;
+  inline bool has_new_oracle_name() const;
+  inline void clear_new_oracle_name();
+  static const int kNewOracleNameFieldNumber = 66;
+  inline const ::fantasybit::SignedTransaction& new_oracle_name() const;
+  inline ::fantasybit::SignedTransaction* mutable_new_oracle_name();
+  inline ::fantasybit::SignedTransaction* release_new_oracle_name();
+  inline void set_allocated_new_oracle_name(::fantasybit::SignedTransaction* new_oracle_name);
+
+  static const int kMasterProofFieldNumber = 401;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::NameProof,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::MasterProof >, 11, false >
+    master_proof;
+  // @@protoc_insertion_point(class_scope:fantasybit.MasterProof)
+ private:
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
+  inline void set_has_new_oracle_name();
+  inline void clear_has_new_oracle_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* season_;
+  ::google::protobuf::int32 week_;
+  ::google::protobuf::int32 timestamp_;
+  ::fantasybit::SignedTransaction* new_oracle_name_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static MasterProof* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -5134,6 +5260,162 @@ inline void TweetProof::set_allocated_tweet(::std::string* tweet) {
   } else {
     clear_has_tweet();
     tweet_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// MasterProof
+
+// optional string season = 10;
+inline bool MasterProof::has_season() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void MasterProof::set_has_season() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void MasterProof::clear_has_season() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void MasterProof::clear_season() {
+  if (season_ != &::google::protobuf::internal::kEmptyString) {
+    season_->clear();
+  }
+  clear_has_season();
+}
+inline const ::std::string& MasterProof::season() const {
+  return *season_;
+}
+inline void MasterProof::set_season(const ::std::string& value) {
+  set_has_season();
+  if (season_ == &::google::protobuf::internal::kEmptyString) {
+    season_ = new ::std::string;
+  }
+  season_->assign(value);
+}
+inline void MasterProof::set_season(const char* value) {
+  set_has_season();
+  if (season_ == &::google::protobuf::internal::kEmptyString) {
+    season_ = new ::std::string;
+  }
+  season_->assign(value);
+}
+inline void MasterProof::set_season(const char* value, size_t size) {
+  set_has_season();
+  if (season_ == &::google::protobuf::internal::kEmptyString) {
+    season_ = new ::std::string;
+  }
+  season_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* MasterProof::mutable_season() {
+  set_has_season();
+  if (season_ == &::google::protobuf::internal::kEmptyString) {
+    season_ = new ::std::string;
+  }
+  return season_;
+}
+inline ::std::string* MasterProof::release_season() {
+  clear_has_season();
+  if (season_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = season_;
+    season_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void MasterProof::set_allocated_season(::std::string* season) {
+  if (season_ != &::google::protobuf::internal::kEmptyString) {
+    delete season_;
+  }
+  if (season) {
+    set_has_season();
+    season_ = season;
+  } else {
+    clear_has_season();
+    season_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 week = 20;
+inline bool MasterProof::has_week() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void MasterProof::set_has_week() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void MasterProof::clear_has_week() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void MasterProof::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 MasterProof::week() const {
+  return week_;
+}
+inline void MasterProof::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional int32 timestamp = 21;
+inline bool MasterProof::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void MasterProof::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void MasterProof::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void MasterProof::clear_timestamp() {
+  timestamp_ = 0;
+  clear_has_timestamp();
+}
+inline ::google::protobuf::int32 MasterProof::timestamp() const {
+  return timestamp_;
+}
+inline void MasterProof::set_timestamp(::google::protobuf::int32 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+}
+
+// optional .fantasybit.SignedTransaction new_oracle_name = 66;
+inline bool MasterProof::has_new_oracle_name() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void MasterProof::set_has_new_oracle_name() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void MasterProof::clear_has_new_oracle_name() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void MasterProof::clear_new_oracle_name() {
+  if (new_oracle_name_ != NULL) new_oracle_name_->::fantasybit::SignedTransaction::Clear();
+  clear_has_new_oracle_name();
+}
+inline const ::fantasybit::SignedTransaction& MasterProof::new_oracle_name() const {
+  return new_oracle_name_ != NULL ? *new_oracle_name_ : *default_instance_->new_oracle_name_;
+}
+inline ::fantasybit::SignedTransaction* MasterProof::mutable_new_oracle_name() {
+  set_has_new_oracle_name();
+  if (new_oracle_name_ == NULL) new_oracle_name_ = new ::fantasybit::SignedTransaction;
+  return new_oracle_name_;
+}
+inline ::fantasybit::SignedTransaction* MasterProof::release_new_oracle_name() {
+  clear_has_new_oracle_name();
+  ::fantasybit::SignedTransaction* temp = new_oracle_name_;
+  new_oracle_name_ = NULL;
+  return temp;
+}
+inline void MasterProof::set_allocated_new_oracle_name(::fantasybit::SignedTransaction* new_oracle_name) {
+  delete new_oracle_name_;
+  new_oracle_name_ = new_oracle_name;
+  if (new_oracle_name) {
+    set_has_new_oracle_name();
+  } else {
+    clear_has_new_oracle_name();
   }
 }
 

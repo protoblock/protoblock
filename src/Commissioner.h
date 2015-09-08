@@ -29,14 +29,10 @@ class Commissioner
 
 
 public:
-	Commissioner() {
-	}
+	Commissioner() {	}
 
     static std::recursive_mutex name_mutex;
 
-    //void stop() { running = false; }
-			
-	//static std::string m_genesis_id;
 	static fc::ecc::public_key_data GENESIS_PUB_KEY;
     static bool isAliasAvailable(alias_t alias)
     {
@@ -95,8 +91,11 @@ public:
 		return pfn;
 	}
 
+    static std::string FantasyMasterName() { return "FantasyMaster"; }
     static std::string FantasyAgentName() { return "FantasyAgent"; }
 
+
+/*
 
     //static SignedBlock GenesisBlock;
     static SignedTransaction makeGenesisName() {
@@ -122,8 +121,58 @@ public:
 
 		return st;
 	}
+*/
+
+    static SignedTransaction makeAgentName(FantasyAgent &agent,SignedTransaction agentname) {
+        //make and sign "FantasyAgent" name transaction
+
+
+        MasterProof mp{};
+        mp.set_season("2105");
+        mp.set_week(1);
+        mp.set_timestamp(1441676880); // 9/8/2015 1:47:28
+        mp.mutable_new_oracle_name()->CopyFrom(agentname);
+
+        NameProof np{};
+        np.set_type(NameProof_Type_MASTER);
+        np.MutableExtension(MasterProof::master_proof)->CopyFrom(mp);
+
+        NameTrans nt = agentname.trans().GetExtension(NameTrans::name_trans);
+
+        NameTrans nametrans{};
+        nametrans.set_public_key(nt.public_key());
+        nametrans.set_fantasy_name(nt.fantasy_name());
+        nametrans.mutable_proof()->CopyFrom(np);
+
+        Transaction trans{};
+        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_type(TransType::NAME);
+        trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
+
+        auto st = agent.makeSigned(trans);
+        return st;
+    }
 
     static SignedTransaction makeGenesisName(FantasyAgent &agent) {
+        //make and sign "FantasyAgent" name transaction
+        NameProof nameproof{};
+        nameproof.set_type(NameProof_Type_ORACLE);
+
+        NameTrans nametrans{};
+        nametrans.set_public_key(agent.pubKeyStr());
+        nametrans.set_fantasy_name(FantasyMasterName());
+        nametrans.mutable_proof()->CopyFrom(nameproof);
+
+        Transaction trans{};
+        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_type(TransType::NAME);
+        trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
+
+        auto st = agent.makeSigned(trans);
+        return st;
+    }
+
+    static SignedTransaction makeFantasyAgent(FantasyAgent &agent) {
         //make and sign "FantasyAgent" name transaction
         NameProof nameproof{};
         nameproof.set_type(NameProof_Type_ORACLE);
@@ -142,6 +191,21 @@ public:
         return st;
     }
 
+    static Transaction MasterGenesisTransition() {
+        DataTransition dt{};
+
+        dt.set_type(DataTransition_Type_SEASONSTART);
+        dt.set_season(2015);
+        dt.set_week(1);
+
+        Transaction trans{};
+        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_type(TransType::DATA);
+        trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
+
+        return trans;
+    }
+
     static Transaction GenesisTransition();
 
     static GlobalState InitialGlobalState () {
@@ -152,7 +216,7 @@ public:
 
         return gs;
     }
-
+/*
     static SignedTransaction makeGenesisTransition() {
         SignedTransaction st{};
 
@@ -165,52 +229,60 @@ public:
         st.set_fantasy_name("FantasyAgent");
         return st;
     }
+*/
 
-    static BlockHeader GenesisBlockHeader() {
-        //auto gtrans = Commissioner::makeGenesisName();
-        //auto gtransition = Commissioner::makeGenesisTransition();
-
+    static BlockHeader MasterGenesisBlockHeader(FantasyAgent fa,
+                                                SignedTransaction name,
+                                                SignedTransaction transition) {
         BlockHeader bh{};
         bh.set_version(Commissioner::BLOCK_VERSION);
-        bh.set_num(1);
+        bh.set_num(0);
         bh.set_prev_id("0000000000000000000000000000000000000000000000000000000000000000");
 
-        //1433116800  June 1 2015 00:00 UTC
-        // 1441530192 Sept 6 2015 09:03:14 GMT
-        //auto time = fc::time_point_sec(fc::time_point::from_iso_string("20150601T000000")).sec_since_epoch();
-        bh.set_timestamp(1441530192);
 
-        bh.set_generator_pk(pk2str(GENESIS_PUB_KEY));
-        //std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
-
-       // bh.set_generator_pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+        bh.set_timestamp(1441680862);
+        bh.set_generator_pk(fa.pubKeyStr());
 
         bh.set_generating_sig(fc::sha256::hash(bh.generator_pk()).str());
-        //bh.set_generating_sig("33319199662b78c55f0def95399a67d6dda4dc920958b7209dc65da2dbc01801");
-
         bh.set_basetarget(0); //todo
         bh.set_blocktype(BlockHeader_Type_DATA);
-
-        //merkle root - two transactions
-        //auto root = fc::sha256::hash(gtransition.id() + gtrans.id()).str();
-        bh.set_transaction_id("9720ef3cc5fd74c429a65b02199bcd74a1ab1942bcf5ef89edccfb66981c9d10");
+        auto root = fc::sha256::hash(transition.id() + name.id()).str();
+        bh.set_transaction_id(root);
 
         return bh;
     }
 
-    static Block makeGenesisBlock();
+    static BlockHeader GenesisBlockHeader(BlockHeader mbh,
+                                          FantasyAgent da,
+                                          SignedTransaction name,
+                                          SignedTransaction transition) {
+        BlockHeader bh{};
+        bh.set_version(Commissioner::BLOCK_VERSION);
+        bh.set_num(1);
+        bh.set_prev_id(fc::sha256::hash(mbh.SerializeAsString()).str());
 
-    static std::string HashIt(std::string &in) {
-        return fc::sha256::hash( in ).str();
+        bh.set_timestamp(1441683084);
+
+        bh.set_generator_pk(da.pubKeyStr());
+        bh.set_generating_sig(fc::sha256::hash(mbh.generating_sig() + bh.generator_pk()).str());
+        bh.set_basetarget(0); //todo
+        bh.set_blocktype(BlockHeader_Type_DATA);
+
+        auto root = fc::sha256::hash(transition.id() + name.id()).str();
+        bh.set_transaction_id(root);
+
+        return bh;
     }
+
+    static Block makeGenesisBlockRaw();
+    static Block makeGenesisBlock();
 
 	static const int BLOCK_VERSION = 1;
 	static const int TRANS_VERSION = 1;
 	static const int GENESIS_NUM = 1;
     
 
-	static bool verify(const fc::ecc::signature &sig, const fc::sha256 &digest, pubkey_t& pk)
-	{
+    static bool verify(const fc::ecc::signature &sig, const fc::sha256 &digest, pubkey_t& pk) {
 		return fc::ecc::public_key(pk).verify(digest, sig);// fc::ecc::public_key(sig, digest) == pub;
 	}
 

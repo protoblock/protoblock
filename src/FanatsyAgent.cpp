@@ -23,7 +23,10 @@ using namespace std;
 
 namespace fantasybit {
 
-FantasyAgent::FantasyAgent() : client{nullptr} {
+FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
+    if ( filename != "" )
+        secretfilename3 = filename;
+
     Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename3};
     if ( !read.good() ) {
         return;
@@ -175,6 +178,16 @@ SignedTransaction FantasyAgent::makeSigned(Transaction &trans) {
     return st;
 }
 
+SignedBlockHeader FantasyAgent::makeSigned(BlockHeader &bh) {
+   SignedBlockHeader sbh{};
+   sbh.mutable_head()->CopyFrom(bh);
+
+   auto p = getIdSig(bh.SerializeAsString());
+   sbh.set_sig(p.second);
+
+   return sbh;
+}
+
 
 std::string FantasyAgent::getSecret() const {
     return m_priv ? (*m_priv).get_secret().str() : "";
@@ -249,6 +262,15 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
     return mfn;
 }
 
+void FantasyAgent::writeNomNonic(string in) {
+    Secret3 secret{};
+    secret.set_private_key(getSecret());
+    secret.set_public_key(pubKeyStr());
+    secret.set_fantasy_name(client->alias());
+
+    Writer<Secret3> writer{ GET_ROOT_DIR() + in};
+    writer(secret);
+}
 
 bool FantasyAgent::UseName(std::string name) {
 
@@ -481,8 +503,8 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt, fc::opt
 	sbh.mutable_head()->CopyFrom(bh);
 
     auto p = getIdSig(sbh.head().SerializeAsString(),*m_oracle);
-	sbh.set_sig(p.second);
-	//todo: store block hash from p.first 
+    sbh.set_sig(p.second);
+    //todo: store block hash from p.first
 
 	b.mutable_signedhead()->CopyFrom(sbh);
 
