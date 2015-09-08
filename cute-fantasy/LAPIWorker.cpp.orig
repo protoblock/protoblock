@@ -32,7 +32,6 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(myNodeWorker,SIGNAL(InSync(int)),this,SLOT(OnInSync(int)));
     QObject::connect(myNodeWorker,SIGNAL(SeenBlock(int)),this,SLOT(OnSeenBlock(int)));
     QObject::connect(myNodeWorker,SIGNAL(BlockError(int)),this,SLOT(OnBlockError(int)));
-    QObject::connect(myNodeWorker,SIGNAL(ResetIndex()),this,SLOT(ResetIndex()));
 
     QObject::connect(this,SIGNAL(ProcessNext()),this,SLOT(ProcessBlock()));
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(Timer()));
@@ -41,7 +40,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     //data processing
     QObject::connect(this,SIGNAL(LiveData(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
-    QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
+    //QObject::connect(this,SIGNAL(Live(bool)),&processor,SLOT(OnLive(bool)));
 
     //data to data signals
     QObject::connect(&processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
@@ -72,12 +71,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&namedata,SIGNAL(ProjectionLive(fantasybit::FantasyBitProj)),
                      this,SLOT(OnProjLive(fantasybit::FantasyBitProj)));
 
-    QObject::connect(&namedata,SIGNAL(FantasyNameBalance(fantasybit::FantasyNameBal)),
-                     this,SIGNAL(NameBal(fantasybit::FantasyNameBal)));
-
-    QObject::connect(&processor,SIGNAL(onControlMessage(QString)),
-                     this,SIGNAL(onControlMessage(QString)));
-
+    QObject::connect(&namedata,SIGNAL(FantasyNameBalance(fantasybit::FantasyNameBal&)),
+                     this,SIGNAL(NameBal(fantasybit::FantasyNameBal&)));
 }
 
 void MainLAPIWorker::GoLive() {
@@ -86,19 +81,17 @@ void MainLAPIWorker::GoLive() {
     intervalstart = 1000;
     timer->start(intervalstart);
 
+    OnGetMyNames();
     qDebug() << "emit LiveData(true)";
     emit LiveData(true);
     emit LiveGui(data.GetGlobalState());
     qDebug() << "emit LiveGui(data.GetGlobalState())" << data.GetGlobalState().DebugString();
-    OnGetMyNames();
-
 
 }
 
 void MainLAPIWorker::startPoint(){
     qDebug("Main Core Thread started");
     Core::instance()->waitForGui();
-    myNodeWorker->preinit();
     node.thread()->start();
     last_block = processor.init();
     if ( last_block < 0 ) {
@@ -108,14 +101,6 @@ void MainLAPIWorker::startPoint(){
 
     intervalstart = 5000;
     timer->start(intervalstart);
-}
-
-void MainLAPIWorker::ResetIndex() {
-    processor.hardReset();
-    last_block = processor.init();
-    if ( last_block < 0 ) {
-        last_block = 0;
-    }
 }
 
 //blockchain
@@ -137,16 +122,14 @@ void MainLAPIWorker::ProcessBlock() {
         //emit OnError();
         return;
     }
-    if ( !Process(*b) ) {
-        qWarning() << " !Process";
-        return;
-    }
+    if ( !Process(*b) ) return;
+
     count = pcount = 0;
     if (!amlive && last_block < numto )
     {
         //emit ProcessNext(); //catching up
         QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-        ProcessBlock();
+        ProcessNext();
     }
     else {
         //doNewDelta();
@@ -219,7 +202,7 @@ void MainLAPIWorker::OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus> 
     emit PlayerStatusChange(in);
 }
 
-void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal bal) {
+void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal &bal) {
     emit NameBalance(bal);
 }
 */
@@ -228,35 +211,29 @@ void MainLAPIWorker::OnGetMyNames() {
     vector<MyFantasyName> my;
     myfantasynames = agent.getMyNamesStatus();
     for(auto p : myfantasynames) {
-        /*
         if ( amlive )
         if ( p.second.status() < MyNameStatus::confirmed )
             namedata.Subscribe(p.first);
-        */
+
         my.push_back(p.second);
     }
 
-
     qDebug() << " MyNames(my)";
     emit MyNames(my);
-	/*
-    if ( my.size() > 0 )  {
-        myCurrentName = my.at(my.size()-1);
-        agent.UseName(myCurrentName.name());
-        emit NameStatus(myCurrentName);
-        namedata.Subscribe(myCurrentName.name());
-    }
-	*/
 }
 
 //from Gui
 void MainLAPIWorker::OnUseName(QString name) {
     myCurrentName.set_name(name.toStdString());
-    myCurrentName.set_status(MyNameStatus::requested);
+    myCurrentName.set_status(MyNameStatus::none);
 
-    myfantasynames = agent.getMyNamesStatus();
 
     auto it = myfantasynames.find(name.toStdString());
+    if ( it == end(myfantasynames)) {
+        myfantasynames = agent.getMyNamesStatus();
+        it = myfantasynames.find(name.toStdString());
+    }
+
     if ( it != end(myfantasynames)) {
         if ( agent.UseName(myCurrentName.name()) ) {
             myCurrentName = it->second;
@@ -274,8 +251,6 @@ void MainLAPIWorker::OnUseName(QString name) {
 //tx
 void MainLAPIWorker::OnClaimName(QString name) {
     if ( !amlive ) return;
-
-    qDebug() << " OnClaimName " << name;
 
     myCurrentName.set_name(name.toStdString());
     myCurrentName.set_status(MyNameStatus::none);
@@ -364,34 +339,22 @@ void MainLAPIWorker::OnProjTX(vector<fantasybit::FantasyBitProj> vinp) {
 
 //tx status
 void MainLAPIWorker::OnFoundName(string name) {
-    if ( !myCurrentName.has_name())
-        myCurrentName.set_name(name);
+    if (myCurrentName.name() == name)
+        myCurrentName.set_status(MyNameStatus::confirmed);
 
-    if (myCurrentName.name() == name) {
-        if ( !agent.UseName(name) ) {
-            myCurrentName.set_status(MyNameStatus::notavil);
-            namedata.UnSubscribe(name);
-            emit NameStatus(myCurrentName);
-            myCurrentName.Clear();
-            return;
-        }
-        else {
-            MyFantasyName mfn = agent.getCurrentNamesStatus();
-            myCurrentName.set_status(mfn.status());
-            if (myCurrentName.status() == MyNameStatus::none )
-                myCurrentName.set_status(MyNameStatus::notavil);
-            if ( myCurrentName.status() ==  MyNameStatus::notavil ) {
-                namedata.UnSubscribe(name);
-                emit NameStatus(myCurrentName);
-                myCurrentName.Clear();
-                return;
-            }
-            else {
-                emit NameStatus(myCurrentName);
-            }
-        }
+    auto it = myfantasynames.find(name);
+    if ( it == end(myfantasynames)) {
+        myfantasynames = agent.getMyNamesStatus();
+        it = myfantasynames.find(name);
+    }
 
-        return;
+    if ( it != end(myfantasynames)) {
+        it->second.set_status(MyNameStatus::confirmed);
+        qDebug() << "NameStatus(it->second)" << it->second.DebugString();
+        emit NameStatus(it->second);
+    }
+    else {
+        qWarning() << "it != end(myfantasynames)";
     }
 }
 
@@ -409,9 +372,13 @@ void MainLAPIWorker::BeOracle() {
 
 void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
     auto txstr = st.SerializeAsString();
-    RestfullClient rest(QUrl(PAPIURL.data()));
-    //rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()));
+<<<<<<< HEAD
+    RestfullClient rest(QUrl("https://stagingapi.trading.football:4545"));
     rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()));
+=======
+    RestfullClient rest(QUrl("http://192.96.159.216:4545"));
+    rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()),true);
+>>>>>>> DA
 }
 
 

@@ -80,6 +80,22 @@ private:
     void previousWeek();
     void currentWeek();
     void navigateToWeek(int week);
+    void setCurrentFantasyName(fantasybit::MyFantasyName * fantasyName,bool useName);
+
+	QString translateNameStatus(fantasybit::MyNameStatus status) const {
+		switch (status) {
+		case fantasybit::confirmed:
+			return QString("Confirmed");			
+		case fantasybit::requested:
+			return QString("Requested");			
+		case fantasybit::notavil:
+			return QString("Not Available");
+		case fantasybit::transaction_sent:
+			return QString("Transaction sent");			
+		case fantasybit::none:
+			return QString("none");			
+		}
+	}
 
     MainLAPIWorker *  myLAPIWorker;
     Ui::MainWindow *ui;    
@@ -89,7 +105,8 @@ private:
     WaitModalDialog myWaitDialog;
     bool myAddNamesPending= false;
     QTimer myLeaderBoardTimer; 
-    bool myIamLive = false;       
+    bool myIamLive = false;    
+	QMap<QString, fantasybit::MyFantasyName *> myFantasyNames;
 };
 
 #endif // MAINWINDOW_H
