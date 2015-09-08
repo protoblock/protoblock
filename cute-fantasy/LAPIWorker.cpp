@@ -410,8 +410,8 @@ void MainLAPIWorker::BeOracle() {
 void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
     auto txstr = st.SerializeAsString();
     RestfullClient rest(QUrl(PAPIURL.data()));
-    //rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()));
-    rest.postRawData("tx","shit",txstr.data(),((size_t)txstr.size()));
+    //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
+    rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
 }
 
 

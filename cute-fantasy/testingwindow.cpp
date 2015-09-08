@@ -459,7 +459,7 @@ void TestingWindow::Timer() {
 
 void TestingWindow::on_GetTx_clicked()
 {
-    auto txstr = RestfullService::getTx("https://stagingapi.trading.football:9854");
+    auto txstr = RestfullService::getTx(LAPIURL.data());
 
 
     SignedTransaction st{};

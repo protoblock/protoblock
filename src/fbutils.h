@@ -23,8 +23,13 @@
 
 namespace fantasybit {
 
-    static std::string PAPIURL = "https://stagingapi.trading.football:4545";
-    static std::string LAPIURL = "https://stagingapi.trading.football:9854";
+    //static std::string PAPIURL = "https://stagingapi.trading.football:4545";
+    //static std::string LAPIURL = "https://stagingapi.trading.football:9854";
+
+    static std::string PAPIURL = "https://trading.football:4545";
+    static std::string LAPIURL = "https://trading.football:9854";
+
+    //static std::string LAPIURL = "158.222.102.83:9854";
 
     //#define NO_ORACLE_CHECK_TESTING
 	//forwards

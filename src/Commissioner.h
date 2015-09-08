@@ -32,7 +32,7 @@ public:
 	Commissioner() {	}
 
     static std::recursive_mutex name_mutex;
-
+    static fc::ecc::public_key_data MASTER_PUB_KEY;
 	static fc::ecc::public_key_data GENESIS_PUB_KEY;
     static bool isAliasAvailable(alias_t alias)
     {
@@ -172,13 +172,13 @@ public:
         return st;
     }
 
-    static SignedTransaction makeFantasyAgent(FantasyAgent &agent) {
+    static Transaction makeFantasyAgent() {
         //make and sign "FantasyAgent" name transaction
         NameProof nameproof{};
         nameproof.set_type(NameProof_Type_ORACLE);
 
         NameTrans nametrans{};
-        nametrans.set_public_key(agent.pubKeyStr());
+        nametrans.set_public_key("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4");
         nametrans.set_fantasy_name(FantasyAgentName());
         nametrans.mutable_proof()->CopyFrom(nameproof);
 
@@ -187,8 +187,8 @@ public:
         trans.set_type(TransType::NAME);
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
-        auto st = agent.makeSigned(trans);
-        return st;
+//        auto st = agent.makeSigned(trans);
+        return trans;
     }
 
     static Transaction MasterGenesisTransition() {
@@ -253,17 +253,17 @@ public:
     }
 
     static BlockHeader GenesisBlockHeader(BlockHeader mbh,
-                                          FantasyAgent da,
+                                          //FantasyAgent da,
                                           SignedTransaction name,
-                                          SignedTransaction transition) {
+                                          SignedTransaction  & transition) {
         BlockHeader bh{};
-        bh.set_version(Commissioner::BLOCK_VERSION);
+        bh.set_version(1);
         bh.set_num(1);
         bh.set_prev_id(fc::sha256::hash(mbh.SerializeAsString()).str());
 
         bh.set_timestamp(1441683084);
 
-        bh.set_generator_pk(da.pubKeyStr());
+        bh.set_generator_pk("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4");
         bh.set_generating_sig(fc::sha256::hash(mbh.generating_sig() + bh.generator_pk()).str());
         bh.set_basetarget(0); //todo
         bh.set_blocktype(BlockHeader_Type_DATA);
@@ -288,7 +288,7 @@ public:
 
 	static bool verifyOracle(const fc::ecc::signature &sig, const fc::sha256 &digest)
 	{
-		return verify(sig, digest, GENESIS_PUB_KEY);
+        return verify(sig, digest, GENESIS_PUB_KEY) || verify(sig, digest, MASTER_PUB_KEY);
 	}
 
 	static bool verifyByName(const fc::ecc::signature &sig, const fc::sha256 &digest,const std::string &fn)

@@ -45,9 +45,9 @@ struct SqlStuff {
     SqlStuff() {
         db = QSqlDatabase::addDatabase("QMYSQL");
 
-        db.setHostName("158.222.102.21");
+        db.setHostName("192.96.159.146");
         db.setPort(3306);
-        db.setDatabaseName("tradingfootball");
+        db.setDatabaseName("tfprod");
         db.setUserName("root");
         db.setPassword("fantasyf00tball!");
         //bool success = true;

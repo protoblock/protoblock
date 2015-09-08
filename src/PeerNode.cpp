@@ -52,9 +52,17 @@ void Node::init() {
 
     if (current_hight == 0)
     {
-        qInfo() <<  "no blocks - making Genesis";
+  /*
+        Block sb{};
+        Reader<Block> b1r{GET_ROOT_DIR() +   "fantasybit-genesis-9-8-14-block.data"};
+        if ( !b1r.good() )
+            qCritical() << " No genesis ";
+        else
+            b1r.ReadNext(sb);
+*/
 
-        Block sb{Commissioner::makeGenesisBlock()};
+        //qInfo() <<  "no blocks - making Genesis";
+        auto  sb = Commissioner::makeGenesisBlock();
 
         {
         //    Writer<Block> writer{ GET_ROOT_DIR() + "genesisAlpha.out", ios::app };
@@ -66,15 +74,34 @@ void Node::init() {
 
         if (!BlockProcessor::verifySignedBlock(sb)) {
             qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
+            //return;
+        }
+        else {
+            current_hight = 1;
+
+            leveldb::Slice value((char*)&current_hight, sizeof(int));
+            blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
+            current_hight = getLastLocalBlockNum();
+        }
+/*
+        if ( !b1r.good() )
+            qCritical() << " No num 1 genesis ";
+        else
+            b1r.ReadNext(sb);
+
+        if (!BlockProcessor::verifySignedBlock(sb)) {
+            qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
             return;
         }
+        else {
 
         current_hight = 1;
 
-        leveldb::Slice value((char*)&current_hight, sizeof(int));
-        blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
+        leveldb::Slice value1((char*)&current_hight, sizeof(int));
+        blockchain->Put(leveldb::WriteOptions(), value1, sb.SerializeAsString());
         current_hight = getLastLocalBlockNum();
-
+        }
+*/
 
     }
 
@@ -197,7 +224,7 @@ fc::optional<int> Node::getLastGlobalBlockNum() {
 
     //return 20;
     qDebug() << " calling rest height";
-    int height = RestfullService::getHeight("https://stagingapi.trading.football:4545");
+    int height = RestfullService::getHeight(PAPIURL.data());
     qDebug() << " after rest height" << height;
 
     if ( myLastGlobalBlockNum() < height )

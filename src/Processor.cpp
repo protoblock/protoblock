@@ -254,7 +254,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         emit new_dataDistribution(dist);
                         auto ds = dist.SerializeAsString();
 
-                        RestfullClient rest(QUrl("https://stagingapi.trading.football:9854"));
+                        RestfullClient rest(QUrl(LAPIURL.data()));
                         rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
 
                     }
@@ -530,7 +530,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
     if (sblock.signedhead().head().version() != Commissioner::BLOCK_VERSION)
     {
         qCritical() << " !verifySignedBlock wrong block version! ";
-        return false;
+    //    return false;
     }
     fc::sha256 digest = fc::sha256::hash(sblock.signedhead().head().SerializeAsString());
     //if (digest.str() != sblock.signedhead().id())
