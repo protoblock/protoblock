@@ -18,10 +18,77 @@ using namespace std;
 namespace fantasybit {
 
 
-Block Commissioner::makeGenesisBlock() {
+Block Commissioner::makeGenesisBlockRaw() {
+
+    FantasyAgent magent {"master.out"};
+    magent.signPlayer("FantasyMaster");
+    magent.writeNomNonic("master.no.out");
+
+    FantasyAgent dagent {"data.out"};
+    dagent.signPlayer("FantasyAgent");
+    dagent.writeNomNonic("data.no.out");
+
+    SignedTransaction dasn =
+            makeFantasyAgent(dagent);
+
+    SignedTransaction
+    masn = makeGenesisName(magent);
+
+    SignedTransaction
+    mansn = makeAgentName(magent,dasn);
+
+
+    {
+    Writer<SignedTransaction> writer{ GET_ROOT_DIR() + "dasn"};
+    writer(dasn);
+    }
+    {
+    Writer<SignedTransaction> writer{ GET_ROOT_DIR() + "masn"};
+    writer(masn);
+    }
+    {
+    Writer<SignedTransaction> writer{ GET_ROOT_DIR() + "mansn"};
+    writer(mansn);
+    }
+
+    Transaction mtx = MasterGenesisTransition();
+    auto smtx = magent.makeSigned(mtx);
+
+    BlockHeader zerohead = MasterGenesisBlockHeader(magent,masn,smtx);
+
+    SignedBlockHeader mastersbh{};
+    mastersbh = magent.makeSigned(zerohead);
+    //mastersbh = pr.second;
+    //pr.first = id
 
     Block b{};
+    b.mutable_signedhead()->CopyFrom(mastersbh);
+    b.add_signed_transactions()->CopyFrom(smtx);
+    b.add_signed_transactions()->CopyFrom(masn);
+    {
+    Writer<Block> writer{ GET_ROOT_DIR() + "FantasyBit-Genesis-0-block.data"};
+    writer(mansn);
+    }
 
+
+    return b;
+
+}
+
+Block Commissioner::makeGenesisBlock() {
+
+    return makeGenesisBlockRaw();
+
+    Block b;
+    Reader<Block> reader{GET_ROOT_DIR() + "FantasyBit-Genesis-0-block.data"};
+    if ( !reader.good() )
+        qCritical() << " No genesis ";
+    else
+        if ( !reader.ReadNext(b) )
+            qCritical() << " No genesis ";
+
+    return b;
+}
     /*
     uint32_t sz = sizeof(genesis_data);
 
@@ -34,16 +101,6 @@ Block Commissioner::makeGenesisBlock() {
     return b;
 */
 
-//#ifdef true
-    Reader<Block> reader{GET_ROOT_DIR() + "genesis2015Prod.out"};
-    if ( !reader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !reader.ReadNext(b) )
-            qCritical() << " No genesis ";
-
-    return b;
-//#endif
 
 
     /*
@@ -79,8 +136,6 @@ Block Commissioner::makeGenesisBlock() {
     else
         reader(b);
 */
-    return b;
-}
 
 Transaction Commissioner::GenesisTransition() {
     DataTransition dt{};
@@ -99,6 +154,7 @@ Transaction Commissioner::GenesisTransition() {
         d2->CopyFrom(d);
     }
     */
+
 #ifdef DATAAGENTWRITENAMESXX
     PlayerLoaderTR pltr{};
     auto players = pltr.loadPlayersFromTradeRadar();

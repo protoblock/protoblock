@@ -23,7 +23,7 @@ namespace fantasybit
 class FantasyAgent
 {
     fc::optional<fc::ecc::private_key> m_priv, m_oracle;
-    std::unique_ptr<FantasyName> client;
+    std::shared_ptr<FantasyName> client;
 	std::vector<SignedTransaction> pendingTrans{};
 	Block prevBlock{};
 
@@ -34,7 +34,7 @@ class FantasyAgent
 public:
     enum status { AVAIL, NOTAVAILABLE, OWNED };
     
-    FantasyAgent();
+    FantasyAgent(string = "");
 
     std::multimap<std::string,std::string> getMyNames();
     std::map<std::string,MyFantasyName> getMyNamesStatus();
@@ -48,6 +48,7 @@ public:
 
     static bool AmFantasyAgent(std::string pubkey);
 
+    void writeNomNonic(string in) ;
     SignedTransaction makeSigned(Transaction &trans);
 	template <class T>
 	Transaction toTransaction(T &t) {
@@ -55,6 +56,8 @@ public:
 		tr.MutableExtension(T::trans)->CopyFrom(t);
 		return tr;
 	}
+
+    SignedBlockHeader makeSigned(BlockHeader &bh);
 
 	template <class T>
 	SignedTransaction toSignedTransaction(T &t) {

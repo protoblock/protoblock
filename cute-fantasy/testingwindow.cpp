@@ -66,8 +66,8 @@ void TestingWindow::initialize() {
 
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myCoreInstance,SLOT(OnClaimName(QString)));
 
-    QObject::connect(myCoreInstance,SIGNAL(MyNames(vector<fantasybit::MyFantasyName>)),
-                     this,SLOT(OnMyFantasyNames(vector<fantasybit::MyFantasyName>)));
+   // QObject::connect(myCoreInstance,SIGNAL(MyNames(vector<fantasybit::MyFantasyName>)),
+    //                 this,SLOT(OnMyFantasyNames(vector<fantasybit::MyFantasyName>)));
 
     QObject::connect(myCoreInstance,SIGNAL(NewWeek(int)),this,SLOT(OnNewWeek(int)));
 
@@ -119,9 +119,11 @@ void TestingWindow::OnNameStatus(MyFantasyName name) {
     ui->FantassyNameIn->setText(QString::fromStdString(name.name()));
 }
 
+/*
 void TestingWindow::OnMyFantasyNames(vector<MyFantasyName> in) {
     qDebug() << in.size();
 }
+*/
 
 void TestingWindow::on_beoracle_clicked() {
     emit BeOracle();
