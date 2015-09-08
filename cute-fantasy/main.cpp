@@ -20,11 +20,20 @@
 //Q_DECLARE_METATYPE(fantasybit::FantasyBitProj)
 //Q_DECLARE_METATYPE(vector<fantasybit::MyFantasyName>)
 
+#include "playerloader.h"
 
 
 int domain(int argc, char *argv[]){
     SingleApplication a(argc, argv);
 
+
+    //Commissioner::makeGenesisBlock();
+    //return 0;
+    /*
+    SqlStuff sql;
+    int i = sql.getpidT("cfc93f5e-105e-4a5e-88d3-f4279893cfa8");
+    i = sql.maxPid();
+    */
     Core::instance()->bootstrap();
     MainWindow form;
 
