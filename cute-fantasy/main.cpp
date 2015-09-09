@@ -10,7 +10,10 @@
 #include "singleapplication.h"
 #include "mainwindow.h"
 #include "core.h"
-#include "testingwindow.h"
+#ifdef DATAAGENTGUI
+    #include "testingwindow.h"
+#endif
+
 #include <QMetaType>
 
 //using namespace fantasybit;
