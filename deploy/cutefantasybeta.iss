@@ -12,7 +12,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{347A0110-E3A4-457A-9B04-07610AC0FEB7}
+AppId={{79913283-A35B-4274-927C-1B52D286D939}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -28,7 +28,6 @@ SolidCompression=yes
 WizardImageFile=TRADINGFOOTBALL.bmp
 PrivilegesRequired=none
 DefaultDirName={localappdata}\tradingfootball
-
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
@@ -38,7 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "tradingfootball.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "storage\genesis2015Prod.out"; DestDir: "{app}\storage"; Flags: ignoreversion
+Source: "storage\FantasyBit-Genesis-1-block.data"; DestDir: "{app}\storage"; Flags: ignoreversion
 Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
