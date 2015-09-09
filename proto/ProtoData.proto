@@ -79,7 +79,7 @@ message InData {
 
 message NameProof 
 {
-	enum Type { POW=1; TWEET=2; ORACLE=3; }
+        enum Type { POW=1; TWEET=2; ORACLE=3; MASTER=4; }
 	optional Type type = 1;
 	extensions 200 to max;
 }
@@ -93,12 +93,24 @@ message TweetProof
 	optional string tweet = 10;
 }
 
+message MasterProof {
+        extend NameProof {
+                optional MasterProof  master_proof = 401;
+        }
+
+        optional string season = 10;
+        optional int32 week = 20;
+        optional int32 timestamp = 21;
+        optional SignedTransaction new_oracle_name =66;
+}
+
 enum TransType {
 	NAME = 0;
 	PROJECTION = 1;
 	RESULT = 2;
 	DATA = 3;	
         PROJECTION_BLOCK = 4;
+        MASTER_NAME = 5;
 }
 
 message Transaction {
