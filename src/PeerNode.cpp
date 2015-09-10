@@ -291,8 +291,6 @@ fc::optional<Block> Node::getLocalBlock(int num) {
 fc::optional<Block> Node::getGlobalBlock(int num) {
     fc::optional<Block> block;
 
-    //int height = RestfullService::getHeight("http://192.96.159.216:4545");
-
     //if ( height < num ) return;
     string bs = RestfullService::getBlk(PAPIURL.data(),num);
     Block bb{};

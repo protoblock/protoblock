@@ -311,6 +311,13 @@ void TestingWindow::on_StageBlock_clicked() {
                 gd.set_gameid(ui->gameID->currentData().toString().toStdString());
                 gd.mutable_status()->CopyFrom(gs);
                 dt.add_gamedata()->CopyFrom(gd);
+                string newmsg{};
+                if ( myMessageData.has_msg())
+                    newmsg += myMessageData.msg() + " | ";
+                newmsg += ui->gameID->currentText().toStdString()
+                        + " kickoff (locked)";
+
+                myMessageData.set_msg(newmsg);
             }
         }
         Data d{};
@@ -325,21 +332,13 @@ void TestingWindow::on_StageBlock_clicked() {
         mStagedGameResult.clear();
 
         d.set_type(Data_Type_MESSAGE);
-        if ( myMessageData.has_msg() ) {
+        if ( !myMessageData.has_msg() )
+            myMessageData.set_msg(to_string(mStagedBlockNum));
 
-            d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
-            dt.add_data()->CopyFrom(d);
-            qDebug() << myMessageData.msg();
-            myMessageData.Clear();
-        }
-
-        if ( !makeStageBlock(dt)) {
-            ui->out->setText("error making block");
-            ui->StageBlock->setEnabled(true);
-
-        }
-        else
-            ui->SendBlock->setEnabled(true);
+        d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
+        dt.add_data()->CopyFrom(d);
+        qDebug() << myMessageData.msg();
+        myMessageData.Clear();
 
 
         d.set_type(Data::PLAYER);
@@ -350,6 +349,14 @@ void TestingWindow::on_StageBlock_clicked() {
             qDebug() << pd.DebugString();
         }
         myPlayerData.clear();
+
+        if ( !makeStageBlock(dt)) {
+            ui->out->setText("error making block");
+            ui->StageBlock->setEnabled(true);
+        }
+        else
+            ui->SendBlock->setEnabled(true);
+
 
         //leveldb::Slice snum((char*)&mStagedBlockNum, sizeof(int));
         //Node::blockchain->Put(leveldb::WriteOptions(), snum, mStagedBlock);
@@ -446,6 +453,17 @@ void TestingWindow::Timer() {
     dt.set_type(DataTransition_Type_HEARTBEAT);
     dt.set_season(2015);
     dt.set_week(realweek());
+
+    Data d{};
+    d.set_type(Data_Type_MESSAGE);
+    if ( !myMessageData.has_msg()  || myMessageData.msg() == "" )
+        myMessageData.set_msg(to_string(mStagedBlockNum));
+
+    d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
+    dt.add_data()->CopyFrom(d);
+    qDebug() << myMessageData.msg();
+    myMessageData.Clear();
+
 
     if ( !makeStageBlock(dt) )
         qDebug() << "error mamakeStageBlock ";
@@ -763,9 +781,10 @@ bool TestingWindow::sendStageBlock() {
     RestfullClient rest(QUrl(LAPIURL.data()));
     rest.postRawData("block/"+QString::number(mStagedBlockNum),"xxx",mStagedBlock.data(),mStagedBlock.size());
 
-    Writer<Block> write{"crap.out"};
-    write(b);
+    //Writer<Block> write{"crap.out"};
+    //write(b);
     //TODO HANDLE ERROR
+    qDebug() << "sent block" << b.DebugString();
     return true;
 }
 
@@ -779,6 +798,7 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     //RestfullClient rest(QUrl(PAPIURL.data()));
     //rest.postRawData("tx","shit",trans.data(),((size_t)trans.size()));
 
+    ui->out->clear();
     //todo: verify block
     if ( b )  {
         mStagedBlockNum = (*b).signedhead().head().num();
@@ -801,10 +821,19 @@ void TestingWindow::on_MsgButton_clicked() {
     myMessageData.set_msg(ui->out->text().toStdString());
 }
 
-void TestingWindow::on_Update_PLayers_clicked()
+void TestingWindow::on_stage_player_clicked()
 {
-    PlayerLoaderTR playerloader;
+    playerloader = new PlayerLoaderTR();
+    myPlayerData = playerloader->loadPlayersFromTradeRadar(false);
 
-    myPlayerData = playerloader.loadPlayersFromTradeRadar(false);
+}
 
+void TestingWindow::on_commit_player_clicked()
+{
+    for ( auto pd : myPlayerData) {
+        ui->staging_data->addItem(QString::fromStdString(pd.DebugString()));
+    }
+
+    playerloader->dump();
+    delete playerloader;
 }

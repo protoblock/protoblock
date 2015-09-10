@@ -13,7 +13,7 @@
 #include <QDebug>
 #include "StaticData.pb.h"
 #include "DistributionAlgo.h"
-
+#include "dataservice.h"
 #include <QtSql/QSql>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlDriver>
@@ -45,9 +45,9 @@ struct SqlStuff {
     SqlStuff() {
         db = QSqlDatabase::addDatabase("QMYSQL");
 
-        db.setHostName("192.96.159.146");
+        db.setHostName(DBIP.data());
         db.setPort(3306);
-        db.setDatabaseName("tfprod");
+        db.setDatabaseName(DBNAME.data());
         db.setUserName("root");
         db.setPassword("fantasyf00tball!");
         //bool success = true;
@@ -198,7 +198,7 @@ struct SqlStuff {
             insertQuery.bindValue(":f",QString::fromStdString(pd.player_base().first()));
             insertQuery.bindValue(":l",QString::fromStdString(pd.player_base().last()));
             insertQuery.bindValue(":pos",QString::fromStdString(pd.player_base().position()));
-            insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
+//            insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
             insertQuery.bindValue(":t",QString::fromStdString(pd.player_status().teamid()));
 
             if ( pd.player_status().status() == PlayerStatus::ACTIVE  ||
@@ -486,8 +486,13 @@ public:
     std::map<int,string> pid{};
 
     std::vector<fantasybit::PlayerData> result;
+    std::set<fantasybit::PlayerData> nochange;
     SqlStuff sqls{};
 
+    std::unordered_map<std::string,pair<string,bool>> myknownplayerstatus;
+
+    //std::map<string,std::unordered_map<std::string,PlayerDetail> *>
+    //teamrosters;
     void dump() {
         for ( auto p : pid ) {
             sqls.playermap(p.first,p.second);
@@ -495,14 +500,33 @@ public:
 
         for ( auto pd : result) {
            // if ( pd.has_player_base())
-                sqls.player(pd);
+           sqls.player(pd);
         }
     }
 
     std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar(bool isgenesis = false) {
 
-        if ( !isgenesis )
+        if ( !isgenesis ) {
             start = sqls.maxPid();
+
+            std::vector<fantasybit::GameRoster>
+            gameroster =  DataService::instance()->GetCurrentWeekGameRosters();
+
+            for ( auto games : gameroster ) {
+                for ( auto p : games.homeroster) {
+                    bool isactive
+                    = (p.second.team_status == PlayerStatus_Status_ACTIVE);
+                    myknownplayerstatus[p.first] = make_pair(games.info.home(),isactive);
+                }
+                for ( auto p : games.awayroster ) {
+                    bool isactive
+                    = (p.second.team_status == PlayerStatus_Status_ACTIVE);
+                    myknownplayerstatus[p.first] = make_pair(games.info.away(),isactive);
+                }
+
+            }
+
+        }
 
         RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/teams/"));
 
@@ -543,6 +567,7 @@ public:
                 sqls.player(pd);
                 result.push_back(pd);
             }
+
             auto vals = jo.value("players");
             QJsonArray parr = vals.toArray();
 
@@ -560,7 +585,7 @@ public:
 
         }
 
-        dump();
+        //dump();
         return result;
     }
 
@@ -569,7 +594,7 @@ public:
 
        auto tid = jsonObject.value("id").toString().toStdString();
 
-       bool isnew;
+       bool isnew = false;
        int mypid;
        if ( isgenesis )
            isnew = true;
@@ -630,14 +655,29 @@ public:
 
        else {
            bool changed = false;
+
            //know team
-           auto tps = sqls.getPlayer(mypid);
-           if ( tps.second == "" ) {
-               errorParsingObject = pos;
-               return pd;
+           string smypid = to_string(mypid);
+           auto iter = myknownplayerstatus.find(smypid);
+           if ( iter == myknownplayerstatus.end()  ) {
+                auto pde = DataService::instance()->GetPlayerBase(smypid);
+                if ( !pde.has_first() || pde.first() == "") {
+                    errorParsingObject = "know player but not on roster?? " ;
+                    return pd;
+                }
+
+                changed = true;
+           }
+           else {
+               if ( iter->second.second != isnowactive ||
+                    iter->second.first != team )
+                   changed = true;
+
+               myknownplayerstatus.erase(iter);
            }
 
-           if ( tps.second != team || tps.first != isnowactive ) {
+
+           if ( changed ) {
                ps.set_teamid(team);
                ps.set_status(isnowactive ? fantasybit::PlayerStatus_Status_ACTIVE : fantasybit::PlayerStatus_Status_INACTIVE);
                pd.mutable_player_status()->CopyFrom(ps);

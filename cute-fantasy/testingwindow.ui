@@ -184,9 +184,9 @@
      </widget>
     </item>
     <item row="5" column="3" colspan="2">
-     <widget class="QPushButton" name="Update_PLayers">
+     <widget class="QPushButton" name="stage_player">
       <property name="text">
-       <string>UPDATE PLAYERS</string>
+       <string>Stage PLayer</string>
       </property>
      </widget>
     </item>
@@ -197,6 +197,13 @@
      <widget class="QPushButton" name="MsgButton">
       <property name="text">
        <string>Message</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="3" colspan="2">
+     <widget class="QPushButton" name="commit_player">
+      <property name="text">
+       <string>Commit Player</string>
       </property>
      </widget>
     </item>

@@ -336,6 +336,8 @@ public:
 		return sig;
 	}
 
+    static std::vector<std::string> STATS_ID;
+
     static std::vector<std::string> GENESIS_NFL_TEAMS;
     static std::set<std::pair<std::string,std::string>> GENESIS_NFL_PLAYERS;
     static std::vector<std::string> GET_GENESIS_NFL_TEAMS() {

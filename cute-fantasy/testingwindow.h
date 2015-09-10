@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "Data.h"
 
+class PlayerLoaderTR;
 namespace Ui {
 class TestingWindow;
 }
@@ -70,7 +71,9 @@ private slots:
 
     void on_MsgButton_clicked();
 
-    void on_Update_PLayers_clicked();
+    void on_stage_player_clicked();
+
+    void on_commit_player_clicked();
 
 private:
     MainLAPIWorker *  myCoreInstance;
@@ -96,6 +99,8 @@ private:
 
     bool sendStageBlock() ;
     bool makeStageBlock(DataTransition &dt);
+    PlayerLoaderTR *playerloader;
+
 
 
     Ui::TestingWindow *ui;

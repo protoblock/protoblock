@@ -200,7 +200,7 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
 
         auto fnhstr = fnh.SerializeAsString();
         RestfullClient rest(QUrl(LAPIURL.data()));
-        rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()));
+        rest.postRawData("fantasy/name","oc",fnhstr.data(),((size_t)fnhstr.size()));
     }
 #endif
 

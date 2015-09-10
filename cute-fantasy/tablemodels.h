@@ -164,7 +164,13 @@ protected:
             if( column ==2)
                 return data->propertyValue<PropertyNames::Team_ID>();
             if( column ==3)
+#ifdef MIKECLAYIMPORT
+                return tr(data->propertyValue<PropertyNames::Player_ID,PropertyNames::Player_ID>());
+
+#else
                 return tr(data->propertyValue<fantasybit::PlayerStatus_Status,PropertyNames::Player_Status>());
+ #endif
+
 //            if( column ==4)
 //                return tr(data->propertyValue<fantasybit::PlayerGameStatus,PropertyNames::Player_Game_Status>());
             if( column ==4)
