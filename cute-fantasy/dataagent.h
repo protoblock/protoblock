@@ -9,7 +9,7 @@
 using namespace fantasybit;
 class dataagent : public GenericSingleton<dataagent>  {
     friend class GenericSingleton<dataagent>;
-    dataagent() : gameloader("PRE") {}
+    dataagent() : gameloader("REG") {}
 public:
 
     void getExternalGameResults();
