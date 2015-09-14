@@ -215,7 +215,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
 #ifdef DATAAGENTWRITENAMES
-                if ( !amlive ) break;
+                //if ( !amlive ) break;
                 Distribution dist{};
                 dist.set_gameid(rd.game_result().gameid());
                 auto gs = mData.GetGlobalState();
@@ -277,9 +277,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( msg.has_msg() ) {
                     qWarning() << "Control messgae" << msg.DebugString();
 
-                    if ( !amlive )
-                        break;
-                    else
+                    //if ( !amlive )
+                    //    break;
+                    //else
                     if ( msg.has_gt() || msg.has_lt()) {
                         int version =
                                 MAJOR_VERSION * 1000 +

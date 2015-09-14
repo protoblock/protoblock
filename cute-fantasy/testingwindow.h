@@ -75,6 +75,8 @@ private slots:
 
     void on_commit_player_clicked();
 
+    void on_Update_PLayers_2_clicked();
+
 private:
     MainLAPIWorker *  myCoreInstance;
     std::unordered_map<string,GameInfo> mGames;
@@ -100,6 +102,7 @@ private:
     bool sendStageBlock() ;
     bool makeStageBlock(DataTransition &dt);
     PlayerLoaderTR *playerloader;
+
 
 
 

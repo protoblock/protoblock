@@ -46,6 +46,8 @@ private slots:
     void on_myLockedGamesRb_toggled(bool checked);
     void on_myOpenGamesRb_toggled(bool checked);    
 
+    void on_importmike_clicked();
+
 private:
 
     void updateCurrentFantasyPlayerProjections();

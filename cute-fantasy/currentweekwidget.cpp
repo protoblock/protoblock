@@ -345,3 +345,13 @@ void CurrentWeekWidget::onControlMessage(QString message){
     ui->myControlMessageLabel->setText(message);
 }
 
+#include "playerloader.h"
+void CurrentWeekWidget::on_importmike_clicked()
+{
+    MikeClayLoader ml{};
+    auto vpp = ml.loadProjFromFile();
+
+    for ( auto pp : vpp )
+    myProjectionsModel.updateItemProperty<PropertyNames::Projection>(pp.playerid().data(),pp.points());
+
+}

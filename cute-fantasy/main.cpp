@@ -30,6 +30,8 @@ int domain(int argc, char *argv[]){
     SingleApplication a(argc, argv);
 
 
+    //MikeClayLoader loader;
+    //loader.loadProjFromFile();
     //Commissioner::makeGenesisBlock();
     //return 0;
     /*
