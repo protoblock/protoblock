@@ -29,9 +29,9 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
 
     //block sync
-    QObject::connect(myNodeWorker,SIGNAL(InSync(int)),this,SLOT(OnInSync(int)));
-    QObject::connect(myNodeWorker,SIGNAL(SeenBlock(int)),this,SLOT(OnSeenBlock(int)));
-    QObject::connect(myNodeWorker,SIGNAL(BlockError(int)),this,SLOT(OnBlockError(int)));
+    QObject::connect(myNodeWorker,SIGNAL(InSync(int32_t)),this,SLOT(OnInSync(int32_t)));
+    QObject::connect(myNodeWorker,SIGNAL(SeenBlock(int32_t)),this,SLOT(OnSeenBlock(int32_t)));
+    QObject::connect(myNodeWorker,SIGNAL(BlockError(int32_t)),this,SLOT(OnBlockError(int32_t)));
     QObject::connect(myNodeWorker,SIGNAL(ResetIndex()),this,SLOT(ResetIndex()));
 
     QObject::connect(this,SIGNAL(ProcessNext()),this,SLOT(ProcessBlock()));
@@ -119,7 +119,7 @@ void MainLAPIWorker::ResetIndex() {
 }
 
 //blockchain
-void MainLAPIWorker::OnInSync(int num) {
+void MainLAPIWorker::OnInSync(int32_t num) {
     if ( !amlive && num == last_block )
         GoLive();
     else {
@@ -145,8 +145,10 @@ void MainLAPIWorker::ProcessBlock() {
     if (!amlive && last_block < numto )
     {
         //emit ProcessNext(); //catching up
-        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-        ProcessBlock();
+        if ( numto < std::numeric_limits<int32_t>::max() ) {
+            ProcessBlock();
+            //QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+        }
     }
     else {
         //doNewDelta();
@@ -157,14 +159,14 @@ void MainLAPIWorker::ProcessBlock() {
     }
 }
 
-void MainLAPIWorker::OnSeenBlock(int num) {   
+void MainLAPIWorker::OnSeenBlock(int32_t num) {
     if (amlive)
         numto = num;
     timer->start(intervalstart);
     count = bcount = 0;
 }
 
-void MainLAPIWorker::OnBlockError(int last) {
+void MainLAPIWorker::OnBlockError(int32_t last) {
     numto = last;
     emit BlockError(last);
 }
@@ -177,7 +179,7 @@ void MainLAPIWorker::Timer() {
         emit ProcessNext();
         if ( bcount > 10 && pcount < 2)
             emit GetNext();
-        else if ( bcount < 3 && numto < std::numeric_limits<int>::max())
+        else if ( bcount < 3 && numto < std::numeric_limits<int32_t>::max())
             emit GetNext();
     }
     else if ( numto > last_block ) {
@@ -197,7 +199,7 @@ void MainLAPIWorker::Timer() {
 }
 
 bool MainLAPIWorker::Process(fantasybit::Block &b) {
-    int last = processor.process(b);
+    int32_t last = processor.process(b);
     if ( last == -1 ) {
         //emit OnError();
         timer->start(5000);
