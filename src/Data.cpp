@@ -95,6 +95,7 @@ void NFLStateData::init() {
 
 void NFLStateData::closeAll() {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+    amlive = false;
     MyTeamRoster.clear();
     MyPlayerStatus.clear();
     MyGameInfo.clear();

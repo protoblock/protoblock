@@ -46,7 +46,9 @@ private slots:
     void on_myLockedGamesRb_toggled(bool checked);
     void on_myOpenGamesRb_toggled(bool checked);    
 
+#ifdef MIKECLAYIMPORT
     void on_importmike_clicked();
+#endif
 
 private:
 

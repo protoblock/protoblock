@@ -144,7 +144,7 @@ Block Commissioner::makeGenesisBlockRaw() { Block b; return b; } /*`
 
 // pair<Block,Block>
 
-#ifdef STAGINGFOOTBALL
+#ifdef XXXSTAGINGFOOTBALL
 
 Block Commissioner::makeGenesisBlock() {
     Block b{};
@@ -288,7 +288,7 @@ Block Commissioner::makeGenesisBlock() {
     if ( !b1r.good() )
         qCritical() << " No genesis ";
     else
-        if ( !b1r.ReadNext(b1) )
+        if ( !b1r.ReadNext(b1) )*
             qCritical() << " No genesis ";
     //qDebug() << b.DebugString();
 
@@ -551,15 +551,20 @@ uint64_t difficulty( const fc::sha224& hash_value )
     return tmp;
 }
 
-fc::ecc::public_key_data Commissioner::MASTER_PUB_KEY
-{ Commissioner::str2pk(std::string("qCxpbzdgBAMGiLYkcs1KhsMH2gXbTP27NJWV8eAgh4j9")) };
+fc::ecc::public_key_data Commissioner::MASTER_PUB_KEY {
+
+#ifdef STAGINGFOOTBALL
+    Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
+#else
+    Commissioner::str2pk(std::string("qCxpbzdgBAMGiLYkcs1KhsMH2gXbTP27NJWV8eAgh4j9"))
+#endif
+
+};
 
 fc::ecc::public_key_data Commissioner::GENESIS_PUB_KEY
 {
 #ifdef STAGINGFOOTBALL
-
       Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"))
-
 #else
       Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
 #endif

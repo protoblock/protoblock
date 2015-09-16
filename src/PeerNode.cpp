@@ -34,13 +34,22 @@ namespace fantasybit
 Node::Node() { }
 void Node::init() {
 
+    Int32Comparator *cmp = new Int32Comparator();
+    leveldb::Options optionsInt;
+    optionsInt.create_if_missing = true;
+    optionsInt.comparator = cmp;
+
     qDebug() << "init node";
     leveldb::Options options;
     options.create_if_missing = true;
     leveldb::Status status;
 
     leveldb::DB *db2;
-    status = leveldb::DB::Open(options, filedir("block/blockchain"), &db2);
+    status = leveldb::DB::Open(optionsInt, filedir("block/blockchain"), &db2);
+    if ( !status.ok()) {
+        qCritical() << " error opening block/blockchain";
+        return;
+    }
     Node::blockchain.reset(db2);
 
     leveldb::DB *db4;
@@ -79,7 +88,7 @@ void Node::init() {
         else {
             current_hight = 1;
 
-            leveldb::Slice value((char*)&current_hight, sizeof(int));
+            leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
             blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
             current_hight = getLastLocalBlockNum();
         }
@@ -87,7 +96,7 @@ void Node::init() {
         if ( !b1r.good() )
             qCritical() << " No num 1 genesis ";
         else
-            b1r.ReadNext(sb);
+            b1r.odNext(sb);
 
         if (!BlockProcessor::verifySignedBlock(sb)) {
             qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
@@ -111,11 +120,11 @@ void Node::init() {
 }
 
 
-void Node::BackSync(int to) {
+void Node::BackSync(int32_t to) {
 
     leveldb::WriteBatch batch;
-    for ( int i=getLastLocalBlockNum();i>to;i--) {
-        leveldb::Slice key((char*)&i, sizeof(int));
+    for ( int32_t i=getLastLocalBlockNum();i>to;i--) {
+        leveldb::Slice key((char*)&i, sizeof(int32_t));
         batch.Delete(key);
     }
     auto s = blockchain->Write(leveldb::WriteOptions(), &batch);
@@ -126,7 +135,7 @@ void Node::BackSync(int to) {
 
 bool Node::Sync() {
     qDebug() << "cureent thread" << QThread::currentThread();
-    fc::optional<int> gh = getLastGlobalBlockNum();
+    fc::optional<int32_t> gh = getLastGlobalBlockNum();
     if ( !gh ) {
         qCritical() << " no getLastGlobalBlockNum";
         return false;
@@ -143,10 +152,14 @@ bool Node::Sync() {
         return true;
 }
 
-bool Node::SyncTo(int gh) {
+bool Node::SyncTo(int32_t gh) {
     global_height = gh;
-
+    bool forked  = false;
+    string previd;
     int count = 0;
+    auto ob = getLocalBlock(current_hight, true);
+    if ( ob )
+        previd = FantasyAgent::BlockHash(*ob);
     while ( current_hight < global_height ) {
 
         if (count > 50) return false;
@@ -157,7 +170,6 @@ bool Node::SyncTo(int gh) {
             qCritical() << " no getGlobalBlockNum" << current_hight+1;
             QThread::currentThread()->sleep(100 * count++);
             continue;
-
         }
 
         qInfo() <<  "received " << (*sb).signedhead().head().num();
@@ -173,15 +185,45 @@ bool Node::SyncTo(int gh) {
             //return false; ;
         }
 
+        //fork
+        if ( (*sb).signedhead().head().prev_id() != previd ) {
+            forking = true;
+            if ( !BackFork((*sb).signedhead().head().prev_id(),current_hight) )
+                return forking = false;
+            else {
+                auto ob = getLocalBlock(current_hight, true);
+                if ( !ob ) return false;
+                previd = FantasyAgent::BlockHash(*ob);
+                if ( (*sb).signedhead().head().prev_id() != previd ) {
+                    qCritical() << " bad prev after BackFork";
+                }
+
+                forked = true;
+           }
+           forking = false;
+        }
+
         if ((*sb).signedhead().head().num() == current_hight + 1) {
             qInfo() << "Received next " << current_hight+1;
-            int myhight = current_hight+1;
-            leveldb::Slice snum((char*)&myhight, sizeof(int));
+            int32_t myhight = current_hight+1;
+            leveldb::Slice snum((char*)&myhight, sizeof(int32_t));
             blockchain->Put(leveldb::WriteOptions(), snum, (*sb).SerializeAsString());
             current_hight = current_hight+1;
 
+            qInfo() << "Put next " << current_hight;
+
+            //int32_t num = *(reinterpret_cast<const int32_t *>(snum.data()));
+
+            //int32_t num2;
+            //memcpy(&num2,snum.data(),snum.size());
+            //qWarning() << myhight << num2 << num << snum.size() << snum.data() << sizeof(int32_t) << sizeof(char) << "yoyo getLastLocalBlockNum()" << getLastLocalBlockNum() << "current_hight" << current_hight;
+            qInfo() << myhight  << snum.size() << snum.data() << sizeof(int32_t) << sizeof(char);
+            qInfo() << "yoyo getLastLocalBlockNum()" << getLastLocalBlockNum() << "current_hight" << current_hight;
+
             count = 0;
             Node::ClearTx(*sb);
+
+            previd = FantasyAgent::BlockHash(*sb);
 
             //CheckOrphanBlocks();
         }
@@ -190,13 +232,66 @@ bool Node::SyncTo(int gh) {
         }
     }
 
-    return current_hight == global_height;
+    return (!forked && (current_hight == global_height));
 }
 
-int Node::getLastLocalBlockNum() {
+bool Node::BackFork(const string &goodid, int32_t num) {
+
+    string prevprev = goodid;
+    string id = "";
+    int count = 0;
+    do {
+        if ( num == 1) {
+            qCritical() << " bad genesis? ";
+
+            return false;
+        }
+        if ( count > 15 ) return false;
+        fc::optional<Block> gb = getGlobalBlock(num);
+        if ( !gb ) {
+            qCritical() << " no prev global block " << num;
+            QThread::currentThread()->sleep(100 * count++);
+            continue;
+        }
+
+        if (!BlockProcessor::verifySignedBlock(*gb))
+            return false;
+
+        id = FantasyAgent::BlockHash(*gb);
+        if ( id != prevprev ) {
+            qCritical() << " expect pre_id t equal id(prev)" << prevprev << id;
+            return false;
+        }
+
+        leveldb::Slice snum((char*)&num, sizeof(int32_t));
+        auto status =
+                blockchain->Put(leveldb::WriteOptions(), snum, (*gb).SerializeAsString());
+        if ( !status.ok() ) return false;
+
+        prevprev = (*gb).signedhead().head().prev_id();
+
+        num--;
+        fc::optional<Block> lb = getLocalBlock(num, true);
+        if ( !lb ) return false;
+
+        id = FantasyAgent::BlockHash(*lb);
+
+    } while (prevprev != id );
+
+    return true;
+}
+
+int32_t Node::getLastLocalBlockNum() {
+
+    //qWarning() << "yoyo" << "in getLastLocalBlockNum";
+
     std::string value;
     auto *it = blockchain->NewIterator(leveldb::ReadOptions());
+    //qWarning() << "yoyo" << "in getLastLocalBlockNum 1";
+
     it->SeekToLast();
+
+    //qWarning() << "yoyo" << "in getLastLocalBlockNum 2";
 
     if (!it->Valid()) {
         delete it;
@@ -204,13 +299,22 @@ int Node::getLastLocalBlockNum() {
     }
     auto slice = it->key();
 
-    int num = *(reinterpret_cast<const int *>(slice.data()));
+    //qWarning() << "yoyo" << "in getLastLocalBlockNumxx";
+
+    //Block sb{};
+    //sb.ParseFromString(it->value().ToString());
+    //qWarning() << "yoyo" << sb.signedhead().head().num();
+
+    int32_t num = *(reinterpret_cast<const int32_t *>(slice.data()));
+
+    //qWarning() << "yoyo" << num << "getLastLocalBlockNum";
+
     delete it;
     return num;
 }
 
-int Node::myLastGlobalBlockNum() {
-    int myglobalheight = 0;
+int32_t Node::myLastGlobalBlockNum() {
+    int32_t myglobalheight = 0;
     {
         std::lock_guard<std::mutex> lockg{ blockchain_mutex };
         myglobalheight = GlobalHeight;
@@ -219,12 +323,12 @@ int Node::myLastGlobalBlockNum() {
     return myglobalheight;
 }
 
-fc::optional<int> Node::getLastGlobalBlockNum() {
+fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     //qDebug() << "cureent thread" << QThread::currentThread();
 
     //return 20;
     qDebug() << " calling rest height";
-    int height = RestfullService::getHeight(PAPIURL.data());
+    int32_t height = RestfullService::getHeight(PAPIURL.data());
     qDebug() << " after rest height" << height;
 
     if ( myLastGlobalBlockNum() < height )
@@ -233,7 +337,7 @@ fc::optional<int> Node::getLastGlobalBlockNum() {
     return height;
 }
 
-void Node::setLastGlobalBlockNum(int mylastglobalheight) {
+void Node::setLastGlobalBlockNum(int32_t mylastglobalheight) {
     std::lock_guard<std::mutex> lockg{ blockchain_mutex };
     GlobalHeight = mylastglobalheight;
 }
@@ -244,9 +348,9 @@ std::string Node::filedir(const std::string &in)
     return GET_ROOT_DIR() + in;
 }
 
-leveldb::Slice Node::i2slice(int i)
+leveldb::Slice Node::i2slice(int32_t i)
 {
-    leveldb::Slice value((char*)&i, sizeof(int) );
+    leveldb::Slice value((char*)&i, sizeof(int32_t) );
     return value;
 }
 
@@ -269,13 +373,19 @@ Block Node::getlastLocalBlock() {
     return b;
 }
 
-fc::optional<Block> Node::getLocalBlock(int num) {
+fc::optional<Block> Node::getLocalBlock(int32_t num, bool force) {
+
     fc::optional<Block> block;
+    if ( forking && !force )
+        return block;
+
+    std::lock_guard<std::mutex> lockg{ blockchain_mutex };
+
     if ( getLastLocalBlockNum() < num )
         return block;
 
     std::string value;
-    leveldb::Slice snum((char*)&num, sizeof(int));
+    leveldb::Slice snum((char*)&num, sizeof(int32_t));
     if (blockchain->Get(leveldb::ReadOptions(), snum, &value).IsNotFound()) {
         qWarning() << "block not found " << num;
         //ToDo
@@ -288,7 +398,7 @@ fc::optional<Block> Node::getLocalBlock(int num) {
     return block;
 }
 
-fc::optional<Block> Node::getGlobalBlock(int num) {
+fc::optional<Block> Node::getGlobalBlock(int32_t num) {
     fc::optional<Block> block;
 
     //if ( height < num ) return;
@@ -318,6 +428,6 @@ decltype(Node::txpool) Node::txpool;
 
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};
-
+bool Node::forking = false;
 
 }	

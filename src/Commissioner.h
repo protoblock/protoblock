@@ -41,6 +41,13 @@ public:
     }
 
 
+    static void clearAll()
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
+        FantasyNames.clear();
+        Hash2Pk.clear();
+    }
+
     static std::vector<std::shared_ptr<FantasyName>> GetFantasyNames() {
         std::vector<std::shared_ptr<FantasyName>> names;
 
