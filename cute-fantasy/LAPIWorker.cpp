@@ -29,9 +29,9 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
 
     //block sync
-    QObject::connect(myNodeWorker,SIGNAL(InSync(int)),this,SLOT(OnInSync(int)));
-    QObject::connect(myNodeWorker,SIGNAL(SeenBlock(int)),this,SLOT(OnSeenBlock(int)));
-    QObject::connect(myNodeWorker,SIGNAL(BlockError(int)),this,SLOT(OnBlockError(int)));
+    QObject::connect(myNodeWorker,SIGNAL(InSync(int32_t)),this,SLOT(OnInSync(int32_t)));
+    QObject::connect(myNodeWorker,SIGNAL(SeenBlock(int32_t)),this,SLOT(OnSeenBlock(int32_t)));
+    QObject::connect(myNodeWorker,SIGNAL(BlockError(int32_t)),this,SLOT(OnBlockError(int32_t)));
     QObject::connect(myNodeWorker,SIGNAL(ResetIndex()),this,SLOT(ResetIndex()));
 
     QObject::connect(this,SIGNAL(ProcessNext()),this,SLOT(ProcessBlock()));
@@ -96,21 +96,27 @@ void MainLAPIWorker::GoLive() {
 }
 
 void MainLAPIWorker::startPoint(){
+
     qDebug("Main Core Thread started");
     Core::instance()->waitForGui();
     myNodeWorker->preinit();
     node.thread()->start();
-    last_block = processor.init();
-    if ( last_block < 0 ) {
+
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        last_block = processor.init();
+        if ( last_block < 0 ) {
         //emit OnError();
-        last_block = 0;
-    }   
+            last_block = 0;
+        }
+    }
 
     intervalstart = 5000;
     timer->start(intervalstart);
 }
 
 void MainLAPIWorker::ResetIndex() {
+    std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
     processor.hardReset();
     last_block = processor.init();
     if ( last_block < 0 ) {
@@ -119,8 +125,16 @@ void MainLAPIWorker::ResetIndex() {
 }
 
 //blockchain
-void MainLAPIWorker::OnInSync(int num) {
-    if ( !amlive && num == last_block )
+void MainLAPIWorker::OnInSync(int32_t num) {
+    qDebug() << "OnInSync" << num;
+    bool myamlive;
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        myamlive = (!amlive && num == last_block);
+    }
+    qDebug() << "myamlive" << myamlive;
+
+    if ( myamlive )
         GoLive();
     else {
         numto = num;
@@ -131,10 +145,14 @@ void MainLAPIWorker::OnInSync(int num) {
 
 #include <QAbstractEventDispatcher>
 void MainLAPIWorker::ProcessBlock() {
-
-    auto b = fantasybit::Node::getLocalBlock(last_block+1);
+    int32_t next;
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        next = last_block+1;
+    }
+    auto b = fantasybit::Node::getLocalBlock(next);
     if (!b) {
-        //emit OnError();
+        qWarning() << " !b";
         return;
     }
     if ( !Process(*b) ) {
@@ -142,45 +160,67 @@ void MainLAPIWorker::ProcessBlock() {
         return;
     }
     count = pcount = 0;
-    if (!amlive && last_block < numto )
+    bool catchingup;
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        catchingup = !amlive && last_block < numto;
+    }
+
+    if ( catchingup )
     {
         //emit ProcessNext(); //catching up
-        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-        ProcessBlock();
+        //if ( numto < std::numeric_limits<int32_t>::max() ) {
+            ProcessBlock();
+            //QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+        //}
     }
     else {
         //doNewDelta();
         if ( !amlive ) {
-            amlive = true;
+            {
+                std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+                amlive = true;
+            }
             GoLive();
         }
     }
 }
 
-void MainLAPIWorker::OnSeenBlock(int num) {   
-    if (amlive)
-        numto = num;
+void MainLAPIWorker::OnSeenBlock(int32_t num) {
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        if (amlive)
+            numto = num;
+    }
     timer->start(intervalstart);
     count = bcount = 0;
 }
 
-void MainLAPIWorker::OnBlockError(int last) {
-    numto = last;
+void MainLAPIWorker::OnBlockError(int32_t last) {
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        numto = last;
+    }
     emit BlockError(last);
 }
 
 void MainLAPIWorker::Timer() {
     //qDebug() << " Timer ";
+    bool numtogtlast;
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        numtogtlast = (numto > last_block);
+    }
     bcount++;
     pcount++;
     if ( !amlive ) {
         emit ProcessNext();
         if ( bcount > 10 && pcount < 2)
             emit GetNext();
-        else if ( bcount < 3 && numto < std::numeric_limits<int>::max())
+        else if ( bcount < 3 && numto < std::numeric_limits<int32_t>::max())
             emit GetNext();
     }
-    else if ( numto > last_block ) {
+    else if ( numtogtlast ) {
         emit ProcessNext();
         if ( bcount < 3)
             emit GetNext();
@@ -197,19 +237,26 @@ void MainLAPIWorker::Timer() {
 }
 
 bool MainLAPIWorker::Process(fantasybit::Block &b) {
-    int last = processor.process(b);
+    int32_t last = processor.process(b);
     if ( last == -1 ) {
         //emit OnError();
         timer->start(5000);
         return false;
     }
-    if ( last != last_block+1) {
+
+    //if ( last != last_block+1) {
         //emit OnError
         //should never be here
-        return false;
-    }
+    //    return false;
+    //}
 
-    last_block = last;
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        if ( last == last_block+1)
+            last_block = last;
+        else
+            qDebug() << " shoud bever be here! ? reorg? fork? ";
+    }
     return true;
 }
 

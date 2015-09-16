@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "Data.h"
 
+class PlayerLoaderTR;
 namespace Ui {
 class TestingWindow;
 }
@@ -70,15 +71,19 @@ private slots:
 
     void on_MsgButton_clicked();
 
-    void on_Update_PLayers_clicked();
+    void on_stage_player_clicked();
 
+    void on_commit_player_clicked();
+/*
+    void on_Update_PLayers_2_clicked();
+*/
 private:
     MainLAPIWorker *  myCoreInstance;
     std::unordered_map<string,GameInfo> mGames;
     std::unordered_map<string,GameResult> mGameResult;
     std::unordered_map<string,GameRoster> mGameRoster;
     std::unordered_map<string,PlayerDetail> mPlayerDetail;
-    std::vector<PlayerData> myPlayerData;
+    std::vector<PlayerData> myPlayerData, myStagedPlayerData;
     std::unordered_map<string,GameResult> mStagedGameResult;
     int TestingWindow::randomNum(int num) ;
         GameResult TestingWindow::fakeit(GameInfo &g);
@@ -96,6 +101,9 @@ private:
 
     bool sendStageBlock() ;
     bool makeStageBlock(DataTransition &dt);
+    PlayerLoaderTR *playerloader;
+
+
 
 
     Ui::TestingWindow *ui;

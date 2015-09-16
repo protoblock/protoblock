@@ -16,7 +16,9 @@
 #include "ApiData.pb.h"
 #include "RestFullCall.h"
 #include "fbutils.h"
-
+#ifdef DATAAGENTWRITENAMES
+#include "playerloader.h"
+#endif
 using namespace std;
 using namespace fantasybit;
 
@@ -73,6 +75,7 @@ void FantasyNameData::init() {
 }
 
 void FantasyNameData::closeAll() {
+    Commissioner::clearAll();
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
     bool amlive = false;
     int week = 0;
@@ -125,8 +128,6 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
 void FantasyNameData::AddProjection(const string &name, const string &player,
                              uint32_t proj) {
 
-
-
     leveldb::Slice bval((char*)&proj, sizeof(uint32_t));
     string key(name + ":" + player);
     if (!projstore->Put(leveldb::WriteOptions(), key, bval).ok())
@@ -161,6 +162,65 @@ std::unordered_map<std::string,int> FantasyNameData::GetProjByName(const std::st
     return FantasyNameProjections[nm];
 }
 
+void FantasyNameData::OnGameStart(std::string gid,
+                 std::vector<std::string> &home,
+                 std::vector<std::string> &away
+                 ) {
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+    GameFantasyBitProj gfp{};
+
+    gfp.set_gameid(gid);
+    for ( auto pid : home) {
+        fantasybit::FantasyBitProj fpj{};
+        fpj.set_playerid(pid);
+
+        //qDebug() << "yoyoyo home" << pid;
+        for ( auto fnp : PlayerIDProjections[pid] ) {
+            fpj.set_name(fnp.first);
+            fpj.set_proj(fnp.second);
+            gfp.add_home()->CopyFrom(fpj);
+            //qDebug() << "yoyoyo" << fnp.first << fnp.second << fpj.DebugString();
+
+        }
+    }
+
+    for ( auto pid : away) {
+        fantasybit::FantasyBitProj fpj{};
+        fpj.set_playerid(pid);
+
+        //qDebug() << "yoyoyo away" << pid;
+        for ( auto fnp : PlayerIDProjections[pid] ) {
+            fpj.set_name(fnp.first);
+            fpj.set_proj(fnp.second);
+            gfp.add_away()->CopyFrom(fpj);
+            //qDebug() << "yoyoyo" << fnp.first << fnp.second << fpj.DebugString();
+
+        }
+    }
+
+    if (!projstore->Put(leveldb::WriteOptions(), gid, gfp.SerializeAsString()).ok())
+        qWarning() << "yoyoyo error writing proj" << gid;
+    else
+        qInfo() << "yoyoyo" << gid;
+
+}
+
+GameFantasyBitProj FantasyNameData::GetGameProj(const std::string &gid) {
+    GameFantasyBitProj gfp;
+
+    string temp;
+    if ( !projstore->Get(leveldb::ReadOptions(), gid, &temp).ok() ) {
+        qWarning() << "yoyoyo cant GetGameProj" << gid.c_str();
+        return gfp;
+    }
+    else
+        qInfo() << "yoyoyo out" << gid;
+
+
+    gfp.ParseFromString(temp);
+    return gfp;
+}
+
 void FantasyNameData::Subscribe(std::string in) {
     mSubscribed.insert(in);
 }
@@ -192,17 +252,23 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
     auto name = fn->alias();
 
 #ifdef DATAAGENTWRITENAMES
-    if ( amlive ) {
+    if ( amlive )
+    {
         FantasyNameHash fnh{};
+        SqlStuff sql{"satoshifantasy"};
+
         fnh.set_name(name);
         fnh.set_hash(fn->hash());
         emit new_dataFantasyNameHash(fnh);
 
         auto fnhstr = fnh.SerializeAsString();
-        RestfullClient rest(QUrl(LAPIURL.data()));
-        rest.postRawData("fantasy/name","shit",fnhstr.data(),((size_t)fnhstr.size()));
+        sql.fantasyname(fnh);
+
+        //RestfullClient rest(QUrl(LAPIURL.data()));
+        //rest.postRawData("fantasy/name","oc",fnhstr.data(),((size_t)fnhstr.size()));
     }
 #endif
+
 
     if ( mSubscribed.find(name) != end(mSubscribed))
         emit FantasyNameFound(name);

@@ -29,7 +29,6 @@
 int domain(int argc, char *argv[]){
     SingleApplication a(argc, argv);
 
-
     //Commissioner::makeGenesisBlock();
     //return 0;
     /*
@@ -39,6 +38,13 @@ int domain(int argc, char *argv[]){
     */
     Core::instance()->bootstrap();
     MainWindow form;
+
+    if ( false ){
+    Node node;
+    node.init();
+    node.Cleaner();
+    return 0;
+    }
 
 #ifdef DATAAGENTGUI
     TestingWindow dform;

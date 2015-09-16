@@ -24,6 +24,7 @@
 #include <leveldb/db.h>
 #include "ProtoData.pb.h"
 #include <memory>
+#include "Processor.h"
 
 namespace fantasybit
 {
@@ -64,6 +65,9 @@ public:
 
     }
 
+
+    void Cleaner();
+    bool Cleanit(Block *b) ;
 };
 
 //static std::string SEED_NODE("162.254.27.226");

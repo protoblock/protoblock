@@ -33,7 +33,7 @@ namespace fantasybit
 
 Node::Node() { }
 void Node::init() {
-
+    qDebug() << "kkk file" << filedir("block");
     qDebug() << "init node";
     leveldb::Options options;
     options.create_if_missing = true;
@@ -314,6 +314,67 @@ void Node::ClearTx(const Block &b) {
     }
 }
 
+void Node::Cleaner() {
+    Block b{};
+    std::vector<Block> replace{};
+    auto *it = blockchain->NewIterator(leveldb::ReadOptions());
+    for (it->SeekToFirst() ;it->Valid();it->Next() ) {
+        b.ParseFromString(it->value().ToString());
+        if ( Cleanit(&b) )
+            replace.push_back(b);
+    }
+    delete it;
+
+    for ( auto b : replace) {
+        int32_t bnum = b.signedhead().head().num();
+        leveldb::Slice snum((char*)&bnum, sizeof(int32_t));
+
+        blockchain->Put(leveldb::WriteOptions(), snum, b.SerializeAsString());
+        //  Cleanit(&b);
+        qDebug() << "kkk" << bnum << b.DebugString();
+
+        //string bdata = b.SerializeAsString();
+        //RestfullClient rest(QUrl(LAPIURL.data()));
+        //rest.postRawData("block/"+QString::number(bnum),"xxx",bdata.data(),bdata.size());
+
+    }
+}
+
+bool Node::Cleanit(Block *b) {
+    auto dt = //b.signed_transactions(0).trans().GetExtension(DataTransition::data_trans);
+    b->mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
+    bool replaceit = false;
+    for ( int i=0;i<dt->data_size(); i++) {
+        if ( dt->data(i).type() != Data::RESULT) continue;
+        replaceit = true;
+
+        Data *d = dt->mutable_data(i);
+        ResultData *prd = d->MutableExtension(ResultData::result_data);
+        for ( int i =0; i < prd->game_result().home_result_size(); i++) {
+            PlayerResult *pr = prd->mutable_game_result()->mutable_home_result(i);
+            if ( !pr->stats().has_kstats() ) continue;
+
+            if ( pr->stats().kstats().fg_size() == 0) continue;
+
+            double newres = BlockProcessor::CalcResults(pr->stats());
+            qDebug() << "kkk" << newres << pr->result();
+            pr->set_result(newres);
+        }
+        for ( int i =0; i < prd->game_result().away_result_size(); i++) {
+            PlayerResult *pr = prd->mutable_game_result()->mutable_away_result(i);
+            if ( !pr->stats().has_kstats() ) continue;
+
+            if ( pr->stats().kstats().fg_size() == 0) continue;
+
+            double newres = BlockProcessor::CalcResults(pr->stats());
+            qDebug() << "kkk" << newres << pr->result();
+            pr->set_result(newres);
+        }
+
+    }
+    return replaceit;
+
+}
 
 decltype(Node::blockchain) Node::blockchain;
 decltype(Node::txpool) Node::txpool;
