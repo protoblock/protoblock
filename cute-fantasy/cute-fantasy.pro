@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 #DEFINES += STAGINGFOOTBALL
 
-DEFINES += MIKECLAYIMPORT
+#DEFINES += MIKECLAYIMPORT
 
 #comment this line to generate
 #DEFINES += DATAAGENTGUI

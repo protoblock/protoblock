@@ -33,7 +33,6 @@ namespace fantasybit
 
 Node::Node() { }
 void Node::init() {
-    qDebug() << "kkk file" << filedir("block");
     Int32Comparator *cmp = new Int32Comparator();
     leveldb::Options optionsInt;
     optionsInt.create_if_missing = true;
@@ -439,7 +438,6 @@ void Node::Cleaner() {
 
         blockchain->Put(leveldb::WriteOptions(), snum, b.SerializeAsString());
         //  Cleanit(&b);
-        qDebug() << "kkk" << bnum << b.DebugString();
 
         //string bdata = b.SerializeAsString();
         //RestfullClient rest(QUrl(LAPIURL.data()));
@@ -465,7 +463,6 @@ bool Node::Cleanit(Block *b) {
             if ( pr->stats().kstats().fg_size() == 0) continue;
 
             double newres = BlockProcessor::CalcResults(pr->stats());
-            qDebug() << "kkk" << newres << pr->result();
             pr->set_result(newres);
         }
         for ( int i =0; i < prd->game_result().away_result_size(); i++) {
@@ -475,7 +472,6 @@ bool Node::Cleanit(Block *b) {
             if ( pr->stats().kstats().fg_size() == 0) continue;
 
             double newres = BlockProcessor::CalcResults(pr->stats());
-            qDebug() << "kkk" << newres << pr->result();
             pr->set_result(newres);
         }
 

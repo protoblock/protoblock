@@ -66,6 +66,7 @@ public:
 
     }
 
+    static bool forking;
 
     void Cleaner();
     bool Cleanit(Block *b) ;

@@ -599,14 +599,12 @@ public:
             gameroster =  DataService::instance()->GetCurrentWeekGameRosters();
 
             for ( auto games : gameroster ) {
-                if ( games.info.home() == "DAL")
                 for ( auto p : games.homeroster) {
                     if ( p.second.base.position() == "DEF") continue;
                     bool isactive
                     = (p.second.team_status == PlayerStatus_Status_ACTIVE);
                     myknownplayerstatus[p.first] = make_pair(games.info.home(),isactive);
                 }
-                if ( games.info.away() == "DAL")
 
                 for ( auto p : games.awayroster ) {
                     if ( p.second.base.position() == "DEF") continue;
@@ -623,7 +621,6 @@ public:
 
         for ( int i = 0; i < fantasybit::Commissioner::GENESIS_NFL_TEAMS.size(); i++) {
             auto team = fantasybit::Commissioner::GENESIS_NFL_TEAMS[i];
-            if ( team != "DAL") continue;
             QThread::currentThread()->msleep(1000);
             auto route = makeroute(team);
             QMap<QString,QString>  headers;
