@@ -8,10 +8,15 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+
+#DEFINES += STAGINGFOOTBALL
+
+#DEFINES += MIKECLAYIMPORT
+
 #comment this line to generate
-#DEFINES += DATAAGENTGUI
-#DEFINES += DATAAGENTWRITENAMES
-#DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
+DEFINES += DATAAGENTGUI
+DEFINES += DATAAGENTWRITENAMES
+#DEFINES += DATAAGENTGUIJay2015fPrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
 
 DEFINES += BUILD_STABLE
@@ -37,12 +42,30 @@ CONFIG(debug, debug|release) {
     MOC_DIR = ./debug
     OBJECTS_DIR = ./debug
     contains(DEFINES, DATAAGENTGUI){ DESTDIR = ./../debugbinagent }
+    contains(DEFINES, DATAAGENTGUI){
+        contains(DEFINES, STAGINGFOOTBALL) {
+            DESTDIR = ./../stage
+        }
+
+        !contains(DEFINES, STAGINGFOOTBALL) {
+            DESTDIR = ./../debugbinagent
+        }
+
+    }
 }
 
 CONFIG(release, debug|release) {
 #    LIBS += -L./../lib
 #    LIBS += -lfc_release
     DESTDIR = ./../bin
+    contains(DEFINES, STAGINGFOOTBALL) {
+        DESTDIR = ./../stage
+    }
+
+    !contains(DEFINES, STAGINGFOOTBALL) {
+        DESTDIR = ./../bin
+    }
+
     MOC_DIR = ./release
     OBJECTS_DIR = ./release
 }
