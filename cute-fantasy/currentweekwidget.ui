@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>726</width>
-    <height>540</height>
+    <width>715</width>
+    <height>542</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,169 +15,172 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="maximumSize">
-      <size>
-       <width>180</width>
-       <height>16777215</height>
-      </size>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-     <property name="title">
-      <string>Schedule</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="myOpenGamesRb">
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Open</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">myGamesOptionsGroup</string>
-        </attribute>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QListView" name="myGamesListView">
-        <property name="font">
-         <font>
-          <family>Segoe UI</family>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::SingleSelection</enum>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectRows</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="myLockedGamesRb">
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Locked</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">myGamesOptionsGroup</string>
-        </attribute>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Player Projections</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="0" colspan="4">
-       <widget class="QTableView" name="myProjectionTableView">
-        <property name="selectionMode">
-         <enum>QAbstractItemView::SingleSelection</enum>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectItems</enum>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="3">
-       <widget class="QLabel" name="myControlMessageLabel">
-        <property name="styleSheet">
-         <string notr="true">color: rgb(255, 0, 0);</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
-        </property>
-        <property name="textInteractionFlags">
-         <set>Qt::TextBrowserInteraction</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QComboBox" name="myPositionComboBox">
-        <item>
-         <property name="text">
-          <string>ALL</string>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="maximumSize">
+       <size>
+        <width>180</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Schedule</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QRadioButton" name="myOpenGamesRb">
+         <property name="autoFillBackground">
+          <bool>false</bool>
          </property>
-        </item>
-        <item>
          <property name="text">
-          <string>QB</string>
+          <string>Open</string>
          </property>
-        </item>
-        <item>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">myGamesOptionsGroup</string>
+         </attribute>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QListView" name="myGamesListView">
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QRadioButton" name="myLockedGamesRb">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
          <property name="text">
-          <string>RB</string>
+          <string>Locked</string>
          </property>
-        </item>
-        <item>
+         <attribute name="buttonGroup">
+          <string notr="true">myGamesOptionsGroup</string>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string>Player Projections</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QComboBox" name="myPositionComboBox">
+         <item>
+          <property name="text">
+           <string>ALL</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>QB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>RB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>WR</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>TE</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>K</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DEF</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="4">
+        <widget class="QTableView" name="myProjectionTableView">
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectItems</enum>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="4">
+        <widget class="QPushButton" name="mySendProjectionButton">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>51</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+         </property>
          <property name="text">
-          <string>WR</string>
+          <string>Send Projections</string>
          </property>
-        </item>
-        <item>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="3">
+        <widget class="QLabel" name="myControlMessageLabel">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 0, 0);</string>
+         </property>
          <property name="text">
-          <string>TE</string>
+          <string/>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>K</string>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>DEF</string>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
-        </item>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="4">
-       <widget class="QPushButton" name="mySendProjectionButton">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>51</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-        </property>
-        <property name="text">
-         <string>Send Projections</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::TextBrowserInteraction</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
