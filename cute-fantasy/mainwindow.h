@@ -66,8 +66,6 @@ private slots:
     void refreshLeaderBoard();
     void showLeaderboardContextualMenu(const QPoint & point);
 
-    void on_pushButton_clicked();
-
 private:
     void initialize();
     void initDefaultGuiDisplay();

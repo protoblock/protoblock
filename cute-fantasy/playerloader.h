@@ -33,21 +33,26 @@ void print_hex_memory(void *mem,int size) {
   printf("\n");
 }
 */
-
 using namespace std;
 using namespace fantasybit;
-
-
 
 struct SqlStuff {
     QSqlDatabase db{};
 
+    SqlStuff(string dbname) {
+        init(dbname);
+    }
+
     SqlStuff() {
+        init(DBNAME);
+    }
+
+    void init(string dbname) {
         db = QSqlDatabase::addDatabase("QMYSQL");
 
         db.setHostName(DBIP.data());
         db.setPort(3306);
-        db.setDatabaseName(DBNAME.data());
+        db.setDatabaseName(dbname.data());
         db.setUserName("root");
         db.setPassword("fantasyf00tball!");
         //bool success = true;
@@ -56,6 +61,7 @@ struct SqlStuff {
              //LogIt(db.lastError().databaseText().toStdString());
             return;
         }
+
 
     }
 
@@ -199,6 +205,47 @@ struct SqlStuff {
 
     void playermap(int playerid, string id) {
         playermapFeed("TRDR",playerid,id);
+    }
+
+    void distribute(Distribution &dist) {
+        QSqlQuery insertQuery(db);
+
+        insertQuery.prepare
+            ("INSERT INTO distribution "
+             "(fantasynameid,gameid,playerid,teamid,season,week,projection,award,result)"
+             "VALUES(:fnid, :gid, :pid,:tid,:s,:w,:proj,:award, :res)");
+
+        insertQuery.bindValue(":fnid",dist.fantasy_nameid());
+        insertQuery.bindValue(":gid",QString::fromStdString(dist.gameid()));
+        insertQuery.bindValue(":pid",QString::fromStdString(dist.playerid()));
+        insertQuery.bindValue(":tid",QString::fromStdString(dist.teamid()));
+        insertQuery.bindValue(":s",dist.season());
+        insertQuery.bindValue(":w",dist.week());
+        insertQuery.bindValue(":proj",dist.proj());
+        insertQuery.bindValue(":award",dist.award());
+        insertQuery.bindValue(":res",dist.result());
+        if ( !insertQuery.exec() ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+        }
+
+
+    }
+
+    void fantasyname(FantasyNameHash &fnh) {
+        QSqlQuery insertQuery(db);
+
+        insertQuery.prepare
+            ("INSERT INTO fantasyname "
+             "(fantasynameid,fantasyname)"
+             "VALUES(:fnid, :fn)");
+
+        insertQuery.bindValue(":fnid",fnh.hash());
+        insertQuery.bindValue(":fn",QString::fromStdString(fnh.name()));
+        if ( !insertQuery.exec() ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+        }
+
+
     }
 
     void playermapFeed(string feed, int playerid, string id) {
@@ -785,7 +832,14 @@ public:
             Dstats daway{};
             GameResult gr{};
             auto tgid = jo.value("id").toString().toStdString();
-            gr.set_gameid(sqls.getgidT(tgid));
+            auto mygid = sqls.getgidT(tgid);
+            if ( mygid == "") {
+                qCritical() << " bas sql return" << tgid << mygid;
+                result.clear();
+                return result;
+            }
+            qInfo() << " using gid" << mygid;
+            gr.set_gameid(mygid);
             for ( auto tm : {QString("home_team"), QString("away_team")}) {
 
                 auto playerresults = ( tm == "home_team" ) ?
@@ -906,8 +960,10 @@ public:
                 for ( auto pstats : tstats) {
                     PlayerResult pr{};
                     int dbpid = sqls.getpidT(pstats.first.toStdString());
-                    if ( dbpid <=0 )
-                        qWarning() << "cant get player id form id ignorming result" << pstats.first;
+                    if ( dbpid <=0 ) {
+                        qWarning() << "cant get player id form id ignoring result" << pstats.first;
+                        continue;
+                    }
                     pr.set_playerid(to_string(dbpid));
                     pr.mutable_stats()->CopyFrom(pstats.second);
                     pr.set_result(CalcResults(pstats.second));
@@ -916,28 +972,32 @@ public:
             }
 
             {
-            PlayerResult pr{};
-            int dbpid = sqls.getpidT(homeid.toStdString());
-            if ( dbpid <=0 )
-                qWarning() << "cant get player id form id ignorming result";
-            pr.set_playerid(to_string(dbpid));
-            dhome.set_ptsa(awaypoints);
-            pr.mutable_stats()->mutable_dstats()->CopyFrom(dhome);
-            pr.set_result(CalcResults(pr.stats()));
-            gr.add_home_result()->CopyFrom(pr);
+                PlayerResult pr{};
+                int dbpid = sqls.getpidT(homeid.toStdString());
+                if ( dbpid <=0 ) {
+                    qWarning() << "cant get player id form id ignorming result" << homeid;
+                    continue;
+                }
+                pr.set_playerid(to_string(dbpid));
+                dhome.set_ptsa(awaypoints);
+                pr.mutable_stats()->mutable_dstats()->CopyFrom(dhome);
+                pr.set_result(CalcResults(pr.stats()));
+                gr.add_home_result()->CopyFrom(pr);
             }
 
             {
-            PlayerResult pr{};
-            int dbpid = sqls.getpidT(awayid.toStdString());
-            if ( dbpid <=0 )
-                qWarning() << "cant get player id form id ignorming result";
-            pr.set_playerid(to_string(dbpid));
-            dhome.set_ptsa(homepoints);
-            pr.mutable_stats()->mutable_dstats()->CopyFrom(daway);
-            pr.set_result(CalcResults(pr.stats()));
-            gr.add_home_result()->CopyFrom(pr);
-            }
+                PlayerResult pr{};
+                int dbpid = sqls.getpidT(awayid.toStdString());
+                if ( dbpid <=0 ) {
+                    qWarning() << "cant get player id form id ignorming result" << awayid;
+                    continue;
+                }
+                pr.set_playerid(to_string(dbpid));
+                dhome.set_ptsa(homepoints);
+                pr.mutable_stats()->mutable_dstats()->CopyFrom(daway);
+                pr.set_result(CalcResults(pr.stats()));
+                gr.add_away_result()->CopyFrom(pr);
+                }
 
 
             result.push_back(gr);
@@ -988,7 +1048,7 @@ public:
             if ( ks.has_pa() )
                 ret += 100 * ks.pa();
             for ( auto f : ks.fg())
-                ret += 300 + 10 * ((f > 30) ? f : 0);
+                ret += 300 + 10 * ((f > 30) ? (f-30) : 0);
         }
         if ( stats.has_dstats() ) {
             auto ds = stats.dstats();

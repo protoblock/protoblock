@@ -476,7 +476,3 @@ void MainWindow::setCurrentFantasyName(fantasybit::MyFantasyName * fantasyName,b
 		emit UseMyFantasyName(QString(myCurrentFantasyName.name().data()));	
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-
-}

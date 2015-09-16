@@ -34,7 +34,6 @@ SOURCES += \
     $$PWD/iresolvable.cpp \    
     $$PWD/dataservice.cpp \
     $$PWD/tablemodels.cpp \
-    $$PWD/dataagent.cpp \
     $$PWD/waitmodaldialog.cpp \
     $$PWD/animationandmessagewidget.cpp \
     $$PWD/../src/mnemonic.cpp
@@ -93,7 +92,6 @@ HEADERS += \
     $$PWD/tablemodels.h \
     $$PWD/propertynames.h \
     $$PWD/datacache.h \
-    $$PWD/dataagent.h \
     $$PWD/waitmodaldialog.h \
     $$PWD/animationandmessagewidget.h \
     $$PWD/../src/mnemonic.h
@@ -113,8 +111,14 @@ RESOURCES += \
 
 contains(DEFINES, DATAAGENTGUI){
     SOURCES += $$PWD/testingwindow.cpp   
+    SOURCES += $$PWD/playerloader.cpp
+    SOURCES += $$PWD/dataagent.cpp
+    HEADERS += $$PWD/dataagent.h
+
     HEADERS += $$PWD/playerloader.h
     FORMS += $$PWD/testingwindow.ui
     HEADERS += $$PWD/testingwindow.h
+
+
 }
 

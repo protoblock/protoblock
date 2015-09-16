@@ -824,12 +824,13 @@ void TestingWindow::on_MsgButton_clicked() {
     myMessageData.set_msg(ui->out->text().toStdString());
 }
 
+/*
 void TestingWindow::on_stage_player_clicked()
 {
     playerloader = new PlayerLoaderTR();
     myPlayerData = playerloader->loadPlayersFromTradeRadar(false);
-
 }
+
 
 void TestingWindow::on_commit_player_clicked()
 {
@@ -883,3 +884,4 @@ void TestingWindow::on_Update_PLayers_2_clicked()
         }
     }
 }
+*/
