@@ -66,6 +66,11 @@ Name: "{app}\bearer"
 Name: "{app}\imageformats"
 Name: "{app}\platforms"
 Name: "{app}\storage"
+
+[InstallDelete]
+Type: filesandordirs; Name: "{app}\storage\index"
+Type: filesandordirs; Name: "{app}\storage\block"
+
 [Code]
 function IsRegularUser(): Boolean;
 begin
