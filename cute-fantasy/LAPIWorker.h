@@ -15,6 +15,7 @@
 #include "StatusData.pb.h"
 #include "ProtoData.pb.h"
 #include <vector>
+#include <mutex>
 #include "iresolvable.h"
 
 using fantasybit::GlobalState;
@@ -44,6 +45,7 @@ class MainLAPIWorker : public QObject , public IResolvable
     fantasybit::MyFantasyName myCurrentName{};
 
     void DoPostTx(SignedTransaction &st);
+    std::recursive_mutex last_mutex{};
 
 public:
     MainLAPIWorker(QObject * parent=0);

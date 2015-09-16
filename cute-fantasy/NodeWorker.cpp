@@ -20,6 +20,8 @@
 
     void NodeWorker::preinit() {
         node.init();
+        //node.Cleaner();
+
     }
 
     void NodeWorker::init(){

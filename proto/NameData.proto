@@ -17,3 +17,9 @@ message FantasyBitProj {
         optional int32 proj = 20;
         optional string playerid = 30;
 }
+
+message GameFantasyBitProj {
+        optional string gameid = 10;
+        repeated FantasyBitProj home = 20;
+        repeated FantasyBitProj away = 30;
+}
