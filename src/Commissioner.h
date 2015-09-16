@@ -41,6 +41,13 @@ public:
     }
 
 
+    static void clearAll()
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
+        FantasyNames.clear();
+        Hash2Pk.clear();
+    }
+
     static std::vector<std::shared_ptr<FantasyName>> GetFantasyNames() {
         std::vector<std::shared_ptr<FantasyName>> names;
 
@@ -335,6 +342,8 @@ public:
 		fc::from_base58(str, sig.data, sig.size());
 		return sig;
 	}
+
+    static std::vector<std::string> STATS_ID;
 
     static std::vector<std::string> GENESIS_NFL_TEAMS;
     static std::set<std::pair<std::string,std::string>> GENESIS_NFL_PLAYERS;

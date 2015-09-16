@@ -102,6 +102,10 @@ public:
     MyFantasyName UseMnemonic(std::string mn, bool store=true);
 
 
+    static string BlockHash(const Block &b) {
+        return fc::sha256::hash(b.signedhead().head().SerializeAsString()).str();
+    }
+
 };
 
 }

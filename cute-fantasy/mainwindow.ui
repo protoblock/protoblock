@@ -186,15 +186,38 @@
         </item>
        </layout>
       </widget>
-      <widget class="QGroupBox" name="groupBox_2">
+      <widget class="QGroupBox" name="MikeProjections">
        <property name="title">
         <string/>
        </property>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_4">
+        <item row="2" column="0" colspan="4">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2" colspan="2">
+         <widget class="QLineEdit" name="myBalanceText">
+          <property name="statusTip">
+           <string>your current balance amount</string>
+          </property>
           <property name="text">
-           <string>Fantasy Name</string>
+           <string>0</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Fantasy Bits:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -208,16 +231,6 @@
           </property>
           <property name="text">
            <string>fp status</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Fantasy Bits:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -240,26 +253,6 @@
           </property>
           <property name="duplicatesEnabled">
            <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2" colspan="2">
-         <widget class="QLineEdit" name="myBalanceText">
-          <property name="statusTip">
-           <string>your current balance amount</string>
-          </property>
-          <property name="text">
-           <string>0</string>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" colspan="4">
-         <widget class="Line" name="line_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
@@ -295,13 +288,6 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0" colspan="4">
-         <widget class="Line" name="line">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
         <item row="5" column="0">
          <widget class="QLabel" name="label">
           <property name="font">
@@ -316,6 +302,20 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="4">
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Fantasy Name</string>
           </property>
          </widget>
         </item>

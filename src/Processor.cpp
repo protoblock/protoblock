@@ -535,6 +535,9 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             for (const PlayerPoints & pt : ptb.player_points() ) {
                 mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
             }
+                    qDebug() << "hoho brady" << st.fantasy_name() << "block" << b.signedhead().head().num();
+                }
+            }
 
             break;
 

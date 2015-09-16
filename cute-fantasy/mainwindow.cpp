@@ -475,3 +475,4 @@ void MainWindow::setCurrentFantasyName(fantasybit::MyFantasyName * fantasyName,b
 	if (useName)
 		emit UseMyFantasyName(QString(myCurrentFantasyName.name().data()));	
 }
+

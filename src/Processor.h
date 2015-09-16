@@ -30,8 +30,8 @@ class BlockProcessor : public QObject {
     BlockRecorder mRecorder{};
     NFLStateData &mData;
     FantasyNameData &mNameData;
-	int realHeight = 0;
-	int lastidprocessed = 0;
+    int32_t realHeight = 0;
+    int32_t lastidprocessed = 0;
     //GlobalState mGlobalState{};
     bool verify_name(const SignedTransaction &, const NameTrans &,
                      const fc::ecc::signature&, const fc::sha256 &);
@@ -51,9 +51,9 @@ signals:
 
 public:
     BlockProcessor(NFLStateData &data, FantasyNameData &namedata) : mData(data), mNameData(namedata) {}
-    int init();
+    int32_t init();
 
-    int process(Block &sblock);
+    int32_t process(Block &sblock);
     bool processDataBlock(const Block &sblock);
     //bool isInWeekGame(const std::string &id, int week );
     //bool sanity(const FantasyPlayerPoints &fpp);

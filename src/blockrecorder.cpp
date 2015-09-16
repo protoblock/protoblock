@@ -20,23 +20,23 @@ void BlockRecorder::init() {
         qWarning() << "!ok no blocks";
     }
     else {
-        lastBlock = *(reinterpret_cast<const int *>(value.data()));
+        lastBlock = *(reinterpret_cast<const int32_t *>(value.data()));
         qInfo() << "lastBLock: " << lastBlock;
     }
 }
 
 
-void BlockRecorder::startBlock(int num) {
-    leveldb::Slice value((char*)&num, sizeof(int));
+void BlockRecorder::startBlock(int32_t num) {
+    leveldb::Slice value((char*)&num, sizeof(int32_t));
     blockstatus->Put(write_sync, "processing", value);
     blockstatus->Put(leveldb::WriteOptions(), "lastblock", value);
     qInfo() << "starting block: " << num;
 }
 
 
-int BlockRecorder::endBlock(int num) {
-    int none = -1;
-    leveldb::Slice value((char*)&none, sizeof(int));
+int32_t BlockRecorder::endBlock(int32_t num) {
+    int32_t none = -1;
+    leveldb::Slice value((char*)&none, sizeof(int32_t));
     blockstatus->Put(write_sync, "processing", value);
     qInfo() << "end block: " << num;
     return num;
@@ -48,12 +48,12 @@ bool BlockRecorder::isValid() {
     if (blockstatus->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound())
         return true;
 
-    int num = *(reinterpret_cast<const int *>(value.data()));
+    int32_t num = *(reinterpret_cast<const int32_t *>(value.data()));
     return num < 0;
 }
 
 
-int BlockRecorder::getLastBlockId() {
+int32_t BlockRecorder::getLastBlockId() {
     return lastBlock;
 }
 

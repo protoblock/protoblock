@@ -19,16 +19,16 @@ class NodeWorker : public QObject
 {
     Q_OBJECT
 
-    int hi = 0;
+    int32_t hi = 0;
 public:
     NodeWorker(QObject * parent=0);
     fantasybit::Node node;
     void preinit();
 
 signals:
-    void InSync(int height);
-    void SeenBlock(int height);
-    void BlockError(int height);
+    void InSync(int32_t height);
+    void SeenBlock(int32_t height);
+    void BlockError(int32_t height);
     void ResetIndex();
 
 public slots:

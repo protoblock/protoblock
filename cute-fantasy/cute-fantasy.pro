@@ -11,15 +11,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 #DEFINES += STAGINGFOOTBALL
 
-#DEFINES += MIKECLAYIMPORT
+DEFINES += MIKECLAYIMPORT
 
 #comment this line to generate
-DEFINES += DATAAGENTGUI
-DEFINES += DATAAGENTWRITENAMES
-#DEFINES += DATAAGENTGUIJay2015fPrePreSeasonTestDemo
+#DEFINES += DATAAGENTGUI
+#DEFINES += DATAAGENTWRITENAMES
+#DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
 
 DEFINES += BUILD_STABLE
+
 
 contains(DEFINES, DATAAGENTGUI){
     TARGET = cute-fantasy-agent
@@ -41,7 +42,6 @@ CONFIG(debug, debug|release) {
     DESTDIR = ./../debugbin
     MOC_DIR = ./debug
     OBJECTS_DIR = ./debug
-    contains(DEFINES, DATAAGENTGUI){ DESTDIR = ./../debugbinagent }
     contains(DEFINES, DATAAGENTGUI){
         contains(DEFINES, STAGINGFOOTBALL) {
             DESTDIR = ./../stage
@@ -57,7 +57,6 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
 #    LIBS += -L./../lib
 #    LIBS += -lfc_release
-    DESTDIR = ./../bin
     contains(DEFINES, STAGINGFOOTBALL) {
         DESTDIR = ./../stage
     }

@@ -380,7 +380,7 @@ public:
         return blk;
     }
 
-    static std::string getBlk(const QString & baseUrl,int blockNum,
+    static std::string getBlk(const QString & baseUrl,int32_t blockNum,
                               QThread * ownerThread = QThread::currentThread()){
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
@@ -395,7 +395,7 @@ public:
         return client.lastReply().toStdString();
     }
 
-    static int getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
+    static int32_t getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
         //qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
@@ -409,7 +409,7 @@ public:
         QString str( response );
         str.remove("\"");
         //int i = to_string(i);
-        int i = str.toInt();
+        int32_t i = str.toLong();
         return i;
     }
 
