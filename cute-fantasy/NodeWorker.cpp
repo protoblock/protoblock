@@ -20,13 +20,15 @@
 
     void NodeWorker::preinit() {
         node.init();
+        //node.Cleaner();
+
     }
 
     void NodeWorker::init(){
         qDebug("NodeWorker Thread started");
 
         bool ret = node.Sync();
-        int last = node.getLastLocalBlockNum();
+        int32_t last = node.getLastLocalBlockNum();
 
         if ( last > hi ) hi = last;
 
@@ -39,7 +41,11 @@
                 node.BackSync(*gnum);
                 hi = node.getLastLocalBlockNum();
                 emit ResetIndex();
-                int last = node.getLastLocalBlockNum();
+                int32_t last = node.getLastLocalBlockNum();
+                emit InSync(last);
+            }
+            else if ( last == *gnum && last > 1) {
+                emit ResetIndex();
                 emit InSync(last);
             }
             else
@@ -57,8 +63,13 @@
                 hi = *gnum;
                 emit SeenBlock(*gnum);
                 if ( !node.SyncTo(*gnum) ) {
-                    int last = node.getLastLocalBlockNum();
-                    emit BlockError(last);
+                    int32_t last = node.getLastLocalBlockNum();
+                    if ( last == *gnum && last > 1) {
+                        emit ResetIndex();
+                        emit InSync(last);
+                    }
+                    else
+                        emit BlockError(last);
                 }
             }
         }

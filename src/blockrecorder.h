@@ -10,7 +10,7 @@ class BlockRecorder {
 
     std::unique_ptr<leveldb::DB> blockstatus;  // lastblock -> status // last block processed
     leveldb::WriteOptions write_sync{};
-    int lastBlock = 0;
+    int32_t lastBlock = 0;
 
 //public slots:
 
@@ -35,10 +35,10 @@ public:
     void OnTeamData(const TeamData &gs);
     TeamData GetTeamData(const std::string &pid);
 */
-    void startBlock(int num);
-    int endBlock(int num);
+    void startBlock(int32_t num);
+    int32_t endBlock(int32_t num);
     bool isValid();
-    int getLastBlockId();
+    int32_t getLastBlockId();
     /*
     void recordName(const hash_t &hash,const std::string &pubkey,const std::string &name);
     void addProjection(const std::string &fname, const FantasyPlayerPoints &fpp);

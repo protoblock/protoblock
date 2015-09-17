@@ -17,6 +17,8 @@ void Core::bootstrap(){
     qRegisterMetaType<fantasybit::GameStatus_Status>("fantasybit::GameStatus_Status");
     qRegisterMetaType<fantasybit::Distribution>("fantasybit::Distribution");
     qRegisterMetaType<fantasybit::FantasyNameHash>("fantasybit::FantasyNameHash");
+    qRegisterMetaType<int32_t>("int32_t");
+
 
     qRegisterMetaType<string>("string");
     qSetMessagePattern(Platform::settings()->getSetting(AppSettings::LogMessagePattern).toString());

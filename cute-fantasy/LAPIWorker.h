@@ -15,6 +15,7 @@
 #include "StatusData.pb.h"
 #include "ProtoData.pb.h"
 #include <vector>
+#include <mutex>
 #include "iresolvable.h"
 
 using fantasybit::GlobalState;
@@ -29,9 +30,9 @@ class MainLAPIWorker : public QObject , public IResolvable
     int bcount =0;
     int pcount =0;
     int count =0;
-    int last_block=0;
+    int32_t last_block=0;
     NodeWorker *myNodeWorker;
-    int numto = std::numeric_limits<int>::max();
+    int32_t numto = std::numeric_limits<int32_t>::max();
     bool amlive = false;
     QTimer * timer;
     fantasybit::FantasyAgent agent{};
@@ -44,6 +45,7 @@ class MainLAPIWorker : public QObject , public IResolvable
     fantasybit::MyFantasyName myCurrentName{};
 
     void DoPostTx(SignedTransaction &st);
+    std::recursive_mutex last_mutex{};
 
 public:
     MainLAPIWorker(QObject * parent=0);
@@ -91,7 +93,7 @@ signals:
     void GameOver(string);
     void onControlMessage(QString);
 
-    void BlockError(int last);
+    void BlockError(int32_t last);
 
 public slots:
 
@@ -100,11 +102,11 @@ public slots:
 
     void startPoint();
 
-    void OnInSync(int num);
+    void OnInSync(int32_t num);
     void ProcessBlock();
-    void OnSeenBlock(int num);
+    void OnSeenBlock(int32_t num);
     void Timer();
-    void OnBlockError(int last);
+    void OnBlockError(int32_t last);
     void ResetIndex();
 
     //void OnPlayerChange(std::string);

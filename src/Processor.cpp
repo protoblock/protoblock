@@ -24,6 +24,9 @@
 #include "ApiData.pb.h"
 #include "RestFullCall.h"
 #include "fbutils.h"
+#ifdef DATAAGENTWRITENAMES
+#include "playerloader.h"
+#endif
 
 namespace fantasybit
 {
@@ -36,7 +39,7 @@ void BlockProcessor::hardReset() {
     fc::remove_all(Platform::getRootDir() + "index/");
 }
 
-int BlockProcessor::init() {
+int32_t BlockProcessor::init() {
     mRecorder.init();
     if (!mRecorder.isValid() ) {
         emit InvalidState(mRecorder.getLastBlockId());
@@ -61,7 +64,7 @@ int BlockProcessor::init() {
     return lastidprocessed;
 }
 
-int BlockProcessor::process(Block &sblock) {
+int32_t BlockProcessor::process(Block &sblock) {
     qDebug() << "process: " << sblock.signedhead().head().num();
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
@@ -180,11 +183,22 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     break;
                 }
                 */
+                auto allprojs = mNameData.GetGameProj(rd.game_result().gameid());
+                unordered_map<string,std::unordered_map<std::string,int>> projmaps;
+                for ( auto fpj : allprojs.home())
+                   projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
+
+                for ( auto fpj : allprojs.away())
+                   projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
+
                 if( rd.game_result().home_result_size() <= 0 )
                     qCritical() << "no home result" + QTD(rd.DebugString());
                 else {
                     for ( int i =0; i < rd.game_result().home_result_size(); i++) {
-                        auto proj = mNameData.GetProjById(rd.game_result().home_result(i).playerid());
+                        qDebug() << rd.game_result().home_result(i).playerid()
+                                 << rd.game_result().home_result(i).result();
+
+                        auto proj = projmaps[rd.game_result().home_result(i).playerid()];
                         //if ( proj.size() == 0 )
                         //    continue;
 
@@ -193,12 +207,16 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     }
                 }
 
+
                 if( rd.game_result().away_result_size() <= 0 )
                     qCritical() << "no away result" + QTD(rd.DebugString());
                 else
                     //for (auto result : rd.game_result().away_result() ) {
                     for ( int i =0; i < rd.game_result().away_result_size(); i++) {
-                        auto proj = mNameData.GetProjById(rd.game_result().away_result(i).playerid());
+                        qDebug() << rd.game_result().away_result(i).playerid()
+                                 << rd.game_result().away_result(i).result();
+
+                        auto proj = projmaps[rd.game_result().away_result(i).playerid()];
                         //if ( proj.size() == 0 )
                         //    continue;
                         processResultProj(rd.mutable_game_result()->mutable_away_result(i),
@@ -206,8 +224,6 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         //result.mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
                         //rd.mutable_game_result()->
                         //        mutable_away_result(i)->mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
-                        qDebug() << rd.game_result().away_result(i).playerid()
-                                 << rd.game_result().away_result(i).fantaybitaward_size();
                     }
 
                 //for (auto result : rd.game_result().away_result() )
@@ -215,7 +231,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
 #ifdef DATAAGENTWRITENAMES
+                {
                 if ( !amlive ) break;
+                SqlStuff sql{"satoshifantasy"};
                 Distribution dist{};
                 dist.set_gameid(rd.game_result().gameid());
                 auto gs = mData.GetGlobalState();
@@ -236,8 +254,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                         auto ds = dist.SerializeAsString();
 
-                        RestfullClient rest(QUrl(LAPIURL.data()));
-                        rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
+                        sql.distribute(dist);
+                        //RestfullClient rest(QUrl(LAPIURL.data()));
+                        //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
 
                     }
                 }
@@ -254,10 +273,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         emit new_dataDistribution(dist);
                         auto ds = dist.SerializeAsString();
 
-                        RestfullClient rest(QUrl(LAPIURL.data()));
-                        rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
+                        sql.distribute(dist);
+                        //RestfullClient rest(QUrl(LAPIURL.data()));
+                        //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
 
                     }
+                }
                 }
 #endif
                 break;
@@ -277,9 +298,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( msg.has_msg() ) {
                     qWarning() << "Control messgae" << msg.DebugString();
 
-                    if ( !amlive )
-                        break;
-                    else
+                    //if ( !amlive )
+                    //    break;
+                    //else
                     if ( msg.has_gt() || msg.has_lt()) {
                         int version =
                                 MAJOR_VERSION * 1000 +
@@ -390,7 +411,17 @@ void BlockProcessor::process(const DataTransition &indt) {
     case DataTransition_Type_GAMESTART:
         for (auto t : indt.gamedata()) {
             mData.OnGameStart(t.gameid(),t.status());
-            qInfo() <<  " Kickoff for game " << t.DebugString();
+            qInfo() <<  "Kickoff for game " << t.DebugString();
+            auto gi =  mData.GetGameInfo(t.gameid());
+            auto homeroster = mData.GetTeamRoster(gi.home());
+            auto awayroster = mData.GetTeamRoster(gi.away());
+            vector<string> homep, awayp;
+            for ( auto hr : homeroster)
+                homep.push_back(hr.first);
+            for ( auto hr : awayroster)
+                awayp.push_back(hr.first);
+
+            mNameData.OnGameStart(t.gameid(),homep,awayp);
         }
         break;
     case DataTransition_Type_WEEKOVER:
@@ -425,7 +456,7 @@ void BlockProcessor::process(const DataTransition &indt) {
 }
 
 bool BlockProcessor::isValidTx(const SignedTransaction &st) {
-    Transaction t{ st.trans() };
+    const Transaction &t = st.trans();
     fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
     if (digest.str() != st.id()) {
         qCritical() << "digest.str() != st.id() ";
@@ -465,11 +496,29 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
 
 void BlockProcessor::processTxfrom(const Block &b,int start) {
 
-    for (int i = start; i < b.signed_transactions_size(); i++)
+    //first do name transactions
+    for (int i = start; i < b.signed_transactions_size(); i++) {
+        if ( b.signed_transactions(i).trans().type() != TransType::NAME)
+            continue;
+
+        if ( !isValidTx(b.signed_transactions(i))) {
+            qDebug() << " imvalid tx";
+            continue;
+        }
+
+        const NameTrans & nt = b.signed_transactions(i).trans().GetExtension(NameTrans::name_trans);
+        mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
+        qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
+
+    }
+
+    for (const SignedTransaction &st : b.signed_transactions()) // i = start; i < b.signed_transactions_size(); i++)
     {
-        auto st = b.signed_transactions(i);
-        Transaction t{ st.trans() };
-        fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
+        if ( st.trans().type() == TransType::NAME)
+            continue;
+
+        const Transaction &t = st.trans();
+        //fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
 
         qDebug() << "processing tx " << t.DebugString();// TransType_Name(t.type());
 
@@ -481,10 +530,11 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
         switch (t.type())
         {
         case TransType::PROJECTION_BLOCK: {
-            auto ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
-            qDebug() << st.fantasy_name() << "new projection block" << ptb.DebugString();
-            for (auto pt : ptb.player_points() )
+            const ProjectionTransBlock & ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
+            qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
+            for (const PlayerPoints & pt : ptb.player_points() ) {
                 mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
+            }
 
             break;
 
@@ -498,16 +548,6 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             break;
         }
 
-        case TransType::NAME:
-        {
-            auto nt = t.GetExtension(NameTrans::name_trans);
-            mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
-            qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
-            //FantasyPlayer fp{};
-            //fp.set_name(nt.fantasy_name());
-            //fp.set_bits(0);
-            //outDelta.add_players()->CopyFrom(fp);
-        }
         break;
         default:
             break;

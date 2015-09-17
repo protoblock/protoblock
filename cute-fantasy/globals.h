@@ -18,7 +18,7 @@
   #ifndef BUILD_STABLE
     #define BUILD_TYPE "beta"
   #else
-    #define BUILD_TYPE ""
+    #define BUILD_TYPE "prod"
   #endif
 #endif
 
@@ -31,11 +31,11 @@
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 1
+  #define REVISION_NUMBER 2
 #endif
 
 #ifndef BUILD_NUMBER
-  #define BUILD_NUMBER   15991246
+  #define BUILD_NUMBER   1
 #endif
 
 #ifndef COPYRIGHT_DATE

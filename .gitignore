@@ -18,3 +18,11 @@ src/Makefile
 /debugbin
 cute_fantasy/debug 
 cute-fantasy/boost-includes.pri
+include/google/protobuf-2.6-1/*
+libwin64 - Copy (2)/*
+bin/*
+cute-fantasy/generatedfiles/qrc_resources.cpp
+cute-fantasy/release/*
+cute-fantasy/tmp/*
+debugbinagent/*
+openssl-1.0.1i-x64_86-win64/*

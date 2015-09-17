@@ -184,7 +184,7 @@ SignedBlockHeader FantasyAgent::makeSigned(BlockHeader &bh) {
 
    auto p = getIdSig(bh.SerializeAsString());
    sbh.set_sig(p.second);
-
+    qDebug() << p.first;
    return sbh;
 }
 

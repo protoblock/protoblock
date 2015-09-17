@@ -30,8 +30,8 @@ class BlockProcessor : public QObject {
     BlockRecorder mRecorder{};
     NFLStateData &mData;
     FantasyNameData &mNameData;
-	int realHeight = 0;
-	int lastidprocessed = 0;
+    int32_t realHeight = 0;
+    int32_t lastidprocessed = 0;
     //GlobalState mGlobalState{};
     bool verify_name(const SignedTransaction &, const NameTrans &,
                      const fc::ecc::signature&, const fc::sha256 &);
@@ -51,9 +51,9 @@ signals:
 
 public:
     BlockProcessor(NFLStateData &data, FantasyNameData &namedata) : mData(data), mNameData(namedata) {}
-    int init();
+    int32_t init();
 
-    int process(Block &sblock);
+    int32_t process(Block &sblock);
     bool processDataBlock(const Block &sblock);
     //bool isInWeekGame(const std::string &id, int week );
     //bool sanity(const FantasyPlayerPoints &fpp);
@@ -72,6 +72,80 @@ public:
     void BlockProcessor::OnWeekStart(int week);
 
     void hardReset();
+
+    static double CalcResults(const Stats &stats) {
+        int ret = 0;
+        double iret = 0;
+
+        if ( stats.has_ostats() ) {
+            auto os = stats.ostats();
+            if ( os.has_passtd())
+                ret += 400 * os.passtd(); //PAssing Yards (QB)
+
+
+            if ( os.has_rushtd() )
+                ret += 600 * os.rushtd();
+
+            if ( os.has_rectd() )
+                ret += 600 *  os.rectd();
+
+            if ( os.has_passyds() )
+               ret += 5 *  os.passyds();
+
+            if ( os.has_recyds() )
+                ret += 10 *  os.recyds();
+
+            if (  os.has_rushyds() )
+                ret += 10 *  os.rushyds();
+
+            if ( os.has_rec() )
+                ret += 100 * os.rec();
+
+            if ( os.has_pint() )
+                ret += -100 * os.pint();
+
+            if ( os.has_twopt() )
+                ret += 200 * os.twopt();
+
+            if (os.has_onept())
+                ret += 200 *  os.onept();
+        }
+        if ( stats.has_kstats() ) {
+            auto ks = stats.kstats();
+            if ( ks.has_pa() )
+                ret += 100 * ks.pa();
+            for ( auto f : ks.fg())
+                ret += 300 + 10 * ((f > 30) ? (f-30) : 0);
+        }
+        if ( stats.has_dstats() ) {
+            auto ds = stats.dstats();
+            if ( ds.has_deftd())
+                ret += 600 * ds.deftd();
+            if ( ds.has_onept())
+                ret += 200 * ds.onept();
+            if ( ds.has_ptsa()) {
+                if ( ds.ptsa() == 0)
+                    ret += 1200;
+                else if ( ds.ptsa() < 7)
+                    ret += 100;
+                else if ( ds.ptsa() < 11)
+                    ret += 800;
+            }
+            if ( ds.has_sacks())
+                ret += 100 * ds.sacks();
+            if ( ds.has_sfty())
+                ret += 500 * ds.sfty();
+            if ( ds.has_turnovers())
+                ret += 200 * ds.turnovers();
+            if ( ds.has_twopt())
+                ret += 200 * ds.twopt();
+        }
+
+        if ( ret == 0) return 0.0;
+
+        iret = (double)ret / 100.0;
+        return iret;
+    }
 
 };
 

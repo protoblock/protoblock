@@ -311,7 +311,15 @@ void TestingWindow::on_StageBlock_clicked() {
                 gd.set_gameid(ui->gameID->currentData().toString().toStdString());
                 gd.mutable_status()->CopyFrom(gs);
                 dt.add_gamedata()->CopyFrom(gd);
+                string newmsg{};
+                if ( myMessageData.has_msg())
+                    newmsg += myMessageData.msg() + " | ";
+                newmsg += ui->gameID->currentText().toStdString()
+                        + " kickoff (locked)";
+
+                myMessageData.set_msg(newmsg);
             }
+
         }
         Data d{};
         d.set_type(Data_Type_RESULT);
@@ -324,22 +332,6 @@ void TestingWindow::on_StageBlock_clicked() {
         }
         mStagedGameResult.clear();
 
-        d.set_type(Data_Type_MESSAGE);
-        if ( myMessageData.has_msg() ) {
-
-            d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
-            dt.add_data()->CopyFrom(d);
-            qDebug() << myMessageData.msg();
-            myMessageData.Clear();
-        }
-
-        if ( !makeStageBlock(dt)) {
-            ui->out->setText("error making block");
-            ui->StageBlock->setEnabled(true);
-
-        }
-        else
-            ui->SendBlock->setEnabled(true);
 
 
         d.set_type(Data::PLAYER);
@@ -350,6 +342,14 @@ void TestingWindow::on_StageBlock_clicked() {
             qDebug() << pd.DebugString();
         }
         myPlayerData.clear();
+
+        if ( !makeStageBlock(dt)) {
+            ui->out->setText("error making block");
+            ui->StageBlock->setEnabled(true);
+        }
+        else
+            ui->SendBlock->setEnabled(true);
+
 
         //leveldb::Slice snum((char*)&mStagedBlockNum, sizeof(int));
         //Node::blockchain->Put(leveldb::WriteOptions(), snum, mStagedBlock);
@@ -438,6 +438,8 @@ void TestingWindow::Timer() {
 
         st.id();
         Node::addTxPool(st.id(), txstr);
+        if ( count > 30)
+            break;
     }
 
     if (count < 1) return;
@@ -548,7 +550,7 @@ GameResult TestingWindow::fakeit(GameInfo &g) {
         }
 
         pr.mutable_stats()->CopyFrom(s);
-        pr.set_result(GameStatsLoader::CalcResults(s));
+        pr.set_result(BlockProcessor::CalcResults(s));
         gr.add_away_result()->CopyFrom(pr);
     }
 
@@ -615,7 +617,7 @@ GameResult TestingWindow::fakeit(GameInfo &g) {
         }
 
         pr.mutable_stats()->CopyFrom(s);
-        pr.set_result(GameStatsLoader::CalcResults(s));
+        pr.set_result(BlockProcessor::CalcResults(s));
         gr.add_home_result()->CopyFrom(pr);
     }
 
@@ -648,8 +650,8 @@ void TestingWindow::on_GetGameResult_clicked()
     if ( rsp != mStagedGameResult.end() )
         result = rsp->second;
     else {
-        //result = dataagent::instance()->getGameResult(realweek(),itg->second);
-        result = fakeit(itg->second);
+        result = dataagent::instance()->getGameResult(realweek(),itg->second);
+        //result = fakeit(itg->second);
         mStagedGameResult[gid] = result;
     }
 
@@ -763,13 +765,32 @@ bool TestingWindow::sendStageBlock() {
     RestfullClient rest(QUrl(LAPIURL.data()));
     rest.postRawData("block/"+QString::number(mStagedBlockNum),"xxx",mStagedBlock.data(),mStagedBlock.size());
 
-    Writer<Block> write{"crap.out"};
-    write(b);
+    Node::ClearTx(b);
+    //write(b);
     //TODO HANDLE ERROR
+    qDebug() << "sent block" << b.DebugString();
     return true;
 }
 
 bool TestingWindow::makeStageBlock(DataTransition &dt) {
+    Data d{};
+    d.set_type(Data_Type_MESSAGE);
+    if ( !myMessageData.has_msg()  || myMessageData.msg() == "" )
+        myMessageData.set_msg(to_string(mStagedBlockNum));
+    myMessageData.set_gt(1019);
+    d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
+    dt.add_data()->CopyFrom(d);
+
+
+    myMessageData.set_msg("<a href=\"http://trading.football:8080/tradingfootball-setup.exe\">Upgrade required! Click to download (v1.0.2)</a>");
+    myMessageData.set_lt(1020);
+    myMessageData.set_gt(15991245);
+    d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
+    dt.add_data()->CopyFrom(d);
+
+    qDebug() << myMessageData.msg();
+    myMessageData.Clear();
+
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::DATA);
@@ -779,6 +800,7 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     //RestfullClient rest(QUrl(PAPIURL.data()));
     //rest.postRawData("tx","shit",trans.data(),((size_t)trans.size()));
 
+    ui->out->clear();
     //todo: verify block
     if ( b )  {
         mStagedBlockNum = (*b).signedhead().head().num();
@@ -801,10 +823,71 @@ void TestingWindow::on_MsgButton_clicked() {
     myMessageData.set_msg(ui->out->text().toStdString());
 }
 
-void TestingWindow::on_Update_PLayers_clicked()
-{
-    PlayerLoaderTR playerloader;
 
-    myPlayerData = playerloader.loadPlayersFromTradeRadar(false);
+void TestingWindow::on_stage_player_clicked()
+{
+    playerloader = new PlayerLoaderTR();
+    myStagedPlayerData = playerloader->loadPlayersFromTradeRadar(false);
+    for ( auto pd : myStagedPlayerData) {
+        ui->staging_data->addItem(QString::fromStdString(pd.DebugString()));
+    }
+
+    playerloader->dump();
+    delete playerloader;
 
 }
+
+
+void TestingWindow::on_commit_player_clicked()
+{
+    myPlayerData = myStagedPlayerData;
+    myStagedPlayerData.clear();
+
+    ui->staging_data->clear();
+
+}
+
+/*
+void TestingWindow::on_Update_PLayers_2_clicked()
+{
+    int count = 0;
+    bool done = false;
+    while(!done) {
+        auto txstr = RestfullService::myGetTx();
+
+        //ToDo: verify
+        SignedTransaction st{};
+        if ( !st.ParseFromString(txstr) )
+            continue;
+
+        if ( st.trans().type() == TransType::NAME) {
+            auto nt = st.trans().GetExtension(NameTrans::name_trans);
+            if ( nt.fantasy_name() == "ffwc")
+                done = true;
+        }
+
+        count++;
+
+        ui->staging_tx->addItem(QString::fromStdString(st.DebugString()));
+
+        st.id();
+        Node::addTxPool(st.id(), txstr);
+        if ( count >= 30 || done) {
+            count = 0;
+            DataTransition dt{};
+            dt.set_type(DataTransition_Type_HEARTBEAT);
+            dt.set_season(2015);
+            dt.set_week(realweek());
+
+            if ( !makeStageBlock(dt) )
+                qDebug() << "error mamakeStageBlock ";
+            else if ( !sendStageBlock() )
+                qDebug() << "error sendStageBlock ";
+            else {
+                qInfo() << "sending block of tx";
+                ui->staging_tx->clear();
+            }
+        }
+    }
+}
+*/

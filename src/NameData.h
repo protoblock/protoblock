@@ -82,6 +82,13 @@ public:
     void Subscribe(std::string );
     void UnSubscribe(std::string );
 
+    void OnGameStart(std::string gid,
+                     std::vector<std::string> &home,
+                     std::vector<std::string> &away
+                     );
+
+    GameFantasyBitProj GetGameProj(const std::string &gid);
+
     std::string filedir(const std::string &in);
 
     void dump(mapmapi &mm);
