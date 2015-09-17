@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>715</width>
-    <height>542</height>
+    <width>720</width>
+    <height>556</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,12 +20,6 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QGroupBox" name="groupBox">
-      <property name="maximumSize">
-       <size>
-        <width>180</width>
-        <height>16777215</height>
-       </size>
-      </property>
       <property name="title">
        <string>Schedule</string>
       </property>
