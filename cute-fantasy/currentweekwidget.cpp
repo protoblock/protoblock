@@ -78,6 +78,7 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
             myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,game.info.home().data());
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerName);
             myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
+
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,
                                               qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,
@@ -100,7 +101,7 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerName);
             myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,
-                                                                                qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
+                                              qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
             myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,
                                                                                      qVariantFromValue<PlayerGameStatus>(playerDetails.game_status));
             myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);

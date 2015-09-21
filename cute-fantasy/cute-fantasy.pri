@@ -118,7 +118,9 @@ contains(DEFINES, DATAAGENTGUI){
     HEADERS += $$PWD/playerloader.h
     FORMS += $$PWD/testingwindow.ui
     HEADERS += $$PWD/testingwindow.h
-
-
 }
 
+contains(DEFINES, MIKECLAYIMPORT){
+    SOURCES += $$PWD/playerloader.cpp
+    HEADERS += $$PWD/playerloader.h
+}

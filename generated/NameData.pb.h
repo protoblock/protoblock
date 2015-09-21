@@ -36,6 +36,7 @@ void protobuf_ShutdownFile_NameData_2eproto();
 class FantasyNameBal;
 class FantasyBitAward;
 class FantasyBitProj;
+class GameFantasyBitProj;
 
 // ===================================================================
 
@@ -367,6 +368,119 @@ class FantasyBitProj : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static FantasyBitProj* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class GameFantasyBitProj : public ::google::protobuf::Message {
+ public:
+  GameFantasyBitProj();
+  virtual ~GameFantasyBitProj();
+
+  GameFantasyBitProj(const GameFantasyBitProj& from);
+
+  inline GameFantasyBitProj& operator=(const GameFantasyBitProj& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GameFantasyBitProj& default_instance();
+
+  void Swap(GameFantasyBitProj* other);
+
+  // implements Message ----------------------------------------------
+
+  GameFantasyBitProj* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const GameFantasyBitProj& from);
+  void MergeFrom(const GameFantasyBitProj& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string gameid = 10;
+  inline bool has_gameid() const;
+  inline void clear_gameid();
+  static const int kGameidFieldNumber = 10;
+  inline const ::std::string& gameid() const;
+  inline void set_gameid(const ::std::string& value);
+  inline void set_gameid(const char* value);
+  inline void set_gameid(const char* value, size_t size);
+  inline ::std::string* mutable_gameid();
+  inline ::std::string* release_gameid();
+  inline void set_allocated_gameid(::std::string* gameid);
+
+  // repeated .fantasybit.FantasyBitProj home = 20;
+  inline int home_size() const;
+  inline void clear_home();
+  static const int kHomeFieldNumber = 20;
+  inline const ::fantasybit::FantasyBitProj& home(int index) const;
+  inline ::fantasybit::FantasyBitProj* mutable_home(int index);
+  inline ::fantasybit::FantasyBitProj* add_home();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj >&
+      home() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj >*
+      mutable_home();
+
+  // repeated .fantasybit.FantasyBitProj away = 30;
+  inline int away_size() const;
+  inline void clear_away();
+  static const int kAwayFieldNumber = 30;
+  inline const ::fantasybit::FantasyBitProj& away(int index) const;
+  inline ::fantasybit::FantasyBitProj* mutable_away(int index);
+  inline ::fantasybit::FantasyBitProj* add_away();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj >&
+      away() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj >*
+      mutable_away();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.GameFantasyBitProj)
+ private:
+  inline void set_has_gameid();
+  inline void clear_has_gameid();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* gameid_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj > home_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj > away_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_NameData_2eproto();
+  friend void protobuf_AssignDesc_NameData_2eproto();
+  friend void protobuf_ShutdownFile_NameData_2eproto();
+
+  void InitAsDefaultInstance();
+  static GameFantasyBitProj* default_instance_;
 };
 // ===================================================================
 
@@ -819,6 +933,130 @@ inline void FantasyBitProj::set_allocated_playerid(::std::string* playerid) {
     clear_has_playerid();
     playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// -------------------------------------------------------------------
+
+// GameFantasyBitProj
+
+// optional string gameid = 10;
+inline bool GameFantasyBitProj::has_gameid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GameFantasyBitProj::set_has_gameid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GameFantasyBitProj::clear_has_gameid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GameFantasyBitProj::clear_gameid() {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    gameid_->clear();
+  }
+  clear_has_gameid();
+}
+inline const ::std::string& GameFantasyBitProj::gameid() const {
+  return *gameid_;
+}
+inline void GameFantasyBitProj::set_gameid(const ::std::string& value) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(value);
+}
+inline void GameFantasyBitProj::set_gameid(const char* value) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(value);
+}
+inline void GameFantasyBitProj::set_gameid(const char* value, size_t size) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* GameFantasyBitProj::mutable_gameid() {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  return gameid_;
+}
+inline ::std::string* GameFantasyBitProj::release_gameid() {
+  clear_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gameid_;
+    gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void GameFantasyBitProj::set_allocated_gameid(::std::string* gameid) {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    delete gameid_;
+  }
+  if (gameid) {
+    set_has_gameid();
+    gameid_ = gameid;
+  } else {
+    clear_has_gameid();
+    gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .fantasybit.FantasyBitProj home = 20;
+inline int GameFantasyBitProj::home_size() const {
+  return home_.size();
+}
+inline void GameFantasyBitProj::clear_home() {
+  home_.Clear();
+}
+inline const ::fantasybit::FantasyBitProj& GameFantasyBitProj::home(int index) const {
+  return home_.Get(index);
+}
+inline ::fantasybit::FantasyBitProj* GameFantasyBitProj::mutable_home(int index) {
+  return home_.Mutable(index);
+}
+inline ::fantasybit::FantasyBitProj* GameFantasyBitProj::add_home() {
+  return home_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj >&
+GameFantasyBitProj::home() const {
+  return home_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj >*
+GameFantasyBitProj::mutable_home() {
+  return &home_;
+}
+
+// repeated .fantasybit.FantasyBitProj away = 30;
+inline int GameFantasyBitProj::away_size() const {
+  return away_.size();
+}
+inline void GameFantasyBitProj::clear_away() {
+  away_.Clear();
+}
+inline const ::fantasybit::FantasyBitProj& GameFantasyBitProj::away(int index) const {
+  return away_.Get(index);
+}
+inline ::fantasybit::FantasyBitProj* GameFantasyBitProj::mutable_away(int index) {
+  return away_.Mutable(index);
+}
+inline ::fantasybit::FantasyBitProj* GameFantasyBitProj::add_away() {
+  return away_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj >&
+GameFantasyBitProj::away() const {
+  return away_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitProj >*
+GameFantasyBitProj::mutable_away() {
+  return &away_;
 }
 
 
