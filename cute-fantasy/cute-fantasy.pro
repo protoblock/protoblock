@@ -38,6 +38,7 @@ INCLUDEPATH += ./../include
 INCLUDEPATH += ./../generated
 INCLUDEPATH += ./../src
 
+
 CONFIG(debug, debug|release) {    
     DESTDIR = ./../debugbin
     MOC_DIR = ./debug
@@ -50,13 +51,10 @@ CONFIG(debug, debug|release) {
         !contains(DEFINES, STAGINGFOOTBALL) {
             DESTDIR = ./../debugbinagent
         }
-
     }
 }
 
-CONFIG(release, debug|release) {
-#    LIBS += -L./../lib
-#    LIBS += -lfc_release
+CONFIG(release, debug|release) { 
     contains(DEFINES, STAGINGFOOTBALL) {
         DESTDIR = ./../stage
     }
@@ -96,19 +94,21 @@ win32 {
 
 CONFIG(debug, debug|release) {
    LIBS+= -llibprotobufd \
-          -lleveldbd \
+#          -lleveldbd \
           -llibeay32 \
-          -lssleay32 \
-          -lfcd
+          -lssleay32 # \
+          #-lfcd
 
 }
 CONFIG(release, debug|release) {
    LIBS+= -llibprotobuf \
-          -lleveldb \
+#          -lleveldb \
           -llibeay32 \
-          -lssleay32 \
-          -lfc
+          -lssleay32 #\
+          #-lfc
 }
 
 include (./boost-includes.pri)
 include (./cute-fantasy.pri)
+include (./../fc-phoenix/fc.pri)
+include (./../leveldb/leveldb.pri)

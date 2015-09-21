@@ -118,7 +118,5 @@ contains(DEFINES, DATAAGENTGUI){
     HEADERS += $$PWD/playerloader.h
     FORMS += $$PWD/testingwindow.ui
     HEADERS += $$PWD/testingwindow.h
-
-
 }
 
