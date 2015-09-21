@@ -22,6 +22,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 DEFINES += BUILD_STABLE
 
 
+contains(DEFINES, MIKECLAYIMPORT){
+    QT += sql
+}
+
 contains(DEFINES, DATAAGENTGUI){
     TARGET = cute-fantasy-agent
     QT += sql

@@ -1151,11 +1151,9 @@ public:
 
     std::vector<fantasybit::PlayerPoints> loadProjFromFile(string infile = "SatoshiFantasy.csv") {
 
-        /*
         for ( auto x : import ) {
             sqls.playermapFeed("STATS",x.second,x.first);
         }
-        */
 
         std::vector<fantasybit::PlayerPoints> result;
         string filename = GET_ROOT_DIR() + infile;

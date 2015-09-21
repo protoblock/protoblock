@@ -35,6 +35,10 @@ void protobuf_ShutdownFile_ApiData_2eproto();
 
 class FantasyNameHash;
 class Distribution;
+class ProjKstats;
+class ProjDstats;
+class ProjOstats;
+class ProjStats;
 
 // ===================================================================
 
@@ -309,6 +313,560 @@ class Distribution : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Distribution* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProjKstats : public ::google::protobuf::Message {
+ public:
+  ProjKstats();
+  virtual ~ProjKstats();
+
+  ProjKstats(const ProjKstats& from);
+
+  inline ProjKstats& operator=(const ProjKstats& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProjKstats& default_instance();
+
+  void Swap(ProjKstats* other);
+
+  // implements Message ----------------------------------------------
+
+  ProjKstats* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProjKstats& from);
+  void MergeFrom(const ProjKstats& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional float pa = 10;
+  inline bool has_pa() const;
+  inline void clear_pa();
+  static const int kPaFieldNumber = 10;
+  inline float pa() const;
+  inline void set_pa(float value);
+
+  // optional float fg30 = 20;
+  inline bool has_fg30() const;
+  inline void clear_fg30();
+  static const int kFg30FieldNumber = 20;
+  inline float fg30() const;
+  inline void set_fg30(float value);
+
+  // optional float fg40 = 30;
+  inline bool has_fg40() const;
+  inline void clear_fg40();
+  static const int kFg40FieldNumber = 30;
+  inline float fg40() const;
+  inline void set_fg40(float value);
+
+  // optional float fg50 = 40;
+  inline bool has_fg50() const;
+  inline void clear_fg50();
+  static const int kFg50FieldNumber = 40;
+  inline float fg50() const;
+  inline void set_fg50(float value);
+
+  // optional float fg60 = 50;
+  inline bool has_fg60() const;
+  inline void clear_fg60();
+  static const int kFg60FieldNumber = 50;
+  inline float fg60() const;
+  inline void set_fg60(float value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.ProjKstats)
+ private:
+  inline void set_has_pa();
+  inline void clear_has_pa();
+  inline void set_has_fg30();
+  inline void clear_has_fg30();
+  inline void set_has_fg40();
+  inline void clear_has_fg40();
+  inline void set_has_fg50();
+  inline void clear_has_fg50();
+  inline void set_has_fg60();
+  inline void clear_has_fg60();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  float pa_;
+  float fg30_;
+  float fg40_;
+  float fg50_;
+  float fg60_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ApiData_2eproto();
+  friend void protobuf_AssignDesc_ApiData_2eproto();
+  friend void protobuf_ShutdownFile_ApiData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProjKstats* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProjDstats : public ::google::protobuf::Message {
+ public:
+  ProjDstats();
+  virtual ~ProjDstats();
+
+  ProjDstats(const ProjDstats& from);
+
+  inline ProjDstats& operator=(const ProjDstats& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProjDstats& default_instance();
+
+  void Swap(ProjDstats* other);
+
+  // implements Message ----------------------------------------------
+
+  ProjDstats* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProjDstats& from);
+  void MergeFrom(const ProjDstats& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional float twopt = 100;
+  inline bool has_twopt() const;
+  inline void clear_twopt();
+  static const int kTwoptFieldNumber = 100;
+  inline float twopt() const;
+  inline void set_twopt(float value);
+
+  // optional float onept = 110;
+  inline bool has_onept() const;
+  inline void clear_onept();
+  static const int kOneptFieldNumber = 110;
+  inline float onept() const;
+  inline void set_onept(float value);
+
+  // optional float deftd = 120;
+  inline bool has_deftd() const;
+  inline void clear_deftd();
+  static const int kDeftdFieldNumber = 120;
+  inline float deftd() const;
+  inline void set_deftd(float value);
+
+  // optional float sfty = 130;
+  inline bool has_sfty() const;
+  inline void clear_sfty();
+  static const int kSftyFieldNumber = 130;
+  inline float sfty() const;
+  inline void set_sfty(float value);
+
+  // optional float turnovers = 140;
+  inline bool has_turnovers() const;
+  inline void clear_turnovers();
+  static const int kTurnoversFieldNumber = 140;
+  inline float turnovers() const;
+  inline void set_turnovers(float value);
+
+  // optional float sacks = 150;
+  inline bool has_sacks() const;
+  inline void clear_sacks();
+  static const int kSacksFieldNumber = 150;
+  inline float sacks() const;
+  inline void set_sacks(float value);
+
+  // optional float ptsa = 160;
+  inline bool has_ptsa() const;
+  inline void clear_ptsa();
+  static const int kPtsaFieldNumber = 160;
+  inline float ptsa() const;
+  inline void set_ptsa(float value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.ProjDstats)
+ private:
+  inline void set_has_twopt();
+  inline void clear_has_twopt();
+  inline void set_has_onept();
+  inline void clear_has_onept();
+  inline void set_has_deftd();
+  inline void clear_has_deftd();
+  inline void set_has_sfty();
+  inline void clear_has_sfty();
+  inline void set_has_turnovers();
+  inline void clear_has_turnovers();
+  inline void set_has_sacks();
+  inline void clear_has_sacks();
+  inline void set_has_ptsa();
+  inline void clear_has_ptsa();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  float twopt_;
+  float onept_;
+  float deftd_;
+  float sfty_;
+  float turnovers_;
+  float sacks_;
+  float ptsa_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ApiData_2eproto();
+  friend void protobuf_AssignDesc_ApiData_2eproto();
+  friend void protobuf_ShutdownFile_ApiData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProjDstats* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProjOstats : public ::google::protobuf::Message {
+ public:
+  ProjOstats();
+  virtual ~ProjOstats();
+
+  ProjOstats(const ProjOstats& from);
+
+  inline ProjOstats& operator=(const ProjOstats& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProjOstats& default_instance();
+
+  void Swap(ProjOstats* other);
+
+  // implements Message ----------------------------------------------
+
+  ProjOstats* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProjOstats& from);
+  void MergeFrom(const ProjOstats& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional float passyds = 10;
+  inline bool has_passyds() const;
+  inline void clear_passyds();
+  static const int kPassydsFieldNumber = 10;
+  inline float passyds() const;
+  inline void set_passyds(float value);
+
+  // optional float passtd = 20;
+  inline bool has_passtd() const;
+  inline void clear_passtd();
+  static const int kPasstdFieldNumber = 20;
+  inline float passtd() const;
+  inline void set_passtd(float value);
+
+  // optional float rushyds = 30;
+  inline bool has_rushyds() const;
+  inline void clear_rushyds();
+  static const int kRushydsFieldNumber = 30;
+  inline float rushyds() const;
+  inline void set_rushyds(float value);
+
+  // optional float rushtd = 40;
+  inline bool has_rushtd() const;
+  inline void clear_rushtd();
+  static const int kRushtdFieldNumber = 40;
+  inline float rushtd() const;
+  inline void set_rushtd(float value);
+
+  // optional float recyds = 50;
+  inline bool has_recyds() const;
+  inline void clear_recyds();
+  static const int kRecydsFieldNumber = 50;
+  inline float recyds() const;
+  inline void set_recyds(float value);
+
+  // optional float rectd = 60;
+  inline bool has_rectd() const;
+  inline void clear_rectd();
+  static const int kRectdFieldNumber = 60;
+  inline float rectd() const;
+  inline void set_rectd(float value);
+
+  // optional float rec = 70;
+  inline bool has_rec() const;
+  inline void clear_rec();
+  static const int kRecFieldNumber = 70;
+  inline float rec() const;
+  inline void set_rec(float value);
+
+  // optional float pint = 80;
+  inline bool has_pint() const;
+  inline void clear_pint();
+  static const int kPintFieldNumber = 80;
+  inline float pint() const;
+  inline void set_pint(float value);
+
+  // optional float fumble = 90;
+  inline bool has_fumble() const;
+  inline void clear_fumble();
+  static const int kFumbleFieldNumber = 90;
+  inline float fumble() const;
+  inline void set_fumble(float value);
+
+  // optional float twopt = 100;
+  inline bool has_twopt() const;
+  inline void clear_twopt();
+  static const int kTwoptFieldNumber = 100;
+  inline float twopt() const;
+  inline void set_twopt(float value);
+
+  // optional float onept = 110;
+  inline bool has_onept() const;
+  inline void clear_onept();
+  static const int kOneptFieldNumber = 110;
+  inline float onept() const;
+  inline void set_onept(float value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.ProjOstats)
+ private:
+  inline void set_has_passyds();
+  inline void clear_has_passyds();
+  inline void set_has_passtd();
+  inline void clear_has_passtd();
+  inline void set_has_rushyds();
+  inline void clear_has_rushyds();
+  inline void set_has_rushtd();
+  inline void clear_has_rushtd();
+  inline void set_has_recyds();
+  inline void clear_has_recyds();
+  inline void set_has_rectd();
+  inline void clear_has_rectd();
+  inline void set_has_rec();
+  inline void clear_has_rec();
+  inline void set_has_pint();
+  inline void clear_has_pint();
+  inline void set_has_fumble();
+  inline void clear_has_fumble();
+  inline void set_has_twopt();
+  inline void clear_has_twopt();
+  inline void set_has_onept();
+  inline void clear_has_onept();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  float passyds_;
+  float passtd_;
+  float rushyds_;
+  float rushtd_;
+  float recyds_;
+  float rectd_;
+  float rec_;
+  float pint_;
+  float fumble_;
+  float twopt_;
+  float onept_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ApiData_2eproto();
+  friend void protobuf_AssignDesc_ApiData_2eproto();
+  friend void protobuf_ShutdownFile_ApiData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProjOstats* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProjStats : public ::google::protobuf::Message {
+ public:
+  ProjStats();
+  virtual ~ProjStats();
+
+  ProjStats(const ProjStats& from);
+
+  inline ProjStats& operator=(const ProjStats& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProjStats& default_instance();
+
+  void Swap(ProjStats* other);
+
+  // implements Message ----------------------------------------------
+
+  ProjStats* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProjStats& from);
+  void MergeFrom(const ProjStats& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.ProjOstats ostats = 10;
+  inline bool has_ostats() const;
+  inline void clear_ostats();
+  static const int kOstatsFieldNumber = 10;
+  inline const ::fantasybit::ProjOstats& ostats() const;
+  inline ::fantasybit::ProjOstats* mutable_ostats();
+  inline ::fantasybit::ProjOstats* release_ostats();
+  inline void set_allocated_ostats(::fantasybit::ProjOstats* ostats);
+
+  // optional .fantasybit.ProjDstats dstats = 20;
+  inline bool has_dstats() const;
+  inline void clear_dstats();
+  static const int kDstatsFieldNumber = 20;
+  inline const ::fantasybit::ProjDstats& dstats() const;
+  inline ::fantasybit::ProjDstats* mutable_dstats();
+  inline ::fantasybit::ProjDstats* release_dstats();
+  inline void set_allocated_dstats(::fantasybit::ProjDstats* dstats);
+
+  // optional .fantasybit.ProjKstats kstats = 30;
+  inline bool has_kstats() const;
+  inline void clear_kstats();
+  static const int kKstatsFieldNumber = 30;
+  inline const ::fantasybit::ProjKstats& kstats() const;
+  inline ::fantasybit::ProjKstats* mutable_kstats();
+  inline ::fantasybit::ProjKstats* release_kstats();
+  inline void set_allocated_kstats(::fantasybit::ProjKstats* kstats);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.ProjStats)
+ private:
+  inline void set_has_ostats();
+  inline void clear_has_ostats();
+  inline void set_has_dstats();
+  inline void clear_has_dstats();
+  inline void set_has_kstats();
+  inline void clear_has_kstats();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::ProjOstats* ostats_;
+  ::fantasybit::ProjDstats* dstats_;
+  ::fantasybit::ProjKstats* kstats_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ApiData_2eproto();
+  friend void protobuf_AssignDesc_ApiData_2eproto();
+  friend void protobuf_ShutdownFile_ApiData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProjStats* default_instance_;
 };
 // ===================================================================
 
@@ -753,6 +1311,642 @@ inline float Distribution::result() const {
 inline void Distribution::set_result(float value) {
   set_has_result();
   result_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ProjKstats
+
+// optional float pa = 10;
+inline bool ProjKstats::has_pa() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProjKstats::set_has_pa() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProjKstats::clear_has_pa() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProjKstats::clear_pa() {
+  pa_ = 0;
+  clear_has_pa();
+}
+inline float ProjKstats::pa() const {
+  return pa_;
+}
+inline void ProjKstats::set_pa(float value) {
+  set_has_pa();
+  pa_ = value;
+}
+
+// optional float fg30 = 20;
+inline bool ProjKstats::has_fg30() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ProjKstats::set_has_fg30() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ProjKstats::clear_has_fg30() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProjKstats::clear_fg30() {
+  fg30_ = 0;
+  clear_has_fg30();
+}
+inline float ProjKstats::fg30() const {
+  return fg30_;
+}
+inline void ProjKstats::set_fg30(float value) {
+  set_has_fg30();
+  fg30_ = value;
+}
+
+// optional float fg40 = 30;
+inline bool ProjKstats::has_fg40() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ProjKstats::set_has_fg40() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ProjKstats::clear_has_fg40() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ProjKstats::clear_fg40() {
+  fg40_ = 0;
+  clear_has_fg40();
+}
+inline float ProjKstats::fg40() const {
+  return fg40_;
+}
+inline void ProjKstats::set_fg40(float value) {
+  set_has_fg40();
+  fg40_ = value;
+}
+
+// optional float fg50 = 40;
+inline bool ProjKstats::has_fg50() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ProjKstats::set_has_fg50() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ProjKstats::clear_has_fg50() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ProjKstats::clear_fg50() {
+  fg50_ = 0;
+  clear_has_fg50();
+}
+inline float ProjKstats::fg50() const {
+  return fg50_;
+}
+inline void ProjKstats::set_fg50(float value) {
+  set_has_fg50();
+  fg50_ = value;
+}
+
+// optional float fg60 = 50;
+inline bool ProjKstats::has_fg60() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ProjKstats::set_has_fg60() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ProjKstats::clear_has_fg60() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ProjKstats::clear_fg60() {
+  fg60_ = 0;
+  clear_has_fg60();
+}
+inline float ProjKstats::fg60() const {
+  return fg60_;
+}
+inline void ProjKstats::set_fg60(float value) {
+  set_has_fg60();
+  fg60_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ProjDstats
+
+// optional float twopt = 100;
+inline bool ProjDstats::has_twopt() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProjDstats::set_has_twopt() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProjDstats::clear_has_twopt() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProjDstats::clear_twopt() {
+  twopt_ = 0;
+  clear_has_twopt();
+}
+inline float ProjDstats::twopt() const {
+  return twopt_;
+}
+inline void ProjDstats::set_twopt(float value) {
+  set_has_twopt();
+  twopt_ = value;
+}
+
+// optional float onept = 110;
+inline bool ProjDstats::has_onept() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ProjDstats::set_has_onept() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ProjDstats::clear_has_onept() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProjDstats::clear_onept() {
+  onept_ = 0;
+  clear_has_onept();
+}
+inline float ProjDstats::onept() const {
+  return onept_;
+}
+inline void ProjDstats::set_onept(float value) {
+  set_has_onept();
+  onept_ = value;
+}
+
+// optional float deftd = 120;
+inline bool ProjDstats::has_deftd() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ProjDstats::set_has_deftd() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ProjDstats::clear_has_deftd() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ProjDstats::clear_deftd() {
+  deftd_ = 0;
+  clear_has_deftd();
+}
+inline float ProjDstats::deftd() const {
+  return deftd_;
+}
+inline void ProjDstats::set_deftd(float value) {
+  set_has_deftd();
+  deftd_ = value;
+}
+
+// optional float sfty = 130;
+inline bool ProjDstats::has_sfty() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ProjDstats::set_has_sfty() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ProjDstats::clear_has_sfty() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ProjDstats::clear_sfty() {
+  sfty_ = 0;
+  clear_has_sfty();
+}
+inline float ProjDstats::sfty() const {
+  return sfty_;
+}
+inline void ProjDstats::set_sfty(float value) {
+  set_has_sfty();
+  sfty_ = value;
+}
+
+// optional float turnovers = 140;
+inline bool ProjDstats::has_turnovers() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ProjDstats::set_has_turnovers() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ProjDstats::clear_has_turnovers() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ProjDstats::clear_turnovers() {
+  turnovers_ = 0;
+  clear_has_turnovers();
+}
+inline float ProjDstats::turnovers() const {
+  return turnovers_;
+}
+inline void ProjDstats::set_turnovers(float value) {
+  set_has_turnovers();
+  turnovers_ = value;
+}
+
+// optional float sacks = 150;
+inline bool ProjDstats::has_sacks() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ProjDstats::set_has_sacks() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ProjDstats::clear_has_sacks() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ProjDstats::clear_sacks() {
+  sacks_ = 0;
+  clear_has_sacks();
+}
+inline float ProjDstats::sacks() const {
+  return sacks_;
+}
+inline void ProjDstats::set_sacks(float value) {
+  set_has_sacks();
+  sacks_ = value;
+}
+
+// optional float ptsa = 160;
+inline bool ProjDstats::has_ptsa() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ProjDstats::set_has_ptsa() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ProjDstats::clear_has_ptsa() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ProjDstats::clear_ptsa() {
+  ptsa_ = 0;
+  clear_has_ptsa();
+}
+inline float ProjDstats::ptsa() const {
+  return ptsa_;
+}
+inline void ProjDstats::set_ptsa(float value) {
+  set_has_ptsa();
+  ptsa_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ProjOstats
+
+// optional float passyds = 10;
+inline bool ProjOstats::has_passyds() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProjOstats::set_has_passyds() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProjOstats::clear_has_passyds() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProjOstats::clear_passyds() {
+  passyds_ = 0;
+  clear_has_passyds();
+}
+inline float ProjOstats::passyds() const {
+  return passyds_;
+}
+inline void ProjOstats::set_passyds(float value) {
+  set_has_passyds();
+  passyds_ = value;
+}
+
+// optional float passtd = 20;
+inline bool ProjOstats::has_passtd() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ProjOstats::set_has_passtd() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ProjOstats::clear_has_passtd() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProjOstats::clear_passtd() {
+  passtd_ = 0;
+  clear_has_passtd();
+}
+inline float ProjOstats::passtd() const {
+  return passtd_;
+}
+inline void ProjOstats::set_passtd(float value) {
+  set_has_passtd();
+  passtd_ = value;
+}
+
+// optional float rushyds = 30;
+inline bool ProjOstats::has_rushyds() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ProjOstats::set_has_rushyds() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ProjOstats::clear_has_rushyds() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ProjOstats::clear_rushyds() {
+  rushyds_ = 0;
+  clear_has_rushyds();
+}
+inline float ProjOstats::rushyds() const {
+  return rushyds_;
+}
+inline void ProjOstats::set_rushyds(float value) {
+  set_has_rushyds();
+  rushyds_ = value;
+}
+
+// optional float rushtd = 40;
+inline bool ProjOstats::has_rushtd() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ProjOstats::set_has_rushtd() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ProjOstats::clear_has_rushtd() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ProjOstats::clear_rushtd() {
+  rushtd_ = 0;
+  clear_has_rushtd();
+}
+inline float ProjOstats::rushtd() const {
+  return rushtd_;
+}
+inline void ProjOstats::set_rushtd(float value) {
+  set_has_rushtd();
+  rushtd_ = value;
+}
+
+// optional float recyds = 50;
+inline bool ProjOstats::has_recyds() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ProjOstats::set_has_recyds() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ProjOstats::clear_has_recyds() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ProjOstats::clear_recyds() {
+  recyds_ = 0;
+  clear_has_recyds();
+}
+inline float ProjOstats::recyds() const {
+  return recyds_;
+}
+inline void ProjOstats::set_recyds(float value) {
+  set_has_recyds();
+  recyds_ = value;
+}
+
+// optional float rectd = 60;
+inline bool ProjOstats::has_rectd() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ProjOstats::set_has_rectd() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ProjOstats::clear_has_rectd() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ProjOstats::clear_rectd() {
+  rectd_ = 0;
+  clear_has_rectd();
+}
+inline float ProjOstats::rectd() const {
+  return rectd_;
+}
+inline void ProjOstats::set_rectd(float value) {
+  set_has_rectd();
+  rectd_ = value;
+}
+
+// optional float rec = 70;
+inline bool ProjOstats::has_rec() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ProjOstats::set_has_rec() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ProjOstats::clear_has_rec() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ProjOstats::clear_rec() {
+  rec_ = 0;
+  clear_has_rec();
+}
+inline float ProjOstats::rec() const {
+  return rec_;
+}
+inline void ProjOstats::set_rec(float value) {
+  set_has_rec();
+  rec_ = value;
+}
+
+// optional float pint = 80;
+inline bool ProjOstats::has_pint() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void ProjOstats::set_has_pint() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void ProjOstats::clear_has_pint() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void ProjOstats::clear_pint() {
+  pint_ = 0;
+  clear_has_pint();
+}
+inline float ProjOstats::pint() const {
+  return pint_;
+}
+inline void ProjOstats::set_pint(float value) {
+  set_has_pint();
+  pint_ = value;
+}
+
+// optional float fumble = 90;
+inline bool ProjOstats::has_fumble() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void ProjOstats::set_has_fumble() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void ProjOstats::clear_has_fumble() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void ProjOstats::clear_fumble() {
+  fumble_ = 0;
+  clear_has_fumble();
+}
+inline float ProjOstats::fumble() const {
+  return fumble_;
+}
+inline void ProjOstats::set_fumble(float value) {
+  set_has_fumble();
+  fumble_ = value;
+}
+
+// optional float twopt = 100;
+inline bool ProjOstats::has_twopt() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void ProjOstats::set_has_twopt() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void ProjOstats::clear_has_twopt() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void ProjOstats::clear_twopt() {
+  twopt_ = 0;
+  clear_has_twopt();
+}
+inline float ProjOstats::twopt() const {
+  return twopt_;
+}
+inline void ProjOstats::set_twopt(float value) {
+  set_has_twopt();
+  twopt_ = value;
+}
+
+// optional float onept = 110;
+inline bool ProjOstats::has_onept() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void ProjOstats::set_has_onept() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void ProjOstats::clear_has_onept() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void ProjOstats::clear_onept() {
+  onept_ = 0;
+  clear_has_onept();
+}
+inline float ProjOstats::onept() const {
+  return onept_;
+}
+inline void ProjOstats::set_onept(float value) {
+  set_has_onept();
+  onept_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ProjStats
+
+// optional .fantasybit.ProjOstats ostats = 10;
+inline bool ProjStats::has_ostats() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProjStats::set_has_ostats() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProjStats::clear_has_ostats() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProjStats::clear_ostats() {
+  if (ostats_ != NULL) ostats_->::fantasybit::ProjOstats::Clear();
+  clear_has_ostats();
+}
+inline const ::fantasybit::ProjOstats& ProjStats::ostats() const {
+  return ostats_ != NULL ? *ostats_ : *default_instance_->ostats_;
+}
+inline ::fantasybit::ProjOstats* ProjStats::mutable_ostats() {
+  set_has_ostats();
+  if (ostats_ == NULL) ostats_ = new ::fantasybit::ProjOstats;
+  return ostats_;
+}
+inline ::fantasybit::ProjOstats* ProjStats::release_ostats() {
+  clear_has_ostats();
+  ::fantasybit::ProjOstats* temp = ostats_;
+  ostats_ = NULL;
+  return temp;
+}
+inline void ProjStats::set_allocated_ostats(::fantasybit::ProjOstats* ostats) {
+  delete ostats_;
+  ostats_ = ostats;
+  if (ostats) {
+    set_has_ostats();
+  } else {
+    clear_has_ostats();
+  }
+}
+
+// optional .fantasybit.ProjDstats dstats = 20;
+inline bool ProjStats::has_dstats() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ProjStats::set_has_dstats() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ProjStats::clear_has_dstats() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProjStats::clear_dstats() {
+  if (dstats_ != NULL) dstats_->::fantasybit::ProjDstats::Clear();
+  clear_has_dstats();
+}
+inline const ::fantasybit::ProjDstats& ProjStats::dstats() const {
+  return dstats_ != NULL ? *dstats_ : *default_instance_->dstats_;
+}
+inline ::fantasybit::ProjDstats* ProjStats::mutable_dstats() {
+  set_has_dstats();
+  if (dstats_ == NULL) dstats_ = new ::fantasybit::ProjDstats;
+  return dstats_;
+}
+inline ::fantasybit::ProjDstats* ProjStats::release_dstats() {
+  clear_has_dstats();
+  ::fantasybit::ProjDstats* temp = dstats_;
+  dstats_ = NULL;
+  return temp;
+}
+inline void ProjStats::set_allocated_dstats(::fantasybit::ProjDstats* dstats) {
+  delete dstats_;
+  dstats_ = dstats;
+  if (dstats) {
+    set_has_dstats();
+  } else {
+    clear_has_dstats();
+  }
+}
+
+// optional .fantasybit.ProjKstats kstats = 30;
+inline bool ProjStats::has_kstats() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ProjStats::set_has_kstats() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ProjStats::clear_has_kstats() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ProjStats::clear_kstats() {
+  if (kstats_ != NULL) kstats_->::fantasybit::ProjKstats::Clear();
+  clear_has_kstats();
+}
+inline const ::fantasybit::ProjKstats& ProjStats::kstats() const {
+  return kstats_ != NULL ? *kstats_ : *default_instance_->kstats_;
+}
+inline ::fantasybit::ProjKstats* ProjStats::mutable_kstats() {
+  set_has_kstats();
+  if (kstats_ == NULL) kstats_ = new ::fantasybit::ProjKstats;
+  return kstats_;
+}
+inline ::fantasybit::ProjKstats* ProjStats::release_kstats() {
+  clear_has_kstats();
+  ::fantasybit::ProjKstats* temp = kstats_;
+  kstats_ = NULL;
+  return temp;
+}
+inline void ProjStats::set_allocated_kstats(::fantasybit::ProjKstats* kstats) {
+  delete kstats_;
+  kstats_ = kstats;
+  if (kstats) {
+    set_has_kstats();
+  } else {
+    clear_has_kstats();
+  }
 }
 
 
