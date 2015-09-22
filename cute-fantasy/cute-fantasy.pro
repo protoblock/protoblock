@@ -9,7 +9,7 @@ QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
-#DEFINES += STAGINGFOOTBALL
+DEFINES += PRODFOOTBALL
 
 #DEFINES += MIKECLAYIMPORT
 
@@ -47,11 +47,11 @@ CONFIG(debug, debug|release) {
     MOC_DIR = ./debug
     OBJECTS_DIR = ./debug
     contains(DEFINES, DATAAGENTGUI){
-        contains(DEFINES, STAGINGFOOTBALL) {
+        !contains(DEFINES, PRODFOOTBALL) {
             DESTDIR = ./../stage
         }
 
-        !contains(DEFINES, STAGINGFOOTBALL) {
+        contains(DEFINES, PRODFOOTBALL) {
             DESTDIR = ./../debugbinagent
         }
 
@@ -61,11 +61,11 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
 #    LIBS += -L./../lib
 #    LIBS += -lfc_release
-    contains(DEFINES, STAGINGFOOTBALL) {
+    !contains(DEFINES, PRODFOOTBALL) {
         DESTDIR = ./../stage
     }
 
-    !contains(DEFINES, STAGINGFOOTBALL) {
+    contains(DEFINES, PRODFOOTBALL) {
         DESTDIR = ./../bin
     }
 
