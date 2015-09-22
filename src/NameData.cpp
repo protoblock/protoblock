@@ -253,7 +253,9 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
     auto name = fn->alias();
 
 #ifdef DATAAGENTWRITENAMES
+#ifndef DATAAGENTWRITENAMES_FORCE
     if ( amlive )
+#endif
     {
         FantasyNameHash fnh{};
         SqlStuff sql{"satoshifantasy"};

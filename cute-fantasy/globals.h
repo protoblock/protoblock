@@ -18,9 +18,14 @@
   #ifndef BUILD_STABLE
     #define BUILD_TYPE "beta"
   #else
+    #ifdef PRODFOOTBALL
     #define BUILD_TYPE "prod"
+    #else
+    #define BUILD_TYPE "stage"
+    #endif
   #endif
 #endif
+
 
 #ifndef MAJOR_VERSION
   #define MAJOR_VERSION  1
@@ -31,7 +36,7 @@
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 2
+  #define REVISION_NUMBER 3
 #endif
 
 #ifndef BUILD_NUMBER

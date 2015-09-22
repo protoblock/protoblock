@@ -908,7 +908,7 @@ public:
                 QJsonObject tdef = sobj.value("defense")
                         .toObject().value("team").toObject();
 
-                QJsonObject td = sobj.value("tds")
+                QJsonObject td = sobj.value("touchdowns")
                         .toObject().value("team").toObject();
 
   /*
@@ -1018,7 +1018,7 @@ public:
                     continue;
                 }
                 pr.set_playerid(to_string(dbpid));
-                dhome.set_ptsa(homepoints);
+                daway.set_ptsa(homepoints);
                 pr.mutable_stats()->mutable_dstats()->CopyFrom(daway);
                 pr.set_result(CalcResults(pr.stats()));
                 gr.add_away_result()->CopyFrom(pr);
@@ -1127,10 +1127,11 @@ public:
        }
        else if ( type == "td") {
            int tds = 0;
-           for ( auto tds : {"int", "fum_ret", "punt_ret","kick_ret","fg_ret"}) {
-                auto its = jsonObject.value(tds);
+           for ( auto tdt : {"int", "fum_ret", "punt_ret","kick_ret","fg_ret"}) {
+                auto its = jsonObject.value(tdt);
                 int it = its.toInt();
                 tds = tds + it;
+                //qDebug() << "xxxx" << tdt << it;
            }
 
            dstat->set_deftd(tds);

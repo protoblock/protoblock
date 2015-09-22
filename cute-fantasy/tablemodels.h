@@ -64,7 +64,12 @@ protected:
         }
 
         QString myt = text.arg(away).arg(home).leftJustified(9,' ');
-        return myt + QString(" - ")+ gametime;//dateTime_toFantasyString(gametime));
+        auto ret = myt + QString(" - ")+ gametime;//dateTime_toFantasyString(gametime));
+#ifndef PRODFOOTBALL
+        auto id = data->propertyValue<PropertyNames::Game_ID>().toString();
+        ret = id + ret;
+#endif
+        return ret;
     }
 
     int getColumnCount() {

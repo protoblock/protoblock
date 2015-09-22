@@ -77,6 +77,12 @@ private slots:
 /*
     void on_Update_PLayers_2_clicked();
 */
+    void on_fix363_clicked();
+
+    void on_FixDef_clicked();
+
+    void on_GetResults4Fix_clicked();
+
 private:
     MainLAPIWorker *  myCoreInstance;
     std::unordered_map<string,GameInfo> mGames;
@@ -103,6 +109,7 @@ private:
     bool makeStageBlock(DataTransition &dt);
     PlayerLoaderTR *playerloader;
 
+    bool Cleanit(Block *b);
 
 
 

@@ -232,7 +232,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
 #ifdef DATAAGENTWRITENAMES
                 {
+#ifndef DATAAGENTWRITENAMES_FORCE
                 if ( !amlive ) break;
+#endif
                 SqlStuff sql{"satoshifantasy"};
                 Distribution dist{};
                 dist.set_gameid(rd.game_result().gameid());

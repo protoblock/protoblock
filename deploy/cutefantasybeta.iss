@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Trading Football"
-#define MyAppVersion "2015 1.0.1"
+#define MyAppVersion "2015 1.0.3"
 #define MyAppPublisher "Satoshi Fantasy LLC"
 #define MyAppURL "http://trading.football"
 #define MyAppExeName "tradingfootball.exe"
@@ -37,7 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "tradingfootball.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "storage\FantasyBit-Genesis-1-block.data"; DestDir: "{app}\storage"; Flags: ignoreversion
+Source: "storage\GenesisTransition-Tr-Transaction.txt"; DestDir: "{app}\storage"; Flags: ignoreversion
 Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -70,6 +70,7 @@ Name: "{app}\storage"
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\storage\index"
 Type: filesandordirs; Name: "{app}\storage\block"
+Type: filesandordirs; Name: "{app}\cutefantasy.log"
 
 [Code]
 function IsRegularUser(): Boolean;
