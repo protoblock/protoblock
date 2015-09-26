@@ -99,7 +99,8 @@ void MainLAPIWorker::startPoint(){
 
     qDebug("Main Core Thread started");
     Core::instance()->waitForGui();
-    emit Height((int)myNodeWorker->preinit());
+    auto h = myNodeWorker->preinit();
+    emit Height(h);
     node.thread()->start();
 
     {
@@ -172,8 +173,9 @@ void MainLAPIWorker::ProcessBlock() {
         //emit ProcessNext(); //catching up
         //if ( numto < std::numeric_limits<int32_t>::max() ) {
             emit BlockNum(last_block);
+            QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
             ProcessBlock();
-            //QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+
         //}
     }
     else {

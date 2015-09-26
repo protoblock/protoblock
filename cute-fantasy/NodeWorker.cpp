@@ -22,7 +22,8 @@
         node.init();
         //node.Cleaner();
 
-        return node.getLastLocalBlockNum();
+        auto h = node.getLastGlobalBlockNum();
+        return h ? *h : 0;
     }
 
     void NodeWorker::init(){

@@ -6,6 +6,9 @@
         <file>loading.gif</file>
         <file>waitingprogress.gif</file>
     </qresource>
+   <qresource prefix="/images">
+       <file>footballspin.gif</file>
+ 	</qresource>
     <qresource prefix="/Fantasy2015">
         <file>Player.2015.json</file>
     </qresource>

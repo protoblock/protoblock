@@ -92,7 +92,7 @@ void MainWindow::initialize() {
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myLAPIWorker,SLOT(OnClaimName(QString)));
 
     //wait for going live
-    myWaitDialog.init(":/icons/footballspin.gif",0,"Syncing...");
+    myWaitDialog.init(":/images/footballspin.gif",3600000,"Syncing...");
     QObject::connect(myLAPIWorker,SIGNAL(Height(int)),&myWaitDialog,SLOT(Height(int)));
     QObject::connect(myLAPIWorker,SIGNAL(BlockNum(int)),&myWaitDialog,SLOT(BlockNum(int)));
 
