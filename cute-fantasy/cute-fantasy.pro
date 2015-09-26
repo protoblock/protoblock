@@ -9,7 +9,7 @@ QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
-DEFINES += PRODFOOTBALL
+DEFINES += STAGINGFOOTBALL
 
 #DEFINES += MIKECLAYIMPORT
 
@@ -42,30 +42,28 @@ INCLUDEPATH += ./../include
 INCLUDEPATH += ./../generated
 INCLUDEPATH += ./../src
 
+
 CONFIG(debug, debug|release) {    
     DESTDIR = ./../debugbin
     MOC_DIR = ./debug
     OBJECTS_DIR = ./debug
     contains(DEFINES, DATAAGENTGUI){
-        !contains(DEFINES, PRODFOOTBALL) {
+        contains(DEFINES, STAGINGFOOTBALL) {
             DESTDIR = ./../stage
         }
 
-        contains(DEFINES, PRODFOOTBALL) {
+        !contains(DEFINES, STAGINGFOOTBALL) {
             DESTDIR = ./../debugbinagent
         }
-
     }
 }
 
-CONFIG(release, debug|release) {
-#    LIBS += -L./../lib
-#    LIBS += -lfc_release
-    !contains(DEFINES, PRODFOOTBALL) {
+CONFIG(release, debug|release) { 
+    contains(DEFINES, STAGINGFOOTBALL) {
         DESTDIR = ./../stage
     }
 
-    contains(DEFINES, PRODFOOTBALL) {
+    !contains(DEFINES, STAGINGFOOTBALL) {
         DESTDIR = ./../bin
     }
 
