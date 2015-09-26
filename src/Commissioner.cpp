@@ -553,7 +553,7 @@ uint64_t difficulty( const fc::sha224& hash_value )
 
 fc::ecc::public_key_data Commissioner::MASTER_PUB_KEY {
 
-#ifdef STAGINGFOOTBALL
+#ifndef PRODFOOTBALL
     Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
 #else
     Commissioner::str2pk(std::string("qCxpbzdgBAMGiLYkcs1KhsMH2gXbTP27NJWV8eAgh4j9"))
@@ -563,7 +563,7 @@ fc::ecc::public_key_data Commissioner::MASTER_PUB_KEY {
 
 fc::ecc::public_key_data Commissioner::GENESIS_PUB_KEY
 {
-#ifdef STAGINGFOOTBALL
+#ifndef PRODFOOTBALL
       Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"))
 #else
       Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))

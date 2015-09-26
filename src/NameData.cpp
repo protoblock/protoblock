@@ -135,13 +135,14 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
     else
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
-        FantasyNameProjections[name].insert(make_pair(player,proj));
-        PlayerIDProjections[player].insert(make_pair(name,proj));
+        FantasyNameProjections[name][player] = proj;
+        PlayerIDProjections[player][name] = proj;
     }
     qDebug() << "proj: " << key << ":" << proj;
     OnProjection(name,player,proj);
 
-    /*
+
+/*
     dump(FantasyNameProjections);
     qDebug() << " ============== ";
     dump(PlayerIDProjections);
@@ -199,9 +200,9 @@ void FantasyNameData::OnGameStart(std::string gid,
     }
 
     if (!projstore->Put(leveldb::WriteOptions(), gid, gfp.SerializeAsString()).ok())
-        qWarning() << "yoyoyo error writing proj" << gid;
+        qWarning() << "error writing proj" << gid;
     else
-        qInfo() << "yoyoyo" << gid;
+        qInfo() << "OnGameStart " << gid;
 
 }
 
@@ -210,11 +211,11 @@ GameFantasyBitProj FantasyNameData::GetGameProj(const std::string &gid) {
 
     string temp;
     if ( !projstore->Get(leveldb::ReadOptions(), gid, &temp).ok() ) {
-        qWarning() << "yoyoyo cant GetGameProj" << gid.c_str();
+        qWarning() << "cant GetGameProj" << gid.c_str();
         return gfp;
     }
     else
-        qInfo() << "yoyoyo out" << gid;
+        qInfo() << "GetGameProj" << gid;
 
 
     gfp.ParseFromString(temp);
@@ -252,7 +253,9 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
     auto name = fn->alias();
 
 #ifdef DATAAGENTWRITENAMES
+#ifndef DATAAGENTWRITENAMES_FORCE
     if ( amlive )
+#endif
     {
         FantasyNameHash fnh{};
         SqlStuff sql{"satoshifantasy"};

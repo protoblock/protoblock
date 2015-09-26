@@ -23,7 +23,7 @@
 
 namespace fantasybit {
 
-#ifdef STAGINGFOOTBALL
+#ifndef PRODFOOTBALL
     static std::string PAPIURL = "https://stagingapi.trading.football:4545";
     static std::string LAPIURL = "https://stagingapi.trading.football:9854";
     static std::string DBIP = "158.222.102.21";
@@ -35,7 +35,6 @@ namespace fantasybit {
     //static std::string DBIP = "192.96.159.216";
     static std::string DBIP = "158.222.102.83";
     static std::string DBNAME = "tfprod";
-
 #endif
 
     //static std::string LAPIURL = "158.222.102.83:9854";

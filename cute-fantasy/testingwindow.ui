@@ -27,38 +27,38 @@
     <item row="0" column="3">
      <widget class="QComboBox" name="pos"/>
     </item>
-    <item row="0" column="4" colspan="2">
+    <item row="0" column="4">
      <widget class="QComboBox" name="player"/>
     </item>
-    <item row="0" column="8">
+    <item row="0" column="7">
      <widget class="QLabel" name="season">
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="9">
+    <item row="0" column="8">
      <widget class="QLabel" name="week_3">
       <property name="text">
        <string>Week</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="10">
+    <item row="0" column="9">
      <widget class="QLabel" name="week">
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="11">
+    <item row="0" column="10">
      <widget class="QLabel" name="Live">
       <property name="text">
        <string>Not Live</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="12">
+    <item row="0" column="11">
      <widget class="QLabel" name="globalstate">
       <property name="text">
        <string>No State</string>
@@ -75,10 +75,10 @@
     <item row="1" column="1" colspan="2">
      <widget class="QLineEdit" name="FantassyNameIn"/>
     </item>
-    <item row="1" column="4" colspan="2">
+    <item row="1" column="4">
      <widget class="QComboBox" name="fantasynames"/>
     </item>
-    <item row="1" column="6">
+    <item row="1" column="5">
      <widget class="QPushButton" name="Clone">
       <property name="text">
        <string>Clone</string>
@@ -106,10 +106,10 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="4" colspan="2">
+    <item row="2" column="4">
      <widget class="QLineEdit" name="projection"/>
     </item>
-    <item row="2" column="6">
+    <item row="2" column="5">
      <widget class="QPushButton" name="projectit">
       <property name="text">
        <string>Project</string>
@@ -133,21 +133,21 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="4" colspan="2">
+    <item row="3" column="4">
      <widget class="QPushButton" name="GetTx">
       <property name="text">
        <string>GetTx</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="6" colspan="2">
+    <item row="3" column="5" colspan="2">
      <widget class="QPushButton" name="updatelb">
       <property name="text">
        <string>UpdateLeaderBoard</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="11">
+    <item row="3" column="10">
      <widget class="QPushButton" name="result">
       <property name="text">
        <string>RESULT</string>
@@ -157,10 +157,10 @@
     <item row="4" column="0" colspan="3">
      <widget class="QListWidget" name="staging_data"/>
     </item>
-    <item row="4" column="3" colspan="4">
+    <item row="4" column="3" colspan="3">
      <widget class="QListWidget" name="staging_tx"/>
     </item>
-    <item row="4" column="7" colspan="6">
+    <item row="4" column="6" colspan="6">
      <widget class="QListWidget" name="awards"/>
     </item>
     <item row="5" column="0">
@@ -183,14 +183,14 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="3" colspan="2">
+    <item row="5" column="3">
      <widget class="QPushButton" name="stage_player">
       <property name="text">
        <string>Stage Player</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="5">
+    <item row="5" column="4">
      <widget class="QPushButton" name="commit_player">
       <property name="text">
        <string>Commit Player</string>
@@ -204,6 +204,27 @@
      <widget class="QPushButton" name="MsgButton">
       <property name="text">
        <string>Message</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="11">
+     <widget class="QPushButton" name="FixDef">
+      <property name="text">
+       <string>FixDef</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="7">
+     <widget class="QPushButton" name="fix363">
+      <property name="text">
+       <string>Fix363</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="8" colspan="3">
+     <widget class="QPushButton" name="GetResults4Fix">
+      <property name="text">
+       <string>GetResults4Fix</string>
       </property>
      </widget>
     </item>

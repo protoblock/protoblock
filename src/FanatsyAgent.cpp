@@ -491,7 +491,7 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt, fc::opt
 	bh.set_version(Commissioner::BLOCK_VERSION);
 	bh.set_num(prev.num() + 1);
 	bh.set_prev_id(fc::sha256::hash(prev.SerializeAsString()).str());
-	bh.set_timestamp( std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+    bh.set_timestamp( std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 	//todo: t
 	bh.set_generator_pk(pubKeyStr());
 	bh.set_generating_sig(fc::sha256::hash(prev.generating_sig() + bh.generator_pk()).str());

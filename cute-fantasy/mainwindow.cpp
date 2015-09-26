@@ -92,7 +92,10 @@ void MainWindow::initialize() {
     QObject::connect(this,SIGNAL(ClaimFantasyName(QString)),myLAPIWorker,SLOT(OnClaimName(QString)));
 
     //wait for going live
-    myWaitDialog.init(":/icons/waitingprogress.gif",120000,"Syncing...");
+    myWaitDialog.init(":/images/footballspin.gif",3600000,"Syncing...");
+    QObject::connect(myLAPIWorker,SIGNAL(Height(int)),&myWaitDialog,SLOT(Height(int)));
+    QObject::connect(myLAPIWorker,SIGNAL(BlockNum(int)),&myWaitDialog,SLOT(BlockNum(int)));
+
     QObject::connect(myLAPIWorker,SIGNAL(LiveGui(fantasybit::GlobalState)),&myWaitDialog,SLOT(stopAndClose()));
 
     //leader timed refresh
@@ -110,7 +113,7 @@ void MainWindow::initialize() {
 
     //wake up core thread
     Core::instance()->guiIsAwake();
-    //myWaitDialog.startExec();
+    myWaitDialog.startExec();
     if (myLAPIWorker == NULL)  {
         qDebug() << "coreapi is not resolved";
         setDisabled(true);

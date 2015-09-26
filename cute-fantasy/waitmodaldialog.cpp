@@ -33,6 +33,7 @@ void WaitModalDialog::init(const QString & fileName,int timeout,const QString & 
   myAnimationMovie.setFileName(fileName);
   if (myTimeout > 0)
       connect(&myTimer,SIGNAL(timeout()),this,SLOT(stopAndClose()));
+
 }
 
 void WaitModalDialog::setAnimationFileName(const QString & fileName){
@@ -55,4 +56,15 @@ void WaitModalDialog::stopAndClose(){
   myAnimationMovie.stop();
   if (myTimer.isActive()) myTimer.stop();
   accept(); 
+}
+
+void WaitModalDialog::Height(int h) {
+    ui->progressBar->setMaximum(h);
+    ui->height->setText(QString::number(h));
+}
+
+void WaitModalDialog::BlockNum(int n) {
+    ui->progressBar->setValue(n);
+    ui->num->setText(QString::number(n));
+
 }

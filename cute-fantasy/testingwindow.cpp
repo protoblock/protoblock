@@ -138,6 +138,7 @@ void TestingWindow::on_weeks_activated(int index)
        return;
    }
 
+   mGames.clear();
    auto weekly =  DataService::instance()->GetWeeklySchedule(index);
    //ui->game->clear();
 
@@ -777,13 +778,13 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     d.set_type(Data_Type_MESSAGE);
     if ( !myMessageData.has_msg()  || myMessageData.msg() == "" )
         myMessageData.set_msg(to_string(mStagedBlockNum));
-    myMessageData.set_gt(1019);
+    myMessageData.set_gt(1029);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
 
 
-    myMessageData.set_msg("<a href=\"http://trading.football:8080/tradingfootball-setup.exe\">Upgrade required! Click to download (v1.0.2)</a>");
-    myMessageData.set_lt(1020);
+    myMessageData.set_msg("<a href=\"http://trading.football:8080/tradingfootball-setup.exe\">Upgrade required! Click to download (v1.0.3)</a>");
+    myMessageData.set_lt(1030);
     myMessageData.set_gt(15991245);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
@@ -891,3 +892,86 @@ void TestingWindow::on_Update_PLayers_2_clicked()
     }
 }
 */
+
+void TestingWindow::on_fix363_clicked()
+{
+   auto b = Node::getLocalBlock(363,true);
+
+   auto id = ui->game->currentData();
+   GameInfo gameinfo = mGames[id.toString().toStdString()];
+
+   GameResult result = dataagent::instance()->getGameResult(2,gameinfo);
+
+   Data d{};
+   d.set_type(Data_Type_RESULT);
+   ResultData rd{};
+   rd.mutable_game_result()->CopyFrom(result);
+   d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
+
+   DataTransition *dt = (*b).mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
+   dt->add_data()->CopyFrom(d);
+   qDebug() << (*b).DebugString();
+
+   string bdata = (*b).SerializeAsString();
+   RestfullClient rest(QUrl(LAPIURL.data()));
+   rest.postRawData("block/363","xxx",bdata.data(),bdata.size());
+
+}
+
+void TestingWindow::on_FixDef_clicked()
+{
+    Block b{};
+    std::vector<Block> replace{};
+    auto *it = Node::blockchain->NewIterator(leveldb::ReadOptions());
+    for (it->SeekToFirst() ;it->Valid();it->Next() ) {
+        b.ParseFromString(it->value().ToString());
+        if ( Cleanit(&b) )
+            replace.push_back(b);
+    }
+    delete it;
+
+    //return;
+
+    for ( auto b : replace) {
+        int32_t bnum = b.signedhead().head().num();
+        leveldb::Slice snum((char*)&bnum, sizeof(int32_t));
+
+        Node::blockchain->Put(leveldb::WriteOptions(), snum, b.SerializeAsString());
+
+        string bdata = b.SerializeAsString();
+        RestfullClient rest(QUrl(LAPIURL.data()));
+        rest.postRawData("block/"+QString::number(bnum),"xxx",bdata.data(),bdata.size());
+
+    }
+
+}
+
+void TestingWindow::on_GetResults4Fix_clicked()
+{
+    GameResult result;
+    for ( auto gp : mGames ) {
+        result = dataagent::instance()->getGameResult(ui->weeks->currentIndex(),gp.second);
+        mStagedGameResult[gp.first] = result;
+        QThread::currentThread()->msleep(1000);
+    }
+
+}
+
+
+bool TestingWindow::Cleanit(Block *b) {
+    auto dt = //b.signed_transactions(0).trans().GetExtension(DataTransition::data_trans);
+    b->mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
+    bool replaceit = false;
+    for ( int i=0;i<dt->data_size(); i++) {
+        if ( dt->data(i).type() != Data::RESULT) continue;
+        replaceit = true;
+        qDebug() << "replace block" << b->signedhead().head().num();
+        //continue;
+        Data *d = dt->mutable_data(i);
+        ResultData *prd = d->MutableExtension(ResultData::result_data);
+        auto it = mStagedGameResult.find(prd->game_result().gameid());
+        prd->mutable_game_result()->CopyFrom(it->second);
+    }
+    return replaceit;
+
+}

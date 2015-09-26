@@ -6,60 +6,84 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>245</width>
-    <height>33</height>
+    <width>260</width>
+    <height>93</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="spacing">
-      <number>13</number>
+   <item row="0" column="0" rowspan="2">
+    <widget class="QLabel" name="myAnimationLabel">
+     <property name="text">
+      <string/>
      </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="myMessageLabel">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+     <property name="indent">
+      <number>2</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="myAnimationLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string/>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+        <string>Block</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="myMessageLabel">
+      <widget class="QLabel" name="num">
        <property name="text">
         <string/>
        </property>
-       <property name="textFormat">
-        <enum>Qt::PlainText</enum>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>of</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-       <property name="indent">
-        <number>2</number>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="height">
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
     </layout>
    </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
   </layout>
+  <zorder>progressBar</zorder>
+  <zorder>label</zorder>
+  <zorder>label_2</zorder>
+  <zorder>height</zorder>
+  <zorder>num</zorder>
+  <zorder>myAnimationLabel</zorder>
+  <zorder>label</zorder>
  </widget>
  <resources/>
  <connections/>
