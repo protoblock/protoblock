@@ -9,7 +9,7 @@ QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
-#DEFINES += STAGINGFOOTBALL
+DEFINES += STAGINGFOOTBALL
 
 #DEFINES += MIKECLAYIMPORT
 
@@ -98,21 +98,19 @@ win32 {
 
 CONFIG(debug, debug|release) {
    LIBS+= -llibprotobufd \
-#          -lleveldbd \
+          -lleveldbd \
           -llibeay32 \
-          -lssleay32 # \
-          #-lfcd
+          -lssleay32 \
+          -lfcd
 
 }
 CONFIG(release, debug|release) {
    LIBS+= -llibprotobuf \
-#          -lleveldb \
+          -lleveldb \
           -llibeay32 \
-          -lssleay32 #\
-          #-lfc
+          -lssleay32 \
+          -lfc
 }
 
 include (./boost-includes.pri)
 include (./cute-fantasy.pri)
-include (./../fc-phoenix/fc.pri)
-include (./../leveldb/leveldb.pri)
