@@ -22,6 +22,8 @@ public:
 public slots:
   void startExec();
   void stopAndClose();
+  void Height(int);
+  void BlockNum(int);
 
 private:
   void setAnimationFileName(const QString & fileName);

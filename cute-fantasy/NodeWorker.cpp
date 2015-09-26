@@ -18,10 +18,11 @@
     }
 
 
-    void NodeWorker::preinit() {
+    int32_t NodeWorker::preinit() {
         node.init();
         //node.Cleaner();
 
+        return node.getLastLocalBlockNum();
     }
 
     void NodeWorker::init(){

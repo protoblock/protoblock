@@ -95,6 +95,9 @@ signals:
 
     void BlockError(int32_t last);
 
+    void Height(int);
+    void BlockNum(int);
+
 public slots:
 
     //void getLivePlayers(int );

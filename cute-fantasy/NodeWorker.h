@@ -23,7 +23,7 @@ class NodeWorker : public QObject
 public:
     NodeWorker(QObject * parent=0);
     fantasybit::Node node;
-    void preinit();
+    int32_t preinit();
 
 signals:
     void InSync(int32_t height);
