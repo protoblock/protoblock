@@ -32,3 +32,5 @@ storage/*
 stage/*
 libwin64*/
 */storage/*
+cute-fantasy/cute-fantasy.pro
+*.log
