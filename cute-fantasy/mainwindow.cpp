@@ -113,7 +113,9 @@ void MainWindow::initialize() {
 
     //wake up core thread
     Core::instance()->guiIsAwake();
+#ifndef DATAAGENTGUI
     myWaitDialog.startExec();
+#endif
     if (myLAPIWorker == NULL)  {
         qDebug() << "coreapi is not resolved";
         setDisabled(true);

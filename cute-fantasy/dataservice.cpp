@@ -4,6 +4,12 @@
 using namespace fantasybit;
 using namespace std;
 
+std::unordered_map<std::string,PlayerDetail>
+    DataService::GetTeamRoster(const std::string &teamid){
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetTeamRoster(teamid);
+}
+
 std::vector<fantasybit::GameRoster> DataService::GetCurrentWeekGameRosters(){
     //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");

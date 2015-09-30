@@ -30,6 +30,8 @@ public:
 
     fantasybit::GlobalState GetGlobalState();
 
+    std::unordered_map<std::string,PlayerDetail> GetTeamRoster(const std::string &teamid);
+
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);
 };

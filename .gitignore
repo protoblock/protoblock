@@ -26,3 +26,9 @@ cute-fantasy/release/*
 cute-fantasy/tmp/*
 debugbinagent/*
 openssl-1.0.1i-x64_86-win64/*
+deploy/storage/*
+storage/*
+*.orig
+stage/*
+libwin64*/
+*/storage/*

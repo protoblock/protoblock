@@ -65,6 +65,33 @@ struct SqlStuff {
 
     }
 
+    void dumpTx(int seqnum) {
+        QSqlQuery query(db);
+
+        query.prepare("SELECT Transactions FROM transactions t WHERE t.SeqNum = 6236");
+
+        //query.bindValue(":seqn",seqnum);
+        if ( ! query.exec() ) {
+            qDebug() << " exec ret " << query.lastError().databaseText();
+
+            return;
+        }
+
+        qDebug() << query.executedQuery() << query.isValid() <<
+                    query.isActive();
+
+
+        auto tx =  query.value(0);
+
+        auto btx = tx.toByteArray();
+
+        SignedTransaction st{};
+        st.ParseFromArray(btx.data(),btx.size());
+
+        qDebug() << st.DebugString();
+
+    }
+
     void teams() {
 
         map<int,string> teamIdKey{};
@@ -566,6 +593,8 @@ class PlayerLoaderTR {
 
 
 public:
+    static map<int,vector<string> > byes;
+
     int start = 1000;
     std::map<int,string> pid{};
 
@@ -590,7 +619,7 @@ public:
 
     }
 
-    std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar(bool isgenesis = false) {
+    std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar(int week, bool isgenesis = false) {
 
         if ( !isgenesis ) {
             start = sqls.maxPid();
@@ -612,9 +641,18 @@ public:
                     = (p.second.team_status == PlayerStatus_Status_ACTIVE);
                     myknownplayerstatus[p.first] = make_pair(games.info.away(),isactive);
                 }
-
             }
 
+            for ( auto t : byes[week]) {
+                std::unordered_map<std::string,PlayerDetail>
+                teamroster = DataService::instance()->GetTeamRoster(t);
+                for ( auto p : teamroster) {
+                    if ( p.second.base.position() == "DEF") continue;
+                    bool isactive
+                    = (p.second.team_status == PlayerStatus_Status_ACTIVE);
+                    myknownplayerstatus[p.first] = make_pair(t,isactive);
+                }
+            }
         }
 
         RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/teams/"));
@@ -674,7 +712,6 @@ public:
 
         }
 
-        //ToDo Byes
         for ( auto dp : myknownplayerstatus ) {
             PlayerData pd{};
             pd.set_playerid(dp.first);
@@ -794,7 +831,7 @@ public:
     }
 
 };
- 
+
 class GameStatsLoader {
     QString uribase = "http://api.sportradar.us/nfl-b1/2015";
     QString uritail = "/statistics.json?api_key=2uqzuwdrgkpzkhbfumzrg8gn";

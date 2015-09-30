@@ -430,20 +430,27 @@ void TestingWindow::Timer() {
 
         //ToDo: verify
         SignedTransaction st{};
-        if ( !st.ParseFromString(txstr) )
+        if ( !st.ParseFromString(txstr) ) {
+            qDebug() << "no more tx - break" << txstr;
             break;
+        }
+
+        qDebug() << "processed " << st.DebugString();
+
 
         count++;
 
         ui->staging_tx->addItem(QString::fromStdString(st.DebugString()));
 
-        st.id();
+        //st.id();
         Node::addTxPool(st.id(), txstr);
         if ( count > 30)
             break;
     }
 
     if (count < 1) return;
+
+    qDebug() << "making block " << count;
 
     DataTransition dt{};
     dt.set_type(DataTransition_Type_HEARTBEAT);
@@ -828,19 +835,18 @@ void TestingWindow::on_MsgButton_clicked() {
 void TestingWindow::on_stage_player_clicked()
 {
     playerloader = new PlayerLoaderTR();
-    myStagedPlayerData = playerloader->loadPlayersFromTradeRadar(false);
+    myStagedPlayerData = playerloader->loadPlayersFromTradeRadar(realweek(),false);
     for ( auto pd : myStagedPlayerData) {
         ui->staging_data->addItem(QString::fromStdString(pd.DebugString()));
     }
-
-    playerloader->dump();
-    delete playerloader;
-
 }
 
 
 void TestingWindow::on_commit_player_clicked()
 {
+    playerloader->dump();
+    delete playerloader;
+
     myPlayerData = myStagedPlayerData;
     myStagedPlayerData.clear();
 
@@ -895,6 +901,30 @@ void TestingWindow::on_Update_PLayers_2_clicked()
 
 void TestingWindow::on_fix363_clicked()
 {
+
+    auto txstr = RestfullService::myGetTx();
+
+    //ToDo: verify
+    SignedTransaction st{};
+    st.ParseFromString(txstr);
+
+    qDebug() << st.DebugString();
+    return;
+
+    SqlStuff sql("satoshifantasy");
+   for ( int i =6237; i<6246; i++) {
+       sql.dumpTx(i);
+   }
+/*
+   auto b = Node::getLocalBlock(i,true);
+
+   for ( auto tr : (*b).signed_transactions()) {
+       qDebug() << i << tr.DebugString();
+   }
+   }
+   */
+   return;
+
    auto b = Node::getLocalBlock(363,true);
 
    auto id = ui->game->currentData();

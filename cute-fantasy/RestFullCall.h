@@ -445,6 +445,25 @@ public:
 
         return client.lastReply().toStdString();
     }
+
+    static std::string myPeekTx(QThread * ownerThread = QThread::currentThread()){
+        return peekTx(fantasybit::LAPIURL.data(),ownerThread);
+    }
+
+    static std::string peekTx(const QString & baseUrl,
+                             QThread * ownerThread = QThread::currentThread()){
+        RestfullClient client(QUrl(baseUrl),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        //hard coded url
+        //TODO move to settings
+        QString customRoute("tx/peek");
+        //customRoute = customRoute.arg(route).arg(blockNum);
+        client.getData(customRoute,params,headers);
+
+        return client.lastReply().toStdString();
+    }
+
 };
 
 #endif // RESTFULLCALL_H

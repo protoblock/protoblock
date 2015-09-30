@@ -49,3 +49,22 @@ decltype(MikeClayLoader::import) MikeClayLoader::import{
 */
 };
 
+decltype (PlayerLoaderTR::byes) PlayerLoaderTR::byes {
+    { 1 , {} },
+    { 2 , {} },
+    { 3 , {} },
+    { 4 , {"NE","TEN"} },
+    { 5 , {"CAR", "MIA", "MIN", "NYJ"} },
+    { 6 , {"DAL", "OAK", "STL", "TB"} },
+    { 7 , {"CHI", "CIN", "DEN", "GB"} },
+    { 8 , {"BUF", "JAC", "PHI", "WAS"} },
+    { 9 , {"ARI", "BAL", "DET", "HOU", "KC", "SEA"} },
+    { 10 , {"ATL", "IND", "SD", "SF"} },
+    { 11 , {"CLE", "NO", "NYG", "PIT"} },
+    { 12 , {} },
+    { 13 , {} },
+    { 14 , {} },
+    { 15 , {} },
+    { 16 , {} },
+    { 17 , {} },
+};
