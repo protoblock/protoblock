@@ -851,7 +851,6 @@ class GameStatsLoader {
     string preregpost;
 public:
 
-    SqlStuff sqls{};
 
     GameStatsLoader(string seasontype) {
         preregpost = seasontype;
@@ -865,6 +864,7 @@ public:
                 loadGameStatsFromTradeRadar(int week,vector<GameInfo> &games) {
         std::vector<fantasybit::GameResult> result;
 
+        SqlStuff sqls;
         RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/2015"));
 
         for ( auto game : games) {
@@ -948,6 +948,11 @@ public:
                 QJsonObject td = sobj.value("touchdowns")
                         .toObject().value("team").toObject();
 
+                QJsonArray two = sobj.value("two_point_conversion")
+                        .toObject().value("players").toArray();
+
+
+
   /*
    *                 "team": {
                     "tackle": 48,
@@ -988,7 +993,7 @@ public:
                 getStats(dstat,"td",td);
 
                 //for ( auto tstats : {homestats, awaystats}) {
-                map<string,QJsonArray> mp = { {"rush", rush}, {"pass", pass}, {"rec",rec}};
+                map<string,QJsonArray> mp = { {"rush", rush}, {"pass", pass}, {"rec",rec} , {"two", two} };
                 for ( auto rpsp : mp ) {
                     auto rps = rpsp.second;
                     for ( int i=0;i<rps.size();i++) {
@@ -1073,6 +1078,18 @@ public:
     }
 
     void getStats(Ostats *ostat,std::string type,QJsonObject & jsonObject) const {
+
+       if ( type == "two") {
+           int made = 0;
+           auto p = jsonObject.value("pass");
+           made += p.toInt();
+           auto r = jsonObject.value("rush");
+           made += r.toInt();
+           auto re = jsonObject.value("rec");
+           made += re.toInt();
+           ostat->set_twopt(made);
+           return;
+       }
 
        auto yds = jsonObject.value("yds");
        int y = yds.toInt();
@@ -1178,6 +1195,231 @@ public:
 
 };
 
+class FFNerdLoader {
+
+    QString nerdbase = "http://www.fantasyfootballnerd.com/service/weekly-projections/json/tfzx83sdg348/";
+    
+    QString makeroute(std::string pos) {
+        return QString::fromStdString(pos);
+    }
+    
+public:
+    static map<string,int> import;
+
+    SqlStuff sqls{};
+
+    std::vector<fantasybit::PlayerPoints> loadProj() {
+
+        for ( auto x : import ) {
+            sqls.playermapFeed("FFNERD",x.second,x.first);
+        }
+
+        std::vector<fantasybit::PlayerPoints> result;
+
+        for ( auto pos : {"QB", "WR", "RB", "TE", "K", "DEF"}) {
+            auto url = QUrl(nerdbase);
+            RestfullClient rest(url);
+            rest.getData(makeroute(pos));
+            auto resp = rest.lastReply();
+            qDebug() << resp;
+            QJsonDocument ret = QJsonDocument::fromJson(resp);
+            qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+            QJsonObject jo = ret.object();
+            auto vals = jo.value("Projections");
+            QJsonArray parr = vals.toArray();
+            for (int i=0;i< parr.size();i++  ) {
+                QJsonValueRef data = parr[i];
+
+                QJsonObject projData = data.toObject();
+                QString errorParsingObject;
+
+                PlayerPoints pp = getProjFromJson(projData,errorParsingObject);
+                if ( errorParsingObject != "" ) continue;
+                result.push_back(pp);
+
+            }
+
+
+        }
+
+        return result;
+    }
+    fantasybit::PlayerPoints getProjFromJson(QJsonObject & jsonObject,QString & errorParsingObject) {
+
+       PlayerPoints pp{};
+
+       ProjStats s{};
+       getStats(&s,jsonObject);
+       double proj = CalcProj(s);
+       pp.set_points(ceil(proj));
+
+       auto playerid = jsonObject.value("playerId").toString();
+       int pid = sqls.getpid("FFNERD",playerid.toStdString());
+       if ( pid == 0) {
+           if (pp.points() > 0.0001 )
+                qDebug() << " FFNERD id not found" << playerid
+                         << jsonObject.value("displayName").toString()
+                         << jsonObject.value("team").toString()
+                         << jsonObject.value("position").toString();
+
+           errorParsingObject = playerid;
+           return pp;
+       }
+
+       pp.set_playerid(to_string(pid));
+       return pp;
+    }
+
+    void getStats(ProjStats *stat,QJsonObject & jsonObject) const {
+
+       ProjOstats os{};
+
+       QString doublestr;
+       float i;
+       doublestr = jsonObject.value("passYds").toString();
+       i = doublestr.toFloat();
+       os.set_passyds(i);
+       doublestr = jsonObject.value("rushYds").toString();
+       i = doublestr.toFloat();
+       os.set_rushyds(i);
+       doublestr = jsonObject.value("recYds").toString();
+       i = doublestr.toFloat();
+       os.set_recyds(i);
+       doublestr = jsonObject.value("passTD").toString();
+       i = doublestr.toFloat();
+       os.set_passtd(i);
+       doublestr = jsonObject.value("rushTD").toString();
+       i = doublestr.toFloat();
+       os.set_rushtd(i);
+       doublestr = jsonObject.value("recTD").toString();
+       i = doublestr.toFloat();
+       os.set_rectd(i);
+       doublestr = jsonObject.value("receptions").toString();
+       i = doublestr.toFloat();
+       os.set_rec(i);
+       doublestr = jsonObject.value("passInt").toString();
+       i = doublestr.toFloat();
+       os.set_pint(i);
+       doublestr = jsonObject.value("fumblesLost").toString();
+       i = doublestr.toFloat();
+       os.set_fumble(i);
+       stat->mutable_ostats()->CopyFrom(os);
+
+       ProjDstats ds{};
+       doublestr = jsonObject.value("defSack").toString();
+       i = doublestr.toFloat();
+       ds.set_sacks(i);
+       doublestr = jsonObject.value("defSafety").toString();
+       i = doublestr.toFloat();
+       ds.set_sfty(i);
+       doublestr = jsonObject.value("defInt").toString();
+       i = doublestr.toFloat();
+       doublestr = jsonObject.value("defFF").toString();
+       i += doublestr.toFloat();
+       ds.set_turnovers(i);
+       doublestr = jsonObject.value("defTD").toString();
+       i = doublestr.toFloat();
+       doublestr = jsonObject.value("defRetTD").toString();
+       i += doublestr.toFloat();
+       ds.set_deftd(i);
+       doublestr = jsonObject.value("defPA").toString();
+       i = doublestr.toFloat();
+       ds.set_ptsa(i);
+       stat->mutable_dstats()->CopyFrom(ds);
+
+       ProjKstats ks{};
+       doublestr = jsonObject.value("xp").toString();
+       i = doublestr.toFloat();
+       ks.set_pa(i);
+       doublestr = jsonObject.value("fg").toString();
+       i = doublestr.toFloat();
+       ks.set_fg40(i);
+       stat->mutable_kstats()->CopyFrom(ks);
+    }
+
+    static double CalcProj(const ProjStats &stats) {
+        double ret = 0;
+
+        if ( stats.has_ostats() ) {
+            auto os = stats.ostats();
+            if ( os.has_passtd())
+                ret += 4.0 * os.passtd(); //PAssing Yards (QB)
+
+
+            if ( os.has_rushtd() )
+                ret += 6.0 * os.rushtd();
+
+            if ( os.has_rectd() )
+                ret += 6.0 *  os.rectd();
+
+            if ( os.has_passyds() )
+               ret += .05 *  os.passyds();
+
+            if ( os.has_recyds() )
+                ret += .1 *  os.recyds();
+
+            if (  os.has_rushyds() )
+                ret += .1 *  os.rushyds();
+
+            if ( os.has_rec() )
+                ret += 1.0 * os.rec();
+
+            if ( os.has_pint() )
+                ret += -1.0 * os.pint();
+
+            if ( os.has_twopt() )
+                ret += 2.0 * os.twopt();
+
+            if (os.has_onept())
+                ret += 2.0 *  os.onept();
+        }
+        if ( stats.has_kstats() ) {
+            auto ks = stats.kstats();
+            if ( ks.has_pa() )
+                ret += 1.0 * ks.pa();
+            if ( ks.has_fg30() )
+                ret += 3.0 * ks.fg30();
+            if ( ks.has_fg40() )
+                ret += 4.0 * ks.fg40();
+            if ( ks.has_fg50() )
+                ret += 5.0 * ks.fg50();
+            if ( ks.has_fg60() )
+                ret += 6.0 * ks.fg60();
+        }
+
+        if ( stats.has_dstats() ) {
+            auto ds = stats.dstats();
+            if ( ds.has_deftd())
+                ret += 6.0 * ds.deftd();
+            if ( ds.has_onept())
+                ret += 2.0 * ds.onept();
+            if ( ds.has_ptsa() && ds.ptsa() > 0.0) {
+                if ( ds.ptsa() < 1.0)
+                    ret += 12.0;
+                else if ( ds.ptsa() < 7.0)
+                    ret += 10.0;
+                else if ( ds.ptsa() < 11.0)
+                    ret += 8.0;
+                else if ( ds.ptsa() < 14.0)
+                    ret += 4.0;
+
+            }
+            if ( ds.has_sacks())
+                ret += 1.0 * ds.sacks();
+            if ( ds.has_sfty())
+                ret += 5.0 * ds.sfty();
+            if ( ds.has_turnovers())
+                ret += 2.0 * ds.turnovers();
+            if ( ds.has_twopt())
+                ret += 2.0 * ds.twopt();
+        }
+
+        return ret;
+    }
+
+
+};
+
 class MikeClayLoader {
 
 public:
@@ -1196,17 +1438,19 @@ public:
         std::vector<fantasybit::PlayerPoints> result;
         string filename = GET_ROOT_DIR() + infile;
 
+        //qDebug() << " ccccc " << filename;
         QFile file(filename.data());
         QTextStream in(&file);
-        if (file.open(QIODevice::ReadOnly)) {
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QStringList listdata;
             QString line;
 
             for ( int i=0;i<start;i++)
                 line = in.readLine();
-            while (!file.atEnd()) {
+            while (!in.atEnd()) {
                 listdata.clear();
                 line = in.readLine();
+                //qDebug() << line;
                 listdata.append(line.split(','));
                 QString errorParsingObject;
 
@@ -1215,6 +1459,8 @@ public:
                 result.push_back(pp);
 
             }
+            qDebug() << "out loop" << file.atEnd();
+
         }
 
         return result;
@@ -1225,6 +1471,7 @@ public:
 
        auto statsid = list[headers["statsid"]];
        auto pos = list[headers["pos"]];
+       //qDebug() << "ccccc" << statsid;
        if (!(
                pos == "QB" ||
                pos == "WR" ||
@@ -1239,7 +1486,8 @@ public:
        }
        int pid = sqls.getpid("STATS",statsid.toStdString());
        if ( pid == 0) {
-           qDebug() << " stats id not found" << statsid;
+           qDebug() << " stats id not found" << statsid << list[headers["name"]]
+                   << list[headers["team"]] << pos;
            errorParsingObject = statsid;
            return pp;
        }
@@ -1249,6 +1497,7 @@ public:
        double proj = CalcProj(s);
        pp.set_points(ceil(proj));
        pp.set_playerid(to_string(pid));
+
        return pp;
     }
 
@@ -1404,6 +1653,277 @@ public:
 
 
 };
+
+struct pmatch {
+    pmatch() = default;
+    std::string pos;
+    //std::string jersey;
+    std::string last;
+    bool operator ==(const pmatch &b) const {
+        return b.pos + b.last == pos + last;
+    }
+};
+
+struct ids {
+    std::map<std::string,std::string> lid{};
+};
+
+namespace std {
+  template <> struct hash<pmatch>
+  {
+    size_t operator()(const pmatch & x) const
+    {
+        return std::hash<std::string>()(x.pos + x.last);
+      /* your code here, e.g. "return hash<int>()(x.value);" */
+    }
+  };
+}
+class FantasyDataNerdMapAll {
+    QString nerdbase = "http://www.fantasyfootballnerd.com/service/players/json/tfzx83sdg348/";
+    QString truribase = "http://api.sportradar.us/nfl-b1/teams";
+    QString truritail = "/roster.json?api_key=2uqzuwdrgkpzkhbfumzrg8gn";
+
+    QString fduribase = "https://api.fantasydata.net/nfl/v2/JSON/Players/";
+    QMap<QString,QString>  fdheaders;
+
+    QString makeroute(std::string team) {
+        return QString::fromStdString(team) + truritail;
+    }
+
+public:
+    std::map<std::string, std::unordered_map<pmatch,ids> > nerddata{};
+    std::map<std::string,std::string> fd2fa{};
+
+    void loadPlayers() {
+        fdheaders["Ocp-Apim-Subscription-Key"] = "e9941289786443bd983c79a6c9f0b6cf";
+
+        SqlStuff sqls;
+
+        loadNerds();
+
+        for ( auto t : fantasybit::Commissioner::GENESIS_NFL_TEAMS) {
+
+            auto fdmap = loadFantasyData(t);
+            for ( auto p : fdmap ) {
+            //    qDebug() << p.first.pos << p.first.jersey << p.first.last << p.second;
+            }
+            auto nerdmap = nerddata[t];
+            auto trurl = QUrl(truribase);
+
+            RestfullClient trrest(trurl);
+            auto route = makeroute(t);
+            qDebug() << truribase << route;
+            trrest.getData(route);
+            auto resp = trrest.lastReply();
+
+            qDebug() << resp;
+            QJsonDocument ret = QJsonDocument::fromJson(resp);
+            qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+            QJsonObject jo = ret.object();
+            auto vals = jo.value("players");
+            QJsonArray parr = vals.toArray();
+
+            for (int i=0;i< parr.size();i++  ) {
+                QJsonValueRef data = parr[i];
+
+                QJsonObject playerData = data.toObject();
+                auto tid = playerData.value("id").toString().toStdString();
+
+                auto pos = playerData.value("position").toString();
+
+                if   (! (pos == "QB"
+                     || pos == "RB"
+                     || pos == "WR"
+                     || pos == "TE"
+                     || pos == "K"
+                     || pos == "FB")) { continue; }
+
+                if ( pos == "FB") pos = "RB";
+
+                auto jersey = playerData.value("jersey_number");
+                auto name_last = playerData.value("name_last").toString();
+
+                auto name_first = playerData.value("name_first").toString().toStdString();
+
+                int jersey_number = jersey.toInt();
+
+                pmatch p{pos.toStdString(),name_last.toStdString()};
+
+                auto myjersey = to_string(jersey_number);
+
+                auto myids = nerdmap[p];
+                std::string holdid = "";
+                std::string npid = "";
+                for ( auto ids : myids.lid) {
+                    if ( ids.first == myjersey) {
+                        npid = ids.second;
+                        break;
+                    }
+                    else if ( ids.first == name_first) {
+                        holdid = ids.second;
+                    }
+                }
+                if ( npid == "" ) {
+                    if ( holdid != "" && myids.lid.size() %2 == 0)
+                        npid = holdid;
+                    else if ( myids.lid.size() == 2)
+                       npid = myids.lid.begin()->second;
+                }
+                if ( npid == "")
+                    qDebug() << "error" << p.pos << p.last;
+
+
+                myids = fdmap[p];
+                holdid = "";
+                std::string fpid = "";
+                for ( auto ids : myids.lid) {
+                    if ( ids.first == myjersey) {
+                        fpid = ids.second;
+                        break;
+                    }
+                    else if ( ids.first == name_first) {
+                        holdid = ids.second;
+                    }
+                }
+                if ( fpid == "" ) {
+                    if ( holdid != "" && myids.lid.size() %2 == 0)
+                        fpid = holdid;
+                    else if ( myids.lid.size() == 2)
+                       fpid = myids.lid.begin()->second;
+                }
+                if ( fpid == "")
+                    qDebug() << "error" << p.pos << p.last;
+
+                auto mypid = sqls.getpidT(tid);
+                if ( mypid <= 0)
+                    continue;
+
+                if ( npid != "")
+                    sqls.playermapFeed("FFNERD",mypid,npid);
+
+                if ( fpid != "") {
+                    sqls.playermapFeed("FNDATA",mypid,fpid);
+                    auto faid = fd2fa[fpid];
+                    if ( faid != "")
+                        sqls.playermapFeed("FALARM",mypid,faid);
+
+                }
+
+            }
+
+
+        }
+
+    }
+
+    std::unordered_map<pmatch,ids> loadFantasyData(std::string team) {
+        std::unordered_map<pmatch,ids> fddata{};
+        auto myteam = team;
+        if ( myteam == "JAC")
+            myteam = "JAX";
+
+        auto url = QUrl(fduribase);
+
+        RestfullClient trrest(url);
+        auto route = QString::fromStdString(myteam);
+        qDebug() << truribase << route;
+        trrest.getData(route,QMap<QString,QVariant>(),fdheaders);
+        auto resp = trrest.lastReply();
+
+        qDebug() << resp;
+        QJsonDocument ret = QJsonDocument::fromJson(resp);
+        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject() << ret.isArray();
+        QJsonArray parr = ret.array();
+        for (int i=0;i< parr.size();i++  ) {
+            QJsonValueRef data = parr[i];
+
+            QJsonObject playerData = data.toObject();
+            auto PlayerID = playerData.value("PlayerID");
+            int pid = PlayerID.toInt();
+
+            auto pos = playerData.value("FantasyPosition").toString();
+
+            if   (! (pos == "QB"
+                 || pos == "RB"
+                 || pos == "WR"
+                 || pos == "TE"
+                 || pos == "K"
+                 )) { continue; }
+
+            auto jersey = playerData.value("Number");
+            auto name_last = playerData.value("LastName").toString();
+            auto name_first = playerData.value("FirstName").toString().toStdString();
+
+            auto FantasyAlarmPlayerID = playerData.value("FantasyAlarmPlayerID");
+            auto faplayerid = FantasyAlarmPlayerID.toInt();
+
+            int jersey_number = jersey.toInt();
+            if ( jersey_number <= 0 ) continue;
+
+            pmatch p{pos.toStdString(), name_last.toStdString()};
+
+            auto myid = fddata[p];
+            myid.lid[to_string(jersey_number)] = to_string(pid);
+            myid.lid[name_first] = to_string(pid);
+
+            fddata[p] = myid;
+
+            if ( faplayerid > 0)
+                fd2fa[to_string(pid)] = to_string(faplayerid);
+        }
+
+        return fddata;
+
+    }
+
+    void loadNerds() { //nerds
+
+        for ( auto t : fantasybit::Commissioner::GENESIS_NFL_TEAMS) {
+            nerddata.insert(make_pair(t,std::unordered_map<pmatch,ids>()));
+        }
+
+        QString route = "";
+        //do nerd
+        auto url = QUrl(nerdbase);
+        RestfullClient rest(url);
+        rest.getData(route);
+        auto resp = rest.lastReply();
+        qDebug() << resp;
+        QJsonDocument ret = QJsonDocument::fromJson(resp);
+        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+        QJsonObject jo = ret.object();
+        auto vals = jo.value("Players");
+        QJsonArray parr = vals.toArray();
+        for (int i=0;i< parr.size();i++  ) {
+            QJsonValueRef data = parr[i];
+
+            QJsonObject playerData = data.toObject();
+            auto jersey = playerData.value("jersey").toString();
+            if ( jersey == "0")
+                continue;
+
+            auto position = playerData.value("position").toString();
+            auto lname = playerData.value("lname").toString();
+            auto fname = playerData.value("fname").toString().toStdString();
+
+
+
+            auto playerid = playerData.value("playerId").toString();
+            auto team = playerData.value("team").toString();
+            pmatch p{position.toStdString(), lname.toStdString()};
+            auto myid = nerddata[team.toStdString()][p];
+            myid.lid[jersey.toStdString()] = playerid.toStdString();
+            myid.lid[fname] = playerid.toStdString();
+
+            nerddata[team.toStdString()][p] = myid;
+        }
+    }
+
+
+};
+
+
 
 #endif // PLAYERLOADER
 
