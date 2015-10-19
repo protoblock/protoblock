@@ -37,24 +37,26 @@ using namespace std;
 using namespace fantasybit;
 
 struct SqlStuff {
-    QSqlDatabase db{};
-
-    const std::string DEFAULT = DBNAME;
+   //  db{};
 
     SqlStuff(string dbname) {
         init(dbname);
     }
 
-    SqlStuff(string dbname, string connectionName) {
+    SqlStuff(const string &dbname, const string &connectionName) {
+        init(dbname, connectionName);
+    }
+
+    SqlStuff(const char* dbname, const char* connectionName) {
         init(dbname, connectionName);
     }
 
     SqlStuff() {
-        init(DEFAULT);
+        init(DBNAME);
     }
 
-    SqlStuff(bool useDefault, string connectionName) {
-        init(DEFAULT,connectionName);
+    SqlStuff(bool useDefault, const string &connectionName) {
+        init(DBNAME,connectionName);
     }
 
 
@@ -62,8 +64,11 @@ struct SqlStuff {
         init(dbname,dbname + "_defaultConnection");
     }
 
+    QString conname;
     void init(string dbname, string connectionName) {
-        db = QSqlDatabase::addDatabase("QMYSQL",QString::fromStdString(connectionName));
+        qDebug() << "sql init " << dbname << connectionName;
+        conname = QString::fromStdString(connectionName);
+        QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL",conname);
 
         db.setHostName(DBIP.data());
         db.setPort(3306);
@@ -77,10 +82,11 @@ struct SqlStuff {
             return;
         }
 
-
     }
 
+
     void dumpTx(int seqnum) {
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery query(db);
 
         query.prepare("SELECT Transactions FROM transactions t WHERE t.SeqNum = 6236");
@@ -88,9 +94,11 @@ struct SqlStuff {
         //query.bindValue(":seqn",seqnum);
         if ( ! query.exec() ) {
             qDebug() << " exec ret " << query.lastError().databaseText();
-
+            db.close();
             return;
         }
+        db.close();
+
 
         qDebug() << query.executedQuery() << query.isValid() <<
                     query.isActive();
@@ -116,13 +124,16 @@ struct SqlStuff {
 
         for ( auto tk : teamIdKey ) {
 //        QSqlQuery query;
+            QSqlDatabase db = QSqlDatabase::database (conname);
             QSqlQuery insertQuery(db);
             insertQuery.prepare("INSERT INTO team (tid, tkey) VALUES(:mid,:mkey)");
             insertQuery.bindValue(":mid",tk.first);
             insertQuery.bindValue(":mkey",QString::fromStdString(tk.second));
             //insertQuery.exec();
-            if ( !insertQuery.exec() )
-            {
+            bool good = insertQuery.exec();
+            db.close();
+
+            if ( !good  ) {
                 qDebug() << " exec ret " << insertQuery.lastError().databaseText();
                 break;
             }
@@ -146,18 +157,21 @@ struct SqlStuff {
     }
 
     int getpid(string feed, string tpid) {
-
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery query(db);
 
         query.prepare("SELECT playerid FROM pid p WHERE p.id = :tpid and p.feed = :feedid");
         query.bindValue(":feedid",QString::fromStdString(feed));
         query.bindValue(":tpid",QString::fromStdString(tpid));
 
-        if ( ! query.exec() ) {
-            qDebug() << " exec ret " << query.lastError().databaseText();
+        bool good = query.exec();
+        db.close();
 
+        if ( !good  ) {
+            qDebug() << " exec ret " << query.lastError().databaseText();
             return -1;
         }
+
 
         qDebug() << query.isActive() << query.isValid() <<
                     query.first();;
@@ -168,12 +182,16 @@ struct SqlStuff {
     }
 
     string getgidT(string tgid) {
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery query(db);
 
         query.prepare("SELECT gameid FROM gid g WHERE g.id = :tgid");
         query.bindValue(":tgid",QString::fromStdString(tgid));
 
-        if ( ! query.exec() ) {
+        bool good = query.exec();
+        db.close();
+
+        if ( ! good ) {
             qDebug() << " exec ret " << query.lastError().databaseText();
 
             return "";
@@ -188,11 +206,15 @@ struct SqlStuff {
     }
 
     int maxPid() {
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery query(db);
 
         query.prepare("SELECT max(playerid) FROM player");
 
-        if ( ! query.exec() ) {
+        bool good = query.exec();
+        db.close();
+
+        if ( ! good ) {
             qDebug() << " exec ret " << query.lastError().databaseText();
 
             return -1;
@@ -208,11 +230,16 @@ struct SqlStuff {
     }
 
     pair<bool,string> getPlayer(int pid) {
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery query(db);
 
         query.prepare("select team, roster_status from player where playerid = :pid");
         query.bindValue(":pid",pid);
-        if ( ! query.exec() ) {
+
+        bool good = query.exec();
+        db.close();
+
+        if ( ! good ) {
             qDebug() << " exec ret " << query.lastError().databaseText();
             return make_pair(false,"");
         }
@@ -231,6 +258,7 @@ struct SqlStuff {
     }
 
     void gamemap(string gameid, string id) {
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery insertQuery(db);
         insertQuery.prepare("INSERT INTO gid (feed, id, gameid) VALUES(:feed, :mid,:mgameid)");
         insertQuery.bindValue(":feed","TRDR");
@@ -238,8 +266,10 @@ struct SqlStuff {
         insertQuery.bindValue(":mgameid",QString::fromStdString(gameid));
         insertQuery.bindValue(":mid",QString::fromStdString(id));
         //insertQuery.exec();
-        if ( !insertQuery.exec() )
-        {
+        bool good = insertQuery.exec();
+        db.close();
+
+        if ( !good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
         }
 
@@ -250,6 +280,8 @@ struct SqlStuff {
     }
 
     void distribute(Distribution &dist) {
+
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
         QSqlQuery insertQuery(db);
 
         insertQuery.prepare
@@ -266,24 +298,33 @@ struct SqlStuff {
         insertQuery.bindValue(":proj",dist.proj());
         insertQuery.bindValue(":award",dist.award());
         insertQuery.bindValue(":res",dist.result());
-        if ( !insertQuery.exec() ) {
+
+
+        bool good = insertQuery.exec();
+        db.close();
+
+        if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+            qDebug() << dist.DebugString();
         }
-
-
     }
 
     void fantasyname(FantasyNameHash &fnh) {
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery insertQuery(db);
 
-        insertQuery.prepare
+         insertQuery.prepare
             ("INSERT INTO fantasyname "
              "(fantasynameid,fantasyname)"
              "VALUES(:fnid, :fn)");
 
         insertQuery.bindValue(":fnid",fnh.hash());
         insertQuery.bindValue(":fn",QString::fromStdString(fnh.name()));
-        if ( !insertQuery.exec() ) {
+
+        bool good = insertQuery.exec();
+        db.close();
+
+        if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
         }
 
@@ -291,22 +332,27 @@ struct SqlStuff {
     }
 
     void playermapFeed(string feed, int playerid, string id) {
-
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery insertQuery(db);
+
         insertQuery.prepare("INSERT INTO pid (feed, id, playerid) VALUES(:feed, :mid,:mplayerid)");
         insertQuery.bindValue(":feed",feed.data());
 
         insertQuery.bindValue(":mplayerid",playerid);
         insertQuery.bindValue(":mid",QString::fromStdString(id));
         //insertQuery.exec();
-        if ( !insertQuery.exec() )
-        {
+
+        bool good = insertQuery.exec();
+        db.close();
+
+        if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
         }
 
     }
 
     void player(PlayerData pd) {
+        QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery insertQuery(db);
 
         if ( pd.has_player_base() ) {
@@ -348,9 +394,10 @@ struct SqlStuff {
         }
         else return;
 
-        //insertQuery.exec();
-        if ( !insertQuery.exec() )
-        {
+        bool good = insertQuery.exec();
+        db.close();
+
+        if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
         }
 
@@ -378,7 +425,12 @@ struct SqlStuff {
     }
 
     ~SqlStuff() {
-        db.close();
+        {
+            QSqlDatabase db = QSqlDatabase::database(conname, false);
+            if (db.isOpen())
+            db.close();
+        }
+        QSqlDatabase::removeDatabase(conname);
     }
 };
 
@@ -470,14 +522,13 @@ public:
 
 class ScheduleLoader
 {
-
+    SqlStuff sqls;
 public:
-    ScheduleLoader(){}
+    ScheduleLoader() : sqls(true,"ScheduleLoader") {}
     ~ScheduleLoader(){}
     std::map<string,string> gid{};
 
     map<string,int> teamIdKey{};
-    SqlStuff sqls{true,"ScheduleLoader"};
     void Dump() {
         for ( auto p : gid ) {
             sqls.gamemap(p.first,p.second);
@@ -608,6 +659,7 @@ class PlayerLoaderTR {
 
 
 public:
+    PlayerLoaderTR() : sqls(true,"PlayerLoaderTR") {}
     static map<int,vector<string> > byes;
 
     int start = 1000;
@@ -615,7 +667,8 @@ public:
 
     std::vector<fantasybit::PlayerData> result;
     std::set<fantasybit::PlayerData> nochange;
-    SqlStuff sqls{true,"PlayerLoaderTR"};
+    SqlStuff sqls;
+
 
     std::unordered_map<std::string,pair<string,bool>> myknownplayerstatus;
 
@@ -879,7 +932,7 @@ public:
                 loadGameStatsFromTradeRadar(int week,vector<GameInfo> &games) {
         std::vector<fantasybit::GameResult> result;
 
-        SqlStuff sqls{true,"GameStatsLoader"};
+        SqlStuff sqls(true,"GameStatsLoader");
         RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/2015"));
 
         for ( auto game : games) {
@@ -1016,8 +1069,9 @@ public:
                         QJsonObject odata = data.toObject();
                         auto id = odata.value("id").toString();
                         auto it = tstats.find(id);
-                        if ( it == end(tstats))
+                        if ( it == end(tstats)) {
                             tstats[id] = Stats{};
+                        }
 
                         Ostats * ostat = tstats[id].mutable_ostats();
                         getStats(ostat,rpsp.first,odata);
@@ -1219,10 +1273,11 @@ class FFNerdLoader {
     }
     
 public:
+    FFNerdLoader() : sqls(true,"FFNerdLoader") {}
+
     static map<string,int> import;
 
-    SqlStuff sqls{true,"FFNerdLoader"};
-
+    SqlStuff sqls;
     std::vector<fantasybit::PlayerPoints> loadProj() {
 
         for ( auto x : import ) {
@@ -1441,8 +1496,10 @@ public:
     static map<string,int> headers;
     static map<string,int> import;
 
+    MikeClayLoader() : sqls(true,"MikeClayLoader") {}
+
     int start = 3;
-    SqlStuff sqls{true,"MikeClayLoader"};
+    SqlStuff sqls;
 
     std::vector<fantasybit::PlayerPoints> loadProjFromFile(string infile = "SatoshiFantasy.csv") {
 
@@ -1712,7 +1769,7 @@ public:
     void loadPlayers() {
         fdheaders["Ocp-Apim-Subscription-Key"] = "e9941289786443bd983c79a6c9f0b6cf";
 
-        SqlStuff sqls{true,"FantasyDataNerdMapAll"};
+        SqlStuff sqls(true,"FantasyDataNerdMapAll");
 
         loadNerds();
 
