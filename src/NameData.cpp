@@ -258,7 +258,7 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
 #endif
     {
         FantasyNameHash fnh{};
-        SqlStuff sql{"satoshifantasy"};
+        SqlStuff sql{"satoshifantasy","OnFantasyName"};
 
         fnh.set_name(name);
         fnh.set_hash(fn->hash());

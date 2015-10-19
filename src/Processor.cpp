@@ -235,7 +235,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 #ifndef DATAAGENTWRITENAMES_FORCE
                 if ( !amlive ) break;
 #endif
-                SqlStuff sql{"satoshifantasy"};
+                SqlStuff sql{"satoshifantasy","distribution"};
                 Distribution dist{};
                 dist.set_gameid(rd.game_result().gameid());
                 auto gs = mData.GetGlobalState();

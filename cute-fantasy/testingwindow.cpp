@@ -911,7 +911,7 @@ void TestingWindow::on_fix363_clicked()
     qDebug() << st.DebugString();
     return;
 
-    SqlStuff sql("satoshifantasy");
+    SqlStuff sql("satoshifantasy","on_fix363_clicked");
    for ( int i =6237; i<6246; i++) {
        sql.dumpTx(i);
    }

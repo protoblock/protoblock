@@ -39,16 +39,31 @@ using namespace fantasybit;
 struct SqlStuff {
     QSqlDatabase db{};
 
+    const std::string DEFAULT = DBNAME;
+
     SqlStuff(string dbname) {
         init(dbname);
     }
 
-    SqlStuff() {
-        init(DBNAME);
+    SqlStuff(string dbname, string connectionName) {
+        init(dbname, connectionName);
     }
 
+    SqlStuff() {
+        init(DEFAULT);
+    }
+
+    SqlStuff(bool useDefault, string connectionName) {
+        init(DEFAULT,connectionName);
+    }
+
+
     void init(string dbname) {
-        db = QSqlDatabase::addDatabase("QMYSQL");
+        init(dbname,dbname + "_defaultConnection");
+    }
+
+    void init(string dbname, string connectionName) {
+        db = QSqlDatabase::addDatabase("QMYSQL",QString::fromStdString(connectionName));
 
         db.setHostName(DBIP.data());
         db.setPort(3306);
@@ -462,7 +477,7 @@ public:
     std::map<string,string> gid{};
 
     map<string,int> teamIdKey{};
-    SqlStuff sqls{};
+    SqlStuff sqls{true,"ScheduleLoader"};
     void Dump() {
         for ( auto p : gid ) {
             sqls.gamemap(p.first,p.second);
@@ -600,7 +615,7 @@ public:
 
     std::vector<fantasybit::PlayerData> result;
     std::set<fantasybit::PlayerData> nochange;
-    SqlStuff sqls{};
+    SqlStuff sqls{true,"PlayerLoaderTR"};
 
     std::unordered_map<std::string,pair<string,bool>> myknownplayerstatus;
 
@@ -864,7 +879,7 @@ public:
                 loadGameStatsFromTradeRadar(int week,vector<GameInfo> &games) {
         std::vector<fantasybit::GameResult> result;
 
-        SqlStuff sqls;
+        SqlStuff sqls{true,"GameStatsLoader"};
         RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/2015"));
 
         for ( auto game : games) {
@@ -1206,7 +1221,7 @@ class FFNerdLoader {
 public:
     static map<string,int> import;
 
-    SqlStuff sqls{};
+    SqlStuff sqls{true,"FFNerdLoader"};
 
     std::vector<fantasybit::PlayerPoints> loadProj() {
 
@@ -1427,7 +1442,7 @@ public:
     static map<string,int> import;
 
     int start = 3;
-    SqlStuff sqls{};
+    SqlStuff sqls{true,"MikeClayLoader"};
 
     std::vector<fantasybit::PlayerPoints> loadProjFromFile(string infile = "SatoshiFantasy.csv") {
 
@@ -1697,7 +1712,7 @@ public:
     void loadPlayers() {
         fdheaders["Ocp-Apim-Subscription-Key"] = "e9941289786443bd983c79a6c9f0b6cf";
 
-        SqlStuff sqls;
+        SqlStuff sqls{true,"FantasyDataNerdMapAll"};
 
         loadNerds();
 
