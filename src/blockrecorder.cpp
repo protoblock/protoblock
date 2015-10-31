@@ -29,7 +29,7 @@ void BlockRecorder::init() {
 void BlockRecorder::startBlock(int32_t num) {
     leveldb::Slice value((char*)&num, sizeof(int32_t));
     blockstatus->Put(write_sync, "processing", value);
-    blockstatus->Put(leveldb::WriteOptions(), "lastblock", value);
+    blockstatus->Put(write_sync, "lastblock", value);
     qInfo() << "starting block: " << num;
 }
 

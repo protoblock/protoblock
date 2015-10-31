@@ -151,7 +151,7 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
-        PostDataDecorator decorator(&myNetworkManager,&request);        
+        PostDataDecorator decorator(&myNetworkManager,&request);
         myCurrentNetworkReply = decorator.postBinaryData(contentType,data,size);
         if (myCurrentNetworkReply == NULL) return false;
         waitForReply();
@@ -203,6 +203,8 @@ public:
         qDebug() << "Get : " << request.url().toDisplayString();
         if (myNetworkManager.networkAccessible()==QNetworkAccessManager::Accessible){
             myCurrentNetworkReply = myNetworkManager.get(request);
+            qDebug() << "waitForReply : " << request.url().toDisplayString();
+
             waitForReply();
             return true;
         }
@@ -382,7 +384,10 @@ public:
 
     static std::string getBlk(const QString & baseUrl,int32_t blockNum,
                               QThread * ownerThread = QThread::currentThread()){
+        qDebug() << " get blk " << blockNum;
         RestfullClient client(QUrl(baseUrl),ownerThread);
+        qDebug() << " get blk 2 " << baseUrl;
+
         QMap<QString,QString>  headers;
         QMap<QString,QVariant> params;
         //hard coded url
@@ -390,9 +395,35 @@ public:
         QString customRoute = "block/" + QString::number(blockNum);
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
+        qDebug() << " get blk 3 " << baseUrl;
 
 
         return client.lastReply().toStdString();
+    }
+
+    static std::vector<std::string> getBlk(const QString & baseUrl,int32_t blockNum,
+                                      int32_t blockEnd,
+                              QThread * ownerThread = QThread::currentThread()){
+
+        RestfullClient client(QUrl(baseUrl),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+
+        std::vector<std::string> ret{};
+        for ( int i = blockNum; i <= blockEnd; i++) {
+            qDebug() << " get blk " << blockNum;
+
+            //hard coded url
+            //TODO move to settings
+            QString customRoute = "block/" + QString::number(i);
+            //customRoute = customRoute.arg(route).arg(blockNum);
+            client.getData(customRoute,params,headers);
+            qDebug() << " get blk 3 " << baseUrl;
+
+            ret.push_back( client.lastReply().toStdString());
+       }
+
+        return ret;
     }
 
     static int32_t getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {

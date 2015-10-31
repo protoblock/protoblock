@@ -44,6 +44,7 @@ void messageHandler(QtMsgType type,
                     const QString &message)
 {
 
+   return;
     static QMutex messageHandlerMutex ;
     QMutexLocker lock(&messageHandlerMutex);
     QString logFileName = Platform::settings()->getSetting(AppSettings::LogFilePath).toString();

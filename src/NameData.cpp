@@ -121,7 +121,8 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     if ( fnp != nullptr)
         fnp->addBalance(amount);
 
-    qDebug() << fn.DebugString();
+    //if ( name == "Windo")
+    //    qDebug() << "abcdefg" << fn.DebugString();
     OnFantasyNameBalance(fn);
 }
 
@@ -130,7 +131,7 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
 
     leveldb::Slice bval((char*)&proj, sizeof(uint32_t));
     string key(name + ":" + player);
-    if (!projstore->Put(leveldb::WriteOptions(), key, bval).ok())
+    if (!projstore->Put(write_sync, key, bval).ok())
         qWarning() << " error writing proj" << player << name << proj;
     else
     {
@@ -138,7 +139,8 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
         FantasyNameProjections[name][player] = proj;
         PlayerIDProjections[player][name] = proj;
     }
-    qDebug() << "proj: " << key << ":" << proj;
+    //if ( name == "MikeClayNFL")
+    //    qDebug() << "proj: " << key << ":" << proj;
     OnProjection(name,player,proj);
 
 
@@ -194,12 +196,12 @@ void FantasyNameData::OnGameStart(std::string gid,
             fpj.set_name(fnp.first);
             fpj.set_proj(fnp.second);
             gfp.add_away()->CopyFrom(fpj);
-            //qDebug() << "yoyoyo" << fnp.first << fnp.second << fpj.DebugString();
+            qDebug() << "yoyoyo" << fnp.first << fnp.second << fpj.DebugString();
 
         }
     }
 
-    if (!projstore->Put(leveldb::WriteOptions(), gid, gfp.SerializeAsString()).ok())
+    if (!projstore->Put(write_sync, gid, gfp.SerializeAsString()).ok())
         qWarning() << "error writing proj" << gid;
     else
         qInfo() << "OnGameStart " << gid;
@@ -293,9 +295,9 @@ void FantasyNameData::OnWeekOver(int in) {
     }
     auto *it = projstore->NewIterator(leveldb::ReadOptions());
     for (it->SeekToFirst(); it->Valid(); it->Next())
-        projstore->Delete(leveldb::WriteOptions(), it->key());
+        projstore->Delete(write_sync, it->key());
     delete it;
-    qDebug() << " clearProjections ";
+    qDebug() << "abcdefg clearProjections " << in;
 }
 
 void FantasyNameData::OnWeekStart(int in) {

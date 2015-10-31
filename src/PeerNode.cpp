@@ -33,6 +33,8 @@ namespace fantasybit
 
 Node::Node() { }
 void Node::init() {
+    write_sync.sync = true;
+
     Int32Comparator *cmp = new Int32Comparator();
     leveldb::Options optionsInt;
     optionsInt.create_if_missing = true;
@@ -88,7 +90,7 @@ void Node::init() {
             current_hight = 1;
 
             leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
-            blockchain->Put(leveldb::WriteOptions(), value, sb.SerializeAsString());
+            blockchain->Put(write_sync, value, sb.SerializeAsString());
             current_hight = getLastLocalBlockNum();
         }
 /*
@@ -106,7 +108,7 @@ void Node::init() {
         current_hight = 1;
 
         leveldb::Slice value1((char*)&current_hight, sizeof(int));
-        blockchain->Put(leveldb::WriteOptions(), value1, sb.SerializeAsString());
+        blockchain->Put(write_sync, value1, sb.SerializeAsString());
         current_hight = getLastLocalBlockNum();
         }
 */
@@ -126,7 +128,7 @@ void Node::BackSync(int32_t to) {
         leveldb::Slice key((char*)&i, sizeof(int32_t));
         batch.Delete(key);
     }
-    auto s = blockchain->Write(leveldb::WriteOptions(), &batch);
+    auto s = blockchain->Write(write_sync, &batch);
 
     current_hight = getLastLocalBlockNum();
 
@@ -164,24 +166,27 @@ bool Node::SyncTo(int32_t gh) {
         if (count > 50) return false;
 
         qDebug() << current_hight << global_height;
-        fc::optional<Block> sb = getGlobalBlock(current_hight+1);
-        if ( !sb ) {
+        auto bend = current_hight+50;
+        auto vsb = getGlobalBlock(current_hight+1, bend < global_height ? bend : global_height);
+        if ( vsb.size() == 0 ) {
             qCritical() << " no getGlobalBlockNum" << current_hight+1;
             QThread::currentThread()->sleep(100 * count++);
             continue;
         }
 
-        qInfo() <<  "received " << (*sb).signedhead().head().num();
+        qInfo() <<  "received " << vsb.size(); //(*sb).signedhead().head().num();
 
+        for ( auto ssb : vsb) {
+        Block *sb = &ssb;
         if (!BlockProcessor::verifySignedBlock(*sb)) {
             qCritical() << " !SyncTo::verifySignedBlock(sb) ";
             QThread::currentThread()->sleep(100 * count++);
-            continue;
+            break;
         }
 
         if ((*sb).signedhead().head().num() > current_hight + 1) {
             qCritical() << "sb.signedhead().head().num() > current_hight + 1";
-            //return false; ;
+            break;
         }
 
         //fork
@@ -206,7 +211,7 @@ bool Node::SyncTo(int32_t gh) {
             qInfo() << "Received next " << current_hight+1;
             int32_t myhight = current_hight+1;
             leveldb::Slice snum((char*)&myhight, sizeof(int32_t));
-            blockchain->Put(leveldb::WriteOptions(), snum, (*sb).SerializeAsString());
+            blockchain->Put(write_sync, snum, (*sb).SerializeAsString());
             current_hight = current_hight+1;
 
             qInfo() << "Put next " << current_hight;
@@ -228,6 +233,8 @@ bool Node::SyncTo(int32_t gh) {
         }
         else if ( (*sb).signedhead().head().num() > current_hight+1){
             qWarning() << "Received gap in block " << (*sb).signedhead().head().num();
+            break;
+        }
         }
     }
 
@@ -264,7 +271,7 @@ bool Node::BackFork(const string &goodid, int32_t num) {
 
         leveldb::Slice snum((char*)&num, sizeof(int32_t));
         auto status =
-                blockchain->Put(leveldb::WriteOptions(), snum, (*gb).SerializeAsString());
+                blockchain->Put(write_sync, snum, (*gb).SerializeAsString());
         if ( !status.ok() ) return false;
 
         prevprev = (*gb).signedhead().head().prev_id();
@@ -414,6 +421,22 @@ fc::optional<Block> Node::getGlobalBlock(int32_t num) {
     return block;
 }
 
+std::vector<Block> Node::getGlobalBlock(int32_t num, int32_t bend) {
+    auto strblks = RestfullService::getBlk(PAPIURL.data(),num,bend);
+
+    std::vector<Block> ret{};
+
+    for ( auto str : strblks) {
+        Block bb{};
+        if ( !bb.ParseFromString(str) )
+            break;
+
+        ret.push_back(bb);
+    }
+
+    return ret;
+}
+
 
 void Node::ClearTx(const Block &b) {
     for (const auto &st : b.signed_transactions()) {
@@ -436,7 +459,7 @@ void Node::Cleaner() {
         int32_t bnum = b.signedhead().head().num();
         leveldb::Slice snum((char*)&bnum, sizeof(int32_t));
 
-        blockchain->Put(leveldb::WriteOptions(), snum, b.SerializeAsString());
+        blockchain->Put(write_sync, snum, b.SerializeAsString());
         //  Cleanit(&b);
 
         //string bdata = b.SerializeAsString();

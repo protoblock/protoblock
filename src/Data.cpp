@@ -442,7 +442,7 @@ int NFLStateData::week() {
 }
 
 void NFLStateData:: OnGlobalState(fantasybit::GlobalState &gs) {
-    statusstore->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
+    statusstore->Put(write_sync, "globalstate", gs.SerializeAsString());
     qDebug() << gs.DebugString();
     if ( amlive )
         emit GlobalStateChange(gs);

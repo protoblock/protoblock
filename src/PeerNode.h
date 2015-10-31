@@ -41,6 +41,8 @@ public:
     void BackSync(int32_t to);
     bool BackFork(const std::string &goodid, int32_t num);
 
+    leveldb::WriteOptions write_sync{};
+
     fc::optional<int32_t> getLastGlobalBlockNum();
 
     std::string filedir(const std::string &in);
@@ -51,6 +53,8 @@ public:
     static fc::optional<Block> Node::getLocalBlock(int32_t num, bool = false) ;
 
     static fc::optional<Block> Node::getGlobalBlock(int32_t num);
+
+    static std::vector<Block> Node::getGlobalBlock(int32_t num, int32_t bend) ;
 
     static int32_t Node::getLastLocalBlockNum();
     static int32_t Node::myLastGlobalBlockNum();
