@@ -256,6 +256,7 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
 #ifndef DATAAGENTWRITENAMES_FORCE
     if ( amlive )
 #endif
+    if ( name != Commissioner::FantasyAgentName())
     {
         FantasyNameHash fnh{};
         SqlStuff sql("satoshifantasy","OnFantasyName");

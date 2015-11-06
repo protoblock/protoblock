@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Trading Football"
-#define MyAppVersion "2015 1.0.3"
+#define MyAppVersion "2015 1.0.3.3"
 #define MyAppPublisher "Satoshi Fantasy LLC"
 #define MyAppURL "http://trading.football"
 #define MyAppExeName "tradingfootball.exe"
@@ -58,7 +58,7 @@ Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; StatusMsg: "Installing Microsoft Visual C++ 2010 x64 Redistributable..."
+Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; StatusMsg: "Installing Trading.Football engine"
 Filename: {app}\{#MyAppExeName}; Flags: nowait postinstall skipifsilent 64bit RunAsOriginalUser; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; 
 
 [Dirs]
@@ -69,7 +69,7 @@ Name: "{app}\storage"
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\storage\index"
-Type: filesandordirs; Name: "{app}\storage\block"
+;Type: filesandordirs; Name: "{app}\storage\block"
 Type: filesandordirs; Name: "{app}\cutefantasy.log"
 
 [Code]

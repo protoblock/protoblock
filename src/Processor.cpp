@@ -558,10 +558,14 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 }
 
 void BlockProcessor::OnWeekOver(int week) {
+    mNameData.OnWeekOver(week);
+    mData.OnWeekOver(week);
     emit WeekOver(week);
 }
 
 void BlockProcessor::OnWeekStart(int week) {
+    mNameData.OnWeekStart(week);
+    mData.OnWeekStart(week);
     emit WeekStart(week);
 }
 

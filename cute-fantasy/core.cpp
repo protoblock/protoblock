@@ -44,13 +44,16 @@ void messageHandler(QtMsgType type,
                     const QString &message)
 {
 
+#ifndef DATAAGENTGUI
+    return;
+#else
     static QMutex messageHandlerMutex ;
     QMutexLocker lock(&messageHandlerMutex);
     QString logFileName = Platform::settings()->getSetting(AppSettings::LogFilePath).toString();
     static std::ofstream  logFile(logFileName.toStdString(),std::ofstream::app);
     if (logFile)
         logFile << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
-
+#endif
 #ifdef QT_DEBUG    
  //   std::cerr  << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
 

@@ -44,10 +44,6 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
 
     //data to data signals
-    QObject::connect(&processor,SIGNAL(WeekOver(int)),&data,SLOT(OnWeekOver(int)));
-    QObject::connect(&processor,SIGNAL(WeekOver(int)),&namedata,SLOT(OnWeekOver(int)));
-    QObject::connect(&processor,SIGNAL(WeekStart(int)),&namedata,SLOT(OnWeekStart(int)));
-    QObject::connect(&processor,SIGNAL(WeekStart(int)),&data,SLOT(OnWeekStart(int)));
     QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
 
     //QObject::connect(&data,SIGNAL(NewGameResult(string)),this,SIGNAL(GameOver(string)));

@@ -56,6 +56,7 @@ public slots:
         amlive = true;
     }
 
+public:
     void OnWeekOver(int week);
     void OnWeekStart(int week);
 
