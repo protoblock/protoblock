@@ -248,7 +248,9 @@ void MainWindow::OnMyFantasyNames(vector<fantasybit::MyFantasyName> names){
         }        
 		if (cachedName != NULL){
 			qDebug() << "set last received name as current" << cachedName->name().data();
-			setCurrentFantasyName(cachedName,true);
+            setCurrentFantasyName(cachedName,true);
+            ui->myFantasyNamesCombo->setCurrentIndex(names.size()-1);
+
 		}
     }
 }
