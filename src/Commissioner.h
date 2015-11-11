@@ -290,7 +290,7 @@ public:
     
 
     static bool verify(const fc::ecc::signature &sig, const fc::sha256 &digest, pubkey_t& pk) {
-          return fc::ecc::public_key(pk).verify(digest, sig);// fc::ecc::public_key(sig, digest) == pub;
+		return fc::ecc::public_key(pk).verify(digest, sig);// fc::ecc::public_key(sig, digest) == pub;
 	}
 
 	static bool verifyOracle(const fc::ecc::signature &sig, const fc::sha256 &digest)
@@ -314,7 +314,7 @@ public:
         }
 	}
 
-	static std::string pk2str(const pubkey_t &pk)
+	static std::string pk2str(pubkey_t &pk)
 	{
 		return fc::to_base58(pk.data, pk.size());
 	}
@@ -331,7 +331,7 @@ public:
 		return pbb;
 	}
 
-	static std::string sig2str(const fc::ecc::signature &sig)
+	static std::string sig2str(fc::ecc::signature &sig)
 	{
 		return fc::to_base58(sig.data, sig.size());
 	}
