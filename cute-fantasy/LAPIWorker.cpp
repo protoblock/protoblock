@@ -141,8 +141,7 @@ void MainLAPIWorker::OnInSync(int32_t num) {
     }
 }
 
-#include <QAbstractEventDispatcher>
-void MainLAPIWorker::ProcessBlock() {
+bool MainLAPIWorker::doProcessBlock() {
     int32_t next;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
@@ -151,39 +150,47 @@ void MainLAPIWorker::ProcessBlock() {
     auto b = fantasybit::Node::getLocalBlock(next);
     if (!b) {
         qWarning() << " !b";
-        return;
+        return false;
     }
     if ( !Process(*b) ) {
         qWarning() << " !Process";
-        return;
+        return false;
     }
-    count = pcount = 0;
+
+    return true;
+}
+
+#include <QAbstractEventDispatcher>
+void MainLAPIWorker::ProcessBlock() {
+
+    int docount = 0;
     bool catchingup;
-    {
-        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
-        catchingup = !amlive && last_block < numto;
-    }
+    do {
+        if ( !doProcessBlock() ) return;
+        count = pcount = 0;
+        {
+            std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+            catchingup = !amlive && last_block < numto;
+        }
 
-    if ( catchingup )
-    {
-        //emit ProcessNext(); //catching up
-        //if ( numto < std::numeric_limits<int32_t>::max() ) {
+        if ( catchingup )
+        {
             emit BlockNum(last_block);
-            QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-            ProcessBlock();
+            if ( docount++ == 50 ) {
+                QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+                docount = 0;
+            }
+        }
 
-        //}
-    }
-    else {
-        //doNewDelta();
-        if ( !amlive ) {
+        else if ( !amlive ) {
             {
                 std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
                 amlive = true;
             }
             GoLive();
-        }
-    }
+         }
+
+    } while( catchingup );
 }
 
 void MainLAPIWorker::OnSeenBlock(int32_t num) {

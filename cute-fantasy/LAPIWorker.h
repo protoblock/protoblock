@@ -134,6 +134,7 @@ public slots:
 private:
 
     bool Process(fantasybit::Block &b);
+    bool doProcessBlock();
 
     //void doNewDelta();
 
