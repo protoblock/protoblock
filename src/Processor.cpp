@@ -488,9 +488,9 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
 
     else if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
     {
-        qCritical() << "!Commissioner::verifyByName";
+        qCritical() << "!Commissioner::verifyByName" << st.fantasy_name();
         //fbutils::LogFalse(std::string("Processor::process cant verify trans sig").append(st.DebugString()));
-        return false;;
+        return false;
     }
 
     return true;
@@ -500,11 +500,14 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 
     //first do name transactions
     for (int i = start; i < b.signed_transactions_size(); i++) {
+
         if ( b.signed_transactions(i).trans().type() != TransType::NAME)
             continue;
 
+        qDebug() << "processing name tx " << b.signed_transactions(i).trans().DebugString();// TransType_Name(t.type());
+
         if ( !isValidTx(b.signed_transactions(i))) {
-            qDebug() << " imvalid tx";
+            qDebug() << " imvalid tx 1"  ;
             continue;
         }
 
@@ -514,18 +517,20 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 
     }
 
-    for (const SignedTransaction &st : b.signed_transactions()) // i = start; i < b.signed_transactions_size(); i++)
+   // for (const SignedTransaction &st : b.signed_transactions()) //
+    for ( int i = start; i < b.signed_transactions_size(); i++)
     {
-        if ( st.trans().type() == TransType::NAME)
+        if ( b.signed_transactions(i).trans().type() == TransType::NAME)
             continue;
 
-        const Transaction &t = st.trans();
+        const SignedTransaction &st = b.signed_transactions(i);
+        const Transaction &t = b.signed_transactions(i).trans();
         //fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
 
         qDebug() << "processing tx " << t.DebugString();// TransType_Name(t.type());
 
         if (!isValidTx(st)) {
-            qDebug() << " imvalid tx";
+            qDebug() << " imvalid tx 2";
             continue;
         }
 

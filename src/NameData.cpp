@@ -138,7 +138,7 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
         FantasyNameProjections[name][player] = proj;
         PlayerIDProjections[player][name] = proj;
     }
-    qDebug() << "proj: " << key << ":" << proj;
+    //qDebug() << "proj: " << key << ":" << proj;
     OnProjection(name,player,proj);
 
 
