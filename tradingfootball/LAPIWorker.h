@@ -1,0 +1,144 @@
+#ifndef LAPIWORKER_H
+#define LAPIWORKER_H
+
+#include "globals.h"
+#include <QTimer.h>
+#include "threadedqobject.h"
+#include "NodeWorker.h"
+#include "FantasyAgent.h"
+#include "Processor.h"
+#include "FantasyAgent.h"
+#include "NameData.h"
+#include "Data.h"
+#include "NameData.pb.h"
+#include "StaticData.pb.h"
+#include "StatusData.pb.h"
+#include "ProtoData.pb.h"
+#include <vector>
+#include <mutex>
+#include "iresolvable.h"
+
+using fantasybit::GlobalState;
+using namespace fantasybit;
+using namespace std;
+class MainLAPIWorker : public QObject , public IResolvable
+{
+    Q_OBJECT
+
+    int intervalmax = 60000;
+    int intervalstart = 500;
+    int bcount =0;
+    int pcount =0;
+    int count =0;
+    int32_t last_block=0;
+    NodeWorker *myNodeWorker;
+    int32_t numto = std::numeric_limits<int32_t>::max();
+    bool amlive = false;
+    QTimer * timer;
+    fantasybit::FantasyAgent agent{};
+    fantasybit::NFLStateData data;
+    fantasybit::FantasyNameData namedata;
+    fantasybit::BlockProcessor processor;
+
+    //fantasybit::DeltaData deltadata{};
+    std::map<std::string,fantasybit::MyFantasyName> myfantasynames{};
+    fantasybit::MyFantasyName myCurrentName{};
+
+    void DoPostTx(SignedTransaction &st);
+    std::recursive_mutex last_mutex{};
+
+public:
+    MainLAPIWorker(QObject * parent=0);
+    ~MainLAPIWorker(){}
+    ThreadedQObject<NodeWorker> node;
+
+    fantasybit::NFLStateData &NFLState() { return data; }
+
+    fantasybit::FantasyNameData &NameData() { return namedata; }
+
+    fantasybit::FantasyAgent &Agent() { return agent; }
+
+    /*
+    std::vector<fantasybit::GameRoster> getWeekGameRosters(int week){
+        std::vector<fantasybit::GameRoster> vector;
+        vector.push_back(fantasybit::GameRoster());
+        return vector;
+    }
+    */
+    void GoLive();
+
+signals:
+
+    //void OnData(const fantasybit::DeltaData &);
+    //void sendNotificationWithData(const QVariant & notificationData);
+    //sync blocks
+    void ProcessNext();
+    void GetNext();
+
+    //to data
+    //void SubscribeLive();
+    void LiveData(bool);
+
+
+    //to GUI
+    void NameStatus(fantasybit::MyFantasyName);
+    void LiveProj(fantasybit::FantasyBitProj);
+    void MyNames(vector<fantasybit::MyFantasyName>);
+    void NameBal(fantasybit::FantasyNameBal);
+    void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
+    void GlobalStateChange(fantasybit::GlobalState);
+    void LiveGui(fantasybit::GlobalState);
+    void NewWeek(int);
+    void GameStart(string);
+    void GameOver(string);
+    void onControlMessage(QString);
+
+    void BlockError(int32_t last);
+
+    void Height(int);
+    void BlockNum(int);
+
+public slots:
+
+    //void getLivePlayers(int );
+    //void processGUIRequest(const QVariant & requestData);
+
+    void startPoint();
+
+    void OnInSync(int32_t num);
+    void ProcessBlock();
+    void OnSeenBlock(int32_t num);
+    void Timer();
+    void OnBlockError(int32_t last);
+    void ResetIndex();
+
+    //void OnPlayerChange(std::string);
+
+    //from gui
+    void OnGetMyNames();
+    void OnUseName(QString);
+
+    //tx
+    void OnFoundName(string);
+    void OnProjLive(fantasybit::FantasyBitProj);
+    void OnClaimName(QString);
+    void OnProjTX(vector<fantasybit::FantasyBitProj>vinp);
+
+    //data
+    //void OnGlobalStateChange(fantasybit::GlobalState);
+    //void OnNameBal(fantasybit::FantasyNameBal);
+    //void OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
+
+    //dataagent
+    void BeOracle();
+private:
+
+    bool Process(fantasybit::Block &b);
+    bool doProcessBlock();
+
+    //void doNewDelta();
+
+};
+
+
+#endif // LAPIWORKER_H
