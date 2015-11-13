@@ -41,7 +41,6 @@ CONFIG += c++11
 
 INCLUDEPATH += ./../include
 INCLUDEPATH += ./../generated
-INCLUDEPATH += ./../src
 
 CONFIG(debug, debug|release) {    
     DESTDIR = ./../debugbin
