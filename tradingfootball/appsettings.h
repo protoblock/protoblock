@@ -9,7 +9,10 @@
 #include <QMutex>
 #include <QCoreApplication>
 #include "genericsingleton.h"
-
+#include <QStandardPaths>
+#include <QApplication>
+#include <QDir>
+#include <stdlib.h>
 
 class AppSettings : public GenericSingleton<AppSettings> {
 
@@ -29,7 +32,8 @@ public:
         PortLiveTxNat,
         LogMessagePattern,
         LeaderBoardRefreshInterval,
-        ConfirmSendAndCopyProjections
+        ConfirmSendAndCopyProjections,
+        GenesisTranactionLocation
     };
 
 private:
@@ -44,7 +48,7 @@ private:
         case ServerIp:  return "serverip";
         case ServerPort:  return "serverport";
         case LogFilePath:  return "logfilepath";
-        case ApplicationStorageDir: "applicationstoragedir";
+        case ApplicationStorageDir: return "applicationstoragedir";
         case PortHand  :return  "porthand";
         case PortStncServ: return "portstncserv";
         case PortLiveBlock: return "portliveblock";
@@ -53,6 +57,7 @@ private:
         case LogMessagePattern: return "logmessagepattern";
         case LeaderBoardRefreshInterval : return "leaderboardrefreshinterval";
         case ConfirmSendAndCopyProjections : return "confirmsendandcopyprojections";
+        case GenesisTranactionLocation : return "genesistranactionlocation";
         default:
             return "";
         }
@@ -66,12 +71,28 @@ private:
         DefaultAppSettings(){}
         ~DefaultAppSettings() {}
         static QVariant getDefaultSetting(SettingsKeys settingKey){
+            QString storageDirName =QString("storage");
+            QString logFileName = QString("tradingfootball.log");
+            #ifdef DATAAGENTGUI
+                QString  dataAgentprefix = "da-";
+                storageDirName =dataAgentprefix + storageDirName;
+                logFileName =dataAgentprefix +  configFileName;
+            #endif
+            #ifdef PRODFOOTBALL
+                storageDirName =storageDirName;
+                logFileName =logFileName;
+            #else
+                QString stagingPrefix = QString("staging-");
+                storageDirName =stagingPrefix + storageDirName;
+                logFileName = stagingPrefix +logFileName;
+            #endif
+
             switch (settingKey) {           
             case LastFantasyName:  return "";
             case ServerIp:  return "127.0.0.1";
             case ServerPort:  return 80;
-            case LogFilePath:  return "./cutefantasy.log";
-            case ApplicationStorageDir: return QCoreApplication::applicationDirPath()+"/storage/";
+            case LogFilePath:  return logPath(logFileName);
+            case ApplicationStorageDir: return storagePath(storageDirName);
             case PortHand  : return  8130;
             case PortStncServ: return 8125;
             case PortLiveBlock: return 8126;
@@ -88,8 +109,18 @@ private:
                         "- %{message}";
             case LeaderBoardRefreshInterval: return 5;
             case ConfirmSendAndCopyProjections: return true;
-            default:               
-                return QVariant();
+            case GenesisTranactionLocation :
+            #ifdef Q_OS_WIN
+                return storagePath(storageDirName)+"/"+"GenesisTransition-Tr-Transaction.txt";
+            #endif
+            #ifdef Q_OS_MAC
+                QDir dir(QApplication::applicationDirPath());
+                dir.cdUp();
+                dir.cd("Resources");
+                return dir.absolutePath()+QString("/GenesisTransition-Tr-Transaction.txt");
+            #endif
+
+
             }
         }
     };
@@ -99,8 +130,34 @@ public:
 
     ~AppSettings();
 
-    static QVariant getSetting(SettingsKeys settingKey);
-    static void setSetting(SettingsKeys settingKey,QVariant & value);
+    QVariant getSetting(SettingsKeys settingKey);
+    void setSetting(SettingsKeys settingKey,QVariant & value);
+private:
+    static QString storagePath(const QString & dirName){       
+        #ifdef Q_OS_WIN
+            return QCoreApplication::applicationDirPath()+"/storage/";
+        #endif
+        #ifdef Q_OS_MAC
+            return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/tradingfootball/"+dirName);
+        #endif
+    }
+
+    static QString logPath(const QString & fileName){        
+        #ifdef Q_OS_WIN
+            return "./cutefantasy.log";
+        #endif
+        #ifdef Q_OS_MAC
+           return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation))+"/tradingfootball/"+fileName;
+        #endif
+    }
+    static QString makePath(const QString & path){
+       QDir dir(path);
+       QString absPath = dir.absolutePath();
+       if (!dir.exists())
+           dir.mkpath(absPath);
+       Q_ASSERT(QDir(absPath).exists());
+       return absPath;
+    }
 };
 
 #endif // APPSETTINGS_H

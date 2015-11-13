@@ -212,25 +212,25 @@
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QLabel" name="label_4">
-            <property name="text">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
              <string>Fantasy Name:</string>
-            </property>
-           </widget>
-          </item>
+          </property>
+         </widget>
+        </item>
           <item>
-           <widget class="QLabel" name="myFantasyNameStatusLabel">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>fp status</string>
-            </property>
-           </widget>
-          </item>
+         <widget class="QLabel" name="myFantasyNameStatusLabel">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>fp status</string>
+          </property>
+         </widget>
+        </item>
          </layout>
         </item>
         <item row="0" column="1" colspan="2">

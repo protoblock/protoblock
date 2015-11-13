@@ -21,7 +21,7 @@ void Core::bootstrap(){
 
 
     qRegisterMetaType<string>("string");
-    qSetMessagePattern(Platform::settings()->getSetting(AppSettings::LogMessagePattern).toString());
+    qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
     qInstallMessageHandler(messageHandler);
     registerNamedInstance("coreapi",myCoreApi.object());
     QObject::connect(myCoreApi.thread(),SIGNAL(started()),myCoreApi.object(),SLOT(startPoint()));
@@ -44,16 +44,16 @@ void messageHandler(QtMsgType type,
                     const QString &message)
 {
 
-#ifndef DATAAGENTGUI
     return;
-#else
+    /*
+
     static QMutex messageHandlerMutex ;
     QMutexLocker lock(&messageHandlerMutex);
-    QString logFileName = Platform::settings()->getSetting(AppSettings::LogFilePath).toString();
+    QString logFileName = AppSettings::instance()->getSetting(AppSettings::LogFilePath).toString();
     static std::ofstream  logFile(logFileName.toStdString(),std::ofstream::app);
     if (logFile)
         logFile << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
-#endif
+
 #ifdef QT_DEBUG    
  //   std::cerr  << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
 

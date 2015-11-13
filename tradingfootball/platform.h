@@ -4,14 +4,15 @@
 #include "genericsingleton.h"
 
 class AppSettings;
-class Platform : GenericSingleton<Platform>
+class Platform : public GenericSingleton<Platform>
 {
     friend class GenericSingleton<Platform>;
     Platform();
 
 public:
     ~Platform();
-    static AppSettings * settings();
-    static std::string getRootDir();
+    AppSettings * settings();
+    std::string getRootDir();
+
 };
 #endif // PLATFORM_H

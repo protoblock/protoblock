@@ -62,10 +62,10 @@ public:
       if (this != &other) {
           //clear old elements
           removeAll();
-          myList.append(copy.list());
-          myIsAutoDeleteModelElements = copy.isAutoDelete();
-          myHorizontalHeaders = copy.horizontalHeaders();
-          myEditableColumnsState = copy.myEditableColumnsState;
+          myList.append(other.list());
+          myIsAutoDeleteModelElements = other.isAutoDelete();
+          myHorizontalHeaders = other.horizontalHeaders();
+          myEditableColumnsState = other.myEditableColumnsState;
       }
       return *this;
   }

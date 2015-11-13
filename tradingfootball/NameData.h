@@ -60,7 +60,6 @@ public:
     void OnWeekOver(int week);
     void OnWeekStart(int week);
 
-
 public:
     FantasyNameData() {}
     void init();

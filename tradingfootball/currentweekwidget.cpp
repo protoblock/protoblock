@@ -30,6 +30,7 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     myProjectionFilterProxy.reset(new ProjectionsViewFilterProxyModel(ui->myPositionComboBox,&myGameModelFilter,&myGamesSelectionModel));
     myProjectionFilterProxy.data()->setSourceModel(&myProjectionsModel);
     myProjectionFilterProxy.data()->setDynamicSortFilter(true);
+    myProjectionFilterProxy.data()->setSortRole(Qt::UserRole);
     ui->myProjectionTableView->setModel(myProjectionFilterProxy.data());
 
     //start with upcoming games filter

@@ -28,6 +28,7 @@
 #include <QLocalServer>
 #include <QMutex>
 #include <cstdlib>
+#include <QDir>
 
 #ifdef Q_OS_UNIX
     #include <signal.h>
@@ -114,6 +115,12 @@ SingleApplication::SingleApplication(int &argc, char *argv[])
         // Handle any further termination signals to ensure the
         // QSharedMemory block is deleted even if the process crashes
         d_ptr->crashHandler();
+
+        //add plugin path to load library search path
+        QDir dir(QApplication::applicationDirPath());
+        dir.cdUp();
+        dir.cd("plugins");
+        QAPPLICATION_CLASS::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
         // Successful creation means that no main process exists
         // So we start a Local Server to listen for connections
@@ -154,4 +161,23 @@ void SingleApplication::slotConnectionEstablished()
     socket->close();
     delete socket;
     emit showUp();
+}
+#include <QSharedMemory>
+
+SingleApp::SingleApp(const QString& appName)
+    : m_QSharedMem(new QSharedMemory(appName)),
+      m_AlreadyRunning(false)
+{
+    if (m_QSharedMem->create(1) == false)
+        m_AlreadyRunning = true;
+}
+
+bool SingleApp::IsAlreadyRunning()
+{
+    return m_AlreadyRunning;
+}
+
+SingleApp::SingleApp()
+{
+    delete m_QSharedMem;
 }

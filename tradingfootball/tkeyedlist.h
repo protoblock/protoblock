@@ -198,11 +198,11 @@ public:
     {
         if (this != &other) {
             //clear old elements
-            myKeyMap = QMap<TKey,X*>(copy.myKeyMap);
+            myKeyMap = QMap<TKey,X*>(other.myKeyMap);
             removeAll();
-            myList.append(copy.list());
-            myIsAutoDeleteModelElements = copy.isAutoDelete();
-            myEditableColumnsState = copy.myEditableColumnsState;
+            myList.append(other.list());
+            myIsAutoDeleteModelElements = other.isAutoDelete();
+            myEditableColumnsState = other.myEditableColumnsState;
             myColumns = other.myColumns;
         }
         return *this;
@@ -265,6 +265,11 @@ public:
         if (role == Qt::DisplayRole) {
             X * value = myList.at(index.row());
             return me->getColumnDisplayData(index.column(),value);
+        }
+
+        if (role == Qt::UserRole) {
+            X * value = myList.at(index.row());
+            return me->getColumnSortData(index.column(),value);
         }
 
         if (role == Qt::ToolTipRole || role == Qt::StatusTipRole || role == Qt::WhatsThisRole) {
@@ -373,11 +378,11 @@ public:
         if (oldItem == NULL){
             //we're going to add the item to the list
             X * newItem = new X();
-            newItem->attachProperty<PROPNAME>(value);
+            newItem->template attachProperty<PROPNAME>(value);
             addItem(key,newItem);
         }
         else {
-            oldItem->attachProperty<PROPNAME>(value);
+            oldItem->template attachProperty<PROPNAME>(value);
             int row = myList.indexOf(oldItem);
             emit dataChanged(index(row,1),index(row,0));
         }
@@ -407,7 +412,7 @@ public:
             return false;
         }
         else {
-            value = item->propertyValue<PROPNAME>();
+            value = item->template propertyValue<PROPNAME>();
             return true;
         }
     }
@@ -564,6 +569,10 @@ protected :
                 return descriptable->entityName();
         }
         return QVariant();
+    }
+
+    virtual QVariant getColumnSortData(uint column, X * value) {
+        return getColumnDisplayData(column,value);
     }
 
     virtual QVariant getColumnDecorateData(uint column,X * value){

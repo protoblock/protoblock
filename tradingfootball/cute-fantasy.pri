@@ -36,7 +36,8 @@ SOURCES += \
     $$PWD/tablemodels.cpp \
     $$PWD/waitmodaldialog.cpp \
     $$PWD/animationandmessagewidget.cpp \
-    $$PWD/mnemonic.cpp
+    $$PWD/mnemonic.cpp \ 
+    $$PWD/RunGuard.cpp
 
 DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
@@ -94,7 +95,9 @@ HEADERS += \
     $$PWD/datacache.h \
     $$PWD/waitmodaldialog.h \
     $$PWD/animationandmessagewidget.h \
-    $$PWD/mnemonic.h
+    $$PWD/mnemonic.h \ 
+    $$PWD/RunGuard.h
+
 
 FORMS += \       
     $$PWD/mainwindow.ui \

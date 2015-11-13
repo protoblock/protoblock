@@ -46,15 +46,15 @@ public:
     std::string filedir(const std::string &in);
     static leveldb::Slice i2slice(int32_t i);
 
-    static Block Node::getlastLocalBlock() ;
+    static Block getlastLocalBlock() ;
 
-    static fc::optional<Block> Node::getLocalBlock(int32_t num, bool = false) ;
+    static fc::optional<Block> getLocalBlock(int32_t num, bool = false) ;
 
-    static fc::optional<Block> Node::getGlobalBlock(int32_t num);
+    static fc::optional<Block> getGlobalBlock(int32_t num);
 
-    static int32_t Node::getLastLocalBlockNum();
-    static int32_t Node::myLastGlobalBlockNum();
-    static void Node::setLastGlobalBlockNum(int32_t num);
+    static int32_t getLastLocalBlockNum();
+    static int32_t myLastGlobalBlockNum();
+    static void setLastGlobalBlockNum(int32_t num);
     static std::mutex blockchain_mutex;
 
     static void ClearTx(const Block &);

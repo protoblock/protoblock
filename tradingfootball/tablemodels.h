@@ -249,16 +249,25 @@ protected:
         }
     }
 
-//    int getColumnCount() {
-//        switch (myDisplayType) {
-//        case WeekDisplayType::CurrentWeek:  return 5;
-//        case WeekDisplayType::PreviousWeek: return 22;
-//        case WeekDisplayType::UpcomingWeek: return 4;
-//        default: return 0;
-//        }
-//    }
+    QVariant getColumnSortData(quint32 column,ViewModel * data) {
 
-    void setDataFromColumn(ViewModel* data, const QModelIndex & index,const QVariant & vvalue,int /*role*/){
+        auto ret = getColumnDisplayData(column,data);
+        if (column > getColumnSortInt() )
+            return ret.toInt();
+        else
+            return ret;
+    }
+    
+   int getColumnSortInt() {
+        switch (myDisplayType) {
+        case WeekDisplayType::CurrentWeek:  return 4;
+        case WeekDisplayType::PreviousWeek: return 3;
+        case WeekDisplayType::UpcomingWeek: return 0;
+        default: return 0;
+        }
+    }
+
+   void setDataFromColumn(ViewModel* data, const QModelIndex & index,const QVariant & vvalue,int /*role*/){
         if (index.column()==4)
             data->attachProperty<PropertyNames::Projection>(vvalue);
     }

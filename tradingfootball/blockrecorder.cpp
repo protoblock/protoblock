@@ -11,7 +11,13 @@ void BlockRecorder::init() {
 
     leveldb::DB *db1;
     leveldb::Status status;
+
     status = leveldb::DB::Open(options, filedir("blockstatus"), &db1);
+    qDebug() << filedir("blockstatus");
+    if (!status.ok()) {
+        std::string err = status.ToString();
+        qWarning() << err;
+    }
     blockstatus.reset(db1);
     std::string value;
     status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);

@@ -20,6 +20,7 @@ PreviousWeekWidget::PreviousWeekWidget(QWidget *parent) :
     myProjectionFilterProxy.reset(new ProjectionsViewFilterProxyModel(ui->myPositionComboBox,NULL,&myGamesSelectionModel));
     myProjectionFilterProxy.data()->setSourceModel(&myProjectionsModel);
     myProjectionFilterProxy.data()->setDynamicSortFilter(true);
+    myProjectionFilterProxy.data()->setSortRole(Qt::UserRole);
     ui->myProjectionTableView->setModel(myProjectionFilterProxy.data());
 
     myCurrentWeek = -1;

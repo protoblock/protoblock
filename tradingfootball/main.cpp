@@ -7,7 +7,7 @@
 //
 #include "globals.h"
 #include <iostream>
-#include "singleapplication.h"
+#include "RunGuard.h"
 #include "mainwindow.h"
 #include "core.h"
 #ifdef DATAAGENTGUI
@@ -25,9 +25,13 @@
 
 #include "playerloader.h"
 
-
 int domain(int argc, char *argv[]){
-    SingleApplication a(argc, argv);
+
+    RunGuard guard( "tradingfootballprodapp" );
+        if ( !guard.tryToRun() )
+            return 0;
+
+    QApplication a(argc, argv);
 
     //MikeClayLoader loader;
     //loader.loadProjFromFile();

@@ -99,7 +99,7 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(LiveGui(fantasybit::GlobalState)),&myWaitDialog,SLOT(stopAndClose()));
 
     //leader timed refresh
-    myLeaderBoardTimer.setInterval(AppSettings::getSetting(AppSettings::LeaderBoardRefreshInterval).toInt()*60000);
+    myLeaderBoardTimer.setInterval(AppSettings::instance()->getSetting(AppSettings::LeaderBoardRefreshInterval).toInt()*60000);
     QObject::connect(&myLeaderBoardTimer,SIGNAL(timeout()),
                      this,SLOT(refreshLeaderBoard()));
 
@@ -248,9 +248,8 @@ void MainWindow::OnMyFantasyNames(vector<fantasybit::MyFantasyName> names){
         }        
 		if (cachedName != NULL){
 			qDebug() << "set last received name as current" << cachedName->name().data();
-            setCurrentFantasyName(cachedName,true);
+			setCurrentFantasyName(cachedName,true);
             ui->myFantasyNamesCombo->setCurrentIndex(names.size()-1);
-
 		}
     }
 }

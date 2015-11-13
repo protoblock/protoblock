@@ -53,7 +53,7 @@ public:
 
     PlayerStatus_Status playerStatus();
 
-    QString  PlayerDataViewModel::playerStatusString() const;
+    QString  playerStatusString() const;
 
     uint playerAge();
 

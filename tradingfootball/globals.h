@@ -36,24 +36,31 @@
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 3
+  #define REVISION_NUMBER 4
 #endif
 
 #ifndef BUILD_NUMBER
-  #define BUILD_NUMBER   5
+  #define BUILD_NUMBER   1
 #endif
 
 #ifndef COPYRIGHT_DATE
     #define COPYRIGHT_DATE "2015"
 #endif
 
+#ifndef VERSION_STRING
+    #define VERSION_STRING QString("%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUMBER)
+#endif
+
 
 #include <QDebug>
 inline QDebug operator<<(QDebug  debug ,std::string msg) {
+    return debug;
+    /*
     static QMutex messageHandlerMutex;
     QMutexLocker locker(&messageHandlerMutex);
     debug << QString(msg.data());
     return debug;
+    */
 }
 
 #include <QDateTime>

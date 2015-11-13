@@ -12,6 +12,8 @@
 #include <ctime>
 //#include "playerloader.h"
 #include "DataPersist.h"
+#include "platform.h"
+#include "appsettings.h"
 
 using namespace std;
 
@@ -223,7 +225,8 @@ Block Commissioner::makeGenesisBlock() {
 
 
     Transaction gt{};
-    Reader<Transaction> treader{GET_ROOT_DIR() +  "GenesisTransition-Tr-Transaction.txt"};
+    QString genesisDataFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisTranactionLocation).toString();
+    Reader<Transaction> treader{genesisDataFile.toStdString()};
     treader.ReadNext(gt);
 
 

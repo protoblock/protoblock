@@ -68,8 +68,8 @@ public:
                            std::unordered_map<std::string,int> &proj,
                            const std::string &blocksigner);
 
-    void BlockProcessor::OnWeekOver(int week);
-    void BlockProcessor::OnWeekStart(int week);
+    void OnWeekOver(int week);
+    void OnWeekStart(int week);
 
     void hardReset();
 

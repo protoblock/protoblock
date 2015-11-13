@@ -36,7 +36,7 @@ void BlockProcessor::hardReset() {
     mData.closeAll();
     mNameData.closeAll();
 
-    fc::remove_all(Platform::getRootDir() + "index/");
+    fc::remove_all(Platform::instance()->getRootDir() + "index/");
 }
 
 int32_t BlockProcessor::init() {
@@ -45,7 +45,7 @@ int32_t BlockProcessor::init() {
         emit InvalidState(mRecorder.getLastBlockId());
         qInfo() <<  "mRecorder not valid! ";
         mRecorder.closeAll();
-        fc::remove_all(Platform::getRootDir() + "index/");
+        fc::remove_all(Platform::instance()->getRootDir() + "index/");
         qInfo() <<  "delete all leveldb, should have nothing";
         mRecorder.init();
         if (!mRecorder.isValid() ) {
@@ -299,6 +299,13 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 auto msg = d.GetExtension(MessageData::message_data);
                 if ( msg.has_msg() ) {
                     qWarning() << "Control messgae" << msg.DebugString();
+#ifdef Q_OS_MAC
+                    if ( msg.msg().find("win64") != string::npos )
+#endif
+#ifdef Q_OS_WIN
+                    if ( msg.msg().find("osx64") != string::npos )
+#endif
+                        break;
 
                     //if ( !amlive )
                     //    break;
@@ -488,9 +495,9 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
 
     else if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
     {
-        qCritical() << "!Commissioner::verifyByName" << st.fantasy_name();
+        qCritical() << "!Commissioner::verifyByName";
         //fbutils::LogFalse(std::string("Processor::process cant verify trans sig").append(st.DebugString()));
-        return false;
+        return false;;
     }
 
     return true;
@@ -576,7 +583,7 @@ void BlockProcessor::OnWeekStart(int week) {
 
 bool BlockProcessor::verifySignedBlock(const Block &sblock)
 {
-    qDebug() << sblock.DebugString();
+    //qDebug() << sblock.DebugString();
 
     if (sblock.signedhead().head().version() != Commissioner::BLOCK_VERSION)
     {

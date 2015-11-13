@@ -385,7 +385,8 @@ fc::optional<Block> Node::getLocalBlock(int32_t num, bool force) {
 
     std::string value;
     leveldb::Slice snum((char*)&num, sizeof(int32_t));
-    if (blockchain->Get(leveldb::ReadOptions(), snum, &value).IsNotFound()) {
+    auto ret = blockchain->Get(leveldb::ReadOptions(), snum, &value);
+    if ( !ret.ok() ){
         qWarning() << "block not found " << num;
         //ToDo
         return block;

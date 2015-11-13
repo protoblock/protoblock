@@ -79,7 +79,7 @@ namespace fantasybit {
 #endif
 
     static std::string GET_ROOT_DIR() {
-        return Platform::getRootDir();
+        return Platform::instance()->getRootDir();
     }
 
     static std::string FB_PORT(int port) {
@@ -111,22 +111,22 @@ namespace fantasybit {
 		return ret;
 	}
 
-	template < typename T >
-	typename T::Type input_proto_enum_map() {
-		auto in = proto_enum_map<T>();
-		int ii;
+//	template < typename T >
+//	typename T::Type input_proto_enum_map() {
+//		auto in = proto_enum_map<T>();
+//		int ii;
 
-		do {
-			for (auto &i : in) {
-				std::cout << i.first << ": " << i.second << endl;
-			}
+//		do {
+//			for (auto &i : in) {
+//				std::cout << i.first << ": " << i.second << endl;
+//			}
 
-			std::cin >> ii;
+//			std::cin >> ii;
 
-		} while (in.find(ii) == end(in));
+//		} while (in.find(ii) == end(in));
 
-		return static_cast<T::Type>(ii);
-	}
+//		return static_cast<T::Type>(ii);
+//	}
 
 }
 

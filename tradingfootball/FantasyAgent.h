@@ -75,29 +75,29 @@ public:
 
     //Block makeNewBlockAsOracle();
     Block makeNewBlockAsDataAgent(const SignedTransaction &, fc::optional<BlockHeader>);
-    fc::optional<Block> FantasyAgent::makeNewBlockAsDataAgent(Transaction &tdt,
+    fc::optional<Block> makeNewBlockAsDataAgent(Transaction &tdt,
                                                 fc::optional<BlockHeader> myprev);
     std::string getSecret() const ;
     fc::ecc::public_key_data pubKey();
 
     std::string pubKeyStr();
 
-    std::pair<std::string, std::string> getIdSig(std::string &in);
+    std::pair<std::string, std::string> getIdSig(const std::string &in);
 
     std::pair<std::string, std::string>
-    getIdSig(std::string &in, fc::ecc::private_key &pk) ;
+    getIdSig(const std::string &in, fc::ecc::private_key &pk) ;
 
     static fc::ecc::private_key str2priv(const std::string &in);
 
-    MyFantasyName FantasyAgent::getCurrentNamesStatus();
+    MyFantasyName getCurrentNamesStatus();
 
-    bool FantasyAgent::UseName(std::string name);
+    bool UseName(std::string name);
 
-    static pair<fc::ecc::private_key,string> FantasyAgent::makePrivMnemonic();
-    static fc::ecc::private_key FantasyAgent::fromMnemonic(const string &in);
+    static pair<fc::ecc::private_key,string> makePrivMnemonic();
+    static fc::ecc::private_key fromMnemonic(const string &in);
 
     std::pair<fc::sha256, fc::ecc::signature>
-    FantasyAgent::getRawIdSig(std::string &in, fc::ecc::private_key &pk) ;
+    getRawIdSig(const std::string &in, fc::ecc::private_key &pk) ;
 
     MyFantasyName UseMnemonic(std::string mn, bool store=true);
 

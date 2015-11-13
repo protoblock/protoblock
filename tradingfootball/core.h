@@ -1,6 +1,9 @@
 #ifndef CORE_H
 #define CORE_H
-
+#if __has_feature(cxx_rvalue_references)
+// This code will only be compiled with the -std=c++11 and -std=gnu++11
+// options, because rvalue references are only standardized in C++11.
+#endif
 #include <QWaitCondition>
 #include <fstream>
 #include  "genericsingleton.h"
@@ -24,7 +27,7 @@ public:
 
     void guiIsAwake();
 
-    void waitForGui();
+    void waitForGui();    
 
     template <class T>
     static bool registerNamedInstance(const QString & name ,T * theInstance) {

@@ -53,11 +53,13 @@ FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
 }
 
 bool FantasyAgent::testIt(Secret3 secret) {
+    //qDebug() << OPENSSL_VERSION_NUMBER;
     auto mnpriv = fromMnemonic(secret.mnemonic_key());
 
     string in = "sdfsfsdfs80999nbb b^&%#^  *(*& 65  \\00xx  *(&(54cV f" + secret.SerializeAsString();
     auto idsig1 = getRawIdSig(in,mnpriv);
-    auto idsig2 = getRawIdSig(in,str2priv(secret.private_key()));
+    fc::ecc::private_key privateKey(str2priv(secret.private_key()));
+    auto idsig2 = getRawIdSig(in,privateKey);
 
     auto pubk1 = mnpriv.get_public_key().serialize();
     auto pubk2 = Commissioner::privStr2Pub(secret.private_key());
@@ -171,7 +173,8 @@ bool FantasyAgent::AmFantasyAgent(std::string pubkey) {
 SignedTransaction FantasyAgent::makeSigned(Transaction &trans) {
    SignedTransaction st{};
     st.mutable_trans()->CopyFrom(trans);
-    auto p = getIdSig(trans.SerializeAsString());
+    string strTrans = string(trans.SerializeAsString());
+    std::pair<std::string, std::string> p = getIdSig(strTrans);
     st.set_id(p.first);
     st.set_sig(p.second);
     st.set_fantasy_name(client->alias());
@@ -181,8 +184,8 @@ SignedTransaction FantasyAgent::makeSigned(Transaction &trans) {
 SignedBlockHeader FantasyAgent::makeSigned(BlockHeader &bh) {
    SignedBlockHeader sbh{};
    sbh.mutable_head()->CopyFrom(bh);
-
-   auto p = getIdSig(bh.SerializeAsString());
+    string strHeader = string(bh.SerializeAsString());
+   std::pair<std::string, std::string> p = getIdSig(strHeader);
    sbh.set_sig(p.second);
     qDebug() << p.first;
    return sbh;
@@ -204,21 +207,21 @@ std::string FantasyAgent::pubKeyStr() {
 }
 
 
-std::pair<std::string, std::string> FantasyAgent::getIdSig(std::string &in) {
+std::pair<std::string, std::string> FantasyAgent::getIdSig(const std::string &in) {
     return m_priv ? getIdSig(in, *m_priv)
                    :  std::make_pair("","");
 }
 
 
 std::pair<std::string, std::string>
-FantasyAgent::getIdSig(std::string &in, fc::ecc::private_key &pk) {
+FantasyAgent::getIdSig(const std::string &in,fc::ecc::private_key &pk) {
     fc::sha256 sha = fc::sha256::hash( in );
     return make_pair(sha.str(), Commissioner::sig2str(pk.sign(sha)));
 }
 
 std::pair<fc::sha256, fc::ecc::signature>
-FantasyAgent::getRawIdSig(std::string &in, fc::ecc::private_key &pk) {
-    fc::sha256 sha = fc::sha256::hash( in );
+FantasyAgent::getRawIdSig(const std::string &in,fc::ecc::private_key &pk) {
+    const fc::sha256 sha = fc::sha256::hash( in );
     return make_pair(sha, pk.sign(sha));
 }
 
@@ -502,7 +505,7 @@ Block FantasyAgent::makeNewBlockAsDataAgent(const SignedTransaction &dt, fc::opt
 	SignedBlockHeader sbh{};
 	sbh.mutable_head()->CopyFrom(bh);
 
-    auto p = getIdSig(sbh.head().SerializeAsString(),*m_oracle);
+    std::pair<std::string, std::string> p = getIdSig(sbh.head().SerializeAsString(),*m_oracle);
     sbh.set_sig(p.second);
     //todo: store block hash from p.first
 
