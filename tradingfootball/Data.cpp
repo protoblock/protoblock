@@ -303,12 +303,14 @@ void NFLStateData::OnWeekStart(int in) {
 WeeklySchedule NFLStateData::GetWeeklySchedule(int week) {
 
     auto ws = getWeeklyStaticSchedule(week);
-    for (auto g : ws.games()) {
-        GameStatus gs = GetUpdatedGameStatus(g.id());
+    auto sz = ws.games().size();
+    for ( int i = 0; i<sz; i++) {
+        GameInfo *g = ws.mutable_games(i);
+        GameStatus gs = GetUpdatedGameStatus(g->id());
         if ( gs.datetime() != -1)
         {
             if ( gs.has_datetime() )
-                g.set_time(gs.datetime());
+                g->set_time(gs.datetime());
         }
     }
 
