@@ -42,7 +42,7 @@ void TestingWindow::initialize() {
     }
     timer = new QTimer(this);
 
-
+    amlive = false;
 /*
     qRegisterMetaType<GlobalState>("GlobalState");
     qRegisterMetaType<MyFantasyName>("MyFantasyName");
@@ -95,6 +95,7 @@ void TestingWindow::GoLive(GlobalState gs) {
     ui->week->setText(QString::number(gs.week()));
     ui->globalstate->setText(QString::fromStdString(GlobalState::State_Name(gs.state())));
     if ( gs.has_week() && gs.week() > 0 ) {
+        amlive = true;
         OnNewWeek(gs.week());
         emit BeOracle();
     }
@@ -110,6 +111,8 @@ void TestingWindow::OnNewWeek(int week) {
     for ( auto g : weekly.games()) {
         ui->gameID->addItem(QString::fromStdString(g.away() + "@" +g.home()),
                           QString::fromStdString(g.id()));
+
+
 
     }
 
@@ -129,6 +132,23 @@ void TestingWindow::on_beoracle_clicked() {
     emit BeOracle();
 }
 
+void TestingWindow::setWeeklySchedule(int week) {
+    mGames.clear();
+    auto weekly =  DataService::instance()->GetWeeklySchedule(week);
+    //ui->game->clear();
+
+    qDebug() << weekly.games_size();
+    for ( auto g : weekly.games()) {
+        mGames[g.id()] = g;
+        ui->game->addItem(QString::fromStdString(g.away() + "@" +g.home()),
+                          QString::fromStdString(g.id()));
+
+        qDebug() << "weekly" << week << QString::fromStdString(g.away() + "@" +g.home())
+                 << QString::fromStdString(g.id());
+
+    }
+}
+
 void TestingWindow::on_weeks_activated(int index)
 {
    qDebug() <<  index;
@@ -138,21 +158,7 @@ void TestingWindow::on_weeks_activated(int index)
        return;
    }
 
-   mGames.clear();
-   auto weekly =  DataService::instance()->GetWeeklySchedule(index);
-   //ui->game->clear();
-
-   qDebug() << weekly.games_size();
-   for ( auto g : weekly.games()) {
-       mGames[g.id()] = g;
-       ui->game->addItem(QString::fromStdString(g.away() + "@" +g.home()),
-                         QString::fromStdString(g.id()));
-
-       qDebug() << "weekly" << index << QString::fromStdString(g.away() + "@" +g.home())
-                << QString::fromStdString(g.id());
-
-   }
-
+   setWeeklySchedule(index);
    qDebug() << index << realweek();
    if ( index < realweek()) {
        auto gameresults =  DataService::instance()->GetPrevWeekGameResults(index);
@@ -343,6 +349,15 @@ void TestingWindow::on_StageBlock_clicked() {
             qDebug() << pd.DebugString();
         }
         myPlayerData.clear();
+
+
+        d.set_type(Data::GAME);
+        for ( auto gd : myGameData ) {
+            d.MutableExtension(GameData::game_data)->CopyFrom(gd);
+            dt.add_data()->CopyFrom(d);
+            qDebug() << gd.DebugString();
+        }
+        myGameData.clear();
 
         if ( !makeStageBlock(dt)) {
             ui->out->setText("error making block");
@@ -831,24 +846,79 @@ void TestingWindow::on_MsgButton_clicked() {
     myMessageData.set_msg(ui->out->text().toStdString());
 }
 
-
-void TestingWindow::on_stage_player_clicked()
-{
+void TestingWindow::on_stage_player_clicked() {
     playerloader = new PlayerLoaderTR();
     myStagedPlayerData = playerloader->loadPlayersFromTradeRadar(realweek(),false);
     for ( auto pd : myStagedPlayerData) {
         ui->staging_data->addItem(QString::fromStdString(pd.DebugString()));
     }
+
 }
 
-
-void TestingWindow::on_commit_player_clicked()
-{
+void TestingWindow::on_commit_player_clicked() {
     playerloader->dump();
     delete playerloader;
 
     myPlayerData = myStagedPlayerData;
     myStagedPlayerData.clear();
+
+    ui->staging_data->clear();
+
+}
+
+void TestingWindow::on_stage_game_clicked() {
+    ScheduleLoader mScheduleLoader;
+    std::vector<fantasybit::ScheduleData> vsd =
+            mScheduleLoader.loadScheduleMovingFwdFromTR(realweek());
+
+    for ( auto sd : vsd ) {
+        auto myweekly =  DataService::instance()->GetWeeklySchedule(sd.week());
+
+        map<string,GameInfo> old;
+        for (auto gi : myweekly.games()) {
+            old[gi.id()] = gi;
+        }
+
+        for ( auto gi : sd.weekly().games()) {
+            auto it = old.find(gi.id());
+            if ( it == end(old)) {
+                qCritical() << "cant find game" << gi.id();
+                continue;
+            }
+            if ( it->second.time() != gi.time()) {
+                GameData gd{};
+                GameStatus gs = DataService::instance()->GetGameStatus(gi.id());
+                if ( !gs.has_status() || gs.status() == GameStatus_Status_SCHEDULED ) {
+                    if ( !gs.has_datetime() || gs.datetime() != gi.time() ) {
+                        gs.set_datetime(gi.time());
+                        gd.set_gameid(gi.id());
+                        gd.mutable_status()->CopyFrom(gs);
+                        myStagedGameData.push_back(gd);
+                    }
+                }
+            }
+        }
+    }
+
+    for ( auto sgd : myStagedGameData) {
+        ui->staging_data->addItem(QString::fromStdString(sgd.DebugString()));
+    }
+}
+
+void TestingWindow::on_commit_game_clicked() {
+    myGameData = myStagedGameData;
+    myStagedGameData.clear();
+
+    ui->staging_data->clear();
+}
+
+void TestingWindow::on_cancel_staged_clicked() {
+
+    if ( playerloader != nullptr )
+        delete playerloader;
+
+    myStagedPlayerData.clear();
+    myStagedGameData.clear();
 
     ui->staging_data->clear();
 
@@ -1005,3 +1075,5 @@ bool TestingWindow::Cleanit(Block *b) {
     return replaceit;
 
 }
+
+

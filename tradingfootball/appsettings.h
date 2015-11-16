@@ -73,19 +73,6 @@ private:
         static QVariant getDefaultSetting(SettingsKeys settingKey){
             QString storageDirName =QString("storage");
             QString logFileName = QString("tradingfootball.log");
-            #ifdef DATAAGENTGUI
-                QString  dataAgentprefix = "da-";
-                storageDirName =dataAgentprefix + storageDirName;
-                logFileName =dataAgentprefix +  configFileName;
-            #endif
-            #ifdef PRODFOOTBALL
-                storageDirName =storageDirName;
-                logFileName =logFileName;
-            #else
-                QString stagingPrefix = QString("staging-");
-                storageDirName =stagingPrefix + storageDirName;
-                logFileName = stagingPrefix +logFileName;
-            #endif
 
             switch (settingKey) {           
             case LastFantasyName:  return "";

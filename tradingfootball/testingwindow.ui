@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>770</width>
+    <width>816</width>
     <height>529</height>
    </rect>
   </property>
@@ -44,21 +44,21 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="9">
+    <item row="0" column="9" colspan="2">
      <widget class="QLabel" name="week">
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="10">
+    <item row="0" column="11">
      <widget class="QLabel" name="Live">
       <property name="text">
        <string>Not Live</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="11">
+    <item row="0" column="12">
      <widget class="QLabel" name="globalstate">
       <property name="text">
        <string>No State</string>
@@ -147,7 +147,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="10">
+    <item row="3" column="11">
      <widget class="QPushButton" name="result">
       <property name="text">
        <string>RESULT</string>
@@ -160,7 +160,7 @@
     <item row="4" column="3" colspan="3">
      <widget class="QListWidget" name="staging_tx"/>
     </item>
-    <item row="4" column="6" colspan="6">
+    <item row="4" column="6" colspan="7">
      <widget class="QListWidget" name="awards"/>
     </item>
     <item row="5" column="0">
@@ -197,6 +197,14 @@
       </property>
      </widget>
     </item>
+    <item row="5" column="5" rowspan="2" colspan="2">
+     <widget class="QPushButton" name="cancel_staged">
+      <property name="text">
+       <string>CANCEL
+ STAGED</string>
+      </property>
+     </widget>
+    </item>
     <item row="6" column="0" colspan="2">
      <widget class="QLineEdit" name="out"/>
     </item>
@@ -207,24 +215,38 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="11">
-     <widget class="QPushButton" name="FixDef">
+    <item row="6" column="3">
+     <widget class="QPushButton" name="stage_game">
       <property name="text">
-       <string>FixDef</string>
+       <string>Stage Game</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="7">
+    <item row="6" column="4">
+     <widget class="QPushButton" name="commit_game">
+      <property name="text">
+       <string>Commit Game</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="8" colspan="2">
      <widget class="QPushButton" name="fix363">
       <property name="text">
        <string>Fix363</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="8" colspan="3">
+    <item row="6" column="10" colspan="2">
      <widget class="QPushButton" name="GetResults4Fix">
       <property name="text">
        <string>GetResults4Fix</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="12">
+     <widget class="QPushButton" name="FixDef">
+      <property name="text">
+       <string>FixDef</string>
       </property>
      </widget>
     </item>
@@ -235,7 +257,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>770</width>
+     <width>816</width>
      <height>21</height>
     </rect>
    </property>

@@ -83,6 +83,12 @@ private slots:
 
     void on_GetResults4Fix_clicked();
 
+    void on_stage_game_clicked();
+
+    void on_commit_game_clicked();
+
+    void on_cancel_staged_clicked();
+
 private:
     MainLAPIWorker *  myCoreInstance;
     std::unordered_map<string,GameInfo> mGames;
@@ -90,6 +96,8 @@ private:
     std::unordered_map<string,GameRoster> mGameRoster;
     std::unordered_map<string,PlayerDetail> mPlayerDetail;
     std::vector<PlayerData> myPlayerData, myStagedPlayerData;
+    std::vector<GameData> myGameData, myStagedGameData;
+
     std::unordered_map<string,GameResult> mStagedGameResult;
     int TestingWindow::randomNum(int num) ;
         GameResult TestingWindow::fakeit(GameInfo &g);
@@ -105,11 +113,15 @@ private:
     int mStagedBlockNum;
     int realweek() ;
 
+    bool amlive;
+
     bool sendStageBlock() ;
     bool makeStageBlock(DataTransition &dt);
     PlayerLoaderTR *playerloader;
 
     bool Cleanit(Block *b);
+
+    void setWeeklySchedule(int week);
 
 
 

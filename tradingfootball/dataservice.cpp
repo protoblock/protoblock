@@ -33,6 +33,13 @@ fantasybit::PlayerBase DataService::GetPlayerBase(std::string playerId) {
     return worker->NFLState().GetPlayerBase(playerId);
 }
 
+
+fantasybit::GameStatus DataService::GetGameStatus(string gid) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetUpdatedGameStatus(gid);
+}
+
+
 std::vector<std::shared_ptr<fantasybit::FantasyName>> DataService::GetLeaderBoard() {
     auto v = Commissioner::GetFantasyNames();
 

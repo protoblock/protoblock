@@ -534,12 +534,9 @@ public:
             sqls.gamemap(p.first,p.second);
         }
     }
+
     std::vector<fantasybit::ScheduleData> loadScheduleFromJsonFile() {
         std::vector<fantasybit::ScheduleData> result;
-
-        for (int i=0;i< Commissioner::GENESIS_NFL_TEAMS.size();i++) {
-            teamIdKey[Commissioner::GENESIS_NFL_TEAMS[i]] = i+1;
-        }
 
         //hard coded resources
         QFile jsonFile(":/Schedule2015/Schedule.2015-reg.json");
@@ -549,8 +546,39 @@ public:
         }
         QByteArray jsonData   = jsonFile.readAll();
         jsonFile.close();
+
+        result = getScheduleDatafromJSON(jsonData,1);
+        Dump();
+        return result;
+    }
+
+    std::vector<fantasybit::ScheduleData> loadScheduleMovingFwdFromTR(int startweek) {
+        std::vector<fantasybit::ScheduleData> result;
+        QString uribase = "http://api.sportradar.us/nfl-b1/2015/REG/";
+        QString uritail = "schedule.json?api_key=2uqzuwdrgkpzkhbfumzrg8gn";
+        RestfullClient rest(QUrl("http://api.sportradar.us/nfl-b1/2015/REG"));
+
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+
+        qDebug() << uribase << uritail;
+        rest.getData(uritail,params,headers);
+        auto resp = rest.lastReply();
+
+        result =  getScheduleDatafromJSON(resp,startweek);
+        return result;
+    }
+
+    std::vector<fantasybit::ScheduleData> getScheduleDatafromJSON(QByteArray jsonData, int startweek) {
+        std::vector<fantasybit::ScheduleData> result;
+
+        for (int i=0;i< Commissioner::GENESIS_NFL_TEAMS.size();i++) {
+            teamIdKey[Commissioner::GENESIS_NFL_TEAMS[i]] = i+1;
+        }
+
         QJsonParseError * error = NULL;
         QJsonDocument doc = QJsonDocument::fromJson(jsonData,error);
+        qDebug() << doc.isNull() << doc.isEmpty() << doc.isArray() << doc.isObject();
 
         if (error != NULL){
             //errorMessage = error->errorString();
@@ -572,6 +600,9 @@ public:
             QJsonValueRef wkdata = wkarr[j];
             auto wkobj = wkdata.toObject();
             int wk = wkobj.value("number").toInt();
+            if ( wk < startweek )
+                continue;
+
             sd.set_week(wk);
 
             fantasybit::WeeklySchedule ws{};
@@ -605,11 +636,71 @@ public:
             result.push_back(sd);
         }
 
-        Dump();
         return result;
     }
 
-   fantasybit::GameInfo getScheduleFromJsonObject(QJsonObject & jsonObject, int wk,
+    /*
+    fantasybit::WeeklySchedule updatedGameInfoFromTR(int startweek) {
+        QString uribase = "http://api.sportradar.us/nfl-t1/2015/REG/";
+        QString uritail = "/schedule.json?api_key=2uqzuwdrgkpzkhbfumzrg8gn";
+        QString route = uritail;//QString::number(week) + uritail;
+
+
+        fantasybit::WeeklySchedule ws{};
+
+        for (int i=0;i< Commissioner::GENESIS_NFL_TEAMS.size();i++) {
+            teamIdKey[Commissioner::GENESIS_NFL_TEAMS[i]] = i+1;
+        }
+
+        RestfullClient rest(QUrl("http://api.sportradar.us/nfl-t1/2015/REG/"));
+
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+
+        qDebug() << uribase << route;
+        rest.getData(route,params,headers);
+        auto resp = rest.lastReply();
+
+        qDebug() << resp;
+        QJsonDocument ret = QJsonDocument::fromJson(resp);
+        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+        //if (doc.isObject())
+        QJsonObject jo = ret.object();
+        int wk = jo.value("number").toInt();
+        if ( wk != week ) {
+            qCritical() << " wring week" << wk << week;
+            return ws;
+        }
+
+        auto games = jo.value("games");
+        QJsonArray gmarr = games.toArray();
+        for (int i=0;i< gmarr.size();i++  ) {
+            QJsonValueRef data = gmarr[i];
+            //we are supposed to encounter a list of objects so skip values
+            if (!data.isObject()) continue;
+            QJsonObject gameData = data.toObject();
+            QString errorParsingObject;
+            fantasybit::GameInfo gi =
+                    getScheduleFromJsonObject(gameData,wk,errorParsingObject);
+            if (!errorParsingObject.isEmpty()) {
+                //errorMessage += "\n Error parsing json object : "+ errorParsingObject;
+                continue;
+            }
+
+//            QFile outfile("GenesisPLayer.txt");
+//            outfile.open(QIODevice::WriteOnly);
+
+            ws.add_games()->CopyFrom(gi);
+
+            //outfile.writeData(player.ser)
+            //std::string ps = player.SerializeAsString();
+            //print_hex_memory((void *)ps.data(),ps.size());
+        }
+        return ws;
+    }
+*/
+    fantasybit::GameInfo getScheduleFromJsonObject(QJsonObject & jsonObject, int wk,
                                                   QString & errorParsingObject) {
       fantasybit::GameInfo pd{};
 
