@@ -796,17 +796,27 @@ bool TestingWindow::sendStageBlock() {
 }
 
 bool TestingWindow::makeStageBlock(DataTransition &dt) {
+    string number = to_string(mStagedBlockNum);
     Data d{};
     d.set_type(Data_Type_MESSAGE);
     if ( !myMessageData.has_msg()  || myMessageData.msg() == "" )
-        myMessageData.set_msg(to_string(mStagedBlockNum));
+        myMessageData.set_msg(number);
     myMessageData.set_gt(1029);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
+    myMessageData.Clear();
 
-    myMessageData.set_msg(myMessageData.msg() +
-                          " <a href=\"https://trading.football/downloads\">Upgrade available! Click to download (v1.0.3.6) win64</a>");
-    myMessageData.set_lt(1036);
+    myMessageData.set_msg(number +
+                          " <a href=\"https://trading.football/downloads\">Upgrade available! Click to download (v1.0.3.7) win64</a>");
+    myMessageData.set_lt(1037);
+    d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
+    dt.add_data()->CopyFrom(d);
+    qDebug() << myMessageData.msg();
+    myMessageData.Clear();
+
+    myMessageData.set_msg(number +
+                          " <a href=\"https://trading.football/downloads\">Upgrade available! Click to download (v1.0.4.4) osx64</a>");
+    myMessageData.set_lt(1044);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     qDebug() << myMessageData.msg();
