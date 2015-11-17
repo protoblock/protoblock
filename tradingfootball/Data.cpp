@@ -341,6 +341,8 @@ GameStatus NFLStateData::GetUpdatedGameStatus(string id) {
     }
     else {
         gs.ParseFromString(temp);
+        if ( gs.has_datetime() && gs.datetime() < 1)
+            gs.set_datetime(-1);
         qDebug() << key << gs.DebugString();
      }
     return gs;
