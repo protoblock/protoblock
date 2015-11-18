@@ -826,6 +826,7 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     myMessageData.set_gt(15991245);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
+    myMessageData.Clear();
 
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
