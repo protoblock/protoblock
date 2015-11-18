@@ -2,7 +2,6 @@ SOURCES += \
     $$PWD/Commissioner.cpp \
     $$PWD/Data.cpp \
     $$PWD/DistributionAlgo.cpp \
-    $$PWD/FanatsyAgent.cpp \
     $$PWD/FantasyName.cpp \
     $$PWD/Processor.cpp \
     $$PWD/Source.cpp \
@@ -37,7 +36,10 @@ SOURCES += \
     $$PWD/waitmodaldialog.cpp \
     $$PWD/animationandmessagewidget.cpp \
     $$PWD/mnemonic.cpp \ 
-    $$PWD/RunGuard.cpp
+    $$PWD/RunGuard.cpp \
+    $$PWD/FantasyAgent.cpp \
+    $$PWD/fnametool.cpp
+
 
 DISTFILES += \
     $$PWD/../proto/ProtoData.proto \
@@ -96,7 +98,9 @@ HEADERS += \
     $$PWD/waitmodaldialog.h \
     $$PWD/animationandmessagewidget.h \
     $$PWD/mnemonic.h \ 
-    $$PWD/RunGuard.h
+    $$PWD/RunGuard.h \
+    $$PWD/fnametool.h
+
 
 
 FORMS += \       
@@ -106,7 +110,9 @@ FORMS += \
     $$PWD/previousweekwidget.ui \
     $$PWD/nextweekwidget.ui \
     $$PWD/waitmodaldialog.ui \
-    $$PWD/animationandmessagewidget.ui
+    $$PWD/animationandmessagewidget.ui \
+    $$PWD/fnametool.ui
+
 
 RESOURCES += \
     $$PWD/resources/resources.qrc

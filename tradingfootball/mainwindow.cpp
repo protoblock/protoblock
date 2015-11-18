@@ -6,7 +6,7 @@
 #include "datacache.h"
 #include <QCheckBox>
 #include <QSettings>
-
+#include "fnametool.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,6 +29,7 @@ void MainWindow::initDefaultGuiDisplay(){
     myCurrentWeek =-1;    
     ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());    
     ui->myLeaderBaordTableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->myFantasyNamesCombo->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 void MainWindow::initialize() {
@@ -107,6 +108,9 @@ void MainWindow::initialize() {
                      this,SLOT(leaderboardCliked(QModelIndex)));
     QObject::connect(ui->myLeaderBaordTableView,SIGNAL(customContextMenuRequested(QPoint)),
                      this,SLOT(showLeaderboardContextualMenu(QPoint)));
+
+    QObject::connect(ui->myFantasyNamesCombo,SIGNAL(customContextMenuRequested(QPoint)),
+                     this,SLOT(myFantasyNamesImportExport(QPoint)));
 
     QObject::connect(myLAPIWorker,SIGNAL(onControlMessage(QString)),
                      ui->myCurrentWeekWidget,SLOT(onControlMessage(QString)));
@@ -482,3 +486,21 @@ void MainWindow::setCurrentFantasyName(fantasybit::MyFantasyName * fantasyName,b
 		emit UseMyFantasyName(QString(myCurrentFantasyName.name().data()));	
 }
 
+
+void MainWindow::myFantasyNamesImportExport(const QPoint &pos)
+{
+    if ( !myIamLive ) return;
+
+    fnametool fnt(this);
+    fnt.setModal(true);
+    fnt.initialize();
+    fnt.UseName(ui->myFantasyNamesCombo->currentText());
+    fnt.exec();
+    //fnt.set
+    auto newname = fnt.newName();
+    if ( newname != "" ) {
+        int index = ui->myFantasyNamesCombo->findText(newname);
+        if ( index > -1 )
+            ui->myFantasyNamesCombo->setCurrentIndex(index);
+    }
+}

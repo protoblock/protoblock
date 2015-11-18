@@ -80,6 +80,7 @@ public:
     std::string getSecret() const ;
     fc::ecc::public_key_data pubKey();
 
+    std::string getMnemonic(std::string fname);
     std::string pubKeyStr();
 
     std::pair<std::string, std::string> getIdSig(const std::string &in);

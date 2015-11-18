@@ -34,6 +34,8 @@ public:
     fantasybit::GameStatus GetGameStatus(string gid);
 
 
+    MyFantasyName importMnemonic(std::string &in);
+    std::string exportMnemonic(std::string &in);
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);
 };

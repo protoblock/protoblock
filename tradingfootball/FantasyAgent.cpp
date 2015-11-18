@@ -52,6 +52,29 @@ FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
     }
 }
 
+std::string FantasyAgent::getMnemonic(std::string fname) {
+    Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename3};
+    if ( !read.good() ) {
+        return "";
+    }
+
+    Secret3 secret{};
+    while (read.ReadNext(secret)) {
+
+        if ( secret.fantasy_name() == fname ) {
+            if ( !testIt(secret) ) {
+                qCritical() << " secret verify fail" << secret.fantasy_name();
+                continue;
+            }
+
+            if ( secret.has_mnemonic_key() )
+                return secret.mnemonic_key();
+        }
+    }
+
+    return "";
+}
+
 bool FantasyAgent::testIt(Secret3 secret) {
     //qDebug() << OPENSSL_VERSION_NUMBER;
     auto mnpriv = fromMnemonic(secret.mnemonic_key());
@@ -234,7 +257,13 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
 
     MyFantasyName mfn{};
     mfn.set_status(MyNameStatus::none);
-    m_priv = fromMnemonic(mn);
+    mfn.set_name("");
+    try {
+        m_priv = fromMnemonic(mn);
+    }
+    catch (MnemonicException) {
+        return mfn;
+    }
     auto pk = pubKey();
     auto fn = Commissioner::getName(pk);
     if ( !fn ) {
@@ -249,6 +278,10 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
 
     mfn.set_status(MyNameStatus::confirmed);
     mfn.set_name(name);
+
+
+    if ( UseName(name) ) //dont write if already have it
+        return mfn;
 
     Secret3 secret{};
     secret.set_private_key(getSecret());

@@ -68,3 +68,14 @@ fantasybit::GlobalState DataService::GetGlobalState() {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->NFLState().GetGlobalState();
 }
+
+
+MyFantasyName DataService::importMnemonic(std::string &in) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->Agent().UseMnemonic(in);
+}
+
+string DataService::exportMnemonic(std::string &in) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->Agent().getMnemonic(in);
+}
