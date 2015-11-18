@@ -170,7 +170,7 @@ bool Node::SyncTo(int32_t gh) {
         auto vsb = getGlobalBlock(current_hight+1, bend < global_height ? bend : global_height);
         if ( vsb.size() == 0 ) {
             qCritical() << " no getGlobalBlockNum" << current_hight+1;
-            QThread::currentThread()->sleep(100 * count++);
+            QThread::currentThread()->msleep(100 * count++);
             continue;
         }
 
@@ -180,7 +180,7 @@ bool Node::SyncTo(int32_t gh) {
         Block *sb = &ssb;
         if (!BlockProcessor::verifySignedBlock(*sb)) {
             qCritical() << " !SyncTo::verifySignedBlock(sb) ";
-            QThread::currentThread()->sleep(100 * count++);
+            QThread::currentThread()->msleep(100 * count++);
             break;
         }
 
@@ -256,7 +256,7 @@ bool Node::BackFork(const string &goodid, int32_t num) {
         fc::optional<Block> gb = getGlobalBlock(num);
         if ( !gb ) {
             qCritical() << " no prev global block " << num;
-            QThread::currentThread()->sleep(100 * count++);
+            QThread::currentThread()->msleep(100 * count++);
             continue;
         }
 

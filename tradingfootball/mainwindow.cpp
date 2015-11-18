@@ -502,8 +502,9 @@ void MainWindow::doImportExport() {
     fnt.exec();
     //fnt.set
     auto newname = fnt.newName();
-    if ( newname != "" ) {
-        int index = ui->myFantasyNamesCombo->findText(newname);
+    if ( newname.status() != MyNameStatus::none ) {
+        setCurrentFantasyName(&newname,false);
+        int index = ui->myFantasyNamesCombo->findText(newname.name().data());
         if ( index > -1 )
             ui->myFantasyNamesCombo->setCurrentIndex(index);
     }

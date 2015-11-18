@@ -3,6 +3,8 @@
 #include "dataservice.h"
 #include "qmessagebox.h"
 
+using namespace fantasybit;
+
 fnametool::fnametool(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::fnametool)
@@ -11,7 +13,7 @@ fnametool::fnametool(QWidget *parent) :
 }
 
 void fnametool::initialize() {
-    useNewName = "";
+    useNewName.set_status(MyNameStatus::none);
     myLAPIWorker = Core::resolveByName<MainLAPIWorker>("coreapi");
 
     QObject::connect(this,SIGNAL(ImportSucess(QString)),myLAPIWorker,SLOT(OnUseName(QString)));
@@ -86,8 +88,8 @@ void fnametool::on_importButton_clicked()
 
    if ( mfn.status() == MyNameStatus::confirmed ) {
        emit ImportSucess(QString(mfn.name().data()));
-
-       useNewName = QString(mfn.name().data());
+       //QThread::currentThread()->msleep(1000);
+       useNewName = mfn;
        QMessageBox::information(this,APPLICATION_NAME,
                                 QString("\"%1\" imported!").arg(mfn.name().data()));
 
@@ -100,7 +102,7 @@ void fnametool::on_importButton_clicked()
 
 }
 
-QString fnametool::newName() {
+MyFantasyName fnametool::newName() {
     return useNewName;
 }
 

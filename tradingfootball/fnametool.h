@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QString>
+#include "ProtoData.pb.h"
 
 namespace Ui {
 class fnametool;
@@ -22,7 +23,7 @@ public:
 
     void initialize();
 
-    QString newName();
+    fantasybit::MyFantasyName newName();
 signals:
     void ImportSucess(QString);
 private slots:
@@ -38,7 +39,7 @@ private slots:
 
 private:
     MainLAPIWorker *  myLAPIWorker;
-    QString useNewName;
+    fantasybit::MyFantasyName useNewName;
     Ui::fnametool *ui;
 };
 
