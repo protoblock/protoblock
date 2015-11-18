@@ -20,6 +20,7 @@ DEFINES += PRODFOOTBALL
 #DEFINES += Jay2015PrePreSeasonTestDemo
 #DEFINES += DATAAGENTWRITENAMES_FORCE
 
+DEFINES += ALLOW_DEBUG
 DEFINES += BUILD_STABLE
 
 
@@ -116,3 +117,5 @@ CONFIG(release, debug|release) {
 
 include (./boost-includes.pri)
 include (./cute-fantasy.pri)
+
+
