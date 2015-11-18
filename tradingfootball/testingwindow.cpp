@@ -450,6 +450,12 @@ void TestingWindow::Timer() {
             break;
         }
 
+        if ( !st.has_trans() ) {
+            qDebug() << "bad tx - break" << txstr;
+            break;
+
+        }
+
         qDebug() << "processed " << st.DebugString();
 
 
