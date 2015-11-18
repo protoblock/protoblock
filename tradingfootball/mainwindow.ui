@@ -87,7 +87,7 @@
         <item row="3" column="0" colspan="4">
          <widget class="QStackedWidget" name="myStackedWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="myPreviousWeekView">
            <layout class="QGridLayout" name="gridLayout_2">
@@ -212,25 +212,25 @@
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-         <widget class="QLabel" name="label_4">
-          <property name="text">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
              <string>Fantasy Name:</string>
-          </property>
-         </widget>
-        </item>
+            </property>
+           </widget>
+          </item>
           <item>
-         <widget class="QLabel" name="myFantasyNameStatusLabel">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>fp status</string>
-          </property>
-         </widget>
-        </item>
+           <widget class="QLabel" name="myFantasyNameStatusLabel">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>fp status</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item row="0" column="1" colspan="2">
@@ -399,8 +399,26 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionFantasyName_Import_Export"/>
+   </widget>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QStatusBar" name="myStatusbar"/>
+  <action name="actionFantasyName_Import_Export">
+   <property name="text">
+    <string>FantasyName Import/Export</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manage your FantasyName. Import using secret, or export secret. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

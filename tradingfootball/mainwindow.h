@@ -68,6 +68,8 @@ private slots:
 
     void myFantasyNamesImportExport(const QPoint &pos);
 
+    void on_actionFantasyName_Import_Export_triggered();
+
 private:
     void initialize();
     void initDefaultGuiDisplay();
@@ -83,6 +85,7 @@ private:
     void currentWeek();
     void navigateToWeek(int week);
     void setCurrentFantasyName(fantasybit::MyFantasyName * fantasyName,bool useName);
+    void MainWindow::doImportExport();
 
 	QString translateNameStatus(fantasybit::MyNameStatus status) const {
 		switch (status) {

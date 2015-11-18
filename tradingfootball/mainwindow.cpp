@@ -489,6 +489,10 @@ void MainWindow::setCurrentFantasyName(fantasybit::MyFantasyName * fantasyName,b
 
 void MainWindow::myFantasyNamesImportExport(const QPoint &pos)
 {
+    doImportExport();
+}
+
+void MainWindow::doImportExport() {
     if ( !myIamLive ) return;
 
     fnametool fnt(this);
@@ -503,4 +507,9 @@ void MainWindow::myFantasyNamesImportExport(const QPoint &pos)
         if ( index > -1 )
             ui->myFantasyNamesCombo->setCurrentIndex(index);
     }
+}
+
+void MainWindow::on_actionFantasyName_Import_Export_triggered()
+{
+   doImportExport();
 }

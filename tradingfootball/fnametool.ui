@@ -16,6 +16,9 @@
   <property name="whatsThis">
    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#005500;&quot;&gt;This tool enables you to import or export your Fantasy Name. This allows backups and changing machines. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#005500;&quot;&gt;Each Fantasy Name has a secret 12 word mnemonic associated with it. This mnemonic is the master private key that controls your Fantasy Name.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#005500;&quot;&gt;This is your &amp;quot;brain wallet&amp;quot;! Write it down! Keep it safe! Memorize it! Dont share it! &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#005500;&quot;&gt;Anyone with this key will have control of any fantasy bits associated with your fantasy name. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;See BIP 39 for more info&quot;&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="usefname">
