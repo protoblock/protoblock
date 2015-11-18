@@ -54,7 +54,7 @@ public:
 
     static fc::optional<Block> getGlobalBlock(int32_t num);
 
-    static std::vector<Block> Node::getGlobalBlock(int32_t num, int32_t bend) ;
+    static std::vector<Block> getGlobalBlock(int32_t num, int32_t bend) ;
 
     static int32_t getLastLocalBlockNum();
     static int32_t myLastGlobalBlockNum();
