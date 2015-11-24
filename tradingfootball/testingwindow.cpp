@@ -812,17 +812,10 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     dt.add_data()->CopyFrom(d);
     myMessageData.Clear();
 
-    myMessageData.set_msg(number +
-                          " <a href=\"https://trading.football/downloads\">Upgrade available! Click to download (v1.0.3.7) win64</a>");
-    myMessageData.set_lt(1210);
-    d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
-    dt.add_data()->CopyFrom(d);
-    qDebug() << myMessageData.msg();
-    myMessageData.Clear();
 
     myMessageData.set_msg(number +
-        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">Upgrade available! Click to download (v1.2.1) win64</a>");
-    myMessageData.set_lt(1210);
+        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">Upgrade available! Click to download (v1.2.2.1) win64</a>");
+    myMessageData.set_lt(1220);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     qDebug() << myMessageData.msg();
