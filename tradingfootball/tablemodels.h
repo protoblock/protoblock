@@ -174,7 +174,10 @@ protected:
 //                return tr(data->propertyValue<fantasybit::PlayerGameStatus,PropertyNames::Player_Game_Status>());
             if( column ==4)
                 return data->propertyValue<PropertyNames::Projection>();
-
+#ifdef PLAYER_ID
+            if( column ==5)
+                return data->propertyValue<PropertyNames::Player_ID>();
+#endif
             QString fantasyName = this->getVisibleColumnHeader(column);
             if (fantasyName.isEmpty())  return QVariant();
             QVariant projection = data->propertyValue(fantasyName);
@@ -278,8 +281,13 @@ private:
         switch (myDisplayType) {
         case WeekDisplayType::CurrentWeek:  headers << "Player Name" << "Pos"
                                                     <<"Team"<<"Roster"
-                                                   << "Projection"  ;
+                                                   << "Projection"
+#ifdef PLAYER_ID
+                                                   << "Player ID"
+#endif
+                                                   ;
             setEditable(4,true);
+            setBold(4,true);
             break;
         case WeekDisplayType::PreviousWeek: headers << "Player Name"
                                                     << "    Pos     "

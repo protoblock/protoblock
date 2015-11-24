@@ -27,6 +27,30 @@ PreviousWeekWidget::PreviousWeekWidget(QWidget *parent) :
 
     //init projection filters
     myProjectionFilterProxy.data()->bindFilter();
+
+    /*
+    int width;
+    for ( auto h : myProjectionsModel.horizontalHeaders() )
+        width += ui->myProjectionTableView->fontMetrics().boundingRect(h).width();
+    QSize qsize = ui->myProjectionTableView->size();
+    qsize.setWidth(width);
+    ui->myProjectionTableView->setBaseSize(qsize);
+*/
+    QSize qsize2 = ui->myGamesListView->size();
+    QString fake = "XXX @ XXX - Xxx 0:00 AM ";
+    int width = ui->myGamesListView->fontMetrics().width(fake);
+    //int width = rect.width();
+    //qsize2.setWidth(width);
+    //qsize2.setHeight(rect.height()*17);
+    ui->myGamesListView->setBaseSize(qsize2);
+    QString fake2 = "XXXXXXXX";
+    width += ui->myGamesListView->fontMetrics().boundingRect(fake2).width();
+    //qsize2.setWidth(width);
+    ui->scheduleGroupBox->setMaximumWidth(width);
+    ui->scheduleGroupBox->adjustSize();
+
+    //ui->myProjectionTableView->setBaseSize(qsize);
+
 }
 
 PreviousWeekWidget::~PreviousWeekWidget()

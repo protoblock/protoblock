@@ -44,6 +44,62 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     ui->myProjectionTableView->setItemDelegateForColumn(4,&myProjectionDelegate);
     //QObject::connect(&myProjectionDelegate,SIGNAL(commitData(QWidget*)),this,SLOT(onProjectionEnterPressed(QWidget *)));
 
+    int width;
+    for ( auto h : myProjectionsModel.horizontalHeaders() )
+        width += ui->myProjectionTableView->fontMetrics().width(h);
+    QSize qsize = ui->myProjectionTableView->size();
+    qsize.setWidth(width);
+    ui->myProjectionTableView->setBaseSize(qsize);
+    //ui->myProjectionTableView->resizeColumnsToContents();
+    //ui->myProjectionTableView->adjustSize();
+    //ui->projGroupBox->adjustSize();
+
+
+    QSize qsize2;// = ui->myGamesListView->size();
+    QString fake = "XXX @ XXX - Xxx 0:00 AM ";
+    width = ui->myGamesListView->fontMetrics().averageCharWidth() * fake.length();
+    int height = ui->myGamesListView->fontMetrics().height();
+    //width = rect.width();
+    qsize2.setWidth(width);
+    qsize2.setHeight(height*17);
+    ui->myGamesListView->setBaseSize(qsize2);
+    QString fake2 = "XXXXXXXX";
+    width += ui->myGamesListView->fontMetrics().averageCharWidth() * fake2.length();
+    //qsize2.setWidth(width);
+    ui->scheduleGroupBox->setMaximumWidth(width);
+
+    //ui->myGamesListView->resize(qsize2);
+    ui->scheduleGroupBox->adjustSize();
+
+
+    //ui->myProjectionTableView->setBaseSize(qsize);
+    QSize wholesize = this->size();
+    bool rz = false;
+    if ( wholesize.height() < qsize2.height()) {
+        wholesize.setHeight(qsize2.height());
+        rz = true;
+    }
+
+    if ( wholesize.width() < width + qsize.width()) {
+        //wholesize.setWidth(qsize2.width() + qsize.width());
+        rz = true;
+        ui->projGroupBox->resize(qsize);
+        wholesize.setWidth(width + qsize.width());
+    }
+
+    if ( rz )
+        this->resize(wholesize);
+
+  //  else {
+  //      qsize.setWidth(wholesize.width() - qsize2.width());
+  //      ui->myProjectionTableView->resize(qsize);
+  //  }
+
+    ui->myProjectionTableView->
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    //ui->myGamesListView->setResizeMode(QListView::Adjust);
+    //horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 CurrentWeekWidget::~CurrentWeekWidget() {
@@ -113,6 +169,8 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
     }
     invalidateFilters();
     updateCurrentFantasyPlayerProjections();
+    //ui->myProjectionTableView->resizeColumnsToContents();
+
 }
 
 void CurrentWeekWidget::onUserSwitchFantasyName(const std::string fantasyPlayerId){

@@ -30,6 +30,26 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myLeaderBaordTableView->setModel(&DataCache::instance()->leaderBoardModel());    
     ui->myLeaderBaordTableView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->myFantasyNamesCombo->setContextMenuPolicy(Qt::CustomContextMenu);
+
+
+    QString qs = "XXXXXX FantasyName Confirmed FantasyBits XXXXXX";
+    QSize qsize = ui->leaderboardBox->size();
+    int width = 0;
+    QLabel *label = ui->myFantasyNameLabel;
+    width += label->fontMetrics().boundingRect(qs).width();
+    width = label->fontMetrics().width(qs);
+    /*label = ui->myFantasyNameStatusLabel;
+    width += label->fontMetrics().boundingRect(label->text()).width();
+    label = ui->myFantasyBitsLabel;
+    width += label->fontMetrics().boundingRect(label->text()).width();
+    qsize.setWidth(width);
+    */
+    ui->leaderboardBox->setMaximumWidth(width);
+    //ui->leaderboardBox->resize(qsize);
+    //ui->myCurrentWeekView->adjustSize();
+    //ui->myStackedWidget->adjustSize();
+    this->adjustSize();
+
 }
 
 void MainWindow::initialize() {
@@ -209,6 +229,7 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
         if (!myLeaderBoardTimer.isActive()) myLeaderBoardTimer.start();
     }
     qDebug() << "glolive"  ;
+    ui->myLeaderBaordTableView->resizeColumnsToContents();
 }
 
 void MainWindow::refreshLeaderBoard(){
@@ -230,6 +251,9 @@ void MainWindow::navigateToWeek(int week)
         previousWeek();
     else
         nextWeek();
+
+    //this->adjustSize();
+
 }
 
 void MainWindow::OnMyFantasyNames(vector<fantasybit::MyFantasyName> names){
@@ -511,6 +535,8 @@ void MainWindow::doImportExport() {
 }
 
 void MainWindow::on_actionFantasyName_Import_Export_triggered()
-{
+{   
    doImportExport();
+
+
 }
