@@ -32,7 +32,7 @@
 #endif
 
 #ifndef MINOR_VERSION
-  #define MINOR_VERSION  0
+  #define MINOR_VERSION  2
 #endif
 
 #ifndef REVISION_NUMBER
@@ -40,7 +40,7 @@
 #endif
 
 #ifndef BUILD_NUMBER
-  #define BUILD_NUMBER   1
+  #define BUILD_NUMBER   2
 #endif
 
 #ifndef COPYRIGHT_DATE

@@ -821,8 +821,10 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     qDebug() << myMessageData.msg();
     myMessageData.Clear();
 
+
     myMessageData.set_msg(number +
-        " <a href=\"http://trading.football:8080/tradingfootball.dmg\">Upgrade required! Click to download (v1.2.1) osx64</a>");
+        " <a href=\"http://trading.football:8080/tradingfootball.dmg\">Upgrade available! Click to download (v1.2.2.2) osx64</a>");
+    myMessageData.set_lt(1220);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     qDebug() << myMessageData.msg();
@@ -830,6 +832,7 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
 
     myMessageData.set_msg("<a href=\"https://trading.football/downloads\">Upgrade required! Click to download latest version</a>");
     myMessageData.set_gt(15991245);
+    myMessageData.set_lt(1036);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     myMessageData.Clear();
