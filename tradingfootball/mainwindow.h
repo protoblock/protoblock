@@ -70,6 +70,8 @@ private slots:
 
     void on_actionFantasyName_Import_Export_triggered();
 
+    void on_toolButton_clicked();
+
 private:
     void initialize();
     void initDefaultGuiDisplay();

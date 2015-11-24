@@ -26,7 +26,7 @@ NameValuePairs<int>
     NameValuePairs<int> award{};
 	if (projections.size() == 0) {
         //LOG(lg, info) << "no projections agent " << agent << " gets balance " << result;
-        qInfo() << "no projections agent " << agent << " gets balance " << result;
+        //qInfo() << "no projections agent " << agent << " gets balance " << result;
         award[agent] = result * 100.0;
 		return award;
 	}
@@ -41,15 +41,15 @@ NameValuePairs<int>
         mean+=diff;
         diffs.emplace_back(diff);
 
-        qInfo() << pair.first << " projection " << pair.second << " diff " << diff;
+        //qInfo() << pair.first << " projection " << pair.second << " diff " << diff;
     }
   
     mean /= projections.size();
-    qInfo() << "mean " << mean;
+    //qInfo() << "mean " << mean;
 
     
     double maxdiff = min(mean, result);
-    qInfo() << " maxdiff " << maxdiff;
+    //qInfo() << " maxdiff " << maxdiff;
 
 
     double sum = 0.0;
@@ -60,7 +60,7 @@ NameValuePairs<int>
     }
 
     if (sum == 0.0) {
-        qInfo() << "no projections within 100% " << agent << " gets balance " << result;
+        //qInfo() << "no projections within 100% " << agent << " gets balance " << result;
         award[agent] = result * 100.0;
         return award;
     }
@@ -73,12 +73,12 @@ NameValuePairs<int>
             return insum + ((val <= maxdiff) ? (result-val) : 0.0);
         });
 
-    qInfo() << " sum " << sum << " sum2" << sum2;
+    //qInfo() << " sum " << sum << " sum2" << sum2;
     */
 
     double payout = result / sum;
 
-    qInfo() << " sum " << sum << " payout " << payout;
+    //qInfo() << " sum " << sum << " payout " << payout;
 
 	double total = 0.0;
     for (const auto& pair : projections) {
@@ -88,10 +88,10 @@ NameValuePairs<int>
 			double amount = (result - diff)*payout;
             award[pair.first] = amount * 100.0;
 			total += amount;
-            qInfo() << pair.first << " projection " << pair.second << " award " << amount;
+            //qInfo() << pair.first << " projection " << pair.second << " award " << amount;
 		}
 		else 
-            qInfo() << pair.first << " projection " << pair.second << "no award ";
+            ;//qInfo() << pair.first << " projection " << pair.second << "no award ";
     }
 
     if (result < total) {

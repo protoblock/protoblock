@@ -279,9 +279,11 @@ private:
     void initialize() {
         QStringList  headers;
         switch (myDisplayType) {
-        case WeekDisplayType::CurrentWeek:  headers << "Player Name" << "Pos"
-                                                    <<"Team"<<"Roster"
-                                                   << "Projection"
+        case WeekDisplayType::CurrentWeek:  headers << "Player Name"
+                                                    << " Pos "
+                                                    << " Team "
+                                                    << "  Roster  "
+                                                   <<  "Projection"
 #ifdef PLAYER_ID
                                                    << "Player ID"
 #endif
@@ -292,7 +294,7 @@ private:
         case WeekDisplayType::PreviousWeek: headers << "Player Name"
                                                     << "    Pos     "
                                                     << " Team "
-                                                   <<  "Result"
+                                                   <<  " Result "
                                                     << "PassTD"
                                                     << "PassYd"
                                                     << "RushTD"

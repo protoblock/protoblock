@@ -56,7 +56,7 @@ int domain(int argc, char *argv[]){
     TestingWindow dform;
 #endif
 
-    form.showMaximized();
+    form.show();
 
 #ifdef DATAAGENTGUI
     dform.show();

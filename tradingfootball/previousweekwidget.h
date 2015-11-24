@@ -27,6 +27,8 @@ private:
     int myCurrentWeek;
     std::vector<GameResult> myGamesResults;
     fantasybit::WeeklySchedule myWeeklySchedule;
+    void invalidateFilters();
+
 };
 
 #endif // PREVIOUSWEEKWIDGET_H

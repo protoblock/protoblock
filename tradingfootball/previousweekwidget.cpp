@@ -2,6 +2,7 @@
 #include "ui_previousweekwidget.h"
 #include "dataservice.h"
 #include "datacache.h"
+#include <Qt>
 
 PreviousWeekWidget::PreviousWeekWidget(QWidget *parent) :
     QWidget(parent),
@@ -47,9 +48,9 @@ PreviousWeekWidget::PreviousWeekWidget(QWidget *parent) :
     width += ui->myGamesListView->fontMetrics().boundingRect(fake2).width();
     //qsize2.setWidth(width);
     ui->scheduleGroupBox->setMaximumWidth(width);
-    ui->scheduleGroupBox->adjustSize();
+    //ui->scheduleGroupBox->adjustSize();
 
-    //ui->myProjectionTableView->setBaseSize(qsize);
+    //ui->myProjectionTab5leView->setBaseSize(qsize);
 
 }
 
@@ -67,7 +68,7 @@ void PreviousWeekWidget::setWeekData(int week){
 
     //myGameTableModel.removeAll();
     //myProjectionsModel.removeAll();
-
+    myGamesResults.clear();
     myCurrentWeek = week;
     DataCache::instance()->getWeeklySchedule(week,myWeeklySchedule);
 
@@ -228,9 +229,17 @@ void PreviousWeekWidget::setWeekData(int week){
 
         }
     }
-    //invalidateFilters();
+    invalidateFilters();
     ui->myProjectionTableView->resizeColumnsToContents();
-    ui->myProjectionTableView->selectColumn(4);
+    //ui->myProjectionTableView->selectColumn(3);
+    ui->myProjectionTableView->sortByColumn(3,Qt::SortOrder::DescendingOrder);
+    //myProjectionsModel.sort(3,Qt::DescendingOrder);
 
+}
+
+void PreviousWeekWidget::invalidateFilters(){
+    //myGamesSelectionModel.invalidate();
+    myProjectionFilterProxy.data()->enable();
+    myProjectionFilterProxy.data()->invalidate();
 }
 

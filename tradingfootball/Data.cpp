@@ -243,10 +243,21 @@ void NFLStateData::OnPlayerStatus(const std::string &pid,PlayerStatus ps) {
 }
 
 void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs) {
+    GameStatus use;
+    if ( gs.status() == GameStatus_Status_SCHEDULED ) {
+        use.CopyFrom(gs);
+    }
+    else {
+        use = GetUpdatedGameStatus(gameid);
+        if ( use.status() == GameStatus_Status_SCHEDULED ) {
+            use.set_status(gs.status());
+        }
+    }
+
     string key = "gamestatus:" + gameid;
-    if (!statusstore->Put(write_sync, key, gs.SerializeAsString()).ok())
+    if (!statusstore->Put(write_sync, key, use.SerializeAsString()).ok())
         qWarning() << "!ok" << "cant update status";
-    qDebug() << key << QString::fromStdString(gs.DebugString());
+    qDebug() << key << QString::fromStdString(use.DebugString());
 }
 
 void NFLStateData::OnWeekOver(int in) {

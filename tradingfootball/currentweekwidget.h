@@ -28,7 +28,7 @@ public:
     void refreshFantasyNamesProjections(const QString & fantasyName);
     GamesFilter gamesFilter(){ return myGameModelFilter.filter(); }
     int gameCount(){ return myGameModelFilter.rowCount(); }
-
+    QSize fixSize();
 
 signals:
 

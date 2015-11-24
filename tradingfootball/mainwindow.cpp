@@ -32,24 +32,6 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myFantasyNamesCombo->setContextMenuPolicy(Qt::CustomContextMenu);
 
 
-    QString qs = "XXXXXX FantasyName Confirmed FantasyBits XXXXXX";
-    QSize qsize = ui->leaderboardBox->size();
-    int width = 0;
-    QLabel *label = ui->myFantasyNameLabel;
-    width += label->fontMetrics().boundingRect(qs).width();
-    width = label->fontMetrics().width(qs);
-    /*label = ui->myFantasyNameStatusLabel;
-    width += label->fontMetrics().boundingRect(label->text()).width();
-    label = ui->myFantasyBitsLabel;
-    width += label->fontMetrics().boundingRect(label->text()).width();
-    qsize.setWidth(width);
-    */
-    ui->leaderboardBox->setMaximumWidth(width);
-    //ui->leaderboardBox->resize(qsize);
-    //ui->myCurrentWeekView->adjustSize();
-    //ui->myStackedWidget->adjustSize();
-    this->adjustSize();
-
 }
 
 void MainWindow::initialize() {
@@ -145,6 +127,47 @@ void MainWindow::initialize() {
         setDisabled(true);
         return;
     }
+
+    QSize qsize = ui->myCurrentWeekWidget->fixSize();
+    //ui->myCurrentWeekWidget->adjustSize();
+    QString qs2 = "XXXXXXXXXXXX";
+    QString qs = "FantasyName Confirmed FantasyBits ";
+
+    //QSize qsize = ui->leaderboardBox->size();
+    int width = 0;
+    QLabel *label = ui->myFantasyNameLabel;
+    //width += label->fontMetrics().boundingRect(qs).width();
+    width = label->fontMetrics().width(qs);
+    QSize qsz2;
+    qsz2.setHeight(qsize.height());
+    qsz2.setWidth(width);
+    ui->leaderboardBox->setBaseSize(qsz2);
+    qsize.setHeight(qsize.width()+width);
+    /*label = ui->myFantasyNameStatusLabel;
+    width += label->fontMetrics().boundingRect(label->text()).width();
+    label = ui->myFantasyBitsLabel;
+    width += label->fontMetrics().boundingRect(label->text()).width();
+    qsize.setWidth(width);
+    */
+    width += 2*label->fontMetrics().width(qs2);
+    ui->leaderboardBox->setMaximumWidth(width);
+    qsize.setWidth(width);
+    //ui->leaderboardBox->SE(qsize);
+    //ui->myCurrentWeekView->adjustSize();
+    //ui->myStackedWidget->adjustSize();
+    //this->adjustSize();
+
+    ui->centralwidget->resize(qsize);
+    this->adjustSize();
+    //this->showMaximized();
+    width = ui->mySeasonLabel->fontMetrics().width("2015");
+
+    ui->myPreviousWeek->setMinimumHeight(width);
+    ui->myPreviousWeek->setMinimumWidth(width);
+
+    ui->myNextWeek->setMinimumHeight(width);
+    ui->myNextWeek->setMinimumWidth(width);
+
 }
 
 
@@ -166,7 +189,10 @@ void MainWindow::nextWeek(){
 
 void MainWindow::previousWeek() {    
     DataCache::instance()->leaderBoardModel().setColumnVisible("Action",false);
-    ui->myStackedWidget->setCurrentWidget(ui->myPreviousWeekView);
+    if ( ui->myStackedWidget->currentWidget() == ui->myPreviousWeekView)
+        emit ui->myStackedWidget->currentChanged(ui->myStackedWidget->currentIndex());
+    else
+        ui->myStackedWidget->setCurrentWidget(ui->myPreviousWeekView);
     ui->myPreviousWeekWidget->setWeekData(myCurrentWeek);
 }
 
@@ -244,7 +270,7 @@ void MainWindow::navigateToWeek(int week)
     QString currentWeekNotice = myGlobalState.week()==myCurrentWeek?" (live) ":"";
     ui->myWeekLabel->setText(QString("Week %1").arg(myCurrentWeek)+currentWeekNotice);
     ui->myPreviousWeek->setDisabled(myCurrentWeek==1);
-    ui->myNextWeek->setDisabled(myCurrentWeek==17);
+    ui->myNextWeek->setDisabled(myCurrentWeek==16);
     if (myCurrentWeek==myGlobalState.week())
         currentWeek();
     else if (myCurrentWeek < myGlobalState.week())
@@ -538,5 +564,9 @@ void MainWindow::on_actionFantasyName_Import_Export_triggered()
 {   
    doImportExport();
 
+}
 
+void MainWindow::on_toolButton_clicked()
+{
+    doImportExport();
 }

@@ -57,6 +57,8 @@ public:
 	}
 
     void getWeeklySchedule(int week,fantasybit::WeeklySchedule & schedule){
+        //schedule = DataService::instance()->GetWeeklySchedule(week);
+        //return;
         std::unordered_map<uint,fantasybit::WeeklySchedule>::const_iterator found =
                 myWeeklySchedulesCache.find(week);
         //not found
