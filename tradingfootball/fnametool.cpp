@@ -55,7 +55,7 @@ void fnametool::on_exportButton_clicked()
         msgBox.exec();
     }
     else {
-        text = "<P><FONT COLOR='#FF0000' style='font-size:14px'>" \
+        text = "<P><FONT COLOR='#FF0000' style='font-size:100%'>" \
         "Display Secret on Screen? <br><br>" \
         "A 12 word secret mnemonic is the master private key that controls your Fantasy Name. <br><br>" \
         "This is your \"brain wallet\" Write it down. Keep it safe. Memorize it. Dont share it. <br><br>" \

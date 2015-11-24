@@ -10,8 +10,16 @@
     <height>93</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>FantasyBit Blockchain</string>
+  </property>
+  <property name="toolTip">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trading.Fooball is a blockchain based fantasy footballe game. The goal of the game is to aquire as many FantasyBiyts as possible. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;FantasyBits are digital tokens, which may have 0 value. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Read our blog at:  satoshifantasy.com &lt;/p&gt;&lt;p&gt;Follow us on twitter #tradingball. &lt;/p&gt;&lt;p&gt;Sign up for updates at info@satoshifantasy.com &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" rowspan="2">
@@ -77,13 +85,9 @@
     </widget>
    </item>
   </layout>
+  <zorder>myMessageLabel</zorder>
   <zorder>progressBar</zorder>
-  <zorder>label</zorder>
-  <zorder>label_2</zorder>
-  <zorder>height</zorder>
-  <zorder>num</zorder>
   <zorder>myAnimationLabel</zorder>
-  <zorder>label</zorder>
  </widget>
  <resources/>
  <connections/>
