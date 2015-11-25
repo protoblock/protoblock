@@ -10,6 +10,8 @@
 #include "RunGuard.h"
 #include "mainwindow.h"
 #include "core.h"
+#include <QDesktopWidget>
+
 #ifdef DATAAGENTGUI
     #include "testingwindow.h"
 #endif
@@ -56,6 +58,10 @@ int domain(int argc, char *argv[]){
     TestingWindow dform;
 #endif
 
+    QRect screenGeometry = QApplication::desktop()->screenGeometry();
+    int x = (screenGeometry.width()-form.width()) / 2;
+    int y = (screenGeometry.height()-form.height()) / 2;
+    form.move(x, y);
     form.show();
 
 #ifdef DATAAGENTGUI

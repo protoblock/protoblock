@@ -30,8 +30,9 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     //set projection filter
     myProjectionFilterProxy.reset(new ProjectionsViewFilterProxyModel(ui->myPositionComboBox,&myGameModelFilter,&myGamesSelectionModel));
     myProjectionFilterProxy.data()->setSourceModel(&myProjectionsModel);
-    myProjectionFilterProxy.data()->setDynamicSortFilter(true);
+    myProjectionFilterProxy.data()->setDynamicSortFilter(false);
     myProjectionFilterProxy.data()->setSortRole(Qt::UserRole);
+    //myProjectionFilterProxy->setDynamicSortFilter(true);
     ui->myProjectionTableView->setModel(myProjectionFilterProxy.data());
 
     //start with upcoming games filter
@@ -44,8 +45,13 @@ CurrentWeekWidget::CurrentWeekWidget(QWidget *parent) :
     myProjectionDelegate.setTableView(ui->myProjectionTableView);
     ui->myProjectionTableView->setItemDelegateForColumn(4,&myProjectionDelegate);
     //QObject::connect(&myProjectionDelegate,SIGNAL(commitData(QWidget*)),this,SLOT(onProjectionEnterPressed(QWidget *)));
-
 }
+
+void CurrentWeekWidget::onProjectionEnterPressed(QWidget *) {
+    //myProjectionFilterProxy.data()->setDynamicSortFilter(false);
+    //myProjectionFilterProxy->setDynamicSortFilter(false);
+}
+
 QSize CurrentWeekWidget::fixSize() {
     int width = 0;
     for ( auto h : myProjectionsModel.horizontalHeaders() )
@@ -183,10 +189,10 @@ void CurrentWeekWidget::setCurrentWeekData(fantasybit::GlobalState state){
     updateCurrentFantasyPlayerProjections();
     //ui->myProjectionTableView->resizeColumnsToContents();
     //ui->myProjectionTableView->selectColumn(4);
-    ui->myProjectionTableView->sortByColumn(4,Qt::SortOrder::DescendingOrder);
-
-
-
+    //ui->myProjectionTableView->sortByColumn(4,Qt::SortOrder::DescendingOrder);
+    //ui->myProjectionTableView->sortByColumn(4,Qt::SortOrder::DescendingOrder);
+    //myProjectionsModel.sort();
+    //myProjectionFilterProxy->sort(4,Qt::SortOrder::DescendingOrder);
 }
 
 void CurrentWeekWidget::onUserSwitchFantasyName(const std::string fantasyPlayerId){

@@ -15,7 +15,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
     //PlayerProjectionWidget *editor = new PlayerProjectionWidget(parent);
     editor->setFrame(false);
     editor->setMinimum(0);
-    editor->setMaximum(100);   
+    editor->setMaximum(50);
     editor->setEnabled(myEnabled);
     editor->setProperty("EditedIndex",index);
     return editor;
