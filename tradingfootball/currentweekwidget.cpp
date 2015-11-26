@@ -119,6 +119,73 @@ QSize CurrentWeekWidget::fixSize() {
     //horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 }
+QSize CurrentWeekWidget::fixSize() {
+    int width = 0;
+    for ( auto h : myProjectionsModel.horizontalHeaders() )
+        width += ui->myProjectionTableView->fontMetrics().width(h);
+    int myheight = ui->myGamesListView->fontMetrics().height();
+
+    QSize qsize = ui->myProjectionTableView->size();
+    qsize.setHeight(myheight*30);
+    qsize.setWidth(width);
+    ui->myProjectionTableView->setBaseSize(qsize);
+    ui->myProjectionTableView->setMinimumWidth(width*2);
+    //ui->myProjectionTableView->resizeColumnsToContents();
+    //ui->myProjectionTableView->adjustSize();
+    //ui->projGroupBox->adjustSize();
+
+
+    QSize qsize2;// = ui->myGamesListView->size();
+    QString fake = "XXX @ XXX - Xxx 0:00 AM ";
+    width = ui->myGamesListView->fontMetrics().width(fake);
+    int height = ui->myGamesListView->fontMetrics().height();
+    //width = rect.width();
+    qsize2.setWidth(width);
+    qsize2.setHeight(height*17);
+    ui->myGamesListView->setMinimumSize(qsize2);
+    QString fake2 = "XXXXXXXX";
+    width += ui->myGamesListView->fontMetrics().width(fake2);
+    //qsize2.setWidth(width);
+    ui->scheduleGroupBox->setMaximumWidth(width);
+
+    //ui->myGamesListView->resize(qsize2);
+    //ui->scheduleGroupBox->adjustSize();
+
+
+    //ui->myProjectionTableView->setBaseSize(qsize);
+/**/
+    QSize wholesize = this->size();
+    bool rz = false;
+    if ( wholesize.height() < qsize2.height()) {
+        wholesize.setHeight(qsize2.height());
+        rz = true;
+    }
+
+    if ( wholesize.width() < width + qsize.width()) {
+        //wholesize.setWidth(qsize2.width() + qsize.width());
+        rz = true;
+        ui->projGroupBox->resize(qsize);
+        wholesize.setWidth(width + qsize.width());
+    }
+
+    if ( rz )
+        this->resize(wholesize);
+
+    return wholesize;
+/**/
+  //  else {
+  //      qsize.setWidth(wholesize.width() - qsize2.width());
+  //      ui->myProjectionTableView->resize(qsize);
+  //  }
+
+    //ui->myProjectionTableView->
+    //horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    //this->adjustSize();
+    //ui->myGamesListView->setResizeMode(QListView::Adjust);
+    //horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+}
 
 CurrentWeekWidget::~CurrentWeekWidget() {
     delete ui;
@@ -393,6 +460,10 @@ void CurrentWeekWidget::onSendFantasyNameProjection(const std::string & fantasyN
             int knownprojection = vMyProjection.toInt();
             if ( knownprojection == projection)
                 continue;
+
+            if ( doMerge && knownprojection > 0 )
+                continue;
+
          }
 
         vector<FantasyBitProj> &vproj = projbygame[gameId.toStdString()];
@@ -407,7 +478,14 @@ void CurrentWeekWidget::onSendFantasyNameProjection(const std::string & fantasyN
     for ( auto &vg : projbygame)
         emit NewProjection(vg.second);
 
-     QMessageBox::information(this,APPLICATION_NAME,QString("%1 projections have been copied and sent.").arg(projectionsCount));
+    if ( doMerge )
+        QMessageBox::information(this,
+            APPLICATION_NAME,QString("%1 projections have been merged and sent.").arg(projectionsCount));
+    else
+        QMessageBox::information(this,
+            APPLICATION_NAME,QString("%1 projections have been copied and sent.").arg(projectionsCount));
+
+        //ui->mySendProjectionButton->hasFocus();
 }
 
 
@@ -426,6 +504,7 @@ void CurrentWeekWidget::refreshFantasyNamesProjections(const QString & fantasyNa
 void CurrentWeekWidget::onControlMessage(QString message){
     ui->myControlMessageLabel->setText(message);
 }
+
 
 #ifdef MIKECLAYIMPORT
 #include "playerloader.h"

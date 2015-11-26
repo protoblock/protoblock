@@ -168,6 +168,8 @@ void MainWindow::initialize() {
     ui->myNextWeek->setMinimumHeight(width);
     ui->myNextWeek->setMinimumWidth(width);
 
+    setSlider(sliderright);
+
 }
 
 
@@ -256,6 +258,9 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
     }
     qDebug() << "glolive"  ;
     ui->myLeaderBaordTableView->resizeColumnsToContents();
+    ui->myLeaderBaordTableView->horizontalHeader()->
+            setSectionResizeMode(QHeaderView::Stretch);
+
 }
 
 void MainWindow::refreshLeaderBoard(){
@@ -479,7 +484,12 @@ void MainWindow::showLeaderboardContextualMenu(const QPoint & point){
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::NoIcon);
     msgBox.setWindowTitle(APPLICATION_NAME);
-    QString text = QString("Copy %1's projections and send them as yours %2 ?").arg(fantasyName).arg(currentFantasyName);
+    QString text;
+
+    if ( ui->myCurrentWeekWidget->doMerge)
+        text = QString("Merge %1's projections with yours %2?").arg(fantasyName).arg(currentFantasyName);
+    else
+        text = QString("Clone all %1's projections and aend them as yours %2 ?").arg(fantasyName).arg(currentFantasyName);
     //QCheckBox * chb = new QCheckBox("Do not show this again");
     //msgBox.setCheckBox(chb);
     msgBox.setText(text);
@@ -570,3 +580,146 @@ void MainWindow::on_toolButton_clicked()
 {
     doImportExport();
 }
+
+/*
+void MainWindow::on_horizontalSlider_sliderPressed()
+{
+    sliderPressed = true;
+    sliderReleased = false;
+}
+*/
+
+/*
+void MainWindow::on_horizontalSlider_sliderMoved(int position) {
+    return;
+    if ( sliderPressed || !sliderReleased) {
+        sliderPressed = false;
+        if ( sliderright && position < ui->horizontalSlider->maximum())
+            setSlider(ui->horizontalSlider->minimum());
+        else if ( !sliderright && position > ui->horizontalSlider->minimum())
+            setSlider(ui->horizontalSlider->maximum());
+    }
+}
+*/
+void MainWindow::setSlider(bool right)
+{
+    //return;
+    //if ( changingSlider )
+   changingSlider = true;
+    //sliderReleased = true;
+    QPalette onp;
+    onp.setColor(QPalette::Window, Qt::darkGreen);
+    onp.setColor(QPalette::WindowText, Qt::white);
+
+    QPalette offp;
+    offp.setColor(QPalette::Window, Qt::darkGray);
+    offp.setColor(QPalette::WindowText, Qt::gray);
+
+    auto onl = ui->clonel;
+    auto offl = ui->mergel;
+
+    if ( right ) {
+        sliderright = true;
+        ui->horizontalSlider->setValue(ui->horizontalSlider->minimum());
+        ui->horizontalSlider->setSliderPosition(ui->horizontalSlider->minimum());
+
+        onl = ui->mergel;
+        offl = ui->clonel;
+        ui->myCurrentWeekWidget->doMerge = true;
+    }
+    else {
+        sliderright = false;
+        ui->horizontalSlider->setSliderPosition(ui->horizontalSlider->maximum());
+        ui->horizontalSlider->setValue(ui->horizontalSlider->maximum());
+        ui->myCurrentWeekWidget->doMerge = false;
+    }
+
+    onl->setAutoFillBackground(true);
+    offl->setAutoFillBackground(true);
+    onl->setPalette(onp);
+    offl->setPalette(offp);
+    changingSlider = false;
+}
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    if ( !sliderright && value < ui->horizontalSlider->maximum())
+        setSlider(true);
+    else if ( sliderright && value > ui->horizontalSlider->minimum())
+        setSlider(false);
+
+    return;
+
+    qDebug() << " changed value " << value;
+    return;
+    if ( changingSlider ) return;
+
+    if ( !sliderright && value < ui->horizontalSlider->maximum())
+        setSlider(true);
+    else if ( sliderright && value > ui->horizontalSlider->minimum())
+        setSlider(false);
+
+    return;
+    if ( sliderReleased ) {
+        if ( sliderright && value == ui->horizontalSlider->maximum()  )
+            sliderReleased = false;
+        if ( !sliderright && value == ui->horizontalSlider->minimum()  )
+            sliderReleased = false;
+        return;
+    }
+    else {
+        if ( sliderright && value > ui->horizontalSlider->minimum()  )
+            sliderReleased = true;
+        if ( !sliderright && value < ui->horizontalSlider->maximum()  )
+            sliderReleased = true;
+
+        if ( !sliderright && value < ui->horizontalSlider->maximum())
+            setSlider(true);
+        else if ( sliderright && value > ui->horizontalSlider->minimum())
+            setSlider(false);
+    }
+
+//    if ( changingSlider ) return;
+//        on_horizontalSlider_sliderMoved(value);
+}
+
+/*
+void MainWindow::on_horizontalSlider_sliderReleased()
+{
+    setSlider(!sliderright);
+    return;
+}
+*/
+            /*
+    if ( !sliderright && value  ui->horizontalSlider->maximum())
+        setSlider(true);
+    else if ( sliderright && value > ui->horizontalSlider->minimum())
+        setSlider(false);
+
+    return;
+    sliderReleased = true;
+*/
+    //return;
+    //if ( sliderPressed ) {
+    //    sliderPressed = false;
+
+    //if ( changingSlider ) return;
+    //if ( ui->horizontalSlider->value() == 1)
+        //setSlider(!sliderright);
+    //else
+    //    setSlider(1);
+
+
+/*
+void MainWindow::on_horizontalSlider_actionTriggered(int action)
+{
+    return;
+    if ( !sliderright && ui->horizontalSlider->sliderPosition()
+         < ui->horizontalSlider->maximum())
+        setSlider(true);
+    else if ( sliderright && ui->horizontalSlider->sliderPosition()
+              > ui->horizontalSlider->minimum())
+        setSlider(false);
+}
+*/
+

@@ -67,6 +67,8 @@ private:
     GlobalState myGlobalState;
     std::vector<fantasybit::GameRoster> myGameRosters;    
     SpinBoxDelegate myProjectionDelegate;
+public:
+    bool doMerge = false;
 };
 
 #endif // CURRENTWEEKWIDGET_H

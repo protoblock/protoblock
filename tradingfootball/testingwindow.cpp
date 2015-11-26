@@ -814,8 +814,8 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
 
 
     myMessageData.set_msg(number +
-        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">Upgrade available! Click to download (v1.2.2.1) win64</a>");
-    myMessageData.set_lt(1220);
+        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">Upgrade available! Click to download (v1.2.2) win64</a>");
+    myMessageData.set_lt(1223);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     qDebug() << myMessageData.msg();
@@ -823,8 +823,8 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
 
 
     myMessageData.set_msg(number +
-        " <a href=\"http://trading.football:8080/tradingfootball.dmg\">Upgrade available! Click to download (v1.2.2.2) osx64</a>");
-    myMessageData.set_lt(1220);
+        " <a href=\"http://trading.football:8080/tradingfootball.dmg\">Upgrade available! Click to download (v1.2.2.3) osx64</a>");
+    myMessageData.set_lt(1223);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     qDebug() << myMessageData.msg();

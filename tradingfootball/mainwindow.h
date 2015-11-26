@@ -72,6 +72,10 @@ private slots:
 
     void on_toolButton_clicked();
 
+    //void on_horizontalSlider_sliderReleased();
+
+    void on_horizontalSlider_valueChanged(int value);
+
 private:
     void initialize();
     void initDefaultGuiDisplay();
@@ -104,6 +108,10 @@ private:
 		}
 	}
 
+    bool changingSlider = false;
+    bool sliderPressed = false;
+    bool sliderReleased = false;
+
     MainLAPIWorker *  myLAPIWorker;
     Ui::MainWindow *ui;    
     uint myCurrentWeek;
@@ -114,6 +122,8 @@ private:
     QTimer myLeaderBoardTimer; 
     bool myIamLive = false;    
 	QMap<QString, fantasybit::MyFantasyName *> myFantasyNames;
+    void setSlider(bool position);
+    bool sliderright = true;
 };
 
 #endif // MAINWINDOW_H
