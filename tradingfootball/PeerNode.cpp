@@ -166,8 +166,9 @@ bool Node::SyncTo(int32_t gh) {
         if (count > 50) return false;
 
         qDebug() << current_hight << global_height;
-        auto bend = current_hight+50;
+        auto bend = current_hight+200;
         auto vsb = getGlobalBlock(current_hight+1, bend < global_height ? bend : global_height);
+
         if ( vsb.size() == 0 ) {
             qCritical() << " no getGlobalBlockNum" << current_hight+1;
             QThread::currentThread()->msleep(100 * count++);

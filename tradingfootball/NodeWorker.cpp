@@ -27,6 +27,7 @@
     }
 
     void NodeWorker::init(){
+        syncing = true;
         qDebug("NodeWorker Thread started");
 
         bool ret = node.Sync();
@@ -53,9 +54,12 @@
             else
                 emit BlockError(last);
         }
+        syncing = false;
     }
 
     void NodeWorker::TryNext() {
+        if ( syncing ) return;
+        syncing = true;
         qDebug() << this->thread();
         auto gnum = node.getLastGlobalBlockNum();
         if ( !gnum )
@@ -75,4 +79,5 @@
                 }
             }
         }
+        syncing = false;
     }

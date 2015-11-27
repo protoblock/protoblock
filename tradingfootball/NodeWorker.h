@@ -20,6 +20,7 @@ class NodeWorker : public QObject
     Q_OBJECT
 
     int32_t hi = 0;
+    bool syncing = false;
 public:
     NodeWorker(QObject * parent=0);
     fantasybit::Node node;
