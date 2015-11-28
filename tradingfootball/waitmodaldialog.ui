@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>260</width>
-    <height>93</height>
+    <height>97</height>
    </rect>
   </property>
   <property name="font">
@@ -19,7 +19,7 @@
    <string>FantasyBit Blockchain</string>
   </property>
   <property name="toolTip">
-   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trading.Fooball is a blockchain based fantasy footballe game. The goal of the game is to aquire as many FantasyBiyts as possible. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;FantasyBits are digital tokens, which may have 0 value. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Read our blog at:  satoshifantasy.com &lt;/p&gt;&lt;p&gt;Follow us on twitter #tradingball. &lt;/p&gt;&lt;p&gt;Sign up for updates at info@satoshifantasy.com &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trading.Football is a blockchain based fantasy football  game. The goal of the game is to aquire as many FantasyBiyts as possible. &lt;/p&gt;&lt;p&gt;FantasyBits are digital tokens, which may have 0 value. &lt;/p&gt;&lt;p&gt;Read our blog at: satoshifantasy.com. Follow us on twitter #tradingball. &lt;/p&gt;&lt;p&gt;Sign up for updates at info@satoshifantasy.com &lt;/p&gt;&lt;p&gt;Get latest updates at https://trading.football/ &lt;/p&gt;&lt;p&gt;30 second instructions: &lt;/p&gt;&lt;p&gt;1. caim your name&lt;/p&gt;&lt;p&gt;2. right click on &amp;quot;MikeClayNFL&amp;quot; or &amp;quot;FantasyFootballNerd&amp;quot; &lt;/p&gt;&lt;p&gt;Level2 trading launch date: 12/15/15 week 15 &lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" rowspan="2">
