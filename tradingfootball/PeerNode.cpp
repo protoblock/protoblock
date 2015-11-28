@@ -166,7 +166,12 @@ bool Node::SyncTo(int32_t gh) {
         if (count > 50) return false;
 
         qDebug() << current_hight << global_height;
+#ifdef Q_OS_MAC
         auto bend = current_hight+200;
+#endif
+#ifdef Q_OS_WIN
+        auto bend = current_hight+50;
+#endif
         auto vsb = getGlobalBlock(current_hight+1, bend < global_height ? bend : global_height);
 
         if ( vsb.size() == 0 ) {
