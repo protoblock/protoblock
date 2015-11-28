@@ -36,11 +36,11 @@
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 2
+  #define REVISION_NUMBER 3
 #endif
 
 #ifndef BUILD_NUMBER
-  #define BUILD_NUMBER   3
+  #define BUILD_NUMBER   0
 #endif
 
 #ifndef COPYRIGHT_DATE
