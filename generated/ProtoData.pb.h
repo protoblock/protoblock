@@ -27,6 +27,7 @@
 #include <google/protobuf/unknown_field_set.h>
 #include "StaticData.pb.h"
 #include "StatusData.pb.h"
+#include "ExData.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace fantasybit {
@@ -67,6 +68,12 @@ class DataTransition;
 class TeamState;
 class DeltaData;
 class MessageData;
+class StampedTrans;
+class ExchangeOrder;
+class OrderUnique;
+class OrderDeets;
+class InsideUnique;
+class TimeTransition;
 
 enum OutData_Type {
   OutData_Type_MYFANTASYNAME = 1,
@@ -256,6 +263,45 @@ inline bool DeltaData_Type_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<DeltaData_Type>(
     DeltaData_Type_descriptor(), name, value);
 }
+enum ExchangeOrder_Type {
+  ExchangeOrder_Type_NEW = 1,
+  ExchangeOrder_Type_CANCEL = 2,
+  ExchangeOrder_Type_REPLACE = 3
+};
+bool ExchangeOrder_Type_IsValid(int value);
+const ExchangeOrder_Type ExchangeOrder_Type_Type_MIN = ExchangeOrder_Type_NEW;
+const ExchangeOrder_Type ExchangeOrder_Type_Type_MAX = ExchangeOrder_Type_REPLACE;
+const int ExchangeOrder_Type_Type_ARRAYSIZE = ExchangeOrder_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ExchangeOrder_Type_descriptor();
+inline const ::std::string& ExchangeOrder_Type_Name(ExchangeOrder_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ExchangeOrder_Type_descriptor(), value);
+}
+inline bool ExchangeOrder_Type_Parse(
+    const ::std::string& name, ExchangeOrder_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ExchangeOrder_Type>(
+    ExchangeOrder_Type_descriptor(), name, value);
+}
+enum TimeTransition_Type {
+  TimeTransition_Type_TRADEOPEN = 2,
+  TimeTransition_Type_TRADECLOSE = 3
+};
+bool TimeTransition_Type_IsValid(int value);
+const TimeTransition_Type TimeTransition_Type_Type_MIN = TimeTransition_Type_TRADEOPEN;
+const TimeTransition_Type TimeTransition_Type_Type_MAX = TimeTransition_Type_TRADECLOSE;
+const int TimeTransition_Type_Type_ARRAYSIZE = TimeTransition_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* TimeTransition_Type_descriptor();
+inline const ::std::string& TimeTransition_Type_Name(TimeTransition_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    TimeTransition_Type_descriptor(), value);
+}
+inline bool TimeTransition_Type_Parse(
+    const ::std::string& name, TimeTransition_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<TimeTransition_Type>(
+    TimeTransition_Type_descriptor(), name, value);
+}
 enum MyNameStatus {
   none = 1,
   notavil = 2,
@@ -283,11 +329,15 @@ enum TransType {
   PROJECTION = 1,
   RESULT = 2,
   DATA = 3,
-  PROJECTION_BLOCK = 4
+  PROJECTION_BLOCK = 4,
+  MASTER_NAME = 5,
+  TIME = 6,
+  STAMPED = 7,
+  EXCHANGE = 8
 };
 bool TransType_IsValid(int value);
 const TransType TransType_MIN = NAME;
-const TransType TransType_MAX = PROJECTION_BLOCK;
+const TransType TransType_MAX = EXCHANGE;
 const int TransType_ARRAYSIZE = TransType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* TransType_descriptor();
@@ -4025,6 +4075,815 @@ class MessageData : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static MessageData* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class StampedTrans : public ::google::protobuf::Message {
+ public:
+  StampedTrans();
+  virtual ~StampedTrans();
+
+  StampedTrans(const StampedTrans& from);
+
+  inline StampedTrans& operator=(const StampedTrans& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const StampedTrans& default_instance();
+
+  void Swap(StampedTrans* other);
+
+  // implements Message ----------------------------------------------
+
+  StampedTrans* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const StampedTrans& from);
+  void MergeFrom(const StampedTrans& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 timestamp = 10;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 10;
+  inline ::google::protobuf::int32 timestamp() const;
+  inline void set_timestamp(::google::protobuf::int32 value);
+
+  // optional int32 seqnum = 20;
+  inline bool has_seqnum() const;
+  inline void clear_seqnum();
+  static const int kSeqnumFieldNumber = 20;
+  inline ::google::protobuf::int32 seqnum() const;
+  inline void set_seqnum(::google::protobuf::int32 value);
+
+  // optional int32 prevseq = 21;
+  inline bool has_prevseq() const;
+  inline void clear_prevseq();
+  static const int kPrevseqFieldNumber = 21;
+  inline ::google::protobuf::int32 prevseq() const;
+  inline void set_prevseq(::google::protobuf::int32 value);
+
+  // optional .fantasybit.SignedTransaction signed_orig = 30;
+  inline bool has_signed_orig() const;
+  inline void clear_signed_orig();
+  static const int kSignedOrigFieldNumber = 30;
+  inline const ::fantasybit::SignedTransaction& signed_orig() const;
+  inline ::fantasybit::SignedTransaction* mutable_signed_orig();
+  inline ::fantasybit::SignedTransaction* release_signed_orig();
+  inline void set_allocated_signed_orig(::fantasybit::SignedTransaction* signed_orig);
+
+  static const int kStampedTransFieldNumber = 300;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::StampedTrans >, 11, false >
+    stamped_trans;
+  // @@protoc_insertion_point(class_scope:fantasybit.StampedTrans)
+ private:
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
+  inline void set_has_seqnum();
+  inline void clear_has_seqnum();
+  inline void set_has_prevseq();
+  inline void clear_has_prevseq();
+  inline void set_has_signed_orig();
+  inline void clear_has_signed_orig();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 timestamp_;
+  ::google::protobuf::int32 seqnum_;
+  ::fantasybit::SignedTransaction* signed_orig_;
+  ::google::protobuf::int32 prevseq_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static StampedTrans* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ExchangeOrder : public ::google::protobuf::Message {
+ public:
+  ExchangeOrder();
+  virtual ~ExchangeOrder();
+
+  ExchangeOrder(const ExchangeOrder& from);
+
+  inline ExchangeOrder& operator=(const ExchangeOrder& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ExchangeOrder& default_instance();
+
+  void Swap(ExchangeOrder* other);
+
+  // implements Message ----------------------------------------------
+
+  ExchangeOrder* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ExchangeOrder& from);
+  void MergeFrom(const ExchangeOrder& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef ExchangeOrder_Type Type;
+  static const Type NEW = ExchangeOrder_Type_NEW;
+  static const Type CANCEL = ExchangeOrder_Type_CANCEL;
+  static const Type REPLACE = ExchangeOrder_Type_REPLACE;
+  static inline bool Type_IsValid(int value) {
+    return ExchangeOrder_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    ExchangeOrder_Type_Type_MIN;
+  static const Type Type_MAX =
+    ExchangeOrder_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    ExchangeOrder_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return ExchangeOrder_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return ExchangeOrder_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return ExchangeOrder_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.ExchangeOrder.Type type = 10;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 10;
+  inline ::fantasybit::ExchangeOrder_Type type() const;
+  inline void set_type(::fantasybit::ExchangeOrder_Type value);
+
+  // optional string playerid = 40;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 40;
+  inline const ::std::string& playerid() const;
+  inline void set_playerid(const ::std::string& value);
+  inline void set_playerid(const char* value);
+  inline void set_playerid(const char* value, size_t size);
+  inline ::std::string* mutable_playerid();
+  inline ::std::string* release_playerid();
+  inline void set_allocated_playerid(::std::string* playerid);
+
+  // optional .fantasybit.OrderCore core = 50;
+  inline bool has_core() const;
+  inline void clear_core();
+  static const int kCoreFieldNumber = 50;
+  inline const ::fantasybit::OrderCore& core() const;
+  inline ::fantasybit::OrderCore* mutable_core();
+  inline ::fantasybit::OrderCore* release_core();
+  inline void set_allocated_core(::fantasybit::OrderCore* core);
+
+  // optional int32 cancel_oref = 100;
+  inline bool has_cancel_oref() const;
+  inline void clear_cancel_oref();
+  static const int kCancelOrefFieldNumber = 100;
+  inline ::google::protobuf::int32 cancel_oref() const;
+  inline void set_cancel_oref(::google::protobuf::int32 value);
+
+  GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(ExchangeOrder)
+  static const int kExchangeOrderFieldNumber = 310;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ExchangeOrder >, 11, false >
+    exchange_order;
+  // @@protoc_insertion_point(class_scope:fantasybit.ExchangeOrder)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+  inline void set_has_core();
+  inline void clear_has_core();
+  inline void set_has_cancel_oref();
+  inline void clear_has_cancel_oref();
+
+  ::google::protobuf::internal::ExtensionSet _extensions_;
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* playerid_;
+  int type_;
+  ::google::protobuf::int32 cancel_oref_;
+  ::fantasybit::OrderCore* core_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ExchangeOrder* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class OrderUnique : public ::google::protobuf::Message {
+ public:
+  OrderUnique();
+  virtual ~OrderUnique();
+
+  OrderUnique(const OrderUnique& from);
+
+  inline OrderUnique& operator=(const OrderUnique& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const OrderUnique& default_instance();
+
+  void Swap(OrderUnique* other);
+
+  // implements Message ----------------------------------------------
+
+  OrderUnique* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const OrderUnique& from);
+  void MergeFrom(const OrderUnique& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string public_key = 10;
+  inline bool has_public_key() const;
+  inline void clear_public_key();
+  static const int kPublicKeyFieldNumber = 10;
+  inline const ::std::string& public_key() const;
+  inline void set_public_key(const ::std::string& value);
+  inline void set_public_key(const char* value);
+  inline void set_public_key(const char* value, size_t size);
+  inline ::std::string* mutable_public_key();
+  inline ::std::string* release_public_key();
+  inline void set_allocated_public_key(::std::string* public_key);
+
+  // optional uint32 season = 20;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 20;
+  inline ::google::protobuf::uint32 season() const;
+  inline void set_season(::google::protobuf::uint32 value);
+
+  // optional uint32 week = 30;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 30;
+  inline ::google::protobuf::uint32 week() const;
+  inline void set_week(::google::protobuf::uint32 value);
+
+  // optional bool buyside = 40;
+  inline bool has_buyside() const;
+  inline void clear_buyside();
+  static const int kBuysideFieldNumber = 40;
+  inline bool buyside() const;
+  inline void set_buyside(bool value);
+
+  // optional string playerid = 50;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 50;
+  inline const ::std::string& playerid() const;
+  inline void set_playerid(const ::std::string& value);
+  inline void set_playerid(const char* value);
+  inline void set_playerid(const char* value, size_t size);
+  inline ::std::string* mutable_playerid();
+  inline ::std::string* release_playerid();
+  inline void set_allocated_playerid(::std::string* playerid);
+
+  // optional int32 price = 70;
+  inline bool has_price() const;
+  inline void clear_price();
+  static const int kPriceFieldNumber = 70;
+  inline ::google::protobuf::int32 price() const;
+  inline void set_price(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.OrderUnique)
+ private:
+  inline void set_has_public_key();
+  inline void clear_has_public_key();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_buyside();
+  inline void clear_has_buyside();
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+  inline void set_has_price();
+  inline void clear_has_price();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* public_key_;
+  ::google::protobuf::uint32 season_;
+  ::google::protobuf::uint32 week_;
+  ::std::string* playerid_;
+  bool buyside_;
+  ::google::protobuf::int32 price_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static OrderUnique* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class OrderDeets : public ::google::protobuf::Message {
+ public:
+  OrderDeets();
+  virtual ~OrderDeets();
+
+  OrderDeets(const OrderDeets& from);
+
+  inline OrderDeets& operator=(const OrderDeets& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const OrderDeets& default_instance();
+
+  void Swap(OrderDeets* other);
+
+  // implements Message ----------------------------------------------
+
+  OrderDeets* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const OrderDeets& from);
+  void MergeFrom(const OrderDeets& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes oid = 10;
+  inline bool has_oid() const;
+  inline void clear_oid();
+  static const int kOidFieldNumber = 10;
+  inline const ::std::string& oid() const;
+  inline void set_oid(const ::std::string& value);
+  inline void set_oid(const char* value);
+  inline void set_oid(const void* value, size_t size);
+  inline ::std::string* mutable_oid();
+  inline ::std::string* release_oid();
+  inline void set_allocated_oid(::std::string* oid);
+
+  // optional .fantasybit.OrderUnique order = 20;
+  inline bool has_order() const;
+  inline void clear_order();
+  static const int kOrderFieldNumber = 20;
+  inline const ::fantasybit::OrderUnique& order() const;
+  inline ::fantasybit::OrderUnique* mutable_order();
+  inline ::fantasybit::OrderUnique* release_order();
+  inline void set_allocated_order(::fantasybit::OrderUnique* order);
+
+  // optional int32 size = 30;
+  inline bool has_size() const;
+  inline void clear_size();
+  static const int kSizeFieldNumber = 30;
+  inline ::google::protobuf::int32 size() const;
+  inline void set_size(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.OrderDeets)
+ private:
+  inline void set_has_oid();
+  inline void clear_has_oid();
+  inline void set_has_order();
+  inline void clear_has_order();
+  inline void set_has_size();
+  inline void clear_has_size();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* oid_;
+  ::fantasybit::OrderUnique* order_;
+  ::google::protobuf::int32 size_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static OrderDeets* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class InsideUnique : public ::google::protobuf::Message {
+ public:
+  InsideUnique();
+  virtual ~InsideUnique();
+
+  InsideUnique(const InsideUnique& from);
+
+  inline InsideUnique& operator=(const InsideUnique& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const InsideUnique& default_instance();
+
+  void Swap(InsideUnique* other);
+
+  // implements Message ----------------------------------------------
+
+  InsideUnique* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const InsideUnique& from);
+  void MergeFrom(const InsideUnique& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string playerid = 50;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 50;
+  inline const ::std::string& playerid() const;
+  inline void set_playerid(const ::std::string& value);
+  inline void set_playerid(const char* value);
+  inline void set_playerid(const char* value, size_t size);
+  inline ::std::string* mutable_playerid();
+  inline ::std::string* release_playerid();
+  inline void set_allocated_playerid(::std::string* playerid);
+
+  // optional string public_key = 10;
+  inline bool has_public_key() const;
+  inline void clear_public_key();
+  static const int kPublicKeyFieldNumber = 10;
+  inline const ::std::string& public_key() const;
+  inline void set_public_key(const ::std::string& value);
+  inline void set_public_key(const char* value);
+  inline void set_public_key(const char* value, size_t size);
+  inline ::std::string* mutable_public_key();
+  inline ::std::string* release_public_key();
+  inline void set_allocated_public_key(::std::string* public_key);
+
+  // optional bool buyside = 40;
+  inline bool has_buyside() const;
+  inline void clear_buyside();
+  static const int kBuysideFieldNumber = 40;
+  inline bool buyside() const;
+  inline void set_buyside(bool value);
+
+  // optional int32 price = 70;
+  inline bool has_price() const;
+  inline void clear_price();
+  static const int kPriceFieldNumber = 70;
+  inline ::google::protobuf::int32 price() const;
+  inline void set_price(::google::protobuf::int32 value);
+
+  // optional bytes oid = 11;
+  inline bool has_oid() const;
+  inline void clear_oid();
+  static const int kOidFieldNumber = 11;
+  inline const ::std::string& oid() const;
+  inline void set_oid(const ::std::string& value);
+  inline void set_oid(const char* value);
+  inline void set_oid(const void* value, size_t size);
+  inline ::std::string* mutable_oid();
+  inline ::std::string* release_oid();
+  inline void set_allocated_oid(::std::string* oid);
+
+  // optional .fantasybit.OrderUnique order = 20;
+  inline bool has_order() const;
+  inline void clear_order();
+  static const int kOrderFieldNumber = 20;
+  inline const ::fantasybit::OrderUnique& order() const;
+  inline ::fantasybit::OrderUnique* mutable_order();
+  inline ::fantasybit::OrderUnique* release_order();
+  inline void set_allocated_order(::fantasybit::OrderUnique* order);
+
+  // optional int32 size = 30;
+  inline bool has_size() const;
+  inline void clear_size();
+  static const int kSizeFieldNumber = 30;
+  inline ::google::protobuf::int32 size() const;
+  inline void set_size(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.InsideUnique)
+ private:
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+  inline void set_has_public_key();
+  inline void clear_has_public_key();
+  inline void set_has_buyside();
+  inline void clear_has_buyside();
+  inline void set_has_price();
+  inline void clear_has_price();
+  inline void set_has_oid();
+  inline void clear_has_oid();
+  inline void set_has_order();
+  inline void clear_has_order();
+  inline void set_has_size();
+  inline void clear_has_size();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* playerid_;
+  ::std::string* public_key_;
+  bool buyside_;
+  ::google::protobuf::int32 price_;
+  ::std::string* oid_;
+  ::fantasybit::OrderUnique* order_;
+  ::google::protobuf::int32 size_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static InsideUnique* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class TimeTransition : public ::google::protobuf::Message {
+ public:
+  TimeTransition();
+  virtual ~TimeTransition();
+
+  TimeTransition(const TimeTransition& from);
+
+  inline TimeTransition& operator=(const TimeTransition& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TimeTransition& default_instance();
+
+  void Swap(TimeTransition* other);
+
+  // implements Message ----------------------------------------------
+
+  TimeTransition* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const TimeTransition& from);
+  void MergeFrom(const TimeTransition& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef TimeTransition_Type Type;
+  static const Type TRADEOPEN = TimeTransition_Type_TRADEOPEN;
+  static const Type TRADECLOSE = TimeTransition_Type_TRADECLOSE;
+  static inline bool Type_IsValid(int value) {
+    return TimeTransition_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    TimeTransition_Type_Type_MIN;
+  static const Type Type_MAX =
+    TimeTransition_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    TimeTransition_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return TimeTransition_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return TimeTransition_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return TimeTransition_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.TimeTransition.Type type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::fantasybit::TimeTransition_Type type() const;
+  inline void set_type(::fantasybit::TimeTransition_Type value);
+
+  // optional uint32 season = 10;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 10;
+  inline ::google::protobuf::uint32 season() const;
+  inline void set_season(::google::protobuf::uint32 value);
+
+  // optional uint32 week = 20;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 20;
+  inline ::google::protobuf::uint32 week() const;
+  inline void set_week(::google::protobuf::uint32 value);
+
+  static const int kTimeTransFieldNumber = 303;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::TimeTransition >, 11, false >
+    time_trans;
+  // @@protoc_insertion_point(class_scope:fantasybit.TimeTransition)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int type_;
+  ::google::protobuf::uint32 season_;
+  ::google::protobuf::uint32 week_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static TimeTransition* default_instance_;
 };
 // ===================================================================
 
@@ -8169,6 +9028,1026 @@ inline void MessageData::set_lt(::google::protobuf::int32 value) {
   lt_ = value;
 }
 
+// -------------------------------------------------------------------
+
+// StampedTrans
+
+// optional int32 timestamp = 10;
+inline bool StampedTrans::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void StampedTrans::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void StampedTrans::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void StampedTrans::clear_timestamp() {
+  timestamp_ = 0;
+  clear_has_timestamp();
+}
+inline ::google::protobuf::int32 StampedTrans::timestamp() const {
+  return timestamp_;
+}
+inline void StampedTrans::set_timestamp(::google::protobuf::int32 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+}
+
+// optional int32 seqnum = 20;
+inline bool StampedTrans::has_seqnum() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void StampedTrans::set_has_seqnum() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void StampedTrans::clear_has_seqnum() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void StampedTrans::clear_seqnum() {
+  seqnum_ = 0;
+  clear_has_seqnum();
+}
+inline ::google::protobuf::int32 StampedTrans::seqnum() const {
+  return seqnum_;
+}
+inline void StampedTrans::set_seqnum(::google::protobuf::int32 value) {
+  set_has_seqnum();
+  seqnum_ = value;
+}
+
+// optional int32 prevseq = 21;
+inline bool StampedTrans::has_prevseq() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void StampedTrans::set_has_prevseq() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void StampedTrans::clear_has_prevseq() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void StampedTrans::clear_prevseq() {
+  prevseq_ = 0;
+  clear_has_prevseq();
+}
+inline ::google::protobuf::int32 StampedTrans::prevseq() const {
+  return prevseq_;
+}
+inline void StampedTrans::set_prevseq(::google::protobuf::int32 value) {
+  set_has_prevseq();
+  prevseq_ = value;
+}
+
+// optional .fantasybit.SignedTransaction signed_orig = 30;
+inline bool StampedTrans::has_signed_orig() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void StampedTrans::set_has_signed_orig() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void StampedTrans::clear_has_signed_orig() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void StampedTrans::clear_signed_orig() {
+  if (signed_orig_ != NULL) signed_orig_->::fantasybit::SignedTransaction::Clear();
+  clear_has_signed_orig();
+}
+inline const ::fantasybit::SignedTransaction& StampedTrans::signed_orig() const {
+  return signed_orig_ != NULL ? *signed_orig_ : *default_instance_->signed_orig_;
+}
+inline ::fantasybit::SignedTransaction* StampedTrans::mutable_signed_orig() {
+  set_has_signed_orig();
+  if (signed_orig_ == NULL) signed_orig_ = new ::fantasybit::SignedTransaction;
+  return signed_orig_;
+}
+inline ::fantasybit::SignedTransaction* StampedTrans::release_signed_orig() {
+  clear_has_signed_orig();
+  ::fantasybit::SignedTransaction* temp = signed_orig_;
+  signed_orig_ = NULL;
+  return temp;
+}
+inline void StampedTrans::set_allocated_signed_orig(::fantasybit::SignedTransaction* signed_orig) {
+  delete signed_orig_;
+  signed_orig_ = signed_orig;
+  if (signed_orig) {
+    set_has_signed_orig();
+  } else {
+    clear_has_signed_orig();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// ExchangeOrder
+
+// optional .fantasybit.ExchangeOrder.Type type = 10;
+inline bool ExchangeOrder::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ExchangeOrder::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ExchangeOrder::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ExchangeOrder::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::fantasybit::ExchangeOrder_Type ExchangeOrder::type() const {
+  return static_cast< ::fantasybit::ExchangeOrder_Type >(type_);
+}
+inline void ExchangeOrder::set_type(::fantasybit::ExchangeOrder_Type value) {
+  assert(::fantasybit::ExchangeOrder_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional string playerid = 40;
+inline bool ExchangeOrder::has_playerid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ExchangeOrder::set_has_playerid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ExchangeOrder::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ExchangeOrder::clear_playerid() {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    playerid_->clear();
+  }
+  clear_has_playerid();
+}
+inline const ::std::string& ExchangeOrder::playerid() const {
+  return *playerid_;
+}
+inline void ExchangeOrder::set_playerid(const ::std::string& value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void ExchangeOrder::set_playerid(const char* value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void ExchangeOrder::set_playerid(const char* value, size_t size) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ExchangeOrder::mutable_playerid() {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  return playerid_;
+}
+inline ::std::string* ExchangeOrder::release_playerid() {
+  clear_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = playerid_;
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ExchangeOrder::set_allocated_playerid(::std::string* playerid) {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (playerid) {
+    set_has_playerid();
+    playerid_ = playerid;
+  } else {
+    clear_has_playerid();
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .fantasybit.OrderCore core = 50;
+inline bool ExchangeOrder::has_core() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ExchangeOrder::set_has_core() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ExchangeOrder::clear_has_core() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ExchangeOrder::clear_core() {
+  if (core_ != NULL) core_->::fantasybit::OrderCore::Clear();
+  clear_has_core();
+}
+inline const ::fantasybit::OrderCore& ExchangeOrder::core() const {
+  return core_ != NULL ? *core_ : *default_instance_->core_;
+}
+inline ::fantasybit::OrderCore* ExchangeOrder::mutable_core() {
+  set_has_core();
+  if (core_ == NULL) core_ = new ::fantasybit::OrderCore;
+  return core_;
+}
+inline ::fantasybit::OrderCore* ExchangeOrder::release_core() {
+  clear_has_core();
+  ::fantasybit::OrderCore* temp = core_;
+  core_ = NULL;
+  return temp;
+}
+inline void ExchangeOrder::set_allocated_core(::fantasybit::OrderCore* core) {
+  delete core_;
+  core_ = core;
+  if (core) {
+    set_has_core();
+  } else {
+    clear_has_core();
+  }
+}
+
+// optional int32 cancel_oref = 100;
+inline bool ExchangeOrder::has_cancel_oref() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ExchangeOrder::set_has_cancel_oref() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ExchangeOrder::clear_has_cancel_oref() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ExchangeOrder::clear_cancel_oref() {
+  cancel_oref_ = 0;
+  clear_has_cancel_oref();
+}
+inline ::google::protobuf::int32 ExchangeOrder::cancel_oref() const {
+  return cancel_oref_;
+}
+inline void ExchangeOrder::set_cancel_oref(::google::protobuf::int32 value) {
+  set_has_cancel_oref();
+  cancel_oref_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// OrderUnique
+
+// optional string public_key = 10;
+inline bool OrderUnique::has_public_key() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void OrderUnique::set_has_public_key() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void OrderUnique::clear_has_public_key() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void OrderUnique::clear_public_key() {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    public_key_->clear();
+  }
+  clear_has_public_key();
+}
+inline const ::std::string& OrderUnique::public_key() const {
+  return *public_key_;
+}
+inline void OrderUnique::set_public_key(const ::std::string& value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void OrderUnique::set_public_key(const char* value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void OrderUnique::set_public_key(const char* value, size_t size) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* OrderUnique::mutable_public_key() {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  return public_key_;
+}
+inline ::std::string* OrderUnique::release_public_key() {
+  clear_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = public_key_;
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void OrderUnique::set_allocated_public_key(::std::string* public_key) {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete public_key_;
+  }
+  if (public_key) {
+    set_has_public_key();
+    public_key_ = public_key;
+  } else {
+    clear_has_public_key();
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional uint32 season = 20;
+inline bool OrderUnique::has_season() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void OrderUnique::set_has_season() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void OrderUnique::clear_has_season() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void OrderUnique::clear_season() {
+  season_ = 0u;
+  clear_has_season();
+}
+inline ::google::protobuf::uint32 OrderUnique::season() const {
+  return season_;
+}
+inline void OrderUnique::set_season(::google::protobuf::uint32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional uint32 week = 30;
+inline bool OrderUnique::has_week() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void OrderUnique::set_has_week() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void OrderUnique::clear_has_week() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void OrderUnique::clear_week() {
+  week_ = 0u;
+  clear_has_week();
+}
+inline ::google::protobuf::uint32 OrderUnique::week() const {
+  return week_;
+}
+inline void OrderUnique::set_week(::google::protobuf::uint32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional bool buyside = 40;
+inline bool OrderUnique::has_buyside() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void OrderUnique::set_has_buyside() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void OrderUnique::clear_has_buyside() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void OrderUnique::clear_buyside() {
+  buyside_ = false;
+  clear_has_buyside();
+}
+inline bool OrderUnique::buyside() const {
+  return buyside_;
+}
+inline void OrderUnique::set_buyside(bool value) {
+  set_has_buyside();
+  buyside_ = value;
+}
+
+// optional string playerid = 50;
+inline bool OrderUnique::has_playerid() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void OrderUnique::set_has_playerid() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void OrderUnique::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void OrderUnique::clear_playerid() {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    playerid_->clear();
+  }
+  clear_has_playerid();
+}
+inline const ::std::string& OrderUnique::playerid() const {
+  return *playerid_;
+}
+inline void OrderUnique::set_playerid(const ::std::string& value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void OrderUnique::set_playerid(const char* value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void OrderUnique::set_playerid(const char* value, size_t size) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* OrderUnique::mutable_playerid() {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  return playerid_;
+}
+inline ::std::string* OrderUnique::release_playerid() {
+  clear_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = playerid_;
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void OrderUnique::set_allocated_playerid(::std::string* playerid) {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (playerid) {
+    set_has_playerid();
+    playerid_ = playerid;
+  } else {
+    clear_has_playerid();
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 price = 70;
+inline bool OrderUnique::has_price() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void OrderUnique::set_has_price() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void OrderUnique::clear_has_price() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void OrderUnique::clear_price() {
+  price_ = 0;
+  clear_has_price();
+}
+inline ::google::protobuf::int32 OrderUnique::price() const {
+  return price_;
+}
+inline void OrderUnique::set_price(::google::protobuf::int32 value) {
+  set_has_price();
+  price_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// OrderDeets
+
+// optional bytes oid = 10;
+inline bool OrderDeets::has_oid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void OrderDeets::set_has_oid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void OrderDeets::clear_has_oid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void OrderDeets::clear_oid() {
+  if (oid_ != &::google::protobuf::internal::kEmptyString) {
+    oid_->clear();
+  }
+  clear_has_oid();
+}
+inline const ::std::string& OrderDeets::oid() const {
+  return *oid_;
+}
+inline void OrderDeets::set_oid(const ::std::string& value) {
+  set_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    oid_ = new ::std::string;
+  }
+  oid_->assign(value);
+}
+inline void OrderDeets::set_oid(const char* value) {
+  set_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    oid_ = new ::std::string;
+  }
+  oid_->assign(value);
+}
+inline void OrderDeets::set_oid(const void* value, size_t size) {
+  set_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    oid_ = new ::std::string;
+  }
+  oid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* OrderDeets::mutable_oid() {
+  set_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    oid_ = new ::std::string;
+  }
+  return oid_;
+}
+inline ::std::string* OrderDeets::release_oid() {
+  clear_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = oid_;
+    oid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void OrderDeets::set_allocated_oid(::std::string* oid) {
+  if (oid_ != &::google::protobuf::internal::kEmptyString) {
+    delete oid_;
+  }
+  if (oid) {
+    set_has_oid();
+    oid_ = oid;
+  } else {
+    clear_has_oid();
+    oid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .fantasybit.OrderUnique order = 20;
+inline bool OrderDeets::has_order() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void OrderDeets::set_has_order() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void OrderDeets::clear_has_order() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void OrderDeets::clear_order() {
+  if (order_ != NULL) order_->::fantasybit::OrderUnique::Clear();
+  clear_has_order();
+}
+inline const ::fantasybit::OrderUnique& OrderDeets::order() const {
+  return order_ != NULL ? *order_ : *default_instance_->order_;
+}
+inline ::fantasybit::OrderUnique* OrderDeets::mutable_order() {
+  set_has_order();
+  if (order_ == NULL) order_ = new ::fantasybit::OrderUnique;
+  return order_;
+}
+inline ::fantasybit::OrderUnique* OrderDeets::release_order() {
+  clear_has_order();
+  ::fantasybit::OrderUnique* temp = order_;
+  order_ = NULL;
+  return temp;
+}
+inline void OrderDeets::set_allocated_order(::fantasybit::OrderUnique* order) {
+  delete order_;
+  order_ = order;
+  if (order) {
+    set_has_order();
+  } else {
+    clear_has_order();
+  }
+}
+
+// optional int32 size = 30;
+inline bool OrderDeets::has_size() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void OrderDeets::set_has_size() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void OrderDeets::clear_has_size() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void OrderDeets::clear_size() {
+  size_ = 0;
+  clear_has_size();
+}
+inline ::google::protobuf::int32 OrderDeets::size() const {
+  return size_;
+}
+inline void OrderDeets::set_size(::google::protobuf::int32 value) {
+  set_has_size();
+  size_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// InsideUnique
+
+// optional string playerid = 50;
+inline bool InsideUnique::has_playerid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void InsideUnique::set_has_playerid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void InsideUnique::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void InsideUnique::clear_playerid() {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    playerid_->clear();
+  }
+  clear_has_playerid();
+}
+inline const ::std::string& InsideUnique::playerid() const {
+  return *playerid_;
+}
+inline void InsideUnique::set_playerid(const ::std::string& value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void InsideUnique::set_playerid(const char* value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void InsideUnique::set_playerid(const char* value, size_t size) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* InsideUnique::mutable_playerid() {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  return playerid_;
+}
+inline ::std::string* InsideUnique::release_playerid() {
+  clear_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = playerid_;
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void InsideUnique::set_allocated_playerid(::std::string* playerid) {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (playerid) {
+    set_has_playerid();
+    playerid_ = playerid;
+  } else {
+    clear_has_playerid();
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string public_key = 10;
+inline bool InsideUnique::has_public_key() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void InsideUnique::set_has_public_key() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void InsideUnique::clear_has_public_key() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void InsideUnique::clear_public_key() {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    public_key_->clear();
+  }
+  clear_has_public_key();
+}
+inline const ::std::string& InsideUnique::public_key() const {
+  return *public_key_;
+}
+inline void InsideUnique::set_public_key(const ::std::string& value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void InsideUnique::set_public_key(const char* value) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(value);
+}
+inline void InsideUnique::set_public_key(const char* value, size_t size) {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  public_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* InsideUnique::mutable_public_key() {
+  set_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    public_key_ = new ::std::string;
+  }
+  return public_key_;
+}
+inline ::std::string* InsideUnique::release_public_key() {
+  clear_has_public_key();
+  if (public_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = public_key_;
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void InsideUnique::set_allocated_public_key(::std::string* public_key) {
+  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete public_key_;
+  }
+  if (public_key) {
+    set_has_public_key();
+    public_key_ = public_key;
+  } else {
+    clear_has_public_key();
+    public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bool buyside = 40;
+inline bool InsideUnique::has_buyside() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void InsideUnique::set_has_buyside() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void InsideUnique::clear_has_buyside() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void InsideUnique::clear_buyside() {
+  buyside_ = false;
+  clear_has_buyside();
+}
+inline bool InsideUnique::buyside() const {
+  return buyside_;
+}
+inline void InsideUnique::set_buyside(bool value) {
+  set_has_buyside();
+  buyside_ = value;
+}
+
+// optional int32 price = 70;
+inline bool InsideUnique::has_price() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void InsideUnique::set_has_price() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void InsideUnique::clear_has_price() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void InsideUnique::clear_price() {
+  price_ = 0;
+  clear_has_price();
+}
+inline ::google::protobuf::int32 InsideUnique::price() const {
+  return price_;
+}
+inline void InsideUnique::set_price(::google::protobuf::int32 value) {
+  set_has_price();
+  price_ = value;
+}
+
+// optional bytes oid = 11;
+inline bool InsideUnique::has_oid() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void InsideUnique::set_has_oid() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void InsideUnique::clear_has_oid() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void InsideUnique::clear_oid() {
+  if (oid_ != &::google::protobuf::internal::kEmptyString) {
+    oid_->clear();
+  }
+  clear_has_oid();
+}
+inline const ::std::string& InsideUnique::oid() const {
+  return *oid_;
+}
+inline void InsideUnique::set_oid(const ::std::string& value) {
+  set_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    oid_ = new ::std::string;
+  }
+  oid_->assign(value);
+}
+inline void InsideUnique::set_oid(const char* value) {
+  set_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    oid_ = new ::std::string;
+  }
+  oid_->assign(value);
+}
+inline void InsideUnique::set_oid(const void* value, size_t size) {
+  set_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    oid_ = new ::std::string;
+  }
+  oid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* InsideUnique::mutable_oid() {
+  set_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    oid_ = new ::std::string;
+  }
+  return oid_;
+}
+inline ::std::string* InsideUnique::release_oid() {
+  clear_has_oid();
+  if (oid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = oid_;
+    oid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void InsideUnique::set_allocated_oid(::std::string* oid) {
+  if (oid_ != &::google::protobuf::internal::kEmptyString) {
+    delete oid_;
+  }
+  if (oid) {
+    set_has_oid();
+    oid_ = oid;
+  } else {
+    clear_has_oid();
+    oid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .fantasybit.OrderUnique order = 20;
+inline bool InsideUnique::has_order() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void InsideUnique::set_has_order() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void InsideUnique::clear_has_order() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void InsideUnique::clear_order() {
+  if (order_ != NULL) order_->::fantasybit::OrderUnique::Clear();
+  clear_has_order();
+}
+inline const ::fantasybit::OrderUnique& InsideUnique::order() const {
+  return order_ != NULL ? *order_ : *default_instance_->order_;
+}
+inline ::fantasybit::OrderUnique* InsideUnique::mutable_order() {
+  set_has_order();
+  if (order_ == NULL) order_ = new ::fantasybit::OrderUnique;
+  return order_;
+}
+inline ::fantasybit::OrderUnique* InsideUnique::release_order() {
+  clear_has_order();
+  ::fantasybit::OrderUnique* temp = order_;
+  order_ = NULL;
+  return temp;
+}
+inline void InsideUnique::set_allocated_order(::fantasybit::OrderUnique* order) {
+  delete order_;
+  order_ = order;
+  if (order) {
+    set_has_order();
+  } else {
+    clear_has_order();
+  }
+}
+
+// optional int32 size = 30;
+inline bool InsideUnique::has_size() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void InsideUnique::set_has_size() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void InsideUnique::clear_has_size() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void InsideUnique::clear_size() {
+  size_ = 0;
+  clear_has_size();
+}
+inline ::google::protobuf::int32 InsideUnique::size() const {
+  return size_;
+}
+inline void InsideUnique::set_size(::google::protobuf::int32 value) {
+  set_has_size();
+  size_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// TimeTransition
+
+// optional .fantasybit.TimeTransition.Type type = 1;
+inline bool TimeTransition::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TimeTransition::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TimeTransition::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TimeTransition::clear_type() {
+  type_ = 2;
+  clear_has_type();
+}
+inline ::fantasybit::TimeTransition_Type TimeTransition::type() const {
+  return static_cast< ::fantasybit::TimeTransition_Type >(type_);
+}
+inline void TimeTransition::set_type(::fantasybit::TimeTransition_Type value) {
+  assert(::fantasybit::TimeTransition_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional uint32 season = 10;
+inline bool TimeTransition::has_season() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void TimeTransition::set_has_season() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void TimeTransition::clear_has_season() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void TimeTransition::clear_season() {
+  season_ = 0u;
+  clear_has_season();
+}
+inline ::google::protobuf::uint32 TimeTransition::season() const {
+  return season_;
+}
+inline void TimeTransition::set_season(::google::protobuf::uint32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional uint32 week = 20;
+inline bool TimeTransition::has_week() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void TimeTransition::set_has_week() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void TimeTransition::clear_has_week() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void TimeTransition::clear_week() {
+  week_ = 0u;
+  clear_has_week();
+}
+inline ::google::protobuf::uint32 TimeTransition::week() const {
+  return week_;
+}
+inline void TimeTransition::set_week(::google::protobuf::uint32 value) {
+  set_has_week();
+  week_ = value;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -8213,6 +10092,14 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::TeamState_State>()
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::DeltaData_Type>() {
   return ::fantasybit::DeltaData_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::ExchangeOrder_Type>() {
+  return ::fantasybit::ExchangeOrder_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::TimeTransition_Type>() {
+  return ::fantasybit::TimeTransition_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::MyNameStatus>() {

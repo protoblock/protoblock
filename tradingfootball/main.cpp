@@ -44,6 +44,14 @@ int domain(int argc, char *argv[]){
     int i = sql.getpidT("cfc93f5e-105e-4a5e-88d3-f4279893cfa8");
     i = sql.maxPid();
     */
+
+    ExchangeData ed;
+    ed.init();
+    ExchangeOrder eo;
+    //eo.
+    //ed.OnNewOrderMsg();
+    //return 0;
+
     Core::instance()->bootstrap();
     MainWindow form;
 

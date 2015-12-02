@@ -39,6 +39,7 @@ public:
     double bits() { return points() * 100; }
     Int64 amount() { return base; }
     void add(Bits b) { base+=b.amount(); }
+    void subtract(Bits b) { base-=b.amount(); }
 };
 
 using pubkey_t = fc::ecc::public_key_data;
@@ -49,24 +50,41 @@ struct FantasyName
 private:
     alias_t  mAlias;
     pubkey_t mPubkey;
-    Bits balance;
+    Bits balance, stake;
     std::recursive_mutex bal_mutex{};
 public:
     FantasyName(const alias_t &inalias, const pubkey_t &inpubkey)
-        : mAlias(inalias) , mPubkey(inpubkey) , balance (0) {}
+        : mAlias(inalias) , mPubkey(inpubkey) , balance (0), stake(0) {}
     
     FantasyName ( const FantasyName &in )
-        : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance) {}
+        : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance), stake(in.stake) {}
 
     Int64 getBalance()  {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         return balance.amount();
     }
-    
+
+    Int64 getStakeBalance()  {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        return stake.amount();
+    }
+
 	void addBalance(Bits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         balance.add(b);
+        stake.add(b);
 	}
+
+    void addProfit(Bits b) {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        stake.add(b);
+    }
+
+    void addLoss(Bits b) {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        stake.subtract(b);
+    }
+
 
     void newBalance(Bits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };

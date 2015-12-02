@@ -431,6 +431,7 @@ void BlockProcessor::process(const DataTransition &indt) {
                 awayp.push_back(hr.first);
 
             mNameData.OnGameStart(t.gameid(),homep,awayp);
+            mExchangeData.OnGameStart(t.gameid(),homep,awayp);
         }
         break;
     case DataTransition_Type_WEEKOVER:
@@ -562,11 +563,46 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             break;
         }
 
-        break;
+        case TransType::TIME: {
+            break;
+        }
+
+        case TransType::STAMPED: {
+            auto stamped = t.GetExtension(StampedTrans::stamped_trans);
+            qDebug() << "new StampedTrans " << stamped.timestamp() << stamped.seqnum();
+
+            ProcessInsideStamped(stamped.signed_orig(),stamped.seqnum());
+
+            break;
+        }
+
         default:
             break;
         }
     }
+}
+
+void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum) {
+    auto fn = BlockProcessor::getFNverifySt(inst);
+    if ( !fn ) {
+        qWarning() << "invalid tx inside stamped" << inst.trans().type();
+        return;
+    }
+
+    const Transaction &t = inst.trans();
+    switch (t.type()) {
+        case TransType::EXCHANGE:
+        {
+            auto emdg = t.GetExtension(ExchangeOrder::exchange_order);
+            qDebug() << "new ExchangeOrder " << emdg.DebugString();
+
+            mExchangeData.OnNewOrderMsg(emdg,seqnum,fn);
+            break;
+        }
+        default:
+            break;
+    }
+
 }
 
 void BlockProcessor::OnWeekOver(int week) {
@@ -642,6 +678,33 @@ bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
         }
 
     return true;
+}
+
+std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransaction &st) {
+
+    std::shared_ptr<FantasyName> ret;
+    if (st.trans().version() != Commissioner::TRANS_VERSION) {
+        qCritical() << " !verifySignedTransaction wrong trans version! ";
+        return ret;
+    }
+
+    fc::sha256 digest = fc::sha256::hash(st.trans().SerializeAsString());
+    if (digest.str() != st.id()) {
+        qCritical() << "digest.str() != st.id() ";
+        return ret;
+    }
+
+    if ( st.fantasy_name() == "") {
+        qCritical() << " Blank FantasyName";
+        return ret;;
+    }
+
+    ret = Commissioner::getName(st.fantasy_name());
+    fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+    if ( !Commissioner::verify(sig,digest,ret->pubkey()) )
+        ret.reset();
+
+    return ret;
 }
 
 bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &nt, 

@@ -3,7 +3,7 @@
 package fantasybit;
 import "StaticData.proto";
 import "StatusData.proto";
-
+import "ExData.proto";
 enum MyNameStatus 
 {
     none=1;
@@ -111,6 +111,9 @@ enum TransType {
 	DATA = 3;	
         PROJECTION_BLOCK = 4;
         MASTER_NAME = 5;
+        TIME = 6;
+        STAMPED = 7;
+        EXCHANGE = 8;
 }
 
 message Transaction {
@@ -131,12 +134,11 @@ message NameTrans {
 
 }
 
-
 message SignedTransaction {
 	optional Transaction trans = 10;
 	optional bytes id = 20;
 	optional bytes sig = 30;	
-	optional string fantasy_name = 40;
+	optional string fantasy_name = 40;       
 }
 
 //message BlockHeader {
@@ -145,7 +147,7 @@ message SignedTransaction {
 //}
 
 message BlockHeader {
-	enum Type { NORMAL=1; DATA=2; }
+        enum Type { NORMAL=1; DATA=2; }
 
 	optional int32 version = 1;
 	optional int32 num = 10;
@@ -336,3 +338,73 @@ message MessageData {
     optional int32 gt  = 20;
     optional int32 lt = 30;
 }
+
+
+message StampedTrans {
+    extend Transaction {
+        optional StampedTrans stamped_trans = 300;
+    }
+
+    optional int32 timestamp = 10;
+    optional int32 seqnum = 20;
+    optional int32 prevseq  = 21;
+    optional SignedTransaction signed_orig = 30;
+}
+
+message ExchangeOrder {
+    extend Transaction {
+        optional ExchangeOrder exchange_order = 310;
+    }
+
+    enum Type { NEW=1; CANCEL=2; REPLACE=3; }
+
+    optional Type type = 10;
+    optional string playerid = 40;
+    optional OrderCore core = 50;
+    optional int32 cancel_oref = 100;
+
+    extensions 500 to max;
+}
+
+message OrderUnique {
+    optional string public_key = 10;
+    optional uint32 season =20;
+    optional uint32 week = 30;
+    optional bool buyside = 40;
+    optional string playerid = 50;
+    optional int32 price = 70;
+}
+
+message OrderDeets {
+    optional bytes oid = 10;
+    optional OrderUnique order = 20;
+    optional int32 size  = 30;
+}
+
+message InsideUnique {
+    optional string playerid = 50;
+    optional string public_key = 10;
+    optional bool buyside = 40;
+    optional int32 price = 70;
+
+    optional bytes oid = 11;
+    optional OrderUnique order = 20;
+    optional int32 size  = 30;
+}
+
+
+message TimeTransition {
+    extend Transaction {
+        optional TimeTransition time_trans = 303;
+    }
+
+    enum Type {
+        TRADEOPEN=2; // trading session opened
+        TRADECLOSE=3; // trading session closed
+    }
+
+    optional Type type =1;
+    optional uint32 season =10;
+    optional uint32 week = 20;
+}
+

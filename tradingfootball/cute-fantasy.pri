@@ -25,6 +25,7 @@ SOURCES += \
     $$PWD/../generated/ApiData.pb.cc \
     $$PWD/NameData.cpp \
     $$PWD/../generated/NameData.pb.cc \
+    $$PWD/../generated/ExData.pb.cc \
     $$PWD/mainwindow.cpp \
     $$PWD/playerprojectionwidget.cpp \
     $$PWD/currentweekwidget.cpp \
@@ -38,7 +39,9 @@ SOURCES += \
     $$PWD/mnemonic.cpp \ 
     $$PWD/RunGuard.cpp \
     $$PWD/FantasyAgent.cpp \
-    $$PWD/fnametool.cpp
+    $$PWD/fnametool.cpp \
+    $$PWD/timestate.cpp \
+    $$PWD/ExchangeData.cpp
 
 
 DISTFILES += \
@@ -46,7 +49,8 @@ DISTFILES += \
     $$PWD/../proto/StaticData.proto \
     $$PWD/../proto/StatusData.proto \
     $$PWD/../proto/NameData.proto \
-    $$PWD/../proto/ApiData.proto
+    $$PWD/../proto/ApiData.proto \
+    $$PWD/../proto/ExData.proto
 
 HEADERS += \
     $$PWD/Commissioner.h \
@@ -84,6 +88,7 @@ HEADERS += \
     $$PWD/../generated/StatusData.pb.h \        
     $$PWD/NameData.h \
     $$PWD/../generated/NameData.pb.h \
+    $$PWD/../generated/ExData.pb.h \
     $$PWD/mainwindow.h \
     $$PWD/playerprojectionwidget.h \
     $$PWD/currentweekwidget.h \
@@ -99,8 +104,9 @@ HEADERS += \
     $$PWD/animationandmessagewidget.h \
     $$PWD/mnemonic.h \ 
     $$PWD/RunGuard.h \
-    $$PWD/fnametool.h
-
+    $$PWD/fnametool.h \
+    $$PWD/timestate.h \
+    $$PWD/ExchangeData.h
 
 
 FORMS += \       

@@ -18,6 +18,8 @@
 #include <fc/crypto/elliptic.hpp>
 #include "ProtoData.pb.h"
 #include "ApiData.pb.h"
+#include "timestate.h"
+#include "ExchangeData.h"
 
 namespace fantasybit
 {
@@ -30,6 +32,7 @@ class BlockProcessor : public QObject {
     BlockRecorder mRecorder{};
     NFLStateData &mData;
     FantasyNameData &mNameData;
+    ExchangeData mExchangeData;
     int32_t realHeight = 0;
     int32_t lastidprocessed = 0;
     //GlobalState mGlobalState{};
@@ -50,7 +53,8 @@ signals:
 
 
 public:
-    BlockProcessor(NFLStateData &data, FantasyNameData &namedata) : mData(data), mNameData(namedata) {}
+    BlockProcessor(NFLStateData &data, FantasyNameData &namedata) :
+        mData(data), mNameData(namedata) {}
     int32_t init();
 
     int32_t process(Block &sblock);
@@ -64,6 +68,8 @@ public:
     void processTxfrom(const Block &b,int start = 0);
     static bool verifySignedBlock(const Block &sblock);
     static bool verifySignedTransaction(const SignedTransaction &st);
+    static std::shared_ptr<FantasyName>
+            getFNverifySt(const SignedTransaction &st);
     void processResultProj(PlayerResult* playerresult,
                            std::unordered_map<std::string,int> &proj,
                            const std::string &blocksigner);
@@ -72,6 +78,8 @@ public:
     void OnWeekStart(int week);
 
     void hardReset();
+    void ProcessInsideStamped(const SignedTransaction &inst, int32_t);
+
 
     static double CalcResults(const Stats &stats) {
         int ret = 0;
