@@ -27,6 +27,12 @@ public:
 
     QTimer * timer;
 
+    QTimer * tradetimer;
+
+    int32_t mySeq = 0;
+
+
+
 signals:
     void UseMyFantasyName(QString);
     void BeOracle();
@@ -38,6 +44,7 @@ public slots:
     //void OnMyFantasyNames(vector<fantasybit::MyFantasyName> );
     void OnNewWeek(int);
     void Timer();
+    void TradeTimer();
 private slots:
     void on_beoracle_clicked();
 

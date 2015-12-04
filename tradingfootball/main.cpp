@@ -45,9 +45,9 @@ int domain(int argc, char *argv[]){
     i = sql.maxPid();
     */
 
-    ExchangeData ed;
-    ed.init();
-    ExchangeOrder eo;
+    //ExchangeData ed;
+    //ed.init();
+    //ExchangeOrder eo;
     //eo.
     //ed.OnNewOrderMsg();
     //return 0;

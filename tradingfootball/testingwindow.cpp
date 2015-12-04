@@ -41,7 +41,7 @@ void TestingWindow::initialize() {
         return;
     }
     timer = new QTimer(this);
-
+    tradetimer = new QTimer(this);
     amlive = false;
 /*
     qRegisterMetaType<GlobalState>("GlobalState");
@@ -50,6 +50,7 @@ void TestingWindow::initialize() {
     qRegisterMetaType<vector<MyFantasyName>>("vector<MyFantasyName>");
 */
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(Timer()));
+    QObject::connect(tradetimer,SIGNAL(timeout()),this,SLOT(TradeTimer()));
 
 
     QObject::connect(myCoreInstance,SIGNAL(GlobalStateChange(fantasybit::GlobalState)),
@@ -98,6 +99,7 @@ void TestingWindow::GoLive(GlobalState gs) {
         amlive = true;
         OnNewWeek(gs.week());
         emit BeOracle();
+        tradetimer->start(5000);
     }
 }
 
@@ -437,6 +439,44 @@ void TestingWindow::on_claimname_clicked()
     emit ClaimFantasyName(ui->FantassyNameIn->text());
 }
 
+void TestingWindow::TradeTimer() {
+    SignedTransaction st{};
+    StampedTrans stt{};
+    while(true) {
+        auto txstr = RestfullService::myGetTr();
+        if ( !st.ParseFromString(txstr) ) {
+            qDebug() << "no more trades - break" << txstr;
+            break;
+        }
+
+        if ( !st.has_trans() ) {
+            qDebug() << "bad tx - break" << txstr;
+            break;
+        }
+
+        stt.Clear();
+        stt.mutable_signed_orig()->CopyFrom(st);
+        stt.set_timestamp(std::chrono::duration_cast<std::chrono::milliseconds>
+                          (std::chrono::system_clock::now().time_since_epoch()).count());
+        stt.set_seqnum(++mySeq);
+
+        Transaction trans{};
+        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_type(TransType::STAMPED);
+        trans.MutableExtension(StampedTrans::stamped_trans)->CopyFrom(stt);
+
+        st.Clear();
+        st = Core::resolveByName<MainLAPIWorker>("coreapi")
+                ->Agent().makeSigned(trans);
+
+        txstr = st.SerializeAsString();
+        {
+        RestfullClient rest(QUrl(PAPIURL.data()));
+        rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
+        }
+    }
+}
+
 void TestingWindow::Timer() {
 
     int count = 0;
@@ -453,7 +493,6 @@ void TestingWindow::Timer() {
         if ( !st.has_trans() ) {
             qDebug() << "bad tx - break" << txstr;
             break;
-
         }
 
         qDebug() << "processed " << st.DebugString();

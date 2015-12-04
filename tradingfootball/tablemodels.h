@@ -555,6 +555,42 @@ protected:
 
 };
 
+class   DepthTableModel :
+        public TKeyedListModel<int,ViewModel> {
+
+public:
+
+    DepthTableModel(): TKeyedListModel<int,ViewModel>(NULL){
+        initialize();
+    }
+    ~DepthTableModel() {}
+
+protected:
+
+    QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
+
+        if (data==NULL) return QVariant();
+        if( column ==0)
+            return data->propertyValue<PropertyNames::BIDSIZE>();
+        if( column ==1)
+            return data->propertyValue<PropertyNames::BID>();
+        if( column ==2)
+            return data->propertyValue<PropertyNames::ASK>();
+        if( column ==3)
+            return data->propertyValue<PropertyNames::ASKSIZE>();
+
+        return QVariant();
+    }
+
+    //int getColumnCount() { return 2; }
+
+private:
+    void initialize() {
+        QStringList headers;
+        headers << "Bid Size" << "Bid" << "Ask" << "Ask Size";
+        setHorizontalHeaders(headers);
+    }
+};
 
 #endif // TABLEMODELS_H
 

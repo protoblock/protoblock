@@ -40,7 +40,9 @@ class GameSettlePos;
 class OrderCore;
 class Order;
 class MarketTicker;
+class DepthItem;
 class BookDelta;
+class MarketSnapshot;
 
 enum MarketTicker_Type {
   MarketTicker_Type_BID = 1,
@@ -707,6 +709,128 @@ class MarketTicker : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class DepthItem : public ::google::protobuf::Message {
+ public:
+  DepthItem();
+  virtual ~DepthItem();
+
+  DepthItem(const DepthItem& from);
+
+  inline DepthItem& operator=(const DepthItem& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DepthItem& default_instance();
+
+  void Swap(DepthItem* other);
+
+  // implements Message ----------------------------------------------
+
+  DepthItem* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DepthItem& from);
+  void MergeFrom(const DepthItem& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 level = 10;
+  inline bool has_level() const;
+  inline void clear_level();
+  static const int kLevelFieldNumber = 10;
+  inline ::google::protobuf::int32 level() const;
+  inline void set_level(::google::protobuf::int32 value);
+
+  // optional int32 b = 30;
+  inline bool has_b() const;
+  inline void clear_b();
+  static const int kBFieldNumber = 30;
+  inline ::google::protobuf::int32 b() const;
+  inline void set_b(::google::protobuf::int32 value);
+
+  // optional int32 a = 40;
+  inline bool has_a() const;
+  inline void clear_a();
+  static const int kAFieldNumber = 40;
+  inline ::google::protobuf::int32 a() const;
+  inline void set_a(::google::protobuf::int32 value);
+
+  // optional int32 bs = 50;
+  inline bool has_bs() const;
+  inline void clear_bs();
+  static const int kBsFieldNumber = 50;
+  inline ::google::protobuf::int32 bs() const;
+  inline void set_bs(::google::protobuf::int32 value);
+
+  // optional int32 as = 60;
+  inline bool has_as() const;
+  inline void clear_as();
+  static const int kAsFieldNumber = 60;
+  inline ::google::protobuf::int32 as() const;
+  inline void set_as(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.DepthItem)
+ private:
+  inline void set_has_level();
+  inline void clear_has_level();
+  inline void set_has_b();
+  inline void clear_has_b();
+  inline void set_has_a();
+  inline void clear_has_a();
+  inline void set_has_bs();
+  inline void clear_has_bs();
+  inline void set_has_as();
+  inline void clear_has_as();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 level_;
+  ::google::protobuf::int32 b_;
+  ::google::protobuf::int32 a_;
+  ::google::protobuf::int32 bs_;
+  ::google::protobuf::int32 as_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ExData_2eproto();
+  friend void protobuf_AssignDesc_ExData_2eproto();
+  friend void protobuf_ShutdownFile_ExData_2eproto();
+
+  void InitAsDefaultInstance();
+  static DepthItem* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class BookDelta : public ::google::protobuf::Message {
  public:
   BookDelta();
@@ -867,6 +991,106 @@ class BookDelta : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static BookDelta* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class MarketSnapshot : public ::google::protobuf::Message {
+ public:
+  MarketSnapshot();
+  virtual ~MarketSnapshot();
+
+  MarketSnapshot(const MarketSnapshot& from);
+
+  inline MarketSnapshot& operator=(const MarketSnapshot& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MarketSnapshot& default_instance();
+
+  void Swap(MarketSnapshot* other);
+
+  // implements Message ----------------------------------------------
+
+  MarketSnapshot* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MarketSnapshot& from);
+  void MergeFrom(const MarketSnapshot& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string symbol = 10;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 10;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
+  // repeated .fantasybit.DepthItem depth = 70;
+  inline int depth_size() const;
+  inline void clear_depth();
+  static const int kDepthFieldNumber = 70;
+  inline const ::fantasybit::DepthItem& depth(int index) const;
+  inline ::fantasybit::DepthItem* mutable_depth(int index);
+  inline ::fantasybit::DepthItem* add_depth();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >&
+      depth() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >*
+      mutable_depth();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.MarketSnapshot)
+ private:
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* symbol_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem > depth_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ExData_2eproto();
+  friend void protobuf_AssignDesc_ExData_2eproto();
+  friend void protobuf_ShutdownFile_ExData_2eproto();
+
+  void InitAsDefaultInstance();
+  static MarketSnapshot* default_instance_;
 };
 // ===================================================================
 
@@ -1419,6 +1643,120 @@ inline void MarketTicker::set_price(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
+// DepthItem
+
+// optional int32 level = 10;
+inline bool DepthItem::has_level() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DepthItem::set_has_level() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DepthItem::clear_has_level() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DepthItem::clear_level() {
+  level_ = 0;
+  clear_has_level();
+}
+inline ::google::protobuf::int32 DepthItem::level() const {
+  return level_;
+}
+inline void DepthItem::set_level(::google::protobuf::int32 value) {
+  set_has_level();
+  level_ = value;
+}
+
+// optional int32 b = 30;
+inline bool DepthItem::has_b() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DepthItem::set_has_b() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DepthItem::clear_has_b() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DepthItem::clear_b() {
+  b_ = 0;
+  clear_has_b();
+}
+inline ::google::protobuf::int32 DepthItem::b() const {
+  return b_;
+}
+inline void DepthItem::set_b(::google::protobuf::int32 value) {
+  set_has_b();
+  b_ = value;
+}
+
+// optional int32 a = 40;
+inline bool DepthItem::has_a() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DepthItem::set_has_a() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DepthItem::clear_has_a() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DepthItem::clear_a() {
+  a_ = 0;
+  clear_has_a();
+}
+inline ::google::protobuf::int32 DepthItem::a() const {
+  return a_;
+}
+inline void DepthItem::set_a(::google::protobuf::int32 value) {
+  set_has_a();
+  a_ = value;
+}
+
+// optional int32 bs = 50;
+inline bool DepthItem::has_bs() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void DepthItem::set_has_bs() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void DepthItem::clear_has_bs() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void DepthItem::clear_bs() {
+  bs_ = 0;
+  clear_has_bs();
+}
+inline ::google::protobuf::int32 DepthItem::bs() const {
+  return bs_;
+}
+inline void DepthItem::set_bs(::google::protobuf::int32 value) {
+  set_has_bs();
+  bs_ = value;
+}
+
+// optional int32 as = 60;
+inline bool DepthItem::has_as() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void DepthItem::set_has_as() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void DepthItem::clear_has_as() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void DepthItem::clear_as() {
+  as_ = 0;
+  clear_has_as();
+}
+inline ::google::protobuf::int32 DepthItem::as() const {
+  return as_;
+}
+inline void DepthItem::set_as(::google::protobuf::int32 value) {
+  set_has_as();
+  as_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // BookDelta
 
 // optional string public_key = 10;
@@ -1694,6 +2032,105 @@ BookDelta::level1tic() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker >*
 BookDelta::mutable_level1tic() {
   return &level1tic_;
+}
+
+// -------------------------------------------------------------------
+
+// MarketSnapshot
+
+// optional string symbol = 10;
+inline bool MarketSnapshot::has_symbol() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void MarketSnapshot::set_has_symbol() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void MarketSnapshot::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void MarketSnapshot::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& MarketSnapshot::symbol() const {
+  return *symbol_;
+}
+inline void MarketSnapshot::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void MarketSnapshot::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void MarketSnapshot::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* MarketSnapshot::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* MarketSnapshot::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void MarketSnapshot::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .fantasybit.DepthItem depth = 70;
+inline int MarketSnapshot::depth_size() const {
+  return depth_.size();
+}
+inline void MarketSnapshot::clear_depth() {
+  depth_.Clear();
+}
+inline const ::fantasybit::DepthItem& MarketSnapshot::depth(int index) const {
+  return depth_.Get(index);
+}
+inline ::fantasybit::DepthItem* MarketSnapshot::mutable_depth(int index) {
+  return depth_.Mutable(index);
+}
+inline ::fantasybit::DepthItem* MarketSnapshot::add_depth() {
+  return depth_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >&
+MarketSnapshot::depth() const {
+  return depth_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >*
+MarketSnapshot::mutable_depth() {
+  return &depth_;
 }
 
 

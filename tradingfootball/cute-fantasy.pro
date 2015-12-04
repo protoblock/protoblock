@@ -9,7 +9,7 @@ QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
-DEFINES += PRODFOOTBALL
+#DEFINES += PRODFOOTBALL
 
 #DEFINES += MIKECLAYIMPORT
 
@@ -20,10 +20,12 @@ DEFINES += PRODFOOTBALL
 #DEFINES += Jay2015PrePreSeasonTestDemo
 #DEFINES += DATAAGENTWRITENAMES_FORCE
 
+DEFINES += TIMEAGENTGUI
+
 DEFINES += BUILD_STABLE
 DEFINES += ALLOW_DEBUG
 DEFINES += PLAYER_ID
-
+DEFINES += TRACE
 
 contains(DEFINES, MIKECLAYIMPORT){
     QT += sql
@@ -44,8 +46,16 @@ CONFIG += c++11
 INCLUDEPATH += ./../include
 INCLUDEPATH += ./../generated
 
-CONFIG(debug, debug|release) {    
-    DESTDIR = ./../debugbin
+CONFIG(debug, debug|release) {
+
+    !contains(DEFINES, PRODFOOTBALL) {
+        DESTDIR = ./../stage
+    }
+
+    contains(DEFINES, PRODFOOTBALL) {
+        DESTDIR = ./../debugbin
+    }
+
     MOC_DIR = ./debug
     OBJECTS_DIR = ./debug
     contains(DEFINES, DATAAGENTGUI){
@@ -118,5 +128,14 @@ CONFIG(release, debug|release) {
 
 include (./boost-includes.pri)
 include (./cute-fantasy.pri)
+
+FORMS += \
+    trading.ui
+
+HEADERS += \
+    trading.h
+
+SOURCES += \
+    trading.cpp
 
 

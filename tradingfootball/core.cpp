@@ -18,7 +18,11 @@ void Core::bootstrap(){
     qRegisterMetaType<fantasybit::Distribution>("fantasybit::Distribution");
     qRegisterMetaType<fantasybit::FantasyNameHash>("fantasybit::FantasyNameHash");
     qRegisterMetaType<int32_t>("int32_t");
+    qRegisterMetaType<int32_t>("fantasybit::ExchangeOrder");
 
+    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::MarketTicker*");
+
+    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::MarketSnapshot*");
 
     qRegisterMetaType<string>("string");
     qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());

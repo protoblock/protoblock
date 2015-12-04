@@ -39,9 +39,15 @@ const ::google::protobuf::Descriptor* MarketTicker_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   MarketTicker_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* MarketTicker_Type_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* DepthItem_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  DepthItem_reflection_ = NULL;
 const ::google::protobuf::Descriptor* BookDelta_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   BookDelta_reflection_ = NULL;
+const ::google::protobuf::Descriptor* MarketSnapshot_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  MarketSnapshot_reflection_ = NULL;
 
 }  // namespace
 
@@ -153,7 +159,26 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketTicker));
   MarketTicker_Type_descriptor_ = MarketTicker_descriptor_->enum_type(0);
-  BookDelta_descriptor_ = file->message_type(6);
+  DepthItem_descriptor_ = file->message_type(6);
+  static const int DepthItem_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, level_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, b_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, a_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, bs_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, as_),
+  };
+  DepthItem_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      DepthItem_descriptor_,
+      DepthItem::default_instance_,
+      DepthItem_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(DepthItem));
+  BookDelta_descriptor_ = file->message_type(7);
   static const int BookDelta_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, public_key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, seqnum_),
@@ -174,6 +199,22 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BookDelta));
+  MarketSnapshot_descriptor_ = file->message_type(8);
+  static const int MarketSnapshot_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, symbol_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, depth_),
+  };
+  MarketSnapshot_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      MarketSnapshot_descriptor_,
+      MarketSnapshot::default_instance_,
+      MarketSnapshot_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(MarketSnapshot));
 }
 
 namespace {
@@ -199,7 +240,11 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     MarketTicker_descriptor_, &MarketTicker::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    DepthItem_descriptor_, &DepthItem::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     BookDelta_descriptor_, &BookDelta::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    MarketSnapshot_descriptor_, &MarketSnapshot::default_instance());
 }
 
 }  // namespace
@@ -217,8 +262,12 @@ void protobuf_ShutdownFile_ExData_2eproto() {
   delete Order_reflection_;
   delete MarketTicker::default_instance_;
   delete MarketTicker_reflection_;
+  delete DepthItem::default_instance_;
+  delete DepthItem_reflection_;
   delete BookDelta::default_instance_;
   delete BookDelta_reflection_;
+  delete MarketSnapshot::default_instance_;
+  delete MarketSnapshot_reflection_;
 }
 
 void protobuf_AddDesc_ExData_2eproto() {
@@ -240,13 +289,16 @@ void protobuf_AddDesc_ExData_2eproto() {
     "ybit.OrderCore\"|\n\014MarketTicker\022+\n\004type\030\001"
     " \001(\0162\035.fantasybit.MarketTicker.Type\022\014\n\004s"
     "ize\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\"\"\n\004Type\022\007\n\003BID\020"
-    "\001\022\007\n\003ASK\020\002\022\010\n\004LAST\020\003\"\346\001\n\tBookDelta\022\022\n\npu"
-    "blic_key\030\n \001(\t\022\016\n\006seqnum\030\024 \001(\005\022\020\n\010player"
-    "id\030\036 \001(\t\022%\n\006newnew\030( \001(\0132\025.fantasybit.Or"
-    "derCore\022\"\n\007removes\0302 \003(\0132\021.fantasybit.Or"
-    "der\022+\n\tlevel2tic\030< \003(\0132\030.fantasybit.Mark"
-    "etTicker\022+\n\tlevel1tic\030F \003(\0132\030.fantasybit"
-    ".MarketTicker", 733);
+    "\001\022\007\n\003ASK\020\002\022\010\n\004LAST\020\003\"H\n\tDepthItem\022\r\n\005lev"
+    "el\030\n \001(\005\022\t\n\001b\030\036 \001(\005\022\t\n\001a\030( \001(\005\022\n\n\002bs\0302 \001"
+    "(\005\022\n\n\002as\030< \001(\005\"\346\001\n\tBookDelta\022\022\n\npublic_k"
+    "ey\030\n \001(\t\022\016\n\006seqnum\030\024 \001(\005\022\020\n\010playerid\030\036 \001"
+    "(\t\022%\n\006newnew\030( \001(\0132\025.fantasybit.OrderCor"
+    "e\022\"\n\007removes\0302 \003(\0132\021.fantasybit.Order\022+\n"
+    "\tlevel2tic\030< \003(\0132\030.fantasybit.MarketTick"
+    "er\022+\n\tlevel1tic\030F \003(\0132\030.fantasybit.Marke"
+    "tTicker\"F\n\016MarketSnapshot\022\016\n\006symbol\030\n \001("
+    "\t\022$\n\005depth\030F \003(\0132\025.fantasybit.DepthItem", 879);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ExData.proto", &protobuf_RegisterTypes);
   SettlePos::default_instance_ = new SettlePos();
@@ -255,14 +307,18 @@ void protobuf_AddDesc_ExData_2eproto() {
   OrderCore::default_instance_ = new OrderCore();
   Order::default_instance_ = new Order();
   MarketTicker::default_instance_ = new MarketTicker();
+  DepthItem::default_instance_ = new DepthItem();
   BookDelta::default_instance_ = new BookDelta();
+  MarketSnapshot::default_instance_ = new MarketSnapshot();
   SettlePos::default_instance_->InitAsDefaultInstance();
   BookPos::default_instance_->InitAsDefaultInstance();
   GameSettlePos::default_instance_->InitAsDefaultInstance();
   OrderCore::default_instance_->InitAsDefaultInstance();
   Order::default_instance_->InitAsDefaultInstance();
   MarketTicker::default_instance_->InitAsDefaultInstance();
+  DepthItem::default_instance_->InitAsDefaultInstance();
   BookDelta::default_instance_->InitAsDefaultInstance();
+  MarketSnapshot::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_ExData_2eproto);
 }
 
@@ -2007,6 +2063,374 @@ void MarketTicker::Swap(MarketTicker* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int DepthItem::kLevelFieldNumber;
+const int DepthItem::kBFieldNumber;
+const int DepthItem::kAFieldNumber;
+const int DepthItem::kBsFieldNumber;
+const int DepthItem::kAsFieldNumber;
+#endif  // !_MSC_VER
+
+DepthItem::DepthItem()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void DepthItem::InitAsDefaultInstance() {
+}
+
+DepthItem::DepthItem(const DepthItem& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void DepthItem::SharedCtor() {
+  _cached_size_ = 0;
+  level_ = 0;
+  b_ = 0;
+  a_ = 0;
+  bs_ = 0;
+  as_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+DepthItem::~DepthItem() {
+  SharedDtor();
+}
+
+void DepthItem::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void DepthItem::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* DepthItem::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return DepthItem_descriptor_;
+}
+
+const DepthItem& DepthItem::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ExData_2eproto();
+  return *default_instance_;
+}
+
+DepthItem* DepthItem::default_instance_ = NULL;
+
+DepthItem* DepthItem::New() const {
+  return new DepthItem;
+}
+
+void DepthItem::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    level_ = 0;
+    b_ = 0;
+    a_ = 0;
+    bs_ = 0;
+    as_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool DepthItem::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 level = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &level_)));
+          set_has_level();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_b;
+        break;
+      }
+
+      // optional int32 b = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_b:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &b_)));
+          set_has_b();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(320)) goto parse_a;
+        break;
+      }
+
+      // optional int32 a = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_a:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &a_)));
+          set_has_a();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(400)) goto parse_bs;
+        break;
+      }
+
+      // optional int32 bs = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_bs:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &bs_)));
+          set_has_bs();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(480)) goto parse_as;
+        break;
+      }
+
+      // optional int32 as = 60;
+      case 60: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_as:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &as_)));
+          set_has_as();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void DepthItem::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional int32 level = 10;
+  if (has_level()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(10, this->level(), output);
+  }
+
+  // optional int32 b = 30;
+  if (has_b()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(30, this->b(), output);
+  }
+
+  // optional int32 a = 40;
+  if (has_a()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(40, this->a(), output);
+  }
+
+  // optional int32 bs = 50;
+  if (has_bs()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(50, this->bs(), output);
+  }
+
+  // optional int32 as = 60;
+  if (has_as()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(60, this->as(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* DepthItem::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional int32 level = 10;
+  if (has_level()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(10, this->level(), target);
+  }
+
+  // optional int32 b = 30;
+  if (has_b()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(30, this->b(), target);
+  }
+
+  // optional int32 a = 40;
+  if (has_a()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(40, this->a(), target);
+  }
+
+  // optional int32 bs = 50;
+  if (has_bs()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(50, this->bs(), target);
+  }
+
+  // optional int32 as = 60;
+  if (has_as()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(60, this->as(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int DepthItem::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int32 level = 10;
+    if (has_level()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->level());
+    }
+
+    // optional int32 b = 30;
+    if (has_b()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->b());
+    }
+
+    // optional int32 a = 40;
+    if (has_a()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->a());
+    }
+
+    // optional int32 bs = 50;
+    if (has_bs()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->bs());
+    }
+
+    // optional int32 as = 60;
+    if (has_as()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->as());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void DepthItem::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const DepthItem* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const DepthItem*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void DepthItem::MergeFrom(const DepthItem& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_level()) {
+      set_level(from.level());
+    }
+    if (from.has_b()) {
+      set_b(from.b());
+    }
+    if (from.has_a()) {
+      set_a(from.a());
+    }
+    if (from.has_bs()) {
+      set_bs(from.bs());
+    }
+    if (from.has_as()) {
+      set_as(from.as());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void DepthItem::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void DepthItem::CopyFrom(const DepthItem& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool DepthItem::IsInitialized() const {
+
+  return true;
+}
+
+void DepthItem::Swap(DepthItem* other) {
+  if (other != this) {
+    std::swap(level_, other->level_);
+    std::swap(b_, other->b_);
+    std::swap(a_, other->a_);
+    std::swap(bs_, other->bs_);
+    std::swap(as_, other->as_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata DepthItem::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = DepthItem_descriptor_;
+  metadata.reflection = DepthItem_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int BookDelta::kPublicKeyFieldNumber;
 const int BookDelta::kSeqnumFieldNumber;
 const int BookDelta::kPlayeridFieldNumber;
@@ -2487,6 +2911,271 @@ void BookDelta::Swap(BookDelta* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = BookDelta_descriptor_;
   metadata.reflection = BookDelta_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int MarketSnapshot::kSymbolFieldNumber;
+const int MarketSnapshot::kDepthFieldNumber;
+#endif  // !_MSC_VER
+
+MarketSnapshot::MarketSnapshot()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void MarketSnapshot::InitAsDefaultInstance() {
+}
+
+MarketSnapshot::MarketSnapshot(const MarketSnapshot& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void MarketSnapshot::SharedCtor() {
+  _cached_size_ = 0;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+MarketSnapshot::~MarketSnapshot() {
+  SharedDtor();
+}
+
+void MarketSnapshot::SharedDtor() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void MarketSnapshot::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* MarketSnapshot::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return MarketSnapshot_descriptor_;
+}
+
+const MarketSnapshot& MarketSnapshot::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ExData_2eproto();
+  return *default_instance_;
+}
+
+MarketSnapshot* MarketSnapshot::default_instance_ = NULL;
+
+MarketSnapshot* MarketSnapshot::New() const {
+  return new MarketSnapshot;
+}
+
+void MarketSnapshot::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
+  }
+  depth_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool MarketSnapshot::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string symbol = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(562)) goto parse_depth;
+        break;
+      }
+
+      // repeated .fantasybit.DepthItem depth = 70;
+      case 70: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_depth:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_depth()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(562)) goto parse_depth;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void MarketSnapshot::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string symbol = 10;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      10, this->symbol(), output);
+  }
+
+  // repeated .fantasybit.DepthItem depth = 70;
+  for (int i = 0; i < this->depth_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      70, this->depth(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* MarketSnapshot::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string symbol = 10;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        10, this->symbol(), target);
+  }
+
+  // repeated .fantasybit.DepthItem depth = 70;
+  for (int i = 0; i < this->depth_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        70, this->depth(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int MarketSnapshot::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string symbol = 10;
+    if (has_symbol()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
+    }
+
+  }
+  // repeated .fantasybit.DepthItem depth = 70;
+  total_size += 2 * this->depth_size();
+  for (int i = 0; i < this->depth_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->depth(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void MarketSnapshot::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const MarketSnapshot* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const MarketSnapshot*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void MarketSnapshot::MergeFrom(const MarketSnapshot& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  depth_.MergeFrom(from.depth_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void MarketSnapshot::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void MarketSnapshot::CopyFrom(const MarketSnapshot& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool MarketSnapshot::IsInitialized() const {
+
+  return true;
+}
+
+void MarketSnapshot::Swap(MarketSnapshot* other) {
+  if (other != this) {
+    std::swap(symbol_, other->symbol_);
+    depth_.Swap(&other->depth_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata MarketSnapshot::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = MarketSnapshot_descriptor_;
+  metadata.reflection = MarketSnapshot_reflection_;
   return metadata;
 }
 

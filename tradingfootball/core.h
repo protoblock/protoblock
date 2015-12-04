@@ -12,6 +12,8 @@
 #include <QDebug>
 #include "threadedqobject.h"
 #include "LAPIWorker.h"
+#include "ProtoData.pb.h"
+
 class IResolvable;
 class Core : public GenericSingleton<Core>
 {
@@ -85,5 +87,9 @@ Q_DECLARE_METATYPE(vector<fantasybit::FantasyBitProj>)
 Q_DECLARE_METATYPE(fantasybit::Distribution)
 Q_DECLARE_METATYPE(fantasybit::FantasyNameHash)
 Q_DECLARE_METATYPE(fantasybit::FantasyNameBal)
+Q_DECLARE_METATYPE(fantasybit::ExchangeOrder)
+Q_DECLARE_METATYPE(fantasybit::MarketTicker*)
+Q_DECLARE_METATYPE(fantasybit::MarketSnapshot*)
+
 
 #endif // CORE_H

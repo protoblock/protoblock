@@ -10,11 +10,20 @@
 #include "fbutils.h"
 #include "Commissioner.h"
 #include "PeerNode.h"
+#include "leveldb/slice.h"
+#include <QGlobalStatic>
 
 using namespace std;
 using namespace fantasybit;
 
+//Q_GLOBAL_STATIC(ExchangeData, staticExchangeData)
+Q_GLOBAL_STATIC(BookDelta, mBookDelta)
+Q_GLOBAL_STATIC(ExchangeDataHolder, pExchangeData)
+
+
 void ExchangeData::init() {
+    pExchangeData->set(this);
+    qDebug() << "level2 ExchangeData init";
     write_sync.sync = true;
     leveldb::Options options;
     options.create_if_missing = true;
@@ -32,13 +41,23 @@ void ExchangeData::init() {
         auto *it = settlestore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             GameSettlePos gsp;
-            gsp.ParseFromString(it->value().ToString());
+            if ( !gsp.ParseFromString(it->value().ToString()) )
+                continue;
+
+#ifdef TRACE
+            qDebug() << "level2 ExchangeData init GameSettlePos " << gsp.gameid();
+#endif
+
             for (auto ha : {"home","away"})
             for ( auto bp : ha == "home" ? gsp.home() : gsp.away()) {
                 auto it2 = mLimitBooks.insert(make_pair(bp.playerid(),
                                unique_ptr<MatchingEngine>(new MatchingEngine(true))));
                 for (auto p : bp.positions()) {
                     it2.first->second->mPkPos.insert(make_pair(p.pk(),Position{p.qty(),p.price()}));
+#ifdef TRACE
+            qDebug() << "level2 ExchangeData init selltlepos" << p.DebugString();
+#endif
+
                 }
             }
         }
@@ -52,30 +71,58 @@ void ExchangeData::init() {
 
     leveldb::DB *db2;
     status = leveldb::DB::Open(optionsInt, filedir("bookdeltastore"), &db2);
-    bookdeltastore.reset(db2);
     if ( !status.ok() ) {
         qCritical() << " cant open " + filedir("bookdeltastore");
         //todo emit fatal
         return;
     }
-    else {
+
+    bookdeltastore.reset(db2);
+
+    /*
+    auto it = bookdeltastore->NewIterator(leveldb::ReadOptions());
+    it->SeekToFirst();
+    string out;
+    bookdeltastore->GetProperty("leveldb.stats",&out);
+#ifdef TRACE
+            qDebug() << "level2 ExchangeData init bookdeltastore " << out <<  it->Valid() << " is valid?";
+#endif
+    */
+    {
         auto *it = bookdeltastore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             BookDelta bd;
-            bd.ParseFromString(it->value().ToString());
+            if ( !bd.ParseFromString(it->value().ToString()) )
+                qCritical() << "level2 ExchanegData bad read BookDelta";
+#ifdef TRACE
+            qDebug() << "level2 ExchangeData init BookDelta " << bd.playerid() << bd.seqnum();
+#endif
 
-            auto it2 = mLimitBooks.insert(make_pair(bd.playerid(),
-                           unique_ptr<MatchingEngine>(new MatchingEngine(false))));
-            //it2.first->second->mPkPos.insert(make_pair(p.pk(),Position{p.qty(),p.price()}));
+            auto it3 = mLimitBooks.find(bd.playerid());
+            if ( it3 == end(mLimitBooks)) {
+                auto it2 = mLimitBooks.insert(make_pair(bd.playerid(),
+                               unique_ptr<MatchingEngine>(new MatchingEngine(false))));
+                //it2.first->second->mPkPos.insert(make_pair(p.pk(),Position{p.qty(),p.price()}));
 
-            if ( !it2.second ) {
-                qWarning() << "unable to insert for" << bd.playerid();
-                continue;
+                if ( !it2.second ) {
+                    qWarning() << "unable to insert for" << bd.playerid();
+                    continue;
+                }
+
+#ifdef TRACE
+            qDebug() << "level2 ExchangeData new init BookDelta for" << bd.playerid();
+#endif
+
+                it2.first->second->mLimitBook.reset(new LimitBook());
+
+                it3 = it2.first;
             }
-            it2.first->second->mLimitBook.reset(new LimitBook());
-            LimitBook &lb = *(it2.first->second->mLimitBook);
+            LimitBook &lb = *(it3->second->mLimitBook);
             InsideBook *ib;
             if ( bd.has_newnew()) {
+#ifdef TRACE
+                qDebug() << "level2 ExchangeData new " << bd.newnew().DebugString();
+#endif
                 ib = lb.getInside(bd.newnew().buyside(),bd.newnew().price());
                 Order o;
                 o.mutable_core()->CopyFrom(bd.newnew());
@@ -84,12 +131,18 @@ void ExchangeData::init() {
             }
 
             for ( auto can : bd.removes() ) {
+#ifdef TRACE
+                qDebug() << "level2 ExchangeData remove " << can.DebugString();
+#endif
                 ib = lb.getInside(can.core().buyside(),can.core().price());
                 ib->Remove(can);
             }
 
             Level1 L1;
             for ( auto l1 : bd.level1tic()) {
+#ifdef TRACE
+                qDebug() << "level2 ExchangeData Level1 " << l1.DebugString();
+#endif
                 switch (l1.type()) {
                 case MarketTicker::BID:
                     L1.bidsize = l1.size();
@@ -106,16 +159,36 @@ void ExchangeData::init() {
                 }
             }
 
-            lb.updateTopfromCache(L1.bid,L1.ask);
+            if ( bd.level1tic_size() > 0) {
+#ifdef TRACE
+            qDebug() << "level2 ExchangeData bba " << L1.ToString();
+#endif
+                lb.updateTopfromCache(L1.bid,L1.ask);
+            }
         }
-        delete it;
+        if ( it != NULL ) delete it;
     }
+
+
+    //MarketTicker *mm = l1.New();
+    //mm->CopyFrom(l1);
+    //emit NewMarketTicker(mm);
+
+
+
 }
 
 void ExchangeData::closeAll() {
     mPositions.clear();
     mLimitBooks.clear();
     settlestore.reset();
+    bookdeltastore.reset();
+}
+
+void ExchangeData::clearNewWeek() {
+    closeAll();
+    removeAll();
+    init();
 }
 
 void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
@@ -139,8 +212,11 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
 void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
                               int32_t seqnum,
                               shared_ptr<FantasyName> fn) {
-    bool exitonly = fn->getStakeBalance() > 0;
+    bool exitonly = fn->getStakeBalance() < 0;
     auto pos = getPosition(fn->pubkey(),eo.playerid());
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnOrderNew exitonly" << exitonly << "pos " << pos;
+#endif
     if ( exitonly && (
          (eo.core().buyside() && pos.netqty > 0) ||
          (!eo.core().buyside() && pos.netqty < 0) )) {
@@ -152,6 +228,10 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
     auto it = mLimitBooks.find(eo.playerid());
     if ( it == end(mLimitBooks)) {
         //todo: confirm player_id even exists
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnOrderNew create new book " << eo.playerid();
+#endif
+
         auto it2 = mLimitBooks.insert(make_pair(eo.playerid(),
                unique_ptr<MatchingEngine>(new MatchingEngine())));
         if ( !it2.second ) {
@@ -170,22 +250,30 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
     ord.mutable_core()->CopyFrom(eo.core());
     ord.set_refnum(seqnum);
     ma.mLimitBook->NewOrder(ord);
-    mBookDelta.set_playerid(eo.playerid());
-    mBookDelta.set_public_key(Commissioner::pk2str(fn->pubkey()));
+    mBookDelta->set_playerid(eo.playerid());
+    mBookDelta->set_public_key(Commissioner::pk2str(fn->pubkey()));
     SaveBookDelta();
 }
 
 void ExchangeData::SaveBookDelta() {
-    int32_t seqnum = mBookDelta.seqnum();
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData SaveBookDelta" << mBookDelta->DebugString();
+#endif
+
+    int32_t seqnum = mBookDelta->seqnum();
     leveldb::Slice snum((char*)&seqnum, sizeof(int32_t));
-    if ( !bookdeltastore->Put(write_sync, snum, mBookDelta.SerializeAsString()).ok());
+    //string temp = "fuck you ass hole";//
+    //mBookDelta->SerializeAsString();
+    leveldb::Status st = bookdeltastore->Put(write_sync, snum, mBookDelta->SerializeAsString() );
+    if ( !st.ok());
         qWarning() << " error writing bookdeltastore";
 }
 
-BookDelta ExchangeData::mBookDelta{};
+//BookDelta mBookDelta{};
 
 void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
                                  shared_ptr<FantasyName> fn) {
+
     auto it = mLimitBooks.find(eo.playerid());
     if ( it == end(mLimitBooks)) {
         qWarning() << "invalid cancel LimitBook not found for" << eo.DebugString();
@@ -202,14 +290,14 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
     ord.mutable_core()->CopyFrom(eo.core());
     ord.set_refnum(eo.cancel_oref());
     ma.mLimitBook->CancelOrder(ord);
-    mBookDelta.set_playerid(eo.playerid());
-    mBookDelta.set_public_key(Commissioner::pk2str(fn->pubkey()));
+    mBookDelta->set_playerid(eo.playerid());
+    mBookDelta->set_public_key(Commissioner::pk2str(fn->pubkey()));
     SaveBookDelta();
 
 }
 
 Position ExchangeData::getPosition(const pubkey_t &pk,const string &playerid) {
-    Position ret;
+    Position ret{0,0};
     auto &pmap = mPositions[pk];
     auto it = pmap.find(playerid);
     if ( it != end(pmap))
@@ -218,10 +306,61 @@ Position ExchangeData::getPosition(const pubkey_t &pk,const string &playerid) {
     return ret;
 }
 
+void ExchangeData::OnGameResult(const GameResult&gs) {
+
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnGameResult " << gs.gameid();
+#endif
+
+    GameSettlePos gsp;
+    if ( !GetGameSettlePos(gs.gameid(),gsp) )
+       return;
+
+    for (auto ha : {"home","away"}) {
+        std::unordered_map<string,int32_t> idtoresult ;
+
+        for ( auto pr : ha == "home" ? gs.home_result() : gs.away_result()) {
+            float fresult = pr.result() * 100.0;
+            int n = floor(fresult + 0.5);
+            idtoresult[pr.playerid()] = n;
+        }
+
+        for ( auto pp : ha == "home" ? gsp.home() : gsp.away()) {
+            auto it = idtoresult.find(pp.playerid());
+            if ( it == end(idtoresult))
+                continue;
+
+            for ( auto spos : pp.positions() )
+                ProcessResult(spos,it);
+        }
+    }
+
+}
+
+bool ExchangeData::GetGameSettlePos(const string &gid,GameSettlePos &gsp) {
+    string temp;
+    leveldb::Slice sgid(gid);
+    if ( !settlestore->Get(leveldb::ReadOptions(), sgid, &temp).ok() ) {
+        qWarning() << "cant read GetGameSettlePos " << gid;
+        return false;
+    }
+    gsp.Clear();
+    if ( !gsp.ParseFromString(temp) ) {
+        qWarning() << "error parsing  GameSettlePos " << gid;
+        return false;
+    }
+
+    return true;
+}
+
 void ExchangeData::OnGameStart(std::string gid,
               std::vector<std::string> &home,
               std::vector<std::string> &away
               ) {
+
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnGameStart " << gid;
+#endif
 
     GameSettlePos gsp{};
     gsp.set_gameid(gid);
@@ -237,13 +376,22 @@ void ExchangeData::OnGameStart(std::string gid,
         }
         else {
             it->second->islocked = true;
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnGameStart locking " << it->first;
+#endif
+
             for ( auto p : it->second->mPkPos ) {
                 SettlePos sp;
                 sp.set_qty(p.second.netqty);
                 sp.set_price(p.second.netprice);
                 sp.set_pk(p.first);
                 bp.add_positions()->CopyFrom(sp);
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnGameStart settlepos " << sp.DebugString();
+#endif
+
             }
+
         }
         if ( ha == "home")
             gsp.add_home()->CopyFrom(bp);
@@ -255,31 +403,81 @@ void ExchangeData::OnGameStart(std::string gid,
         qWarning() << "error writing settlestore" << gid;
     else
         qInfo() << "OnGameStart " << gid;
-
 }
 
+void ExchangeData::OnWeekOver(int week) {
+    //set all results to 0 and proess pnl
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnWeekOver" << week;
+#endif
+
+    for (auto &it : mLimitBooks) {
+        ProcessResultOver(it.first,0);
+    }
+    clearNewWeek();
+}
+
+void ExchangeData::ProcessResult(const SettlePos &spos,std::unordered_map<string,int32_t>::const_iterator result) {
+    //set pnl delte position
+}
+
+void ExchangeData::ProcessResultOver(const string &key, int32_t result) {
+    //set pnl delte position
+    //mLimitBooks.erase(key);
+}
+
+
 void LimitBook::SaveRemove(Order &o,int32_t fillqty) {
-    auto no = ExchangeData::mBookDelta.add_removes();
+    auto no = mBookDelta->add_removes();
     no->CopyFrom(o);
     no->mutable_core()->set_size(fillqty);
 }
 
 void LimitBook::SaveNew(const OrderCore &oc) {
-    ExchangeData::mBookDelta.mutable_newnew()->CopyFrom(oc);
+#ifdef TRACE
+    string s = oc.buyside() ? "Bid" : "Ask";
+    qDebug() << "level2 New SaveNew " << s  << oc.price() << oc.size();
+#endif
+
+    mBookDelta->mutable_newnew()->CopyFrom(oc);
+}
+
+void LimitBook::NewTop(int price, int32_t qty, bool isbuy) {
+    MarketTicker *pmt = MarketTicker::default_instance().New();
+    MarketTicker &mt = *pmt;
+    mt.set_type(isbuy ? MarketTicker::BID : MarketTicker::ASK);
+    mt.set_price(price);
+    mt.set_size(qty);
+    mBookDelta->add_level1tic()->CopyFrom(mt);
+    emit pExchangeData->get()->NewMarketTicker(pmt);
+
+#ifdef TRACE
+    string s = isbuy ? "Bid" : "Ask";
+    qDebug() << "level2 NewTop " <<  s << price << qty;
+#endif
+
 }
 
 void LimitBook::NewOrder(Order &eo) {
-    ExchangeData::mBookDelta.Clear();
-    ExchangeData::mBookDelta.set_seqnum(eo.refnum());
-    //ExchangeData::mBookDelta.set_allocated_newnew(eo.mutable_core());
-    if ( eo.core().buyside() )
-        NewBid(eo);
-    else
-        NewAsk(eo);
+    mBookDelta->Clear();
+    mBookDelta->set_seqnum(eo.refnum());
+    //mBookDelta->set_allocated_newnew(eo.mutable_core());
+    if ( eo.core().buyside() ) {
+        if ( eo.core().price() > 0 && eo.core().size() > 0 && eo.core().size() <= 100000 )
+            NewBid(eo);
+        else
+            qWarning() << " invalid order";
+    }
+    else {
+        if ( eo.core().price() <= 40 && eo.core().size() > 0 && eo.core().size() <= 100000 )
+            NewAsk(eo);
+        else
+            qWarning() << " invalid order";
+    }
 }
 
 int32_t LimitBook::CancelOrder(Order &order) {
-    ExchangeData::mBookDelta.Clear();
+    mBookDelta->Clear();
     auto myprice = order.core().price()-1;
     if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
         return -1;
@@ -287,7 +485,7 @@ int32_t LimitBook::CancelOrder(Order &order) {
     if (order.core().buyside()) {
         mBids[myprice].Cancel(order);
         SaveRemove(order,order.core().size());
-        //ExchangeData::mBookDelta.add_removes()->CopyFrom(order);
+        //mBookDelta->add_removes()->CopyFrom(order);
         //{
         //Send(new BookFeedData(ExecType.Canceled, order));
 
@@ -321,5 +519,262 @@ int32_t LimitBook::CancelOrder(Order &order) {
     }
 }
 
+MarketSnapshot* MatchingEngine::makeSnapshot(const string &symbol) {
+    MarketSnapshot *ms = MarketSnapshot::default_instance().New();
+    ms->set_symbol(symbol);
+#ifdef TRACE
+qDebug() << "level2 makeSnapshot" << symbol;
+#endif
+
+    int a = 1;
+    int b = BOOK_SIZE;
+    int nexta = 0;
+    int nextb = 0;
+    InsideBook *next;
+    DepthItem *di;
+    do {
+        if ( b >= 1) {
+            if ( nullptr != (next = mLimitBook->getInside(true,b)))
+                if ( next->totSize > 0) {
+#ifdef TRACE
+                    qDebug() << "level2 makeSnapshot bid" << nextb << ":" << b << next->totSize;
+#endif
+
+                    if ( nextb == ms->depth_size())
+                        di = ms->add_depth();
+                    else if ( nextb < ms->depth_size() )//nextbid < depth_size
+                        di = ms->mutable_depth(nextb);
+                    else {
+                        qCritical() << " should not be here nexta > depth_size";
+                        continue;
+                    }
+
+
+                    di->set_bs(next->totSize);
+                    di->set_b(b);
+                    nextb++;
+                }
+            b--;
+        }
+
+        if ( a <= BOOK_SIZE) {
+            if ( nullptr != (next = mLimitBook->getInside(false,a)))
+                if ( next->totSize > 0) {
+#ifdef TRACE
+                    qDebug() << "level2 makeSnapshot ask" << nexta << ":" << a << next->totSize;
+#endif
+
+                    if ( nexta == ms->depth_size())
+                        di = ms->add_depth();
+                    else if ( nexta < ms->depth_size() )//nexta < depth_size
+                        di = ms->mutable_depth(nexta);
+                    else {
+                        qCritical() << " should not be here nexta > depth_size";
+                        continue;
+                    }
+
+                    di->set_as(next->totSize);
+                    di->set_a(a);
+                    nexta++;
+                }
+            a++;
+        }
+    } while(b >= 1 && a <= BOOK_SIZE);
+
+#ifdef TRACE
+    qDebug() << "level2 makeSnapshot" << symbol << "depthsize " << ms->depth_size();
+#endif
+
+    if ( ms->depth_size() > 0 )
+        return ms;
+}
+
+void LimitBook::NewBid(Order &order) {
+#ifdef TRACE
+qDebug() << "level2 New Bid " << order.core().price() << order.core().size();
+#endif
+
+    auto myprice = order.core().price()-1;
+    if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
+        return;
+
+    if (myprice < mBa) {
+        //if (order.constraint == Constraint.IOC)
+        //    Send(new BookFeedData(ExecType.Canceled, order));
+        // else
+        //{
+         mBids[myprice].New(order);
+#ifdef TRACE
+    qDebug() << "level2 NewBid 1 mBb" <<  mBb;
+#endif
+
+         if (myprice >= mBb) {
+             mBb = myprice;
+             NewTop(myprice+1, mBids[myprice].totSize, true);
+         }
+         NewNew(order);
+#ifdef TRACE
+    qDebug() << "level2 NewBid 2 mBb" <<  mBb;
+#endif
+
+         //}
+     }
+     else {
+#ifdef TRACE
+    qDebug() << "level2 NewBid 3 mBb" <<  mBb;
+#endif
+
+         SweepAsks(order); //will modify size
+#ifdef TRACE
+    qDebug() << "level2 NewBid 4 mBb" <<  mBb;
+#endif
+
+         GetTop(false);
+#ifdef TRACE
+    qDebug() << "level2 NewBid 5 mBb" <<  mBb;
+#endif
+
+         if (order.core().size() <= 0)
+             ;//Send(new BookFeedData(ExecType.Done, order));
+         else {
+             //if (order.constraint == Constraint.IOC)
+             //    Send(new BookFeedData(ExecType.Canceled, order));
+             //else {
+#ifdef TRACE
+    qDebug() << "level2 NewBid 6 mBb" <<  mBb;
+#endif
+
+             mBids[myprice].New(order);
+             mBb = myprice;
+#ifdef TRACE
+    qDebug() << "level2 NewBid 7 mBb" <<  mBb;
+#endif
+
+             NewTop(myprice+1, mBids[myprice].totSize, true);
+             NewNew(order);
+
+
+             //mFeed.Executi    on(order, BookFeed.OrdStatus.New, 0);
+             //Send(new BookFeedData(ExecType.New,order));
+             //}
+         }
+     }
+}
+
+void LimitBook::NewAsk(Order &order){
+#ifdef TRACE
+   qDebug() << "level2 New Ask " << order.core().price() << order.core().size();
+#endif
+
+       auto myprice = order.core().price()-1;
+       if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
+           return;
+
+       if (myprice > mBb) {
+           //if (order.constraint == Constraint.IOC)
+           //    Send(new BookFeedData(ExecType.Canceled, order));
+           // else
+           //{
+            mAsks[myprice].New(order);
+            if (myprice <= mBa) {
+                mBa = myprice;
+                NewTop(myprice+1, mAsks[myprice].totSize, false);
+            }
+            NewNew(order);
+            //}
+        }
+        else {
+            SweepBids(order); //will modify size
+            GetTop(true);
+
+            if (order.core().size() <= 0)
+                ;//Send(new BookFeedData(ExecType.Done, order));
+            else {
+                //if (order.constraint == Constraint.IOC)
+                //    Send(new BookFeedData(ExecType.Canceled, order));
+                //else {
+                mAsks[myprice].New(order);
+                mBa = myprice;
+                NewTop(myprice+1, mAsks[myprice].totSize, false);
+                NewNew(order);
+
+                //mFeed.Execution(order, BookFeed.OrdStatus.New, 0);
+                //Send(new BookFeedData(ExecType.New,order));
+                //}
+            }
+        }
+   }
+
+void LimitBook::SweepAsks( Order &order) {
+    int price = order.core().price()-1;
+    int left = order.core().size();
+    for (; mBa <= price; ++mBa) {
+        InsideBook &curr = mAsks[mBa];
+
+        int fillqty = min(curr.totSize, left);
+        if (fillqty <= 0)
+            continue;
+
+
+        SendFill(order, fillqty, mBa);
+        //NewTrade(mBa, fillqty, Side.BID);
+
+        for (auto iiter = curr.top();
+             iiter != curr.bot() && left > 0;) {
+            Order &ord = *iiter;
+            fillqty = min(ord.core().size(), left);
+            if (fillqty <= 0)
+                continue;
+
+            left -= fillqty;
+
+            SendFill(ord, fillqty, mBa);
+            //ord.mutable_core()->set_size(ord.core().size()-fillqty);
+            SaveRemove(ord,fillqty);
+            if (curr.Fill(fillqty, iiter))
+                ;//Send(new BookFeedData(ExecType.Done, ord));
+        }
+
+        //NewDepth(Side.ASK, mBa);
+
+        if (left <= 0)
+            break;
+    }
+}
+void LimitBook::SweepBids( Order &order) {
+    int price = order.core().price()-1;
+    int left = order.core().size();
+    for (; mBb >= price; --mBb) {
+        InsideBook &curr = mBids[mBb];
+
+        int fillqty = min(curr.totSize, left);
+        if (fillqty <= 0)
+            continue;
+
+        SendFill(order, fillqty, mBb);
+        //NewTrade(mBb, fillqty, Side.ASK);
+
+        for (auto iiter = curr.rtop();
+             iiter != curr.rbot() && left > 0;) {
+            Order &ord = *iiter;
+            fillqty = min(ord.core().size(), left);
+            if (fillqty <= 0)
+                continue;
+
+            left -= fillqty;
+
+            SendFill(ord, fillqty, mBa);
+            //ord.mutable_core()->set_size(ord.core().size()-fillqty);
+            SaveRemove(ord,fillqty);
+            if (curr.Fill(fillqty, iiter))
+                ;//Send(new BookFeedData(ExecType.Done, ord));
+        }
+
+        //NewDepth(Side.ASK, mBa);
+
+        if (left <= 0)
+            break;
+    }
+}
 
 

@@ -5,6 +5,7 @@
 //  Created by Jay Berg on 8/24/14.
 //
 //
+#include <QApplication>
 
 #include <utility>
 #include "Commissioner.h"
@@ -35,6 +36,9 @@ void BlockProcessor::hardReset() {
     mRecorder.closeAll();
     mData.closeAll();
     mNameData.closeAll();
+    mExchangeData.closeAll();
+
+    mExchangeData.removeAll();
 
     fc::remove_all(Platform::instance()->getRootDir() + "index/");
 }
@@ -57,12 +61,14 @@ int32_t BlockProcessor::init() {
 
     mData.init();
     mNameData.init();
+    mExchangeData.init();
 
     qInfo() <<  "YES mRecorder is valid";
 
     lastidprocessed =  mRecorder.getLastBlockId();
     return lastidprocessed;
 }
+
 
 int32_t BlockProcessor::process(Block &sblock) {
     qDebug() << "process: " << sblock.signedhead().head().num();
@@ -230,6 +236,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+                mExchangeData.OnGameResult(rd.game_result());
 #ifdef DATAAGENTWRITENAMES
                 {
 #ifndef DATAAGENTWRITENAMES_FORCE
@@ -480,22 +487,31 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
         return false;
     }
 
-    if ( st.fantasy_name() == "") {
-        qCritical() << " Blank FantasyName";
-        return false;;
+    fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+    if ( st.trans().type() == TransType::STAMPED) {
+        if ( Commissioner::verifyOracle(sig, digest) )
+            return true;
+
+        qCritical() << "TransType::STAMPED !Commissioner::verifyOracle";
+        return false;
     }
 
-    fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+    if ( st.fantasy_name() == "") {
+        qCritical() << " Blank FantasyName";
+        return false;
+    }
+
     if (t.type() == TransType::NAME) {
         auto nt = t.GetExtension(NameTrans::name_trans);
         if (!verify_name(st, nt, sig, digest)) {
             qInfo() << " !verify name";
             return false;
         }
+
+        return true;
     }
 
-    else if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
-    {
+    if (!Commissioner::verifyByName(sig, digest, st.fantasy_name())) {
         qCritical() << "!Commissioner::verifyByName";
         //fbutils::LogFalse(std::string("Processor::process cant verify trans sig").append(st.DebugString()));
         return false;;
@@ -608,6 +624,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
 void BlockProcessor::OnWeekOver(int week) {
     mNameData.OnWeekOver(week);
     mData.OnWeekOver(week);
+    mExchangeData.OnWeekOver(week);
     emit WeekOver(week);
 }
 
@@ -700,10 +717,13 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
     }
 
     ret = Commissioner::getName(st.fantasy_name());
-    fc::ecc::signature sig = Commissioner::str2sig(st.sig());
-    if ( !Commissioner::verify(sig,digest,ret->pubkey()) )
-        ret.reset();
-
+    if ( !ret )
+        qCritical() << " cant find FantasyName" << st.fantasy_name();
+    else {
+        fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+        if ( !Commissioner::verify(sig,digest,ret->pubkey()) )
+            ret.reset();
+    }
     return ret;
 }
 

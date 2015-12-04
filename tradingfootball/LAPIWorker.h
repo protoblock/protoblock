@@ -40,11 +40,15 @@ class MainLAPIWorker : public QObject , public IResolvable
     fantasybit::FantasyNameData namedata;
     fantasybit::BlockProcessor processor;
 
+    fantasybit::ExchangeData exchangedata;
+
     //fantasybit::DeltaData deltadata{};
     std::map<std::string,fantasybit::MyFantasyName> myfantasynames{};
     fantasybit::MyFantasyName myCurrentName{};
 
     void DoPostTx(SignedTransaction &st);
+    void DoPostTr(SignedTransaction &st);
+
     std::recursive_mutex last_mutex{};
 
 public:
@@ -57,6 +61,8 @@ public:
     fantasybit::FantasyNameData &NameData() { return namedata; }
 
     fantasybit::FantasyAgent &Agent() { return agent; }
+
+    fantasybit::ExchangeData &ExData() { return exchangedata; }
 
     /*
     std::vector<fantasybit::GameRoster> getWeekGameRosters(int week){
@@ -122,8 +128,9 @@ public slots:
     void OnFoundName(string);
     void OnProjLive(fantasybit::FantasyBitProj);
     void OnClaimName(QString);
-    void OnProjTX(vector<fantasybit::FantasyBitProj>vinp);
+    void OnProjTX(vector<fantasybit::FantasyBitProj>);
 
+    void OnNewOrder(fantasybit::ExchangeOrder);
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
     //void OnNameBal(fantasybit::FantasyNameBal);

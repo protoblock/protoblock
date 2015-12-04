@@ -7,6 +7,7 @@
 #include <QCheckBox>
 #include <QSettings>
 #include "fnametool.h"
+#include "trading.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -31,6 +32,8 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myLeaderBaordTableView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->myFantasyNamesCombo->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    ui->tabWidget->setCurrentWidget(ui->level2);
+    ui->tradingview->Init();
 
 }
 
@@ -117,6 +120,10 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(onControlMessage(QString)),
                      ui->myCurrentWeekWidget,SLOT(onControlMessage(QString)));
 
+    QObject::connect(ui->tradingview,SIGNAL(SendOrder(fantasybit::ExchangeOrder)),
+                      myLAPIWorker,SLOT(OnNewOrder(fantasybit::ExchangeOrder)));
+
+
     //wake up core thread
     Core::instance()->guiIsAwake();
 #ifndef DATAAGENTGUI
@@ -157,7 +164,9 @@ void MainWindow::initialize() {
     //ui->myStackedWidget->adjustSize();
     //this->adjustSize();
 
-    ui->centralwidget->resize(qsize);
+    ui->level1->resize(qsize);
+    ui->tabWidget->adjustSize();
+    ui->centralwidget->adjustSize();
     this->adjustSize();
     //this->showMaximized();
     width = ui->mySeasonLabel->fontMetrics().width("2015");

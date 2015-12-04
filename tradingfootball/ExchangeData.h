@@ -20,6 +20,10 @@
 #include "FantasyName.h"
 #include "ExData.pb.h"
 #include <list>
+#include <fc/filesystem.hpp>
+#include <string>       // std::string
+#include <iostream>     // std::cout
+#include <sstream>      // std::stringstrea
 
 using namespace std;
 
@@ -29,6 +33,9 @@ namespace fantasybit
 struct Position {
     int netqty;
     int netprice;
+    operator string() {
+        return to_string(netqty) + " " + to_string(netprice);
+    }
 };
 
 /*
@@ -40,6 +47,7 @@ struct Order {
 */
 
 struct InsideBook {
+    InsideBook() : totSize(0) {}
     list<Order> mOList;
     std::unordered_map<int32_t,list<Order>::iterator> mOMap;
     //static int32_t orderIdCount;
@@ -60,6 +68,14 @@ struct InsideBook {
 
     list<Order>::iterator bot() {
         return end(mOList);
+    }
+
+    list<Order>::reverse_iterator rtop() {
+        return rbegin(mOList);
+    }
+
+    list<Order>::reverse_iterator rbot() {
+        return rend(mOList);
     }
 
     void New(Order& order) {
@@ -88,7 +104,7 @@ struct InsideBook {
         return;
     }
 
-    bool Fill(int32_t qty,list<Order>::iterator iter) {
+    bool Fill(int32_t qty,list<Order>::iterator &iter) {
         totSize -= qty;
         auto newsize = iter->core().size() - qty;
         if ( newsize > 0 ) {
@@ -96,7 +112,22 @@ struct InsideBook {
         }
         else {
             mOMap.erase(iter->refnum());
-            mOList.erase(iter);
+            iter = mOList.erase(iter);
+        }
+
+        return true;
+    }
+
+    bool Fill(int32_t qty,list<Order>::reverse_iterator &iter) {
+        totSize -= qty;
+        auto newsize = iter->core().size() - qty;
+        if ( newsize > 0 ) {
+            iter->mutable_core()->set_size(newsize);
+        }
+        else {
+            mOMap.erase(iter->refnum());
+
+            mOList.erase(std::next(iter).base());
         }
 
         return true;
@@ -127,111 +158,56 @@ struct InsideBook {
 };
 
 struct Level1 {
+   Level1() {
+       bidsize = bid = ask = asksize = last = lastsize = 0;
+   }
+
    int32_t bidsize;
    int bid;
    int ask;
    int32_t asksize;
    int last;
    int32_t lastsize;
+   std::string ToString() {
+       std::stringstream ss;
+       ss << "Level1 "
+          << bidsize << " "
+          << bid << " "
+          << ask << " "
+          << asksize << " "
+          << last << " "
+          << lastsize;
+
+        return ss.str();
+   }
+
 };
 
 #define BOOK_SIZE 40
 class LimitBook {
     InsideBook mBids[BOOK_SIZE], mAsks[BOOK_SIZE];
     int mBb, mBa;
-    void NewBid(Order &order) {
-        auto myprice = order.core().price()-1;
-        if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
-            return;
-
-        if (myprice < mBa) {
-            //if (order.constraint == Constraint.IOC)
-            //    Send(new BookFeedData(ExecType.Canceled, order));
-            // else
-            //{
-             mBids[myprice].New(order);
-             if (myprice >= mBb) {
-                 mBb = myprice;
-                 NewTop(myprice, mBids[myprice].totSize, true);
-             }
-             NewNew(order);
-             //}
-         }
-         else {
-             SweepAsks(order); //will modify size
-             GetTop(false);
-
-             if (order.core().size() <= 0)
-                 ;//Send(new BookFeedData(ExecType.Done, order));
-             else {
-                 //if (order.constraint == Constraint.IOC)
-                 //    Send(new BookFeedData(ExecType.Canceled, order));
-                 //else {
-                 mBids[myprice].New(order);
-                 mBb = myprice;
-                 NewTop(myprice, mBids[myprice].totSize, true);
-                 NewNew(order);
-
-                 //mFeed.Execution(order, BookFeed.OrdStatus.New, 0);
-                 //Send(new BookFeedData(ExecType.New,order));
-                 //}
-             }
-         }
-    }
-    int32_t NewAsk(Order &eo) { return 0; }
-
-    void NewTop(int price, int32_t qty, bool isbuy) {}
+    void NewBid(Order &order);
+    void NewAsk(Order &order);
+    void NewTop(int price, int32_t qty, bool isbuy);
     void NewNew(Order &order) {
         SaveNew(order.core());
     }
 
-    void SweepAsks( Order &order) {
-        int price = order.core().price();
-        int left = order.core().size();
-        for (; mBa <= price; ++mBa) {
-            InsideBook curr = mAsks[mBa];
 
-            int fillqty = min(curr.totSize, left);
-            if (fillqty <= 0)
-                continue;
-
-            //SendFill(order, fillqty, mBa);
-            //NewTrade(mBa, fillqty, Side.BID);
-
-            for (auto iiter = curr.top();
-                 iiter != curr.bot() && left > 0; ++iiter) {
-                Order &ord = *iiter;
-                fillqty = min(ord.core().size(), left);
-                if (fillqty <= 0)
-                    continue;
-
-                left -= fillqty;
-
-                //SendFill(ord, fillqty, mBa);
-                //ord.mutable_core()->set_size(ord.core().size()-fillqty);
-                SaveRemove(ord,fillqty);
-                if (curr.Fill(fillqty, iiter))
-                    ;//Send(new BookFeedData(ExecType.Done, ord));
-            }
-
-            //NewDepth(Side.ASK, mBa);
-
-            if (left <= 0)
-                break;
-        }
-    }
-
+    void SweepAsks( Order &order);
+    void SweepBids( Order &order);
     void GetTop(bool isbuy) {
         if (isbuy) {
-            for (; mBb > 0 && mBids[mBb].totSize == 0; --mBb) ;
-            if (mBb <= 0)
+            for (; mBb >= 0 && mBids[mBb].totSize == 0; --mBb) ;
+            if (mBb < 0)
                 NewTop(0,0,isbuy);
             else
                 NewTop(mBb, mBids[mBb].totSize, isbuy);
         }
         else {
             for (; mBa < BOOK_SIZE && mAsks[mBa].totSize == 0; ++mBa) ;
-            if (mBa > BOOK_SIZE)
+            if (mBa >= BOOK_SIZE)
                 NewTop(0,0,isbuy);
             else
                 NewTop(mBa, mAsks[mBa].totSize, isbuy);
@@ -240,11 +216,15 @@ class LimitBook {
 
     void SaveRemove(Order &o,int32_t fillqty);
     void SaveNew(const OrderCore &oc);
+    void SendFill(Order &o, int32_t q, int price ) {
+        o.mutable_core()->set_size(o.core().size()-q);
+        //send fill
+    }
 
 public:
     LimitBook() {
-        mBb = 0;
-        mBa = BOOK_SIZE-1;
+        mBb = -1;
+        mBa = BOOK_SIZE;
     }
 
     InsideBook *getInside(bool bid, int32_t price) {
@@ -268,9 +248,14 @@ struct MatchingEngine {
     unique_ptr<LimitBook> mLimitBook;
     bool islocked;
     std::unordered_map<std::string,Position> mPkPos;
+
+    MarketSnapshot *makeSnapshot(const string &symbol) ;
 };
 
-class ExchangeData {
+
+class ExchangeData : public QObject {
+
+    Q_OBJECT
 
     std::shared_ptr<leveldb::DB> settlestore;
     std::shared_ptr<leveldb::DB> bookdeltastore;
@@ -278,12 +263,14 @@ class ExchangeData {
     std::unordered_map<pubkey_t,std::unordered_map<std::string,Position>> mPositions;
     std::unordered_map<string,unique_ptr<MatchingEngine>> mLimitBooks;
     leveldb::WriteOptions write_sync{};
-
+    void ProcessResultOver(const string &,int32_t);
+    void ProcessResult(const SettlePos &spos,std::unordered_map<string,int32_t>::const_iterator result);
+    bool GetGameSettlePos(const string &gid,GameSettlePos &gsp);
+    bool amlive = false;
 public:
     ExchangeData() {}
     void init();
     void closeAll();
-    static BookDelta mBookDelta;
 
     void OnNewOrderMsg(const ExchangeOrder&, int32_t seqnum,
                        shared_ptr<fantasybit::FantasyName> fn);
@@ -298,7 +285,8 @@ public:
 
     Position getPosition(const pubkey_t &pk,const string &playerid);
 
-    void ExchangeData::SaveBookDelta();
+    void SaveBookDelta();
+    void OnGameResult(const GameResult&gs);
 
     void OnNewOrderMsg(const ExchangeOrder&);
 
@@ -306,9 +294,46 @@ public:
                      std::vector<std::string> &home,
                      std::vector<std::string> &away
                      );
+    void clearNewWeek();
 
+    void OnWeekOver(int week);
     std::string filedir(const std::string &in) {
         return GET_ROOT_DIR() + "trade/" + in;
+    }
+
+    void removeAll() {
+       fc::remove_all(GET_ROOT_DIR() + "trade/");
+    }
+
+signals:
+    void NewMarketTicker(fantasybit::MarketTicker*);
+    void NewMarketSnapShot(fantasybit::MarketSnapshot*);
+public slots:
+    void OnLive(bool subscribe) {
+        amlive = true;
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnLive";
+#endif
+
+        for (auto &it : mLimitBooks) {
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
+#endif
+            emit NewMarketSnapShot(it.second->makeSnapshot(it.first));
+        }
+    }
+
+};
+
+class ExchangeDataHolder {
+    ExchangeData *instance;
+public:
+    void set(ExchangeData *that) {
+        instance = that;
+    }
+
+    ExchangeData *get() {
+        return instance;
     }
 
 };

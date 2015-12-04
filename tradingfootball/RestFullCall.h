@@ -463,6 +463,10 @@ public:
         return getTx(fantasybit::LAPIURL.data(),ownerThread);
     }
 
+    static std::string myGetTr(QThread * ownerThread = QThread::currentThread()){
+        return getTr(fantasybit::LAPIURL.data(),ownerThread);
+    }
+
     static std::string getTx(const QString & baseUrl,
                              QThread * ownerThread = QThread::currentThread()){
         RestfullClient client(QUrl(baseUrl),ownerThread);
@@ -471,6 +475,20 @@ public:
         //hard coded url
         //TODO move to settings
         QString customRoute("tx");
+        //customRoute = customRoute.arg(route).arg(blockNum);
+        client.getData(customRoute,params,headers);
+
+        return client.lastReply().toStdString();
+    }
+
+    static std::string getTr(const QString & baseUrl,
+                             QThread * ownerThread = QThread::currentThread()){
+        RestfullClient client(QUrl(baseUrl),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        //hard coded url
+        //TODO move to settings
+        QString customRoute("trade");
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
 

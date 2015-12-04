@@ -32,7 +32,7 @@ class BlockProcessor : public QObject {
     BlockRecorder mRecorder{};
     NFLStateData &mData;
     FantasyNameData &mNameData;
-    ExchangeData mExchangeData;
+    ExchangeData &mExchangeData;
     int32_t realHeight = 0;
     int32_t lastidprocessed = 0;
     //GlobalState mGlobalState{};
@@ -53,8 +53,10 @@ signals:
 
 
 public:
-    BlockProcessor(NFLStateData &data, FantasyNameData &namedata) :
-        mData(data), mNameData(namedata) {}
+    BlockProcessor(NFLStateData &data, FantasyNameData &namedata,
+                   ExchangeData &ed) :
+        mData(data), mNameData(namedata) , mExchangeData(ed) {}
+
     int32_t init();
 
     int32_t process(Block &sblock);

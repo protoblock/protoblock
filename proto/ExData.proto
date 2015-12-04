@@ -36,6 +36,15 @@ message MarketTicker {
     optional int32 price = 30;
 }
 
+message DepthItem {
+    optional int32 level = 10;
+    optional int32 b = 30;
+    optional int32 a = 40;
+    optional int32 bs = 50;
+    optional int32 as = 60;
+
+}
+
 message BookDelta {
     optional string public_key = 10;
     optional int32 seqnum = 20;
@@ -44,4 +53,9 @@ message BookDelta {
     repeated Order removes = 50;
     repeated MarketTicker level2tic = 60;
     repeated MarketTicker level1tic = 70;
+}
+
+message MarketSnapshot {
+    optional string symbol = 10;
+    repeated DepthItem depth = 70;
 }

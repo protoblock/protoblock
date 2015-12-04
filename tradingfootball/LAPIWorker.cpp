@@ -10,11 +10,12 @@
 #include <vector>
 #include "Commissioner.h"
 
+
 using namespace std;
 using namespace fantasybit;
 
 MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
-    data{}, namedata{}, processor(data,namedata)
+    data{}, namedata{}, exchangedata{}, processor(data,namedata, exchangedata)
 {
     timer = new QTimer(this);
     node.thread()->connect(node.thread(),
@@ -39,9 +40,11 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
 
     //data processing
+    QObject::connect(this,SIGNAL(LiveData(bool)),&exchangedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
+
 
     //data to data signals
     QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
@@ -468,7 +471,25 @@ void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
     rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
 }
 
+void MainLAPIWorker::DoPostTr(SignedTransaction &st) {
+    auto txstr = st.SerializeAsString();
+    RestfullClient rest(QUrl(PAPIURL.data()));
+    //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
+    rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
+}
 
+
+void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
+
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::EXCHANGE);
+    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+    DoPostTr(sn);
+    //namedata.Subscribe(myCurrentName.name());
+}
 
 /*ys
 //ToDo: convert names with a status OnLive()

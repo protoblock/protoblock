@@ -55,7 +55,11 @@ namespace PropertyNames {
     ENUMITEM(D1pt)
     ENUMITEM(PtsA)
 
-
+    ENUMITEM(BID)
+    ENUMITEM(BIDSIZE)
+    ENUMITEM(ASK)
+    ENUMITEM(ASKSIZE)
+    ENUMITEM(LEVEL)
 
 
     template<typename Name>
