@@ -216,16 +216,15 @@ class LimitBook {
 
     void SaveRemove(Order &o,int32_t fillqty);
     void SaveNew(const OrderCore &oc);
-    void SendFill(Order &o, int32_t q, int price ) {
-        o.mutable_core()->set_size(o.core().size()-q);
-        //send fill
-    }
+    void SendFill(Order &o, int32_t q, int price );
 
 public:
-    LimitBook() {
+    LimitBook(const string &playerid) : mPlayerid(playerid) {
         mBb = -1;
         mBa = BOOK_SIZE;
     }
+
+    string mPlayerid;
 
     InsideBook *getInside(bool bid, int32_t price) {
         return bid ? &mBids[price-1] : &mAsks[price-1];
@@ -244,12 +243,17 @@ public:
 };
 
 struct MatchingEngine {
-    MatchingEngine(bool il = false) : islocked(il) {}
+    MatchingEngine(const string &playerid,bool il = false) : mPlayerid(playerid), islocked(il) {
+
+    }
     unique_ptr<LimitBook> mLimitBook;
     bool islocked;
     std::unordered_map<std::string,Position> mPkPos;
-
-    MarketSnapshot *makeSnapshot(const string &symbol) ;
+    string mPlayerid;
+    MarketSnapshot *makeSnapshot(MarketSnapshot *) ;
+    void ResetLimitBook() {
+        mLimitBook.reset(new LimitBook(mPlayerid));
+    }
 };
 
 
@@ -259,14 +263,33 @@ class ExchangeData : public QObject {
 
     std::shared_ptr<leveldb::DB> settlestore;
     std::shared_ptr<leveldb::DB> bookdeltastore;
+    std::shared_ptr<leveldb::DB> snapstore;
 
     std::unordered_map<pubkey_t,std::unordered_map<std::string,Position>> mPositions;
     std::unordered_map<string,unique_ptr<MatchingEngine>> mLimitBooks;
+    std::unordered_map<string,ContractOHLC> mContractOHLC;
+    std::unordered_map<string,MarketQuote> mMarketQuote;
+
+
     leveldb::WriteOptions write_sync{};
     void ProcessResultOver(const string &,int32_t);
     void ProcessResult(const SettlePos &spos,std::unordered_map<string,int32_t>::const_iterator result);
     bool GetGameSettlePos(const string &gid,GameSettlePos &gsp);
     bool amlive = false;
+
+    void StoreOhlc(string playerid) {
+//        if (!snapstore->Put(write_sync, "xxxx",
+//                            "xxxxxx").ok())
+
+        if (!snapstore->Put(write_sync, playerid, mContractOHLC[playerid].SerializeAsString()).ok())
+            qWarning() << "error writing ohlc";// << ohlc.DebugString();
+        else
+            if ( amlive )
+                qDebug() << "snapstore stored" << mContractOHLC[playerid].DebugString();
+            else
+                qDebug() << "snapstore stored";
+    }
+
 public:
     ExchangeData() {}
     void init();
@@ -305,24 +328,12 @@ public:
        fc::remove_all(GET_ROOT_DIR() + "trade/");
     }
 
+    void OnMarketTicker(const string &playerid, fantasybit::MarketTicker *mt);
 signals:
     void NewMarketTicker(fantasybit::MarketTicker*);
     void NewMarketSnapShot(fantasybit::MarketSnapshot*);
 public slots:
-    void OnLive(bool subscribe) {
-        amlive = true;
-#ifdef TRACE
-    qDebug() << "level2 ExchangeData OnLive";
-#endif
-
-        for (auto &it : mLimitBooks) {
-#ifdef TRACE
-    qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
-#endif
-            emit NewMarketSnapShot(it.second->makeSnapshot(it.first));
-        }
-    }
-
+    void OnLive(bool subscribe);
 };
 
 class ExchangeDataHolder {
@@ -334,6 +345,29 @@ public:
 
     ExchangeData *get() {
         return instance;
+    }
+};
+
+class BookDeltaMediator : public BookDelta {
+public:
+    void OnFill(MarketTicker *mt) {
+        auto &myphlc = *mutable_ohlc();
+
+        if ( myphlc.has_high() || mt->price() > myphlc.high())
+            myphlc.set_high(mt->price());
+        if ( myphlc.has_low() || myphlc.low() <= 0 || mt->price() < myphlc.low())
+            myphlc.set_low(mt->price());
+        if ( !myphlc.has_open() || myphlc.open() == 0)
+            myphlc.set_open(mt->price());
+        myphlc.set_close(mt->price());
+        myphlc.set_volume(myphlc.volume()+mt->size());
+        myphlc.set_change(myphlc.close() - myphlc.open());
+    }
+
+    void Reset(const string &ticker) {
+        Clear();
+        set_playerid(ticker);
+        mutable_ohlc()->set_symbol(ticker);
     }
 
 };

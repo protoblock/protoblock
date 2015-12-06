@@ -60,6 +60,8 @@ namespace PropertyNames {
     ENUMITEM(ASK)
     ENUMITEM(ASKSIZE)
     ENUMITEM(LEVEL)
+    ENUMITEM(LAST)
+    ENUMITEM(LASTSIZE)
 
 
     template<typename Name>

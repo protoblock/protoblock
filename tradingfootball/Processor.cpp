@@ -36,9 +36,12 @@ void BlockProcessor::hardReset() {
     mRecorder.closeAll();
     mData.closeAll();
     mNameData.closeAll();
+#ifdef TRADE_FEATURE
     mExchangeData.closeAll();
 
     mExchangeData.removeAll();
+#endif
+
 
     fc::remove_all(Platform::instance()->getRootDir() + "index/");
 }
@@ -61,7 +64,10 @@ int32_t BlockProcessor::init() {
 
     mData.init();
     mNameData.init();
+#ifdef TRADE_FEATURE
     mExchangeData.init();
+#endif
+
 
     qInfo() <<  "YES mRecorder is valid";
 
@@ -236,7 +242,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+#ifdef TRADE_FEATURE
                 mExchangeData.OnGameResult(rd.game_result());
+#endif
 #ifdef DATAAGENTWRITENAMES
                 {
 #ifndef DATAAGENTWRITENAMES_FORCE
@@ -438,7 +446,10 @@ void BlockProcessor::process(const DataTransition &indt) {
                 awayp.push_back(hr.first);
 
             mNameData.OnGameStart(t.gameid(),homep,awayp);
+#ifdef TRADE_FEATURE
             mExchangeData.OnGameStart(t.gameid(),homep,awayp);
+#endif
+
         }
         break;
     case DataTransition_Type_WEEKOVER:
@@ -609,6 +620,10 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     switch (t.type()) {
         case TransType::EXCHANGE:
         {
+#ifndef TRADE_FEATURE
+            break;
+#endif
+
             auto emdg = t.GetExtension(ExchangeOrder::exchange_order);
             qDebug() << "new ExchangeOrder " << emdg.DebugString();
 
@@ -624,7 +639,10 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
 void BlockProcessor::OnWeekOver(int week) {
     mNameData.OnWeekOver(week);
     mData.OnWeekOver(week);
+#ifdef TRADE_FEATURE
     mExchangeData.OnWeekOver(week);
+#endif
+
     emit WeekOver(week);
 }
 
