@@ -33,6 +33,11 @@ void Trading::Init() {
        QObject::connect(exchangedata,SIGNAL(NewMarketSnapShot(fantasybit::MarketSnapshot*)),
                          this,SLOT(OnMarketSnapShot(fantasybit::MarketSnapshot*)));
 
+       QObject::connect(exchangedata,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
+                         this,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
+
+
+
     }
 
     QObject::connect(ui->playerList,SIGNAL(doubleClicked(QModelIndex)),
@@ -293,6 +298,16 @@ void Trading::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
         mPlayerListModel.updateItemProperty<PropertyNames::LASTSIZE>(playerid,mq.ls());
     }
 }
+
+void Trading::OnDepthDelta(fantasybit::DepthFeedDelta* df) {
+    if ( df->symbol() == "" )
+        return;
+#ifdef TRACE
+    qDebug() << "level2 OnDepthDelta " << df->DebugString();
+#endif
+    mDepthTableModel.onDelta(df);
+}
+
 
 decltype(Trading::icons) Trading::icons{
     {"SF",":/NFL/png/49ers.png"},

@@ -42,6 +42,9 @@ const ::google::protobuf::Descriptor* MarketTicker_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   MarketTicker_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* MarketTicker_Type_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* DepthFeedDelta_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  DepthFeedDelta_reflection_ = NULL;
 const ::google::protobuf::Descriptor* ContractOHLC_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ContractOHLC_reflection_ = NULL;
@@ -186,7 +189,25 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketTicker));
   MarketTicker_Type_descriptor_ = MarketTicker_descriptor_->enum_type(0);
-  ContractOHLC_descriptor_ = file->message_type(7);
+  DepthFeedDelta_descriptor_ = file->message_type(7);
+  static const int DepthFeedDelta_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, symbol_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, isbid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, size_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, price_),
+  };
+  DepthFeedDelta_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      DepthFeedDelta_descriptor_,
+      DepthFeedDelta::default_instance_,
+      DepthFeedDelta_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(DepthFeedDelta));
+  ContractOHLC_descriptor_ = file->message_type(8);
   static const int ContractOHLC_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ContractOHLC, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ContractOHLC, open_),
@@ -207,7 +228,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ContractOHLC));
-  DepthItem_descriptor_ = file->message_type(8);
+  DepthItem_descriptor_ = file->message_type(9);
   static const int DepthItem_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, level_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, b_),
@@ -226,7 +247,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DepthItem));
-  BookDelta_descriptor_ = file->message_type(9);
+  BookDelta_descriptor_ = file->message_type(10);
   static const int BookDelta_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, public_key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, seqnum_),
@@ -248,7 +269,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BookDelta));
-  MarketQuote_descriptor_ = file->message_type(10);
+  MarketQuote_descriptor_ = file->message_type(11);
   static const int MarketQuote_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketQuote, bs_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketQuote, b_),
@@ -269,7 +290,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketQuote));
-  MarketSnapshot_descriptor_ = file->message_type(11);
+  MarketSnapshot_descriptor_ = file->message_type(12);
   static const int MarketSnapshot_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, week_),
@@ -315,6 +336,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     MarketTicker_descriptor_, &MarketTicker::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    DepthFeedDelta_descriptor_, &DepthFeedDelta::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ContractOHLC_descriptor_, &ContractOHLC::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     DepthItem_descriptor_, &DepthItem::default_instance());
@@ -343,6 +366,8 @@ void protobuf_ShutdownFile_ExData_2eproto() {
   delete OrderFill_reflection_;
   delete MarketTicker::default_instance_;
   delete MarketTicker_reflection_;
+  delete DepthFeedDelta::default_instance_;
+  delete DepthFeedDelta_reflection_;
   delete ContractOHLC::default_instance_;
   delete ContractOHLC_reflection_;
   delete DepthItem::default_instance_;
@@ -377,25 +402,27 @@ void protobuf_AddDesc_ExData_2eproto() {
     "MarketTicker\022+\n\004type\030\001 \001(\0162\035.fantasybit."
     "MarketTicker.Type\022\014\n\004size\030\024 \001(\005\022\r\n\005price"
     "\030\036 \001(\005\"\"\n\004Type\022\007\n\003BID\020\001\022\007\n\003ASK\020\002\022\010\n\004LAST"
-    "\020\003\"v\n\014ContractOHLC\022\016\n\006symbol\030\n \001(\t\022\014\n\004op"
-    "en\030\024 \001(\005\022\014\n\004high\030\036 \001(\005\022\013\n\003low\030( \001(\005\022\r\n\005c"
-    "lose\0302 \001(\005\022\016\n\006volume\030< \001(\005\022\016\n\006change\030F \001"
-    "(\005\"H\n\tDepthItem\022\r\n\005level\030\n \001(\005\022\t\n\001b\030\036 \001("
-    "\005\022\t\n\001a\030( \001(\005\022\n\n\002bs\0302 \001(\005\022\n\n\002as\030< \001(\005\"\216\002\n"
-    "\tBookDelta\022\022\n\npublic_key\030\n \001(\t\022\016\n\006seqnum"
-    "\030\024 \001(\005\022\020\n\010playerid\030\036 \001(\t\022%\n\006newnew\030( \001(\013"
-    "2\025.fantasybit.OrderCore\022&\n\004ohlc\030) \001(\0132\030."
-    "fantasybit.ContractOHLC\022\"\n\007removes\0302 \003(\013"
-    "2\021.fantasybit.Order\022+\n\tlevel2tic\030< \003(\0132\030"
-    ".fantasybit.MarketTicker\022+\n\tlevel1tic\030F "
-    "\003(\0132\030.fantasybit.MarketTicker\"_\n\013MarketQ"
-    "uote\022\n\n\002bs\030\n \001(\005\022\t\n\001b\030\024 \001(\005\022\t\n\001a\030\036 \001(\005\022\n"
-    "\n\002as\030( \001(\005\022\t\n\001l\0302 \001(\005\022\n\n\002ls\030< \001(\005\022\013\n\003udn"
-    "\030F \001(\005\"\244\001\n\016MarketSnapshot\022\016\n\006symbol\030\n \001("
-    "\t\022\014\n\004week\030\013 \001(\005\022$\n\005depth\030F \003(\0132\025.fantasy"
-    "bit.DepthItem\022&\n\004ohlc\030\024 \001(\0132\030.fantasybit"
-    ".ContractOHLC\022&\n\005quote\030\036 \001(\0132\027.fantasybi"
-    "t.MarketQuote", 1333);
+    "\020\003\"L\n\016DepthFeedDelta\022\016\n\006symbol\030\001 \001(\t\022\r\n\005"
+    "isbid\030\n \001(\010\022\014\n\004size\030\024 \001(\005\022\r\n\005price\030\036 \001(\005"
+    "\"v\n\014ContractOHLC\022\016\n\006symbol\030\n \001(\t\022\014\n\004open"
+    "\030\024 \001(\005\022\014\n\004high\030\036 \001(\005\022\013\n\003low\030( \001(\005\022\r\n\005clo"
+    "se\0302 \001(\005\022\016\n\006volume\030< \001(\005\022\016\n\006change\030F \001(\005"
+    "\"H\n\tDepthItem\022\r\n\005level\030\n \001(\005\022\t\n\001b\030\036 \001(\005\022"
+    "\t\n\001a\030( \001(\005\022\n\n\002bs\0302 \001(\005\022\n\n\002as\030< \001(\005\"\216\002\n\tB"
+    "ookDelta\022\022\n\npublic_key\030\n \001(\t\022\016\n\006seqnum\030\024"
+    " \001(\005\022\020\n\010playerid\030\036 \001(\t\022%\n\006newnew\030( \001(\0132\025"
+    ".fantasybit.OrderCore\022&\n\004ohlc\030) \001(\0132\030.fa"
+    "ntasybit.ContractOHLC\022\"\n\007removes\0302 \003(\0132\021"
+    ".fantasybit.Order\022+\n\tlevel2tic\030< \003(\0132\030.f"
+    "antasybit.MarketTicker\022+\n\tlevel1tic\030F \003("
+    "\0132\030.fantasybit.MarketTicker\"_\n\013MarketQuo"
+    "te\022\n\n\002bs\030\n \001(\005\022\t\n\001b\030\024 \001(\005\022\t\n\001a\030\036 \001(\005\022\n\n\002"
+    "as\030( \001(\005\022\t\n\001l\0302 \001(\005\022\n\n\002ls\030< \001(\005\022\013\n\003udn\030F"
+    " \001(\005\"\244\001\n\016MarketSnapshot\022\016\n\006symbol\030\n \001(\t\022"
+    "\014\n\004week\030\013 \001(\005\022$\n\005depth\030F \003(\0132\025.fantasybi"
+    "t.DepthItem\022&\n\004ohlc\030\024 \001(\0132\030.fantasybit.C"
+    "ontractOHLC\022&\n\005quote\030\036 \001(\0132\027.fantasybit."
+    "MarketQuote", 1411);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ExData.proto", &protobuf_RegisterTypes);
   SettlePos::default_instance_ = new SettlePos();
@@ -405,6 +432,7 @@ void protobuf_AddDesc_ExData_2eproto() {
   Order::default_instance_ = new Order();
   OrderFill::default_instance_ = new OrderFill();
   MarketTicker::default_instance_ = new MarketTicker();
+  DepthFeedDelta::default_instance_ = new DepthFeedDelta();
   ContractOHLC::default_instance_ = new ContractOHLC();
   DepthItem::default_instance_ = new DepthItem();
   BookDelta::default_instance_ = new BookDelta();
@@ -417,6 +445,7 @@ void protobuf_AddDesc_ExData_2eproto() {
   Order::default_instance_->InitAsDefaultInstance();
   OrderFill::default_instance_->InitAsDefaultInstance();
   MarketTicker::default_instance_->InitAsDefaultInstance();
+  DepthFeedDelta::default_instance_->InitAsDefaultInstance();
   ContractOHLC::default_instance_->InitAsDefaultInstance();
   DepthItem::default_instance_->InitAsDefaultInstance();
   BookDelta::default_instance_->InitAsDefaultInstance();
@@ -2492,6 +2521,349 @@ void MarketTicker::Swap(MarketTicker* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = MarketTicker_descriptor_;
   metadata.reflection = MarketTicker_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int DepthFeedDelta::kSymbolFieldNumber;
+const int DepthFeedDelta::kIsbidFieldNumber;
+const int DepthFeedDelta::kSizeFieldNumber;
+const int DepthFeedDelta::kPriceFieldNumber;
+#endif  // !_MSC_VER
+
+DepthFeedDelta::DepthFeedDelta()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void DepthFeedDelta::InitAsDefaultInstance() {
+}
+
+DepthFeedDelta::DepthFeedDelta(const DepthFeedDelta& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void DepthFeedDelta::SharedCtor() {
+  _cached_size_ = 0;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  isbid_ = false;
+  size_ = 0;
+  price_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+DepthFeedDelta::~DepthFeedDelta() {
+  SharedDtor();
+}
+
+void DepthFeedDelta::SharedDtor() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void DepthFeedDelta::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* DepthFeedDelta::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return DepthFeedDelta_descriptor_;
+}
+
+const DepthFeedDelta& DepthFeedDelta::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ExData_2eproto();
+  return *default_instance_;
+}
+
+DepthFeedDelta* DepthFeedDelta::default_instance_ = NULL;
+
+DepthFeedDelta* DepthFeedDelta::New() const {
+  return new DepthFeedDelta;
+}
+
+void DepthFeedDelta::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
+    isbid_ = false;
+    size_ = 0;
+    price_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool DepthFeedDelta::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string symbol = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(80)) goto parse_isbid;
+        break;
+      }
+
+      // optional bool isbid = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_isbid:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &isbid_)));
+          set_has_isbid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(160)) goto parse_size;
+        break;
+      }
+
+      // optional int32 size = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_size:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &size_)));
+          set_has_size();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_price;
+        break;
+      }
+
+      // optional int32 price = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_price:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &price_)));
+          set_has_price();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void DepthFeedDelta::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string symbol = 1;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->symbol(), output);
+  }
+
+  // optional bool isbid = 10;
+  if (has_isbid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(10, this->isbid(), output);
+  }
+
+  // optional int32 size = 20;
+  if (has_size()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(20, this->size(), output);
+  }
+
+  // optional int32 price = 30;
+  if (has_price()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(30, this->price(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* DepthFeedDelta::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string symbol = 1;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->symbol(), target);
+  }
+
+  // optional bool isbid = 10;
+  if (has_isbid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(10, this->isbid(), target);
+  }
+
+  // optional int32 size = 20;
+  if (has_size()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(20, this->size(), target);
+  }
+
+  // optional int32 price = 30;
+  if (has_price()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(30, this->price(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int DepthFeedDelta::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string symbol = 1;
+    if (has_symbol()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
+    }
+
+    // optional bool isbid = 10;
+    if (has_isbid()) {
+      total_size += 1 + 1;
+    }
+
+    // optional int32 size = 20;
+    if (has_size()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->size());
+    }
+
+    // optional int32 price = 30;
+    if (has_price()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->price());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void DepthFeedDelta::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const DepthFeedDelta* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const DepthFeedDelta*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void DepthFeedDelta::MergeFrom(const DepthFeedDelta& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
+    if (from.has_isbid()) {
+      set_isbid(from.isbid());
+    }
+    if (from.has_size()) {
+      set_size(from.size());
+    }
+    if (from.has_price()) {
+      set_price(from.price());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void DepthFeedDelta::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void DepthFeedDelta::CopyFrom(const DepthFeedDelta& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool DepthFeedDelta::IsInitialized() const {
+
+  return true;
+}
+
+void DepthFeedDelta::Swap(DepthFeedDelta* other) {
+  if (other != this) {
+    std::swap(symbol_, other->symbol_);
+    std::swap(isbid_, other->isbid_);
+    std::swap(size_, other->size_);
+    std::swap(price_, other->price_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata DepthFeedDelta::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = DepthFeedDelta_descriptor_;
+  metadata.reflection = DepthFeedDelta_reflection_;
   return metadata;
 }
 

@@ -90,6 +90,7 @@ Q_DECLARE_METATYPE(fantasybit::FantasyNameBal)
 Q_DECLARE_METATYPE(fantasybit::ExchangeOrder)
 Q_DECLARE_METATYPE(fantasybit::MarketTicker*)
 Q_DECLARE_METATYPE(fantasybit::MarketSnapshot*)
+Q_DECLARE_METATYPE(fantasybit::DepthFeedDelta*)
 
 
 #endif // CORE_H

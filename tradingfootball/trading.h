@@ -107,24 +107,219 @@ public:
            it->second.push_back(bi);
        }
 
-       if ( !current ) {
-           //current = &it->second;
-           //datachangeddbot = rowCount();
-       }
-       else {
+       if ( current && current == &it->second) {
            if ( datachangeddbot > 0 && rowCount() > datachangeddbot)
                datachangeddbot = rowCount();
+
+
+           int deltarow = rowCount() - prevrow;
+           if ( deltarow > 0) {
+                insertRows(0,deltarow);
+           }
+           else if ( deltarow < 0)
+               removeRows(rowCount(),-deltarow);
+
+
+           if ( datachangeddbot > 0 )
+                allDataChanged(datachangeddbot);
        }
 
-       int deltarow = rowCount() - prevrow;
-       if ( deltarow > 0) {
-            insertRows(0,deltarow);
-       }
-
-       if ( datachangeddbot > 0 )
-            allDataChanged(datachangeddbot);
     }
 
+    void onDelta(DepthFeedDelta *dfd) {
+        auto it = symbolDepth.find(dfd->symbol());
+        if ( it == end(symbolDepth)) {
+            auto it2 = symbolDepth.insert(make_pair(dfd->symbol(),std::vector<BookItem>()));
+            if ( !it2.second )
+                return;
+
+            it = it2.first;
+        }
+
+        std::vector<BookItem> &book = it->second;
+        int prevrows = 0;
+        if ( current == &it->second) {
+            prevrows = rowCount();
+        }
+        if ( dfd->isbid() )
+        {
+            bool nopush = false;
+            if ( book.size() > 0 ) {
+                if ( book[book.size()-1].b == 0)
+                    nopush = true;;
+            }
+
+            for ( int i =0; i<book.size(); i++) {
+                if ( book[i].b == 0 ) {
+                    if ( dfd->size() > 0 ) {
+                        book[i].b = dfd->price();
+                        book[i].bs = dfd->size();
+                    }
+                    break;
+                }
+                else if ( dfd->price() < book[i].b)  {
+                    if ( i < book.size()-1)
+                        continue;
+
+                    if ( dfd->size() > 0) {
+                        BookItem bi;
+                        bi.a = bi.as = 0;
+                        bi.b = dfd->price();
+                        bi.bs = dfd->size();
+                        book.push_back(bi);
+                    }
+                    break;
+                }
+                else if ( dfd->price() > book[i].b ) {
+                    if ( dfd->size() > 0) {
+                        int end = book.size()-1;
+                        if ( nopush )
+                            ;//end = book.size()-1;
+                        else {
+                            //end = book.size()-2;
+                            BookItem bi;
+                            bi.a = bi.as = 0;
+                            bi.b = book[book.size()-1].b;
+                            bi.bs = book[book.size()-1].bs;
+                            book.push_back(bi);
+                        }
+                        for (int j=end;j > i;--j) {
+                            if ( nopush && book[j-1].b != 0 )
+                                nopush = false;
+
+                            if ( !nopush ) {
+                                book[j].b = book[j-1].b;
+                                book[j].bs = book[j-1].bs;
+                            }
+                        }
+
+                        book[i].b = dfd->price();
+                        book[i].bs = dfd->size();
+                    }
+
+                    break;
+                }
+                else {
+                    if ( dfd->size() > 0 )
+                        book[i].bs = dfd->size();
+                    else {
+                        int j=i;
+                        for (;
+                              j<book.size()-1 && book[j].b > 0;
+                              ++j) {
+                            book[j].b = book[j+1].b;
+                            book[j].bs = book[j+1].bs;
+                        }
+                        book[j].b = book[j].bs = 0;
+                    }
+
+                    break;
+                }
+            }
+        }
+        else //!isbid
+        {
+            bool nopush = false;
+            if ( book.size() > 0 ) {
+                if ( book[book.size()-1].a == 0)
+                    nopush = true;
+            }
+
+            for ( int i =0; i<book.size(); i++) {
+                if ( book[i].a == 0 ) {
+                    if ( dfd->size() > 0 ) {
+                        book[i].a = dfd->price();
+                        book[i].as = dfd->size();
+                    }
+                    break;
+                }
+                else if ( dfd->price() > book[i].a)  {
+                    if ( i < book.size()-1)
+                        continue;
+
+                    if ( dfd->size() > 0) {
+                        BookItem bi;
+                        bi.b = bi.bs = 0;
+                        bi.a = dfd->price();
+                        bi.as = dfd->size();
+                        book.push_back(bi);
+                    }
+                    break;
+                }
+                else if ( dfd->price() < book[i].a ) {
+                    if ( dfd->size() > 0) {
+                        int end = book.size()-1;
+                        if ( nopush )
+                            ;//end = dfd->size()-1;
+                        else {
+                            //end = dfd->size()-2;
+                            BookItem bi;
+                            bi.b = bi.bs = 0;
+                            bi.a = book[book.size()-1].a;
+                            bi.as = book[book.size()-1].as;
+                            book.push_back(bi);
+                        }
+                        for (int j=end;j > i;--j) {
+                            if ( nopush && book[j-1].a != 0 )
+                                nopush = false;
+
+                            if ( !nopush ) {
+                                book[j].a = book[j-1].a;
+                                book[j].as = book[j-1].as;
+                            }
+                        }
+
+                        book[i].a = dfd->price();
+                        book[i].as = dfd->size();
+                    }
+                    break;
+                }
+                else {
+                    if ( dfd->size() > 0 )
+                        book[i].as = dfd->size();
+                    else {
+                        int j=i;
+                        for (;
+                              j<book.size()-1 && book[j].a > 0;
+                              ++j) {
+                           book[j].a = book[j+1].a;
+                           book[j].as = book[j+1].as;
+                        }
+                        book[j].a =
+                        book[j].as = 0;
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (book.size() == 0 && dfd->size() >0 && dfd->price() > 0) {
+            BookItem bi;
+            if ( dfd->isbid() ) {
+                bi.a = bi.as = 0;
+                bi.b = dfd->price();
+                bi.bs = dfd->size();
+            }
+            else {
+                bi.b = bi.bs = 0;
+                bi.a = dfd->price();
+                bi.as = dfd->size();
+            }
+            book.push_back(bi);
+        }
+
+        if ( current == &it->second) {
+            int deltarow = rowCount() - prevrows;
+            if ( deltarow > 0) {
+                insertRows(0,deltarow);
+            }
+            else if ( deltarow < 0)
+                removeRows(rowCount(),-deltarow);
+
+            allDataChanged(max(rowCount()-1,prevrows-1));
+        }
+
+    }
 
     void changeSymbol(const string &syb) {
         int prevrows = rowCount();
@@ -150,19 +345,28 @@ public:
         if ( deltarow > 0) {
             insertRows(0,deltarow);
         }
-
-
+        else if ( deltarow < 0)
+            removeRows(rowCount(),-deltarow);
 
         allDataChanged(max(rowCount()-1,prevrows-1));
     }
 
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) {
-      if (count < 1 || row < 0 || row > rowCount(parent))
-        return false;
+     // if (count < 1 || row < 0 || row > rowCount(parent))
+     //   return false;
 
       beginInsertRows(QModelIndex(), row, row + count - 1);
-
       endInsertRows();
+
+      return true;
+    }
+
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) {
+     // if (count <= 0 || row < 0 || (row + count) > rowCount(parent))
+     //   return false;
+
+      beginRemoveRows(QModelIndex(), row, row + count - 1);
+      endRemoveRows();
 
       return true;
     }
@@ -206,6 +410,10 @@ private slots:
 public slots:
     void OnMarketTicker(fantasybit::MarketTicker *);
     void OnMarketSnapShot(fantasybit::MarketSnapshot*);
+    void OnDepthDelta(fantasybit::DepthFeedDelta*);
+
+
+
     void OnLive(bool subscribe) {
         auto st = DataService::instance()->GetGlobalState();
 

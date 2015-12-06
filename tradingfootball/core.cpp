@@ -24,6 +24,9 @@ void Core::bootstrap(){
 
     qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::MarketSnapshot*");
 
+    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::DepthFeedDelta*");
+
+
     qRegisterMetaType<string>("string");
     qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
     qInstallMessageHandler(messageHandler);

@@ -41,6 +41,7 @@ class OrderCore;
 class Order;
 class OrderFill;
 class MarketTicker;
+class DepthFeedDelta;
 class ContractOHLC;
 class DepthItem;
 class BookDelta;
@@ -823,6 +824,123 @@ class MarketTicker : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static MarketTicker* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DepthFeedDelta : public ::google::protobuf::Message {
+ public:
+  DepthFeedDelta();
+  virtual ~DepthFeedDelta();
+
+  DepthFeedDelta(const DepthFeedDelta& from);
+
+  inline DepthFeedDelta& operator=(const DepthFeedDelta& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DepthFeedDelta& default_instance();
+
+  void Swap(DepthFeedDelta* other);
+
+  // implements Message ----------------------------------------------
+
+  DepthFeedDelta* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DepthFeedDelta& from);
+  void MergeFrom(const DepthFeedDelta& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string symbol = 1;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 1;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
+  // optional bool isbid = 10;
+  inline bool has_isbid() const;
+  inline void clear_isbid();
+  static const int kIsbidFieldNumber = 10;
+  inline bool isbid() const;
+  inline void set_isbid(bool value);
+
+  // optional int32 size = 20;
+  inline bool has_size() const;
+  inline void clear_size();
+  static const int kSizeFieldNumber = 20;
+  inline ::google::protobuf::int32 size() const;
+  inline void set_size(::google::protobuf::int32 value);
+
+  // optional int32 price = 30;
+  inline bool has_price() const;
+  inline void clear_price();
+  static const int kPriceFieldNumber = 30;
+  inline ::google::protobuf::int32 price() const;
+  inline void set_price(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.DepthFeedDelta)
+ private:
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
+  inline void set_has_isbid();
+  inline void clear_has_isbid();
+  inline void set_has_size();
+  inline void clear_has_size();
+  inline void set_has_price();
+  inline void clear_has_price();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* symbol_;
+  bool isbid_;
+  ::google::protobuf::int32 size_;
+  ::google::protobuf::int32 price_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ExData_2eproto();
+  friend void protobuf_AssignDesc_ExData_2eproto();
+  friend void protobuf_ShutdownFile_ExData_2eproto();
+
+  void InitAsDefaultInstance();
+  static DepthFeedDelta* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2197,6 +2315,146 @@ inline ::google::protobuf::int32 MarketTicker::price() const {
   return price_;
 }
 inline void MarketTicker::set_price(::google::protobuf::int32 value) {
+  set_has_price();
+  price_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// DepthFeedDelta
+
+// optional string symbol = 1;
+inline bool DepthFeedDelta::has_symbol() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DepthFeedDelta::set_has_symbol() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DepthFeedDelta::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DepthFeedDelta::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& DepthFeedDelta::symbol() const {
+  return *symbol_;
+}
+inline void DepthFeedDelta::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void DepthFeedDelta::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void DepthFeedDelta::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DepthFeedDelta::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* DepthFeedDelta::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DepthFeedDelta::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bool isbid = 10;
+inline bool DepthFeedDelta::has_isbid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DepthFeedDelta::set_has_isbid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DepthFeedDelta::clear_has_isbid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DepthFeedDelta::clear_isbid() {
+  isbid_ = false;
+  clear_has_isbid();
+}
+inline bool DepthFeedDelta::isbid() const {
+  return isbid_;
+}
+inline void DepthFeedDelta::set_isbid(bool value) {
+  set_has_isbid();
+  isbid_ = value;
+}
+
+// optional int32 size = 20;
+inline bool DepthFeedDelta::has_size() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DepthFeedDelta::set_has_size() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DepthFeedDelta::clear_has_size() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DepthFeedDelta::clear_size() {
+  size_ = 0;
+  clear_has_size();
+}
+inline ::google::protobuf::int32 DepthFeedDelta::size() const {
+  return size_;
+}
+inline void DepthFeedDelta::set_size(::google::protobuf::int32 value) {
+  set_has_size();
+  size_ = value;
+}
+
+// optional int32 price = 30;
+inline bool DepthFeedDelta::has_price() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void DepthFeedDelta::set_has_price() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void DepthFeedDelta::clear_has_price() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void DepthFeedDelta::clear_price() {
+  price_ = 0;
+  clear_has_price();
+}
+inline ::google::protobuf::int32 DepthFeedDelta::price() const {
+  return price_;
+}
+inline void DepthFeedDelta::set_price(::google::protobuf::int32 value) {
   set_has_price();
   price_ = value;
 }
