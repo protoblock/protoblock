@@ -28,6 +28,13 @@ message Order {
     optional OrderCore core = 20;
 }
 
+message OrderFill {
+    optional Order left = 10;
+    optional int32 fillprice = 20;
+    optional int32 fillsize = 30;
+    optional int32 timestamp = 40;
+}
+
 message MarketTicker {
     enum Type { BID=1; ASK=2; LAST=3; }
 
@@ -35,6 +42,17 @@ message MarketTicker {
     optional int32 size = 20;
     optional int32 price = 30;
 }
+
+message ContractOHLC {
+    optional string symbol = 10;
+    optional int32 open = 20;
+    optional int32 high = 30;
+    optional int32 low = 40;
+    optional int32 close = 50;
+    optional int32 volume = 60;
+    optional int32 change = 70;
+}
+
 
 message DepthItem {
     optional int32 level = 10;
@@ -50,12 +68,26 @@ message BookDelta {
     optional int32 seqnum = 20;
     optional string playerid = 30;
     optional OrderCore newnew = 40;
+    optional ContractOHLC ohlc = 41;
     repeated Order removes = 50;
     repeated MarketTicker level2tic = 60;
     repeated MarketTicker level1tic = 70;
 }
 
+message MarketQuote {
+    optional int32 bs = 10;
+    optional int32 b = 20;
+    optional int32 a = 30;
+    optional int32 as = 40;
+    optional int32 l = 50;
+    optional int32 ls = 60;
+    optional int32 udn = 70;
+}
+
 message MarketSnapshot {
     optional string symbol = 10;
+    optional int32 week = 11;
     repeated DepthItem depth = 70;
+    optional ContractOHLC ohlc = 20;
+    optional MarketQuote quote = 30;
 }

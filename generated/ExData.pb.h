@@ -39,9 +39,12 @@ class BookPos;
 class GameSettlePos;
 class OrderCore;
 class Order;
+class OrderFill;
 class MarketTicker;
+class ContractOHLC;
 class DepthItem;
 class BookDelta;
+class MarketQuote;
 class MarketSnapshot;
 
 enum MarketTicker_Type {
@@ -582,6 +585,120 @@ class Order : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class OrderFill : public ::google::protobuf::Message {
+ public:
+  OrderFill();
+  virtual ~OrderFill();
+
+  OrderFill(const OrderFill& from);
+
+  inline OrderFill& operator=(const OrderFill& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const OrderFill& default_instance();
+
+  void Swap(OrderFill* other);
+
+  // implements Message ----------------------------------------------
+
+  OrderFill* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const OrderFill& from);
+  void MergeFrom(const OrderFill& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.Order left = 10;
+  inline bool has_left() const;
+  inline void clear_left();
+  static const int kLeftFieldNumber = 10;
+  inline const ::fantasybit::Order& left() const;
+  inline ::fantasybit::Order* mutable_left();
+  inline ::fantasybit::Order* release_left();
+  inline void set_allocated_left(::fantasybit::Order* left);
+
+  // optional int32 fillprice = 20;
+  inline bool has_fillprice() const;
+  inline void clear_fillprice();
+  static const int kFillpriceFieldNumber = 20;
+  inline ::google::protobuf::int32 fillprice() const;
+  inline void set_fillprice(::google::protobuf::int32 value);
+
+  // optional int32 fillsize = 30;
+  inline bool has_fillsize() const;
+  inline void clear_fillsize();
+  static const int kFillsizeFieldNumber = 30;
+  inline ::google::protobuf::int32 fillsize() const;
+  inline void set_fillsize(::google::protobuf::int32 value);
+
+  // optional int32 timestamp = 40;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 40;
+  inline ::google::protobuf::int32 timestamp() const;
+  inline void set_timestamp(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.OrderFill)
+ private:
+  inline void set_has_left();
+  inline void clear_has_left();
+  inline void set_has_fillprice();
+  inline void clear_has_fillprice();
+  inline void set_has_fillsize();
+  inline void clear_has_fillsize();
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::Order* left_;
+  ::google::protobuf::int32 fillprice_;
+  ::google::protobuf::int32 fillsize_;
+  ::google::protobuf::int32 timestamp_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ExData_2eproto();
+  friend void protobuf_AssignDesc_ExData_2eproto();
+  friend void protobuf_ShutdownFile_ExData_2eproto();
+
+  void InitAsDefaultInstance();
+  static OrderFill* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class MarketTicker : public ::google::protobuf::Message {
  public:
   MarketTicker();
@@ -706,6 +823,153 @@ class MarketTicker : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static MarketTicker* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ContractOHLC : public ::google::protobuf::Message {
+ public:
+  ContractOHLC();
+  virtual ~ContractOHLC();
+
+  ContractOHLC(const ContractOHLC& from);
+
+  inline ContractOHLC& operator=(const ContractOHLC& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ContractOHLC& default_instance();
+
+  void Swap(ContractOHLC* other);
+
+  // implements Message ----------------------------------------------
+
+  ContractOHLC* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ContractOHLC& from);
+  void MergeFrom(const ContractOHLC& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string symbol = 10;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 10;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
+  // optional int32 open = 20;
+  inline bool has_open() const;
+  inline void clear_open();
+  static const int kOpenFieldNumber = 20;
+  inline ::google::protobuf::int32 open() const;
+  inline void set_open(::google::protobuf::int32 value);
+
+  // optional int32 high = 30;
+  inline bool has_high() const;
+  inline void clear_high();
+  static const int kHighFieldNumber = 30;
+  inline ::google::protobuf::int32 high() const;
+  inline void set_high(::google::protobuf::int32 value);
+
+  // optional int32 low = 40;
+  inline bool has_low() const;
+  inline void clear_low();
+  static const int kLowFieldNumber = 40;
+  inline ::google::protobuf::int32 low() const;
+  inline void set_low(::google::protobuf::int32 value);
+
+  // optional int32 close = 50;
+  inline bool has_close() const;
+  inline void clear_close();
+  static const int kCloseFieldNumber = 50;
+  inline ::google::protobuf::int32 close() const;
+  inline void set_close(::google::protobuf::int32 value);
+
+  // optional int32 volume = 60;
+  inline bool has_volume() const;
+  inline void clear_volume();
+  static const int kVolumeFieldNumber = 60;
+  inline ::google::protobuf::int32 volume() const;
+  inline void set_volume(::google::protobuf::int32 value);
+
+  // optional int32 change = 70;
+  inline bool has_change() const;
+  inline void clear_change();
+  static const int kChangeFieldNumber = 70;
+  inline ::google::protobuf::int32 change() const;
+  inline void set_change(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.ContractOHLC)
+ private:
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
+  inline void set_has_open();
+  inline void clear_has_open();
+  inline void set_has_high();
+  inline void clear_has_high();
+  inline void set_has_low();
+  inline void clear_has_low();
+  inline void set_has_close();
+  inline void clear_has_close();
+  inline void set_has_volume();
+  inline void clear_has_volume();
+  inline void set_has_change();
+  inline void clear_has_change();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* symbol_;
+  ::google::protobuf::int32 open_;
+  ::google::protobuf::int32 high_;
+  ::google::protobuf::int32 low_;
+  ::google::protobuf::int32 close_;
+  ::google::protobuf::int32 volume_;
+  ::google::protobuf::int32 change_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ExData_2eproto();
+  friend void protobuf_AssignDesc_ExData_2eproto();
+  friend void protobuf_ShutdownFile_ExData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ContractOHLC* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -925,6 +1189,15 @@ class BookDelta : public ::google::protobuf::Message {
   inline ::fantasybit::OrderCore* release_newnew();
   inline void set_allocated_newnew(::fantasybit::OrderCore* newnew);
 
+  // optional .fantasybit.ContractOHLC ohlc = 41;
+  inline bool has_ohlc() const;
+  inline void clear_ohlc();
+  static const int kOhlcFieldNumber = 41;
+  inline const ::fantasybit::ContractOHLC& ohlc() const;
+  inline ::fantasybit::ContractOHLC* mutable_ohlc();
+  inline ::fantasybit::ContractOHLC* release_ohlc();
+  inline void set_allocated_ohlc(::fantasybit::ContractOHLC* ohlc);
+
   // repeated .fantasybit.Order removes = 50;
   inline int removes_size() const;
   inline void clear_removes();
@@ -971,16 +1244,161 @@ class BookDelta : public ::google::protobuf::Message {
   inline void clear_has_playerid();
   inline void set_has_newnew();
   inline void clear_has_newnew();
+  inline void set_has_ohlc();
+  inline void clear_has_ohlc();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* public_key_;
   ::std::string* playerid_;
   ::fantasybit::OrderCore* newnew_;
+  ::fantasybit::ContractOHLC* ohlc_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::Order > removes_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker > level2tic_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker > level1tic_;
   ::google::protobuf::int32 seqnum_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ExData_2eproto();
+  friend void protobuf_AssignDesc_ExData_2eproto();
+  friend void protobuf_ShutdownFile_ExData_2eproto();
+
+  void InitAsDefaultInstance();
+  static BookDelta* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class MarketQuote : public ::google::protobuf::Message {
+ public:
+  MarketQuote();
+  virtual ~MarketQuote();
+
+  MarketQuote(const MarketQuote& from);
+
+  inline MarketQuote& operator=(const MarketQuote& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MarketQuote& default_instance();
+
+  void Swap(MarketQuote* other);
+
+  // implements Message ----------------------------------------------
+
+  MarketQuote* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MarketQuote& from);
+  void MergeFrom(const MarketQuote& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 bs = 10;
+  inline bool has_bs() const;
+  inline void clear_bs();
+  static const int kBsFieldNumber = 10;
+  inline ::google::protobuf::int32 bs() const;
+  inline void set_bs(::google::protobuf::int32 value);
+
+  // optional int32 b = 20;
+  inline bool has_b() const;
+  inline void clear_b();
+  static const int kBFieldNumber = 20;
+  inline ::google::protobuf::int32 b() const;
+  inline void set_b(::google::protobuf::int32 value);
+
+  // optional int32 a = 30;
+  inline bool has_a() const;
+  inline void clear_a();
+  static const int kAFieldNumber = 30;
+  inline ::google::protobuf::int32 a() const;
+  inline void set_a(::google::protobuf::int32 value);
+
+  // optional int32 as = 40;
+  inline bool has_as() const;
+  inline void clear_as();
+  static const int kAsFieldNumber = 40;
+  inline ::google::protobuf::int32 as() const;
+  inline void set_as(::google::protobuf::int32 value);
+
+  // optional int32 l = 50;
+  inline bool has_l() const;
+  inline void clear_l();
+  static const int kLFieldNumber = 50;
+  inline ::google::protobuf::int32 l() const;
+  inline void set_l(::google::protobuf::int32 value);
+
+  // optional int32 ls = 60;
+  inline bool has_ls() const;
+  inline void clear_ls();
+  static const int kLsFieldNumber = 60;
+  inline ::google::protobuf::int32 ls() const;
+  inline void set_ls(::google::protobuf::int32 value);
+
+  // optional int32 udn = 70;
+  inline bool has_udn() const;
+  inline void clear_udn();
+  static const int kUdnFieldNumber = 70;
+  inline ::google::protobuf::int32 udn() const;
+  inline void set_udn(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.MarketQuote)
+ private:
+  inline void set_has_bs();
+  inline void clear_has_bs();
+  inline void set_has_b();
+  inline void clear_has_b();
+  inline void set_has_a();
+  inline void clear_has_a();
+  inline void set_has_as();
+  inline void clear_has_as();
+  inline void set_has_l();
+  inline void clear_has_l();
+  inline void set_has_ls();
+  inline void clear_has_ls();
+  inline void set_has_udn();
+  inline void clear_has_udn();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 bs_;
+  ::google::protobuf::int32 b_;
+  ::google::protobuf::int32 a_;
+  ::google::protobuf::int32 as_;
+  ::google::protobuf::int32 l_;
+  ::google::protobuf::int32 ls_;
+  ::google::protobuf::int32 udn_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
@@ -990,7 +1408,7 @@ class BookDelta : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_ExData_2eproto();
 
   void InitAsDefaultInstance();
-  static BookDelta* default_instance_;
+  static MarketQuote* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1060,6 +1478,13 @@ class MarketSnapshot : public ::google::protobuf::Message {
   inline ::std::string* release_symbol();
   inline void set_allocated_symbol(::std::string* symbol);
 
+  // optional int32 week = 11;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 11;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
   // repeated .fantasybit.DepthItem depth = 70;
   inline int depth_size() const;
   inline void clear_depth();
@@ -1072,18 +1497,45 @@ class MarketSnapshot : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >*
       mutable_depth();
 
+  // optional .fantasybit.ContractOHLC ohlc = 20;
+  inline bool has_ohlc() const;
+  inline void clear_ohlc();
+  static const int kOhlcFieldNumber = 20;
+  inline const ::fantasybit::ContractOHLC& ohlc() const;
+  inline ::fantasybit::ContractOHLC* mutable_ohlc();
+  inline ::fantasybit::ContractOHLC* release_ohlc();
+  inline void set_allocated_ohlc(::fantasybit::ContractOHLC* ohlc);
+
+  // optional .fantasybit.MarketQuote quote = 30;
+  inline bool has_quote() const;
+  inline void clear_quote();
+  static const int kQuoteFieldNumber = 30;
+  inline const ::fantasybit::MarketQuote& quote() const;
+  inline ::fantasybit::MarketQuote* mutable_quote();
+  inline ::fantasybit::MarketQuote* release_quote();
+  inline void set_allocated_quote(::fantasybit::MarketQuote* quote);
+
   // @@protoc_insertion_point(class_scope:fantasybit.MarketSnapshot)
  private:
   inline void set_has_symbol();
   inline void clear_has_symbol();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_ohlc();
+  inline void clear_has_ohlc();
+  inline void set_has_quote();
+  inline void clear_has_quote();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* symbol_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem > depth_;
+  ::fantasybit::ContractOHLC* ohlc_;
+  ::fantasybit::MarketQuote* quote_;
+  ::google::protobuf::int32 week_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_ExData_2eproto();
   friend void protobuf_AssignDesc_ExData_2eproto();
@@ -1572,6 +2024,114 @@ inline void Order::set_allocated_core(::fantasybit::OrderCore* core) {
 
 // -------------------------------------------------------------------
 
+// OrderFill
+
+// optional .fantasybit.Order left = 10;
+inline bool OrderFill::has_left() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void OrderFill::set_has_left() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void OrderFill::clear_has_left() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void OrderFill::clear_left() {
+  if (left_ != NULL) left_->::fantasybit::Order::Clear();
+  clear_has_left();
+}
+inline const ::fantasybit::Order& OrderFill::left() const {
+  return left_ != NULL ? *left_ : *default_instance_->left_;
+}
+inline ::fantasybit::Order* OrderFill::mutable_left() {
+  set_has_left();
+  if (left_ == NULL) left_ = new ::fantasybit::Order;
+  return left_;
+}
+inline ::fantasybit::Order* OrderFill::release_left() {
+  clear_has_left();
+  ::fantasybit::Order* temp = left_;
+  left_ = NULL;
+  return temp;
+}
+inline void OrderFill::set_allocated_left(::fantasybit::Order* left) {
+  delete left_;
+  left_ = left;
+  if (left) {
+    set_has_left();
+  } else {
+    clear_has_left();
+  }
+}
+
+// optional int32 fillprice = 20;
+inline bool OrderFill::has_fillprice() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void OrderFill::set_has_fillprice() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void OrderFill::clear_has_fillprice() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void OrderFill::clear_fillprice() {
+  fillprice_ = 0;
+  clear_has_fillprice();
+}
+inline ::google::protobuf::int32 OrderFill::fillprice() const {
+  return fillprice_;
+}
+inline void OrderFill::set_fillprice(::google::protobuf::int32 value) {
+  set_has_fillprice();
+  fillprice_ = value;
+}
+
+// optional int32 fillsize = 30;
+inline bool OrderFill::has_fillsize() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void OrderFill::set_has_fillsize() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void OrderFill::clear_has_fillsize() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void OrderFill::clear_fillsize() {
+  fillsize_ = 0;
+  clear_has_fillsize();
+}
+inline ::google::protobuf::int32 OrderFill::fillsize() const {
+  return fillsize_;
+}
+inline void OrderFill::set_fillsize(::google::protobuf::int32 value) {
+  set_has_fillsize();
+  fillsize_ = value;
+}
+
+// optional int32 timestamp = 40;
+inline bool OrderFill::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void OrderFill::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void OrderFill::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void OrderFill::clear_timestamp() {
+  timestamp_ = 0;
+  clear_has_timestamp();
+}
+inline ::google::protobuf::int32 OrderFill::timestamp() const {
+  return timestamp_;
+}
+inline void OrderFill::set_timestamp(::google::protobuf::int32 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // MarketTicker
 
 // optional .fantasybit.MarketTicker.Type type = 1;
@@ -1639,6 +2199,212 @@ inline ::google::protobuf::int32 MarketTicker::price() const {
 inline void MarketTicker::set_price(::google::protobuf::int32 value) {
   set_has_price();
   price_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ContractOHLC
+
+// optional string symbol = 10;
+inline bool ContractOHLC::has_symbol() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ContractOHLC::set_has_symbol() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ContractOHLC::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ContractOHLC::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& ContractOHLC::symbol() const {
+  return *symbol_;
+}
+inline void ContractOHLC::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void ContractOHLC::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void ContractOHLC::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ContractOHLC::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* ContractOHLC::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ContractOHLC::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 open = 20;
+inline bool ContractOHLC::has_open() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ContractOHLC::set_has_open() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ContractOHLC::clear_has_open() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ContractOHLC::clear_open() {
+  open_ = 0;
+  clear_has_open();
+}
+inline ::google::protobuf::int32 ContractOHLC::open() const {
+  return open_;
+}
+inline void ContractOHLC::set_open(::google::protobuf::int32 value) {
+  set_has_open();
+  open_ = value;
+}
+
+// optional int32 high = 30;
+inline bool ContractOHLC::has_high() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ContractOHLC::set_has_high() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ContractOHLC::clear_has_high() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ContractOHLC::clear_high() {
+  high_ = 0;
+  clear_has_high();
+}
+inline ::google::protobuf::int32 ContractOHLC::high() const {
+  return high_;
+}
+inline void ContractOHLC::set_high(::google::protobuf::int32 value) {
+  set_has_high();
+  high_ = value;
+}
+
+// optional int32 low = 40;
+inline bool ContractOHLC::has_low() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ContractOHLC::set_has_low() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ContractOHLC::clear_has_low() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ContractOHLC::clear_low() {
+  low_ = 0;
+  clear_has_low();
+}
+inline ::google::protobuf::int32 ContractOHLC::low() const {
+  return low_;
+}
+inline void ContractOHLC::set_low(::google::protobuf::int32 value) {
+  set_has_low();
+  low_ = value;
+}
+
+// optional int32 close = 50;
+inline bool ContractOHLC::has_close() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ContractOHLC::set_has_close() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ContractOHLC::clear_has_close() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ContractOHLC::clear_close() {
+  close_ = 0;
+  clear_has_close();
+}
+inline ::google::protobuf::int32 ContractOHLC::close() const {
+  return close_;
+}
+inline void ContractOHLC::set_close(::google::protobuf::int32 value) {
+  set_has_close();
+  close_ = value;
+}
+
+// optional int32 volume = 60;
+inline bool ContractOHLC::has_volume() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ContractOHLC::set_has_volume() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ContractOHLC::clear_has_volume() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ContractOHLC::clear_volume() {
+  volume_ = 0;
+  clear_has_volume();
+}
+inline ::google::protobuf::int32 ContractOHLC::volume() const {
+  return volume_;
+}
+inline void ContractOHLC::set_volume(::google::protobuf::int32 value) {
+  set_has_volume();
+  volume_ = value;
+}
+
+// optional int32 change = 70;
+inline bool ContractOHLC::has_change() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ContractOHLC::set_has_change() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ContractOHLC::clear_has_change() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ContractOHLC::clear_change() {
+  change_ = 0;
+  clear_has_change();
+}
+inline ::google::protobuf::int32 ContractOHLC::change() const {
+  return change_;
+}
+inline void ContractOHLC::set_change(::google::protobuf::int32 value) {
+  set_has_change();
+  change_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1959,6 +2725,44 @@ inline void BookDelta::set_allocated_newnew(::fantasybit::OrderCore* newnew) {
   }
 }
 
+// optional .fantasybit.ContractOHLC ohlc = 41;
+inline bool BookDelta::has_ohlc() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void BookDelta::set_has_ohlc() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void BookDelta::clear_has_ohlc() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void BookDelta::clear_ohlc() {
+  if (ohlc_ != NULL) ohlc_->::fantasybit::ContractOHLC::Clear();
+  clear_has_ohlc();
+}
+inline const ::fantasybit::ContractOHLC& BookDelta::ohlc() const {
+  return ohlc_ != NULL ? *ohlc_ : *default_instance_->ohlc_;
+}
+inline ::fantasybit::ContractOHLC* BookDelta::mutable_ohlc() {
+  set_has_ohlc();
+  if (ohlc_ == NULL) ohlc_ = new ::fantasybit::ContractOHLC;
+  return ohlc_;
+}
+inline ::fantasybit::ContractOHLC* BookDelta::release_ohlc() {
+  clear_has_ohlc();
+  ::fantasybit::ContractOHLC* temp = ohlc_;
+  ohlc_ = NULL;
+  return temp;
+}
+inline void BookDelta::set_allocated_ohlc(::fantasybit::ContractOHLC* ohlc) {
+  delete ohlc_;
+  ohlc_ = ohlc;
+  if (ohlc) {
+    set_has_ohlc();
+  } else {
+    clear_has_ohlc();
+  }
+}
+
 // repeated .fantasybit.Order removes = 50;
 inline int BookDelta::removes_size() const {
   return removes_.size();
@@ -2036,6 +2840,164 @@ BookDelta::mutable_level1tic() {
 
 // -------------------------------------------------------------------
 
+// MarketQuote
+
+// optional int32 bs = 10;
+inline bool MarketQuote::has_bs() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void MarketQuote::set_has_bs() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void MarketQuote::clear_has_bs() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void MarketQuote::clear_bs() {
+  bs_ = 0;
+  clear_has_bs();
+}
+inline ::google::protobuf::int32 MarketQuote::bs() const {
+  return bs_;
+}
+inline void MarketQuote::set_bs(::google::protobuf::int32 value) {
+  set_has_bs();
+  bs_ = value;
+}
+
+// optional int32 b = 20;
+inline bool MarketQuote::has_b() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void MarketQuote::set_has_b() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void MarketQuote::clear_has_b() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void MarketQuote::clear_b() {
+  b_ = 0;
+  clear_has_b();
+}
+inline ::google::protobuf::int32 MarketQuote::b() const {
+  return b_;
+}
+inline void MarketQuote::set_b(::google::protobuf::int32 value) {
+  set_has_b();
+  b_ = value;
+}
+
+// optional int32 a = 30;
+inline bool MarketQuote::has_a() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void MarketQuote::set_has_a() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void MarketQuote::clear_has_a() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void MarketQuote::clear_a() {
+  a_ = 0;
+  clear_has_a();
+}
+inline ::google::protobuf::int32 MarketQuote::a() const {
+  return a_;
+}
+inline void MarketQuote::set_a(::google::protobuf::int32 value) {
+  set_has_a();
+  a_ = value;
+}
+
+// optional int32 as = 40;
+inline bool MarketQuote::has_as() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void MarketQuote::set_has_as() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void MarketQuote::clear_has_as() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void MarketQuote::clear_as() {
+  as_ = 0;
+  clear_has_as();
+}
+inline ::google::protobuf::int32 MarketQuote::as() const {
+  return as_;
+}
+inline void MarketQuote::set_as(::google::protobuf::int32 value) {
+  set_has_as();
+  as_ = value;
+}
+
+// optional int32 l = 50;
+inline bool MarketQuote::has_l() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void MarketQuote::set_has_l() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void MarketQuote::clear_has_l() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void MarketQuote::clear_l() {
+  l_ = 0;
+  clear_has_l();
+}
+inline ::google::protobuf::int32 MarketQuote::l() const {
+  return l_;
+}
+inline void MarketQuote::set_l(::google::protobuf::int32 value) {
+  set_has_l();
+  l_ = value;
+}
+
+// optional int32 ls = 60;
+inline bool MarketQuote::has_ls() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void MarketQuote::set_has_ls() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void MarketQuote::clear_has_ls() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void MarketQuote::clear_ls() {
+  ls_ = 0;
+  clear_has_ls();
+}
+inline ::google::protobuf::int32 MarketQuote::ls() const {
+  return ls_;
+}
+inline void MarketQuote::set_ls(::google::protobuf::int32 value) {
+  set_has_ls();
+  ls_ = value;
+}
+
+// optional int32 udn = 70;
+inline bool MarketQuote::has_udn() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void MarketQuote::set_has_udn() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void MarketQuote::clear_has_udn() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void MarketQuote::clear_udn() {
+  udn_ = 0;
+  clear_has_udn();
+}
+inline ::google::protobuf::int32 MarketQuote::udn() const {
+  return udn_;
+}
+inline void MarketQuote::set_udn(::google::protobuf::int32 value) {
+  set_has_udn();
+  udn_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // MarketSnapshot
 
 // optional string symbol = 10;
@@ -2108,6 +3070,28 @@ inline void MarketSnapshot::set_allocated_symbol(::std::string* symbol) {
   }
 }
 
+// optional int32 week = 11;
+inline bool MarketSnapshot::has_week() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void MarketSnapshot::set_has_week() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void MarketSnapshot::clear_has_week() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void MarketSnapshot::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 MarketSnapshot::week() const {
+  return week_;
+}
+inline void MarketSnapshot::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
 // repeated .fantasybit.DepthItem depth = 70;
 inline int MarketSnapshot::depth_size() const {
   return depth_.size();
@@ -2131,6 +3115,82 @@ MarketSnapshot::depth() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >*
 MarketSnapshot::mutable_depth() {
   return &depth_;
+}
+
+// optional .fantasybit.ContractOHLC ohlc = 20;
+inline bool MarketSnapshot::has_ohlc() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void MarketSnapshot::set_has_ohlc() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void MarketSnapshot::clear_has_ohlc() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void MarketSnapshot::clear_ohlc() {
+  if (ohlc_ != NULL) ohlc_->::fantasybit::ContractOHLC::Clear();
+  clear_has_ohlc();
+}
+inline const ::fantasybit::ContractOHLC& MarketSnapshot::ohlc() const {
+  return ohlc_ != NULL ? *ohlc_ : *default_instance_->ohlc_;
+}
+inline ::fantasybit::ContractOHLC* MarketSnapshot::mutable_ohlc() {
+  set_has_ohlc();
+  if (ohlc_ == NULL) ohlc_ = new ::fantasybit::ContractOHLC;
+  return ohlc_;
+}
+inline ::fantasybit::ContractOHLC* MarketSnapshot::release_ohlc() {
+  clear_has_ohlc();
+  ::fantasybit::ContractOHLC* temp = ohlc_;
+  ohlc_ = NULL;
+  return temp;
+}
+inline void MarketSnapshot::set_allocated_ohlc(::fantasybit::ContractOHLC* ohlc) {
+  delete ohlc_;
+  ohlc_ = ohlc;
+  if (ohlc) {
+    set_has_ohlc();
+  } else {
+    clear_has_ohlc();
+  }
+}
+
+// optional .fantasybit.MarketQuote quote = 30;
+inline bool MarketSnapshot::has_quote() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void MarketSnapshot::set_has_quote() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void MarketSnapshot::clear_has_quote() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void MarketSnapshot::clear_quote() {
+  if (quote_ != NULL) quote_->::fantasybit::MarketQuote::Clear();
+  clear_has_quote();
+}
+inline const ::fantasybit::MarketQuote& MarketSnapshot::quote() const {
+  return quote_ != NULL ? *quote_ : *default_instance_->quote_;
+}
+inline ::fantasybit::MarketQuote* MarketSnapshot::mutable_quote() {
+  set_has_quote();
+  if (quote_ == NULL) quote_ = new ::fantasybit::MarketQuote;
+  return quote_;
+}
+inline ::fantasybit::MarketQuote* MarketSnapshot::release_quote() {
+  clear_has_quote();
+  ::fantasybit::MarketQuote* temp = quote_;
+  quote_ = NULL;
+  return temp;
+}
+inline void MarketSnapshot::set_allocated_quote(::fantasybit::MarketQuote* quote) {
+  delete quote_;
+  quote_ = quote;
+  if (quote) {
+    set_has_quote();
+  } else {
+    clear_has_quote();
+  }
 }
 
 

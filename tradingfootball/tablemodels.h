@@ -63,8 +63,10 @@ protected:
             return QVariant();
         }
 
+
         QString myt = text.arg(away).arg(home).leftJustified(9,' ');
         auto ret = myt + QString(" - ")+ gametime;//dateTime_toFantasyString(gametime));
+
 #ifndef PRODFOOTBALL
         auto id = data->propertyValue<PropertyNames::Game_ID>().toString();
         ret = id + ret;
@@ -591,6 +593,50 @@ private:
         setHorizontalHeaders(headers);
     }
 };
+
+
+class   PlayerListModal :
+        public TKeyedListModel<QString,ViewModel> {
+
+public:
+
+    PlayerListModal(): TKeyedListModel<QString,ViewModel>(NULL){
+        initialize();
+    }
+    ~PlayerListModal() {}
+
+protected:
+
+    QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
+
+        if( column ==0)
+            return data->propertyValue<PropertyNames::Player_ID>();
+        if( column ==1)
+            return data->propertyValue<PropertyNames::BIDSIZE>();
+        if( column ==2)
+            return data->propertyValue<PropertyNames::BID>();
+        if( column ==3)
+            return data->propertyValue<PropertyNames::ASK>();
+        if( column ==4)
+            return data->propertyValue<PropertyNames::ASKSIZE>();
+        if( column ==5)
+            return data->propertyValue<PropertyNames::LAST>();
+        if( column ==6)
+            return data->propertyValue<PropertyNames::LASTSIZE>();
+
+        return QVariant();
+    }
+
+    //int getColumnCount() { return 2; }
+
+private:
+    void initialize() {
+        QStringList headers;
+        headers << "Player id" << "Bid Size" << "Bid" << "Ask" << "Ask Size";
+        setHorizontalHeaders(headers);
+    }
+};
+
 
 #endif // TABLEMODELS_H
 

@@ -4,7 +4,7 @@
 #include <QMutex>
 #include "genericsingleton.h"
 #include "core.h"
-#include "LAPIWorker.h"
+//#include "LAPIWorker.h"
 #include "Data.h"
 //#include <QMutexLocker>
 
@@ -30,11 +30,11 @@ public:
 
     fantasybit::GlobalState GetGlobalState();
 
-    std::unordered_map<std::string,PlayerDetail> GetTeamRoster(const std::string &teamid);
+    std::unordered_map<std::string,fantasybit::PlayerDetail> GetTeamRoster(const std::string &teamid);
     fantasybit::GameStatus GetGameStatus(string gid);
 
 
-    MyFantasyName importMnemonic(std::string &in);
+    fantasybit::MyFantasyName importMnemonic(std::string &in);
     std::string exportMnemonic(std::string &in);
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);
