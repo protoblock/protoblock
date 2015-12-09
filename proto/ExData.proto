@@ -39,8 +39,19 @@ message MarketTicker {
     enum Type { BID=1; ASK=2; LAST=3; }
 
     optional Type type = 1;
+    optional string symbol = 2;
     optional int32 size = 20;
     optional int32 price = 30;
+}
+
+message TradeTic {
+    optional string symbol = 2;
+    optional int32 size = 20;
+    optional int32 price = 30;
+    optional int32 ishigh = 40;
+    optional int32 islow = 45;
+    optional int32 change = 50;
+    optional int32 tic = 60;
 }
 
 message DepthFeedDelta {
@@ -71,7 +82,7 @@ message DepthItem {
 }
 
 message BookDelta {
-    optional string public_key = 10;
+    optional string fantasy_name = 10;
     optional int32 seqnum = 20;
     optional string playerid = 30;
     optional OrderCore newnew = 40;

@@ -44,6 +44,9 @@ public:
 
     QVariant   data(const QModelIndex & index, int role = Qt::DisplayRole ) const {
 
+        if (role != Qt::DisplayRole)
+            return QVariant();
+
         if ( current == nullptr)
             return QVariant();
 
@@ -402,6 +405,15 @@ public:
     void SetCurrentWeekData(int week);
     string myPlayerid;
     int mCurrentWeek = 0;
+    string myFantasyName;
+    string myPositionsName;
+    void SetFantasyName(std::string name);
+
+    void SetMyPositions() {
+        myPositionsName = myFantasyName;
+        auto mypositions = DataService::instance()->GetPositionsByName(myPositionsName);
+    }
+
 private slots:
     void on_buyit_clicked();
 
@@ -411,13 +423,17 @@ public slots:
     void OnMarketTicker(fantasybit::MarketTicker *);
     void OnMarketSnapShot(fantasybit::MarketSnapshot*);
     void OnDepthDelta(fantasybit::DepthFeedDelta*);
-
+    void OnTradeTick(fantasybit::TradeTic*);
+    void OnMyNewOrder(fantasybit::Order& ord) {
+        qDebug() << "MyOrder New" << ord.DebugString();
+    }
 
 
     void OnLive(bool subscribe) {
         auto st = DataService::instance()->GetGlobalState();
-
         SetCurrentWeekData(st.week());
+        if ( myFantasyName != "" && myPositionsName != myFantasyName)
+            SetMyPositions();
     }
     void playerListCliked(const QModelIndex &index);
 

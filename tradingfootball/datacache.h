@@ -18,6 +18,8 @@ class DataCache : public GenericSingleton<DataCache>
     LeaderBoardTableModel myLeaderBoardTableModel;
     bool myLeaderboardDataUpdated = false;
 
+    //QSortFilterProxyModel proxyModel;
+
 public:
     ~DataCache(){}
     void getGameResult(uint week, std::vector<GameResult> &weekResults){
@@ -48,12 +50,16 @@ public:
             myLeaderBoardTableModel.updateItemProperty<PropertyNames::Balance>(fantasyPlayerName,fPlayer->getBalance());
         }
 		myLeaderboardDataUpdated = true;
+
     }
-    LeaderBoardTableModel & leaderBoardModel() { 
+    LeaderBoardTableModel & leaderBoardModel() {
 		//getting leaderboard model in the first call of this function 
 		// need an explicit refresh 
 		if (!myLeaderboardDataUpdated) refreshLeaderboard();
-		return myLeaderBoardTableModel; 
+
+        //proxyModel.setSourceModel( &myLeaderBoardTableModel );
+
+        return myLeaderBoardTableModel;
 	}
 
     void getWeeklySchedule(int week,fantasybit::WeeklySchedule & schedule){

@@ -42,6 +42,9 @@ const ::google::protobuf::Descriptor* MarketTicker_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   MarketTicker_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* MarketTicker_Type_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* TradeTic_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  TradeTic_reflection_ = NULL;
 const ::google::protobuf::Descriptor* DepthFeedDelta_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DepthFeedDelta_reflection_ = NULL;
@@ -172,8 +175,9 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(OrderFill));
   MarketTicker_descriptor_ = file->message_type(6);
-  static const int MarketTicker_offsets_[3] = {
+  static const int MarketTicker_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketTicker, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketTicker, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketTicker, size_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketTicker, price_),
   };
@@ -189,7 +193,28 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketTicker));
   MarketTicker_Type_descriptor_ = MarketTicker_descriptor_->enum_type(0);
-  DepthFeedDelta_descriptor_ = file->message_type(7);
+  TradeTic_descriptor_ = file->message_type(7);
+  static const int TradeTic_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, symbol_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, size_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, price_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, ishigh_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, islow_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, change_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, tic_),
+  };
+  TradeTic_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      TradeTic_descriptor_,
+      TradeTic::default_instance_,
+      TradeTic_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(TradeTic));
+  DepthFeedDelta_descriptor_ = file->message_type(8);
   static const int DepthFeedDelta_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, isbid_),
@@ -207,7 +232,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DepthFeedDelta));
-  ContractOHLC_descriptor_ = file->message_type(8);
+  ContractOHLC_descriptor_ = file->message_type(9);
   static const int ContractOHLC_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ContractOHLC, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ContractOHLC, open_),
@@ -228,7 +253,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ContractOHLC));
-  DepthItem_descriptor_ = file->message_type(9);
+  DepthItem_descriptor_ = file->message_type(10);
   static const int DepthItem_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, level_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, b_),
@@ -247,9 +272,9 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DepthItem));
-  BookDelta_descriptor_ = file->message_type(10);
+  BookDelta_descriptor_ = file->message_type(11);
   static const int BookDelta_offsets_[8] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, public_key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, fantasy_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, seqnum_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, newnew_),
@@ -269,7 +294,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BookDelta));
-  MarketQuote_descriptor_ = file->message_type(11);
+  MarketQuote_descriptor_ = file->message_type(12);
   static const int MarketQuote_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketQuote, bs_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketQuote, b_),
@@ -290,7 +315,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketQuote));
-  MarketSnapshot_descriptor_ = file->message_type(12);
+  MarketSnapshot_descriptor_ = file->message_type(13);
   static const int MarketSnapshot_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, week_),
@@ -336,6 +361,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     MarketTicker_descriptor_, &MarketTicker::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    TradeTic_descriptor_, &TradeTic::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     DepthFeedDelta_descriptor_, &DepthFeedDelta::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ContractOHLC_descriptor_, &ContractOHLC::default_instance());
@@ -366,6 +393,8 @@ void protobuf_ShutdownFile_ExData_2eproto() {
   delete OrderFill_reflection_;
   delete MarketTicker::default_instance_;
   delete MarketTicker_reflection_;
+  delete TradeTic::default_instance_;
+  delete TradeTic_reflection_;
   delete DepthFeedDelta::default_instance_;
   delete DepthFeedDelta_reflection_;
   delete ContractOHLC::default_instance_;
@@ -398,31 +427,34 @@ void protobuf_AddDesc_ExData_2eproto() {
     "r\022\016\n\006refnum\030\n \001(\005\022#\n\004core\030\024 \001(\0132\025.fantas"
     "ybit.OrderCore\"d\n\tOrderFill\022\037\n\004left\030\n \001("
     "\0132\021.fantasybit.Order\022\021\n\tfillprice\030\024 \001(\005\022"
-    "\020\n\010fillsize\030\036 \001(\005\022\021\n\ttimestamp\030( \001(\005\"|\n\014"
-    "MarketTicker\022+\n\004type\030\001 \001(\0162\035.fantasybit."
-    "MarketTicker.Type\022\014\n\004size\030\024 \001(\005\022\r\n\005price"
-    "\030\036 \001(\005\"\"\n\004Type\022\007\n\003BID\020\001\022\007\n\003ASK\020\002\022\010\n\004LAST"
-    "\020\003\"L\n\016DepthFeedDelta\022\016\n\006symbol\030\001 \001(\t\022\r\n\005"
-    "isbid\030\n \001(\010\022\014\n\004size\030\024 \001(\005\022\r\n\005price\030\036 \001(\005"
-    "\"v\n\014ContractOHLC\022\016\n\006symbol\030\n \001(\t\022\014\n\004open"
-    "\030\024 \001(\005\022\014\n\004high\030\036 \001(\005\022\013\n\003low\030( \001(\005\022\r\n\005clo"
-    "se\0302 \001(\005\022\016\n\006volume\030< \001(\005\022\016\n\006change\030F \001(\005"
-    "\"H\n\tDepthItem\022\r\n\005level\030\n \001(\005\022\t\n\001b\030\036 \001(\005\022"
-    "\t\n\001a\030( \001(\005\022\n\n\002bs\0302 \001(\005\022\n\n\002as\030< \001(\005\"\216\002\n\tB"
-    "ookDelta\022\022\n\npublic_key\030\n \001(\t\022\016\n\006seqnum\030\024"
-    " \001(\005\022\020\n\010playerid\030\036 \001(\t\022%\n\006newnew\030( \001(\0132\025"
-    ".fantasybit.OrderCore\022&\n\004ohlc\030) \001(\0132\030.fa"
-    "ntasybit.ContractOHLC\022\"\n\007removes\0302 \003(\0132\021"
-    ".fantasybit.Order\022+\n\tlevel2tic\030< \003(\0132\030.f"
-    "antasybit.MarketTicker\022+\n\tlevel1tic\030F \003("
-    "\0132\030.fantasybit.MarketTicker\"_\n\013MarketQuo"
-    "te\022\n\n\002bs\030\n \001(\005\022\t\n\001b\030\024 \001(\005\022\t\n\001a\030\036 \001(\005\022\n\n\002"
-    "as\030( \001(\005\022\t\n\001l\0302 \001(\005\022\n\n\002ls\030< \001(\005\022\013\n\003udn\030F"
-    " \001(\005\"\244\001\n\016MarketSnapshot\022\016\n\006symbol\030\n \001(\t\022"
-    "\014\n\004week\030\013 \001(\005\022$\n\005depth\030F \003(\0132\025.fantasybi"
-    "t.DepthItem\022&\n\004ohlc\030\024 \001(\0132\030.fantasybit.C"
-    "ontractOHLC\022&\n\005quote\030\036 \001(\0132\027.fantasybit."
-    "MarketQuote", 1411);
+    "\020\n\010fillsize\030\036 \001(\005\022\021\n\ttimestamp\030( \001(\005\"\214\001\n"
+    "\014MarketTicker\022+\n\004type\030\001 \001(\0162\035.fantasybit"
+    ".MarketTicker.Type\022\016\n\006symbol\030\002 \001(\t\022\014\n\004si"
+    "ze\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\"\"\n\004Type\022\007\n\003BID\020\001"
+    "\022\007\n\003ASK\020\002\022\010\n\004LAST\020\003\"s\n\010TradeTic\022\016\n\006symbo"
+    "l\030\002 \001(\t\022\014\n\004size\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\022\016\n\006"
+    "ishigh\030( \001(\005\022\r\n\005islow\030- \001(\005\022\016\n\006change\0302 "
+    "\001(\005\022\013\n\003tic\030< \001(\005\"L\n\016DepthFeedDelta\022\016\n\006sy"
+    "mbol\030\001 \001(\t\022\r\n\005isbid\030\n \001(\010\022\014\n\004size\030\024 \001(\005\022"
+    "\r\n\005price\030\036 \001(\005\"v\n\014ContractOHLC\022\016\n\006symbol"
+    "\030\n \001(\t\022\014\n\004open\030\024 \001(\005\022\014\n\004high\030\036 \001(\005\022\013\n\003lo"
+    "w\030( \001(\005\022\r\n\005close\0302 \001(\005\022\016\n\006volume\030< \001(\005\022\016"
+    "\n\006change\030F \001(\005\"H\n\tDepthItem\022\r\n\005level\030\n \001"
+    "(\005\022\t\n\001b\030\036 \001(\005\022\t\n\001a\030( \001(\005\022\n\n\002bs\0302 \001(\005\022\n\n\002"
+    "as\030< \001(\005\"\220\002\n\tBookDelta\022\024\n\014fantasy_name\030\n"
+    " \001(\t\022\016\n\006seqnum\030\024 \001(\005\022\020\n\010playerid\030\036 \001(\t\022%"
+    "\n\006newnew\030( \001(\0132\025.fantasybit.OrderCore\022&\n"
+    "\004ohlc\030) \001(\0132\030.fantasybit.ContractOHLC\022\"\n"
+    "\007removes\0302 \003(\0132\021.fantasybit.Order\022+\n\tlev"
+    "el2tic\030< \003(\0132\030.fantasybit.MarketTicker\022+"
+    "\n\tlevel1tic\030F \003(\0132\030.fantasybit.MarketTic"
+    "ker\"_\n\013MarketQuote\022\n\n\002bs\030\n \001(\005\022\t\n\001b\030\024 \001("
+    "\005\022\t\n\001a\030\036 \001(\005\022\n\n\002as\030( \001(\005\022\t\n\001l\0302 \001(\005\022\n\n\002l"
+    "s\030< \001(\005\022\013\n\003udn\030F \001(\005\"\244\001\n\016MarketSnapshot\022"
+    "\016\n\006symbol\030\n \001(\t\022\014\n\004week\030\013 \001(\005\022$\n\005depth\030F"
+    " \003(\0132\025.fantasybit.DepthItem\022&\n\004ohlc\030\024 \001("
+    "\0132\030.fantasybit.ContractOHLC\022&\n\005quote\030\036 \001"
+    "(\0132\027.fantasybit.MarketQuote", 1547);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ExData.proto", &protobuf_RegisterTypes);
   SettlePos::default_instance_ = new SettlePos();
@@ -432,6 +464,7 @@ void protobuf_AddDesc_ExData_2eproto() {
   Order::default_instance_ = new Order();
   OrderFill::default_instance_ = new OrderFill();
   MarketTicker::default_instance_ = new MarketTicker();
+  TradeTic::default_instance_ = new TradeTic();
   DepthFeedDelta::default_instance_ = new DepthFeedDelta();
   ContractOHLC::default_instance_ = new ContractOHLC();
   DepthItem::default_instance_ = new DepthItem();
@@ -445,6 +478,7 @@ void protobuf_AddDesc_ExData_2eproto() {
   Order::default_instance_->InitAsDefaultInstance();
   OrderFill::default_instance_->InitAsDefaultInstance();
   MarketTicker::default_instance_->InitAsDefaultInstance();
+  TradeTic::default_instance_->InitAsDefaultInstance();
   DepthFeedDelta::default_instance_->InitAsDefaultInstance();
   ContractOHLC::default_instance_->InitAsDefaultInstance();
   DepthItem::default_instance_->InitAsDefaultInstance();
@@ -2235,6 +2269,7 @@ const int MarketTicker::Type_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
 const int MarketTicker::kTypeFieldNumber;
+const int MarketTicker::kSymbolFieldNumber;
 const int MarketTicker::kSizeFieldNumber;
 const int MarketTicker::kPriceFieldNumber;
 #endif  // !_MSC_VER
@@ -2256,6 +2291,7 @@ MarketTicker::MarketTicker(const MarketTicker& from)
 void MarketTicker::SharedCtor() {
   _cached_size_ = 0;
   type_ = 1;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   size_ = 0;
   price_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2266,6 +2302,9 @@ MarketTicker::~MarketTicker() {
 }
 
 void MarketTicker::SharedDtor() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -2294,6 +2333,11 @@ MarketTicker* MarketTicker::New() const {
 void MarketTicker::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     type_ = 1;
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
     size_ = 0;
     price_ = 0;
   }
@@ -2320,6 +2364,23 @@ bool MarketTicker::MergePartialFromCodedStream(
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_symbol;
+        break;
+      }
+
+      // optional string symbol = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_symbol:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -2383,6 +2444,15 @@ void MarketTicker::SerializeWithCachedSizes(
       1, this->type(), output);
   }
 
+  // optional string symbol = 2;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->symbol(), output);
+  }
+
   // optional int32 size = 20;
   if (has_size()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(20, this->size(), output);
@@ -2405,6 +2475,16 @@ void MarketTicker::SerializeWithCachedSizes(
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->type(), target);
+  }
+
+  // optional string symbol = 2;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->symbol(), target);
   }
 
   // optional int32 size = 20;
@@ -2432,6 +2512,13 @@ int MarketTicker::ByteSize() const {
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional string symbol = 2;
+    if (has_symbol()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
     }
 
     // optional int32 size = 20;
@@ -2478,6 +2565,9 @@ void MarketTicker::MergeFrom(const MarketTicker& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
     if (from.has_size()) {
       set_size(from.size());
     }
@@ -2508,6 +2598,7 @@ bool MarketTicker::IsInitialized() const {
 void MarketTicker::Swap(MarketTicker* other) {
   if (other != this) {
     std::swap(type_, other->type_);
+    std::swap(symbol_, other->symbol_);
     std::swap(size_, other->size_);
     std::swap(price_, other->price_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -2521,6 +2612,471 @@ void MarketTicker::Swap(MarketTicker* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = MarketTicker_descriptor_;
   metadata.reflection = MarketTicker_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int TradeTic::kSymbolFieldNumber;
+const int TradeTic::kSizeFieldNumber;
+const int TradeTic::kPriceFieldNumber;
+const int TradeTic::kIshighFieldNumber;
+const int TradeTic::kIslowFieldNumber;
+const int TradeTic::kChangeFieldNumber;
+const int TradeTic::kTicFieldNumber;
+#endif  // !_MSC_VER
+
+TradeTic::TradeTic()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void TradeTic::InitAsDefaultInstance() {
+}
+
+TradeTic::TradeTic(const TradeTic& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void TradeTic::SharedCtor() {
+  _cached_size_ = 0;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  size_ = 0;
+  price_ = 0;
+  ishigh_ = 0;
+  islow_ = 0;
+  change_ = 0;
+  tic_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+TradeTic::~TradeTic() {
+  SharedDtor();
+}
+
+void TradeTic::SharedDtor() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void TradeTic::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* TradeTic::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return TradeTic_descriptor_;
+}
+
+const TradeTic& TradeTic::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ExData_2eproto();
+  return *default_instance_;
+}
+
+TradeTic* TradeTic::default_instance_ = NULL;
+
+TradeTic* TradeTic::New() const {
+  return new TradeTic;
+}
+
+void TradeTic::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
+    size_ = 0;
+    price_ = 0;
+    ishigh_ = 0;
+    islow_ = 0;
+    change_ = 0;
+    tic_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool TradeTic::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string symbol = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(160)) goto parse_size;
+        break;
+      }
+
+      // optional int32 size = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_size:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &size_)));
+          set_has_size();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_price;
+        break;
+      }
+
+      // optional int32 price = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_price:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &price_)));
+          set_has_price();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(320)) goto parse_ishigh;
+        break;
+      }
+
+      // optional int32 ishigh = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_ishigh:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &ishigh_)));
+          set_has_ishigh();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(360)) goto parse_islow;
+        break;
+      }
+
+      // optional int32 islow = 45;
+      case 45: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_islow:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &islow_)));
+          set_has_islow();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(400)) goto parse_change;
+        break;
+      }
+
+      // optional int32 change = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_change:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &change_)));
+          set_has_change();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(480)) goto parse_tic;
+        break;
+      }
+
+      // optional int32 tic = 60;
+      case 60: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_tic:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &tic_)));
+          set_has_tic();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void TradeTic::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string symbol = 2;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->symbol(), output);
+  }
+
+  // optional int32 size = 20;
+  if (has_size()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(20, this->size(), output);
+  }
+
+  // optional int32 price = 30;
+  if (has_price()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(30, this->price(), output);
+  }
+
+  // optional int32 ishigh = 40;
+  if (has_ishigh()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(40, this->ishigh(), output);
+  }
+
+  // optional int32 islow = 45;
+  if (has_islow()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(45, this->islow(), output);
+  }
+
+  // optional int32 change = 50;
+  if (has_change()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(50, this->change(), output);
+  }
+
+  // optional int32 tic = 60;
+  if (has_tic()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(60, this->tic(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* TradeTic::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string symbol = 2;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->symbol(), target);
+  }
+
+  // optional int32 size = 20;
+  if (has_size()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(20, this->size(), target);
+  }
+
+  // optional int32 price = 30;
+  if (has_price()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(30, this->price(), target);
+  }
+
+  // optional int32 ishigh = 40;
+  if (has_ishigh()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(40, this->ishigh(), target);
+  }
+
+  // optional int32 islow = 45;
+  if (has_islow()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(45, this->islow(), target);
+  }
+
+  // optional int32 change = 50;
+  if (has_change()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(50, this->change(), target);
+  }
+
+  // optional int32 tic = 60;
+  if (has_tic()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(60, this->tic(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int TradeTic::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string symbol = 2;
+    if (has_symbol()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
+    }
+
+    // optional int32 size = 20;
+    if (has_size()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->size());
+    }
+
+    // optional int32 price = 30;
+    if (has_price()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->price());
+    }
+
+    // optional int32 ishigh = 40;
+    if (has_ishigh()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->ishigh());
+    }
+
+    // optional int32 islow = 45;
+    if (has_islow()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->islow());
+    }
+
+    // optional int32 change = 50;
+    if (has_change()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->change());
+    }
+
+    // optional int32 tic = 60;
+    if (has_tic()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->tic());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void TradeTic::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const TradeTic* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const TradeTic*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void TradeTic::MergeFrom(const TradeTic& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
+    if (from.has_size()) {
+      set_size(from.size());
+    }
+    if (from.has_price()) {
+      set_price(from.price());
+    }
+    if (from.has_ishigh()) {
+      set_ishigh(from.ishigh());
+    }
+    if (from.has_islow()) {
+      set_islow(from.islow());
+    }
+    if (from.has_change()) {
+      set_change(from.change());
+    }
+    if (from.has_tic()) {
+      set_tic(from.tic());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void TradeTic::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void TradeTic::CopyFrom(const TradeTic& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool TradeTic::IsInitialized() const {
+
+  return true;
+}
+
+void TradeTic::Swap(TradeTic* other) {
+  if (other != this) {
+    std::swap(symbol_, other->symbol_);
+    std::swap(size_, other->size_);
+    std::swap(price_, other->price_);
+    std::swap(ishigh_, other->ishigh_);
+    std::swap(islow_, other->islow_);
+    std::swap(change_, other->change_);
+    std::swap(tic_, other->tic_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata TradeTic::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = TradeTic_descriptor_;
+  metadata.reflection = TradeTic_reflection_;
   return metadata;
 }
 
@@ -3704,7 +4260,7 @@ void DepthItem::Swap(DepthItem* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int BookDelta::kPublicKeyFieldNumber;
+const int BookDelta::kFantasyNameFieldNumber;
 const int BookDelta::kSeqnumFieldNumber;
 const int BookDelta::kPlayeridFieldNumber;
 const int BookDelta::kNewnewFieldNumber;
@@ -3732,7 +4288,7 @@ BookDelta::BookDelta(const BookDelta& from)
 
 void BookDelta::SharedCtor() {
   _cached_size_ = 0;
-  public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  fantasy_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   seqnum_ = 0;
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   newnew_ = NULL;
@@ -3745,8 +4301,8 @@ BookDelta::~BookDelta() {
 }
 
 void BookDelta::SharedDtor() {
-  if (public_key_ != &::google::protobuf::internal::kEmptyString) {
-    delete public_key_;
+  if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete fantasy_name_;
   }
   if (playerid_ != &::google::protobuf::internal::kEmptyString) {
     delete playerid_;
@@ -3780,9 +4336,9 @@ BookDelta* BookDelta::New() const {
 
 void BookDelta::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_public_key()) {
-      if (public_key_ != &::google::protobuf::internal::kEmptyString) {
-        public_key_->clear();
+    if (has_fantasy_name()) {
+      if (fantasy_name_ != &::google::protobuf::internal::kEmptyString) {
+        fantasy_name_->clear();
       }
     }
     seqnum_ = 0;
@@ -3811,14 +4367,14 @@ bool BookDelta::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string public_key = 10;
+      // optional string fantasy_name = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_public_key()));
+                input, this->mutable_fantasy_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->public_key().data(), this->public_key().length(),
+            this->fantasy_name().data(), this->fantasy_name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -3951,13 +4507,13 @@ bool BookDelta::MergePartialFromCodedStream(
 
 void BookDelta::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string public_key = 10;
-  if (has_public_key()) {
+  // optional string fantasy_name = 10;
+  if (has_fantasy_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->public_key().data(), this->public_key().length(),
+      this->fantasy_name().data(), this->fantasy_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      10, this->public_key(), output);
+      10, this->fantasy_name(), output);
   }
 
   // optional int32 seqnum = 20;
@@ -4012,14 +4568,14 @@ void BookDelta::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* BookDelta::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string public_key = 10;
-  if (has_public_key()) {
+  // optional string fantasy_name = 10;
+  if (has_fantasy_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->public_key().data(), this->public_key().length(),
+      this->fantasy_name().data(), this->fantasy_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        10, this->public_key(), target);
+        10, this->fantasy_name(), target);
   }
 
   // optional int32 seqnum = 20;
@@ -4083,11 +4639,11 @@ int BookDelta::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string public_key = 10;
-    if (has_public_key()) {
+    // optional string fantasy_name = 10;
+    if (has_fantasy_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->public_key());
+          this->fantasy_name());
     }
 
     // optional int32 seqnum = 20;
@@ -4172,8 +4728,8 @@ void BookDelta::MergeFrom(const BookDelta& from) {
   level2tic_.MergeFrom(from.level2tic_);
   level1tic_.MergeFrom(from.level1tic_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_public_key()) {
-      set_public_key(from.public_key());
+    if (from.has_fantasy_name()) {
+      set_fantasy_name(from.fantasy_name());
     }
     if (from.has_seqnum()) {
       set_seqnum(from.seqnum());
@@ -4210,7 +4766,7 @@ bool BookDelta::IsInitialized() const {
 
 void BookDelta::Swap(BookDelta* other) {
   if (other != this) {
-    std::swap(public_key_, other->public_key_);
+    std::swap(fantasy_name_, other->fantasy_name_);
     std::swap(seqnum_, other->seqnum_);
     std::swap(playerid_, other->playerid_);
     std::swap(newnew_, other->newnew_);

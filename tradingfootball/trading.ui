@@ -24,14 +24,7 @@
           <widget class="QComboBox" name="gamesCombo"/>
          </item>
          <item row="1" column="0">
-          <widget class="QTableView" name="playerList">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
+          <widget class="QTableView" name="playerList"/>
          </item>
         </layout>
        </item>
@@ -124,7 +117,7 @@
        <item row="1" column="1">
         <widget class="QPushButton" name="sellit">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -142,7 +135,7 @@
        <item row="1" column="0">
         <widget class="QPushButton" name="buyit">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>

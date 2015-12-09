@@ -1099,7 +1099,7 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "\002\"t\n\013MessageData\022\013\n\003msg\030\n \001(\t\022\n\n\002gt\030\024 \001("
     "\005\022\n\n\002lt\030\036 \001(\0052@\n\014message_data\022\020.fantasyb"
     "it.Data\030\224\003 \001(\0132\027.fantasybit.MessageData\""
-    "\301\001\n\014StampedTrans\022\021\n\ttimestamp\030\n \001(\005\022\016\n\006s"
+    "\301\001\n\014StampedTrans\022\021\n\ttimestamp\030\n \001(\004\022\016\n\006s"
     "eqnum\030\024 \001(\005\022\017\n\007prevseq\030\025 \001(\005\0222\n\013signed_o"
     "rig\030\036 \001(\0132\035.fantasybit.SignedTransaction"
     "2I\n\rstamped_trans\022\027.fantasybit.Transacti"
@@ -11537,7 +11537,7 @@ StampedTrans::StampedTrans(const StampedTrans& from)
 
 void StampedTrans::SharedCtor() {
   _cached_size_ = 0;
-  timestamp_ = 0;
+  timestamp_ = GOOGLE_ULONGLONG(0);
   seqnum_ = 0;
   prevseq_ = 0;
   signed_orig_ = NULL;
@@ -11577,7 +11577,7 @@ StampedTrans* StampedTrans::New() const {
 
 void StampedTrans::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    timestamp_ = 0;
+    timestamp_ = GOOGLE_ULONGLONG(0);
     seqnum_ = 0;
     prevseq_ = 0;
     if (has_signed_orig()) {
@@ -11594,12 +11594,12 @@ bool StampedTrans::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 timestamp = 10;
+      // optional uint64 timestamp = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &timestamp_)));
           set_has_timestamp();
         } else {
@@ -11673,9 +11673,9 @@ bool StampedTrans::MergePartialFromCodedStream(
 
 void StampedTrans::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional int32 timestamp = 10;
+  // optional uint64 timestamp = 10;
   if (has_timestamp()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(10, this->timestamp(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(10, this->timestamp(), output);
   }
 
   // optional int32 seqnum = 20;
@@ -11702,9 +11702,9 @@ void StampedTrans::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* StampedTrans::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional int32 timestamp = 10;
+  // optional uint64 timestamp = 10;
   if (has_timestamp()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(10, this->timestamp(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(10, this->timestamp(), target);
   }
 
   // optional int32 seqnum = 20;
@@ -11735,10 +11735,10 @@ int StampedTrans::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional int32 timestamp = 10;
+    // optional uint64 timestamp = 10;
     if (has_timestamp()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->timestamp());
     }
 

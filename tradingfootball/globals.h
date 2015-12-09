@@ -73,4 +73,11 @@ static QString fromTime_t_toFantasyString(uint dtt) {
     return QDateTime::fromTime_t(dtt,tz).toString("ddd h:mm a").remove(" pm");
 }
 
+static QDateTime currentNewYorkTime() {
+    QByteArray zone = "America/New_York";
+    QTimeZone tz(zone);//str.c_str();
+
+    return QDateTime::currentDateTime().toTimeZone(tz);
+}
+
 #endif

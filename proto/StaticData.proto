@@ -59,6 +59,7 @@ message PlayerResult {
     optional float result = 40;
     optional Stats stats = 50;
     repeated FantasyBitAward fantaybitaward = 60;
+    repeated FantasyBitPnl fantasybitpnl = 70;
 }
 
 message GameResult {

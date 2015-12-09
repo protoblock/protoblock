@@ -79,3 +79,9 @@ string DataService::exportMnemonic(std::string &in) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->Agent().getMnemonic(in);
 }
+
+std::unordered_map<std::string,Position> DataService::GetPositionsByName(const std::string &fname) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->ExData().GetPositionsByName(fname);
+}
+

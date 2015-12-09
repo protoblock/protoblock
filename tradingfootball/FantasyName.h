@@ -29,28 +29,31 @@
 namespace fantasybit
 {
 
+template <class T>
 class Bits
 { 
-    Int64 base;
+    T base;
 public:		
-    Bits(Int64 b) : base(b) {}
+    Bits(T b) : base(b) {}
     
     double points() { return base * .00000001; }
     double bits() { return points() * 100; }
-    Int64 amount() { return base; }
+    T amount() { return base; }
     void add(Bits b) { base+=b.amount(); }
     void subtract(Bits b) { base-=b.amount(); }
 };
 
 using pubkey_t = fc::ecc::public_key_data;
 using hash_t = uint64_t;
-
+using skillbits  =Bits<UInt64>;
+using stakebits = Bits<Int64>;
 struct FantasyName
 {
 private:
     alias_t  mAlias;
     pubkey_t mPubkey;
-    Bits balance, stake;
+    skillbits balance;
+    stakebits stake;
     std::recursive_mutex bal_mutex{};
 public:
     FantasyName(const alias_t &inalias, const pubkey_t &inpubkey)
@@ -59,7 +62,7 @@ public:
     FantasyName ( const FantasyName &in )
         : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance), stake(in.stake) {}
 
-    Int64 getBalance()  {
+    UInt64 getBalance()  {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         return balance.amount();
     }
@@ -69,24 +72,32 @@ public:
         return stake.amount();
     }
 
-	void addBalance(Bits b) {
+    void addBalance(skillbits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         balance.add(b);
-        stake.add(b);
+        stake.add(b.amount());
 	}
 
-    void addProfit(Bits b) {
+    void addProfitLoss(stakebits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         stake.add(b);
     }
 
+    /*
     void addLoss(Bits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         stake.subtract(b);
     }
 
+    void addProfit(Bits b) {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        stake.add(b);
+    }
+    */
 
-    void newBalance(Bits b) {
+
+
+    void newBalance(skillbits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         balance = b;
     }

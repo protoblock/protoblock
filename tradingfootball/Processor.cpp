@@ -181,7 +181,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     qCritical() << "no data" + QTD(ttd.DebugString());
                 }
                 break;
-            case Data_Type_RESULT: {
+            case Data_Type_RESULT:
+            {
                 rd = d.GetExtension(ResultData::result_data);
 
                 if ( !rd.has_game_result()) {
@@ -196,30 +197,69 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 }
                 */
                 auto allprojs = mNameData.GetGameProj(rd.game_result().gameid());
+                bool nopnl = false;
+                GameSettlePos gsp;
+                if ( !mExchangeData.GetGameSettlePos(rd.game_result().gameid(),gsp) )
+                   nopnl = true;
+
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
-                for ( auto fpj : allprojs.home())
-                   projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
+                unordered_map<string,BookPos *> posmap;
 
-                for ( auto fpj : allprojs.away())
-                   projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
+                for (auto ha : {QString("home"),QString("away")}) {
+                    for ( auto fpj : ha == "home" ? allprojs.home() : allprojs.away())
+                        projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
 
-                if( rd.game_result().home_result_size() <= 0 )
-                    qCritical() << "no home result" + QTD(rd.DebugString());
-                else {
-                    for ( int i =0; i < rd.game_result().home_result_size(); i++) {
-                        qDebug() << rd.game_result().home_result(i).playerid()
-                                 << rd.game_result().home_result(i).result();
+                    if ( nopnl ) continue;
 
-                        auto proj = projmaps[rd.game_result().home_result(i).playerid()];
-                        //if ( proj.size() == 0 )
-                        //    continue;
-
-                        processResultProj(rd.mutable_game_result()->mutable_home_result(i)
-                                          ,proj,blocksigner);
-                    }
+                    for ( BookPos &bp : ha == "home" ? *gsp.mutable_home() : *gsp.mutable_away())
+                        posmap[bp.playerid()] = &bp;
                 }
 
 
+                //for ( auto fpj : allprojs.away())
+                //   projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
+
+
+                for (auto ha : {QString("home"),QString("away")}) {
+
+                    int size =  (ha == "home") ?
+                                rd.game_result().home_result_size()
+                                :  rd.game_result().away_result_size();
+
+                    if( size <= 0) {
+                        qCritical() << "no" << ha << " result" + QTD(rd.DebugString());
+                        continue;
+                    }
+
+                    decltype(rd.game_result().home_result())
+                            haresult = (ha == "home") ?
+                                rd.game_result().home_result()
+                                :  rd.game_result().away_result();
+
+                    decltype(rd.mutable_game_result()->mutable_home_result())
+                            mut_haresult = (ha == "home") ?
+                                rd.mutable_game_result()->mutable_home_result()
+                                :  rd.mutable_game_result()->mutable_away_result();
+
+                    for ( int i =0; i < size; i++) {
+                        qDebug() << haresult.Get(i).playerid()
+                                 << haresult.Get(i).result();
+
+
+                        auto proj = projmaps[haresult.Get(i).playerid()];
+                        //if ( proj.size() == 0 )
+                        //    continue;
+
+                        BookPos  *bpos = nullptr;
+                        if ( !nopnl ) {
+                            bpos = posmap.at(haresult.Get(i).playerid());
+                        }
+
+                        processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
+                    }
+                }
+
+                /*
                 if( rd.game_result().away_result_size() <= 0 )
                     qCritical() << "no away result" + QTD(rd.DebugString());
                 else
@@ -241,10 +281,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 //for (auto result : rd.game_result().away_result() )
                 //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
+                */
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
-#ifdef TRADE_FEATURE
-                mExchangeData.OnGameResult(rd.game_result());
-#endif
 #ifdef DATAAGENTWRITENAMES
                 {
 #ifndef DATAAGENTWRITENAMES_FORCE
@@ -354,28 +392,42 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
 void BlockProcessor::processResultProj(PlayerResult* playerresultP,
                                        std::unordered_map<std::string,int> &proj,
+                                       BookPos *pbpos,
                                        const std::string &blocksigner) {
     auto &playerresult = *playerresultP;
+    PlayerResult awards;
     DistribuePointsAvg dist(proj);
-    if ( !playerresult.has_result() && playerresult.has_stats()) {
+    auto rewards = dist.distribute(playerresult.result(), blocksigner);
+
+    //if ( !playerresult.has_result() && playerresult.has_stats()) {
         //auto calc = CalcResults(playerresult.stats());
         //playerresult.set_result(calc);
-    }
+    //}
 
-    auto rewards = dist.distribute(playerresult.result(), blocksigner);
     //decltype(PlayerResult::default_instance().fantaybitaward())
-    PlayerResult awards;
     for (auto r : rewards ) {
-        FantasyBitAward fba{};
+        FantasyBitAward &fba = *playerresult.mutable_fantaybitaward()->Add();
         fba.set_name(r.first);
         auto m = proj[r.first];
         fba.set_proj(m);
         fba.set_award(r.second);
-        awards.add_fantaybitaward()->CopyFrom(fba);
+        //awards.add_fantaybitaward()->CopyFrom(fba);
         mNameData.AddBalance(r.first,r.second);
     }
-    playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
+    //playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
     //return awards;
+
+    if ( pbpos == nullptr) return;
+
+    SettlePositionsRawStake set(*pbpos);
+    auto pnls = set.settle(playerresult.result(), blocksigner);
+    for (auto r : pnls ) {
+        FantasyBitPnl &fba = *playerresult.mutable_fantasybitpnl()->Add();
+        fba.mutable_spos()->CopyFrom(r.second.first);
+        fba.set_pnl(r.second.second);
+        //awards.add_fantaybitaward()->CopyFrom(fba);
+        mNameData.AddPnL(r.first,r.second.second);
+    }
 }
 
 void BlockProcessor::process(const DataTransition &indt) {
@@ -459,6 +511,20 @@ void BlockProcessor::process(const DataTransition &indt) {
 
         if ( indt.week() != mGlobalState.week())
             qWarning() << indt.type() << " wrong week" << mGlobalState.week() << indt.week();
+
+        auto pos = mExchangeData.GetRemainingSettlePos();
+        for ( auto sbp : pos ) {
+            SettlePositionsRawStake set(sbp.second);
+            auto pnls = set.settle(0.0, Commissioner::FantasyAgentName());
+            for (auto r : pnls ) {
+                //FantasyBitPnl &fba = *playerresult.mutable_fantasybitpnl()->Add();
+                //fba.mutable_spos()->CopyFrom(r.second.first);
+                //fba.set_pnl(r.second.second);
+                //awards.add_fantaybitaward()->CopyFrom(fba);
+                mNameData.AddPnL(r.first,r.second.second);
+            }
+        }
+
 
         OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
@@ -623,10 +689,10 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
 #ifndef TRADE_FEATURE
             break;
 #endif
-
             auto emdg = t.GetExtension(ExchangeOrder::exchange_order);
             qDebug() << "new ExchangeOrder " << emdg.DebugString();
 
+            //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
             mExchangeData.OnNewOrderMsg(emdg,seqnum,fn);
             break;
         }

@@ -139,6 +139,7 @@ public slots:
     //dataagent
     void BeOracle();
 private:
+    void DoSubscribe(const string &name, bool suborun);
 
     bool Process(fantasybit::Block &b);
     bool doProcessBlock();

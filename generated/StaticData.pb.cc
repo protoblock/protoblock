@@ -188,11 +188,12 @@ void protobuf_AssignDesc_StaticData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Stats));
   PlayerResult_descriptor_ = file->message_type(7);
-  static const int PlayerResult_offsets_[4] = {
+  static const int PlayerResult_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, result_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, stats_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, fantaybitaward_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, fantasybitpnl_),
   };
   PlayerResult_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -303,14 +304,15 @@ void protobuf_AddDesc_StaticData_2eproto() {
     "\001(\005\022\r\n\005onept\030n \001(\005\"s\n\005Stats\022\"\n\006ostats\030\n "
     "\001(\0132\022.fantasybit.Ostats\022\"\n\006dstats\030\024 \001(\0132"
     "\022.fantasybit.Dstats\022\"\n\006kstats\030\036 \001(\0132\022.fa"
-    "ntasybit.Kstats\"\207\001\n\014PlayerResult\022\020\n\010play"
+    "ntasybit.Kstats\"\271\001\n\014PlayerResult\022\020\n\010play"
     "erid\030\024 \001(\t\022\016\n\006result\030( \001(\002\022 \n\005stats\0302 \001("
     "\0132\021.fantasybit.Stats\0223\n\016fantaybitaward\030<"
-    " \003(\0132\033.fantasybit.FantasyBitAward\"\217\001\n\nGa"
-    "meResult\022\016\n\006gameid\030\001 \001(\t\022-\n\013home_result\030"
-    "\n \003(\0132\030.fantasybit.PlayerResult\022-\n\013away_"
-    "result\030\024 \003(\0132\030.fantasybit.PlayerResult\022\023"
-    "\n\013kickofftime\030\036 \001(\r", 979);
+    " \003(\0132\033.fantasybit.FantasyBitAward\0220\n\rfan"
+    "tasybitpnl\030F \003(\0132\031.fantasybit.FantasyBit"
+    "Pnl\"\217\001\n\nGameResult\022\016\n\006gameid\030\001 \001(\t\022-\n\013ho"
+    "me_result\030\n \003(\0132\030.fantasybit.PlayerResul"
+    "t\022-\n\013away_result\030\024 \003(\0132\030.fantasybit.Play"
+    "erResult\022\023\n\013kickofftime\030\036 \001(\r", 1029);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StaticData.proto", &protobuf_RegisterTypes);
   PlayerBase::default_instance_ = new PlayerBase();
@@ -2938,6 +2940,7 @@ const int PlayerResult::kPlayeridFieldNumber;
 const int PlayerResult::kResultFieldNumber;
 const int PlayerResult::kStatsFieldNumber;
 const int PlayerResult::kFantaybitawardFieldNumber;
+const int PlayerResult::kFantasybitpnlFieldNumber;
 #endif  // !_MSC_VER
 
 PlayerResult::PlayerResult()
@@ -3010,6 +3013,7 @@ void PlayerResult::Clear() {
     }
   }
   fantaybitaward_.Clear();
+  fantasybitpnl_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3077,6 +3081,21 @@ bool PlayerResult::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(482)) goto parse_fantaybitaward;
+        if (input->ExpectTag(562)) goto parse_fantasybitpnl;
+        break;
+      }
+
+      // repeated .fantasybit.FantasyBitPnl fantasybitpnl = 70;
+      case 70: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_fantasybitpnl:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_fantasybitpnl()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(562)) goto parse_fantasybitpnl;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3125,6 +3144,12 @@ void PlayerResult::SerializeWithCachedSizes(
       60, this->fantaybitaward(i), output);
   }
 
+  // repeated .fantasybit.FantasyBitPnl fantasybitpnl = 70;
+  for (int i = 0; i < this->fantasybitpnl_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      70, this->fantasybitpnl(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3160,6 +3185,13 @@ void PlayerResult::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         60, this->fantaybitaward(i), target);
+  }
+
+  // repeated .fantasybit.FantasyBitPnl fantasybitpnl = 70;
+  for (int i = 0; i < this->fantasybitpnl_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        70, this->fantasybitpnl(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3201,6 +3233,14 @@ int PlayerResult::ByteSize() const {
         this->fantaybitaward(i));
   }
 
+  // repeated .fantasybit.FantasyBitPnl fantasybitpnl = 70;
+  total_size += 2 * this->fantasybitpnl_size();
+  for (int i = 0; i < this->fantasybitpnl_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->fantasybitpnl(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -3227,6 +3267,7 @@ void PlayerResult::MergeFrom(const ::google::protobuf::Message& from) {
 void PlayerResult::MergeFrom(const PlayerResult& from) {
   GOOGLE_CHECK_NE(&from, this);
   fantaybitaward_.MergeFrom(from.fantaybitaward_);
+  fantasybitpnl_.MergeFrom(from.fantasybitpnl_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_playerid()) {
       set_playerid(from.playerid());
@@ -3264,6 +3305,7 @@ void PlayerResult::Swap(PlayerResult* other) {
     std::swap(result_, other->result_);
     std::swap(stats_, other->stats_);
     fantaybitaward_.Swap(&other->fantaybitaward_);
+    fantasybitpnl_.Swap(&other->fantasybitpnl_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

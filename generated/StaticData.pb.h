@@ -1013,6 +1013,18 @@ class PlayerResult : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward >*
       mutable_fantaybitaward();
 
+  // repeated .fantasybit.FantasyBitPnl fantasybitpnl = 70;
+  inline int fantasybitpnl_size() const;
+  inline void clear_fantasybitpnl();
+  static const int kFantasybitpnlFieldNumber = 70;
+  inline const ::fantasybit::FantasyBitPnl& fantasybitpnl(int index) const;
+  inline ::fantasybit::FantasyBitPnl* mutable_fantasybitpnl(int index);
+  inline ::fantasybit::FantasyBitPnl* add_fantasybitpnl();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >&
+      fantasybitpnl() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >*
+      mutable_fantasybitpnl();
+
   // @@protoc_insertion_point(class_scope:fantasybit.PlayerResult)
  private:
   inline void set_has_playerid();
@@ -1027,10 +1039,11 @@ class PlayerResult : public ::google::protobuf::Message {
   ::std::string* playerid_;
   ::fantasybit::Stats* stats_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward > fantaybitaward_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl > fantasybitpnl_;
   float result_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_StaticData_2eproto();
   friend void protobuf_AssignDesc_StaticData_2eproto();
@@ -2418,6 +2431,31 @@ PlayerResult::fantaybitaward() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward >*
 PlayerResult::mutable_fantaybitaward() {
   return &fantaybitaward_;
+}
+
+// repeated .fantasybit.FantasyBitPnl fantasybitpnl = 70;
+inline int PlayerResult::fantasybitpnl_size() const {
+  return fantasybitpnl_.size();
+}
+inline void PlayerResult::clear_fantasybitpnl() {
+  fantasybitpnl_.Clear();
+}
+inline const ::fantasybit::FantasyBitPnl& PlayerResult::fantasybitpnl(int index) const {
+  return fantasybitpnl_.Get(index);
+}
+inline ::fantasybit::FantasyBitPnl* PlayerResult::mutable_fantasybitpnl(int index) {
+  return fantasybitpnl_.Mutable(index);
+}
+inline ::fantasybit::FantasyBitPnl* PlayerResult::add_fantasybitpnl() {
+  return fantasybitpnl_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >&
+PlayerResult::fantasybitpnl() const {
+  return fantasybitpnl_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >*
+PlayerResult::mutable_fantasybitpnl() {
+  return &fantasybitpnl_;
 }
 
 // -------------------------------------------------------------------

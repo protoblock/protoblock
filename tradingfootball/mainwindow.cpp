@@ -382,6 +382,8 @@ void MainWindow::OnNameStatus(MyFantasyName name){
 		QVariant balance;
 		DataCache::instance()->leaderBoardModel().itemPropertyValue<PropertyNames::Balance>(fname, balance);
 		ui->myBalanceText->setText(QString("%1").arg(balance.toDouble()));
+        ui->tradingview->SetFantasyName(myCurrentFantasyName.name());
+
     }
 }
 
@@ -520,6 +522,7 @@ void MainWindow::setCurrentFantasyName(fantasybit::MyFantasyName * fantasyName,b
         QString(fantasyName->name().data()) <<
         " with status :" << translateNameStatus(fantasyName->status());
 	
+    ui->tradingview->SetFantasyName(fantasyName->name());
     myCurrentFantasyName.CopyFrom(*fantasyName);
 
 	//update status label

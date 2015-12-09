@@ -62,6 +62,11 @@ namespace PropertyNames {
     ENUMITEM(LEVEL)
     ENUMITEM(LAST)
     ENUMITEM(LASTSIZE)
+    ENUMITEM(HIGH)
+    ENUMITEM(LOW)
+    ENUMITEM(VOLUME)
+    ENUMITEM(CHANGE)
+    ENUMITEM(TIC)
 
 
     template<typename Name>

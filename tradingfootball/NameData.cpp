@@ -126,6 +126,28 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     OnFantasyNameBalance(fn);
 }
 
+void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
+    auto hash = FantasyName::name_hash(name);
+
+    string temp;
+    leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+    if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {
+        qWarning() << "cant name to add balance" << name.c_str();
+        return;
+    }
+    FantasyNameBal fn{};
+    fn.ParseFromString(temp);
+    fn.set_stake(fn.stake() + pnl);
+    namestore->Put(write_sync, hkey, fn.SerializeAsString());
+    auto fnp = Commissioner::getName(hash);
+    if ( fnp != nullptr) {
+        fnp->addProfitLoss(pnl);
+    }
+    //if ( name == "Windo")
+    //    qDebug() << "abcdefg" << fn.DebugString();
+    OnFantasyNamePnl(fn);
+}
+
 void FantasyNameData::AddProjection(const string &name, const string &player,
                              uint32_t proj) {
 
@@ -231,6 +253,7 @@ void FantasyNameData::UnSubscribe(std::string in) {
     mSubscribed.erase(in);
 }
 
+
 void FantasyNameData::OnProjection(const std::string &name, const std::string &player,
                             uint32_t proj) {
     if ( !amlive )
@@ -287,6 +310,15 @@ void FantasyNameData::OnFantasyNameBalance(FantasyNameBal &fn) {
         emit FantasyNameBalance(fn);
 }
 
+void FantasyNameData::OnFantasyNamePnl(FantasyNameBal &fn) {
+    if ( !amlive )
+        return;
+
+    if ( mSubscribed.find(fn.name()) != end(mSubscribed))
+        emit FantasyNamePnl(fn);
+}
+
+
 void FantasyNameData::OnWeekOver(int in) {
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
@@ -328,3 +360,12 @@ void FantasyNameData::dumpProj() {
     qDebug() << "--PlayerIDProjections--";
     dump(PlayerIDProjections);
 }
+
+/*
+void FantasyNameData::OnFantasyNameOrder(fantasybit::Order& ord) {
+    if ( mSubscribed.find(ord.co) == end(mSubscribed))
+        return;
+
+    emit NewFantasyNameOrder(ord);
+}
+*/

@@ -4132,12 +4132,12 @@ class StampedTrans : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 timestamp = 10;
+  // optional uint64 timestamp = 10;
   inline bool has_timestamp() const;
   inline void clear_timestamp();
   static const int kTimestampFieldNumber = 10;
-  inline ::google::protobuf::int32 timestamp() const;
-  inline void set_timestamp(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint64 timestamp() const;
+  inline void set_timestamp(::google::protobuf::uint64 value);
 
   // optional int32 seqnum = 20;
   inline bool has_seqnum() const;
@@ -4179,10 +4179,10 @@ class StampedTrans : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::int32 timestamp_;
+  ::google::protobuf::uint64 timestamp_;
   ::google::protobuf::int32 seqnum_;
-  ::fantasybit::SignedTransaction* signed_orig_;
   ::google::protobuf::int32 prevseq_;
+  ::fantasybit::SignedTransaction* signed_orig_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
@@ -9032,7 +9032,7 @@ inline void MessageData::set_lt(::google::protobuf::int32 value) {
 
 // StampedTrans
 
-// optional int32 timestamp = 10;
+// optional uint64 timestamp = 10;
 inline bool StampedTrans::has_timestamp() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -9043,13 +9043,13 @@ inline void StampedTrans::clear_has_timestamp() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void StampedTrans::clear_timestamp() {
-  timestamp_ = 0;
+  timestamp_ = GOOGLE_ULONGLONG(0);
   clear_has_timestamp();
 }
-inline ::google::protobuf::int32 StampedTrans::timestamp() const {
+inline ::google::protobuf::uint64 StampedTrans::timestamp() const {
   return timestamp_;
 }
-inline void StampedTrans::set_timestamp(::google::protobuf::int32 value) {
+inline void StampedTrans::set_timestamp(::google::protobuf::uint64 value) {
   set_has_timestamp();
   timestamp_ = value;
 }

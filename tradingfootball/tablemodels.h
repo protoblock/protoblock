@@ -124,6 +124,15 @@ private:
     }
 };
 
+/*
+class LeaderBoardViewFilterProxyModel : public QSortFilterProxyModel {
+   Q_OBJECT
+
+public:
+    LeaderBoardViewFilterProxyModel(QObject *parent = 0) : QSortFilterProxyModel(parent) {}
+};
+*/
+
 #include <QSet>
 class   ProjectionSheetTableModel :
         public TKeyedListModel<QString,ViewModel> {
@@ -609,20 +618,33 @@ protected:
 
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
 
-        if( column ==0)
+        int i=0;
+        if( column ==i++)
             return data->propertyValue<PropertyNames::Player_ID>();
-        if( column ==1)
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::Player_Name>();
+        if( column ==i++)
             return data->propertyValue<PropertyNames::BIDSIZE>();
-        if( column ==2)
+        if( column ==i++)
             return data->propertyValue<PropertyNames::BID>();
-        if( column ==3)
+        if( column ==i++)
             return data->propertyValue<PropertyNames::ASK>();
-        if( column ==4)
+        if( column ==i++)
             return data->propertyValue<PropertyNames::ASKSIZE>();
-        if( column ==5)
+        if( column ==i++)
             return data->propertyValue<PropertyNames::LAST>();
-        if( column ==6)
+        if( column ==i++)
             return data->propertyValue<PropertyNames::LASTSIZE>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::HIGH>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::LOW>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::VOLUME>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::CHANGE>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::TIC>();
 
         return QVariant();
     }
@@ -632,7 +654,9 @@ protected:
 private:
     void initialize() {
         QStringList headers;
-        headers << "Player id" << "Bid Size" << "Bid" << "Ask" << "Ask Size";
+        headers << "id" << "Player-Name" << "Bid-Qty" << "Bid" << "Ask" << "Ask-Qty"
+                << "Last" << "Last-Qty" << "High" << "Low" << "Volume"
+                 << "Change" << "";
         setHorizontalHeaders(headers);
     }
 };

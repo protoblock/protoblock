@@ -13,6 +13,9 @@
 #include "leveldb/slice.h"
 #include <QGlobalStatic>
 #include "dataservice.h"
+#ifdef TIMEAGENTWRITEFILLS
+#include "playerloader.h"
+#endif
 
 using namespace std;
 using namespace fantasybit;
@@ -23,16 +26,13 @@ Q_GLOBAL_STATIC(ExchangeDataHolder, pExchangeData)
 
 
 void ExchangeData::init() {
+    std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     pExchangeData->set(this);
     qDebug() << "level2 ExchangeData init";
     write_sync.sync = true;
     leveldb::Options options;
     options.create_if_missing = true;
     leveldb::Status status;
-
-
-
-
 
     leveldb::DB *db1;
     status = leveldb::DB::Open(options, filedir("settlestore"), &db1);
@@ -69,11 +69,12 @@ void ExchangeData::init() {
         delete it;
     }
 
+/*
     leveldb::DB *db3;
-    status = leveldb::DB::Open(options, filedir("snapstore"), &db3);
-    snapstore.reset(db3);
+    status = leveldb::DB::Open(options, filedir("orderseqstore"), &db3);
+    orderseqstore.reset(db3);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("snapstore");
+        qCritical() << " cant open " + filedir("orderseqstore");
         //todo emit fatal
         return;
     }
@@ -108,7 +109,7 @@ void ExchangeData::init() {
         }
         delete it;
     }
-
+*/
 
     Int32Comparator *cmp = new Int32Comparator();
     leveldb::Options optionsInt;
@@ -138,12 +139,18 @@ void ExchangeData::init() {
         auto *it = bookdeltastore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             BookDelta bd;
-            if ( !bd.ParseFromString(it->value().ToString()) )
+            if ( !bd.ParseFromString(it->value().ToString()) ) {
                 qCritical() << "level2 ExchanegData bad read BookDelta";
+                continue;
+            }
 #ifdef TRACE
             qDebug() << "level2 ExchangeData init BookDelta " << bd.playerid() << bd.seqnum();
 #endif
 
+            auto &myset = mNameSeqMap[bd.fantasy_name()];
+            myset.insert(bd.seqnum());
+            mSeqNameMap[bd.seqnum()] = bd.fantasy_name();
+            ProcessBookDelta(bd);
             auto it3 = mLimitBooks.find(bd.playerid());
             if ( it3 == end(mLimitBooks)) {
                 auto it2 = mLimitBooks.insert(make_pair(bd.playerid(),
@@ -184,7 +191,12 @@ void ExchangeData::init() {
                 ib->Remove(can);
             }
 
-            MarketQuote mq;
+            MarketQuote &mq = mMarketQuote[bd.playerid()];
+            ContractOHLC &ohlc = mContractOHLC[bd.playerid()];
+
+            int i;
+            if ( bd.playerid() == "1307")
+                i = 0;
             for ( auto l1 : bd.level1tic()) {
 #ifdef TRACE
                 qDebug() << "level2 ExchangeData Level1 " << l1.DebugString();
@@ -201,6 +213,7 @@ void ExchangeData::init() {
                 case MarketTicker::LAST:
                     mq.set_ls(l1.size());
                     mq.set_l(l1.price());
+                    setOhlc(ohlc,&l1);
                     break;
                 }
             }
@@ -209,9 +222,9 @@ void ExchangeData::init() {
 #ifdef TRACE
             qDebug() << "level2 ExchangeData bba " << mq.DebugString();
 #endif
+                //MergeMarketQuote(bd.playerid(),mq);
                 lb->updateTopfromCache(mq.b(),mq.a());
             }
-            mMarketQuote[bd.playerid()] = mq;
         }
         if ( it != NULL ) delete it;
     }
@@ -225,13 +238,21 @@ void ExchangeData::init() {
 
 }
 
+/*
+void ExchangeData::MergeMarketQuote(const string &playerid,const MarketQuote &in ) {
+    MarketQuote &curr = mMarketQuote[playerid];
+    if ( )
+}
+*/
+
 void ExchangeData::closeAll() {
+    std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     mPositions.clear();
     mLimitBooks.clear();
     settlestore.reset();
     bookdeltastore.reset();
     mContractOHLC.clear();
-    snapstore.reset();
+    ///snapstore.reset();
 }
 
 void ExchangeData::clearNewWeek() {
@@ -243,6 +264,10 @@ void ExchangeData::clearNewWeek() {
 void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
                                  int32_t seqnum,
                                  shared_ptr<FantasyName> fn) {
+
+    if ( amlive && mSubscribed.find(fn->alias()) != end(mSubscribed))
+        ;//mSubscribed.insert(seqnum);
+
     switch(eo.type()) {
     case ExchangeOrder::NEW:
         OnOrderNew(eo,seqnum,fn);
@@ -262,7 +287,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
                               int32_t seqnum,
                               shared_ptr<FantasyName> fn) {
     bool exitonly = fn->getStakeBalance() < 0;
-    auto pos = getPosition(fn->pubkey(),eo.playerid());
+    auto pos = getPosition(fn->alias(),eo.playerid());
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnOrderNew exitonly" << exitonly << "pos " << pos;
 #endif
@@ -308,8 +333,15 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
     mBookDelta->Reset(eo.playerid());
     ma.mLimitBook->NewOrder(ord);
     //mBookDelta->set_playerid(eo.playerid());
-    mBookDelta->set_public_key(Commissioner::pk2str(fn->pubkey()));
+    mBookDelta->set_fantasy_name(fn->alias());
     SaveBookDelta();
+#ifdef TIMEAGENTWRITEFILLS
+    if ( !amlive ) return;
+    if ( mBookDelta->level1tic_size() > 0 ) {
+        SqlStuff sql("satoshifantasy","md_level1");
+        sql.mdlevel1(mBookDelta->playerid(),mMarketQuote[mBookDelta->playerid()]);
+    }
+#endif
 }
 
 void ExchangeData::SaveBookDelta() {
@@ -324,6 +356,39 @@ void ExchangeData::SaveBookDelta() {
     leveldb::Status st = bookdeltastore->Put(write_sync, snum, mBookDelta->SerializeAsString() );
     if ( !st.ok());
         qWarning() << " error writing bookdeltastore";
+
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+        ProcessBookDelta(*mBookDelta);
+    }
+}
+
+void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
+    if ( bd.has_newnew() ) {
+        if ( mOpenOrders.find(bd.seqnum()) != end(mOpenOrders) )
+            qCritical() << " already have this NEW order" << bd.newnew().DebugString();
+
+        mOpenOrders.insert(make_pair(static_cast<int32_t>(bd.seqnum()),
+                                OpenOrder{bd.playerid(), bd.newnew()}));
+    }
+
+    for ( auto can : bd.removes()) {
+        auto iter = mOpenOrders.find(bd.seqnum());
+
+        if ( iter != end(mOpenOrders) ) {
+            OrderCore &core = iter->second.livecore;
+            auto sz = core.size();
+
+            auto newsz = can.core().size() - sz;
+            if ( newsz > 0 )
+                core.set_size(newsz);
+
+            mOpenOrders.erase(iter);
+
+        }
+        else
+            qCritical() << " should already have this REMOVE order" << can.DebugString();
+    }
 }
 
 //BookDelta mBookDelta{};
@@ -348,14 +413,15 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
     ord.set_refnum(eo.cancel_oref());
     ma.mLimitBook->CancelOrder(ord);
     mBookDelta->set_playerid(eo.playerid());
-    mBookDelta->set_public_key(Commissioner::pk2str(fn->pubkey()));
+    mBookDelta->set_fantasy_name(fn->alias());
     SaveBookDelta();
 
 }
 
-Position ExchangeData::getPosition(const pubkey_t &pk,const string &playerid) {
+Position ExchangeData::getPosition(const string &fname,const string &playerid) {
+    std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     Position ret{0,0};
-    auto &pmap = mPositions[pk];
+    auto &pmap = mPositions[fname];
     auto it = pmap.find(playerid);
     if ( it != end(pmap))
        ret = it->second;
@@ -363,6 +429,7 @@ Position ExchangeData::getPosition(const pubkey_t &pk,const string &playerid) {
     return ret;
 }
 
+/*
 void ExchangeData::OnGameResult(const GameResult&gs) {
 
 #ifdef TRACE
@@ -373,7 +440,7 @@ void ExchangeData::OnGameResult(const GameResult&gs) {
     if ( !GetGameSettlePos(gs.gameid(),gsp) )
        return;
 
-    for (auto ha : {"home","away"}) {
+    for (auto ha : {QString("home"),QString("home")}) {
         std::unordered_map<string,int32_t> idtoresult ;
 
         for ( auto pr : ha == "home" ? gs.home_result() : gs.away_result()) {
@@ -393,7 +460,7 @@ void ExchangeData::OnGameResult(const GameResult&gs) {
     }
 
 }
-
+*/
 bool ExchangeData::GetGameSettlePos(const string &gid,GameSettlePos &gsp) {
     string temp;
     leveldb::Slice sgid(gid);
@@ -410,6 +477,29 @@ bool ExchangeData::GetGameSettlePos(const string &gid,GameSettlePos &gsp) {
     return true;
 }
 
+std::unordered_map<string,BookPos> ExchangeData::GetRemainingSettlePos() {
+
+    std::unordered_map<string,BookPos> mbp{};
+    for ( auto &it : mLimitBooks) {
+        BookPos bp{};
+        bp.set_playerid(it.first);
+
+
+        for ( auto p : it.second->mPkPos ) {
+            SettlePos &sp = *bp.add_positions();
+            sp.set_qty(p.second.netqty);
+            sp.set_price(p.second.netprice);
+            sp.set_pk(p.first);
+#ifdef TRACE
+qDebug() << "level2 ExchangeData OnGameStart GetRemainingSettlePos ";
+#endif
+        }
+
+    }
+
+    return mbp;
+}
+
 void ExchangeData::OnGameStart(std::string gid,
               std::vector<std::string> &home,
               std::vector<std::string> &away
@@ -422,7 +512,7 @@ void ExchangeData::OnGameStart(std::string gid,
     GameSettlePos gsp{};
     gsp.set_gameid(gid);
 
-    for (auto ha : {"home","away"})
+    for (auto ha : { QString("home"),QString("away")})
     for ( auto pid : ha == "home" ? home : away) {
         BookPos bp{};
         bp.set_playerid(pid);
@@ -468,13 +558,18 @@ void ExchangeData::OnWeekOver(int week) {
     qDebug() << "level2 ExchangeData OnWeekOver" << week;
 #endif
 
+    /*
     for (auto &it : mLimitBooks) {
         ProcessResultOver(it.first,0);
     }
+    */
     clearNewWeek();
+    mWeek = week;
 }
 
-void ExchangeData::ProcessResult(const SettlePos &spos,std::unordered_map<string,int32_t>::const_iterator result) {
+/*
+void ExchangeData::ProcessResult(const SettlePos &spos,
+                                 std::unordered_map<string,int32_t>::const_iterator result) {
     //set pnl delte position
 }
 
@@ -482,53 +577,79 @@ void ExchangeData::ProcessResultOver(const string &key, int32_t result) {
     //set pnl delte position
     //mLimitBooks.erase(key);
 }
+*/
 
 void ExchangeData::OnMarketTicker(const string &playerid, fantasybit::MarketTicker *mt) {
     //MarketQuote & mq = ;
+    mt->set_symbol(playerid);
     MarketQuote &mquote = mMarketQuote[playerid];
-    if ( mt->type() == MarketTicker::LAST ) {
-        if ( mt->price() > mquote.l())
-            mquote.set_udn(1);
-        else if ( mt->price() < mquote.l() )
-            mquote.set_udn(-1);
-        else
-            mquote.set_udn(0);
-
-        mquote.set_l(mt->price());
-        mquote.set_ls(mt->size());
-
-        auto it = mContractOHLC.find(playerid);
-        if ( it == mContractOHLC.end() ) {
-            ContractOHLC oh;
-            oh.set_symbol(playerid);
-            mContractOHLC[playerid] = oh;
-        }
-
-        ContractOHLC &myphlc = mContractOHLC[playerid];
-
-
-        if ( !myphlc.has_high() || mt->price() > myphlc.high())
-            myphlc.set_high(mt->price());
-        if ( !myphlc.has_low() || myphlc.low() <= 0 || mt->price() < myphlc.low())
-            myphlc.set_low(mt->price());
-        if ( !myphlc.has_open() || myphlc.open() == 0)
-            myphlc.set_open(mt->price());
-        myphlc.set_close(mt->price());
-        myphlc.set_volume(myphlc.volume()+mt->size());
-        myphlc.set_change(myphlc.close() - myphlc.open());
-
-        StoreOhlc(playerid);
-    }
-    else if ( mt->type() == MarketTicker::BID ) {
+    if ( mt->type() == MarketTicker::BID ) {
         mquote.set_b(mt->price());
         mquote.set_bs(mt->size());
     }
-    else {
+    else if ( mt->type() == MarketTicker::ASK){
         mquote.set_a(mt->price());
         mquote.set_as(mt->size());
     }
 
-    emit NewMarketTicker(mt);
+    if ( amlive )
+        emit NewMarketTicker(mt);
+}
+
+void ExchangeData::OnTrade(const string &playerid, fantasybit::TradeTic *tt) {
+    //MarketQuote & mq = ;
+    tt->set_symbol(playerid);
+    MarketQuote &mquote = mMarketQuote[playerid];
+    if ( tt->price() > mquote.l())
+        mquote.set_udn(1);
+    else if ( tt->price() < mquote.l() )
+        mquote.set_udn(-1);
+    else
+        mquote.set_udn(0);
+
+    tt->set_tic(mquote.udn());
+    mquote.set_l(tt->price());
+    mquote.set_ls(tt->size());
+
+    auto it = mContractOHLC.find(playerid);
+    if ( it == mContractOHLC.end() ) {
+        ContractOHLC oh;
+        oh.set_symbol(playerid);
+        mContractOHLC[playerid] = oh;
+    }
+
+    ContractOHLC &myphlc = mContractOHLC[playerid];
+
+    if ( !myphlc.has_high() || tt->price() > myphlc.high()) {
+        myphlc.set_high(tt->price());
+        tt->set_ishigh(true);
+    }
+    if ( !myphlc.has_low() || myphlc.low() <= 0 || tt->price() < myphlc.low()) {
+        myphlc.set_low(tt->price());
+        tt->set_islow(true);
+    }
+    if ( !myphlc.has_open() || myphlc.open() == 0)
+        myphlc.set_open(tt->price());
+    myphlc.set_close(tt->price());
+    myphlc.set_volume(myphlc.volume()+tt->size());
+    auto chg  = myphlc.close() - myphlc.open();
+    if ( !myphlc.has_change() || chg != myphlc.change()) {
+        myphlc.set_change(chg);
+        tt->set_change(chg);
+    }
+
+    //StoreOhlc(playerid);
+
+    if ( amlive ) {
+       emit NewTradeTic(tt);
+    }
+
+#ifdef TIMEAGENTWRITEFILLS
+    {
+    SqlStuff sql("satoshifantasy","playerquotes");
+    sql.quote(playerid,myphlc);
+    }
+#endif
 }
 
 
@@ -565,6 +686,17 @@ void LimitBook::NewTop(int price, int32_t qty, bool isbuy) {
 
 }
 
+void LimitBook::NewDepth(bool isbuy,int price) {
+    DepthFeedDelta *df = DepthFeedDelta::default_instance().New();
+
+    df->set_isbid(isbuy);
+    df->set_price(price+1);
+    df->set_size(isbuy ? mBids[price].totSize : mAsks[price].totSize);
+
+    pExchangeData->get()->OnNewDepth(mPlayerid,df);
+
+}
+
 void LimitBook::NewOrder(Order &eo) {
     //mBookDelta->Clear();
     mBookDelta->set_seqnum(eo.refnum());
@@ -598,31 +730,30 @@ int32_t LimitBook::CancelOrder(Order &order) {
 
         if (mBb == myprice) {
             if (mBids[myprice].totSize > 0)
-                NewTop(myprice, mBids[myprice].totSize, true);
+                NewTop(myprice+1, mBids[myprice].totSize, true);
             else
                 GetTop(true);
         }
 
-        //NewDepth(Side.BID, order.tickPrice);
+        NewDepth(true, myprice);
         //} else
         //Send(new BookFeedData(ExecType.CancelReject, order));
     }
-    else { // Side.Ask
-        /*
-        if (mAsks[order.tickPrice].Remove(order)) {
-            Send(new BookFeedData(ExecType.Canceled, order));
-            if (mBa == order.tickPrice) {
-                if (mAsks[order.tickPrice].totSize > 0)
-                    NewTop(order.tickPrice, mAsks[order.tickPrice].totSize, Side.ASK);
-                else
-                    GetTop(Side.ASK);
-            }
+    else {
+        mAsks[myprice].Cancel(order);
+        //Send(new BookFeedData(ExecType.Canceled, order));
+        SaveRemove(order,order.core().size());
+        if (mBa == myprice) {
+            if (mAsks[myprice].totSize > 0)
+                NewTop(myprice+1, mAsks[myprice].totSize, false);
+            else
+                GetTop(false);
+        }
 
-            NewDepth(Side.ASK, order.tickPrice);
-        } else
-            //mFeed.Execution(order, BookFeed.OrdStatus.CancelReject, 0);
-            Send(new BookFeedData(ExecType.CancelReject, order));
-        */
+        NewDepth(false, myprice);
+        //} else
+        //    //mFeed.Execution(order, BookFeed.OrdStatus.CancelReject, 0);
+        //    Send(new BookFeedData(ExecType.CancelReject, order));
     }
 }
 
@@ -823,7 +954,7 @@ void LimitBook::SweepAsks( Order &order) {
             continue;
 
 
-        SendFill(order, fillqty, mBa);
+        SendFill(order, fillqty, mBa, false);
         //NewTrade(mBa, fillqty, Side.BID);
 
         for (auto iiter = curr.top();
@@ -835,14 +966,14 @@ void LimitBook::SweepAsks( Order &order) {
 
             left -= fillqty;
 
-            SendFill(ord, fillqty, mBa);
+            SendFill(ord, fillqty, mBa, true);
             //ord.mutable_core()->set_size(ord.core().size()-fillqty);
             SaveRemove(ord,fillqty);
             if (curr.Fill(fillqty, iiter))
                 ;//Send(new BookFeedData(ExecType.Done, ord));
         }
 
-        //NewDepth(Side.ASK, mBa);
+        NewDepth(false, mBa);
 
         if (left <= 0)
             break;
@@ -858,7 +989,7 @@ void LimitBook::SweepBids( Order &order) {
         if (fillqty <= 0)
             continue;
 
-        SendFill(order, fillqty, mBb);
+        SendFill(order, fillqty, mBb, false);
         //NewTrade(mBb, fillqty, Side.ASK);
 
         for (auto iiter = curr.rtop();
@@ -870,29 +1001,55 @@ void LimitBook::SweepBids( Order &order) {
 
             left -= fillqty;
 
-            SendFill(ord, fillqty, mBa);
+            SendFill(ord, fillqty, mBb, true);
             //ord.mutable_core()->set_size(ord.core().size()-fillqty);
             SaveRemove(ord,fillqty);
             if (curr.Fill(fillqty, iiter))
                 ;//Send(new BookFeedData(ExecType.Done, ord));
         }
 
-        //NewDepth(Side.ASK, mBa);
+        NewDepth(true, mBb);
 
         if (left <= 0)
             break;
     }
 }
 
-void LimitBook::SendFill(Order &o, int32_t q, int price ) {
-    price += 1;
+
+void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
+    //price += 1;
     o.mutable_core()->set_size(o.core().size()-q);
+    if ( ispassive )
+        return;
+
     MarketTicker *lst = mBookDelta->add_level1tic();
     lst->set_type(MarketTicker::LAST);
-    lst->set_price(price);
+    lst->set_price(price+1);
     lst->set_size(q);
 
-    pExchangeData->get()->OnMarketTicker(mPlayerid,lst);
+    TradeTic *tt = TradeTic::default_instance().New();
+    tt->set_price(price+1);
+    tt->set_size(q);
+
+    uint64_t timestamp = (std::chrono::duration_cast<std::chrono::milliseconds>
+                      (std::chrono::system_clock::now().time_since_epoch()).count());
+
+    auto dt = currentNewYorkTime();
+    pExchangeData->get()->OnTrade(mPlayerid,tt);
+#ifdef TIMEAGENTWRITEFILLS
+#ifndef TIMEAGENTWRITEFILLS_FORCE
+    if ( !pExchangeData->get()->amlive )
+        return;
+
+#else
+#endif
+
+    qDebug() << " sql epoch " << timestamp;
+
+    SqlStuff sql("satoshifantasy","ticker");
+    sql.fill(mPlayerid,tt,pExchangeData->get()->mWeek,timestamp,o.refnum());
+
+#endif
 }
 
 void ExchangeData::OnLive(bool subscribe) {
@@ -906,9 +1063,10 @@ qDebug() << "level2 ExchangeData OnLive";
     for (auto &it : mLimitBooks) {
 #ifdef TRACE
 qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
-#endif`
+#endif
         auto *ms = MarketSnapshot::default_instance().New();
         ms->set_week(st.week());
+        mWeek = st.week();
         //auto it2 = mMarketQuote.find(it.first);
         ms->mutable_quote()->CopyFrom(mMarketQuote[it.first]);
         ms->mutable_ohlc()->CopyFrom(mContractOHLC[it.first]);
@@ -916,3 +1074,24 @@ qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
         emit NewMarketSnapShot(it.second->makeSnapshot(ms));
     }
 }
+
+/*
+void ExchangeData::StoreOhlc(string playerid) {
+//        if (!snapstore->Put(write_sync, "xxxx",
+//                            "xxxxxx").ok())
+
+    if (!snapstore->Put(write_sync, playerid, mContractOHLC[playerid].SerializeAsString()).ok())
+        qWarning() << "error writing ohlc";// << ohlc.DebugString();
+    else
+        if ( amlive )
+            qDebug() << "snapstore stored" << mContractOHLC[playerid].DebugString();
+        else
+            qDebug() << "snapstore stored";
+}
+*/
+void LimitBook::NewNew(Order &order) {
+    pExchangeData->get()->OnNewOrder(order);
+    SaveNew(order.core());
+    NewDepth(order.core().buyside(), order.core().price()-1);
+}
+

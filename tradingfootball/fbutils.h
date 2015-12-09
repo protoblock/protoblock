@@ -45,8 +45,10 @@ namespace fantasybit {
 
     using Int = int;
 	using Uid = std::string;// uint_least64_t;
-	using Int64 = uint64_t;
-	using MapS2I = std::map < std::string, Int > ;
+    using UInt64 = uint64_t;
+    using Int64 = int64_t;
+
+    using MapS2I = std::map < std::string, Int > ;
 	template<class T>
 	using NameValuePairs =
 		std::unordered_map < std::string, T > ;

@@ -139,3 +139,14 @@ contains(DEFINES, MIKECLAYIMPORT){
     SOURCES += $$PWD/playerloader.cpp
     HEADERS += $$PWD/playerloader.h
 }
+
+contains(DEFINES, TRADE_FEATURE){
+    FORMS += \
+        trading.ui
+
+    HEADERS += \
+        trading.h
+
+    SOURCES += \
+        trading.cpp
+}

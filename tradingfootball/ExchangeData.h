@@ -190,11 +190,9 @@ class LimitBook {
     void NewBid(Order &order);
     void NewAsk(Order &order);
     void NewTop(int price, int32_t qty, bool isbuy);
-    void NewNew(Order &order) {
-        SaveNew(order.core());
-    }
+    void NewNew(Order &order);
 
-
+    void NewDepth(bool isbuy,int price);
     void SweepAsks( Order &order);
     void SweepBids( Order &order);
     void GetTop(bool isbuy) {
@@ -203,20 +201,20 @@ class LimitBook {
             if (mBb < 0)
                 NewTop(0,0,isbuy);
             else
-                NewTop(mBb, mBids[mBb].totSize, isbuy);
+                NewTop(mBb+1, mBids[mBb].totSize, isbuy);
         }
         else {
             for (; mBa < BOOK_SIZE && mAsks[mBa].totSize == 0; ++mBa) ;
             if (mBa >= BOOK_SIZE)
                 NewTop(0,0,isbuy);
             else
-                NewTop(mBa, mAsks[mBa].totSize, isbuy);
+                NewTop(mBa+1, mAsks[mBa].totSize, isbuy);
         }
     }
 
     void SaveRemove(Order &o,int32_t fillqty);
     void SaveNew(const OrderCore &oc);
-    void SendFill(Order &o, int32_t q, int price );
+    void SendFill(Order &o, int32_t q, int price, bool );
 
 public:
     LimitBook(const string &playerid) : mPlayerid(playerid) {
@@ -256,6 +254,10 @@ struct MatchingEngine {
     }
 };
 
+struct OpenOrder {
+    string playerid;
+    OrderCore livecore;
+};
 
 class ExchangeData : public QObject {
 
@@ -263,37 +265,55 @@ class ExchangeData : public QObject {
 
     std::shared_ptr<leveldb::DB> settlestore;
     std::shared_ptr<leveldb::DB> bookdeltastore;
-    std::shared_ptr<leveldb::DB> snapstore;
+    std::shared_ptr<leveldb::DB> orderseqstore;
 
-    std::unordered_map<pubkey_t,std::unordered_map<std::string,Position>> mPositions;
+    std::unordered_map<string,std::unordered_map<std::string,Position>> mPositions;
     std::unordered_map<string,unique_ptr<MatchingEngine>> mLimitBooks;
     std::unordered_map<string,ContractOHLC> mContractOHLC;
     std::unordered_map<string,MarketQuote> mMarketQuote;
 
+    std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
+    std::unordered_map<int32_t,std::string> mSeqNameMap;
+    std::unordered_map<int32_t,OpenOrder> mOpenOrders;
+
+    std::set<std::string> mSubscribed;
 
     leveldb::WriteOptions write_sync{};
-    void ProcessResultOver(const string &,int32_t);
-    void ProcessResult(const SettlePos &spos,std::unordered_map<string,int32_t>::const_iterator result);
-    bool GetGameSettlePos(const string &gid,GameSettlePos &gsp);
-    bool amlive = false;
+    //void ProcessResultOver(const string &,int32_t);
+    //void ProcessResult(const SettlePos &spos,std::unordered_map<string,int32_t>::const_iterator result);
 
-    void StoreOhlc(string playerid) {
-//        if (!snapstore->Put(write_sync, "xxxx",
-//                            "xxxxxx").ok())
-
-        if (!snapstore->Put(write_sync, playerid, mContractOHLC[playerid].SerializeAsString()).ok())
-            qWarning() << "error writing ohlc";// << ohlc.DebugString();
-        else
-            if ( amlive )
-                qDebug() << "snapstore stored" << mContractOHLC[playerid].DebugString();
-            else
-                qDebug() << "snapstore stored";
-    }
+    void StoreOhlc(string playerid);
+    void ProcessBookDelta(const BookDelta &bd);
 
 public:
     ExchangeData() {}
     void init();
     void closeAll();
+    bool amlive = false;
+
+    void Subscribe(std::string in) {
+        mSubscribed.insert(in);
+    }
+
+    void UnSubscribe(std::string in) {
+        mSubscribed.erase(in);
+    }
+
+    void setOhlc(ContractOHLC &myphlc, const MarketTicker *mt) {
+        if ( myphlc.has_high() || mt->price() > myphlc.high())
+            myphlc.set_high(mt->price());
+        if ( myphlc.has_low() || myphlc.low() <= 0 || mt->price() < myphlc.low())
+            myphlc.set_low(mt->price());
+        if ( !myphlc.has_open() || myphlc.open() == 0)
+            myphlc.set_open(mt->price());
+        myphlc.set_close(mt->price());
+        myphlc.set_volume(myphlc.volume()+mt->size());
+        myphlc.set_change(myphlc.close() - myphlc.open());
+
+    }
+
+    bool GetGameSettlePos(const string &gid,GameSettlePos &gsp);
+    std::unordered_map<string,BookPos> GetRemainingSettlePos();
 
     void OnNewOrderMsg(const ExchangeOrder&, int32_t seqnum,
                        shared_ptr<fantasybit::FantasyName> fn);
@@ -306,7 +326,7 @@ public:
 
     //void OnOrderReplace(const ExchangeOrder&, const string &uid) {}
 
-    Position getPosition(const pubkey_t &pk,const string &playerid);
+    Position getPosition(const string &pk,const string &playerid);
 
     void SaveBookDelta();
     void OnGameResult(const GameResult&gs);
@@ -319,6 +339,8 @@ public:
                      );
     void clearNewWeek();
 
+    int mWeek;
+
     void OnWeekOver(int week);
     std::string filedir(const std::string &in) {
         return GET_ROOT_DIR() + "trade/" + in;
@@ -328,10 +350,41 @@ public:
        fc::remove_all(GET_ROOT_DIR() + "trade/");
     }
 
+    //void MergeMarketQuote(const string &playerid,const MarketQuote & );
+    void OnTrade(const string &playerid, fantasybit::TradeTic *tt);
     void OnMarketTicker(const string &playerid, fantasybit::MarketTicker *mt);
+    void OnNewDepth(const string &playerid, fantasybit::DepthFeedDelta *df) {
+        if ( amlive ) {
+            df->set_symbol(playerid);
+            emit NewDepthDelta(df);
+        }
+    }
+
+    void OnNewOrder(Order &neworder) {
+        if ( !amlive )  return;
+
+        emit NewFantasyNameOrder(neworder);
+    }
+
+    std::unordered_map<std::string,Position> GetPositionsByName(const std::string &fname) {
+        std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+        return mPositions[fname];
+    }
+
+    std::unordered_map<std::string,Position> GetOrdersByName(const std::string &fname) {
+        std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+        return mPositions[fname];
+    }
+
+
+    std::recursive_mutex ex_mutex{};
+
 signals:
     void NewMarketTicker(fantasybit::MarketTicker*);
     void NewMarketSnapShot(fantasybit::MarketSnapshot*);
+    void NewDepthDelta(fantasybit::DepthFeedDelta*);
+    void NewTradeTic(fantasybit::TradeTic *);
+    void NewFantasyNameOrder(fantasybit::Order&);
 public slots:
     void OnLive(bool subscribe);
 };

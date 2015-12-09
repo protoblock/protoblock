@@ -309,6 +309,139 @@ struct SqlStuff {
         }
     }
 
+    void quote(const string &inplayerid, const ContractOHLC &ohlc) {
+
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
+        QSqlQuery insertQuery(db);
+
+
+        insertQuery.prepare
+            ("REPLACE into player_contract_quote "
+             "(playerid,price,volume,`change`) "
+             " VALUES(:pid, :pr, :vol, :chg)");
+        /*
+             "ON DUPLICATE KEY "
+             "UPDATE player_contract_quote "
+              "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid");
+
+        /*
+        insertQuery.prepare
+            ("UPDATE player_contract_quote "
+             "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid");
+        /*
+        insertQuery.prepare
+        ("UPDATE player_contract_quote "
+        "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid"
+        "IF @@ROWCOUNT=0"
+            "INSERT into player_contract_quote "
+            "(playerid,price,volume,`change`) "
+            " VALUES(:pid, :pr, :vol, :chg)");
+            */
+
+        insertQuery.bindValue(":pid",std::stoi(inplayerid));
+        insertQuery.bindValue(":pr",ohlc.close());
+        insertQuery.bindValue(":vol",ohlc.volume());
+        insertQuery.bindValue(":chg",ohlc.change());
+
+        bool good = insertQuery.exec();
+        db.close();
+
+        qDebug() << " sql query " << insertQuery.executedQuery();
+
+        if ( ! good ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+            qDebug() << ohlc.DebugString();
+        }
+    }
+
+    void mdlevel1(const string &inplayerid, const MarketQuote &mq) {
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
+        QSqlQuery insertQuery(db);
+
+
+        insertQuery.prepare
+            ("REPLACE into md_level1"
+             "(playerid, bidsize, bid, ask, asksize, `last`, lastsize, updownind, lastupdate) "
+             " VALUES(:pid, :bs, :b, :a, :as, :l, :ls, :ud, :timestamp)");
+        /*
+             "ON DUPLICATE KEY "
+             "UPDATE player_contract_quote "
+              "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid");
+
+        /*
+        insertQuery.prepare
+            ("UPDATE player_contract_quote "
+             "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid");
+        /*
+        insertQuery.prepare
+        ("UPDATE player_contract_quote "
+        "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid"
+        "IF @@ROWCOUNT=0"
+            "INSERT into player_contract_quote "
+            "(playerid,price,volume,`change`) "
+            " VALUES(:pid, :pr, :vol, :chg)");
+            */
+
+        insertQuery.bindValue(":pid",inplayerid.data());
+        insertQuery.bindValue(":bs",mq.bs());
+        insertQuery.bindValue(":b",mq.b());
+        insertQuery.bindValue(":a",mq.a());
+        insertQuery.bindValue(":as",mq.as());
+        insertQuery.bindValue(":l",mq.l());
+        insertQuery.bindValue(":ls",mq.ls());
+        insertQuery.bindValue(":ud",mq.udn());
+        insertQuery.bindValue(":timestamp",currentNewYorkTime());
+
+        bool good = insertQuery.exec();
+        db.close();
+
+        qDebug() << " sql query " << insertQuery.executedQuery();
+
+        if ( ! good ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+            qDebug() << mq.DebugString();
+        }
+    }
+
+
+    void fill(const string playerid,
+              TradeTic *tt,
+              int week,
+              uint64_t timestamp,
+              int32_t seqnum) {
+
+        QString ds = QDateTime::currentDateTimeUtc().toString("yyyy-mm-dd-hh.mm.ss.nnnnnn");
+        qDebug() << " sql fill timestamp " << ds;
+
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
+        QSqlQuery insertQuery(db);
+
+        insertQuery.prepare
+            ("INSERT INTO ticker "
+             "(playerid,week,price,qty,tictime,seqnum)"
+             "VALUES(:pid, :w, :tic,:qty,:tictime,:seq)");
+
+        insertQuery.bindValue(":pid",QString::fromStdString(playerid));
+        insertQuery.bindValue(":w", week);
+        insertQuery.bindValue(":tic",tt->price());
+        insertQuery.bindValue(":qty",tt->size());
+        insertQuery.bindValue(":tictime",QDateTime::currentDateTimeUtc());
+        insertQuery.bindValue(":seq",seqnum);
+
+
+
+        bool good = insertQuery.exec();
+        db.close();
+
+        qDebug() << " sql query " << insertQuery.executedQuery();
+
+        if ( ! good ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+            //qDebug() << dist.DebugString();
+        }
+
+    }
+
     void fantasyname(FantasyNameHash &fnh) {
         QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery insertQuery(db);
@@ -778,7 +911,8 @@ public:
 
     }
 
-    std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar(int week, bool isgenesis = false) {
+    std::vector<fantasybit::PlayerData> loadPlayersFromTradeRadar(int week, bool makeSymbols,
+                                                                  bool isgenesis = false) {
 
         if ( !isgenesis ) {
             start = sqls.maxPid();

@@ -49,12 +49,16 @@ signals:
     void ProjectionLive(fantasybit::FantasyBitProj);
     void FantasyNameFound(string);
     void FantasyNameBalance(fantasybit::FantasyNameBal);
+    void FantasyNamePnl(fantasybit::FantasyNameBal);
     void new_dataFantasyNameHash(fantasybit::FantasyNameHash);
+    void NewFantasyNameOrder(fantasybit::Order&);
 
 public slots:
     void OnLive(bool subscribe) {
         amlive = true;
     }
+
+    //void OnFantasyNameOrder(fantasybit::Order&);
 
 public:
     void OnWeekOver(int week);
@@ -64,14 +68,23 @@ public:
     FantasyNameData() {}
     void init();
     void closeAll();
+
+    /*
+    void IsSubscribed(const std::string &fname) {
+        return amlive && (mSubscribed.find(name) != end(mSubscribed));
+    }
+    */
+
     void AddNewName(std::string name, std::string pubkey);
     void AddBalance(const std::string name,uint64_t amount);
-
+    void AddPnL(const std::string name, int64_t pnl);
     void AddProjection(const std::string &name, const std::string &player, uint32_t proj);
     void OnProjection(const std::string &name, const std::string &player, uint32_t proj);
     void OnFantasyName(std::shared_ptr<FantasyName> fn);
 
     void OnFantasyNameBalance(FantasyNameBal &fn);
+
+    void OnFantasyNamePnl(FantasyNameBal &fn);
 
     //ToDo: the place to store game time IN/OUt status of NFL player
     //void UpdatePlayerGameStatus(const std::string &player, PlayerGameStatus status);

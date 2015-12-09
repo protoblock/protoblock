@@ -19,6 +19,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #DEFINES += DATAAGENTGUIJay2015PrePreSeasonTestDemo
 #DEFINES += Jay2015PrePreSeasonTestDemo
 #DEFINES += DATAAGENTWRITENAMES_FORCE
+#DEFINES += TIMEAGENTGUI
+#DEFINES += TIMEAGENTWRITEFILLS
+#DEFINES += TIMEAGENTWRITEFILLS_FORCE
 
 DEFINES += TRADE_FEATURE
 
@@ -26,6 +29,10 @@ DEFINES += BUILD_STABLE
 DEFINES += ALLOW_DEBUG
 DEFINES += PLAYER_ID
 DEFINES += TRACE
+
+contains(DEFINES, TIMEAGENTWRITEFILLS){
+    QT += sql
+}
 
 contains(DEFINES, MIKECLAYIMPORT){
     QT += sql
@@ -129,13 +136,5 @@ CONFIG(release, debug|release) {
 include (./boost-includes.pri)
 include (./cute-fantasy.pri)
 
-FORMS += \
-    trading.ui
-
-HEADERS += \
-    trading.h
-
-SOURCES += \
-    trading.cpp
 
 

@@ -17,6 +17,8 @@ message Distribution {
         optional float result = 9;
 }
 
+
+
 message ProjKstats {
     optional float pa = 10;
     optional float fg30 = 20;

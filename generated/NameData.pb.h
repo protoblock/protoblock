@@ -24,6 +24,7 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "ExData.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace fantasybit {
@@ -35,6 +36,7 @@ void protobuf_ShutdownFile_NameData_2eproto();
 
 class FantasyNameBal;
 class FantasyBitAward;
+class FantasyBitPnl;
 class FantasyBitProj;
 class GameFantasyBitProj;
 
@@ -125,6 +127,13 @@ class FantasyNameBal : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 bits() const;
   inline void set_bits(::google::protobuf::uint64 value);
 
+  // optional int64 stake = 40;
+  inline bool has_stake() const;
+  inline void clear_stake();
+  static const int kStakeFieldNumber = 40;
+  inline ::google::protobuf::int64 stake() const;
+  inline void set_stake(::google::protobuf::int64 value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyNameBal)
  private:
   inline void set_has_name();
@@ -133,15 +142,18 @@ class FantasyNameBal : public ::google::protobuf::Message {
   inline void clear_has_public_key();
   inline void set_has_bits();
   inline void clear_has_bits();
+  inline void set_has_stake();
+  inline void clear_has_stake();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* name_;
   ::std::string* public_key_;
   ::google::protobuf::uint64 bits_;
+  ::google::protobuf::int64 stake_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_NameData_2eproto();
   friend void protobuf_AssignDesc_NameData_2eproto();
@@ -256,6 +268,100 @@ class FantasyBitAward : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static FantasyBitAward* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class FantasyBitPnl : public ::google::protobuf::Message {
+ public:
+  FantasyBitPnl();
+  virtual ~FantasyBitPnl();
+
+  FantasyBitPnl(const FantasyBitPnl& from);
+
+  inline FantasyBitPnl& operator=(const FantasyBitPnl& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FantasyBitPnl& default_instance();
+
+  void Swap(FantasyBitPnl* other);
+
+  // implements Message ----------------------------------------------
+
+  FantasyBitPnl* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const FantasyBitPnl& from);
+  void MergeFrom(const FantasyBitPnl& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.SettlePos spos = 20;
+  inline bool has_spos() const;
+  inline void clear_spos();
+  static const int kSposFieldNumber = 20;
+  inline const ::fantasybit::SettlePos& spos() const;
+  inline ::fantasybit::SettlePos* mutable_spos();
+  inline ::fantasybit::SettlePos* release_spos();
+  inline void set_allocated_spos(::fantasybit::SettlePos* spos);
+
+  // optional int64 pnl = 30;
+  inline bool has_pnl() const;
+  inline void clear_pnl();
+  static const int kPnlFieldNumber = 30;
+  inline ::google::protobuf::int64 pnl() const;
+  inline void set_pnl(::google::protobuf::int64 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.FantasyBitPnl)
+ private:
+  inline void set_has_spos();
+  inline void clear_has_spos();
+  inline void set_has_pnl();
+  inline void clear_has_pnl();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::SettlePos* spos_;
+  ::google::protobuf::int64 pnl_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_NameData_2eproto();
+  friend void protobuf_AssignDesc_NameData_2eproto();
+  friend void protobuf_ShutdownFile_NameData_2eproto();
+
+  void InitAsDefaultInstance();
+  static FantasyBitPnl* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -651,6 +757,28 @@ inline void FantasyNameBal::set_bits(::google::protobuf::uint64 value) {
   bits_ = value;
 }
 
+// optional int64 stake = 40;
+inline bool FantasyNameBal::has_stake() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void FantasyNameBal::set_has_stake() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void FantasyNameBal::clear_has_stake() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void FantasyNameBal::clear_stake() {
+  stake_ = GOOGLE_LONGLONG(0);
+  clear_has_stake();
+}
+inline ::google::protobuf::int64 FantasyNameBal::stake() const {
+  return stake_;
+}
+inline void FantasyNameBal::set_stake(::google::protobuf::int64 value) {
+  set_has_stake();
+  stake_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // FantasyBitAward
@@ -767,6 +895,70 @@ inline ::google::protobuf::uint64 FantasyBitAward::award() const {
 inline void FantasyBitAward::set_award(::google::protobuf::uint64 value) {
   set_has_award();
   award_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// FantasyBitPnl
+
+// optional .fantasybit.SettlePos spos = 20;
+inline bool FantasyBitPnl::has_spos() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void FantasyBitPnl::set_has_spos() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void FantasyBitPnl::clear_has_spos() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void FantasyBitPnl::clear_spos() {
+  if (spos_ != NULL) spos_->::fantasybit::SettlePos::Clear();
+  clear_has_spos();
+}
+inline const ::fantasybit::SettlePos& FantasyBitPnl::spos() const {
+  return spos_ != NULL ? *spos_ : *default_instance_->spos_;
+}
+inline ::fantasybit::SettlePos* FantasyBitPnl::mutable_spos() {
+  set_has_spos();
+  if (spos_ == NULL) spos_ = new ::fantasybit::SettlePos;
+  return spos_;
+}
+inline ::fantasybit::SettlePos* FantasyBitPnl::release_spos() {
+  clear_has_spos();
+  ::fantasybit::SettlePos* temp = spos_;
+  spos_ = NULL;
+  return temp;
+}
+inline void FantasyBitPnl::set_allocated_spos(::fantasybit::SettlePos* spos) {
+  delete spos_;
+  spos_ = spos;
+  if (spos) {
+    set_has_spos();
+  } else {
+    clear_has_spos();
+  }
+}
+
+// optional int64 pnl = 30;
+inline bool FantasyBitPnl::has_pnl() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void FantasyBitPnl::set_has_pnl() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void FantasyBitPnl::clear_has_pnl() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void FantasyBitPnl::clear_pnl() {
+  pnl_ = GOOGLE_LONGLONG(0);
+  clear_has_pnl();
+}
+inline ::google::protobuf::int64 FantasyBitPnl::pnl() const {
+  return pnl_;
+}
+inline void FantasyBitPnl::set_pnl(::google::protobuf::int64 value) {
+  set_has_pnl();
+  pnl_ = value;
 }
 
 // -------------------------------------------------------------------

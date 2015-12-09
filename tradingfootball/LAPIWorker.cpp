@@ -45,6 +45,10 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
 
+    /*
+    QObject::connect(&exchangedata,SIGNAL(NewFantasyNameOrder(fantasybit::Order&)),
+                     &namedata,SLOT(NewFantasyNameOrder(fantasybit::Order&)));
+    */
 
     //data to data signals
     QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
@@ -321,7 +325,7 @@ void MainLAPIWorker::OnUseName(QString name) {
     }
 
     if ( myCurrentName.status() < MyNameStatus::confirmed)
-        namedata.Subscribe(myCurrentName.name());
+        DoSubscribe(myCurrentName.name(),true);
 
     qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
     emit NameStatus(myCurrentName);
@@ -363,7 +367,7 @@ void MainLAPIWorker::OnClaimName(QString name) {
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nt);
         SignedTransaction sn = agent.makeSigned(trans);
         agent.onSignedTransaction(sn);
-        namedata.Subscribe(myCurrentName.name());
+        DoSubscribe(myCurrentName.name(),true);
         DoPostTx(sn);
     }
 
@@ -415,8 +419,7 @@ void MainLAPIWorker::OnProjTX(vector<fantasybit::FantasyBitProj> vinp) {
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
     DoPostTx(sn);
-    namedata.Subscribe(myCurrentName.name());
-
+    DoSubscribe(myCurrentName.name(),true);
 }
 
 //tx status
@@ -427,7 +430,7 @@ void MainLAPIWorker::OnFoundName(string name) {
     if (myCurrentName.name() == name) {
         if ( !agent.UseName(name) ) {
             myCurrentName.set_status(MyNameStatus::notavil);
-            namedata.UnSubscribe(name);
+            DoSubscribe(name,false);
             emit NameStatus(myCurrentName);
             myCurrentName.Clear();
             return;
@@ -438,7 +441,7 @@ void MainLAPIWorker::OnFoundName(string name) {
             if (myCurrentName.status() == MyNameStatus::none )
                 myCurrentName.set_status(MyNameStatus::notavil);
             if ( myCurrentName.status() ==  MyNameStatus::notavil ) {
-                namedata.UnSubscribe(name);
+                DoSubscribe(name, false);
                 emit NameStatus(myCurrentName);
                 myCurrentName.Clear();
                 return;
@@ -478,6 +481,16 @@ void MainLAPIWorker::DoPostTr(SignedTransaction &st) {
     rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 }
 
+void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
+    if ( suborun ) {
+        namedata.Subscribe(name);
+        exchangedata.Subscribe(name);
+    }
+    else {
+        namedata.UnSubscribe(name);
+        exchangedata.UnSubscribe(name);
+    }
+}
 
 void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
 

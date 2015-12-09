@@ -17,6 +17,8 @@ Trading::Trading(QWidget *parent) :
     ui->depthView->setModel(&mDepthTableModel);
 
     ui->playerList->setModel(&mPlayerListModel);
+    myFantasyName = "";
+
 }
 
 void Trading::Init() {
@@ -37,7 +39,14 @@ void Trading::Init() {
                          this,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
 
 
+       QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+                         this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
 
+       /*
+       FantasyNameData *namedata = &(theLAPIWorker->NameData());
+       QObject::connect(namedata,SIGNAL(NewFantasyNameOrder(fantasybit::Order&)),
+                         this,SLOT(OnMyNewOrder(fantasybit::Order&)));
+        */
     }
 
     QObject::connect(ui->playerList,SIGNAL(doubleClicked(QModelIndex)),
@@ -80,6 +89,15 @@ void Trading::playerListCliked(const QModelIndex &index) {
         ui->teamicon->setText("<img src=" + QString::fromStdString(Trading::icons[team.toStdString()]) +">");
         myPlayerid = playerid.toStdString();
 
+
+    }
+}
+
+void Trading::SetFantasyName(std::string name) {
+    if ( name != myFantasyName ) {
+        ui->fantastname->setText(name.data());
+        myFantasyName = name;
+        SetMyPositions();
     }
 }
 
@@ -148,6 +166,9 @@ void Trading::SetCurrentWeekData(int week) {
                                                   qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
             }
         }
+
+        ui->playerList->resizeColumnsToContents();
+        ui->playerList->resizeRowsToContents();
     }
         /*
         if ( lasttime != game.info.time()) {
@@ -260,19 +281,41 @@ void Trading::OnMarketTicker(fantasybit::MarketTicker* mt) {
 #ifdef TRACE
     qDebug() << "level2 OnMarketTicker " << mt->DebugString();
 #endif
-/*
     if ( mt->symbol() == "" ) return;
-    qString playerid = mt->symbol().data();
+    QString playerid = mt->symbol().data();
     mPlayerListModel.updateItemProperty<PropertyNames::Player_ID>(playerid,playerid);
-    mPlayerListModel.updateItemProperty<PropertyNames::BIDSIZE>(playerid, mq.bs());
-    mPlayerListModel.updateItemProperty<PropertyNames::BID>(playerid,mq.b());
-    mPlayerListModel.updateItemProperty<PropertyNames::ASK>(playerid,mq.a());
-    mPlayerListModel.updateItemProperty<PropertyNames::ASKSIZE>(playerid,mq.as());
-    mPlayerListModel.updateItemProperty<PropertyNames::LAST>(playerid,mq.l());
-    mPlayerListModel.updateItemProperty<PropertyNames::LASTSIZE>(playerid,mq.ls());
-    */
-
+    if ( mt->type() == MarketTicker_Type_BID) {
+        mPlayerListModel.updateItemProperty<PropertyNames::BIDSIZE>(playerid, mt->size());
+        mPlayerListModel.updateItemProperty<PropertyNames::BID>(playerid,mt->price());
+    }
+    else if ( mt->type() == MarketTicker_Type_ASK){
+        mPlayerListModel.updateItemProperty<PropertyNames::ASK>(playerid,mt->price());
+        mPlayerListModel.updateItemProperty<PropertyNames::ASKSIZE>(playerid,mt->size());
+    }
 }
+
+
+void Trading::OnTradeTick(fantasybit::TradeTic* tt) {
+#ifdef TRACE
+    qDebug() << "level2 OnTradeTick " << tt->DebugString();
+#endif
+    if ( tt->symbol() == "" ) return;
+    QString playerid = tt->symbol().data();
+    mPlayerListModel.updateItemProperty<PropertyNames::Player_ID>(playerid,playerid);
+    mPlayerListModel.updateItemProperty<PropertyNames::LAST>(playerid,tt->price());
+    mPlayerListModel.updateItemProperty<PropertyNames::LASTSIZE>(playerid,tt->size());
+    mPlayerListModel.updateItemProperty<PropertyNames::CHANGE>(playerid,tt->change());
+    ViewModel * item = mPlayerListModel.itemByKey(playerid);
+    int volume = tt->size() + item->propertyValue<PropertyNames::VOLUME>().toInt();
+
+    mPlayerListModel.updateItemProperty<PropertyNames::VOLUME>(playerid,volume);
+    if ( tt->ishigh())
+        mPlayerListModel.updateItemProperty<PropertyNames::HIGH>(playerid, tt->price());
+
+    if ( tt->islow())
+        mPlayerListModel.updateItemProperty<PropertyNames::LOW>(playerid, tt->price());
+}
+
 
 void Trading::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
     if ( mt->symbol() == "" )
@@ -285,17 +328,33 @@ void Trading::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
         SetCurrentWeekData(mt->week());
 
     mDepthTableModel.addSnap(mt);
+    QString playerid = mt->symbol().data();
+    mPlayerListModel.updateItemProperty<PropertyNames::Player_ID>(playerid,playerid);
+
     if ( mt->has_quote()) {
         //ContractOHLC &ohlc = mt->ohlc();
-        QString playerid = mt->symbol().data();
         const MarketQuote &mq = mt->quote();
-        mPlayerListModel.updateItemProperty<PropertyNames::Player_ID>(playerid,playerid);
-        mPlayerListModel.updateItemProperty<PropertyNames::BIDSIZE>(playerid, mq.bs());
-        mPlayerListModel.updateItemProperty<PropertyNames::BID>(playerid,mq.b());
-        mPlayerListModel.updateItemProperty<PropertyNames::ASK>(playerid,mq.a());
-        mPlayerListModel.updateItemProperty<PropertyNames::ASKSIZE>(playerid,mq.as());
-        mPlayerListModel.updateItemProperty<PropertyNames::LAST>(playerid,mq.l());
-        mPlayerListModel.updateItemProperty<PropertyNames::LASTSIZE>(playerid,mq.ls());
+        if ( mq.has_bs())
+            mPlayerListModel.updateItemProperty<PropertyNames::BIDSIZE>(playerid, mq.bs());
+        if ( mq.has_b())
+            mPlayerListModel.updateItemProperty<PropertyNames::BID>(playerid,mq.b());
+        if ( mq.has_a())
+            mPlayerListModel.updateItemProperty<PropertyNames::ASK>(playerid,mq.a());
+        if ( mq.has_as())
+            mPlayerListModel.updateItemProperty<PropertyNames::ASKSIZE>(playerid,mq.as());
+        if ( mq.has_l())
+            mPlayerListModel.updateItemProperty<PropertyNames::LAST>(playerid,mq.l());
+        if ( mq.has_ls())
+            mPlayerListModel.updateItemProperty<PropertyNames::LASTSIZE>(playerid,mq.ls());
+    }
+
+    if ( mt->has_ohlc()) {
+        const ContractOHLC &ohlc = mt->ohlc();
+
+        mPlayerListModel.updateItemProperty<PropertyNames::HIGH>(playerid,ohlc.high());
+        mPlayerListModel.updateItemProperty<PropertyNames::LOW>(playerid,ohlc.low());
+        mPlayerListModel.updateItemProperty<PropertyNames::VOLUME>(playerid,ohlc.volume());
+        mPlayerListModel.updateItemProperty<PropertyNames::CHANGE>(playerid,ohlc.change());
     }
 }
 
