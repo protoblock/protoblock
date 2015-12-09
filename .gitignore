@@ -38,3 +38,5 @@ satoshifantasy.pro.user
 deploy/tradingfootball.exe
 prodtest1-0-3-5/*
 tradingfootball/tmp/*
+tradingfootball/debug/*
+tradingfootball/generatedfiles/qrc_resources.cpp
