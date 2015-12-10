@@ -48,7 +48,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -734,7 +734,7 @@
       </widget>
       <widget class="QWidget" name="level2">
        <attribute name="icon">
-        <iconset resource="resources/resources.qrc">
+        <iconset>
          <normaloff>:/icons/tf_logo_PNG-2400x2400.png</normaloff>:/icons/tf_logo_PNG-2400x2400.png</iconset>
        </attribute>
        <attribute name="title">

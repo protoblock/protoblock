@@ -6,7 +6,6 @@
         <file>loading.gif</file>
         <file>waitingprogress.gif</file>
         <file>tf_logo_PNG-158x160.png</file>
-        <file>tf_logo_PNG-2400x2400.png</file>
     </qresource>
     <qresource prefix="/images">
         <file>footballspin.gif</file>
