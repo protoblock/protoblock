@@ -67,7 +67,10 @@ namespace PropertyNames {
     ENUMITEM(VOLUME)
     ENUMITEM(CHANGE)
     ENUMITEM(TIC)
-
+    ENUMITEM(BUYORSELL)
+    ENUMITEM(PRICE)
+    ENUMITEM(QTY)
+    ENUMITEM(ORDERID)
 
     template<typename Name>
     static const char * naturalName() {
