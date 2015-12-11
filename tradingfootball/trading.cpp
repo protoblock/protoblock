@@ -5,6 +5,7 @@
 #include "Commissioner.h"
 #include "RestFullCall.h"
 #include "dataservice.h"
+#include "julylightchanges.h"
 
 using namespace fantasybit;
 
@@ -18,6 +19,22 @@ Trading::Trading(QWidget *parent) :
 
     ui->playerList->setModel(&mPlayerListModel);
     myFantasyName = "";
+
+    mJLC.push_back(new JulyLightChanges(ui->marketBid));
+    mJLC.push_back(new JulyLightChanges(ui->marketAsk));
+    //mJLC.push_back(new JulyLightChanges(ui->marketBids));
+    //mJLC.push_back(new JulyLightChanges(ui->marketAsks));
+    //mJLC.push_back(new JulyLightChanges(ui->marketVolume));
+    //mJLC.push_back(new JulyLightChanges(ui->marketHigh));
+    //mJLC.push_back(new JulyLightChanges(ui->marketLow));
+    mJLC.push_back(new JulyLightChanges(ui->marketLast));
+    mJLC.push_back(new JulyLightChanges(ui->marketChng,true));
+    mJLC.push_back(new JulyLightChanges(ui->posOpenPnl, true));
+    //mJLC.push_back(new JulyLightChanges(ui->posQty));
+    //mJLC.push_back(new JulyLightChanges(ui->marketLast));
+    mJLC.push_back(new JulyLightChanges(ui->fantasybitStake));
+    mJLC.push_back(new JulyLightChanges(ui->fantasybitPnl, true));
+
 
 }
 
@@ -52,23 +69,29 @@ void Trading::Init() {
     QObject::connect(ui->playerList,SIGNAL(doubleClicked(QModelIndex)),
                      this,SLOT(playerListCliked(QModelIndex)));
 
+    QObject::connect(ui->buyqty, SIGNAL(valueChanged(int)),
+                     this, SLOT(UpdateBuys(int)));
 
+    QObject::connect(ui->buyprice, SIGNAL(valueChanged(int)),
+                     this, SLOT(UpdateBuys(int)));
 
-/*
-    ui->playerid->addItem("1097");
-    ui->playerid->addItem("1412");
-    ui->playerid->addItem("1822");
-    ui->playerid->addItem("1808");
-    ui->playerid->addItem("1792");
-    ui->playerid->addItem("1772");
-    ui->playerid->addItem("1755");
-    ui->playerid->addItem("1715");
-    ui->playerid->addItem("1");
-    ui->playerid->addItem("2");
-    ui->playerid->addItem("3");
-    ui->playerid->addItem("5");
-    ui->playerid->addItem("4");
-    */
+    QObject::connect(ui->buyCeil, SIGNAL(valueChanged(int)),
+                     this, SLOT(UpdateBuys(int)));
+
+    QObject::connect(ui->buyFloor, SIGNAL(valueChanged(int)),
+                     this, SLOT(UpdateBuys(int)));
+
+    QObject::connect(ui->sellqty, SIGNAL(valueChanged(int)),
+                     this, SLOT(UpdateSells(int)));
+
+    QObject::connect(ui->sellprice, SIGNAL(valueChanged(int)),
+                     this, SLOT(UpdateSells(int)));
+
+    QObject::connect(ui->sellCeil, SIGNAL(valueChanged(int)),
+                     this, SLOT(UpdateSells(int)));
+
+    QObject::connect(ui->sellFloor, SIGNAL(valueChanged(int)),
+                     this, SLOT(UpdateSells(int)));
 
 }
 
@@ -81,12 +104,34 @@ void Trading::playerListCliked(const QModelIndex &index) {
     ViewModel * data = mPlayerListModel.getItemByIndex(index);
     if (data !=NULL) {
         QString playerid = data->propertyValue<QString,PropertyNames::Player_ID>();
+        if ( myPlayerid == playerid.toStdString())
+            return;
+
         mDepthTableModel.changeSymbol(playerid.toStdString());
         ui->playername->setText(data->propertyValue<QString,PropertyNames::Player_Name>());
         ui->position->setText(data->propertyValue<QString,PropertyNames::Position>());
         ui->teamicon->setTextFormat(Qt::RichText);
         QString team = data->propertyValue<QString,PropertyNames::Team_ID>();
         ui->teamicon->setText("<img src=" + QString::fromStdString(Trading::icons[team.toStdString()]) +">");
+
+        ui->marketLast->setValue(data->propertyValue<QString,PropertyNames::LAST>().toInt());
+        ui->marketBid->setValue(data->propertyValue<QString,PropertyNames::BID>().toInt());
+        ui->marketAsk->setValue(data->propertyValue<QString,PropertyNames::ASK>().toInt());
+        ui->marketChng->setValue(data->propertyValue<QString,PropertyNames::CHANGE>().toInt());
+        ui->marketHigh->setValue(data->propertyValue<QString,PropertyNames::HIGH>().toInt());
+        ui->marketLow->setValue(data->propertyValue<QString,PropertyNames::LOW>().toInt());
+        ui->marketVolume->setValue(data->propertyValue<QString,PropertyNames::VOLUME>().toInt());
+        ui->marketBids->setValue(data->propertyValue<QString,PropertyNames::BIDSIZE>().toInt());
+        ui->marketAsks->setValue(data->propertyValue<QString,PropertyNames::ASKSIZE>().toInt());
+        ui->buyprice->setValue(1);
+        ui->buyqty->setValue(1);
+        ui->sellprice->setValue(40);
+        ui->sellqty->setValue(1);
+        ui->buyCeil->setValue(40);
+        ui->sellCeil->setValue(40);
+        ui->buyFloor->setValue(0);
+        ui->sellFloor->setValue(0);
+
         myPlayerid = playerid.toStdString();
 
 
@@ -104,6 +149,10 @@ void Trading::SetFantasyName(std::string name) {
 
 void Trading::on_buyit_clicked()
 {
+#ifdef TRACE
+    qDebug() << "level2 on_buyit_clicked";
+#endif
+
     NewOrder(true);
 }
 
@@ -257,8 +306,12 @@ void Trading::NewOrder(bool isbuy) {
 
     OrderCore core;
     core.set_buyside(isbuy);
-    core.set_size(ui->qty->value());
-    core.set_price(ui->price->value());
+    core.set_size(isbuy ? ui->buyqty->value() : ui->sellqty->value());
+    core.set_price(isbuy ? ui->buyprice->value() : ui->sellprice->value());
+
+#ifdef TRACE
+    qDebug() << "level2 NewOrder " << core.DebugString();
+#endif
 
     eo.mutable_core()->CopyFrom(core);
     //emit SendOrder(eo);
@@ -346,6 +399,7 @@ void Trading::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
             mPlayerListModel.updateItemProperty<PropertyNames::LAST>(playerid,mq.l());
         if ( mq.has_ls())
             mPlayerListModel.updateItemProperty<PropertyNames::LASTSIZE>(playerid,mq.ls());
+
     }
 
     if ( mt->has_ohlc()) {
@@ -402,3 +456,49 @@ decltype(Trading::icons) Trading::icons{
     {"TEN",":/NFL/png/Titans.png"},
     {"MIN",":/NFL/png/Vikings.png"},
 };
+
+void Trading::UpdateBuys(int p) {
+    ui->buyvalue->setValue(ui->buyprice->value() * 100 * ui->buyqty->value());
+    ui->buyRisk->setValue((ui->buyFloor->value() - ui->buyprice->value()) * 100 * ui->buyqty->value());
+    ui->buyProfit->setValue((ui->buyCeil->value() - ui->buyprice->value()) * 100 * ui->buyqty->value());
+}
+
+void Trading::UpdateSells(int p) {
+    ui->sellvalue->setValue(ui->sellprice->value() * -100 * ui->sellqty->value());
+    ui->sellProfit->setValue((ui->sellprice->value() - ui->sellFloor->value()) * 100 * ui->sellqty->value());
+    ui->sellRisk->setValue(( ui->sellprice->value() - ui->sellCeil->value()) * 100 * ui->sellqty->value());
+}
+
+void Trading::on_buyPriceAsMarketAsk_clicked() {
+    ui->buyprice->setValue(ui->marketAsk->value());
+    ui->buyqty->setValue(ui->marketAsks->value());
+}
+
+void Trading::on_buyPriceAsMarketBid_clicked()
+{
+    ui->buyprice->setValue(ui->marketBid->value());
+    ui->buyqty->setValue(ui->marketBids->value());
+}
+
+void Trading::on_buyPriceAsMarketLastPrice_clicked()
+{
+    ui->buyprice->setValue(ui->marketLast->value());
+    //ui->buyqty->setValue(ui->marketLast->value());
+}
+
+void Trading::on_sellPriceAsMarketLastPrice_clicked()
+{
+    ui->sellprice->setValue(ui->marketLast->value());
+}
+
+void Trading::on_sellPriceAsMarketAsk_clicked()
+{
+    ui->sellprice->setValue(ui->marketAsk->value());
+    ui->sellqty->setValue(ui->marketAsks->value());
+}
+
+void Trading::on_sellPriceAsMarketBid_clicked()
+{
+    ui->sellprice->setValue(ui->marketBid->value());
+    ui->sellqty->setValue(ui->marketBids->value());
+}

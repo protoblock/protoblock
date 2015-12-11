@@ -6,6 +6,7 @@
 #include "LAPIWorker.h"
 #include "tablemodels.h"
 #include "dataservice.h"
+#include "julylightchanges.h"
 
 class DepthTablesModel : public QAbstractTableModel {
     struct BookItem {
@@ -419,6 +420,22 @@ private slots:
 
     void on_sellit_clicked();
 
+    void UpdateBuys(int arg1);
+
+    void UpdateSells(int arg1);
+
+    void on_buyPriceAsMarketAsk_clicked();
+
+    void on_buyPriceAsMarketBid_clicked();
+
+    void on_buyPriceAsMarketLastPrice_clicked();
+
+    void on_sellPriceAsMarketLastPrice_clicked();
+
+    void on_sellPriceAsMarketAsk_clicked();
+
+    void on_sellPriceAsMarketBid_clicked();
+
 public slots:
     void OnMarketTicker(fantasybit::MarketTicker *);
     void OnMarketSnapShot(fantasybit::MarketSnapshot*);
@@ -446,6 +463,8 @@ private:
     Ui::Trading *ui;
     DepthTablesModel mDepthTableModel;
     PlayerListModal mPlayerListModel;
+    std::vector<JulyLightChanges *> mJLC;
+
 };
 
 

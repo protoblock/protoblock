@@ -149,4 +149,11 @@ contains(DEFINES, TRADE_FEATURE){
 
     SOURCES += \
         trading.cpp
+
+    HEADERS += \
+        julylightchanges.h
+
+    SOURCES += \
+        julylightchanges.cpp
+
 }
