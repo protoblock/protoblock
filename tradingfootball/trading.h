@@ -410,11 +410,7 @@ public:
     string myPositionsName;
     void SetFantasyName(std::string name);
 
-    void SetMyPositions() {
-        myPositionsName = myFantasyName;
-        auto mypositions = DataService::instance()->GetPositionsByName(myPositionsName);
-    }
-
+    void SetMyPositions();
 private slots:
     void on_buyit_clicked();
 
@@ -442,11 +438,15 @@ public slots:
     void OnDepthDelta(fantasybit::DepthFeedDelta*);
     void OnTradeTick(fantasybit::TradeTic*);
     void OnMyNewOrder(fantasybit::Order& ord) {
-        qDebug() << "MyOrder New" << ord.DebugString();
+        qDebug() << "level2 OnMyNewOrder MyOrder New" << ord.DebugString();
     }
 
 
     void OnLive(bool subscribe) {
+#ifdef TRACE
+    qDebug() << "level2 Trading OnLive";
+#endif
+
         auto st = DataService::instance()->GetGlobalState();
         SetCurrentWeekData(st.week());
         if ( myFantasyName != "" && myPositionsName != myFantasyName)
@@ -463,7 +463,11 @@ private:
     Ui::Trading *ui;
     DepthTablesModel mDepthTableModel;
     PlayerListModal mPlayerListModel;
+    OrderTablesModel mOrderTableModel;
+
     std::vector<JulyLightChanges *> mJLC;
+    bool mUpdatingS = false;
+    bool mUpdatingB = false;
 
 };
 

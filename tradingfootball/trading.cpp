@@ -18,6 +18,8 @@ Trading::Trading(QWidget *parent) :
     ui->depthView->setModel(&mDepthTableModel);
 
     ui->playerList->setModel(&mPlayerListModel);
+
+    ui->ordersTable->setModel(&mOrderTableModel);
     myFantasyName = "";
 
     mJLC.push_back(new JulyLightChanges(ui->marketBid));
@@ -64,6 +66,10 @@ void Trading::Init() {
        QObject::connect(namedata,SIGNAL(NewFantasyNameOrder(fantasybit::Order&)),
                          this,SLOT(OnMyNewOrder(fantasybit::Order&)));
         */
+
+       QObject::connect(exchangedata,SIGNAL(NewFantasyNameOrder(fantasybit::Order&)),
+                         this,SLOT(OnMyNewOrder(fantasybit::Order&)));
+
     }
 
     QObject::connect(ui->playerList,SIGNAL(doubleClicked(QModelIndex)),
@@ -107,6 +113,7 @@ void Trading::playerListCliked(const QModelIndex &index) {
         if ( myPlayerid == playerid.toStdString())
             return;
 
+        mUpdatingS = mUpdatingB = true;
         mDepthTableModel.changeSymbol(playerid.toStdString());
         ui->playername->setText(data->propertyValue<QString,PropertyNames::Player_Name>());
         ui->position->setText(data->propertyValue<QString,PropertyNames::Position>());
@@ -131,6 +138,9 @@ void Trading::playerListCliked(const QModelIndex &index) {
         ui->sellCeil->setValue(40);
         ui->buyFloor->setValue(0);
         ui->sellFloor->setValue(0);
+        mUpdatingS = mUpdatingB = false;
+        UpdateSells(0);
+        UpdateBuys(0);
 
         myPlayerid = playerid.toStdString();
 
@@ -139,6 +149,10 @@ void Trading::playerListCliked(const QModelIndex &index) {
 }
 
 void Trading::SetFantasyName(std::string name) {
+#ifdef TRACE
+    qDebug() << "level2 trading SetFantasyName" << name;
+#endif
+
     if ( name != myFantasyName ) {
         ui->fantastname->setText(name.data());
         myFantasyName = name;
@@ -458,15 +472,21 @@ decltype(Trading::icons) Trading::icons{
 };
 
 void Trading::UpdateBuys(int p) {
+    if ( mUpdatingB ) return;
+    mUpdatingB = true;
     ui->buyvalue->setValue(ui->buyprice->value() * 100 * ui->buyqty->value());
     ui->buyRisk->setValue((ui->buyFloor->value() - ui->buyprice->value()) * 100 * ui->buyqty->value());
     ui->buyProfit->setValue((ui->buyCeil->value() - ui->buyprice->value()) * 100 * ui->buyqty->value());
+    mUpdatingB = false;
 }
 
 void Trading::UpdateSells(int p) {
+    if ( mUpdatingS ) return;
+    mUpdatingS = true;
     ui->sellvalue->setValue(ui->sellprice->value() * -100 * ui->sellqty->value());
     ui->sellProfit->setValue((ui->sellprice->value() - ui->sellFloor->value()) * 100 * ui->sellqty->value());
     ui->sellRisk->setValue(( ui->sellprice->value() - ui->sellCeil->value()) * 100 * ui->sellqty->value());
+    mUpdatingS = false;
 }
 
 void Trading::on_buyPriceAsMarketAsk_clicked() {
@@ -501,4 +521,33 @@ void Trading::on_sellPriceAsMarketBid_clicked()
 {
     ui->sellprice->setValue(ui->marketBid->value());
     ui->sellqty->setValue(ui->marketBids->value());
+}
+
+//typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order> > > ordsnap_t;
+
+void Trading::SetMyPositions() {
+    myPositionsName = myFantasyName;
+    auto myorderpositions = DataService::instance()->GetOrdersPositionsByName(myPositionsName);
+
+#ifdef TRACE
+    qDebug() << "level2 Trading SetMyPositions" << myPositionsName << myorderpositions.size();
+    for ( auto p : myorderpositions ) {
+      //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;
+        auto &mypair = p.second;
+        auto &myorders = mypair.second;
+        for ( auto o : myorders) {
+            mOrderTableModel.updateItemProperty<PropertyNames::ORDERID>(o.refnum(),o.refnum());
+            QString buyorsell(o.core().buyside() ? "Bid" : "Ask");
+            mOrderTableModel.updateItemProperty<PropertyNames::BUYORSELL>(o.refnum(),buyorsell);
+            mOrderTableModel.updateItemProperty<PropertyNames::PRICE>(o.refnum(),o.core().price());
+            mOrderTableModel.updateItemProperty<PropertyNames::QTY>(o.refnum(),o.core().size());
+            mOrderTableModel.updateItemProperty<PropertyNames::ORDERID>(o.refnum(),o.refnum());
+            mOrderTableModel.updateItemProperty<PropertyNames::Player_ID>(o.refnum(),p.first.data());
+            ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
+            auto name = item->propertyValue<PropertyNames::Player_Name>();
+            mOrderTableModel.updateItemProperty<PropertyNames::Player_Name>(o.refnum(),name);
+        }
+    }
+
+    #endif
 }

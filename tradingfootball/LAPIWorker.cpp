@@ -482,6 +482,7 @@ void MainLAPIWorker::DoPostTr(SignedTransaction &st) {
 }
 
 void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
+
     if ( suborun ) {
         namedata.Subscribe(name);
         exchangedata.Subscribe(name);
@@ -492,6 +493,7 @@ void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
     }
 }
 
+/*
 void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
 
     Transaction trans{};
@@ -503,7 +505,7 @@ void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
     DoPostTr(sn);
     //namedata.Subscribe(myCurrentName.name());
 }
-
+*/
 /*ys
 //ToDo: convert names with a status OnLive()
 myfantasynames = agent.getMyNamesStatus();

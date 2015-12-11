@@ -80,8 +80,8 @@ string DataService::exportMnemonic(std::string &in) {
     return worker->Agent().getMnemonic(in);
 }
 
-std::unordered_map<std::string,Position> DataService::GetPositionsByName(const std::string &fname) {
+ordsnap_t DataService::GetOrdersPositionsByName(const std::string &fname) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
-    return worker->ExData().GetPositionsByName(fname);
+    return worker->ExData().GetOrdersPositionsByName(fname);
 }
 

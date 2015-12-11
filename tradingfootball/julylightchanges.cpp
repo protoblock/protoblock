@@ -102,11 +102,9 @@ QString JulyLightChanges::DOWNCOLOR =
 
 
 QString JulyLightChanges::UPCOLORa =
-        QString("QSpinBox:disabled{color:green;} QSpinBox {color:green;}")
-        .arg(LIGHTGREEN);
+        QString("QSpinBox:disabled{color:green;} QSpinBox {color:green;}");
 
 QString JulyLightChanges::DOWNCOLORa =
-        QString("QSpinBox:disabled{color:red;} QSpinBox {color:red;}")
-        .arg(LIGHTRED);
+        QString("QSpinBox:disabled{color:red;} QSpinBox {color:red;}");
 
 

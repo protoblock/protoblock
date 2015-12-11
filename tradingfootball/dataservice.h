@@ -37,8 +37,8 @@ public:
     fantasybit::MyFantasyName importMnemonic(std::string &in);
     std::string exportMnemonic(std::string &in);
 
-    std::unordered_map<std::string,fantasybit::Position>
-        GetPositionsByName(const std::string &fname);
+    ordsnap_t
+        GetOrdersPositionsByName(const std::string &fname);
 
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);

@@ -27,6 +27,7 @@ void Core::bootstrap(){
     qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::DepthFeedDelta*");
 
     qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::TradeTic*");
+    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::Order&");
 
     qRegisterMetaType<string>("string");
     qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());

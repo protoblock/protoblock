@@ -163,7 +163,7 @@ void ExchangeData::init() {
                 }
 
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData new init BookDelta for" << bd.playerid();
+              qDebug() << "level2 ExchangeData new init BookDelta for" << bd.playerid();
 #endif
 
                 it2.first->second->ResetLimitBook();//mLimitBook.reset(new LimitBook());
@@ -366,7 +366,7 @@ void ExchangeData::SaveBookDelta() {
 void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
     if ( bd.has_newnew() ) {
         if ( mOpenOrders.find(bd.seqnum()) != end(mOpenOrders) )
-            qCritical() << " already have this NEW order" << bd.newnew().DebugString();
+            qCritical() << "level2 ExchangeData already have this NEW order" << bd.newnew().DebugString();
 
         mOpenOrders.insert(make_pair(static_cast<int32_t>(bd.seqnum()),
                                 OpenOrder{bd.playerid(), bd.newnew()}));
@@ -1019,6 +1019,19 @@ void LimitBook::SweepBids( Order &order) {
 void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
     //price += 1;
     o.mutable_core()->set_size(o.core().size()-q);
+/*
+    auto it = pExchangeData->get()->mSeqNameMap.find(o.refnum());
+    if ( it == end(pExchangeData->get()->mSeqNameMap))
+        qCritical() << "level2 cant find order for fill" << o.DebugString();
+    else {
+        auto &mypos = mPkPos[it->second];
+        auto size = q * (o.core().buyside() ? 1 : -1);
+        mypos.netqty += size;
+        mypos.netprice += size * (price+1) * -1;
+    //fo.refnum(),q,price+1
+        pExchangeData->get()->OnOrderPositionChange(o,mypos,this->mPlayerid,it->second);
+    }
+    */
     if ( ispassive )
         return;
 
@@ -1095,3 +1108,50 @@ void LimitBook::NewNew(Order &order) {
     NewDepth(order.core().buyside(), order.core().price()-1);
 }
 
+ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
+    std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+
+    mSubscribed.insert(fname);
+    ordsnap_t ret{};
+//        ordsnap_t::value_type mypair
+
+//      ordsnap_t::value_type::second_type
+
+    auto &mypos = mPositions[fname];
+    for ( auto p : mypos) {
+        auto &mypair = ret[p.first];
+        mypair.first = p.second;
+    }
+    auto it = mNameSeqMap.find(fname);
+    if ( it != end(mNameSeqMap)) {
+        for ( auto oid : it->second) {
+#ifdef TRACE
+qDebug() << "level2 GetOrdersPositionsByName" << oid;
+#endif
+            auto it2 = mOpenOrders.find(oid);
+            if ( it2 == end(mOpenOrders)) {
+#ifdef TRACE
+                qDebug() << "level2 GetOrdersPositionsByName not cound" << oid;
+                continue;
+#endif
+            }
+            OpenOrder &ord = mOpenOrders.at(oid);
+#ifdef TRACE
+qDebug() << "level2 GetOrdersPositionsByName" << ord.playerid << ord.livecore.DebugString();
+#endif
+            //continue;
+            auto &mypair = ret[ord.playerid];
+            Order o{};
+            o.set_refnum(oid);
+            o.mutable_core()->CopyFrom(ord.livecore);
+            mypair.second.push_back(o);
+        }
+    }
+
+#ifdef TRACE
+qDebug() << "level2 GetOrdersPositionsByName" << ret.size();
+#endif
+    //ret.clear();
+
+    return ret;
+}

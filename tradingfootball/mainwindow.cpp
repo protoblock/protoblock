@@ -120,9 +120,10 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(onControlMessage(QString)),
                      ui->myCurrentWeekWidget,SLOT(onControlMessage(QString)));
 
+    /*
     QObject::connect(ui->tradingview,SIGNAL(SendOrder(fantasybit::ExchangeOrder)),
                       myLAPIWorker,SLOT(OnNewOrder(fantasybit::ExchangeOrder)));
-
+    */
 
     //wake up core thread
     Core::instance()->guiIsAwake();

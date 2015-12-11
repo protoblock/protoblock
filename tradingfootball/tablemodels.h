@@ -654,12 +654,54 @@ protected:
 private:
     void initialize() {
         QStringList headers;
-        headers << "id" << "Player-Name" << "Bid-Qty" << "Bid" << "Ask" << "Ask-Qty"
-                << "Last" << "Last-Qty" << "High" << "Low" << "Volume"
-                 << "Change" << "";
+        headers << "id" << "player" << "" << "bid" << "ask" << ""
+                << "tdr" << "" << "hi" << "lo" << "vol"
+                 << "chg" << "pos", "pnl";
         setHorizontalHeaders(headers);
     }
 };
+
+
+class   OrderTablesModel :
+        public TKeyedListModel<int,ViewModel> {
+
+public:
+
+    OrderTablesModel(): TKeyedListModel<int,ViewModel>(NULL){
+        initialize();
+    }
+    ~OrderTablesModel() {}
+
+protected:
+
+    QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
+
+        int i=0;
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::Player_ID>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::Player_Name>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::BUYORSELL>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::PRICE>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::QTY>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::ORDERID>();
+        return QVariant();
+    }
+
+    //int getColumnCount() { return 2; }
+
+private:
+    void initialize() {
+        QStringList headers;
+        headers << "pid" << "Player-Name" << "Side" << "Price" << "Qty" << "Order-ID";
+        setHorizontalHeaders(headers);
+    }
+};
+
 
 
 #endif // TABLEMODELS_H

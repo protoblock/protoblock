@@ -38,6 +38,8 @@ struct Position {
     }
 };
 
+typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order> > > ordsnap_t;
+
 /*
 struct Order {
     OrderCore   mOrderCore;
@@ -272,8 +274,6 @@ class ExchangeData : public QObject {
     std::unordered_map<string,ContractOHLC> mContractOHLC;
     std::unordered_map<string,MarketQuote> mMarketQuote;
 
-    std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
-    std::unordered_map<int32_t,std::string> mSeqNameMap;
     std::unordered_map<int32_t,OpenOrder> mOpenOrders;
 
     std::set<std::string> mSubscribed;
@@ -290,12 +290,23 @@ public:
     void init();
     void closeAll();
     bool amlive = false;
+    std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
+    std::unordered_map<int32_t,std::string> mSeqNameMap;
+
 
     void Subscribe(std::string in) {
+#ifdef TRACE
+        qDebug() << "level2 ExchangeData Subscribe" << in;
+#endif
+
         mSubscribed.insert(in);
     }
 
     void UnSubscribe(std::string in) {
+#ifdef TRACE
+        qDebug() << "level2 ExchangeData UnSubscribe" << in;
+#endif
+
         mSubscribed.erase(in);
     }
 
@@ -362,12 +373,16 @@ public:
 
     void OnNewOrder(Order &neworder) {
         if ( !amlive )  return;
+#ifdef TRACE
+            qDebug() << "level2 ExchangeData OnNewOrder emit NewFantasyNameOrder";
+#endif
 
         emit NewFantasyNameOrder(neworder);
     }
 
-    std::unordered_map<std::string,Position> GetPositionsByName(const std::string &fname) {
+    std::unordered_map<std::string,Position> GetPositionsByName(const std::string &fname, bool subscribe = true) {
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+        mSubscribed.insert(fname);
         return mPositions[fname];
     }
 
@@ -376,7 +391,7 @@ public:
         return mPositions[fname];
     }
 
-
+    ordsnap_t  GetOrdersPositionsByName(const std::string &fname);
     std::recursive_mutex ex_mutex{};
 
 signals:

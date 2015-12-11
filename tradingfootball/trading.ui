@@ -56,6 +56,98 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QLabel" name="usdLabel10_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>11</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="accessibleDescription">
+             <string>USD_ICON</string>
+            </property>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; color:#0000ff;&quot;&gt;ƑɃ&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="buyRisk">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="accessibleName">
+             <string>PRICE</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>CAN_BE_ZERO</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QSpinBox {color: &quot;red&quot;;}</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="showGroupSeparator" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="minimum">
+             <number>-999999999</number>
+            </property>
+            <property name="maximum">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_29">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="accessibleName">
+           <string>TR00034</string>
+          </property>
+          <property name="text">
+           <string>Max Profit:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
@@ -128,6 +220,19 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="accessibleName">
+           <string>TR00033</string>
+          </property>
+          <property name="text">
+           <string>Max Loss:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
         </item>
         <item row="0" column="2">
          <layout class="QGridLayout" name="gridLayout_25">
@@ -215,92 +320,6 @@
             </property>
             <property name="text">
              <string>Ask</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_10">
-          <property name="accessibleName">
-           <string>TR00033</string>
-          </property>
-          <property name="text">
-           <string>Max Loss:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QLabel" name="usdLabel10_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>11</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="accessibleDescription">
-             <string>USD_ICON</string>
-            </property>
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; color:#0000ff;&quot;&gt;ƑɃ&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="buyRisk">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>40</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="accessibleName">
-             <string>PRICE</string>
-            </property>
-            <property name="accessibleDescription">
-             <string>CAN_BE_ZERO</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QSpinBox {color: &quot;red&quot;;}</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="showGroupSeparator" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="minimum">
-             <number>-999999999</number>
-            </property>
-            <property name="maximum">
-             <number>0</number>
             </property>
            </widget>
           </item>
@@ -451,24 +470,74 @@
           </item>
          </layout>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_29">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="accessibleName">
-           <string>TR00034</string>
-          </property>
-          <property name="text">
-           <string>Max Profit:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
+        <item row="3" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QLabel" name="label_37">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="accessibleName">
+             <string>TR00034</string>
+            </property>
+            <property name="text">
+             <string>projected</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="buyCeil">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>40</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="accessibleName">
+             <string>PRICE</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>CAN_BE_ZERO</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="readOnly">
+             <bool>false</bool>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="correctionMode">
+             <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+            </property>
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>40</number>
+            </property>
+            <property name="value">
+             <number>40</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item row="2" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -540,93 +609,41 @@
           </item>
          </layout>
         </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_32">
+        <item row="3" column="2" rowspan="2">
+         <widget class="QPushButton" name="buyit">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string/>
+          </property>
           <property name="accessibleName">
-           <string>TR00034</string>
+           <string>BUY</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {color: blue} QPushButton::disabled {color: gray}</string>
           </property>
           <property name="text">
-           <string>Ceiling: </string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <string>BUY</string>
           </property>
          </widget>
-        </item>
-        <item row="3" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
-          <item>
-           <widget class="QLabel" name="label_37">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="accessibleName">
-             <string>TR00034</string>
-            </property>
-            <property name="text">
-             <string>projected</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="buyCeil">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>40</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="accessibleName">
-             <string>PRICE</string>
-            </property>
-            <property name="accessibleDescription">
-             <string>CAN_BE_ZERO</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-            <property name="readOnly">
-             <bool>false</bool>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="correctionMode">
-             <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-            </property>
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>40</number>
-            </property>
-            <property name="value">
-             <number>40</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="label_35">
@@ -716,39 +733,22 @@
           </item>
          </layout>
         </item>
-        <item row="3" column="2" rowspan="2">
-         <widget class="QPushButton" name="buyit">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_32">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>16</pointsize>
-           </font>
-          </property>
-          <property name="toolTip">
-           <string/>
-          </property>
           <property name="accessibleName">
-           <string>BUY</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton {color: blue} QPushButton::disabled {color: gray}</string>
+           <string>TR00034</string>
           </property>
           <property name="text">
-           <string>BUY</string>
+           <string>Ceiling: </string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -1744,230 +1744,6 @@
              </layout>
             </widget>
            </item>
-           <item row="2" column="0" colspan="2">
-            <widget class="QWidget" name="widget_2" native="true">
-             <layout class="QGridLayout" name="gridLayout_2">
-              <item row="1" column="0">
-               <widget class="QLabel" name="bidsLabelIndicator_5">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="accessibleName">
-                 <string>TR00008</string>
-                </property>
-                <property name="text">
-                 <string>Bid:</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="marketBid">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="whatsThis">
-                 <string>BidPrice</string>
-                </property>
-                <property name="accessibleName">
-                 <string>PRICE</string>
-                </property>
-                <property name="accessibleDescription">
-                 <string>CAN_BE_ZERO</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="buttonSymbols">
-                 <enum>QAbstractSpinBox::NoButtons</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="asksLabelIndicator_8">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="accessibleName">
-                 <string>TR00009</string>
-                </property>
-                <property name="text">
-                 <string>Price</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="asksLabelIndicator_7">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="accessibleName">
-                 <string>TR00009</string>
-                </property>
-                <property name="text">
-                 <string>Size</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QSpinBox" name="marketAsks">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="whatsThis">
-                 <string>BidPrice</string>
-                </property>
-                <property name="accessibleName">
-                 <string>PRICE</string>
-                </property>
-                <property name="accessibleDescription">
-                 <string>CAN_BE_ZERO</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="buttonSymbols">
-                 <enum>QAbstractSpinBox::NoButtons</enum>
-                </property>
-                <property name="maximum">
-                 <number>9999</number>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QSpinBox" name="marketBids">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="whatsThis">
-                 <string>BidPrice</string>
-                </property>
-                <property name="accessibleName">
-                 <string>PRICE</string>
-                </property>
-                <property name="accessibleDescription">
-                 <string>CAN_BE_ZERO</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="buttonSymbols">
-                 <enum>QAbstractSpinBox::NoButtons</enum>
-                </property>
-                <property name="maximum">
-                 <number>9999</number>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="asksLabelIndicator_9">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="accessibleName">
-                 <string>TR00009</string>
-                </property>
-                <property name="text">
-                 <string>Ask:</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QSpinBox" name="marketAsk">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="whatsThis">
-                 <string>AskPrice</string>
-                </property>
-                <property name="accessibleName">
-                 <string>PRICE</string>
-                </property>
-                <property name="accessibleDescription">
-                 <string>CAN_BE_ZERO</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="buttonSymbols">
-                 <enum>QAbstractSpinBox::NoButtons</enum>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
            <item row="2" column="2">
             <widget class="QWidget" name="widget_3" native="true">
              <layout class="QFormLayout" name="formLayout">
@@ -2391,19 +2167,95 @@
            </item>
            <item row="1" column="0" colspan="3">
             <widget class="QWidget" name="widget_5" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <layout class="QGridLayout" name="gridLayout_15">
-              <item row="0" column="0">
+              <item row="0" column="0" rowspan="2">
                <widget class="QLabel" name="teamicon">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/NFL/png/Steelers.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
+              </item>
+              <item row="0" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_13">
+                <item>
+                 <widget class="QLabel" name="label_28">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>18</pointsize>
+                   </font>
+                  </property>
+                  <property name="accessibleName">
+                   <string>TR00012</string>
+                  </property>
+                  <property name="text">
+                   <string>Last:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="marketLast">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>18</pointsize>
+                   </font>
+                  </property>
+                  <property name="whatsThis">
+                   <string>LastPrice</string>
+                  </property>
+                  <property name="accessibleName">
+                   <string>PRICE</string>
+                  </property>
+                  <property name="accessibleDescription">
+                   <string>CAN_BE_ZERO</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::NoButtons</enum>
+                  </property>
+                  <property name="maximum">
+                   <number>49</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item row="1" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_12">
@@ -2478,82 +2330,236 @@
                 </item>
                </layout>
               </item>
-              <item row="0" column="1">
-               <layout class="QHBoxLayout" name="horizontalLayout_13">
-                <item>
-                 <widget class="QLabel" name="label_28">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>18</pointsize>
-                   </font>
-                  </property>
-                  <property name="accessibleName">
-                   <string>TR00012</string>
-                  </property>
-                  <property name="text">
-                   <string>Last:</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="marketLast">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>70</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>18</pointsize>
-                   </font>
-                  </property>
-                  <property name="whatsThis">
-                   <string>LastPrice</string>
-                  </property>
-                  <property name="accessibleName">
-                   <string>PRICE</string>
-                  </property>
-                  <property name="accessibleDescription">
-                   <string>CAN_BE_ZERO</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="readOnly">
-                   <bool>true</bool>
-                  </property>
-                  <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::NoButtons</enum>
-                  </property>
-                  <property name="maximum">
-                   <number>49</number>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
              </layout>
              <zorder>label_28</zorder>
              <zorder>bidsLabelIndicator_7</zorder>
              <zorder>marketChng</zorder>
              <zorder>marketLast</zorder>
              <zorder>teamicon</zorder>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QWidget" name="widget_2" native="true">
+             <layout class="QGridLayout" name="gridLayout_2">
+              <item row="0" column="1">
+               <widget class="QLabel" name="asksLabelIndicator_8">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="accessibleName">
+                 <string>TR00009</string>
+                </property>
+                <property name="text">
+                 <string>Price</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="asksLabelIndicator_7">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="accessibleName">
+                 <string>TR00009</string>
+                </property>
+                <property name="text">
+                 <string>Size</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="bidsLabelIndicator_5">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="accessibleName">
+                 <string>TR00008</string>
+                </property>
+                <property name="text">
+                 <string>Bid:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="marketBid">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="whatsThis">
+                 <string>BidPrice</string>
+                </property>
+                <property name="accessibleName">
+                 <string>PRICE</string>
+                </property>
+                <property name="accessibleDescription">
+                 <string>CAN_BE_ZERO</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="buttonSymbols">
+                 <enum>QAbstractSpinBox::NoButtons</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QSpinBox" name="marketBids">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="whatsThis">
+                 <string>BidPrice</string>
+                </property>
+                <property name="accessibleName">
+                 <string>PRICE</string>
+                </property>
+                <property name="accessibleDescription">
+                 <string>CAN_BE_ZERO</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="buttonSymbols">
+                 <enum>QAbstractSpinBox::NoButtons</enum>
+                </property>
+                <property name="maximum">
+                 <number>9999</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="asksLabelIndicator_9">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="accessibleName">
+                 <string>TR00009</string>
+                </property>
+                <property name="text">
+                 <string>Ask:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QSpinBox" name="marketAsks">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="whatsThis">
+                 <string>BidPrice</string>
+                </property>
+                <property name="accessibleName">
+                 <string>PRICE</string>
+                </property>
+                <property name="accessibleDescription">
+                 <string>CAN_BE_ZERO</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="buttonSymbols">
+                 <enum>QAbstractSpinBox::NoButtons</enum>
+                </property>
+                <property name="maximum">
+                 <number>9999</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="marketAsk">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="whatsThis">
+                 <string>AskPrice</string>
+                </property>
+                <property name="accessibleName">
+                 <string>PRICE</string>
+                </property>
+                <property name="accessibleDescription">
+                 <string>CAN_BE_ZERO</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="buttonSymbols">
+                 <enum>QAbstractSpinBox::NoButtons</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
