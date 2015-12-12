@@ -208,11 +208,13 @@ enum DataTransition_Type {
   DataTransition_Type_SEASONEND = 3,
   DataTransition_Type_HEARTBEAT = 5,
   DataTransition_Type_GAMESTART = 6,
-  DataTransition_Type_WEEKOVER = 7
+  DataTransition_Type_WEEKOVER = 7,
+  DataTransition_Type_TRADESESSIONSTART = 8,
+  DataTransition_Type_TRADESESSIONCLOSEANDPREOPEN = 9
 };
 bool DataTransition_Type_IsValid(int value);
 const DataTransition_Type DataTransition_Type_Type_MIN = DataTransition_Type_SEASONSTART;
-const DataTransition_Type DataTransition_Type_Type_MAX = DataTransition_Type_WEEKOVER;
+const DataTransition_Type DataTransition_Type_Type_MAX = DataTransition_Type_TRADESESSIONCLOSEANDPREOPEN;
 const int DataTransition_Type_Type_ARRAYSIZE = DataTransition_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor();
@@ -333,11 +335,12 @@ enum TransType {
   MASTER_NAME = 5,
   TIME = 6,
   STAMPED = 7,
-  EXCHANGE = 8
+  EXCHANGE = 8,
+  EXCHANGE_BLOCK = 9
 };
 bool TransType_IsValid(int value);
 const TransType TransType_MIN = NAME;
-const TransType TransType_MAX = EXCHANGE;
+const TransType TransType_MAX = EXCHANGE_BLOCK;
 const int TransType_ARRAYSIZE = TransType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* TransType_descriptor();
@@ -3562,6 +3565,8 @@ class DataTransition : public ::google::protobuf::Message {
   static const Type HEARTBEAT = DataTransition_Type_HEARTBEAT;
   static const Type GAMESTART = DataTransition_Type_GAMESTART;
   static const Type WEEKOVER = DataTransition_Type_WEEKOVER;
+  static const Type TRADESESSIONSTART = DataTransition_Type_TRADESESSIONSTART;
+  static const Type TRADESESSIONCLOSEANDPREOPEN = DataTransition_Type_TRADESESSIONCLOSEANDPREOPEN;
   static inline bool Type_IsValid(int value) {
     return DataTransition_Type_IsValid(value);
   }

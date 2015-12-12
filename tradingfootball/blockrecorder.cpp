@@ -4,6 +4,16 @@
 
 using namespace fantasybit ;
 
+
+void BlockRecorder::InitCheckpoint(int32_t lastblock) {
+    leveldb::DB *db1;
+    leveldb::Status status;
+    leveldb::DB::Open(leveldb::Options(), filedir("blockstatus"), &db1);
+    leveldb::Slice value((char*)&lastblock, sizeof(int32_t));
+    db1->Put(leveldb::WriteOptions(), "lastblock", value);
+    delete db1;
+}
+
 void BlockRecorder::init() {
     write_sync.sync = true;
     leveldb::Options options;

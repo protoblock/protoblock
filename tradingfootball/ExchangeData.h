@@ -292,6 +292,7 @@ public:
     bool amlive = false;
     std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
     std::unordered_map<int32_t,std::string> mSeqNameMap;
+    void OnTradeSessionStart(int week);
 
 
     void Subscribe(std::string in) {
@@ -342,8 +343,6 @@ public:
     void SaveBookDelta();
     void OnGameResult(const GameResult&gs);
 
-    void OnNewOrderMsg(const ExchangeOrder&);
-
     void OnGameStart(std::string gid,
                      std::vector<std::string> &home,
                      std::vector<std::string> &away
@@ -371,6 +370,7 @@ public:
         }
     }
 
+    /*
     void OnNewOrder(Order &neworder) {
         if ( !amlive )  return;
 #ifdef TRACE
@@ -379,6 +379,7 @@ public:
 
         emit NewFantasyNameOrder(neworder);
     }
+    */
 
     std::unordered_map<std::string,Position> GetPositionsByName(const std::string &fname, bool subscribe = true) {
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };

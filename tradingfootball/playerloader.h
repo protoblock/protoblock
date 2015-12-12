@@ -181,6 +181,39 @@ struct SqlStuff {
         return pid;
     }
 
+    unordered_map<string,int> getallpid(string feed) {
+        unordered_map<string,int> ret;
+
+        QSqlDatabase db = QSqlDatabase::database (conname);
+        QSqlQuery query(db);
+
+        query.prepare("SELECT id,playerid FROM pid p WHERE p.feed = :feedid");
+        query.bindValue(":feedid",QString::fromStdString(feed));
+
+        bool good = query.exec();
+        db.close();
+
+        if ( !good  ) {
+            qDebug() << " exec ret " << query.lastError().databaseText();
+            return ret;
+        }
+
+
+        qDebug() << query.isActive() << query.isValid() <<
+                    query.first();
+
+        int idf = 0;//query.rec.indexOf("id");
+        int playeridf = 1;//query.rec.indexOf("playerid");
+
+        while (query.next()) {
+            QString id = query.value(idf).toString();
+            int pid = query.value(playeridf).toInt();
+            ret[id.toStdString()] = pid;
+        }
+
+        return ret;
+    }
+
     string getgidT(string tgid) {
         QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery query(db);
@@ -440,6 +473,55 @@ struct SqlStuff {
             //qDebug() << dist.DebugString();
         }
 
+    }
+
+    void openprice(const string &inplayerid, int price) {
+
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
+        QSqlQuery insertQuery(db);
+
+
+        insertQuery.prepare(
+                "INSERT into player_contract_quote "
+                "(playerid,price) "
+                " VALUES(:pid, :pr)");
+
+        /*
+            ("REPLACE into player_contract_quote "
+             "(playerid,price,`change`) "
+             " VALUES(:pid, :pr, :vol, :chg)");
+        /*
+             "ON DUPLICATE KEY "
+             "UPDATE player_contract_quote "
+              "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid");
+
+        /*
+        insertQuery.prepare
+            ("UPDATE player_contract_quote "
+             "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid");
+        /*
+        insertQuery.prepare
+        ("UPDATE player_contract_quote "
+        "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid"
+        "IF @@ROWCOUNT=0"
+            "INSERT into player_contract_quote "
+            "(playerid,price,volume,`change`) "
+            " VALUES(:pid, :pr, :vol, :chg)");
+            */
+
+        insertQuery.bindValue(":pid",std::stoi(inplayerid));
+        insertQuery.bindValue(":pr",price);
+
+        bool good = insertQuery.exec();
+        db.close();
+
+        qDebug() << " sql query " << insertQuery.executedQuery();
+
+        if ( ! good ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+            qDebug() << price;
+            return;
+        }
     }
 
     void fantasyname(FantasyNameHash &fnh) {
@@ -1720,11 +1802,51 @@ class MikeClayLoader {
 public:
     static map<string,int> headers;
     static map<string,int> import;
-
-    MikeClayLoader() : sqls(true,"MikeClayLoader") {}
+    bool mDirect;
+    MikeClayLoader(bool direct =false) : sqls(true,"MikeClayLoader") , mDirect(direct) {}
 
     int start = 3;
     SqlStuff sqls;
+
+    std::unordered_map<string, int> mIds;
+    std::vector<fantasybit::PlayerPoints> loadProjFromLink(int week) {
+        mIds = sqls.getallpid("STATS");
+        QString pfflink("https://www.profootballfocus.com/");
+        QString route("toolkit/export/Satoshi/?password=a90kvc294gh9jmc9je98du932fj39&week=%1");
+
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+
+        QUrl url;
+        url.setUrl(pfflink);
+        RestfullClient rest (url);
+        rest.getData(route.arg(week));
+        auto resp = rest.lastReply();
+
+        std::vector<fantasybit::PlayerPoints> result;
+
+        QTextStream in(resp);
+        QStringList listdata;
+        QString line;
+
+        for ( int i=0;i<start;i++)
+            line = in.readLine();
+        while (!in.atEnd()) {
+            listdata.clear();
+            line = in.readLine();
+            //qDebug() << line;
+            listdata.append(line.split(','));
+            QString errorParsingObject;
+
+            PlayerPoints pp = getProjFromList(listdata,errorParsingObject);
+            if ( errorParsingObject != "" ) continue;
+            result.push_back(pp);
+
+        }
+        qDebug() << "out loop";
+
+        return result;
+    }
 
     std::vector<fantasybit::PlayerPoints> loadProjFromFile(string infile = "SatoshiFantasy.csv") {
 
@@ -1762,6 +1884,15 @@ public:
 
         return result;
     }
+
+    int getpid(string &in) {
+        auto it = mIds.find(in);
+        if ( it != end(mIds))
+            return it->second;
+        else
+            return 0;
+    }
+
     fantasybit::PlayerPoints getProjFromList(QStringList & list,QString & errorParsingObject) {
 
        PlayerPoints pp{};
@@ -1781,7 +1912,7 @@ public:
            errorParsingObject = pos;
            return pp;
        }
-       int pid = sqls.getpid("STATS",statsid.toStdString());
+       int pid = getpid(statsid.toStdString());
        if ( pid == 0) {
            qDebug() << " stats id not found" << statsid << list[headers["name"]]
                    << list[headers["team"]] << pos;

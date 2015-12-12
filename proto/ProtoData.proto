@@ -114,6 +114,7 @@ enum TransType {
         TIME = 6;
         STAMPED = 7;
         EXCHANGE = 8;
+        EXCHANGE_BLOCK = 9;
 }
 
 message Transaction {
@@ -297,6 +298,8 @@ message DataTransition {
         HEARTBEAT=5; //anytime
         GAMESTART=6; //list of teamids to cut off projections for week
         WEEKOVER=7; //clear all projections
+        TRADESESSIONSTART=8;
+        TRADESESSIONCLOSEANDPREOPEN=9;
     }
 
     optional Type type =1;

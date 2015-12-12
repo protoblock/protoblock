@@ -504,7 +504,7 @@ void TestingWindow::Timer() {
 
         //st.id();
         Node::addTxPool(st.id(), txstr);
-        if ( count > 30)
+        if ( count >= 100)
             break;
     }
 

@@ -246,7 +246,7 @@ class PlayerStatus : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class GameStatus : public ::google::protobuf::Message {
+class   GameStatus : public ::google::protobuf::Message {
  public:
   GameStatus();
   virtual ~GameStatus();

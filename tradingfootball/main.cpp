@@ -35,8 +35,9 @@ int domain(int argc, char *argv[]){
 
     QApplication a(argc, argv);
 
+
     //MikeClayLoader loader;
-    //loader.loadProjFromFile();
+    //loader.loadProjFromLink(14);
     //Commissioner::makeGenesisBlock();
     //return 0;
     /*

@@ -8,6 +8,7 @@ namespace fantasybit {
 
 class BlockRecorder {
 
+    static void InitCheckpoint(int32_t);
     std::unique_ptr<leveldb::DB> blockstatus;  // lastblock -> status // last block processed
     leveldb::WriteOptions write_sync{};
     int32_t lastBlock = 0;
@@ -45,7 +46,7 @@ public:
     void clearProjections();
     void addBalance(std::string &pubkey,uint64_t add);
     */
-    std::string filedir(const std::string &in);
+    static std::string filedir(const std::string &in);
     void closeAll();
 };
 }

@@ -16,6 +16,9 @@
 #include "ApiData.pb.h"
 #include "RestFullCall.h"
 #include "fbutils.h"
+
+#include "DataPersist.h"
+
 #ifdef DATAAGENTWRITENAMES
 #include "playerloader.h"
 #endif
@@ -37,10 +40,19 @@ void FantasyNameData::init() {
         return;
     }
     else {
+#ifdef WRITE_BOOTSTRAP
+        Writer<FantasyNameBal> writer{ GET_ROOT_DIR() + "bootstrap/FantasyNameBal.txt" };
+#endif
         auto *it = namestore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             FantasyNameBal fn;
-            fn.ParseFromString(it->value().ToString());
+            if ( !fn.ParseFromString(it->value().ToString())) {
+                 qCritical() << "NameData error reading names";
+                 break;
+            }
+#ifdef WRITE_BOOTSTRAP
+            writer(fn);
+#endif
             auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
             if ( fnp != nullptr )
                 fnp->addBalance(fn.bits());
@@ -56,7 +68,7 @@ void FantasyNameData::init() {
         //todo emit fatal shit
         return;
     }
-    else {
+    else {       
         auto *it = projstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             auto str = it->key().ToString();

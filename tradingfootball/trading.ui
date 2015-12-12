@@ -2331,11 +2331,6 @@
                </layout>
               </item>
              </layout>
-             <zorder>label_28</zorder>
-             <zorder>bidsLabelIndicator_7</zorder>
-             <zorder>marketChng</zorder>
-             <zorder>marketLast</zorder>
-             <zorder>teamicon</zorder>
             </widget>
            </item>
            <item row="2" column="0">
@@ -2771,13 +2766,14 @@
      </layout>
     </widget>
    </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>MArketMake</string>
+     </property>
+    </widget>
+   </item>
   </layout>
-  <zorder>d</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>widget_8</zorder>
-  <zorder>widgetBuy_2</zorder>
-  <zorder>widget</zorder>
  </widget>
  <resources/>
  <connections/>

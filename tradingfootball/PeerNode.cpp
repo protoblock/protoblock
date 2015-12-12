@@ -60,6 +60,21 @@ void Node::init() {
     current_hight = getLastLocalBlockNum();
     qInfo() <<  "current_hight" << current_hight;
 
+#ifdef CHECKPOINTS
+    if ( current_hight < Commissioner::DeveloperCheckpointHigh() ) {
+        auto dc = Commissioner::getCheckPoint();
+
+        current_hight = Commissioner::DeveloperCheckpointHigh();
+
+        leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
+        blockchain->Put(write_sync, value, dc.SerializeAsString());
+        current_hight = getLastLocalBlockNum();
+
+        NFLStateData::InitCheckpoint();
+        BlockRecorder::InitCheckpoint(current_hight);
+    }
+#endif
+
     if (current_hight == 0)
     {
   /*
@@ -338,6 +353,7 @@ int32_t Node::myLastGlobalBlockNum() {
 fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     //qDebug() << "cureent thread" << QThread::currentThread();
 
+    //return 1966;
     //return 20;
     qDebug() << " calling rest height";
     int32_t height = RestfullService::getHeight(PAPIURL.data());

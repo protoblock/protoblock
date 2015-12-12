@@ -1076,61 +1076,63 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     ".ResultData\"\214\001\n\014ScheduleData\022\014\n\004week\030\001 \001"
     "(\005\022*\n\006weekly\030\n \001(\0132\032.fantasybit.WeeklySc"
     "hedule2B\n\rschedule_data\022\020.fantasybit.Dat"
-    "a\030\256\002 \001(\0132\030.fantasybit.ScheduleData\"\303\002\n\016D"
+    "a\030\256\002 \001(\0132\030.fantasybit.ScheduleData\"\374\002\n\016D"
     "ataTransition\022-\n\004type\030\001 \001(\0162\037.fantasybit"
     ".DataTransition.Type\022\016\n\006season\030\n \001(\r\022\014\n\004"
     "week\030\024 \001(\r\022&\n\010gamedata\030\036 \003(\0132\024.fantasybi"
     "t.GameData\022\036\n\004data\030( \003(\0132\020.fantasybit.Da"
-    "ta\"R\n\004Type\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEND"
-    "\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEK"
-    "OVER\020\0072H\n\ndata_trans\022\027.fantasybit.Transa"
-    "ction\030\313\001 \001(\0132\032.fantasybit.DataTransition"
-    "\"w\n\tTeamState\022*\n\005state\030\001 \001(\0162\033.fantasybi"
-    "t.TeamState.State\022\014\n\004week\030\n \001(\r\022\016\n\006teami"
-    "d\030\024 \001(\t\" \n\005State\022\013\n\007PREGAME\020\001\022\n\n\006INGAME\020"
-    "\002\"\275\002\n\tDeltaData\022(\n\004type\030\001 \001(\0162\032.fantasyb"
-    "it.DeltaData.Type\0220\n\rmyfantasyname\030\002 \003(\013"
-    "2\031.fantasybit.MyFantasyName\022,\n\013globalsta"
-    "te\030\n \001(\0132\027.fantasybit.GlobalState\022)\n\ntea"
-    "mstates\030\024 \003(\0132\025.fantasybit.TeamState\022\037\n\005"
-    "datas\030\036 \003(\0132\020.fantasybit.Data\022*\n\007players"
-    "\030( \003(\0132\031.fantasybit.FantasyPlayer\"#\n\004Typ"
-    "e\022\014\n\010SNAPSHOT\020\002\022\r\n\tHEARTBEAT\020\003*\t\010\350\007\020\200\200\200\200"
-    "\002\"t\n\013MessageData\022\013\n\003msg\030\n \001(\t\022\n\n\002gt\030\024 \001("
-    "\005\022\n\n\002lt\030\036 \001(\0052@\n\014message_data\022\020.fantasyb"
-    "it.Data\030\224\003 \001(\0132\027.fantasybit.MessageData\""
-    "\301\001\n\014StampedTrans\022\021\n\ttimestamp\030\n \001(\004\022\016\n\006s"
-    "eqnum\030\024 \001(\005\022\017\n\007prevseq\030\025 \001(\005\0222\n\013signed_o"
-    "rig\030\036 \001(\0132\035.fantasybit.SignedTransaction"
-    "2I\n\rstamped_trans\022\027.fantasybit.Transacti"
-    "on\030\254\002 \001(\0132\030.fantasybit.StampedTrans\"\213\002\n\r"
-    "ExchangeOrder\022,\n\004type\030\n \001(\0162\036.fantasybit"
-    ".ExchangeOrder.Type\022\020\n\010playerid\030( \001(\t\022#\n"
-    "\004core\0302 \001(\0132\025.fantasybit.OrderCore\022\023\n\013ca"
-    "ncel_oref\030d \001(\005\"(\n\004Type\022\007\n\003NEW\020\001\022\n\n\006CANC"
-    "EL\020\002\022\013\n\007REPLACE\020\003*\t\010\364\003\020\200\200\200\200\0022K\n\016exchange"
-    "_order\022\027.fantasybit.Transaction\030\266\002 \001(\0132\031"
-    ".fantasybit.ExchangeOrder\"q\n\013OrderUnique"
-    "\022\022\n\npublic_key\030\n \001(\t\022\016\n\006season\030\024 \001(\r\022\014\n\004"
-    "week\030\036 \001(\r\022\017\n\007buyside\030( \001(\010\022\020\n\010playerid\030"
-    "2 \001(\t\022\r\n\005price\030F \001(\005\"O\n\nOrderDeets\022\013\n\003oi"
-    "d\030\n \001(\014\022&\n\005order\030\024 \001(\0132\027.fantasybit.Orde"
-    "rUnique\022\014\n\004size\030\036 \001(\005\"\227\001\n\014InsideUnique\022\020"
-    "\n\010playerid\0302 \001(\t\022\022\n\npublic_key\030\n \001(\t\022\017\n\007"
-    "buyside\030( \001(\010\022\r\n\005price\030F \001(\005\022\013\n\003oid\030\013 \001("
-    "\014\022&\n\005order\030\024 \001(\0132\027.fantasybit.OrderUniqu"
-    "e\022\014\n\004size\030\036 \001(\005\"\316\001\n\016TimeTransition\022-\n\004ty"
-    "pe\030\001 \001(\0162\037.fantasybit.TimeTransition.Typ"
-    "e\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"%\n\004Type\022"
-    "\r\n\tTRADEOPEN\020\002\022\016\n\nTRADECLOSE\020\0032H\n\ntime_t"
-    "rans\022\027.fantasybit.Transaction\030\257\002 \001(\0132\032.f"
-    "antasybit.TimeTransition*Y\n\014MyNameStatus"
-    "\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequested\020\005\022\024"
-    "\n\020transaction_sent\020\017\022\r\n\tconfirmed\020\024*\207\001\n\t"
-    "TransType\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006R"
-    "ESULT\020\002\022\010\n\004DATA\020\003\022\024\n\020PROJECTION_BLOCK\020\004\022"
-    "\017\n\013MASTER_NAME\020\005\022\010\n\004TIME\020\006\022\013\n\007STAMPED\020\007\022"
-    "\014\n\010EXCHANGE\020\010", 5773);
+    "ta\"\212\001\n\004Type\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEN"
+    "D\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEE"
+    "KOVER\020\007\022\025\n\021TRADESESSIONSTART\020\010\022\037\n\033TRADES"
+    "ESSIONCLOSEANDPREOPEN\020\t2H\n\ndata_trans\022\027."
+    "fantasybit.Transaction\030\313\001 \001(\0132\032.fantasyb"
+    "it.DataTransition\"w\n\tTeamState\022*\n\005state\030"
+    "\001 \001(\0162\033.fantasybit.TeamState.State\022\014\n\004we"
+    "ek\030\n \001(\r\022\016\n\006teamid\030\024 \001(\t\" \n\005State\022\013\n\007PRE"
+    "GAME\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDeltaData\022(\n\004type"
+    "\030\001 \001(\0162\032.fantasybit.DeltaData.Type\0220\n\rmy"
+    "fantasyname\030\002 \003(\0132\031.fantasybit.MyFantasy"
+    "Name\022,\n\013globalstate\030\n \001(\0132\027.fantasybit.G"
+    "lobalState\022)\n\nteamstates\030\024 \003(\0132\025.fantasy"
+    "bit.TeamState\022\037\n\005datas\030\036 \003(\0132\020.fantasybi"
+    "t.Data\022*\n\007players\030( \003(\0132\031.fantasybit.Fan"
+    "tasyPlayer\"#\n\004Type\022\014\n\010SNAPSHOT\020\002\022\r\n\tHEAR"
+    "TBEAT\020\003*\t\010\350\007\020\200\200\200\200\002\"t\n\013MessageData\022\013\n\003msg"
+    "\030\n \001(\t\022\n\n\002gt\030\024 \001(\005\022\n\n\002lt\030\036 \001(\0052@\n\014messag"
+    "e_data\022\020.fantasybit.Data\030\224\003 \001(\0132\027.fantas"
+    "ybit.MessageData\"\301\001\n\014StampedTrans\022\021\n\ttim"
+    "estamp\030\n \001(\004\022\016\n\006seqnum\030\024 \001(\005\022\017\n\007prevseq\030"
+    "\025 \001(\005\0222\n\013signed_orig\030\036 \001(\0132\035.fantasybit."
+    "SignedTransaction2I\n\rstamped_trans\022\027.fan"
+    "tasybit.Transaction\030\254\002 \001(\0132\030.fantasybit."
+    "StampedTrans\"\213\002\n\rExchangeOrder\022,\n\004type\030\n"
+    " \001(\0162\036.fantasybit.ExchangeOrder.Type\022\020\n\010"
+    "playerid\030( \001(\t\022#\n\004core\0302 \001(\0132\025.fantasybi"
+    "t.OrderCore\022\023\n\013cancel_oref\030d \001(\005\"(\n\004Type"
+    "\022\007\n\003NEW\020\001\022\n\n\006CANCEL\020\002\022\013\n\007REPLACE\020\003*\t\010\364\003\020"
+    "\200\200\200\200\0022K\n\016exchange_order\022\027.fantasybit.Tra"
+    "nsaction\030\266\002 \001(\0132\031.fantasybit.ExchangeOrd"
+    "er\"q\n\013OrderUnique\022\022\n\npublic_key\030\n \001(\t\022\016\n"
+    "\006season\030\024 \001(\r\022\014\n\004week\030\036 \001(\r\022\017\n\007buyside\030("
+    " \001(\010\022\020\n\010playerid\0302 \001(\t\022\r\n\005price\030F \001(\005\"O\n"
+    "\nOrderDeets\022\013\n\003oid\030\n \001(\014\022&\n\005order\030\024 \001(\0132"
+    "\027.fantasybit.OrderUnique\022\014\n\004size\030\036 \001(\005\"\227"
+    "\001\n\014InsideUnique\022\020\n\010playerid\0302 \001(\t\022\022\n\npub"
+    "lic_key\030\n \001(\t\022\017\n\007buyside\030( \001(\010\022\r\n\005price\030"
+    "F \001(\005\022\013\n\003oid\030\013 \001(\014\022&\n\005order\030\024 \001(\0132\027.fant"
+    "asybit.OrderUnique\022\014\n\004size\030\036 \001(\005\"\316\001\n\016Tim"
+    "eTransition\022-\n\004type\030\001 \001(\0162\037.fantasybit.T"
+    "imeTransition.Type\022\016\n\006season\030\n \001(\r\022\014\n\004we"
+    "ek\030\024 \001(\r\"%\n\004Type\022\r\n\tTRADEOPEN\020\002\022\016\n\nTRADE"
+    "CLOSE\020\0032H\n\ntime_trans\022\027.fantasybit.Trans"
+    "action\030\257\002 \001(\0132\032.fantasybit.TimeTransitio"
+    "n*Y\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002"
+    "\022\r\n\trequested\020\005\022\024\n\020transaction_sent\020\017\022\r\n"
+    "\tconfirmed\020\024*\233\001\n\tTransType\022\010\n\004NAME\020\000\022\016\n\n"
+    "PROJECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003\022\024\n\020PR"
+    "OJECTION_BLOCK\020\004\022\017\n\013MASTER_NAME\020\005\022\010\n\004TIM"
+    "E\020\006\022\013\n\007STAMPED\020\007\022\014\n\010EXCHANGE\020\010\022\022\n\016EXCHAN"
+    "GE_BLOCK\020\t", 5850);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -1304,6 +1306,7 @@ bool TransType_IsValid(int value) {
     case 6:
     case 7:
     case 8:
+    case 9:
       return true;
     default:
       return false;
@@ -10003,6 +10006,8 @@ bool DataTransition_Type_IsValid(int value) {
     case 5:
     case 6:
     case 7:
+    case 8:
+    case 9:
       return true;
     default:
       return false;
@@ -10015,6 +10020,8 @@ const DataTransition_Type DataTransition::SEASONEND;
 const DataTransition_Type DataTransition::HEARTBEAT;
 const DataTransition_Type DataTransition::GAMESTART;
 const DataTransition_Type DataTransition::WEEKOVER;
+const DataTransition_Type DataTransition::TRADESESSIONSTART;
+const DataTransition_Type DataTransition::TRADESESSIONCLOSEANDPREOPEN;
 const DataTransition_Type DataTransition::Type_MIN;
 const DataTransition_Type DataTransition::Type_MAX;
 const int DataTransition::Type_ARRAYSIZE;

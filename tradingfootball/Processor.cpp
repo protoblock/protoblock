@@ -98,6 +98,9 @@ int32_t BlockProcessor::process(Block &sblock) {
 
     //qDebug() << " outDelta " << outDelta.DebugString();
 
+//TODO for debug exit
+    if ( lastidprocessed == 1966 )
+        return lastidprocessed;
     return lastidprocessed;
 }
 
@@ -211,8 +214,11 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                     if ( nopnl ) continue;
 
-                    for ( BookPos &bp : ha == "home" ? *gsp.mutable_home() : *gsp.mutable_away())
-                        posmap[bp.playerid()] = &bp;
+                    auto rgsp =  (ha == "home") ? gsp.mutable_home() : gsp.mutable_away();
+                    for ( int i=0; i<rgsp->size();i++) {
+                        BookPos *bp = rgsp->Mutable(i);
+                        posmap[bp->playerid()] = bp;
+                    }
                 }
 
 
@@ -252,7 +258,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                         BookPos  *bpos = nullptr;
                         if ( !nopnl ) {
-                            bpos = posmap.at(haresult.Get(i).playerid());
+                            bpos = posmap[haresult.Get(i).playerid()];
                         }
 
                         processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
@@ -544,6 +550,11 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
         break;
     }
+    case DataTransition_Type_TRADESESSIONSTART:
+    {
+        mExchangeData.OnTradeSessionStart(indt.week());
+        break;
+    }
     default:
         break;
     }
@@ -797,7 +808,7 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
 
     if ( st.fantasy_name() == "") {
         qCritical() << " Blank FantasyName";
-        return ret;;
+        return ret;
     }
 
     ret = Commissioner::getName(st.fantasy_name());
@@ -805,8 +816,10 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
         qCritical() << " cant find FantasyName" << st.fantasy_name();
     else {
         fc::ecc::signature sig = Commissioner::str2sig(st.sig());
-        if ( !Commissioner::verify(sig,digest,ret->pubkey()) )
+        if ( !Commissioner::verify(sig,digest,ret->pubkey()) ) {
             ret.reset();
+            qCritical() << "verify error" << st.fantasy_name() << "getFNverifySt";
+        }
     }
     return ret;
 }

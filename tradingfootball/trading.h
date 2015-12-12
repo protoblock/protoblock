@@ -432,6 +432,8 @@ private slots:
 
     void on_sellPriceAsMarketBid_clicked();
 
+    void on_pushButton_clicked();
+
 public slots:
     void OnMarketTicker(fantasybit::MarketTicker *);
     void OnMarketSnapShot(fantasybit::MarketSnapshot*);

@@ -53,7 +53,7 @@ void ExchangeData::init() {
             qDebug() << "level2 ExchangeData init GameSettlePos " << gsp.gameid();
 #endif
 
-            for (auto ha : {"home","away"})
+            for (auto ha : {QString("home"),QString("away")} )
             for ( auto bp : ha == "home" ? gsp.home() : gsp.away()) {
                 auto it2 = mLimitBooks.insert(make_pair(bp.playerid(),
                                unique_ptr<MatchingEngine>(new MatchingEngine(bp.playerid(),true))));
@@ -146,10 +146,11 @@ void ExchangeData::init() {
 #ifdef TRACE
             qDebug() << "level2 ExchangeData init BookDelta " << bd.playerid() << bd.seqnum();
 #endif
-
+/*
             auto &myset = mNameSeqMap[bd.fantasy_name()];
             myset.insert(bd.seqnum());
             mSeqNameMap[bd.seqnum()] = bd.fantasy_name();
+*/
             ProcessBookDelta(bd);
             auto it3 = mLimitBooks.find(bd.playerid());
             if ( it3 == end(mLimitBooks)) {
@@ -364,6 +365,10 @@ void ExchangeData::SaveBookDelta() {
 }
 
 void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
+    auto &myset = mNameSeqMap[bd.fantasy_name()];
+    myset.insert(bd.seqnum());
+    mSeqNameMap[bd.seqnum()] = bd.fantasy_name();
+
     if ( bd.has_newnew() ) {
         if ( mOpenOrders.find(bd.seqnum()) != end(mOpenOrders) )
             qCritical() << "level2 ExchangeData already have this NEW order" << bd.newnew().DebugString();
@@ -567,6 +572,7 @@ void ExchangeData::OnWeekOver(int week) {
     mWeek = week;
 }
 
+
 /*
 void ExchangeData::ProcessResult(const SettlePos &spos,
                                  std::unordered_map<string,int32_t>::const_iterator result) {
@@ -763,7 +769,7 @@ MarketSnapshot* MatchingEngine::makeSnapshot(MarketSnapshot *ms) {
 #ifdef TRACE
     qDebug() << "level2 makeSnapshot";// << symbol;
 #endif
-
+    if ( islocked ) return ms;
     int a = 1;
     int b = BOOK_SIZE;
     int nexta = 0;
@@ -1103,7 +1109,7 @@ void ExchangeData::StoreOhlc(string playerid) {
 }
 */
 void LimitBook::NewNew(Order &order) {
-    pExchangeData->get()->OnNewOrder(order);
+    //pExchangeData->get()->OnNewOrder(order);
     SaveNew(order.core());
     NewDepth(order.core().buyside(), order.core().price()-1);
 }
@@ -1126,7 +1132,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
     if ( it != end(mNameSeqMap)) {
         for ( auto oid : it->second) {
 #ifdef TRACE
-qDebug() << "level2 GetOrdersPositionsByName" << oid;
+            qDebug() << "level2 GetOrdersPositionsByName" << oid;
 #endif
             auto it2 = mOpenOrders.find(oid);
             if ( it2 == end(mOpenOrders)) {
@@ -1137,7 +1143,7 @@ qDebug() << "level2 GetOrdersPositionsByName" << oid;
             }
             OpenOrder &ord = mOpenOrders.at(oid);
 #ifdef TRACE
-qDebug() << "level2 GetOrdersPositionsByName" << ord.playerid << ord.livecore.DebugString();
+            qDebug() << "level2 GetOrdersPositionsByName" << ord.playerid << ord.livecore.DebugString();
 #endif
             //continue;
             auto &mypair = ret[ord.playerid];
@@ -1154,4 +1160,36 @@ qDebug() << "level2 GetOrdersPositionsByName" << ret.size();
     //ret.clear();
 
     return ret;
+}
+
+void ExchangeData::OnTradeSessionStart(int week) {
+    #ifdef TIMEAGENTWRITEFILLS
+        if ( !amlive ) return;
+
+        std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+
+        for ( auto mdl1 : mMarketQuote)  {
+            if ( mdl1.second.has_l() ) continue;
+
+            if ( !mdl1.second.has_b() || !mdl1.second.has_a())
+                continue;
+            auto &ohlc = mContractOHLC[mdl1.first];
+            if ( !ohlc.has_symbol() || ohlc.symbol() == "")
+                ohlc.set_symbol(mdl1.first);
+
+            if ( ohlc.has_close() && ohlc.close() > 0)
+                continue;
+
+            int price = (mdl1.second.b() * min(1,mdl1.second.bs()) +
+                         mdl1.second.a() * min(1,mdl1.second.as()) );
+            price = price/2;
+
+            ohlc.set_open(price);
+            {
+                SqlStuff sql("satoshifantasy","openprice");
+                sql.openprice(mdl1.first,price);
+            }
+
+          }
+    #endif
 }

@@ -531,6 +531,7 @@ void Trading::SetMyPositions() {
 
 #ifdef TRACE
     qDebug() << "level2 Trading SetMyPositions" << myPositionsName << myorderpositions.size();
+#endif
     for ( auto p : myorderpositions ) {
       //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;
         auto &mypair = p.second;
@@ -549,5 +550,77 @@ void Trading::SetMyPositions() {
         }
     }
 
-    #endif
+
 }
+
+void Trading::on_pushButton_clicked()
+{
+}
+#ifdef AUTOMMMIKECLAY
+#include "playerloader.h"
+void Trading::on_pushButton_clicked()
+{
+    MikeClayLoader mkl;
+    auto mproj = mkl.loadProjFromLink(14);
+
+
+    for ( auto p : mproj ) {
+        if ( p.points() < 1) continue;
+        if ( !p.has_playerid() || p.playerid() == "")
+            continue;
+
+        qDebug() << "Level2" << p.DebugString();
+        //continue;
+        int bid = 0;
+        bool nextask = false;
+        do {
+            bool isbid = !nextask;
+            eo.set_playerid(p.playerid());
+            eo.set_type(ExchangeOrder::NEW);
+
+            OrderCore core;
+            core.set_buyside(isbid);
+            core.set_size(1);
+            int delta = floor(p.points() * .50);// * ((isbid) ? -1 : 1);
+            if ( isbid ) delta = -delta;
+            int price = p.points() + delta;
+            if ( isbid ) {
+                if ( price <= 0 ) price = 1;
+                bid = price;
+            }
+            else {
+                if ( price <= 0 && bid <= 1) continue;
+
+                if ( price <= bid ) price++;
+
+                if ( price >= 30) price = 30;
+
+                if ( price <= bid) price++;
+
+            }
+            core.set_price(price);
+
+            eo.mutable_core()->CopyFrom(core);
+            //emit SendOrder(eo);
+#ifdef TRACE
+    qDebug() << "level2 NewOrder " << eo.DebugString();
+#endif
+            //continue;
+
+            Transaction trans{};
+            trans.set_version(Commissioner::TRANS_VERSION);
+            trans.set_type(TransType::EXCHANGE);
+            trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
+
+            SignedTransaction st = Core::resolveByName<MainLAPIWorker>("coreapi")
+                    ->Agent().makeSigned(trans);
+
+            auto txstr = st.SerializeAsString();
+            RestfullClient rest(QUrl(PAPIURL.data()));
+            //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
+            rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
+
+        } while(nextask = !nextask);
+    }
+}
+#endif

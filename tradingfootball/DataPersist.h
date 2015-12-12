@@ -51,8 +51,10 @@ public:
     
 	~Writer()
 	{
-   		delete _CodedOutputStream;
-		delete _OstreamOutputStream;    
+        if ( _CodedOutputStream)
+            delete _CodedOutputStream;
+        if ( _OstreamOutputStream )
+            delete _OstreamOutputStream;
 		mFs.close();
 	}
 };

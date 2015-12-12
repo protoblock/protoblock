@@ -10,8 +10,9 @@ AppSettings * Platform::settings() {
 }
 
 std::string Platform::getRootDir() {    
-    QString qstrPath = AppSettings::instance()->getSetting(AppSettings::ApplicationStorageDir).toString()+
-            QString(QDir::separator());
+    QString qstrPath = AppSettings::instance()->
+            getSetting(AppSettings::ApplicationStorageDir).toString();
+            //+QString(QDir::separator());
     qDebug() <<  qstrPath.toStdString();
     return qstrPath.toStdString();
 }

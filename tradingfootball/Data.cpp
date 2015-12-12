@@ -12,8 +12,48 @@
 #include "fbutils.h"
 #include "Commissioner.h"
 
+#include "DataPersist.h"
+
 using namespace std;
 using namespace fantasybit;
+
+#ifdef CHECKPOINTS
+void NFLStateData::InitCheckpoint() {
+    Reader<GlobalState> reader{ GET_ROOT_DIR() + " /GlobalState.txt"};
+    GlobalState gs;
+    reader.ReadNext(gs);
+    leveldb::DB *db2;
+    leveldb::DB::Open(options, filedir("statusstore"), &db2);
+    db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
+    delete db2;
+
+    Reader<GameStatus> reader2{ GET_ROOT_DIR() + "bootstrap/GameStatus.txt" };
+    GameStatus gas;
+    while ( reader2.ReadNext(gas) ) {
+        gas.ByteSize();
+        string key = "gamestatus:" + gas.;
+
+    }
+
+    Reader<PlayerData> reader3{ GET_ROOT_DIR() + "bootstrap/PlayerData.txt"};
+    PlayerData pd;
+    while ( reader3.ReadNext(pd) ) {
+        pd.ByteSize();
+    }
+
+    Reader<FantasyNameBal> reader4{ GET_ROOT_DIR() + "bootstrap/FantasyNameBal.txt"};
+    FantasyNameBal fnb;
+    while ( reader4.ReadNext(fnb) ) {
+        fnb.ByteSize();
+    }
+
+    Reader<WeeklySchedule> reader5{ GET_ROOT_DIR() + "bootstrap/WeeklySchedule.txt" };
+    WeeklySchedule ws;
+    while ( reader5.ReadNext(ws) ) {
+        ws.ByteSize();
+    }
+}
+#endif
 
 void NFLStateData::init() {
     write_sync.sync = true;
@@ -48,18 +88,47 @@ void NFLStateData::init() {
         return;
     }
 
+#ifdef WRITE_BOOTSTRAP
+    {
+    Writer<GlobalState> writer{ GET_ROOT_DIR() + "bootstrap/GlobalState.txt"};
+
+    GlobalState gs{};
+    std::string temp;
+    if (statusstore->Get(leveldb::ReadOptions(), "globalstate", &temp).ok()) {
+        if (gs.ParseFromString(temp))
+            writer(gs);
+    }
+    }
+#endif
+
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+#ifdef WRITE_BOOTSTRAP
+        //Writer<PlayerStatus> writer{ GET_ROOT_DIR() + "bootstrap/PlayerStatus.txt" };
+        Writer<PlayerData> writer3{ GET_ROOT_DIR() + "bootstrap/PlayerData.txt"};
+#endif
+
 
         auto *it = playerstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
+#ifdef WRITE_BOOTSTRAP
+            PlayerBase pb;
+            pb.ParseFromString(it->value().ToString());
+            PlayerData pd;
+            pd.mutable_player_base()->CopyFrom(pb);
+            pd.set_playerid(it->key().ToString());
+#endif
             string temp;
             if ( !statusstore->Get(leveldb::ReadOptions(), it->key(), &temp).ok() )
                 continue;
             PlayerStatus ps;
-            if (!ps.ParseFromString(temp) )
+            if (!ps.ParseFromString(temp) ) {
                 continue;
-
+            }
+#ifdef WRITE_BOOTSTRAP
+            pd.mutable_player_status()->CopyFrom(ps);
+            writer3(pd);
+#endif
             MyPlayerStatus[it->key().ToString()] = ps;
             if (ps.has_teamid()) {
                 //qDebug() << ps.teamid();
@@ -74,6 +143,12 @@ void NFLStateData::init() {
     }
 
     {
+#ifdef WRITE_BOOTSTRAP
+        Writer<WeeklySchedule> writer{ GET_ROOT_DIR() + "bootstrap/WeeklySchedule.txt" };
+
+        Writer<GameStatus> writer2{ GET_ROOT_DIR() + "bootstrap/GameStatus.txt" };
+        Writer<GameResult> writer3{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
+#endif
         for (int i=1; i<=17;i++) {
             string key = "scheduleweek:" + to_string(i);
             string temp;
@@ -82,10 +157,28 @@ void NFLStateData::init() {
                 break;
             }
             WeeklySchedule ws;
-            ws.ParseFromString(temp);
-
+            if ( !ws.ParseFromString(temp) ) {
+                qCritical() << "bad read WeeklySchedule ";
+                continue;
+            }
+#ifdef WRITE_BOOTSTRAP
+            writer(ws);
+#endif
             for ( auto game : ws.games()) {
                 MyGameInfo[game.id()] = game;
+#ifdef WRITE_BOOTSTRAP
+                string key = "gamestatus:" + game.id();
+                string temp;
+                if ( statusstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+                    GameStatus gs;
+                    if (gs.ParseFromString(temp) )
+                        writer2(gs);
+                }
+                GameResult gamer;
+                if ( GetGameResult(game.id(),gamer))
+                    writer3(gamer);
+#endif
+
             }
         }
 
@@ -164,7 +257,7 @@ bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) 
         if (!result.ParseFromString(temp) )
             qWarning() << " cant parse game result";
         else {
-            qDebug() << QString::fromStdString(result.DebugString());
+            qDebug() << result.DebugString();
             return true;
         }
     }

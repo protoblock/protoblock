@@ -31,6 +31,15 @@ class Commissioner
 public:
 	Commissioner() {	}
 
+    static int DeveloperCheckpointHigh() {
+        return 1966;
+    }
+
+    static Block getCheckPoint() {
+        Block b;
+        return b;
+    }
+
     static std::recursive_mutex name_mutex;
     static fc::ecc::public_key_data MASTER_PUB_KEY;
 	static fc::ecc::public_key_data GENESIS_PUB_KEY;
