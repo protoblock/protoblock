@@ -666,6 +666,8 @@ class   OrderTablesModel :
         public TKeyedListModel<int,ViewModel> {
 
 public:
+    QItemSelectionModel * mySelectedOrders;
+
 
     OrderTablesModel(): TKeyedListModel<int,ViewModel>(NULL){
         initialize();
@@ -673,22 +675,27 @@ public:
     ~OrderTablesModel() {}
 
 protected:
-
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
 
         int i=0;
         if( column ==i++)
-            return data->propertyValue<PropertyNames::Player_ID>();
+            return data->propertyValue<PropertyNames::ORDERID>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::Player_Name>();
         if( column ==i++)
-            return data->propertyValue<PropertyNames::BUYORSELL>();
+            return data->propertyValue<PropertyNames::Player_ID>();
+
         if( column ==i++)
-            return data->propertyValue<PropertyNames::PRICE>();
+            return data->propertyValue<PropertyNames::BUYORSELL>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::QTY>();
         if( column ==i++)
-            return data->propertyValue<PropertyNames::ORDERID>();
+            return data->propertyValue<PropertyNames::PRICE>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::VALUE>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::ORDERX>();
+
         return QVariant();
     }
 
@@ -697,8 +704,10 @@ protected:
 private:
     void initialize() {
         QStringList headers;
-        headers << "pid" << "Player-Name" << "Side" << "Price" << "Qty" << "Order-ID";
+        headers << "#" << "Player" << "pid" << "Type" << "Qty" << "Price" << "Value" << "-";
         setHorizontalHeaders(headers);
+        for ( int i = 0; i<6; i++)
+            setAlign(i,Qt::AlignCenter);
     }
 };
 

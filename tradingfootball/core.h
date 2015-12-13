@@ -92,7 +92,7 @@ Q_DECLARE_METATYPE(fantasybit::MarketTicker*)
 Q_DECLARE_METATYPE(fantasybit::MarketSnapshot*)
 Q_DECLARE_METATYPE(fantasybit::DepthFeedDelta*)
 Q_DECLARE_METATYPE(fantasybit::TradeTic*)
-Q_DECLARE_METATYPE(fantasybit::Order)
+Q_DECLARE_METATYPE(fantasybit::FullPosition)
 
 
 #endif // CORE_H

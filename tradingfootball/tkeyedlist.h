@@ -232,6 +232,10 @@ public:
         myBoldColumnsState[column] = on;
     }
 
+    void setAlign(int column,Qt::AlignmentFlag a) {
+        myAlignmentFlag[column] = a;
+    }
+
     int   rowCount(const QModelIndex & parent = QModelIndex() ) const {
         Q_UNUSED(parent);
         return myList.size();
@@ -299,6 +303,10 @@ public:
             }
         }
 
+        if (role == Qt::TextAlignmentRole) {
+            if ( myAlignmentFlag.contains(index.column()))
+                return myAlignmentFlag.value(index.column());
+        }
         return QVariant();
     }
 
@@ -609,7 +617,9 @@ private:
     bool myIsAutoDeleteModelElements;
     QMap<int,bool> myEditableColumnsState;
     QMap<int,bool> myBoldColumnsState;
+    QMap<int,Qt::AlignmentFlag> myAlignmentFlag;
     TableColumnsDefinition myColumns;
+
 
 }; 
 

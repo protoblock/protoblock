@@ -71,6 +71,8 @@ namespace PropertyNames {
     ENUMITEM(PRICE)
     ENUMITEM(QTY)
     ENUMITEM(ORDERID)
+    ENUMITEM(ORDERX)
+    ENUMITEM(VALUE)
 
     template<typename Name>
     static const char * naturalName() {

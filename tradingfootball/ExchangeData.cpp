@@ -151,7 +151,6 @@ void ExchangeData::init() {
             myset.insert(bd.seqnum());
             mSeqNameMap[bd.seqnum()] = bd.fantasy_name();
 */
-            ProcessBookDelta(bd);
             auto it3 = mLimitBooks.find(bd.playerid());
             if ( it3 == end(mLimitBooks)) {
                 auto it2 = mLimitBooks.insert(make_pair(bd.playerid(),
@@ -159,12 +158,12 @@ void ExchangeData::init() {
                 //it2.first->second->mPkPos.insert(make_pair(p.pk(),Position{p.qty(),p.price()}));
 
                 if ( !it2.second ) {
-                    qWarning() << "unable to insert for" << bd.playerid();
+                    qWarning() << "level2 unable to insert for" << bd.playerid();
                     continue;
                 }
 
 #ifdef TRACE
-              qDebug() << "level2 ExchangeData new init BookDelta for" << bd.playerid();
+                qDebug() << "level2 ExchangeData new init BookDelta for" << bd.playerid();
 #endif
 
                 it2.first->second->ResetLimitBook();//mLimitBook.reset(new LimitBook());
@@ -195,9 +194,9 @@ void ExchangeData::init() {
             MarketQuote &mq = mMarketQuote[bd.playerid()];
             ContractOHLC &ohlc = mContractOHLC[bd.playerid()];
 
-            int i;
-            if ( bd.playerid() == "1307")
-                i = 0;
+//            int i;
+//            if ( bd.playerid() == "1307")
+//                i = 0;
             for ( auto l1 : bd.level1tic()) {
 #ifdef TRACE
                 qDebug() << "level2 ExchangeData Level1 " << l1.DebugString();
@@ -226,6 +225,8 @@ void ExchangeData::init() {
                 //MergeMarketQuote(bd.playerid(),mq);
                 lb->updateTopfromCache(mq.b(),mq.a());
             }
+
+            ProcessBookDelta(bd);
         }
         if ( it != NULL ) delete it;
     }
@@ -332,7 +333,18 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
     ord.mutable_core()->CopyFrom(eo.core());
     ord.set_refnum(seqnum);
     mBookDelta->Reset(eo.playerid());
-    ma.mLimitBook->NewOrder(ord);
+
+    Position instapos;
+    bool haveinstapos = ma.mLimitBook->NewOrder(ord, instapos);
+
+    if ( haveinstapos ) {
+        std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+        Position &mypos = mPositions[eo.playerid()][fn->alias()];
+        mypos.netprice += instapos.netprice;
+        mypos.netqty += instapos.netqty;
+        OnNewPosition(fn->alias(),mypos, eo.playerid());
+    }
+
     //mBookDelta->set_playerid(eo.playerid());
     mBookDelta->set_fantasy_name(fn->alias());
     SaveBookDelta();
@@ -345,6 +357,34 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 #endif
 }
 
+void ExchangeData::OnNewPosition(const string &fname,
+                                const Position &pos,
+                                const string &playerid) {
+    if ( !amlive ) return;
+
+    if ( mSubscribed.find(fname) == end(mSubscribed))
+         return;
+
+    emit NewPos(FullPosition{playerid,fname,pos});
+}
+
+void ExchangeData::OnDeltaPos(const string &pid, int32_t seqnum,
+                              int32_t deltaqty, int32_t deltapos) {
+    std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+    auto it = mSeqNameMap.find(seqnum);
+    if ( it == end(mSeqNameMap)) {
+        qCritical() << " level2 error expect mSeqNameMap OnDeltaPos" << seqnum;
+        return;
+    }
+
+    Position &mypos = mPositions[pid][it->second];
+    mypos.netprice += deltapos;
+    mypos.netqty += deltaqty;
+
+    OnNewPosition(it->second,mypos,pid);
+
+}
+
 void ExchangeData::SaveBookDelta() {
 #ifdef TRACE
     qDebug() << "level2 ExchangeData SaveBookDelta" << mBookDelta->DebugString();
@@ -352,8 +392,6 @@ void ExchangeData::SaveBookDelta() {
 
     int32_t seqnum = mBookDelta->seqnum();
     leveldb::Slice snum((char*)&seqnum, sizeof(int32_t));
-    //string temp = "fuck you ass hole";//
-    //mBookDelta->SerializeAsString();
     leveldb::Status st = bookdeltastore->Put(write_sync, snum, mBookDelta->SerializeAsString() );
     if ( !st.ok());
         qWarning() << " error writing bookdeltastore";
@@ -378,7 +416,7 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
     }
 
     for ( auto can : bd.removes()) {
-        auto iter = mOpenOrders.find(bd.seqnum());
+        auto iter = mOpenOrders.find(can.refnum());
 
         if ( iter != end(mOpenOrders) ) {
             OrderCore &core = iter->second.livecore;
@@ -401,7 +439,21 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
 void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
                                  shared_ptr<FantasyName> fn) {
 
-    auto it = mLimitBooks.find(eo.playerid());
+    string playerid;
+    Order ord;
+    auto mit = mOpenOrders.find(eo.cancel_oref());
+    if ( mit == end(mOpenOrders)) {
+        playerid = eo.playerid();
+        ord.mutable_core()->CopyFrom(eo.core());
+        ord.set_refnum(eo.cancel_oref());
+    }
+    else {
+        playerid = mit->second.playerid;
+        ord.mutable_core()->CopyFrom(mit->second.livecore);
+        ord.set_refnum(eo.cancel_oref());
+    }
+
+    auto it = mLimitBooks.find(playerid);
     if ( it == end(mLimitBooks)) {
         qWarning() << "invalid cancel LimitBook not found for" << eo.DebugString();
         return;
@@ -413,11 +465,10 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
     }
 
     MatchingEngine &ma = *(it->second);
-    Order ord;
-    ord.mutable_core()->CopyFrom(eo.core());
-    ord.set_refnum(eo.cancel_oref());
+    //ord.mutable_core()->CopyFrom(eo.core());
+    //ord.set_refnum(eo.cancel_oref());
     ma.mLimitBook->CancelOrder(ord);
-    mBookDelta->set_playerid(eo.playerid());
+    mBookDelta->set_playerid(playerid);
     mBookDelta->set_fantasy_name(fn->alias());
     SaveBookDelta();
 
@@ -703,22 +754,25 @@ void LimitBook::NewDepth(bool isbuy,int price) {
 
 }
 
-void LimitBook::NewOrder(Order &eo) {
+bool LimitBook::NewOrder(Order &o, Position &posdelta) {
+    bool haspos = false;
     //mBookDelta->Clear();
-    mBookDelta->set_seqnum(eo.refnum());
-    //mBookDelta->set_allocated_newnew(eo.mutable_core());
-    if ( eo.core().buyside() ) {
-        if ( eo.core().price() > 0 && eo.core().size() > 0 && eo.core().size() <= 100000 )
-            NewBid(eo);
+    mBookDelta->set_seqnum(o.refnum());
+    //mBookDelta->set_allocated_newnew(o.mutable_core());
+    if ( o.core().buyside() ) {
+        if ( o.core().price() > 0 && o.core().size() > 0 && o.core().size() <= 100000 )
+            haspos = NewBid(o,posdelta);
         else
-            qWarning() << " invalid order";
+            qWarning() << "level2 invalid order";
     }
     else {
-        if ( eo.core().price() <= 40 && eo.core().size() > 0 && eo.core().size() <= 100000 )
-            NewAsk(eo);
+        if ( o.core().price() <= 40 && o.core().size() > 0 && o.core().size() <= 100000 )
+            haspos = NewAsk(o,posdelta);
         else
-            qWarning() << " invalid order";
+            qWarning() << "level2 invalid order";
     }
+
+    return haspos;
 }
 
 int32_t LimitBook::CancelOrder(Order &order) {
@@ -833,14 +887,17 @@ MarketSnapshot* MatchingEngine::makeSnapshot(MarketSnapshot *ms) {
     return ms;
 }
 
-void LimitBook::NewBid(Order &order) {
+bool LimitBook::NewBid(Order &order, Position &deltapos) {
 #ifdef TRACE
 qDebug() << "level2 New Bid " << order.core().price() << order.core().size();
 #endif
 
+
     auto myprice = order.core().price()-1;
     if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
-        return;
+        return false;
+
+    bool havepos = false;
 
     if (myprice < mBa) {
         //if (order.constraint == Constraint.IOC)
@@ -857,26 +914,18 @@ qDebug() << "level2 New Bid " << order.core().price() << order.core().size();
              NewTop(myprice+1, mBids[myprice].totSize, true);
          }
          NewNew(order);
-#ifdef TRACE
-    qDebug() << "level2 NewBid 2 mBb" <<  mBb;
-#endif
-
-         //}
      }
-     else {
-#ifdef TRACE
-    qDebug() << "level2 NewBid 3 mBb" <<  mBb;
-#endif
+    else {
+         int fillqty = order.core().size();
 
-         SweepAsks(order); //will modify size
-#ifdef TRACE
-    qDebug() << "level2 NewBid 4 mBb" <<  mBb;
-#endif
-
+         int32_t pos =
+                 SweepAsks(order); //will modify size
          GetTop(false);
-#ifdef TRACE
-    qDebug() << "level2 NewBid 5 mBb" <<  mBb;
-#endif
+         fillqty = fillqty - order.core().size();
+
+         deltapos.netprice = -pos;
+         deltapos.netqty = fillqty;
+         havepos = true;
 
          if (order.core().size() <= 0)
              ;//Send(new BookFeedData(ExecType.Done, order));
@@ -901,57 +950,71 @@ qDebug() << "level2 New Bid " << order.core().price() << order.core().size();
              //mFeed.Executi    on(order, BookFeed.OrdStatus.New, 0);
              //Send(new BookFeedData(ExecType.New,order));
              //}
-         }
+         }         
      }
+
+    return havepos;
 }
 
-void LimitBook::NewAsk(Order &order){
+bool LimitBook::NewAsk(Order &order, Position &deltapos) {
 #ifdef TRACE
-   qDebug() << "level2 New Ask " << order.core().price() << order.core().size();
+    qDebug() << "level2 New Ask " << order.core().price() << order.core().size();
 #endif
 
-       auto myprice = order.core().price()-1;
-       if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
-           return;
+    auto myprice = order.core().price()-1;
+    if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
+       return false;
 
-       if (myprice > mBb) {
-           //if (order.constraint == Constraint.IOC)
-           //    Send(new BookFeedData(ExecType.Canceled, order));
-           // else
-           //{
+    bool havepos = false;
+
+    if (myprice > mBb) {
+       //if (order.constraint == Constraint.IOC)
+       //    Send(new BookFeedData(ExecType.Canceled, order));
+       // else
+       //{
+        mAsks[myprice].New(order);
+        if (myprice <= mBa) {
+            mBa = myprice;
+            NewTop(myprice+1, mAsks[myprice].totSize, false);
+        }
+        NewNew(order);
+        //}
+    }
+    else {
+        int fillqty = order.core().size();
+        int32_t pos =
+                SweepBids(order); //will modify size
+        GetTop(true);
+        fillqty = fillqty - order.core().size();
+
+        deltapos.netprice = pos;
+        deltapos.netqty = -fillqty;
+        havepos = true;
+
+        if (order.core().size() <= 0)
+            ;//Send(new BookFeedData(ExecType.Done, order));
+        else {
+            //if (order.constraint == Constraint.IOC)
+            //    Send(new BookFeedData(ExecType.Canceled, order));
+            //else {
             mAsks[myprice].New(order);
-            if (myprice <= mBa) {
-                mBa = myprice;
-                NewTop(myprice+1, mAsks[myprice].totSize, false);
-            }
+            mBa = myprice;
+            NewTop(myprice+1, mAsks[myprice].totSize, false);
             NewNew(order);
+
+            //mFeed.Execution(order, BookFeed.OrdStatus.New, 0);
+            //Send(new BookFeedData(ExecType.New,order));
             //}
         }
-        else {
-            SweepBids(order); //will modify size
-            GetTop(true);
+    }
 
-            if (order.core().size() <= 0)
-                ;//Send(new BookFeedData(ExecType.Done, order));
-            else {
-                //if (order.constraint == Constraint.IOC)
-                //    Send(new BookFeedData(ExecType.Canceled, order));
-                //else {
-                mAsks[myprice].New(order);
-                mBa = myprice;
-                NewTop(myprice+1, mAsks[myprice].totSize, false);
-                NewNew(order);
+    return havepos;
+}
 
-                //mFeed.Execution(order, BookFeed.OrdStatus.New, 0);
-                //Send(new BookFeedData(ExecType.New,order));
-                //}
-            }
-        }
-   }
-
-void LimitBook::SweepAsks( Order &order) {
+int32_t LimitBook::SweepAsks( Order &order) {
     int price = order.core().price()-1;
     int left = order.core().size();
+    int32_t pos = 0;
     for (; mBa <= price; ++mBa) {
         InsideBook &curr = mAsks[mBa];
 
@@ -959,6 +1022,7 @@ void LimitBook::SweepAsks( Order &order) {
         if (fillqty <= 0)
             continue;
 
+        pos += (mBa+1) * fillqty; //for instafill
 
         SendFill(order, fillqty, mBa, false);
         //NewTrade(mBa, fillqty, Side.BID);
@@ -984,16 +1048,22 @@ void LimitBook::SweepAsks( Order &order) {
         if (left <= 0)
             break;
     }
+
+    return pos;
 }
-void LimitBook::SweepBids( Order &order) {
+
+int32_t LimitBook::SweepBids( Order &order) {
     int price = order.core().price()-1;
     int left = order.core().size();
+    int32_t pos = 0;
     for (; mBb >= price; --mBb) {
         InsideBook &curr = mBids[mBb];
 
         int fillqty = min(curr.totSize, left);
         if (fillqty <= 0)
             continue;
+
+        pos += (mBb+1) * fillqty; //for instafill
 
         SendFill(order, fillqty, mBb, false);
         //NewTrade(mBb, fillqty, Side.ASK);
@@ -1019,17 +1089,36 @@ void LimitBook::SweepBids( Order &order) {
         if (left <= 0)
             break;
     }
+
+    return pos;
 }
 
 
 void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
     //price += 1;
     o.mutable_core()->set_size(o.core().size()-q);
-/*
+
+    if ( ispassive ) {
+        int32_t deltaqty;
+        int32_t deltapos;
+        if (o.core().buyside() ) {
+            deltaqty = q;
+            deltapos = -q * price;
+        }
+        else {
+            deltaqty = -q;
+            deltapos = q * price;
+        }
+
+        pExchangeData->get()->
+                OnDeltaPos(mPlayerid, o.refnum(),deltaqty, deltapos);
+    }
+    /*
     auto it = pExchangeData->get()->mSeqNameMap.find(o.refnum());
     if ( it == end(pExchangeData->get()->mSeqNameMap))
         qCritical() << "level2 cant find order for fill" << o.DebugString();
     else {
+
         auto &mypos = mPkPos[it->second];
         auto size = q * (o.core().buyside() ? 1 : -1);
         mypos.netqty += size;
@@ -1155,7 +1244,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
     }
 
 #ifdef TRACE
-qDebug() << "level2 GetOrdersPositionsByName" << ret.size();
+    qDebug() << "level2 GetOrdersPositionsByName" << ret.size();
 #endif
     //ret.clear();
 

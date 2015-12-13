@@ -38,6 +38,12 @@ struct Position {
     }
 };
 
+struct FullPosition {
+    string playerid;
+    string fname;
+    Position pos;
+};
+
 typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order> > > ordsnap_t;
 
 /*
@@ -189,14 +195,14 @@ struct Level1 {
 class LimitBook {
     InsideBook mBids[BOOK_SIZE], mAsks[BOOK_SIZE];
     int mBb, mBa;
-    void NewBid(Order &order);
-    void NewAsk(Order &order);
+    bool NewBid(Order &order, Position &);
+    bool NewAsk(Order &order, Position &);
     void NewTop(int price, int32_t qty, bool isbuy);
     void NewNew(Order &order);
 
     void NewDepth(bool isbuy,int price);
-    void SweepAsks( Order &order);
-    void SweepBids( Order &order);
+    int32_t SweepAsks( Order &order);
+    int32_t SweepBids( Order &order);
     void GetTop(bool isbuy) {
         if (isbuy) {
             for (; mBb >= 0 && mBids[mBb].totSize == 0; --mBb) ;
@@ -237,7 +243,7 @@ public:
             mBa = a-1;
     }
 
-    void NewOrder(Order &eo);
+    bool NewOrder(Order &eo, Position &);
 
     int32_t CancelOrder(Order &order);
 };
@@ -294,6 +300,7 @@ public:
     std::unordered_map<int32_t,std::string> mSeqNameMap;
     void OnTradeSessionStart(int week);
 
+    void OnNewPosition(const string &,const Position &, const string &);
 
     void Subscribe(std::string in) {
 #ifdef TRACE
@@ -339,6 +346,7 @@ public:
     //void OnOrderReplace(const ExchangeOrder&, const string &uid) {}
 
     Position getPosition(const string &pk,const string &playerid);
+    void OnDeltaPos(const string &pid, int32_t seqnum, int32_t pqty, int price);
 
     void SaveBookDelta();
     void OnGameResult(const GameResult&gs);
@@ -401,6 +409,7 @@ signals:
     void NewDepthDelta(fantasybit::DepthFeedDelta*);
     void NewTradeTic(fantasybit::TradeTic *);
     void NewFantasyNameOrder(fantasybit::Order&);
+    void NewPos(fantasybit::FullPosition);
 public slots:
     void OnLive(bool subscribe);
 };

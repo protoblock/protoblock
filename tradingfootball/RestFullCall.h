@@ -200,10 +200,10 @@ public:
             request.setRawHeader(headerKey.toUtf8(),headersMap.value(headerKey).toUtf8());
         }
 
-        qDebug() << "Get : " << request.url().toDisplayString();
+        //qDebug() << "Get : " << request.url().toDisplayString();
         if (myNetworkManager.networkAccessible()==QNetworkAccessManager::Accessible){
             myCurrentNetworkReply = myNetworkManager.get(request);
-            qDebug() << "waitForReply : " << request.url().toDisplayString();
+            //qDebug() << "waitForReply : " << request.url().toDisplayString();
 
             waitForReply();
             return true;
@@ -247,7 +247,7 @@ signals:
 private slots:
 
     void finishedSlot(QNetworkReply* reply){
-        qDebug() << "finishedSlot";
+        //qDebug() << "finishedSlot";
         if (reply != NULL){
             myLastRepliedData = reply->readAll();
             reply->deleteLater();

@@ -434,7 +434,12 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_ordersCancelSelected_clicked();
+
+    void on_cancelOrderListButton_clicked();
+
 public slots:
+    void checkValidOrdersButtons();
     void OnMarketTicker(fantasybit::MarketTicker *);
     void OnMarketSnapShot(fantasybit::MarketSnapshot*);
     void OnDepthDelta(fantasybit::DepthFeedDelta*);
@@ -442,6 +447,10 @@ public slots:
     void OnMyNewOrder(fantasybit::Order& ord) {
         qDebug() << "level2 OnMyNewOrder MyOrder New" << ord.DebugString();
     }
+
+    void OnNewPos(fantasybit::FullPosition);
+    void cancelOrderByXButton();
+    //void CanelOrderslot(int id);
 
 
     void OnLive(bool subscribe) {
@@ -455,8 +464,11 @@ public slots:
             SetMyPositions();
     }
     void playerListCliked(const QModelIndex &index);
+    void cancelOrder(QString s, QByteArray b) {
+        qDebug() << " level2 cancel " << s << b;
+    }
 
-
+    void CancelOrder(int id);
 signals:
     void SendOrder(fantasybit::ExchangeOrder);
     //void SendOrder();
@@ -466,6 +478,8 @@ private:
     DepthTablesModel mDepthTableModel;
     PlayerListModal mPlayerListModel;
     OrderTablesModel mOrderTableModel;
+    QSortFilterProxyModel *ordersSortModel;
+    QItemSelectionModel ordersSelectionModel;
 
     std::vector<JulyLightChanges *> mJLC;
     bool mUpdatingS = false;

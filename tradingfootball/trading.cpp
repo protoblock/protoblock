@@ -6,6 +6,7 @@
 #include "RestFullCall.h"
 #include "dataservice.h"
 #include "julylightchanges.h"
+#include "orderstablecancelbutton.h"
 
 using namespace fantasybit;
 
@@ -19,7 +20,7 @@ Trading::Trading(QWidget *parent) :
 
     ui->playerList->setModel(&mPlayerListModel);
 
-    ui->ordersTable->setModel(&mOrderTableModel);
+    //ui->ordersTable->setModel(&mOrderTableModel);
     myFantasyName = "";
 
     mJLC.push_back(new JulyLightChanges(ui->marketBid));
@@ -37,6 +38,35 @@ Trading::Trading(QWidget *parent) :
     mJLC.push_back(new JulyLightChanges(ui->fantasybitStake));
     mJLC.push_back(new JulyLightChanges(ui->fantasybitPnl, true));
 
+    //ordersModel=new OrdersModel;
+    ordersSortModel=new QSortFilterProxyModel;
+    ordersSortModel->setSortRole(Qt::EditRole);
+    ordersSortModel->setFilterRole(Qt::WhatsThisRole);
+    ordersSortModel->setDynamicSortFilter(true);
+    ordersSortModel->setSourceModel(&mOrderTableModel);
+    ui->ordersTable->setModel(ordersSortModel);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(3,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(4,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(5,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(6,QHeaderView::ResizeToContents);
+    ui->ordersTable->setItemDelegateForColumn(6,new OrdersTableCancelButton(ui->ordersTable, this));
+    ui->ordersTable->setSelectionModel(&ordersSelectionModel);
+
+    ui->ordersTable->setSortingEnabled(true);
+    ui->ordersTable->sortByColumn(0);
+
+    connect(ui->ordersTable->selectionModel(),
+            SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+            this,SLOT(checkValidOrdersButtons()));
+
+
+    //connect(ordersModel,SIGNAL(ordersIsAvailable()),this,SLOT(ordersIsAvailable()));
+    //connect(ordersModel,SIGNAL(cancelOrder(QString,QByteArray)),this,SLOT(cancelOrder(QString,QByteArray)));
+    //connect(ordersModel,SIGNAL(volumeAmountChanged(double, double)),this,SLOT(volumeAmountChanged(double, double)));
+    //connect(ui.ordersTable->selectionModel(),SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),this,SLOT(checkValidOrdersButtons()));
 
 }
 
@@ -67,8 +97,9 @@ void Trading::Init() {
                          this,SLOT(OnMyNewOrder(fantasybit::Order&)));
         */
 
-       QObject::connect(exchangedata,SIGNAL(NewFantasyNameOrder(fantasybit::Order&)),
-                         this,SLOT(OnMyNewOrder(fantasybit::Order&)));
+       QObject::connect(exchangedata,
+                        SIGNAL(NewPos(fantasybit::FullPosition)),
+                         this,SLOT(OnNewPos(fantasybit::FullPosition)));
 
     }
 
@@ -98,6 +129,9 @@ void Trading::Init() {
 
     QObject::connect(ui->sellFloor, SIGNAL(valueChanged(int)),
                      this, SLOT(UpdateSells(int)));
+
+
+
 
 }
 
@@ -344,6 +378,27 @@ void Trading::NewOrder(bool isbuy) {
     rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 }
 
+void Trading::CancelOrder(int id) {
+
+    eo.set_type(ExchangeOrder::CANCEL);
+
+    //emit SendOrder(eo);
+    eo.set_cancel_oref(id);
+
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::EXCHANGE);
+    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
+
+    SignedTransaction st = Core::resolveByName<MainLAPIWorker>("coreapi")
+            ->Agent().makeSigned(trans);
+
+    auto txstr = st.SerializeAsString();
+    RestfullClient rest(QUrl(PAPIURL.data()));
+    //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
+    rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
+}
+
 void Trading::OnMarketTicker(fantasybit::MarketTicker* mt) {
 #ifdef TRACE
     qDebug() << "level2 OnMarketTicker " << mt->DebugString();
@@ -354,11 +409,20 @@ void Trading::OnMarketTicker(fantasybit::MarketTicker* mt) {
     if ( mt->type() == MarketTicker_Type_BID) {
         mPlayerListModel.updateItemProperty<PropertyNames::BIDSIZE>(playerid, mt->size());
         mPlayerListModel.updateItemProperty<PropertyNames::BID>(playerid,mt->price());
+        if ( mt->symbol() == myPlayerid ) {
+            ui->marketBid->setValue(mt->price());
+            ui->marketBids->setValue(mt->size());
+        }
     }
     else if ( mt->type() == MarketTicker_Type_ASK){
         mPlayerListModel.updateItemProperty<PropertyNames::ASK>(playerid,mt->price());
         mPlayerListModel.updateItemProperty<PropertyNames::ASKSIZE>(playerid,mt->size());
+        if ( mt->symbol() == myPlayerid ) {
+            ui->marketAsk->setValue(mt->price());;
+            ui->marketAsks->setValue(mt->size());
+        }
     }
+
 }
 
 
@@ -368,6 +432,8 @@ void Trading::OnTradeTick(fantasybit::TradeTic* tt) {
 #endif
     if ( tt->symbol() == "" ) return;
     QString playerid = tt->symbol().data();
+    bool updatelive = (tt->symbol() == myPlayerid );
+
     mPlayerListModel.updateItemProperty<PropertyNames::Player_ID>(playerid,playerid);
     mPlayerListModel.updateItemProperty<PropertyNames::LAST>(playerid,tt->price());
     mPlayerListModel.updateItemProperty<PropertyNames::LASTSIZE>(playerid,tt->size());
@@ -381,6 +447,15 @@ void Trading::OnTradeTick(fantasybit::TradeTic* tt) {
 
     if ( tt->islow())
         mPlayerListModel.updateItemProperty<PropertyNames::LOW>(playerid, tt->price());
+
+    if ( updatelive ) {
+        ui->marketLast->setValue(tt->price());
+        ui->marketVolume->setValue(volume);
+        if ( tt->ishigh() ) ui->marketHigh->setValue(tt->price());
+        if ( tt->islow() ) ui->marketLow->setValue(tt->price());
+        ui->marketChng->setValue(tt->change());
+    }
+
 }
 
 
@@ -526,6 +601,7 @@ void Trading::on_sellPriceAsMarketBid_clicked()
 //typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order> > > ordsnap_t;
 
 void Trading::SetMyPositions() {
+    mOrderTableModel.removeAll();
     myPositionsName = myFantasyName;
     auto myorderpositions = DataService::instance()->GetOrdersPositionsByName(myPositionsName);
 
@@ -542,15 +618,21 @@ void Trading::SetMyPositions() {
             mOrderTableModel.updateItemProperty<PropertyNames::BUYORSELL>(o.refnum(),buyorsell);
             mOrderTableModel.updateItemProperty<PropertyNames::PRICE>(o.refnum(),o.core().price());
             mOrderTableModel.updateItemProperty<PropertyNames::QTY>(o.refnum(),o.core().size());
-            mOrderTableModel.updateItemProperty<PropertyNames::ORDERID>(o.refnum(),o.refnum());
+            //mOrderTableModel.updateItemProperty<PropertyNames::ORDERID>(o.refnum(),o.refnum());
             mOrderTableModel.updateItemProperty<PropertyNames::Player_ID>(o.refnum(),p.first.data());
             ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
             auto name = item->propertyValue<PropertyNames::Player_Name>();
             mOrderTableModel.updateItemProperty<PropertyNames::Player_Name>(o.refnum(),name);
+            mOrderTableModel.updateItemProperty<PropertyNames::ORDERX>(o.refnum(),o.refnum());
+            ui->cancelOrdersList->addItem(o.DebugString().data(),o.refnum());
+        }
+
+        if ( p.first == myPlayerid) {
+            ui->posQty->setValue(p.second.first.netqty);
+            ui->posAvgPrice->setValue(p.second.first.netprice);
+
         }
     }
-
-
 }
 
 void Trading::on_pushButton_clicked()
@@ -620,7 +702,67 @@ void Trading::on_pushButton_clicked()
             //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
             rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 
-        } while(nextask = !nextask);
+        } while(nextask = !nextask);`
     }
 }
 #endif
+
+void Trading::cancelOrderByXButton()
+{
+    QPushButton* buttonCancel=dynamic_cast<QPushButton*>(sender());
+    if(!buttonCancel)return;
+    QModelIndex & index = (QModelIndex &)buttonCancel->property("OrderId");
+    ViewModel * data = mOrderTableModel.getItemByIndex(index);
+    if (data !=NULL) {
+        QString oid = data->propertyValue<int,PropertyNames::ORDERID>();
+        qDebug() << oid;
+    }
+
+}
+
+
+void Trading::on_ordersCancelSelected_clicked()
+{
+    QModelIndexList selectedIdx=ui->ordersTable->selectionModel()->selectedIndexes();
+    ViewModel *data = mOrderTableModel.getItemByIndex(selectedIdx.at(0));
+    if (data !=NULL) {
+        int oid = data->propertyValue<PropertyNames::ORDERID>().toInt();
+        qDebug() << "level2 cancel" << oid;
+        emit CancelOrder(oid);
+    }
+
+
+    //    OrderTablesModel *ot = dynamic_cast<OrderTablesModel *>(ui->ordersTable->selectionModel()->model());
+ /*   for ( auto index : ot-> selectedRows()) {
+        ViewModel * data = mOrderTableModel.getItemByIndex(index);
+        if (data !=NULL) {
+            int oid = data->propertyValue<int,PropertyNames::ORDERID>();
+            qDebug() << "level2 cancel" << oid;
+        }
+    }
+    */
+}
+
+
+void Trading::checkValidOrdersButtons()
+{
+    ui->ordersCancelAllButton->setEnabled(mOrderTableModel.rowCount());
+    ui->ordersCancelSelected->setEnabled(ui->ordersTable->selectionModel()->selectedIndexes().count());
+}
+
+
+void Trading::on_cancelOrderListButton_clicked()
+{
+    int oid = ui->cancelOrdersList->currentData().toInt();
+    if ( oid != 0 )
+        emit CancelOrder(oid);
+}
+
+void Trading::OnNewPos(fantasybit::FullPosition fp) {
+    qDebug() << "level2 Trading::OnNewPos " << fp.pos << fp.playerid << fp.fname;
+
+    if ( fp.playerid == myPlayerid && fp.fname == myFantasyName) {
+        ui->posQty->setValue(fp.pos.netqty);
+        ui->posAvgPrice->setValue(fp.pos.netprice);
+    }
+}

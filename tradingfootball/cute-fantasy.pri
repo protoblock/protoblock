@@ -156,4 +156,10 @@ contains(DEFINES, TRADE_FEATURE){
     SOURCES += \
         julylightchanges.cpp
 
+HEADERS += \
+    orderstablecancelbutton.h
+
+SOURCES += \
+    orderstablecancelbutton.cpp
+
 }
