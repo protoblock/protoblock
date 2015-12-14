@@ -851,7 +851,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QSpinBox" name="posAvgPrice">
+         <widget class="QSpinBox" name="posQty">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -913,7 +913,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="posQty">
+         <widget class="QSpinBox" name="posAvgPrice">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1095,7 +1095,7 @@
                <item row="0" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout">
                  <item>
-                  <widget class="QRadioButton" name="open">
+                  <widget class="QRadioButton" name="openrb">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -1114,7 +1114,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="closed">
+                  <widget class="QRadioButton" name="lockedrb">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -1174,16 +1174,19 @@
                <item row="0" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_9">
                  <item>
-                  <widget class="QCheckBox" name="checkBox_2">
+                  <widget class="QCheckBox" name="myorderFilter">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="text">
                     <string>Orders</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="checkBox_3">
+                  <widget class="QCheckBox" name="mypositionsFilter">
                    <property name="text">
-                    <string>Positiosn</string>
+                    <string>Positions</string>
                    </property>
                   </widget>
                  </item>
@@ -1210,21 +1213,21 @@
                   <enum>QLayout::SetMaximumSize</enum>
                  </property>
                  <item>
-                  <widget class="QCheckBox" name="checkBox_4">
+                  <widget class="QCheckBox" name="activefilter">
                    <property name="text">
                     <string>active</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="checkBox_5">
+                  <widget class="QCheckBox" name="liquidfilter">
                    <property name="text">
                     <string>liquid</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="checkBox_8">
+                  <widget class="QCheckBox" name="moversfiler">
                    <property name="text">
                     <string>movers</string>
                    </property>
@@ -1267,7 +1270,7 @@
              <bool>true</bool>
             </property>
             <property name="selectionMode">
-             <enum>QAbstractItemView::ExtendedSelection</enum>
+             <enum>QAbstractItemView::SingleSelection</enum>
             </property>
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
@@ -3073,11 +3076,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>layoutWidget</zorder>
-  <zorder>ordersTableFrame</zorder>
-  <zorder>fantasynamedata</zorder>
-  <zorder>currentplayer</zorder>
-  <zorder>d</zorder>
  </widget>
  <resources/>
  <connections/>

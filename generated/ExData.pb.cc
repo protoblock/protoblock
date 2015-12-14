@@ -23,6 +23,9 @@ namespace {
 const ::google::protobuf::Descriptor* SettlePos_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SettlePos_reflection_ = NULL;
+const ::google::protobuf::Descriptor* StorePos_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  StorePos_reflection_ = NULL;
 const ::google::protobuf::Descriptor* BookPos_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   BookPos_reflection_ = NULL;
@@ -90,7 +93,23 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SettlePos));
-  BookPos_descriptor_ = file->message_type(1);
+  StorePos_descriptor_ = file->message_type(1);
+  static const int StorePos_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StorePos, qty_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StorePos, price_),
+  };
+  StorePos_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      StorePos_descriptor_,
+      StorePos::default_instance_,
+      StorePos_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StorePos, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StorePos, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(StorePos));
+  BookPos_descriptor_ = file->message_type(2);
   static const int BookPos_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookPos, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookPos, positions_),
@@ -106,7 +125,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BookPos));
-  GameSettlePos_descriptor_ = file->message_type(2);
+  GameSettlePos_descriptor_ = file->message_type(3);
   static const int GameSettlePos_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameSettlePos, gameid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameSettlePos, home_),
@@ -123,7 +142,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameSettlePos));
-  OrderCore_descriptor_ = file->message_type(3);
+  OrderCore_descriptor_ = file->message_type(4);
   static const int OrderCore_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OrderCore, buyside_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OrderCore, size_),
@@ -140,7 +159,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(OrderCore));
-  Order_descriptor_ = file->message_type(4);
+  Order_descriptor_ = file->message_type(5);
   static const int Order_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Order, refnum_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Order, core_),
@@ -156,7 +175,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Order));
-  OrderFill_descriptor_ = file->message_type(5);
+  OrderFill_descriptor_ = file->message_type(6);
   static const int OrderFill_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OrderFill, left_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OrderFill, fillprice_),
@@ -174,7 +193,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(OrderFill));
-  MarketTicker_descriptor_ = file->message_type(6);
+  MarketTicker_descriptor_ = file->message_type(7);
   static const int MarketTicker_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketTicker, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketTicker, symbol_),
@@ -193,7 +212,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketTicker));
   MarketTicker_Type_descriptor_ = MarketTicker_descriptor_->enum_type(0);
-  TradeTic_descriptor_ = file->message_type(7);
+  TradeTic_descriptor_ = file->message_type(8);
   static const int TradeTic_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TradeTic, size_),
@@ -214,7 +233,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TradeTic));
-  DepthFeedDelta_descriptor_ = file->message_type(8);
+  DepthFeedDelta_descriptor_ = file->message_type(9);
   static const int DepthFeedDelta_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthFeedDelta, isbid_),
@@ -232,7 +251,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DepthFeedDelta));
-  ContractOHLC_descriptor_ = file->message_type(9);
+  ContractOHLC_descriptor_ = file->message_type(10);
   static const int ContractOHLC_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ContractOHLC, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ContractOHLC, open_),
@@ -253,7 +272,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ContractOHLC));
-  DepthItem_descriptor_ = file->message_type(10);
+  DepthItem_descriptor_ = file->message_type(11);
   static const int DepthItem_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, level_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DepthItem, b_),
@@ -272,7 +291,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DepthItem));
-  BookDelta_descriptor_ = file->message_type(11);
+  BookDelta_descriptor_ = file->message_type(12);
   static const int BookDelta_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, fantasy_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, seqnum_),
@@ -294,7 +313,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BookDelta));
-  MarketQuote_descriptor_ = file->message_type(12);
+  MarketQuote_descriptor_ = file->message_type(13);
   static const int MarketQuote_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketQuote, bs_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketQuote, b_),
@@ -315,7 +334,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketQuote));
-  MarketSnapshot_descriptor_ = file->message_type(13);
+  MarketSnapshot_descriptor_ = file->message_type(14);
   static const int MarketSnapshot_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, week_),
@@ -349,6 +368,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SettlePos_descriptor_, &SettlePos::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    StorePos_descriptor_, &StorePos::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     BookPos_descriptor_, &BookPos::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     GameSettlePos_descriptor_, &GameSettlePos::default_instance());
@@ -381,6 +402,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void protobuf_ShutdownFile_ExData_2eproto() {
   delete SettlePos::default_instance_;
   delete SettlePos_reflection_;
+  delete StorePos::default_instance_;
+  delete StorePos_reflection_;
   delete BookPos::default_instance_;
   delete BookPos_reflection_;
   delete GameSettlePos::default_instance_;
@@ -418,6 +441,7 @@ void protobuf_AddDesc_ExData_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\014ExData.proto\022\nfantasybit\"3\n\tSettlePos\022"
     "\n\n\002pk\030\n \001(\t\022\013\n\003qty\030\024 \001(\005\022\r\n\005price\030\031 \001(\005\""
+    "&\n\010StorePos\022\013\n\003qty\030\024 \001(\005\022\r\n\005price\030\031 \001(\005\""
     "E\n\007BookPos\022\020\n\010playerid\030\036 \001(\t\022(\n\tposition"
     "s\030( \003(\0132\025.fantasybit.SettlePos\"e\n\rGameSe"
     "ttlePos\022\016\n\006gameid\030\n \001(\t\022!\n\004home\030\024 \003(\0132\023."
@@ -454,10 +478,11 @@ void protobuf_AddDesc_ExData_2eproto() {
     "\016\n\006symbol\030\n \001(\t\022\014\n\004week\030\013 \001(\005\022$\n\005depth\030F"
     " \003(\0132\025.fantasybit.DepthItem\022&\n\004ohlc\030\024 \001("
     "\0132\030.fantasybit.ContractOHLC\022&\n\005quote\030\036 \001"
-    "(\0132\027.fantasybit.MarketQuote", 1547);
+    "(\0132\027.fantasybit.MarketQuote", 1587);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ExData.proto", &protobuf_RegisterTypes);
   SettlePos::default_instance_ = new SettlePos();
+  StorePos::default_instance_ = new StorePos();
   BookPos::default_instance_ = new BookPos();
   GameSettlePos::default_instance_ = new GameSettlePos();
   OrderCore::default_instance_ = new OrderCore();
@@ -472,6 +497,7 @@ void protobuf_AddDesc_ExData_2eproto() {
   MarketQuote::default_instance_ = new MarketQuote();
   MarketSnapshot::default_instance_ = new MarketSnapshot();
   SettlePos::default_instance_->InitAsDefaultInstance();
+  StorePos::default_instance_->InitAsDefaultInstance();
   BookPos::default_instance_->InitAsDefaultInstance();
   GameSettlePos::default_instance_->InitAsDefaultInstance();
   OrderCore::default_instance_->InitAsDefaultInstance();
@@ -796,6 +822,254 @@ void SettlePos::Swap(SettlePos* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = SettlePos_descriptor_;
   metadata.reflection = SettlePos_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int StorePos::kQtyFieldNumber;
+const int StorePos::kPriceFieldNumber;
+#endif  // !_MSC_VER
+
+StorePos::StorePos()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void StorePos::InitAsDefaultInstance() {
+}
+
+StorePos::StorePos(const StorePos& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void StorePos::SharedCtor() {
+  _cached_size_ = 0;
+  qty_ = 0;
+  price_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+StorePos::~StorePos() {
+  SharedDtor();
+}
+
+void StorePos::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void StorePos::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* StorePos::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return StorePos_descriptor_;
+}
+
+const StorePos& StorePos::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ExData_2eproto();
+  return *default_instance_;
+}
+
+StorePos* StorePos::default_instance_ = NULL;
+
+StorePos* StorePos::New() const {
+  return new StorePos;
+}
+
+void StorePos::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    qty_ = 0;
+    price_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool StorePos::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 qty = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &qty_)));
+          set_has_qty();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(200)) goto parse_price;
+        break;
+      }
+
+      // optional int32 price = 25;
+      case 25: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_price:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &price_)));
+          set_has_price();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void StorePos::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional int32 qty = 20;
+  if (has_qty()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(20, this->qty(), output);
+  }
+
+  // optional int32 price = 25;
+  if (has_price()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(25, this->price(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* StorePos::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional int32 qty = 20;
+  if (has_qty()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(20, this->qty(), target);
+  }
+
+  // optional int32 price = 25;
+  if (has_price()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(25, this->price(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int StorePos::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int32 qty = 20;
+    if (has_qty()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->qty());
+    }
+
+    // optional int32 price = 25;
+    if (has_price()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->price());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void StorePos::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const StorePos* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const StorePos*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void StorePos::MergeFrom(const StorePos& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_qty()) {
+      set_qty(from.qty());
+    }
+    if (from.has_price()) {
+      set_price(from.price());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void StorePos::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void StorePos::CopyFrom(const StorePos& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool StorePos::IsInitialized() const {
+
+  return true;
+}
+
+void StorePos::Swap(StorePos* other) {
+  if (other != this) {
+    std::swap(qty_, other->qty_);
+    std::swap(price_, other->price_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata StorePos::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = StorePos_descriptor_;
+  metadata.reflection = StorePos_reflection_;
   return metadata;
 }
 

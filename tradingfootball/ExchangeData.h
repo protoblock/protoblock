@@ -274,6 +274,7 @@ class ExchangeData : public QObject {
     std::shared_ptr<leveldb::DB> settlestore;
     std::shared_ptr<leveldb::DB> bookdeltastore;
     std::shared_ptr<leveldb::DB> orderseqstore;
+    std::shared_ptr<leveldb::DB> posstore;
 
     std::unordered_map<string,std::unordered_map<std::string,Position>> mPositions;
     std::unordered_map<string,unique_ptr<MatchingEngine>> mLimitBooks;

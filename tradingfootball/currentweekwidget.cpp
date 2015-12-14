@@ -284,6 +284,7 @@ void CurrentWeekWidget::onGameOver(string gameId){
   invalidateFilters();
    qDebug() << "Game over " << gameId;
 }
+
 void CurrentWeekWidget::onGameStart(string gameId){
     myGameTableModel.updateItemProperty<PropertyNames::Game_Status>
             (gameId.data(),qVariantFromValue<GameStatus_Status>(fantasybit::GameStatus_Status_INGAME));

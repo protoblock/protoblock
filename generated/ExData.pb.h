@@ -35,6 +35,7 @@ void protobuf_AssignDesc_ExData_2eproto();
 void protobuf_ShutdownFile_ExData_2eproto();
 
 class SettlePos;
+class StorePos;
 class BookPos;
 class GameSettlePos;
 class OrderCore;
@@ -175,6 +176,98 @@ class SettlePos : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SettlePos* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class StorePos : public ::google::protobuf::Message {
+ public:
+  StorePos();
+  virtual ~StorePos();
+
+  StorePos(const StorePos& from);
+
+  inline StorePos& operator=(const StorePos& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const StorePos& default_instance();
+
+  void Swap(StorePos* other);
+
+  // implements Message ----------------------------------------------
+
+  StorePos* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const StorePos& from);
+  void MergeFrom(const StorePos& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 qty = 20;
+  inline bool has_qty() const;
+  inline void clear_qty();
+  static const int kQtyFieldNumber = 20;
+  inline ::google::protobuf::int32 qty() const;
+  inline void set_qty(::google::protobuf::int32 value);
+
+  // optional int32 price = 25;
+  inline bool has_price() const;
+  inline void clear_price();
+  static const int kPriceFieldNumber = 25;
+  inline ::google::protobuf::int32 price() const;
+  inline void set_price(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.StorePos)
+ private:
+  inline void set_has_qty();
+  inline void clear_has_qty();
+  inline void set_has_price();
+  inline void clear_has_price();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 qty_;
+  ::google::protobuf::int32 price_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ExData_2eproto();
+  friend void protobuf_AssignDesc_ExData_2eproto();
+  friend void protobuf_ShutdownFile_ExData_2eproto();
+
+  void InitAsDefaultInstance();
+  static StorePos* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1942,6 +2035,54 @@ inline ::google::protobuf::int32 SettlePos::price() const {
   return price_;
 }
 inline void SettlePos::set_price(::google::protobuf::int32 value) {
+  set_has_price();
+  price_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// StorePos
+
+// optional int32 qty = 20;
+inline bool StorePos::has_qty() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void StorePos::set_has_qty() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void StorePos::clear_has_qty() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void StorePos::clear_qty() {
+  qty_ = 0;
+  clear_has_qty();
+}
+inline ::google::protobuf::int32 StorePos::qty() const {
+  return qty_;
+}
+inline void StorePos::set_qty(::google::protobuf::int32 value) {
+  set_has_qty();
+  qty_ = value;
+}
+
+// optional int32 price = 25;
+inline bool StorePos::has_price() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void StorePos::set_has_price() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void StorePos::clear_has_price() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void StorePos::clear_price() {
+  price_ = 0;
+  clear_has_price();
+}
+inline ::google::protobuf::int32 StorePos::price() const {
+  return price_;
+}
+inline void StorePos::set_price(::google::protobuf::int32 value) {
   set_has_price();
   price_ = value;
 }

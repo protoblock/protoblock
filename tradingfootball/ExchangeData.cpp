@@ -237,7 +237,56 @@ void ExchangeData::init() {
     //emit NewMarketTicker(mm);
 
 
+    leveldb::DB *db4;
+    status = leveldb::DB::Open(options, filedir("posstore"), &db4);
+    posstore.reset(db4);
+    if ( !status.ok() ) {
+        qCritical() << " cant open " + filedir("posstore");
+        //todo emit fatal
+        return;
+    }
+    else {
+        auto *it = posstore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            auto str = it->key().ToString();
+            int ii =  str.find_first_of(':');
+            auto fname = str.substr(0, ii);
+            auto nflplayer = str.substr(ii + 1);
 
+            StorePos sp;
+            if ( !sp.ParseFromString(it->value().ToString()) )
+                continue;
+
+#ifdef TRACE
+            qDebug() << "level2 ExchangeData posstore " << str << sp.DebugString();
+#endif
+            auto &plist = mPositions[fname];
+            Position &pos = plist[nflplayer];
+            pos.netprice = sp.price();
+            pos.netqty = sp.qty();
+
+            auto it3 = mLimitBooks.find(nflplayer);
+            if ( it3 == end(mLimitBooks) ) {
+                auto it2 = mLimitBooks.insert(make_pair(nflplayer,
+                               unique_ptr<MatchingEngine>(new MatchingEngine(nflplayer,false))));
+
+                if ( !it2.second ) {
+                    qWarning() << "level2 unable to insert for" << nflplayer;
+                    continue;
+                }
+
+#ifdef TRACE
+                qDebug() << "level2 ExchangeData new for pos" << nflplayer;
+#endif
+
+                it2.first->second->ResetLimitBook();//mLimitBook.reset(new LimitBook());
+
+                it3 = it2.first;
+            }
+            it3->second->mPkPos.insert(make_pair(fname,pos));
+        }
+        delete it;
+    }
 }
 
 /*
@@ -253,6 +302,7 @@ void ExchangeData::closeAll() {
     mLimitBooks.clear();
     settlestore.reset();
     bookdeltastore.reset();
+    posstore.reset();
     mContractOHLC.clear();
     ///snapstore.reset();
 }
@@ -339,7 +389,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 
     if ( haveinstapos ) {
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
-        Position &mypos = mPositions[eo.playerid()][fn->alias()];
+        Position &mypos = mPositions[fn->alias()][eo.playerid()];
         mypos.netprice += instapos.netprice;
         mypos.netqty += instapos.netqty;
         OnNewPosition(fn->alias(),mypos, eo.playerid());
@@ -360,6 +410,15 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 void ExchangeData::OnNewPosition(const string &fname,
                                 const Position &pos,
                                 const string &playerid) {
+
+    StorePos spos;
+    spos.set_qty(pos.netqty);
+    spos.set_price(pos.netprice);
+
+    string key(fname + ":" + playerid);
+    if (!posstore->Put(write_sync, key, spos.SerializeAsString()).ok())
+        qWarning() << " error writing posstore" << fname << playerid;
+
     if ( !amlive ) return;
 
     if ( mSubscribed.find(fname) == end(mSubscribed))
@@ -377,7 +436,7 @@ void ExchangeData::OnDeltaPos(const string &pid, int32_t seqnum,
         return;
     }
 
-    Position &mypos = mPositions[pid][it->second];
+    Position &mypos = mPositions[it->second][pid];
     mypos.netprice += deltapos;
     mypos.netqty += deltaqty;
 

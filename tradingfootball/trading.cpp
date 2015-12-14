@@ -17,6 +17,9 @@ Trading::Trading(QWidget *parent) :
     ui->setupUi(this);
 
 
+
+
+
     //ui->ordersTable->setModel(&mOrderTableModel);
     myFantasyName = "";
 
@@ -62,7 +65,6 @@ Trading::Trading(QWidget *parent) :
 
     ui->depthView->setModel(&mDepthTableModel);
 
-    ui->playerList->setModel(&mPlayerListModel);
 
     ui->depthView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
     ui->depthView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
@@ -73,6 +75,43 @@ Trading::Trading(QWidget *parent) :
 
     //auto w = ui->depthView->fontMetrics().width(" BIS SIZE BID ASK SK SIZE   ");
     //ui->depthView->setMaximumWidth(w*2);
+
+    ui->playerList->setSelectionBehavior(QAbstractItemView::SelectItems);
+    ui->playerList->setSelectionMode(QAbstractItemView::SingleSelection);
+    myPlayerFilterProxy.reset(new PlayerListViewFilterProxyModel(&myGameTableModel,this->ui));
+    myPlayerFilterProxy.data()->setSourceModel(&mPlayerListModel);
+    myPlayerFilterProxy.data()->setDynamicSortFilter(true);
+    myPlayerFilterProxy.data()->setSortRole(Qt::UserRole);
+    ui->playerList->setModel(myPlayerFilterProxy.data());
+    playersSelectionModel = new QItemSelectionModel(myPlayerFilterProxy.data());
+    //playersSelectionModel.setModel(myPlayerFilterProxy.data());
+    ui->playerList->setSelectionModel(playersSelectionModel);
+
+    QObject::connect(playersSelectionModel,
+                     SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+                     this, SLOT(OnplayerListSelection(QModelIndex,QModelIndex)));
+
+    QObject::connect(playersSelectionModel,
+                     SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                     this,SLOT(OnPlayerListSelection(QItemSelection,QItemSelection)));
+
+
+    for ( int i = 1; i < mPlayerListModel.columnCount()-1; i++)
+        ui->playerList->horizontalHeader()->setSectionResizeMode(i,QHeaderView::ResizeToContents);
+
+    ui->playerList->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
+    ui->playerList->horizontalHeader()->setSectionResizeMode(mPlayerListModel.columnCount()-1,QHeaderView::Stretch);
+
+
+    ui->groupBoxPlayerFilterGame->setChecked(false);
+    ui->groupBoxPlayerFilterTrading->setChecked(false);
+    ui->liquidfilter->setChecked(true);
+    //ui->PlayersGroup->children();
+
+    //ui->groupBoxPlayerFilterGame->isChecked()
+
+    //ui->groupBoxPlayerFilterGame->ch
+
 
 
     //connect(ordersModel,SIGNAL(ordersIsAvailable()),this,SLOT(ordersIsAvailable()));
@@ -116,6 +155,8 @@ void Trading::Init() {
        QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
                          this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
 
+       QObject::connect(theLAPIWorker,SIGNAL(GameStart(string)),this,SLOT(onGameStart(string)));
+
        /*
        FantasyNameData *namedata = &(theLAPIWorker->NameData());
        QObject::connect(namedata,SIGNAL(NewFantasyNameOrder(fantasybit::Order&)),
@@ -128,9 +169,10 @@ void Trading::Init() {
 
     }
 
+    /*
     QObject::connect(ui->playerList,SIGNAL(doubleClicked(QModelIndex)),
                      this,SLOT(playerListCliked(QModelIndex)));
-
+    */
     QObject::connect(ui->buyqty, SIGNAL(valueChanged(int)),
                      this, SLOT(UpdateBuys(int)));
 
@@ -155,6 +197,27 @@ void Trading::Init() {
     QObject::connect(ui->sellFloor, SIGNAL(valueChanged(int)),
                      this, SLOT(UpdateSells(int)));
 
+    QObject::connect(ui->lockedrb,SIGNAL(clicked(bool)),this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->openrb,SIGNAL(clicked(bool)),this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->groupBoxlocked,SIGNAL(toggled(bool))
+            ,this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->groupBoxPlayerFilterGame,SIGNAL(clicked(bool)),this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->groupBoxPlayerFilterMarket,SIGNAL(clicked(bool)),this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->groupBoxPlayerFilterTrading,SIGNAL(clicked(bool)),this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->teamComboFilter,SIGNAL(currentIndexChanged(int))
+            ,this,SLOT(invalidateFilters(int)));
+    QObject::connect(ui->posComboFilter,SIGNAL(currentIndexChanged(int))
+            ,this,SLOT(invalidateFilters(int)));
+    QObject::connect(ui->myorderFilter,SIGNAL(clicked(bool))
+            ,this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->mypositionsFilter,SIGNAL(clicked(bool))
+            ,this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->activefilter,SIGNAL(clicked(bool))
+            ,this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->liquidfilter,SIGNAL(clicked(bool))
+            ,this,SLOT(invalidateFilters(bool)));
+    QObject::connect(ui->moversfiler,SIGNAL(clicked(bool))
+            ,this,SLOT(invalidateFilters(bool)));
 
 
 
@@ -165,10 +228,75 @@ Trading::~Trading()
     delete ui;
 }
 
-void Trading::playerListCliked(const QModelIndex &index) {
+void Trading::OnplayerListSelection(QItemSelection index,QItemSelection) {
+    int i = 0;
+}
+
+void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
+
+    index = myPlayerFilterProxy.data()->mapToSource(index);
+
+    /*
+    ViewModel * data1 = mPlayerListModel.getItemByIndex(i1);
+    QString playerid1 = data1->propertyValue<QString,PropertyNames::Player_ID>();
+    qDebug() << data1->propertyValue<QString,PropertyNames::Player_Name>();
+
+    QModelIndex i2 = myPlayerFilterProxy.data()->mapToSource(index);
+    ViewModel * data2 = mPlayerListModel.getItemByIndex(i2);
+    QString playerid2 = data2->propertyValue<QString,PropertyNames::Player_ID>();
+    qDebug() << data2->propertyValue<QString,PropertyNames::Player_Name>();
+
+    /*
+    QItemSelection filteredSelection = playersSelectionModel->selection();
+    QItemSelection sourceSelection1;
+
+    QItemSelection sourceSelection2;
+
+    sourceSelection1 = myPlayerFilterProxy.data()->mapSelectionToSource(filteredSelection);
+    QModelIndexList selectionList1 = sourceSelection1.indexes();
+
+    sourceSelection2 = myPlayerFilterProxy.data()->mapSelectionFromSource(filteredSelection);
+    QModelIndexList selectionList2 = sourceSelection2.indexes();
+
+    for(int i=0;i<selectionList1.count();i++){
+        QModelIndex sourceIndex = selectionList1.at(i);
+        ViewModel * data = mPlayerListModel.getItemByIndex(sourceIndex);
+        if (data == NULL) return;
+        QString playerid = data->propertyValue<QString,PropertyNames::Player_ID>();
+        qDebug() << data->propertyValue<QString,PropertyNames::Player_Name>();
+    }
+
+    for(int i=0;i<selectionList2.count();i++){
+        QModelIndex sourceIndex = selectionList2.at(i);
+        ViewModel * data = mPlayerListModel.getItemByIndex(sourceIndex);
+        if (data == NULL) return;
+        QString playerid = data->propertyValue<QString,PropertyNames::Player_ID>();
+        qDebug() << data->propertyValue<QString,PropertyNames::Player_Name>();
+    }
+*/
+    /*
+    QItemSelection s1 = playersSelectionModel->selection();
+
+
+    s1.select(myPlayerFilterProxy->mapSelectionToSource(s1),
+              QItemSelectionModel::ClearAndSelect);
+
+
+
+    QModelIndex ci = playersSelectionModel->currentIndex();
+
+    QModelIndexList selectionList = s1.indexes();
+
+    ViewModel * data1 = mPlayerListModel.getItemByIndex(ci);
+
+    QString playerid = data1->propertyValue<QString,PropertyNames::Player_ID>();
+    qDebug() << " pid1 " << playerid;
+*/
     ViewModel * data = mPlayerListModel.getItemByIndex(index);
     if (data !=NULL) {
         QString playerid = data->propertyValue<QString,PropertyNames::Player_ID>();
+        qDebug() << " pid2 " << playerid;
+
         if ( myPlayerid == playerid.toStdString())
             return;
 
@@ -204,6 +332,9 @@ void Trading::playerListCliked(const QModelIndex &index) {
         //ui->playername->setText(QString("whta"));
         myPlayerid = playerid.toStdString();
 
+        ui->posAvgPrice->setValue(data->propertyValue<QString,PropertyNames::MYAVG>().toInt());
+        ui->posQty->setValue(data->propertyValue<QString,PropertyNames::MYPOS>().toInt());
+
 
     }
 }
@@ -233,6 +364,29 @@ void Trading::on_buyit_clicked()
 void Trading::on_sellit_clicked()
 {
     NewOrder(false);
+}
+
+
+void Trading::onGameStart(string gameId){
+    myGameTableModel.updateItemProperty<PropertyNames::Game_Status>
+            (gameId.data(),qVariantFromValue<GameStatus_Status>(fantasybit::GameStatus_Status_INGAME));
+   invalidateFilters();
+   qDebug() << "Trading on Game Start " << gameId;
+}
+
+void Trading::invalidateFilters() {
+    //myGameModelFilter.invalidate();
+    playersSelectionModel->reset();
+    myPlayerFilterProxy.data()->enable();
+    myPlayerFilterProxy.data()->invalidate();
+}
+
+void Trading::invalidateFilters(bool) {
+    invalidateFilters();
+}
+
+void Trading::invalidateFilters(int) {
+    invalidateFilters();
 }
 
 void Trading::SetCurrentWeekData(int week) {
@@ -272,6 +426,12 @@ void Trading::SetCurrentWeekData(int week) {
 
         //ui->gamesComboFilter->insertItem(i++,ret,gameId);
 
+        myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
+        myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
+        myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,fromTime_t_toFantasyString(game.info.time()));
+        myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,qVariantFromValue<GameStatus_Status>(game.status));
+
         for ( auto hh : { QString("home"), QString("away")} ) {
             for ( auto ho : (hh == "home") ? game.homeroster : game.awayroster ) {
                 QString playerId = ho.first.data();
@@ -280,6 +440,7 @@ void Trading::SetCurrentWeekData(int week) {
                 playerName = QString(playerDetails.base.first().data()) + " " + QString(playerDetails.base.last().data());
 
 
+                mPlayerListModel.updateItemProperty<PropertyNames::Game_ID>(playerId,gameId);
                 mPlayerListModel.updateItemProperty<PropertyNames::Player_ID>(ho.first.data(),ho.first.data());
                 mPlayerListModel.updateItemProperty<PropertyNames::Team_ID>(playerId,game.info.home().data());
                 mPlayerListModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerName);
@@ -653,6 +814,9 @@ void Trading::SetMyPositions() {
             ui->cancelOrdersList->addItem(o.DebugString().data(),o.refnum());
         }
 
+        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),p.second.first.netqty);
+        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(p.first.data(),p.second.first.netprice);
+
         if ( p.first == myPlayerid) {
             ui->posQty->setValue(p.second.first.netqty);
             ui->posAvgPrice->setValue(p.second.first.netprice);
@@ -792,3 +956,4 @@ void Trading::OnNewPos(fantasybit::FullPosition fp) {
         ui->posAvgPrice->setValue(fp.pos.netprice);
     }
 }
+

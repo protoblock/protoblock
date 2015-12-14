@@ -74,6 +74,10 @@ namespace PropertyNames {
     ENUMITEM(ORDERX)
     ENUMITEM(VALUE)
 
+    ENUMITEM(MYPOS)
+    ENUMITEM(MYAVG)
+    ENUMITEM(MYPNL)
+
     template<typename Name>
     static const char * naturalName() {
         //QString result= QString(Name::name()).replace('_',' ');

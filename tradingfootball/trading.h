@@ -463,7 +463,9 @@ private slots:
 
     void on_cancelOrderListButton_clicked();
 
+
 public slots:
+    void onGameStart(string gameId);
     void checkValidOrdersButtons();
     void OnMarketTicker(fantasybit::MarketTicker *);
     void OnMarketSnapShot(fantasybit::MarketSnapshot*);
@@ -488,12 +490,17 @@ public slots:
         if ( myFantasyName != "" && myPositionsName != myFantasyName)
             SetMyPositions();
     }
-    void playerListCliked(const QModelIndex &index);
+    void OnplayerListSelection(QModelIndex, QModelIndex);
+    void OnplayerListSelection(QItemSelection, QItemSelection);
+
     void cancelOrder(QString s, QByteArray b) {
         qDebug() << " level2 cancel " << s << b;
     }
 
     void CancelOrder(int id);
+    void invalidateFilters(bool);
+    void invalidateFilters(int);
+
 signals:
     void SendOrder(fantasybit::ExchangeOrder);
     //void SendOrder();
@@ -505,13 +512,19 @@ private:
     OrderTablesModel mOrderTableModel;
     QSortFilterProxyModel *ordersSortModel;
     QItemSelectionModel ordersSelectionModel;
+    QItemSelectionModel *playersSelectionModel;
+    GameTableModel  myGameTableModel{WeekDisplayType::CurrentWeek};
+
+    QScopedPointer<PlayerListViewFilterProxyModel>  myPlayerFilterProxy;
 
     std::vector<JulyLightChanges *> mJLC;
     bool mUpdatingS = false;
     bool mUpdatingB = false;
+    void invalidateFilters();
+
+
 
 };
-
 
 
 

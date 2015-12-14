@@ -51,19 +51,7 @@ protected:
         QString gametime;
         home =data->propertyValue<PropertyNames::Home>().toString();
         away =data->propertyValue<PropertyNames::Away>().toString();
-        switch (myGameTableType) {
-        case WeekDisplayType::CurrentWeek:
-        case WeekDisplayType::UpcomingWeek :
-            gametime = data->propertyValue<PropertyNames::Game_Time>().toString();
-            break;
-        case WeekDisplayType::PreviousWeek:
-            gametime = data->propertyValue<PropertyNames::Game_Time>().toString();
-            break;
-        default:
-            return QVariant();
-        }
-
-
+        gametime = data->propertyValue<PropertyNames::Game_Time>().toString();
         QString myt = text.arg(away).arg(home).leftJustified(9,' ');
         auto ret = myt + QString(" - ")+ gametime;//dateTime_toFantasyString(gametime));
 
@@ -80,12 +68,8 @@ protected:
 
 private:
     void initialize() {
-        QStringList  headers;
-        switch (myGameTableType) {
-        case WeekDisplayType::CurrentWeek:  headers << "Time" << "Home" << "Away"; break;
-        case WeekDisplayType::PreviousWeek: headers << "Time" << "Home" << "Away"; break;
-        case WeekDisplayType::UpcomingWeek: headers << "Time" << "Home" << "Away"; break;
-        }
+        QStringList  headers;       
+        headers << "Time" << "Home" << "Away";
         setHorizontalHeaders(headers);
     }
 
@@ -619,10 +603,14 @@ protected:
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
 
         int i=0;
-        if( column ==i++)
-            return data->propertyValue<PropertyNames::Player_ID>();
+ //       if( column ==i++)
+ //           return data->propertyValue<PropertyNames::Player_ID>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::Player_Name>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::Team_ID>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::Position>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::BIDSIZE>();
         if( column ==i++)
@@ -632,10 +620,6 @@ protected:
         if( column ==i++)
             return data->propertyValue<PropertyNames::ASKSIZE>();
         if( column ==i++)
-            return data->propertyValue<PropertyNames::LAST>();
-        if( column ==i++)
-            return data->propertyValue<PropertyNames::LASTSIZE>();
-        if( column ==i++)
             return data->propertyValue<PropertyNames::HIGH>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::LOW>();
@@ -644,9 +628,28 @@ protected:
         if( column ==i++)
             return data->propertyValue<PropertyNames::CHANGE>();
         if( column ==i++)
-            return data->propertyValue<PropertyNames::TIC>();
+            return data->propertyValue<PropertyNames::LASTSIZE>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::MYPOS>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::MYAVG>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::MYPNL>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::LAST>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::Player_Name>();
 
         return QVariant();
+    }
+
+    QVariant getColumnSortData(quint32 column,ViewModel * data) {
+
+        auto ret = getColumnDisplayData(column,data);
+        if (column > 2 && column < 16 )
+            return ret.toInt();
+        else
+            return ret;
     }
 
     //int getColumnCount() { return 2; }
@@ -654,10 +657,16 @@ protected:
 private:
     void initialize() {
         QStringList headers;
-        headers << "id" << "player" << "" << "bid" << "ask" << ""
-                << "tdr" << "" << "hi" << "lo" << "vol"
-                 << "chg" << "pos", "pnl";
+        headers //<< "pid"
+                <<  "Player" << "Team" << "Pos" << "Bqty"
+                << "Bid" << "Ask" << "Aqty"
+                << "Hi" << "Lo" << "Vol"
+                << "Chg" << "Lqty" << "MyPos" << "MyAvg" << "MyPnL" << "Last"
+                << "Player";
         setHorizontalHeaders(headers);
+        for ( int i = 0; i<17; i++)
+            setAlign(i,Qt::AlignCenter);
+
     }
 };
 
@@ -709,6 +718,61 @@ private:
         for ( int i = 0; i<6; i++)
             setAlign(i,Qt::AlignCenter);
     }
+};
+
+
+class Ui_Trading;
+class PlayerListViewFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+    GameTableModel  * myGameModel;
+    bool myIsEnabled = true;
+    Ui_Trading *myuit;
+public:
+
+    PlayerListViewFilterProxyModel(GameTableModel  * gameModel= NULL,
+                                    Ui_Trading *uit = NULL,
+                                    QObject *parent = 0)
+                        : QSortFilterProxyModel(parent)
+    {
+        myGameModel = gameModel;
+        myuit = uit;
+    }
+
+    bool isEnabled(){
+        return myIsEnabled;
+    }
+
+    void disable(){
+        myIsEnabled = false;
+    }
+
+    void enable(){
+        myIsEnabled = true;
+    }
+
+    void bindFilter(){
+        /*
+        if (myPositionCombobox!=NULL){
+            QObject::connect(myPositionCombobox,
+                             SIGNAL(currentTextChanged(QString)),
+                             this,SLOT(invalidate()));
+        }
+        */
+
+        /*
+        if (myGameModelProxy!=NULL){
+            QObject::connect(myGameModelProxy,
+                             SIGNAL(modelReset()),
+                             this,SLOT(invalidate()));
+        }
+        */
+     }
+
+protected:
+    bool PlayerListViewFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+
 };
 
 

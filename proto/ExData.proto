@@ -6,6 +6,11 @@ message SettlePos {
     optional int32 price = 25;
 }
 
+message StorePos {
+    optional int32 qty = 20;
+    optional int32 price = 25;
+}
+
 message BookPos {
     optional string playerid = 30;
     repeated SettlePos positions = 40;
