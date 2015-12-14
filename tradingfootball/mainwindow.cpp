@@ -32,9 +32,9 @@ void MainWindow::initDefaultGuiDisplay(){
     ui->myLeaderBaordTableView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->myFantasyNamesCombo->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    ui->tabWidget->setCurrentWidget(ui->level2);
-    ui->tradingview->Init();
+    //ui->tabWidget->setCurrentWidget(ui->level2);
 
+    ui->tradingview->Init();
 }
 
 void MainWindow::initialize() {
@@ -136,6 +136,7 @@ void MainWindow::initialize() {
         return;
     }
 
+
     QSize qsize = ui->myCurrentWeekWidget->fixSize();
     //ui->myCurrentWeekWidget->adjustSize();
     QString qs2 = "XXXXXXXXXXXX";
@@ -166,7 +167,10 @@ void MainWindow::initialize() {
     //this->adjustSize();
 
     ui->level1->resize(qsize);
+    ui->tradingview->resize(qsize);
     ui->tabWidget->adjustSize();
+    ui->tabWidget->setAutoFillBackground(true);
+    ui->tabWidget->widget(1)->setAutoFillBackground(true);
     ui->centralwidget->adjustSize();
     this->adjustSize();
     //this->showMaximized();

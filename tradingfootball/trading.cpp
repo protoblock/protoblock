@@ -16,9 +16,6 @@ Trading::Trading(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->depthView->setModel(&mDepthTableModel);
-
-    ui->playerList->setModel(&mPlayerListModel);
 
     //ui->ordersTable->setModel(&mOrderTableModel);
     myFantasyName = "";
@@ -52,7 +49,8 @@ Trading::Trading(QWidget *parent) :
     ui->ordersTable->horizontalHeader()->setSectionResizeMode(4,QHeaderView::ResizeToContents);
     ui->ordersTable->horizontalHeader()->setSectionResizeMode(5,QHeaderView::ResizeToContents);
     ui->ordersTable->horizontalHeader()->setSectionResizeMode(6,QHeaderView::ResizeToContents);
-    ui->ordersTable->setItemDelegateForColumn(6,new OrdersTableCancelButton(ui->ordersTable, this));
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(7,QHeaderView::ResizeToContents);
+    ui->ordersTable->setItemDelegateForColumn(7,new OrdersTableCancelButton(ui->ordersTable, this));
     ui->ordersTable->setSelectionModel(&ordersSelectionModel);
 
     ui->ordersTable->setSortingEnabled(true);
@@ -62,12 +60,39 @@ Trading::Trading(QWidget *parent) :
             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
             this,SLOT(checkValidOrdersButtons()));
 
+    ui->depthView->setModel(&mDepthTableModel);
+
+    ui->playerList->setModel(&mPlayerListModel);
+
+    ui->depthView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
+    ui->depthView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
+    ui->depthView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+    ui->depthView->horizontalHeader()->setSectionResizeMode(3,QHeaderView::ResizeToContents);
+    ui->depthView->horizontalHeader()->setSectionResizeMode(4,QHeaderView::ResizeToContents);
+    ui->depthView->horizontalHeader()->setSectionResizeMode(5,QHeaderView::Stretch);
+
+    //auto w = ui->depthView->fontMetrics().width(" BIS SIZE BID ASK SK SIZE   ");
+    //ui->depthView->setMaximumWidth(w*2);
+
 
     //connect(ordersModel,SIGNAL(ordersIsAvailable()),this,SLOT(ordersIsAvailable()));
     //connect(ordersModel,SIGNAL(cancelOrder(QString,QByteArray)),this,SLOT(cancelOrder(QString,QByteArray)));
     //connect(ordersModel,SIGNAL(volumeAmountChanged(double, double)),this,SLOT(volumeAmountChanged(double, double)));
     //connect(ui.ordersTable->selectionModel(),SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),this,SLOT(checkValidOrdersButtons()));
 
+    /*
+    QLayout* layout = ui->logowidget->layout();
+    if(layout == NULL)
+    {
+        layout = new QGridLayout();
+        layout->setContentsMargins(0,0,0,0);
+        layout->setSpacing(0);
+        logowidget->setLayout(layout);
+        LogoButton* logoButton = new LogoButton;
+        connect(this, SIGNAL(themeChanged()), logoButton, SLOT(themeChanged()));
+        layout->addWidget(logoButton);
+    }
+    */
 }
 
 void Trading::Init() {
@@ -151,9 +176,9 @@ void Trading::playerListCliked(const QModelIndex &index) {
         mDepthTableModel.changeSymbol(playerid.toStdString());
         ui->playername->setText(data->propertyValue<QString,PropertyNames::Player_Name>());
         ui->position->setText(data->propertyValue<QString,PropertyNames::Position>());
-        ui->teamicon->setTextFormat(Qt::RichText);
-        QString team = data->propertyValue<QString,PropertyNames::Team_ID>();
-        ui->teamicon->setText("<img src=" + QString::fromStdString(Trading::icons[team.toStdString()]) +">");
+        //ui->teamicon->setTextFormat(Qt::RichText);
+        //QString team = data->propertyValue<QString,PropertyNames::Team_ID>();
+        //ui->teamicon->setText("<img src=" + QString::fromStdString(Trading::icons[team.toStdString()]) +">");
 
         ui->marketLast->setValue(data->propertyValue<QString,PropertyNames::LAST>().toInt());
         ui->marketBid->setValue(data->propertyValue<QString,PropertyNames::BID>().toInt());
@@ -162,8 +187,8 @@ void Trading::playerListCliked(const QModelIndex &index) {
         ui->marketHigh->setValue(data->propertyValue<QString,PropertyNames::HIGH>().toInt());
         ui->marketLow->setValue(data->propertyValue<QString,PropertyNames::LOW>().toInt());
         ui->marketVolume->setValue(data->propertyValue<QString,PropertyNames::VOLUME>().toInt());
-        ui->marketBids->setValue(data->propertyValue<QString,PropertyNames::BIDSIZE>().toInt());
-        ui->marketAsks->setValue(data->propertyValue<QString,PropertyNames::ASKSIZE>().toInt());
+        //ui->marketBids->setValue(data->propertyValue<QString,PropertyNames::BIDSIZE>().toInt());
+        //ui->marketAsks->setValue(data->propertyValue<QString,PropertyNames::ASKSIZE>().toInt());
         ui->buyprice->setValue(1);
         ui->buyqty->setValue(1);
         ui->sellprice->setValue(40);
@@ -176,6 +201,7 @@ void Trading::playerListCliked(const QModelIndex &index) {
         UpdateSells(0);
         UpdateBuys(0);
 
+        //ui->playername->setText(QString("whta"));
         myPlayerid = playerid.toStdString();
 
 
@@ -244,7 +270,7 @@ void Trading::SetCurrentWeekData(int week) {
                 .arg(game.info.home().data()).leftJustified(9,' ');
         auto ret = myt + QString(" - ")+ fromTime_t_toFantasyString(game.info.time());
 
-        ui->gamesCombo->insertItem(i++,ret,gameId);
+        //ui->gamesComboFilter->insertItem(i++,ret,gameId);
 
         for ( auto hh : { QString("home"), QString("away")} ) {
             for ( auto ho : (hh == "home") ? game.homeroster : game.awayroster ) {
@@ -411,7 +437,7 @@ void Trading::OnMarketTicker(fantasybit::MarketTicker* mt) {
         mPlayerListModel.updateItemProperty<PropertyNames::BID>(playerid,mt->price());
         if ( mt->symbol() == myPlayerid ) {
             ui->marketBid->setValue(mt->price());
-            ui->marketBids->setValue(mt->size());
+            //ui->marketBids->setValue(mt->size());
         }
     }
     else if ( mt->type() == MarketTicker_Type_ASK){
@@ -419,7 +445,7 @@ void Trading::OnMarketTicker(fantasybit::MarketTicker* mt) {
         mPlayerListModel.updateItemProperty<PropertyNames::ASKSIZE>(playerid,mt->size());
         if ( mt->symbol() == myPlayerid ) {
             ui->marketAsk->setValue(mt->price());;
-            ui->marketAsks->setValue(mt->size());
+            //ui->marketAsks->setValue(mt->size());
         }
     }
 
@@ -566,13 +592,13 @@ void Trading::UpdateSells(int p) {
 
 void Trading::on_buyPriceAsMarketAsk_clicked() {
     ui->buyprice->setValue(ui->marketAsk->value());
-    ui->buyqty->setValue(ui->marketAsks->value());
+    //ui->buyqty->setValue(ui->marketAsks->value());
 }
 
 void Trading::on_buyPriceAsMarketBid_clicked()
 {
     ui->buyprice->setValue(ui->marketBid->value());
-    ui->buyqty->setValue(ui->marketBids->value());
+    //ui->buyqty->setValue(ui->marketBids->value());
 }
 
 void Trading::on_buyPriceAsMarketLastPrice_clicked()
@@ -589,13 +615,13 @@ void Trading::on_sellPriceAsMarketLastPrice_clicked()
 void Trading::on_sellPriceAsMarketAsk_clicked()
 {
     ui->sellprice->setValue(ui->marketAsk->value());
-    ui->sellqty->setValue(ui->marketAsks->value());
+    //ui->sellqty->setValue(ui->marketAsks->value());
 }
 
 void Trading::on_sellPriceAsMarketBid_clicked()
 {
     ui->sellprice->setValue(ui->marketBid->value());
-    ui->sellqty->setValue(ui->marketBids->value());
+    //ui->sellqty->setValue(ui->marketBids->value());
 }
 
 //typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order> > > ordsnap_t;
@@ -746,8 +772,8 @@ void Trading::on_ordersCancelSelected_clicked()
 
 void Trading::checkValidOrdersButtons()
 {
-    ui->ordersCancelAllButton->setEnabled(mOrderTableModel.rowCount());
-    ui->ordersCancelSelected->setEnabled(ui->ordersTable->selectionModel()->selectedIndexes().count());
+    ///ui->ordersCancelAllButton->setEnabled(mOrderTableModel.rowCount());
+    //ui->ordersCancelSelected->setEnabled(ui->ordersTable->selectionModel()->selectedIndexes().count());
 }
 
 

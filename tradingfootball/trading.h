@@ -22,13 +22,18 @@ public:
         if (role != Qt::DisplayRole) return QVariant();
         switch (section) {
         case 0:
-            return "Bid Size";
+            return "    ";
         case 1:
-            return "Bid";
+            return "Bid Size";
         case 2:
-            return "Ask";
+            return "  Bid";
         case 3:
+            return "Ask  ";
+        case 4:
             return "Ask Size";
+        case 5:
+            return "    ";
+
         }
         return QVariant();
     }
@@ -40,13 +45,11 @@ public:
     int   columnCount(const QModelIndex & parent = QModelIndex() ) const {
         Q_UNUSED(parent);
         //if ( !current ) return 0;
-        return 4;
+        return 6;
     }
 
     QVariant   data(const QModelIndex & index, int role = Qt::DisplayRole ) const {
 
-        if (role != Qt::DisplayRole)
-            return QVariant();
 
         if ( current == nullptr)
             return QVariant();
@@ -54,18 +57,40 @@ public:
         if ( index.row() > current->size())
             return QVariant();
 
+        if (role == Qt::TextAlignmentRole) {
+            switch ( index.column() ) {
+                case 0:
+                case 1:
+                case 2:
+                    return Qt::AlignRight;
+                break;
+                case 3:
+                case 4:
+                case 5:
+
+                    return Qt::AlignLeft;
+                break;
+                default:
+                    return QVariant();
+                break;
+            }
+        }
+
+        if (role != Qt::DisplayRole)
+            return QVariant();
+
         int ret = 0;
         switch ( index.column() ) {
-            case 0:
+            case 1:
                 ret = current->at(index.row()).bs;
             break;
-            case 1:
+            case 2:
                 ret = current->at(index.row()).b;
             break;
-            case 2:
+            case 3:
                 ret = current->at(index.row()).a;
             break;
-            case 3:
+            case 4:
                 ret = current->at(index.row()).as;
             break;
             default:

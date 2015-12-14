@@ -51,5 +51,37 @@
         <file>png/Thumbs.db</file>
         <file>png/Titans.png</file>
         <file>png/Vikings.png</file>
+        <file>ico/49ers.ico</file>
+        <file>ico/Bears.ico</file>
+        <file>ico/Bengels.ico</file>
+        <file>ico/Bills.ico</file>
+        <file>ico/Broncos.ico</file>
+        <file>ico/Browns.ico</file>
+        <file>ico/Buccaneers.ico</file>
+        <file>ico/Cardinals.ico</file>
+        <file>ico/Chargers.ico</file>
+        <file>ico/Chiefs.ico</file>
+        <file>ico/Colts.ico</file>
+        <file>ico/Cowboys.ico</file>
+        <file>ico/Dolphins.ico</file>
+        <file>ico/Eagles.ico</file>
+        <file>ico/Falcons.ico</file>
+        <file>ico/Giants.ico</file>
+        <file>ico/Jaguar.ico</file>
+        <file>ico/Jets.ico</file>
+        <file>ico/Lions.ico</file>
+        <file>ico/Packers.ico</file>
+        <file>ico/Panthers.ico</file>
+        <file>ico/Patriots.ico</file>
+        <file>ico/Raiders.ico</file>
+        <file>ico/Rams.ico</file>
+        <file>ico/Ravens.ico</file>
+        <file>ico/Redskins.ico</file>
+        <file>ico/Saints.ico</file>
+        <file>ico/Seahawks.ico</file>
+        <file>ico/Steelers.ico</file>
+        <file>ico/Texans.ico</file>
+        <file>ico/Titans.ico</file>
+        <file>ico/Vikings.ico</file>
     </qresource>
 </RCC>

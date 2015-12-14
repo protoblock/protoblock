@@ -48,7 +48,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -733,16 +733,26 @@
        </layout>
       </widget>
       <widget class="QWidget" name="level2">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));</string>
+       </property>
        <attribute name="icon">
-        <iconset>
-         <normaloff>:/icons/tf_logo_PNG-2400x2400.png</normaloff>:/icons/tf_logo_PNG-2400x2400.png</iconset>
+        <iconset resource="resources/resources.qrc">
+         <normaloff>:/icons/tf_logo_PNG-158x160.png</normaloff>:/icons/tf_logo_PNG-158x160.png</iconset>
        </attribute>
        <attribute name="title">
         <string notr="true">Level 2 - Trading</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_8">
         <item row="0" column="0">
-         <widget class="Trading" name="tradingview" native="true"/>
+         <widget class="Trading" name="tradingview" native="true">
+          <property name="autoFillBackground">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
