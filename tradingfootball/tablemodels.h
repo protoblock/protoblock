@@ -818,7 +818,8 @@ public:
      }
 
 protected:
-    bool PlayerListViewFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+    bool PlayerListViewFilterProxyModel::filterAcceptsRow
+        (int sourceRow, const QModelIndex &sourceParent) const;
 
 };
 

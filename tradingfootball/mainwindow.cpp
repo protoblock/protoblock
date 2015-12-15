@@ -120,6 +120,9 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(onControlMessage(QString)),
                      ui->myCurrentWeekWidget,SLOT(onControlMessage(QString)));
 
+    QObject::connect(myLAPIWorker,SIGNAL(onControlMessage(QString)),
+                     ui->tradingview,SLOT(onControlMessage(QString)));
+
     /*
     QObject::connect(ui->tradingview,SIGNAL(SendOrder(fantasybit::ExchangeOrder)),
                       myLAPIWorker,SLOT(OnNewOrder(fantasybit::ExchangeOrder)));
@@ -187,6 +190,7 @@ void MainWindow::initialize() {
 
     setSlider(sliderright);
 
+    //ui->tabWidget->setCurrentIndex(1);
 }
 
 
@@ -283,6 +287,7 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
     ui->myLeaderBaordTableView->horizontalHeader()->
             setSectionResizeMode(QHeaderView::Stretch);
 
+   // showMaximized();
 }
 
 void MainWindow::refreshLeaderBoard(){

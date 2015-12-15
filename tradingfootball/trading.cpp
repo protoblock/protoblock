@@ -275,12 +275,13 @@ void Trading::OnOrderCancelSelected(QModelIndex index,QModelIndex index2) {
             int id = data->propertyValue<QString,PropertyNames::ORDERID>().toInt();
             emit CancelOrder(id);
         }
-
     }
 }
 
 void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
 
+    ui->buyit->setEnabled(true);
+    ui->sellit->setEnabled(true);
     index = myPlayerFilterProxy.data()->mapToSource(index);
 
     /*
@@ -350,11 +351,16 @@ void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
         mUpdatingS = mUpdatingB = true;
         mDepthTableModel.changeSymbol(playerid.toStdString());
         ui->playername->setText(data->propertyValue<QString,PropertyNames::Player_Name>());
-        ui->position->setText(data->propertyValue<QString,PropertyNames::Position>());
+        ui->positionTeam->setText(data->propertyValue<QString,PropertyNames::Position>());
         //ui->teamicon->setTextFormat(Qt::RichText);
         QString team = data->propertyValue<QString,PropertyNames::Team_ID>();
-        //ui->teamicon->setText("<img src=" + QString::fromStdString(Trading::icons[team.toStdString()]) +">");
+        //ui->teamicon->setText("<img src=" + QString::fromStdString(Trading::) +">");
+        //ui->positionTeam->setPixmap(QPixmap("icons[team.toStdString()]"));
+        int w = ui->currentTeam->width();
+        int h = ui->currentTeam->height();
 
+        ui->currentTeam->setPixmap(QPixmap(icons[team.toStdString()].data()).scaled(w,h,Qt::KeepAspectRatio));
+        // set a scaled pixmap to a w x h window keeping its aspect ratio
         ui->marketLast->setValue(data->propertyValue<QString,PropertyNames::LAST>().toInt());
         ui->marketBid->setValue(data->propertyValue<QString,PropertyNames::BID>().toInt());
         ui->marketAsk->setValue(data->propertyValue<QString,PropertyNames::ASK>().toInt());
@@ -382,7 +388,7 @@ void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
         ui->posAvgPrice->setValue(data->propertyValue<QString,PropertyNames::MYAVG>().toInt());
         ui->posQty->setValue(data->propertyValue<QString,PropertyNames::MYPOS>().toInt());
 
-        emit OnPlayerPosTeam(ui->playername->text(),team,ui->position->text());
+        emit OnPlayerPosTeam(ui->playername->text(),team,ui->positionTeam->text());
         //emit OnPriceChange(ui->marketLast->value());
 
     }
@@ -404,16 +410,62 @@ void Trading::SetFantasyName(std::string name,int balance) {
 
 void Trading::on_buyit_clicked()
 {
+    if ( ui->playername->text() == "Player Name" ) return;
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setWindowTitle(APPLICATION_NAME);
+
 #ifdef TRACE
     qDebug() << "level2 on_buyit_clicked";
 #endif
+    QString text = "Buy %1 contracts of %2 at price of %3?";
+    int result = QMessageBox::Cancel;
+    msgBox.setText(text.arg(ui->buyqty->value()).arg(ui->playername->text()).arg(ui->buyprice->value()));
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setButtonText(QMessageBox::Yes,"Send Buy Order");
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    //msgBox.setParent(ui->buyit);
+    result = msgBox.exec();
 
-    NewOrder(true);
+    if ( result == QMessageBox::Yes) {
+        NewOrder(true);
+        QMessageBox msgBox2;
+        msgBox2.setText(QString("Buy Order sent! Will be reflected in Open Orders or \"MyPos\" if accepted or expecuted"));
+        msgBox2.setStandardButtons(QMessageBox::Ok);
+        msgBox2.button(QMessageBox::Ok)->animateClick(15000);
+        //msgBox2.setParent(ui->ordersTableFrame);
+        msgBox2.exec();
+    }
 }
 
 void Trading::on_sellit_clicked()
 {
-    NewOrder(false);
+    if ( ui->playername->text() == "Player Name" ) return;
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setWindowTitle(APPLICATION_NAME);
+
+#ifdef TRACE
+    qDebug() << "level2 on_sellit_clicked";
+#endif
+    QString text = "Sell %1 contracts of %2 at price of %3?";
+    int result = QMessageBox::Cancel;
+    msgBox.setText(text.arg(ui->sellqty->value()).arg(ui->playername->text()).arg(ui->sellprice->value()));
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setButtonText(QMessageBox::Yes,"Send Sell Order");
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    //msgBox.setParent(ui->sellit);
+    result = msgBox.exec();
+
+    if ( result == QMessageBox::Yes) {
+        NewOrder(false);
+        QMessageBox msgBox2;
+        msgBox2.setText(QString("Sell Order sent!  Will be reflected in Open Orders or \"MyPos\" if accepted or expecuted"));
+        msgBox2.setStandardButtons(QMessageBox::Ok);
+        msgBox2.button(QMessageBox::Ok)->animateClick(15000);
+        //msgBox2.setParent(ui->ordersTableFrame);
+        msgBox2.exec();
+    }
 }
 
 
@@ -483,7 +535,7 @@ void Trading::SetCurrentWeekData(int week) {
         myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,qVariantFromValue<GameStatus_Status>(game.status));
 
         for ( auto hh : { QString("home"), QString("away")} ) {
-            for ( auto ho : (hh == "home") ? game.homeroster : game.awayroster ) {
+            for ( auto ho : (hh == QString("home")) ? game.homeroster : game.awayroster ) {
                 QString playerId = ho.first.data();
                 auto playerDetails = ho.second;
                 QString playerName;
@@ -492,7 +544,8 @@ void Trading::SetCurrentWeekData(int week) {
 
                 mPlayerListModel.updateItemProperty<PropertyNames::Game_ID>(playerId,gameId);
                 mPlayerListModel.updateItemProperty<PropertyNames::Player_ID>(ho.first.data(),ho.first.data());
-                mPlayerListModel.updateItemProperty<PropertyNames::Team_ID>(playerId,game.info.home().data());
+                mPlayerListModel.updateItemProperty<PropertyNames::Team_ID>(playerId,
+                                                      (hh == QString("home")) ? game.info.home().data() : game.info.away().data());
                 mPlayerListModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerName);
                 mPlayerListModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
 
@@ -634,6 +687,14 @@ void Trading::CancelOrder(int id) {
     RestfullClient rest(QUrl(PAPIURL.data()));
     //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
     rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
+
+    QMessageBox msgBox2;
+    msgBox2.setText(QString("Cancel Order(%1) sent!").arg(id));
+    msgBox2.setStandardButtons(QMessageBox::Ok);
+    msgBox2.button(QMessageBox::Ok)->animateClick(4000);
+    //msgBox2.setParent(ui->ordersTableFrame);
+    msgBox2.exec();
+
 }
 
 void Trading::OnMarketTicker(fantasybit::MarketTicker* mt) {
@@ -829,7 +890,7 @@ void Trading::SetMyPositions() {
             auto name = item->propertyValue<PropertyNames::Player_Name>();
             mOrderTableModel.updateItemProperty<PropertyNames::Player_Name>(o.refnum(),name);
             mOrderTableModel.updateItemProperty<PropertyNames::ORDERX>(o.refnum(),"");
-            ui->cancelOrdersList->addItem(o.DebugString().data(),o.refnum());
+            //ui->cancelOrdersList->addItem(o.DebugString().data(),o.refnum());
         }
 
         mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),p.second.first.netqty);
@@ -843,15 +904,13 @@ void Trading::SetMyPositions() {
     }
 }
 
-void Trading::on_pushButton_clicked()
-{
-}
+
 #ifdef AUTOMMMIKECLAY
 #include "playerloader.h"
 void Trading::on_pushButton_clicked()
 {
     MikeClayLoader mkl;
-    auto mproj = mkl.loadProjFromLink(14);
+    auto mproj = mkl.loadProjFromLink(15);
 
 
     for ( auto p : mproj ) {
@@ -910,10 +969,13 @@ void Trading::on_pushButton_clicked()
             //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
             rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 
-        } while(nextask = !nextask);`
+        } while(nextask = !nextask);
     }
 }
+#else
+void Trading::on_pushButton_clicked() {}
 #endif
+
 
 void Trading::cancelOrderByXButton()
 {
@@ -968,9 +1030,9 @@ void Trading::checkValidOrdersButtons()
 
 void Trading::on_cancelOrderListButton_clicked()
 {
-    int oid = ui->cancelOrdersList->currentData().toInt();
-    if ( oid != 0 )
-        emit CancelOrder(oid);
+    //int oid = ui->cancelOrdersList->currentData().toInt();
+    //if ( oid != 0 )
+    //    emit CancelOrder(oid);
 }
 
 void Trading::OnNewPos(fantasybit::FullPosition fp) {
@@ -982,6 +1044,17 @@ void Trading::OnNewPos(fantasybit::FullPosition fp) {
     }
 }
 
+void Trading::onControlMessage(QString msg) {
+    if ( msg.contains("[t.f]")) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setWindowTitle(APPLICATION_NAME);
+
+        msgBox.setText(msg);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+    }
+}
 
 /*
 decltype(Trading::icons) Trading::icons{
@@ -1054,3 +1127,4 @@ decltype(Trading::icons) Trading::icons{
     {"TEN",":/NFL/ico/Titans.ico"},
     {"MIN",":/NFL/ico/Vikings.ico"},
 };
+

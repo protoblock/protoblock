@@ -442,6 +442,9 @@ void TestingWindow::on_claimname_clicked()
 void TestingWindow::TradeTimer() {
     SignedTransaction st{};
     StampedTrans stt{};
+
+    SqlStuff sql("satoshifantasy","trades");
+    mySeq = sql.lastSeq();
     while(true) {
         auto txstr = RestfullService::myGetTr();
         if ( !st.ParseFromString(txstr) ) {
@@ -504,7 +507,7 @@ void TestingWindow::Timer() {
 
         //st.id();
         Node::addTxPool(st.id(), txstr);
-        if ( count >= 100)
+        if ( count >= 500)
             break;
     }
 

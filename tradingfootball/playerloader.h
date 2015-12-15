@@ -85,6 +85,32 @@ struct SqlStuff {
     }
 
 
+    int lastSeq() {
+        QSqlDatabase db = QSqlDatabase::database (conname);
+        QSqlQuery query(db);
+
+        query.prepare("SELECT max(SeqNum) FROM trades WHERE IsProcessed = 1");
+
+        //query.bindValue(":seqn",seqnum);
+        if ( ! query.exec() ) {
+            qDebug() << " exec ret " << query.lastError().databaseText();
+            db.close();
+            return 0;
+        }
+        db.close();
+
+
+        qDebug() << query.executedQuery() << query.isValid() <<
+                    query.isActive();
+
+
+        auto ppid =  query.value(0);
+        int pid = ppid.toInt();
+        return pid;
+
+
+    }
+
     void dumpTx(int seqnum) {
         QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery query(db);
@@ -461,8 +487,6 @@ struct SqlStuff {
         insertQuery.bindValue(":tictime",QDateTime::currentDateTimeUtc());
         insertQuery.bindValue(":seq",seqnum);
 
-
-
         bool good = insertQuery.exec();
         db.close();
 
@@ -475,7 +499,7 @@ struct SqlStuff {
 
     }
 
-    void openprice(const string &inplayerid, int price) {
+    void openprice(const string &inplayerid, int price, int week) {
 
         QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
         QSqlQuery insertQuery(db);
@@ -486,6 +510,25 @@ struct SqlStuff {
                 "(playerid,price) "
                 " VALUES(:pid, :pr)");
 
+        insertQuery.bindValue(":pid",std::stoi(inplayerid));
+        insertQuery.bindValue(":pr",price);
+
+        bool good = insertQuery.exec();
+        db.close();
+
+        qDebug() << " sql query " << insertQuery.executedQuery();
+
+        if ( ! good ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+            qDebug() << price;
+            return;
+        }
+
+        TradeTic tt;
+        tt.set_price(price);
+        tt.set_size(0);
+
+        fill(inplayerid,&tt,week,0,0);
         /*
             ("REPLACE into player_contract_quote "
              "(playerid,price,`change`) "
@@ -504,24 +547,12 @@ struct SqlStuff {
         ("UPDATE player_contract_quote "
         "set price = :pr, volume = :vol, `change` = :chg where playerid = :pid"
         "IF @@ROWCOUNT=0"
-            "INSERT into player_contract_quote "
+            "INSERT into pla    yer_contract_quote "
             "(playerid,price,volume,`change`) "
             " VALUES(:pid, :pr, :vol, :chg)");
             */
 
-        insertQuery.bindValue(":pid",std::stoi(inplayerid));
-        insertQuery.bindValue(":pr",price);
 
-        bool good = insertQuery.exec();
-        db.close();
-
-        qDebug() << " sql query " << insertQuery.executedQuery();
-
-        if ( ! good ) {
-            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
-            qDebug() << price;
-            return;
-        }
     }
 
     void fantasyname(FantasyNameHash &fnh) {

@@ -463,6 +463,7 @@ private slots:
 
     void on_cancelOrderListButton_clicked();
 
+    void onControlMessage(QString);
 
 public slots:
     void onGameStart(string gameId);

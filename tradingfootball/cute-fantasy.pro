@@ -27,13 +27,17 @@ DEFINES += TRADE_FEATURE
 
 DEFINES += BUILD_STABLE
 DEFINES += ALLOW_DEBUG
-#DEFINES += PLAYER_ID
+DEFINES += PLAYER_ID
 DEFINES += TRACE
-#DEFINED += AUTOMMMIKECLAY
+#DEFINES += AUTOMMMIKECLAY
 #DEFINES += WRITE_BOOTSTRAP
-DEFINES += CHECKPOINTS
+#DEFINES += CHECKPOINTS
 
 contains(DEFINES, TIMEAGENTWRITEFILLS){
+    QT += sql
+}
+
+contains(DEFINES, AUTOMMMIKECLAY){
     QT += sql
 }
 
@@ -138,6 +142,8 @@ CONFIG(release, debug|release) {
 
 include (./boost-includes.pri)
 include (./cute-fantasy.pri)
+
+FORMS +=
 
 
 

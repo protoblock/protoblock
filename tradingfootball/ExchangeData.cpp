@@ -1316,6 +1316,7 @@ void ExchangeData::OnTradeSessionStart(int week) {
 
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
 
+        SqlStuff sql("satoshifantasy","openprice");
         for ( auto mdl1 : mMarketQuote)  {
             if ( mdl1.second.has_l() ) continue;
 
@@ -1334,8 +1335,7 @@ void ExchangeData::OnTradeSessionStart(int week) {
 
             ohlc.set_open(price);
             {
-                SqlStuff sql("satoshifantasy","openprice");
-                sql.openprice(mdl1.first,price);
+                sql.openprice(mdl1.first,price,week);
             }
 
           }

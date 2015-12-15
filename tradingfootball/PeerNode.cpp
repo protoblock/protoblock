@@ -173,9 +173,12 @@ bool Node::SyncTo(int32_t gh) {
     bool forked  = false;
     string previd;
     int count = 0;
+#ifdef CHECKPOINTS
     if ( current_hight == Commissioner::DeveloperCheckpointHigh())
         previd = Commissioner::DeveloperCheckPointId();
-    else {
+    else
+#endif
+    {
         auto ob = getLocalBlock(current_hight, true);
         if ( ob )
             previd = FantasyAgent::BlockHash(*ob);
@@ -335,6 +338,7 @@ int32_t Node::getLastLocalBlockNum() {
     //Block sb{};
     //sb.ParseFromString(it->value().ToString());
     //qWarning() << "yoyo" << sb.signedhead().head().num();
+    //auto previd = FantasyAgent::BlockHash(sb);
 
     int32_t num = *(reinterpret_cast<const int32_t *>(slice.data()));
 
