@@ -19,39 +19,88 @@ using namespace fantasybit;
 
 #ifdef CHECKPOINTS
 void NFLStateData::InitCheckpoint() {
-    Reader<GlobalState> reader{ GET_ROOT_DIR() + " /GlobalState.txt"};
+
+    leveldb::WriteOptions write_sync;
+    write_sync.sync = true;
+    leveldb::Options options;
+    options.create_if_missing = true;
+    leveldb::Status status;
+
+
+    Reader<GlobalState> reader{ GET_ROOT_DIR() + "bootstrap/GlobalState.txt"};
     GlobalState gs;
     reader.ReadNext(gs);
     leveldb::DB *db2;
     leveldb::DB::Open(options, filedir("statusstore"), &db2);
     db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
-    delete db2;
 
-    Reader<GameStatus> reader2{ GET_ROOT_DIR() + "bootstrap/GameStatus.txt" };
-    GameStatus gas;
+
+    leveldb::DB *db4;
+    leveldb::DB::Open(options, filedir("staticstore"), &db4);
+
+    Reader<ScheduleData> reader5{ GET_ROOT_DIR() + "bootstrap/WeeklySchedule.txt" };
+    ScheduleData sd;
+    while ( reader5.ReadNext(sd) ) {
+        string key = "scheduleweek:" + to_string(sd.week());
+        db4->Put(write_sync, key,
+                       sd.weekly().SerializeAsString() );
+    }
+
+    Reader<GameData> reader2{ GET_ROOT_DIR() + "bootstrap/GameData.txt" };
+    GameData gas;
     while ( reader2.ReadNext(gas) ) {
         gas.ByteSize();
-        string key = "gamestatus:" + gas.;
+        string key = "gamestatus:" + gas.gameid();
+        db2->Put(leveldb::WriteOptions(), key, gas.status().SerializeAsString());
 
     }
 
+    Reader<GameResult> reader22{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
+    GameResult gr;
+    while ( reader22.ReadNext(gr) ) {
+        gas.ByteSize();
+        string key = "gameresult:" + gr.gameid();
+        db4->Put(write_sync, key,
+                       gr.SerializeAsString() );
+
+    }
+
+
+
+    leveldb::DB *db3;
+    leveldb::DB::Open(options, filedir("playerstore"), &db3);
     Reader<PlayerData> reader3{ GET_ROOT_DIR() + "bootstrap/PlayerData.txt"};
     PlayerData pd;
     while ( reader3.ReadNext(pd) ) {
         pd.ByteSize();
+        db2->Put(write_sync, pd.playerid(),
+                       pd.player_status().SerializeAsString() );
+        db3->Put(write_sync, pd.playerid(),
+                       pd.player_base().SerializeAsString() );
+
     }
+
+    delete db2;
+    delete db3;
+    delete db4;
+
+
+
+
+    leveldb::DB *db5;
+    status = leveldb::DB::Open(options, filedir("namestore"), &db5);
+
 
     Reader<FantasyNameBal> reader4{ GET_ROOT_DIR() + "bootstrap/FantasyNameBal.txt"};
     FantasyNameBal fnb;
     while ( reader4.ReadNext(fnb) ) {
-        fnb.ByteSize();
-    }
+        auto hash = FantasyName::name_hash(fnb.name());
 
-    Reader<WeeklySchedule> reader5{ GET_ROOT_DIR() + "bootstrap/WeeklySchedule.txt" };
-    WeeklySchedule ws;
-    while ( reader5.ReadNext(ws) ) {
-        ws.ByteSize();
+        leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+        db5->Put(write_sync, hkey, fnb.SerializeAsString());
     }
+    delete db5;
+
 }
 #endif
 
@@ -144,9 +193,9 @@ void NFLStateData::init() {
 
     {
 #ifdef WRITE_BOOTSTRAP
-        Writer<WeeklySchedule> writer{ GET_ROOT_DIR() + "bootstrap/WeeklySchedule.txt" };
+        Writer<ScheduleData> writer{ GET_ROOT_DIR() + "bootstrap/WeeklySchedule.txt" };
 
-        Writer<GameStatus> writer2{ GET_ROOT_DIR() + "bootstrap/GameStatus.txt" };
+        Writer<GameData> writer2{ GET_ROOT_DIR() + "bootstrap/GameData.txt" };
         Writer<GameResult> writer3{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
 #endif
         for (int i=1; i<=17;i++) {
@@ -162,7 +211,10 @@ void NFLStateData::init() {
                 continue;
             }
 #ifdef WRITE_BOOTSTRAP
-            writer(ws);
+            ScheduleData sd;
+            sd.set_week(i);
+            sd.mutable_weekly()->CopyFrom(ws);
+            writer(sd);
 #endif
             for ( auto game : ws.games()) {
                 MyGameInfo[game.id()] = game;
@@ -171,8 +223,12 @@ void NFLStateData::init() {
                 string temp;
                 if ( statusstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
                     GameStatus gs;
-                    if (gs.ParseFromString(temp) )
-                        writer2(gs);
+                    if (gs.ParseFromString(temp) ) {
+                        GameData gd;
+                        gd.set_gameid(game.id());
+                        gd.mutable_status()->CopyFrom(gs);
+                        writer2(gd);
+                    }
                 }
                 GameResult gamer;
                 if ( GetGameResult(game.id(),gamer))

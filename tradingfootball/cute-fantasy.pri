@@ -41,7 +41,11 @@ SOURCES += \
     $$PWD/FantasyAgent.cpp \
     $$PWD/fnametool.cpp \
     $$PWD/timestate.cpp \
-    $$PWD/ExchangeData.cpp
+    $$PWD/ExchangeData.cpp \
+    $$PWD/trading.cpp \
+    $$PWD/julylightchanges.cpp
+
+
 
 
 DISTFILES += \
@@ -106,7 +110,10 @@ HEADERS += \
     $$PWD/RunGuard.h \
     $$PWD/fnametool.h \
     $$PWD/timestate.h \
-    $$PWD/ExchangeData.h
+    $$PWD/ExchangeData.h \
+    $$PWD/trading.h \
+    $$PWD/julylightchanges.h
+
 
 
 FORMS += \       
@@ -117,7 +124,9 @@ FORMS += \
     $$PWD/nextweekwidget.ui \
     $$PWD/waitmodaldialog.ui \
     $$PWD/animationandmessagewidget.ui \
-    $$PWD/fnametool.ui
+    $$PWD/fnametool.ui \
+    $$PWD/trading.ui
+
 
 
 RESOURCES += \
@@ -140,21 +149,3 @@ contains(DEFINES, MIKECLAYIMPORT){
     HEADERS += $$PWD/playerloader.h
 }
 
-contains(DEFINES, TRADE_FEATURE){
-    FORMS += \
-        trading.ui
-
-    HEADERS += \
-        trading.h
-
-    SOURCES += \
-        trading.cpp
-
-    HEADERS += \
-        julylightchanges.h
-
-    SOURCES += \
-        julylightchanges.cpp
-
-
-}

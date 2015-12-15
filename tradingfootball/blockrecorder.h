@@ -8,10 +8,11 @@ namespace fantasybit {
 
 class BlockRecorder {
 
-    static void InitCheckpoint(int32_t);
     std::unique_ptr<leveldb::DB> blockstatus;  // lastblock -> status // last block processed
     leveldb::WriteOptions write_sync{};
     int32_t lastBlock = 0;
+public:
+    static void InitCheckpoint(int32_t);
 
 //public slots:
 

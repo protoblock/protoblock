@@ -191,6 +191,10 @@ void Trading::Init() {
 
        QObject::connect(theLAPIWorker,SIGNAL(GameStart(string)),this,SLOT(onGameStart(string)));
 
+       QObject::connect(theLAPIWorker,SIGNAL(NameBal(fantasybit::FantasyNameBal)),
+                        this,SLOT(OnNameBalance(fantasybit::FantasyNameBal)));
+
+
        /*
        FantasyNameData *namedata = &(theLAPIWorker->NameData());
        QObject::connect(namedata,SIGNAL(NewFantasyNameOrder(fantasybit::Order&)),
@@ -384,7 +388,7 @@ void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
     }
 }
 
-void Trading::SetFantasyName(std::string name) {
+void Trading::SetFantasyName(std::string name,int balance) {
 #ifdef TRACE
     qDebug() << "level2 trading SetFantasyName" << name;
 #endif
@@ -392,6 +396,7 @@ void Trading::SetFantasyName(std::string name) {
     if ( name != myFantasyName ) {
         ui->fantastname->setText(name.data());
         myFantasyName = name;
+        ui->fantasybitSkill->setValue(balance);
         SetMyPositions();
     }
 }
@@ -923,6 +928,13 @@ void Trading::cancelOrderByXButton()
 
 }
 
+void Trading::OnNameBalance(fantasybit::FantasyNameBal namebal) {
+    if ( namebal.name() == myFantasyName ) {
+        ui->fantasybitSkill->setValue(namebal.bits());
+        ui->fantasybitStake->setValue(namebal.stake());
+    }
+
+}
 
 void Trading::on_ordersCancelSelected_clicked()
 {

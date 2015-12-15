@@ -173,9 +173,13 @@ bool Node::SyncTo(int32_t gh) {
     bool forked  = false;
     string previd;
     int count = 0;
-    auto ob = getLocalBlock(current_hight, true);
-    if ( ob )
-        previd = FantasyAgent::BlockHash(*ob);
+    if ( current_hight == Commissioner::DeveloperCheckpointHigh())
+        previd = Commissioner::DeveloperCheckPointId();
+    else {
+        auto ob = getLocalBlock(current_hight, true);
+        if ( ob )
+            previd = FantasyAgent::BlockHash(*ob);
+    }
     while ( current_hight < global_height ) {
 
         if (count > 50) return false;
@@ -430,7 +434,7 @@ fc::optional<Block> Node::getLocalBlock(int32_t num, bool force) {
 fc::optional<Block> Node::getGlobalBlock(int32_t num) {
     fc::optional<Block> block;
 
-    //if ( height < num ) return;
+    //if ( height < num  ) return;
     string bs = RestfullService::getBlk(PAPIURL.data(),num);
     Block bb{};
     bb.ParseFromString(bs);

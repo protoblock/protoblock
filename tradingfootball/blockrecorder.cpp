@@ -8,7 +8,10 @@ using namespace fantasybit ;
 void BlockRecorder::InitCheckpoint(int32_t lastblock) {
     leveldb::DB *db1;
     leveldb::Status status;
-    leveldb::DB::Open(leveldb::Options(), filedir("blockstatus"), &db1);
+    leveldb::Options options;
+    options.create_if_missing = true;
+
+    leveldb::DB::Open(options, filedir("blockstatus"), &db1);
     leveldb::Slice value((char*)&lastblock, sizeof(int32_t));
     db1->Put(leveldb::WriteOptions(), "lastblock", value);
     delete db1;

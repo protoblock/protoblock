@@ -35,6 +35,9 @@ public:
         return 1966;
     }
 
+    static string DeveloperCheckPointId() {
+        return "593847b623ba54ad105c0b22a41631f535911905eb24cd6e7cabb392009c44d2";
+    }
     static Block getCheckPoint() {
         Block b;
         return b;

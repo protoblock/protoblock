@@ -136,7 +136,7 @@ private:
     WeeklySchedule getWeeklyStaticSchedule(int week);
     int week();
 
-    std::string filedir(const std::string &in);
+    static std::string filedir(const std::string &in);
 };
 
 }

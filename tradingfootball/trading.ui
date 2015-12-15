@@ -44,8 +44,11 @@
       <property name="bottomMargin">
        <number>1</number>
       </property>
-      <property name="spacing">
-       <number>1</number>
+      <property name="horizontalSpacing">
+       <number>3</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>2</number>
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="fantastname">
@@ -301,7 +304,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="fantasybitStake_2">
+           <widget class="QSpinBox" name="fantasybitSkill">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>

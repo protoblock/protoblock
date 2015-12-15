@@ -433,7 +433,7 @@ public:
     int mCurrentWeek = 0;
     string myFantasyName;
     string myPositionsName;
-    void SetFantasyName(std::string name);
+    void SetFantasyName(std::string name, int);
 
     void SetMyPositions();
 private slots:
@@ -501,6 +501,7 @@ public slots:
     void invalidateFilters(bool);
     void invalidateFilters(int);
 
+    void OnNameBalance(fantasybit::FantasyNameBal);
 signals:
     void SendOrder(fantasybit::ExchangeOrder);
     void OnPlayerPosTeam(QString,QString,QString);
