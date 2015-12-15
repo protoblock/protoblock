@@ -3030,7 +3030,7 @@
           <item>
            <widget class="QComboBox" name="cancelOrdersList">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -3063,6 +3063,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="cancelOrderListButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Cancel</string>
             </property>

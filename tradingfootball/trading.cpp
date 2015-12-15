@@ -15,8 +15,6 @@ Trading::Trading(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->orderFilterlayout->setEnabled(false);
-
     int i =0;
     ui->posComboFilter->insertItem(i++,"ALL","ALL");
     ui->posComboFilter->insertItem(i++,"QB","QB");
