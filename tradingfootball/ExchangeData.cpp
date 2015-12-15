@@ -1286,8 +1286,8 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
             if ( it2 == end(mOpenOrders)) {
 #ifdef TRACE
                 qDebug() << "level2 GetOrdersPositionsByName not cound" << oid;
-                continue;
 #endif
+                continue;
             }
             OpenOrder &ord = mOpenOrders.at(oid);
 #ifdef TRACE

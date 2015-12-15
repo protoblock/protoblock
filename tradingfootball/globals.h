@@ -28,15 +28,15 @@
 
 
 #ifndef MAJOR_VERSION
-  #define MAJOR_VERSION  1
+  #define MAJOR_VERSION  2
 #endif
 
 #ifndef MINOR_VERSION
-  #define MINOR_VERSION  2
+  #define MINOR_VERSION  0
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 3
+  #define REVISION_NUMBER 0
 #endif
 
 #ifndef BUILD_NUMBER
