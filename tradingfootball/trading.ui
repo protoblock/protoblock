@@ -3026,7 +3026,7 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_23">
+         <layout class="QHBoxLayout" name="orderFilterlayout">
           <item>
            <widget class="QComboBox" name="cancelOrdersList">
             <property name="enabled">

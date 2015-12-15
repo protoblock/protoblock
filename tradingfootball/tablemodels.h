@@ -598,18 +598,32 @@ public:
     }
     ~PlayerListModal() {}
 
+
+
 protected:
+
+    int bid = 4;
+    int ask = 5;
+    int last = 15;
+    int mypos = 12;
+    int myavg = 13;
+    int mypnl = 14;
+    int change = 10;
+    int name1 = 0;
+    int team = 1;
+    int pos = 2;
+    int name2 = 16;
 
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
 
         int i=0;
  //       if( column ==i++)
  //           return data->propertyValue<PropertyNames::Player_ID>();
-        if( column ==i++)
+        if( column == i++)
             return data->propertyValue<PropertyNames::Player_Name>();
-        if( column ==i++)
+        if( column == i++)
             return data->propertyValue<PropertyNames::Team_ID>();
-        if( column ==i++)
+        if( column ==  i++)
             return data->propertyValue<PropertyNames::Position>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::BIDSIZE>();
@@ -625,19 +639,19 @@ protected:
             return data->propertyValue<PropertyNames::LOW>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::VOLUME>();
-        if( column ==i++)
+        if( column == i++)
             return data->propertyValue<PropertyNames::CHANGE>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::LASTSIZE>();
-        if( column ==i++)
+        if( column == i++)
             return data->propertyValue<PropertyNames::MYPOS>();
-        if( column ==i++)
+        if( column == i++)
             return data->propertyValue<PropertyNames::MYAVG>();
-        if( column ==i++)
+        if( column ==  i++)
             return data->propertyValue<PropertyNames::MYPNL>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::LAST>();
-        if( column ==i++)
+        if( column == i++)
             return data->propertyValue<PropertyNames::Player_Name>();
 
         return QVariant();
@@ -646,10 +660,21 @@ protected:
     QVariant getColumnSortData(quint32 column,ViewModel * data) {
 
         auto ret = getColumnDisplayData(column,data);
-        if (column > 2 && column < 16 )
-            return ret.toInt();
-        else
+        if (
+                (column == change ) ||
+                (column == mypos ) ||
+                (column == mypnl ) ||
+                (column == myavg ) )
+            return abs(ret.toInt());
+
+        if  (
+                (column == name2 ) ||
+                (column == name1 ) ||
+                (column == team ) ||
+                (column == pos ) )
             return ret;
+
+        return ret.toInt();
     }
 
     //int getColumnCount() { return 2; }
@@ -664,8 +689,15 @@ private:
                 << "Chg" << "Lqty" << "MyPos" << "MyAvg" << "MyPnL" << "Last"
                 << "Player";
         setHorizontalHeaders(headers);
-        for ( int i = 0; i<17; i++)
+        for ( int i = 1; i<columnCount()-1; i++)
             setAlign(i,Qt::AlignCenter);
+
+        setBold(bid,true);
+        setBold(ask,true);
+        setBold(last,true);
+        setBold(mypos,true);
+        setBold(myavg,true);
+        setBold(mypnl,true);
 
     }
 };
@@ -683,7 +715,22 @@ public:
     }
     ~OrderTablesModel() {}
 
+
+    QVariant columnData(uint column,const QModelIndex & index){
+        ViewModel *value = getItemByIndex(index);
+        if (value == NULL) return QVariant();
+        return getColumnDecorateData(column,value);
+    }
 protected:
+
+    QVariant getColumnDecorateData(uint column, ViewModel *value){
+      if (column==7){
+              return QPixmap(":/icons/redx.png");
+      }
+      return QVariant();
+    }
+
+
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
 
         int i=0;
@@ -775,7 +822,41 @@ protected:
 
 };
 
+class OrdersListViewFilterProxyModel : public QSortFilterProxyModel {
+    Q_OBJECT
 
+    bool myIsEnabled = true;
+    Ui_Trading *myuit;
+public:
+
+    OrdersListViewFilterProxyModel(Ui_Trading *uit = NULL,
+                                    QObject *parent = 0)
+                        : QSortFilterProxyModel(parent)
+    {
+        myuit = uit;
+    }
+
+    bool isEnabled(){
+        return myIsEnabled;
+    }
+
+    void disable(){
+        myIsEnabled = false;
+    }
+
+    void enable(){
+        myIsEnabled = true;
+    }
+
+    void bindFilter(){}
+
+protected:
+    bool OrdersListViewFilterProxyModel::filterAcceptsRow
+    (int sourceRow, const QModelIndex &sourceParent) const {
+        return true;
+    }
+
+};
 
 #endif // TABLEMODELS_H
 

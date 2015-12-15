@@ -59,7 +59,7 @@ public slots:
     void OnPlayerStatusChange(pair<string, fantasybit::PlayerStatus> in);
     void onSendFantasyNameProjection(QString fantasyName);
     void leaderboardCliked(const QModelIndex & index);
-
+    void UpdateTab(QString,QString,QString);
 private slots:
     void on_myFantasyNamesCombo_currentIndexChanged(int index);
     void on_myClaimFantasyNameButton_clicked();

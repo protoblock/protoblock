@@ -125,7 +125,10 @@ void MainWindow::initialize() {
                       myLAPIWorker,SLOT(OnNewOrder(fantasybit::ExchangeOrder)));
     */
 
-    //wake up core thread
+    //wake up core thread/
+    QObject::connect(ui->tradingview,SIGNAL(OnPlayerPosTeam(QString,QString,QString)),
+                     this,SLOT(UpdateTab(QString,QString,QString)));
+
     Core::instance()->guiIsAwake();
 #ifndef DATAAGENTGUI
     myWaitDialog.startExec();
@@ -190,6 +193,11 @@ void MainWindow::initialize() {
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::UpdateTab(QString player,QString team,QString pos) {
+    ui->tabWidget->setTabIcon(1,QIcon(QPixmap(Trading::icons[team.toStdString()].data())));
+    ui->tabWidget->setTabText(1,QString("%1 (%2) - trading").arg(player,pos));
 }
 
 void MainWindow::on_myNextWeek_clicked()

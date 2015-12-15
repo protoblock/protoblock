@@ -491,8 +491,8 @@ public slots:
             SetMyPositions();
     }
     void OnplayerListSelection(QModelIndex, QModelIndex);
-    void OnplayerListSelection(QItemSelection, QItemSelection);
-
+    //void OnplayerListSelection(QItemSelection, QItemSelection);
+    void OnOrderCancelSelected(QModelIndex, QModelIndex);
     void cancelOrder(QString s, QByteArray b) {
         qDebug() << " level2 cancel " << s << b;
     }
@@ -503,6 +503,8 @@ public slots:
 
 signals:
     void SendOrder(fantasybit::ExchangeOrder);
+    void OnPlayerPosTeam(QString,QString,QString);
+
     //void SendOrder();
 
 private:
@@ -510,12 +512,13 @@ private:
     DepthTablesModel mDepthTableModel;
     PlayerListModal mPlayerListModel;
     OrderTablesModel mOrderTableModel;
-    QSortFilterProxyModel *ordersSortModel;
-    QItemSelectionModel ordersSelectionModel;
+    //QSortFilterProxyModel *ordersSortModel;
+    QItemSelectionModel *ordersSelectionModel;
     QItemSelectionModel *playersSelectionModel;
     GameTableModel  myGameTableModel{WeekDisplayType::CurrentWeek};
-
+    //OrdersTableCancelButton myOrdersTableCancelButtonDelgate;
     QScopedPointer<PlayerListViewFilterProxyModel>  myPlayerFilterProxy;
+    QScopedPointer<OrdersListViewFilterProxyModel>  myOrdersFilterProxy;
 
     std::vector<JulyLightChanges *> mJLC;
     bool mUpdatingS = false;

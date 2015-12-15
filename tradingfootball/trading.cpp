@@ -6,7 +6,6 @@
 #include "RestFullCall.h"
 #include "dataservice.h"
 #include "julylightchanges.h"
-#include "orderstablecancelbutton.h"
 
 using namespace fantasybit;
 
@@ -16,9 +15,23 @@ Trading::Trading(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->orderFilterlayout->setEnabled(false);
+
+    int i =0;
+    ui->posComboFilter->insertItem(i++,"ALL","ALL");
+    ui->posComboFilter->insertItem(i++,"QB","QB");
+    ui->posComboFilter->insertItem(i++,"RB","RB");
+    ui->posComboFilter->insertItem(i++,"WR","WR");
+    ui->posComboFilter->insertItem(i++,"TE","TE");
+    ui->posComboFilter->insertItem(i++,"K","K");
+    ui->posComboFilter->insertItem(i++,"D","D");
 
 
-
+    ui->teamComboFilter->insertItem(i++,"ALL","ALL");
+    for (int i=0;i<Commissioner::GENESIS_NFL_TEAMS.size();i++) {
+        ui->teamComboFilter->insertItem(i+1,Commissioner::GENESIS_NFL_TEAMS[i].data(),
+                                        Commissioner::GENESIS_NFL_TEAMS[i].data());
+    }
 
     //ui->ordersTable->setModel(&mOrderTableModel);
     myFantasyName = "";
@@ -37,32 +50,6 @@ Trading::Trading(QWidget *parent) :
     //mJLC.push_back(new JulyLightChanges(ui->marketLast));
     mJLC.push_back(new JulyLightChanges(ui->fantasybitStake));
     mJLC.push_back(new JulyLightChanges(ui->fantasybitPnl, true));
-
-    //ordersModel=new OrdersModel;
-    ordersSortModel=new QSortFilterProxyModel;
-    ordersSortModel->setSortRole(Qt::EditRole);
-    ordersSortModel->setFilterRole(Qt::WhatsThisRole);
-    ordersSortModel->setDynamicSortFilter(true);
-    ordersSortModel->setSourceModel(&mOrderTableModel);
-    ui->ordersTable->setModel(ordersSortModel);
-    ui->ordersTable->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-    ui->ordersTable->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
-    ui->ordersTable->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
-    ui->ordersTable->horizontalHeader()->setSectionResizeMode(3,QHeaderView::ResizeToContents);
-    ui->ordersTable->horizontalHeader()->setSectionResizeMode(4,QHeaderView::ResizeToContents);
-    ui->ordersTable->horizontalHeader()->setSectionResizeMode(5,QHeaderView::ResizeToContents);
-    ui->ordersTable->horizontalHeader()->setSectionResizeMode(6,QHeaderView::ResizeToContents);
-    ui->ordersTable->horizontalHeader()->setSectionResizeMode(7,QHeaderView::ResizeToContents);
-    ui->ordersTable->setItemDelegateForColumn(7,new OrdersTableCancelButton(ui->ordersTable, this));
-    ui->ordersTable->setSelectionModel(&ordersSelectionModel);
-
-    ui->ordersTable->setSortingEnabled(true);
-    ui->ordersTable->sortByColumn(0);
-
-    connect(ui->ordersTable->selectionModel(),
-            SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-            this,SLOT(checkValidOrdersButtons()));
-
     ui->depthView->setModel(&mDepthTableModel);
 
 
@@ -91,10 +78,11 @@ Trading::Trading(QWidget *parent) :
                      SIGNAL(currentChanged(QModelIndex,QModelIndex)),
                      this, SLOT(OnplayerListSelection(QModelIndex,QModelIndex)));
 
+    /*
     QObject::connect(playersSelectionModel,
                      SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                      this,SLOT(OnPlayerListSelection(QItemSelection,QItemSelection)));
-
+*/
 
     for ( int i = 1; i < mPlayerListModel.columnCount()-1; i++)
         ui->playerList->horizontalHeader()->setSectionResizeMode(i,QHeaderView::ResizeToContents);
@@ -106,12 +94,60 @@ Trading::Trading(QWidget *parent) :
     ui->groupBoxPlayerFilterGame->setChecked(false);
     ui->groupBoxPlayerFilterTrading->setChecked(false);
     ui->liquidfilter->setChecked(true);
+
+
     //ui->PlayersGroup->children();
 
     //ui->groupBoxPlayerFilterGame->isChecked()
 
     //ui->groupBoxPlayerFilterGame->ch
 
+
+
+    //ordersModel=new OrdersModel;
+    ui->ordersTable->setSelectionBehavior(QAbstractItemView::SelectItems);
+    ui->ordersTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    myOrdersFilterProxy.reset(new OrdersListViewFilterProxyModel(this->ui));
+    myOrdersFilterProxy.data()->setSourceModel(&mOrderTableModel);
+    myOrdersFilterProxy.data()->setDynamicSortFilter(true);
+    myOrdersFilterProxy.data()->setSortRole(Qt::UserRole);
+    ui->ordersTable->setModel(myOrdersFilterProxy.data());
+    ordersSelectionModel = new QItemSelectionModel(myOrdersFilterProxy.data());
+    ui->ordersTable->setSelectionModel(ordersSelectionModel);
+
+    QObject::connect(ordersSelectionModel,
+                     SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+                     this, SLOT(OnOrderCancelSelected(QModelIndex,QModelIndex)));
+    /*
+    ordersSortModel=new QSortFilterProxyModel;
+    ordersSortModel->setSortRole(Qt::EditRole);
+    ordersSortModel->setFilterRole(Qt::WhatsThisRole);
+    ordersSortModel->setDynamicSortFilter(true);
+    ordersSortModel->setSourceModel(&mOrderTableModel);
+    ui->ordersTable->setModel(ordersSortModel);
+    */
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(3,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(4,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(5,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(6,QHeaderView::ResizeToContents);
+    ui->ordersTable->horizontalHeader()->setSectionResizeMode(7,QHeaderView::ResizeToContents);
+
+    //ui->ordersTable->setItemDelegateForColumn(7,&myOrdersTableCancelButtonDelgate);
+
+    //ui->ordersTable->setItemDelegateForColumn(7,new OrdersTableCancelButton(ui->ordersTable, this));
+    ui->ordersTable->setSelectionModel(ordersSelectionModel);
+
+    ui->ordersTable->setSortingEnabled(true);
+    ui->ordersTable->sortByColumn(0);
+
+    /*
+    connect(ui->ordersTable->selectionModel(),
+            SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+            this,SLOT(checkValidOrdersButtons()));
+    */
 
 
     //connect(ordersModel,SIGNAL(ordersIsAvailable()),this,SLOT(ordersIsAvailable()));
@@ -228,8 +264,17 @@ Trading::~Trading()
     delete ui;
 }
 
-void Trading::OnplayerListSelection(QItemSelection index,QItemSelection) {
-    int i = 0;
+void Trading::OnOrderCancelSelected(QModelIndex index,QModelIndex index2) {
+    index = myOrdersFilterProxy.data()->mapToSource(index);
+
+    if ( index.column() == 7) {
+        ViewModel * data = mOrderTableModel.getItemByIndex(index);
+        if (data !=NULL) {
+            int id = data->propertyValue<QString,PropertyNames::ORDERID>().toInt();
+            emit CancelOrder(id);
+        }
+
+    }
 }
 
 void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
@@ -305,7 +350,7 @@ void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
         ui->playername->setText(data->propertyValue<QString,PropertyNames::Player_Name>());
         ui->position->setText(data->propertyValue<QString,PropertyNames::Position>());
         //ui->teamicon->setTextFormat(Qt::RichText);
-        //QString team = data->propertyValue<QString,PropertyNames::Team_ID>();
+        QString team = data->propertyValue<QString,PropertyNames::Team_ID>();
         //ui->teamicon->setText("<img src=" + QString::fromStdString(Trading::icons[team.toStdString()]) +">");
 
         ui->marketLast->setValue(data->propertyValue<QString,PropertyNames::LAST>().toInt());
@@ -335,6 +380,8 @@ void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
         ui->posAvgPrice->setValue(data->propertyValue<QString,PropertyNames::MYAVG>().toInt());
         ui->posQty->setValue(data->propertyValue<QString,PropertyNames::MYPOS>().toInt());
 
+        emit OnPlayerPosTeam(ui->playername->text(),team,ui->position->text());
+        //emit OnPriceChange(ui->marketLast->value());
 
     }
 }
@@ -641,6 +688,7 @@ void Trading::OnTradeTick(fantasybit::TradeTic* tt) {
         if ( tt->ishigh() ) ui->marketHigh->setValue(tt->price());
         if ( tt->islow() ) ui->marketLow->setValue(tt->price());
         ui->marketChng->setValue(tt->change());
+        //emit OnPriceChange(ui->marketLast->value());
     }
 
 }
@@ -698,40 +746,7 @@ void Trading::OnDepthDelta(fantasybit::DepthFeedDelta* df) {
 }
 
 
-decltype(Trading::icons) Trading::icons{
-    {"SF",":/NFL/png/49ers.png"},
-    {"CHI",":/NFL/png/Bears.png"},
-    {"CIN",":/NFL/png/Bengels.png"},
-    {"BUF",":/NFL/png/Bills.png"},
-    {"DEN",":/NFL/png/Broncos.png"},
-    {"CLE",":/NFL/png/Browns.png"},
-    {"TB",":/NFL/png/Buccaneers.png"},
-    {"ARI",":/NFL/png/Cardinals.png"},
-    {"SD",":/NFL/png/Chargers.png"},
-    {"KC",":/NFL/png/Chiefs.png"},
-    {"IND",":/NFL/png/Colts.png"},
-    {"DAL",":/NFL/png/Cowboys.png"},
-    {"MIA",":/NFL/png/Dolphins.png"},
-    {"PHI",":/NFL/png/Eagles.png"},
-    {"ATL",":/NFL/png/Falcons.png"},
-    {"NYG",":/NFL/png/Giants.png"},
-    {"JAC",":/NFL/png/Jaguar.png"},
-    {"NYJ",":/NFL/png/Jets.png"},
-    {"DET",":/NFL/png/Lions.png"},
-    {"GB",":/NFL/png/Packers.png"},
-    {"CAR",":/NFL/png/Panthers.png"},
-    {"NE",":/NFL/png/Patriots.png"},
-    {"OAK",":/NFL/png/Raiders.png"},
-    {"STL",":/NFL/png/Rams.png"},
-    {"BAL",":/NFL/png/Ravens.png"},
-    {"WAS",":/NFL/png/Redskins.png"},
-    {"NO",":/NFL/png/Saints.png"},
-    {"SEA",":/NFL/png/Seahawks.png"},
-    {"PIT",":/NFL/png/Steelers.png"},
-    {"HOU",":/NFL/png/Texans.png"},
-    {"TEN",":/NFL/png/Titans.png"},
-    {"MIN",":/NFL/png/Vikings.png"},
-};
+
 
 void Trading::UpdateBuys(int p) {
     if ( mUpdatingB ) return;
@@ -810,7 +825,7 @@ void Trading::SetMyPositions() {
             ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
             auto name = item->propertyValue<PropertyNames::Player_Name>();
             mOrderTableModel.updateItemProperty<PropertyNames::Player_Name>(o.refnum(),name);
-            mOrderTableModel.updateItemProperty<PropertyNames::ORDERX>(o.refnum(),o.refnum());
+            mOrderTableModel.updateItemProperty<PropertyNames::ORDERX>(o.refnum(),"");
             ui->cancelOrdersList->addItem(o.DebugString().data(),o.refnum());
         }
 
@@ -957,3 +972,75 @@ void Trading::OnNewPos(fantasybit::FullPosition fp) {
     }
 }
 
+
+/*
+decltype(Trading::icons) Trading::icons{
+    {"SF",":/NFL/png/49ers.png"},
+    {"CHI",":/NFL/png/Bears.png"},
+    {"CIN",":/NFL/png/Bengels.png"},
+    {"BUF",":/NFL/png/Bills.png"},
+    {"DEN",":/NFL/png/Broncos.png"},
+    {"CLE",":/NFL/png/Browns.png"},
+    {"TB",":/NFL/png/Buccaneers.png"},
+    {"ARI",":/NFL/png/Cardinals.png"},
+    {"SD",":/NFL/png/Chargers.png"},
+    {"KC",":/NFL/png/Chiefs.png"},
+    {"IND",":/NFL/png/Colts.png"},
+    {"DAL",":/NFL/png/Cowboys.png"},
+    {"MIA",":/NFL/png/Dolphins.png"},
+    {"PHI",":/NFL/png/Eagles.png"},
+    {"ATL",":/NFL/png/Falcons.png"},
+    {"NYG",":/NFL/png/Giants.png"},
+    {"JAC",":/NFL/png/Jaguar.png"},
+    {"NYJ",":/NFL/png/Jets.png"},
+    {"DET",":/NFL/png/Lions.png"},
+    {"GB",":/NFL/png/Packers.png"},
+    {"CAR",":/NFL/png/Panthers.png"},
+    {"NE",":/NFL/png/Patriots.png"},
+    {"OAK",":/NFL/png/Raiders.png"},
+    {"STL",":/NFL/png/Rams.png"},
+    {"BAL",":/NFL/png/Ravens.png"},
+    {"WAS",":/NFL/png/Redskins.png"},
+    {"NO",":/NFL/png/Saints.png"},
+    {"SEA",":/NFL/png/Seahawks.png"},
+    {"PIT",":/NFL/png/Steelers.png"},
+    {"HOU",":/NFL/png/Texans.png"},
+    {"TEN",":/NFL/png/Titans.png"},
+    {"MIN",":/NFL/png/Vikings.png"},
+};
+*/
+
+decltype(Trading::icons) Trading::icons{
+    {"SF",":/NFL/ico/49ers.ico"},
+    {"CHI",":/NFL/ico/Bears.ico"},
+    {"CIN",":/NFL/ico/Bengels.ico"},
+    {"BUF",":/NFL/ico/Bills.ico"},
+    {"DEN",":/NFL/ico/Broncos.ico"},
+    {"CLE",":/NFL/ico/Browns.ico"},
+    {"TB",":/NFL/ico/Buccaneers.ico"},
+    {"ARI",":/NFL/ico/Cardinals.ico"},
+    {"SD",":/NFL/ico/Chargers.ico"},
+    {"KC",":/NFL/ico/Chiefs.ico"},
+    {"IND",":/NFL/ico/Colts.ico"},
+    {"DAL",":/NFL/ico/Cowboys.ico"},
+    {"MIA",":/NFL/ico/Dolphins.ico"},
+    {"PHI",":/NFL/ico/Eagles.ico"},
+    {"ATL",":/NFL/ico/Falcons.ico"},
+    {"NYG",":/NFL/ico/Giants.ico"},
+    {"JAC",":/NFL/ico/Jaguar.ico"},
+    {"NYJ",":/NFL/ico/Jets.ico"},
+    {"DET",":/NFL/ico/Lions.ico"},
+    {"GB",":/NFL/ico/Packers.ico"},
+    {"CAR",":/NFL/ico/Panthers.ico"},
+    {"NE",":/NFL/ico/Patriots.ico"},
+    {"OAK",":/NFL/ico/Raiders.ico"},
+    {"STL",":/NFL/ico/Rams.ico"},
+    {"BAL",":/NFL/ico/Ravens.ico"},
+    {"WAS",":/NFL/ico/Redskins.ico"},
+    {"NO",":/NFL/ico/Saints.ico"},
+    {"SEA",":/NFL/ico/Seahawks.ico"},
+    {"PIT",":/NFL/ico/Steelers.ico"},
+    {"HOU",":/NFL/ico/Texans.ico"},
+    {"TEN",":/NFL/ico/Titans.ico"},
+    {"MIN",":/NFL/ico/Vikings.ico"},
+};
