@@ -485,7 +485,7 @@ public slots:
 #ifdef TRACE
     qDebug() << "level2 Trading OnLive";
 #endif
-
+        amlive = true;
         auto st = DataService::instance()->GetGlobalState();
         SetCurrentWeekData(st.week());
         if ( myFantasyName != "" && myPositionsName != myFantasyName)
@@ -510,6 +510,7 @@ signals:
     //void SendOrder();
 
 private:
+    bool amlive = false;
     Ui::Trading *ui;
     DepthTablesModel mDepthTableModel;
     PlayerListModal mPlayerListModel;

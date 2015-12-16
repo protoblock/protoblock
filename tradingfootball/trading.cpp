@@ -426,7 +426,9 @@ void Trading::SetFantasyName(std::string name,int balance) {
         ui->fantastname->setText(name.data());
         myFantasyName = name;
         ui->fantasybitSkill->setValue(balance);
+        myOrdersFilterProxy->clear();
         SetMyPositions();
+        invalidateFilters();
     }
 }
 
@@ -1109,7 +1111,8 @@ void Trading::OnNewPos(fantasybit::FullPosition fp) {
 }
 
 void Trading::onControlMessage(QString msg) {
-    if ( msg.contains("[t.f]")) {
+    if ( msg.contains("[t.2f]") && amlive ) {
+
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Critical);
         msgBox.setWindowTitle(APPLICATION_NAME);
