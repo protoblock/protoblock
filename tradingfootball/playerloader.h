@@ -89,7 +89,8 @@ struct SqlStuff {
         QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery query(db);
 
-        query.prepare("SELECT max(SeqNum) FROM trades WHERE IsProcessed = 1");
+        query.prepare("SELECT max(seqnum) FROM trades  WHERE isprocessed = 1");
+        //order by t.seqnum desc limit 1);
 
         //query.bindValue(":seqn",seqnum);
         if ( ! query.exec() ) {
@@ -101,7 +102,7 @@ struct SqlStuff {
 
 
         qDebug() << query.executedQuery() << query.isValid() <<
-                    query.isActive();
+                    query.first();
 
 
         auto ppid =  query.value(0);

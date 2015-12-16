@@ -15,6 +15,11 @@ Trading::Trading(QWidget *parent) :
 {
     ui->setupUi(this);
 
+/*
+    int w = ui->currentTeam->width();
+    int h = ui->currentTeam->height();
+    ui->currentTeam->setPixmap(QPixmap(":/icons/tf_logo_PNG-158x160.png").scaled(w,h,Qt::KeepAspectRatio));
+*/
     int i =0;
     ui->posComboFilter->insertItem(i++,"ALL","ALL");
     ui->posComboFilter->insertItem(i++,"QB","QB");
@@ -58,6 +63,8 @@ Trading::Trading(QWidget *parent) :
     ui->depthView->horizontalHeader()->setSectionResizeMode(4,QHeaderView::ResizeToContents);
     ui->depthView->horizontalHeader()->setSectionResizeMode(5,QHeaderView::Stretch);
 
+    ui->depthView->verticalHeader()->setResizeContentsPrecision(10);
+
     //auto w = ui->depthView->fontMetrics().width(" BIS SIZE BID ASK SK SIZE   ");
     //ui->depthView->setMaximumWidth(w*2);
 
@@ -82,11 +89,11 @@ Trading::Trading(QWidget *parent) :
                      this,SLOT(OnPlayerListSelection(QItemSelection,QItemSelection)));
 */
 
-    for ( int i = 1; i < mPlayerListModel.columnCount()-1; i++)
-        ui->playerList->horizontalHeader()->setSectionResizeMode(i,QHeaderView::ResizeToContents);
-
-    ui->playerList->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
-    ui->playerList->horizontalHeader()->setSectionResizeMode(mPlayerListModel.columnCount()-1,QHeaderView::Stretch);
+    for ( int i = 0; i < mPlayerListModel.columnCount(); i++)
+        if ( i == mPlayerListModel.name1)
+            ui->playerList->horizontalHeader()->setSectionResizeMode(i,QHeaderView::Interactive);
+        else
+            ui->playerList->horizontalHeader()->setSectionResizeMode(i,QHeaderView::ResizeToContents);
 
 
     ui->groupBoxPlayerFilterGame->setChecked(false);
@@ -388,6 +395,22 @@ void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
         ui->posAvgPrice->setValue(data->propertyValue<QString,PropertyNames::MYAVG>().toInt());
         ui->posQty->setValue(data->propertyValue<QString,PropertyNames::MYPOS>().toInt());
 
+
+        /*
+        int netqty = ui->posQty->value();
+        double avg = 0;
+        double pnl = 0;
+        if ( neyqty ==0 ) {
+            //double pnl = fp.pos.netprice * 100;
+        }
+        else  {
+            ViewModel * item = mPlayerListModel.itemByKey(fp.playerid.data());
+            int price = item->propertyValue<PropertyNames::LAST>().toInt();
+            pnl = (price * netqty) + fp.pos.netprice;
+            avg = fp.pos.netprice / (netqty * -1);
+        }
+        */
+
         emit OnPlayerPosTeam(ui->playername->text(),team,ui->positionTeam->text());
         //emit OnPriceChange(ui->marketLast->value());
 
@@ -430,7 +453,8 @@ void Trading::on_buyit_clicked()
     if ( result == QMessageBox::Yes) {
         NewOrder(true);
         QMessageBox msgBox2;
-        msgBox2.setText(QString("Buy Order sent! Will be reflected in Open Orders or \"MyPos\" if accepted or expecuted"));
+        msgBox2.setText(QString(
+                            "Buy Order sent! Will be reflected in Open Orders or \"MyPos\" if accepted or executed"));
         msgBox2.setStandardButtons(QMessageBox::Ok);
         msgBox2.button(QMessageBox::Ok)->animateClick(15000);
         //msgBox2.setParent(ui->ordersTableFrame);
@@ -460,7 +484,7 @@ void Trading::on_sellit_clicked()
     if ( result == QMessageBox::Yes) {
         NewOrder(false);
         QMessageBox msgBox2;
-        msgBox2.setText(QString("Sell Order sent!  Will be reflected in Open Orders or \"MyPos\" if accepted or expecuted"));
+        msgBox2.setText(QString("Sell Order sent!  Will be reflected in Open Orders or \"MyPos\" if accepted or executed"));
         msgBox2.setStandardButtons(QMessageBox::Ok);
         msgBox2.button(QMessageBox::Ok)->animateClick(15000);
         //msgBox2.setParent(ui->ordersTableFrame);
@@ -478,9 +502,11 @@ void Trading::onGameStart(string gameId){
 
 void Trading::invalidateFilters() {
     //myGameModelFilter.invalidate();
-    playersSelectionModel->reset();
+    //playersSelectionModel->reset();
     myPlayerFilterProxy.data()->enable();
     myPlayerFilterProxy.data()->invalidate();
+    //ui->playerList->horizontalHeader()->setSectionResizeMode(mPlayerListModel.name1,QHeaderView::Interactive);
+
 }
 
 void Trading::invalidateFilters(bool) {
@@ -893,14 +919,31 @@ void Trading::SetMyPositions() {
             //ui->cancelOrdersList->addItem(o.DebugString().data(),o.refnum());
         }
 
-        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),p.second.first.netqty);
-        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(p.first.data(),p.second.first.netprice);
+
+        int netqty = p.second.first.netqty;
+        double avg = 0;
+        double pnl = 0;
+        if ( netqty ==0 ) {
+            double pnl = p.second.first.netprice * 100;
+        }
+        else  {
+            ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
+            int price = item->propertyValue<PropertyNames::LAST>().toInt();
+            pnl = 100 * ((price * netqty) + p.second.first.netprice);
+            avg = p.second.first.netprice / (netqty * -1);
+        }
+
+        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),netqty);
+        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(p.first.data(),avg);
+        mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(p.first.data(),pnl);
 
         if ( p.first == myPlayerid) {
-            ui->posQty->setValue(p.second.first.netqty);
-            ui->posAvgPrice->setValue(p.second.first.netprice);
+            ui->posQty->setValue(netqty);
+            ui->posAvgPrice->setValue(avg);
+            ui->posOpenPnl->setValue(pnl);
 
         }
+
     }
 }
 
@@ -929,7 +972,7 @@ void Trading::on_pushButton_clicked()
 
             OrderCore core;
             core.set_buyside(isbid);
-            core.set_size(1);
+            core.set_size(5);
             int delta = floor(p.points() * .50);// * ((isbid) ? -1 : 1);
             if ( isbid ) delta = -delta;
             int price = p.points() + delta;
@@ -1036,11 +1079,32 @@ void Trading::on_cancelOrderListButton_clicked()
 }
 
 void Trading::OnNewPos(fantasybit::FullPosition fp) {
-    qDebug() << "level2 Trading::OnNewPos " << fp.pos << fp.playerid << fp.fname;
+    qDebug() << "level2 Trading::OnNewPos " << fp.pos.ToString() << fp.playerid << fp.fname;
 
-    if ( fp.playerid == myPlayerid && fp.fname == myFantasyName) {
-        ui->posQty->setValue(fp.pos.netqty);
-        ui->posAvgPrice->setValue(fp.pos.netprice);
+    if ( fp.fname == myFantasyName ) {
+        int netqty = fp.pos.netqty;
+        double avg = 0;
+        double pnl = 0;
+        if ( netqty ==0 ) {
+            double pnl = fp.pos.netprice * 100;
+        }
+        else  {
+            ViewModel * item = mPlayerListModel.itemByKey(fp.playerid.data());
+            int price = item->propertyValue<PropertyNames::LAST>().toInt();
+            pnl = (price * netqty) + fp.pos.netprice;
+            avg = fp.pos.netprice / (netqty * -1);
+        }
+
+        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(fp.playerid.data(),netqty);
+        mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(fp.playerid.data(),pnl);
+        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(fp.playerid.data(),avg);
+        invalidateFilters();
+
+        if ( fp.playerid == myPlayerid ) {
+            ui->posQty->setValue(netqty);
+            ui->posAvgPrice->setValue(avg);
+            ui->posOpenPnl->setValue(pnl);
+        }
     }
 }
 

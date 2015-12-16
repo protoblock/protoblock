@@ -63,6 +63,13 @@ int domain(int argc, char *argv[]){
     return 0;
     }
 
+   // SqlStuff sql("tfprod","max");
+   // int mySeq = sql.maxPid();
+
+  //SqlStuff sql("satoshifantasy","tradesxx");
+  //int mySeq = sql.lastSeq();
+
+
 #ifdef DATAAGENTGUI
     TestingWindow dform;
 #endif

@@ -599,20 +599,19 @@ public:
     ~PlayerListModal() {}
 
 
+    int bid = 8;
+    int ask = 9;
+    int last = 3;
+    int mypos = 0;
+    int myavg = 1;
+    int mypnl = 2;
+    int change = 15;
+    int name1 = 5;
+    int team = 6;
+    int pos = 4;
 
 protected:
 
-    int bid = 4;
-    int ask = 5;
-    int last = 15;
-    int mypos = 12;
-    int myavg = 13;
-    int mypnl = 14;
-    int change = 10;
-    int name1 = 0;
-    int team = 1;
-    int pos = 2;
-    int name2 = 16;
 
     QVariant getColumnDisplayData(quint32 column,ViewModel * data) {
 
@@ -620,11 +619,19 @@ protected:
  //       if( column ==i++)
  //           return data->propertyValue<PropertyNames::Player_ID>();
         if( column == i++)
+            return data->propertyValue<PropertyNames::MYPOS>();
+        if( column == i++)
+            return data->propertyValue<PropertyNames::MYAVG>();
+        if( column ==  i++)
+            return data->propertyValue<PropertyNames::MYPNL>();
+        if( column ==i++)
+            return data->propertyValue<PropertyNames::LAST>();
+        if( column ==  i++)
+            return data->propertyValue<PropertyNames::Position>();
+        if( column == i++)
             return data->propertyValue<PropertyNames::Player_Name>();
         if( column == i++)
             return data->propertyValue<PropertyNames::Team_ID>();
-        if( column ==  i++)
-            return data->propertyValue<PropertyNames::Position>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::BIDSIZE>();
         if( column ==i++)
@@ -643,16 +650,6 @@ protected:
             return data->propertyValue<PropertyNames::CHANGE>();
         if( column ==i++)
             return data->propertyValue<PropertyNames::LASTSIZE>();
-        if( column == i++)
-            return data->propertyValue<PropertyNames::MYPOS>();
-        if( column == i++)
-            return data->propertyValue<PropertyNames::MYAVG>();
-        if( column ==  i++)
-            return data->propertyValue<PropertyNames::MYPNL>();
-        if( column ==i++)
-            return data->propertyValue<PropertyNames::LAST>();
-        if( column == i++)
-            return data->propertyValue<PropertyNames::Player_Name>();
 
         return QVariant();
     }
@@ -668,7 +665,6 @@ protected:
             return abs(ret.toInt());
 
         if  (
-                (column == name2 ) ||
                 (column == name1 ) ||
                 (column == team ) ||
                 (column == pos ) )
@@ -683,14 +679,27 @@ private:
     void initialize() {
         QStringList headers;
         headers //<< "pid"
-                <<  "Player" << "Team" << "Pos" << "Bqty"
-                << "Bid" << "Ask" << "Aqty"
-                << "Hi" << "Lo" << "Vol"
-                << "Chg" << "Lqty" << "MyPos" << "MyAvg" << "MyPnL" << "Last"
-                << "Player";
+                << "MyPos"
+                << "MyAvg"
+                << "MyPnL"
+                << "Last"
+                << "Pos"
+                <<  "         NFL Player         "
+                 << "Team"
+                 << "Bqty"
+                << "Bid"
+                << "Ask"
+                << "Aqty"
+                << "Hi"
+                << "Lo"
+                << "Vol"
+                << "Chg"
+                << "Lqty";
         setHorizontalHeaders(headers);
-        for ( int i = 1; i<columnCount()-1; i++)
-            setAlign(i,Qt::AlignCenter);
+        for ( int i = 0; i<columnCount(); i++) {
+            //if ( i != name1)
+                setAlign(i,Qt::AlignCenter);
+        }
 
         setBold(bid,true);
         setBold(ask,true);
@@ -698,6 +707,9 @@ private:
         setBold(mypos,true);
         setBold(myavg,true);
         setBold(mypnl,true);
+        setBold(name1,true);
+        setBold(team, true);
+        setBold(pos,true);
 
     }
 };

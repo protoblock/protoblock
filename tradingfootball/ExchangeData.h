@@ -33,7 +33,7 @@ namespace fantasybit
 struct Position {
     int netqty;
     int netprice;
-    operator string() {
+    string ToString() const {
         return to_string(netqty) + " " + to_string(netprice);
     }
 };
@@ -127,6 +127,9 @@ struct InsideBook {
     }
 
     bool Fill(int32_t qty,list<Order>::reverse_iterator &iter) {
+#ifdef TRACE
+        qDebug() << "level2 qty " << qty << iter->core().size() << totSize;
+#endif
         totSize -= qty;
         auto newsize = iter->core().size() - qty;
         if ( newsize > 0 ) {

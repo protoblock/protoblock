@@ -99,7 +99,11 @@ void TestingWindow::GoLive(GlobalState gs) {
         amlive = true;
         OnNewWeek(gs.week());
         emit BeOracle();
+        SqlStuff sql("satoshifantasy","trades");
+        mySeq = sql.lastSeq();
+
         tradetimer->start(5000);
+
     }
 }
 
@@ -443,8 +447,6 @@ void TestingWindow::TradeTimer() {
     SignedTransaction st{};
     StampedTrans stt{};
 
-    SqlStuff sql("satoshifantasy","trades");
-    mySeq = sql.lastSeq();
     while(true) {
         auto txstr = RestfullService::myGetTr();
         if ( !st.ParseFromString(txstr) ) {
@@ -856,28 +858,13 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
 
 
     myMessageData.set_msg(number +
-        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">Upgrade available! Click to download (v1.2.2) win64</a>");
-    myMessageData.set_lt(1223);
+        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">New Version 2.0 - Trading. (win64)</a>");
+    myMessageData.set_lt(2000);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     qDebug() << myMessageData.msg();
     myMessageData.Clear();
 
-
-    myMessageData.set_msg(number +
-        " <a href=\"http://trading.football:8080/tradingfootball.dmg\">Upgrade available! Click to download (v1.2.2.3) osx64</a>");
-    myMessageData.set_lt(1223);
-    d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
-    dt.add_data()->CopyFrom(d);
-    qDebug() << myMessageData.msg();
-    myMessageData.Clear();
-
-    myMessageData.set_msg("<a href=\"https://trading.football/downloads\">Upgrade required! Click to download latest version</a>");
-    myMessageData.set_gt(15991245);
-    myMessageData.set_lt(1036);
-    d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
-    dt.add_data()->CopyFrom(d);
-    myMessageData.Clear();
 
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
