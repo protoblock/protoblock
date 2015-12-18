@@ -58,7 +58,7 @@ void ExchangeData::init() {
                 auto it2 = mLimitBooks.insert(make_pair(bp.playerid(),
                                unique_ptr<MatchingEngine>(new MatchingEngine(bp.playerid(),true))));
                 for (auto p : bp.positions()) {
-                    it2.first->second->mPkPos.insert(make_pair(p.pk(),Position{p.qty(),p.price()}));
+                    it2.first->second->mPkPos.insert(make_pair(p.   pk(),Position{p.qty(),p.price()}));
 #ifdef TRACE
             qDebug() << "level2 ExchangeData init selltlepos" << p.DebugString();
 #endif
@@ -170,6 +170,7 @@ void ExchangeData::init() {
 
                 it3 = it2.first;
             }
+            if ( it3->second->islocked ) continue;
             LimitBook *lb = it3->second->mLimitBook.get();
             InsideBook *ib;
             if ( bd.has_newnew()) {
@@ -1341,6 +1342,10 @@ void ExchangeData::OnLive(bool subscribe) {
 qDebug() << "level2 ExchangeData OnLive";
 #endif
 
+#ifdef TIMEAGENTWRITETWEETS
+    TweetIt();
+#endif
+
     auto st = DataService::instance()->GetGlobalState();
 
     mWeek = st.week();
@@ -1437,7 +1442,7 @@ void ExchangeData::OnTradeSessionStart(int week) {
         if ( !amlive ) return;
 
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
-
+        SessionOpen Tics sots;
         SqlStuff sql("satoshifantasy","openprice");
         for ( auto mdl1 : mMarketQuote)  {
             if ( mdl1.second.has_l() ) continue;
@@ -1460,6 +1465,80 @@ void ExchangeData::OnTradeSessionStart(int week) {
                 sql.openprice(mdl1.first,price,week);
             }
 
+            SessionOpenTic *sot = sots.add_opentic();
+            sot->set_playerid(mdl1.first);
+            sot->set_price(price);
+
           }
+          settlestore->put(write_sync,"sessionopentic",sots.SerializeAsString());
     #endif
 }
+
+#ifdef TIMEAGENTWRITETWEETS
+#include "o1.h"
+#include "o2globals.h"
+#include "RestFullCall.h"
+
+    void ExchangeData::TweetIt() {
+        //return;
+        //auto MY_CLIENT_ID = "Kkuh8WBi5O2sTIlRd7XALiNjQ";
+        //O1Twitter *o1;
+        //o1->setClientId(MY_CLIENT_ID);
+        //o1->setClientSecret(MY_CLIENT_SECRET);
+        string mytweet("My Tweet ");
+
+        auto timestamp = QString::number(QDateTime::currentDateTimeUtc().toTime_t()).toLatin1();
+        auto nonce = O1::nonce();
+        QList<O1RequestParameter> headers;
+        headers.append(O1RequestParameter(O2_OAUTH_VERSION, "1.0"));
+        headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE_METHOD, "HMAC-SHA1"));
+        headers.append(O1RequestParameter(O2_OAUTH_CONSUMER_KEY, "Kkuh8WBi5O2sTIlRd7XALiNjQ"));
+        headers.append(O1RequestParameter(O2_OAUTH_NONCE, nonce));
+        headers.append(O1RequestParameter(O2_OAUTH_TOKEN, "3305320862-vktlFL7JYwH8bqsIeQdPyV0FGdRdExTyRcvxyqr"));
+        headers.append(O1RequestParameter(O2_OAUTH_TIMESTAMP,timestamp ));
+        //headers.append(O1RequestParameter("Status",mytweet.data()));
+
+        QString token_secret("HoSKMd5ikQTag1C7drMu72SXoENg3BA9tyBrqrNtFiVxr");
+        QString client_secret("Kkuh8WBi5O2sTIlRd7XALiNjQ");
+
+        QUrl url("https://api.twitter.com/1.1/statuses/update.json");
+        QList<O1RequestParameter> other;
+        other.append(O1RequestParameter("Status",mytweet.data()));
+
+
+        auto signature = O1::sign(headers, other, url,
+                                  QNetworkAccessManager::PostOperation,
+                                  client_secret, token_secret);
+
+        headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE,signature));
+
+        auto head = O1::buildAuthorizationHeader(headers);
+
+        QMap<QString,QString> headersMap;
+        QMap<QString,QVariant> paramsMap;
+
+        headersMap[O2_HTTP_AUTHORIZATION_HEADER] = head;
+        paramsMap["Status"] = mytweet.data();
+        RestfullClient rest(url);
+        rest.postTData("",paramsMap,headersMap);
+        auto resp = rest.lastReply();
+
+        qDebug() << resp;
+
+        //RestService
+/*
+        headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE,
+                      generateSignature(headers, request, QList<O1RequestParameter>(),
+                                        QNetworkAccessManager::PostOperation)));
+
+        std::string dst("OAuth ");
+        dst += "oauth_version=\"1.0\",";
+        dst += "oauth_signature_method=\"HMAC-SHA1\",";
+        dst += "oauth_consumer_key=\"Kkuh8WBi5O2sTIlRd7XALiNjQ\",";
+        dst += "oauth_token=\"3305320862-vktlFL7JYwH8bqsIeQdPyV0FGdRdExTyRcvxyqr\",";
+        //oauth_signature
+*/
+    }
+#endif
+
+
