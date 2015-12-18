@@ -114,11 +114,15 @@ struct InsideBook {
 
     bool Fill(int32_t qty,list<Order>::iterator &iter) {
         totSize -= qty;
+
+        /*
         auto newsize = iter->core().size() - qty;
         if ( newsize > 0 ) {
             iter->mutable_core()->set_size(newsize);
         }
-        else {
+        */
+        if ( iter->core().size() == 0)
+        {
             mOMap.erase(iter->refnum());
             iter = mOList.erase(iter);
         }
@@ -131,14 +135,17 @@ struct InsideBook {
         qDebug() << "level2 qty " << qty << iter->core().size() << totSize;
 #endif
         totSize -= qty;
+        /*
         auto newsize = iter->core().size() - qty;
         if ( newsize > 0 ) {
             iter->mutable_core()->set_size(newsize);
         }
-        else {
+        */
+        if (iter->core().size() == 0) {
             mOMap.erase(iter->refnum());
 
-            mOList.erase(std::next(iter).base());
+            list<Order>::iterator tempIter = mOList.erase( --iter.base());
+            iter = list<Order>::reverse_iterator(tempIter);
         }
 
         return true;
@@ -406,6 +413,10 @@ public:
 
     ordsnap_t  GetOrdersPositionsByName(const std::string &fname);
     std::recursive_mutex ex_mutex{};
+
+#ifdef TIMEAGENTWRITETWEETS
+    void TweetIt() ;
+#endif
 
 signals:
     void NewMarketTicker(fantasybit::MarketTicker*);

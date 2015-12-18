@@ -58,7 +58,7 @@ void ExchangeData::init() {
                 auto it2 = mLimitBooks.insert(make_pair(bp.playerid(),
                                unique_ptr<MatchingEngine>(new MatchingEngine(bp.playerid(),true))));
                 for (auto p : bp.positions()) {
-                    it2.first->second->mPkPos.insert(make_pair(p.   pk(),Position{p.qty(),p.price()}));
+                    it2.first->second->mPkPos.insert(make_pair(p.pk(),Position{p.qty(),p.price()}));
 #ifdef TRACE
             qDebug() << "level2 ExchangeData init selltlepos" << p.DebugString();
 #endif
@@ -1182,7 +1182,7 @@ int32_t LimitBook::SweepAsks( Order &order) {
         //NewTrade(mBa, fillqty, Side.BID);
 
         for (auto iiter = curr.top();
-             iiter != curr.bot() && left > 0;iiter=std::next(iiter)) {
+             iiter != curr.bot() && left > 0;) {
             Order &ord = *iiter;
             fillqty = min(ord.core().size(), left);
             if (fillqty <= 0)
@@ -1232,7 +1232,7 @@ qDebug() << "level2 sweepbids  fillqty continue " << fillqty;
         //NewTrade(mBb, fillqty, Side.ASK);
 
         for (auto iiter = curr.rtop();
-             iiter != curr.rbot() && left > 0; ++iiter) {
+             iiter != curr.rbot() && left > 0;) {
             Order &ord = *iiter;
 #ifdef TRACE
 qDebug() << "level2 sweepbids  curr ord iityer" << mBb << ord.DebugString() << " left " << left;
