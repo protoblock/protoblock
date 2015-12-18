@@ -36,7 +36,7 @@
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 2
+  #define REVISION_NUMBER 3
 #endif
 
 #ifndef BUILD_NUMBER
