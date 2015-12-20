@@ -36,7 +36,7 @@
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 3
+  #define REVISION_NUMBER 4
 #endif
 
 #ifndef BUILD_NUMBER
@@ -71,6 +71,13 @@ static QString fromTime_t_toFantasyString(uint dtt) {
     QTimeZone tz(zone);//str.c_str();
 
     return QDateTime::fromTime_t(dtt,tz).toString("ddd h:mm a").remove(" pm");
+}
+
+static QString TimetoTweetString() {
+    QByteArray zone = "America/New_York";
+    QTimeZone tz(zone);//str.c_str();
+
+    return QDateTime::currentDateTime().toTimeZone(tz).toString("M/d/yy hh:mm:ss.z");
 }
 
 static QDateTime currentNewYorkTime() {

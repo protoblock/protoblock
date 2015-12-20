@@ -293,6 +293,7 @@ class ExchangeData : public QObject {
 
     std::unordered_map<int32_t,OpenOrder> mOpenOrders;
 
+
     std::set<std::string> mSubscribed;
 
     leveldb::WriteOptions write_sync{};
@@ -304,6 +305,7 @@ class ExchangeData : public QObject {
 
 public:
     ExchangeData() {}
+
     void init();
     void closeAll();
     bool amlive = false;
@@ -330,9 +332,9 @@ public:
     }
 
     void setOhlc(ContractOHLC &myphlc, const MarketTicker *mt) {
-        if ( myphlc.has_high() || mt->price() > myphlc.high())
+        if ( !myphlc.has_high() || mt->price() > myphlc.high())
             myphlc.set_high(mt->price());
-        if ( myphlc.has_low() || myphlc.low() <= 0 || mt->price() < myphlc.low())
+        if ( !myphlc.has_low() || myphlc.low() <= 0 || mt->price() < myphlc.low())
             myphlc.set_low(mt->price());
         if ( !myphlc.has_open() || myphlc.open() == 0)
             myphlc.set_open(mt->price());
@@ -414,9 +416,6 @@ public:
     ordsnap_t  GetOrdersPositionsByName(const std::string &fname);
     std::recursive_mutex ex_mutex{};
 
-#ifdef TIMEAGENTWRITETWEETS
-    void TweetIt() ;
-#endif
 
 signals:
     void NewMarketTicker(fantasybit::MarketTicker*);

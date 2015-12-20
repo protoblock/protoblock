@@ -417,6 +417,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
         SqlStuff sql("satoshifantasy","md_level1");
         sql.mdlevel1(mBookDelta->playerid(),mMarketQuote[mBookDelta->playerid()]);
     }
+
 #endif
 }
 
@@ -539,8 +540,8 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
             auto newsz = can.core().size() - sz;
             if ( newsz > 0 )
                 core.set_size(newsz);
-
-            mOpenOrders.erase(iter);
+            else
+                mOpenOrders.erase(iter);
 
         }
         else
@@ -571,6 +572,9 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
         ord.set_refnum(eo.cancel_oref());
     }
 
+    if ( playerid == "1078")
+        qDebug() << "seq";
+
     auto it = mLimitBooks.find(playerid);
     if ( it == end(mLimitBooks)) {
         qWarning() << "invalid cancel LimitBook not found for" << eo.DebugString();
@@ -582,9 +586,12 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
          return;
     }
 
+    mBookDelta->Reset(playerid);
+
     MatchingEngine &ma = *(it->second);
     //ord.mutable_core()->CopyFrom(eo.core());
     //ord.set_refnum(eo.cancel_oref());
+    mBookDelta->set_seqnum(seqnum);
     ma.mLimitBook->CancelOrder(ord);
     mBookDelta->set_playerid(playerid);
     mBookDelta->set_fantasy_name(fn->alias());
@@ -824,6 +831,7 @@ void ExchangeData::OnTrade(const string &playerid, fantasybit::TradeTic *tt) {
     SqlStuff sql("satoshifantasy","playerquotes");
     sql.quote(playerid,myphlc);
     }
+
 #endif
 }
 
@@ -914,7 +922,7 @@ bool LimitBook::NewOrder(Order &o, Position &posdelta) {
 }
 
 int32_t LimitBook::CancelOrder(Order &order) {
-    mBookDelta->Clear();
+    //mBookDelta->Clear();
     auto myprice = order.core().price()-1;
     if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
         return -1;
@@ -1342,10 +1350,6 @@ void ExchangeData::OnLive(bool subscribe) {
 qDebug() << "level2 ExchangeData OnLive";
 #endif
 
-#ifdef TIMEAGENTWRITETWEETS
-    TweetIt();
-#endif
-
     auto st = DataService::instance()->GetGlobalState();
 
     mWeek = st.week();
@@ -1442,7 +1446,7 @@ void ExchangeData::OnTradeSessionStart(int week) {
         if ( !amlive ) return;
 
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
-        SessionOpen Tics sots;
+        //SessionOpen Tics sots;
         SqlStuff sql("satoshifantasy","openprice");
         for ( auto mdl1 : mMarketQuote)  {
             if ( mdl1.second.has_l() ) continue;
@@ -1465,80 +1469,97 @@ void ExchangeData::OnTradeSessionStart(int week) {
                 sql.openprice(mdl1.first,price,week);
             }
 
-            SessionOpenTic *sot = sots.add_opentic();
-            sot->set_playerid(mdl1.first);
-            sot->set_price(price);
+  //          SessionOpenTic *sot = sots.add_opentic();
+    //        sot->set_playerid(mdl1.first);
+      //      sot->set_price(price);
 
           }
-          settlestore->put(write_sync,"sessionopentic",sots.SerializeAsString());
+          //settlestore->put(write_sync,"sessionopentic",sots.SerializeAsString());
     #endif
 }
 
-#ifdef TIMEAGENTWRITETWEETS
+#ifdef TIMEAGENTWRITETWEETSX
 #include "o1.h"
 #include "o2globals.h"
 #include "RestFullCall.h"
+#include "o1twitter.h"
 
-    void ExchangeData::TweetIt() {
-        //return;
-        //auto MY_CLIENT_ID = "Kkuh8WBi5O2sTIlRd7XALiNjQ";
-        //O1Twitter *o1;
-        //o1->setClientId(MY_CLIENT_ID);
-        //o1->setClientSecret(MY_CLIENT_SECRET);
-        string mytweet("My Tweet ");
+void ExchangeData::TweetIt(fantasybit::TradeTic *tt) {
 
-        auto timestamp = QString::number(QDateTime::currentDateTimeUtc().toTime_t()).toLatin1();
-        auto nonce = O1::nonce();
-        QList<O1RequestParameter> headers;
-        headers.append(O1RequestParameter(O2_OAUTH_VERSION, "1.0"));
-        headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE_METHOD, "HMAC-SHA1"));
-        headers.append(O1RequestParameter(O2_OAUTH_CONSUMER_KEY, "Kkuh8WBi5O2sTIlRd7XALiNjQ"));
-        headers.append(O1RequestParameter(O2_OAUTH_NONCE, nonce));
-        headers.append(O1RequestParameter(O2_OAUTH_TOKEN, "3305320862-vktlFL7JYwH8bqsIeQdPyV0FGdRdExTyRcvxyqr"));
-        headers.append(O1RequestParameter(O2_OAUTH_TIMESTAMP,timestamp ));
-        //headers.append(O1RequestParameter("Status",mytweet.data()));
-
-        QString token_secret("HoSKMd5ikQTag1C7drMu72SXoENg3BA9tyBrqrNtFiVxr");
-        QString client_secret("Kkuh8WBi5O2sTIlRd7XALiNjQ");
-
-        QUrl url("https://api.twitter.com/1.1/statuses/update.json");
-        QList<O1RequestParameter> other;
-        other.append(O1RequestParameter("Status",mytweet.data()));
+    auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
+                       (std::chrono::system_clock::now()).count());
 
 
-        auto signature = O1::sign(headers, other, url,
-                                  QNetworkAccessManager::PostOperation,
-                                  client_secret, token_secret);
+    std::chrono::steady_clock::time_point last_tweet = std::chrono::steady_clock::now();
+    //return;
+    auto MY_CLIENT_ID = "Kkuh8WBi5O2sTIlRd7XALiNjQ";
+    auto MY_CLIENT_SECRET = "7OCwZV9zd58mioyESDewf9TDlsJGUu8niuJYfZRM2dTro51RI5";
 
-        headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE,signature));
+    /*
+    auto MY_CLIENT_ID = "Kkuh8WBi5O2sTIlRd7XALiNjQ";
+    auto MY_CLIENT_SECRET = "7OCwZV9zd58mioyESDewf9TDlsJGUu8niuJYfZRM2dTro51RI5";
+    O1Twitter *o1 = new O1Twitter(this);
+    o1->setClientId(MY_CLIENT_ID);
+    o1->setClientSecret(MY_CLIENT_SECRET);
+    o1->link();
 
-        auto head = O1::buildAuthorizationHeader(headers);
+    return;
+    */
+    string mytweet("My Tweet ");
 
-        QMap<QString,QString> headersMap;
-        QMap<QString,QVariant> paramsMap;
+    auto timestamp = QString::number(QDateTime::currentDateTimeUtc().toTime_t()).toLatin1();
+    auto nonce = O1::nonce();
+    QList<O1RequestParameter> headers;
+    headers.append(O1RequestParameter(O2_OAUTH_VERSION, "1.0"));
+    headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE_METHOD, "HMAC-SHA1"));
+    headers.append(O1RequestParameter(O2_OAUTH_CONSUMER_KEY, "Kkuh8WBi5O2sTIlRd7XALiNjQ"));
+    headers.append(O1RequestParameter(O2_OAUTH_NONCE, nonce));
+    headers.append(O1RequestParameter(O2_OAUTH_TOKEN, "3305320862-vktlFL7JYwH8bqsIeQdPyV0FGdRdExTyRcvxyqr"));
+    headers.append(O1RequestParameter(O2_OAUTH_TIMESTAMP,timestamp ));
+    //headers.append(O1RequestParameter("Status",mytweet.data()));
 
-        headersMap[O2_HTTP_AUTHORIZATION_HEADER] = head;
-        paramsMap["Status"] = mytweet.data();
-        RestfullClient rest(url);
-        rest.postTData("",paramsMap,headersMap);
-        auto resp = rest.lastReply();
+    QString token_secret("HoSKMd5ikQTag1C7drMu72SXoENg3BA9tyBrqrNtFiVxr");
+    QString client_secret("7OCwZV9zd58mioyESDewf9TDlsJGUu8niuJYfZRM2dTro51RI5");
 
-        qDebug() << resp;
+    QUrl url("https://api.twitter.com/1.1/statuses/update.json");
+    QList<O1RequestParameter> other;
+    other.append(O1RequestParameter("Status",mytweet.data()));
 
-        //RestService
+
+    auto signature = O1::sign(headers, other, url,
+                              QNetworkAccessManager::PostOperation,
+                              client_secret, token_secret);
+
+    headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE,signature));
+
+    auto head = O1::buildAuthorizationHeader(headers);
+
+    qDebug() << " level2 tweet " << head;
+    QMap<QString,QString> headersMap;
+    QMap<QString,QString> paramsMap;
+
+    headersMap[O2_HTTP_AUTHORIZATION_HEADER] = head;
+    paramsMap["Status"] = mytweet.data();
+    RestfullClient rest(url);
+    rest.postTData("",paramsMap,headersMap);
+    auto resp = rest.lastReply();
+
+    qDebug() << resp;
+
+    //RestService
 /*
-        headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE,
-                      generateSignature(headers, request, QList<O1RequestParameter>(),
-                                        QNetworkAccessManager::PostOperation)));
+    headers.append(O1RequestParameter(O2_OAUTH_SIGNATURE,
+                  generateSignature(headers, request, QList<O1RequestParameter>(),
+                                    QNetworkAccessManager::PostOperation)));
 
-        std::string dst("OAuth ");
-        dst += "oauth_version=\"1.0\",";
-        dst += "oauth_signature_method=\"HMAC-SHA1\",";
-        dst += "oauth_consumer_key=\"Kkuh8WBi5O2sTIlRd7XALiNjQ\",";
-        dst += "oauth_token=\"3305320862-vktlFL7JYwH8bqsIeQdPyV0FGdRdExTyRcvxyqr\",";
-        //oauth_signature
+    std::string dst("OAuth ");
+    dst += "oauth_version=\"1.0\",";
+    dst += "oauth_signature_method=\"HMAC-SHA1\",";
+    dst += "oauth_consumer_key=\"Kkuh8WBi5O2sTIlRd7XALiNjQ\",";
+    dst += "oauth_token=\"3305320862-vktlFL7JYwH8bqsIeQdPyV0FGdRdExTyRcvxyqr\",";
+    //oauth_signature
 */
-    }
+}
 #endif
 
 
