@@ -54,8 +54,10 @@ void FantasyNameData::init() {
             writer(fn);
 #endif
             auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
-            if ( fnp != nullptr )
-                fnp->addBalance(fn.bits());
+            if ( fnp != nullptr ) {
+                fnp->newBalance(fn.bits());
+                fnp->addProfitLoss(fn.stake());
+            }
         }
         delete it;
     }
@@ -128,6 +130,7 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     FantasyNameBal fn{};
     fn.ParseFromString(temp);
     fn.set_bits(fn.bits() + amount);
+    fn.set_stake(fn.stake() + amount);
     namestore->Put(write_sync, hkey, fn.SerializeAsString());
     auto fnp = Commissioner::getName(hash);
     if ( fnp != nullptr)
@@ -141,6 +144,7 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
 void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     auto hash = FantasyName::name_hash(name);
 
+    qDebug() << "adding pnl " << name << pnl;
     string temp;
     leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
     if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {

@@ -249,6 +249,7 @@ void MainWindow::GlobalStateChange(fantasybit::GlobalState state){
                 if (!myLeaderBoardTimer.isActive()) myLeaderBoardTimer.start();
 
             myGlobalState = state;
+            ui->tradingview->SetCurrentWeekData(state.week());
 
     }
 

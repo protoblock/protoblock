@@ -95,6 +95,7 @@ void NFLStateData::InitCheckpoint() {
     FantasyNameBal fnb;
     while ( reader4.ReadNext(fnb) ) {
         auto hash = FantasyName::name_hash(fnb.name());
+        fnb.set_stake(fnb.bits());
 
         leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
         db5->Put(write_sync, hkey, fnb.SerializeAsString());

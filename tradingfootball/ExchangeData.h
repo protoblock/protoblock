@@ -318,6 +318,7 @@ public:
     bool amlive = false;
     std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
     std::unordered_map<int32_t,std::string> mSeqNameMap;
+    std::unordered_set<string> fnames;
     void OnTradeSessionStart(int week);
 
     void OnNewPosition(const string &,const Position &, const string &);
@@ -384,6 +385,10 @@ public:
     int mWeek;
 
     void OnWeekOver(int week);
+    void OnWeekStart(int week) {
+        mWeek = week;
+    }
+
     std::string filedir(const std::string &in) {
         return GET_ROOT_DIR() + "trade/" + in;
     }

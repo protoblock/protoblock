@@ -728,6 +728,7 @@ void BlockProcessor::OnWeekOver(int week) {
 void BlockProcessor::OnWeekStart(int week) {
     mNameData.OnWeekStart(week);
     mData.OnWeekStart(week);
+    mExchangeData.OnWeekStart(week);
     emit WeekStart(week);
 }
 
@@ -741,6 +742,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
     //    return false;
     }
     fc::sha256 digest = fc::sha256::hash(sblock.signedhead().head().SerializeAsString());
+    qDebug() << "qqqqqq" << sblock.signedhead().head().num() << digest.str() << sblock.signedhead().head().prev_id();
     //if (digest.str() != sblock.signedhead().id())
     //	return
     //fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));

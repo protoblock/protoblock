@@ -50,7 +50,7 @@ void ExchangeData::init() {
                 continue;
 
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData init GameSettlePos " << gsp.gameid();
+            qDebug() << "level2 ExchangeData init GameSettlePos llllll" << gsp.gameid();
 #endif
 
             for (auto ha : {QString("home"),QString("away")} )
@@ -175,7 +175,7 @@ void ExchangeData::init() {
             InsideBook *ib;
             if ( bd.has_newnew()) {
 #ifdef TRACE
-                qDebug() << "level2 ExchangeData new " << bd.newnew().DebugString();
+                qDebug() << "level2 ExchangeData new llllll" <<bd.fantasy_name() << bd.newnew().DebugString();
 #endif
                 ib = lb->getInside(bd.newnew().buyside(),bd.newnew().price());
                 Order o;
@@ -259,7 +259,7 @@ void ExchangeData::init() {
                 continue;
 
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData posstore " << str << sp.DebugString();
+            qDebug() << "level2 ExchangeData posstore llllll" << str << sp.DebugString();
 #endif
             auto &plist = mPositions[fname];
             Position &pos = plist[nflplayer];
@@ -305,6 +305,10 @@ void ExchangeData::closeAll() {
     bookdeltastore.reset();
     posstore.reset();
     mContractOHLC.clear();
+    mMarketQuote.clear();
+    mOpenOrders.clear();
+    mNameSeqMap.clear();
+    mSeqNameMap.clear();
     ///snapstore.reset();
 }
 
@@ -321,6 +325,7 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
     if ( amlive && mSubscribed.find(fn->alias()) != end(mSubscribed))
         ;//mSubscribed.insert(seqnum);
 
+    //fnames.insert(fn->alias());
     switch(eo.type()) {
     case ExchangeOrder::NEW:
         OnOrderNew(eo,seqnum,fn);
@@ -362,6 +367,11 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 
         return;
     }
+
+#ifdef TRACE
+    qDebug() << "level2 ExchangeData OnOrderNew oooooo " << fn->alias() << eo.DebugString();
+#endif
+
     //MatchingEngine &ma;
     auto it = mLimitBooks.find(eo.playerid());
     if ( it == end(mLimitBooks)) {
@@ -752,7 +762,7 @@ void ExchangeData::OnGameStart(std::string gid,
                 sp.set_pk(p.first);
                 bp.add_positions()->CopyFrom(sp);
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData OnGameStart settlepos " << sp.DebugString();
+    qDebug() << "level2 ExchangeData OnGameStart settlepos oooooo" << sp.DebugString();
 #endif
 
             }
@@ -1385,7 +1395,11 @@ void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
 void ExchangeData::OnLive(bool subscribe) {
     amlive = true;
 #ifdef TRACE
-qDebug() << "level2 ExchangeData OnLive";
+qDebug() << "level2 ExchangeData OnLive qqqqqq" << fnames.size();
+for (  auto n : fnames ) {
+    qDebug() << "qqqqqq" << n;
+}
+
 #endif
 
     auto st = DataService::instance()->GetGlobalState();
