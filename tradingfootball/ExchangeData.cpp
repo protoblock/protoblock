@@ -437,6 +437,8 @@ void ExchangeData::OnNewPosition(const string &fname,
     if (!posstore->Put(write_sync, key, spos.SerializeAsString()).ok())
         qWarning() << " error writing posstore" << fname << playerid;
 
+    mLimitBooks[playerid]->mPkPos[fname] = pos;
+
     if ( !amlive ) return;
 
     if ( mSubscribed.find(fname) == end(mSubscribed))
@@ -1290,6 +1292,7 @@ void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
             deltaqty = -q;
             deltapos = q * price;
         }
+
 
         pExchangeData->get()->
                 OnDeltaPos(mPlayerid, o.refnum(),deltaqty, deltapos);

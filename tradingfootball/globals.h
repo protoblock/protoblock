@@ -32,15 +32,15 @@
 #endif
 
 #ifndef MINOR_VERSION
-  #define MINOR_VERSION  0
+  #define MINOR_VERSION  1
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 4
+  #define REVISION_NUMBER 0
 #endif
 
 #ifndef BUILD_NUMBER
-  #define BUILD_NUMBER   1
+  #define BUILD_NUMBER   0
 #endif
 
 #ifndef COPYRIGHT_DATE
