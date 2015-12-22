@@ -222,6 +222,10 @@ void Trading::Init() {
                         SIGNAL(NewPos(fantasybit::FullPosition)),
                          this,SLOT(OnNewPos(fantasybit::FullPosition)));
 
+       QObject::connect(exchangedata,
+                        SIGNAL(NewOO(fantasybit::FullOrderDelta)),
+                         this,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
+
     }
 
     /*
@@ -437,12 +441,16 @@ void Trading::SetFantasyName(std::string name,int balance) {
 #endif
 
     if ( name != myFantasyName ) {
+        auto fn = Commissioner::getName(name);
         ui->fantastname->setText(name.data());
         myFantasyName = name;
-        ui->fantasybitSkill->setValue(balance);
+        ui->fantasybitSkill->setValue(fn->getBalance());
+        ui->fantasybitStake->setValue(fn->getStakeBalance());
+        ui->fantasybitPnl->setValue(ui->fantasybitStake->value());
         myOrdersFilterProxy->clear();
         SetMyPositions();
         invalidateFilters();
+        invalidateOrderFilters();
     }
 }
 
@@ -524,6 +532,12 @@ void Trading::invalidateFilters() {
     //ui->playerList->horizontalHeader()->setSectionResizeMode(mPlayerListModel.name1,QHeaderView::Interactive);
 
 }
+
+void Trading::invalidateOrderFilters() {
+    myOrdersFilterProxy.data()->enable();
+    myOrdersFilterProxy.data()->invalidate();
+}
+
 
 void Trading::invalidateFilters(bool) {
     invalidateFilters();
@@ -920,6 +934,7 @@ void Trading::SetMyPositions() {
 #ifdef TRACE
     qDebug() << "level2 Trading SetMyPositions" << myPositionsName << myorderpositions.size();
 #endif
+    double totpnl = 0.0;
     for ( auto p : myorderpositions ) {
       //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;
         auto &mypair = p.second;
@@ -944,7 +959,7 @@ void Trading::SetMyPositions() {
         double avg = 0;
         double pnl = 0;
         if ( netqty ==0 ) {
-            double pnl = p.second.first.netprice * 100;
+            pnl = p.second.first.netprice * 100;
         }
         else  {
             ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
@@ -964,7 +979,12 @@ void Trading::SetMyPositions() {
 
         }
 
+        totpnl += pnl;
+
     }
+
+    ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+totpnl);
+
 }
 
 
@@ -1148,6 +1168,37 @@ void Trading::OnNewPos(fantasybit::FullPosition fp) {
     }
 }
 
+void Trading::OnNewOO(fantasybit::FullOrderDelta fo) {
+    qDebug() << "level2 Trading::OnNewOO " << fo.fname << fo.openorder.DebugString();
+
+    if ( fo.fname != myFantasyName )
+        return;
+
+    auto &o = fo.openorder;
+
+    ViewModel * item = mOrderTableModel.itemByKey(o.refnum());
+    if ( item == NULL ) return;
+
+    if ( fo.openorder.core().size() <= 0)
+        mOrderTableModel.takeItem(o.refnum());
+    else {
+        mOrderTableModel.updateItemProperty<PropertyNames::ORDERID>(o.refnum(),o.refnum());
+        QString buyorsell(o.core().buyside() ? "Bid" : "Ask");
+        mOrderTableModel.updateItemProperty<PropertyNames::BUYORSELL>(o.refnum(),buyorsell);
+        mOrderTableModel.updateItemProperty<PropertyNames::PRICE>(o.refnum(),o.core().price());
+        mOrderTableModel.updateItemProperty<PropertyNames::QTY>(o.refnum(),o.core().size());
+        //mOrderTableModel.updateItemProperty<PropertyNames::ORDERID>(o.refnum(),o.refnum());
+        mOrderTableModel.updateItemProperty<PropertyNames::Player_ID>(o.refnum(),fo.playerid.data());
+        ViewModel * item = mPlayerListModel.itemByKey(fo.playerid.data());
+        auto name = item->propertyValue<PropertyNames::Player_Name>();
+        mOrderTableModel.updateItemProperty<PropertyNames::Player_Name>(o.refnum(),name);
+        //mOrderTableModel.updateItemProperty<PropertyNames::ORDERX>(o.refnum(),"");
+    }
+
+    invalidateOrderFilters();
+
+}
+
 void Trading::onControlMessage(QString msg) {
     if ( msg.contains("[t.2f]") && amlive ) {
 
@@ -1160,43 +1211,6 @@ void Trading::onControlMessage(QString msg) {
         msgBox.exec();
     }
 }
-
-/*
-decltype(Trading::icons) Trading::icons{
-    {"SF",":/NFL/png/49ers.png"},
-    {"CHI",":/NFL/png/Bears.png"},
-    {"CIN",":/NFL/png/Bengels.png"},
-    {"BUF",":/NFL/png/Bills.png"},
-    {"DEN",":/NFL/png/Broncos.png"},
-    {"CLE",":/NFL/png/Browns.png"},
-    {"TB",":/NFL/png/Buccaneers.png"},
-    {"ARI",":/NFL/png/Cardinals.png"},
-    {"SD",":/NFL/png/Chargers.png"},
-    {"KC",":/NFL/png/Chiefs.png"},
-    {"IND",":/NFL/png/Colts.png"},
-    {"DAL",":/NFL/png/Cowboys.png"},
-    {"MIA",":/NFL/png/Dolphins.png"},
-    {"PHI",":/NFL/png/Eagles.png"},
-    {"ATL",":/NFL/png/Falcons.png"},
-    {"NYG",":/NFL/png/Giants.png"},
-    {"JAC",":/NFL/png/Jaguar.png"},
-    {"NYJ",":/NFL/png/Jets.png"},
-    {"DET",":/NFL/png/Lions.png"},
-    {"GB",":/NFL/png/Packers.png"},
-    {"CAR",":/NFL/png/Panthers.png"},
-    {"NE",":/NFL/png/Patriots.png"},
-    {"OAK",":/NFL/png/Raiders.png"},
-    {"STL",":/NFL/png/Rams.png"},
-    {"BAL",":/NFL/png/Ravens.png"},
-    {"WAS",":/NFL/png/Redskins.png"},
-    {"NO",":/NFL/png/Saints.png"},
-    {"SEA",":/NFL/png/Seahawks.png"},
-    {"PIT",":/NFL/png/Steelers.png"},
-    {"HOU",":/NFL/png/Texans.png"},
-    {"TEN",":/NFL/png/Titans.png"},
-    {"MIN",":/NFL/png/Vikings.png"},
-};
-*/
 
 decltype(Trading::icons) Trading::icons{
     {"SF",":/NFL/ico/49ers.ico"},

@@ -484,6 +484,9 @@ public slots:
     }
 
     void OnNewPos(fantasybit::FullPosition);
+    void OnNewOO(fantasybit::FullOrderDelta);
+
+
     void cancelOrderByXButton();
     //void CanelOrderslot(int id);
 
@@ -506,6 +509,7 @@ public slots:
     }
 
     void CancelOrder(int id);
+    void invalidateOrderFilters();
     void invalidateFilters(bool);
     void invalidateFilters(int);
 

@@ -50,7 +50,8 @@ struct FullPosition {
 
 struct FullOrderDelta {
     string fname;
-    OpenOrder openorder;
+    Order openorder;
+    string playerid;
 };
 
 
@@ -321,7 +322,9 @@ public:
 
     void OnNewPosition(const string &,const Position &, const string &);
 
-    void OnDeltaOpenOrder(const string &fname, const OpenOrder &oo);
+    void OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int32_t seqnum);
+    void OnCancelOpenOrder(const OpenOrder &oo,int32_t seqnum);
+
 
     void Subscribe(std::string in) {
 #ifdef TRACE

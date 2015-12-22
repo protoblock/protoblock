@@ -504,7 +504,19 @@ void ExchangeData::SaveBookDelta() {
     }
 }
 
-void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo) {
+void ExchangeData::OnCancelOpenOrder(const OpenOrder &oo,int32_t seqnum) {
+    if ( !amlive ) return;
+
+    auto it = mSeqNameMap.find(seqnum);
+    if ( it == end(mSeqNameMap)) {
+        qCritical() << " level2 error expect mSeqNameMap OnDeltaPos" << seqnum;
+        return;
+    }
+
+    OnDeltaOpenOrder(it->second,oo,seqnum);
+
+}
+void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int32_t seqnum) {
     if ( !amlive ) return;
     if ( mSubscribed.find(fname) == end(mSubscribed))
 #ifdef TRACE
@@ -519,8 +531,10 @@ void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo) {
     qDebug() << "level2 OnDeltaOpenOrder !subscribed emit NewOO" << fname ;
 #endif
 
-    emit NewOO(FullOrderDelta{fname,oo});
-
+    Order ord;
+    ord.mutable_core()->CopyFrom(oo.livecore);
+    ord.set_refnum(seqnum);
+    emit NewOO(FullOrderDelta{fname,ord,oo.playerid});
 }
 
 void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
@@ -541,7 +555,7 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
         mOpenOrders.insert(make_pair(static_cast<int32_t>(bd.seqnum()),
                                 openorder));
 
-        OnDeltaOpenOrder(bd.fantasy_name(),openorder);
+        OnDeltaOpenOrder(bd.fantasy_name(),openorder,bd.seqnum());
 
 #ifdef TRACE
         qDebug() << "level2 ProcessBookDelta add open ord" << bd.seqnum() << bd.playerid();
@@ -562,16 +576,18 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
             auto sz = core.size();
 
             auto newsz = can.core().size() - sz;
-            if ( newsz > 0 )
-                core.set_size(newsz);
-            else
+            core.set_size(newsz);
+            if ( newsz <= 0 )
                 mOpenOrders.erase(iter);
+
+            OnCancelOpenOrder(iter->second,can.refnum());
 
         }
         else
             qCritical() << " should already have this REMOVE order" << can.DebugString();
     }
 }
+
 
 //BookDelta mBookDelta{};
 
