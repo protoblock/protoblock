@@ -572,9 +572,6 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
         ord.set_refnum(eo.cancel_oref());
     }
 
-    if ( playerid == "1078")
-        qDebug() << "seq";
-
     auto it = mLimitBooks.find(playerid);
     if ( it == end(mLimitBooks)) {
         qWarning() << "invalid cancel LimitBook not found for" << eo.DebugString();
