@@ -240,6 +240,47 @@ public:
     }
 
 
+    bool postTData(const QString & route,
+                 const QMap<QString,QString> parameters,
+                 const QMap<QString,QString> headersMap)  {
+        QNetworkRequest request;
+        restNetworkStatus();
+        //construct url with parameters
+        QString url = myBaseUrl.toString();
+        //if (parameters.count()> 0) url+="?";
+
+        QByteArray postBodyContent;
+        foreach (QString paramName, parameters.keys()) {
+            //url+=QString("%1=%2").arg(paramName) + QUrl::toPercentEncoding(parameters.value(paramName).toString());
+            postBodyContent.append(QUrl::toPercentEncoding(paramName) + QString("=").toUtf8() +
+                                   QUrl::toPercentEncoding(parameters.value(paramName)));
+
+        }
+        request.setUrl(QUrl(url));
+
+        //add headers
+        foreach (QString headerKey, headersMap.keys()) {
+            request.setRawHeader(headerKey.toUtf8(),headersMap.value(headerKey).toUtf8());
+        }
+
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
+        qDebug() << "Post : " << request.url().toDisplayString();
+        if (myNetworkManager.networkAccessible()==QNetworkAccessManager::Accessible){
+            myCurrentNetworkReply = myNetworkManager.post(request,postBodyContent);
+            //qDebug() << "waitForReply : " << request.url().toDisplayString();
+
+            waitForReply();
+            return true;
+        }
+        else {
+            qDebug()<< "No network connection !";
+            return false;
+        }
+    }
+    /**/
+
+
 signals:
 
     void doneReading();

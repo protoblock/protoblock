@@ -11,9 +11,19 @@ using namespace fantasybit;
 
 Trading::Trading(QWidget *parent) :
     QWidget(parent),
+    #ifdef TIMEAGENTWRITETWEETS
+        sock{AF_SP, NN_PAIR},
+    #endif
     ui(new Ui::Trading)
 {
+#ifdef TIMEAGENTWRITETWEETS
+    sock.bind("tcp://127.0.0.1:5088");
+#endif
+
     ui->setupUi(this);
+
+    //;
+
 
 /*
     int w = ui->currentTeam->width();
@@ -271,6 +281,10 @@ void Trading::Init() {
 Trading::~Trading()
 {
     delete ui;
+#ifdef TIMEAGENTWRITETWEETS
+    nn_term();
+#endif
+
 }
 
 void Trading::OnOrderCancelSelected(QModelIndex index,QModelIndex index2) {
@@ -783,6 +797,10 @@ void Trading::OnTradeTick(fantasybit::TradeTic* tt) {
         //emit OnPriceChange(ui->marketLast->value());
     }
 
+#ifdef TIMEAGENTWRITETWEETS
+    TweetIt(tt);
+#endif
+
 }
 
 
@@ -954,6 +972,7 @@ void Trading::SetMyPositions() {
 #include "playerloader.h"
 void Trading::on_pushButton_clicked()
 {
+    bool onlysell = false;
     MikeClayLoader mkl;
     auto mproj = mkl.loadProjFromLink(15);
 
@@ -967,22 +986,41 @@ void Trading::on_pushButton_clicked()
         //continue;
         int bid = 0;
         bool nextask = false;
+        ViewModel * data = mPlayerListModel.itemByKey(p.playerid().data());
+        if ( !data )
+            continue;
+
+        auto pname = data->propertyValue<QString,PropertyNames::Player_Name>();
+        auto pos = data->propertyValue<QString,PropertyNames::Position>();
+        auto t = data->propertyValue<QString,PropertyNames::Team_ID>();
+
+        if ( t != "NYJ" && t != "DAL" )
+            continue;
+
+        if ( p.points() < 5 ) continue;
+
         do {
             bool isbid = !nextask;
+            if ( onlysell ) isbid = false;
             eo.set_playerid(p.playerid());
             eo.set_type(ExchangeOrder::NEW);
 
             OrderCore core;
             core.set_buyside(isbid);
-            core.set_size(5);
-            int delta = floor(p.points() * .50);// * ((isbid) ? -1 : 1);
-            if ( isbid ) delta = -delta;
+            core.set_size(1);
+            int delta = 0;//floor(p.points() * .75);// * ((isbid) ? -1 : 1);
+            if ( isbid ) delta = -1;//-delta;
             int price = p.points() + delta;
             if ( isbid ) {
                 if ( price <= 0 ) price = 1;
                 bid = price;
             }
             else {
+                price = p.points();
+                if ( onlysell ) {
+                    price = p.points();
+                    bid = price--;
+                }
                 if ( price <= 0 && bid <= 1) continue;
 
                 if ( price <= bid ) price++;
@@ -1014,7 +1052,7 @@ void Trading::on_pushButton_clicked()
             //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
             rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 
-        } while(nextask = !nextask);
+        } while(nextask = !nextask && !onlysell);
     }
 }
 #else
@@ -1195,3 +1233,60 @@ decltype(Trading::icons) Trading::icons{
     {"MIN",":/NFL/ico/Vikings.ico"},
 };
 
+#ifdef TIMEAGENTWRITETWEETS
+#include "nn.hpp"
+void Trading::TweetIt(fantasybit::TradeTic *tt) {
+
+    ViewModel * data = mPlayerListModel.itemByKey(tt->symbol().data());
+    if ( !data )
+        return;
+
+    auto pname = data->propertyValue<QString,PropertyNames::Player_Name>();
+    auto pos = data->propertyValue<QString,PropertyNames::Position>();
+    auto t = data->propertyValue<QString,PropertyNames::Team_ID>();
+
+
+    QString tweet = "%1 %2 (%3) last trade -%4-";
+    tweet = tweet.arg(pname,pos,t,to_string(tt->price()).data());
+
+    bool doit = false;
+    QString type(" ");
+    if ( tt->ishigh() || tt->islow()) {
+        int price = 0;
+        auto &lasttime = mLastTweet[tt->symbol()];
+        auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
+                            (std::chrono::system_clock::now()-lasttime.second).count());
+
+        if ( tt->islow() && (sincelast > 30 || lasttime.first)) {
+            if ( !tt->ishigh() )
+                type = " at new Low! ";
+            lasttime.first = false;
+            lasttime.second = std::chrono::system_clock::now();
+            doit = true;;
+        }
+        else if ( tt->ishigh() && (sincelast > 30 || !lasttime.first)) {
+            type = " at new High! ";
+            lasttime.first = true;
+            lasttime.second = std::chrono::system_clock::now();
+            doit = true;
+        }
+    }
+    if ( !doit ) {
+         auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
+                             (std::chrono::system_clock::now()-last_tweet).count());
+         if ( sincelast > 30)
+            doit = true;
+
+         type = " ";
+    }
+
+    if ( !doit ) return;
+
+    last_tweet = std::chrono::system_clock::now();
+    QString end = "%1 #fantasyfootball week %2 %3";
+    end = end.arg(getLink(tt->symbol()), to_string(mCurrentWeek).data(), TimetoTweetString());
+    string tosend = tweet.toStdString() + type.toStdString() + end.toStdString() ;
+    sock.send(tosend.data(), tosend.size(),0);
+}
+
+#endif

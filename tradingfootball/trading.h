@@ -7,6 +7,12 @@
 #include "tablemodels.h"
 #include "dataservice.h"
 #include "julylightchanges.h"
+#ifdef TIMEAGENTWRITETWEETS
+#include "nn.hpp"
+#include "nn.h"
+#include <nanomsg/pair.h>
+#endif
+
 
 class DepthTablesModel : public QAbstractTableModel {
     struct BookItem {
@@ -420,6 +426,7 @@ class Trading : public QWidget
 
 public:
     explicit Trading(QWidget *parent = 0);
+
     ~Trading();
 
     void NewOrder(bool);
@@ -528,6 +535,19 @@ private:
     bool mUpdatingB = false;
     void invalidateFilters();
 
+#ifdef TIMEAGENTWRITETWEETS
+    nn::socket sock;
+    std::unordered_map<string,std::pair<bool,std::chrono::steady_clock::time_point>> mLastTweet;
+#endif
+
+    static QString getLink(string is) {
+        return QString("https://trading.football/player?playerId=%1").arg(is.data());
+    }
+#ifdef TIMEAGENTWRITETWEETS
+    void Trading::TweetIt(fantasybit::TradeTic *tt);
+
+    std::chrono::steady_clock::time_point last_tweet;
+#endif
 
 
 };
