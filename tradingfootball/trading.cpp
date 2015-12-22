@@ -972,11 +972,14 @@ void Trading::SetMyPositions() {
         }
         else  {
             ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
-            int price = (netqty > 0) ?
-                    item->propertyValue<PropertyNames::BID>().toInt() :
-                    item->propertyValue<PropertyNames::ASK>().toInt();
+            int bid = item->propertyValue<PropertyNames::BID>().toInt();
+            int ask = item->propertyValue<PropertyNames::ASK>().toInt();
+            int price = (netqty > 0) ? bid :  ask;
 
-            pnl = 100 * ((price * netqty) + p.second.first.netprice);
+            if ( bid == 0 && ask == 0 )
+                pnl = 0;
+            else
+                pnl = 100 * ((price * netqty) + p.second.first.netprice);
             avg = p.second.first.netprice / (netqty * -1);
         }
 

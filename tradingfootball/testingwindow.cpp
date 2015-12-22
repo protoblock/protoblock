@@ -857,8 +857,8 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     myMessageData.Clear();
 
     myMessageData.set_msg(number +
-        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">New Version 2.0.4 - Trading. (win64)[t.2f][t.f]</a>");
-    myMessageData.set_lt(2040);
+        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">New Version 2.1 - Trading. (win64)[t.2f][t.f]</a>");
+    myMessageData.set_lt(2100);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     qDebug() << myMessageData.msg();
