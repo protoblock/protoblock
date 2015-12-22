@@ -504,6 +504,25 @@ void ExchangeData::SaveBookDelta() {
     }
 }
 
+void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo) {
+    if ( !amlive ) return;
+    if ( mSubscribed.find(fname) == end(mSubscribed))
+#ifdef TRACE
+    {
+        qDebug() << "level2 OnDeltaOpenOrder !subscribed" << fname;
+#endif
+
+         return;
+
+#ifdef TRACE
+    }
+    qDebug() << "level2 OnDeltaOpenOrder !subscribed emit NewOO" << fname ;
+#endif
+
+    emit NewOO(FullOrderDelta{fname,oo});
+
+}
+
 void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
 
 #ifdef TRACE
@@ -518,8 +537,11 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
         if ( mOpenOrders.find(bd.seqnum()) != end(mOpenOrders) )
             qCritical() << "level2 ExchangeData already have this NEW order" << bd.newnew().DebugString();
 
+        OpenOrder openorder{bd.playerid(), bd.newnew()};
         mOpenOrders.insert(make_pair(static_cast<int32_t>(bd.seqnum()),
-                                OpenOrder{bd.playerid(), bd.newnew()}));
+                                openorder));
+
+        OnDeltaOpenOrder(bd.fantasy_name(),openorder);
 
 #ifdef TRACE
         qDebug() << "level2 ProcessBookDelta add open ord" << bd.seqnum() << bd.playerid();

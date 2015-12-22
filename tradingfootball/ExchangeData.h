@@ -29,6 +29,10 @@ using namespace std;
 
 namespace fantasybit
 {
+struct OpenOrder {
+    string playerid;
+    OrderCore livecore;
+};
 
 struct Position {
     int netqty;
@@ -43,6 +47,12 @@ struct FullPosition {
     string fname;
     Position pos;
 };
+
+struct FullOrderDelta {
+    string fname;
+    OpenOrder openorder;
+};
+
 
 typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order> > > ordsnap_t;
 
@@ -272,10 +282,6 @@ struct MatchingEngine {
     }
 };
 
-struct OpenOrder {
-    string playerid;
-    OrderCore livecore;
-};
 
 class ExchangeData : public QObject {
 
@@ -314,6 +320,8 @@ public:
     void OnTradeSessionStart(int week);
 
     void OnNewPosition(const string &,const Position &, const string &);
+
+    void OnDeltaOpenOrder(const string &fname, const OpenOrder &oo);
 
     void Subscribe(std::string in) {
 #ifdef TRACE
@@ -424,6 +432,8 @@ signals:
     void NewTradeTic(fantasybit::TradeTic *);
     void NewFantasyNameOrder(fantasybit::Order&);
     void NewPos(fantasybit::FullPosition);
+    void NewOO(fantasybit::FullOrderDelta);
+
 public slots:
     void OnLive(bool subscribe);
 };
