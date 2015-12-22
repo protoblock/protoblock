@@ -412,7 +412,7 @@ void Trading::OnplayerListSelection(QModelIndex index,QModelIndex) {
 
         ui->posAvgPrice->setValue(data->propertyValue<QString,PropertyNames::MYAVG>().toInt());
         ui->posQty->setValue(data->propertyValue<QString,PropertyNames::MYPOS>().toInt());
-
+        ui->posOpenPnl->setValue(data->propertyValue<QString,PropertyNames::MYPNL>().toInt());
 
         /*
         int netqty = ui->posQty->value();
@@ -447,7 +447,6 @@ void Trading::SetFantasyName(std::string name,int balance) {
         ui->fantasybitSkill->setValue(fn->getBalance());
         ui->fantasybitStake->setValue(fn->getStakeBalance());
         ui->fantasybitPnl->setValue(ui->fantasybitStake->value());
-        myOrdersFilterProxy->clear();
         SetMyPositions();
         invalidateFilters();
         invalidateOrderFilters();
@@ -613,84 +612,6 @@ void Trading::SetCurrentWeekData(int week) {
         ui->playerList->resizeColumnsToContents();
         ui->playerList->resizeRowsToContents();
     }
-        /*
-        if ( lasttime != game.info.time()) {
-            ui->gameList->addItem(fromTime_t_toFantasyString(game.info.time()));
-            lasttime = game.info.time();
-        }
-        QString gamev = "<img src=" +
-                QString::fromStdString(Trading::icons[game.info.away()]) +">"
-                + "@" +
-                "<img src=" + QString::fromStdString(Trading::icons[game.info.home()]) +">";
-        ui->gameList->addItem(gamev);
-
-        ui->gameList->insertItem();
-        setItemWidget
-*/
-        /*
-        // add game
-        myGameTableModel.updateItemProperty<PropertyNames::Game_ID>(gameId,gameId);
-        myGameTableModel.updateItemProperty<PropertyNames::Away>(gameId,game.info.away().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Home>(gameId,game.info.home().data());
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Time>(gameId,fromTime_t_toFantasyString(game.info.time()));
-        myGameTableModel.updateItemProperty<PropertyNames::Game_Status>(gameId,qVariantFromValue<GameStatus_Status>(game.status));
-        //add home players
-        for(const auto& player : game.homeroster) {
-            QString playerId = player.first.data();
-            PlayerDetail playerDetails = player.second;
-            QString playerName;
-            playerName = QString(playerDetails.base.first().data()) + " " + QString(playerDetails.base.last().data());
-            myProjectionsModel.updateItemProperty<PropertyNames::Game_ID>(playerId,gameId);
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_ID>(playerId,playerId);
-            myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,game.info.home().data());
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerName);
-            myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
-
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,
-                                              qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,
-                                              qVariantFromValue<PlayerGameStatus>(playerDetails.game_status));
-            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId, 0);
-            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,QVariant::fromValue(ScoreState::NonScored));
-            myProjectionsModel.updateItemProperty<PropertyNames::KnownProjection>(playerId,-1);
-
-        }
-
-        //add away players
-        for(const auto& player : game.awayroster) {
-            QString playerId = player.first.data();
-            PlayerDetail playerDetails = player.second;
-            QString playerName;
-            playerName = QString(playerDetails.base.first().data()) + " " + QString(playerDetails.base.last().data());
-            myProjectionsModel.updateItemProperty<PropertyNames::Game_ID>(playerId,gameId);
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_ID>(playerId,playerId);
-            myProjectionsModel.updateItemProperty<PropertyNames::Team_ID>(playerId,game.info.away().data());
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Name>(playerId,playerName);
-            myProjectionsModel.updateItemProperty<PropertyNames::Position>(playerId,playerDetails.base.position().data());
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Status>(playerId,
-                                              qVariantFromValue<PlayerStatus_Status>(playerDetails.team_status));
-            myProjectionsModel.updateItemProperty<PropertyNames::Player_Game_Status>(playerId,
-                                                                                     qVariantFromValue<PlayerGameStatus>(playerDetails.game_status));
-            myProjectionsModel.updateItemProperty<PropertyNames::Projection>(playerId,0);
-            myProjectionsModel.updateItemProperty<PropertyNames::ProjectionStatus>(playerId,QVariant::fromValue(ScoreState::NonScored));
-            myProjectionsModel.updateItemProperty<PropertyNames::KnownProjection>(playerId,-1);
-
-        }
-        */
-
-
-    /*
-    QString ii = "<img src=" + QString::fromStdString(Trading::icons["NYJ"]) +">";
-
-    ui->gamesCombo->insertItem(i++,ii,"gameId");
-
-
-    string home ="NYJ";
-    string away = "NYG";
-    ui->awayicon->setTextFormat(Qt::RichText);
-    ui->awayicon->setText("<img src=" + QString::fromStdString(Trading::icons[away]) +">");
-    ui->homeicon->setText("<img src=" + QString::fromStdString(Trading::icons[home]) +">");
-    */
 }
 
 void Trading::NewOrder(bool isbuy) {
@@ -760,21 +681,84 @@ void Trading::OnMarketTicker(fantasybit::MarketTicker* mt) {
     if ( mt->symbol() == "" ) return;
     QString playerid = mt->symbol().data();
     mPlayerListModel.updateItemProperty<PropertyNames::Player_ID>(playerid,playerid);
+    ViewModel * item = mPlayerListModel.itemByKey(playerid);
     if ( mt->type() == MarketTicker_Type_BID) {
         mPlayerListModel.updateItemProperty<PropertyNames::BIDSIZE>(playerid, mt->size());
         mPlayerListModel.updateItemProperty<PropertyNames::BID>(playerid,mt->price());
+        double pnl = 0.0;
+        int32_t pos = item->propertyValue<PropertyNames::MYPOS>().toInt();
+
+        if (pos > 0 ) {
+            int32_t avg = item->propertyValue<PropertyNames::MYAVG>().toInt();
+            int32_t mypnl = item->propertyValue<PropertyNames::MYPNL>().toInt();
+
+            if ( mt->price() == 0) {
+                if ( item->propertyValue<PropertyNames::ASK>().toInt() == 0)
+                    pnl = 0;
+                else
+                    pnl = pos * avg * -1;
+            }
+            else {
+                auto netprice = avg * pos * -1;
+                pnl = 100 * ((mt->price() * pos) + netprice);
+            }
+            mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(playerid,pnl);
+
+            double delta = pnl - mypnl;
+            ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+delta);
+        }
+
+
         if ( mt->symbol() == myPlayerid ) {
             ui->marketBid->setValue(mt->price());
             //ui->marketBids->setValue(mt->size());
+            if ( pos > 0 )
+                ui->posOpenPnl->setValue(pnl);
         }
+
+
     }
     else if ( mt->type() == MarketTicker_Type_ASK){
         mPlayerListModel.updateItemProperty<PropertyNames::ASK>(playerid,mt->price());
         mPlayerListModel.updateItemProperty<PropertyNames::ASKSIZE>(playerid,mt->size());
+        double pnl = 0.0;
+        int32_t pos = item->propertyValue<PropertyNames::MYPOS>().toInt();
+
+        if (pos < 0 ) {
+            int32_t avg = item->propertyValue<PropertyNames::MYAVG>().toInt();
+            int32_t mypnl = item->propertyValue<PropertyNames::MYPNL>().toInt();
+
+            int useprice = mt->price();
+            if ( useprice == 0) {
+                useprice = item->propertyValue<PropertyNames::LAST>().toInt();
+                if ( useprice == 0 )
+                    useprice = item->propertyValue<PropertyNames::BID>().toInt();
+                useprice = max(avg,useprice);
+            }
+
+
+            if ( useprice == 0) {
+                pnl = 0;//pos * avg * -1;
+            }
+            else {
+                auto netprice = avg * pos * -1;
+                pnl = 100 * ((mt->price() * pos) + netprice);
+            }
+            mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(playerid,pnl);
+
+            double delta = pnl - mypnl;
+            ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+delta);
+
+        }
+
+
         if ( mt->symbol() == myPlayerid ) {
             ui->marketAsk->setValue(mt->price());;
-            //ui->marketAsks->setValue(mt->size());
+            //ui->marketBids->setValue(mt->size());
+            if ( pos < 0 )
+                ui->posOpenPnl->setValue(pnl);
         }
+
     }
 
 }
@@ -802,6 +786,19 @@ void Trading::OnTradeTick(fantasybit::TradeTic* tt) {
     if ( tt->islow())
         mPlayerListModel.updateItemProperty<PropertyNames::LOW>(playerid, tt->price());
 
+    /*
+    double pnl = 0.0;
+    int32_t pos = item->propertyValue<PropertyNames::MYPOS>().toInt();
+    int32_t avg = item->propertyValue<PropertyNames::MYAVG>().toInt();
+
+    if (pos != 0 ) {
+        if ( tt->has_price() && tt->price() > 0) {
+            auto netprice = avg * pos * -1;
+            pnl = 100 * ((tt->price() * pos) + netprice);
+            mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(playerid,pnl);
+        }
+    }
+    */
     if ( updatelive ) {
         ui->marketLast->setValue(tt->price());
         ui->marketVolume->setValue(volume);
@@ -809,6 +806,8 @@ void Trading::OnTradeTick(fantasybit::TradeTic* tt) {
         if ( tt->islow() ) ui->marketLow->setValue(tt->price());
         ui->marketChng->setValue(tt->change());
         //emit OnPriceChange(ui->marketLast->value());
+        //if ( pos != 0)
+        //    ui->posOpenPnl->setValue(pnl);
     }
 
 #ifdef TIMEAGENTWRITETWEETS
@@ -928,6 +927,16 @@ void Trading::on_sellPriceAsMarketBid_clicked()
 
 void Trading::SetMyPositions() {
     mOrderTableModel.removeAll();
+    for ( auto key : mPlayerListModel.keys()) {
+        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(key,0);
+        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(key,0);
+        mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(key,0);
+    }
+    ui->posQty->setValue(0);
+    ui->posAvgPrice->setValue(0);
+    ui->posOpenPnl->setValue(0);
+
+
     myPositionsName = myFantasyName;
     auto myorderpositions = DataService::instance()->GetOrdersPositionsByName(myPositionsName);
 
@@ -963,7 +972,10 @@ void Trading::SetMyPositions() {
         }
         else  {
             ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
-            int price = item->propertyValue<PropertyNames::LAST>().toInt();
+            int price = (netqty > 0) ?
+                    item->propertyValue<PropertyNames::BID>().toInt() :
+                    item->propertyValue<PropertyNames::ASK>().toInt();
+
             pnl = 100 * ((price * netqty) + p.second.first.netprice);
             avg = p.second.first.netprice / (netqty * -1);
         }
@@ -976,7 +988,6 @@ void Trading::SetMyPositions() {
             ui->posQty->setValue(netqty);
             ui->posAvgPrice->setValue(avg);
             ui->posOpenPnl->setValue(pnl);
-
         }
 
         totpnl += pnl;

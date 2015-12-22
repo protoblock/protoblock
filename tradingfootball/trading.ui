@@ -268,7 +268,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Week open Balance  </string>
+           <string>Settled Balance  </string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>

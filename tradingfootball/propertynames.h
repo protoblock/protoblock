@@ -24,6 +24,8 @@ namespace PropertyNames {
     ENUMITEM(Kickoff_Time)
     ENUMITEM(Fantasy_Name)
     ENUMITEM(Balance)
+    ENUMITEM(StakeBalance)
+
     ENUMITEM(Player_ID)
     ENUMITEM(Player_Name)
     ENUMITEM(Position)

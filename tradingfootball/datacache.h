@@ -48,6 +48,8 @@ public:
             QString fantasyPlayerName = fPlayer->alias().data();
             myLeaderBoardTableModel.updateItemProperty<PropertyNames::Fantasy_Name>(fantasyPlayerName,fantasyPlayerName);
             myLeaderBoardTableModel.updateItemProperty<PropertyNames::Balance>(fantasyPlayerName,fPlayer->getBalance());
+            myLeaderBoardTableModel.updateItemProperty<PropertyNames::StakeBalance>(fantasyPlayerName,fPlayer->getStakeBalance());
+
         }
 		myLeaderboardDataUpdated = true;
 

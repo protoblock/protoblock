@@ -205,6 +205,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( !mExchangeData.GetGameSettlePos(rd.game_result().gameid(),gsp) )
                    nopnl = true;
 
+                qDebug() << gsp.DebugString();
+
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
                 unordered_map<string,BookPos *> posmap;
 

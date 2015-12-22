@@ -95,6 +95,9 @@ protected:
             return data->propertyValue<PropertyNames::Fantasy_Name>();
         if( column ==1)
             return data->propertyValue<PropertyNames::Balance>();
+        if( column ==2)
+            return data->propertyValue<PropertyNames::StakeBalance>();
+
         return QVariant();
     }
 
@@ -103,7 +106,7 @@ protected:
 private:
     void initialize() {
         QStringList headers;
-        headers << "FantasyName" << "FantasyBits";
+        headers << "FantasyName" << "Skill Balance" << "Stake Balance";
         setHorizontalHeaders(headers);       
     }
 };

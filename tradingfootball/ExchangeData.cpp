@@ -577,10 +577,10 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
 
             auto newsz = can.core().size() - sz;
             core.set_size(newsz);
-            if ( newsz <= 0 )
-                mOpenOrders.erase(iter);
 
             OnCancelOpenOrder(iter->second,can.refnum());
+            if ( newsz <= 0 )
+                mOpenOrders.erase(iter);
 
         }
         else
