@@ -856,15 +856,21 @@ bool TestingWindow::makeStageBlock(DataTransition &dt) {
     dt.add_data()->CopyFrom(d);
     myMessageData.Clear();
 
-
     myMessageData.set_msg(number +
-        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">New Version 2.0 - Trading. (win64)</a>");
-    myMessageData.set_lt(2000);
+        " <a href=\"http://trading.football:8080/tradingfootball-setup.exe\">New Version 2.0.4 - Trading. (win64)[t.2f][t.f]</a>");
+    myMessageData.set_lt(2040);
     d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
     dt.add_data()->CopyFrom(d);
     qDebug() << myMessageData.msg();
     myMessageData.Clear();
 
+    myMessageData.set_msg(number +
+        " <a href=\"http://trading.football:8080/tradingfootball.dmg\">New Version 2.0.4.1 - Trading. (osx64)[t.2f][t.f]</a>");
+    myMessageData.set_lt(2041);
+    d.MutableExtension(MessageData::message_data)->CopyFrom(myMessageData);
+    dt.add_data()->CopyFrom(d);
+    qDebug() << myMessageData.msg();
+    myMessageData.Clear();
 
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
