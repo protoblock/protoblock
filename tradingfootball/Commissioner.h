@@ -32,13 +32,21 @@ public:
 	Commissioner() {	}
 
     static int DeveloperCheckpointHigh() {
+#ifdef CHECKPOINT_2100
+        return 2936;
+#else
         return 2187;
+#endif
+
     }
 
     static string DeveloperCheckPointId() {
         //return "2bf0172182bd7d425860cffe127507ef60f0675416d1382ca84988b0cbc68e29";
+#ifdef CHECKPOINT_2100
+        return "c64b5e7eb550b5b1bafc037f98074ec8e0807ca21c7712c71070209bad44cf97";
+#else
         return "802debd372421418ab30b074133f49ddb663c44130dcb1876ebd2ad25cfc3091";
-
+#endif
     }
     static Block getCheckPoint() {
         Block b;
