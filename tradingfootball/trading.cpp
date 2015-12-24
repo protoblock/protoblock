@@ -1006,9 +1006,11 @@ void Trading::SetMyPositions() {
 #include "playerloader.h"
 void Trading::on_pushButton_clicked()
 {
+    bool special = true;
     bool onlysell = false;
+    bool onlybuy = false;;
     MikeClayLoader mkl;
-    auto mproj = mkl.loadProjFromLink(15);
+    auto mproj = mkl.loadProjFromLink(16);
 
 
     for ( auto p : mproj ) {
@@ -1027,11 +1029,13 @@ void Trading::on_pushButton_clicked()
         auto pname = data->propertyValue<QString,PropertyNames::Player_Name>();
         auto pos = data->propertyValue<QString,PropertyNames::Position>();
         auto t = data->propertyValue<QString,PropertyNames::Team_ID>();
+        auto bidp = data->propertyValue<QString,PropertyNames::BID>().toInt();
+        auto askp = data->propertyValue<QString,PropertyNames::ASK>().toInt();
 
-        if ( t != "NYJ" && t != "DAL" )
+        if ( t != "OAK" && t != "SD" )
             continue;
 
-        if ( p.points() < 5 ) continue;
+        //if ( p.points() < 3 ) continue;
 
         do {
             bool isbid = !nextask;
@@ -1041,20 +1045,56 @@ void Trading::on_pushButton_clicked()
 
             OrderCore core;
             core.set_buyside(isbid);
-            core.set_size(1);
-            int delta = 0;//floor(p.points() * .75);// * ((isbid) ? -1 : 1);
-            if ( isbid ) delta = -1;//-delta;
+            core.set_size(2);
+            int delta = floor(p.points() * .75);// * ((isbid) ? -1 : 1);
+            if ( isbid ) delta = -delta;
             int price = p.points() + delta;
             if ( isbid ) {
-                if ( price <= 0 ) price = 1;
-                bid = price;
+                if ( special ) {
+                    bid = 0;
+                    price = p.points();
+                    if ( price > 20 ) price -= 5;
+                    else if ( price > 10 ) price -= 4;
+                    else if ( price > 5 ) price -= 3;
+                    else {
+                        price-=2;
+                        if ( price == 0)
+                            price = 1;
+
+                        //price = p.points();
+                        //bid = price--;
+                    }
+
+                    if ( price < 0 ) continue;
+                    if ( price >= askp-1 && askp > 0 ) continue;
+                    if ( price <= bidp ) continue;
+                    bid = price;
+                }
+                else {
+                    if ( price <= 0 ) price = 1;
+                    bid = price;
+                }
             }
             else {
-                price = p.points();
-                if ( onlysell ) {
+                if ( special ) {
+
                     price = p.points();
-                    bid = price--;
+                    if ( price > 20 ) price -= 4;
+                    else if ( price > 10 ) price -= 3;
+                    else if ( price > 5 ) price -= 2;
+                    else {
+                        price--;
+                        if ( price <= 1)
+                            price = 2;
+                        //price = p.points();
+                        //bid = price--;
+                    }
+
+                    if ( price <= bid ) price = bid+1;
+                    if ( price >= askp && askp > 0 ) continue;
+                    if ( price <= bidp ) continue;
                 }
+                else {
                 if ( price <= 0 && bid <= 1) continue;
 
                 if ( price <= bid ) price++;
@@ -1062,6 +1102,7 @@ void Trading::on_pushButton_clicked()
                 if ( price >= 30) price = 30;
 
                 if ( price <= bid) price++;
+                }
 
             }
             core.set_price(price);
@@ -1086,7 +1127,7 @@ void Trading::on_pushButton_clicked()
             //rest.postRawData("tx","octet-stream",txstr.data(),((size_t)txstr.size()));
             rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 
-        } while(nextask = !nextask && !onlysell);
+        } while(nextask = !nextask && !onlysell && !onlybuy);
     }
 }
 #else
