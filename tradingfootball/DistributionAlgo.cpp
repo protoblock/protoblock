@@ -126,7 +126,7 @@ PnlResults SettlePositionsRawStake::
     int intresult = floor((result * 100.0) + 0.5);
 
     for(const auto& settlepos : positions.positions()) {
-        int hispnl = (settlepos.qty() * intresult) - settlepos.price() * 100;
+        int hispnl = (settlepos.qty() * intresult) + settlepos.price() * 100;
         pnl[settlepos.pk()] = make_pair(settlepos,hispnl);
     }
 

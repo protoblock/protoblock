@@ -119,9 +119,10 @@ public:
     }
     
     std::string ToString() {
-      return "alias(" + alias() + ") hash(" + std::to_string(hash()) + ") pk(" +
-              fc::to_base58(pubkey().data, pubkey().size()) + ") balance(" +
-              std::to_string(getBalance()) + ")";
+      return "alias(" + alias() + ") hash(" + std::to_string(hash()) + ") public-key(" +
+              fc::to_base58(pubkey().data, pubkey().size()) + ") skill-balance(" +
+              std::to_string(getBalance()) + ") stake-balance(" +
+              std::to_string(getStakeBalance()) +")";
     }
 
     static hash_t name_hash( const alias_t& n );
