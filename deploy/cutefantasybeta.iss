@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Trading Football"
-#define MyAppVersion "2015 1.0.3"
+#define MyAppVersion "2015 2.1"
 #define MyAppPublisher "Satoshi Fantasy LLC"
 #define MyAppURL "http://trading.football"
 #define MyAppExeName "tradingfootball.exe"
@@ -52,13 +52,20 @@ Source: "platforms\qwindows.dll"; DestDir: "{app}\platforms"
 Source: "imageformats\qgif.dll"; DestDir: "{app}\imageformats"; Flags: ignoreversion
 Source: "bearer\qgenericbearer.dll"; DestDir: "{app}\bearer"
 Source: "bearer\qnativewifibearer.dll"; DestDir: "{app}\bearer"
+Source: "storage\bootstrap\FantasyNameBal.txt"; DestDir: "{app}\storage\bootstrap"; Flags: ignoreversion
+Source: "storage\bootstrap\GameData.txt"; DestDir: "{app}\storage\bootstrap"; Flags: ignoreversion
+Source: "storage\bootstrap\GameResult.txt"; DestDir: "{app}\storage\bootstrap"; Flags: ignoreversion
+Source: "storage\bootstrap\GlobalState.txt"; DestDir: "{app}\storage\bootstrap"; Flags: ignoreversion
+Source: "storage\bootstrap\PlayerData.txt"; DestDir: "{app}\storage\bootstrap"; Flags: ignoreversion
+Source: "storage\bootstrap\WeeklySchedule.txt"; DestDir: "{app}\storage\bootstrap"; Flags: ignoreversion
+
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; StatusMsg: "Installing Microsoft Visual C++ 2010 x64 Redistributable..."
+Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/q"; StatusMsg: "Installing Trading.Football Engine..."
 Filename: {app}\{#MyAppExeName}; Flags: nowait postinstall skipifsilent 64bit RunAsOriginalUser; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; 
 
 [Dirs]
@@ -66,11 +73,16 @@ Name: "{app}\bearer"
 Name: "{app}\imageformats"
 Name: "{app}\platforms"
 Name: "{app}\storage"
+Name: "{app}\storage\bootstrap"
 
 [InstallDelete]
-Type: filesandordirs; Name: "{app}\storage\index"
+;Type: filesandordirs; Name: "{app}\storage\bootstrap"
 Type: filesandordirs; Name: "{app}\storage\block"
-Type: filesandordirs; Name: "{app}\cutefantasy.log"
+Type: filesandordirs; Name: "{app}\storage\index"
+Type: filesandordirs; Name: "{app}\storage\tx"
+Type: filesandordirs; Name: "{app}\storage\trade"
+
+;Type: filesandordirs; Name: "{app}\cutefantasy.log"
 
 [Code]
 function IsRegularUser(): Boolean;
