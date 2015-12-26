@@ -141,6 +141,7 @@ Trading::Trading(QWidget *parent) :
     ordersSortModel->setSourceModel(&mOrderTableModel);
     ui->ordersTable->setModel(ordersSortModel);
     */
+
     ui->ordersTable->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
     ui->ordersTable->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
     ui->ordersTable->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
@@ -535,6 +536,7 @@ void Trading::invalidateFilters() {
 void Trading::invalidateOrderFilters() {
     myOrdersFilterProxy.data()->enable();
     myOrdersFilterProxy.data()->invalidate();
+   // ui->ordersTable->resizeColumnsToContents();
 }
 
 
@@ -998,6 +1000,7 @@ void Trading::SetMyPositions() {
     }
 
     ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+totpnl);
+    invalidateOrderFilters();
 
 }
 
@@ -1231,8 +1234,10 @@ void Trading::OnNewOO(fantasybit::FullOrderDelta fo) {
 
     auto &o = fo.openorder;
 
-    ViewModel * item = mOrderTableModel.itemByKey(o.refnum());
-    if ( item == NULL ) return;
+    //ViewModel * item = mOrderTableModel.itemByKey(o.refnum());
+    //if ( item == NULL ) return;
+
+    qDebug() << "level2 Trading::OnNewOO " << fo.fname << fo.openorder.DebugString();
 
     if ( fo.openorder.core().size() <= 0)
         mOrderTableModel.takeItem(o.refnum());

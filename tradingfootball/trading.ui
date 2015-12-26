@@ -1227,10 +1227,13 @@
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
+           <enum>Qt::ScrollBarAlwaysOn</enum>
           </property>
           <property name="horizontalScrollBarPolicy">
            <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::AdjustIgnored</enum>
           </property>
           <property name="autoScroll">
            <bool>false</bool>
@@ -1241,14 +1244,17 @@
           <property name="alternatingRowColors">
            <bool>true</bool>
           </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
           <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
+           <enum>QAbstractItemView::SelectItems</enum>
           </property>
           <property name="textElideMode">
            <enum>Qt::ElideMiddle</enum>
           </property>
           <property name="verticalScrollMode">
-           <enum>QAbstractItemView::ScrollPerPixel</enum>
+           <enum>QAbstractItemView::ScrollPerItem</enum>
           </property>
           <property name="horizontalScrollMode">
            <enum>QAbstractItemView::ScrollPerPixel</enum>
@@ -1262,6 +1268,9 @@
           <property name="wordWrap">
            <bool>false</bool>
           </property>
+          <attribute name="horizontalHeaderCascadingSectionResizes">
+           <bool>false</bool>
+          </attribute>
           <attribute name="horizontalHeaderHighlightSections">
            <bool>false</bool>
           </attribute>
@@ -1278,7 +1287,7 @@
            <bool>false</bool>
           </attribute>
           <attribute name="verticalHeaderMinimumSectionSize">
-           <number>10</number>
+           <number>21</number>
           </attribute>
          </widget>
         </item>

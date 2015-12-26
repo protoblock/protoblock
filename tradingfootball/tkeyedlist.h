@@ -338,7 +338,7 @@ public:
 
     bool insertRows(int row, int count, const QModelIndex &parent)
     {
-        if (count < 1 || row < 0 || row > rowCount(parent))
+        if (count < 1 || row < 0 )
             return false;
 
         beginInsertRows(QModelIndex(), row, row + count - 1);
@@ -354,7 +354,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex &parent)
     {
 
-        if (count <= 0 || row < 0 || (row + count) > rowCount(parent))
+        if (count <= 0 || row < 0)
             return false;
 
         beginRemoveRows(QModelIndex(), row, row + count - 1);

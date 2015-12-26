@@ -775,9 +775,9 @@ protected:
 private:
     void initialize() {
         QStringList headers;
-        headers << "#" << "Player" << "pid" << "Type" << "Qty" << "Price" << "Value" << "-";
+        headers << "   #   " << "      Player     " << " pid " << "Type" << "Qty" << "Price" << "Value" << "  -  ";
         setHorizontalHeaders(headers);
-        for ( int i = 0; i<6; i++)
+        for ( int i = 0; i<8; i++)
             setAlign(i,Qt::AlignCenter);
     }
 };

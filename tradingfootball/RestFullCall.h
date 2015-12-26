@@ -77,7 +77,9 @@ private:
             myRequest->setHeader(QNetworkRequest::ContentTypeHeader,contentType);
             myRequest->setHeader(QNetworkRequest::ContentLengthHeader,postData.length());
             if (myNam->networkAccessible()==QNetworkAccessManager::Accessible){
+#ifdef TRACE
                 qDebug() << "Post : " << myRequest->url().toDisplayString();
+#endif
                 return myNam->post(*myRequest,postData);
             }
             else {
@@ -231,10 +233,12 @@ public:
     }
 
     QByteArray lastReply() {
+#ifdef TRACE
         if ( myLastRepliedData.size() > 100 )
             qDebug() << myLastRepliedData.size();
         else
             qDebug() << myLastRepliedData;
+#endif
 
         return myLastRepliedData;
     }
@@ -264,8 +268,10 @@ public:
         }
 
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-
+#ifdef TRACE
         qDebug() << "Post : " << request.url().toDisplayString();
+#endif
+
         if (myNetworkManager.networkAccessible()==QNetworkAccessManager::Accessible){
             myCurrentNetworkReply = myNetworkManager.post(request,postBodyContent);
             //qDebug() << "waitForReply : " << request.url().toDisplayString();
@@ -405,15 +411,20 @@ public:
         auto arrby = client.lastReply();
         QJsonDocument ret = QJsonDocument::fromJson(arrby);
 
-
+#ifdef TRACE
         qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+#endif
+
 
         QJsonArray qa = ret.array();
         QJsonValueRef json = qa[0];
 
         QString str(json.toObject().value("data").toString());
 
+#ifdef TRACE
         qDebug() << str;
+#endif
+
 
         auto arrayblock =
                 QByteArray::fromBase64(str.toUtf8());
@@ -425,9 +436,14 @@ public:
 
     static std::string getBlk(const QString & baseUrl,int32_t blockNum,
                               QThread * ownerThread = QThread::currentThread()){
+#ifdef TRACE
         qDebug() << " get blk " << blockNum;
+#endif
+
         RestfullClient client(QUrl(baseUrl),ownerThread);
+#ifdef TRACE
         qDebug() << " get blk 2 " << baseUrl;
+#endif
 
         QMap<QString,QString>  headers;
         QMap<QString,QVariant> params;
@@ -436,7 +452,10 @@ public:
         QString customRoute = "block/" + QString::number(blockNum);
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
+#ifdef TRACE
         qDebug() << " get blk 3 " << baseUrl;
+#endif
+
 
 
         return client.lastReply().toStdString();
@@ -452,14 +471,18 @@ public:
 
         std::vector<std::string> ret{};
         for ( int i = blockNum; i <= blockEnd; i++) {
-            qDebug() << " get blk " << blockNum;
-
+#ifdef TRACE
+            qDebug() << " get blk " << i;
+#endif
             //hard coded url
             //TODO move to settings
             QString customRoute = "block/" + QString::number(i);
             //customRoute = customRoute.arg(route).arg(blockNum);
             client.getData(customRoute,params,headers);
+#ifdef TRACE
             qDebug() << " get blk 3 " << baseUrl;
+#endif
+
 
             ret.push_back( client.lastReply().toStdString());
        }
