@@ -71,6 +71,7 @@ void Node::init() {
         current_hight = getLastLocalBlockNum();
 
         NFLStateData::InitCheckpoint();
+
         BlockRecorder::InitCheckpoint(current_hight);
     }
 #endif
@@ -192,7 +193,7 @@ bool Node::SyncTo(int32_t gh) {
         auto bend = current_hight+200;
 #endif
 #ifdef Q_OS_WIN
-        auto bend = current_hight+50;
+        auto bend = current_hight+150;
 #endif
         auto vsb = getGlobalBlock(current_hight+1, bend < global_height ? bend : global_height);
 
@@ -361,11 +362,15 @@ int32_t Node::myLastGlobalBlockNum() {
 fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     //qDebug() << "cureent thread" << QThread::currentThread();
 
-    //return 1966;
+
     //return 20;
     //  qDebug() << " calling rest height";
     int32_t height = RestfullService::getHeight(PAPIURL.data());
     //qDebug() << " after rest height" << height;
+
+#ifdef STOP_BOOTSTRAP_2936
+    height = 2936;
+#endif
 
     if ( myLastGlobalBlockNum() < height )
         setLastGlobalBlockNum(height);

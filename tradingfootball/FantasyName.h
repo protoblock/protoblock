@@ -53,14 +53,14 @@ private:
     alias_t  mAlias;
     pubkey_t mPubkey;
     skillbits balance;
-    stakebits stake;
+    stakebits stakedelta;
     std::recursive_mutex bal_mutex{};
 public:
     FantasyName(const alias_t &inalias, const pubkey_t &inpubkey)
-        : mAlias(inalias) , mPubkey(inpubkey) , balance (0), stake(0) {}
+        : mAlias(inalias) , mPubkey(inpubkey) , balance (0), stakedelta(0) {}
     
     FantasyName ( const FantasyName &in )
-        : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance), stake(in.stake) {}
+        : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance), stakedelta(in.stakedelta) {}
 
     UInt64 getBalance()  {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
@@ -69,18 +69,17 @@ public:
 
     Int64 getStakeBalance()  {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
-        return stake.amount();
+        return (Int64)balance.amount() + stakedelta.amount();
     }
 
     void addBalance(skillbits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         balance.add(b);
-        stake.add(b.amount());
 	}
 
     void addProfitLoss(stakebits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
-        stake.add(b);
+        stakedelta.add(b);
     }
 
     /*
@@ -95,12 +94,16 @@ public:
     }
     */
 
-
-
-    void newBalance(skillbits b) {
+    void initBalance(skillbits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         balance = b;
     }
+
+    void initStakePNL(stakebits b) {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        stakedelta = b;
+    }
+
 
     hash_t hash() const {
         return name_hash(alias());
@@ -121,8 +124,10 @@ public:
     std::string ToString() {
       return "alias(" + alias() + ") hash(" + std::to_string(hash()) + ") public-key(" +
               fc::to_base58(pubkey().data, pubkey().size()) + ") skill-balance(" +
-              std::to_string(getBalance()) + ") stake-balance(" +
+              std::to_string(getBalance()) + ") stake-delta(" +
+              std::to_string(stakedelta.bits()) + ") stake-balance(" +
               std::to_string(getStakeBalance()) +")";
+
     }
 
     static hash_t name_hash( const alias_t& n );

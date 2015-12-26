@@ -34,6 +34,7 @@ void NFLStateData::InitCheckpoint() {
     leveldb::DB::Open(options, filedir("statusstore"), &db2);
     db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
 
+    qDebug() << "zxcvbn" << gs.DebugString();
 
     leveldb::DB *db4;
     leveldb::DB::Open(options, filedir("staticstore"), &db4);
@@ -79,25 +80,21 @@ void NFLStateData::InitCheckpoint() {
                        pd.player_base().SerializeAsString() );
 
     }
-
     delete db2;
     delete db3;
     delete db4;
 
-
-
-
     leveldb::DB *db5;
     status = leveldb::DB::Open(options, filedir("namestore"), &db5);
-
 
     Reader<FantasyNameBal> reader4{ GET_ROOT_DIR() + "bootstrap/FantasyNameBal.txt"};
     FantasyNameBal fnb;
     while ( reader4.ReadNext(fnb) ) {
         auto hash = FantasyName::name_hash(fnb.name());
-
         leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
         db5->Put(write_sync, hkey, fnb.SerializeAsString());
+        qDebug() << "zxcvbn" << fnb.DebugString();
+        fnb.Clear();
     }
     delete db5;
 

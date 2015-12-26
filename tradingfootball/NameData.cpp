@@ -55,8 +55,10 @@ void FantasyNameData::init() {
 #endif
             auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
             if ( fnp != nullptr ) {
-                fnp->newBalance(fn.bits());
-                fnp->addProfitLoss(fn.stake());
+                fnp->initBalance(fn.bits());
+                fnp->initStakePNL(fn.stake());
+                qDebug() << "zxcvbn2222" << fnp->ToString();
+
             }
         }
         delete it;
@@ -130,14 +132,13 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     FantasyNameBal fn{};
     fn.ParseFromString(temp);
     fn.set_bits(fn.bits() + amount);
-    fn.set_stake(fn.stake() + amount);
     namestore->Put(write_sync, hkey, fn.SerializeAsString());
     auto fnp = Commissioner::getName(hash);
     if ( fnp != nullptr)
         fnp->addBalance(amount);
 
     //if ( name == "Windo")
-    //    qDebug() << "abcdefg" << fn.DebugString();
+    qDebug() << "ZXCVBN333" << fn.DebugString() << fnp->ToString();
     OnFantasyNameBalance(fn);
 }
 
@@ -151,6 +152,7 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
         qWarning() << "cant name to add balance" << name.c_str();
         return;
     }
+
     FantasyNameBal fn{};
     fn.ParseFromString(temp);
     fn.set_stake(fn.stake() + pnl);
