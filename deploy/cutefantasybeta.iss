@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Trading Football"
-#define MyAppVersion "2015 2.1"
+#define MyAppVersion "2015 2.1.1"
 #define MyAppPublisher "Satoshi Fantasy LLC"
 #define MyAppURL "http://trading.football"
 #define MyAppExeName "tradingfootball.exe"
