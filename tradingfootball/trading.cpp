@@ -1035,7 +1035,10 @@ void Trading::on_pushButton_clicked()
         auto bidp = data->propertyValue<QString,PropertyNames::BID>().toInt();
         auto askp = data->propertyValue<QString,PropertyNames::ASK>().toInt();
 
-        if ( t != "OAK" && t != "SD" )
+        if ( t == "OAK" || t == "SD" )
+            continue;
+
+        if ( t == "WAS" || t == "PHI" )
             continue;
 
         //if ( p.points() < 3 ) continue;
@@ -1048,14 +1051,35 @@ void Trading::on_pushButton_clicked()
 
             OrderCore core;
             core.set_buyside(isbid);
-            core.set_size(2);
+            core.set_size(1);
             int delta = floor(p.points() * .75);// * ((isbid) ? -1 : 1);
             if ( isbid ) delta = -delta;
             int price = p.points() + delta;
             if ( isbid ) {
                 if ( special ) {
+                    if ( bidp <=0 && askp >=1 ) {
+                        qInfo() << "nobid" << p.playerid() << pname;
+                        continue;
+                    }
+
                     bid = 0;
                     price = p.points();
+
+                    if ( price < askp || askp < 1)
+                        continue;
+
+                    bid = askp;
+
+                }
+                else if (false ){
+                    bid = 0;
+                    price = p.points();
+                    if ( bidp <=0 && askp >=1 ) {
+                        qInfo() << "nobid" << p.playerid() << pname;
+                        continue;
+                    }
+
+
                     if ( price > 20 ) price -= 5;
                     else if ( price > 10 ) price -= 4;
                     else if ( price > 5 ) price -= 3;
@@ -1067,9 +1091,8 @@ void Trading::on_pushButton_clicked()
                         //price = p.points();
                         //bid = price--;
                     }
-
+                    if ( price-5 >= askp-1 && askp > 1 ) price = askp-1;
                     if ( price < 0 ) continue;
-                    if ( price >= askp-1 && askp > 0 ) continue;
                     if ( price <= bidp ) continue;
                     bid = price;
                 }
@@ -1077,34 +1100,15 @@ void Trading::on_pushButton_clicked()
                     if ( price <= 0 ) price = 1;
                     bid = price;
                 }
+
+
             }
             else {
                 if ( special ) {
+                    if ( bid == 0) continue;
+                    price = bid;
 
-                    price = p.points();
-                    if ( price > 20 ) price -= 4;
-                    else if ( price > 10 ) price -= 3;
-                    else if ( price > 5 ) price -= 2;
-                    else {
-                        price--;
-                        if ( price <= 1)
-                            price = 2;
-                        //price = p.points();
-                        //bid = price--;
-                    }
-
-                    if ( price <= bid ) price = bid+1;
-                    if ( price >= askp && askp > 0 ) continue;
-                    if ( price <= bidp ) continue;
-                }
-                else {
-                if ( price <= 0 && bid <= 1) continue;
-
-                if ( price <= bid ) price++;
-
-                if ( price >= 30) price = 30;
-
-                if ( price <= bid) price++;
+                    //if ( price <= askp ) continue;
                 }
 
             }
@@ -1272,6 +1276,38 @@ void Trading::onControlMessage(QString msg) {
     }
 }
 
+decltype(Trading::games) Trading::games{
+  {"NYJ", "#NEvsNYJ"},
+    {"NE", "#NEvsNYJ"},
+    {"CHI", "#CHIvsTB"},
+    {"TB", "#CHIvsTB"},
+    {"HOU", "#HOUvsTEN"},
+    {"TEN", "#HOUvsTEN"},
+    {"IND", "#INDvsMIA"},
+    {"MIA", "#INDvsMIA"},
+    {"SF", "#SFvsDET"},
+    {"DET", "#SFvsDET"},
+    {"JAC", "#JACvsNO"},
+    {"NO", "#JACvsNO"},
+    {"CLE", "#CLEvsKC"},
+    {"KC", "#CLEvsKC"},
+    {"CAR", "#CARvsATL"},
+    {"ATL", "#CARvsATL"},
+    {"NYG", "#NYGvsMIN"},
+    {"MIN", "#NYGvsMIN"},
+    {"DAL", "#DALvsBUF"},
+    {"BUF", "#DALvsBUF"},
+    {"GB", "#GBvsARI"},
+    {"ARI", "#GBvsARI"},
+    {"STL", "#STLvsSEA"},
+    {"SEA", "#STLvsSEA"},
+    {"PIT", "#PITvsBAL"},
+    {"BAL", "#PITvsBAL"},
+    {"CIN", "#CINvsDEN"},
+    {"DEN", "#CINvsDEN"},
+
+};
+
 decltype(Trading::icons) Trading::icons{
     {"SF",":/NFL/ico/49ers.ico"},
     {"CHI",":/NFL/ico/Bears.ico"},
@@ -1357,8 +1393,9 @@ void Trading::TweetIt(fantasybit::TradeTic *tt) {
     if ( !doit ) return;
 
     last_tweet = std::chrono::system_clock::now();
-    QString end = "%1 #fantasyfootball week %2 %3";
-    end = end.arg(getLink(tt->symbol()), to_string(mCurrentWeek).data(), TimetoTweetString());
+    QString end = "%1 #fantasyfootball %4 week %2 %3";
+    end = end.arg(getLink(tt->symbol()), to_string(mCurrentWeek).data(),
+                  TimetoTweetString(),QString(games[t.toStdString()].data()));
     string tosend = tweet.toStdString() + type.toStdString() + end.toStdString() ;
     sock.send(tosend.data(), tosend.size(),0);
 }

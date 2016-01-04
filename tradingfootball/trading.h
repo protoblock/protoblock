@@ -434,7 +434,7 @@ public:
     ExchangeOrder eo;
     void Init();
 
-    static map<string,string> icons;
+    static map<string,string> icons, games;
     void SetCurrentWeekData(int week);
     string myPlayerid;
     int mCurrentWeek = 0;
