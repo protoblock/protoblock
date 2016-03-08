@@ -346,6 +346,12 @@ int32_t Node::getLastLocalBlockNum() {
     //qWarning() << "yoyo" << num << "getLastLocalBlockNum";
 
     delete it;
+
+#ifdef STOP_HEIGHT_TEST
+    if (num > 3861 )
+        num = 3861;
+#endif
+
     return num;
 }
 
@@ -368,8 +374,8 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     int32_t height = RestfullService::getHeight(PAPIURL.data());
     //qDebug() << " after rest height" << height;
 
-#ifdef STOP_BOOTSTRAP_2936
-    height = 2936;
+#ifdef STOP_HEIGHT_TEST
+    height = 3861;
 #endif
 
     if ( myLastGlobalBlockNum() < height )
