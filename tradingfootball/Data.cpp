@@ -541,7 +541,7 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
 std::vector<fantasybit::GameResult> NFLStateData::GetPrevWeekGameResults(int week) {
     std::vector<fantasybit::GameResult> ret{};
     auto s = GetGlobalState();
-    if  (s.week() <= week)
+    if  (s.week() <= week && s.week() != 0)
         return ret;
 
     auto ws = GetWeeklySchedule(week);

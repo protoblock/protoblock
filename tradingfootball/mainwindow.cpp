@@ -277,10 +277,14 @@ void MainWindow::GoLive(fantasybit::GlobalState state){
     ui->mySeasonLabel->setText(seasonLabel);
 
     //load roaster for current week
-    if ( myGlobalState.week() > 0) {
+    if ( myGlobalState.week() > 0 || myGlobalState.state() == state.OFFSEASON) {
         DataCache::instance()->refreshLeaderboard();
-        ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState);
-        navigateToWeek(myGlobalState.week());
+        if ( myGlobalState.state() != state.OFFSEASON )
+            ui->myCurrentWeekWidget->setCurrentWeekData(myGlobalState);
+        if ( myGlobalState.state() == state.OFFSEASON )
+            navigateToWeek(16);
+        else
+            navigateToWeek(myGlobalState.week());
         if (!myLeaderBoardTimer.isActive()) myLeaderBoardTimer.start();
     }
     qDebug() << "glolive"  ;
@@ -306,7 +310,8 @@ void MainWindow::navigateToWeek(int week)
     ui->myNextWeek->setDisabled(myCurrentWeek==16);
     if (myCurrentWeek==myGlobalState.week())
         currentWeek();
-    else if (myCurrentWeek < myGlobalState.week())
+    else if (myCurrentWeek < myGlobalState.week() ||
+             myGlobalState.week() == 0 && myCurrentWeek <= 16 && myCurrentWeek >= 1)
         previousWeek();
     else
         nextWeek();
