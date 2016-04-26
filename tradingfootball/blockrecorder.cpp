@@ -1,6 +1,7 @@
 #include <blockrecorder.h>
 #include <QDebug>
 #include <leveldb/db.h>
+#include "PeerNode.h"
 
 using namespace fantasybit ;
 
@@ -42,6 +43,18 @@ void BlockRecorder::init() {
         lastBlock = *(reinterpret_cast<const int32_t *>(value.data()));
         qInfo() << "lastBLock: " << lastBlock;
     }
+
+    #ifdef CLEAN_BLOCKS
+    Int32Comparator *cmp = new Int32Comparator();
+    leveldb::Options optionsInt;
+    optionsInt.create_if_missing = true;
+    optionsInt.comparator = cmp;
+
+    leveldb::DB *db2;
+    status = leveldb::DB::Open(optionsInt, filedir("cleanblock"), &db2);
+    cleanblocks.reset(db2);
+    #endif
+
 }
 
 

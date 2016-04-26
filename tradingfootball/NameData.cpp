@@ -138,7 +138,7 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
         fnp->addBalance(amount);
 
     //if ( name == "Windo")
-    qDebug() << "ZXCVBN333" << fn.DebugString() << fnp->ToString();
+    qDebug() << "adding award" << amount << " :: " << fn.DebugString() << fnp->ToString();
     OnFantasyNameBalance(fn);
 }
 
@@ -179,7 +179,7 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
         FantasyNameProjections[name][player] = proj;
         PlayerIDProjections[player][name] = proj;
     }
-    //qDebug() << "proj: " << key << ":" << proj;
+    qDebug() << "proj: " << key << ":" << proj;
     OnProjection(name,player,proj);
 
 

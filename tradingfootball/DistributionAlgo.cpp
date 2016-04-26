@@ -88,10 +88,10 @@ NameValuePairs<int>
 			double amount = (result - diff)*payout;
             award[pair.first] = amount * 100.0;
 			total += amount;
-            //qInfo() << pair.first << " projection " << pair.second << " award " << amount;
+            qInfo() << pair.first << " projection " << pair.second << " award " << amount;
 		}
 		else 
-            ;//qInfo() << pair.first << " projection " << pair.second << "no award ";
+            qInfo() << pair.first << " projection " << pair.second << "no award ";
     }
 
     if (result < total) {

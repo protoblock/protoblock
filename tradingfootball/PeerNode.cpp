@@ -348,8 +348,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 3861 )
-        num = 3861;
+    if (num > 139 )
+        num = 139;
 #endif
 
     return num;

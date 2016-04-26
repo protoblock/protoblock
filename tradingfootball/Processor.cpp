@@ -88,6 +88,11 @@ int32_t BlockProcessor::process(Block &sblock) {
     }
 
     mRecorder.startBlock(sblock.signedhead().head().num());
+
+#ifdef CLEAN_BLOCKS
+    mRecorder.newBlock(sblock);
+#endif
+
     if (sblock.signedhead().head().blocktype() == BlockHeader::Type::BlockHeader_Type_DATA)
         processDataBlock(sblock);
     else
@@ -95,6 +100,9 @@ int32_t BlockProcessor::process(Block &sblock) {
 
     qInfo() << " BLOCK(" << sblock.signedhead().head().num() << ") processed! ";
     lastidprocessed = mRecorder.endBlock(sblock.signedhead().head().num());
+#ifdef CLEAN_BLOCKS
+    mRecorder.endBlock();
+#endif
 
     //qDebug() << " outDelta " << outDelta.DebugString();
 
@@ -619,11 +627,22 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             continue;
 
         qDebug() << "processing name tx " << b.signed_transactions(i).trans().DebugString();// TransType_Name(t.type());
+        auto &st = b.signed_transactions(i);
+        if ( !isValidTx(st)) {
 
-        if ( !isValidTx(b.signed_transactions(i))) {
-            qDebug() << " imvalid tx 1"  ;
+            qDebug() << " imvalid tx 1" << st.DebugString() ;
             continue;
         }
+        else if ( st.fantasy_name() == "Kola") {
+            qDebug() << "good name kola";
+        }
+        else if ( st.fantasy_name() == "Ellis") {
+            qDebug() << "good name ellis";
+        }
+
+#ifdef CLEAN_BLOCKS
+        mRecorder.addTx(st);
+#endif
 
         const NameTrans & nt = b.signed_transactions(i).trans().GetExtension(NameTrans::name_trans);
         mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
@@ -641,12 +660,38 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
         const Transaction &t = b.signed_transactions(i).trans();
         //fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
 
-        qDebug() << "processing tx " << t.DebugString();// TransType_Name(t.type());
+        qDebug() << "processing tx " << st.DebugString();
 
         if (!isValidTx(st)) {
             qDebug() << " imvalid tx 2";
+
+            if ( st.fantasy_name() == "Kola")
+                continue;
+            if ( st.fantasy_name() == "Ellis")
+                continue;
+            if ( st.fantasy_name() == "mb41407")
+                continue;
+            if ( st.fantasy_name() == "Trader1515")
+                continue;
+
             continue;
         }
+        else if ( st.fantasy_name() == "Kola") {
+            qDebug() << "good kola";
+        }
+        else if ( st.fantasy_name() == "Ellis") {
+            qDebug() << "good ellis";
+        }
+        else if ( st.fantasy_name() == "Trader1515") {
+            qDebug() << "good trader1515";
+        }
+        else if ( st.fantasy_name() == "mb41407") {
+            qDebug() << "good mb41407";
+        }
+
+#ifdef CLEAN_BLOCKS
+        mRecorder.addTx(st);
+#endif
 
         switch (t.type())
         {
