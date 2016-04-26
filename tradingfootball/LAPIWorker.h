@@ -31,7 +31,9 @@ class MainLAPIWorker : public QObject , public IResolvable
     int pcount =0;
     int count =0;
     int32_t last_block=0;
+#ifndef NOSYNC
     NodeWorker *myNodeWorker;
+#endif
     int32_t numto = std::numeric_limits<int32_t>::max();
     bool amlive = false;
     QTimer * timer;
@@ -54,7 +56,9 @@ class MainLAPIWorker : public QObject , public IResolvable
 public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}
+#ifndef NOSYNC
     ThreadedQObject<NodeWorker> node;
+#endif
 
     fantasybit::NFLStateData &NFLState() { return data; }
 

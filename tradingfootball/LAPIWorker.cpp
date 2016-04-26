@@ -18,11 +18,13 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     data{}, namedata{}, exchangedata{}, processor(data,namedata, exchangedata)
 {
     timer = new QTimer(this);
+#ifndef NOSYNC
     node.thread()->connect(node.thread(),
                            SIGNAL(started()),
                            node.object(),
                            SLOT(init()));
     myNodeWorker = node.object();
+
 
     //QObject::connect(this,SIGNAL(Timer()),myNodeWorker,SLOT(TryNext()));
     //QObject::connect(this,SIGNAL(GetNext()),qApp,SLOT(aboutQt()));
@@ -35,9 +37,12 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(myNodeWorker,SIGNAL(BlockError(int32_t)),this,SLOT(OnBlockError(int32_t)));
     QObject::connect(myNodeWorker,SIGNAL(ResetIndex()),this,SLOT(ResetIndex()));
 
+    QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
+#endif
+
     QObject::connect(this,SIGNAL(ProcessNext()),this,SLOT(ProcessBlock()));
     QObject::connect(timer,SIGNAL(timeout()),this,SLOT(Timer()));
-    QObject::connect(this,SIGNAL(GetNext()),myNodeWorker,SLOT(TryNext()));
+
 
     //data processing
     //QObject::connect(this,SIGNAL(LiveData(bool)),&exchangedata,SLOT(OnLive(bool)));
@@ -101,16 +106,25 @@ void MainLAPIWorker::GoLive() {
 void MainLAPIWorker::startPoint(){
 
     qDebug("Main Core Thread started");
-#ifndef NOSYNC
+
     Core::instance()->waitForGui();
-#endif
+
+#ifndef NOSYNC
     auto h = myNodeWorker->preinit();
     emit Height(h);
     node.thread()->start();
-
+#endif
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         last_block = processor.init();
+#ifdef NOSYNC
+        Node node;
+        node.init();
+        numto = Node::getLastLocalBlockNum();
+        emit Height(numto);
+        OnInSync(numto);
+#endif
+
         if ( last_block < 0 ) {
         //emit OnError();
             last_block = 0;
