@@ -101,7 +101,9 @@ void MainLAPIWorker::GoLive() {
 void MainLAPIWorker::startPoint(){
 
     qDebug("Main Core Thread started");
+#ifndef NOSYNC
     Core::instance()->waitForGui();
+#endif
     auto h = myNodeWorker->preinit();
     emit Height(h);
     node.thread()->start();
