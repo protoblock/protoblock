@@ -58,7 +58,28 @@ public:
     void newBlock(const fantasybit::Block &inb) {
         cleanBlock.Clear();
         cleanBlock.mutable_signedhead()->CopyFrom(inb.signedhead());
-        cleanBlock.mutable_signed_transactions()->Add()->CopyFrom(inb.signed_transactions(0));
+        const SignedTransaction &oldst = inb.signed_transactions(0);
+        SignedTransaction st{};
+        st.set_id(oldst.id());
+        st.set_sig(oldst.sig());
+        st.set_fantasy_name(oldst.fantasy_name());
+        const DataTransition &olddt = oldst.trans().GetExtension(DataTransition::data_trans);
+        DataTransition dt{};
+        dt.set_type(olddt.type());
+        dt.set_season(olddt.season());
+        dt.set_week(olddt.week());
+        for ( auto &oldg : olddt.gamedata())
+            dt.add_gamedata()->CopyFrom(oldg);
+        for ( auto &oldd : olddt.data())
+            if ( oldd.type() != Data::MESSAGE )
+                dt.add_data()->CopyFrom(oldd);
+
+        Transaction tr{};
+        tr.set_type(oldst.trans().type());
+        tr.set_version(oldst.trans().version());
+        tr.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
+        st.mutable_trans()->CopyFrom(tr);
+        cleanBlock.mutable_signed_transactions()->Add()->CopyFrom(st);
     }
 
     void addTx(const fantasybit::SignedTransaction &st) {
