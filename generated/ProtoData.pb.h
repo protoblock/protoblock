@@ -203,30 +203,6 @@ inline bool Data_Type_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<Data_Type>(
     Data_Type_descriptor(), name, value);
 }
-enum DataTransition_Type {
-  DataTransition_Type_SEASONSTART = 2,
-  DataTransition_Type_SEASONEND = 3,
-  DataTransition_Type_HEARTBEAT = 5,
-  DataTransition_Type_GAMESTART = 6,
-  DataTransition_Type_WEEKOVER = 7,
-  DataTransition_Type_TRADESESSIONSTART = 8,
-  DataTransition_Type_TRADESESSIONCLOSEANDPREOPEN = 9
-};
-bool DataTransition_Type_IsValid(int value);
-const DataTransition_Type DataTransition_Type_Type_MIN = DataTransition_Type_SEASONSTART;
-const DataTransition_Type DataTransition_Type_Type_MAX = DataTransition_Type_TRADESESSIONCLOSEANDPREOPEN;
-const int DataTransition_Type_Type_ARRAYSIZE = DataTransition_Type_Type_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor();
-inline const ::std::string& DataTransition_Type_Name(DataTransition_Type value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    DataTransition_Type_descriptor(), value);
-}
-inline bool DataTransition_Type_Parse(
-    const ::std::string& name, DataTransition_Type* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<DataTransition_Type>(
-    DataTransition_Type_descriptor(), name, value);
-}
 enum TeamState_State {
   TeamState_State_PREGAME = 1,
   TeamState_State_INGAME = 2
@@ -352,6 +328,30 @@ inline bool TransType_Parse(
     const ::std::string& name, TransType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<TransType>(
     TransType_descriptor(), name, value);
+}
+enum TrType {
+  SEASONSTART = 2,
+  SEASONEND = 3,
+  HEARTBEAT = 5,
+  GAMESTART = 6,
+  WEEKOVER = 7,
+  TRADESESSIONSTART = 8,
+  TRADESESSIONCLOSEANDPREOPEN = 9
+};
+bool TrType_IsValid(int value);
+const TrType TrType_MIN = SEASONSTART;
+const TrType TrType_MAX = TRADESESSIONCLOSEANDPREOPEN;
+const int TrType_ARRAYSIZE = TrType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* TrType_descriptor();
+inline const ::std::string& TrType_Name(TrType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    TrType_descriptor(), value);
+}
+inline bool TrType_Parse(
+    const ::std::string& name, TrType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<TrType>(
+    TrType_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -3559,43 +3559,14 @@ class DataTransition : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef DataTransition_Type Type;
-  static const Type SEASONSTART = DataTransition_Type_SEASONSTART;
-  static const Type SEASONEND = DataTransition_Type_SEASONEND;
-  static const Type HEARTBEAT = DataTransition_Type_HEARTBEAT;
-  static const Type GAMESTART = DataTransition_Type_GAMESTART;
-  static const Type WEEKOVER = DataTransition_Type_WEEKOVER;
-  static const Type TRADESESSIONSTART = DataTransition_Type_TRADESESSIONSTART;
-  static const Type TRADESESSIONCLOSEANDPREOPEN = DataTransition_Type_TRADESESSIONCLOSEANDPREOPEN;
-  static inline bool Type_IsValid(int value) {
-    return DataTransition_Type_IsValid(value);
-  }
-  static const Type Type_MIN =
-    DataTransition_Type_Type_MIN;
-  static const Type Type_MAX =
-    DataTransition_Type_Type_MAX;
-  static const int Type_ARRAYSIZE =
-    DataTransition_Type_Type_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  Type_descriptor() {
-    return DataTransition_Type_descriptor();
-  }
-  static inline const ::std::string& Type_Name(Type value) {
-    return DataTransition_Type_Name(value);
-  }
-  static inline bool Type_Parse(const ::std::string& name,
-      Type* value) {
-    return DataTransition_Type_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
 
-  // optional .fantasybit.DataTransition.Type type = 1;
+  // optional .fantasybit.TrType type = 1;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
-  inline ::fantasybit::DataTransition_Type type() const;
-  inline void set_type(::fantasybit::DataTransition_Type value);
+  inline ::fantasybit::TrType type() const;
+  inline void set_type(::fantasybit::TrType value);
 
   // optional uint32 season = 10;
   inline bool has_season() const;
@@ -8514,7 +8485,7 @@ inline void ScheduleData::set_allocated_weekly(::fantasybit::WeeklySchedule* wee
 
 // DataTransition
 
-// optional .fantasybit.DataTransition.Type type = 1;
+// optional .fantasybit.TrType type = 1;
 inline bool DataTransition::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -8528,11 +8499,11 @@ inline void DataTransition::clear_type() {
   type_ = 2;
   clear_has_type();
 }
-inline ::fantasybit::DataTransition_Type DataTransition::type() const {
-  return static_cast< ::fantasybit::DataTransition_Type >(type_);
+inline ::fantasybit::TrType DataTransition::type() const {
+  return static_cast< ::fantasybit::TrType >(type_);
 }
-inline void DataTransition::set_type(::fantasybit::DataTransition_Type value) {
-  assert(::fantasybit::DataTransition_Type_IsValid(value));
+inline void DataTransition::set_type(::fantasybit::TrType value) {
+  assert(::fantasybit::TrType_IsValid(value));
   set_has_type();
   type_ = value;
 }
@@ -10087,10 +10058,6 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::Data_Type>() {
   return ::fantasybit::Data_Type_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::DataTransition_Type>() {
-  return ::fantasybit::DataTransition_Type_descriptor();
-}
-template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::TeamState_State>() {
   return ::fantasybit::TeamState_State_descriptor();
 }
@@ -10113,6 +10080,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::MyNameStatus>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::TransType>() {
   return ::fantasybit::TransType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::TrType>() {
+  return ::fantasybit::TrType_descriptor();
 }
 
 }  // namespace google

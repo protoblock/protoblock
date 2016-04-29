@@ -29,6 +29,10 @@
 #include "playerloader.h"
 #endif
 
+#ifdef BLOCK_EXPLORER
+#include "blockexplorer.h"
+#endif
+
 namespace fantasybit
 {
 
@@ -47,6 +51,7 @@ void BlockProcessor::hardReset() {
 }
 
 int32_t BlockProcessor::init() {
+
     mRecorder.init();
     if (!mRecorder.isValid() ) {
         emit InvalidState(mRecorder.getLastBlockId());
@@ -72,11 +77,17 @@ int32_t BlockProcessor::init() {
     qInfo() <<  "YES mRecorder is valid";
 
     lastidprocessed =  mRecorder.getLastBlockId();
+
+#ifdef BLOCK_EXPLORER
+    bx.init(lastidprocessed);
+#endif
+
     return lastidprocessed;
 }
 
 
 int32_t BlockProcessor::process(Block &sblock) {
+
     qDebug() << "process: " << sblock.signedhead().head().num();
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
@@ -113,6 +124,10 @@ int32_t BlockProcessor::process(Block &sblock) {
     lastidprocessed = mRecorder.endBlock(sblock.signedhead().head().num());
 #ifdef CLEAN_BLOCKS
     mRecorder.endBlock();
+#ifdef BLOCK_EXPLORER
+    bx.pblock(mRecorder.cleanBlock);
+#endif
+
 #endif
 
     //qDebug() << " outDelta " << outDelta.DebugString();
@@ -467,7 +482,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     auto mGlobalState = mData.GetGlobalState();
     switch (indt.type())
     {
-    case DataTransition_Type_SEASONSTART:
+    case TrType::SEASONSTART:
         if (mGlobalState.state() != GlobalState_State_OFFSEASON)
             qWarning() << indt.type() << " bad transition for current state " << mGlobalState.state();
 
@@ -483,7 +498,7 @@ void BlockProcessor::process(const DataTransition &indt) {
             OnWeekStart(indt.week());
         }
         break;
-    case DataTransition_Type_SEASONEND:
+    case TrType::SEASONEND:
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
 
@@ -504,7 +519,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         //outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
         break;
 
-    case DataTransition_Type_HEARTBEAT:
+    case TrType::HEARTBEAT:
         //todo: deal w data in this msg
         if (mGlobalState.season() != indt.season()) {
             qWarning() << "wrong season! " << indt.DebugString();
@@ -517,7 +532,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
 
         break;
-    case DataTransition_Type_GAMESTART:
+    case TrType::GAMESTART:
         for (auto t : indt.gamedata()) {
             mData.OnGameStart(t.gameid(),t.status());
             qInfo() <<  "Kickoff for game " << t.DebugString();
@@ -537,7 +552,7 @@ void BlockProcessor::process(const DataTransition &indt) {
 
         }
         break;
-    case DataTransition_Type_WEEKOVER:
+    case TrType::WEEKOVER:
     {
         qDebug() << "bracedocsss week" << mGlobalState.week();
         for ( auto i : bracedoc) {
@@ -583,7 +598,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
         break;
     }
-    case DataTransition_Type_TRADESESSIONSTART:
+    case TrType::TRADESESSIONSTART:
     {
         mExchangeData.OnTradeSessionStart(indt.week());
         break;

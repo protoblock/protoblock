@@ -411,7 +411,7 @@ Transaction Commissioner::GenesisTransition()
 {
     DataTransition dt{};
 
-    dt.set_type(DataTransition_Type_HEARTBEAT);
+    dt.set_type(TrType::HEARTBEAT);
     dt.set_season(2015);
     dt.set_week(1);
 

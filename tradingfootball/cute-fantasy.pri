@@ -19,13 +19,6 @@ SOURCES += \
     $$PWD/appsettings.cpp \
     $$PWD/playerdataviewmodel.cpp \
     $$PWD/core.cpp \
-    $$PWD/../generated/ProtoData.pb.cc \
-    $$PWD/../generated/StaticData.pb.cc \
-    $$PWD/../generated/StatusData.pb.cc \        
-    $$PWD/../generated/ApiData.pb.cc \
-    $$PWD/NameData.cpp \
-    $$PWD/../generated/NameData.pb.cc \
-    $$PWD/../generated/ExData.pb.cc \
     $$PWD/mainwindow.cpp \
     $$PWD/playerprojectionwidget.cpp \
     $$PWD/currentweekwidget.cpp \
@@ -43,18 +36,12 @@ SOURCES += \
     $$PWD/timestate.cpp \
     $$PWD/ExchangeData.cpp \
     $$PWD/trading.cpp \
-    $$PWD/julylightchanges.cpp
+    $$PWD/julylightchanges.cpp \
+    $$PWD/NameData.cpp
 
 
 
 
-DISTFILES += \
-    $$PWD/../proto/ProtoData.proto \
-    $$PWD/../proto/StaticData.proto \
-    $$PWD/../proto/StatusData.proto \
-    $$PWD/../proto/NameData.proto \
-    $$PWD/../proto/ApiData.proto \
-    $$PWD/../proto/ExData.proto
 
 HEADERS += \
     $$PWD/Commissioner.h \
@@ -86,13 +73,6 @@ HEADERS += \
     $$PWD/playerdataviewmodel.h \
     $$PWD/viewmodels.h \
     $$PWD/core.h \
-    $$PWD/../generated/ApiData.pb.h \
-    $$PWD/../generated/ProtoData.pb.h \
-    $$PWD/../generated/StaticData.pb.h \
-    $$PWD/../generated/StatusData.pb.h \        
-    $$PWD/NameData.h \
-    $$PWD/../generated/NameData.pb.h \
-    $$PWD/../generated/ExData.pb.h \
     $$PWD/mainwindow.h \
     $$PWD/playerprojectionwidget.h \
     $$PWD/currentweekwidget.h \
@@ -112,7 +92,8 @@ HEADERS += \
     $$PWD/timestate.h \
     $$PWD/ExchangeData.h \
     $$PWD/trading.h \
-    $$PWD/julylightchanges.h
+    $$PWD/julylightchanges.h \
+    $$PWD/NameData.h
 
 
 
@@ -148,4 +129,34 @@ contains(DEFINES, MIKECLAYIMPORT){
     SOURCES += $$PWD/playerloader.cpp
     HEADERS += $$PWD/playerloader.h
 }
+
+contains(DEFINES, BLOCK_EXPLORER) {
+    #DISTFILES += ./../../block-explorer/proto/StateData.proto
+}
+
+    SOURCES += \
+    $$PWD/../generated/ProtoData.pb.cc \
+    $$PWD/../generated/StaticData.pb.cc \
+    $$PWD/../generated/StatusData.pb.cc \
+    $$PWD/../generated/ApiData.pb.cc \
+    $$PWD/../generated/NameData.pb.cc \
+    $$PWD/../generated/ExData.pb.cc \
+    $$PWD/../generated/StateData.pb.cc
+
+#    DISTFILES += \
+#        $$PWD/../proto/ProtoData.proto \
+#        $$PWD/../proto/StaticData.proto \
+#        $$PWD/../proto/StatusData.proto \
+#        $$PWD/../proto/NameData.proto \
+#        $$PWD/../proto/ApiData.proto \
+#        $$PWD/../proto/ExData.proto
+
+
+    HEADERS += $$PWD/../generated/ApiData.pb.h \
+    $$PWD/../generated/ProtoData.pb.h \
+    $$PWD/../generated/StaticData.pb.h \
+    $$PWD/../generated/StatusData.pb.h \
+    $$PWD/../generated/NameData.pb.h \
+    $$PWD/../generated/ExData.pb.h \
+    $$PWD/../generated/StateData.pb.h
 

@@ -110,7 +110,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* DataTransition_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DataTransition_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* TeamState_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   TeamState_reflection_ = NULL;
@@ -144,6 +143,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::EnumDescriptor* TimeTransition_Type_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* MyNameStatus_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* TransType_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor* TrType_descriptor_ = NULL;
 
 }  // namespace
 
@@ -637,7 +637,6 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DataTransition));
-  DataTransition_Type_descriptor_ = DataTransition_descriptor_->enum_type(0);
   TeamState_descriptor_ = file->message_type(28);
   static const int TeamState_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamState, state_),
@@ -809,6 +808,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
   TimeTransition_Type_descriptor_ = TimeTransition_descriptor_->enum_type(0);
   MyNameStatus_descriptor_ = file->enum_type(0);
   TransType_descriptor_ = file->enum_type(1);
+  TrType_descriptor_ = file->enum_type(2);
 }
 
 namespace {
@@ -1076,63 +1076,62 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     ".ResultData\"\214\001\n\014ScheduleData\022\014\n\004week\030\001 \001"
     "(\005\022*\n\006weekly\030\n \001(\0132\032.fantasybit.WeeklySc"
     "hedule2B\n\rschedule_data\022\020.fantasybit.Dat"
-    "a\030\256\002 \001(\0132\030.fantasybit.ScheduleData\"\374\002\n\016D"
-    "ataTransition\022-\n\004type\030\001 \001(\0162\037.fantasybit"
-    ".DataTransition.Type\022\016\n\006season\030\n \001(\r\022\014\n\004"
-    "week\030\024 \001(\r\022&\n\010gamedata\030\036 \003(\0132\024.fantasybi"
-    "t.GameData\022\036\n\004data\030( \003(\0132\020.fantasybit.Da"
-    "ta\"\212\001\n\004Type\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEN"
-    "D\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEE"
-    "KOVER\020\007\022\025\n\021TRADESESSIONSTART\020\010\022\037\n\033TRADES"
-    "ESSIONCLOSEANDPREOPEN\020\t2H\n\ndata_trans\022\027."
-    "fantasybit.Transaction\030\313\001 \001(\0132\032.fantasyb"
-    "it.DataTransition\"w\n\tTeamState\022*\n\005state\030"
-    "\001 \001(\0162\033.fantasybit.TeamState.State\022\014\n\004we"
-    "ek\030\n \001(\r\022\016\n\006teamid\030\024 \001(\t\" \n\005State\022\013\n\007PRE"
-    "GAME\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDeltaData\022(\n\004type"
-    "\030\001 \001(\0162\032.fantasybit.DeltaData.Type\0220\n\rmy"
-    "fantasyname\030\002 \003(\0132\031.fantasybit.MyFantasy"
-    "Name\022,\n\013globalstate\030\n \001(\0132\027.fantasybit.G"
-    "lobalState\022)\n\nteamstates\030\024 \003(\0132\025.fantasy"
-    "bit.TeamState\022\037\n\005datas\030\036 \003(\0132\020.fantasybi"
-    "t.Data\022*\n\007players\030( \003(\0132\031.fantasybit.Fan"
-    "tasyPlayer\"#\n\004Type\022\014\n\010SNAPSHOT\020\002\022\r\n\tHEAR"
-    "TBEAT\020\003*\t\010\350\007\020\200\200\200\200\002\"t\n\013MessageData\022\013\n\003msg"
-    "\030\n \001(\t\022\n\n\002gt\030\024 \001(\005\022\n\n\002lt\030\036 \001(\0052@\n\014messag"
-    "e_data\022\020.fantasybit.Data\030\224\003 \001(\0132\027.fantas"
-    "ybit.MessageData\"\301\001\n\014StampedTrans\022\021\n\ttim"
-    "estamp\030\n \001(\004\022\016\n\006seqnum\030\024 \001(\005\022\017\n\007prevseq\030"
-    "\025 \001(\005\0222\n\013signed_orig\030\036 \001(\0132\035.fantasybit."
-    "SignedTransaction2I\n\rstamped_trans\022\027.fan"
-    "tasybit.Transaction\030\254\002 \001(\0132\030.fantasybit."
-    "StampedTrans\"\213\002\n\rExchangeOrder\022,\n\004type\030\n"
-    " \001(\0162\036.fantasybit.ExchangeOrder.Type\022\020\n\010"
-    "playerid\030( \001(\t\022#\n\004core\0302 \001(\0132\025.fantasybi"
-    "t.OrderCore\022\023\n\013cancel_oref\030d \001(\005\"(\n\004Type"
-    "\022\007\n\003NEW\020\001\022\n\n\006CANCEL\020\002\022\013\n\007REPLACE\020\003*\t\010\364\003\020"
-    "\200\200\200\200\0022K\n\016exchange_order\022\027.fantasybit.Tra"
-    "nsaction\030\266\002 \001(\0132\031.fantasybit.ExchangeOrd"
-    "er\"q\n\013OrderUnique\022\022\n\npublic_key\030\n \001(\t\022\016\n"
-    "\006season\030\024 \001(\r\022\014\n\004week\030\036 \001(\r\022\017\n\007buyside\030("
-    " \001(\010\022\020\n\010playerid\0302 \001(\t\022\r\n\005price\030F \001(\005\"O\n"
-    "\nOrderDeets\022\013\n\003oid\030\n \001(\014\022&\n\005order\030\024 \001(\0132"
-    "\027.fantasybit.OrderUnique\022\014\n\004size\030\036 \001(\005\"\227"
-    "\001\n\014InsideUnique\022\020\n\010playerid\0302 \001(\t\022\022\n\npub"
-    "lic_key\030\n \001(\t\022\017\n\007buyside\030( \001(\010\022\r\n\005price\030"
-    "F \001(\005\022\013\n\003oid\030\013 \001(\014\022&\n\005order\030\024 \001(\0132\027.fant"
-    "asybit.OrderUnique\022\014\n\004size\030\036 \001(\005\"\316\001\n\016Tim"
-    "eTransition\022-\n\004type\030\001 \001(\0162\037.fantasybit.T"
-    "imeTransition.Type\022\016\n\006season\030\n \001(\r\022\014\n\004we"
-    "ek\030\024 \001(\r\"%\n\004Type\022\r\n\tTRADEOPEN\020\002\022\016\n\nTRADE"
-    "CLOSE\020\0032H\n\ntime_trans\022\027.fantasybit.Trans"
-    "action\030\257\002 \001(\0132\032.fantasybit.TimeTransitio"
-    "n*Y\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002"
-    "\022\r\n\trequested\020\005\022\024\n\020transaction_sent\020\017\022\r\n"
-    "\tconfirmed\020\024*\233\001\n\tTransType\022\010\n\004NAME\020\000\022\016\n\n"
-    "PROJECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003\022\024\n\020PR"
-    "OJECTION_BLOCK\020\004\022\017\n\013MASTER_NAME\020\005\022\010\n\004TIM"
-    "E\020\006\022\013\n\007STAMPED\020\007\022\014\n\010EXCHANGE\020\010\022\022\n\016EXCHAN"
-    "GE_BLOCK\020\t", 5850);
+    "a\030\256\002 \001(\0132\030.fantasybit.ScheduleData\"\342\001\n\016D"
+    "ataTransition\022 \n\004type\030\001 \001(\0162\022.fantasybit"
+    ".TrType\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022&\n"
+    "\010gamedata\030\036 \003(\0132\024.fantasybit.GameData\022\036\n"
+    "\004data\030( \003(\0132\020.fantasybit.Data2H\n\ndata_tr"
+    "ans\022\027.fantasybit.Transaction\030\313\001 \001(\0132\032.fa"
+    "ntasybit.DataTransition\"w\n\tTeamState\022*\n\005"
+    "state\030\001 \001(\0162\033.fantasybit.TeamState.State"
+    "\022\014\n\004week\030\n \001(\r\022\016\n\006teamid\030\024 \001(\t\" \n\005State\022"
+    "\013\n\007PREGAME\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDeltaData\022("
+    "\n\004type\030\001 \001(\0162\032.fantasybit.DeltaData.Type"
+    "\0220\n\rmyfantasyname\030\002 \003(\0132\031.fantasybit.MyF"
+    "antasyName\022,\n\013globalstate\030\n \001(\0132\027.fantas"
+    "ybit.GlobalState\022)\n\nteamstates\030\024 \003(\0132\025.f"
+    "antasybit.TeamState\022\037\n\005datas\030\036 \003(\0132\020.fan"
+    "tasybit.Data\022*\n\007players\030( \003(\0132\031.fantasyb"
+    "it.FantasyPlayer\"#\n\004Type\022\014\n\010SNAPSHOT\020\002\022\r"
+    "\n\tHEARTBEAT\020\003*\t\010\350\007\020\200\200\200\200\002\"t\n\013MessageData\022"
+    "\013\n\003msg\030\n \001(\t\022\n\n\002gt\030\024 \001(\005\022\n\n\002lt\030\036 \001(\0052@\n\014"
+    "message_data\022\020.fantasybit.Data\030\224\003 \001(\0132\027."
+    "fantasybit.MessageData\"\301\001\n\014StampedTrans\022"
+    "\021\n\ttimestamp\030\n \001(\004\022\016\n\006seqnum\030\024 \001(\005\022\017\n\007pr"
+    "evseq\030\025 \001(\005\0222\n\013signed_orig\030\036 \001(\0132\035.fanta"
+    "sybit.SignedTransaction2I\n\rstamped_trans"
+    "\022\027.fantasybit.Transaction\030\254\002 \001(\0132\030.fanta"
+    "sybit.StampedTrans\"\213\002\n\rExchangeOrder\022,\n\004"
+    "type\030\n \001(\0162\036.fantasybit.ExchangeOrder.Ty"
+    "pe\022\020\n\010playerid\030( \001(\t\022#\n\004core\0302 \001(\0132\025.fan"
+    "tasybit.OrderCore\022\023\n\013cancel_oref\030d \001(\005\"("
+    "\n\004Type\022\007\n\003NEW\020\001\022\n\n\006CANCEL\020\002\022\013\n\007REPLACE\020\003"
+    "*\t\010\364\003\020\200\200\200\200\0022K\n\016exchange_order\022\027.fantasyb"
+    "it.Transaction\030\266\002 \001(\0132\031.fantasybit.Excha"
+    "ngeOrder\"q\n\013OrderUnique\022\022\n\npublic_key\030\n "
+    "\001(\t\022\016\n\006season\030\024 \001(\r\022\014\n\004week\030\036 \001(\r\022\017\n\007buy"
+    "side\030( \001(\010\022\020\n\010playerid\0302 \001(\t\022\r\n\005price\030F "
+    "\001(\005\"O\n\nOrderDeets\022\013\n\003oid\030\n \001(\014\022&\n\005order\030"
+    "\024 \001(\0132\027.fantasybit.OrderUnique\022\014\n\004size\030\036"
+    " \001(\005\"\227\001\n\014InsideUnique\022\020\n\010playerid\0302 \001(\t\022"
+    "\022\n\npublic_key\030\n \001(\t\022\017\n\007buyside\030( \001(\010\022\r\n\005"
+    "price\030F \001(\005\022\013\n\003oid\030\013 \001(\014\022&\n\005order\030\024 \001(\0132"
+    "\027.fantasybit.OrderUnique\022\014\n\004size\030\036 \001(\005\"\316"
+    "\001\n\016TimeTransition\022-\n\004type\030\001 \001(\0162\037.fantas"
+    "ybit.TimeTransition.Type\022\016\n\006season\030\n \001(\r"
+    "\022\014\n\004week\030\024 \001(\r\"%\n\004Type\022\r\n\tTRADEOPEN\020\002\022\016\n"
+    "\nTRADECLOSE\020\0032H\n\ntime_trans\022\027.fantasybit"
+    ".Transaction\030\257\002 \001(\0132\032.fantasybit.TimeTra"
+    "nsition*Y\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007not"
+    "avil\020\002\022\r\n\trequested\020\005\022\024\n\020transaction_sen"
+    "t\020\017\022\r\n\tconfirmed\020\024*\233\001\n\tTransType\022\010\n\004NAME"
+    "\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003"
+    "\022\024\n\020PROJECTION_BLOCK\020\004\022\017\n\013MASTER_NAME\020\005\022"
+    "\010\n\004TIME\020\006\022\013\n\007STAMPED\020\007\022\014\n\010EXCHANGE\020\010\022\022\n\016"
+    "EXCHANGE_BLOCK\020\t*\214\001\n\006TrType\022\017\n\013SEASONSTA"
+    "RT\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGA"
+    "MESTART\020\006\022\014\n\010WEEKOVER\020\007\022\025\n\021TRADESESSIONS"
+    "TART\020\010\022\037\n\033TRADESESSIONCLOSEANDPREOPEN\020\t", 5839);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -1302,6 +1301,25 @@ bool TransType_IsValid(int value) {
     case 2:
     case 3:
     case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::google::protobuf::EnumDescriptor* TrType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return TrType_descriptor_;
+}
+bool TrType_IsValid(int value) {
+  switch(value) {
+    case 2:
+    case 3:
     case 5:
     case 6:
     case 7:
@@ -9995,37 +10013,6 @@ void ScheduleData::Swap(ScheduleData* other) {
 
 // ===================================================================
 
-const ::google::protobuf::EnumDescriptor* DataTransition_Type_descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return DataTransition_Type_descriptor_;
-}
-bool DataTransition_Type_IsValid(int value) {
-  switch(value) {
-    case 2:
-    case 3:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-      return true;
-    default:
-      return false;
-  }
-}
-
-#ifndef _MSC_VER
-const DataTransition_Type DataTransition::SEASONSTART;
-const DataTransition_Type DataTransition::SEASONEND;
-const DataTransition_Type DataTransition::HEARTBEAT;
-const DataTransition_Type DataTransition::GAMESTART;
-const DataTransition_Type DataTransition::WEEKOVER;
-const DataTransition_Type DataTransition::TRADESESSIONSTART;
-const DataTransition_Type DataTransition::TRADESESSIONCLOSEANDPREOPEN;
-const DataTransition_Type DataTransition::Type_MIN;
-const DataTransition_Type DataTransition::Type_MAX;
-const int DataTransition::Type_ARRAYSIZE;
-#endif  // _MSC_VER
 #ifndef _MSC_VER
 const int DataTransition::kTypeFieldNumber;
 const int DataTransition::kSeasonFieldNumber;
@@ -10110,7 +10097,7 @@ bool DataTransition::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .fantasybit.DataTransition.Type type = 1;
+      // optional .fantasybit.TrType type = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -10118,8 +10105,8 @@ bool DataTransition::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::fantasybit::DataTransition_Type_IsValid(value)) {
-            set_type(static_cast< ::fantasybit::DataTransition_Type >(value));
+          if (::fantasybit::TrType_IsValid(value)) {
+            set_type(static_cast< ::fantasybit::TrType >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -10210,7 +10197,7 @@ bool DataTransition::MergePartialFromCodedStream(
 
 void DataTransition::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .fantasybit.DataTransition.Type type = 1;
+  // optional .fantasybit.TrType type = 1;
   if (has_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->type(), output);
@@ -10246,7 +10233,7 @@ void DataTransition::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DataTransition::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .fantasybit.DataTransition.Type type = 1;
+  // optional .fantasybit.TrType type = 1;
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->type(), target);
@@ -10287,7 +10274,7 @@ int DataTransition::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .fantasybit.DataTransition.Type type = 1;
+    // optional .fantasybit.TrType type = 1;
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());

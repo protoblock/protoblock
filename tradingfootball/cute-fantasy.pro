@@ -39,7 +39,9 @@ DEFINES += STOP_HEIGHT_TEST
 
 DEFINES += NOSYNC
 
-#DEFINES += CLEAN_BLOCKS
+DEFINES += CLEAN_BLOCKS
+
+DEFINES += BLOCK_EXPLORER
 
 contains(DEFINES, TIMEAGENTWRITEFILLS){
     QT += sql
@@ -139,6 +141,13 @@ CONFIG(debug, debug|release) {
           -lssleay32 \
           -lfcd
 
+    contains(DEFINES, BLOCK_EXPLORER) {
+        LIBS += -L./../../block-explorer/debug \
+              -lblockexplorer
+        INCLUDEPATH += ./../../block-explorer
+        #INCLUDEPATH += ./../../block-explorer/proto
+    }
+
 }
 CONFIG(release, debug|release) {
    LIBS+= -llibprotobuf \
@@ -146,7 +155,15 @@ CONFIG(release, debug|release) {
           -llibeay32 \
           -lssleay32 \
           -lfc
+
+    contains(DEFINES, BLOCK_EXPLORER) {
+        LIBS += -L./../../block-explorer/release \
+              -lblockexplorer
+        INCLUDEPATH += ./../../block-explorer
+        #INCLUDEPATH += ./../../block-explorer/proto
+    }
 }
+
 
 include (./boost-includes.pri)
 include (./cute-fantasy.pri)

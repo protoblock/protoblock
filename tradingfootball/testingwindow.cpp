@@ -309,7 +309,7 @@ void TestingWindow::on_StageBlock_clicked() {
         dt.set_season(2015);
         dt.set_week(ui->weeks->currentIndex());
 
-        if ( dt.type() == DataTransition_Type_GAMESTART) {
+        if ( dt.type() == TrType::GAMESTART) {
             GameData gd{};
             GameStatus gs{};
             gs.set_status(GameStatus::INGAME);
@@ -518,7 +518,7 @@ void TestingWindow::Timer() {
     qDebug() << "making block " << count;
 
     DataTransition dt{};
-    dt.set_type(DataTransition_Type_HEARTBEAT);
+    dt.set_type(TrType::HEARTBEAT);
     dt.set_season(2015);
     dt.set_week(realweek());
 
@@ -1010,7 +1010,7 @@ void TestingWindow::on_Update_PLayers_2_clicked()
         if ( count >= 30 || done) {
             count = 0;
             DataTransition dt{};
-            dt.set_type(DataTransition_Type_HEARTBEAT);
+            dt.set_type(TrType::HEARTBEAT);
             dt.set_season(2015);
             dt.set_week(realweek());
 

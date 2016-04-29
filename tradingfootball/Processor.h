@@ -20,6 +20,10 @@
 #include "ApiData.pb.h"
 #include "timestate.h"
 #include "ExchangeData.h"
+#ifdef BLOCK_EXPLORER
+#include "blockexplorer.h"
+#endif
+
 
 namespace fantasybit
 {
@@ -83,6 +87,9 @@ public:
     void hardReset();
     void ProcessInsideStamped(const SignedTransaction &inst, int32_t);
 
+#ifdef BLOCK_EXPLORER
+    fantasybit_bx::BlockExplorer bx;
+#endif
 
     static double CalcResults(const Stats &stats) {
         int ret = 0;

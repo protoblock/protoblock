@@ -223,7 +223,7 @@ public:
     static Transaction MasterGenesisTransition() {
         DataTransition dt{};
 
-        dt.set_type(DataTransition_Type_SEASONSTART);
+        dt.set_type(TrType::SEASONSTART);
         dt.set_season(2015);
         dt.set_week(1);
 
