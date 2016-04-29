@@ -98,18 +98,18 @@ int32_t BlockProcessor::process(Block &sblock) {
         qInfo() << "yes verifySignedBlock " <<  sblock.signedhead().head().num();
     }
 
-    if ( sblock.signedhead().head().num() == 139 ) {
-        auto bs = sblock.DebugString();
-        qInfo() << bs.data();
-    }
+//    if ( sblock.signedhead().head().num() == 139 ) {
+//        auto bs = sblock.DebugString();
+//        qInfo() << bs.data();
+//    }
 
     mRecorder.startBlock(sblock.signedhead().head().num());
 
-    if ( sblock.signedhead().head().num() == 1199 ) {
-        qInfo() << sblock.DebugString();
-        auto str = sblock.DebugString();
-        qDebug() << str.data();
-    }
+//    if ( sblock.signedhead().head().num() == 1199 ) {
+//        qInfo() << sblock.DebugString();
+//        auto str = sblock.DebugString();
+//        qDebug() << str.data();
+//    }
 
 #ifdef CLEAN_BLOCKS
     mRecorder.newBlock(sblock);
@@ -126,15 +126,13 @@ int32_t BlockProcessor::process(Block &sblock) {
     mRecorder.endBlock();
 #ifdef BLOCK_EXPLORER
     bx.pblock(mRecorder.cleanBlock);
+    bx.endit();
 #endif
 
 #endif
 
     //qDebug() << " outDelta " << outDelta.DebugString();
 
-//TODO for debug exit
-    if ( lastidprocessed == 1966 )
-        return lastidprocessed;
     return lastidprocessed;
 }
 
@@ -459,8 +457,6 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
         fba.set_award(r.second);
         //awards.add_fantaybitaward()->CopyFrom(fba);
         mNameData.AddBalance(r.first,r.second);
-        if ( r.first == "Bracedoc")
-            bracedoc[playerresult.playerid()] = r.second;
     }
     //playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
     //return awards;
@@ -554,11 +550,6 @@ void BlockProcessor::process(const DataTransition &indt) {
         break;
     case TrType::WEEKOVER:
     {
-        qDebug() << "bracedocsss week" << mGlobalState.week();
-        for ( auto i : bracedoc) {
-            qDebug() << i.first.data() << ":" << i.second;
-        }
-        bracedoc.clear();
 
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
@@ -786,7 +777,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
             break;
 #endif
             auto emdg = t.GetExtension(ExchangeOrder::exchange_order);
-            qDebug() << "new ExchangeOrder " << emdg.DebugString();
+            //qDebug() << "new ExchangeOrder " << emdg.DebugString();
 
             //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
             mExchangeData.OnNewOrderMsg(emdg,seqnum,fn);

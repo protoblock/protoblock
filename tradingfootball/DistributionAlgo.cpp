@@ -41,7 +41,7 @@ NameValuePairs<int>
         mean+=diff;
         diffs.emplace_back(diff);
 
-        qDebug() << pair.first << " projection " << pair.second << " diff " << diff;
+        //qDebug() << pair.first << " projection " << pair.second << " diff " << diff;
     }
   
     mean /= projections.size();
@@ -128,6 +128,10 @@ PnlResults SettlePositionsRawStake::
     for(const auto& settlepos : positions.positions()) {
         int hispnl = (settlepos.qty() * intresult) + settlepos.price() * 100;
         pnl[settlepos.pk()] = make_pair(settlepos,hispnl);
+        qDebug() << settlepos.DebugString();
+//        " pnl " <<  hispnl << " result " << result <<
+//                    " pos " << settlepos.second.first << " " << settlepos.second.second;
+
     }
 
     return pnl;

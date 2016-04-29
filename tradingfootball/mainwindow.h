@@ -41,7 +41,7 @@ signals:
     //void SubscribePlayerGameStatus();
     //void NewProjection(vector<fantasybit::FantasyBitProj>);
     void ClaimFantasyName(QString);
-
+    void NewHeightStop(int32_t);
 public slots:
 
     void on_myNextWeek_clicked(); 
@@ -60,6 +60,7 @@ public slots:
     void onSendFantasyNameProjection(QString fantasyName);
     void leaderboardCliked(const QModelIndex & index);
     void UpdateTab(QString,QString,QString);
+    void lastBlock(int);
 private slots:
     void on_myFantasyNamesCombo_currentIndexChanged(int index);
     void on_myClaimFantasyNameButton_clicked();
@@ -75,6 +76,10 @@ private slots:
     //void on_horizontalSlider_sliderReleased();
 
     void on_horizontalSlider_valueChanged(int value);
+
+    void on_blockNum_valueChanged(int arg1);
+
+
 
 private:
     void initialize();
@@ -112,6 +117,7 @@ private:
     bool sliderPressed = false;
     bool sliderReleased = false;
 
+        int last_block;
     MainLAPIWorker *  myLAPIWorker;
     Ui::MainWindow *ui;    
     uint myCurrentWeek;

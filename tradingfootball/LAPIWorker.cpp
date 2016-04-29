@@ -121,6 +121,10 @@ void MainLAPIWorker::startPoint(){
         Node node;
         node.init();
         numto = Node::getLastLocalBlockNum();
+#ifdef BLOCK_STEP
+        int gonum = 2187;
+        numto = (gonum >= last_block) ? gonum : last_block;
+#endif
         emit Height(numto);
         OnInSync(numto);
 #endif
@@ -211,7 +215,11 @@ void MainLAPIWorker::ProcessBlock() {
                 amlive = true;
             }
             GoLive();
-         }
+        }
+//        else if ( docount < numto) {
+//            docount = numto;
+//            emit BlockNum(last_block);
+//        }
 
     } while( catchingup );
 }

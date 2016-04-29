@@ -346,6 +346,8 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
                               shared_ptr<FantasyName> fn) {
 
 
+    qDebug() << eo.playerid() << ":newOrder:" << seqnum << " : " << fn->alias();
+
     bool exitonly = fn->getStakeBalance() <= 0;
     auto pos = getPosition(fn->alias(),eo.playerid());
 #ifdef TRACE
@@ -390,7 +392,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
         it->second->ResetLimitBook();//mLimitBook.reset(new LimitBook());
     }
     if ( it->second->islocked) {
-         qWarning() << "invalid order, locked limitbook for" << eo.DebugString();
+         qWarning() << "invalid order, locked limitbook for" << eo.playerid();
          return;
     }
     MatchingEngine &ma = *(it->second);
@@ -1158,7 +1160,7 @@ qDebug() << "level2 New Bid " << order.core().price() << order.core().size();
 
 bool LimitBook::NewAsk(Order &order, Position &deltapos) {
 #ifdef TRACE
-    qDebug() << "level2 New Ask " << order.core().price() << order.core().size();
+    qDebug() << order.refnum() << "level2 New Ask " << order.core().price() << order.core().size();
 #endif
 
     auto myprice = order.core().price()-1;
@@ -1183,13 +1185,13 @@ bool LimitBook::NewAsk(Order &order, Position &deltapos) {
     else {
 
 #ifdef TRACE
-        qDebug() << " order.core().size() " << order.core().size() << " before";
+        qDebug() << order.refnum() << " order.core().size() " << order.core().size() << " before";
 #endif
         int fillqty = order.core().size();
         int32_t pos =
                 SweepBids(order); //will modify size
 #ifdef TRACE
-        qDebug() << " order.core().size() " << order.core().size() << " after";
+        qDebug() << order.refnum() << " order.core().size() " << order.core().size() << " after";
 #endif
 
         GetTop(true);
@@ -1225,11 +1227,15 @@ int32_t LimitBook::SweepAsks( Order &order) {
     int32_t pos = 0;
     for (; mBa <= price; ++mBa) {
         InsideBook &curr = mAsks[mBa];
-
+#ifdef TRACE
+qDebug() << order.refnum() << "level2 SweepAsks  curr " << mBb << curr.totSize << " ord core " << order.core().size();
+#endif
         int fillqty = min(curr.totSize, left);
         if (fillqty <= 0)
             continue;
-
+#ifdef TRACE
+qDebug() << order.refnum() << "level2 SweepAsks  fillqty continue " << fillqty;
+#endif
         pos += (mBa+1) * fillqty; //for instafill
 
         SendFill(order, fillqty, mBa, false);
@@ -1239,6 +1245,9 @@ int32_t LimitBook::SweepAsks( Order &order) {
         for (auto iiter = curr.top();
              iiter != curr.bot() && left > 0;) {
             Order &ord = *iiter;
+#ifdef TRACE
+qDebug() << order.refnum() << "level2 SweepAsks  curr ord iityer" << mBb << ord.DebugString() << " left " << left;
+#endif
             fillqty = min(ord.core().size(), left);
             if (fillqty <= 0)
                 continue;
@@ -1251,7 +1260,9 @@ int32_t LimitBook::SweepAsks( Order &order) {
             if (curr.Fill(fillqty, iiter))
                 ;//Send(new BookFeedData(ExecType.Done, ord));
         }
-
+#ifdef TRACE
+qDebug() << order.refnum() << "level2 SweepAsks  curr bottom" << mBb << curr.totSize;
+#endif
         NewDepth(false, mBa);
 
         if (left <= 0)
@@ -1264,13 +1275,15 @@ int32_t LimitBook::SweepAsks( Order &order) {
 int32_t LimitBook::SweepBids( Order &order) {
     int price = order.core().price()-1;
     int left = order.core().size();
-    qDebug() << "level2 sweepbids  top ord core" << order.core().size();
+    #ifdef TRACE
+    qDebug() << order.refnum() << "level2 sweepbids  top ord core" << order.core().size();
+    #endif
     int32_t pos = 0;
     for (; mBb >= price; --mBb) {
         InsideBook &curr = mBids[mBb];
 
 #ifdef TRACE
-qDebug() << "level2 sweepbids  curr " << mBb << curr.totSize << " ord core " << order.core().size();
+qDebug() << order.refnum() << "level2 sweepbids  curr " << mBb << curr.totSize << " ord core " << order.core().size();
 #endif
 
         int fillqty = min(curr.totSize, left);
@@ -1278,7 +1291,7 @@ qDebug() << "level2 sweepbids  curr " << mBb << curr.totSize << " ord core " << 
             continue;
 
 #ifdef TRACE
-qDebug() << "level2 sweepbids  fillqty continue " << fillqty;
+qDebug() << order.refnum() << "level2 sweepbids  fillqty continue " << fillqty;
 #endif
 
         pos += (mBb+1) * fillqty; //for instafill
@@ -1286,11 +1299,11 @@ qDebug() << "level2 sweepbids  fillqty continue " << fillqty;
         SendFill(order, fillqty, mBb, false);
         //NewTrade(mBb, fillqty, Side.ASK);
 
-        for (auto iiter = curr.rtop();
-             iiter != curr.rbot() && left > 0;) {
+        for (auto iiter = curr.top();
+             iiter != curr.bot() && left > 0;) {
             Order &ord = *iiter;
 #ifdef TRACE
-qDebug() << "level2 sweepbids  curr ord iityer" << mBb << ord.DebugString() << " left " << left;
+qDebug() << order.refnum() << "level2 sweepbids  curr ord iityer" << mBb << ord.DebugString() << " left " << left;
 #endif
 
             fillqty = min(ord.core().size(), left);
@@ -1307,7 +1320,7 @@ qDebug() << "level2 sweepbids  curr ord iityer" << mBb << ord.DebugString() << "
         }
 
 #ifdef TRACE
-qDebug() << "level2 sweepbids  curr bottom" << mBb << curr.totSize;
+qDebug() << order.refnum() << "level2 sweepbids  curr bottom" << mBb << curr.totSize;
 #endif
 
         NewDepth(true, mBb);
@@ -1323,7 +1336,7 @@ qDebug() << "level2 sweepbids  curr bottom" << mBb << curr.totSize;
 void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
 
 #ifdef TRACE
-        qDebug() << "level2 SendFill " << q << price << ispassive << o.DebugString();
+        qDebug() << o.refnum() << "level2 SendFill " << q << price << ispassive << o.DebugString();
 #endif
 
     price += 1;
@@ -1440,7 +1453,7 @@ void LimitBook::NewNew(Order &order) {
     NewDepth(order.core().buyside(), order.core().price()-1);
 
 #ifdef TRACE
-        qDebug() << "level2 NewNew " << order.DebugString();
+        qDebug() << order.refnum() << "level2 NewNew " << order.DebugString();
 #endif
 
 }

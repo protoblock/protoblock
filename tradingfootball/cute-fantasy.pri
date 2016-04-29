@@ -140,8 +140,9 @@ contains(DEFINES, BLOCK_EXPLORER) {
     $$PWD/../generated/StatusData.pb.cc \
     $$PWD/../generated/ApiData.pb.cc \
     $$PWD/../generated/NameData.pb.cc \
-    $$PWD/../generated/ExData.pb.cc \
-    $$PWD/../generated/StateData.pb.cc
+    $$PWD/../generated/ExData.pb.cc
+#\
+#    $$PWD/../generated/StateData.pb.cc
 
 #    DISTFILES += \
 #        $$PWD/../proto/ProtoData.proto \
@@ -157,6 +158,7 @@ contains(DEFINES, BLOCK_EXPLORER) {
     $$PWD/../generated/StaticData.pb.h \
     $$PWD/../generated/StatusData.pb.h \
     $$PWD/../generated/NameData.pb.h \
-    $$PWD/../generated/ExData.pb.h \
-    $$PWD/../generated/StateData.pb.h
+    $$PWD/../generated/ExData.pb.h
+#\
+#    $$PWD/../generated/StateData.pb.h
 

@@ -123,6 +123,15 @@ void MainWindow::initialize() {
     QObject::connect(myLAPIWorker,SIGNAL(onControlMessage(QString)),
                      ui->tradingview,SLOT(onControlMessage(QString)));
 
+    QObject::connect(myLAPIWorker,SIGNAL(onControlMessage(QString)),
+                     ui->tradingview,SLOT(onControlMessage(QString)));
+
+    QObject::connect(myLAPIWorker,SIGNAL(BlockNum(int)),this,SLOT(lastBlock(int)));
+
+    QObject::connect(this,SIGNAL(NewHeightStop(int)),myLAPIWorker,SLOT(OnSeenBlock(int32_t)));
+
+    QObject::connect(myLAPIWorker,SIGNAL(Height(int)),this,SLOT(lastBlock(int)));
+
     /*
     QObject::connect(ui->tradingview,SIGNAL(SendOrder(fantasybit::ExchangeOrder)),
                       myLAPIWorker,SLOT(OnNewOrder(fantasybit::ExchangeOrder)));
@@ -761,3 +770,17 @@ void MainWindow::on_horizontalSlider_actionTriggered(int action)
 }
 */
 
+
+void MainWindow::on_blockNum_valueChanged(int arg1)
+{
+    if ( arg1 > last_block )
+        emit NewHeightStop(arg1);
+}
+
+void MainWindow::lastBlock(int num)
+{
+    last_block = num;
+    if (ui->blockNum->value() < num ) {
+        ui->blockNum->setValue(num);
+    }
+}
