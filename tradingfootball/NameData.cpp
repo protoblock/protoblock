@@ -182,6 +182,8 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
     qDebug() << "proj: " << key << ":" << proj;
     OnProjection(name,player,proj);
 
+    if ( name == "The Savages" && player == "1122" && proj == 5)
+        qDebug() << "";
 
 /*
     dump(FantasyNameProjections);

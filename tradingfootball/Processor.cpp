@@ -89,6 +89,12 @@ int32_t BlockProcessor::process(Block &sblock) {
 
     mRecorder.startBlock(sblock.signedhead().head().num());
 
+    if ( sblock.signedhead().head().num() == 1199 ) {
+        qInfo() << sblock.DebugString();
+        auto str = sblock.DebugString();
+        qDebug() << str.data();
+    }
+
 #ifdef CLEAN_BLOCKS
     mRecorder.newBlock(sblock);
 #endif
@@ -238,6 +244,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 for (auto ha : {QString("home"),QString("away")}) {
 
+                    qDebug() << "****" << ha;
                     int size =  (ha == "home") ?
                                 rd.game_result().home_result_size()
                                 :  rd.game_result().away_result_size();
@@ -260,7 +267,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     for ( int i =0; i < size; i++) {
                         qDebug() << haresult.Get(i).playerid()
                                  << haresult.Get(i).result();
-
+                        if ( haresult.Get(i).playerid() == "1122")
+                            qDebug() << "1122";
 
                         auto proj = projmaps[haresult.Get(i).playerid()];
                         //if ( proj.size() == 0 )
@@ -272,7 +280,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         }
 
                         processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
-                    }
+                        }
                 }
 
                 /*

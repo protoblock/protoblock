@@ -41,7 +41,7 @@ NameValuePairs<int>
         mean+=diff;
         diffs.emplace_back(diff);
 
-        //qInfo() << pair.first << " projection " << pair.second << " diff " << diff;
+        qDebug() << pair.first << " projection " << pair.second << " diff " << diff;
     }
   
     mean /= projections.size();
