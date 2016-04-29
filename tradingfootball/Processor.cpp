@@ -87,6 +87,11 @@ int32_t BlockProcessor::process(Block &sblock) {
         qInfo() << "yes verifySignedBlock " <<  sblock.signedhead().head().num();
     }
 
+    if ( sblock.signedhead().head().num() == 139 ) {
+        auto bs = sblock.DebugString();
+        qInfo() << bs.data();
+    }
+
     mRecorder.startBlock(sblock.signedhead().head().num());
 
     if ( sblock.signedhead().head().num() == 1199 ) {
@@ -207,6 +212,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     break;
                 }
 
+                if ( rd.game_result().gameid() == "201500122")
+                    qDebug() << " 201500122 ";
                 /*
                 if ( !sanity(rd.fpp()) ) {
                     qCritical() << " invalid result skipping" << rd.DebugString();
@@ -225,12 +232,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 unordered_map<string,BookPos *> posmap;
 
                 for (auto ha : {QString("home"),QString("away")}) {
-                    for ( auto fpj : ha == "home" ? allprojs.home() : allprojs.away())
+                    for ( auto fpj : (ha == QString("home")) ? allprojs.home() : allprojs.away())
                         projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
 
                     if ( nopnl ) continue;
 
-                    auto rgsp =  (ha == "home") ? gsp.mutable_home() : gsp.mutable_away();
+                    auto rgsp =  (ha == QString("home")) ? gsp.mutable_home() : gsp.mutable_away();
                     for ( int i=0; i<rgsp->size();i++) {
                         BookPos *bp = rgsp->Mutable(i);
                         posmap[bp->playerid()] = bp;
@@ -245,7 +252,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 for (auto ha : {QString("home"),QString("away")}) {
 
                     qDebug() << "****" << ha;
-                    int size =  (ha == "home") ?
+                    int size =  (ha == QString("home")) ?
                                 rd.game_result().home_result_size()
                                 :  rd.game_result().away_result_size();
 
@@ -255,12 +262,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     }
 
                     decltype(rd.game_result().home_result())
-                            haresult = (ha == "home") ?
+                            haresult = (ha == QString("home")) ?
                                 rd.game_result().home_result()
                                 :  rd.game_result().away_result();
 
                     decltype(rd.mutable_game_result()->mutable_home_result())
-                            mut_haresult = (ha == "home") ?
+                            mut_haresult = (ha == QString("home")) ?
                                 rd.mutable_game_result()->mutable_home_result()
                                 :  rd.mutable_game_result()->mutable_away_result();
 
@@ -437,6 +444,8 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
         fba.set_award(r.second);
         //awards.add_fantaybitaward()->CopyFrom(fba);
         mNameData.AddBalance(r.first,r.second);
+        if ( r.first == "Bracedoc")
+            bracedoc[playerresult.playerid()] = r.second;
     }
     //playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
     //return awards;
@@ -530,6 +539,12 @@ void BlockProcessor::process(const DataTransition &indt) {
         break;
     case DataTransition_Type_WEEKOVER:
     {
+        qDebug() << "bracedocsss week" << mGlobalState.week();
+        for ( auto i : bracedoc) {
+            qDebug() << i.first.data() << ":" << i.second;
+        }
+        bracedoc.clear();
+
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
 

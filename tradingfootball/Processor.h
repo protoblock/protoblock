@@ -27,7 +27,7 @@ namespace fantasybit
 class BlockProcessor : public QObject {
 
     Q_OBJECT
-
+    std::map<std::string,int> bracedoc;
 
     BlockRecorder mRecorder{};
     NFLStateData &mData;
