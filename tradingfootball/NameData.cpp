@@ -163,6 +163,8 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     }
     //if ( name == "Windo")
     //    qDebug() << "abcdefg" << fn.DebugString();
+    qDebug() << "adding pnl" << pnl << " :: " << name <<
+             fn.public_key() << fn.stake() << fn.bits();
     OnFantasyNamePnl(fn);
 }
 
