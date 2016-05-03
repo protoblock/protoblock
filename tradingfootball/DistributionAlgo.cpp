@@ -24,10 +24,10 @@ NameValuePairs<int>
     DistribuePointsAvg::distribute(const double result, const std::string &agent) const
 {
     NameValuePairs<int> award{};
-	if (projections.size() == 0) {
-        //LOG(lg, info) << "no projections agent " << agent << " gets balance " << result;
-        //qInfo() << "no projections agent " << agent << " gets balance " << result;
-        award[agent] = result * 100.0;
+    if (projections.size() == 0 || result <= 0.0001 ) {
+        qInfo() << "no projections agent " << agent << " gets balance " << result;
+        if ( result > 0.0001 )
+            award[agent] = result * 100.0;
 		return award;
 	}
 	
@@ -41,7 +41,7 @@ NameValuePairs<int>
         mean+=diff;
         diffs.emplace_back(diff);
 
-        //qDebug() << pair.first << " projection " << pair.second << " diff " << diff;
+//        qDebug() << pair.first << " projection " << pair.second << " diff " << diff;
     }
   
     mean /= projections.size();
@@ -60,7 +60,7 @@ NameValuePairs<int>
     }
 
     if (sum == 0.0) {
-        //qInfo() << "no projections within 100% " << agent << " gets balance " << result;
+        qInfo() << "no projections within 100% " << agent << " gets balance " << result;
         award[agent] = result * 100.0;
         return award;
     }
@@ -78,7 +78,7 @@ NameValuePairs<int>
 
     double payout = result / sum;
 
-    //qInfo() << " sum " << sum << " payout " << payout;
+//    qInfo() << " sum " << sum << " payout " << payout;
 
 	double total = 0.0;
     for (const auto& pair : projections) {
@@ -90,17 +90,18 @@ NameValuePairs<int>
 			total += amount;
 //            qInfo() << pair.first << " projection " << pair.second << " award " << amount;
 		}
-        else ;
+        else;
 //            qInfo() << pair.first << " projection " << pair.second << "no award ";
     }
 
     if (result < total) {
-        qCritical() << "gave out to much";
+        qCritical() << "gave out to much" << result << total;
     }
     else {
         double leftover = result - total;
         if (leftover > 0.00001) {
-            award[agent] = leftover;
+            int hold = award[agent];
+            award[agent] = hold + leftover;
             qDebug() << "agent " << agent << " leftovers " << leftover;
 
         }

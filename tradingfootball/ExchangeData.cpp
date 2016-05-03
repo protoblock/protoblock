@@ -711,21 +711,25 @@ std::unordered_map<string,BookPos> ExchangeData::GetRemainingSettlePos() {
 
     std::unordered_map<string,BookPos> mbp{};
     for ( auto &it : mLimitBooks) {
+        if ( it.second->islocked == true) continue;
+
         BookPos bp{};
         bp.set_playerid(it.first);
-
 
         for ( auto p : it.second->mPkPos ) {
             SettlePos &sp = *bp.add_positions();
             sp.set_qty(p.second.netqty);
             sp.set_price(p.second.netprice);
             sp.set_pk(p.first);
+        }
+        if ( bp.positions_size() > 0 )
+            mbp[it.first] = bp;
+    }
+
 #ifdef TRACE
 qDebug() << "level2 ExchangeData OnGameStart GetRemainingSettlePos ";
 #endif
-        }
 
-    }
 
     return mbp;
 }

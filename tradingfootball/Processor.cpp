@@ -127,6 +127,15 @@ int32_t BlockProcessor::process(Block &sblock) {
 #ifdef BLOCK_EXPLORER
     bx.pblock(mRecorder.cleanBlock);
     bx.endit();
+
+    assert( Commissioner::getName("FantasyAgent")->getBalance() == bx.SkillBalance("FantasyAgent"));
+
+    if ( Commissioner::getName("FantasyAgent")->getBalance() != bx.SkillBalance("FantasyAgent")) {
+        qDebug()
+                << "bad fantasyagent " << Commissioner::getName("FantasyAgent")->getBalance()
+                <<  bx.SkillBalance("FantasyAgent");
+    }
+
 #endif
 
 #endif
