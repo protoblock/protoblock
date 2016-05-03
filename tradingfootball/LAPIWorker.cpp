@@ -122,7 +122,7 @@ void MainLAPIWorker::startPoint(){
         node.init();
         numto = Node::getLastLocalBlockNum();
 #ifdef BLOCK_STEP
-        int gonum = 2187;
+        int gonum = 4000 ;
         numto = (gonum >= last_block) ? gonum : last_block;
 #endif
         emit Height(numto);
@@ -220,6 +220,11 @@ void MainLAPIWorker::ProcessBlock() {
 //            docount = numto;
 //            emit BlockNum(last_block);
 //        }
+#ifdef BLOCK_STEP
+        if ( last_block < numto)
+            if ( docount++ < 10) continue;
+        docount=0;
+#endif
 
     } while( catchingup );
 }

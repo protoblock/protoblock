@@ -73,12 +73,12 @@ void TestingWindow::initialize() {
     QObject::connect(myCoreInstance,SIGNAL(NewWeek(int)),this,SLOT(OnNewWeek(int)));
 
     //GlobalStateChange(GlobalState);
-    for (int i = DataTransition::Type_MIN; i < DataTransition::Type_ARRAYSIZE; i++) {
+    for (int i = fantasybit::TrType_MIN; i < fantasybit::TrType_ARRAYSIZE; i++) {
 
-        if (!DataTransition::Type_IsValid(i)) continue;
+        if (!fantasybit::TrType_IsValid(i)) continue;
 
         ui->transitions->addItem(
-                    QString::fromStdString(DataTransition::Type_Name(DataTransition::Type(i))),
+                    QString::fromStdString(fantasybit::TrType_Name(fantasybit::TrType(i))),
                                          QVariant(i));
     }
 
@@ -305,7 +305,7 @@ void TestingWindow::on_StageBlock_clicked() {
         }
 
         DataTransition dt{};
-        dt.set_type(static_cast<DataTransition_Type>(ui->transitions->currentData().toInt()));
+        dt.set_type(static_cast<TrType>(ui->transitions->currentData().toInt()));
         dt.set_season(2015);
         dt.set_week(ui->weeks->currentIndex());
 
@@ -1030,19 +1030,19 @@ void TestingWindow::on_Update_PLayers_2_clicked()
 void TestingWindow::on_fix363_clicked()
 {
 
-    auto txstr = RestfullService::myGetTx();
+    //auto txstr = RestfullService::myGetTx();
 
     //ToDo: verify
-    SignedTransaction st{};
-    st.ParseFromString(txstr);
+//    SignedTransaction st{};
+//    st.ParseFromString(txstr);
 
-    qDebug() << st.DebugString();
-    return;
+//    qDebug() << st.DebugString();
+//    return;
 
-    SqlStuff sql("satoshifantasy","on_fix363_clicked");
-   for ( int i =6237; i<6246; i++) {
-       sql.dumpTx(i);
-   }
+//    SqlStuff sql("satoshifantasy","on_fix363_clicked");
+//   for ( int i =6237; i<6246; i++) {
+//       sql.dumpTx(i);
+//   }
 /*
    auto b = Node::getLocalBlock(i,true);
 
@@ -1051,28 +1051,41 @@ void TestingWindow::on_fix363_clicked()
    }
    }
    */
-   return;
+//   return;
 
-   auto b = Node::getLocalBlock(363,true);
+//   Node::Cleanit()
+//   auto bb = Node::getGlobalBlock(1439);
+//   qDebug() << (*bb).DebugString();
 
-   auto id = ui->game->currentData();
-   GameInfo gameinfo = mGames[id.toString().toStdString()];
+   auto b = Node::getLocalBlock(1439,true);
 
-   GameResult result = dataagent::instance()->getGameResult(2,gameinfo);
-
-   Data d{};
-   d.set_type(Data_Type_RESULT);
-   ResultData rd{};
-   rd.mutable_game_result()->CopyFrom(result);
-   d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
+   auto id = "201501031";;
+   GameInfo gameinfo = mGames[id];
+   GameResult result = dataagent::instance()->getGameResult(10,gameinfo);
 
    DataTransition *dt = (*b).mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
-   dt->add_data()->CopyFrom(d);
-   qDebug() << (*b).DebugString();
+   ResultData *resultdata = dt->mutable_data(1)->MutableExtension(ResultData::result_data);
+   resultdata->mutable_game_result()->CopyFrom(result);
 
+
+//   Data d{};
+//   d.set_type(Data_Type_RESULT);
+//   ResultData rd{};
+//   rd.mutable_game_result()->CopyFrom(result);
+//   d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
+
+//   DataTransition *dt = (*b).mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
+//   dt->add_data()->CopyFrom(d);
+
+
+   qDebug() << (*b).DebugString();
    string bdata = (*b).SerializeAsString();
+//   int32_t bnum = 1439;
+//   leveldb::Slice value((char*)&bnum, sizeof(int32_t));
+//   Node::blockchain->Put(write_sync, value, bdata);
+
    RestfullClient rest(QUrl(LAPIURL.data()));
-   rest.postRawData("block/363","xxx",bdata.data(),bdata.size());
+   rest.postRawData("block/1439","xxx",bdata.data(),bdata.size());
 
 }
 
