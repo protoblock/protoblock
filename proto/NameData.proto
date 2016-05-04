@@ -15,6 +15,7 @@ message FantasyBitAward {
 }
 
 message FantasyBitPnl {
+        optional string name = 10;
         optional SettlePos spos = 20;
         optional int64 pnl = 30;
 }

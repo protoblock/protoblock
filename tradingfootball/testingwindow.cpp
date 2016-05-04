@@ -1029,6 +1029,53 @@ void TestingWindow::on_Update_PLayers_2_clicked()
 
 void TestingWindow::on_fix363_clicked()
 {
+    auto b = Node::getLocalBlock(2377,true);
+
+    Block &bb = *b;
+    DataTransition *dt = bb.mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
+        qDebug() << dt->DebugString().data();
+    dt->set_type(HEARTBEAT);
+
+    auto b2 = Node::getLocalBlock(2390,true);
+    Block &bb2 = *b2;
+    DataTransition *dt2 = bb2.mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
+            qDebug() << dt2->DebugString().data();
+    dt2->set_type(GAMESTART);
+    dt2->mutable_gamedata()->Add()->CopyFrom(dt->gamedata(0));
+
+    dt->mutable_gamedata()->Clear();
+
+    bb.mutable_signed_transactions(0)->CopyFrom(*dt);
+
+    bb2.mutable_signed_transactions(0)->CopyFrom(*dt2);
+
+    qDebug() << bb.DebugString().data();
+
+    qDebug() << bb2.DebugString().data();
+
+    qDebug() << " dsdsfdsfd ";
+
+    {
+    int32_t bnum = 2377;
+    string str = bb.SerializeAsString();
+    leveldb::Slice value((char*)&bnum, sizeof(int32_t));
+    Node::blockchain->Put(leveldb::WriteOptions(), value, str);
+    }
+
+    {
+    int32_t bnum = 2390;
+    string str = bb2.SerializeAsString();
+    leveldb::Slice value((char*)&bnum, sizeof(int32_t));
+    Node::blockchain->Put(leveldb::WriteOptions(), value,str);
+    }
+
+    return;
+
+
+//    auto b = Node::getLocalBlock(1439,true);
+//    string bdata = (*b).SerializeAsString();
+//    RestfullClient rest(QUrl("https://app.trading.football:9854"));
+//    rest.postRawData("block/"+QString::number(1439),"xxx",bdata.data(),bdata.size());
 
     //auto txstr = RestfullService::myGetTx();
 
@@ -1055,11 +1102,17 @@ void TestingWindow::on_fix363_clicked()
 
 //   Node::Cleanit()
 
-    auto b = Node::getLocalBlock(1439,true);
-    qDebug() << (*b).DebugString();
-    string bdata = (*b).SerializeAsString();
-    RestfullClient rest(QUrl("https://158.222.102.83:9854"));
-    rest.postRawData("block/50000","xxx",bdata.data(),bdata.size());
+//    string bs = RestfullService::getBlk("https://app.trading.football:4545",1439);
+//    Block bl;
+//    bl.ParseFromString(bs);
+//    qDebug() << bl.DebugString().data();
+//    return;
+
+//    auto b = Node::getLocalBlock(1439,true);
+//    qDebug() << (*b).DebugString();
+//    string bdata = (*b).SerializeAsString();
+//    RestfullClient rest(QUrl("https://app.trading.football:9854"));
+//    rest.postRawData("block/1439","xxx",bdata.data(),bdata.size());
 
     /*
   auto bb = Node::getGlobalBlock(1439);

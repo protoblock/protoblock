@@ -361,7 +361,38 @@ struct SqlStuff {
 
 
         bool good = insertQuery.exec();
-        db.close();
+        //db.close();
+
+        if ( ! good ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+            qDebug() << dist.DebugString();
+        }
+    }
+
+    void profit(Profits &dist) {
+
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
+        QSqlQuery insertQuery(db);
+
+        insertQuery.prepare
+            ("INSERT INTO profits "
+             "(fantasynameid,gameid,playerid,teamid,season,week,qty,price,pnl,result)"
+             "VALUES(:fnid, :gid, :pid,:tid,:s,:w,:qty,:price,:pnl,:res)");
+
+        insertQuery.bindValue(":fnid",dist.fantasy_nameid());
+        insertQuery.bindValue(":gid",QString::fromStdString(dist.gameid()));
+        insertQuery.bindValue(":pid",QString::fromStdString(dist.playerid()));
+        insertQuery.bindValue(":tid",QString::fromStdString(dist.teamid()));
+        insertQuery.bindValue(":s",dist.season());
+        insertQuery.bindValue(":w",dist.week());
+        insertQuery.bindValue(":proj",dist.qty());
+        insertQuery.bindValue(":award",dist.price());
+        insertQuery.bindValue(":award",dist.pnl());
+        insertQuery.bindValue(":res",dist.result());
+
+
+        bool good = insertQuery.exec();
+        //db.close();
 
         if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();

@@ -81,7 +81,8 @@ void protobuf_AssignDesc_NameData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FantasyBitAward));
   FantasyBitPnl_descriptor_ = file->message_type(2);
-  static const int FantasyBitPnl_offsets_[2] = {
+  static const int FantasyBitPnl_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitPnl, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitPnl, spos_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyBitPnl, pnl_),
   };
@@ -181,13 +182,14 @@ void protobuf_AddDesc_NameData_2eproto() {
     "to\"O\n\016FantasyNameBal\022\014\n\004name\030\n \001(\t\022\022\n\npu"
     "blic_key\030\024 \001(\t\022\014\n\004bits\030\036 \001(\004\022\r\n\005stake\030( "
     "\001(\003\"<\n\017FantasyBitAward\022\014\n\004name\030\n \001(\t\022\014\n\004"
-    "proj\030\024 \001(\005\022\r\n\005award\030\036 \001(\004\"A\n\rFantasyBitP"
-    "nl\022#\n\004spos\030\024 \001(\0132\025.fantasybit.SettlePos\022"
-    "\013\n\003pnl\030\036 \001(\003\">\n\016FantasyBitProj\022\014\n\004name\030\n"
-    " \001(\t\022\014\n\004proj\030\024 \001(\005\022\020\n\010playerid\030\036 \001(\t\"x\n\022"
-    "GameFantasyBitProj\022\016\n\006gameid\030\n \001(\t\022(\n\004ho"
-    "me\030\024 \003(\0132\032.fantasybit.FantasyBitProj\022(\n\004"
-    "away\030\036 \003(\0132\032.fantasybit.FantasyBitProj", 438);
+    "proj\030\024 \001(\005\022\r\n\005award\030\036 \001(\004\"O\n\rFantasyBitP"
+    "nl\022\014\n\004name\030\n \001(\t\022#\n\004spos\030\024 \001(\0132\025.fantasy"
+    "bit.SettlePos\022\013\n\003pnl\030\036 \001(\003\">\n\016FantasyBit"
+    "Proj\022\014\n\004name\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\020\n\010play"
+    "erid\030\036 \001(\t\"x\n\022GameFantasyBitProj\022\016\n\006game"
+    "id\030\n \001(\t\022(\n\004home\030\024 \003(\0132\032.fantasybit.Fant"
+    "asyBitProj\022(\n\004away\030\036 \003(\0132\032.fantasybit.Fa"
+    "ntasyBitProj", 452);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NameData.proto", &protobuf_RegisterTypes);
   FantasyNameBal::default_instance_ = new FantasyNameBal();
@@ -880,6 +882,7 @@ void FantasyBitAward::Swap(FantasyBitAward* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int FantasyBitPnl::kNameFieldNumber;
 const int FantasyBitPnl::kSposFieldNumber;
 const int FantasyBitPnl::kPnlFieldNumber;
 #endif  // !_MSC_VER
@@ -901,6 +904,7 @@ FantasyBitPnl::FantasyBitPnl(const FantasyBitPnl& from)
 
 void FantasyBitPnl::SharedCtor() {
   _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   spos_ = NULL;
   pnl_ = GOOGLE_LONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -911,6 +915,9 @@ FantasyBitPnl::~FantasyBitPnl() {
 }
 
 void FantasyBitPnl::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
   if (this != default_instance_) {
     delete spos_;
   }
@@ -939,6 +946,11 @@ FantasyBitPnl* FantasyBitPnl::New() const {
 
 void FantasyBitPnl::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
+        name_->clear();
+      }
+    }
     if (has_spos()) {
       if (spos_ != NULL) spos_->::fantasybit::SettlePos::Clear();
     }
@@ -954,10 +966,27 @@ bool FantasyBitPnl::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string name = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_spos;
+        break;
+      }
+
       // optional .fantasybit.SettlePos spos = 20;
       case 20: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_spos:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_spos()));
         } else {
@@ -1001,6 +1030,15 @@ bool FantasyBitPnl::MergePartialFromCodedStream(
 
 void FantasyBitPnl::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string name = 10;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      10, this->name(), output);
+  }
+
   // optional .fantasybit.SettlePos spos = 20;
   if (has_spos()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -1020,6 +1058,16 @@ void FantasyBitPnl::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* FantasyBitPnl::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // optional string name = 10;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        10, this->name(), target);
+  }
+
   // optional .fantasybit.SettlePos spos = 20;
   if (has_spos()) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -1043,6 +1091,13 @@ int FantasyBitPnl::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string name = 10;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+
     // optional .fantasybit.SettlePos spos = 20;
     if (has_spos()) {
       total_size += 2 +
@@ -1084,6 +1139,9 @@ void FantasyBitPnl::MergeFrom(const ::google::protobuf::Message& from) {
 void FantasyBitPnl::MergeFrom(const FantasyBitPnl& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
     if (from.has_spos()) {
       mutable_spos()->::fantasybit::SettlePos::MergeFrom(from.spos());
     }
@@ -1113,6 +1171,7 @@ bool FantasyBitPnl::IsInitialized() const {
 
 void FantasyBitPnl::Swap(FantasyBitPnl* other) {
   if (other != this) {
+    std::swap(name_, other->name_);
     std::swap(spos_, other->spos_);
     std::swap(pnl_, other->pnl_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);

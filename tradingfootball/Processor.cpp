@@ -343,17 +343,23 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 #endif
                 SqlStuff sql("satoshifantasy","distribution");
                 Distribution dist{};
+                Profits prof{};
                 dist.set_gameid(rd.game_result().gameid());
+                prof.set_gameid(dist.gameid());
                 auto gs = mData.GetGlobalState();
                 dist.set_season(gs.season());
                 dist.set_week(gs.week());
+                prof.set_season(dist.season());
+                prof.set_week(dist.week());
 
                 auto gi = mData.GetGameInfo(dist.gameid());
                 dist.set_teamid(gi.home());
+                prof.set_teamid(dist.teamid());
                 for ( auto res : rd.game_result().home_result()) {
                     dist.set_playerid(res.playerid());
                     dist.set_result(res.result());
-
+                    prof.set_playerid(dist.playerid());
+                    prof.set_result(dist.result());
                     for ( auto fba : res.fantaybitaward()) {
                         dist.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
                         dist.set_proj(fba.proj());
@@ -367,12 +373,31 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
 
                     }
+
+                    for ( auto fba : res.fantasybitpnl()) {
+
+                        prof.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
+                        prof.set_qty(fba.spos().qty());
+                        prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
+                        prof.set_pnl(fba.pnl());
+                        //emit new_dataProfits(prof);
+
+                        //auto ds = prof.SerializeAsString();
+
+                        sql.profit(prof);
+                        //RestfullClient rest(QUrl(LAPIURL.data()));
+                        //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
+
+                    }
                 }
 
                 dist.set_teamid(gi.away());
+                prof.set_teamid(dist.teamid());
                 for ( auto res : rd.game_result().away_result()) {
                     dist.set_playerid(res.playerid());
                     dist.set_result(res.result());
+                    prof.set_playerid(dist.playerid());
+                    prof.set_result(dist.result());
 
                     for ( auto fba : res.fantaybitaward()) {
                         dist.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
@@ -382,6 +407,22 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         auto ds = dist.SerializeAsString();
 
                         sql.distribute(dist);
+                        //RestfullClient rest(QUrl(LAPIURL.data()));
+                        //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
+
+                    }
+
+                    for ( auto fba : res.fantasybitpnl()) {
+
+                        prof.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
+                        prof.set_qty(fba.spos().qty());
+                        prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
+                        prof.set_pnl(fba.pnl());
+                        //emit new_dataProfits(prof);
+
+                        //auto ds = prof.SerializeAsString();
+
+                        sql.profit(prof);
                         //RestfullClient rest(QUrl(LAPIURL.data()));
                         //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
 
@@ -478,6 +519,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
         FantasyBitPnl &fba = *playerresult.mutable_fantasybitpnl()->Add();
         fba.mutable_spos()->CopyFrom(r.second.first);
         fba.set_pnl(r.second.second);
+        fba.set_name(r.first);
         //awards.add_fantaybitaward()->CopyFrom(fba);
         mNameData.AddPnL(r.first,r.second.second);
     }

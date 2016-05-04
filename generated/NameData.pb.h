@@ -325,6 +325,18 @@ class FantasyBitPnl : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
+  // optional string name = 10;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 10;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
   // optional .fantasybit.SettlePos spos = 20;
   inline bool has_spos() const;
   inline void clear_spos();
@@ -343,6 +355,8 @@ class FantasyBitPnl : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyBitPnl)
  private:
+  inline void set_has_name();
+  inline void clear_has_name();
   inline void set_has_spos();
   inline void clear_has_spos();
   inline void set_has_pnl();
@@ -350,11 +364,12 @@ class FantasyBitPnl : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* name_;
   ::fantasybit::SettlePos* spos_;
   ::google::protobuf::int64 pnl_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_NameData_2eproto();
   friend void protobuf_AssignDesc_NameData_2eproto();
@@ -901,15 +916,85 @@ inline void FantasyBitAward::set_award(::google::protobuf::uint64 value) {
 
 // FantasyBitPnl
 
-// optional .fantasybit.SettlePos spos = 20;
-inline bool FantasyBitPnl::has_spos() const {
+// optional string name = 10;
+inline bool FantasyBitPnl::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void FantasyBitPnl::set_has_spos() {
+inline void FantasyBitPnl::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void FantasyBitPnl::clear_has_spos() {
+inline void FantasyBitPnl::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void FantasyBitPnl::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& FantasyBitPnl::name() const {
+  return *name_;
+}
+inline void FantasyBitPnl::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void FantasyBitPnl::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void FantasyBitPnl::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* FantasyBitPnl::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* FantasyBitPnl::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void FantasyBitPnl::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .fantasybit.SettlePos spos = 20;
+inline bool FantasyBitPnl::has_spos() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void FantasyBitPnl::set_has_spos() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void FantasyBitPnl::clear_has_spos() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void FantasyBitPnl::clear_spos() {
   if (spos_ != NULL) spos_->::fantasybit::SettlePos::Clear();
@@ -941,13 +1026,13 @@ inline void FantasyBitPnl::set_allocated_spos(::fantasybit::SettlePos* spos) {
 
 // optional int64 pnl = 30;
 inline bool FantasyBitPnl::has_pnl() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void FantasyBitPnl::set_has_pnl() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void FantasyBitPnl::clear_has_pnl() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void FantasyBitPnl::clear_pnl() {
   pnl_ = GOOGLE_LONGLONG(0);
