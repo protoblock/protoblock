@@ -336,12 +336,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 */
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
-#ifdef DATAAGENTWRITENAMES
+#if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT
                 {
 #ifndef DATAAGENTWRITENAMES_FORCE
                 if ( !amlive ) break;
 #endif
-                SqlStuff sql("satoshifantasy","distribution");
+                //SqlStuff sql("satoshifantasy","distribution");
                 Distribution dist{};
                 Profits prof{};
                 dist.set_gameid(rd.game_result().gameid());
@@ -364,14 +364,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         dist.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
                         dist.set_proj(fba.proj());
                         dist.set_award(fba.award());
-                        emit new_dataDistribution(dist);
-
-                        auto ds = dist.SerializeAsString();
-
+#ifdef DATAAGENTWRITENAMES
                         sql.distribute(dist);
-                        //RestfullClient rest(QUrl(LAPIURL.data()));
-                        //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
-
+#endif
                     }
 
                     for ( auto fba : res.fantasybitpnl()) {
@@ -380,14 +375,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_qty(fba.spos().qty());
                         prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
                         prof.set_pnl(fba.pnl());
-                        //emit new_dataProfits(prof);
-
-                        //auto ds = prof.SerializeAsString();
-
+#ifdef DATAAGENTWRITEPROFIT
                         sql.profit(prof);
-                        //RestfullClient rest(QUrl(LAPIURL.data()));
-                        //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
-
+#endif
                     }
                 }
 
@@ -406,9 +396,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         emit new_dataDistribution(dist);
                         auto ds = dist.SerializeAsString();
 
+#ifdef DATAAGENTWRITENAMES
                         sql.distribute(dist);
-                        //RestfullClient rest(QUrl(LAPIURL.data()));
-                        //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
+#endif
 
                     }
 
@@ -418,13 +408,10 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_qty(fba.spos().qty());
                         prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
                         prof.set_pnl(fba.pnl());
-                        //emit new_dataProfits(prof);
 
-                        //auto ds = prof.SerializeAsString();
-
+#ifdef DATAAGENTWRITEPROFIT
                         sql.profit(prof);
-                        //RestfullClient rest(QUrl(LAPIURL.data()));
-                        //rest.postRawData("distribution","shit",ds.data(),((size_t)ds.size()));
+#endif
 
                     }
                 }
