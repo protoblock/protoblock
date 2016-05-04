@@ -12,7 +12,7 @@
 #include "Commissioner.h"
 #include <QDebug>
 #include "StaticData.pb.h"
-#include "DistributionAlgo.h"
+//#include "DistributionAlgo.h"
 #include "dataservice.h"
 #include <QtSql/QSql>
 #include <QtSql/QSqlDatabase>
@@ -1286,6 +1286,28 @@ public:
             auto resp = rest.lastReply();
 
             qDebug() << resp;
+#ifdef DUMPFILE
+            QString myFileName;
+            myFileName = QString("%1_%2-%3-%4.json")
+                    .arg( QCoreApplication::applicationDirPath())
+                    .arg(week)
+                    .arg(game.away().data())
+                    .arg(game.home().data()) ;
+
+            QFile mFile(myFileName);
+            if(!mFile.open(QIODevice::ReadWrite | QIODevice::Text)){
+                qDebug() << "could not open file " << myFileName << " for writing ";
+            }
+
+            QTextStream mStream(&mFile);
+
+            mStream << resp;
+            // wr
+            mFile.close();
+            mFile.flush();
+#endif
+
+
             QJsonDocument ret = QJsonDocument::fromJson(resp);
             qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
 
