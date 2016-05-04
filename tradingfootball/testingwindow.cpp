@@ -1054,10 +1054,19 @@ void TestingWindow::on_fix363_clicked()
 //   return;
 
 //   Node::Cleanit()
-//   auto bb = Node::getGlobalBlock(1439);
-//   qDebug() << (*bb).DebugString();
+
+    auto b = Node::getLocalBlock(1439,true);
+    qDebug() << (*b).DebugString();
+    string bdata = (*b).SerializeAsString();
+    RestfullClient rest(QUrl("https://158.222.102.83:9854"));
+    rest.postRawData("block/50000","xxx",bdata.data(),bdata.size());
+
+    /*
+  auto bb = Node::getGlobalBlock(1439);
+  qDebug() << (*bb).DebugString();
 
    auto b = Node::getLocalBlock(1439,true);
+   qDebug() << (*b).DebugString();
 
    auto id = "201501031";;
    GameInfo gameinfo = mGames[id];
@@ -1068,25 +1077,18 @@ void TestingWindow::on_fix363_clicked()
    resultdata->mutable_game_result()->CopyFrom(result);
 
 
-//   Data d{};
-//   d.set_type(Data_Type_RESULT);
-//   ResultData rd{};
-//   rd.mutable_game_result()->CopyFrom(result);
-//   d.MutableExtension(ResultData::result_data)->CopyFrom(rd);
-
-//   DataTransition *dt = (*b).mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
-//   dt->add_data()->CopyFrom(d);
-
 
    qDebug() << (*b).DebugString();
    string bdata = (*b).SerializeAsString();
-//   int32_t bnum = 1439;
-//   leveldb::Slice value((char*)&bnum, sizeof(int32_t));
-//   Node::blockchain->Put(write_sync, value, bdata);
+   int32_t bnum = 1439;
+   leveldb::Slice value((char*)&bnum, sizeof(int32_t));
+   Node::blockchain->Put(leveldb::WriteOptions(), value, bdata);
 
-   RestfullClient rest(QUrl(LAPIURL.data()));
+//   RestfullClient rest(QUrl(LAPIURL.data()));
+
+   RestfullClient rest(QUrl("http://158.222.102.83:9854"));
    rest.postRawData("block/1439","xxx",bdata.data(),bdata.size());
-
+    */
 }
 
 void TestingWindow::on_FixDef_clicked()
