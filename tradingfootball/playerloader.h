@@ -400,6 +400,36 @@ struct SqlStuff {
         }
     }
 
+    void fills(Fills &dist) {
+
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
+        QSqlQuery insertQuery(db);
+
+        insertQuery.prepare("INSERT INTO fills "
+                "(fantasynamebuyer,fantaynameseller,playerid,season,week,qty,price,isbuyaggressive)"
+                "VALUES(:buyer, :seller, :pid,:pid,:s, :w,:qty,:price, :isba)");
+
+        insertQuery.bindValue(":buyer",QString::fromStdString(dist.buyer()));
+        insertQuery.bindValue(":seller",QString::fromStdString(dist.seller()));
+//        insertQuery.bindValue(":gid",QString::fromStdString(dist.gameid()));
+//        insertQuery.bindValue(":tid",QString::fromStdString(dist.teamid()));
+        insertQuery.bindValue(":pid",QString::fromStdString(dist.playerid()));
+        insertQuery.bindValue(":s",dist.season());
+        insertQuery.bindValue(":w",dist.week());
+        insertQuery.bindValue(":qty",dist.qty());
+        insertQuery.bindValue(":price",dist.price());
+        insertQuery.bindValue(":isba",dist.passivebuy() ? 0 : 1);
+
+
+        bool good = insertQuery.exec();
+        //db.close();
+
+        if ( ! good ) {
+            qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+            qDebug() << dist.DebugString();
+        }
+    }
+
     void quote(const string &inplayerid, const ContractOHLC &ohlc) {
 
         QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection

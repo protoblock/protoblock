@@ -30,6 +30,19 @@ message Profits {
         optional float pnl = 10;
 }
 
+message Fills {
+    optional bool passivebuy = 1;
+    optional string buyer = 10;
+    optional string seller = 20;
+    optional string teamid = 40;
+    optional string playerid = 45;
+    optional int32 season = 50;
+    optional int32 week = 60;
+    optional int32 qty = 70;
+    optional float price = 80;
+
+}
+
 message ProjKstats {
     optional float pa = 10;
     optional float fg30 = 20;

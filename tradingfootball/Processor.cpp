@@ -25,16 +25,23 @@
 #include "ApiData.pb.h"
 #include "RestFullCall.h"
 #include "fbutils.h"
-#ifdef DATAAGENTWRITENAMES
+#if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT || defined SQL
 #include "playerloader.h"
 #endif
 
 #ifdef BLOCK_EXPLORER
 #include "blockexplorer.h"
+#ifdef BLOCK_EXPLORER_WRITE_FILLS
+#include "utils.h"
+#endif
 #endif
 
 namespace fantasybit
 {
+
+#ifdef SQL
+    SqlStuff sql("satoshifantasy","distribution");
+#endif
 
 void BlockProcessor::hardReset() {
     mRecorder.closeAll();
@@ -127,6 +134,11 @@ int32_t BlockProcessor::process(Block &sblock) {
 #ifdef BLOCK_EXPLORER
     bx.pblock(mRecorder.cleanBlock);
     bx.endit();
+
+#ifdef BLOCK_EXPLORER_WRITE_FILLS
+    while (!fantasybit_bx::FILL_QUEUE.isEmpty())
+        sql.fills(fantasybit_bx::FILL_QUEUE.dequeue());
+#endif
 
     assert( Commissioner::getName("FantasyAgent")->getBalance() == bx.SkillBalance("FantasyAgent"));
 
@@ -341,7 +353,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 #ifndef DATAAGENTWRITENAMES_FORCE
                 if ( !amlive ) break;
 #endif
-                //SqlStuff sql("satoshifantasy","distribution");
+
                 Distribution dist{};
                 Profits prof{};
                 dist.set_gameid(rd.game_result().gameid());
@@ -1014,6 +1026,9 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 	}
 	*/
 }
+
+BlockProcessor::BlockProcessor(NFLStateData &data, FantasyNameData &namedata, ExchangeData &ed) :
+    mData(data), mNameData(namedata) , mExchangeData(ed) {}
 
 
 }

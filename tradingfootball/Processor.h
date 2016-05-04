@@ -25,6 +25,8 @@
 #endif
 
 
+
+
 namespace fantasybit
 {
 
@@ -57,8 +59,7 @@ signals:
 
 public:
     BlockProcessor(NFLStateData &data, FantasyNameData &namedata,
-                   ExchangeData &ed) :
-        mData(data), mNameData(namedata) , mExchangeData(ed) {}
+                   ExchangeData &ed);
 
     int32_t init();
 
@@ -89,6 +90,7 @@ public:
 #ifdef BLOCK_EXPLORER
     fantasybit_bx::BlockExplorer bx;
 #endif
+
 
     static double CalcResults(const Stats &stats) {
         int ret = 0;

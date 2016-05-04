@@ -29,6 +29,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Profits_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Profits_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Fills_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Fills_reflection_ = NULL;
 const ::google::protobuf::Descriptor* ProjKstats_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ProjKstats_reflection_ = NULL;
@@ -114,7 +117,31 @@ void protobuf_AssignDesc_ApiData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Profits));
-  ProjKstats_descriptor_ = file->message_type(3);
+  Fills_descriptor_ = file->message_type(3);
+  static const int Fills_offsets_[10] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, passivebuy_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, buyer_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, seller_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, gameid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, teamid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, playerid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, season_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, week_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, qty_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, price_),
+  };
+  Fills_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Fills_descriptor_,
+      Fills::default_instance_,
+      Fills_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Fills));
+  ProjKstats_descriptor_ = file->message_type(4);
   static const int ProjKstats_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjKstats, pa_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjKstats, fg30_),
@@ -133,7 +160,7 @@ void protobuf_AssignDesc_ApiData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjKstats));
-  ProjDstats_descriptor_ = file->message_type(4);
+  ProjDstats_descriptor_ = file->message_type(5);
   static const int ProjDstats_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjDstats, twopt_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjDstats, onept_),
@@ -154,7 +181,7 @@ void protobuf_AssignDesc_ApiData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjDstats));
-  ProjOstats_descriptor_ = file->message_type(5);
+  ProjOstats_descriptor_ = file->message_type(6);
   static const int ProjOstats_offsets_[11] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjOstats, passyds_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjOstats, passtd_),
@@ -179,7 +206,7 @@ void protobuf_AssignDesc_ApiData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjOstats));
-  ProjStats_descriptor_ = file->message_type(6);
+  ProjStats_descriptor_ = file->message_type(7);
   static const int ProjStats_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjStats, ostats_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjStats, dstats_),
@@ -215,6 +242,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Profits_descriptor_, &Profits::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Fills_descriptor_, &Fills::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ProjKstats_descriptor_, &ProjKstats::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ProjDstats_descriptor_, &ProjDstats::default_instance());
@@ -233,6 +262,8 @@ void protobuf_ShutdownFile_ApiData_2eproto() {
   delete Distribution_reflection_;
   delete Profits::default_instance_;
   delete Profits_reflection_;
+  delete Fills::default_instance_;
+  delete Fills_reflection_;
   delete ProjKstats::default_instance_;
   delete ProjKstats_reflection_;
   delete ProjDstats::default_instance_;
@@ -260,25 +291,30 @@ void protobuf_AddDesc_ApiData_2eproto() {
     " \001(\t\022\016\n\006season\030\005 \001(\005\022\014\n\004week\030\006 \001(\005\022\026\n\016fa"
     "ntasy_nameid\030\001 \001(\004\022\020\n\010playerid\030\003 \001(\t\022\013\n\003"
     "qty\030\007 \001(\005\022\r\n\005price\030\010 \001(\002\022\016\n\006result\030\t \001(\002"
-    "\022\013\n\003pnl\030\n \001(\002\"P\n\nProjKstats\022\n\n\002pa\030\n \001(\002\022"
-    "\014\n\004fg30\030\024 \001(\002\022\014\n\004fg40\030\036 \001(\002\022\014\n\004fg50\030( \001("
-    "\002\022\014\n\004fg60\0302 \001(\002\"{\n\nProjDstats\022\r\n\005twopt\030d"
-    " \001(\002\022\r\n\005onept\030n \001(\002\022\r\n\005deftd\030x \001(\002\022\r\n\004sf"
-    "ty\030\202\001 \001(\002\022\022\n\tturnovers\030\214\001 \001(\002\022\016\n\005sacks\030\226"
-    "\001 \001(\002\022\r\n\004ptsa\030\240\001 \001(\002\"\266\001\n\nProjOstats\022\017\n\007p"
-    "assyds\030\n \001(\002\022\016\n\006passtd\030\024 \001(\002\022\017\n\007rushyds\030"
-    "\036 \001(\002\022\016\n\006rushtd\030( \001(\002\022\016\n\006recyds\0302 \001(\002\022\r\n"
-    "\005rectd\030< \001(\002\022\013\n\003rec\030F \001(\002\022\014\n\004pint\030P \001(\002\022"
-    "\016\n\006fumble\030Z \001(\002\022\r\n\005twopt\030d \001(\002\022\r\n\005onept\030"
-    "n \001(\002\"\203\001\n\tProjStats\022&\n\006ostats\030\n \001(\0132\026.fa"
-    "ntasybit.ProjOstats\022&\n\006dstats\030\024 \001(\0132\026.fa"
-    "ntasybit.ProjDstats\022&\n\006kstats\030\036 \001(\0132\026.fa"
-    "ntasybit.ProjKstats", 939);
+    "\022\013\n\003pnl\030\n \001(\002\"\246\001\n\005Fills\022\022\n\npassivebuy\030\001 "
+    "\001(\010\022\r\n\005buyer\030\n \001(\t\022\016\n\006seller\030\024 \001(\t\022\016\n\006ga"
+    "meid\030\036 \001(\t\022\016\n\006teamid\030( \001(\t\022\020\n\010playerid\030-"
+    " \001(\t\022\016\n\006season\0302 \001(\005\022\014\n\004week\030< \001(\005\022\013\n\003qt"
+    "y\030F \001(\005\022\r\n\005price\030P \001(\002\"P\n\nProjKstats\022\n\n\002"
+    "pa\030\n \001(\002\022\014\n\004fg30\030\024 \001(\002\022\014\n\004fg40\030\036 \001(\002\022\014\n\004"
+    "fg50\030( \001(\002\022\014\n\004fg60\0302 \001(\002\"{\n\nProjDstats\022\r"
+    "\n\005twopt\030d \001(\002\022\r\n\005onept\030n \001(\002\022\r\n\005deftd\030x "
+    "\001(\002\022\r\n\004sfty\030\202\001 \001(\002\022\022\n\tturnovers\030\214\001 \001(\002\022\016"
+    "\n\005sacks\030\226\001 \001(\002\022\r\n\004ptsa\030\240\001 \001(\002\"\266\001\n\nProjOs"
+    "tats\022\017\n\007passyds\030\n \001(\002\022\016\n\006passtd\030\024 \001(\002\022\017\n"
+    "\007rushyds\030\036 \001(\002\022\016\n\006rushtd\030( \001(\002\022\016\n\006recyds"
+    "\0302 \001(\002\022\r\n\005rectd\030< \001(\002\022\013\n\003rec\030F \001(\002\022\014\n\004pi"
+    "nt\030P \001(\002\022\016\n\006fumble\030Z \001(\002\022\r\n\005twopt\030d \001(\002\022"
+    "\r\n\005onept\030n \001(\002\"\203\001\n\tProjStats\022&\n\006ostats\030\n"
+    " \001(\0132\026.fantasybit.ProjOstats\022&\n\006dstats\030\024"
+    " \001(\0132\026.fantasybit.ProjDstats\022&\n\006kstats\030\036"
+    " \001(\0132\026.fantasybit.ProjKstats", 1108);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ApiData.proto", &protobuf_RegisterTypes);
   FantasyNameHash::default_instance_ = new FantasyNameHash();
   Distribution::default_instance_ = new Distribution();
   Profits::default_instance_ = new Profits();
+  Fills::default_instance_ = new Fills();
   ProjKstats::default_instance_ = new ProjKstats();
   ProjDstats::default_instance_ = new ProjDstats();
   ProjOstats::default_instance_ = new ProjOstats();
@@ -286,6 +322,7 @@ void protobuf_AddDesc_ApiData_2eproto() {
   FantasyNameHash::default_instance_->InitAsDefaultInstance();
   Distribution::default_instance_->InitAsDefaultInstance();
   Profits::default_instance_->InitAsDefaultInstance();
+  Fills::default_instance_->InitAsDefaultInstance();
   ProjKstats::default_instance_->InitAsDefaultInstance();
   ProjDstats::default_instance_->InitAsDefaultInstance();
   ProjOstats::default_instance_->InitAsDefaultInstance();
@@ -1761,6 +1798,661 @@ void Profits::Swap(Profits* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = Profits_descriptor_;
   metadata.reflection = Profits_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Fills::kPassivebuyFieldNumber;
+const int Fills::kBuyerFieldNumber;
+const int Fills::kSellerFieldNumber;
+const int Fills::kGameidFieldNumber;
+const int Fills::kTeamidFieldNumber;
+const int Fills::kPlayeridFieldNumber;
+const int Fills::kSeasonFieldNumber;
+const int Fills::kWeekFieldNumber;
+const int Fills::kQtyFieldNumber;
+const int Fills::kPriceFieldNumber;
+#endif  // !_MSC_VER
+
+Fills::Fills()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void Fills::InitAsDefaultInstance() {
+}
+
+Fills::Fills(const Fills& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void Fills::SharedCtor() {
+  _cached_size_ = 0;
+  passivebuy_ = false;
+  buyer_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  seller_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  season_ = 0;
+  week_ = 0;
+  qty_ = 0;
+  price_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Fills::~Fills() {
+  SharedDtor();
+}
+
+void Fills::SharedDtor() {
+  if (buyer_ != &::google::protobuf::internal::kEmptyString) {
+    delete buyer_;
+  }
+  if (seller_ != &::google::protobuf::internal::kEmptyString) {
+    delete seller_;
+  }
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    delete gameid_;
+  }
+  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
+    delete teamid_;
+  }
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void Fills::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Fills::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Fills_descriptor_;
+}
+
+const Fills& Fills::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ApiData_2eproto();
+  return *default_instance_;
+}
+
+Fills* Fills::default_instance_ = NULL;
+
+Fills* Fills::New() const {
+  return new Fills;
+}
+
+void Fills::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    passivebuy_ = false;
+    if (has_buyer()) {
+      if (buyer_ != &::google::protobuf::internal::kEmptyString) {
+        buyer_->clear();
+      }
+    }
+    if (has_seller()) {
+      if (seller_ != &::google::protobuf::internal::kEmptyString) {
+        seller_->clear();
+      }
+    }
+    if (has_gameid()) {
+      if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+        gameid_->clear();
+      }
+    }
+    if (has_teamid()) {
+      if (teamid_ != &::google::protobuf::internal::kEmptyString) {
+        teamid_->clear();
+      }
+    }
+    if (has_playerid()) {
+      if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+        playerid_->clear();
+      }
+    }
+    season_ = 0;
+    week_ = 0;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    qty_ = 0;
+    price_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Fills::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool passivebuy = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &passivebuy_)));
+          set_has_passivebuy();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(82)) goto parse_buyer;
+        break;
+      }
+
+      // optional string buyer = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_buyer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_buyer()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->buyer().data(), this->buyer().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_seller;
+        break;
+      }
+
+      // optional string seller = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_seller:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_seller()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->seller().data(), this->seller().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(242)) goto parse_gameid;
+        break;
+      }
+
+      // optional string gameid = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_gameid:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_gameid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->gameid().data(), this->gameid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(322)) goto parse_teamid;
+        break;
+      }
+
+      // optional string teamid = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_teamid:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_teamid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->teamid().data(), this->teamid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(362)) goto parse_playerid;
+        break;
+      }
+
+      // optional string playerid = 45;
+      case 45: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_playerid:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_playerid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->playerid().data(), this->playerid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(400)) goto parse_season;
+        break;
+      }
+
+      // optional int32 season = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_season:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &season_)));
+          set_has_season();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(480)) goto parse_week;
+        break;
+      }
+
+      // optional int32 week = 60;
+      case 60: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_week:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &week_)));
+          set_has_week();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(560)) goto parse_qty;
+        break;
+      }
+
+      // optional int32 qty = 70;
+      case 70: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_qty:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &qty_)));
+          set_has_qty();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(645)) goto parse_price;
+        break;
+      }
+
+      // optional float price = 80;
+      case 80: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_price:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &price_)));
+          set_has_price();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void Fills::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional bool passivebuy = 1;
+  if (has_passivebuy()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->passivebuy(), output);
+  }
+
+  // optional string buyer = 10;
+  if (has_buyer()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->buyer().data(), this->buyer().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      10, this->buyer(), output);
+  }
+
+  // optional string seller = 20;
+  if (has_seller()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->seller().data(), this->seller().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      20, this->seller(), output);
+  }
+
+  // optional string gameid = 30;
+  if (has_gameid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->gameid().data(), this->gameid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      30, this->gameid(), output);
+  }
+
+  // optional string teamid = 40;
+  if (has_teamid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->teamid().data(), this->teamid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      40, this->teamid(), output);
+  }
+
+  // optional string playerid = 45;
+  if (has_playerid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->playerid().data(), this->playerid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      45, this->playerid(), output);
+  }
+
+  // optional int32 season = 50;
+  if (has_season()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(50, this->season(), output);
+  }
+
+  // optional int32 week = 60;
+  if (has_week()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(60, this->week(), output);
+  }
+
+  // optional int32 qty = 70;
+  if (has_qty()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(70, this->qty(), output);
+  }
+
+  // optional float price = 80;
+  if (has_price()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(80, this->price(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* Fills::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional bool passivebuy = 1;
+  if (has_passivebuy()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->passivebuy(), target);
+  }
+
+  // optional string buyer = 10;
+  if (has_buyer()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->buyer().data(), this->buyer().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        10, this->buyer(), target);
+  }
+
+  // optional string seller = 20;
+  if (has_seller()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->seller().data(), this->seller().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        20, this->seller(), target);
+  }
+
+  // optional string gameid = 30;
+  if (has_gameid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->gameid().data(), this->gameid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        30, this->gameid(), target);
+  }
+
+  // optional string teamid = 40;
+  if (has_teamid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->teamid().data(), this->teamid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        40, this->teamid(), target);
+  }
+
+  // optional string playerid = 45;
+  if (has_playerid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->playerid().data(), this->playerid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        45, this->playerid(), target);
+  }
+
+  // optional int32 season = 50;
+  if (has_season()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(50, this->season(), target);
+  }
+
+  // optional int32 week = 60;
+  if (has_week()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(60, this->week(), target);
+  }
+
+  // optional int32 qty = 70;
+  if (has_qty()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(70, this->qty(), target);
+  }
+
+  // optional float price = 80;
+  if (has_price()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(80, this->price(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int Fills::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional bool passivebuy = 1;
+    if (has_passivebuy()) {
+      total_size += 1 + 1;
+    }
+
+    // optional string buyer = 10;
+    if (has_buyer()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->buyer());
+    }
+
+    // optional string seller = 20;
+    if (has_seller()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->seller());
+    }
+
+    // optional string gameid = 30;
+    if (has_gameid()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->gameid());
+    }
+
+    // optional string teamid = 40;
+    if (has_teamid()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->teamid());
+    }
+
+    // optional string playerid = 45;
+    if (has_playerid()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->playerid());
+    }
+
+    // optional int32 season = 50;
+    if (has_season()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->season());
+    }
+
+    // optional int32 week = 60;
+    if (has_week()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->week());
+    }
+
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional int32 qty = 70;
+    if (has_qty()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->qty());
+    }
+
+    // optional float price = 80;
+    if (has_price()) {
+      total_size += 2 + 4;
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Fills::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Fills* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Fills*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Fills::MergeFrom(const Fills& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_passivebuy()) {
+      set_passivebuy(from.passivebuy());
+    }
+    if (from.has_buyer()) {
+      set_buyer(from.buyer());
+    }
+    if (from.has_seller()) {
+      set_seller(from.seller());
+    }
+    if (from.has_gameid()) {
+      set_gameid(from.gameid());
+    }
+    if (from.has_teamid()) {
+      set_teamid(from.teamid());
+    }
+    if (from.has_playerid()) {
+      set_playerid(from.playerid());
+    }
+    if (from.has_season()) {
+      set_season(from.season());
+    }
+    if (from.has_week()) {
+      set_week(from.week());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_qty()) {
+      set_qty(from.qty());
+    }
+    if (from.has_price()) {
+      set_price(from.price());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Fills::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Fills::CopyFrom(const Fills& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Fills::IsInitialized() const {
+
+  return true;
+}
+
+void Fills::Swap(Fills* other) {
+  if (other != this) {
+    std::swap(passivebuy_, other->passivebuy_);
+    std::swap(buyer_, other->buyer_);
+    std::swap(seller_, other->seller_);
+    std::swap(gameid_, other->gameid_);
+    std::swap(teamid_, other->teamid_);
+    std::swap(playerid_, other->playerid_);
+    std::swap(season_, other->season_);
+    std::swap(week_, other->week_);
+    std::swap(qty_, other->qty_);
+    std::swap(price_, other->price_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Fills::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Fills_descriptor_;
+  metadata.reflection = Fills_reflection_;
   return metadata;
 }
 
