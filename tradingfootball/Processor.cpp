@@ -86,7 +86,7 @@ int32_t BlockProcessor::init() {
     lastidprocessed =  mRecorder.getLastBlockId();
 
 #ifdef BLOCK_EXPLORER
-    bx.init(lastidprocessed);
+    bx.init();//lastidprocessed);
 #endif
 
     return lastidprocessed;
@@ -136,11 +136,11 @@ int32_t BlockProcessor::process(Block &sblock) {
     bx.endit();
 
 #ifdef BLOCK_EXPLORER_WRITE_FILLS
-    while (!fantasybit_bx::FILL_QUEUE.isEmpty())
-        sql.fills(fantasybit_bx::FILL_QUEUE.dequeue());
+    while (!fantasybit_bx::staticglobal::FILL_QUEUE.isEmpty())
+        sql.fills(fantasybit_bx::staticglobal::FILL_QUEUE.dequeue());
 #endif
 
-    assert( Commissioner::getName("FantasyAgent")->getBalance() == bx.SkillBalance("FantasyAgent"));
+    //assert( Commissioner::getName("FantasyAgent")->getBalance() == bx.SkillBalance("FantasyAgent"));
 
     if ( Commissioner::getName("FantasyAgent")->getBalance() != bx.SkillBalance("FantasyAgent")) {
         qDebug()

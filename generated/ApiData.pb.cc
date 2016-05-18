@@ -118,11 +118,10 @@ void protobuf_AssignDesc_ApiData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Profits));
   Fills_descriptor_ = file->message_type(3);
-  static const int Fills_offsets_[10] = {
+  static const int Fills_offsets_[9] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, passivebuy_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, buyer_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, seller_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, gameid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, teamid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Fills, season_),
@@ -291,24 +290,24 @@ void protobuf_AddDesc_ApiData_2eproto() {
     " \001(\t\022\016\n\006season\030\005 \001(\005\022\014\n\004week\030\006 \001(\005\022\026\n\016fa"
     "ntasy_nameid\030\001 \001(\004\022\020\n\010playerid\030\003 \001(\t\022\013\n\003"
     "qty\030\007 \001(\005\022\r\n\005price\030\010 \001(\002\022\016\n\006result\030\t \001(\002"
-    "\022\013\n\003pnl\030\n \001(\002\"\246\001\n\005Fills\022\022\n\npassivebuy\030\001 "
-    "\001(\010\022\r\n\005buyer\030\n \001(\t\022\016\n\006seller\030\024 \001(\t\022\016\n\006ga"
-    "meid\030\036 \001(\t\022\016\n\006teamid\030( \001(\t\022\020\n\010playerid\030-"
-    " \001(\t\022\016\n\006season\0302 \001(\005\022\014\n\004week\030< \001(\005\022\013\n\003qt"
-    "y\030F \001(\005\022\r\n\005price\030P \001(\002\"P\n\nProjKstats\022\n\n\002"
-    "pa\030\n \001(\002\022\014\n\004fg30\030\024 \001(\002\022\014\n\004fg40\030\036 \001(\002\022\014\n\004"
-    "fg50\030( \001(\002\022\014\n\004fg60\0302 \001(\002\"{\n\nProjDstats\022\r"
-    "\n\005twopt\030d \001(\002\022\r\n\005onept\030n \001(\002\022\r\n\005deftd\030x "
-    "\001(\002\022\r\n\004sfty\030\202\001 \001(\002\022\022\n\tturnovers\030\214\001 \001(\002\022\016"
-    "\n\005sacks\030\226\001 \001(\002\022\r\n\004ptsa\030\240\001 \001(\002\"\266\001\n\nProjOs"
-    "tats\022\017\n\007passyds\030\n \001(\002\022\016\n\006passtd\030\024 \001(\002\022\017\n"
-    "\007rushyds\030\036 \001(\002\022\016\n\006rushtd\030( \001(\002\022\016\n\006recyds"
-    "\0302 \001(\002\022\r\n\005rectd\030< \001(\002\022\013\n\003rec\030F \001(\002\022\014\n\004pi"
-    "nt\030P \001(\002\022\016\n\006fumble\030Z \001(\002\022\r\n\005twopt\030d \001(\002\022"
-    "\r\n\005onept\030n \001(\002\"\203\001\n\tProjStats\022&\n\006ostats\030\n"
-    " \001(\0132\026.fantasybit.ProjOstats\022&\n\006dstats\030\024"
-    " \001(\0132\026.fantasybit.ProjDstats\022&\n\006kstats\030\036"
-    " \001(\0132\026.fantasybit.ProjKstats", 1108);
+    "\022\013\n\003pnl\030\n \001(\002\"\226\001\n\005Fills\022\022\n\npassivebuy\030\001 "
+    "\001(\010\022\r\n\005buyer\030\n \001(\t\022\016\n\006seller\030\024 \001(\t\022\016\n\006te"
+    "amid\030( \001(\t\022\020\n\010playerid\030- \001(\t\022\016\n\006season\0302"
+    " \001(\005\022\014\n\004week\030< \001(\005\022\013\n\003qty\030F \001(\005\022\r\n\005price"
+    "\030P \001(\002\"P\n\nProjKstats\022\n\n\002pa\030\n \001(\002\022\014\n\004fg30"
+    "\030\024 \001(\002\022\014\n\004fg40\030\036 \001(\002\022\014\n\004fg50\030( \001(\002\022\014\n\004fg"
+    "60\0302 \001(\002\"{\n\nProjDstats\022\r\n\005twopt\030d \001(\002\022\r\n"
+    "\005onept\030n \001(\002\022\r\n\005deftd\030x \001(\002\022\r\n\004sfty\030\202\001 \001"
+    "(\002\022\022\n\tturnovers\030\214\001 \001(\002\022\016\n\005sacks\030\226\001 \001(\002\022\r"
+    "\n\004ptsa\030\240\001 \001(\002\"\266\001\n\nProjOstats\022\017\n\007passyds\030"
+    "\n \001(\002\022\016\n\006passtd\030\024 \001(\002\022\017\n\007rushyds\030\036 \001(\002\022\016"
+    "\n\006rushtd\030( \001(\002\022\016\n\006recyds\0302 \001(\002\022\r\n\005rectd\030"
+    "< \001(\002\022\013\n\003rec\030F \001(\002\022\014\n\004pint\030P \001(\002\022\016\n\006fumb"
+    "le\030Z \001(\002\022\r\n\005twopt\030d \001(\002\022\r\n\005onept\030n \001(\002\"\203"
+    "\001\n\tProjStats\022&\n\006ostats\030\n \001(\0132\026.fantasybi"
+    "t.ProjOstats\022&\n\006dstats\030\024 \001(\0132\026.fantasybi"
+    "t.ProjDstats\022&\n\006kstats\030\036 \001(\0132\026.fantasybi"
+    "t.ProjKstats", 1092);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ApiData.proto", &protobuf_RegisterTypes);
   FantasyNameHash::default_instance_ = new FantasyNameHash();
@@ -1808,7 +1807,6 @@ void Profits::Swap(Profits* other) {
 const int Fills::kPassivebuyFieldNumber;
 const int Fills::kBuyerFieldNumber;
 const int Fills::kSellerFieldNumber;
-const int Fills::kGameidFieldNumber;
 const int Fills::kTeamidFieldNumber;
 const int Fills::kPlayeridFieldNumber;
 const int Fills::kSeasonFieldNumber;
@@ -1836,7 +1834,6 @@ void Fills::SharedCtor() {
   passivebuy_ = false;
   buyer_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   seller_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   season_ = 0;
@@ -1856,9 +1853,6 @@ void Fills::SharedDtor() {
   }
   if (seller_ != &::google::protobuf::internal::kEmptyString) {
     delete seller_;
-  }
-  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
-    delete gameid_;
   }
   if (teamid_ != &::google::protobuf::internal::kEmptyString) {
     delete teamid_;
@@ -1904,11 +1898,6 @@ void Fills::Clear() {
         seller_->clear();
       }
     }
-    if (has_gameid()) {
-      if (gameid_ != &::google::protobuf::internal::kEmptyString) {
-        gameid_->clear();
-      }
-    }
     if (has_teamid()) {
       if (teamid_ != &::google::protobuf::internal::kEmptyString) {
         teamid_->clear();
@@ -1921,9 +1910,9 @@ void Fills::Clear() {
     }
     season_ = 0;
     week_ = 0;
+    qty_ = 0;
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    qty_ = 0;
     price_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1977,23 +1966,6 @@ bool Fills::MergePartialFromCodedStream(
                 input, this->mutable_seller()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->seller().data(), this->seller().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(242)) goto parse_gameid;
-        break;
-      }
-
-      // optional string gameid = 30;
-      case 30: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_gameid:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_gameid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->gameid().data(), this->gameid().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -2141,15 +2113,6 @@ void Fills::SerializeWithCachedSizes(
       20, this->seller(), output);
   }
 
-  // optional string gameid = 30;
-  if (has_gameid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->gameid().data(), this->gameid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      30, this->gameid(), output);
-  }
-
   // optional string teamid = 40;
   if (has_teamid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -2219,16 +2182,6 @@ void Fills::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         20, this->seller(), target);
-  }
-
-  // optional string gameid = 30;
-  if (has_gameid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->gameid().data(), this->gameid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        30, this->gameid(), target);
   }
 
   // optional string teamid = 40;
@@ -2301,13 +2254,6 @@ int Fills::ByteSize() const {
           this->seller());
     }
 
-    // optional string gameid = 30;
-    if (has_gameid()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->gameid());
-    }
-
     // optional string teamid = 40;
     if (has_teamid()) {
       total_size += 2 +
@@ -2336,8 +2282,6 @@ int Fills::ByteSize() const {
           this->week());
     }
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional int32 qty = 70;
     if (has_qty()) {
       total_size += 2 +
@@ -2345,6 +2289,8 @@ int Fills::ByteSize() const {
           this->qty());
     }
 
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional float price = 80;
     if (has_price()) {
       total_size += 2 + 4;
@@ -2386,9 +2332,6 @@ void Fills::MergeFrom(const Fills& from) {
     if (from.has_seller()) {
       set_seller(from.seller());
     }
-    if (from.has_gameid()) {
-      set_gameid(from.gameid());
-    }
     if (from.has_teamid()) {
       set_teamid(from.teamid());
     }
@@ -2401,11 +2344,11 @@ void Fills::MergeFrom(const Fills& from) {
     if (from.has_week()) {
       set_week(from.week());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_qty()) {
       set_qty(from.qty());
     }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_price()) {
       set_price(from.price());
     }
@@ -2435,7 +2378,6 @@ void Fills::Swap(Fills* other) {
     std::swap(passivebuy_, other->passivebuy_);
     std::swap(buyer_, other->buyer_);
     std::swap(seller_, other->seller_);
-    std::swap(gameid_, other->gameid_);
     std::swap(teamid_, other->teamid_);
     std::swap(playerid_, other->playerid_);
     std::swap(season_, other->season_);

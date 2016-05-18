@@ -974,7 +974,7 @@ void protobuf_AddDesc_StateData_2eproto() {
     "\rOrderFillMeta\022\016\n\006refnum\030\001 \001(\005\022\r\n\005fname\030"
     "\n \001(\t\022\020\n\010playerid\030\017 \001(\t\022\021\n\tfillprice\030\024 \001"
     "(\005\022\020\n\010fillsize\030\036 \001(\005\022\017\n\007buyside\030# \001(\010\022\021\n"
-    "\ttimestamp\030( \001(\005\022\020\n\010txmetaid\030< \001(\014\022\014\n\004pr"
+    "\ttimestamp\030( \001(\004\022\020\n\010txmetaid\030< \001(\014\022\014\n\004pr"
     "ev\030F \001(\014\"m\n\017GlobalStateMeta\022,\n\013globalsta"
     "te\030\n \001(\0132\027.fantasybit.GlobalState\022\020\n\010trm"
     "etaid\030\024 \001(\014\022\014\n\004prev\030\036 \001(\014\022\014\n\004next\030( \001(\014\""
@@ -12074,7 +12074,7 @@ void OrderFillMeta::SharedCtor() {
   fillprice_ = 0;
   fillsize_ = 0;
   buyside_ = false;
-  timestamp_ = 0;
+  timestamp_ = GOOGLE_ULONGLONG(0);
   txmetaid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   prev_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -12138,7 +12138,7 @@ void OrderFillMeta::Clear() {
     fillprice_ = 0;
     fillsize_ = 0;
     buyside_ = false;
-    timestamp_ = 0;
+    timestamp_ = GOOGLE_ULONGLONG(0);
     if (has_txmetaid()) {
       if (txmetaid_ != &::google::protobuf::internal::kEmptyString) {
         txmetaid_->clear();
@@ -12259,13 +12259,13 @@ bool OrderFillMeta::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 timestamp = 40;
+      // optional uint64 timestamp = 40;
       case 40: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_timestamp:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &timestamp_)));
           set_has_timestamp();
         } else {
@@ -12359,9 +12359,9 @@ void OrderFillMeta::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(35, this->buyside(), output);
   }
 
-  // optional int32 timestamp = 40;
+  // optional uint64 timestamp = 40;
   if (has_timestamp()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(40, this->timestamp(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(40, this->timestamp(), output);
   }
 
   // optional bytes txmetaid = 60;
@@ -12424,9 +12424,9 @@ void OrderFillMeta::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(35, this->buyside(), target);
   }
 
-  // optional int32 timestamp = 40;
+  // optional uint64 timestamp = 40;
   if (has_timestamp()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(40, this->timestamp(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(40, this->timestamp(), target);
   }
 
   // optional bytes txmetaid = 60;
@@ -12494,10 +12494,10 @@ int OrderFillMeta::ByteSize() const {
       total_size += 2 + 1;
     }
 
-    // optional int32 timestamp = 40;
+    // optional uint64 timestamp = 40;
     if (has_timestamp()) {
       total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->timestamp());
     }
 

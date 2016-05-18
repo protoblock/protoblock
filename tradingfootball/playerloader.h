@@ -406,8 +406,8 @@ struct SqlStuff {
         QSqlQuery insertQuery(db);
 
         insertQuery.prepare("INSERT INTO fills "
-                "(fantasynamebuyer,fantaynameseller,playerid,season,week,qty,price,isbuyaggressive)"
-                "VALUES(:buyer, :seller, :pid,:pid,:s, :w,:qty,:price, :isba)");
+                "(fantasynamebuyer,fantasynameseller,playerid,season,week,qty,price,isbuyaggressive)"
+                "VALUES(:buyer, :seller, :pid,:s, :w,:qty,:price, :isba)");
 
         insertQuery.bindValue(":buyer",QString::fromStdString(dist.buyer()));
         insertQuery.bindValue(":seller",QString::fromStdString(dist.seller()));

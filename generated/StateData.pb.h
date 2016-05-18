@@ -3915,12 +3915,12 @@ class OrderFillMeta : public ::google::protobuf::Message {
   inline bool buyside() const;
   inline void set_buyside(bool value);
 
-  // optional int32 timestamp = 40;
+  // optional uint64 timestamp = 40;
   inline bool has_timestamp() const;
   inline void clear_timestamp();
   static const int kTimestampFieldNumber = 40;
-  inline ::google::protobuf::int32 timestamp() const;
-  inline void set_timestamp(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint64 timestamp() const;
+  inline void set_timestamp(::google::protobuf::uint64 value);
 
   // optional bytes txmetaid = 60;
   inline bool has_txmetaid() const;
@@ -3975,9 +3975,9 @@ class OrderFillMeta : public ::google::protobuf::Message {
   ::std::string* playerid_;
   ::google::protobuf::int32 fillsize_;
   bool buyside_;
+  ::google::protobuf::uint64 timestamp_;
   ::std::string* txmetaid_;
   ::std::string* prev_;
-  ::google::protobuf::int32 timestamp_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
@@ -13018,7 +13018,7 @@ inline void OrderFillMeta::set_buyside(bool value) {
   buyside_ = value;
 }
 
-// optional int32 timestamp = 40;
+// optional uint64 timestamp = 40;
 inline bool OrderFillMeta::has_timestamp() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
@@ -13029,13 +13029,13 @@ inline void OrderFillMeta::clear_has_timestamp() {
   _has_bits_[0] &= ~0x00000040u;
 }
 inline void OrderFillMeta::clear_timestamp() {
-  timestamp_ = 0;
+  timestamp_ = GOOGLE_ULONGLONG(0);
   clear_has_timestamp();
 }
-inline ::google::protobuf::int32 OrderFillMeta::timestamp() const {
+inline ::google::protobuf::uint64 OrderFillMeta::timestamp() const {
   return timestamp_;
 }
-inline void OrderFillMeta::set_timestamp(::google::protobuf::int32 value) {
+inline void OrderFillMeta::set_timestamp(::google::protobuf::uint64 value) {
   set_has_timestamp();
   timestamp_ = value;
 }

@@ -16,7 +16,7 @@ using namespace std;
  */
 #define MNEMONIC_SALT                       ("mnemonic")
 #define MNEMONIC_DEFAULT_LENGTH             (16)
-#define MNEMONIC_PBKDF2_ITERATIONS          (2048)
+#define MNEMONIC_PBKDF2_ITERATIONS          (2048) // change to 2
 #define SEED_SIZE                           (32)
 
 typedef vector<string> mnemonic_words;
