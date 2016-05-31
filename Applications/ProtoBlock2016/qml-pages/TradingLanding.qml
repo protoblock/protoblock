@@ -40,7 +40,7 @@ Rectangle {
             width: rootLoader.width / 1.07
             height: rootLoader.height / 6
             text: "Season long trading"
-            onClicked: root.currentPage = "SeasonLongLandingPage"
+            onClicked: currentPage = "SeasonLongLandingPage"
             elevation: 2
         }
 
@@ -48,7 +48,7 @@ Rectangle {
             width: rootLoader.width / 1.07
             height: rootLoader.height / 6
             text: "Weekly Trading "
-            onClicked: root.currentPage= "WeeklyLandingPage"
+            onClicked: currentPage= "WeeklyLandingPage"
             elevation: 2
         }
     }

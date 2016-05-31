@@ -32,10 +32,12 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QtWebEngine::initialize();
     QString appDir = qApp->applicationDirPath ();
+
+
     QQmlContext *context = new QQmlContext(engine.rootContext());
 
     context->setContextProperty ("AppDir", appDir);
-    qmlRegisterType<QQmlWebSocket>("Socket",1,0,"ProtoblockSocket");
+    qmlRegisterType<QQmlWebSocket>("ProtoblockSocket",1,0,"ProtoblockSocket");
 
 
 

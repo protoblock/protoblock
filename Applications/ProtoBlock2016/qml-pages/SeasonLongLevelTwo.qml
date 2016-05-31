@@ -154,4 +154,29 @@ Item {
 
         weekPlayersModel.exec()
     }
+
+
+
+
+
+    function fillDefaultModels(){
+        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
+        for (var i in positionArray){
+            postionModel.append({'text': positionArray[i] })
+        }
+        for (var ii = 0 ; ii < 17; ii++){
+            if(ii === 0 ){
+                weekModel.append({"text" : "all weeks"})
+            }
+            else
+            {
+                weekModel.append({"text" : ii.toString() })
+            }
+        }
+    }
+
+    ListModel{id: postionModel}
+    ListModel{id: weekModel}
+
+
 }

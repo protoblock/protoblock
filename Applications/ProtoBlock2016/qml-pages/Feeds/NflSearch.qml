@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.XmlListModel 2.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+import QtWebEngine 1.2
+
 Item {
     signal reload()
     ListView{
@@ -31,9 +33,11 @@ Item {
             switch(status){
             case XmlListModel.Loading :
                 console.log("Loading")
+                actInd.visible = true
                 break;
             case XmlListModel.Ready :
                 console.log("ready count " + count )
+                actInd.visible = false
                 break;
             case XmlListModel.Error :
                     console.log(errorString())
@@ -42,5 +46,40 @@ Item {
 
         }
 
+    }
+
+
+
+
+    Rectangle{
+        id: wView
+        scale: shown === true ? 1 : 0
+        property bool shown: false
+        width: shown === true ?  parent.width : 0
+        height:shown === true ?   parent.height - back.height : 0
+        ListItems.Standard{
+            id: back
+            elevation: 8
+            text: "back"
+            onClicked: wView.shown = false
+            visible: wView.shown === true ?  true : false
+        }
+        WebEngineView {
+            id: webView
+            scale: wView.shown === true ? 1 : 0
+            width: wView.shown === true ?  parent.width : 0
+            height:wView.shown === true ?   parent.height - back.height : 0
+            anchors.top: back.bottom
+            onLoadProgressChanged:  {
+                if( wView.shown === true ){
+                    if (webView.loadProgress < 90){
+                        opacity = 0
+                    }else{
+                        opacity = 1
+                    }
+                }
+            }
+            Behavior on opacity {NumberAnimation{duration: 600; }}
+        }
     }
 }

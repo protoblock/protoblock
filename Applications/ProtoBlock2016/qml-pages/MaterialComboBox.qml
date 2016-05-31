@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
-FocusScope {
+Item {
     id: comboBox
     property bool expanded : false
     property alias expandedHeight: listView.height
@@ -57,7 +57,7 @@ FocusScope {
             model: comboBox.model
             delegate: ListItems.Standard{
                 height: 48
-                focus: true
+//                focus: true
                 text: modelData
                 onClicked: {
 

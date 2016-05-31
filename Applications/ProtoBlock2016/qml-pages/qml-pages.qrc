@@ -34,7 +34,6 @@
         <file>Feeds/CBSSearch.qml</file>
         <file>Feeds/EspnSearch.qml</file>
         <file>Feeds/NflSearch.qml</file>
-        <file>Twitter/tweetsearch.qml</file>
         <file>Twitter/TweetDelegate.qml</file>
         <file>Twitter/ListHeader.qml</file>
         <file>Twitter/SearchDelegate.qml</file>
@@ -43,5 +42,6 @@
         <file>Twitter/FlipBar.qml</file>
         <file>Twitter/TweetsModel.qml</file>
         <file>Twitter/tweetsearch.js</file>
+        <file>Twitter/Tweetsearch.qml</file>
     </qresource>
 </RCC>

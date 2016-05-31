@@ -14,9 +14,10 @@ ApplicationWindow {
     visible: false
 
     // Pages
-    property var sections: [ basicComponents, styles, compoundComponents ]
+    property var sections: [ basicComponents, styles, compoundComponents,chater ]
     property var sectionTitles: [ "Projections", "Trading","News",  "Chat" ]
     property string currentPage: sections[0][0]
+//    property string currentPage
     property string gameId: "201500115"
     // we set this to 18 because there is no 18 so that it changes of the fly
     property string  err
@@ -56,7 +57,7 @@ ApplicationWindow {
 
     // Level Two
     property var styles: [
-           "SeasonLongLandingPage", "WeeklyTradingLanding", ""
+           "SeasonLongLandingPage", "WeeklyLandingPage"
     ]
     // Level One
     property var basicComponents: [
@@ -67,6 +68,10 @@ ApplicationWindow {
     // Level Three News
     property var compoundComponents: [
         "News", "Twitter/Tweetsearch" ,"Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
+    ]
+
+    property var  chater: [
+        "Chat"
     ]
 
 
@@ -295,13 +300,13 @@ ApplicationWindow {
                     visible: status == Loader.Ready
                     // currentPage will always be valid, as it defaults to the first component
                     source: {
-
                         var theFile = navDrawer.enabled ?  root.currentPage : currentPage
                         Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                     }
                 }
 
                 ProgressCircle {
+                    id: actInd
                     anchors.centerIn: parent
                     visible: rootLoader.status == Loader.Loading
                 }
@@ -328,12 +333,26 @@ ApplicationWindow {
 
 
 
-
     /////////////
+    ListModel{id: postionModel}
+    ListModel{id: weekModel}
 
-
-
-
+    Component.onCompleted: fillDefaultModels()
+    function fillDefaultModels(){
+        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
+        for (var i in positionArray){
+            postionModel.append({'text': positionArray[i] })
+        }
+        for (var ii = 0 ; ii < 17; ii++){
+            if(ii === 0 ){
+                weekModel.append({"text" : "all weeks"})
+            }
+            else
+            {
+                weekModel.append({"text" : ii.toString() })
+            }
+        }
+    }
 
     Dialog {
         id: loginErrorDialog

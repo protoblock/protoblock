@@ -32,6 +32,21 @@ Item {
         XmlRole{name: "title" ; query: "title/string()" }
         XmlRole{name: "summary" ; query: "description/string()" }
         XmlRole{name: "link" ; query: "link/string()" }
+        onStatusChanged: {
+            switch(status){
+            case XmlListModel.Loading :
+                console.log("Loading")
+                actInd.visible = true
+                break;
+            case XmlListModel.Ready :
+                console.log("ready count " + count )
+                actInd.visible = false
+                break;
+            case XmlListModel.Error :
+                    console.log(errorString())
+                break;
+            }
+        }
     }
 
 

@@ -6,15 +6,21 @@ import ProRotoQml.Sql 1.0
 import Material 1.0
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
-import "Utils.js" as Utils
+//import "Utils.js" as Utils
 Item {
     property string  lastQuery
         width : 20
-        Row{
+        Component.onCompleted:{
+            teamPicker.currentIndex = 0
+            pPicker.currentIndex = 1
+        }
+            Rectangle{
             id: pickers
             width:  parent.width
             height: teamPicker.expanded ? teamPicker.expandedHeight : 48
-            MaterialComboBox{
+            color: "transparent"
+
+            ComboBox{
                 id: teamPicker
                 width: parent.width / 2
                 height: parent.height
@@ -23,16 +29,18 @@ Item {
                     resetModel()
                 }
             }
-           ComboBox{
-                id: posPicker
+
+            ComboBox{
+                id: pPicker
                 height: parent.height
                 width: parent.width / 2
-//                onExpandedChanged: console.log("expanded " + expanded)
                 model: postionModel
+                anchors.right: parent.right
                 onCurrentIndexChanged:{
                     resetModel()
                 }
             }
+
         }
 
     ListView{
@@ -75,7 +83,7 @@ Item {
         connectionName: "protoblock"
         queryString:{
             "SELECT * FROM tfprod_fantasydata WHERE FantasyPosition=\'"
-                    + posPicker.currentText
+                    + pPicker.currentText
                     + "\' AND Team=\'"
                     + teamPicker.currentText
                     + "\' ORDER BY DepthOrder; "
@@ -154,7 +162,7 @@ Item {
     function resetModel(){
         weekPlayersModel.queryString = ""
         weekPlayersModel.queryString = "SELECT * FROM tfprod_fantasydata WHERE FantasyPosition=\'"
-                + posPicker.currentText
+                + pPicker.currentText
                 + "\' AND Team=\'"
                 + teamPicker.currentText
                 + "\' ORDER BY CASE

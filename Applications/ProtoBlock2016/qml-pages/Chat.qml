@@ -2,7 +2,7 @@ import QtQuick 2.4
 import QtQuick.Window 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
-import Sockets 1.0
+import ProtoblockSocket 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 import "qwebchannel.js" as WebChannel
@@ -29,14 +29,14 @@ Rectangle {
         }
         property var onmessage;
         onStatusChanged: {
-            if (socket.status == WebSocket.Error) {
+            if (socket.status == ProtoblockSocket.Error) {
                 console.error("Error: " + socket.errorString)
             }
-            else if (socket.status == WebSocket.Closed) {
+            else if (socket.status == ProtoblockSocket.Closed) {
 
 //                messageBox.app += "\nSocket closed"
             }
-            else if (socket.status == WebSocket.Open) {
+            else if (socket.status == ProtoblockSocket.Open) {
 
                 //open the webchannel with the socket as transport
                 new WebChannel.QWebChannel(socket, function(ch) {
@@ -91,7 +91,7 @@ Rectangle {
         ListView{
             id: userlist
             width: 150
-            height: parent.height - message.height
+            height: parent.height - messagBox.height
             Layout.fillHeight: true
             header: ListItems.Standard{backgroundColor: "#EFF6F9"; text: "Users"; elevation: 2}
             model: usersModel
@@ -109,10 +109,10 @@ Rectangle {
             Layout.columnSpan: 2
             Layout.fillWidth: true
             onEditingFinished: {
-                if (message.text.length)
+                if (messageBox.text.length)
                     //call the sendMessage method to send the message
-                    chatRoot.channel.objects.chatserver.sendMessage(root.uname, message.text);
-                message.text = '';
+                    chatRoot.channel.objects.chatserver.sendMessage(root.uname, messageBox.text);
+                messageBox.text = '';
             }
         }
     }
@@ -127,7 +127,7 @@ Rectangle {
         repeat: false
         running: false
         onTriggered: {
-            if (socket.status === WebSocket.Open){
+            if (socket.status === ProtoblockSocket.Open){
                 console.log("getting ready to login " +  root.uname)
                 login();
             }else{

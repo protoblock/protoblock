@@ -41,7 +41,7 @@ Rectangle {
             height: rootLoader.height / 6
             text: "Start Trading "
 
-            onClicked: root.currentPage = "TradingLanding"
+            onClicked: currentPage = "TradingLanding"
             elevation: 2
         }
 
@@ -49,7 +49,7 @@ Rectangle {
             width: rootLoader.width / 1.07
             height: rootLoader.height / 6
             text: "Start making projections "
-            onClicked: root.currentPage= "PnL"
+            onClicked: currentPage= "PnL"
             elevation: 2
         }
 
@@ -58,14 +58,14 @@ Rectangle {
             width: rootLoader.width / 1.07
             height: rootLoader.height / 6
             text: "Chat with experts "
-            onClicked: root.currentPage = "Chat"
+            onClicked: currentPage = "Chat"
             elevation: 2
         }
         Button{
             width: rootLoader.width / 1.07
             height: rootLoader.height / 6
             text: "Protoblock News "
-            onClicked: root.currentPage = "News"
+            onClicked: currentPage = "News"
             elevation: 2
         }
     }
