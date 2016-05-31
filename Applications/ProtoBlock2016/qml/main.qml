@@ -2,33 +2,41 @@ import QtQuick 2.4
 import QtQuick.Window 2.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItem
-import ProRotoQml.Backend 1.0
+import ProRotoQml.Protoblock 1.0
+import ProRotoQml.Sql 1.0
 
 
 ApplicationWindow {
-    id: demo
-    property string gameId: "201500115"
-    // we set this to 18 because there is no 18 so that it changes of the fly
-    property int weekInFocus: 18
-    property string leaderInView
+    id: root
     title: "Protoblock 2016 "
     width: Screen.width
     height:  Screen.height
-    visible: true
+    visible: false
 
-    Component.onCompleted: {
-        var attach = 'secret3.out'
-        if (Qt.platform.os  === 'windows'){
-            console.log("Where was 2015 installed ? " + Backend.lastKnowLoc() )
-        }else if (Qt.platform.os   == 'osx'){
-            userInfo.secertFile = homePath +"/tradingfootball/"+ attach
-            userInfo.readData()
-        }
-    }
-    UserInfo{
-        id: userInfo
-        onErrorStringChanged:{
-            console.log(errorString)
+    // Pages
+    property var sections: [ basicComponents, styles, compoundComponents ]
+    property var sectionTitles: [ "Projections", "Trading","News",  "Chat" ]
+    property string currentPage: sections[0][0]
+    property string gameId: "201500115"
+    // we set this to 18 because there is no 18 so that it changes of the fly
+    property string  err
+    property string currentTeamInFocus
+    property string currentHomeTeam
+    property string currentAwayTeam
+    property string uname: "NULL"
+    property string errorString
+    property int loginCardScale: 1
+    property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
+
+//    property alias currentPage: rootLoader.source
+
+    property var splashWindow: Splash {
+        onTimeout: {root.visible = true
+            if (uname !== "NULL"){
+             console.log("have name")
+            }else{
+            loginDialog.show();
+            }
         }
     }
 
@@ -37,36 +45,37 @@ ApplicationWindow {
         accentColor: "red"
         tabHighlightColor: "white"
     }
+
+    //    "Welcome", "WelcomeBack", "About", "Chat", "GetName", "PickUserName",
+    //    "Players", , "UserSettings",
+    //    , "TradingLanding","PickUserName" , "WeeklyLandingPage" , "SeasonLongLandingPage"
+    //    ,"WeeklyTradingLanding","SeasonLongLevelTwo"
+
+
+
+
     // Level Two
     property var styles: [
-            "", "", ""
+           "SeasonLongLandingPage", "WeeklyTradingLanding", ""
     ]
     // Level One
     property var basicComponents: [
-            "LevelOn", "Leaderboard", "Schedule", "Stats",
-            "Projections", "Awards", "Profit and Loss"
+        "WelcomeBack","Welcome", "About", "UserSettings"
+
+
     ]
-    // Level Three Aka Extras
+    // Level Three News
     property var compoundComponents: [
-            "Team News", "Hot", "Cold", "Sleepers", "Premium"
+        "News", "Twitter/Tweetsearch" ,"Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
     ]
 
-    property var sections: [ basicComponents, styles, compoundComponents ]
 
-    property var sectionTitles: [ "Projections", "Trading", "News" ]
-
-    property string selectedComponent: sections[0][0]
 
     initialPage: TabbedPage {
-        id: page
-
+        id: pageHelper
         title: "ProtoBlock 2016"
-
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
-
         actions: [
-
-
             Action {
                 iconName: "image_color_lens"
                 name: "Colors"
@@ -81,7 +90,7 @@ ApplicationWindow {
 
             Action {
                 iconName: "action_account_circle"
-                name: userInfo.fantasyName
+                name: uname
                 onTriggered: userPicker.show()
             }
         ]
@@ -90,9 +99,7 @@ ApplicationWindow {
 
         NavigationDrawer {
             id: navDrawer
-
-            enabled: page.width < dp(500)
-
+            enabled: pageHelper.width < dp(500)
             onEnabledChanged: smallLoader.active = enabled
 
             Flickable {
@@ -112,14 +119,13 @@ ApplicationWindow {
                             ListItem.Subheader {
                                 text: sectionTitles[index]
                             }
-
                             Repeater {
                                 model: modelData
                                 delegate: ListItem.Standard {
                                     text: modelData
-                                    selected: modelData == demo.selectedComponent
+                                    selected: modelData == root.currentPage
                                     onClicked: {
-                                        demo.selectedComponent = modelData
+                                        root.currentPage = modelData
                                         navDrawer.close()
                                     }
                                 }
@@ -136,7 +142,7 @@ ApplicationWindow {
             delegate: Tab {
                 title: sectionTitles[index]
 
-                property string selectedComponent: modelData[0]
+                property string currentPage: modelData[0]
                 property var section: modelData
 
                 sourceComponent: tabDelegate
@@ -154,10 +160,27 @@ ApplicationWindow {
         }
     }
 
+//Login dialog
+    Dialog {
+        id: loginDialog
+        width: parent.width / 1.07
+        height: parent.height / 1.07
+        title: "Please Login"
+        anchors.centerIn: parent
+        hasActions: false
+        positiveButtonText: "Done"
+        GetName{
+            width: loginDialog.width
+            height:  loginDialog.height
+        }
+
+
+    }
+
+
     Dialog {
         id: colorPicker
         title: "Pick color"
-
         positiveButtonText: "Done"
 
         MenuField {
@@ -249,8 +272,8 @@ ApplicationWindow {
                         model: section
                         delegate: ListItem.Standard {
                             text: modelData
-                            selected: modelData == selectedComponent
-                            onClicked: selectedComponent = modelData
+                            selected: modelData == currentPage
+                            onClicked: currentPage = modelData
                         }
                     }
                 }
@@ -264,27 +287,127 @@ ApplicationWindow {
                     bottom: parent.bottom
                 }
                 clip: true
-                contentHeight: Math.max(example.implicitHeight + 40, height)
+                contentHeight: Math.max(rootLoader.implicitHeight + 40, height)
                 Loader {
-                    id: example
+                    id: rootLoader
                     anchors.fill: parent
                     asynchronous: true
                     visible: status == Loader.Ready
-                    // selectedComponent will always be valid, as it defaults to the first component
+                    // currentPage will always be valid, as it defaults to the first component
                     source: {
-                        var theFile = navDrawer.enabled ?  demo.selectedComponent : selectedComponent
+
+                        var theFile = navDrawer.enabled ?  root.currentPage : currentPage
                         Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                     }
                 }
 
                 ProgressCircle {
                     anchors.centerIn: parent
-                    visible: example.status == Loader.Loading
+                    visible: rootLoader.status == Loader.Loading
                 }
             }
             Scrollbar {
                 flickableItem: flickable
             }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /////////////
+
+
+
+
+
+    Dialog {
+        id: loginErrorDialog
+        title: "Error in Signup"
+        positiveButtonText: "back"
+        onAccepted: loginCardScale = 1
+        onRejected:  loginCardScale = 1
+        Text{
+            width: parent.width
+            height: dp(160)
+            wrapMode: Text.WordWrap
+            text:  errorString
+        }
+    }
+    Image{
+        id: loaderImage
+        source: "qrc:/logoFinal.png"
+        opacity: 0
+        scale: opacity
+        width: parent.width / 1.07
+        anchors.centerIn: parent
+    }
+
+    Connections {
+        target: MiddleMan
+        onNameCheckGet: {
+            console.log("onNameCheckGet " + status  + " \n" +  name )
+            if(status === "true" )
+            {
+                console.log("name is not taken")
+                MiddleMan.signPlayer(uname)
+            }
+            else
+            {
+                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
+                root.loginCardScale = 0
+                loginErrorDialog.open()
+                root.errorString =  err
+            }
+        }
+
+        onNameStatusChanged: {
+//            console.log("nameStatusChange " + MiddleMan.playersName  +" " + MiddleMan.playersStatus )
+            uname = MiddleMan.playersName;
+             loginDialog.close()
+        }
+
+        onUsingFantasyName: {
+            console.log("usingFantasyName " + MiddleMan.playersName )
+            uname = MiddleMan.playersName;
+            loginDialog.close()
+        }
+    }
+
+
+
+    // Set up the default connections to the databases
+
+    QmlSqlDatabase{
+        id: mainTfProdDb
+        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
+        databaseDriver: QmlSqlDatabase.SQLight
+        connectionName: "protoblock"
+        onConnectionOpened: console.log("database Open")
+        onError: console.log("DB Error:  " +  errorString)
+        Component.onCompleted: addDataBase()
+
+}
+
+
+    UserInfo{
+        id: userInfo
+        onErrorStringChanged:{
+            console.log(errorString)
         }
     }
 }

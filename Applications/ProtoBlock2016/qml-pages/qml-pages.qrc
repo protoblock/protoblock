@@ -1,0 +1,47 @@
+<RCC>
+    <qresource prefix="/">
+        <file>GetName.qml</file>
+        <file>WeeklyTradingLanding.qml</file>
+        <file>MaterialComboBox.qml</file>
+        <file>WeeklyLandingPage.qml</file>
+        <file>SeasonLongLevelTwo.qml</file>
+        <file>SeasonLongLandingPage.qml</file>
+        <file>TradingLanding.qml</file>
+        <file>PageHelper.qml</file>
+        <file>Splash.qml</file>
+        <file>PlayersCard.qml</file>
+        <file>TradingCard.qml</file>
+        <file>RoundImage.qml</file>
+        <file>Sc2016.qml</file>
+        <file>Players.qml</file>
+        <file>WelcomeBack.qml</file>
+        <file>LocalJsonCaller.qml</file>
+        <file>PickUserName.qml</file>
+        <file>News.qml</file>
+        <file>ProjectionsLevelOne.qml</file>
+        <file>Welcome.qml</file>
+        <file>UserSettings.qml</file>
+        <file>UpdateView.qml</file>
+        <file>Chat.qml</file>
+        <file>PnL.qml</file>
+        <file>SportsRadarApiCaller.qml</file>
+        <file>FantasyDataApiCaller.qml</file>
+        <file>BaserModel.qml</file>
+        <file>About.qml</file>
+        <file>Themes/VersionOne.qml</file>
+        <file>Feeds/RotoSearch.qml</file>
+        <file>Feeds/GetFeedLinkText.qml</file>
+        <file>Feeds/CBSSearch.qml</file>
+        <file>Feeds/EspnSearch.qml</file>
+        <file>Feeds/NflSearch.qml</file>
+        <file>Twitter/tweetsearch.qml</file>
+        <file>Twitter/TweetDelegate.qml</file>
+        <file>Twitter/ListHeader.qml</file>
+        <file>Twitter/SearchDelegate.qml</file>
+        <file>Twitter/LineInput.qml</file>
+        <file>Twitter/ListFooter.qml</file>
+        <file>Twitter/FlipBar.qml</file>
+        <file>Twitter/TweetsModel.qml</file>
+        <file>Twitter/tweetsearch.js</file>
+    </qresource>
+</RCC>

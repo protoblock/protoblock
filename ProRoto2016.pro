@@ -17,4 +17,5 @@ OTHER_FILES += \
             $$PWD/pri/deployment.pri \
             $$PWD/pri/artwork.pri \
             $$PWD/pri/staticJson.pri \
-            $$PWD/pri/qml-pages.pri
+            $$PWD/pri/qml-pages.pri \
+            $$PWD/pri/qml-utils.pri

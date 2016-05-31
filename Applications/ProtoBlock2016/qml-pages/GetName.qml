@@ -8,10 +8,9 @@ Item {
     id: loginPage
     width: 200
     height: 200
-    property string  err
     Component.onCompleted:{
-        pageHelper.title = "Please Login"
-        pageHelper.buttonsEnabled = false       
+//        pageHelper.title = "Please Login"
+//        pageHelper.buttonsEnabled = false
         MiddleMan.init()
     }
     Card{

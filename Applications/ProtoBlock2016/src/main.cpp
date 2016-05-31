@@ -11,8 +11,14 @@
 #include <QDebug>
 #include "qqmlwebsockets.h"
 #include <QtWebEngine/qtwebengineglobal.h>
+#include <QSysInfo>
+
+
 
 //#include "mediator.h"
+
+
+
 
 
 
@@ -20,25 +26,58 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-#ifdef Q_OS_ANDROID
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QFont mFont;
-    mFont.setPixelSize (48);
-    qApp->setFont (mFont);
-#endif
+    QSysInfo sysInfo;
+    QString sInfo = sysInfo.productType ();
 
     QQmlApplicationEngine engine;
-
     QtWebEngine::initialize();
-
     QString appDir = qApp->applicationDirPath ();
     QQmlContext *context = new QQmlContext(engine.rootContext());
 
     context->setContextProperty ("AppDir", appDir);
-
     qmlRegisterType<QQmlWebSocket>("Socket",1,0,"ProtoblockSocket");
 
+
+
+
+    if (sInfo == "windows"){
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    }
+    else if (sInfo == "osx" )
+    {
+     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    }
+    else if (sInfo == "android")
+    {
+        QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        QFont mFont;
+        mFont.setPixelSize (48);
+        qApp->setFont (mFont);
+        engine.load(QUrl(QStringLiteral("qrc:/phone-main.qml")));
+    }
+    // Window phone
+    else if (sInfo  == "winrt")
+    {
+        QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        QFont mFont;
+        mFont.setPixelSize (48);
+        qApp->setFont (mFont);
+        engine.load(QUrl(QStringLiteral("qrc:/phone-main.qml")));
+    }
+    else if (sInfo == "ios" )
+    {
+        QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        QFont mFont;
+        mFont.setPixelSize (48);
+        qApp->setFont (mFont);
+        engine.load(QUrl(QStringLiteral("qrc:/phone-main.qml")));
+    }
+
+
+
+
+
+
 
     return app.exec();
 }
