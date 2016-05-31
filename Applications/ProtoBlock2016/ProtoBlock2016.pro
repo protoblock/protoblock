@@ -5,8 +5,14 @@ include ($$PWD/../../pri/qml-pages.pri)
 include ($$PWD/../../pri/qml-utils.pri)
 
 
+qtHaveModule(webengine) {
+    QT += webengine
+    DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
+}
+
+
 TEMPLATE = app
-QT += qml quick sql core widgets sql websockets webchannel network webengine
+QT += qml quick sql core widgets sql websockets webchannel network
 CONFIG += c++11
 
 SOURCES += \

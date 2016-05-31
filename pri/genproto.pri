@@ -13,9 +13,10 @@ ios {
 }
 
 android{
-    LIBS += -L/Users/satoshi/Qt/5.6/android_armv7/lib -lprotobuf-cpp-full-ndk
-    INCLUDEPATH += /Users/satoshi/Qt/5.6/android_armv7/include
-    GENERATEDDIR = $$PWD/../generated
+#    LIBS += -L/Users/satoshi/Qt/5.6/android_armv7/lib -lprotobuf-cpp-full-ndk
+#    INCLUDEPATH += /Users/satoshi/Qt/5.6/android_armv7/include
+INCLUDEPATH += /usr/local/protobuf_2_6_1/include
+GENERATEDDIR = $$PWD/../generated
     DEFINES += GOOGLE_NAMESPACE=google
 }
 

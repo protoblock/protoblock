@@ -1,5 +1,5 @@
-#ifndef UTILS_PLUGIN_H
-#define UTILS_PLUGIN_H
+#ifndef ProRotoQmlUtilsPlugin_H
+#define ProRotoQmlUtilsPlugin_H
 
 #include <QQmlExtensionPlugin>
 

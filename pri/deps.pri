@@ -10,7 +10,7 @@ win32 {
    LIBS+= -L$$PWD/../libwin64
 
     CONFIG(debug, debug|release) {
-       LIBS+= -llibprotobufd \
+       LIBS+= -llibprotobuf \
               -lleveldbd \
               -llibeay32 \
               -lssleay32 \
