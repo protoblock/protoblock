@@ -45,5 +45,6 @@
         <file>TradingCard.qml</file>
         <file>MaterialComboBox.qml</file>
         <file>SeasonLongLevelTwo.qml</file>
+        <file>Themes/VersionOne.qml</file>
     </qresource>
 </RCC>
