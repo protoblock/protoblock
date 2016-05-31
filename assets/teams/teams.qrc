@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ARI.PNG</file>
+        <file>ATL.PNG</file>
+        <file>BAL.PNG</file>
+        <file>BUF.PNG</file>
+        <file>CAR.PNG</file>
+        <file>CHI.PNG</file>
+        <file>CIN.PNG</file>
+        <file>CLE.PNG</file>
+        <file>DAL.PNG</file>
+        <file>DEN.PNG</file>
+        <file>DET.PNG</file>
+        <file>GB.PNG</file>
+        <file>HOU.PNG</file>
+        <file>IND.PNG</file>
+        <file>KC.PNG</file>
+        <file>MIA.PNG</file>
+        <file>MIN.PNG</file>
+        <file>NE.PNG</file>
+        <file>NO.PNG</file>
+        <file>NYG.PNG</file>
+        <file>NYJ.PNG</file>
+        <file>OAK.PNG</file>
+        <file>PHI.PNG</file>
+        <file>PIT.PNG</file>
+        <file>SD.PNG</file>
+        <file>SEA.PNG</file>
+        <file>SF.PNG</file>
+        <file>TB.PNG</file>
+        <file>TEN.PNG</file>
+        <file>WAS.PNG</file>
+        <file>JAX.PNG</file>
+        <file>LA.PNG</file>
+    </qresource>
+</RCC>

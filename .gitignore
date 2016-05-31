@@ -1,0 +1,48 @@
+##QT
+# C++ objects and libs
+
+*.DS_Store
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+*.obj
+*.exe
+*.app
+
+# the proto generated files
+
+generated/*.cc
+generated/*.h
+# Qt-es
+
+/.qmake.cache
+/.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+Makefile*
+*build-*
+
+# QtCreator
+*.autosave
+# QtCtreator Qml
+*.qmlproject.user
+*.qmlproject.user.*
+
+# QtCtreator CMake
+CMakeLists.txt.user
+
+Applications/tradingfootball-qml/meta/**
+ProRotoQml/Backend/meta-new/**
+ProRotoQml/Backend/meta/**

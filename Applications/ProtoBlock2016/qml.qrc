@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Playercard.qml</file>
+        <file>AllPlayers.qml</file>
+        <file>Welcome.qml</file>
+        <file>GameDelegate.qml</file>
+        <file>Leaderboard.qml</file>
+        <file>LevelOn.qml</file>
+        <file>Cold.qml</file>
+        <file>Hot.qml</file>
+        <file>TeamNews.qml</file>
+        <file>Sleepers.qml</file>
+        <file>Premium.qml</file>
+        <file>Schedule.qml</file>
+        <file>Stats.qml</file>
+        <file>Projections.qml</file>
+        <file>Awards.qml</file>
+        <file>ProfitandLoss.qml</file>
+        <file>Utils.js</file>
+        <file>QChart.js</file>
+        <file>Chart.qml</file>
+    </qresource>
+</RCC>

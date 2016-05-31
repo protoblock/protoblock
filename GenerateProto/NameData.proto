@@ -1,0 +1,33 @@
+syntax = "proto2";
+package fantasybit;
+import "ExData.proto";
+
+message FantasyNameBal {
+    optional string name = 10;
+    optional string public_key = 20;
+    optional uint64 bits = 30;
+        optional int64 stake = 40;
+}
+
+message FantasyBitAward {
+    optional string name = 10;
+    optional int32 proj = 20;
+        optional uint64 award = 30;
+}
+
+message FantasyBitPnl {
+        optional SettlePos spos = 20;
+        optional int64 pnl = 30;
+}
+
+message FantasyBitProj {
+        optional string name = 10;
+        optional int32 proj = 20;
+        optional string playerid = 30;
+}
+
+message GameFantasyBitProj {
+        optional string gameid = 10;
+        repeated FantasyBitProj home = 20;
+        repeated FantasyBitProj away = 30;
+}

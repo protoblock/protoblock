@@ -1,0 +1,3 @@
+module ProRotoQml.Audio
+plugin ProRotoQml.Audio
+classname ProRotoQmlAudioPlugin

@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/Common">
+        <file>AbstractButton.qml</file>
+        <file>AbstractCategoryHeader.qml</file>
+        <file>AbstractExpandingDropDown.qml</file>
+        <file>AbstractScrollbar.qml</file>
+        <file>Banner.qml</file>
+        <file>Card.qml</file>
+        <file>DropDownContainer.qml</file>
+        <file>FoldingArrow.qml</file>
+        <file>Header.qml</file>
+        <file>ImageButton.qml</file>
+        <file>Ink.qml</file>
+        <file>PageHelper.qml</file>
+        <file>PageTabs.qml</file>
+        <file>SettingsMenu.qml</file>
+        <file>SimpleButton.qml</file>
+        <file>SimpleHeader.qml</file>
+        <file>StanderedDelegate.qml</file>
+        <file>StanderedDropDown.qml</file>
+        <file>StanderedTextField.qml</file>
+        <file>View.qml</file>
+        <file>ViewWithBanner.qml</file>
+        <file>ViewWithScrollbar.qml</file>
+        <file>wordList</file>
+        <file>timeJS.js</file>
+    </qresource>
+</RCC>

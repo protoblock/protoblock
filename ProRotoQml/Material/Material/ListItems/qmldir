@@ -1,0 +1,10 @@
+module Material.ListItems
+
+BaseListItem 1.0 BaseListItem.qml
+Divider 1.0 Divider.qml
+SimpleMenu 1.0 SimpleMenu.qml
+Standard 1.0 Standard.qml
+Subheader 1.0 Subheader.qml
+Subtitled 1.0 Subtitled.qml
+SectionHeader 1.0 SectionHeader.qml
+Game 1.0 Game.qml

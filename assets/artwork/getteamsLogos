@@ -1,0 +1,32 @@
+#!/bin/bash
+## Simple script to get all the nfl teams logos from scraping espn
+
+outDir="/home/joseph/Work/SatoshiFantasy/Git/ProRoto2016/Applications/ProtoBlock2016/artwork/"
+
+
+if [[ $1 == "clean" ]];
+then
+	cd $outDir;
+	rm *.png;
+	echo "all pngs have been removed from the system"
+
+elif [[ $1 == "build" ]];
+then
+	for i in ari atl bal buf car chi cin cle dal den det gb hou ind jac kc mia min ne no nyg nyj oak phi pit sd sea sf stl tb ten was;
+	do
+		wget -O $ourDir$i.png http://a1.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/$i.png&transparent=true;
+	done
+
+	echo "All teams have deen downloaded to"
+	echo $outDir
+else
+
+echo "---------------------------------------------------"
+echo "|		Options                           |"
+echo "|-------------------------------------------------|"
+echo "|                                                 |"
+echo "|	clean:    Cleans all the pngs of disk     |"
+echo "|	build:   DSOwnloads all the pngs          |"
+echo "---------------------------------------------------"
+
+fi
