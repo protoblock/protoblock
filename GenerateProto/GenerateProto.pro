@@ -20,7 +20,7 @@ protobuf_decl.name = protobuf headers
 protobuf_decl.input = PROTOS
 protobuf_decl.output = $$PWD/../generated/${QMAKE_FILE_BASE}.pb.h
 osx{
-protobuf_decl.commands = /Users/satoshi/Desktop/fc/ios/extrenal/prototbuf/platform/x86_64/bin/protoc --cpp_out=$$PWD/../generated/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
+protobuf_decl.commands = /Users/$$(USER)/Desktop/fc/ios/extrenal/prototbuf/platform/x86_64/bin/protoc --cpp_out=$$PWD/../generated/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
 }
 
 android{

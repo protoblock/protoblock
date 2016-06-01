@@ -106,7 +106,7 @@ private:
             #endif
 
 
-            }
+            ;}
         }
     };
 

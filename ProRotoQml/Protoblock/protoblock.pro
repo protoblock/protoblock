@@ -6,7 +6,6 @@ ios{
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Protoblock
 }
 
-
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Protoblock
 TARGET = ProRotoQml.Protoblock
@@ -14,17 +13,19 @@ TARGET = ProRotoQml.Protoblock
 uri = ProRotoQml.Protoblock
 
 QT += qml quick network websockets core
-CONFIG += qt plugin c++11 warn_off
+CONFIG += qt plugin c++11
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = ProRotoQml.Protoblock
+
+#QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -pedantic
 
 DEFINES += USE_NUM_NONE
 DEFINES += USE_FIELD_10X26
 DEFINES += USE_FIELD_INV_BUILTIN
 DEFINES += USE_SCALAR_8X32
 DEFINES += USE_SCALAR_INV_BUILTIN
-#DEFINES += __cplusplus
-
+DEFINES += _GLIBCXX_HAVE_ATTRIBUTE_VISIBILITY
+#DEFINES+=_GLIBCXX_HAVE_BROKEN_VSWPRINTF
 
 SOURCES += \
     $$PWD/utils/utils.cpp \

@@ -413,7 +413,7 @@ ApplicationWindow {
 
     QmlSqlDatabase{
         id: mainTfProdDb
-        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
+        databaseName: "/Users/$$(USER)/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
         databaseDriver: QmlSqlDatabase.SQLight
         connectionName: "protoblock"
         onConnectionOpened: console.log("database Open")
