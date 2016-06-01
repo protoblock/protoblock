@@ -1,4 +1,4 @@
-osx {
+osx :{
     GENERATEDDIR = $$PWD/../generated
     DEFINES += GOOGLE_NAMESPACE=google_public
     INCLUDEPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
@@ -6,21 +6,20 @@ osx {
 }
 
 ios {
-    GENERATEDDIR = $$PWD/../generated
     DEFINES += GOOGLE_NAMESPACE=google_public
+    GENERATEDDIR = $$PWD/../generated
     INCLUDEPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
     DEPENDPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
 }
 
 android{
-#    LIBS += -L/Users/satoshi/Qt/5.6/android_armv7/lib -lprotobuf-cpp-full-ndk
-#    INCLUDEPATH += /Users/satoshi/Qt/5.6/android_armv7/include
-INCLUDEPATH += /usr/local/protobuf_2_6_1/include
-GENERATEDDIR = $$PWD/../generated
     DEFINES += GOOGLE_NAMESPACE=google
+    GENERATEDDIR = $$PWD/../generated
+    INCLUDEPATH += /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/include
+    DEPENDPATH += /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/include
 }
 
-win32{
+win32:{
     GENERATEDDIR = $$PWD/../generated
     DEFINES += GOOGLE_NAMESPACE=google
     INCLUDEPATH +=  $$PWD/../3rdParty/

@@ -28,11 +28,11 @@ namespace fantasybit
 
 template <class T>
 class Bits
-{ 
+{
     T base;
-public:		
+public:
     Bits(T b) : base(b) {}
-    
+
     double points() { return base * .00000001; }
     double bits() { return points() * 100; }
     T amount() { return base; }
@@ -54,7 +54,7 @@ private:
 public:
     FantasyName(const alias_t &inalias, const pb::public_key_data &inpubkey)
         : mAlias(inalias) , mPubkey(inpubkey) , balance (0), stakedelta(0) {}
-    
+
     FantasyName ( const FantasyName &in )
         : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance), stakedelta(in.stakedelta) {}
 
@@ -71,7 +71,7 @@ public:
     void addBalance(skillbits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         balance.add(b);
-	}
+    }
 
     void addProfitLoss(stakebits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
@@ -104,7 +104,7 @@ public:
     hash_t hash() const {
         return name_hash(alias());
     }
-    
+
     pb::public_key_data pubkey() const {
         return mPubkey;
     }
@@ -116,13 +116,22 @@ public:
     bool isAlias(const alias_t &that) const {
         return hash() == name_hash(that);
     }
-    
+
+    template <typename T>
+    std::string To_String(T val)
+    {
+        std::stringstream stream;
+        stream << val;
+        return stream.str();
+    }
+
+
     std::string ToString() {
-      return "alias(" + alias() + ") hash(" + std::to_string(hash()) + ") public-key(" +
+      return "alias(" + alias() + ") hash(" + To_String(hash()) + ") public-key(" +
               pb::to_base58(pubkey()) + ") skill-balance(" +
-              std::to_string(getBalance()) + ") stake-delta(" +
-              std::to_string(stakedelta.bits()) + ") stake-balance(" +
-              std::to_string(getStakeBalance()) +")";
+              To_String(getBalance()) + ") stake-delta(" +
+              To_String(stakedelta.bits()) + ") stake-balance(" +
+              To_String(getStakeBalance()) +")";
 
     }
 
@@ -134,21 +143,21 @@ public:
 class KeyPair
 {
 public:
-	KeyPair() {}
-	KeyPair(Secret _k);
+    KeyPair() {}
+    KeyPair(Secret _k);
 
-	static KeyPair create();
+    static KeyPair create();
 
-	Secret const& secret() const { return m_secret; }
-	Secret const& sec() const { return m_secret; }
-	Public const& pub() const { return m_public; }
+    Secret const& secret() const { return m_secret; }
+    Secret const& sec() const { return m_secret; }
+    Public const& pub() const { return m_public; }
 
-	Address const& address() const { return m_address; }
+    Address const& address() const { return m_address; }
 
 private:
-	Secret m_secret;
-	Public m_public;
-	Address m_address;
+    Secret m_secret;
+    Public m_public;
+    Address m_address;
 };
 */
 

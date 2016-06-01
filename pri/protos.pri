@@ -1,7 +1,5 @@
 include (genproto.pri)
-
 INCLUDEPATH += $$GENERATEDDIR
-
 HEADERS += \
     $$GENERATEDDIR/ApiData.pb.h \
     $$GENERATEDDIR/ExData.pb.h \

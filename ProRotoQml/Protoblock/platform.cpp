@@ -144,7 +144,7 @@ AppSettings * Platform::settings() {
 
 //FIXME this is stupid and should be set in a way different way
 std::string Platform::getRootDir() {
-    if ( systemInfo.productType () == "ios" || systemInfo.productType () == "osx"){
+    if ( systemInfo.productType () == "ios" || systemInfo.productType () == "osx" || systemInfo.productType () == "android" ){
        QString pRet = QStandardPaths::standardLocations (QStandardPaths::AppDataLocation).value (0);
        createIosDir (pRet);
        pRet.append ("/");

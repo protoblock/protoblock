@@ -19,18 +19,22 @@ PROTOS += \
 protobuf_decl.name = protobuf headers
 protobuf_decl.input = PROTOS
 protobuf_decl.output = $$PWD/../generated/${QMAKE_FILE_BASE}.pb.h
+
 osx{
 protobuf_decl.commands = /Users/satoshi/Desktop/fc/ios/extrenal/prototbuf/platform/x86_64/bin/protoc --cpp_out=$$PWD/../generated/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
 }
 
 android{
-protobuf_decl.commands = /usr/local/protobuf_2_6_1/bin/protoc --cpp_out=$$PWD/../generated/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
+## IF YOU NEED THIS INSTALL VIA CELLAR BREW
+message (Android coming in )
+protobuf_decl.commands =/usr/local/Cellar/protobuf/2.6.1/bin/protoc --cpp_out=$$PWD/../generated/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
 }
 
 
 win32{
-protobuf_decl.commands = protoc --cpp_out=$$PWD/../generated/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
+    protobuf_decl.commands = protoc --cpp_out=$$PWD/../generated/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
 }
+
 protobuf_decl.variable_out = HEADERS
 QMAKE_EXTRA_COMPILERS += protobuf_decl
 

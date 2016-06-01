@@ -12,17 +12,10 @@
 #include "city.hpp"
 #include "base58.h"
 
-
-//#if DEFINED(TARGET_OS_IPHONE) || DEFINED(TARGET_IPHONE_SIMULATOR)
-//    #define GOOGLE_NAMESPACE google_public
-//#else
-//    #define GOOGLE_NAMESPACE google
-//#endif
-
 namespace pb {
     uint8_t from_hex( char c );
 
-    std::string to_hex( const char* d, uint32_t s );
+     std::string to_hex( const char* d, uint32_t s );
 
     size_t from_hex( const std::string& hex_str, char* out_data, size_t out_data_len );
     static secp256k1_context *CTX = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);

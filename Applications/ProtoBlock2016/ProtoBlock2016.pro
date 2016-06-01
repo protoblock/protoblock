@@ -1,4 +1,5 @@
 include ($$PWD/../../pri/deps.pri)
+
 include ($$PWD/../../pri/artwork.pri)
 include ($$PWD/../../pri/macrosAndModels.pri)
 include ($$PWD/../../pri/qml-pages.pri)
@@ -38,5 +39,10 @@ DISTFILES += \
     android/gradlew.bat
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+    ANDROID_EXTRA_LIBS = \
+        $$PWD/../../../../prebuilt/android/extrenal-android/lib/libprotobuf.so
+}
 
 

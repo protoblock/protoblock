@@ -86,9 +86,7 @@ ios {
 
 
 
-android{
-
-
+android {
     ##PATHS
     INCLUDEPATH +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/include
     DEPENDPATH += /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/include
@@ -99,13 +97,13 @@ android{
     LIBS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
     PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
 
-    # SECP251K1
+##     SECP251K1
     LIBS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
     PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
 
-    ## PROTOBUFF
-    LIBS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libprotobuf.a
-    PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libprotobuf.a
+    # PROTOBUFF
+      LIBS += -L/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib -lprotobuf
+
 
 
 
@@ -117,3 +115,4 @@ android{
 #    LIBS += /usr/lib/x86_64-linux-gnu/libmysqlclient_r.so
 #    INCLUDEPATH += /usr/include
 #}
+
