@@ -17,6 +17,10 @@ Item {
             text: model.title
             subText: model.summary + " \nCopyright 2016, CBSSports.com"
             maximumLineCount: 4
+            onClicked:{
+                webView.url = model.link
+                wView.shown = true
+            }
         }
     }
     XmlListModel{

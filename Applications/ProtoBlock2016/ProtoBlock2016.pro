@@ -1,12 +1,19 @@
 include ($$PWD/../../pri/deps.pri)
+
 include ($$PWD/../../pri/artwork.pri)
 include ($$PWD/../../pri/macrosAndModels.pri)
 include ($$PWD/../../pri/qml-pages.pri)
 include ($$PWD/../../pri/qml-utils.pri)
 
 
+qtHaveModule(webengine) {
+    QT += webengine
+    DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
+}
+
+
 TEMPLATE = app
-QT += qml quick sql core widgets sql websockets webchannel network webengine
+QT += qml quick sql core widgets sql websockets webchannel network
 CONFIG += c++11
 
 SOURCES += \
@@ -32,5 +39,10 @@ DISTFILES += \
     android/gradlew.bat
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+    ANDROID_EXTRA_LIBS = \
+        $$PWD/../../../../prebuilt/android/extrenal-android/lib/libprotobuf.so
+}
 
 

@@ -1,5 +1,5 @@
-#ifndef THEMEPLUGIN_H
-#define THEMEPLUGIN_H
+#ifndef ProRotoQmlThemePlugin_H
+#define ProRotoQmlThemePlugin_H
 
 #include <QQmlExtensionPlugin>
 #include <QStandardPaths>

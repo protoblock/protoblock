@@ -22,7 +22,7 @@ class Writer
     bool gd = false;
 public:
     typedef T indata;
-    Writer(const std::string &file,std::ios::openmode flags = 0) :
+    Writer(const std::string &file,std::ios::openmode flags =  std::ios::in) :
         mFs(file,std::ios::out | std::ios::binary | flags)
     {
         if (mFs.good())
@@ -68,7 +68,8 @@ class Reader
     GOOGLE_NAMESPACE::protobuf::io::CodedInputStream *_CodedInputStream = nullptr;
     bool gd = false;
 public:
-    Reader(const std::string &file, std::ios::openmode flags = 0):
+    Reader(const std::string &file, std::ios::openmode flags = std::ios::in):
+
         mFs(file,std::ios::in | std::ios::binary | flags)
     {
         if (mFs.good())

@@ -18,6 +18,7 @@
 #include <string>
 #include <unordered_map>
 #include "platform.h"
+#include<sstream>
 
 
 #define QTD QString::fromStdString
@@ -50,21 +51,21 @@ namespace fantasybit {
     //static std::string LAPIURL = "158.222.102.83:9854";
 
     //#define NO_ORACLE_CHECK_TESTING
-	//forwards
-	struct FantasyName;
+    //forwards
+    struct FantasyName;
 
     using Int = int;
-	using Uid = std::string;// uint_least64_t;
+    using Uid = std::string;// uint_least64_t;
     using UInt64 = uint64_t;
     using Int64 = int64_t;
 
     using MapS2I = std::map < std::string, Int > ;
-	template<class T>
-	using NameValuePairs =
-		std::unordered_map < std::string, T > ;
-	//	std::vector<std::pair<std::shared_ptr<FantasyName>, T>>;
+    template<class T>
+    using NameValuePairs =
+        std::unordered_map < std::string, T > ;
+    //	std::vector<std::pair<std::shared_ptr<FantasyName>, T>>;
 
-	using Signature = std::string;
+    using Signature = std::string;
 
 #if defined(Jay2015PrePreSeasonTestDemo) || defined(DATAAGENTGUIJay2015PrePreSeasonTestDemo)
 //#ifdef FBWIN
@@ -90,12 +91,21 @@ namespace fantasybit {
 
 #endif
 
+    template <typename T>
+    std::string To_String(T val)
+    {
+        std::stringstream stream;
+        stream << val;
+        return stream.str();
+    }
+
+
     static std::string GET_ROOT_DIR() {
         return Platform::instance()->getRootDir();
     }
 
     static std::string FB_PORT(int port) {
-        return std::string(":").append(std::to_string(port));
+        return std::string(":").append( To_String( port ) );
     }
 
     /*
@@ -110,18 +120,18 @@ namespace fantasybit {
     }
 */
 
-	template < typename T >
-	std::map<int, std::string> proto_enum_map() {
-		std::map<int, std::string> ret;
+    template < typename T >
+    std::map<int, std::string> proto_enum_map() {
+        std::map<int, std::string> ret;
 
-		for (int i = T::Type_MIN; i < T::Type_ARRAYSIZE; i++) {
+        for (int i = T::Type_MIN; i < T::Type_ARRAYSIZE; i++) {
 
-			if (!T::Type_IsValid(i)) continue;
-			ret[i] = T::Type_Name(T::Type(i));
-		}
+            if (!T::Type_IsValid(i)) continue;
+            ret[i] = T::Type_Name(T::Type(i));
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 
 //	template < typename T >
 //	typename T::Type input_proto_enum_map() {

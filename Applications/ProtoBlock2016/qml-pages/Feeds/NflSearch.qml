@@ -17,6 +17,10 @@ Item {
             text: model.title
             subText: model.summary + " \n© 2016 NFL Enterprises LLC"
             maximumLineCount: 4
+            onClicked:{
+                webView.url = model.link
+                wView.shown = true
+            }
         }
     }
     XmlListModel{

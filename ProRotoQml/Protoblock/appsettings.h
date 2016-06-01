@@ -97,8 +97,7 @@ private:
             case GenesisTranactionLocation :
             #ifdef Q_OS_WIN
                 return storagePath(storageDirName)+"/"+"GenesisTransition-Tr-Transaction.txt";
-            #endif
-            #ifdef Q_OS_MAC
+            #else
                 QDir dir(QCoreApplication::applicationDirPath());
                 dir.cdUp();
                 dir.cd("Resources");
@@ -106,7 +105,7 @@ private:
             #endif
 
 
-            }
+            ;}
         }
     };
 

@@ -10,7 +10,11 @@
 #include <QObject>
 #include <QDebug>
 #include "qqmlwebsockets.h"
-#include <QtWebEngine/qtwebengineglobal.h>
+
+#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
+#include <QtWebEngine>
+#endif // QT_WEBVIEW_WEBENGINE_BACKEND
+
 #include <QSysInfo>
 
 
@@ -29,8 +33,13 @@ int main(int argc, char *argv[])
     QSysInfo sysInfo;
     QString sInfo = sysInfo.productType ();
 
-    QQmlApplicationEngine engine;
+
+#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
     QtWebEngine::initialize();
+#endif // QT_WEBVIEW_WEBENGINE_BACKEND
+
+
+    QQmlApplicationEngine engine;
     QString appDir = qApp->applicationDirPath ();
 
 
