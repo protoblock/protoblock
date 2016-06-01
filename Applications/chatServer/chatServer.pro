@@ -9,6 +9,8 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
+INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
+
 SOURCES += main.cpp \
     chatserver.cpp \
     websocketclientwrapper.cpp \
@@ -17,4 +19,5 @@ SOURCES += main.cpp \
 HEADERS += \
     chatserver.h \
     websocketclientwrapper.h \
-    websockettransport.h
+    websockettransport.h \
+    ../../ProRotoQml/Protoblock/fbutils.h

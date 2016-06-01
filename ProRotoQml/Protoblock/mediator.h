@@ -29,6 +29,7 @@ class Mediator : public QObject
     Q_PROPERTY(MyNameStatus myNameStatus READ myNameStatus NOTIFY myNameStatusChanged)
     Q_ENUMS (MyNameStatus)
 
+    QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
 
 public:
 

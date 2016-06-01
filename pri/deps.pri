@@ -10,14 +10,14 @@ win32 {
    LIBS+= -L$$PWD/../libwin64
 
     CONFIG(debug, debug|release) {
-       LIBS += -L$$PWD/../ProRotoQml/jsonpb/debug/ -ljsonpb
+#       LIBS += -L$$PWD/../ProRotoQml/jsonpb/debug/ -ljsonpb
        LIBS+= -llibprotobufd \
               -lleveldbd \
               -llibeay32 \
               -lssleay32 \
     }
     CONFIG(release, debug|release) {
-       LIBS += -L$$PWD/../ProRotoQml/jsonpb/release/ -ljsonpb
+#       LIBS += -L$$PWD/../ProRotoQml/jsonpb/release/ -ljsonpb
        LIBS+= -llibprotobuf \
               -lleveldb \
               -llibeay32 \

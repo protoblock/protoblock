@@ -11,7 +11,7 @@ ApplicationWindow {
     title: "Protoblock 2016 "
     width: Screen.width
     height:  Screen.height
-    visible: false
+    visible: true
 
     // Pages
     property var sections: [ basicComponents, styles, compoundComponents,chater ]
@@ -31,15 +31,17 @@ ApplicationWindow {
 
 //    property alias currentPage: rootLoader.source
 
-    property var splashWindow: Splash {
-        onTimeout: {root.visible = true
-            if (uname !== "NULL"){
-             console.log("have name")
-            }else{
-            loginDialog.show();
-            }
-        }
-    }
+//    property var splashWindow: Splash {
+//        onTimeout: {
+
+//            root.visible = true
+//            if (uname !== "NULL"){
+//             console.log("have name")
+//            }else{
+//            loginDialog.show();
+//            }
+//        }
+//    }
 
     theme {
         primaryColor: "blue"
@@ -244,21 +246,21 @@ ApplicationWindow {
 
     // USERS INFO
 
-    Dialog {
-        id: userPicker
-        title: "User Information"
-        positiveButtonText: "Done"
-        MenuField {
-            model: userInfo.fantasyName
-            width: dp(160)
-        }
-        Text{
-            width: parent.width
-            height: dp(160)
-            wrapMode: Text.WordWrap
-            text: "Your Secert \n"+userInfo.mnemonicKey
-        }
-    }
+//    Dialog {
+//        id: userPicker
+//        title: "User Information"
+//        positiveButtonText: "Done"
+//        MenuField {
+//            model: userInfo.fantasyName
+//            width: dp(160)
+//        }
+//        Text{
+//            width: parent.width
+//            height: dp(160)
+//            wrapMode: Text.WordWrap
+//            text: "Your Secert \n"+userInfo.mnemonicKey
+//        }
+//    }
 
     Component {
         id: tabDelegate
@@ -337,8 +339,19 @@ ApplicationWindow {
     ListModel{id: postionModel}
     ListModel{id: weekModel}
 
-    Component.onCompleted: fillDefaultModels()
+    Component.onCompleted: {
+        fillDefaultModels()
+        MiddleMan.init()
+        root.visible = true
+        if (uname !== "NULL"){
+         console.log("have name")
+        }else{
+        loginDialog.show();
+        }
+    }
+
     function fillDefaultModels(){
+        console.log(" main qml 342")
         var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
         for (var i in positionArray){
             postionModel.append({'text': positionArray[i] })
@@ -395,7 +408,7 @@ ApplicationWindow {
         }
 
         onNameStatusChanged: {
-//            console.log("nameStatusChange " + MiddleMan.playersName  +" " + MiddleMan.playersStatus )
+            console.log("nameStatusChange " + MiddleMan.playersName )
             uname = MiddleMan.playersName;
              loginDialog.close()
         }
@@ -411,22 +424,22 @@ ApplicationWindow {
 
     // Set up the default connections to the databases
 
-    QmlSqlDatabase{
-        id: mainTfProdDb
-        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
-        databaseDriver: QmlSqlDatabase.SQLight
-        connectionName: "protoblock"
-        onConnectionOpened: console.log("database Open")
-        onError: console.log("DB Error:  " +  errorString)
-        Component.onCompleted: addDataBase()
+//    QmlSqlDatabase{
+//        id: mainTfProdDb
+//        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
+//        databaseDriver: QmlSqlDatabase.SQLight
+//        connectionName: "protoblock"
+//        onConnectionOpened: console.log("database Open")
+//        onError: console.log("DB Error:  " +  errorString)
+//        Component.onCompleted: addDataBase()
 
-}
+//    }
 
 
-    UserInfo{
-        id: userInfo
-        onErrorStringChanged:{
-            console.log(errorString)
-        }
-    }
+//    UserInfo{
+//        id: userInfo
+//        onErrorStringChanged:{
+//            console.log(errorString)
+//        }
+//    }
 }

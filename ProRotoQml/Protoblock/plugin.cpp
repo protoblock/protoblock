@@ -2,12 +2,12 @@
 #include <qqml.h>
 #include <QCoreApplication>
 #include "mediator.h"
-#include "getuserinfo.h"
+//#include "getuserinfo.h"
 void ProRotoQmlProtoblockPlugin::registerTypes(const char *uri)
 {
     // @uri ProRotoQml.Protoblock
 
-    qmlRegisterType<GetUserInfo>(uri,1,0,"UserInfo");
+//    qmlRegisterType<GetUserInfo>(uri,1,0,"UserInfo");
     qmlRegisterSingletonType<Mediator>(uri,1,0,"MiddleMan",middleMan);
 
 }

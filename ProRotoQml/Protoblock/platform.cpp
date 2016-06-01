@@ -154,6 +154,7 @@ std::string Platform::getRootDir() {
     }else{
         QString qstrPath = AppSettings::instance()->
                 getSetting(AppSettings::ApplicationStorageDir).toString();
+        createIosDir (qstrPath);
         //+QString(QDir::separator());
 //        qDebug() <<  qstrPath.toStdString();
         return qstrPath.toStdString();

@@ -9,7 +9,7 @@
 #include "websocketclientwrapper.h"
 #include "websockettransport.h"
 #include "chatserver.h"
-
+#include "fbutils.h"
 
 int main(int argc, char** argv)
 {
@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 
     QWebSocketServer server(QStringLiteral("Protoblock Chat Server"),
                             QWebSocketServer::NonSecureMode);
-    if (!server.listen(QHostAddress::Any, 4545)) {
+    if (!server.listen(QHostAddress::Any, fantasybit::PB_WS_CHAT_PORT)) {
         qFatal("Failed to open web socket server.");
         return 1;
     }

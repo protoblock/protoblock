@@ -33,9 +33,9 @@ Item {
         }
     }
 
-    UserInfo{
-           id: userSetttings
-           secertFile: secert3File
-    }
+//    UserInfo{
+//           id: userSetttings
+//           secertFile: secert3File
+//    }
 
 }

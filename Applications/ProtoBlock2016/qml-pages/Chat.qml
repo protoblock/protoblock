@@ -6,6 +6,7 @@ import ProtoblockSocket 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 import "qwebchannel.js" as WebChannel
+import ProRotoQml.Protoblock 1.0
 
 Rectangle {
     id: chatRoot
@@ -19,7 +20,7 @@ Rectangle {
     }
     ProtoblockSocket {
         id: socket
-        url: "ws://localhost:4545";
+        url: MiddleMan.chatServerAddr;
         active: false
         property var send: function (arg) {
             sendTextMessage(arg);
@@ -91,7 +92,7 @@ Rectangle {
         ListView{
             id: userlist
             width: 150
-            height: parent.height - messagBox.height
+            height: parent.height - messageBox.height
             Layout.fillHeight: true
             header: ListItems.Standard{backgroundColor: "#EFF6F9"; text: "Users"; elevation: 2}
             model: usersModel

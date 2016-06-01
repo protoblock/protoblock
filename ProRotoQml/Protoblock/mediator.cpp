@@ -7,8 +7,18 @@
 using namespace fantasybit;
 Mediator::Mediator(QObject *parent) : QObject(parent) {
 
-    m_webSocket.open(QUrl(QStringLiteral("ws://192.168.42.80:4001")));
-    m_txsocket.open(QUrl(QStringLiteral("ws://192.168.42.80:4000")));
+    QString wss("ws://%1:%2");
+
+    m_chatServerAddr = wss.arg(PB_WS_CHAT.data()).arg(PB_WS_CHAT_PORT);
+    QString lserver = wss.arg(PB_WS_LITE_AGENT.data()).arg(PB_WS_LITE_AGENT_PORT);
+    QString txserver = wss.arg(PB_WS_TX.data()).arg(PB_WS_TX_PORT);
+
+#ifndef NODEBUG
+    qDebug() << " connecting to lserver" << lserver;
+    qDebug() << " connecting to txserver" << txserver;
+#endif
+    m_webSocket.open(QUrl(lserver));
+    m_txsocket.open(QUrl(txserver));
 
 //    init ();
     connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));

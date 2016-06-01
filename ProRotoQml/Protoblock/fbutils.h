@@ -26,6 +26,14 @@
 namespace fantasybit {
 
 #ifndef PRODFOOTBALL
+    static std::string PB_WS_LITE_AGENT = "app.trading.football";
+    static int PB_WS_LITE_AGENT_PORT = 4001;
+    static std::string PB_WS_TX = "app.trading.football";
+    static int PB_WS_TX_PORT = 4000;
+    static std::string PB_WS_CHAT = "app.trading.football";
+    static int PB_WS_CHAT_PORT = 4002;
+
+
     static std::string PAPIURL = "https://stagingapi.trading.football:4545";
     static std::string LAPIURL = "https://stagingapi.trading.football:9854";
     static std::string DBIP = "158.222.102.21";
