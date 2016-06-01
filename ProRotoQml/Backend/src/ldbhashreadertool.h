@@ -47,7 +47,7 @@ class LdbHashReaderTool : public QObject
 #ifdef Q_OS_WIN
         status = leveldb::DB::Open(opt, m_path.toStdString(), &ldb);
 #else
-        status = leveldb::DB::Open(opt, "/Users/satoshi/work/tmp/tmp/meta", &ldb);
+        status = leveldb::DB::Open(opt, "/Users/$$(USER)/work/tmp/tmp/meta", &ldb);
 #endif
 
         if (!status.ok()) {
