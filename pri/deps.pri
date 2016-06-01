@@ -35,24 +35,24 @@ win32 {
 ##############
 
 #unix:mac{
-#    INCLUDEPATH += /Users/satoshi/Desktop/fc/osx/extrenal/include
+#    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
 #    DEPENDPATH += Users/satoshi/Desktop/fc/osx/extrenal/include
 
 #    ##FIXME compile levelDB
 #    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
 #    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
-#    LIBS += /Users/satoshi/Desktop/fc/osx/extrenal/lib/libprotobuf.a
-#    PRE_TARGETDEPS += /Users/satoshi/Desktop/fc/osx/extrenal/lib/libprotobuf.a
+#    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
+#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
 
-#    LIBS += /Users/satoshi/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
-#    PRE_TARGETDEPS += /Users/satoshi/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
+#    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
+#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
 
-#    LIBS += /Users/satoshi/Desktop/fc/osx/extrenal/lib/libssl.a
-#    PRE_TARGETDEPS += /Users/satoshi/Desktop/fc/osx/extrenal/lib/libssl.a
+#    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
+#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
 
-#    LIBS+=/Users/satoshi/Desktop/fc/osx/extrenal/lib/libcrypto.a
-#    PRE_TARGETDEPS+=/Users/satoshi/Desktop/fc/osx/extrenal/lib/libcrypto.a
+#    LIBS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
+#    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
 
 #    ##FIXME compile levelDB
 #    LIBS += -L/usr/local/lib  -lleveldb
@@ -63,22 +63,22 @@ win32 {
 
 ios {
     ##PATHS
-    INCLUDEPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
-    DEPENDPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
 
     ##OPENSSL
-    LIBS +=/Users/satoshi/Desktop/fc/ios/extrenal/lib/libcrypto.a
-    PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/ios/extrenal/lib/libcrypto.a
-    LIBS +=/Users/satoshi/Desktop/fc/ios/extrenal/lib/libssl.a
-    PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/ios/extrenal/lib/libssl.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libcrypto.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libcrypto.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libssl.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libssl.a
 
     # SECP251K1
-    LIBS +=/Users/satoshi/Desktop/fc/ios/extrenal/lib/libsecp256k1.a
-    PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/ios/extrenal/lib/libsecp256k1.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libsecp256k1.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libsecp256k1.a
 
     ## PROTOBUFF
-    LIBS +=/Users/satoshi/Desktop/fc/ios/extrenal/lib/libprotobuf.a
-    PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/ios/extrenal/lib/libprotobuf.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
 }
 
 
@@ -88,25 +88,21 @@ ios {
 
 android {
     ##PATHS
-    INCLUDEPATH +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/include
-    DEPENDPATH += /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/include
+    INCLUDEPATH +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/include
 
     ##OPENSSL
-    LIBS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
-    PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
-    LIBS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
-    PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
 
 ##     SECP251K1
-    LIBS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
-    PRE_TARGETDEPS +=/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
 
     # PROTOBUFF
-      LIBS += -L/Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib -lprotobuf
-
-
-
-
+      LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lprotobuf
 }
 
 #LATERFOOL
