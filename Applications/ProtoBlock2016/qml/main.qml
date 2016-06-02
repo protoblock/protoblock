@@ -4,6 +4,7 @@ import Material 1.0
 import Material.ListItems 1.0 as ListItem
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Sql 1.0
+import ProRotoQml.Utils 1.0
 
 
 ApplicationWindow {
@@ -15,10 +16,8 @@ ApplicationWindow {
 
     // Pages
     property var sections: [ basicComponents, styles, compoundComponents,chater ]
-    property var sectionTitles: [ "Projections", "Trading","News",  "Chat" ]
+    property var sectionTitles: [ "Protoblock Home",  "Trading","News",  "Chat" ]
     property string currentPage: sections[0][0]
-//    property string currentPage
-    property string gameId: "201500115"
     // we set this to 18 because there is no 18 so that it changes of the fly
     property string  err
     property string currentTeamInFocus
@@ -93,12 +92,16 @@ ApplicationWindow {
                 iconName: "action_settings"
                 name: "Settings"
                 hoverAnimation: true
+                onTriggered: {
+                    currentPage = "UserSettings"
+                }
+
             },
 
             Action {
                 iconName: "action_account_circle"
                 name: uname
-                onTriggered: userPicker.show()
+//                onTriggered: userPicker.show()
             }
         ]
 
@@ -106,12 +109,20 @@ ApplicationWindow {
 
         NavigationDrawer {
             id: navDrawer
-            enabled: pageHelper.width < dp(500)
+            enabled:{
+                if ( Device.name === "phone" || Device.name === "tablet"){
+                    true
+                }else if (pageHelper.width < dp(500)){
+                    true
+                }else{
+                    false
+                }
+            }
             onEnabledChanged: smallLoader.active = enabled
 
             Flickable {
                 anchors.fill: parent
-                contentHeight: Math.max(content.implicitHeight, height)
+               contentHeight: Math.max(content.implicitHeight, height)
 
                 Column {
                     id: content
@@ -145,13 +156,10 @@ ApplicationWindow {
 
         Repeater {
             model: !navDrawer.enabled ? sections : 0
-
             delegate: Tab {
                 title: sectionTitles[index]
-
                 property string currentPage: modelData[0]
                 property var section: modelData
-
                 sourceComponent: tabDelegate
             }
         }
@@ -160,7 +168,6 @@ ApplicationWindow {
             id: smallLoader
             anchors.fill: parent
             sourceComponent: tabDelegate
-
             property var section: []
             visible: active
             active: false
@@ -180,8 +187,6 @@ ApplicationWindow {
             width: loginDialog.width
             height:  loginDialog.height
         }
-
-
     }
 
 
@@ -219,7 +224,6 @@ ApplicationWindow {
 
                     Ink {
                         anchors.fill: parent
-
                         onPressed: {
                             switch(selection.selectedIndex) {
                                 case 0:
@@ -269,12 +273,9 @@ ApplicationWindow {
 
             Sidebar {
                 id: sidebar
-
                 expanded: !navDrawer.enabled
-
                 Column {
                     width: parent.width
-
                     Repeater {
                         model: section
                         delegate: ListItem.Standard {
@@ -320,29 +321,16 @@ ApplicationWindow {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /////////////
     ListModel{id: postionModel}
     ListModel{id: weekModel}
 
     Component.onCompleted: {
+        console.log("The formfactor of this device is " + Device.name)
         fillDefaultModels()
         MiddleMan.init()
-        root.visible = true
+
+//        root.visible = true
         if (uname !== "NULL"){
          console.log("have name")
         }else{
