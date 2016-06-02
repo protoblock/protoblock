@@ -30,6 +30,7 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
     connect(this,SIGNAL (nameStatusChanged(QString,QString))
             ,this, SLOT (handdleNameStatus(QString,QString)));
+
     connect(this,SIGNAL(usingFantasyName(QString)),
             this,SLOT(handdleUsingName(QString)));
 
@@ -135,6 +136,7 @@ Mediator::MyNameStatus Mediator::myNameStatus() const
     return m_myNameStatus;
 }
 
+//FIXME when the status of a current name is changed update this
 void Mediator::setMyNameStatus(const Mediator::MyNameStatus &myNameStatus)
 {
     if (m_myNameStatus == myNameStatus){
