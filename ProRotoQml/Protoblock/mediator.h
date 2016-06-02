@@ -69,6 +69,7 @@ public:
     Q_INVOKABLE void init();
 
 
+    qint64 sendBinaryMessage(const google::protobuf::Message &data);
 signals:
     void usingFantasyName(QString);
     void nameStatusChanged (QString, QString);
@@ -93,7 +94,7 @@ protected slots:
 
 private:
     QWebSocket m_webSocket, m_txsocket;
-    fantasybit::WsReq lastPk2name;
+    fantasybit::Pk2FnameReq lastPk2name;
     fantasybit::FantasyAgent m_fantasy_agent;
     static Mediator *myInstance;
     explicit Mediator(QObject *parent = 0);

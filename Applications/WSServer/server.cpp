@@ -133,26 +133,37 @@ void Server::processBinaryMessage(QByteArray message) {
         switch ( req.ctype() ) {
         case PK2FNAME:
         {
+            Pk2FnameRep pkr;
+            pkr.mutable_req()->CopyFrom(req.GetExtension(Pk2FnameReq::req));
             rep.set_ctype(PK2FNAME);
-            auto fname = Commissioner::getName(Commissioner::str2pk(req.data()));
+            auto fname = Commissioner::getName(Commissioner::str2pk(pkr.req().pk()));
             if ( fname == nullptr)
-                rep.set_data("");
+                pkr.set_fname("");
             else
-                rep.set_data(fname->alias());
+                pkr.set_fname(fname->alias());
+
+
+            rep.MutableExtension(Pk2FnameRep::rep)->CopyFrom(pkr);
             break;
         }
         case CHECKNAME:
+        {
             rep.set_ctype(CHECKNAME);
-            if ( fantasybit::Commissioner::isAliasAvailable(req.data()))
-                rep.set_data("true");
+            CheckNameRep cr;
+            cr.mutable_req()->CopyFrom(req.GetExtension(CheckNameReq::req));
+            if ( fantasybit::Commissioner::isAliasAvailable(cr.req().fantasy_name()))
+                cr.set_isavail("true");
             else
-                rep.set_data("false");
+                cr.set_isavail("false");
+
+            rep.MutableExtension(CheckNameRep::rep)->CopyFrom(cr);
             break;
+        }
         default:
             return;
         }
 
-        rep.mutable_req()->CopyFrom(req);
+//        rep.mutable_req()->CopyFrom(req);
 
         auto repstr = rep.SerializeAsString();
         QByteArray qb(repstr.data(),(size_t)repstr.size());

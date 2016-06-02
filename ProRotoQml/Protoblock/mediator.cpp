@@ -50,10 +50,12 @@ QString Mediator::nameStatusGet(const QString &name) {
 }
 
 void Mediator::pk2fname(const QString &pk) {
-    //WsReq req;// = lastNameCheck;
-    lastPk2name.set_ctype(PK2FNAME);
-    lastPk2name.set_data(pk.toStdString());
-    auto txstr = lastPk2name.SerializeAsString();
+    WsReq req;// = lastNameCheck;
+    req.set_ctype(PK2FNAME);
+    //Pk2FnameReq pk2;
+    lastPk2name.set_pk(pk.toStdString());
+    req.MutableExtension(Pk2FnameReq::req)->CopyFrom(lastPk2name);
+    auto txstr = req.SerializeAsString();
     QByteArray qb(txstr.data(),(size_t)txstr.size());
 
     m_webSocket.sendBinaryMessage(qb);
@@ -62,7 +64,9 @@ void Mediator::pk2fname(const QString &pk) {
 void Mediator::checkname(const QString &name) {
     WsReq req;
     req.set_ctype(CHECKNAME);
-    req.set_data(name.toStdString());
+    CheckNameReq cnr;
+    cnr.set_fantasy_name(name.toStdString());
+    req.MutableExtension(CheckNameReq::req)->CopyFrom(cnr);
     auto txstr = req.SerializeAsString();
     QByteArray qb(txstr.data(),(size_t)txstr.size());
     m_webSocket.sendBinaryMessage(qb);
@@ -167,6 +171,15 @@ qint64 Mediator::sendBinaryMessage(const QByteArray &data) {
     return m_webSocket.sendBinaryMessage(data);
 }
 
+qint64 Mediator::sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data) {
+    auto txstr = data.SerializeAsString();
+
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+
+    return sendBinaryMessage(qb);
+}
+
+
 void Mediator::handleClosed() {
     qDebug() << "Close Reason " << m_webSocket.closeReason ();
     return;
@@ -177,6 +190,17 @@ void Mediator::onConnected() {
     qDebug() << "connected to " <<  hInfo.toString () << " on Port " << m_webSocket.peerPort ();
     connect(&m_webSocket, SIGNAL(binaryMessageReceived(QByteArray)),
             this, SLOT ( onBinaryMessageRecived(QByteArray) ));
+
+    WsReq reqstat;
+    reqstat.set_ctype(GETSTATUS);
+    auto mynamepk = m_fantasy_agent.getMyNames();
+    for ( auto &np : mynamepk) {
+        NameStatusReq nsq;
+        nsq.set_name(np.first);
+        nsq.set_pk(np.second);
+        reqstat.MutableExtension(NameStatusReq::req)->CopyFrom(nsq);
+        sendBinaryMessage(reqstat);
+    }
 }
 
 void Mediator::handleAboutToClose()
@@ -199,7 +223,8 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
     switch ( rep.ctype()) {
         case PK2FNAME:
         {
-            auto name= rep.data();
+            const Pk2FnameRep &pk2 = rep.GetExtension(Pk2FnameRep::rep);
+            auto name= pk2.fname();
             if ( name == "" ) {
                 error(QString("import failed. please input valid secret"));
                 qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
@@ -208,14 +233,14 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             }
 
 
-            m_fantasy_agent.finishImportMnemonic(rep.req().data(), name);
+            m_fantasy_agent.finishImportMnemonic(pk2.req().pk(), name);
 
             //FIXME lets make this as a real map to pass to a string
             m_nameStatuses[name.data()] = QString("confirmed");
             nameStatusChanged( name.data() , "confirmed" );
 
             if ( !m_fantasy_agent.HaveClient() ||
-                 lastPk2name.data() == name)
+                 lastPk2name.pk() == pk2.req().pk())
                 if ( !m_fantasy_agent.UseName(name) )
                     qDebug() << "error using name " << name.data () ;
 //                    error(QString("error using name").append(name.data()));
@@ -223,10 +248,24 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             usingFantasyName(m_fantasy_agent.currentClient().data());
             break;
         }
-        case CHECKNAME:
-            qDebug() << " emit " << rep.req().data().data() << rep.data().data();
-            nameCheckGet(rep.req().data().data(),rep.data().data());
+        case CHECKNAME: {
+            const CheckNameRep &cn = rep.GetExtension(CheckNameRep::rep);
+            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
+            nameCheckGet(cn.req().fantasy_name().data(),cn.isavail().data());
 //            update_checkname(rep.data().data());
+            break;
+        }
+        case GETSTATUS:
+        {
+            const NameStatusRep &np = rep.GetExtension(NameStatusRep::rep);
+            QString statusstr = fantasybit::MyNameStatus_Name(np.status()).data();
+            auto name = np.req().name();
+            m_nameStatuses[name.data()] = statusstr;
+            qDebug() << " emit " << name.data() << statusstr;
+            nameStatusChanged( name.data() , statusstr );
+        }
+        default:
+            break;
     }
 //    emit gotPk2fname(name);
 }
