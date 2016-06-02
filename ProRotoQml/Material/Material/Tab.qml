@@ -47,7 +47,7 @@ Controls.Tab {
     property bool canRemove: false
 
     /*!
-     * The index of the tab in a TabbedPage.
+     * The index of the tab in a TabbeUnits.dpage.
      *
      * \since 0.3
      */

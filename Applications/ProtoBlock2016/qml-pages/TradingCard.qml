@@ -11,16 +11,16 @@ Item {
     View {
         anchors.centerIn: parent
         backgroundColor: "#10FFFFFF"
-        width: dp(350)
-        height: column.implicitHeight + dp(32)
-        radius: dp(2)
+        width: Unit.dp(350)
+        height: column.implicitHeight + Unit.dp(32)
+        radius: Unit.dp(2)
 
         ColumnLayout {
             id: column
             anchors {
                 fill: parent
-                topMargin: dp(16)
-                bottomMargin: dp(16)
+                topMargin: Unit.dp(16)
+                bottomMargin: Unit.dp(16)
             }
             Label {
                 id: titleLabel
@@ -28,7 +28,7 @@ Item {
                 anchors {
                     left: parent.left
                     right: parent.right
-                    margins: dp(16)
+                    margins: Unit.dp(16)
                 }
                 style: "title"
                 text: buying ? "Buy " : "Sell"
@@ -98,16 +98,16 @@ Item {
 
             Item {
                 Layout.fillWidth: true
-                Layout.preferredHeight: dp(8)
+                Layout.preferredHeight: Unit.dp(8)
             }
 
             RowLayout {
                 Layout.alignment: Qt.AlignRight
-                spacing: dp(8)
+                spacing: Unit.dp(8)
 
                 anchors {
                     right: parent.right
-                    margins: dp(16)
+                    margins: Unit.dp(16)
                 }
                 Button {
                     elevation: 5

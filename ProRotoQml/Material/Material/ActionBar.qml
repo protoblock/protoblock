@@ -12,7 +12,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import Material 1.0
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 import Material.ListItems 1.0 as ListItem
 import "utils.js" as Utils
 
@@ -117,7 +117,7 @@ Item {
      *
      * \since 0.3
      */
-    property int iconSize: Units.gridUnit == 48 * Units.dp ? 20 * Units.dp : 24 * Units.dp
+    property int iconSize: Unit.gridUnit == 48 * Units.dp ? 20 * Units.dp : 24 * Units.dp
 
     /*!
      * Set to true to integrate the tab bar into a single row with the actions.

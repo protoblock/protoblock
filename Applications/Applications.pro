@@ -3,6 +3,6 @@ CONFIG += ordered
 SUBDIRS += \
     $$PWD/ProtoBlock2016 \
     $$PWD/debugProtoLdb \
-    $$PWD/WSServer \
     $$PWD/chatServer/chatServer.pro
+#SUBDIRS += $$PWD/WSServer
 

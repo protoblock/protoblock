@@ -13,7 +13,7 @@ import QtQuick.Controls 1.3 as Controls
 import QtQuick.Controls.Styles 1.3 as Styles
 
 /*!
-   \qmltype TabbedPage
+   \qmltype TabbeUnits.dpage
    \inqmlmodule Material
 
    \brief A special page for tabs.

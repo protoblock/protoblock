@@ -11,9 +11,9 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3 as Controls
 import QtQuick.Window 2.2
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 import Material.Extras 1.0
-
+import ProRotoQml.Theme 1.0
 /*!
    \qmltype ApplicationWindow
    \inqmlmodule Material
@@ -120,8 +120,8 @@ Controls.ApplicationWindow {
         id: overlayLayer
     }
 
-    width: dp(800)
-    height: dp(600)
+    width: Unit.dp(800)
+    height: Unit.dp(600)
 
     Dialog {
         id: errorDialog
@@ -165,19 +165,6 @@ Controls.ApplicationWindow {
         return errorDialog.promise
     }
 
-    // Units
-
-    function dp(dp) {
-        return dp * Units.dp
-    }
-
-    function gu(gu) {
-        return units.gu(gu)
-    }
-
-    UnitsHelper {
-        id: units
-    }
 
     Component.onCompleted: {
         if (clientSideDecorations)

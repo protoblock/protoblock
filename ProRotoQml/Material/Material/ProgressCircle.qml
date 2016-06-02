@@ -21,7 +21,7 @@ import QtQuick 2.4
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.3 as Controls
 import QtQuick.Controls.Styles 1.3 as Styles
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 import Material 1.0
 
 /*!
@@ -41,7 +41,7 @@ Controls.ProgressBar {
 
     /*!
        The thickness of the progress circle's stroke,
-       3 dp by default
+       3 Units.dp by default
      */
     property real dashThickness: 3 * Units.dp
 
@@ -91,7 +91,7 @@ Controls.ProgressBar {
                     {
                         if(control.indeterminate)
                         {
-                            internal.arcEndPoint = 0
+                            internal.arcEndpoint = 0
                             internal.arcStartPoint = 0
                             internal.rotate = 0
                         }
@@ -103,8 +103,8 @@ Controls.ProgressBar {
                 QtObject {
                     id: internal
 
-                    property real arcEndPoint: 0
-                    onArcEndPointChanged: canvas.requestPaint();
+                    property real arcEndpoint: 0
+                    onArcEndpointChanged: canvas.requestPaint();
 
                     property real arcStartPoint: 0
                     onArcStartPointChanged: canvas.requestPaint();
@@ -134,7 +134,7 @@ Controls.ProgressBar {
                     ParallelAnimation {
                         NumberAnimation {
                             target: internal
-                            properties: "arcEndPoint"
+                            properties: "arcEndpoint"
                             from: 0
                             to: internal.longDash
                             easing.type: Easing.InOutCubic
@@ -154,7 +154,7 @@ Controls.ProgressBar {
                     ParallelAnimation {
                         NumberAnimation {
                             target: internal
-                            properties: "arcEndPoint"
+                            properties: "arcEndpoint"
                             from: internal.longDash
                             to: 2 * Math.PI - 0.001
                             easing.type: Easing.InOutCubic
@@ -185,7 +185,7 @@ Controls.ProgressBar {
 
                     ctx.arc(0, 0, Math.max(0, Math.min(canvas.width, canvas.height) / 2 - ctx.lineWidth),
                         control.indeterminate ? internal.arcStartPoint : 0,
-                        control.indeterminate ? internal.arcEndPoint : currentProgress * (2 * Math.PI),
+                        control.indeterminate ? internal.arcEndpoint : currentProgress * (2 * Math.PI),
                         false);
 
                     ctx.stroke();

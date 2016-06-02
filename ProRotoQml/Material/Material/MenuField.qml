@@ -21,7 +21,7 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.1
 
 import Material 1.0
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 import Material.ListItems 1.0
 
 /*!
@@ -51,7 +51,7 @@ Item {
     property alias selectedIndex: listView.currentIndex
     property int maxVisibleItems: 4
 
-    property alias placeholderText: fieldPlaceholder.text
+    property alias placeholderText: fieldplaceholder.text
     property alias helperText: helperTextLabel.text
 
     property bool floatingLabel: false
@@ -153,7 +153,7 @@ Item {
     }
 
     Label {
-        id: fieldPlaceholder
+        id: fieldplaceholder
 
         text: field.placeholderText
         visible: floatingLabel

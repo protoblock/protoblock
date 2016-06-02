@@ -15,7 +15,7 @@ import QtQuick.Controls 1.3 as QuickControls
 import QtQuick.Controls.Styles 1.3
 
 import Material 1.0
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 import Material.Extras 1.0
 
 FocusScope {

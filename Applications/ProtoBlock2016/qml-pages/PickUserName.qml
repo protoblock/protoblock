@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4 as Contols
 import Material 1.0
-import Socket 1.0
 import ProRotoQml.Protoblock 1.0
 
 Item {

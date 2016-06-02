@@ -14,7 +14,7 @@ import QtQuick 2.4
    \qmltype ThinDivider
    \inqmlmodule Material
 
-   \brief A 1dp high divider for use in lists and other columns of content.
+   \brief A 1Units.dp high divider for use in lists and other columns of content.
  */
 Rectangle {
     anchors {

@@ -11,7 +11,7 @@
 import QtQuick 2.4
 import QtQuick.Controls.Styles 1.3
 import Material 1.0
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 
 
 ButtonStyle {
@@ -38,9 +38,7 @@ ButtonStyle {
         id: background
 
         implicitHeight: 36 * Units.dp
-
-        radius: 2 * Units.dp
-
+        radius: 2 * Units.dp;
         backgroundColor: control.enabled || controlElevation === 0
                 ? controlBackground
                 : darkBackground ? Qt.rgba(1, 1, 1, 0.12)
@@ -70,7 +68,7 @@ ButtonStyle {
             anchors.fill: parent
             focused: control.focus && background.context !== "dialog"
                     && background.context !== "snackbar"
-            focusWidth: parent.width - 30 * Units.dp
+            focusWidth: parent.width - 30 *  Units.dp
             focusColor: Qt.darker(background.backgroundColor, 1.05)
 
             Connections {
@@ -82,11 +80,11 @@ ButtonStyle {
         }
     }
     label: Item {
-        implicitHeight: Math.max(36 * Units.dp, label.height + 16 * Units.dp)
+        implicitHeight: Math.max(36 *Units.dp, label.height + 16 *Units.dp)
         implicitWidth: context == "dialog"
-                ? Math.max(64 * Units.dp, label.width + 16 * Units.dp)
-                : context == "snackbar" ? label.width + 16 * Units.dp
-                                        : Math.max(88 * Units.dp, label.width + 32 * Units.dp)
+                ? Math.max(64 *Units.dp, label.width + 16 *Units.dp)
+                : context == "snackbar" ? label.width + 16 *Units.dp
+                                        : Math.max(88 *Units.dp, label.width + 32 *Units.dp)
 
         Label {
             id: label

@@ -18,6 +18,8 @@ Item {
             subText: model.summary + " \nCopyright 2015 ESPN Inc"
             maximumLineCount: 4
             onClicked:{
+
+//                if (Device.for === "phone" || )
                 webView.url = model.link
                 wView.shown = true
             }

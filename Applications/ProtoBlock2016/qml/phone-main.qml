@@ -42,16 +42,16 @@ ApplicationWindow {
 
     // FIXME set so that we check for secert 3 and whatever the fuck jay wants
     property string currentPage
-        onCurrentPageChanged:  {
-//            console.log("Loader should animate")
-            loaderAnimation.start()
-        }
+    onCurrentPageChanged:  {
+        //            console.log("Loader should animate")
+        loaderAnimation.start()
+    }
 
     SequentialAnimation{
         id: loaderAnimation
-        NumberAnimation { target: pageHelper ; property:  "m_opacity"; from: 1; to: 0 ; duration: 0 }
-        NumberAnimation { target: loaderImage ; property: "opacity"; from: 0; to: 1 ; duration: 250 }
-        NumberAnimation { target: loaderImage ; property: "opacity"; from: 1; to: 0 ; duration: 250 }
+        NumberAnimation { target: pageHelper ; property:  "m_opacity"; from: 1; to: 0 ; duration: 300 }
+//        NumberAnimation { target: loaderImage ; property: "opacity"; from: 0; to: 1 ; duration: 250 }
+//        NumberAnimation { target: loaderImage ; property: "opacity"; from: 1; to: 0 ; duration: 250 }
         NumberAnimation { target: pageHelper ; property: "m_opacity"; from: 0; to: 1 ; duration: 250 }
     }
 
@@ -73,7 +73,7 @@ ApplicationWindow {
                 visible: (currentPage === modelData);
                 source: Qt.resolvedUrl("qrc:/%1.qml".arg(modelData))
                 onSourceChanged:{
-//                         console.log("source changed " + source)
+                    //                         console.log("source changed " + source)
                 }
                 onVisibleChanged: {
                     loadIfNotLoaded();
@@ -149,10 +149,10 @@ ApplicationWindow {
     Connections {
         target: MiddleMan
         onNameCheckGet: {
-            console.log("onNameCheckGet " + status  + " \n" +  name )
+//            console.log("onNameCheckGet " + status  + " \n" +  name )
             if(status === "true" )
             {
-                console.log("name is not taken")
+//                console.log("name is not taken")
                 MiddleMan.signPlayer(uname)
             }
             else
@@ -165,12 +165,12 @@ ApplicationWindow {
         }
 
         onNameStatusChanged: {
-            console.log("nameStatusChange " + MiddleMan.playersName  +" " + MiddleMan.playersStatus )
+//            console.log("nameStatusChange " + MiddleMan.playersName  +" " + MiddleMan.playersStatus )
             uname = MiddleMan.playersName;
         }
 
         onUsingFantasyName: {
-            console.log("usingFantasyName " + MiddleMan.playersName )
+//            console.log("usingFantasyName " + MiddleMan.playersName )
             uname = MiddleMan.playersName;
             currentPage = "WelcomeBack"
             pageHelper.buttonsEnabled = true
@@ -190,11 +190,6 @@ ApplicationWindow {
         onError: console.log("DB Error:  " +  errorString)
         Component.onCompleted: addDataBase()
 
-}
-
-
-
-
-
+    }
 }
 

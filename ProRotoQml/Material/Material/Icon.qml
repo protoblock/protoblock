@@ -12,7 +12,7 @@
 import QtQuick 2.4
 import QtQuick.Window 2.2
 
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 import Material 1.0
 import QtGraphicalEffects 1.0
 

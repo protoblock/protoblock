@@ -22,6 +22,20 @@ Device::Device(QObject *parent)
 #endif
 
 
+    QSysInfo systemInfo;
+   setbuildCpuArchitecture(systemInfo.buildCpuArchitecture ());
+   setcurrentCpuArchitecture(systemInfo.currentCpuArchitecture ());
+   setbuildAbi(systemInfo.buildAbi ());
+   setkernelType(systemInfo.kernelType ());
+   setkernelVersion(systemInfo.kernelVersion ());
+   setproductType(systemInfo.productType ());
+   setproductVersion(systemInfo.productType ());
+   setprettyProductName(systemInfo.prettyProductName ());
+
+    setdp( m_screen->devicePixelRatio () );
+
+
+
     setappDir(QStandardPaths::standardLocations (QStandardPaths::AppDataLocation).first ()) ;
     setappConfigDir (QStandardPaths::standardLocations (QStandardPaths::AppDataLocation).first ());
     setdataDir(QStandardPaths::standardLocations (QStandardPaths::DataLocation).first ()) ;
@@ -40,38 +54,53 @@ Device::FormFactor Device::formFactor() const
 {
     float diagonal = calculateDiagonal();
 
-    if (diagonal >= 3.5 && diagonal < 5) { //iPhone 1st generation to phablet
-        return Device::Phone;
-    } else if (diagonal >= 5 && diagonal < 6.5) {
-        return Device::Phablet;
-    } else if (diagonal >= 6.5 && diagonal < 10.1) {
-        return Device::Tablet;
-    } else if (diagonal >= 10.1 && diagonal < 29) {
-        return Device::Computer;
-    } else if (diagonal >= 29 && diagonal < 92) {
-        return Device::TV;
-    } else {
-        return Device::Unknown;
+
+
+    QSysInfo sysInfo ;
+
+
+    if ( sysInfo.productType () == "ios" || sysInfo.productType () == "android" ){
+        if (diagonal >= 3.5 && diagonal < 5) { //iPhone 1st generation to phablet
+            return Device::Phone;
+        } else if (diagonal >= 5 && diagonal < 6.5) {
+            return Device::Phablet;
+        } else if (diagonal >= 6.5 && diagonal < 10.1) {
+            return Device::Tablet;
+        }
+    }else{
+        if (diagonal >= 10.1 && diagonal < 29) {
+            return Device::Computer;
+        } else if (diagonal >= 29 && diagonal < 92) {
+            return Device::TV;
+        } else {
+            return Device::Unknown;
+        }
     }
 }
-
 QString Device::name() const
 {
     switch (formFactor()) {
-        case Phone:
-            return tr("phone");
-        case Phablet:
-            return tr("phablet");
-        case Tablet:
-            return tr("tablet");
-        case Computer:
-            return tr("computer");
-        case TV:
-            return tr("TV");
-        case Unknown:
-            return tr("device");
-        default:
-            return tr("unknown");
+    case Phone:
+        return tr("phone");
+        break;
+    case Phablet:
+        return tr("phablet");
+        break;
+    case Tablet:
+        return tr("tablet");
+        break;
+    case Computer:
+        return tr("computer");
+        break;
+    case TV:
+        return tr("TV");
+    break;
+    case Unknown:
+        return tr("device");
+        break;
+    default:
+        return tr("unknown");
+        break;
     }
 }
 
