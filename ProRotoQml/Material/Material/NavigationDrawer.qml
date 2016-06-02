@@ -10,7 +10,7 @@
  */
 
 import QtQuick 2.4
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 
 /*!
    \qmltype NavigationDrawer

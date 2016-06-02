@@ -13,7 +13,7 @@ import QtQuick 2.4
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 import Material 1.0
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 TextFieldStyle {
     id: style
 
@@ -74,7 +74,7 @@ TextFieldStyle {
 
 
         Label {
-            id: fieldPlaceholder
+            id: fieldplaceholder
 
             anchors.verticalCenter: parent.verticalCenter
             text: control.placeholderText
@@ -89,12 +89,12 @@ TextFieldStyle {
                     name: "floating"
                     when: control.displayText.length > 0 && background.floatingLabel
                     AnchorChanges {
-                        target: fieldPlaceholder
+                        target: fieldplaceholder
                         anchors.verticalCenter: undefined
                         anchors.top: parent.top
                     }
                     PropertyChanges {
-                        target: fieldPlaceholder
+                        target: fieldplaceholder
                         font.pixelSize: 12 * Units.dp
                     }
                 },
@@ -102,7 +102,7 @@ TextFieldStyle {
                     name: "hidden"
                     when: control.displayText.length > 0 && !background.floatingLabel
                     PropertyChanges {
-                        target: fieldPlaceholder
+                        target: fieldplaceholder
                         visible: false
                     }
                 }

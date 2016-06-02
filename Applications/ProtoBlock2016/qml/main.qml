@@ -1,11 +1,15 @@
 import QtQuick 2.4
 import QtQuick.Window 2.0
-import Material 1.0
-import Material.ListItems 1.0 as ListItem
+
+
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Sql 1.0
 import ProRotoQml.Utils 1.0
+import ProRotoQml.Theme 1.0
 
+
+import Material 1.0
+import Material.ListItems 1.0 as ListItem
 
 ApplicationWindow {
     id: root
@@ -16,7 +20,7 @@ ApplicationWindow {
 
     // Pages
     property var sections: [ basicComponents, styles, compoundComponents,chater ]
-    property var sectionTitles: [ "Protoblock Home",  "Trading","News",  "Chat" ]
+    property var sectionTitles: [ "Protoblock Home", "Projections", "Trading","NFL News",  "Chat" ]
     property string currentPage: sections[0][0]
     // we set this to 18 because there is no 18 so that it changes of the fly
     property string  err
@@ -43,9 +47,9 @@ ApplicationWindow {
 //    }
 
     theme {
-        primaryColor: "blue"
-        accentColor: "red"
-        tabHighlightColor: "white"
+        primaryColor: Colors.blue
+        accentColor: Colors.amber
+        tabHighlightColor: Colors.white
     }
 
     //    "Welcome", "WelcomeBack", "About", "Chat", "GetName", "PickUserName",
@@ -93,6 +97,11 @@ ApplicationWindow {
                 name: "Settings"
                 hoverAnimation: true
                 onTriggered: {
+                    console.log("Trigger Hello")
+                    root.currentPage = "UserSettings"
+                }onToggled: {
+                    console.log("Toggle  Hello")
+
                     currentPage = "UserSettings"
                 }
 
@@ -112,7 +121,7 @@ ApplicationWindow {
             enabled:{
                 if ( Device.name === "phone" || Device.name === "tablet"){
                     true
-                }else if (pageHelper.width < dp(500)){
+                }else if (pageHelper.width < Unit.dp(400)){
                     true
                 }else{
                     false
@@ -135,6 +144,7 @@ ApplicationWindow {
                             width: parent.width
 
                             ListItem.Subheader {
+                                backgroundColor: root.theme.primaryColor
                                 text: sectionTitles[index]
                             }
                             Repeater {
@@ -198,28 +208,28 @@ ApplicationWindow {
         MenuField {
             id: selection
             model: ["Primary color", "Accent color", "Background color"]
-            width: dp(160)
+            width: Unit.dp(160)
         }
 
         Grid {
             columns: 7
-            spacing: dp(8)
+            spacing: Unit.dp(8)
 
             Repeater {
                 model: [
-                    "red", "pink", "purple", "deepPurple", "indigo",
-                    "blue", "lightBlue", "cyan", "teal", "green",
-                    "lightGreen", "lime", "yellow", "amber", "orange",
-                    "deepOrange", "grey", "blueGrey", "brown", "black",
+                    Colors.red, Colors.pink, Colors.purple, Colors.deepPurple, Colors.indigo,
+                    Colors.blue, Colors.lightBlue, Colors.cyan, Colors.teal, Colors.green,
+                    Colors.lightGreen, Colors.lime, Colors.yellow, Colors.amber, Colors.orange,
+                    Colors.deepOrange, Colors.grey, Colors.blueGrey, Colors.brown, Colors.black,
                     "white"
                 ]
 
                 Rectangle {
-                    width: dp(30)
-                    height: dp(30)
-                    radius: dp(2)
-                    color: Palette.colors[modelData]["500"]
-                    border.width: modelData === "white" ? dp(2) : 0
+                    width: Unit.dp(30)
+                    height: Unit.dp(30)
+                    radius:Unit.dp(2)
+                    color: modelData
+                    border.width: modelData === "white" ? Unit.dp(2) : 0
                     border.color: Theme.alpha("#000", 0.26)
 
                     Ink {
@@ -256,11 +266,11 @@ ApplicationWindow {
 //        positiveButtonText: "Done"
 //        MenuField {
 //            model: userInfo.fantasyName
-//            width: dp(160)
+//            width: Unit.dp(160)
 //        }
 //        Text{
 //            width: parent.width
-//            height: dp(160)
+//            height: Unit.dp(160)
 //            wrapMode: Text.WordWrap
 //            text: "Your Secert \n"+userInfo.mnemonicKey
 //        }
@@ -301,7 +311,6 @@ ApplicationWindow {
                     anchors.fill: parent
                     asynchronous: true
                     visible: status == Loader.Ready
-                    // currentPage will always be valid, as it defaults to the first component
                     source: {
                         var theFile = navDrawer.enabled ?  root.currentPage : currentPage
                         Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
@@ -326,7 +335,7 @@ ApplicationWindow {
     ListModel{id: weekModel}
 
     Component.onCompleted: {
-        console.log("The formfactor of this device is " + Device.name)
+            console.log( "The formfactor of this device is " + Device.name )
         fillDefaultModels()
         MiddleMan.init()
 
@@ -339,7 +348,7 @@ ApplicationWindow {
     }
 
     function fillDefaultModels(){
-        console.log(" main qml 342")
+//        console.log(" main qml 342")
         var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
         for (var i in positionArray){
             postionModel.append({'text': positionArray[i] })
@@ -363,7 +372,7 @@ ApplicationWindow {
         onRejected:  loginCardScale = 1
         Text{
             width: parent.width
-            height: dp(160)
+            height: Unit.dp(160)
             wrapMode: Text.WordWrap
             text:  errorString
         }
@@ -412,22 +421,16 @@ ApplicationWindow {
 
     // Set up the default connections to the databases
 
-//    QmlSqlDatabase{
-//        id: mainTfProdDb
-//        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
-//        databaseDriver: QmlSqlDatabase.SQLight
-//        connectionName: "protoblock"
-//        onConnectionOpened: console.log("database Open")
-//        onError: console.log("DB Error:  " +  errorString)
-//        Component.onCompleted: addDataBase()
+    QmlSqlDatabase{
+        id: mainTfProdDb
+        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
+        databaseDriver: QmlSqlDatabase.SQLight
+        connectionName: "protoblock"
+        onConnectionOpened: console.log("database Open")
+        onError: console.log("DB Error:  " +  errorString)
+        Component.onCompleted: addDataBase()
+    }
 
-//    }
 
 
-//    UserInfo{
-//        id: userInfo
-//        onErrorStringChanged:{
-//            console.log(errorString)
-//        }
-//    }
 }

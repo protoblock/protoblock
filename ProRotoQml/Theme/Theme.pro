@@ -1,3 +1,6 @@
+include ($$PWD/../../pri/macrosAndModels.pri)
+
+
 ios{
     CXX_MODULE=qml
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Theme

@@ -20,7 +20,7 @@
 #include <QTouchDevice>
 #include <QStandardPaths>
 #include "QQmlConstRefPropertyHelpers.h"
-
+#include <QSysInfo>
 
 class Device : public QObject {
     Q_OBJECT
@@ -35,6 +35,8 @@ class Device : public QObject {
     Q_PROPERTY(bool hoverEnabled READ hoverEnabled CONSTANT)
     Q_PROPERTY(int gridUnit READ gridUnit NOTIFY geometryChanged)
 
+
+    // Standered Paths
     QML_READONLY_CSTREF_PROPERTY( QString, appDir )
     QML_READONLY_CSTREF_PROPERTY( QString, appConfigDir )
     QML_READONLY_CSTREF_PROPERTY( QString, dataDir )
@@ -45,6 +47,21 @@ class Device : public QObject {
     QML_READONLY_CSTREF_PROPERTY( QString , fontsDir )
     QML_READONLY_CSTREF_PROPERTY( QString , musicDir )
 
+
+    // System Info
+    QML_READONLY_CSTREF_PROPERTY (QString, buildCpuArchitecture)
+    QML_READONLY_CSTREF_PROPERTY ( QString ,currentCpuArchitecture )
+    QML_READONLY_CSTREF_PROPERTY ( QString, buildAbi )
+    QML_READONLY_CSTREF_PROPERTY ( QString, kernelType )
+    QML_READONLY_CSTREF_PROPERTY ( QString, kernelVersion)
+    QML_READONLY_CSTREF_PROPERTY ( QString, productType )
+    QML_READONLY_CSTREF_PROPERTY ( QString, productVersion)
+    QML_READONLY_CSTREF_PROPERTY ( QString, prettyProductName)
+
+
+//    Screen/Window to come
+    QML_READONLY_CSTREF_PROPERTY (qreal, dp)
+//    QML_READONLY_CSTREF_PROPERTY ()
 
 public:
     enum FormFactor {
@@ -80,7 +97,6 @@ private slots:
 
 private:
     float calculateDiagonal() const;
-
     QScreen *m_screen;
 };
 

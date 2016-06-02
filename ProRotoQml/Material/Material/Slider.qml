@@ -11,7 +11,7 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.3 as Controls
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
 import Material 1.0
 import Material.Styles 1.0 as MaterialStyle
 

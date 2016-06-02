@@ -12,7 +12,8 @@ import QtQuick 2.4
 import QtQuick.Window 2.2
 
 import Material 1.0
-import Material.Utils 1.0
+import ProRotoQml.Utils 1.0
+import ProRotoQml.Theme 1.0
 
 
 /*!
@@ -68,20 +69,7 @@ Window {
         id: overlayLayer
     }
 
-    width: dp(800)
-    height: dp(600)
+    width: Unit.dp(800)
+    height: Unit.dp(600)
 
-    // Units
-
-    function dp(dp) {
-        return dp * Units.dp
-    }
-
-    function gu(gu) {
-        return units.gu(gu)
-    }
-
-    UnitsHelper {
-        id: units
-    }
 }

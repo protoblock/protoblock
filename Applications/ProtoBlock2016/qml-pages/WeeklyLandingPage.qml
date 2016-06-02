@@ -4,7 +4,7 @@ import ProRotoQml.Sql 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
-import "Utils.js" as Utils
+import "qrc:/Utils.js" as Utils
 Item {
     id: weekRoot
     property string weekInFocus: "1"
@@ -13,9 +13,6 @@ Item {
         console.log(weekInFocus)
         weekModel.queryString = ""
         weekModel.queryString =  "SELECT * FROM Schedules WHERE Week='" + weekRoot.weekInFocus + "';"
-
-
-        console.log(mainTfProdDb.databaseName)
         weekModel.exec()
 
     }
@@ -33,7 +30,7 @@ Item {
         model: weekModel
         delegate: pnlZeroDel
     }
-    MaterialComboBox{
+    ComboBox{
         id: weekPicker
         width: parent.width / 1.07
         height:  48
@@ -55,12 +52,12 @@ Item {
 //                    Qt.formatDateTime(time, "dddd MMMM yy h:mm ap")
                    }
                    secondaryItem: Image {
-                       height:  dp(32)
+                       height:  Unit.dp(32)
                        width: height
                        source: "qrc:/"+ AwayTeam + ".PNG"
                    }
                    action: Image {
-                       height:  dp(32)
+                       height:  Unit.dp(32)
                        width: height
                        source:"qrc:/"+ HomeTeam + ".PNG"
 
@@ -73,14 +70,10 @@ Item {
                }
     }
 
-
-
-
-
     QmlSqlQueryModel{
         id: weekModel
         connectionName: "protoblock"
-        queryString:"SELECT * FROM Schedules"
+        queryString:"SELECT * FROM Schedules where Week='"+ weekInFocus+ "';"
         onQueryStringChanged: console.log(" Summon Query "+  queryString)
     }
 }
