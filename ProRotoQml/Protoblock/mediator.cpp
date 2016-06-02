@@ -253,10 +253,15 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 //            update_checkname(rep.data().data());
             break;
         }
-//        case NameStatusRep:
-//        {
-
-//        }
+        case GETSTATUS:
+        {
+            const NameStatusRep &np = rep.GetExtension(NameStatusRep::rep);
+            QString statusstr = fantasybit::MyNameStatus_Name(np.status()).data();
+            auto name = np.req().name();
+            m_nameStatuses[name.data()] = statusstr;
+            qDebug() << " emit " << name.data() << statusstr;
+            nameStatusChanged( name.data() , statusstr );
+        }
         default:
             break;
     }
