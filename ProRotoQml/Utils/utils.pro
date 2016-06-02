@@ -1,12 +1,19 @@
+include ($$PWD/../../pri/macrosAndModels.pri)
+
 ios{
     CXX_MODULE=qml
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Utils
 }
 
+android{
+    QT += androidextras
+}
+
+
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Utils
 TARGET =  ProRotoQml.Utils
-QT += qml quick core
+QT += qml quick core network websockets
 CONFIG += qt plugin c++11
 
 TARGET = $$qtLibraryTarget($$TARGET)
@@ -14,22 +21,29 @@ uri = ProRotoQml.Utils
 
 # Input
 SOURCES += \
-    passwordstrength.cpp \
-    plugininisetter.cpp \
+    $$PWD/passwordstrength.cpp \
+    $$PWD/plugininisetter.cpp \
 #    qmlsesttings.cpp \
 #    qqmlprocess.cpp \
-    utils.cpp \
-    downloader.cpp \
-    plugin.cpp
+    $$PWD/utils.cpp \
+    $$PWD/downloader.cpp \
+    $$PWD/plugin.cpp \
+    $$PWD/device.cpp \
+    $$PWD/units.cpp \
+    $$PWD/qqmlwebsockets.cpp
+
 
 HEADERS += \
-    passwordstrength.h \
-    plugininisetter.h \
+    $$PWD/passwordstrength.h \
+    $$PWD/plugininisetter.h \
 #    qmlsesttings.h \
 #    qqmlprocess.h \
-    utils.h \
-    downloader.h \
-    plugin.h
+    $$PWD/utils.h \
+    $$PWD/downloader.h \
+    $$PWD/plugin.h \
+    $$PWD/units.h \
+    $$PWD/device.h \
+    $$PWD/qqmlwebsockets.h
 
 DISTFILES = qmldir
 

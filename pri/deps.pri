@@ -36,34 +36,36 @@ win32 {
 ##     OSX
 ##############
 
-#unix:mac{
-#    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
-#    DEPENDPATH += Users/satoshi/Desktop/fc/osx/extrenal/include
+osx{
+message(OSX BUILD)
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
+    DEPENDPATH += Users/satoshi/Desktop/fc/osx/extrenal/include
 
-#    ##FIXME compile levelDB
-#    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-#    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+    ##FIXME compile levelDB
+    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
-#    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
-#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
+    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
 
-#    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
-#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
+    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
 
-#    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
-#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
+    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
 
-#    LIBS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
-#    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
+    LIBS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
+    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
 
-#    ##FIXME compile levelDB
-#    LIBS += -L/usr/local/lib  -lleveldb
+    ##FIXME compile levelDB
+    LIBS += -L/usr/local/lib  -lleveldb
 
-#}
+}
 
 
 
 ios {
+message (IOS BUILD)
     ##PATHS
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include

@@ -1,7 +1,8 @@
 #ifndef ProRotoQmlUtilsPlugin_H
 #define ProRotoQmlUtilsPlugin_H
-
+#include <QJSEngine>
 #include <QQmlExtensionPlugin>
+static QObject *deviceSingleton(QQmlEngine *engine, QJSEngine *scriptEngine);
 
 class ProRotoQmlUtilsPlugin : public QQmlExtensionPlugin
 {

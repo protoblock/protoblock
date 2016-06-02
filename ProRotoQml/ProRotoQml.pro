@@ -15,6 +15,6 @@ SUBDIRS += \
 #        $$PWD/libQmlSsh \
         $$PWD/Protoblock/protoblock.pro \
         $$PWD/PeerTwoPeerChat \
-        $$PWD/Backend
+#        $$PWD/Backend
 
 #Backend.depends = jsonpb

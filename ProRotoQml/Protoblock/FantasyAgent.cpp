@@ -239,12 +239,18 @@ bool FantasyAgent::HaveClient() {
     return client != nullptr;
 }
 
+
+/*!
+ * \brief FantasyAgent::currentClient
+ * \return
+ * returns the current fantasyName of the end user.
+ * if the "client" is not running it returns NOT GOOD
+ */
 std::string FantasyAgent::currentClient() {
 
     if ( !HaveClient() ) {
         return "NOT GOOD";
     }
-    qDebug() << "WTF is this ? " << client->alias ().data ();
     return client->alias();
 }
 

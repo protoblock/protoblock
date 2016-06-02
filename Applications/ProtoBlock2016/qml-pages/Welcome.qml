@@ -5,7 +5,7 @@ Rectangle {
     color: "#F1F1F1"
     width: rootLoader.width
     height: rootLoader.height
-    Component.onCompleted:  pageHelper.title = qsTr("2015 Final Results")
+    Component.onCompleted:  pageHelper.title = qsTr("Protoblock Home")
     Image {
         id: logo
         source: "qrc:/logoFinal.png"
