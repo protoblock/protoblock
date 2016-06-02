@@ -11,7 +11,7 @@ Item {
     Component.onCompleted:{
 //        pageHelper.title = "Please Login"
 //        pageHelper.buttonsEnabled = false
-        MiddleMan.init()
+//        MiddleMan.init()
     }
     Card{
         id: loginCard
