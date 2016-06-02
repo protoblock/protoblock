@@ -9,54 +9,30 @@
 #include <qqml.h>
 #include <QObject>
 #include <QDebug>
-#include "qqmlwebsockets.h"
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
 #endif // QT_WEBVIEW_WEBENGINE_BACKEND
-
 #include <QSysInfo>
 
-
-
-//#include "mediator.h"
-
-
-
-
-
-
+//fix me check the arguments here and
+// add help page
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-
+    QQmlApplicationEngine engine;
     QSysInfo sysInfo;
     QString sInfo = sysInfo.productType ();
-
-
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
     QtWebEngine::initialize();
 #endif // QT_WEBVIEW_WEBENGINE_BACKEND
 
-
-    QQmlApplicationEngine engine;
-    QString appDir = qApp->applicationDirPath ();
-
-
-    QQmlContext *context = new QQmlContext(engine.rootContext());
-
-    context->setContextProperty ("AppDir", appDir);
-    qmlRegisterType<QQmlWebSocket>("ProtoblockSocket",1,0,"ProtoblockSocket");
-
-
-
-
     if (sInfo == "windows"){
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+        engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     }
     else if (sInfo == "osx" )
     {
-     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+        engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     }
     else if (sInfo == "android")
     {
@@ -83,12 +59,6 @@ int main(int argc, char *argv[])
         qApp->setFont (mFont);
         engine.load(QUrl(QStringLiteral("qrc:/phone-main.qml")));
     }
-
-
-
-
-
-
 
     return app.exec();
 }

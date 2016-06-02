@@ -1,22 +1,22 @@
 osx :{
     GENERATEDDIR = $$PWD/../generated
     DEFINES += GOOGLE_NAMESPACE=google_public
-    INCLUDEPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
-    DEPENDPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
 }
 
 ios {
     DEFINES += GOOGLE_NAMESPACE=google_public
     GENERATEDDIR = $$PWD/../generated
-    INCLUDEPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
-    DEPENDPATH += /Users/satoshi/Desktop/fc/ios/extrenal/include
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
 }
 
 android{
     DEFINES += GOOGLE_NAMESPACE=google
     GENERATEDDIR = $$PWD/../generated
-    INCLUDEPATH += /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/include
-    DEPENDPATH += /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/include
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
 }
 
 win32:{

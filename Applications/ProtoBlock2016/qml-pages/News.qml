@@ -6,6 +6,7 @@ import Material.ListItems 1.0 as ListItems
 
 Item {
 
+Component.onCompleted:  pageHelper.title = qsTr("NFL News")
 
 
 ListView{

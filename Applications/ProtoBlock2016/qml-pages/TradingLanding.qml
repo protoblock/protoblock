@@ -5,7 +5,7 @@ Rectangle {
     color: "#F1F1F1"
     width: rootLoader.width
     height: rootLoader.height
-    Component.onCompleted:  pageHelper.title = qsTr("Welcome to Protoblock  ") + root.uname
+    Component.onCompleted:  pageHelper.title = qsTr("Trading Game ")
     Image {
         id: logo
         source: "qrc:/logoFinal.png"

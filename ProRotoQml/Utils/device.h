@@ -18,6 +18,9 @@
 #include <QGuiApplication>
 #include <QScreen>
 #include <QTouchDevice>
+#include <QStandardPaths>
+#include "QQmlConstRefPropertyHelpers.h"
+
 
 class Device : public QObject {
     Q_OBJECT
@@ -30,8 +33,18 @@ class Device : public QObject {
     Q_PROPERTY(bool isMobile READ isMobile CONSTANT)
     Q_PROPERTY(bool hasTouchScreen READ hasTouchScreen CONSTANT)
     Q_PROPERTY(bool hoverEnabled READ hoverEnabled CONSTANT)
-
     Q_PROPERTY(int gridUnit READ gridUnit NOTIFY geometryChanged)
+
+    QML_READONLY_CSTREF_PROPERTY( QString, appDir )
+    QML_READONLY_CSTREF_PROPERTY( QString, appConfigDir )
+    QML_READONLY_CSTREF_PROPERTY( QString, dataDir )
+    QML_READONLY_CSTREF_PROPERTY( QString, downloadsDir )
+    QML_READONLY_CSTREF_PROPERTY( QString, homeDir )
+    QML_READONLY_CSTREF_PROPERTY( QString, picturesDir )
+    QML_READONLY_CSTREF_PROPERTY( QString, desktopDir )
+    QML_READONLY_CSTREF_PROPERTY( QString , fontsDir )
+    QML_READONLY_CSTREF_PROPERTY( QString , musicDir )
+
 
 public:
     enum FormFactor {

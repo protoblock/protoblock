@@ -20,6 +20,18 @@ Device::Device(QObject *parent)
     connect(app, &QGuiApplication::primaryScreenChanged,
             this, &Device::screenChanged);
 #endif
+
+
+    setappDir(QStandardPaths::standardLocations (QStandardPaths::AppDataLocation).first ()) ;
+    setappConfigDir (QStandardPaths::standardLocations (QStandardPaths::AppDataLocation).first ());
+    setdataDir(QStandardPaths::standardLocations (QStandardPaths::DataLocation).first ()) ;
+    setdownloadsDir(QStandardPaths::standardLocations (QStandardPaths::DownloadLocation).first ()) ;
+    sethomeDir(QStandardPaths::standardLocations (QStandardPaths::HomeLocation).first ()) ;
+    setpicturesDir(QStandardPaths::standardLocations (QStandardPaths::PicturesLocation).first ()) ;
+    setdesktopDir(QStandardPaths::standardLocations (QStandardPaths::DesktopLocation).first ()) ;
+    setfontsDir(QStandardPaths::standardLocations (QStandardPaths::FontsLocation).first ()) ;
+    setmusicDir(QStandardPaths::standardLocations (QStandardPaths::MusicLocation).first ()) ;
+
 }
 
 

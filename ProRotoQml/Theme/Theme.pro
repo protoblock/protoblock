@@ -19,7 +19,7 @@ SOURCES += \
     $$PWD/palette.cpp \
     $$PWD/units.cpp \
     $$PWD/listener.cpp \
-    $$PWD/teamcolors.cpp
+    $$PWD/teamcolors.cpp \
 
 HEADERS += \
     $$PWD/plugin.h \
@@ -28,7 +28,7 @@ HEADERS += \
     $$PWD/palette.h \
     $$PWD/units.h \
     $$PWD/listener.h \
-    $$PWD/teamcolors.h
+    $$PWD/teamcolors.h \
 
 DISTFILES = qmldir \
     README.md

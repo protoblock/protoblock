@@ -8,7 +8,7 @@ Item {
         anchors.fill: parent
         spacing: 2
         ListItems.Standard {
-            text: "Username: " + root.uname
+            text: "Account: "
             elevation: 1
         }
 
@@ -32,10 +32,4 @@ Item {
             elevation: 1
         }
     }
-
-//    UserInfo{
-//           id: userSetttings
-//           secertFile: secert3File
-//    }
-
 }

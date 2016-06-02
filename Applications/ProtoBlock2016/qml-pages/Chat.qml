@@ -2,7 +2,7 @@ import QtQuick 2.4
 import QtQuick.Window 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
-import ProtoblockSocket 1.0
+import ProRotoQml.Utils 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 import "qwebchannel.js" as WebChannel
@@ -14,7 +14,7 @@ Rectangle {
     color: "transparent"
 
     Component.onCompleted: {
-        pageHelper.title = "Chat with experts"
+        pageHelper.title = "Chat"
         socket.active = true;
         runner.start()
     }
@@ -112,7 +112,7 @@ Rectangle {
             onEditingFinished: {
                 if (messageBox.text.length)
                     //call the sendMessage method to send the message
-                    chatRoot.channel.objects.chatserver.sendMessage(root.uname, messageBox.text);
+                chatRoot.channel.objects.chatserver.sendMessage(root.uname, messageBox.text);
                 messageBox.text = '';
             }
         }
