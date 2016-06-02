@@ -449,15 +449,83 @@ enum CType {
     CHECKNAME = 1;
     NEWTX = 2;
     PK2FNAME = 3;
+    GETSTATUS = 4;
 }
 
+//message WsReq {
+//    optional CType ctype = 1;
+//    repeated string data = 10;
+//}
+
+//message WSReply {
+//    optional CType ctype = 1;
+//    repeated string data = 10;
+//    optional WsReq req = 20;
+//}
+
 message WsReq {
-    optional CType ctype = 1;
-    optional string data = 10;
+    optional int32 version = 1;
+    optional CType ctype = 2;
+
+    extensions 100 to max;
 }
 
 message WSReply {
-    optional CType ctype = 1;
-    optional string data = 10;
+    optional int32 version = 1;
+    optional CType ctype = 2;
     optional WsReq req = 20;
+
+    extensions 100 to max;
+}
+
+message CheckNameReq {
+    extend WsReq {
+        optional CheckNameReq req = 200;
+    }
+
+    optional string fantasy_name = 10;
+}
+
+message CheckNameRep {
+    extend WSReply {
+        optional CheckNameRep rep = 200;
+    }
+
+    optional string isavail = 10;
+    optional CheckNameReq req = 20;
+}
+
+message Pk2FnameReq {
+    extend WsReq {
+        optional Pk2FnameReq req = 300;
+    }
+
+    optional string pk = 10;
+}
+
+message Pk2FnameRep {
+    extend WSReply {
+        optional Pk2FnameRep rep = 300;
+    }
+
+    optional string fname = 10;
+    optional Pk2FnameReq req = 20;
+}
+
+message NameStatusReq {
+    extend WsReq {
+        optional NameStatusReq req = 400;
+    }
+
+    optional string name = 10;
+    optional string pk = 20;
+}
+
+message NameStatusRep {
+    extend WSReply {
+        optional NameStatusRep rep = 400;
+    }
+
+    optional MyNameStatus status = 10;
+    optional NameStatusReq req = 20;
 }

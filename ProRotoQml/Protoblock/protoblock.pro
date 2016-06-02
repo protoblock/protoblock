@@ -111,6 +111,6 @@ target.path = $$installPath
 INSTALLS += target qmldir
 
 ## Extra Includes
-INCLUDEPATH += $$PWD/bitcoin-core-base58 \
-                                  $$PWD/../../../PhoneApp/TradingFootball2015
+INCLUDEPATH += $$PWD/bitcoin-core-base58
+#                                  $$PWD/../../../PhoneApp/TradingFootball2015
 
