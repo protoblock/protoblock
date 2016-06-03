@@ -39,49 +39,33 @@ Item {
                 }
             }
 
-            Tumbler {
-                width: parent.width / 1.07
-                height: parent.height / 4
-                anchors.horizontalCenter: parent.horizontalCenter
-                  TumblerColumn {
-                      model: 9
-                  }
-                  TumblerColumn {
-                      model: 9
-                  }
-                  TumblerColumn {
-                      model: 9
-                  }
-                  TumblerColumn {
-                      model: 9
-                  }
-              }
             Row{
-                width: parent.width / 1.07
+                width: spinOne.width * 4 + showPass.width
                 height: parent.height / 6
                 anchors.horizontalCenter: parent.horizontalCenter
                 BoxText{
                     id: spinOne
-                    width: parent.width / 8
+                    width: rootLoader.width / 8
                     height: parent.height
                 }
                 BoxText{
                     id: spinTwo
-                    width: parent.width / 8
+                    width: rootLoader.width / 8
                     height: parent.height
                 }
                 BoxText{
                     id: spinThree
-                    width: parent.width / 8
+                    width: rootLoader.width / 8
                     height: parent.height
                 }
                 BoxText{
                     id: spinFour
-                    width: parent.width / 8
+                    width: rootLoader.width / 8
                     height: parent.height
                 }
 
                 CheckBox{
+                    id: showPass
                     text: "Show Password"
                     anchors.verticalCenter: parent.verticalCenter
                     onCheckedChanged: {
@@ -96,7 +80,7 @@ Item {
 
             Button{
                 elevation: 1
-                text: "ecypt file "
+                text: "Encrypt System for this user"
                 width: parent.width / 1.07
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {

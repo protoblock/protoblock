@@ -32,7 +32,7 @@ Material.ApplicationWindow{
             id: rootLoader
             width: parent.width / 1.07
             height:parent.height / 1.07
-            opacity: 0
+            opacity: 1
             anchors.centerIn: parent
             sourceComponent: login
             Behavior   on opacity {NumberAnimation{duration: 1200 ;}}
@@ -99,7 +99,7 @@ Material.ApplicationWindow{
                     ComboBox{
                         id: cCombo
                         width: parent.width / 1.07
-                        model:['foo',"bar","car","nar"]
+                        model:["Some Name","Another Name","YAN","NOT"]
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
 
@@ -118,7 +118,7 @@ Material.ApplicationWindow{
                         elevation: 1
                         width: parent.width / 1.07
                         height: parent.height / 16
-                        text: "Encrypt System"
+                        text: "Encrypt User " + uname
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: rootLoader.sourceComponent = eLogin
                     }

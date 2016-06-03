@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Material 1.0
 Item {
-
+    Component.onCompleted:  pageHelper.title = "About Protoblock"
     Card{
         width: parent.width / 1.07
         height:  parent.height / 1.07
