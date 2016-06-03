@@ -133,14 +133,6 @@ QString SecureNodes::decrypt(const QString data)
 }
 
 
-
-
-
-
-
-
-
-
 bool SecureNodes::encryptFile(const QString destination)
 {
     try
@@ -210,7 +202,7 @@ bool SecureNodes::encryptFile(const QString destination)
     }
 }
 
-bool SecureNodes::decryptFile(const QString source,const QString destination)
+bool SecureNodes::decryptFile(const QString source, const QString destination)
 {
     try
     {
@@ -244,6 +236,16 @@ bool SecureNodes::decryptFile(const QString source,const QString destination)
     }
     catch(...)
     {
+
+        // clean up the bad file
+        QFile mFile;
+        if (mFile.remove (destination)){
+            qDebug() << "bad file removed";
+        }else {
+            qDebug() << "err in removing bad file";
+
+        }
+
         return false;
     }
 }

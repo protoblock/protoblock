@@ -12,7 +12,9 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3 as Controls
 import Material.Styles 1.0 as MaterialStyle
+
 import ProRotoQml.Utils 1.0
+import ProRotoQml.Theme 1.0
 
 /*!
    \qmltype CheckBox
@@ -26,7 +28,7 @@ Controls.CheckBox {
     /*!
        The checkbox color. By default this is the app's accent color
      */
-    property color color: darkBackground ? Theme.dark.accentColor : Theme.light.accentColor
+    property color color: darkBackground ? Colors.primaryColor : Colors.primaryColor
 
     /*!
        Set to \c true if the checkbox is on a dark background
@@ -44,7 +46,7 @@ Controls.CheckBox {
 
         width: 40 * Units.dp
         height: 40 * Units.dp
-        color: checkBox.checked ? Theme.alpha(checkBox.color, 0.20)
+        color: checkBox.checked ? Qt.lighter(checkBox.color, 0.20)
                                 : checkBox.darkBackground ? Qt.rgba(1,1,1,0.1)
                                                           : Qt.rgba(0,0,0,0.1)
         enabled: checkBox.enabled

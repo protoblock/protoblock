@@ -232,7 +232,7 @@ MyFantasyName FantasyAgent::getCurrentNamesStatus() {
 void FantasyAgent::onSignedTransaction(SignedTransaction &sn)
 {
     pendingTrans.emplace_back(sn);
-    qDebug() << sn.DebugString();
+//    qDebug() << sn.DebugString();
 }
 
 bool FantasyAgent::HaveClient() {
@@ -288,7 +288,7 @@ SignedBlockHeader FantasyAgent::makeSigned(BlockHeader &bh) {
     string strHeader = string(bh.SerializeAsString());
    std::pair<std::string, std::string> p = getIdSig(strHeader);
    sbh.set_sig(p.second);
-    qDebug() << p.first;
+//    qDebug() << p.first;
    return sbh;
 }
 
@@ -522,23 +522,23 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 //            client = make_unique<FantasyName>(name, m_priv.get_public_key().serialize());
             client = std::unique_ptr<FantasyName>(new FantasyName(name, m_priv.get_public_key().serialize()));
 
-            qDebug() << "pubKeyStr |" << pubKeyStr().data() << "|";
+//            qDebug() << "pubKeyStr |" << pubKeyStr().data() << "|";
 
 
             Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename3, ios::app };
-            qDebug() << writer.good() << "file name " << (GET_ROOT_DIR() + secretfilename3).data();
+//            qDebug() << writer.good() << "file name " << (GET_ROOT_DIR() + secretfilename3).data();
             Secret3 secret{};
             secret.set_private_key(getSecret());
             secret.set_mnemonic_key(m_mnemonic);
             secret.set_public_key(pubKeyStr());
             secret.set_fantasy_name(name);
             writer(secret);
-            qDebug() << "\n"<< secret.DebugString ().data ();
+//            qDebug() << "\n"<< secret.DebugString ().data ();
             secret.clear_mnemonic_key();
             m_secrets.push_back(secret);
 
             //LOG(lg, info) << "name available saving secret to file " << name;
-            qDebug() << "name available saving secret to file " << name.data();
+//            qDebug() << "name available saving secret to file " << name.data();
 
             ret = AVAIL;
 

@@ -31,7 +31,8 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
-    qml-pages/Feeds/WebView.qml
+    qml-pages/Feeds/WebView.qml \
+    qml-pages/BoxText.qml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

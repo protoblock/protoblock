@@ -73,6 +73,6 @@ unix:*-g++* {
 }
 
 
-installPath = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
+installPath = $$[QT_INSTALL_LIBS]/$$replace(uri, \\., /)
 target.path = $$installPath
 INSTALLS += target
