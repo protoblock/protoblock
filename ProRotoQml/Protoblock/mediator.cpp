@@ -338,7 +338,9 @@ void Mediator::init() {
     std::string dname = m_fantasy_agent.defaultName();
     if ( dname == "") {
         // FIXME this should be a error signal
-//        qDebug() << " Mediator::init() no name";
+        // Also we should update the engine status to false
+        // as we could not mke it the end of fantasyadgent ?
+
         return;
     }
 
@@ -347,10 +349,10 @@ void Mediator::init() {
     m_nameStatuses[defaultName] = QString("requested");
     nameStatusChanged( defaultName , "requested" );
 
+    // HERE I am setting the engine as true because it is up and we made ith through all the stuff that was needed
+    engineUpdate(true);
     usingFantasyName( defaultName ) ;
 
-
-    engineUpdate(true);
 }
 
 void Mediator::handdleUsingName(const QString &name)

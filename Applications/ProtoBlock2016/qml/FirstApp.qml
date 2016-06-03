@@ -143,7 +143,17 @@ Material.ApplicationWindow{
 
         Connections {
             target: MiddleMan
-            Component.onCompleted: MiddleMan.init();
+
+            Component.onCompleted:{
+                MiddleMan.init();
+            }
+            onEngineStatusChanged:{
+                console.log("ENGINE STATUS: " +engineStatus)
+
+
+
+            }
+
             onNameCheckGet: {
                 if(status === "true" )
                 {
@@ -160,37 +170,41 @@ Material.ApplicationWindow{
             }
 
             onNameStatusChanged: {
-                uname = MiddleMan.playersName;
-                unameStatus = MiddleMan.playersStatus
-
-
-
-                console.log( MiddleMan.encyptPath + uname +"-lock")
-                // check to see if there is a lock file for the username
-                if ( fCheck.exists(MiddleMan.encyptPath + uname +"-lock") === true ){
-                    rootLoader.sourceComponent = eLogin
-                    rootLoader.opacity = 1
+                if(MiddleMan.engineStatus === true ){
+                    uname = MiddleMan.playersName;
+                    unameStatus = MiddleMan.playersStatus
                 }
                 else
                 {
-                    rootLoader.sourceComponent = afterLogin
-                    rootLoader.opacity = 1
+                    console.log("Doing nothing as there is not a good engine")
                 }
             }
+
             onUsingFantasyName: {
-                uname = MiddleMan.playersName;
-                rootLoader.sourceComponent = afterLogin
-                pageHelper.title = "Thanks For claiming a name"
-                rootLoader.opacity = 1
+                if(MiddleMan.engineStatus === true ){
+                    uname = MiddleMan.playersName;
+                    console.log("THE PATH " + MiddleMan.encyptPath + uname +"-lock")
+                    // check to see if there is a lock file for the username
+                    if ( fCheck.exists(MiddleMan.encyptPath + uname +"-lock") === true ){
+                        rootLoader.sourceComponent = eLogin
+                        rootLoader.opacity = 1
+                    }
+                    else
+                    {
+                        rootLoader.sourceComponent = afterLogin
+                        pageHelper.title = "Thanks For claiming a name"
+                        rootLoader.opacity = 1
+                    }
+                }
+                else
+                {
+
+                    console.log(MiddleMan.playersName + " Doing nothing as there is not a good engine")
+                }
             }
         }
-    }
 
-    QmlFile{
-        id:fCheck
-
-    }
-
+    QmlFile{ id:fCheck }
 
     Material.Dialog {
         id: loginErrorDialog
@@ -204,5 +218,7 @@ Material.ApplicationWindow{
             wrapMode: Text.WordWrap
             text:  err
         }
+    }
+
     }
 }
