@@ -9,22 +9,21 @@ uri = QmlSsh
 # Input
 SOURCES += \
     ssh_plugin.cpp \
-    generatekeys.cpp \
+#    generatekeys.cpp \
     securenodes.cpp \
 #    sftpupload.cpp \
 #    sshremoteprocess.cpp \
 #    uploadkeys.cpp
-    mnemonic.cpp
 
 HEADERS += \
     ssh_plugin.h \
-    generatekeys.h \
+#    generatekeys.h \
 #    remotelinux_export.h \
     securenodes.h \
 #    sftpupload.h \
 #    sshremoteprocess.h \
 #    uploadkeys.h
-    mnemonic.h
+
 
 DISTFILES = qmldir
 
@@ -41,13 +40,6 @@ qmldir.path = $$installPath
 target.path = $$installPath
 INSTALLS += target qmldir
 
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libQSsh/release/ -lQSsh
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libQSsh/debug/ -lQSsh
-else:unix: LIBS += -L$$OUT_PWD/../libQSsh/ -lQSsh
-
-INCLUDEPATH += $$PWD/../libQSsh
-DEPENDPATH += $$PWD/../libQSsh
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libBotan/release/ -lBotan
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libBotan/debug/ -lBotan

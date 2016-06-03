@@ -9,7 +9,7 @@
  */
 
 import QtQuick 2.4
-
+import ProRotoQml.Theme 1.0
 /*!
    \qmltype Units
    \inqmlmodule Material
@@ -40,15 +40,15 @@ import QtQuick 2.4
 Object {
     id: units
 
-    /*!
-       This is the standard function to use for accessing device-independent pixels. You should use
-       this anywhere you need to refer to distances on the screen.
-     */
-    function Unit.dp(number) {
-        return Math.round(number * Units.dp);
-    }
+//    /*!
+//       This is the standard function to use for accessing device-independent pixels. You should use
+//       this anywhere you need to refer to distances on the screen.
+//     */
+//    function Unit.dp(number) {
+//        return Math.round(number * Units.dp);
+//    }
 
-    function gu(number) {
-        return Unit.dp(number * Device.gridUnit)
-    }
+//    function gu(number) {
+//        return Unit.dp(number * Device.gridUnit)
+//    }
 }

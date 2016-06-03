@@ -10,9 +10,9 @@ SUBDIRS += \
         $$PWD/Utils/utils.pro \
         $$PWD/Audio/audio.pro \
         $$PWD/Material/QtMaterial.pro \
-#        $$PWD/libBotan \
+        $$PWD/libBotan \
 #        $$PWD/libQSsh \
-#        $$PWD/libQmlSsh \
+        $$PWD/libQmlSsh \
         $$PWD/Protoblock/protoblock.pro \
         $$PWD/PeerTwoPeerChat \
 #        $$PWD/Backend

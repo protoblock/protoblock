@@ -6,6 +6,10 @@ Colors::Colors(QObject *parent):
 {
     connect(this,SIGNAL(themeChanged()),this,SLOT(resetTheme()));
     init();
+
+    m_primaryColor = blue ();
+    m_accentColor = amber ();
+    m_tabHighlightColor = white ();
 }
 
 Colors::~Colors()

@@ -110,10 +110,10 @@ void QmlFile::exec()
      }
 }
 
-bool QmlFile::remove()
+bool QmlFile::remove(const QString &path)
 {
-    QFile file(m_fileName);
-    if(file.remove()){
+    QFile file;
+    if(file.remove(path)){
         return true;
     }
     else
@@ -122,9 +122,9 @@ bool QmlFile::remove()
     }
 }
 
-bool QmlFile::exists() const
+bool QmlFile::exists(const QString &path)
 {
-    QFile file(m_fileName);
+    QFile file(path);
     if(file.exists()){
         return true;
     }

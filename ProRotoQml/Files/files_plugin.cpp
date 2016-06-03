@@ -10,7 +10,7 @@
 
 void ProRotoQmlFilesPlugin::registerTypes(const char *uri)
 {
-    // @uri roRotoQml.Files
+    // @uri ProRotoQml.Files
     qmlRegisterType<QmlFile>(uri,1,0,"QmlFile");
     qmlRegisterType<QmlDir>(uri,1,0,"QmlDir");
     qmlRegisterType<QmlMimeType>(uri,1,0,"QmlMimeType");

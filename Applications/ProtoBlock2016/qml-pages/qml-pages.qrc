@@ -43,5 +43,7 @@
         <file>Twitter/TweetsModel.qml</file>
         <file>Twitter/tweetsearch.js</file>
         <file>Twitter/Tweetsearch.qml</file>
+        <file>EncryptLogin.qml</file>
+        <file>BoxText.qml</file>
     </qresource>
 </RCC>

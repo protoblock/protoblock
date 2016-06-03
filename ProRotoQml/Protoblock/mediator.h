@@ -23,6 +23,9 @@ class Mediator : public QObject
     QML_CONSTANT_CSTREF_PROPERTY (QVariantMap, nameStatuses)
 
     QML_CONSTANT_CSTREF_PROPERTY (QString, secert3File)
+    QML_READONLY_CSTREF_PROPERTY (QString, encyptPath)
+    QML_READONLY_CSTREF_PROPERTY (bool, engineStatus)
+
 
     Q_PROPERTY(QString playersName READ playersName  NOTIFY playersNameChanged)
     Q_PROPERTY(QString  playersStatus READ playersStatus  NOTIFY playersStatusChanged)
@@ -72,7 +75,7 @@ public:
     Q_INVOKABLE void init();
 
 
-    qint64 sendBinaryMessage(const google::protobuf::Message &data);
+    qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);
 signals:
     void importSuccess(QString);
 
@@ -83,8 +86,12 @@ signals:
     void error(QString);
     void myNameStatusChanged();
     void errorStringChanged();
+
     void playersNameChanged();
     void playersStatusChanged();
+
+    // for QML only
+    bool engineUpdate(bool);
 protected slots:
     void handdleUsingName(const QString &name);
     void handdleNameStatus(const QString &name,const QString &status );
@@ -97,6 +104,8 @@ protected slots:
     void onTextMessageReceived( QString message);
     void onBinaryMessageRecived(const QByteArray &message);
 
+    // slot to update QML ONLY propertys
+    void handleEngineUpdate(const bool &sta);
 private:
     QWebSocket m_webSocket, m_txsocket;
     std::string lastPk2name;

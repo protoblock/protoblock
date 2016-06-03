@@ -4,9 +4,16 @@
 #include <QObject>
 #include <QString>
 
+#include "QQmlConstRefPropertyHelpers.h"
+
 class Colors : public QObject
 {
     Q_OBJECT
+
+      QML_CONSTANT_CSTREF_PROPERTY (QString ,  primaryColor)
+      QML_CONSTANT_CSTREF_PROPERTY (QString ,  accentColor)
+      QML_CONSTANT_CSTREF_PROPERTY (QString ,  tabHighlightColor)
+
     Q_PROPERTY(QString red READ red NOTIFY redChanged())
     Q_PROPERTY(QString pink READ pink  NOTIFY pinkChanged)
     Q_PROPERTY(QString purple READ purple  NOTIFY purpleChanged)

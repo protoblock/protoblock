@@ -50,8 +50,8 @@ public:
     void setType(const QmlFile::Type &type);
     //method
     Q_INVOKABLE void exec();
-    Q_INVOKABLE bool remove();
-    Q_INVOKABLE bool exists() const;
+    Q_INVOKABLE bool remove(const QString &path);
+    Q_INVOKABLE bool exists(const QString &path);
 
 signals:
     void fileNameChanged();

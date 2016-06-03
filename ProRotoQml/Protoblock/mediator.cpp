@@ -36,10 +36,14 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
     connect(this,SIGNAL (nameStatusChanged(QString,QString))
             ,this, SLOT (handdleNameStatus(QString,QString)));
+
     connect(this,SIGNAL(usingFantasyName(QString)),
             this,SLOT(handdleUsingName(QString)));
 
 
+
+    connect (this ,SIGNAL (engineUpdate(bool)),this,SLOT(handleEngineUpdate(bool)));
+    setencyptPath (QString::fromStdString (GET_ROOT_DIR ()));
 }
 
 
@@ -151,6 +155,7 @@ Mediator::MyNameStatus Mediator::myNameStatus() const
     return m_myNameStatus;
 }
 
+//FIXME when the status of a current name is changed update this
 void Mediator::setMyNameStatus(const Mediator::MyNameStatus &myNameStatus)
 {
     if (m_myNameStatus == myNameStatus){
@@ -308,8 +313,25 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         default:
             break;
     }
-//    emit gotPk2fname(name);
+    //    emit gotPk2fname(name);
 }
+
+
+/*!
+ * \brief Mediator::handleEngineUpdate
+    THIS SLOT IS QML ONLY !
+    This means that somewhere in this code someone has updateed the engine status
+    engineUpdate(bool )  fires this slot.
+    This slot is used to set A QML property (read only)
+    the QML property is called engineStatus
+    It returns a bool that means the engine is in good shape.
+*/
+void Mediator::handleEngineUpdate(const bool &sta)
+{
+    setengineStatus (sta);
+}
+
+
 
 /*!
  * \brief GetUserInfo::importMnemonic
@@ -361,16 +383,22 @@ void Mediator::signPlayer(const QString &name)  {
 void Mediator::init() {
     std::string dname = m_fantasy_agent.defaultName();
     if ( dname == "") {
-        qDebug() << " Mediator::init() no name";
+        // FIXME this should be a error signal
+        // Also we should update the engine status to false
+        // as we could not mke it the end of fantasyadgent ?
+
         return;
     }
 
-    qDebug() << " Mediator::init() " << dname.data();
+//    qDebug() << " Mediator::init() " << dname.data();
     QString defaultName = QString::fromStdString (m_fantasy_agent.currentClient().data());
     m_nameStatuses[defaultName] = QString("requested");
     nameStatusChanged( defaultName , "requested" );
 
+    // HERE I am setting the engine as true because it is up and we made ith through all the stuff that was needed
+    engineUpdate(true);
     usingFantasyName( defaultName ) ;
+
 }
 
 void Mediator::handdleUsingName(const QString &name)
