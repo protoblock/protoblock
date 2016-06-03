@@ -12,7 +12,6 @@ Item {
     Component.onCompleted:  pageHelper.title = "Contact Protoblock"
     property string protoblockemail: "jay@protoblock.com"
 
-
     Image {
         id: logo
         source: "qrc:/logoFinal.png"
@@ -57,6 +56,5 @@ Item {
 
             }
         }
-
     }
 }
