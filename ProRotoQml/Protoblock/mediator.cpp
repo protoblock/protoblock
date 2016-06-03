@@ -7,6 +7,12 @@
 using namespace fantasybit;
 Mediator::Mediator(QObject *parent) : QObject(parent) {
 
+    for ( auto &np : m_fantasy_agent.getMyNames()) {
+        m_myPubkeyFname[np.second] = "";
+        qDebug() << " Mediator::Mediator name:" << np.first << " pk: " << np.second;
+    }
+
+
     QString wss("ws://%1:%2");
 
     m_chatServerAddr = wss.arg(PB_WS_CHAT.data()).arg(PB_WS_CHAT_PORT);
@@ -49,15 +55,21 @@ QString Mediator::nameStatusGet(const QString &name) {
 }
 
 void Mediator::pk2fname(const QString &pk) {
-    WsReq req;// = lastNameCheck;
+    lastPk2name = pk.toStdString();
+    doPk2fname(lastPk2name);
+}
+
+void Mediator::doPk2fname(const std::string &pkstr) {
+    WsReq req;
+    Pk2FnameReq pkreq;
+    pkreq.set_pk(pkstr);
     req.set_ctype(PK2FNAME);
-    //Pk2FnameReq pk2;
-    lastPk2name.set_pk(pk.toStdString());
-    req.MutableExtension(Pk2FnameReq::req)->CopyFrom(lastPk2name);
+    req.MutableExtension(Pk2FnameReq::req)->CopyFrom(pkreq);
     auto txstr = req.SerializeAsString();
     QByteArray qb(txstr.data(),(size_t)txstr.size());
 
     m_webSocket.sendBinaryMessage(qb);
+
 }
 
 void Mediator::checkname(const QString &name) {
@@ -189,15 +201,32 @@ void Mediator::onConnected() {
     connect(&m_webSocket, SIGNAL(binaryMessageReceived(QByteArray)),
             this, SLOT ( onBinaryMessageRecived(QByteArray) ));
 
-    WsReq reqstat;
-    reqstat.set_ctype(GETSTATUS);
-    auto mynamepk = m_fantasy_agent.getMyNames();
-    for ( auto &np : mynamepk) {
-        NameStatusReq nsq;
-        nsq.set_name(np.first);
-        nsq.set_pk(np.second);
-        reqstat.MutableExtension(NameStatusReq::req)->CopyFrom(nsq);
-        sendBinaryMessage(reqstat);
+//    WsReq reqstat;
+//    reqstat.set_ctype(GETSTATUS);
+//    auto mynamepk = m_fantasy_agent.getMyNames();
+//    for ( auto &np : mynamepk) {
+//        NameStatusReq nsq;
+//        nsq.set_name(np.first);
+//        nsq.set_pk(np.second);
+//        reqstat.MutableExtension(NameStatusReq::req)->CopyFrom(nsq);
+//        sendBinaryMessage(reqstat);
+//    }
+
+    std::string sent = "";
+    if ( m_fantasy_agent.HaveClient() ) {
+        sent = m_fantasy_agent.pubKeyStr();
+        if ( m_myPubkeyFname[sent] == "" ) {
+            doPk2fname(sent);
+        }
+    }
+    for ( auto &np : m_myPubkeyFname) {
+        if ( np.first == sent )
+            continue;
+
+        if ( np.second != "")
+            continue;
+
+        doPk2fname(np.first);
     }
 }
 
@@ -224,26 +253,40 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             const Pk2FnameRep &pk2 = rep.GetExtension(Pk2FnameRep::rep);
             auto name= pk2.fname();
             if ( name == "" ) {
-                error(QString("import failed. please input valid secret"));
-                qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
-
+                if ( pk2.req().pk() == lastPk2name) {
+                    error(QString("import failed. please input valid secret"));
+                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
+                }
                 return;
             }
 
 
-            m_fantasy_agent.finishImportMnemonic(pk2.req().pk(), name);
+            bool was_pending = m_fantasy_agent.finishImportMnemonic(pk2.req().pk(), name);
 
             //FIXME lets make this as a real map to pass to a string
-            m_nameStatuses[name.data()] = QString("confirmed");
-            nameStatusChanged( name.data() , "confirmed" );
+//            m_nameStatuses[name.data()] = QString("confirmed");
+            std::string currname = m_myPubkeyFname[pk2.req().pk()] ;
+            if ( currname == "") {
+                m_myPubkeyFname[pk2.req().pk()] = name;
+                QString goodname = name.data();
+                m_goodFnames.append(&goodname);
+                qDebug() << " new good name! " << goodname;
+            }
+                //            nameStatusChanged( name.data() , "confirmed" );
 
             if ( !m_fantasy_agent.HaveClient() ||
-                 lastPk2name.pk() == pk2.req().pk())
+                 lastPk2name == pk2.req().pk()) {
                 if ( !m_fantasy_agent.UseName(name) )
                     qDebug() << "error using name " << name.data () ;
 //                    error(QString("error using name").append(name.data()));
+                usingFantasyName(m_fantasy_agent.currentClient().data());
+            }
 
-            usingFantasyName(m_fantasy_agent.currentClient().data());
+            if ( was_pending ) {
+                importSuccess(m_fantasy_agent.currentClient().data());
+                usingFantasyName(m_fantasy_agent.currentClient().data());
+            }
+
             break;
         }
         case CHECKNAME: {
@@ -279,6 +322,7 @@ QString Mediator::importMnemonic(const QString &importStr) {
     if ( pk == "" )
         return "none";
 
+    m_myPubkeyFname[pk] = "";
     pk2fname(pk.data());
     return "pending";
 }
@@ -304,6 +348,8 @@ void Mediator::signPlayer(const QString &name)  {
     m_nameStatuses[name] = QString("requested");
     nameStatusChanged(name,"requested");
     usingFantasyName(m_fantasy_agent.currentClient().data());
+    m_myPubkeyFname[m_fantasy_agent.pubKeyStr()] = "";
+    doPk2fname(m_fantasy_agent.pubKeyStr());
 }
 
 

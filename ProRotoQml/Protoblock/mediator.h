@@ -10,6 +10,7 @@
 #include "QMap"
 #include "StateData.pb.h"
 #include "FantasyAgent.h"
+#include "QQmlListPropertyHelper.h"
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -30,6 +31,8 @@ class Mediator : public QObject
     Q_ENUMS (MyNameStatus)
 
     QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
+
+    QML_LIST_PROPERTY(Mediator,goodFnames,QString)
 
 public:
 
@@ -71,6 +74,8 @@ public:
 
     qint64 sendBinaryMessage(const google::protobuf::Message &data);
 signals:
+    void importSuccess(QString);
+
     void usingFantasyName(QString);
     void nameStatusChanged (QString, QString);
     void nameCheckGet( const QString & name, const QString & status );
@@ -94,7 +99,7 @@ protected slots:
 
 private:
     QWebSocket m_webSocket, m_txsocket;
-    fantasybit::Pk2FnameReq lastPk2name;
+    std::string lastPk2name;
     fantasybit::FantasyAgent m_fantasy_agent;
     static Mediator *myInstance;
     explicit Mediator(QObject *parent = 0);
@@ -102,6 +107,10 @@ private:
     QString m_errorString;
     QString m_playersName;
     QString m_playersStatus;
+
+    std::unordered_map<std::string, std::string> m_myPubkeyFname;
+
+    void doPk2fname(const std::string &pkstr);
 };
 
 #endif // MEDIATOR_H
