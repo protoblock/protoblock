@@ -60,6 +60,8 @@ message(OSX BUILD)
     ##FIXME compile levelDB
     LIBS += -L/usr/local/lib  -lleveldb
 
+
+
 }
 
 
@@ -83,6 +85,10 @@ message (IOS BUILD)
     ## PROTOBUFF
     LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
     PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
+
+    ## BOTAN
+    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
 }
 
 
@@ -101,12 +107,15 @@ android {
     LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
     PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
 
-##     SECP251K1
+    ##  SECP251K1
     LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
     PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
 
     # PROTOBUFF
       LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lprotobuf
+
+    ## BOTAN
+      LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lBotan
 }
 
 #LATERFOOL

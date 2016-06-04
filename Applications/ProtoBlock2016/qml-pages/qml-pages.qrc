@@ -45,5 +45,9 @@
         <file>Twitter/Tweetsearch.qml</file>
         <file>EncryptLogin.qml</file>
         <file>BoxText.qml</file>
+        <file>Home.qml</file>
+        <file>ProtoblockNews.qml</file>
+        <file>ContactUs.qml</file>
+        <file>Projections.qml</file>
     </qresource>
 </RCC>

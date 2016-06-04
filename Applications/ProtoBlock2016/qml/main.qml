@@ -13,14 +13,17 @@ import Material.ListItems 1.0 as ListItem
 
 ApplicationWindow {
     id: root
+    //1200 w
+    // 1219 h
     title: "Protoblock 2016 "
-    width: Screen.width
-    height:  Screen.height
+    width: Device.productType === "osx"||Device.productType === "win32" ? 1200  :  Screen.width
+    height: Device.productType === "osx"||Device.productType === "win32" ? 1220  :  Screen.height
+
     visible: true
 
     // Pages
-    property var sections: [ basicComponents, styles, compoundComponents,chater ]
-    property var sectionTitles: [ "Protoblock Home", "Projections", "Trading","NFL News",  "Chat" ]
+    property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive ]
+    property var sectionTitles: [ "Home", "Projections", "Trading","NFL News",  "Chat" ]
     property string currentPage: sections[0][0]
     // we set this to 18 because there is no 18 so that it changes of the fly
     property string  err
@@ -58,28 +61,25 @@ ApplicationWindow {
     //    ,"WeeklyTradingLanding","SeasonLongLevelTwo"
 
 
-
+    // Level One
+    property var levelOne: [ "Protoblock News" , "About" , "Contact Us","Faqs"  ]
 
     // Level Two
-    property var styles: [
-           "SeasonLongLandingPage", "WeeklyLandingPage"
-    ]
-    // Level One
-    property var basicComponents: [
-        "WelcomeBack","Welcome", "About", "UserSettings"
+    property var levelTwo: [ "Projections" ]
 
-
-    ]
     // Level Three News
-    property var compoundComponents: [
-        "News", "Twitter/Tweetsearch" ,"Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
+    property var levelThree: [ "SeasonLongLandingPage", "WeeklyLandingPage" ]
+
+    //Level four
+    property var  levelFour: [
+         "News", "Twitter/Tweetsearch" ,"Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
     ]
 
-    property var  chater: [
-        "Chat"
+    //Level Five
+    property var levelFive: [
+    "Chat"
+
     ]
-
-
 
     initialPage: TabbedPage {
         id: pageHelper
@@ -110,7 +110,10 @@ ApplicationWindow {
             Action {
                 iconName: "action_account_circle"
                 name: uname
-//                onTriggered: userPicker.show()
+                onTriggered:{
+                    userSettings.open()
+                    userSettings.visible = true
+                }
             }
         ]
 
@@ -149,6 +152,7 @@ ApplicationWindow {
                             }
                             Repeater {
                                 model: modelData
+                                // TODO iocns
                                 delegate: ListItem.Standard {
                                     text: modelData
                                     selected: modelData == root.currentPage
@@ -377,6 +381,26 @@ ApplicationWindow {
             text:  errorString
         }
     }
+
+
+UserSettings{
+    id: userSettings
+    width: root.width / 1.07
+    height: root.height / 1.07
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
     Image{
         id: loaderImage
         source: "qrc:/logoFinal.png"
@@ -432,5 +456,12 @@ ApplicationWindow {
     }
 
 
-
+    Text {
+        rotation: -45
+        text: qsTr("Demo Not Production Ready")
+        color: "#60000000"
+        anchors.centerIn: parent
+        font.pixelSize: Unit.dp(48)
+        font.bold:  true
+    }
 }

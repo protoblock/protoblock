@@ -32,13 +32,14 @@ Rectangle {
         onStatusChanged: {
             if (socket.status == ProtoblockSocket.Error) {
                 console.error("Error: " + socket.errorString)
+                chatTimer.start();
             }
             else if (socket.status == ProtoblockSocket.Closed) {
-
+                chatTimer.start();
 //                messageBox.app += "\nSocket closed"
             }
             else if (socket.status == ProtoblockSocket.Open) {
-
+                chatTimmer.stop()
                 //open the webchannel with the socket as transport
                 new WebChannel.QWebChannel(socket, function(ch) {
                     chatRoot.channel = ch;
@@ -68,6 +69,21 @@ Rectangle {
         }
     }
 
+/*!
+  run the timmer once every two seconds to reconnect to the server
+  */
+    Timer{
+        id: chatTimmer
+        interval: 2000
+        running: false
+        repeat: true
+        onTriggered: {
+            if (socket.status !== ProtoblockSocket.Open){
+                socket.active = false
+                socket.active = true
+            }
+        }
+    }
 
 
 

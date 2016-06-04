@@ -339,6 +339,7 @@ void Mediator::handleEngineUpdate(const bool &sta)
  * \return
  * This will return the mn for import
  */
+// FIXME error checking
 QString Mediator::importMnemonic(const QString &importStr) {
     auto pk = m_fantasy_agent.startImportMnemonic(importStr.toStdString());
     if ( pk == "" )
@@ -349,6 +350,8 @@ QString Mediator::importMnemonic(const QString &importStr) {
     return "pending";
 }
 
+// FIXME ? set this to be a bool and not a void so that
+// we know if it was good or not ?
 void Mediator::signPlayer(const QString &name)  {
     m_fantasy_agent.signPlayer(name.toStdString());
     NameTrans nt{};
@@ -415,6 +418,8 @@ void Mediator::handdleNameStatus(const QString &name, const QString &status)
     setPlayersStatus (status);
 }
 
+
+// THIS SHOULD be a error signal that alerts others that something is going on.
 void Mediator::handleSocketError(QAbstractSocket::SocketError error)
 {
     qDebug() << error;
