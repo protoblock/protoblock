@@ -44,6 +44,11 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
     connect (this ,SIGNAL (engineUpdate(bool)),this,SLOT(handleEngineUpdate(bool)));
     setencyptPath (QString::fromStdString (GET_ROOT_DIR ()));
+
+
+    signPlayerStatus.setInterval(2000);
+    connect(&signPlayerStatus, SIGNAL(timeout()),
+            this, SLOT(getSignedPlayerStatus()));
 }
 
 
@@ -54,8 +59,6 @@ QString Mediator::nameStatusGet(const QString &name) {
     else
         qDebug() << "Suggested Name:  "  << iter.value ().toString ();
         return iter.value().toString();
-
-
 }
 
 void Mediator::pk2fname(const QString &pk) {
@@ -132,9 +135,9 @@ void Mediator::setPlayersStatus(const QString &playersStatus)
  * \return
     return the current fantasys players name that is in focus
 */
-QString Mediator::playersName() const
+QString Mediator::playersName()
 {
-    return m_playersName;
+    return m_fantasy_agent.currentClient().data();
 }
 
 /*!
@@ -272,9 +275,15 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 //            m_nameStatuses[name.data()] = QString("confirmed");
             std::string currname = m_myPubkeyFname[pk2.req().pk()] ;
             if ( currname == "") {
+                if ( m_lastSignedplayer == pk2.req().pk()) {
+                    signPlayerStatus.stop();
+                    m_lastSignedplayer = "";
+                }
+
                 m_myPubkeyFname[pk2.req().pk()] = name;
                 QString goodname = name.data();
-                m_goodFnames.append(&goodname);
+//                m_goodFnames.append(&goodname);
+                m_goodList.append(goodname);
                 qDebug() << " new good name! " << goodname;
             }
                 //            nameStatusChanged( name.data() , "confirmed" );
@@ -374,9 +383,21 @@ void Mediator::signPlayer(const QString &name)  {
     nameStatusChanged(name,"requested");
     usingFantasyName(m_fantasy_agent.currentClient().data());
     m_myPubkeyFname[m_fantasy_agent.pubKeyStr()] = "";
-    doPk2fname(m_fantasy_agent.pubKeyStr());
+    m_lastSignedplayer = m_fantasy_agent.pubKeyStr();
+    signPlayerStatus.start();
 }
 
+
+void Mediator::getSignedPlayerStatus() {
+    doPk2fname(m_lastSignedplayer);
+}
+
+
+void Mediator::useName(const QString &name) {
+    if ( m_fantasy_agent.UseName(name.toStdString()) )
+        usingFantasyName(name);
+
+}
 
 /*!
  * \brief Mediator::init

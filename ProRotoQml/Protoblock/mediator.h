@@ -11,6 +11,7 @@
 #include "StateData.pb.h"
 #include "FantasyAgent.h"
 #include "QQmlListPropertyHelper.h"
+#include <QTimer>
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -35,9 +36,26 @@ class Mediator : public QObject
 
     QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
 
-    QML_LIST_PROPERTY(Mediator,goodFnames,QString)
+//    QML_LIST_PROPERTY(Mediator,goodFname,QString)
+
+//    Q_PROPERTY(QQmlListProperty<QString> goodFnames READ goodFnames NOTIFY goodFnamesChanged)
 
 public:
+    QStringList m_goodList;
+
+//     QList<QString *> m_goodFnames;
+//     QQmlListProperty<QString> goodFnames() {
+//         return QQmlListProperty<QString>(this, m_goodFnames);
+//     }
+
+//     QString *goodFname(int index) const
+//     {
+//         return m_goodFnames.at(index);
+//     }
+
+//    int goodFnameCount() const{
+//        return m_goodFnames.count();
+//    }
 
     //FIXME make destroctor as this wikl leak
     static Mediator *instance();
@@ -45,7 +63,7 @@ public:
     QString playersStatus()const;
     void setPlayersStatus(const QString &playersStatus);
 
-    QString playersName()const;
+    QString playersName();
     void setPlayersName(const QString &playersName);
 
 
@@ -72,8 +90,11 @@ public:
     Q_INVOKABLE void checkname(const QString&);
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
     Q_INVOKABLE void signPlayer(const QString &name);
+    Q_INVOKABLE void useName(const QString &name);
     Q_INVOKABLE void init();
-
+    Q_INVOKABLE QStringList goodList() {
+        return m_goodList;
+    }
 
     qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);
 signals:
@@ -86,6 +107,7 @@ signals:
     void error(QString);
     void myNameStatusChanged();
     void errorStringChanged();
+    void goodFnamesChanged();
 
     void playersNameChanged();
     void playersStatusChanged();
@@ -103,6 +125,7 @@ protected slots:
     void handleAboutToClose();
     void onTextMessageReceived( QString message);
     void onBinaryMessageRecived(const QByteArray &message);
+    void getSignedPlayerStatus();
 
     // slot to update QML ONLY propertys
     void handleEngineUpdate(const bool &sta);
@@ -116,10 +139,13 @@ private:
     QString m_errorString;
     QString m_playersName;
     QString m_playersStatus;
+    std::string m_lastSignedplayer;
 
     std::unordered_map<std::string, std::string> m_myPubkeyFname;
 
     void doPk2fname(const std::string &pkstr);
+
+    QTimer signPlayerStatus;
 };
 
 #endif // MEDIATOR_H
