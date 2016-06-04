@@ -43,7 +43,7 @@ Item {
 
        \sa name
       */
-    property string source: name ? "icon://" + name : ""
+    property string source : name //? "icon://" + name : ""
 
     property bool valid: source.indexOf("icon://awesome/") == 0
             ? awesomeIcon.valid : image.status == Image.Ready
@@ -55,21 +55,22 @@ Item {
 
     Image {
         id: image
-
         anchors.fill: parent
         visible: source != "" && !colorize
-
         source: {
             if (icon.source.indexOf("icon://awesome/") == 0) {
                 return ''
-            } else if (icon.source.indexOf('icon://') === 0) {
+            }
+            else if (icon.source.indexOf('icon://') === 0) {
                 var name = icon.source.substring(7)
                 if (name)
-                    return "icons/" + name + '.svg'
-                else
-                    return ""
-            } else {
+                    return   name //+ '.svg'
+            }
+            else if (icon.source.indexOf("qrc:/") === 0 ){
+                console.log("QRC icon " +  icon.source)
                 return icon.source
+            }else {
+                return ""
             }
         }
 

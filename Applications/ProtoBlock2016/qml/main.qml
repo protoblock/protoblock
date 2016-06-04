@@ -23,7 +23,27 @@ ApplicationWindow {
 
     // Pages
     property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive ]
+    property var sectionsIcons: [
+        levelOneIcons,
+        levelTwoIcons,
+        levelThreeIcons,
+        levelFourIcons,
+        levelFiveIcons
+    ]
     property var sectionTitles: [ "Home", "Projections", "Trading","NFL News",  "Chat" ]
+    property var sectionTitlesAlias: [ "Home", "Projections", "Trading","NFL News",  "Chat" ]
+    property var sectionTitlesIcons: [
+        "qrc:/logoOnly.png",
+        "qrc:/icons/ic_poll.png",
+        "qrc:/icons/ic_poll.png",
+        "qrc:/icons/newspaper.png",
+        "qrc:/icons/ic_help.png"
+    ]
+
+
+    property int  currentTabInFocus: 0
+
+
     property string currentPage: sections[0][0]
     // we set this to 18 because there is no 18 so that it changes of the fly
     property string  err
@@ -62,60 +82,75 @@ ApplicationWindow {
 
 
     // Level One
-    property var levelOne: [ "Protoblock News" , "About" , "Contact Us","Faqs"  ]
-
+    property var levelOne: [ "Protoblock News" , "About" , "Contact Us","UserSettings","Faqs"  ]
+    property var levelOneIcons: [
+        "qrc:/icons/newspaper.png" ,
+        "qrc:/icons/ic_help.png",
+        "qrc:/icons/ic_contact_mail.png" ,
+        "qrc:/icons/ic_help.png"
+    ]
     // Level Two
     property var levelTwo: [ "Projections" ]
-
+    property var levelTwoIcons: [
+        "qrc:/icons/newspaper.png"
+    ]
     // Level Three News
     property var levelThree: [ "SeasonLongLandingPage", "WeeklyLandingPage" ]
-
+    property var levelThreeIcons: [
+        "qrc:/icons/newspaper.png" ,
+        "qrc:/icons/ic_help.png",
+    ]
     //Level four
     property var  levelFour: [
          "News", "Twitter/Tweetsearch" ,"Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
+    ]
+    property var levelFourIcons: [
+        "qrc:/icons/newspaper.png" ,
+        "qrc:/icons/ic_help.png",
+        "qrc:/icons/ic_contact_mail.png" ,
+        "qrc:/icons/ic_help.png",
+        "qrc:/icons/ic_help.png",
+        "qrc:/icons/ic_help.png"
     ]
 
     //Level Five
     property var levelFive: [
     "Chat"
+    ]
+    property var levelFiveIcons: [
+        "qrc:/icons/newspaper.png" ,
 
     ]
+
+
+
+    //Login dialog
+        Dialog {
+            id: loginDialog
+            width: parent.width / 1.07
+            height: parent.height / 1.07
+            title: "Please Login"
+            anchors.centerIn: parent
+            hasActions: false
+            positiveButtonText: "Done"
+            GetName{
+                width: loginDialog.width
+                height:  loginDialog.height
+            }
+        }
+
 
     initialPage: TabbedPage {
         id: pageHelper
         title: "ProtoBlock 2016"
+
+
+
+        onSelectedTabChanged: {
+            title = sectionTitles[selectedTabIndex]
+        }
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
-        actions: [
-            Action {
-                iconName: "image_color_lens"
-                name: "Colors"
-                onTriggered: colorPicker.show()
-            },
 
-            Action {
-                iconName: "action_settings"
-                name: "Settings"
-                hoverAnimation: true
-                onTriggered: {
-                    console.log("Trigger Hello")
-                    root.currentPage = "UserSettings"
-                }onToggled: {
-                    console.log("Toggle  Hello")
-
-                    currentPage = "UserSettings"
-                }
-
-            },
-
-            Action {
-                iconName: "action_account_circle"
-                name: uname
-                onTriggered:{
-                    userSettings.open()
-                    userSettings.visible = true
-                }
-            }
-        ]
 
         backAction: navDrawer.action
 
@@ -142,13 +177,19 @@ ApplicationWindow {
 
                     Repeater {
                         model: sections
-
                         delegate: Column {
                             width: parent.width
 
-                            ListItem.Subheader {
+                            ListItem.Subtitled {
+                                id: tabMin
                                 backgroundColor: root.theme.primaryColor
                                 text: sectionTitles[index]
+                                action: Image{
+                                    source: sectionTitlesIcons[index]
+                                    height: 32
+                                    width:32
+                                    fillMode: Image.PreserveAspectFit
+                                }
                             }
                             Repeater {
                                 model: modelData
@@ -172,9 +213,12 @@ ApplicationWindow {
             model: !navDrawer.enabled ? sections : 0
             delegate: Tab {
                 title: sectionTitles[index]
+                iconName: sectionTitlesIcons[index]
                 property string currentPage: modelData[0]
                 property var section: modelData
+
                 sourceComponent: tabDelegate
+
             }
         }
 
@@ -188,103 +232,11 @@ ApplicationWindow {
         }
     }
 
-//Login dialog
-    Dialog {
-        id: loginDialog
-        width: parent.width / 1.07
-        height: parent.height / 1.07
-        title: "Please Login"
-        anchors.centerIn: parent
-        hasActions: false
-        positiveButtonText: "Done"
-        GetName{
-            width: loginDialog.width
-            height:  loginDialog.height
-        }
-    }
 
-
-    Dialog {
-        id: colorPicker
-        title: "Pick color"
-        positiveButtonText: "Done"
-
-        MenuField {
-            id: selection
-            model: ["Primary color", "Accent color", "Background color"]
-            width: Unit.dp(160)
-        }
-
-        Grid {
-            columns: 7
-            spacing: Unit.dp(8)
-
-            Repeater {
-                model: [
-                    Colors.red, Colors.pink, Colors.purple, Colors.deepPurple, Colors.indigo,
-                    Colors.blue, Colors.lightBlue, Colors.cyan, Colors.teal, Colors.green,
-                    Colors.lightGreen, Colors.lime, Colors.yellow, Colors.amber, Colors.orange,
-                    Colors.deepOrange, Colors.grey, Colors.blueGrey, Colors.brown, Colors.black,
-                    "white"
-                ]
-
-                Rectangle {
-                    width: Unit.dp(30)
-                    height: Unit.dp(30)
-                    radius:Unit.dp(2)
-                    color: modelData
-                    border.width: modelData === "white" ? Unit.dp(2) : 0
-                    border.color: Theme.alpha("#000", 0.26)
-
-                    Ink {
-                        anchors.fill: parent
-                        onPressed: {
-                            switch(selection.selectedIndex) {
-                                case 0:
-                                    theme.primaryColor = parent.color
-                                    break;
-                                case 1:
-                                    theme.accentColor = parent.color
-                                    break;
-                                case 2:
-                                    theme.backgroundColor = parent.color
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        onRejected: {
-            // TODO set default colors again but we currently don't know what that is
-        }
-    }
-
-
-    // USERS INFO
-
-//    Dialog {
-//        id: userPicker
-//        title: "User Information"
-//        positiveButtonText: "Done"
-//        MenuField {
-//            model: userInfo.fantasyName
-//            width: Unit.dp(160)
-//        }
-//        Text{
-//            width: parent.width
-//            height: Unit.dp(160)
-//            wrapMode: Text.WordWrap
-//            text: "Your Secert \n"+userInfo.mnemonicKey
-//        }
-//    }
 
     Component {
         id: tabDelegate
-
         Item {
-
             Sidebar {
                 id: sidebar
                 expanded: !navDrawer.enabled
@@ -292,10 +244,24 @@ ApplicationWindow {
                     width: parent.width
                     Repeater {
                         model: section
-                        delegate: ListItem.Standard {
+                        delegate: ListItem.Subtitled {
                             text: modelData
                             selected: modelData == currentPage
-                            onClicked: currentPage = modelData
+//                            action:Image{
+//                                width: height
+//                                height: parent.height
+//                                source: {
+////                                    if(sections === 0 ){
+//                                        modelData[index]
+////                                    }
+//                                }
+//                            }
+
+                            onSelectedChanged: console.log(index)
+                            onClicked: {
+                                pageHelper.title = modelData
+                                currentPage = modelData
+                            }
                         }
                     }
                 }
@@ -319,6 +285,7 @@ ApplicationWindow {
                         var theFile = navDrawer.enabled ?  root.currentPage : currentPage
                         Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                     }
+                    onSourceChanged: pageHelper.title = currentPage
                 }
 
                 ProgressCircle {
@@ -333,6 +300,40 @@ ApplicationWindow {
         }
     }
 
+
+
+
+
+
+
+
+    Row{
+        width: systemSettingsButton.width  * 2.2
+        height: systemSettingsButton.height
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.topMargin: 24
+        anchors.rightMargin: 22
+        spacing: 12
+
+        IconButton {
+            id: systemSettingsButton
+            iconName: "qrc:/icons/action_settings.png"
+            hoverAnimation: true
+            onClicked: {
+                root.currentPage = "UserSettings"
+                currentPage = "UserSettings"
+            }
+        }
+
+        IconButton {
+            iconName: "qrc:/icons/action_account_circle.png"
+            onClicked: {
+                console.log("HFJKAHFJKDHSKFHKJDSH  ")
+                currentPage = "UserSettings"
+            }
+        }
+    }
 
     /////////////
     ListModel{id: postionModel}
@@ -383,12 +384,7 @@ ApplicationWindow {
     }
 
 
-UserSettings{
-    id: userSettings
-    width: root.width / 1.07
-    height: root.height / 1.07
 
-}
 
 
 

@@ -10,7 +10,7 @@ Item {
     height: 200
     Component.onCompleted:{
         pageHelper.title = "Please Login"
-        pageHelper.buttonsEnabled = false
+//        pageHelper.buttonsEnabled = false
     }
     Card{
         id: loginCard

@@ -8,6 +8,15 @@ Item {
 
 Component.onCompleted:  pageHelper.title  =  "Protoblock Home"
 
+BoxText {
+    id: boxText1
+    width: 482
+    height: 80
+    showNumbers: true
+    elevation: 1
+    defaultText: "welcome to protoblock thanks for signing up"
+}
+
 
 
 

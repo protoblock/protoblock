@@ -50,5 +50,8 @@
         <file>logo-wordsOnly.png</file>
         <file>icons/ic_sync.png</file>
         <file>bird-anim-sprites.png</file>
+        <file>icons/newspaper.png</file>
+        <file>icons/ic_contact_mail.png</file>
+        <file>icons/arrow_drop_down.png</file>
     </qresource>
 </RCC>

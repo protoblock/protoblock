@@ -53,7 +53,6 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             onClicked: {
                 Qt.openUrlExternally("mailto:" + protoblockemail + "?Subject="+subInput.text)
-
             }
         }
     }

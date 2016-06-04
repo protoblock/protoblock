@@ -22,13 +22,13 @@ import QtQuick.Controls 1.3 as Controls
 Controls.Tab {
     id: tab
 
-	/*!
+    /*!
        The icon displayed for the action. This can be a Material Design icon or an icon from
        FontAwesome. See \l Icon from more details.
      */
-	property string iconName
+    property string iconName
 
-	/*!
+    /*!
        A URL pointing to an image to display as the icon. By default, this is
        a special URL representing the icon named by \l iconName from the Material Design
        icon collection or FontAwesome. The icon will be colorized using the specificed \l color,
