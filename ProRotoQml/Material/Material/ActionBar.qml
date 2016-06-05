@@ -309,7 +309,7 @@ Item {
         IconButton {
             id: overflowButton
 
-            iconName: "navigation_more_vert"
+            iconName: "navigation_more_vert.svg"
             objectName: "action/overflow"
             size: 27 * Units.dp
             color: Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,

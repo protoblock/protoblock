@@ -235,7 +235,7 @@ void FantasyAgent::onSignedTransaction(SignedTransaction &sn)
 //    qDebug() << sn.DebugString();
 }
 
-bool FantasyAgent::HaveClient() {
+bool FantasyAgent::HaveClient() const {
     return client != nullptr;
 }
 
@@ -294,6 +294,7 @@ SignedBlockHeader FantasyAgent::makeSigned(BlockHeader &bh) {
 
 
 std::string FantasyAgent::getSecret() const {
+    if ( !HaveClient()) return "";
     return m_priv.get_secret().str();
 }
 
@@ -373,6 +374,14 @@ bool FantasyAgent::finishImportMnemonic(const std::string &pk,
 
     Secret3 &sec = it->second;
     sec.set_fantasy_name(name);
+
+    for ( auto s2 : m_secrets ) {
+        if ( s2.public_key() == sec.public_key() &&
+             s2.fantasy_name() == sec.fantasy_name() ) {
+                m_pending.erase(it);
+                return true;
+        }
+    }
 
     Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename3, ios::app };
     writer(sec);

@@ -91,14 +91,21 @@ public:
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
     Q_INVOKABLE void signPlayer(const QString &name);
     Q_INVOKABLE void useName(const QString &name);
-    Q_INVOKABLE void init();
+    Q_INVOKABLE QString init();
+    Q_INVOKABLE QString getSecret() {
+        if ( !m_fantasy_agent.HaveClient() )
+            return "error- no name";
+        else
+        return m_fantasy_agent.getMnemonic(m_fantasy_agent.currentClient()).data();
+    }
+
     Q_INVOKABLE QStringList goodList() {
         return m_goodList;
     }
 
     qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);
 signals:
-    void importSuccess(QString);
+    void importSuccess(const QString name, bool passfail);
 
     void usingFantasyName(const QString &name, bool isdefault = false);
     void nameStatusChanged (QString, QString);

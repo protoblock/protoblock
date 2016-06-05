@@ -264,6 +264,10 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 if ( pk2.req().pk() == lastPk2name) {
                     error(QString("import failed. please input valid secret"));
                     qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
+                    QString err = "import failed. no name for: ";
+                    err.append(lastPk2name.data());
+                    emit importSuccess(err,false);
+                    lastPk2name = "";
                 }
                 return;
             }
@@ -297,7 +301,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             }
 
             if ( was_pending ) {
-                importSuccess(m_fantasy_agent.currentClient().data());
+                importSuccess(m_fantasy_agent.currentClient().data(), true);
                 usingFantasyName(m_fantasy_agent.currentClient().data());
             }
 
@@ -352,7 +356,17 @@ void Mediator::handleEngineUpdate(const bool &sta)
 QString Mediator::importMnemonic(const QString &importStr) {
     auto pk = m_fantasy_agent.startImportMnemonic(importStr.toStdString());
     if ( pk == "" )
-        return "none";
+        return "";
+
+    auto iter = m_myPubkeyFname.find(pk);
+    if ( iter != end(m_myPubkeyFname)) {
+        if ( iter->second == "" )
+            pk2fname(pk.data());
+        else
+            usingFantasyName(iter->second.data());
+
+        return pk.data();
+    }
 
     m_myPubkeyFname[pk] = "";
     pk2fname(pk.data());
@@ -404,14 +418,13 @@ void Mediator::useName(const QString &name) {
     Try to find the best fantasy name that there is to use
     ? There might be a reace on on this ?
  */
-void Mediator::init() {
+QString Mediator::init() {
     std::string dname = m_fantasy_agent.defaultName();
     if ( dname == "") {
+        return "";
         // FIXME this should be a error signal
         // Also we should update the engine status to false
         // as we could not mke it the end of fantasyadgent ?
-
-        return;
     }
 
 //    qDebug() << " Mediator::init() " << dname.data();
@@ -419,6 +432,7 @@ void Mediator::init() {
     m_nameStatuses[defaultName] = QString("requested");
     nameStatusChanged( defaultName , "requested" );
 
+    return defaultName;
     // HERE I am setting the engine as true because it is up and we made ith through all the stuff that was needed
     engineUpdate(true);
     usingFantasyName( defaultName, true ) ;

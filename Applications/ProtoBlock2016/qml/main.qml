@@ -54,6 +54,7 @@ ApplicationWindow {
     property string currentAwayTeam
     property string uname: "NULL"
     property string errorString
+    property string msgString
     property int loginCardScale: 1
     property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
 
@@ -124,7 +125,7 @@ ApplicationWindow {
 
     ]
 
-    // Level One
+    // Level Six
     property var levelSix: [ "Account" , "Import-Export" , "FAQ"  ]
     property var levelSixIcons: [
         "qrc:/icons/account_action_circle.png" ,
@@ -136,16 +137,16 @@ ApplicationWindow {
     //Login dialog
         Dialog {
             id: loginDialog
-            width: parent.width / 1.07
-            height: parent.height / 1.07
+//            width: parent.width / 1.07
+//            height: parent.height / 1.07
             title: "Please Login"
             anchors.centerIn: parent
-            hasActions: false
+//            hasActions: false
             positiveButtonText: "Done"
-            GetName{
-                width: loginDialog.width
-                height:  loginDialog.height
-            }
+//            GetName{
+//                width: loginDialog.width
+//                height:  loginDialog.height
+//            }
         }
 
 
@@ -291,6 +292,7 @@ ApplicationWindow {
                     asynchronous: true
                     visible: status == Loader.Ready
                     source: {
+                        console.log(" cp " + currentPage + " rcp " + root.currentPage)
                         var theFile = navDrawer.enabled ?  root.currentPage : currentPage
                         Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                     }
@@ -339,8 +341,9 @@ ApplicationWindow {
             iconName: "qrc:/icons/action_account_circle.png"
             onClicked: {
                 console.log("HFJKAHFJKDHSKFHKJDSH  ")
-                currentPage = "UserSettings"
-                loginDialog.show();
+                root.currentPage = "Account"
+                currentPage = "Account"
+//               loginDialog.show();
             }
         }
     }
@@ -349,17 +352,23 @@ ApplicationWindow {
     ListModel{id: postionModel}
     ListModel{id: weekModel}
 
+    property string defaultname
     Component.onCompleted: {
             console.log( "The formfactor of this device is " + Device.name )
         fillDefaultModels()
-        MiddleMan.init()
 
+        defaultname = MiddleMan.init()
+        if ( defaultname  === "" )
+            currentPage = "Account"
+//        tabDelegate.currentPage = "Account"
+//        currentPage[0] = "Account"
+//        console.log(" default name " + defaultname)
 //        root.visible = true
-        if (uname !== "NULL"){
-         console.log("have name")
-        }else{
-        loginDialog.show();
-        }
+//        if (uname !== "NULL"){
+//         console.log("have name")
+//        }else{
+//        loginDialog.show();
+//        }
     }
 
     function fillDefaultModels(){
@@ -383,8 +392,8 @@ ApplicationWindow {
         id: loginErrorDialog
         title: "Error in Signup"
         positiveButtonText: "back"
-        onAccepted: loginCardScale = 1
-        onRejected:  loginCardScale = 1
+//        onAccepted: loginCardScale = 1
+//        onRejected:  loginCardScale = 1
         Text{
             width: parent.width
             height: Unit.dp(160)
@@ -401,13 +410,11 @@ ApplicationWindow {
         id: usingNameDialog
         title: "Account"
         positiveButtonText: "ok"
-        onAccepted: loginCardScale = 1
-        onRejected:  loginCardScale = 1
         Text{
             width: parent.width
             height: Unit.dp(160)
             wrapMode: Text.WordWrap
-            text: "You are now playing as: " + uname
+            text: msgString
         }
     }
 
@@ -457,10 +464,26 @@ ApplicationWindow {
         onUsingFantasyName: {
             if ( uname !== name) {
                 uname = name
-                if ( !isdefault )
+                if ( !isdefault ) {
+                    msgString = "You are now playing as: " + name
                     usingNameDialog.open()
+                }
                 console.log("usingFantasyName " + name )
             }
+        }
+
+        onImportSuccess: {
+            console.log(passfail + "onImportSucess " + name )
+
+            if ( passfail ) {
+                msgString = name + " - Imported!"
+                usingNameDialog.open()
+            }
+            else {
+                errorString = name
+                loginErrorDialog.open()
+            }
+            console.log(passfail + "onImportSucess " + name )
         }
     }
 

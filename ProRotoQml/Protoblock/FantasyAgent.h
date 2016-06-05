@@ -48,7 +48,7 @@ public:
 
     bool makeGenesis();
     void onSignedTransaction(SignedTransaction &sn);
-    bool HaveClient();
+    bool HaveClient() const;
     bool amDataAgent();
 
     static bool AmFantasyAgent(pb::public_key_data pubkey);

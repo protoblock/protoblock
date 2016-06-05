@@ -107,7 +107,7 @@ Card {
                 wrapMode: Text.WordWrap
                 text:  errmsg
             }
-            onRejected: currentPage = "Import.qml"
+            onRejected: currentPage = "Import-Export"
 
 //            onAccepted: ""
 

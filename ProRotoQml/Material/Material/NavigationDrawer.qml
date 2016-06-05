@@ -57,7 +57,7 @@ PopupBase {
 
     Action {
         id: action
-        iconName: "navigation_menu"
+        iconName: "navigation_menu.svg"
         name: "Navigation Drawer"
         onTriggered: navDrawer.toggle()
     }
