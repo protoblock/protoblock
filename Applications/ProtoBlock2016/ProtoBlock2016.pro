@@ -33,7 +33,8 @@ DISTFILES += \
     android/gradlew.bat \
     qml-pages/Feeds/WebView.qml \
     qml-pages/BoxText.qml \
-    qml-pages/ProtoblockNews.qml
+    qml-pages/ProtoblockNews.qml \
+    qml-pages/LeftMenu.qml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

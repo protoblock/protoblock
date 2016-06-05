@@ -31,7 +31,7 @@ Item {
         }
 
         ListItems.Standard {
-            text: MIddleMan.secert3File
+            text: MiddleMan.secert3File
             elevation: 1
         }
 

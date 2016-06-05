@@ -45,7 +45,7 @@ ApplicationWindow {
 
     property int  currentTabInFocus: 0
 
-
+    property string pageSwitcher
     property string currentPage: sections[0][0]
     // we set this to 18 because there is no 18 so that it changes of the fly
     property string  err
@@ -58,19 +58,19 @@ ApplicationWindow {
     property int loginCardScale: 1
     property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
 
-//    property alias currentPage: rootLoader.source
+    //    property alias currentPage: rootLoader.source
 
-//    property var splashWindow: Splash {
-//        onTimeout: {
+    //    property var splashWindow: Splash {
+    //        onTimeout: {
 
-//            root.visible = true
-//            if (uname !== "NULL"){
-//             console.log("have name")
-//            }else{
-//            loginDialog.show();
-//            }
-//        }
-//    }
+    //            root.visible = true
+    //            if (uname !== "NULL"){
+    //             console.log("have name")
+    //            }else{
+    //            loginDialog.show();
+    //            }
+    //        }
+    //    }
 
     theme {
         primaryColor: Colors.blue
@@ -105,7 +105,7 @@ ApplicationWindow {
     ]
     //Level four
     property var  levelFour: [
-         "News", "Twitter/Tweetsearch" ,"Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
+        "News", "Twitter/Tweetsearch" ,"Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
     ]
     property var levelFourIcons: [
         "qrc:/icons/newspaper.png" ,
@@ -118,7 +118,7 @@ ApplicationWindow {
 
     //Level Five
     property var levelFive: [
-    "Chat"
+        "Chat"
     ]
     property var levelFiveIcons: [
         "qrc:/icons/newspaper.png" ,
@@ -135,35 +135,25 @@ ApplicationWindow {
 
 
     //Login dialog
-        Dialog {
-            id: loginDialog
-//            width: parent.width / 1.07
-//            height: parent.height / 1.07
-            title: "Please Login"
-            anchors.centerIn: parent
-//            hasActions: false
-            positiveButtonText: "Done"
-//            GetName{
-//                width: loginDialog.width
-//                height:  loginDialog.height
-//            }
-        }
+    Dialog {
+        id: loginDialog
+        title: "Please Login"
+        anchors.centerIn: parent
+        positiveButtonText: "Done"
+    }
 
 
     initialPage: TabbedPage {
         id: pageHelper
         title: "ProtoBlock 2016"
-
-
-
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
+            var cp = sectionTitles[selectedTabIndex]
+
+            rootLoader.source = Qt.resolvedUrl(cp.replace(/\s/g, "") + ".qml" )
         }
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
-
-
         backAction: navDrawer.action
-
         NavigationDrawer {
             id: navDrawer
             enabled:{
@@ -175,11 +165,11 @@ ApplicationWindow {
                     false
                 }
             }
-            onEnabledChanged: smallLoader.active = enabled
+//            onEnabledChanged: smallLoader.active = enabled
 
             Flickable {
                 anchors.fill: parent
-               contentHeight: Math.max(content.implicitHeight, height)
+                contentHeight: Math.max(content.implicitHeight, height)
 
                 Column {
                     id: content
@@ -192,13 +182,17 @@ ApplicationWindow {
 
                             ListItem.Subtitled {
                                 id: tabMin
-                                backgroundColor: root.theme.primaryColor
+                                backgroundColor: Colors.primaryColor
                                 text: sectionTitles[index]
                                 action: Image{
                                     source: sectionTitlesIcons[index]
                                     height: 32
                                     width:32
                                     fillMode: Image.PreserveAspectFit
+                                }
+                                onClicked:{
+
+                                    rootLoader.source = sectionTitles[index] + ".qml"
                                 }
                             }
                             Repeater {
@@ -208,8 +202,11 @@ ApplicationWindow {
                                     text: modelData
                                     selected: modelData == root.currentPage
                                     onClicked: {
-                                        root.currentPage = modelData
-                                        navDrawer.close()
+                                        console.log(sectionTitles[index] )
+                                        rootLoader.source = sectionTitles[index] + ".qml"
+
+//                                        rootLoader.source =  modelData
+//                                        navDrawer.close()
                                     }
                                 }
                             }
@@ -218,6 +215,30 @@ ApplicationWindow {
                 }
             }
         }
+        ProgressCircle {
+            id: actInd
+            anchors.centerIn: rootLoader
+            visible: rootLoader.status == Loader.Loading
+        }
+
+        Loader {
+            id: rootLoader
+            width: root.width - 250
+            height: root.height
+            asynchronous: true
+            visible: status == Loader.Ready
+            anchors {
+                top:tabDelegate.top
+                right: parent.right
+            }
+            source: {
+                var theFile = navDrawer.enabled ?  root.currentPage : currentPage
+                Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
+            }
+            onSourceChanged: pageHelper.title = currentPage
+            onStatusChanged: console.log("Loader " +status)
+        }
+
 
         Repeater {
             model: !navDrawer.enabled ? sections : 0
@@ -226,126 +247,17 @@ ApplicationWindow {
                 iconName: sectionTitlesIcons[index]
                 property string currentPage: modelData[0]
                 property var section: modelData
-
-                sourceComponent: tabDelegate
-
-            }
-        }
-
-        Loader {
-            id: smallLoader
-            anchors.fill: parent
-            sourceComponent: tabDelegate
-            property var section: []
-            visible: active
-            active: false
-        }
-    }
-
-
-
-    Component {
-        id: tabDelegate
-        Item {
-            Sidebar {
-                id: sidebar
-                expanded: !navDrawer.enabled
-                Column {
-                    width: parent.width
-                    Repeater {
-                        model: section
-                        delegate: ListItem.Subtitled {
-                            text: modelData
-                            selected: modelData == currentPage
-//                            action:Image{
-//                                width: height
-//                                height: parent.height
-//                                source: {
-////                                    if(sections === 0 ){
-//                                        modelData[index]
-////                                    }
-//                                }
-//                            }
-
-                            onSelectedChanged: console.log(index)
-                            onClicked: {
-                                pageHelper.title = modelData
-                                currentPage = modelData
-                            }
-                        }
-                    }
-                }
-            }
-            Flickable {
-                id: flickable
-                anchors {
-                    left: sidebar.right
-                    right: parent.right
-                    top: parent.top
-                    bottom: parent.bottom
-                }
-                clip: true
-                contentHeight: Math.max(rootLoader.implicitHeight + 40, height)
-                Loader {
-                    id: rootLoader
-                    anchors.fill: parent
-                    asynchronous: true
-                    visible: status == Loader.Ready
-                    source: {
-                        console.log(" cp " + currentPage + " rcp " + root.currentPage)
-                        var theFile = navDrawer.enabled ?  root.currentPage : currentPage
-                        Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
-                    }
-                    onSourceChanged: pageHelper.title = currentPage
-                }
-
-                ProgressCircle {
-                    id: actInd
-                    anchors.centerIn: parent
-                    visible: rootLoader.status == Loader.Loading
-                }
-            }
-            Scrollbar {
-                flickableItem: flickable
+                source: "qrc:/LeftMenu.qml"
             }
         }
     }
 
 
-
-
-
-
-
-
-    Row{
-        width: systemSettingsButton.width  * 2.2
-        height: systemSettingsButton.height
+    Indicators{
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.topMargin: 24
-        anchors.rightMargin: 22
-        spacing: 12
-
-        IconButton {
-            id: systemSettingsButton
-            iconName: "qrc:/icons/action_settings.png"
-            hoverAnimation: true
-            onClicked: {
-                root.currentPage = "UserSettings"
-                currentPage = "UserSettings"
-            }
-        }
-
-        IconButton {
-            iconName: "qrc:/icons/action_account_circle.png"
-            onClicked: {
-                console.log("HFJKAHFJKDHSKFHKJDSH  ")
-                root.currentPage = "Account"
-                currentPage = "Account"
-//               loginDialog.show();
-            }
-        }
+        anchors.rightMargin: 48 * 2
     }
 
     /////////////
@@ -354,25 +266,25 @@ ApplicationWindow {
 
     property string defaultname
     Component.onCompleted: {
-            console.log( "The formfactor of this device is " + Device.name )
+        console.log( "The formfactor of this device is " + Device.name )
         fillDefaultModels()
 
         defaultname = MiddleMan.init()
         if ( defaultname  === "" )
             currentPage = "Account"
-//        tabDelegate.currentPage = "Account"
-//        currentPage[0] = "Account"
-//        console.log(" default name " + defaultname)
-//        root.visible = true
-//        if (uname !== "NULL"){
-//         console.log("have name")
-//        }else{
-//        loginDialog.show();
-//        }
+        //        tabDelegate.currentPage = "Account"
+        //        currentPage[0] = "Account"
+        //        console.log(" default name " + defaultname)
+        //        root.visible = true
+        //        if (uname !== "NULL"){
+        //         console.log("have name")
+        //        }else{
+        //        loginDialog.show();
+        //        }
     }
 
     function fillDefaultModels(){
-//        console.log(" main qml 342")
+        //        console.log(" main qml 342")
         var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
         for (var i in positionArray){
             postionModel.append({'text': positionArray[i] })
@@ -392,8 +304,8 @@ ApplicationWindow {
         id: loginErrorDialog
         title: "Error in Signup"
         positiveButtonText: "back"
-//        onAccepted: loginCardScale = 1
-//        onRejected:  loginCardScale = 1
+        //        onAccepted: loginCardScale = 1
+        //        onRejected:  loginCardScale = 1
         Text{
             width: parent.width
             height: Unit.dp(160)
@@ -439,27 +351,27 @@ ApplicationWindow {
 
     Connections {
         target: MiddleMan
-//        onNameCheckGet: {
-//            console.log("onNameCheckGet " + status  + " \n" +  name )
-//            if(status === "true" )
-//            {
-//                console.log("name is not taken")
-//                MiddleMan.signPlayer(uname)
-//            }
-//            else
-//            {
-//                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-//                root.loginCardScale = 0
-//                loginErrorDialog.open()
-//                root.errorString =  err
-//            }
-//        }
+        //        onNameCheckGet: {
+        //            console.log("onNameCheckGet " + status  + " \n" +  name )
+        //            if(status === "true" )
+        //            {
+        //                console.log("name is not taken")
+        //                MiddleMan.signPlayer(uname)
+        //            }
+        //            else
+        //            {
+        //                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
+        //                root.loginCardScale = 0
+        //                loginErrorDialog.open()
+        //                root.errorString =  err
+        //            }
+        //        }
 
-//        onNameStatusChanged: {
-//            console.log("nameStatusChange " + MiddleMan.playersName )
-//            uname = MiddleMan.playersName;
-//             loginDialog.close()
-//        }
+        //        onNameStatusChanged: {
+        //            console.log("nameStatusChange " + MiddleMan.playersName )
+        //            uname = MiddleMan.playersName;
+        //             loginDialog.close()
+        //        }
 
         onUsingFantasyName: {
             if ( uname !== name) {

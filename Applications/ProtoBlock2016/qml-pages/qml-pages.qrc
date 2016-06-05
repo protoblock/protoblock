@@ -51,5 +51,7 @@
         <file>Projections.qml</file>
         <file>Account.qml</file>
         <file>Import-Export.qml</file>
+        <file>Indicators.qml</file>
+        <file>LeftMenu.qml</file>
     </qresource>
 </RCC>
