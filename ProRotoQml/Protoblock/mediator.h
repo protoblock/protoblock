@@ -100,7 +100,7 @@ public:
 signals:
     void importSuccess(QString);
 
-    void usingFantasyName(QString);
+    void usingFantasyName(const QString &name, bool isdefault = false);
     void nameStatusChanged (QString, QString);
     void nameCheckGet( const QString & name, const QString & status );
     //    void myNameChang (const QString & name, QString status );

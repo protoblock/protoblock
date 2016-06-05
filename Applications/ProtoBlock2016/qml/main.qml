@@ -22,22 +22,24 @@ ApplicationWindow {
     visible: true
 
     // Pages
-    property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive ]
+    property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive, levelSix ]
     property var sectionsIcons: [
         levelOneIcons,
         levelTwoIcons,
         levelThreeIcons,
         levelFourIcons,
-        levelFiveIcons
+        levelFiveIcons,
+        levelSixIcons
     ]
-    property var sectionTitles: [ "Home", "Projections", "Trading","NFL News",  "Chat" ]
-    property var sectionTitlesAlias: [ "Home", "Projections", "Trading","NFL News",  "Chat" ]
+    property var sectionTitles: [ "Home", "Projections", "Trading", "NFL News", "Chat", "Account" ]
+    property var sectionTitlesAlias: [ "Home", "Projections", "Trading","NFL News", "Chat","Account" ]
     property var sectionTitlesIcons: [
         "qrc:/logoOnly.png",
         "qrc:/icons/ic_poll.png",
         "qrc:/icons/ic_poll.png",
         "qrc:/icons/newspaper.png",
-        "qrc:/icons/ic_help.png"
+        "qrc:/icons/ic_help.png",
+        "qrc:/icons/action_account_circle.png"
     ]
 
 
@@ -122,6 +124,13 @@ ApplicationWindow {
 
     ]
 
+    // Level One
+    property var levelSix: [ "Account" , "Import-Export" , "FAQ"  ]
+    property var levelSixIcons: [
+        "qrc:/icons/account_action_circle.png" ,
+        "qrc:/icons/ic_sync.png",
+        "qrc:/icons/ic_lightbulb.png"
+    ]
 
 
     //Login dialog
@@ -331,6 +340,7 @@ ApplicationWindow {
             onClicked: {
                 console.log("HFJKAHFJKDHSKFHKJDSH  ")
                 currentPage = "UserSettings"
+                loginDialog.show();
             }
         }
     }
@@ -387,6 +397,20 @@ ApplicationWindow {
 
 
 
+    Dialog {
+        id: usingNameDialog
+        title: "Account"
+        positiveButtonText: "ok"
+        onAccepted: loginCardScale = 1
+        onRejected:  loginCardScale = 1
+        Text{
+            width: parent.width
+            height: Unit.dp(160)
+            wrapMode: Text.WordWrap
+            text: "You are now playing as: " + uname
+        }
+    }
+
 
 
 
@@ -408,32 +432,35 @@ ApplicationWindow {
 
     Connections {
         target: MiddleMan
-        onNameCheckGet: {
-            console.log("onNameCheckGet " + status  + " \n" +  name )
-            if(status === "true" )
-            {
-                console.log("name is not taken")
-                MiddleMan.signPlayer(uname)
-            }
-            else
-            {
-                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-                root.loginCardScale = 0
-                loginErrorDialog.open()
-                root.errorString =  err
-            }
-        }
+//        onNameCheckGet: {
+//            console.log("onNameCheckGet " + status  + " \n" +  name )
+//            if(status === "true" )
+//            {
+//                console.log("name is not taken")
+//                MiddleMan.signPlayer(uname)
+//            }
+//            else
+//            {
+//                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
+//                root.loginCardScale = 0
+//                loginErrorDialog.open()
+//                root.errorString =  err
+//            }
+//        }
 
-        onNameStatusChanged: {
-            console.log("nameStatusChange " + MiddleMan.playersName )
-            uname = MiddleMan.playersName;
-             loginDialog.close()
-        }
+//        onNameStatusChanged: {
+//            console.log("nameStatusChange " + MiddleMan.playersName )
+//            uname = MiddleMan.playersName;
+//             loginDialog.close()
+//        }
 
         onUsingFantasyName: {
-            console.log("usingFantasyName " + MiddleMan.playersName )
-            uname = MiddleMan.playersName;
-            loginDialog.close()
+            if ( uname !== name) {
+                uname = name
+                if ( !isdefault )
+                    usingNameDialog.open()
+                console.log("usingFantasyName " + name )
+            }
         }
     }
 

@@ -49,5 +49,7 @@
         <file>ProtoblockNews.qml</file>
         <file>ContactUs.qml</file>
         <file>Projections.qml</file>
+        <file>Account.qml</file>
+        <file>Import-Export.qml</file>
     </qresource>
 </RCC>

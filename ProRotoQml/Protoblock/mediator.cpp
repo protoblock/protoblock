@@ -356,7 +356,7 @@ QString Mediator::importMnemonic(const QString &importStr) {
 
     m_myPubkeyFname[pk] = "";
     pk2fname(pk.data());
-    return "pending";
+    return pk.data();
 }
 
 // FIXME ? set this to be a bool and not a void so that
@@ -421,7 +421,7 @@ void Mediator::init() {
 
     // HERE I am setting the engine as true because it is up and we made ith through all the stuff that was needed
     engineUpdate(true);
-    usingFantasyName( defaultName ) ;
+    usingFantasyName( defaultName, true ) ;
 
 }
 
