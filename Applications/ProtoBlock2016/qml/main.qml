@@ -58,20 +58,6 @@ ApplicationWindow {
     property int loginCardScale: 1
     property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
 
-    //    property alias currentPage: rootLoader.source
-
-    //    property var splashWindow: Splash {
-    //        onTimeout: {
-
-    //            root.visible = true
-    //            if (uname !== "NULL"){
-    //             console.log("have name")
-    //            }else{
-    //            loginDialog.show();
-    //            }
-    //        }
-    //    }
-
     theme {
         primaryColor: Colors.blue
         accentColor: Colors.amber
@@ -149,7 +135,6 @@ ApplicationWindow {
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
-
             rootLoader.source = Qt.resolvedUrl(cp.replace(/\s/g, "") + ".qml" )
         }
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
@@ -165,8 +150,6 @@ ApplicationWindow {
                     false
                 }
             }
-//            onEnabledChanged: smallLoader.active = enabled
-
             Flickable {
                 anchors.fill: parent
                 contentHeight: Math.max(content.implicitHeight, height)
@@ -192,7 +175,7 @@ ApplicationWindow {
                                 }
                                 onClicked:{
 
-                                    rootLoader.source = sectionTitles[index] + ".qml"
+                                    rootLoader.source = "qrc:/" +sectionTitles[index] + ".qml"
                                 }
                             }
                             Repeater {
@@ -203,7 +186,7 @@ ApplicationWindow {
                                     selected: modelData == root.currentPage
                                     onClicked: {
                                         console.log(sectionTitles[index] )
-                                        rootLoader.source = sectionTitles[index] + ".qml"
+                                        rootLoader.source = "qrc:/"+sectionTitles[index] + ".qml"
 
 //                                        rootLoader.source =  modelData
 //                                        navDrawer.close()
@@ -268,23 +251,15 @@ ApplicationWindow {
     Component.onCompleted: {
         console.log( "The formfactor of this device is " + Device.name )
         fillDefaultModels()
-        rootLoader.source = "qrc:/Account.qml"
+        rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
         defaultname = MiddleMan.init()
-        if ( defaultname  === "" )
-            currentPage = "Account"
-        //        tabDelegate.currentPage = "Account"
-        //        currentPage[0] = "Account"
-        //        console.log(" default name " + defaultname)
-        //        root.visible = true
-        //        if (uname !== "NULL"){
-        //         console.log("have name")
-        //        }else{
-        //        loginDialog.show();
-        //        }
+        if ( defaultname  === "" ){
+//            currentPage = "Account"
+        }
     }
 
     function fillDefaultModels(){
-        //        console.log(" main qml 342")
+
         var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
         for (var i in positionArray){
             postionModel.append({'text': positionArray[i] })
