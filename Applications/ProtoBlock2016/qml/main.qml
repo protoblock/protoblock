@@ -268,7 +268,7 @@ ApplicationWindow {
     Component.onCompleted: {
         console.log( "The formfactor of this device is " + Device.name )
         fillDefaultModels()
-
+        rootLoader.source = "qrc:/Account.qml"
         defaultname = MiddleMan.init()
         if ( defaultname  === "" )
             currentPage = "Account"
