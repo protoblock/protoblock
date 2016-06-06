@@ -246,11 +246,14 @@ ApplicationWindow {
     Component.onCompleted: {
         console.log( "The formfactor of this device is " + Device.name )
         fillDefaultModels()
-        rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
-        pageHelper.selectedTabIndex = 5
         defaultname = MiddleMan.init()
         if ( defaultname  === "" ){
-//            currentPage = "Account"
+            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+            pageHelper.selectedTabIndex = 5
+        }else{
+            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+            pageHelper.selectedTabIndex = 0
+
         }
     }
 
@@ -300,15 +303,6 @@ ApplicationWindow {
             text: msgString
         }
     }
-
-
-
-
-
-
-
-
-
 
 
     Image{
