@@ -41,9 +41,22 @@ Item {
 
 
         Card{
+            property bool hide
             id: namePicker
+            enabled: {
+                if (MiddleMan.goodList().length > 0) {
+                     true
+                }
+                else {false}
+            }
+
             width: parent.width / 1.07
-            height: parent.height / 1.7
+            height: {
+                if (MiddleMan.goodList().length > 0)
+                    parent.height / 1.7
+                else 0
+             }
+
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: accountInfoTxt.bottom
             anchors.topMargin: 32
@@ -70,8 +83,9 @@ Item {
                         height: parent.height
                         width : height
                         fillMode: Image.PreserveAspectFit
-                        opacity: MiddleMan.goodList()[index] === uname ? 1 : 0
-                        source:  "qrc:/icons/action_account_circle.png"
+//                        opacity: MiddleMan.goodList()[index] === uname ? 1 : 0
+                        source:  MiddleMan.goodList()[index] === uname ?
+                                     "qrc:/icons/action_account_circle.png" : ""
                         Behavior on opacity {NumberAnimation{duration: 1200}}
                     }
                     valueText: "Balance : " + " 0"
@@ -144,7 +158,8 @@ Item {
                 wrapMode: Text.WordWrap
                 text:  errmsg
             }
-            onRejected: currentPage = "Import-Export"
+            onRejected: rootLoader.source =  Qt.resolvedUrl("qrc:/Import-Export.qml")
+//            currentPage = "Import-Export"
         }
         // FIXME why is there 2 connection points ?
         // this could be the cause of the bugs in startup
@@ -156,7 +171,8 @@ Item {
                     console.log("name is not taken")
                     //                    root.uname = name
                     MiddleMan.signPlayer(name)
-                    currentPage = "ProtoblockNews"
+//                    currentPage = "ProtoblockNews"
+                    rootLoader.source =  Qt.resolvedUrl("qrc:/ProtoblockNews.qml")
                 }
                 else {
                     errmsg = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"

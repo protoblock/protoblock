@@ -419,6 +419,7 @@ void Mediator::useName(const QString &name) {
     ? There might be a reace on on this ?
  */
 QString Mediator::init() {
+    engineUpdate(true);
     std::string dname = m_fantasy_agent.defaultName();
     if ( dname == "") {
         return "";
@@ -429,14 +430,16 @@ QString Mediator::init() {
 
 //    qDebug() << " Mediator::init() " << dname.data();
     QString defaultName = QString::fromStdString (m_fantasy_agent.currentClient().data());
+    usingFantasyName( defaultName, true ) ;
+
+    return defaultName;
     m_nameStatuses[defaultName] = QString("requested");
     nameStatusChanged( defaultName , "requested" );
 
-    return defaultName;
     // HERE I am setting the engine as true because it is up and we made ith through all the stuff that was needed
     engineUpdate(true);
     usingFantasyName( defaultName, true ) ;
-
+    return defaultName;
 }
 
 void Mediator::handdleUsingName(const QString &name)
