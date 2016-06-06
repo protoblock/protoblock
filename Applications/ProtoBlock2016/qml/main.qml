@@ -153,16 +153,13 @@ ApplicationWindow {
             Flickable {
                 anchors.fill: parent
                 contentHeight: Math.max(content.implicitHeight, height)
-
                 Column {
                     id: content
                     anchors.fill: parent
-
                     Repeater {
                         model: sections
                         delegate: Column {
                             width: parent.width
-
                             ListItem.Subtitled {
                                 id: tabMin
                                 backgroundColor: Colors.primaryColor
@@ -174,7 +171,6 @@ ApplicationWindow {
                                     fillMode: Image.PreserveAspectFit
                                 }
                                 onClicked:{
-
                                     rootLoader.source = "qrc:/" +sectionTitles[index] + ".qml"
                                 }
                             }
@@ -207,11 +203,10 @@ ApplicationWindow {
         Loader {
             id: rootLoader
             width: root.width - 250
-            height: root.height
+            height:navDrawer.height
             asynchronous: true
             visible: status == Loader.Ready
             anchors {
-                top:tabDelegate.top
                 right: parent.right
             }
             source: {
@@ -252,6 +247,7 @@ ApplicationWindow {
         console.log( "The formfactor of this device is " + Device.name )
         fillDefaultModels()
         rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+        pageHelper.selectedTabIndex = 5
         defaultname = MiddleMan.init()
         if ( defaultname  === "" ){
 //            currentPage = "Account"

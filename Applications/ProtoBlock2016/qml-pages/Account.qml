@@ -5,17 +5,15 @@ import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
 Item {
-
+    property string errmsg
     Card {
 
         Component.onCompleted: pageHelper.title = "Accounts"
         height:parent.height / 1.07
         width: parent.width / 1.07
         elevation: 5
-        anchors.top: parent.top
-        anchors.topMargin:  parent.height / 22
-        anchors.horizontalCenter: parent.horizontalCenter
-        property string  errmsg
+        anchors.centerIn: parent
+
 
         Column{
             anchors.fill: parent

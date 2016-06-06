@@ -3,7 +3,7 @@ import QtQuick 2.4
 import ProRotoQml.Protoblock 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
-
+Item{
 Card {
 
     Component.onCompleted: {
@@ -13,8 +13,7 @@ Card {
     height: parent.height / 1.07
     width: parent.width / 1.07
     elevation: 5
-//    anchors.top: parent.top
-//    anchors.topMargin:  parent.height / 22
+    anchors.centerIn: parent
 
     property string  errmsg
 
@@ -24,12 +23,10 @@ Card {
 
         Label {
             id: welcomeTxt
-//            anchors.top: parent.top
-//            anchors.topMargin:  parent.height / 22
-//            width: parent.width / 1.07
+            width: parent.width / 1.07
             font.pixelSize: Qt.platform.os === "android" ? 32 : 22
             font.family: "Roboto"
-            horizontalAlignment: Text.HorizontalFit
+            horizontalAlignment: Text.AlignHCenter
             text: "Protoblock account names are not stored on a central server... blah" +
                   "Import from another device. " +
                   "Export or backup"
@@ -66,9 +63,9 @@ Card {
             property string mypk
             id: importButton
             text: "Import From Secret Backup"
-//            width: parent.width / 1.07
+            width: parent.width / 1.07
             elevation: 5
-//            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             onClicked: {
                 mypk = MiddleMan.importMnemonic(nameText.text)
                 if ( mypk === "" )
@@ -92,10 +89,10 @@ Card {
             id: statusTxt
 //            anchors.top: parent.top
 //            anchors.topMargin:  parent.height / 22
-//            width: parent.width / 1.07
+            width: parent.width / 1.07
             font.pixelSize: Qt.platform.os === "android" ? 32 : 22
             font.family: "Roboto"
-            horizontalAlignment: Text.HorizontalFit
+            horizontalAlignment: Text.AlignHCenter
             text: ""
 
             wrapMode: Text.WordWrap
@@ -107,9 +104,9 @@ Card {
             property string mypk
             id: exportButton
             text: "Export Secret 12 Word for Exprt or Backup"
-//            width: parent.width / 1.07
+            width: parent.width / 1.07
             elevation: 5
-//            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             onClicked: {
 //                mypk = MiddleMan.importMnemonic(nameText.text)
 //                if ( mypk === "" )
@@ -132,10 +129,10 @@ Card {
             id: secretTxt
 //            anchors.top: parent.top
 //            anchors.topMargin:  parent.height / 22
-//            width: parent.width / 1.07
+            width: parent.width / 1.07
             font.pixelSize: Qt.platform.os === "android" ? 32 : 22
             font.family: "Roboto"
-            horizontalAlignment: Text.HorizontalFit
+            horizontalAlignment: Text.AlignHCenter
             text: ""
 
             wrapMode: Text.WordWrap
@@ -145,9 +142,9 @@ Card {
             property string mypk
             id: clearSecret
             text: "Clear secret"
-//            width: parent.width / 1.07
+            width: parent.width / 1.07
             elevation: 5
-//            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             onClicked: {
                 secretTxt.text = ""
             }
@@ -159,7 +156,7 @@ Card {
             positiveButtonText: "show secret"
             negativeButtonText: "get me out of here!"
             Text{
-                width: parent.width
+                width: parent.width / 1.07
                 height: Unit.dp(160)
                 wrapMode: Text.WordWrap
                 text:  "Please make sure nobody is behind you. Secret to your account: " +root.uname + ", will be displayed!"
@@ -185,3 +182,4 @@ Card {
     }
 }
 
+}
