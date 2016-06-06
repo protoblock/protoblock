@@ -30,8 +30,14 @@ Page {
      *
      * \since 0.3
      */
-    readonly property Tab selectedTab: tabView.count > 0
-            ? tabView.getTab(selectedTabIndex) : null
+    readonly property Tab selectedTab: {
+        if ( tabView.count > 0 )
+            tabView.getTab(selectedTabIndex)
+        else
+            null
+     }
+//    tabView.count > 0
+//            ? tabView.getTab(selectedTabIndex) : null
 
     tabs: tabView
 
