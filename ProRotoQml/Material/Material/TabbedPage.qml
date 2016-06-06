@@ -36,6 +36,12 @@ Page {
         else
             null
      }
+
+//    property Tab selectedTab: {
+//        if ( tabView.count > 0 && selectedTabIndex >=0 && selectedTabIndex < tabView.count)
+//        { tabView.getTab(selectedTabIndex) }
+//        else { null }
+//    }
 //    tabView.count > 0
 //            ? tabView.getTab(selectedTabIndex) : null
 

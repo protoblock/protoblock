@@ -78,7 +78,7 @@ Card {
 //                }else{
 //                    MiddleMan.importMnemonic(nameText.text);
 //                }
-//                myImportDialog.show()
+                myImportDialog.show()
                 nameText.text = ""
                 statusTxt.text = errmsg;
                 secretTxt.text = ""
@@ -167,17 +167,17 @@ Card {
                 //"essence scatter shrimp holt try butler reed mushroom mix item mirror draft"
             }
         }
-//        Dialog {
-//            id: myImportDialog
-//            title: "Import status"
-//            positiveButtonText: "back"
-//            Text{
-//                width: parent.width
-//                height: Unit.dp(160)
-//                wrapMode: Text.WordWrap
-//                text:  errmsg
-//            }
-//        }
+        Dialog {
+            id: myImportDialog
+            title: "Import status"
+            positiveButtonText: "back"
+            Text{
+                width: parent.width
+                height: Unit.dp(160)
+                wrapMode: Text.WordWrap
+                text:  errmsg
+            }
+        }
 
     }
 }

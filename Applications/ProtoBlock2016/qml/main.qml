@@ -133,6 +133,7 @@ ApplicationWindow {
         id: pageHelper
         title: "ProtoBlock 2016"
         onSelectedTabChanged: {
+            console.log("onSelectedTabChanged " + selectedTabIndex)
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl(cp.replace(/\s/g, "") + ".qml" )
@@ -215,18 +216,51 @@ ApplicationWindow {
             }
             onSourceChanged: pageHelper.title = currentPage
             onStatusChanged: console.log("Loader " +status)
+            onProgressChanged: {
+                console.log("progreass " + progress)
+            }
         }
 
-
         Repeater {
+            id: foo
+            property int myi: 0
             model: !navDrawer.enabled ? sections : 0
             delegate: Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
                 property string currentPage: modelData[0]
                 property var section: modelData
+                signal loaded()
+
                 source: "qrc:/LeftMenu.qml"
+                Component.onCompleted: {
+
+                    console.log(source + " i " + foo.myi + " root.sectionTitles.length " + root.sectionTitles.length)
+                    foo.myi = foo.myi+1
+                    if (foo.myi === root.sectionTitles.length ){
+                        console.log("All Done")
+                    }
+
+                    defaultname = MiddleMan.init()
+                    console.log("default name: " + defaultname)
+                    if ( defaultname  === "" ){
+                        rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+                        pageHelper.selectedTabIndex = 5
+                    }else{
+                        rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+                        pageHelper.selectedTabIndex = 0
+                    }
+
+                }
             }
+
+            Component.onCompleted: {
+                console.log("Repeater complete")
+            }
+        }
+
+        Component.onCompleted: {
+            console.log("tab loaded ")
         }
     }
 
@@ -243,18 +277,7 @@ ApplicationWindow {
     ListModel{id: weekModel}
 
     property string defaultname
-    Component.onCompleted: {
-        console.log( "The formfactor of this device is " + Device.name )
-        fillDefaultModels()
-        defaultname = MiddleMan.init()
-        if ( defaultname  === "" ){
-            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
-            pageHelper.selectedTabIndex = 5
-        }else{
-            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
-            pageHelper.selectedTabIndex = 0
-        }
-    }
+
 
     function fillDefaultModels(){
 
@@ -386,4 +409,27 @@ ApplicationWindow {
         font.pixelSize: Unit.dp(48)
         font.bold:  true
     }
+
+    Component.onCompleted: {
+        rootLoader.source =  "qrc:/Chat.qml"
+
+//        pageHelper.selectedTabIndex = 4
+
+//        console.log( "The formfactor of this device is " + Device.name )
+//        fillDefaultModels()
+//        defaultname = MiddleMan.init()
+//        console.log("default name: " + defaultname)
+//        if ( defaultname  === "" ){
+//            console.log("111 default name: " + defaultname)
+//            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+//            console.log("222default name: " + defaultname)
+//            pageHelper.selectedTabIndex = 5
+//        }else{
+//            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+//            pageHelper.selectedTabIndex = 0
+//        }
+
+        console.log("232default name: " + defaultname)
+    }
+
 }
