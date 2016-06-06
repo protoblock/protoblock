@@ -53,5 +53,6 @@
         <file>Import-Export.qml</file>
         <file>Indicators.qml</file>
         <file>LeftMenu.qml</file>
+        <file>Banner.qml</file>
     </qresource>
 </RCC>

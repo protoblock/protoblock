@@ -12,8 +12,9 @@ Item {
             iconName: "qrc:/icons/action_settings.png"
             hoverAnimation: true
             onClicked: {
-//                root.currentPage = "UserSettings"
                 rootLoader.source  = "qrc:/UserSettings.qml"
+//                pageHelper.selectedTabIndex = 0
+                 pageHelper.title = "System Settings"
             }
         }
 
@@ -21,6 +22,8 @@ Item {
             iconName: "qrc:/icons/action_account_circle.png"
             onClicked: {
                 rootLoader.source = "qrc:/Account.qml"
+                pageHelper.selectedTabIndex = 5
+                 pageHelper.title = "Account Settings"
             }
         }
     }

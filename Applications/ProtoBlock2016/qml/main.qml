@@ -71,7 +71,7 @@ ApplicationWindow {
 
 
     // Level One
-    property var levelOne: [ "Protoblock News" , "About" , "Contact Us","UserSettings","Faqs"  ]
+    property var levelOne: [ "Protoblock News" , "About" , "Contact Us","FAQS"  ]
     property var levelOneIcons: [
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/ic_help.png",
@@ -253,7 +253,6 @@ ApplicationWindow {
         }else{
             rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
             pageHelper.selectedTabIndex = 0
-
         }
     }
 
