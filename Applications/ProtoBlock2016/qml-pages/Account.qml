@@ -156,7 +156,7 @@ Item {
                     console.log("name is not taken")
                     //                    root.uname = name
                     MiddleMan.signPlayer(name)
-                    currentPage = "ProtoblockNews"
+//                    currentPage = "ProtoblockNews"
                 }
                 else {
                     errmsg = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"

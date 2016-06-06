@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>RotoSearch.qml</file>
+        <file>NflSearch.qml</file>
+        <file>CBSSearch.qml</file>
+        <file>EspnSearch.qml</file>
+        <file>WebView.qml</file>
+        <file>GetFeedLinkText.qml</file>
+        <file>Tweetsearch.qml</file>
+        <file>TweetDelegate.qml</file>
+        <file>ListHeader.qml</file>
+        <file>SearchDelegate.qml</file>
+        <file>LineInput.qml</file>
+        <file>ListFooter.qml</file>
+        <file>FlipBar.qml</file>
+        <file>TweetsModel.qml</file>
+        <file>tweetsearch.js</file>
+    </qresource>
+</RCC>

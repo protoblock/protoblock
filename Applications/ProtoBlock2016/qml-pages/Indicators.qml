@@ -13,8 +13,7 @@ Item {
             hoverAnimation: true
             onClicked: {
                 rootLoader.source  = "qrc:/UserSettings.qml"
-//                pageHelper.selectedTabIndex = 0
-                 pageHelper.title = "System Settings"
+                pageHelper.title = "System Settings"
             }
         }
 
@@ -23,7 +22,7 @@ Item {
             onClicked: {
                 rootLoader.source = "qrc:/Account.qml"
                 pageHelper.selectedTabIndex = 5
-                 pageHelper.title = "Account Settings"
+                pageHelper.title = "Account Settings"
             }
         }
     }

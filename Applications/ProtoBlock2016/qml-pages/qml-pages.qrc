@@ -29,20 +29,6 @@
         <file>BaserModel.qml</file>
         <file>About.qml</file>
         <file>Themes/VersionOne.qml</file>
-        <file>Feeds/RotoSearch.qml</file>
-        <file>Feeds/GetFeedLinkText.qml</file>
-        <file>Feeds/CBSSearch.qml</file>
-        <file>Feeds/EspnSearch.qml</file>
-        <file>Feeds/NflSearch.qml</file>
-        <file>Twitter/TweetDelegate.qml</file>
-        <file>Twitter/ListHeader.qml</file>
-        <file>Twitter/SearchDelegate.qml</file>
-        <file>Twitter/LineInput.qml</file>
-        <file>Twitter/ListFooter.qml</file>
-        <file>Twitter/FlipBar.qml</file>
-        <file>Twitter/TweetsModel.qml</file>
-        <file>Twitter/tweetsearch.js</file>
-        <file>Twitter/Tweetsearch.qml</file>
         <file>EncryptLogin.qml</file>
         <file>BoxText.qml</file>
         <file>Home.qml</file>

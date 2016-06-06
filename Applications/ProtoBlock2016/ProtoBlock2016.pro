@@ -1,8 +1,9 @@
 include ($$PWD/../../pri/deps.pri)
 include ($$PWD/../../pri/artwork.pri)
 include ($$PWD/../../pri/qml-pages.pri)
+include ($$PWD/../../pri/qml-pinky.pri)
+include ($$PWD/../../pri/qml-news.pri)
 include ($$PWD/../../pri/qml-utils.pri)
-
 
 qtHaveModule(webengine) {
     QT += webengine

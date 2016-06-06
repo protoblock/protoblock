@@ -9,8 +9,11 @@ import Material 1.0
 import Material.ListItems 1.0 as ListItem
 import Material.Extras 1.0
 Item {
-    Component.onCompleted:  pageHelper.title = "Contact Protoblock"
-    property string protoblockemail: "jay@protoblock.com"
+    Component.onCompleted: {
+
+        pageHelper.title = "Contact Protoblock"
+    }
+        property string protoblockemail: "jay@protoblock.com"
 
     Image {
         id: logo

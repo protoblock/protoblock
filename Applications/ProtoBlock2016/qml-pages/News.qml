@@ -1,5 +1,4 @@
 import QtQuick 2.0
-import "Twitter"
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
@@ -44,22 +43,22 @@ ListView{
         id: feedsModels
         ListElement{
             name: "Twitter"
-            source : "Twitter/Tweetsearch"
+            source : "Tweetsearch"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{
             name: "NFL"
-            source : "Feeds/NflSearch"
+            source : "NflSearch"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{
             name: "ESPN"
-            source: "Feeds/EspnSearch"
+            source: "EspnSearch"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{
             name: "RotoWorld"
-            source: "Feeds/RotoSearch"
+            source: "RotoSearch"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{

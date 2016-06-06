@@ -91,7 +91,7 @@ ApplicationWindow {
     ]
     //Level four
     property var  levelFour: [
-        "News", "Twitter/Tweetsearch" ,"Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
+        "News", "Tweet search" ,"CBS Search" , "Espn Search", "Nfl Search" ,"Roto Search"
     ]
     property var levelFourIcons: [
         "qrc:/icons/newspaper.png" ,
@@ -136,6 +136,7 @@ ApplicationWindow {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl(cp.replace(/\s/g, "") + ".qml" )
+console.log("SELECTED TAB      " +selectedTabIndex)
         }
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
         backAction: navDrawer.action
@@ -345,6 +346,7 @@ ApplicationWindow {
                     usingNameDialog.open()
                 }
                 console.log("usingFantasyName " + name )
+
             }
         }
 
