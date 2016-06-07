@@ -4,6 +4,8 @@ import ProRotoQml.Protoblock 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 Item{
+property string  errmsg
+
 Card {
 
     Component.onCompleted: {
@@ -15,7 +17,7 @@ Card {
     elevation: 5
     anchors.centerIn: parent
 
-    property string  errmsg
+
 
     Column{
         anchors.fill: parent

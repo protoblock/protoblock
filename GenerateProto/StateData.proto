@@ -450,6 +450,7 @@ enum CType {
     NEWTX = 2;
     PK2FNAME = 3;
     GETSTATUS = 4;
+    GETALLNAMES = 5;
 }
 
 //message WsReq {
@@ -529,3 +530,12 @@ message NameStatusRep {
     optional MyNameStatus status = 10;
     optional NameStatusReq req = 20;
 }
+
+message GetAllNamesRep {
+    extend WSReply {
+        optional GetAllNamesRep rep = 500;
+    }
+
+    repeated string names = 10;
+}
+
