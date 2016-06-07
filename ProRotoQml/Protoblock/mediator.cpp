@@ -236,6 +236,8 @@ void Mediator::onConnected() {
 
         doPk2fname(np.first);
     }
+
+    allNamesGet();
 }
 
 void Mediator::handleAboutToClose()
@@ -282,6 +284,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 if ( m_lastSignedplayer == pk2.req().pk()) {
                     signPlayerStatus.stop();
                     m_lastSignedplayer = "";
+                    allNamesGet();
                 }
 
                 m_myPubkeyFname[pk2.req().pk()] = name;
@@ -322,6 +325,18 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             m_nameStatuses[name.data()] = statusstr;
             qDebug() << " emit " << name.data() << statusstr;
             nameStatusChanged( name.data() , statusstr );
+            break;
+        }
+        case GETALLNAMES: {
+            m_allNamesList.clear();
+            const GetAllNamesRep &np = rep.GetExtension(GetAllNamesRep::rep);
+            for (int i = np.names_size()-1; i >= 0; i--) {
+               m_allNamesList.append(np.names(i).data());
+            }
+#ifdef TRACE
+            qDebug() << "GETALLNAMES" <<  np.DebugString().data();
+#endif
+            break;
         }
         default:
             break;
@@ -419,6 +434,8 @@ void Mediator::useName(const QString &name) {
     ? There might be a reace on on this ?
  */
 QString Mediator::init() {
+    engineUpdate(true);
+
     std::string dname = m_fantasy_agent.defaultName();
     if ( dname == "") {
         return "";
@@ -429,14 +446,17 @@ QString Mediator::init() {
 
 //    qDebug() << " Mediator::init() " << dname.data();
     QString defaultName = QString::fromStdString (m_fantasy_agent.currentClient().data());
-    m_nameStatuses[defaultName] = QString("requested");
-    nameStatusChanged( defaultName , "requested" );
-
-    return defaultName;
-    // HERE I am setting the engine as true because it is up and we made ith through all the stuff that was needed
-    engineUpdate(true);
     usingFantasyName( defaultName, true ) ;
 
+
+    return defaultName;
+//    m_nameStatuses[defaultName] = QString("requested");
+//    nameStatusChanged( defaultName , "requested" );
+
+//    // HERE I am setting the engine as true because it is up and we made ith through all the stuff that was needed
+//    engineUpdate(true);
+//    usingFantasyName( defaultName, true ) ;
+//    return defaultName;
 }
 
 void Mediator::handdleUsingName(const QString &name)
@@ -471,5 +491,15 @@ QString Mediator::lastKnowLoc() {
     return settings.value( "InstallLocation" ).toString();
 }
 #endif
+
+void Mediator::allNamesGet() {
+    WsReq req;
+    req.set_ctype(GETALLNAMES);
+    auto txstr = req.SerializeAsString();
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+    qDebug() << " allNamesGet sending " << req.DebugString().data();
+    m_webSocket.sendBinaryMessage(qb);
+}
+
 
 Mediator *Mediator::myInstance;

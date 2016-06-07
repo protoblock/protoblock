@@ -18,6 +18,7 @@
 #include "fbutils.h"
 
 #include "DataPersist.h"
+#include "Server.h"
 
 #ifdef DATAAGENTWRITENAMES
 #include "playerloader.h"
@@ -71,6 +72,9 @@ void FantasyNameData::init() {
                 qDebug() << "zxcvbn2222" << fnp->ToString().data();
 
             }
+
+            Server::AllNamesRep.add_names(fn.name());
+
         }
         delete it;
     }

@@ -48,6 +48,8 @@ public:
     bool verify_name(const fantasybit::SignedTransaction &st, const NameTrans &nt,
                      const secp256k1_ecdsa_signature &sig, const pb::sha256 &digest);
     std::shared_ptr<FantasyName> getFNverifySt(const SignedTransaction &st);
+
+    static fantasybit::GetAllNamesRep AllNamesRep;
 Q_SIGNALS:
     void closed();
     void error(QString);
@@ -67,6 +69,7 @@ private:
     fantasybit::BlockMeta bm;
     std::string forPbJSon;
     quint16 mport;
+
 
 };
 

@@ -159,6 +159,15 @@ void Server::processBinaryMessage(QByteArray message) {
             rep.MutableExtension(CheckNameRep::rep)->CopyFrom(cr);
             break;
         }
+        case GETALLNAMES: {
+            rep.set_ctype(GETALLNAMES);
+            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(AllNamesRep);
+            break;
+        }
+//        case NameStatusReq:
+//        {
+//            rep.set_ctype(GETSTATUS);
+//        }
         default:
             return;
         }
@@ -189,7 +198,25 @@ void Server::processBinaryMessage(QByteArray message) {
             }
 
             mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
-            qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
+            qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name()) << " adding name";
+            AllNamesRep.add_names(nt.fantasy_name());
+
+//            fantasybit::WSReply rep;
+//            rep.set_ctype(PK2FNAME);
+
+//            Pk2FnameReq req;
+//            req.set_pk(nt.public_key());
+
+//            Pk2FnameRep pkr;
+//            pkr.set_fname(nt.fantasy_name());
+//            pkr.mutable_req()->CopyFrom(req);
+
+//            rep.MutableExtension(Pk2FnameRep::rep)->CopyFrom(pkr);
+//            auto repstr = rep.SerializeAsString();
+//            QByteArray qb(repstr.data(),(size_t)repstr.size());
+//            pClient->sendBinaryMessage(qb);
+//            qDebug() << rep.DebugString().data();
+            return;
         }
     }
 }
@@ -301,3 +328,5 @@ void Server::handleError(const QString err)
 {
     qDebug() << "ProRoto Error " << err ;
 }
+
+fantasybit::GetAllNamesRep Server::AllNamesRep{};
