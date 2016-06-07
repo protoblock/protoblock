@@ -42,6 +42,7 @@ class Mediator : public QObject
 
 public:
     QStringList m_goodList;
+    QStringList m_allNamesList;
 
 //     QList<QString *> m_goodFnames;
 //     QQmlListProperty<QString> goodFnames() {
@@ -85,6 +86,7 @@ public:
 #ifdef Q_OS_WIN32
     Q_INVOKABLE QString lastKnowLoc();
 #endif
+    Q_INVOKABLE void allNamesGet();
     Q_INVOKABLE QString nameStatusGet(const QString&);
     Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(const QString&);
@@ -101,6 +103,10 @@ public:
 
     Q_INVOKABLE QStringList goodList() {
         return m_goodList;
+    }
+
+    Q_INVOKABLE QStringList allNamesList() {
+        return m_allNamesList;
     }
 
     qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);

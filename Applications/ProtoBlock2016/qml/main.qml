@@ -239,16 +239,16 @@ ApplicationWindow {
                     foo.myi = foo.myi+1
                     if (foo.myi === root.sectionTitles.length ){
                         console.log("All Done")
-                    }
 
-                    defaultname = MiddleMan.init()
-                    console.log("default name: " + defaultname)
-                    if ( defaultname  === "" ){
-                        rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
-                        pageHelper.selectedTabIndex = 5
-                    }else{
-                        rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
-                        pageHelper.selectedTabIndex = 0
+                        defaultname = MiddleMan.init()
+                        console.log("default name: " + defaultname)
+                        if ( defaultname  === "" ){
+                            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+                            pageHelper.selectedTabIndex = 5
+                        }else{
+                            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+                            pageHelper.selectedTabIndex = 0
+                        }
                     }
 
                 }
@@ -411,7 +411,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        rootLoader.source =  "qrc:/Chat.qml"
+//        rootLoader.source =  "qrc:/Chat.qml"
 
 //        pageHelper.selectedTabIndex = 4
 
