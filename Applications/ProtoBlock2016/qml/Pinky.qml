@@ -5,13 +5,15 @@ import QtQuick.Dialogs 1.2
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import ProRotoQml.Sql 1.0
-
-Window {
+import Material 1.0
+ApplicationWindow {
     id: root
     width: Screen.width
     height: Screen.height
     visible: true
-    property string unamex
+    property string uname
+    property string currentHomeTeam
+    property string currentAwayTeam
     Component.onCompleted: {
         fillDefaultModels();
     }

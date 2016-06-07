@@ -65,7 +65,7 @@ Item {
                    onClicked:{
                     currentHomeTeam = model.HomeTeam
                     currentAwayTeam = model.AwayTeam
-                    currentPage = "WeeklyTradingLanding"
+                    rootLoader.source = "qrc:/WeeklyTradingLanding.qml"
                    }
                }
     }

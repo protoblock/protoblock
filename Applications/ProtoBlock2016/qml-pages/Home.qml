@@ -25,6 +25,8 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         text: "Welcome  To Protoblock"
         wrapMode: Text.WordWrap
+        color: realRoot.theme ===  "Pinky" ? "white" : "black"
+
     }
     Column{
         id:buttons
@@ -43,6 +45,8 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             text: "Tell your Friends"
             wrapMode: Text.WordWrap
+            color: realRoot.theme ===  "Pinky" ? "white" : "black"
+            Component.onCompleted: console.log(realRoot.theme)
         }
     }
 

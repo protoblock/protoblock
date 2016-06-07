@@ -7,7 +7,7 @@ import Material.ListItems 1.0 as ListItems
 Item {
     id: usersettingsCard
     Component.onCompleted:  pageHelper.title = "User Settings"
-    // MOve to System Settings
+    // move to System Settings
     Card {
         id: colorPicker
         width: parent.width / 1.07
@@ -96,14 +96,16 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: themeBanner.bottom
             anchors.topMargin: 32
+            onSelectedTextChanged: {
+                console.log(selectedText)
+                if(selectedText !== realRoot.theme ){
+                    realRoot.theme =  selectedText
+                }else {
+                console.log( "Current Root Object is theme")
+
+                }
+
+          }
         }
-
-
     }
-
-
-
-
-
-
 }

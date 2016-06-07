@@ -3,12 +3,12 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtMultimedia 5.5
 
-
 import ProRotoQml.Files 1.0
 import ProRotoQml.Utils 1.0
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+
 Item {
     id: pageHelper
     property alias title: headerTitle.text
@@ -28,7 +28,7 @@ Item {
     property int menuLevel: 0
 
     function modelBack(){
-//        menu.model = null
+        //        menu.model = null
         menu.model = sectionTitles
         menuLevel = 0
     }
@@ -36,35 +36,31 @@ Item {
     function switchModel(ind){
         switch(ind){
         case 0 :
-//            menu.model = null
+            //            menu.model = null
             menu.model= levelOne
             break;
         case 1 :
-//            menuModel = null
+            //            menuModel = null
             menu.model = levelTwo
             break;
         case 2 :
-//           menu.model = null
+            //           menu.model = null
             menu.model = levelThree
             break;
         case 3 :
-//            menu.model= null
+            //            menu.model= null
             menu.model = levelFour
             break;
         case 4 :
-//          menu.model = null
+            //          menu.model = null
             menu.model = levelFive
             break;
         case 5 :
-//          menu.model = null
+            //          menu.model = null
             menu.model = levelSix
             break;
         }
-
         menuLevel = 2
-
-//        console.log(menuLevel)
-
     }
 
 
@@ -79,12 +75,12 @@ Item {
         ListElement{text:"Back" }
     }
 
-//    property var levelOneIcons: [
-//        "qrc:/icons/newspaper.png" ,
-//        "qrc:/icons/ic_help.png",
-//        "qrc:/icons/ic_contact_mail.png" ,
-//        "qrc:/icons/ic_help.png"
-//    ]
+    //    property var levelOneIcons: [
+    //        "qrc:/icons/newspaper.png" ,
+    //        "qrc:/icons/ic_help.png",
+    //        "qrc:/icons/ic_contact_mail.png" ,
+    //        "qrc:/icons/ic_help.png"
+    //    ]
     // Level Two
     ListModel {
         id: levelTwo
@@ -154,8 +150,6 @@ Item {
     ]
 
 
-
-
     Image{
         id: background
         width: parent.width
@@ -166,6 +160,24 @@ Item {
     // Image on the right
 
     Image {
+        id: pImages2
+        x: pImages.x
+        anchors.verticalCenter: parent.verticalCenter
+        width: parent.width / 3
+        height: parent.height / 1.1
+        source:  pImages.source
+        onXChanged:{
+            if( x === (parent.width / 1.8) ){
+                seAnimation.start()
+            }
+        }
+        ParallelAnimation{
+            id: seAnimation
+            NumberAnimation{ target: pImages2; property: "opacity"; from : 1 ; to: 0; duration: 1200; }
+            NumberAnimation{ target: pImages2; property: "scale"; from : 1 ; to: 2; duration: 1200; }
+        }
+    }
+    Image {
         id: pImages
         x: parent.width / 2
         anchors.verticalCenter: parent.verticalCenter
@@ -173,21 +185,15 @@ Item {
         height: parent.height / 1.1
         onSourceChanged: scale = 1.1
         Behavior on scale {
-
             ParallelAnimation{
                 NumberAnimation{duration: 1200; from: 0 ; to: 1 ; easing.type:  Easing.OutBack }
+                NumberAnimation { target: pImages; property: "x"; from: parent.width; to: parent.width / 1.8;
+                    duration: 1200; easing.type: Easing.InOutQuad; }
 
-                NumberAnimation {
-                    target: pImages
-                    property: "x"
-                    from: parent.width
-                    to: parent.width / 1.8
-                    duration: 1200
-                    easing.type: Easing.InOutQuad
-                }
             }
         }
     }
+
 
     Timer{
         id: playerPosTimer
@@ -218,7 +224,6 @@ Item {
                 pImages.source = playerImages[i]
                 i = i +1
             }
-
         }
     }
     Rectangle{
@@ -228,8 +233,6 @@ Item {
         anchors.top: header.bottom
         anchors.left: parent.left
         anchors.leftMargin: parent.width / 16
-
-
         ListView{
             id: menu
             width:  parent.width
@@ -246,20 +249,19 @@ Item {
                     text:qsTr("%1").arg( model.text )
                     width: parent.width - 15
                     elide: Text.ElideRight
-                    height: 58
+                    height: 64
                     color: "white"
-                    font.pixelSize: parent.height
+                    font.pixelSize: 48
                     anchors.left: parent.left
                     anchors.leftMargin: 5
                     verticalAlignment: Text.AlignVCenter
-                    smooth: true
-//                    style: Text.Raised
+                    style: Text.Raised
                     font.bold: true
 
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-//                            console.log(menuModel)
+                            //                            console.log(menuModel)
                             if( menuLevel === 0 ){
                                 switchModel(index)
                             }
@@ -279,14 +281,37 @@ Item {
                     }
                 }
             }
-//            add: Transition {
-//                NumberAnimation { properties: "opacity"; from: 1;to:0; duration: 1200 }
-//            }
-//            remove: Transition {
-//                NumberAnimation { properties: "opacity"; from: 0;to:1; duration: 1200 }
-//            }
+            add: Transition {
+                NumberAnimation { properties: "opacity"; from: 1;to:0; duration: 1200 }
+            }
+            remove: Transition {
+                NumberAnimation { properties: "opacity"; from: 0;to:1; duration: 1200 }
+            }
         }
     }
+
+    // The Slider  AKA the slider!
+    Rectangle {
+        id: pageTwo
+        property bool shown: false
+        height: parent.height - (footer.height+ header.height)
+        width: parent.width
+        anchors.top: parent.top
+        anchors.topMargin: header.height
+        x: shown === true ?  0 : parent.width
+        Behavior on x {NumberAnimation{duration: 1200 ; easing.type: Easing.OutBack}}
+        color: "black"
+        Image{
+            id: nextPageBackground
+            anchors.fill: parent
+            source: "qrc:/football.jpg"
+        }
+        Loader{
+            id: sliderLoader
+            anchors.fill: parent
+        }
+    }
+
 
     Rectangle{
         id: header
@@ -384,10 +409,10 @@ Item {
 
 
         Rectangle{
+            id: settingsMenu
             property bool shown: false
             width: settingsButton.width
             height: settingsButton.height * 2.5
-            id: settingsMenu
             color: "#88000000"
             border.color: "#44FFFFFF"
             border.width: 1
@@ -406,7 +431,11 @@ Item {
                     text: modelData
 
                     onClicked: {
-
+                        var cSpace = modelData
+                        sliderLoader.source = Qt.resolvedUrl("qrc:/" +cSpace.replace(/\s/g,"")+ ".qml")
+                        pageTwo.shown = true
+                        backButton.shown = true
+                        settingsMenu.shown = false
                     }
                 }
             }
@@ -426,7 +455,7 @@ Item {
         Component.onCompleted:{
             setFiles(dir)
             for (var i = 0 ; i < files.length;i++){
-//                console.log(files[i])
+                //                console.log(files[i])
                 teamBackgrounds.push("file://"+files[i])
 
             }
@@ -447,37 +476,10 @@ Item {
         Component.onCompleted:{
             setFiles(dir)
             for (var i = 0 ; i < files.length;i++){
-//                console.log(files[i])
+                //                console.log(files[i])
                 playerImages.push("file://"+files[i])
 
             }
-        }
-    }
-
-
-
-
-
-
-    // The Slider  AKA the slider!
-    Rectangle {
-        id: pageTwo
-        property bool shown: false
-        height: parent.height - (footer.height+ header.height)
-        width: parent.width
-        anchors.top: parent.top
-        anchors.topMargin: header.height
-        x: shown === true ?  0 : parent.width
-        Behavior on x {NumberAnimation{duration: 1200 ; easing.type: Easing.OutBack}}
-        color: "black"
-        Image{
-            id: nextPageBackground
-            anchors.fill: parent
-            source: "qrc:/football.jpg"
-        }
-        Loader{
-            id: sliderLoader
-            anchors.fill: parent
         }
     }
 
@@ -494,9 +496,9 @@ Item {
         // FIXME make media objects that work
         var strMedia = trackList[currentTrack]
         var cutLast = strMedia.substring(strMedia.lastIndexOf("/")+1)
-//        console.log(cutLast)
+        //        console.log(cutLast)
         var removeExt = cutLast.substring(0,cutLast.lastIndexOf("."))
-//        console.log(removeExt)
+        //        console.log(removeExt)
 
         trackName.text = "Artist: NFL Films Presents" + "\nSong: "+ removeExt.replace(/-/g," ")
         trackNameTimerOne.start()
@@ -525,7 +527,7 @@ Item {
         Component.onCompleted:{
             setFiles(dir)
             for (var i = 0 ; i < files.length;i++){
-//                console.log(files[i])
+                //                console.log(files[i])
                 trackList.push("file://"+files[i])
             }
             getNewTrack();

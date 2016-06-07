@@ -5,39 +5,22 @@ import Material.ListItems 1.0 as ListItems
 
 Item {
 
-Component.onCompleted:  pageHelper.title = qsTr("NFL News")
-
-
-ListView{
-    width: parent.width
-    height: parent.height
-    clip: true
-    spacing: 3
-    model: feedsModels
-    delegate: ListItems.Subtitled{
-        elevation: 5
-        text: model.name
-        subText: model.subT
-        onClicked: {
-            currentPage = model.source
+    Component.onCompleted:  pageHelper.title = qsTr("NFL News")
+    ListView{
+        width: parent.width
+        height: parent.height
+        clip: true
+        spacing: 3
+        model: feedsModels
+        delegate: ListItems.Subtitled{
+            elevation: 5
+            text: model.name
+            subText: model.subT
+            onClicked: {
+                rootLoader.source ="qrc:/"+ model.source + ".qml"
+            }
         }
-
-
     }
-}
-
-
-
-//    Tweetsearch{
-//        anchors.fill: parent
-//    }
-
-
-
-
-
-
-
 
     ListModel{
         id: feedsModels

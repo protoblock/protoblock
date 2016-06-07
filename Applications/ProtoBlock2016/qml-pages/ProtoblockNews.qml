@@ -1,12 +1,9 @@
 import QtQuick 2.0
 
-
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 Item {
-
     Component.onCompleted: pageHelper.title = "Protoblock"
-
     Image {
         id: logo
         source: "qrc:/logoFinal.png"
@@ -24,6 +21,7 @@ Item {
         width: parent.width / 1.07
         font.pixelSize: Qt.platform.os === "android" ? 32 : 22
         font.family: "Roboto"
+        color: realRoot.theme ===  "Pinky" ? "white" : "black"
         horizontalAlignment: Text.AlignHCenter
         text: "Welcome  To Protoblock"
         wrapMode: Text.WordWrap
@@ -37,15 +35,14 @@ Item {
         anchors.top: welcomeTxt.bottom
         anchors.topMargin: 10
 
-
         Label {
             width: parent.width / 1.07
             font.pixelSize: Qt.platform.os === "android" ? 32 : 22
             font.family: "Roboto"
             horizontalAlignment: Text.AlignHCenter
             text: "Tell your Friends"
+            color: realRoot.theme ===  "Pinky" ? "white" : "black"
             wrapMode: Text.WordWrap
         }
     }
-
 }

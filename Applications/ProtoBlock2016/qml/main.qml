@@ -10,16 +10,11 @@ import ProRotoQml.Theme 1.0
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItem
-
-ApplicationWindow {
+ApplicationWindow{
     id: root
-    //1200 w
-    // 1219 h
-    title: "Protoblock 2016 "
-    width: Device.productType === "osx"||Device.productType === "win32" ? 1200  :  Screen.width
-    height: Device.productType === "osx"||Device.productType === "win32" ? 1220  :  Screen.height
-
-    visible: true
+  visible: true
+  width: Device.productType === "osx"||Device.productType === "win32" ? 1200  :  Screen.width
+  height: Device.productType === "osx"||Device.productType === "win32" ? 1220  :  Screen.height
 
     // Pages
     property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive, levelSix ]
@@ -48,13 +43,6 @@ ApplicationWindow {
     property string pageSwitcher
     property string currentPage: sections[0][0]
     // we set this to 18 because there is no 18 so that it changes of the fly
-    property string  err
-    property string currentTeamInFocus
-    property string currentHomeTeam
-    property string currentAwayTeam
-    property string uname: "NULL"
-    property string errorString
-    property string msgString
     property int loginCardScale: 1
     property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
 
@@ -184,9 +172,6 @@ console.log("SELECTED TAB      " +selectedTabIndex)
                                     onClicked: {
                                         console.log(sectionTitles[index] )
                                         rootLoader.source = "qrc:/"+sectionTitles[index] + ".qml"
-
-//                                        rootLoader.source =  modelData
-//                                        navDrawer.close()
                                     }
                                 }
                             }
@@ -215,7 +200,7 @@ console.log("SELECTED TAB      " +selectedTabIndex)
                 Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
             }
             onSourceChanged: pageHelper.title = currentPage
-            onStatusChanged: console.log("Loader " +status)
+            onStatusChanged: console.log("Loader " + status)
         }
 
 
@@ -274,96 +259,22 @@ console.log("SELECTED TAB      " +selectedTabIndex)
         }
     }
 
-    Dialog {
-        id: loginErrorDialog
-        title: "Error in Signup"
-        positiveButtonText: "back"
-        //        onAccepted: loginCardScale = 1
-        //        onRejected:  loginCardScale = 1
-        Text{
-            width: parent.width
-            height: Unit.dp(160)
-            wrapMode: Text.WordWrap
-            text:  errorString
-        }
-    }
 
 
 
 
 
-    Dialog {
-        id: usingNameDialog
-        title: "Account"
-        positiveButtonText: "ok"
-        Text{
-            width: parent.width
-            height: Unit.dp(160)
-            wrapMode: Text.WordWrap
-            text: msgString
-        }
-    }
 
 
-    Image{
-        id: loaderImage
-        source: "qrc:/logoFinal.png"
-        opacity: 0
-        scale: opacity
-        width: parent.width / 1.07
-        anchors.centerIn: parent
-    }
+//    Image{
+//        id: loaderImage
+//        source: "qrc:/logoFinal.png"
+//        opacity: 0
+//        scale: opacity
+//        width: parent.width / 1.07
+//        anchors.centerIn: parent
+//    }
 
-    Connections {
-        target: MiddleMan
-        //        onNameCheckGet: {
-        //            console.log("onNameCheckGet " + status  + " \n" +  name )
-        //            if(status === "true" )
-        //            {
-        //                console.log("name is not taken")
-        //                MiddleMan.signPlayer(uname)
-        //            }
-        //            else
-        //            {
-        //                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-        //                root.loginCardScale = 0
-        //                loginErrorDialog.open()
-        //                root.errorString =  err
-        //            }
-        //        }
-
-        //        onNameStatusChanged: {
-        //            console.log("nameStatusChange " + MiddleMan.playersName )
-        //            uname = MiddleMan.playersName;
-        //             loginDialog.close()
-        //        }
-
-        onUsingFantasyName: {
-            if ( uname !== name) {
-                uname = name
-                if ( !isdefault ) {
-                    msgString = "You are now playing as: " + name
-                    usingNameDialog.open()
-                }
-                console.log("usingFantasyName " + name )
-
-            }
-        }
-
-        onImportSuccess: {
-            console.log(passfail + "onImportSucess " + name )
-
-            if ( passfail ) {
-                msgString = name + " - Imported!"
-                usingNameDialog.open()
-            }
-            else {
-                errorString = name
-                loginErrorDialog.open()
-            }
-            console.log(passfail + "onImportSucess " + name )
-        }
-    }
 
 
 
@@ -380,7 +291,7 @@ console.log("SELECTED TAB      " +selectedTabIndex)
     }
 
 
-    Text {
+    Label {
         rotation: -45
         text: qsTr("Demo Not Production Ready")
         color: "#60000000"
