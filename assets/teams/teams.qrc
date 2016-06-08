@@ -32,7 +32,7 @@
         <file>WAS.PNG</file>
         <file>JAX.PNG</file>
         <file>LA.PNG</file>
-        <file>bucslarge.jpg</file>
+<!--        <file>bucslarge.jpg</file>
         <file>49erslarge.jpg</file>
         <file>cardinalslarge.jpg</file>
         <file>cowboyslarge.jpg</file>
@@ -51,6 +51,6 @@
         <file>brick_wall_1440.jpg</file>
         <file>Chargers.jpg</file>
         <file>00073-UIS_LIB_SOLOPLAYERS.dat.File00073.copy001.png</file>
-        <file>00089-UIS_LIB_SOLOPLAYERS.dat.File00089.copy001.png</file>
+        <file>00089-UIS_LIB_SOLOPLAYERS.dat.File00089.copy001.png</file>-->
     </qresource>
 </RCC>

@@ -256,7 +256,11 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
     fantasybit::WSReply rep;
     rep.ParseFromString(message.toStdString());
 
+    if ( rep.ctype() != GETALLNAMES)
     qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
+    else
+        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
+
     switch ( rep.ctype()) {
         case PK2FNAME:
         {
@@ -334,7 +338,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                m_allNamesList.append(np.names(i).data());
             }
 #ifdef TRACE
-            qDebug() << "GETALLNAMES" <<  np.DebugString().data();
+            //qDebug() << "GETALLNAMES" <<  np.DebugString().data();
 #endif
             break;
         }
