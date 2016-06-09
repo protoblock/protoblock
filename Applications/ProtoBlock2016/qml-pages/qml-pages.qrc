@@ -40,5 +40,6 @@
         <file>Indicators.qml</file>
         <file>LeftMenu.qml</file>
         <file>Banner.qml</file>
+        <file>NFLNews.qml</file>
     </qresource>
 </RCC>

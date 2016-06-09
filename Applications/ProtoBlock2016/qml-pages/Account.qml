@@ -45,11 +45,13 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: accountInfoTxt.bottom
             anchors.topMargin: 32
+            opacity: repeater.opacity
             Banner{
                 id: namePickerBannner
                 width: namePicker.width
                 height: 48
                 text: "Choose Name"
+                opacity: repeater.opacity
             }
             ListView {
                 id: repeater
@@ -57,6 +59,7 @@ Item {
                 height: namePicker.height - 48
                 clip: true
                 interactive: true
+                onCountChanged: count < 1 ? opacity = 0 : opacity = 1
                 anchors.top: namePickerBannner.bottom
                 model: MiddleMan.goodList().length
                 delegate:
@@ -104,6 +107,7 @@ Item {
                     font.family: "Default"
                     placeholderText: "please enter in a new fantasy name"
                     anchors.horizontalCenter: parent.horizontalCenter
+                    onAccepted: nameCheckBlank(nameText.text)
                 }
                 Button{
                     id: clamNameButton
@@ -111,9 +115,7 @@ Item {
                     width: parent.width / 1.07
                     elevation: 5
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onClicked: {
-                        MiddleMan.checkname(nameText.text)
-                    }
+                    onClicked: nameCheckBlank(nameText.text)
                 }
             }
         }
@@ -131,7 +133,9 @@ Item {
                 wrapMode: Text.WordWrap
                 text:  errorString
             }
-            onRejected: rootLoader.source = "qrc:/Import-Export.qml"
+            onRejected: {
+                rootLoader.source = "qrc:/Import-Export.qml"
+            }
         }
 
         // FIXME why is there 2 connection points ?
@@ -142,12 +146,27 @@ Item {
                 if(status === "true" ) {
                     MiddleMan.signPlayer(name)
                     rootLoader.source = "qrc:/ProtoblockNews.qml"
+                    pageHelper.selectedTabIndex = 0;
                 }
                 else {
                     errorString = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
                     accountErrorDialog.open()
                 }
             }
+        }
+    }
+
+    function nameCheckBlank(s) {
+        if ( s.length === 0 ) {
+            return
+        }
+        else if ( s.length > 45) {
+            errString = "name to long"
+            accountErrorDialog.show()
+        }
+
+        else {
+            MiddleMan.checkname(s)
         }
     }
 }

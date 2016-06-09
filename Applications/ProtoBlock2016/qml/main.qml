@@ -124,7 +124,7 @@ ApplicationWindow{
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl(cp.replace(/\s/g, "") + ".qml" )
-console.log("SELECTED TAB      " +selectedTabIndex)
+            console.log("SELECTED TAB      " +selectedTabIndex)
         }
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
         backAction: navDrawer.action
@@ -199,7 +199,7 @@ console.log("SELECTED TAB      " +selectedTabIndex)
                 var theFile = navDrawer.enabled ?  root.currentPage : currentPage
                 Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
             }
-//            onSourceChanged: pageHelper.title = currentPage
+//            onSourceChanged: pageHelper.title = sec
             onStatusChanged: console.log("Loader " + status)
         }
 
@@ -212,6 +212,26 @@ console.log("SELECTED TAB      " +selectedTabIndex)
                 property string currentPage: modelData[0]
                 property var section: modelData
                 source: "qrc:/LeftMenu.qml"
+
+                Component.onCompleted: {
+
+//                    console.log(source + " i " + foo.myi + " root.sectionTitles.length " + root.sectionTitles.length)
+//                    foo.myi = foo.myi+1
+//                    if (foo.myi === root.sectionTitles.length ){
+//                        console.log("All Done")
+//                    }
+
+                    defaultname = MiddleMan.init()
+                    console.log("default name: " + defaultname)
+                    if ( defaultname  === "" ){
+                        rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+                        pageHelper.selectedTabIndex = 5
+                    }else{
+                        rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+                        pageHelper.selectedTabIndex = 0
+                    }
+
+                }
             }
         }
     }
@@ -229,18 +249,18 @@ console.log("SELECTED TAB      " +selectedTabIndex)
     ListModel{id: weekModel}
 
     property string defaultname
-    Component.onCompleted: {
-        console.log( "The formfactor of this device is " + Device.name )
-        fillDefaultModels()
-        defaultname = MiddleMan.init()
-        if ( defaultname  === "" ){
-            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
-            pageHelper.selectedTabIndex = 5
-        }else{
-            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
-            pageHelper.selectedTabIndex = 0
-        }
-    }
+//    Component.onCompleted: {
+//        console.log( "The formfactor of this device is " + Device.name )
+//        fillDefaultModels()
+//        defaultname = MiddleMan.init()
+//        if ( defaultname  === "" ){
+//            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+//            pageHelper.selectedTabIndex = 5
+//        }else{
+//            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+//            pageHelper.selectedTabIndex = 0
+//        }
+//    }
 
     function fillDefaultModels(){
 
