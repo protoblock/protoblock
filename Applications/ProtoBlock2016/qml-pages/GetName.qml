@@ -68,7 +68,7 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     onTextChanged: {
                     // fix me handle import
-                        root.uname = text
+                        realRoot.uname = text
 
                     }
                 }

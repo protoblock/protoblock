@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Window 2.0
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Protoblock 1.0
+//import ProRotoQml.Torrent 1.0
 
 import Material 1.0 as Material
 Window {
@@ -14,12 +15,27 @@ Window {
     property string theme: "Material"
     property string errorString
     property string  uname
+    onUnameChanged: console.log("USING NEW UNAME " + uname)
     property string  err
     property string currentTeamInFocus
     property string currentHomeTeam
     property string currentAwayTeam
     //    property string uname: "NULL"
     property string msgString
+
+    // make this into c++
+    property var speed2Name: function( bytesPerSecond ){
+        if ( bytesPerSecond < 1000 )
+            return bytesPerSecond + " B";
+        if ( bytesPerSecond < 1024000 )
+            return Math.round( bytesPerSecond / 1024 * 100 ) / 100 + " Kb"
+        if ( bytesPerSecond < 1048576000 )
+            return Math.round( bytesPerSecond / 1048576 * 100 ) / 100 + " Mb"
+        else
+            return Math.round( bytesPerSecond / 1073741824 * 100 ) / 100 + " Gb"
+    }
+
+
 
     onThemeChanged:
         if(theme === "Material") {
@@ -40,87 +56,56 @@ Window {
         }
     }
 
-    Connections {
-        target: MiddleMan
-        //        onNameCheckGet: {
-        //            console.log("onNameCheckGet " + status  + " \n" +  name )
-        //            if(status === "true" )
-        //            {
-        //                console.log("name is not taken")
-        //                MiddleMan.signPlayer(uname)
-        //            }
-        //            else
-        //            {
-        //                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-        //                root.loginCardScale = 0
-        //                loginErrorDialog.open()
-        //                root.errorString =  err
-        //            }
-        //        }
-
-        //        onNameStatusChanged: {
-        //            console.log("nameStatusChange " + MiddleMan.playersName )
-        //            uname = MiddleMan.playersName;
-        //             loginDialog.close()
-        //        }
-
-        onUsingFantasyName: {
-            if ( uname !== name) {
-                uname = name
-                if ( !isdefault ) {
-                    msgString = "You are now playing as: " + name
-                    usingNameDialog.open()
-                }
-                console.log("usingFantasyName " + name )
-
-            }
-        }
-
-        onImportSuccess: {
-            console.log(passfail + "onImportSucess " + name )
-
-            if ( passfail ) {
-                msgString = name + " - Imported!"
-                usingNameDialog.open()
-            }
-            else {
-                errorString = name
-                loginErrorDialog.open()
-            }
-            console.log(passfail + "onImportSucess " + name )
-        }
-    }
 
 
 
 
 
 
-    Material.Dialog {
-        id: usingNameDialog
-        title: "Account"
-        positiveButtonText: "ok"
-        Text{
-            width: parent.width
-            height: Unit.dp(160)
-            wrapMode: Text.WordWrap
-            text: msgString
-        }
-    }
 
 
 
-    Material.Dialog {
-        id: loginErrorDialog
-        title: "Error in Signup"
-        positiveButtonText: "back"
-        //        onAccepted: loginCardScale = 1
-        //        onRejected:  loginCardScale = 1
-        Text{
-            width: parent.width
-            height: Unit.dp(160)
-            wrapMode: Text.WordWrap
-            text:  errorString
-        }
-    }
+
+
+
+//    Button {
+//        iconName: "av/play_arrow"
+//        name: "Play"
+//        onTriggered: {
+//            for ( var i = 0; i < torrentModel.count; ++i ){
+//                var res = torrentModel.data( i, TorrentModel.TorState );
+//                if ( res == TorrentModel.Paused )
+//                    torrentModel.setPause( i, false )
+//            }
+//        }
+//    },
+
+//    Button {
+//        iconName: "av/pause"
+//        name: "Pause"
+//        onTriggered: {
+//            for ( var i = 0; i < torrentModel.count; ++i ){
+//                var res = torrentModel.data( i, TorrentModel.TorState );
+//                if ( res == TorrentModel.Downloading || res == TorrentModel.Seeding )
+//                    torrentModel.setPause( i, true )
+//            }
+//        }
+//    }
+//    Button{
+//        id : addTorrentAction
+//        name: "New Torrent"
+//        iconName: "action/note_add"
+//        onTriggered: addTorrentDialog.open()
+//    }
+
+
+//    AddTorrentDialog{
+//        id : addTorrentDialog
+//        onAccepted: torModel.addTorrent( torrentFileUrl, destinationFolder )
+//    }
+
+//    TorrentModel{
+//        id: torModel
+//        onCountChanged: console.log(count)
+//    }
 }

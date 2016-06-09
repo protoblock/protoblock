@@ -9,7 +9,7 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
     for ( auto &np : m_fantasy_agent.getMyNames()) {
         m_myPubkeyFname[np.second] = "";
-        qDebug() << " Mediator::Mediator name:" << np.first << " pk: " << np.second;
+        qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
     }
 
 
@@ -32,13 +32,13 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
     connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
     connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
 
-        connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
+    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
 
-    connect(this,SIGNAL (nameStatusChanged(QString,QString))
-            ,this, SLOT (handdleNameStatus(QString,QString)));
+//    connect(this,SIGNAL (nameStatusChanged(QString,QString))
+//            ,this, SLOT (handdleNameStatus(QString,QString)));
 
-    connect(this,SIGNAL(usingFantasyName(QString)),
-            this,SLOT(handdleUsingName(QString)));
+//    connect(this,SIGNAL(usingFantasyName(QString)),
+//            this,SLOT(handdleUsingName(QString)));
 
 
 
@@ -52,14 +52,14 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 }
 
 
-QString Mediator::nameStatusGet(const QString &name) {
-    QVariantMap::const_iterator iter = m_nameStatuses.find(name);
-    if ( !iter->isValid() )
-        return "none";
-    else
-        qDebug() << "Suggested Name:  "  << iter.value ().toString ();
-        return iter.value().toString();
-}
+//QString Mediator::nameStatusGet(const QString &name) {
+//    QVariantMap::const_iterator iter = m_nameStatuses.find(name);
+//    if ( !iter->isValid() )
+//        return "none";
+//    else
+//        qDebug() << "Suggested Name:  "  << iter.value ().toString ();
+//        return iter.value().toString();
+//}
 
 void Mediator::pk2fname(const QString &pk) {
     lastPk2name = pk.toStdString();
@@ -107,83 +107,83 @@ Mediator *Mediator::instance() {
     return myInstance;
 }
 
-/*!
- * \brief Mediator::playersStatus
- * \return
-    returns the current fantasy players status that is in focus
-*/
-QString Mediator::playersStatus() const
-{
-    return m_playersStatus;
-}
+///*!
+// * \brief Mediator::playersStatus
+// * \return
+//    returns the current fantasy players status that is in focus
+//*/
+//QString Mediator::playersStatus() const
+//{
+//    return m_playersStatus;
+//}
 
-/*!
- * \brief Mediator::setPlayersStatus
- * \param playersStatus
-    set the curreent fantasy players status
-*/
-void Mediator::setPlayersStatus(const QString &playersStatus)
-{
-    if(m_playersStatus == playersStatus)
-        return;
-    m_playersStatus = playersStatus;
-    emit playersStatusChanged();
-}
+///*!
+// * \brief Mediator::setPlayersStatus
+// * \param playersStatus
+//    set the curreent fantasy players status
+//*/
+//void Mediator::setPlayersStatus(const QString &playersStatus)
+//{
+//    if(m_playersStatus == playersStatus)
+//        return;
+//    m_playersStatus = playersStatus;
+//    emit playersStatusChanged();
+//}
 
-/*!
- * \brief Mediator::playersName
- * \return
-    return the current fantasys players name that is in focus
-*/
-QString Mediator::playersName()
-{
-    return m_fantasy_agent.currentClient().data();
-}
+///*!
+// * \brief Mediator::playersName
+// * \return
+//    return the current fantasys players name that is in focus
+//*/
+//QString Mediator::playersName()
+//{
+//    return m_fantasy_agent.currentClient().data();
+//}
 
-/*!
- * \brief Mediator::setPlayersName
- * \param playersName
-    Set the Current players name that is in focus
-*/
-void Mediator::setPlayersName(const QString &playersName)
-{
-    if( m_playersName == playersName)
-        return;
-    m_playersName = playersName;
-    emit playersNameChanged();
-}
+///*!
+// * \brief Mediator::setPlayersName
+// * \param playersName
+//    Set the Current players name that is in focus
+//*/
+//void Mediator::setPlayersName(const QString &playersName)
+//{
+//    if( m_playersName == playersName)
+//        return;
+//    m_playersName = playersName;
+//    emit playersNameChanged();
+//}
 
-Mediator::MyNameStatus Mediator::myNameStatus() const
-{
-    return m_myNameStatus;
-}
+//Mediator::MyNameStatus Mediator::myNameStatus() const
+//{
+//    return m_myNameStatus;
+//}
 
 //FIXME when the status of a current name is changed update this
-void Mediator::setMyNameStatus(const Mediator::MyNameStatus &myNameStatus)
-{
-    if (m_myNameStatus == myNameStatus){
-        return;
-    }else {
-        switch (myNameStatus) {
-        case None :
-            m_myNameStatus = None;
-            break;
-        case NotAvil:
-            m_myNameStatus = NotAvil;
-            break;
-        case Requested:
-            m_myNameStatus = Requested;
-            break;
-        case TransactionSent:
-            m_myNameStatus = TransactionSent;
-            break;
-        case Confirmed:
-            m_myNameStatus = Confirmed;
-            break;
-        }
-        emit myNameStatusChanged();
-    }
-}
+//void Mediator::setMyNameStatus(const Mediator::MyNameStatus &myNameStatus)
+//{
+//    if (m_myNameStatus == myNameStatus){
+//        return;
+//    }else {
+//        switch (myNameStatus) {
+//        case None :
+//            m_myNameStatus = None;
+//            break;
+//        case NotAvil:
+//            m_myNameStatus = NotAvil;
+//            break;
+//        case Requested:
+//            m_myNameStatus = Requested;
+//            break;
+//        case TransactionSent:
+//            m_myNameStatus = TransactionSent;
+//            break;
+//        case Confirmed:
+//            m_myNameStatus = Confirmed;
+//            break;
+//        }
+//        emit myNameStatusChanged();
+//    }
+//}
 
 qint64 Mediator::sendBinaryMessage(const QByteArray &data) {
     return m_webSocket.sendBinaryMessage(data);
@@ -323,23 +323,28 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         }
         case GETSTATUS:
         {
-            const NameStatusRep &np = rep.GetExtension(NameStatusRep::rep);
-            QString statusstr = fantasybit::MyNameStatus_Name(np.status()).data();
-            auto name = np.req().name();
-            m_nameStatuses[name.data()] = statusstr;
-            qDebug() << " emit " << name.data() << statusstr;
-            nameStatusChanged( name.data() , statusstr );
+//            const NameStatusRep &np = rep.GetExtension(NameStatusRep::rep);
+//            QString statusstr = fantasybit::MyNameStatus_Name(np.status()).data();
+//            auto name = np.req().name();
+//            m_nameStatuses[name.data()] = statusstr;
+//            qDebug() << " emit " << name.data() << statusstr;
+//            nameStatusChanged( name.data() , statusstr );
             break;
         }
         case GETALLNAMES: {
             m_allNamesList.clear();
+//            m_allNames2.clear();
             const GetAllNamesRep &np = rep.GetExtension(GetAllNamesRep::rep);
             for (int i = np.names_size()-1; i >= 0; i--) {
                m_allNamesList.append(np.names(i).data());
+//               m_allNames2.append(np.names(i).data());
             }
+            leaderBoardchanged();
 #ifdef TRACE
             //qDebug() << "GETALLNAMES" <<  np.DebugString().data();
 #endif
+
+//            setallNames2(m_allNamesList)
             break;
         }
         default:
@@ -412,8 +417,8 @@ void Mediator::signPlayer(const QString &name)  {
 
     m_txsocket.sendBinaryMessage(qb);
 
-    m_nameStatuses[name] = QString("requested");
-    nameStatusChanged(name,"requested");
+//    m_nameStatuses[name] = QString("requested");
+//    nameStatusChanged(name,"requested");
     usingFantasyName(m_fantasy_agent.currentClient().data());
     m_myPubkeyFname[m_fantasy_agent.pubKeyStr()] = "";
     m_lastSignedplayer = m_fantasy_agent.pubKeyStr();
@@ -427,8 +432,11 @@ void Mediator::getSignedPlayerStatus() {
 
 
 void Mediator::useName(const QString &name) {
-    if ( m_fantasy_agent.UseName(name.toStdString()) )
+    qDebug() << " Mediator::useName " << name;
+    if ( m_fantasy_agent.UseName(name.toStdString()) ) {
+//        qDebug() << " Mediator::useName  usingFantasyName" << name;
         usingFantasyName(name);
+    }
 
 }
 
@@ -463,31 +471,32 @@ QString Mediator::init() {
 //    return defaultName;
 }
 
-void Mediator::handdleUsingName(const QString &name)
-{
-#ifdef TRACE
-    qDebug() << " handdleUsingName " << name;
-#endif
-    setPlayersName (name);
-}
+//void Mediator::handdleUsingName(const QString &name)
+//{
+//#ifdef TRACE
+//    qDebug() << " handdleUsingName " << name;
+//#endif
+//    setPlayersName (name);
+//}
 
-void Mediator::handdleNameStatus(const QString &name, const QString &status)
-{
-    setPlayersName (name);
-    setPlayersStatus (status);
-}
+//void Mediator::handdleNameStatus(const QString &name, const QString &status)
+//{
+//    setPlayersName (name);
+//    setPlayersStatus (status);
+//}
 
 
 // THIS SHOULD be a error signal that alerts others that something is going on.
 void Mediator::handleSocketError(QAbstractSocket::SocketError error)
 {
+
     qDebug() << error;
 }
 
-void Mediator::handdleNameStatuses()
-{
-    setMyNameStatus (m_myNameStatus);
-}
+//void Mediator::handdleNameStatuses()
+//{
+//    setMyNameStatus (m_myNameStatus);
+//}
 
 #ifdef Q_OS_WIN32
 QString Mediator::lastKnowLoc() {

@@ -39,7 +39,7 @@ Card {
         ListItems.Subtitled{
             elevation: 1
             width: parent.width / 1.07
-            text: "FantasyName: " + root.uname
+            text: "FantasyName: " + realRoot.uname
 //                        subText: "Status of name " +  unameStatus
             action: RoundImage{
                 height: parent.height
@@ -57,7 +57,7 @@ Card {
             placeholderText: "please enter in 12 secret words"
             anchors.horizontalCenter: parent.horizontalCenter
 //            onTextChanged: {
-//                root.uname = text
+//                realRoot.uname = text
 //            }
         }
 
@@ -138,6 +138,7 @@ Card {
             text: ""
 
             wrapMode: Text.WordWrap
+
         }
 
         Button{
@@ -148,7 +149,7 @@ Card {
             elevation: 5
             anchors.horizontalCenter: parent.horizontalCenter
             onClicked: {
-                secretTxt.text = ""
+                 secretTxt.text = ""
             }
         }
 
@@ -161,10 +162,10 @@ Card {
                 width: parent.width / 1.07
                 height: Unit.dp(160)
                 wrapMode: Text.WordWrap
-                text:  "Please make sure nobody is behind you. Secret to your account: " +root.uname + ", will be displayed!"
+                text:  "Please make sure nobody is behind you. Secret to your account: " +realRoot.uname + ", will be displayed!"
             }
             onAccepted: {
-                secretTxt.text = "click Clear when done. 12 word Secret for " + root.uname + ": " +
+                secretTxt.text = "12 word Secret for " + realRoot.uname + ": \n\n" +
                         MiddleMan.getSecret()
                 //"essence scatter shrimp holt try butler reed mushroom mix item mirror draft"
             }
@@ -183,5 +184,7 @@ Card {
 
     }
 }
+
+
 
 }

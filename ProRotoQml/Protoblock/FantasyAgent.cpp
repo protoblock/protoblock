@@ -10,10 +10,6 @@
 #include <iostream>
 #include <utility>
 #include <memory>
-
-//#include <secp256k1/util.h>
-
-
 #include "FantasyAgent.h"
 #include "Commissioner.h"
 #include "DataPersist.h"
@@ -22,9 +18,10 @@
 #include "mnemonic.h"
 #include "utils/utils.h"
 #include <openssl/rand.h>
-#include <QFile>
-#include <QString>
-namespace fantasybit {
+//#include <QFile>
+//#include <QString>
+
+using namespace fantasybit;
 
 FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
     if ( filename != "" )
@@ -46,7 +43,7 @@ FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
         if ( secret.has_mnemonic_key() )
             secret.clear_mnemonic_key();
         m_secrets.push_back(secret);
-        qInfo() << secret.DebugString().data(); //fantasy_name() << " have key";
+        qDebug() << secret.fantasy_name().data() << " have key";
         if ( AmFantasyAgent(secret.public_key())) {
               auto pr = str2priv(secret.private_key());
               m_oracle = pr;
@@ -449,15 +446,16 @@ void FantasyAgent::writeNomNonic(string in) {
     writer(secret);
 }
 
-bool FantasyAgent::UseName(std::string name) {
-
+bool FantasyAgent::UseName(const std::string &name) {
     for ( auto s : m_secrets ) {
+
         if ( s.fantasy_name() == name) {
             auto str = s.private_key();
             auto pr = str2priv(str);
             m_priv = pr;
             client = make_unique<FantasyName>
                     (name, m_priv.get_public_key().serialize());
+
             return true;
         }
     }
@@ -554,19 +552,19 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 
 
 
-            QString mnF =  QString::fromStdString (GET_ROOT_DIR());
-            mnF.append (QString::fromStdString (secretfilename3.data ()));
-            QFile f(mnF);
-            if (!f.open (QFile::ReadOnly | QFile::Text)){
-                qDebug() << "could not open the  " << mnF;
-            }
-            QTextStream in(&f);
-                  while (!in.atEnd()) {
-                      QString line = in.readLine();
-                      qDebug() << line;
-                  }
-            f.close ();
-            f.flush ();
+//            QString mnF =  QString::fromStdString (GET_ROOT_DIR());
+//            mnF.append (QString::fromStdString (secretfilename3.data ()));
+//            QFile f(mnF);
+//            if (!f.open (QFile::ReadOnly | QFile::Text)){
+//                qDebug() << "could not open the  " << mnF;
+//            }
+//            QTextStream in(&f);
+//                  while (!in.atEnd()) {
+//                      QString line = in.readLine();
+//                      qDebug() << line;
+//                  }
+//            f.close ();
+//            f.flush ();
 
         }
 
@@ -926,4 +924,3 @@ sb.set_sig(p.second);
 std::cout << "\n" << sb.DebugString() << "\n";
 */
 
-}

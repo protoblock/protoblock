@@ -199,7 +199,7 @@ console.log("SELECTED TAB      " +selectedTabIndex)
                 var theFile = navDrawer.enabled ?  root.currentPage : currentPage
                 Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
             }
-            onSourceChanged: pageHelper.title = currentPage
+//            onSourceChanged: pageHelper.title = currentPage
             onStatusChanged: console.log("Loader " + status)
         }
 
@@ -217,12 +217,12 @@ console.log("SELECTED TAB      " +selectedTabIndex)
     }
 
 
-    Indicators{
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.topMargin: 24
-        anchors.rightMargin: 48 * 2
-    }
+//    Indicators{
+//        anchors.right: parent.right
+//        anchors.top: parent.top
+//        anchors.topMargin: 24
+//        anchors.rightMargin: 48 * 2
+//    }
 
     /////////////
     ListModel{id: postionModel}
@@ -280,23 +280,110 @@ console.log("SELECTED TAB      " +selectedTabIndex)
 
     // Set up the default connections to the databases
 
-    QmlSqlDatabase{
-        id: mainTfProdDb
-        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
-        databaseDriver: QmlSqlDatabase.SQLight
-        connectionName: "protoblock"
-        onConnectionOpened: console.log("database Open")
-        onError: console.log("DB Error:  " +  errorString)
-        Component.onCompleted: addDataBase()
-    }
+//    QmlSqlDatabase{
+//        id: mainTfProdDb
+//        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
+//        databaseDriver: QmlSqlDatabase.SQLight
+//        connectionName: "protoblock"
+//        onConnectionOpened: console.log("database Open")
+//        onError: console.log("DB Error:  " +  errorString)
+//        Component.onCompleted: addDataBase()
+//    }
 
 
     Label {
         rotation: -45
-        text: qsTr("Demo Not Production Ready")
+        text: qsTr("Demo Not Live")
         color: "#60000000"
         anchors.centerIn: parent
         font.pixelSize: Unit.dp(48)
         font.bold:  true
     }
+
+
+    Dialog {
+        id: usingNameDialog
+        title: "Account"
+        positiveButtonText: "ok"
+        Text{
+            width: parent.width
+            height: Unit.dp(160)
+            wrapMode: Text.WordWrap
+            text: msgString
+        }
+    }
+
+    Connections {
+        id: connectionPoints
+        target: MiddleMan
+        //        onNameCheckGet: {
+        //            console.log("onNameCheckGet " + status  + " \n" +  name )
+        //            if(status === "true" )
+        //            {
+        //                console.log("name is not taken")
+        //                MiddleMan.signPlayer(uname)
+        //            }
+        //            else
+        //            {
+        //                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
+        //                root.loginCardScale = 0
+        //                loginErrorDialog.open()
+        //                root.errorString =  err
+        //            }
+        //        }
+
+
+//        onNameCheckGet: {
+//            if(status === "true" ) {
+//                MiddleMan.signPlayer(name)
+////                    currentPage = "ProtoblockNews"
+//            }
+//            else {
+//                errorString = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
+//                loginErrorDialog.open()
+//            }
+//        }
+
+
+//        onNameCheckGet: {
+//            console.log("onNameCheckGet " + status  + " \n" +  name )
+//            if(status === "true" ) {
+//                uname = name
+//                MiddleMan.signPlayer(name)
+//            }
+//            else {
+//                errmsg = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
+//                loginErrorDialog.open()
+//            }
+//        }
+
+        onUsingFantasyName: {
+            console.log("usingFantasyName " + name )
+            if ( uname !== name) {
+                uname = name
+                if ( !isdefault ) {
+                    msgString = "You are now playing as: " + name
+                    usingNameDialog.open()
+                }
+                console.log("usingFantasyName " + name )
+            }
+        }
+
+        onImportSuccess: {
+            console.log(passfail + "onImportSucess " + name )
+
+            if ( passfail ) {
+                msgString = name + " - Imported!"
+                usingNameDialog.open()
+            }
+            else {
+                errorString = name
+                loginErrorDialog.open()
+            }
+            console.log(passfail + "onImportSucess " + name )
+        }
+    }
+
+
+
 }

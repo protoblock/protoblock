@@ -57,9 +57,9 @@ Rectangle {
                     });
                     //connect to the keep alive signal
                     ch.objects.chatserver.keepAlive.connect(function(args) {
-                        if (root.uname !== '')
+                        if (realRoot.uname !== '')
                             //and call the keep alive response method as an answer
-                            ch.objects.chatserver.keepAliveResponse(root.uname)
+                            ch.objects.chatserver.keepAliveResponse(realRoot.uname)
                     });
 
 //                    ch.objects.chatserver.
@@ -128,7 +128,7 @@ Rectangle {
             onEditingFinished: {
                 if (messageBox.text.length)
                     //call the sendMessage method to send the message
-                chatRoot.channel.objects.chatserver.sendMessage(root.uname, messageBox.text);
+                chatRoot.channel.objects.chatserver.sendMessage(realRoot.uname, messageBox.text);
                 messageBox.text = '';
             }
         }
@@ -145,7 +145,7 @@ Rectangle {
         running: false
         onTriggered: {
             if (socket.status === ProtoblockSocket.Open){
-                console.log("getting ready to login " +  root.uname)
+                console.log("getting ready to login " +  realRoot.uname)
                 login();
             }else{
                 runner.start()
@@ -173,10 +173,10 @@ Rectangle {
     }
 
     function login(){
-            chatRoot.channel.objects.chatserver.login(root.uname, function(arg) {
+            chatRoot.channel.objects.chatserver.login(realRoot.uname, function(arg) {
             //check the return value for success
             if (arg === true) {
-                console.log("logged in as " + root.uname)
+                console.log("logged in as " + realRoot.uname)
             } else {
             }
         });

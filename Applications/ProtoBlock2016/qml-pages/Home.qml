@@ -2,9 +2,12 @@ import QtQuick 2.0
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
-Item {
 
-    Component.onCompleted: pageHelper.title = "Protoblock"
+
+import ProRotoQml.Protoblock 1.0
+import ProRotoQml.Theme 1.0
+Item {
+    //    Component.onCompleted: pageHelper.title = "Protoblock"
     Image {
         id: logo
         source: "qrc:/logoFinal.png"
@@ -22,11 +25,10 @@ Item {
         width: parent.width / 1.07
         font.pixelSize: Qt.platform.os === "android" ? 32 : 22
         font.family: "Roboto"
+        color: realRoot.theme ===  "Pinky" ? "white" : "black"
         horizontalAlignment: Text.AlignHCenter
         text: "Welcome  To Protoblock"
         wrapMode: Text.WordWrap
-        color: realRoot.theme ===  "Pinky" ? "white" : "black"
-
     }
     Column{
         id:buttons
@@ -37,17 +39,79 @@ Item {
         anchors.top: welcomeTxt.bottom
         anchors.topMargin: 10
 
-
         Label {
             width: parent.width / 1.07
             font.pixelSize: Qt.platform.os === "android" ? 32 : 22
             font.family: "Roboto"
             horizontalAlignment: Text.AlignHCenter
             text: "Tell your Friends"
-            wrapMode: Text.WordWrap
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
-            Component.onCompleted: console.log(realRoot.theme)
+            wrapMode: Text.WordWrap
+        }
+
+
+        Card{
+            width: parent.width / 1.07
+            height:     parent.height / 2
+            elevation: 1
+            anchors.horizontalCenter: parent.horizontalCenter
+            Banner{
+                id: ban
+                text: "LeaderBoard"
+                color: "white"
+                backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
+                width: parent.width
+                height: 48
+            }
+            ListView{
+                id: leaderboard
+                width: parent.width
+                anchors.top: ban.bottom
+                height: parent.height - ban.height
+                clip: true
+                model: MiddleMan.allNamesList()
+                delegate:
+                    ListItems.Subtitled{
+                    elevation: 2
+                    width: parent.width
+                    text: "FantasyName: " +  modelData
+                    action: RoundImage{
+                        height: parent.height
+                        width : height
+                        fillMode: Image.PreserveAspectFit
+                        source:  "qrc:/icons/action_account_circle.png"
+                    }
+                    valueText: "Balance : " + 0// model.balance
+                }
+            }
+//            ProgressCircle {
+//                id: fNameInd
+//                anchors.centerIn: leaderboard
+//                visible: MiddleMan.fetchingLeaders  === true ?  true : false
+//            }
         }
     }
+//    ListModel{
+//        id: leaders
 
+//    }
+//    Component.onCompleted:{
+//        var nL = MiddleMan.allNamesList()
+//        for (var i = 0 ; i < nL.length ;i++ )
+//        {
+////            console.log(nL[i])
+//            leaders.append({"fName":nL[i], "balance": 0})
+//        }
+//        leaderboard.model = null
+//        leaderboard.model = leaders
+
+//    }
+
+    Connections {
+        target: MiddleMan
+
+        onLeaderBoardchanged: {
+            leaderboard.model = MiddleMan.allNamesList()
+        }
+    }
 }
