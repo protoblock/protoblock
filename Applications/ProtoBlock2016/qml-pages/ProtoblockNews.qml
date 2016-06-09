@@ -7,7 +7,12 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 Item {
-    //    Component.onCompleted: pageHelper.title = "Protoblock"
+    Component.onCompleted: {
+        if ( !root.reloadhome )
+            root.reloadhome = true
+        else
+            MiddleMan.allNamesGet()
+    }
     Image {
         id: logo
         source: "qrc:/logoFinal.png"

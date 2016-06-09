@@ -145,6 +145,7 @@ Item {
             onNameCheckGet: {
                 if(status === "true" ) {
                     MiddleMan.signPlayer(name)
+                    root.reloadhome = false
                     rootLoader.source = "qrc:/ProtoblockNews.qml"
                     pageHelper.selectedTabIndex = 0;
                 }

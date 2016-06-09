@@ -40,6 +40,8 @@ ApplicationWindow{
 
     property int  currentTabInFocus: 0
 
+    property bool  reloadhome: false
+
     property string pageSwitcher
     property string currentPage: sections[0][0]
     // we set this to 18 because there is no 18 so that it changes of the fly
