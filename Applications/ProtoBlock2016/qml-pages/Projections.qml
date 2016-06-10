@@ -1,111 +1,122 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.4
-import ProRotoQml.Sql 1.0
+
+import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
+
+import ProRotoQml.Protoblock 1.0
+import ProRotoQml.Theme 1.0
 Item {
-    property string cHT
-    property string cAT
-    SplitView{
-        anchors.fill: parent
-        orientation: Qt.Horizontal
-        ListView{
-            id: weekTable
-            width: parent.width / 5
-            height: parent.height
-            model:weekModel
-            delegate:         ListItems.Game {
-                elevation: 5
-                text:  model.HomeTeam + " VS " + model.AwayTeam
-                subText: {
-                    model.StadiumDetails_Name
-                    //                       model.Date
-                    //                    Qt.formatDateTime(time, "dddd MMMM yy h:mm ap")
-                }
-                secondaryItem: Image {
-                    height:  Unit.dp(32)
-                    width: height
-                    source: "qrc:/"+ AwayTeam + ".PNG"
-                }
-                action: Image {
-                    height:  Unit.dp(32)
-                    width: height
-                    source:"qrc:/"+ HomeTeam + ".PNG"
+    Component.onCompleted: {
+        if ( !root.reloadhome )
+            root.reloadhome = true
+        else
+            MiddleMan.allNamesGet()
+    }
+    Image {
+        id: logo
+        source: "qrc:/logoFinal.png"
+        fillMode: Image.PreserveAspectFit
+        width: parent.width / 1.07
+        height: parent.height / 6
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: parent.height / 22
+    }
+    Label {
+        id: welcomeTxt
+        anchors.top: logo.bottom
+        anchors.topMargin:  paintedHeight
+        width: parent.width / 1.07
+        font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+        font.family: "Roboto"
+        color: realRoot.theme ===  "Pinky" ? "white" : "black"
+        horizontalAlignment: Text.AlignHCenter
+        text: "Welcome  To Protoblock"
+        wrapMode: Text.WordWrap
+    }
+    Column{
+        id:buttons
+        width: parent.width
+        height: parent.height - (welcomeTxt.paintedHeight - logo.height)
+        spacing: 5
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: welcomeTxt.bottom
+        anchors.topMargin: 10
 
-                }
-                onClicked:{
-                    cHT = model.HomeTeam
-                    cAT = model.AwayTeam
-                    weekPlayersModel.exec()
-                }
-            }
+        Label {
+            width: parent.width / 1.07
+            font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+            font.family: "Roboto"
+            horizontalAlignment: Text.AlignHCenter
+            text: "Tell your Friends"
+            color: realRoot.theme ===  "Pinky" ? "white" : "black"
+            wrapMode: Text.WordWrap
         }
 
 
-        TableView{
-            width: parent.width - (weekTable*2)
-            height: parent.height
-            model:weekPlayersModel
-            TableViewColumn{
-                role: "Name"
-                title: "Name"
+        Card{
+            width: parent.width / 1.07
+            height:     parent.height / 2
+            elevation: 1
+            anchors.horizontalCenter: parent.horizontalCenter
+            Banner{
+                id: ban
+                text: "LeaderBoard"
+                color: "white"
+                backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
+                width: parent.width
+                height: 48
             }
-            TableViewColumn{
-                role: "Team"
-                title: "Team"
+            ListView{
+                id: leaderboard
+                width: parent.width
+                anchors.top: ban.bottom
+                height: parent.height - ban.height
+                clip: true
+                model: MiddleMan.allNamesList()
+                delegate:
+                    ListItems.Subtitled{
+                    elevation: 2
+                    width: parent.width
+                    text: "FantasyName: " +  modelData
+                    action: RoundImage{
+                        height: parent.height
+                        width : height
+                        fillMode: Image.PreserveAspectFit
+                        source:  "qrc:/icons/action_account_circle.png"
+                    }
+                    valueText: "Balance : " + 0// model.balance
+                }
             }
-            TableViewColumn{
-                role: "LastName"
-                title: "Last Name"
-            }
-            TableViewColumn{
-                role: "Position"
-                title: "Position"
-            }
-            TableViewColumn{
-                role: "AverageDraftPosition"
-                title: "ADP"
-            }
-            TableViewColumn{
-                role: "CurrentStatus"
-                title: "Current Status"
-            }
-        }
-
-        TableView{
-            id: leaderBoardTable
-            width: parent.width / 5
-            height: parent.height
-            model:weekModel
-            TableViewColumn{
-                role: "HomeTeam"
-                title: "Home Team"
-            }
-            TableViewColumn{
-                role: "AwayTeam"
-                title: "Away Team"
-            }
+//            ProgressCircle {
+//                id: fNameInd
+//                anchors.centerIn: leaderboard
+//                visible: MiddleMan.fetchingLeaders  === true ?  true : false
+//            }
         }
     }
+//    ListModel{
+//        id: leaders
 
+//    }
+//    Component.onCompleted:{
+//        var nL = MiddleMan.allNamesList()
+//        for (var i = 0 ; i < nL.length ;i++ )
+//        {
+////            console.log(nL[i])
+//            leaders.append({"fName":nL[i], "balance": 0})
+//        }
+//        leaderboard.model = null
+//        leaderboard.model = leaders
 
+//    }
 
-    QmlSqlQueryModel{
-        id: weekModel
-        connectionName: "protoblock"
-        queryString:"SELECT * FROM Schedules where Week='1';"
-        onQueryStringChanged: console.log(" Summon Query "+  queryString)
-        Component.onCompleted: exec()
-    }
-    QmlSqlQueryModel{
-        id: weekPlayersModel
-        connectionName: "protoblock"
-        queryString:{
-            "SELECT * FROM tfprod_fantasydata WHERE Team = '"+cHT
-                    + "\' OR Team=\'"
-                    + cAT
-                    + "\' ORDER BY DepthOrder; "
+    Connections {
+        target: MiddleMan
+
+        onLeaderBoardchanged: {
+            leaderboard.model = MiddleMan.allNamesList()
         }
     }
-
 }

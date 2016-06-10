@@ -146,8 +146,8 @@ Item {
                 if(status === "true" ) {
                     MiddleMan.signPlayer(name)
                     root.reloadhome = false
-                    rootLoader.source = "qrc:/ProtoblockNews.qml"
-                    pageHelper.selectedTabIndex = 0;
+                    rootLoader.source = "qrc:/Projections.qml"
+                    pageHelper.selectedTabIndex = 1;
                 }
                 else {
                     errorString = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
