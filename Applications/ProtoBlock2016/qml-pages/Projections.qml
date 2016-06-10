@@ -8,6 +8,7 @@ import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 Item {
     Component.onCompleted: {
+        pageHelper.title = "Projections"
         if ( !root.reloadhome )
             root.reloadhome = true
         else
