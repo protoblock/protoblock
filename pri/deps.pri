@@ -48,6 +48,7 @@ message(OSX BUILD)
     LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
 
+
     LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
 
@@ -58,7 +59,7 @@ message(OSX BUILD)
     PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
 
     ##FIXME compile levelDB
-    LIBS += -L/usr/local/lib  -lleveldb
+#    LIBS += -L/usr/local/lib  -lleveldb
 
 
 
@@ -102,10 +103,11 @@ android {
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/include
 
     ##OPENSSL
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.so
+#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
+
+    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.so
+#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
 
     ##  SECP251K1
     LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a

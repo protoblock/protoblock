@@ -10,15 +10,16 @@ qtHaveModule(webengine) {
     DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
 }
 
-
 TEMPLATE = app
     QT += qml quick sql core widgets sql websockets webchannel network
 
 CONFIG += c++11
+osx{
+#CONFIG-=app_bundle
+}
 
 SOURCES += \
     $$PWD/src/main.cpp \
-
 
 RESOURCES += $$PWD/qml/qml.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -31,15 +32,13 @@ DISTFILES += \
     android/res/values/libs.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat \
-    qml-pages/Feeds/WebView.qml \
-    qml-pages/BoxText.qml \
-    qml-pages/ProtoblockNews.qml \
-    qml-pages/LeftMenu.qml
-
+    android/gradlew.bat
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
-        $$PWD/../../../../prebuilt/android/extrenal-android/lib/libprotobuf.so
+        /Qt/5.6/android_armv7/lib/libcrypto.so \
+    /Qt/5.6/android_armv7/lib/libssl.so \
+    /Qt/5.6/android_armv7/lib/libprotobuf.so
 }
+
