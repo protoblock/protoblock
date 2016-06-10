@@ -27,7 +27,7 @@ win32 {
 
     BOOST_DIR = C:\local\boost_1_55_0
     LIBS += -L$${BOOST_DIR}/lib64-msvc-12.0
-    LIBS += -lboost_log-vc120-1_55
+#    LIBS += -lboost_log-vc120-1_55
     INCLUDEPATH += $${BOOST_DIR}
 
 }

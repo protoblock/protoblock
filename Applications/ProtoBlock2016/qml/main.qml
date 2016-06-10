@@ -132,12 +132,13 @@ ApplicationWindow{
         }
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
         backAction: navDrawer.action
+        property bool doit: navDrawer.enabled
         NavigationDrawer {
             id: navDrawer
             enabled:{
                 if ( Device.name === "phone" || Device.name === "tablet"){
                     true
-                }else if (pageHelper.width < Unit.dp(400)){
+                }else if (pageHelper.width < Unit.dp(600)){
                     true
                 }else{
                     false
@@ -150,8 +151,11 @@ ApplicationWindow{
                     id: content
                     anchors.fill: parent
                     Repeater {
-                        model: sections
+                        model: navDrawer.enabled ? sections : 0
+
                         delegate: Column {
+                            property var section: modelData
+                            property string strCheck: section[0]
                             width: parent.width
                             ListItem.Subtitled {
                                 id: tabMin
@@ -160,26 +164,57 @@ ApplicationWindow{
                                 action: Image{
                                     source: sectionTitlesIcons[index]
                                     height: 32
-                                    width:32
+                                    width: 32
                                     fillMode: Image.PreserveAspectFit
                                 }
                                 onClicked:{
-                                    rootLoader.source = "qrc:/" +sectionTitles[index] + ".qml"
+//                                    rootLoader.source = "qrc:/" +sectionTitles[index] + ".qml"
                                 }
+
+
+                                Component.onCompleted: {
+
+                                        if ( rootLoader.myi >= sectionTitles.length)
+                                            return
+
+                                        console.log(" i " + rootLoader.myi)
+                                        rootLoader.myi = rootLoader.myi+1
+                                        if (rootLoader.myi === sectionTitles.length ){
+                                            console.log("All Done")
+
+                                            defaultname = MiddleMan.init()
+                                            console.log("default name: " + defaultname)
+                                            if ( defaultname  === "" ){
+                                                rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+                                                pageHelper.selectedTabIndex = 5
+                                            }else{
+                                                rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+                                                pageHelper.selectedTabIndex = 0
+                                            }
+                                        }
+                                    }
+
                             }
                             Repeater {
-                                model: modelData
+                                model: section
+
                                 // TODO iocns
                                 delegate: ListItem.Standard {
                                     text: modelData
-                                    selected: modelData == root.currentPage
+                                    selected: modelData == strCheck
                                     onClicked: {
-                                        console.log(sectionTitles[index] )
-                                        rootLoader.source = "qrc:/"+sectionTitles[index] + ".qml"
+//                                        console.log(sectionTitles[index] )
+//                                        rootLoader.source = "qrc:/"+sectionTitles[index] + ".qml"
+
+                                        strCheck = section[index]
+                                        pageHelper.title = modelData
+                                        var theFile = modelData
+                                        rootLoader.source  = Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                                     }
                                 }
                             }
                         }
+
                     }
                 }
             }
@@ -192,8 +227,9 @@ ApplicationWindow{
 
         Loader {
             id: rootLoader
-            width: root.width - 250
-            height:navDrawer.height
+            property int myi: 0
+            width: root.width - (navDrawer.enabled ? 0 : 250)
+            height: navDrawer.height
             asynchronous: true
             visible: status == Loader.Ready
             anchors {
@@ -219,20 +255,23 @@ ApplicationWindow{
 
                 Component.onCompleted: {
 
-//                    console.log(source + " i " + foo.myi + " root.sectionTitles.length " + root.sectionTitles.length)
-//                    foo.myi = foo.myi+1
-//                    if (foo.myi === root.sectionTitles.length ){
-//                        console.log("All Done")
-//                    }
+                    if ( rootLoader.myi >= sectionTitles.length)
+                        return
 
-                    defaultname = MiddleMan.init()
-                    console.log("default name: " + defaultname)
-                    if ( defaultname  === "" ){
-                        rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
-                        pageHelper.selectedTabIndex = 5
-                    }else{
-                        rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
-                        pageHelper.selectedTabIndex = 0
+                   console.log(" i2 " + rootLoader.myi)
+                    rootLoader.myi = rootLoader.myi+1
+                    if (rootLoader.myi === sectionTitles.length ){
+                        console.log("All Done2")
+
+                        defaultname = MiddleMan.init()
+                        console.log("default name: " + defaultname)
+                        if ( defaultname  === "" ){
+                            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+                            pageHelper.selectedTabIndex = 5
+                        }else{
+                            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+                            pageHelper.selectedTabIndex = 0
+                        }
                     }
 
                 }
