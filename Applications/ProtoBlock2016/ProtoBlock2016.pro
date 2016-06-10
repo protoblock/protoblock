@@ -1,7 +1,7 @@
 include ($$PWD/../../pri/deps.pri)
 include ($$PWD/../../pri/artwork.pri)
 include ($$PWD/../../pri/qml-pages.pri)
-include ($$PWD/../../pri/qml-pinky.pri)
+#include ($$PWD/../../pri/qml-pinky.pri)
 include ($$PWD/../../pri/qml-news.pri)
 include ($$PWD/../../pri/qml-utils.pri)
 
@@ -12,9 +12,11 @@ qtHaveModule(webengine) {
 
 
 TEMPLATE = app
-    QT += qml quick sql core widgets sql websockets webchannel network
+#    QT += qml quick sql core widgets sql websockets webchannel network
+    QT += qml quick core websockets network
 
-CONFIG += c++11
+
+CONFIG += c++11 console
 
 SOURCES += \
     $$PWD/src/main.cpp \
