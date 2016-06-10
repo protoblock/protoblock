@@ -192,6 +192,7 @@ ApplicationWindow{
 
         Loader {
             id: rootLoader
+            property int myi: 0
             width: root.width - 250
             height:navDrawer.height
             asynchronous: true
@@ -220,19 +221,19 @@ ApplicationWindow{
                 Component.onCompleted: {
 
 //                    console.log(source + " i " + foo.myi + " root.sectionTitles.length " + root.sectionTitles.length)
-//                    foo.myi = foo.myi+1
-//                    if (foo.myi === root.sectionTitles.length ){
-//                        console.log("All Done")
-//                    }
+                    rootLoader.myi = rootLoader.myi+1
+                    if (rootLoader.myi === sectionTitles.length ){
+                        console.log("All Done")
 
-                    defaultname = MiddleMan.init()
-                    console.log("default name: " + defaultname)
-                    if ( defaultname  === "" ){
-                        rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
-                        pageHelper.selectedTabIndex = 5
-                    }else{
-                        rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
-                        pageHelper.selectedTabIndex = 0
+                        defaultname = MiddleMan.init()
+                        console.log("default name: " + defaultname)
+                        if ( defaultname  === "" ){
+                            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
+                            pageHelper.selectedTabIndex = 5
+                        }else{
+                            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
+                            pageHelper.selectedTabIndex = 0
+                        }
                     }
 
                 }
