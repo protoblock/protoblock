@@ -15,7 +15,10 @@ ApplicationWindow{
   visible: true
   width: Device.productType === "osx"||Device.productType === "win32" ? 1200  :  Screen.width
   height: Device.productType === "osx"||Device.productType === "win32" ? 1220  :  Screen.height
-
+  property string  errorString
+  property bool  reloadhome: false
+  property string  importExportStatus
+  property string secretTxt
     // Pages
     property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive, levelSix ]
     property var sectionsIcons: [
@@ -108,13 +111,6 @@ ApplicationWindow{
     ]
 
 
-    //Login dialog
-    Dialog {
-        id: loginDialog
-        title: "Please Login"
-        anchors.centerIn: parent
-        positiveButtonText: "Done"
-    }
 
 
     initialPage: TabbedPage {
@@ -124,67 +120,77 @@ ApplicationWindow{
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl(cp.replace(/\s/g, "") + ".qml" )
-console.log("SELECTED TAB      " +selectedTabIndex)
+//console.log("SELECTED TAB      " +selectedTabIndex)
         }
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
         backAction: navDrawer.action
-        NavigationDrawer {
-            id: navDrawer
-            enabled:{
-                if ( Device.name === "phone" || Device.name === "tablet"){
-                    true
-                }else if (pageHelper.width < Unit.dp(400)){
-                    true
-                }else{
-                    false
-                }
-            }
-            Flickable {
-                anchors.fill: parent
-                contentHeight: Math.max(content.implicitHeight, height)
-                Column {
-                    id: content
-                    anchors.fill: parent
-                    Repeater {
-                        model: sections
-                        delegate: Column {
-                            width: parent.width
-                            ListItem.Subtitled {
-                                id: tabMin
-                                backgroundColor: Colors.primaryColor
-                                text: sectionTitles[index]
-                                action: Image{
-                                    source: sectionTitlesIcons[index]
-                                    height: 32
-                                    width:32
-                                    fillMode: Image.PreserveAspectFit
-                                }
-                                onClicked:{
-                                    rootLoader.source = "qrc:/" +sectionTitles[index] + ".qml"
-                                }
-                            }
-                            Repeater {
-                                model: modelData
-                                // TODO iocns
-                                delegate: ListItem.Standard {
-                                    text: modelData
-                                    selected: modelData == root.currentPage
-                                    onClicked: {
-                                        console.log(sectionTitles[index] )
-                                        rootLoader.source = "qrc:/"+sectionTitles[index] + ".qml"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        ProgressCircle {
-            id: actInd
-            anchors.centerIn: rootLoader
-            visible: rootLoader.status == Loader.Loading
-        }
+
+
+       // New Nav
+       Rectangle{
+                width:parent.width /  3.3
+                height: rootLoader.height
+                property bool shown: true
+       }
+
+
+
+
+
+
+        //        NavigationDrawer {
+//            id: navDrawer
+//            enabled:{
+//                if ( Device.name === "phone" || Device.name === "tablet"){
+//                    true
+//                }else if (pageHelper.width < Unit.dp(400)){
+//                    true
+//                }else{
+//                    false
+//                }
+//            }
+//            Flickable {
+//                anchors.fill: parent
+//                contentHeight: Math.max(content.implicitHeight, height)
+//                Column {
+//                    id: content
+//                    anchors.fill: parent
+//                    Repeater {
+//                        model: sections
+//                        delegate: Column {
+//                            width: parent.width
+//                            ListItem.Subtitled {
+//                                id: tabMin
+//                                backgroundColor: Colors.primaryColor
+//                                text: sectionTitles[index]
+//                                action: Image{
+//                                    source: sectionTitlesIcons[index]
+//                                    height: 32
+//                                    width:32
+//                                    fillMode: Image.PreserveAspectFit
+//                                }
+//                                onClicked:{
+//                                    rootLoader.source = "qrc:/" +sectionTitles[index] + ".qml"
+//                                }
+//                            }
+//                            Repeater {
+//                                model: modelData
+//                                // TODO iocns
+//                                delegate: ListItem.Standard {
+//                                    text: modelData
+//                                    selected: modelData == root.currentPage
+//                                    onClicked: {
+////                                        console.log(sectionTitles[index] )
+//                                        rootLoader.source = "qrc:/"+sectionTitles[index] + ".qml"
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
 
         Loader {
             id: rootLoader
@@ -199,21 +205,25 @@ console.log("SELECTED TAB      " +selectedTabIndex)
                 var theFile = navDrawer.enabled ?  root.currentPage : currentPage
                 Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
             }
-            onSourceChanged: pageHelper.title = currentPage
-            onStatusChanged: console.log("Loader " + status)
+//            onSourceChanged: pageHelper.title = currentPage
+//            onStatusChanged: console.log("Loader " + status)
+        }
+        ProgressCircle {
+            id: actInd
+            anchors.centerIn: rootLoader
+            visible: rootLoader.status == Loader.Loading
         }
 
-
-        Repeater {
-            model: !navDrawer.enabled ? sections : 0
-            delegate: Tab {
-                title: sectionTitles[index]
-                iconName: sectionTitlesIcons[index]
-                property string currentPage: modelData[0]
-                property var section: modelData
-                source: "qrc:/LeftMenu.qml"
-            }
-        }
+//        Repeater {
+//            model: !navDrawer.enabled ? sections : 0
+//            delegate: Tab {
+//                title: sectionTitles[index]
+//                iconName: sectionTitlesIcons[index]
+//                property string currentPage: modelData[0]
+//                property var section: modelData
+//                source: "qrc:/LeftMenu.qml"
+//            }
+//        }
     }
 
 
@@ -230,7 +240,6 @@ console.log("SELECTED TAB      " +selectedTabIndex)
 
     property string defaultname
     Component.onCompleted: {
-        console.log( "The formfactor of this device is " + Device.name )
         fillDefaultModels()
         defaultname = MiddleMan.init()
         if ( defaultname  === "" ){
@@ -285,7 +294,7 @@ console.log("SELECTED TAB      " +selectedTabIndex)
         databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
         databaseDriver: QmlSqlDatabase.SQLight
         connectionName: "protoblock"
-        onConnectionOpened: console.log("database Open")
+//        onConnectionOpened: console.log("database Open")
         onError: console.log("DB Error:  " +  errorString)
         Component.onCompleted: addDataBase()
     }
@@ -293,10 +302,126 @@ console.log("SELECTED TAB      " +selectedTabIndex)
 
     Label {
         rotation: -45
-        text: qsTr("Demo Not Production Ready")
+        text: qsTr("Demo Not Live")
         color: "#60000000"
         anchors.centerIn: parent
         font.pixelSize: Unit.dp(48)
         font.bold:  true
     }
+
+
+
+
+
+    Dialog {
+        id: usingNameDialog
+        title: "Account"
+        Text{
+            width: parent.width
+            height: Unit.dp(160)
+            wrapMode: Text.WordWrap
+            text: msgString
+        }
+    }
+
+    //Login dialog
+    Dialog {
+        id: loginDialog
+        title: "Please Login"
+    }
+
+    Dialog {
+        id: accountErrorDialog
+        title: "Error in Signup"
+        positiveButtonText: "Back"
+        negativeButtonText: "Import"
+        //            onAccepted: loginCardScale = 1
+        //            onRejected:  loginCardScale = 1
+        Text{
+            width: parent.width
+            height: Unit.dp(160)
+            wrapMode: Text.WordWrap
+            text:  errorString
+        }
+        onRejected: {
+            rootLoader.source = "qrc:/Import-Export.qml"
+        }
+    }
+
+    Dialog{
+        id: loginErrorDialog
+        title: "Error in Signup"
+        Label{
+            width: parent.width
+            height: parent.height
+            wrapMode: Text.WordWrap
+            text:  root.errorString
+        }
+    }
+
+
+
+
+
+
+
+
+    Connections {
+        target: MiddleMan
+        //        onNameCheckGet: {
+        //            console.log("onNameCheckGet " + status  + " \n" +  name )
+        //            if(status === "true" )
+        //            {
+        //                console.log("name is not taken")
+        //                MiddleMan.signPlayer(uname)
+        //            }
+        //            else
+        //            {
+        //                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
+        //                root.loginCardScale = 0
+        //                loginErrorDialog.open()
+        //                root.errorString =  err
+        //            }
+        //        }
+
+
+        onNameCheckGet: {
+            if(status === "true" ) {
+                MiddleMan.signPlayer(name)
+                root.reloadhome = false
+                rootLoader.source = "qrc:/ProtoblockNews.qml"
+                pageHelper.selectedTabIndex = 0;
+            }
+            else {
+                errorString = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
+                accountErrorDialog.open()
+            }
+        }
+
+        onUsingFantasyName: {
+            if ( uname !== name) {
+                if ( !isdefault ) {
+                    msgString = "You are now playing as: " + name
+                    usingNameDialog.open()
+                }
+                console.log("usingFantasyName " + name )
+            }
+            uname = name
+            getNames()
+        }
+
+        onImportSuccess: {
+                  console.log(passfail + "onImportSucess " + name )
+
+                  if ( passfail ) {
+                      msgString = name + " - Imported!"
+                      usingNameDialog.open()
+                  }
+                  else {
+                      errorString = name
+                      loginErrorDialog.open()
+                  }
+                  console.log(passfail + "onImportSucess " + name )
+              }
+          }
 }

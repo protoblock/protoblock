@@ -5,13 +5,12 @@ import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
 Item {
-    property string errmsg
     Component.onCompleted: pageHelper.title = "Accounts Settings"
     Flickable{
         interactive: true
         width: parent.width
         height: parent.height
-        contentHeight: parent.height * 1.10
+        contentHeight: accountInfoTxt.height + (32* 3.2) +(namePicker.height + newNameCard.height)
         contentWidth: parent.width
         boundsBehavior:  Flickable.StopAtBounds
         Card {
@@ -32,8 +31,7 @@ Item {
                 color: "white"
                 text: "Protoblock players must claim a name to create an account" +
                       "Chose your Twitter handle or fantasy team name. " +
-                      "this is your fantasy identity. and we will be used for display on the projjection leaderboard"
-
+                      "this is your fantasy identity and we will be used for display on the projection leaderboard"
                 wrapMode: Text.WordWrap
             }
         }
@@ -43,15 +41,17 @@ Item {
         Card{
             id: namePicker
             width: parent.width / 1.07
-            height: parent.height / 1.7
+            height: (72 * repeater.count) + (namePickerBannner.height + 10)
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: accountInfoTxt.bottom
             anchors.topMargin: 32
+            opacity: repeater.opacity
             Banner{
                 id: namePickerBannner
                 width: namePicker.width
                 height: 48
                 text: "Choose Name"
+                opacity: repeater.opacity
             }
             ListView {
                 id: repeater
@@ -59,10 +59,12 @@ Item {
                 height: namePicker.height - 48
                 clip: true
                 interactive: true
+                onCountChanged: count < 1 ? opacity = 0 : opacity = 1
                 anchors.top: namePickerBannner.bottom
                 model: MiddleMan.goodList().length
                 delegate:
                     ListItems.Subtitled{
+
                     elevation: 2
                     width: parent.width
                     text: "FantasyName: " +  MiddleMan.goodList()[index]
@@ -72,7 +74,7 @@ Item {
                         fillMode: Image.PreserveAspectFit
                         opacity: MiddleMan.goodList()[index] === uname ? 1 : 0
                         source:  "qrc:/icons/action_account_circle.png"
-                        Behavior on opacity {NumberAnimation{duration: 1200}}
+                        Behavior on opacity {NumberAnimation{duration: 80}}
                     }
                     valueText: "Balance : " + " 0"
                     onClicked: MiddleMan.useName(MiddleMan.goodList()[index])
@@ -105,6 +107,7 @@ Item {
                     font.family: "Default"
                     placeholderText: "please enter in a new fantasy name"
                     anchors.horizontalCenter: parent.horizontalCenter
+                    onAccepted: nameCheckBlank(nameText.text)
                 }
                 Button{
                     id: clamNameButton
@@ -112,67 +115,42 @@ Item {
                     width: parent.width / 1.07
                     elevation: 5
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onClicked: {
-                        MiddleMan.checkname(nameText.text)
-                        //                if (text === "Claim New Name" ){
-                        //                    MiddleMan.checkname(nameText.text)
-                        //                    //checkNameTimmer.start()
-                        //                }else{
-                        //                    MiddleMan.importMnemonic(nameText.text);
-                        //                }
-                    }
+                    onClicked: nameCheckBlank(nameText.text)
                 }
             }
         }
 
 
-
-
-
-
-
-        Dialog {
-            id: loginErrorDialog
-            title: "Error in Signup"
-            positiveButtonText: "back"
-            negativeButtonText: "import"
-            //            onAccepted: loginCardScale = 1
-            //            onRejected:  loginCardScale = 1
-            Text{
-                width: parent.width
-                height: Unit.dp(160)
-                wrapMode: Text.WordWrap
-                text:  errmsg
-            }
-            onRejected: currentPage = "Import-Export"
-        }
         // FIXME why is there 2 connection points ?
         // this could be the cause of the bugs in startup
-        Connections {
-            target: MiddleMan
-            onNameCheckGet: {
-                console.log("onNameCheckGet " + status  + " \n" +  name )
-                if(status === "true" ) {
-                    console.log("name is not taken")
-                    //                    root.uname = name
-                    MiddleMan.signPlayer(name)
-//                    currentPage = "ProtoblockNews"
-                }
-                else {
-                    errmsg = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
-                    //                    root.loginCardScale = 0
-                    loginErrorDialog.open()
-                    //                    root.errorString =  err
-                }
-            }
+//        Connections {
+//            target: MiddleMan
+//            onNameCheckGet: {
+//                if(status === "true" ) {
+//                    MiddleMan.signPlayer(name)
+//                    root.reloadhome = false
+//                    rootLoader.source = "qrc:/ProtoblockNews.qml"
+//                    pageHelper.selectedTabIndex = 0;
+//                }
+//                else {
+//                    errorString = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
+//                    accountErrorDialog.open()
+//                }
+//            }
+//        }
+    }
 
-            //            onUsingFantasyName: {
-            //                console.log("usingFantasyName " + MiddleMan.playersName )
-            //                uname = MiddleMan.playersName;
-            //                loginDialog.close()
-            //            }
+    function nameCheckBlank(s) {
+        if ( s.length === 0 ) {
+            return
+        }
+        else if ( s.length > 45) {
+            errString = "name to long"
+            accountErrorDialog.show()
         }
 
+        else {
+            MiddleMan.checkname(s)
+        }
     }
 }
-

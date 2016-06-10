@@ -59,6 +59,10 @@ int main(int argc, char *argv[])
 //        qApp->setFont (mFont);
 //        engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 //    }
+
+
+
+
         engine.load(QUrl(QStringLiteral("qrc:/NewMain.qml")));
     return app.exec();
 }

@@ -234,7 +234,7 @@ Item {
                     }
 
                     IconButton {
-                        iconName: "navigation_close.svg"
+                        iconName: "qrc:/icons/navigation_close.png"
                         visible: tab.hasOwnProperty("canRemove") && tab.canRemove && (tabs.hasOwnProperty("removeTab") || tab.hasOwnProperty("close"))
                         color: tabItem.selected
                                 ? darkBackground ? Theme.dark.iconColor : Theme.light.accentColor

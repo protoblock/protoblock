@@ -47,6 +47,7 @@ Item {
                     width: parent.width / 1.07
                     height: parent.height / 12
                     anchors.horizontalCenter: parent.horizontalCenter
+                    fillMode: Image.PreserveAspectFit
                 }
                 Label{
                     font.family: "Roboto"

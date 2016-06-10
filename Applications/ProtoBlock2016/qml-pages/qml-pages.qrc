@@ -40,5 +40,7 @@
         <file>Indicators.qml</file>
         <file>LeftMenu.qml</file>
         <file>Banner.qml</file>
+        <file>ThemeButton.qml</file>
+        <file>../../ProtoBlock2016/qml-pages/Trading.qml</file>
     </qresource>
 </RCC>

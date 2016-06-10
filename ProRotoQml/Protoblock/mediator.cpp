@@ -5,7 +5,9 @@
 
 
 using namespace fantasybit;
-Mediator::Mediator(QObject *parent) : QObject(parent) {
+Mediator::Mediator(QObject *parent) : QObject(parent),
+    m_fetchingLeaders(false)
+{
 
     for ( auto &np : m_fantasy_agent.getMyNames()) {
         m_myPubkeyFname[np.second] = "";
@@ -20,8 +22,8 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
     QString txserver = wss.arg(PB_WS_TX.data()).arg(PB_WS_TX_PORT);
 
 #ifndef NODEBUG
-    qDebug() << " connecting to lserver" << lserver;
-    qDebug() << " connecting to txserver" << txserver;
+//    qDebug() << " connecting to lserver" << lserver;
+//    qDebug() << " connecting to txserver" << txserver;
 #endif
     m_webSocket.open(QUrl(lserver));
     m_txsocket.open(QUrl(txserver));
@@ -57,7 +59,7 @@ QString Mediator::nameStatusGet(const QString &name) {
     if ( !iter->isValid() )
         return "none";
     else
-        qDebug() << "Suggested Name:  "  << iter.value ().toString ();
+//        qDebug() << "Suggested Name:  "  << iter.value ().toString ();
         return iter.value().toString();
 }
 
@@ -199,13 +201,13 @@ qint64 Mediator::sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &da
 
 
 void Mediator::handleClosed() {
-    qDebug() << "Close Reason " << m_webSocket.closeReason ();
+//    qDebug() << "Close Reason " << m_webSocket.closeReason ();
     return;
 }
 
 void Mediator::onConnected() {
     QHostAddress hInfo = m_webSocket.peerAddress ();
-    qDebug() << "connected to " <<  hInfo.toString () << " on Port " << m_webSocket.peerPort ();
+//    qDebug() << "connected to " <<  hInfo.toString () << " on Port " << m_webSocket.peerPort ();
     connect(&m_webSocket, SIGNAL(binaryMessageReceived(QByteArray)),
             this, SLOT ( onBinaryMessageRecived(QByteArray) ));
 
@@ -248,7 +250,7 @@ void Mediator::handleAboutToClose()
 
 
 void Mediator::onTextMessageReceived(QString message) {
-        qDebug() << "Message received:" << message;
+//        qDebug() << "Message received:" << message;
 }
 
 
@@ -256,7 +258,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
     fantasybit::WSReply rep;
     rep.ParseFromString(message.toStdString());
 
-    qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
+//    qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
     switch ( rep.ctype()) {
         case PK2FNAME:
         {
@@ -265,7 +267,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             if ( name == "" ) {
                 if ( pk2.req().pk() == lastPk2name) {
                     error(QString("import failed. please input valid secret"));
-                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
+//                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
                     QString err = "import failed. no name for: ";
                     err.append(lastPk2name.data());
                     emit importSuccess(err,false);
@@ -291,14 +293,14 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 QString goodname = name.data();
 //                m_goodFnames.append(&goodname);
                 m_goodList.append(goodname);
-                qDebug() << " new good name! " << goodname;
+//                qDebug() << " new good name! " << goodname;
             }
                 //            nameStatusChanged( name.data() , "confirmed" );
 
             if ( !m_fantasy_agent.HaveClient() ||
                  lastPk2name == pk2.req().pk()) {
                 if ( !m_fantasy_agent.UseName(name) )
-                    qDebug() << "error using name " << name.data () ;
+//                    qDebug() << "error using name " << name.data () ;
 //                    error(QString("error using name").append(name.data()));
                 usingFantasyName(m_fantasy_agent.currentClient().data());
             }
@@ -312,7 +314,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         }
         case CHECKNAME: {
             const CheckNameRep &cn = rep.GetExtension(CheckNameRep::rep);
-            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
+//            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
             nameCheckGet(cn.req().fantasy_name().data(),cn.isavail().data());
 //            update_checkname(rep.data().data());
             break;
@@ -323,19 +325,24 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             QString statusstr = fantasybit::MyNameStatus_Name(np.status()).data();
             auto name = np.req().name();
             m_nameStatuses[name.data()] = statusstr;
-            qDebug() << " emit " << name.data() << statusstr;
+//            qDebug() << " emit " << name.data() << statusstr;
             nameStatusChanged( name.data() , statusstr );
             break;
         }
         case GETALLNAMES: {
+        setfetchingLeaders (true);
             m_allNamesList.clear();
             const GetAllNamesRep &np = rep.GetExtension(GetAllNamesRep::rep);
             for (int i = np.names_size()-1; i >= 0; i--) {
                m_allNamesList.append(np.names(i).data());
             }
+            leaderBoardchanged();
+
+
 #ifdef TRACE
-            qDebug() << "GETALLNAMES" <<  np.DebugString().data();
+//            qDebug() << "GETALLNAMES" <<  np.DebugString().data();
 #endif
+            setfetchingLeaders (false);
             break;
         }
         default:
@@ -462,7 +469,7 @@ QString Mediator::init() {
 void Mediator::handdleUsingName(const QString &name)
 {
 #ifdef TRACE
-    qDebug() << " handdleUsingName " << name;
+//    qDebug() << " handdleUsingName " << name;
 #endif
     setPlayersName (name);
 }
@@ -478,6 +485,7 @@ void Mediator::handdleNameStatus(const QString &name, const QString &status)
 void Mediator::handleSocketError(QAbstractSocket::SocketError error)
 {
     qDebug() << error;
+
 }
 
 void Mediator::handdleNameStatuses()
@@ -497,7 +505,7 @@ void Mediator::allNamesGet() {
     req.set_ctype(GETALLNAMES);
     auto txstr = req.SerializeAsString();
     QByteArray qb(txstr.data(),(size_t)txstr.size());
-    qDebug() << " allNamesGet sending " << req.DebugString().data();
+//    qDebug() << " allNamesGet sending " << req.DebugString().data();
     m_webSocket.sendBinaryMessage(qb);
 }
 

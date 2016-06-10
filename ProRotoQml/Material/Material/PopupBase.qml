@@ -1,28 +1,11 @@
-/*
- * QML Material - An application framework implementing Material Design.
- *
- * Copyright (C) 2015-2016 Michael Spencer <sonrisesoftware@gmail.com>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
 import QtQuick 2.4
 import QtQuick.Window 2.2
-//import Material 1.0
+import Material 1.0
 import Material.Extras 1.0
-import "utils.js" as Utils
+import "utils.js" as UtilsJS
 
-/*!
-   \qmltype PopupBase
-   \inqmlmodule Material
-
-   \brief A base class for popups such as dialogs or dropdowns.
- */
 FocusScope {
     id: popup
-
     property color overlayColor: "transparent"
     property string overlayLayer: "overlayLayer"
     property bool globalMouseAreaEnabled: true
@@ -44,9 +27,9 @@ FocusScope {
 
     function open() {
         __lastFocusedItem = Window.activeFocusItem
-        parent = Utils.findRootChild(popup, overlayLayer)
+        parent = UtilsJS.findRootChild(popup, overlayLayer)
 
-        if (!parent.enabled)
+        if (parent.enabled === false)
             return
 
         showing = true

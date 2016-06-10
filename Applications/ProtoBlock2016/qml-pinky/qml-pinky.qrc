@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>MainPinky.qml</file>
+        <file>../../ProtoBlock2016/qml-pages/Trading.qml</file>
     </qresource>
 </RCC>

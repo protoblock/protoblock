@@ -12,6 +12,7 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.0
 import Material 1.0
 import ProRotoQml.Utils 1.0
 import Material.Extras 1.0
@@ -31,18 +32,17 @@ PopupBase {
     opacity: showing ? 1 : 0
     visible: opacity > 0
 
-    width: Math.max(minimumWidth,
-                    content.contentWidth + 2 * contentMargins)
-
-    height: Math.min(parent.height - 64 * Units.dp,
-                     headerView.height +
-                     content.contentHeight +
-                     (floatingActions ? 0 : buttonContainer.height))
+//    width: Math.max(minimumWidth,
+//                    content.contentWidth + 2 * contentMargins)
+    width: Screen.width / 2
+    height: Screen.height / 2
+//    height: Math.min(parent.height - 64 * Units.dp,
+//                     headerView.height +
+//                     content.contentHeight +
+//                     (floatingActions ? 0 : buttonContainer.height))
 
     property int contentMargins: 24 * Units.dp
-
-    property int minimumWidth: Device.isMobile ? 280 * Units.dp : 300 * Units.dp
-
+    property int minimumWidth: 300 * Units.dp
     property alias title: titleLabel.text
     property alias text: textLabel.text
 

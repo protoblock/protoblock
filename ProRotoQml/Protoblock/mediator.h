@@ -21,6 +21,8 @@ class Mediator : public QObject
 
     //protoected :)
     QML_READONLY_CSTREF_PROPERTY (QString, namefrompk)
+    QML_READONLY_CSTREF_PROPERTY (bool, fetchingLeaders)
+
     QML_CONSTANT_CSTREF_PROPERTY (QVariantMap, nameStatuses)
 
     QML_CONSTANT_CSTREF_PROPERTY (QString, secert3File)
@@ -125,6 +127,8 @@ signals:
     void playersNameChanged();
     void playersStatusChanged();
 
+
+     void leaderBoardchanged();
     // for QML only
     bool engineUpdate(bool);
 protected slots:

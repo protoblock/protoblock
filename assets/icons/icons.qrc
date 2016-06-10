@@ -53,5 +53,14 @@
         <file>icons/newspaper.png</file>
         <file>icons/ic_contact_mail.png</file>
         <file>icons/arrow_drop_down.png</file>
+        <file>icons/navigation_close.png</file>
+        <file>icons/navigation_more_vert.png</file>
+        <file>icons/upload.png</file>
+        <file>icons/play.png</file>
+        <file>icons/download.png</file>
+        <file>icons/ic_menu.png</file>
+        <file>icons/ic_contact_mail copy.png</file>
+        <file>icons/done.png</file>
+        <file>icons/pause.png</file>
     </qresource>
 </RCC>

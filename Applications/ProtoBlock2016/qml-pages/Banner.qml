@@ -5,10 +5,13 @@ Item {
     id: bannerRoot
     property string text
     property string color: "white"
+    property string backgroundColor: "black"
+    height: 48
+    width: parent.width
     Card{
-        height: 48
+        height: parent.height
         width: parent.width
-        backgroundColor: root.theme.primaryColor
+        backgroundColor: bannerRoot.backgroundColor
         elevation: 0
         Text {
             text: bannerRoot.text

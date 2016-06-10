@@ -1,32 +1,8 @@
-/*
- * QML Material - An application framework implementing Material Design.
- *
- * Copyright (C) 2015-2016 Michael Spencer <sonrisesoftware@gmail.com>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
 import QtQuick 2.4
 import ProRotoQml.Utils 1.0
 import Material.Extras 1.0
-import "utils.js" as Utils
+import "utils.js" as UtilsJS
 
-/*!
-   \qmltype Tooltip
-   \inqmlmodule Material
-
-   \brief A tooltip is a label that appears on hover and explains a non-text UI element.
-
-   To display a tooltip for your view, simply create an instance of Tooltip,
-   set the text property to your tooltip text, and then set the mouseArea property
-   to your MouseArea or Ink that will trigger the tooltip. If you use a MouseArea,
-   make sure hoverEnabled is set to true.
-
-   See the Material Design guidelines for more details:
-   http://www.google.com/design/spec/components/tooltips.html
- */
 PopupBase {
     id: popover
 
@@ -42,7 +18,7 @@ PopupBase {
     default property alias data: view.data
 
     function open(caller, offsetX, offsetY) {
-        parent = Utils.findRootChild(popover, overlayLayer)
+        parent = UtilsJS.findRootChild(popover, overlayLayer)
 
         if (!parent.enabled)
             return
@@ -58,7 +34,7 @@ PopupBase {
 
         var position = caller.mapToItem(popover.parent, 0, 0)
         var globalPos = caller.mapToItem(null, 0, 0)
-        var root = Utils.findRoot(popover)
+        var root = UtilsJS.findRoot(popover)
 
         popover.x = Qt.binding(function() {
             var x = position.x + (caller.width / 2 - popover.width / 2) + offsetX

@@ -14,21 +14,12 @@ Item {
     property alias title: headerTitle.text
     width: root.width
     height: root.height
-    ListModel {
-        id: sectionTitles
-        ListElement { text: "Home"}
-        ListElement { text: "Projections"}
-        ListElement { text:"Trading"}
-        ListElement { text:"NFL News"}
-        ListElement { text:"Chat"}
-        ListElement { text:"Account" }
-    }
     property var  teamBackgrounds: []
     property var playerImages: [ ]
     property int menuLevel: 0
 
     function modelBack(){
-        //        menu.model = null
+        menu.model = null
         menu.model = sectionTitles
         menuLevel = 0
     }
@@ -36,27 +27,27 @@ Item {
     function switchModel(ind){
         switch(ind){
         case 0 :
-            //            menu.model = null
+            menu.model = null
             menu.model= levelOne
             break;
         case 1 :
-            //            menuModel = null
+            menu.model = null
             menu.model = levelTwo
             break;
         case 2 :
-            //           menu.model = null
+            menu.model = null
             menu.model = levelThree
             break;
         case 3 :
-            //            menu.model= null
+            menu.model= null
             menu.model = levelFour
             break;
         case 4 :
-            //          menu.model = null
+            menu.model = null
             menu.model = levelFive
             break;
         case 5 :
-            //          menu.model = null
+            menu.model = null
             menu.model = levelSix
             break;
         }
@@ -64,90 +55,13 @@ Item {
     }
 
 
-
-    // Level One
-    ListModel {
-        id:levelOne
-        ListElement{text: "Protoblock News" }
-        ListElement{text:"About"}
-        ListElement{text:"Contact Us"}
-        ListElement{text:"FAQS"}
-        ListElement{text:"Back" }
-    }
-
-    //    property var levelOneIcons: [
-    //        "qrc:/icons/newspaper.png" ,
-    //        "qrc:/icons/ic_help.png",
-    //        "qrc:/icons/ic_contact_mail.png" ,
-    //        "qrc:/icons/ic_help.png"
-    //    ]
-    // Level Two
-    ListModel {
-        id: levelTwo
-        ListElement{text:"Projections"}
-        ListElement{text:"Back" }
-    }
-
-    property var levelTwoIcons: [
-        "qrc:/icons/newspaper.png"
-    ]
-    // Level Three News
-    ListModel {
-        id: levelThree
-        ListElement{text: "SeasonLongLandingPage"}
-        ListElement{text:"WeeklyLandingPage"}
-        ListElement{text:"Back" }
-    }
-
-    property var levelThreeIcons: [
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/ic_help.png",
-    ]
-    //Level four
-    ListModel {
-        id: levelFour
-        ListElement{text:  "News"}
-        ListElement{text: "Tweet search" }
-        ListElement{text: "CBS Search" }
-        ListElement{text: "Espn Search"}
-        ListElement{text: "Nfl Search" }
-        ListElement{text: "Roto Search" }
-        ListElement{text: "Back"}
-    }
-
-    property var levelFourIcons: [
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_contact_mail.png" ,
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_help.png"
-    ]
-
-    //Level Five
-    ListModel {
-        id:levelFive
-        ListElement{text: "Chat"}
-        ListElement{text: "Back"}
-    }
-    property var levelFiveIcons: [
-        "qrc:/icons/newspaper.png" ,
-
-    ]
-
-    // Level Six
-    ListModel {
-        id:levelSix
-        ListElement{text: "Account" }
-        ListElement{text: "Import-Export" }
-        ListElement{text: "FAQ" }
-        ListElement{text: "Back" }
-    }
-    property var levelSixIcons: [
-        "qrc:/icons/account_action_circle.png" ,
-        "qrc:/icons/ic_sync.png",
-        "qrc:/icons/ic_lightbulb.png"
-    ]
+    LevelOneMenuModel{id: levelOne}
+    LevelTwoMenuModel{id: levelTwo}
+    LevelThreeMenuModel{id: levelThree}
+    LevelFourMenuModel{id: levelFour}
+    LevelFiveMenuModel{id: levelFive}
+    LevelSixMenuModel{id: levelSix}
+    SectionTitleMenuModel{id: sectionTitles}
 
 
     Image{
@@ -261,16 +175,16 @@ Item {
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-                            //                            console.log(menuModel)
+                            console.log(index)
                             if( menuLevel === 0 ){
                                 switchModel(index)
                             }
-                            else if (modelData === "Back"){
+                            else if (model.text === "Back"){
                                 modelBack()
                             }
-                            else if (menuLevel > 1 && modelData !== "Back")
+                            else if (menuLevel > 1 && model.text !== "Back")
                             {
-                                var theFile = modelData
+                                var theFile = model.text
                                 sliderLoader.source = Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                                 backButton.shown = true
                                 pageTwo.shown = true
@@ -353,7 +267,7 @@ Item {
 
         Text {
             id: headerUname
-            text: uname + " Balance: 0"
+            text: realRoot.uname + " Balance: 0"
             color: "white"
             font.pixelSize: header.height / 1.7
             anchors.verticalCenter: parent.verticalCenter
@@ -379,8 +293,6 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: parent.width / 12
         }
-
-
 
         Rectangle{
             id: settingsButton

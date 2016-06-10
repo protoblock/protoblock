@@ -16,5 +16,6 @@ SUBDIRS += \
         $$PWD/Protoblock/protoblock.pro \
         $$PWD/PeerTwoPeerChat \
 #        $$PWD/Backend
+    Torrent/torrent.pro
 
 #Backend.depends = jsonpb

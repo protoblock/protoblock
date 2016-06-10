@@ -134,3 +134,12 @@ HEADERS += \
 SOURCES += \
     dummyios.cpp
 
+RESOURCES += \
+    material.qrc \
+    popups.qrc \
+    window.qrc \
+    components.qrc \
+    controls.qrc \
+    core.qrc \
+    fonts/fonts.qrc
+
