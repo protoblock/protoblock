@@ -7,6 +7,16 @@
 using namespace fantasybit;
 Mediator::Mediator(QObject *parent) : QObject(parent) {
 
+    auto mynames = m_fantasy_agent.getMyNames(); 
+//    if ( mynames.size() == 0 ) {
+//        auto filepath = lastYearPath();
+//        if ( filepath != "" ) {
+//            qDebug() <<" found last year!! " << filepath;
+//            m_fantasy_agent.readFromSecret(filepath,true);
+//            mynames = m_fantasy_agent.getMyNames();
+//        }
+//    }
+
     for ( auto &np : m_fantasy_agent.getMyNames()) {
         m_myPubkeyFname[np.second] = "";
         qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
@@ -52,7 +62,7 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 }
 
 
-//QString Mediator::nameStatusGet(const QString &name) {
+//QString Mediator::nameS                           tatusGet(const QString &name) {
 //    QVariantMap::const_iterator iter = m_nameStatuses.find(name);
 //    if ( !iter->isValid() )
 //        return "none";
@@ -489,21 +499,34 @@ QString Mediator::init() {
 // THIS SHOULD be a error signal that alerts others that something is going on.
 void Mediator::handleSocketError(QAbstractSocket::SocketError error)
 {
-
     qDebug() << error;
 }
 
-//void Mediator::handdleNameStatuses()
-//{
-//    setMyNameStatus (m_myNameStatus);
+//#include <QStandardPaths>
+//std::string Mediator::lastYearPath() {
+//    std::string ret = "";
+//#ifdef Q_OS_WIN32
+////    QSettings settings(QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1"), QSettings::NativeFormat);
+//    QSettings settings(QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"), QSettings::NativeFormat);
+
+//    qDebug() << "settings " << settings.status();
+//    qDebug() << "child keys = " <<  settings.childKeys();
+//    for ( auto k : settings.allKeys() )
+//        qDebug() << "HKLM " << k;
+//    QString path = settings.value( "InstallLocation" ).toString();
+//    ret = path.toStdString();
+//#elif Q_OS_MAC
+//    QString path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation).append("/tradingfootball/");
+//    ret = path.toStdString();
+//#endif
+
+////    "HKCU\\SOFTWARE\\Classes\\VirtualStore\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1"
+
+//    return ret;
 //}
 
-#ifdef Q_OS_WIN32
-QString Mediator::lastKnowLoc() {
-    QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1", QSettings::NativeFormat);
-    return settings.value( "InstallLocation" ).toString();
-}
-#endif
+////HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{79913283-A35B-4274-927C-1B52D286D939}_is1
+
 
 void Mediator::allNamesGet() {
     WsReq req;
