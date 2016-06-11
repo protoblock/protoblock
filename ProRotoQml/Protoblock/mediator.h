@@ -85,9 +85,7 @@ public:
     QHostAddress  peerAddress() const;
     QAbstractSocket::SocketState  state()const;
     QWebSocketProtocol::Version  version()const;
-#ifdef Q_OS_WIN32
-    Q_INVOKABLE QString lastKnowLoc();
-#endif
+//    std::string lastYearPath();
     Q_INVOKABLE void allNamesGet();
 //    Q_INVOKABLE QString nameStatusGet(const QString&);
     Q_INVOKABLE void pk2fname(const QString&);

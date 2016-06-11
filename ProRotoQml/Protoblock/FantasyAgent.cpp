@@ -25,31 +25,48 @@ using namespace fantasybit;
 
 FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
     if ( filename != "" )
-        secretfilename3 = filename;
+        secretfilename4 = filename;
 
-    Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename3};
-    if ( !read.good() ) {
-        // fix me log error
-        return;
+    if ( !readFromSecret( GET_ROOT_DIR() +  secretfilename4, false) )
+         readFromSecret( GET_ROOT_DIR() +  secretfilename3, true);
+}
+
+bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
+
+    std::vector<Secret3> temp;
+    {
+        Reader<Secret3> read{ readfrom };
+            if ( !read.good() )
+                return false;
+
+        Secret3 secret;
+        while (read.ReadNext(secret)) {
+            if (transfer) temp.push_back(secret);
+
+            if ( !testIt(secret) ) {
+                qCritical() << " secret verify fail" << secret.fantasy_name();
+                continue;
+            }
+
+            if ( secret.has_mnemonic_key() )
+                secret.clear_mnemonic_key();
+
+            m_secrets.push_back(secret);
+            qDebug() << secret.fantasy_name().data() << " have key";
+            if ( AmFantasyAgent(secret.public_key())) {
+                  auto pr = str2priv(secret.private_key());
+                  m_oracle = pr;
+                qInfo() << " is oracle key";
+            }
+        }
     }
 
-    Secret3 secret{};
-    while (read.ReadNext(secret)) {
-        if ( !testIt(secret) ) {
-            qCritical() << " secret verify fail" << secret.fantasy_name();
-            continue;
-        }
-
-        if ( secret.has_mnemonic_key() )
-            secret.clear_mnemonic_key();
-        m_secrets.push_back(secret);
-        qDebug() << secret.fantasy_name().data() << " have key";
-        if ( AmFantasyAgent(secret.public_key())) {
-              auto pr = str2priv(secret.private_key());
-              m_oracle = pr;
-            qInfo() << " is oracle key";
-        }
+    if ( transfer ) {
+        Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename4, ios::app };
+        for ( auto &sec : temp)
+            writer(sec);
     }
+
 }
 
 std::string FantasyAgent::getMnemonic(std::string fname) {
