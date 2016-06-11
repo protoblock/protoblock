@@ -3,6 +3,8 @@ import QtQuick 2.4
 import ProRotoQml.Protoblock 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+import ProRotoQml.Theme 1.0
+
 Item{
 property string  errmsg
 
@@ -26,7 +28,7 @@ Card {
         Label {
             id: welcomeTxt
             width: parent.width / 1.07
-            font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+            font.pointSize: ProtoScreen.FONT_MEDIUM * 2// Qt.platform.os === "android" ? 32 : 22
             font.family: "Roboto"
             horizontalAlignment: Text.AlignHCenter
             text: "Protoblock account names are not stored on a central server... blah" +

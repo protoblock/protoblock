@@ -9,7 +9,7 @@ ios{
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Theme
 TARGET = ProRotoQml.Theme
-QT += qml quick core gui websockets
+QT += qml quick core gui websockets widgets
 CONFIG += qt plugin c++11
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = ProRotoQml.Theme
@@ -23,6 +23,7 @@ SOURCES += \
     $$PWD/units.cpp \
     $$PWD/listener.cpp \
     $$PWD/teamcolors.cpp \
+    $$PWD/protoscreen.cpp
 
 HEADERS += \
     $$PWD/plugin.h \
@@ -32,6 +33,7 @@ HEADERS += \
     $$PWD/units.h \
     $$PWD/listener.h \
     $$PWD/teamcolors.h \
+    $$PWD/protoscreen.h
 
 DISTFILES = qmldir \
     README.md

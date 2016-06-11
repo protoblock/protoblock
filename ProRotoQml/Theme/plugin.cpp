@@ -5,6 +5,7 @@
 #include "units.h"
 #include "listener.h"
 #include "teamcolors.h"
+#include "ProtoScreen.h"
 #include <qqml.h>
 
 void ProRotoQmlThemePlugin::registerTypes(const char *uri)
@@ -16,6 +17,8 @@ void ProRotoQmlThemePlugin::registerTypes(const char *uri)
     qmlRegisterSingletonType<TeamColors>(uri,1,0,"TeamInfo",teamColors);
 
     qmlRegisterSingletonType<Units>(uri, 1, 0, "UnitsSingle",unitsListen);
+
+    qmlRegisterSingletonType<ProtoScreen>(uri, 1, 0, "ProtoScreen", ProtoScreen::singletontype_provider);
 }
 
 void ProRotoQmlThemePlugin::initializeEngine(QQmlEngine *engine, const char *uri)

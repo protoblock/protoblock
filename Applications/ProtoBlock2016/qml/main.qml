@@ -137,12 +137,19 @@ ApplicationWindow{
             id: navDrawer
             enabled:{
                 console.log("unit "  + Units.dp + " UnitsSingle " +  UnitsSingle.gu(20)+  " unit " + Unit.gu(20))
-                console.log("This is To get Current DP"  + (2 * Units.dp));
-
+                console.log("This is To get Current DP "  + (2 * Units.dp));
                 console.log("This is To RETURN Current DP " + Unit.dp(2) )
-
                 console.log("This is To RETURN CurrentGrid Units " + Unit.gu(2) )
+                console.log("pxToGu " + ProtoScreen.pxToGu(1) + " gutopx " + ProtoScreen.guToPx(1))
+                console.log("desktopWidth " + ProtoScreen.desktopWidth)
+                console.log("desktopHeight " + ProtoScreen.desktopHeight)
+                console.log("designWidth " + ProtoScreen.designWidth)
+                console.log("designHeight " + ProtoScreen.designHeight)
+                console.log("displaySize " + ProtoScreen.displaySize)
+                console.log("devicePixelRatio " + ProtoScreen.devicePixelRatio)
+                console.log("gridUnit " + ProtoScreen.gridUnit)
 
+                console.log("pxToGu " + ProtoScreen.pxToGu(1) + " gutopx " + ProtoScreen.guToPx(1))
                 if ( Device.name === "phone" || Device.name === "tablet"){
                     true
                 }else if (pageHelper.width < UnitsSingle.dp(600)){
@@ -361,7 +368,7 @@ ApplicationWindow{
         text: qsTr("Demo Not Live")
         color: "#60000000"
         anchors.centerIn: parent
-        font.pixelSize: UnitsSingle.dp(48)
+        font.pointSize: ProtoScreen.FONT_XXLARGE * 2
         font.bold:  true
     }
 
