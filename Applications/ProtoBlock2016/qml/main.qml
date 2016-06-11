@@ -136,9 +136,16 @@ ApplicationWindow{
         NavigationDrawer {
             id: navDrawer
             enabled:{
+                console.log("unit "  + Units.dp + " UnitsSingle " +  UnitsSingle.gu(20)+  " unit " + Unit.gu(20))
+                console.log("This is To get Current DP"  + (2 * Units.dp));
+
+                console.log("This is To RETURN Current DP " + Unit.dp(2) )
+
+                console.log("This is To RETURN CurrentGrid Units " + Unit.gu(2) )
+
                 if ( Device.name === "phone" || Device.name === "tablet"){
                     true
-                }else if (pageHelper.width < Unit.dp(600)){
+                }else if (pageHelper.width < UnitsSingle.dp(600)){
                     true
                 }else{
                     false
@@ -292,18 +299,13 @@ ApplicationWindow{
     ListModel{id: weekModel}
 
     property string defaultname
-//    Component.onCompleted: {
-//        console.log( "The formfactor of this device is " + Device.name )
-//        fillDefaultModels()
-//        defaultname = MiddleMan.init()
-//        if ( defaultname  === "" ){
-//            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
-//            pageHelper.selectedTabIndex = 5
-//        }else{
-//            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
-//            pageHelper.selectedTabIndex = 0
-//        }
-//    }
+    property int andButtonHeight
+    property string os: Qt.platform.os
+    Component.onCompleted: {
+//        height:{ if (Qt.platform.os === “android”){    rootLoader.height / 10} }
+
+//          rootLoader.height / 10
+    }
 
     function fillDefaultModels(){
 
@@ -359,7 +361,7 @@ ApplicationWindow{
         text: qsTr("Demo Not Live")
         color: "#60000000"
         anchors.centerIn: parent
-        font.pixelSize: Unit.dp(48)
+        font.pixelSize: UnitsSingle.dp(48)
         font.bold:  true
     }
 
@@ -370,7 +372,7 @@ ApplicationWindow{
         positiveButtonText: "ok"
         Text{
             width: parent.width
-            height: Unit.dp(160)
+            height: UnitsSingle.dp(160)
             wrapMode: Text.WordWrap
             text: msgString
         }
