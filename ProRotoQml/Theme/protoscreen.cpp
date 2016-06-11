@@ -1,7 +1,6 @@
 
 #include "protoscreen.h"
 #include <QCoreApplication>
-#include <QDesktopWidget>
 #include <qmath.h>
 #include <QScreen>
 #include <QGuiApplication>
@@ -9,11 +8,10 @@
 ProtoScreen* ProtoScreen::m_pInstance = NULL;
 
 ProtoScreen::ProtoScreen(QObject *parent) :
-    QObject(parent), m_bInitialized(false)
+    QObject(parent),
+    m_bInitialized(false),
+    m_designResolution(QGuiApplication::primaryScreen ()->availableGeometry ())
 {
-     //m_designResolution = QRect(0,0,1366,768);
-
-
      initialize();
 }
 
@@ -24,9 +22,9 @@ QObject* ProtoScreen::singletontype_provider(QQmlEngine *engine, QJSEngine *scri
 }
 
 void ProtoScreen::initialize() {
-//    QDesktopWidget* desktop = qApp->desktop();
+
     QScreen * desktop = QGuiApplication::primaryScreen();
-    m_designResolution = desktop->availableGeometry();
+
     QSizeF displaySize = qApp->primaryScreen()->physicalSize();
     double mmToInch = 0.0393700787;
     double displayWidthInch = displaySize.width()*mmToInch;
@@ -98,13 +96,13 @@ void ProtoScreen::setDesignResolution(int width, int height) {
 }
 
 void ProtoScreen::updateFonts() {
-    m_fonts[FONT_XXLARGE] = guToPx(5);
-    m_fonts[FONT_XLARGE] = guToPx(4.7);
-    m_fonts[FONT_LARGE] = guToPx(4);
-    m_fonts[FONT_MEDIUM] = guToPx(3.5);
-    m_fonts[FONT_NORMAL] = guToPx(2.5);
-    m_fonts[FONT_SMALL] = guToPx(2);
-    m_fonts[FONT_TINY] = guToPx(1.2);
+    m_fonts[FONT_XXLARGE] = guToPx((5*5));
+    m_fonts[FONT_XLARGE] = guToPx((4.7* 5));
+    m_fonts[FONT_LARGE] = guToPx((4* 5));
+    m_fonts[FONT_MEDIUM] = guToPx((3.5* 5));
+    m_fonts[FONT_NORMAL] = guToPx((2.5* 5));
+    m_fonts[FONT_SMALL] = guToPx((2* 5));
+    m_fonts[FONT_TINY] = guToPx((1.2 *5 ));
 }
 
 
@@ -179,4 +177,3 @@ QObject* ProtoDevice::singletontype_provider(QQmlEngine *engine, QJSEngine *scri
     Q_UNUSED(scriptEngine)
     return ProtoDevice::instance(engine);
 }
-
