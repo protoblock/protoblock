@@ -119,7 +119,7 @@ public:
     std::string currentClient();
     bool finishImportMnemonic(const std::string &pk, const std::string &name);
     std::string defaultName();
-    bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer = false);
+    bool readFromSecret(const std::string &readfrom, bool transfer = false);
 };
 
 }

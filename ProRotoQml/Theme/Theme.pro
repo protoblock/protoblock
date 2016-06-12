@@ -5,6 +5,9 @@ ios{
     CXX_MODULE=qml
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Theme
 }
+android {
+    QT += androidextras
+}
 
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Theme

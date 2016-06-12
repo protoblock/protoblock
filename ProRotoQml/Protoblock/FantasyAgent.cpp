@@ -20,6 +20,7 @@
 #include <openssl/rand.h>
 //#include <QFile>
 //#include <QString>
+#include <QStandardPaths>
 
 using namespace fantasybit;
 
@@ -27,12 +28,22 @@ FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
     if ( filename != "" )
         secretfilename4 = filename;
 
-    if ( !readFromSecret( GET_ROOT_DIR() +  secretfilename4, false) )
+    if ( !readFromSecret( GET_ROOT_DIR() +  secretfilename4, false) ) {
+        #ifdef Q_OS_MAC
+            QString path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+//            path.append("/tradingfootball/storage/" + secretfilename3);
+            std::string oldosxsecret = path.toStdString() + "/tradingfootball/storage/" + secretfilename3;
+            qDebug() << " oldosxsecret " << oldosxsecret.data();
+            readFromSecret( oldosxsecret, true);
+        #endif
+
          readFromSecret( GET_ROOT_DIR() +  secretfilename3, true);
+    }
 }
 
 bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
 
+    qDebug() << "readFromSecret " << readfrom.data();
     std::vector<Secret3> temp;
     {
         Reader<Secret3> read{ readfrom };
@@ -66,6 +77,8 @@ bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
         for ( auto &sec : temp)
             writer(sec);
     }
+
+    return true;
 
 }
 

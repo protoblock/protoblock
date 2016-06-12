@@ -7,7 +7,7 @@
 using namespace fantasybit;
 Mediator::Mediator(QObject *parent) : QObject(parent) {
 
-    auto mynames = m_fantasy_agent.getMyNames(); 
+    auto mynames = m_fantasy_agent.getMyNames();
 //    if ( mynames.size() == 0 ) {
 //        auto filepath = lastYearPath();
 //        if ( filepath != "" ) {
@@ -515,7 +515,7 @@ void Mediator::handleSocketError(QAbstractSocket::SocketError error)
 //        qDebug() << "HKLM " << k;
 //    QString path = settings.value( "InstallLocation" ).toString();
 //    ret = path.toStdString();
-//#elif Q_OS_MAC
+//#ifdef Q_OS_MAC
 //    QString path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation).append("/tradingfootball/");
 //    ret = path.toStdString();
 //#endif
