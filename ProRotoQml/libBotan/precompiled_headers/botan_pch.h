@@ -37,7 +37,7 @@
 # undef _POSIX_
 #endif
 
-#include "../botan/botan.h"
+#include "../botan.h"
 
 #include <map>
 #include <fstream>

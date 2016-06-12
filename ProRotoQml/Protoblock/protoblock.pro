@@ -6,7 +6,7 @@ ios{
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Protoblock
 }
 
-DEFINES = PRODFOOTBALL
+#DEFINES = PRODFOOTBALL
 
 #android {
 #HEADERS += \

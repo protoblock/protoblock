@@ -7,10 +7,10 @@ HEADERS += $$PWD/botan.h
 
 PRECOMPILED_HEADER = $$PWD/precompiled_headers/botan_pch.h
 
-CONFIG += exceptions
+CONFIG += exceptions static
 
 equals(USE_SYSTEM_BOTAN, 1) {
-    DEFINES += USE_SYSTEM_BOTAN
+    DEFINES += USE_SYSTEM_BOTANF
     CONFIG += link_pkgconfig
     PKGCONFIG += botan-1.10
 } else {
