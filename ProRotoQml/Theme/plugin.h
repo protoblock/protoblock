@@ -14,6 +14,9 @@ static QObject *colors(QQmlEngine *engine, QJSEngine *scriptEngine);
 static QObject *formFactor(QQmlEngine *engine, QJSEngine *scriptEngine);
 static QObject *themes(QQmlEngine *engine, QJSEngine *scriptEngine);
 static QObject *teamColors(QQmlEngine *engine, QJSEngine *scriptEngine);
+static QObject *protoScreen(QQmlEngine *engine, QJSEngine *scriptEngine);
+
+
 
 class ProRotoQmlThemePlugin : public QQmlExtensionPlugin
 {

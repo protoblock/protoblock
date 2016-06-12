@@ -6,6 +6,7 @@ include ($$PWD/../../pri/qml-news.pri)
 include ($$PWD/../../pri/qml-utils.pri)
 include ($$PWD/../../pri/qml-models.pri)
 include ($$PWD/../../pri/qml-torrent.pri)
+include ($$PWD/../../pri/qml-realChat.pri)
 
 qtHaveModule(webengine) {
     QT += webengine
@@ -14,8 +15,8 @@ qtHaveModule(webengine) {
 
 
 TEMPLATE = app
-    QT += qml quick sql core widgets sql websockets webchannel network
-
+    QT += qml quick core widgets websockets network
+#sql webchannel
 CONFIG += c++11
 
 SOURCES += \
@@ -33,15 +34,18 @@ DISTFILES += \
     android/res/values/libs.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat \
-    qml-pages/Feeds/WebView.qml \
-    qml-pages/BoxText.qml \
-    qml-pages/ProtoblockNews.qml \
-    qml-pages/LeftMenu.qml
+    android/gradlew.bat
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
-        $$PWD/../../../../prebuilt/android/extrenal-android/lib/libprotobuf.so
+                /Users/satoshi/Qt/5.6/android_armv7/lib/libprotobuf.so \
+                /Users/satoshi/Qt/5.6/android_armv7/lib/libcrypto.so \
+                /Users/satoshi/Qt/5.6/android_armv7/lib/libssl.so
+#                /Users/satoshi/Qt/5.6/android_armv7/lib/lib.so
+
+#       /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libprotobuf.so
+#       /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.so \
+#       /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.so
 }

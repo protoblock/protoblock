@@ -35,9 +35,6 @@ Window {
         else
             return Math.round( bytesPerSecond / 1073741824 * 100 ) / 100 + " Gb"
     }
-
-
-
     onThemeChanged:
         if(theme === "Material") {
             newLoader.source = "qrc:/main.qml"
@@ -56,9 +53,6 @@ Window {
             }
         }
     }
-
-
-
 
     function getNames(){
         var nL = MiddleMan.allNamesList()

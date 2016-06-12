@@ -9,8 +9,8 @@ import ProRotoQml.Utils 1.0
 import ProRotoQml.Theme 1.0
 
 Item{
-    width: 200
-    height: 100
+    width:  ProtoScreen.guToPx(25)
+    height:  ProtoScreen.guToPx(12.5)
 
     Button {
         id: ad
@@ -26,7 +26,7 @@ Item{
         width: parent.width
         height: parent.height - ad.height
         anchors.top: ad.bottom
-        spacing:  4
+        spacing:  ProtoScreen.guToPx(.5)
         clip: true
         model: torModel
         delegate: TorrentDelegate {

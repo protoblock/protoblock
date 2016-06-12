@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Material.ListItems 1.0 as ListItems
-import QtWebEngine 1.3
+//import QtWebEngine 1.3
 
 Item {
     Rectangle{
@@ -16,22 +16,22 @@ Item {
             onClicked: wView.shown = false
             visible: wView.shown === true ?  true : false
         }
-        WebEngineView {
-            id: webView
-            scale: wView.shown === true ? 1 : 0
-            width: wView.shown === true ?  parent.width : 0
-            height:wView.shown === true ?   parent.height - back.height : 0
-            anchors.top: back.bottom
-            onLoadProgressChanged:  {
-                if( wView.shown === true ){
-                    if (webView.loadProgress < 90){
-                        opacity = 0
-                    }else{
-                        opacity = 1
-                    }
-                }
-            }
-            Behavior on opacity {NumberAnimation{duration: 600; }}
-        }
+//        WebEngineView {
+//            id: webView
+//            scale: wView.shown === true ? 1 : 0
+//            width: wView.shown === true ?  parent.width : 0
+//            height:wView.shown === true ?   parent.height - back.height : 0
+//            anchors.top: back.bottom
+//            onLoadProgressChanged:  {
+//                if( wView.shown === true ){
+//                    if (webView.loadProgress < 90){
+//                        opacity = 0
+//                    }else{
+//                        opacity = 1
+//                    }
+//                }
+//            }
+//            Behavior on opacity {NumberAnimation{duration: 600; }}
+//        }
     }
 }

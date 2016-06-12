@@ -1,0 +1,3 @@
+module ProRotoQml.Protoblock
+plugin ProRotoQml.Protoblock
+classname ProRotoQmlProtoblockPlugin

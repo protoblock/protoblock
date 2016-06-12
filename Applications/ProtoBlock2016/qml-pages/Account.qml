@@ -1,8 +1,10 @@
 import QtQuick 2.4
 
 import ProRotoQml.Protoblock 1.0
+
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+import ProRotoQml.Theme 1.0
 
 Item {
     Component.onCompleted: pageHelper.title = "Accounts Settings"
@@ -19,13 +21,13 @@ Item {
             width: parent.width / 1.07
             elevation: 5
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: 32
+            anchors.topMargin: ProtoScreen.guToPx(4)
             anchors.top: parent.top
             backgroundColor: root.theme.primaryColor
             Label {
                 id: welcomeTxt
                 width: parent.width / 1.07
-                font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
                 color: "white"
@@ -44,19 +46,19 @@ Item {
             height: (72 * repeater.count) + (namePickerBannner.height + 10)
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: accountInfoTxt.bottom
-            anchors.topMargin: 32
+            anchors.topMargin: ProtoScreen.guToPx(4)
             opacity: repeater.opacity
             Banner{
                 id: namePickerBannner
                 width: namePicker.width
-                height: 48
+                height: ProtoScreen.guToPx(6)
                 text: "Choose Name"
                 opacity: repeater.opacity
             }
             ListView {
                 id: repeater
                 width: namePicker.width
-                height: namePicker.height - 48
+                height: namePicker.height - ProtoScreen.guToPx(6)
                 clip: true
                 interactive: true
                 onCountChanged: count < 1 ? opacity = 0 : opacity = 1
@@ -64,9 +66,9 @@ Item {
                 model: MiddleMan.goodList().length
                 delegate:
                     ListItems.Subtitled{
-
                     elevation: 2
                     width: parent.width
+                    height: ProtoScreen.guToPx(11)
                     text: "FantasyName: " +  MiddleMan.goodList()[index]
                     action: RoundImage{
                         height: parent.height
@@ -86,24 +88,25 @@ Item {
         Card{
             id: newNameCard
             width: parent.width / 1.07
-            height: nameText.height + (clamNameButton.height + 32)  + 64
+            height: nameText.height + (clamNameButton.height + ProtoScreen.guToPx(6))  + ProtoScreen.guToPx(8)
             elevation: 1
             anchors.top: namePicker.bottom
-            anchors.topMargin: 32
+            anchors.topMargin: ProtoScreen.guToPx(8)
             anchors.horizontalCenter: parent.horizontalCenter
             Column{
                 // add a banner
                 anchors.fill: parent
-                spacing: 16
+                spacing: ProtoScreen.guToPx(3)
                 Banner{
                     width: parent.width
-                    height: 48
+                    height: ProtoScreen.guToPx(5)
                     text: "Claim New Name"
                 }
 
                 TextField {
                     id: nameText
                     width: parent.width / 1.07
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.MEDIUM)
                     font.family: "Default"
                     placeholderText: "please enter in a new fantasy name"
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -119,25 +122,6 @@ Item {
                 }
             }
         }
-
-
-        // FIXME why is there 2 connection points ?
-        // this could be the cause of the bugs in startup
-//        Connections {
-//            target: MiddleMan
-//            onNameCheckGet: {
-//                if(status === "true" ) {
-//                    MiddleMan.signPlayer(name)
-//                    root.reloadhome = false
-//                    rootLoader.source = "qrc:/ProtoblockNews.qml"
-//                    pageHelper.selectedTabIndex = 0;
-//                }
-//                else {
-//                    errorString = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
-//                    accountErrorDialog.open()
-//                }
-//            }
-//        }
     }
 
     function nameCheckBlank(s) {
@@ -148,7 +132,6 @@ Item {
             errString = "name to long"
             accountErrorDialog.show()
         }
-
         else {
             MiddleMan.checkname(s)
         }

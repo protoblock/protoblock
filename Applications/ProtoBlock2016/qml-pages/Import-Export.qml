@@ -3,6 +3,8 @@ import QtQuick 2.4
 import ProRotoQml.Protoblock 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+import ProRotoQml.Theme 1.0
+
 Item{
     Card {
         Component.onCompleted: {
@@ -14,11 +16,9 @@ Item{
         elevation: 5
         anchors.centerIn: parent
 
-
-
         Column{
             anchors.fill: parent
-            spacing: 10
+            spacing: ProtoScreen.guToPx(1.25)
 
             Label {
                 id: welcomeTxt
@@ -37,7 +37,6 @@ Item{
                 elevation: 1
                 width: parent.width / 1.07
                 text: "FantasyName: " + realRoot.uname
-                //                        subText: "Status of name " +  unameStatus
                 action: RoundImage{
                     height: parent.height
                     width : height
@@ -51,12 +50,11 @@ Item{
                 id: nameText
                 width: parent.width / 1.07
                 font.family: "Default"
-                placeholderText: "please enter in 12 secret words"
+                placeholderText: "Please enter in you last years 12 secret words"
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Button{
-                property string mypk
                 id: importButton
                 text: "Import From Secret Backup"
                 width: parent.width / 1.07
@@ -67,7 +65,7 @@ Item{
                     if ( mypk === "" )
                         importExportStatus = "Error: Import failed, please try again"
                     else
-                        importExportStatus = "Trying to import with key: " + mypk
+                    importExportStatus = "Trying to import with key: " + mypk
                     myImportDialog.show()
                     nameText.text = ""
                     statusTxt.text = importExportStatus;
@@ -108,11 +106,8 @@ Item{
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
                 text: ""
-
                 wrapMode: Text.WordWrap
-
             }
-
             Button{
                 property string mypk
                 id: clearSecret
@@ -126,31 +121,21 @@ Item{
             }
         }
     }
+
     Dialog {
         id: mySecretDialog
         title: "12 word account Secret"
         positiveButtonText: "show secret"
         negativeButtonText: "get me out of here!"
-        Text{
+        Label{
             width: parent.width / 1.07
-            height: Unit.dp(160)
             wrapMode: Text.WordWrap
             text:  "Please make sure nobody is behind you. Secret to your account: " +realRoot.uname + ", will be displayed!"
         }
         onAccepted: {
             secretTxt.text = "12 word Secret for " + realRoot.uname + ": \n\n" +
-                    MiddleMan.getSecret()
+            MiddleMan.getSecret()
         }
     }
-    Dialog {
-        id: myImportDialog
-        title: "Import status"
-        positiveButtonText: "back"
-        Text{
-            width: parent.width
-            height: Unit.dp(160)
-            wrapMode: Text.WordWrap
-            text:  importExportStatus
-        }
-    }
+
 }

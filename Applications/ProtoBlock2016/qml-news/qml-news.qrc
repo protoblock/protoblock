@@ -1,12 +1,12 @@
 <RCC>
     <qresource prefix="/">
-        <file>RotoSearch.qml</file>
-        <file>NflSearch.qml</file>
-        <file>CBSSearch.qml</file>
-        <file>EspnSearch.qml</file>
+        <file>RotoWorld.qml</file>
+        <file>NFL.qml</file>
+        <file>CBS.qml</file>
+        <file>ESPN.qml</file>
         <file>WebView.qml</file>
         <file>GetFeedLinkText.qml</file>
-        <file>Tweetsearch.qml</file>
+        <file>Twitter.qml</file>
         <file>TweetDelegate.qml</file>
         <file>ListHeader.qml</file>
         <file>SearchDelegate.qml</file>
@@ -15,5 +15,6 @@
         <file>FlipBar.qml</file>
         <file>TweetsModel.qml</file>
         <file>tweetsearch.js</file>
+        <file>NFLNews.qml</file>
     </qresource>
 </RCC>

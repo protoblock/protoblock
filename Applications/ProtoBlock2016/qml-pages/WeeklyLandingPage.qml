@@ -3,6 +3,7 @@ import QtQuick.Controls 1.4
 import ProRotoQml.Sql 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+import ProRotoQml.Theme 1.0
 
 import "qrc:/Utils.js" as Utils
 Item {
@@ -20,7 +21,7 @@ Item {
     ListView{
         id: weeksView
         width: parent.width / 1.07
-        height: parent.height - ( weekPicker.height + 20 )
+        height: parent.height - ( weekPicker.height + ProtoScreen.guToPx(2.5) )
         clip: true
         spacing: 5
         anchors.horizontalCenter: parent.horizontalCenter

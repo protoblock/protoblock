@@ -1,8 +1,12 @@
 import QtQuick 2.0
 ListModel {
     ListElement{
-        text: "SeasonLongLandingPage"
+        text: "Trading"
         icon: "qrc:/icons/newspaper.png"
+    }
+    ListElement{
+        text: "SeasonLongLandingPage"
+        icon: "qrc:/icons/ic_poll.png"
     }
     ListElement{
         text:"WeeklyLandingPage"

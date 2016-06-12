@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+import ProRotoQml.Theme 1.0
 Item {
     id: comboBox
     property bool expanded : false
@@ -15,7 +16,7 @@ Item {
         id: vCard
         width: parent.width
         elevation: 1
-        height: 48
+        height: ProtoScreen.guToPx(6)
         text: currentText
         onClicked: {
             if(comboBox.expanded === true ){
@@ -49,19 +50,17 @@ Item {
         ListView{
             id: listView
             width: parent.width
-            height: comboBox.expanded === true ?  ((48 + spacing) * count )   :  0
+            height: comboBox.expanded === true ?  ((ProtoScreen.guToPx(6) + spacing) * count )   :  0
             clip: true
             interactive: true
 //            onCountChanged: console.log(count)
             visible: comboBox.expanded === true ? true : false
             model: comboBox.model
             delegate: ListItems.Standard{
-                height: 48
+                height: ProtoScreen.guToPx(6)
 //                focus: true
                 text: modelData
                 onClicked: {
-
-                    console.log(text)
                     comboBox.currentText = text
                     comboBox.currentIndex = index
                     comboBox.expanded = false

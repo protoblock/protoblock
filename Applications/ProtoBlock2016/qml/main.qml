@@ -12,13 +12,19 @@ import Material 1.0
 import Material.ListItems 1.0 as ListItem
 ApplicationWindow{
     id: root
-  visible: true
-  width: Device.productType === "osx"||Device.productType === "win32" ? 1200  :  Screen.width
-  height: Device.productType === "osx"||Device.productType === "win32" ? 1220  :  Screen.height
-  property string  errorString
-  property bool  reloadhome: false
-  property string  importExportStatus
-  property string secretTxt
+    visible: true
+    width: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.width
+    height: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.height
+    property string  errorString
+    property bool  reloadhome: false
+
+    // LOGIN STUFF
+    property string importExportStatus
+    property string secretTxt
+    property string statusTxt
+//    property string mypk
+
+
     // Pages
     property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive, levelSix ]
     property var sectionsIcons: [
@@ -29,8 +35,8 @@ ApplicationWindow{
         levelFiveIcons,
         levelSixIcons
     ]
-    property var sectionTitles: [ "Home", "Projections", "Trading", "NFL News", "Chat", "Account" ]
-    property var sectionTitlesAlias: [ "Home", "Projections", "Trading","NFL News", "Chat","Account" ]
+    property var sectionTitles: [ "Home", "Projections", "Trading", "NFL News", "Proto Chat", "Account" ]
+    property var sectionTitlesAlias: [ "Home", "Projections", "Trading","NFL News", "Proto .Chat","Account" ]
     property var sectionTitlesIcons: [
         "qrc:/logoOnly.png",
         "qrc:/icons/ic_poll.png",
@@ -75,14 +81,14 @@ ApplicationWindow{
         "qrc:/icons/newspaper.png"
     ]
     // Level Three News
-    property var levelThree: [ "SeasonLongLandingPage", "WeeklyLandingPage" ]
+    property var levelThree: [ "Trading" ,"SeasonLongLandingPage", "WeeklyLandingPage" ]
     property var levelThreeIcons: [
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/ic_help.png",
     ]
     //Level four
     property var  levelFour: [
-        "News", "Tweet search" ,"CBS Search" , "Espn Search", "Nfl Search" ,"Roto Search"
+        "News", "Twitter" ,"CBS" , "ESPN", "NFL" ,"Roto World"
     ]
     property var levelFourIcons: [
         "qrc:/icons/newspaper.png" ,
@@ -95,7 +101,7 @@ ApplicationWindow{
 
     //Level Five
     property var levelFive: [
-        "Chat"
+        "Proto Chat"
     ]
     property var levelFiveIcons: [
         "qrc:/icons/newspaper.png" ,
@@ -109,148 +115,148 @@ ApplicationWindow{
         "qrc:/icons/ic_sync.png",
         "qrc:/icons/ic_lightbulb.png"
     ]
-
+    property string selectedComponent: sections[0][0]
 
 
 
     initialPage: TabbedPage {
         id: pageHelper
         title: "ProtoBlock 2016"
+
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
+
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl(cp.replace(/\s/g, "") + ".qml" )
-//console.log("SELECTED TAB      " +selectedTabIndex)
         }
+
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
         backAction: navDrawer.action
+        NavigationDrawer {
+            id: navDrawer
+            enabled:{
+                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet"){
+                    true
+                }else if (pageHelper.width < ProtoScreen.guToPx(120)){
+                    true
+                }else{
+                    false
+                }
+            }
+            Flickable {
+                anchors.fill: parent
+                contentHeight: Math.max(content.implicitHeight, height)
+                Column {
+                    id: content
+                    anchors.fill: parent
+                    Repeater {
+                        model: sections
+                        delegate: Column {
+                            width: parent.width
+                            ListItem.Subtitled {
+                                id: tabMin
+                                backgroundColor: Colors.primaryColor
+                                text: sectionTitles[index]
+                                action: Image{
+                                    source: sectionTitlesIcons[index]
+                                    height: 32
+                                    width:32
+                                    fillMode: Image.PreserveAspectFit
+                                }
+                                onClicked:{
+                                    rootLoader.source = ""
 
+                                    var theFile = modelData;
+                                    Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
+                                    rootLoader.source = "qrc:/"+theFile + ".qml"
 
-       // New Nav
-       Rectangle{
-                width:parent.width /  3.3
-                height: rootLoader.height
-                property bool shown: true
-       }
+                                    navDrawer.close()
+                                    navDrawer.showing = false
+                                }
+                            }
+                            Repeater {
+                                model: modelData
+                                // TODO iocns
+                                delegate: ListItem.Standard {
+                                    text: modelData
+                                    selected: modelData == root.currentPage
+                                    onClicked: {
+                                        rootLoader.source = ""
 
+                                        var theFile = modelData;
+                                        Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
+                                        rootLoader.source = "qrc:/"+theFile + ".qml"
+                                        navDrawer.close()
+                                        navDrawer.showing = false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-
-
-
-
-        //        NavigationDrawer {
-//            id: navDrawer
-//            enabled:{
-//                if ( Device.name === "phone" || Device.name === "tablet"){
-//                    true
-//                }else if (pageHelper.width < Unit.dp(400)){
-//                    true
-//                }else{
-//                    false
-//                }
-//            }
-//            Flickable {
-//                anchors.fill: parent
-//                contentHeight: Math.max(content.implicitHeight, height)
-//                Column {
-//                    id: content
-//                    anchors.fill: parent
-//                    Repeater {
-//                        model: sections
-//                        delegate: Column {
-//                            width: parent.width
-//                            ListItem.Subtitled {
-//                                id: tabMin
-//                                backgroundColor: Colors.primaryColor
-//                                text: sectionTitles[index]
-//                                action: Image{
-//                                    source: sectionTitlesIcons[index]
-//                                    height: 32
-//                                    width:32
-//                                    fillMode: Image.PreserveAspectFit
-//                                }
-//                                onClicked:{
-//                                    rootLoader.source = "qrc:/" +sectionTitles[index] + ".qml"
-//                                }
-//                            }
-//                            Repeater {
-//                                model: modelData
-//                                // TODO iocns
-//                                delegate: ListItem.Standard {
-//                                    text: modelData
-//                                    selected: modelData == root.currentPage
-//                                    onClicked: {
-////                                        console.log(sectionTitles[index] )
-//                                        rootLoader.source = "qrc:/"+sectionTitles[index] + ".qml"
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
 
 
         Loader {
             id: rootLoader
-            width: root.width - 250
+            // sidebar is ProtoScreen.guToPx(31.25)
+            width: navDrawer.enabled === true ? (root.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
             height:navDrawer.height
-            asynchronous: true
             visible: status == Loader.Ready
-            anchors {
-                right: parent.right
-            }
-            source: {
-                var theFile = navDrawer.enabled ?  root.currentPage : currentPage
-                Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
-            }
-//            onSourceChanged: pageHelper.title = currentPage
-//            onStatusChanged: console.log("Loader " + status)
+            anchors.right: parent.right
         }
+
+
+
         ProgressCircle {
             id: actInd
             anchors.centerIn: rootLoader
             visible: rootLoader.status == Loader.Loading
         }
 
-//        Repeater {
-//            model: !navDrawer.enabled ? sections : 0
-//            delegate: Tab {
-//                title: sectionTitles[index]
-//                iconName: sectionTitlesIcons[index]
-//                property string currentPage: modelData[0]
-//                property var section: modelData
-//                source: "qrc:/LeftMenu.qml"
-//            }
-//        }
-    }
+        Repeater {
+            model: !navDrawer.enabled ? sections : 0
+            delegate: Tab {
+                title: sectionTitles[index]
+                iconName: sectionTitlesIcons[index]
+                property string currentPage: modelData[0]
+                property var section: modelData
+                source: "qrc:/LeftMenu.qml"
+            }
+        }
 
 
-    Indicators{
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.topMargin: 24
-        anchors.rightMargin: 48 * 2
+
+
+    }// END TABED PAGE
+
+
+    Label {
+        rotation: -45
+        text: qsTr("Demo Not Live")
+        color: "#40000000"
+        anchors.centerIn: parent
+        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
+        font.bold:  true
     }
+
 
     /////////////
-    ListModel{id: postionModel}
-    ListModel{id: weekModel}
+    ///////////////////
 
-    property string defaultname
-    Component.onCompleted: {
-        fillDefaultModels()
-        defaultname = MiddleMan.init()
-        if ( defaultname  === "" ){
-            rootLoader.source =  Qt.resolvedUrl("qrc:/Account.qml")
-            pageHelper.selectedTabIndex = 5
-        }else{
-            rootLoader.source =  Qt.resolvedUrl("qrc:/Home.qml")
-            pageHelper.selectedTabIndex = 0
+
+
+
+    //    SIMPLE MODELS
+    ListModel{id: postionModel}
+    ListModel{
+        id: weekModel
+        Component.onCompleted: {
+            fillDefaultModels()
         }
     }
-
     function fillDefaultModels(){
 
         var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
@@ -268,85 +274,86 @@ ApplicationWindow{
         }
     }
 
-
-
-
-
-
-
-
-//    Image{
-//        id: loaderImage
-//        source: "qrc:/logoFinal.png"
-//        opacity: 0
-//        scale: opacity
-//        width: parent.width / 1.07
-//        anchors.centerIn: parent
-//    }
-
-
-
-
     // Set up the default connections to the databases
-
     QmlSqlDatabase{
         id: mainTfProdDb
         databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
         databaseDriver: QmlSqlDatabase.SQLight
         connectionName: "protoblock"
-//        onConnectionOpened: console.log("database Open")
         onError: console.log("DB Error:  " +  errorString)
         Component.onCompleted: addDataBase()
     }
 
 
-    Label {
-        rotation: -45
-        text: qsTr("Demo Not Live")
-        color: "#60000000"
-        anchors.centerIn: parent
-        font.pixelSize: Unit.dp(48)
-        font.bold:  true
-    }
 
-
-
-
-
+    /// DIALOGS
     Dialog {
         id: usingNameDialog
         title: "Account"
+        onAccepted: {
+            if (loginDialog.visible === true){
+                rootLoader.source = "qrc:/Home.qml"
+                loginDialog.toggle()
+
+            }else if (loginDialog.visible === false){
+                rootLoader.source = "qrc:/Import-Export.qml"
+            }
+        }
         Text{
             width: parent.width
-            height: Unit.dp(160)
+            height: parent.height
             wrapMode: Text.WordWrap
+            font.pixelSize:  ProtoScreen.font(ProtoScreen.LARGE)
             text: msgString
         }
     }
 
-    //Login dialog
+    //Login dialog (only when user does not have a secert3)
     Dialog {
         id: loginDialog
-        title: "Please Login"
+        hasActions: false
+        width: root.width
+        height: root.height
+        contentMargins: 0
+        GetName{
+            width: root.width
+            height: root.height
+        }
     }
+
+
+
 
     Dialog {
         id: accountErrorDialog
         title: "Error in Signup"
         positiveButtonText: "Back"
-        negativeButtonText: "Import"
-        //            onAccepted: loginCardScale = 1
-        //            onRejected:  loginCardScale = 1
-        Text{
-            width: parent.width
-            height: Unit.dp(160)
-            wrapMode: Text.WordWrap
-            text:  errorString
-        }
+        negativeButtonText:  loginDialog.visible ?  "" : "Import"
         onRejected: {
-            rootLoader.source = "qrc:/Import-Export.qml"
+            if (loginDialog.visible === false){
+                rootLoader.source = "qrc:/Import-Export.qml"
+            }
+        }
+        Column{
+            spacing: ProtoScreen.guToPx(2)
+            width: parent.width
+            height: parent.height
+            Text{
+                width: parent.width
+                height: ProtoScreen.guToPx(20)
+                wrapMode: Text.WordWrap
+                text:  errorString
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+            Button{
+                text: "Email protoblock staff"
+                elevation: loginDialog.visible === true ?5 : 0
+                width: loginDialog.visible === true ? parent.width: 0
+                onClicked: Qt.openUrlExternally("mailto:contact@protoblock.comexample.com=Login%20support")
+            }
         }
     }
+
 
     Dialog{
         id: loginErrorDialog
@@ -356,34 +363,34 @@ ApplicationWindow{
             height: parent.height
             wrapMode: Text.WordWrap
             text:  root.errorString
+            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
         }
     }
 
 
-
-
-
-
-
+    Dialog {
+        id: myImportDialog
+        title: "Import status"
+        positiveButtonText: "Back"
+        Column{
+            anchors.fill: parent
+            Text{
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text:  importExportStatus
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+        }
+    }
 
     Connections {
         target: MiddleMan
-        //        onNameCheckGet: {
-        //            console.log("onNameCheckGet " + status  + " \n" +  name )
-        //            if(status === "true" )
-        //            {
-        //                console.log("name is not taken")
-        //                MiddleMan.signPlayer(uname)
-        //            }
-        //            else
-        //            {
-        //                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-        //                root.loginCardScale = 0
-        //                loginErrorDialog.open()
-        //                root.errorString =  err
-        //            }
-        //        }
-
+        Component.onCompleted: {
+            var defaultname = MiddleMan.init()
+            if ( defaultname  === "" ){
+                loginDialog.toggle()
+            }
+        }
 
         onNameCheckGet: {
             if(status === "true" ) {
@@ -393,7 +400,13 @@ ApplicationWindow{
                 pageHelper.selectedTabIndex = 0;
             }
             else {
-                errorString = name + " is taken. please try with a different name. If this your name from another device, please click import or contact Protoblock for help"
+                errorString = name + " is taken. Please try with a different name. Or if you feel that this is in fact your name from last year. Or would like to import from another device."
+                        if (loginDialog.visible){
+                        +" Please click back. Then click \"I Already Have a Name\" "
+                        }else if (!loginDialog.visible){
+                        + " Please click Import below."
+                        }
+                        + "For more assistance please contact the protoblock staff at <contact@protoblock.com>"
                 accountErrorDialog.open()
             }
         }
@@ -401,27 +414,43 @@ ApplicationWindow{
         onUsingFantasyName: {
             if ( uname !== name) {
                 if ( !isdefault ) {
-                    msgString = "You are now playing as: " + name
+                    msgString = "Congraulation You are now playing as: " + name +
                     usingNameDialog.open()
                 }
-                console.log("usingFantasyName " + name )
             }
             uname = name
             getNames()
         }
 
         onImportSuccess: {
-                  console.log(passfail + "onImportSucess " + name )
+            console.log(passfail + "onImportSucess " + name )
 
-                  if ( passfail ) {
-                      msgString = name + " - Imported!"
-                      usingNameDialog.open()
-                  }
-                  else {
-                      errorString = name
-                      loginErrorDialog.open()
-                  }
-                  console.log(passfail + "onImportSucess " + name )
-              }
-          }
+            if ( passfail ) {
+                msgString = name + " - Imported!"
+                usingNameDialog.open()
+            }
+            else {
+                errorString = name
+                loginErrorDialog.open()
+            }
+            console.log(passfail + "onImportSucess " + name )
+        }
+    }
+
+
+
+
+    Indicators{
+        id: indicators
+//        shown:  loginDialog.enabled === false ?  true : false
+//        anchors.right: parent.right
+//        anchors.rightMargin: ProtoScreen.guToPx(8.2)
+        anchors.top: parent.top
+        anchors.topMargin: ProtoScreen.guToPx(1.7)
+        anchors.left: parent.left
+        anchors.leftMargin: parent.width - ProtoScreen.guToPx(10)
+
+//        anchors.topMargin: !navDrawer.enabled ? - ProtoScreen.guToPx(4) : ProtoScreen.guToPx(1.7)
+//anchors.centerIn: parent
+    }
 }

@@ -6,7 +6,7 @@ Item {
     property string text
     property string color: "white"
     property string backgroundColor: "black"
-    height: 48
+    height: ProtoScreen.guToPx(6)
     width: parent.width
     Card{
         height: parent.height
@@ -15,12 +15,12 @@ Item {
         elevation: 0
         Text {
             text: bannerRoot.text
-            height:38
+            height:ProtoScreen.guToPx(4.75)
             width: parent.width - 10
-            font.pixelSize: 32
+            font.pixelSize: ProtoScreen.guToPx(4)
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            anchors.leftMargin:  10
+            anchors.leftMargin:  ProtoScreen.guToPx(1.25)
             color: bannerRoot.color
         }
 

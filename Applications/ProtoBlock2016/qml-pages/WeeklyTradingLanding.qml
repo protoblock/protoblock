@@ -6,7 +6,8 @@ import ProRotoQml.Sql 1.0
 import Material 1.0
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
-//import "Utils.js" as Utils
+
+
 Item {
     property string  lastQuery
         width : 20
@@ -48,7 +49,7 @@ Item {
         width: parent.width
         height:  parent.height - pickers.height
         anchors.top: pickers.bottom
-        anchors.topMargin: pickers.height > 48 ? pickers.height :0
+        anchors.topMargin: pickers.height > ProtoScreen.guToPx(6) ? pickers.height :0
         clip: true
         spacing: 3
         model: weekPlayersModel
@@ -174,7 +175,5 @@ Item {
 
         weekPlayersModel.exec()
     }
-
-
 
 }

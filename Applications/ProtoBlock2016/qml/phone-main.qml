@@ -2,7 +2,7 @@ import QtQuick 2.3
 import QtQuick.Window 2.2
 import Material 1.0
 import ProRotoQml.Protoblock 1.0
-//import ProRotoQml.Files 1.0
+import ProRotoQml.Files 1.0
 import ProRotoQml.Theme 1.0
 import ProRotoQml.Sql 1.0
 

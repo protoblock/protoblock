@@ -129,6 +129,5 @@ Item {
             gl_Position = qt_Matrix * pos;
             qt_TexCoord0 = qt_MultiTexCoord0;
         }"
-
     }
 }

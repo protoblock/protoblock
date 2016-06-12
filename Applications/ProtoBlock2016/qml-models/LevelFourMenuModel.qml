@@ -6,23 +6,23 @@ ListModel {
         icon: "qrc:/icons/newspaper.png"
     }
     ListElement{
-        text: "Tweet search"
+        text: "Twitter"
         icon:"qrc:/icons/ic_help.png"
     }
     ListElement{
-        text: "CBS Search"
+        text: "CBS"
         icon:"qrc:/icons/ic_contact_mail.png"
     }
     ListElement{
-        text: "Espn Search"
+        text: "ESPN"
         icon:"qrc:/icons/ic_help.png"
     }
     ListElement{
-        text: "Nfl Search"
+        text: "NFL"
         icon:"qrc:/icons/ic_help.png"
     }
     ListElement{
-        text: "Roto Search"
+        text: "Roto World"
         icon:"qrc:/icons/ic_help.png"
     }
     ListElement{

@@ -21,7 +21,7 @@ Rectangle {
         anchors.top: logo.bottom
         anchors.topMargin:  paintedHeight
         width: parent.width / 1.07
-        font.pixelSize: Qt.platform.os === "android" ? 48 : 22
+        font.pixelSize: ProtoScreen.guToPx(2.75)
         font.family: "Roboto"
         horizontalAlignment: Text.AlignHCenter
         text: "Welcome back " + root.uname

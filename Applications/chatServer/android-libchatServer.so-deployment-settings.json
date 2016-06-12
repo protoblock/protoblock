@@ -3,7 +3,7 @@
    "qt": "/Users/satoshi/Qt/5.6/android_armv7",
    "sdk": "/Users/satoshi/Library/Android/sdk",
    "sdkBuildToolsRevision": "23.0.3",
-   "ndk": "/Users/satoshi/Desktop/ndk/android-ndk-r11c",
+   "ndk": "/Users/satoshi/Desktop/ndk/android-ndk-r10e",
    "toolchain-prefix": "arm-linux-androideabi",
    "tool-prefix": "arm-linux-androideabi",
    "toolchain-version": "4.9",

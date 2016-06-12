@@ -4,7 +4,6 @@ import Material.ListItems 1.0 as ListItems
 
 
 Item {
-
     Component.onCompleted:  pageHelper.title = qsTr("NFL News")
     ListView{
         width: parent.width
@@ -26,27 +25,27 @@ Item {
         id: feedsModels
         ListElement{
             name: "Twitter"
-            source : "Tweetsearch"
+            source : "Twitter"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{
             name: "NFL"
-            source : "NflSearch"
+            source : "NFL"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{
             name: "ESPN"
-            source: "EspnSearch"
+            source: "ESPN"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{
             name: "RotoWorld"
-            source: "RotoSearch"
+            source: "RotoWorld"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{
             name: "CBS Sports"
-            source: "Feeds/CBSSearch"
+            source: "Feeds/CBS"
             subT:  "All the latest news from rotoworld"
         }
     }

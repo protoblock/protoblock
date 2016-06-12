@@ -5,6 +5,7 @@ import QtMultimedia 5.5
 
 import ProRotoQml.Files 1.0
 import ProRotoQml.Utils 1.0
+import ProRotoQml.Theme 1.0
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
@@ -12,8 +13,8 @@ import Material.ListItems 1.0 as ListItems
 Item {
     id: pageHelper
     property alias title: headerTitle.text
-    width: root.width
-    height: root.height
+    width: Screen.width
+    height: Screen.height
     property var  teamBackgrounds: []
     property var playerImages: [ ]
     property int menuLevel: 0
@@ -142,7 +143,7 @@ Item {
     }
     Rectangle{
         width:  parent.width / 3
-        height : parent.height - (48*2 )
+        height : parent.height - ProtoScreen.guToPx(12)
         color: "#80000000"
         anchors.top: header.bottom
         anchors.left: parent.left
@@ -150,7 +151,7 @@ Item {
         ListView{
             id: menu
             width:  parent.width
-            height: 64*6
+            height:ProtoScreen.guToPx(48)
             anchors.verticalCenter: parent.verticalCenter
             spacing: 4
             model: sectionTitles
@@ -158,14 +159,14 @@ Item {
                 Image{
                 source: "qrc:/menuButtonLong.png"
                 width: parent.width
-                height: 64
+                height: ProtoScreen.guToPx(8)
                 Label {
                     text:qsTr("%1").arg( model.text )
                     width: parent.width - 15
                     elide: Text.ElideRight
-                    height: 64
+                    height:ProtoScreen.guToPx(8)
                     color: "white"
-                    font.pixelSize: 48
+                    font.pixelSize: ProtoScreen.guToPx(6)
                     anchors.left: parent.left
                     anchors.leftMargin: 5
                     verticalAlignment: Text.AlignVCenter
@@ -229,19 +230,19 @@ Item {
 
     Rectangle{
         id: header
-        height: 48
+        height: ProtoScreen.guToPx(6)
         width:  parent.width
         color: "#000000"
         Button{
             id: backButton
             property bool shown: false
-            height: 48
+            height: ProtoScreen.guToPx(6)
             backgroundColor: "#44000000"
             elevation: 1
             text: "Back"
             y: shown === true ?  0 : (- header.height)
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: ProtoScreen.guToPx(1.25)
             Behavior on y {NumberAnimation{duration: 600; easing.type:  Easing.OutQuad}}
             onClicked: {
                 pageTwo.shown = false
@@ -279,7 +280,7 @@ Item {
     Rectangle{
         id: footer
         width: parent.width
-        height: 48
+        height: ProtoScreen.guToPx(6)
         color: "#000000"
         anchors.bottom: parent.bottom
 
@@ -356,7 +357,7 @@ Item {
 
 
 
-    // Backgrounds
+//    // Backgrounds
     QmlDir{
         id: backDir
         // FIX THIS PATH
@@ -453,7 +454,7 @@ Item {
         property bool shown: false
         color: "#88000000"
         border.color: "#44FFFFFF"
-        height:shown ?64: 0
+        height:shown ? ProtoScreen.guToPx(8): 0
         width: shown ? height*4 : 0
         Behavior on width {NumberAnimation{duration: 600; easing.type: Easing.OutQuad}}
         anchors.left: parent.left

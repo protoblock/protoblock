@@ -1,38 +1,29 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4 as Contols
 import Material 1.0
-//import Socket 1.0
+
 import ProRotoQml.Protoblock 1.0
+import ProRotoQml.Theme 1.0
 
 Item {
     id: loginPage
-    width: 200
-    height: 200
-    Component.onCompleted:{
-        pageHelper.title = "Please Login"
-//        pageHelper.buttonsEnabled = false
-    }
+    property string  defaultTxt: "Please fill out the fields below to claim a signup. If you played last year and would like to countiune to use your fantasy name from last year please click on the button titled \"Already Have a Name\" "
     Card{
         id: loginCard
-        width: parent.width / 1.07
-        height:  parent.height / 1.07
-        anchors.centerIn: parent
+        width: parent.width
+        height:  parent.height
         elevation: 5
-        scale:  root.loginCardScale
-        opacity: scale
-        Behavior on scale{NumberAnimation{duration:600 ; easing.type: Easing.OutQuint}}
         Rectangle{
             id: aboutHeader
             width: parent.width
             height:   parent.height / 10
             color: "#2196f3"
             Label  {
-                text: "Please choose a name"
+                text: "Please pick a username"
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 10
-                font.family: "Roboto"
-                font.pixelSize: parent.height / 2
+                font.pixelSize:ProtoScreen.font(ProtoScreen.LARGE)
                 font.bold: true
                 color: "white"
             }
@@ -45,45 +36,63 @@ Item {
             fillMode: Image.PreserveAspectFit
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: aboutHeader.bottom
-            anchors.topMargin: parent.height / 22
+            anchors.topMargin: parent.height / ProtoScreen.guToPx(2.75)
         }
-
+        Label  {
+            id: welcomeTxt
+            text: defaultTxt
+            anchors.top: logo.bottom
+            anchors.topMargin: ProtoScreen.guToPx(2)
+            width: loginCard.width / 1.07
+            height: paintedHeight
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
+            font.pixelSize:ProtoScreen.font(ProtoScreen.NORMAL)
+        }
         Card{
             id: signInCard
             width: parent.width / 1.07
-            height: parent.height / 1.5 - (aboutHeader.height + logo.height)
+            height: parent.height / 1.5 - (aboutHeader.height + logo.height ) + welcomeTxt.paintedHeight
+            anchors.top: welcomeTxt.bottom
+            anchors.topMargin: ProtoScreen.guToPx(1)
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: logo.bottom
-            anchors.topMargin: logo.height
             Column{
                 width: parent.width
                 height: parent.height / 2
                 anchors.centerIn: parent
-                spacing: nameText.height
-               TextField{
+                spacing: ProtoScreen.guToPx(1)
+                TextField{
                     id: nameText
                     width: parent.width / 1.07
-                    font.family: "Default"
-                    placeholderText: "please enter in a new fantasy name"
+                    height: ProtoScreen.guToPx(8)
+                    font.pixelSize:ProtoScreen.font(ProtoScreen.NORMAL)
+                    placeholderText: "Please enter in a new fantasy name"
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onTextChanged: {
-                    // fix me handle import
-                        root.uname = text
-
-                    }
+                    onAccepted: clamNameButton.clicked();
                 }
                 Button{
                     id: clamNameButton
                     text: "Claim New Name"
                     width: parent.width / 1.07
+                    height: ProtoScreen.guToPx(8)
                     elevation: 5
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: {
                         if (text === "Claim New Name" ){
-                            MiddleMan.checkname(nameText.text)
-                            //checkNameTimmer.start()
+                            // this is to SIGNUP
+                            nameCheckBlank(nameText.text)
                         }else{
-                            MiddleMan.importMnemonic(nameText.text);
+                            // THIS IS TO USE LAST YEARS PASS   WORD
+                            var mypk = MiddleMan.importMnemonic(nameText.text)
+                            if ( mypk === "" ){
+                                importExportStatus = "Error: Import failed. Please try again"
+                                myImportDialog.toggle()
+                            }else{
+                                importExportStatus = "Trying to import with key: " + mypk
+                                nameText.text = ""
+                                statusTxt.text = importExportStatus;
+                                secretTxt.text = ""
+                            }
                         }
                     }
                 }
@@ -92,16 +101,23 @@ Item {
                     width: parent.width / 1.07
                     elevation: 5
                     anchors.horizontalCenter: parent.horizontalCenter
+                    height: ProtoScreen.guToPx(8)
                     onClicked: {
                         nameText.text = ""
                         if (text === "Already Have a Name" ){
                             clamNameButton.text = "Submit"
-                            nameText.placeholderText = "Please enter in you 12 word password"
+                            welcomeTxtAnimation.start()
+                            nameText.placeholderText = "Please enter in your last years password"
+                            welcomeTxt.text = "Last year when you played you recived a 12 word password. You can now enter that into the the box below to re-cliam your fantasy name for 2016. If you do not remeber the 12 word secert you can open up trading football 2015 and click on export my mnemonic and this will give you your password. For further help contact the protoblock team via email <contact@protoblock.com>. "
                             text = "Back"
-                        }else{
-                                nameText.placeholderText = "please enter in a new fantasy name"
-                                text = "Already Have a Name"
-                                clamNameButton.text = "Claim New Name"
+                        }
+                        else
+                        {
+                            nameText.placeholderText = "Please enter in a new fantasy name"
+                            welcomeTxtAnimation.start()
+                            welcomeTxt.text = defaultTxt
+                            text = "Already Have a Name"
+                            clamNameButton.text = "Claim New Name"
                         }
                     }
                 }
@@ -114,7 +130,7 @@ Item {
             width: parent.width
             horizontalAlignment:  Text.AlignHCenter
             font.family: "Roboto"
-            font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+            font.pixelSize: ProtoScreen.guToPx(2.75)
             wrapMode: Text.WordWrap
             anchors.top: signInCard.bottom
             anchors.topMargin: paintedHeight*2
@@ -126,4 +142,23 @@ Item {
             }
         }
     }//card
+
+    function nameCheckBlank(s) {
+        if ( s.length === 0 ) {
+            return
+        }
+        else if ( s.length > 45) {
+            errorString = "Sorry but that fantasy name is just to long. Please try again."
+            accountErrorDialog.toggle()
+        }
+        else {
+            MiddleMan.checkname(s)
+        }
+    }
+
+    SequentialAnimation{
+        id: welcomeTxtAnimation
+        NumberAnimation { target: welcomeTxt ; property: "opacity"; from: 1; to: 0; duration: 1; }
+        NumberAnimation { target: welcomeTxt ; property: "opacity"; from: 0; to: 1; duration: 600; }
+    }
 }

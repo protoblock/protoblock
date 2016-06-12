@@ -85,7 +85,7 @@ Material.ApplicationWindow {
         onUsingFantasyName: {
             //            console.log("usingFantasyName " + MiddleMan.playersName )
             uname = MiddleMan.playersName;
-//            currentPage = "MainPinky"
+            //            currentPage = "MainPinky"
         }
     }
 
@@ -106,9 +106,8 @@ Material.ApplicationWindow {
     Dialog {
         id: usingNameDialog
         title: "Account"
-        Text{
+        Material.Label{
             width: parent.width
-            height: Unit.dp(160)
             wrapMode: Text.WordWrap
             text: msgString
         }
@@ -127,7 +126,7 @@ Material.ApplicationWindow {
         negativeButtonText: "Import"
         //            onAccepted: loginCardScale = 1
         //            onRejected:  loginCardScale = 1
-        Text{
+        Material.Label{
             width: parent.width
             height: Unit.dp(160)
             wrapMode: Text.WordWrap
@@ -148,13 +147,6 @@ Material.ApplicationWindow {
             text:  root.errorString
         }
     }
-
-
-
-
-
-
-
 
     Connections {
         target: MiddleMan
@@ -201,18 +193,18 @@ Material.ApplicationWindow {
         }
 
         onImportSuccess: {
-                  console.log(passfail + "onImportSucess " + name )
+            console.log(passfail + "onImportSucess " + name )
 
-                  if ( passfail ) {
-                      msgString = name + " - Imported!"
-                      usingNameDialog.open()
-                  }
-                  else {
-                      errorString = name
-                      loginErrorDialog.open()
-                  }
-                  console.log(passfail + "onImportSucess " + name )
-              }
-          }
+            if ( passfail ) {
+                msgString = name + " - Imported!"
+                usingNameDialog.open()
+            }
+            else {
+                errorString = name
+                loginErrorDialog.open()
+            }
+            console.log(passfail + "onImportSucess " + name )
+        }
+    }
 }
 

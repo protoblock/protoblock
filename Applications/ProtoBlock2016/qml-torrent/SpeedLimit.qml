@@ -8,6 +8,7 @@ import ProRotoQml.Torrent 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItem
 import Material.Extras 1.0
+import ProRotoQml.Theme 1.0
 
 Item {
     anchors.fill: parent
@@ -19,8 +20,8 @@ Item {
             wrapMode: Text.WordWrap
             width: parent.width - 15
             elide: Text.ElideRight
-            height: 25
-            font.pixelSize: 22
+            height: ProtoScreen.guToPx(3)
+            font.pixelSize:  ProtoScreen.guToPx(2.8)
             anchors.left: parent.left
             anchors.leftMargin: 5
             verticalAlignment: Text.AlignVCenter
@@ -51,8 +52,8 @@ Item {
             wrapMode: Text.WordWrap
             width: parent.width - 15
             elide: Text.ElideRight
-            height: 25
-            font.pixelSize: 22
+            height:  ProtoScreen.guToPx(3)
+            font.pixelSize:  ProtoScreen.guToPx(2.8)
             anchors.left: parent.left
             anchors.leftMargin: 5
             verticalAlignment: Text.AlignVCenter

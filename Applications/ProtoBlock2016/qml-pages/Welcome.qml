@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Material 1.0
-
+import ProRotoQml.Theme 1.0
 Rectangle {
     color: "#F1F1F1"
     width: rootLoader.width
@@ -14,14 +14,14 @@ Rectangle {
         height: parent.height / 6
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.topMargin: parent.height / 22
+        anchors.topMargin: parent.height / ProtoScreen.guToPx(2.75)
     }
     Label {
         id: welcomeTxt
         anchors.top: logo.bottom
         anchors.topMargin:  paintedHeight
         width: parent.width / 1.07
-        font.pixelSize: Qt.platform.os === "android" ? 48 : 22
+        font.pixelSize: ProtoScreen.guToPx(2.75)
         font.family: "Roboto"
         horizontalAlignment: Text.AlignHCenter
         text: qsTr("Welcome to Protoblocks tally of 2015 results")

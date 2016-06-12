@@ -1,0 +1,3 @@
+module ProRotoQml.Sql
+plugin ProRotoQml.Sql
+classname ProRotoQmlSqlPlugin

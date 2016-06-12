@@ -1,29 +1,26 @@
 
 import QtQuick 2.0
+import ProRotoQml.Theme 1.0
 // this is used to refresh the current page
 // we could also put this on a timmer if we like
 
-
-
-
 Item {
-    height: 60
+    height: ProtoScreen.guToPx(7.5)
     width: parent.width
 
     property bool refresh: state == "pulled" ? true : false
 
     Row {
-        spacing: 6
+        spacing: ProtoScreen.guToPx(.8)
         height: childrenRect.height
         anchors.centerIn: parent
 
         Image {
             id: arrow
             source: "qrc:/icons/ic_sync.png"
-            height: 48
+            height: ProtoScreen.guToPx(6)
             width: height
             fillMode: Image.PreserveAspectFit
-
             transformOrigin: Item.Center
             Behavior on rotation { NumberAnimation { duration: 200 } }
         }
@@ -32,7 +29,7 @@ Item {
             id: label
             anchors.verticalCenter: arrow.verticalCenter
             text: "Pull to refresh...    "
-            font.pixelSize: 18
+            font.pixelSize: ProtoScreen.guToPx(2.25)
             color: "#999999"
         }
     }

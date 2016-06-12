@@ -57,7 +57,7 @@ Material.ApplicationWindow{
                 Column{
                     width: parent.width
                     height: parent.height
-                    spacing: 22
+                    spacing:  ProtoScreen.guToPx(3)
 
                     Rectangle{
                         width: parent.width
@@ -68,7 +68,7 @@ Material.ApplicationWindow{
                             id: t
                             horizontalAlignment: Image.AlignHCenter
                             text: qsTr("Thanks for claiming a name more to come soon " )
-                            font.pointSize: 32
+                            font.pointSize:  ProtoScreen.guToPx(3)
                             wrapMode: Text.WordWrap
                             color: "white"
                         }
@@ -93,7 +93,7 @@ Material.ApplicationWindow{
                         height: parent.height / 16
                         horizontalAlignment: Image.AlignHCenter
                         text: "Use Other Name"
-                        font.pointSize: 48
+                        font.pointSize:  ProtoScreen.guToPx(6)
                         wrapMode: Text.WordWrap
                     }
                     ComboBox{
@@ -212,13 +212,11 @@ Material.ApplicationWindow{
         positiveButtonText: "back"
         onAccepted: loginCardScale = 1
         onRejected:  loginCardScale = 1
-        Text{
+        Label{
             width: parent.width
-            height: Unit.dp(160)
             wrapMode: Text.WordWrap
             text:  err
         }
     }
-
     }
 }

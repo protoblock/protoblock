@@ -23,6 +23,7 @@ SOURCES += \
     $$PWD/units.cpp \
     $$PWD/listener.cpp \
     $$PWD/teamcolors.cpp \
+    protoscreen.cpp
 
 HEADERS += \
     $$PWD/plugin.h \
@@ -32,6 +33,7 @@ HEADERS += \
     $$PWD/units.h \
     $$PWD/listener.h \
     $$PWD/teamcolors.h \
+    protoscreen.h
 
 DISTFILES = qmldir \
     README.md

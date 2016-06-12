@@ -1,7 +1,7 @@
 import QtQuick 2.0
 ListModel {
     ListElement{
-        text: "Chat"
+        text: "Proto Chat"
         icon: "qrc:/icons/newspaper.png"
     }
     ListElement{

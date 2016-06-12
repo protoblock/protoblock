@@ -2,6 +2,8 @@
 import QtQuick 2.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+
+import ProRotoQml.Theme 1.0
 FlipBar {
     id: flipBar
     animDuration: 250
@@ -13,7 +15,7 @@ FlipBar {
     signal ok
     signal hasOpened
 
-    height: 60
+    height: ProtoScreen.guToPx(7.5)
     width: parent.width
 
     function open() {
@@ -35,30 +37,30 @@ FlipBar {
         height: 60
         text: flipBar.label
         width: parent.width
-            onClicked: {
-                if (!flipBar.opened)
-                    open()
-                else if (!lineInput.activeFocus)
-                    lineInput.forceActiveFocus()
-                else
-                    close()
-            }
+        onClicked: {
+            if (!flipBar.opened)
+                open()
+            else if (!lineInput.activeFocus)
+                lineInput.forceActiveFocus()
+            else
+                close()
+        }
     }
 
     back: ListItems.Standard {
         elevation: 5
-        height: 60
+        height: ProtoScreen.guToPx(7.5)
         width: parent.width
-            TextField{
-                id: lineInput
-                placeholderText:  flipBar.placeHolder
-                focus: flipBar.opened
-                anchors { fill: parent; margins: 6 }
-                onAccepted: {
-                    if (Qt.inputMethod.visible)
-                        Qt.inputMethod.hide()
-                    flipBar.ok()
-                }
+        TextField{
+            id: lineInput
+            placeholderText:  flipBar.placeHolder
+            focus: flipBar.opened
+            anchors { fill: parent; margins: ProtoScreen.guToPx(.75) }
+            onAccepted: {
+                if (Qt.inputMethod.visible)
+                    Qt.inputMethod.hide()
+                flipBar.ok()
             }
         }
+    }
 }

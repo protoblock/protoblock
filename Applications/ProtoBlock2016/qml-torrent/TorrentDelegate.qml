@@ -10,12 +10,14 @@ import Material 1.0
 import Material.ListItems 1.0 as ListItem
 import Material.Extras 1.0
 
+import ProRotoQml.Theme 1.0
+
+
 ListItem.Subtitled {
     id: torrentDelegate
     elevation: 5
     anchors.left: parent.left
     anchors.right: parent.right
-    // some reason having issues getting the name back along with other things like files and what not
     text: model.TorName
     content : Item{
         id: torSpeed
@@ -23,19 +25,19 @@ ListItem.Subtitled {
             Icon{
                 color: TorState == TorrentModel.Downloading
                        ? theme.accentColor : Palette.colors['grey']['500']
-                size: 15
+                size:  ProtoScreen.guToPx(1.875)
                 name: "qrc:/icons/download.png"
             }
             Label{
                 Layout.fillWidth: true
-                Layout.minimumWidth: 48
+                Layout.minimumWidth:  ProtoScreen.guToPx(6)
                 text: speed2Name( TorDownSpeed )
             }
             Icon{
                 color: TorState == TorrentModel.Downloading ||
                        TorState == TorrentModel.Seeding
                        ? theme.accentColor : Palette.colors['grey']['500']
-                size:  15
+                size:   ProtoScreen.guToPx(1.875)
                 name: "qrc:/icons/upload.png"
             }
             Label{
@@ -51,7 +53,7 @@ ListItem.Subtitled {
             verticalCenter: parent.verticalCenter
         }
 
-        height: torrentDelegate.height - 16
+        height: torrentDelegate.height -  ProtoScreen.guToPx(2)
         width: height
 
         Icon{
@@ -92,8 +94,7 @@ ListItem.Subtitled {
         id: playPauseIcon
         anchors.centerIn: parent
         name: TorState == TorrentModel.Paused ? "qrc:/icons/play.png" : "qrc:/icons/pause.png"
-        size: torrentDelegate.height - 32
-
+        size: torrentDelegate.height -  ProtoScreen.guToPx(4)
         MouseArea{
             id: playPauseArea
             anchors.fill: parent

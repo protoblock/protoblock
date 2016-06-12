@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Material 1.0
+import ProRotoQml.Theme 1.0
 Item {
     id: b
     property string img
@@ -23,7 +24,7 @@ Item {
         Image{
             id: imgage
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins:  ProtoScreen.guToPx( 2.5)
             anchors.centerIn: parent
             source: img
             fillMode: Image.PreserveAspectFit
@@ -43,9 +44,9 @@ Item {
             width: parent.width - 5
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
-            height: 64
+            height: ProtoScreen.guToPx(8)
             color:  realRoot.theme !== "Pinky" ? "#c7c7c7": "black"
-            font.pixelSize: 22
+            font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
             style: Text.Raised
             font.bold: true
             anchors.top: parent.bottom

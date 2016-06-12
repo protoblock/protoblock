@@ -4,5 +4,6 @@ SUBDIRS += \
     $$PWD/ProtoBlock2016 \
     $$PWD/debugProtoLdb \
     $$PWD/chatServer/chatServer.pro
-#SUBDIRS += $$PWD/WSServer
+#    $$PWD/../ProRotoQml/libcommuni/examples/examples.pro
+##SUBDIRS += $$PWD/WSServer
 

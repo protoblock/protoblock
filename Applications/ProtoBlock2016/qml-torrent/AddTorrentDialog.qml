@@ -54,9 +54,7 @@ Dialog{
 
     FileDialog{
         id : destFolderDialog
-
         title: "Please choose a destination folder"
-
         selectFolder: true
         selectExisting: false
         selectMultiple: false
@@ -64,9 +62,7 @@ Dialog{
 
     FileDialog{
         id : torrentFileDialog
-
         title: "Please choose a file"
         nameFilters: [ "Torrent files (*.torrent)", "All files (*)" ]
     }
-
 }

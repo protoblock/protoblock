@@ -27,7 +27,7 @@ Item {
         anchors.top: logo.bottom
         anchors.topMargin:  paintedHeight
         width: parent.width / 1.07
-        font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+        font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
         font.family: "Roboto"
         color: realRoot.theme ===  "Pinky" ? "white" : "black"
         horizontalAlignment: Text.AlignHCenter
@@ -45,7 +45,7 @@ Item {
 
         Label {
             width: parent.width / 1.07
-            font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+            font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
             font.family: "Roboto"
             horizontalAlignment: Text.AlignHCenter
             text: "Tell your Friends"
@@ -65,7 +65,7 @@ Item {
                 color: "white"
                 backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
                 width: parent.width
-                height: 48
+                height: ProtoScreen.guToPx(6)
             }
             ListView{
                 id: leaderboard

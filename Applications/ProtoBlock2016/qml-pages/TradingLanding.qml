@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Material 1.0
-
+import ProRotoQml.Theme 1.0
 Rectangle {
     color: "#F1F1F1"
     width: rootLoader.width
@@ -21,7 +21,7 @@ Rectangle {
         anchors.top: logo.bottom
         anchors.topMargin:  paintedHeight
         width: parent.width / 1.07
-        font.pixelSize: Qt.platform.os === "android" ? 48 : 22
+        font.pixelSize: ProtoScreen.guToPx(2.75)
         font.family: "Roboto"
         horizontalAlignment: Text.AlignHCenter
         text: "Welcome back " + root.uname
@@ -34,7 +34,7 @@ Rectangle {
         spacing: 5
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: welcomeTxt.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: ProtoScreen.guToPx(1.25)
         Button{
             id: button1
             width: rootLoader.width / 1.07

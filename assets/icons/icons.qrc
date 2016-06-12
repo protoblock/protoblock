@@ -62,5 +62,6 @@
         <file>icons/ic_contact_mail copy.png</file>
         <file>icons/done.png</file>
         <file>icons/pause.png</file>
+        <file>icons/local_atm.png</file>
     </qresource>
 </RCC>

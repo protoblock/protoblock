@@ -5,6 +5,6 @@ ListModel {
     ListElement { text: "Projections"}
     ListElement { text:"Trading"}
     ListElement { text:"NFL News"}
-    ListElement { text:"Chat"}
+    ListElement { text:"Proto Chat"}
     ListElement { text:"Account" }
 }

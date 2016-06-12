@@ -3,6 +3,7 @@ import QtQuick 2.0
 import "tweetsearch.js" as Helper
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+import ProRotoQml.Theme 1.0
 Item {
     id: container
     property real hm: 1.0
@@ -21,7 +22,7 @@ Item {
         ScriptAction { script: flipBar.flipDown(startRotation); }
     }
 
-    width: 320
+    width: ProtoScreen.guToPx(40)
     height: flipBar.height * hm
 
     FlipBar {
@@ -32,7 +33,7 @@ Item {
 
         anchors.bottom: parent.bottom
         width: container.ListView.view ? container.ListView.view.width : 0
-        height: Math.max(72, frontPlaceHolder.y + frontPlaceHolder.height + 10)
+        height: Math.max(ProtoScreen.guToPx(9), frontPlaceHolder.y + frontPlaceHolder.height + ProtoScreen.guToPx(1.25))
 
         front: ListItems.Subtitled {
             id: frontPlaceHolder
@@ -84,7 +85,7 @@ Item {
 
         back: Rectangle {
             width: container.ListView.view ? container.ListView.view.width : 0
-            height: Math.max(72, frontPlaceHolder.y + frontPlaceHolder.height + 10)
+            height: Math.max(ProtoScreen.guToPx(9), frontPlaceHolder.y + frontPlaceHolder.height + ProtoScreen.guToPx(1.25))
             color: "#be4a25"
 
             Rectangle { color: "#ff6633"; width: parent.width; height: 1 }
@@ -94,7 +95,7 @@ Item {
                 id: avatar2
                 source: model.userImage
                 anchors.right: parent.right
-                anchors.rightMargin: 10
+                anchors.rightMargin: ProtoScreen.guToPx(1.25)
                 y: 9
                 MouseArea {
                     anchors.fill: parent
@@ -108,8 +109,9 @@ Item {
             Text {
                 id: username
                 text: model.twitterName
-                x: 10; anchors { top: avatar2.top; topMargin: -3 }
-                font.pixelSize: 12
+                x: ProtoScreen.guToPx(1.25);
+                anchors { top: avatar2.top; topMargin: -3 }
+                font.pixelSize: ProtoScreen.guToPx(1.5)
                 font.bold: true
                 color: "white"
                 linkColor: "white"
@@ -117,9 +119,9 @@ Item {
 
             Text {
                 text: model.source + "<br>" + Helper.formatDate(model.published) + "<br>" + model.uri
-                x: 10; anchors { top: username.bottom; topMargin: 0 }
+                x:ProtoScreen.guToPx(1.25); anchors { top: username.bottom; topMargin: 0 }
                 wrapMode: Text.WordWrap
-                font.pixelSize: 12
+                font.pixelSize: ProtoScreen.guToPx(1.5)
                 font.bold: false
                 color: "#ffc2ad"
                 linkColor: "white"

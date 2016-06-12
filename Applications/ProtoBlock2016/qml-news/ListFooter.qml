@@ -1,6 +1,6 @@
 
 import QtQuick 2.0
-
+import ProRotoQml.Theme 1.0
 Rectangle {
     color: "transparent"
     width: parent.width
@@ -44,8 +44,8 @@ Rectangle {
         SearchDelegate {
             id: userSearch
             label: "From user..."
-            placeHolder: "@username"
-            prefix: "@"
+            placeHolder: "@protoblock"
+            prefix: "@protoblock"
             onHasOpened:{
                 tagSearch.close()
                 wordSearch.close()
@@ -56,6 +56,23 @@ Rectangle {
                 tweetsModel.phrase = ""
                 tweetsModel.from = searchText
             }
+            Component.onCompleted: {
+                initTimmer.start()
+            }
+        }
+
+        Timer{
+            id: initTimmer
+            interval: 200
+            repeat: false
+            running: false
+            onTriggered: {
+                mainListView.positionViewAtBeginning()
+                mainListView.clear()
+                tweetsModel.phrase = ""
+                tweetsModel.from = "@protoblock"
+            }
+
         }
 
         SearchDelegate {
@@ -78,8 +95,8 @@ Rectangle {
         SpriteSequence {
             id: sprite
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 320
-            height: 300
+            width: ProtoScreen.guToPx(40)
+            height: ProtoScreen.guToPx(40)
             running: true
             interpolate: false
             Sprite {
@@ -87,8 +104,8 @@ Rectangle {
                 source: "qrc:/bird-anim-sprites.png"
                 frameCount: 1
                 frameRate: 1
-                frameWidth: 320
-                frameHeight: 300
+                frameWidth:ProtoScreen.guToPx(40)
+                frameHeight: ProtoScreen.guToPx(40)
                 to: { "bird":10, "trill":1, "blink":1 }
             }
             Sprite {
@@ -96,8 +113,8 @@ Rectangle {
                 source: "qrc:/bird-anim-sprites.png"
                 frameCount: 5
                 frameRate: 3
-                frameWidth: 320
-                frameHeight: 300
+                frameWidth: ProtoScreen.guToPx(40)
+                frameHeight: ProtoScreen.guToPx(40)
                 to: {"bird":1}
             }
             Sprite {
@@ -105,9 +122,9 @@ Rectangle {
                 source: "qrc:/bird-anim-sprites.png"
                 frameCount: 1
                 frameRate: 3
-                frameWidth: 320
-                frameHeight: 300
-                frameX: 1600
+                frameWidth: ProtoScreen.guToPx(40)
+                frameHeight: ProtoScreen.guToPx(40)
+                frameX: ProtoScreen.guToPx(200)
                 to: {"bird":1}
             }
         }

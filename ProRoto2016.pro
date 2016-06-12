@@ -19,5 +19,5 @@ OTHER_FILES += \
             $$PWD/pri/staticJson.pri \
             $$PWD/pri/qml-pages.pri \
             $$PWD/pri/qml-utils.pri
-#            $$PWD/pri/qml-material.pri
+            $$PWD/pri/qml-realChat.pri
 

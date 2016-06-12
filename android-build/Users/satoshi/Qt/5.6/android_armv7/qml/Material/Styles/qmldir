@@ -1,0 +1,12 @@
+module Material.Styles
+
+ApplicationWindowStyle 1.0 ApplicationWindowStyle.qml
+ButtonStyle 1.0 ButtonStyle.qml
+CheckBoxStyle 1.0 CheckBoxStyle.qml
+ProgressBarStyle 1.0 ProgressBarStyle.qml
+SwitchStyle 1.0 SwitchStyle.qml
+ToolBarStyle.qml 1.0 ToolBarStyle.qml
+ToolButtonStyle.qml 1.0 ToolButtonStyle.qml
+RadioButtonStyle 1.0 RadioButtonStyle.qml
+SliderStyle 1.0 SliderStyle.qml
+TextFieldStyle 1.0 TextFieldStyle.qml

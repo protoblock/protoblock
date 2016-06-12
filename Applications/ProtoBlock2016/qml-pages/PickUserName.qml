@@ -46,6 +46,8 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: aboutHeader.bottom
             anchors.topMargin: parent.height / 22
+            fillMode: Image.PreserveAspectFit
+
         }
 
         Card{
@@ -60,7 +62,7 @@ Item {
                 height: parent.height / 2
                 anchors.centerIn: parent
                 spacing: nameText.height
-               MainView{
+                MainView{
                     id: nameText
                     width: parent.width / 1.07
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -73,9 +75,9 @@ Item {
                     elevation: 5
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: {
+                    }
                 }
             }
-        }
-    }//card
-}
+        }//card
+    }
 }

@@ -29,29 +29,29 @@ Item {
         Card {
             id: colorPicker
             width: parent.width / 1.07
-            height: Unit.dp(90) + (selection.height * 2) + selectionBanner.height
+            height: ProtoScreen.guToPx(11.25) + (selection.height * 2) + selectionBanner.height
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 32
+            anchors.top: parent.top // ProtoScreen.guToPx(4)
+            anchors.topMargin: ProtoScreen.guToPx(4)
             Banner{
                 id: selectionBanner
                 text: "Change Colors"
-                height: 48
+                height:  ProtoScreen.guToPx(6)
                 width: parent.width
             }
 
             MenuField {
                 id: selection
                 model: ["Primary color", "Accent color", "Background color"]
-                width: Unit.dp(160)
+                width: ProtoScreen.guToPx(20)
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: selectionBanner.bottom
-                anchors.topMargin: 32
+                anchors.topMargin: ProtoScreen.guToPx(4)
             }
 
             Grid {
                 columns: 7
-                spacing: Unit.dp(8)
+                spacing: ProtoScreen.guToPx(1)
                 anchors.top: selection.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 Repeater {
@@ -64,11 +64,11 @@ Item {
                     ]
 
                     Rectangle {
-                        width: Unit.dp(30)
-                        height: Unit.dp(30)
-                        radius:Unit.dp(2)
+                        width: ProtoScreen.guToPx(4)
+                        height: ProtoScreen.guToPx(4)
+                        radius:5
                         color: modelData
-                        border.width: modelData === "white" ? Unit.dp(2) : 0
+                        border.width: modelData === "white" ? 5 : 0
                         border.color: Theme.alpha("#000", 0.26)
 
                         Ink {
@@ -98,11 +98,11 @@ Item {
             height: colorPicker.height
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: colorPicker.bottom
-            anchors.topMargin: 32
+            anchors.topMargin: ProtoScreen.guToPx(4)
             Banner{
                 id: themeBanner
                 width: parent.width
-                height: 48
+                height: ProtoScreen.guToPx(6)
                 text: "Theme Picker"
             }
             Row{
@@ -110,7 +110,7 @@ Item {
                 spacing: 5
                 height: themPicker.height - themeBanner.height
                 anchors.top: themeBanner.bottom
-                anchors.topMargin: 12
+                anchors.topMargin: ProtoScreen.guToPx(1.5)
                 anchors.horizontalCenter: parent.horizontalCenter
                 Repeater {
                     id: themeMenu
@@ -141,11 +141,11 @@ Item {
             height: colorPicker.height
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: themPicker.bottom
-            anchors.topMargin: 32
+            anchors.topMargin: ProtoScreen.guToPx(4)
             Banner{
                 id: torrentSettingsBanner
                 width: parent.width
-                height: 48
+                height: ProtoScreen.guToPx(4)
                 text: "Torrent Settings"
             }
             SpeedLimit{
@@ -156,16 +156,13 @@ Item {
             }
         }
 
-
-
-
         TorrentListView{
             id: torrentHelper
             width: parent.width / 1.07
             height: colorPicker.height
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: torrentCard.bottom
-            anchors.topMargin: 32
+            anchors.topMargin: ProtoScreen.guToPx(4)
         }
     }
 }

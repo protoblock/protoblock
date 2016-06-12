@@ -1,0 +1,9 @@
+DEFINES+=IRC_SHARED
+IRC_VERSION=3.5.0
+IRC_VERSION_MAJOR=3
+IRC_VERSION_MINOR=5
+IRC_VERSION_PATCH=0
+IRC_INSTALL_LIBS=/Users/satoshi/Qt/5.6/android_armv7/lib
+IRC_INSTALL_BINS=/Users/satoshi/Qt/5.6/android_armv7/bin
+IRC_INSTALL_HEADERS=/Users/satoshi/Qt/5.6/android_armv7/include/Communi
+IRC_INSTALL_FEATURES=/Users/satoshi/Qt/5.6/android_armv7/mkspecs/features
