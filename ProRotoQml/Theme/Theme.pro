@@ -1,4 +1,4 @@
-include ($$PWD/../../pri/macrosAndModels.pri)
+#include ($$PWD/../../pri/macrosAndModels.pri)
 
 
 ios{

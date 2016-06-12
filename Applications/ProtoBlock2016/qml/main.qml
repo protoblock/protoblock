@@ -22,7 +22,7 @@ ApplicationWindow{
     property string importExportStatus
     property string secretTxt
     property string statusTxt
-//    property string mypk
+    //    property string mypk
 
 
     // Pages
@@ -159,16 +159,13 @@ ApplicationWindow{
                                 text: sectionTitles[index]
                                 action: Image{
                                     source: sectionTitlesIcons[index]
-                                    height: 32
-                                    width:32
+                                    height: ProtoScreen.guToPx(4)
+                                    width:ProtoScreen.guToPx(4)
                                     fillMode: Image.PreserveAspectFit
                                 }
                                 onClicked:{
-                                    rootLoader.source = ""
-
                                     var theFile = modelData;
-                                    Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
-                                    rootLoader.source = "qrc:/"+theFile + ".qml"
+                                    rootLoader.source = Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
 
                                     navDrawer.close()
                                     navDrawer.showing = false
@@ -181,8 +178,6 @@ ApplicationWindow{
                                     text: modelData
                                     selected: modelData == root.currentPage
                                     onClicked: {
-                                        rootLoader.source = ""
-
                                         var theFile = modelData;
                                         Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                                         rootLoader.source = "qrc:/"+theFile + ".qml"
@@ -401,12 +396,12 @@ ApplicationWindow{
             }
             else {
                 errorString = name + " is taken. Please try with a different name. Or if you feel that this is in fact your name from last year. Or would like to import from another device."
-                        if (loginDialog.visible){
-                        +" Please click back. Then click \"I Already Have a Name\" "
-                        }else if (!loginDialog.visible){
-                        + " Please click Import below."
-                        }
-                        + "For more assistance please contact the protoblock staff at <contact@protoblock.com>"
+                if (loginDialog.visible){
+                    +" Please click back. Then click \"I Already Have a Name\" "
+                }else if (!loginDialog.visible){
+                    + " Please click Import below."
+                }
+                + "For more assistance please contact the protoblock staff at <contact@protoblock.com>"
                 accountErrorDialog.open()
             }
         }
@@ -415,7 +410,7 @@ ApplicationWindow{
             if ( uname !== name) {
                 if ( !isdefault ) {
                     msgString = "Congraulation You are now playing as: " + name +
-                    usingNameDialog.open()
+                            usingNameDialog.open()
                 }
             }
             uname = name
@@ -442,15 +437,15 @@ ApplicationWindow{
 
     Indicators{
         id: indicators
-//        shown:  loginDialog.enabled === false ?  true : false
-//        anchors.right: parent.right
-//        anchors.rightMargin: ProtoScreen.guToPx(8.2)
+        //        shown:  loginDialog.enabled === false ?  true : false
+        //        anchors.right: parent.right
+        //        anchors.rightMargin: ProtoScreen.guToPx(8.2)
         anchors.top: parent.top
         anchors.topMargin: ProtoScreen.guToPx(1.7)
         anchors.left: parent.left
         anchors.leftMargin: parent.width - ProtoScreen.guToPx(10)
 
-//        anchors.topMargin: !navDrawer.enabled ? - ProtoScreen.guToPx(4) : ProtoScreen.guToPx(1.7)
-//anchors.centerIn: parent
+        //        anchors.topMargin: !navDrawer.enabled ? - ProtoScreen.guToPx(4) : ProtoScreen.guToPx(1.7)
+        //anchors.centerIn: parent
     }
 }

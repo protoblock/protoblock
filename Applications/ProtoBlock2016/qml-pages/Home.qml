@@ -79,7 +79,7 @@ Item {
                     elevation: 2
                     width: parent.width
                     text: "FantasyName: " +  modelData
-                    action: RoundImage{
+                    action: Image{
                         height: parent.height
                         width : height
                         fillMode: Image.PreserveAspectFit

@@ -18,7 +18,12 @@ Item {
                     onClicked: {
                         strCheck= section[index]
                         pageHelper.title = modelData
+                        console.log(section[index])
                         var theFile = modelData
+
+
+
+
                         rootLoader.source  = Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                     }
                 }

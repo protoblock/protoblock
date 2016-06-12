@@ -68,7 +68,7 @@ Item {
                     left: parent.left
                     leftMargin: parent.width / 17
                 }
-                RoundImage{
+                Image{
                     source: model.PhotoUrl
                     width: height
                     height:  100

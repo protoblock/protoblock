@@ -43,7 +43,7 @@ Item {
                      +  " College: "  + model.College +  " Experience: " + model.Experience
                      + " years "
                      + model.BirthDateString  +" (" + model.Age + ") "
-            action: RoundImage{
+            action: Image{
                 height: parent.height
                 width : height
                 fillMode: Image.PreserveAspectFit

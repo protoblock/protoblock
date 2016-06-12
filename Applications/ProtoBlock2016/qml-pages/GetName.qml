@@ -97,30 +97,42 @@ Item {
                     }
                 }
                 Button{
-                    text: "Already Have a Name"
+                    text: "Skip"
                     width: parent.width / 1.07
                     elevation: 5
                     anchors.horizontalCenter: parent.horizontalCenter
                     height: ProtoScreen.guToPx(8)
                     onClicked: {
-                        nameText.text = ""
-                        if (text === "Already Have a Name" ){
-                            clamNameButton.text = "Submit"
-                            welcomeTxtAnimation.start()
-                            nameText.placeholderText = "Please enter in your last years password"
-                            welcomeTxt.text = "Last year when you played you recived a 12 word password. You can now enter that into the the box below to re-cliam your fantasy name for 2016. If you do not remeber the 12 word secert you can open up trading football 2015 and click on export my mnemonic and this will give you your password. For further help contact the protoblock team via email <contact@protoblock.com>. "
-                            text = "Back"
-                        }
-                        else
-                        {
-                            nameText.placeholderText = "Please enter in a new fantasy name"
-                            welcomeTxtAnimation.start()
-                            welcomeTxt.text = defaultTxt
-                            text = "Already Have a Name"
-                            clamNameButton.text = "Claim New Name"
-                        }
+                        loginDialog.close();
                     }
                 }
+
+
+//                Button{
+//                    text: "Already Have a Name"
+//                    width: parent.width / 1.07
+//                    elevation: 5
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//                    height: ProtoScreen.guToPx(8)
+//                    onClicked: {
+//                        nameText.text = ""
+//                        if (text === "Already Have a Name" ){
+//                            clamNameButton.text = "Submit"
+//                            welcomeTxtAnimation.start()
+//                            nameText.placeholderText = "Please enter in your last years password"
+//                            welcomeTxt.text = "Last year when you played you recived a 12 word password. You can now enter that into the the box below to re-cliam your fantasy name for 2016. If you do not remeber the 12 word secert you can open up trading football 2015 and click on export my mnemonic and this will give you your password. For further help contact the protoblock team via email <contact@protoblock.com>. "
+//                            text = "Back"
+//                        }
+//                        else
+//                        {
+//                            nameText.placeholderText = "Please enter in a new fantasy name"
+//                            welcomeTxtAnimation.start()
+//                            welcomeTxt.text = defaultTxt
+//                            text = "Already Have a Name"
+//                            clamNameButton.text = "Claim New Name"
+//                        }
+//                    }
+//                }
             }
         }
 

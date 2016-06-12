@@ -34,7 +34,7 @@ Item {
                 width: parent.width
                 text: "Player: " +  modelData  + " Status: "
                 subText: "Amount " + Math.floor((Math.random() * 30) + 1);
-                action: RoundImage{
+                action: Image{
                     height: parent.height
                     width : height
                     fillMode: Image.PreserveAspectFit

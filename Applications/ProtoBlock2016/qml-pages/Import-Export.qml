@@ -37,7 +37,7 @@ Item{
                 elevation: 1
                 width: parent.width / 1.07
                 text: "FantasyName: " + realRoot.uname
-                action: RoundImage{
+                action:Image{
                     height: parent.height
                     width : height
                     fillMode: Image.PreserveAspectFit

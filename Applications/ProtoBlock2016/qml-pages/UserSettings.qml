@@ -9,7 +9,7 @@ import Material.ListItems 1.0 as ListItems
 Item {
     id: usersettingsCard
     Component.onCompleted:  pageHelper.title = "User Settings"
-    property var themes: ["Material","Classic","Pinky"]
+    property var themes: ["Material","Pinky"]
 
     Flickable{
         width: parent.width
@@ -135,34 +135,34 @@ Item {
         }
 
 
-        Card{
-            id: torrentCard
-            width: parent.width / 1.07
-            height: colorPicker.height
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: themPicker.bottom
-            anchors.topMargin: ProtoScreen.guToPx(4)
-            Banner{
-                id: torrentSettingsBanner
-                width: parent.width
-                height: ProtoScreen.guToPx(4)
-                text: "Torrent Settings"
-            }
-            SpeedLimit{
-                width: parent.width / 1.07
-                height: torrentCard.height - torrentSettingsBanner.height
-                anchors.top: torrentSettingsBanner.bottom
-                anchors.topMargin: torrentSettingsBanner.height + 5
-            }
-        }
+//        Card{
+//            id: torrentCard
+//            width: parent.width / 1.07
+//            height: colorPicker.height
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.top: themPicker.bottom
+//            anchors.topMargin: ProtoScreen.guToPx(4)
+//            Banner{
+//                id: torrentSettingsBanner
+//                width: parent.width
+//                height: ProtoScreen.guToPx(4)
+//                text: "Torrent Settings"
+//            }
+//            SpeedLimit{
+//                width: parent.width / 1.07
+//                height: torrentCard.height - torrentSettingsBanner.height
+//                anchors.top: torrentSettingsBanner.bottom
+//                anchors.topMargin: torrentSettingsBanner.height + 5
+//            }
+//        }
 
-        TorrentListView{
-            id: torrentHelper
-            width: parent.width / 1.07
-            height: colorPicker.height
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: torrentCard.bottom
-            anchors.topMargin: ProtoScreen.guToPx(4)
-        }
-    }
+//        TorrentListView{
+//            id: torrentHelper
+//            width: parent.width / 1.07
+//            height: colorPicker.height
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.top: torrentCard.bottom
+//            anchors.topMargin: ProtoScreen.guToPx(4)
+//        }
+//    }
 }

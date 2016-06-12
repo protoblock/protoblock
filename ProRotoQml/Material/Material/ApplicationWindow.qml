@@ -81,11 +81,6 @@ Controls.ApplicationWindow {
         id: __theme
     }
 
-    PlatformExtensions {
-        id: platformExtensions
-        decorationColor: __toolbar.decorationColor
-        window: app
-    }
 
     PageStack {
         id: __pageStack

@@ -102,8 +102,7 @@ Text {
 
     property var fontInfo: fontStyles[style]
 
-    font.pixelSize: (ProtoScreen.formFactor !== "phone" && ProtoScreen.formFactor !== "phablet"  && fontInfo.size_desktop
-            ? fontInfo.size_desktop : fontInfo.size) * Units.dp
+    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
     font.family: "Roboto"
 //    font.weight: {
 //        var weight = fontInfo.font

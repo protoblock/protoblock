@@ -45,7 +45,6 @@ DISTFILES = qmldir \
     PageSidebar.qml \
     PageStack.qml \
     Palette.qml \
-    PlatformExtensions.qml \
     Popover.qml \
     PopupBase.qml \
     ProgressBar.qml \
