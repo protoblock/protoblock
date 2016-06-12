@@ -5,13 +5,21 @@
 
 
 using namespace fantasybit;
-Mediator::Mediator(QObject *parent) : QObject(parent),
-    m_fetchingLeaders(false)
-{
+Mediator::Mediator(QObject *parent) : QObject(parent) {
+
+    auto mynames = m_fantasy_agent.getMyNames();
+//    if ( mynames.size() == 0 ) {
+//        auto filepath = lastYearPath();
+//        if ( filepath != "" ) {
+//            qDebug() <<" found last year!! " << filepath;
+//            m_fantasy_agent.readFromSecret(filepath,true);
+//            mynames = m_fantasy_agent.getMyNames();
+//        }
+//    }
 
     for ( auto &np : m_fantasy_agent.getMyNames()) {
         m_myPubkeyFname[np.second] = "";
-        qDebug() << " Mediator::Mediator name:" << np.first << " pk: " << np.second;
+        qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
     }
 
 
@@ -22,8 +30,8 @@ Mediator::Mediator(QObject *parent) : QObject(parent),
     QString txserver = wss.arg(PB_WS_TX.data()).arg(PB_WS_TX_PORT);
 
 #ifndef NODEBUG
-//    qDebug() << " connecting to lserver" << lserver;
-//    qDebug() << " connecting to txserver" << txserver;
+    qDebug() << " connecting to lserver" << lserver;
+    qDebug() << " connecting to txserver" << txserver;
 #endif
     m_webSocket.open(QUrl(lserver));
     m_txsocket.open(QUrl(txserver));
@@ -34,13 +42,13 @@ Mediator::Mediator(QObject *parent) : QObject(parent),
     connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
     connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
 
-        connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
+    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
 
-    connect(this,SIGNAL (nameStatusChanged(QString,QString))
-            ,this, SLOT (handdleNameStatus(QString,QString)));
+//    connect(this,SIGNAL (nameStatusChanged(QString,QString))
+//            ,this, SLOT (handdleNameStatus(QString,QString)));
 
-    connect(this,SIGNAL(usingFantasyName(QString)),
-            this,SLOT(handdleUsingName(QString)));
+//    connect(this,SIGNAL(usingFantasyName(QString)),
+//            this,SLOT(handdleUsingName(QString)));
 
 
 
@@ -54,14 +62,14 @@ Mediator::Mediator(QObject *parent) : QObject(parent),
 }
 
 
-QString Mediator::nameStatusGet(const QString &name) {
-    QVariantMap::const_iterator iter = m_nameStatuses.find(name);
-    if ( !iter->isValid() )
-        return "none";
-    else
+//QString Mediator::nameS                           tatusGet(const QString &name) {
+//    QVariantMap::const_iterator iter = m_nameStatuses.find(name);
+//    if ( !iter->isValid() )
+//        return "none";
+//    else
 //        qDebug() << "Suggested Name:  "  << iter.value ().toString ();
-        return iter.value().toString();
-}
+//        return iter.value().toString();
+//}
 
 void Mediator::pk2fname(const QString &pk) {
     lastPk2name = pk.toStdString();
@@ -109,83 +117,83 @@ Mediator *Mediator::instance() {
     return myInstance;
 }
 
-/*!
- * \brief Mediator::playersStatus
- * \return
-    returns the current fantasy players status that is in focus
-*/
-QString Mediator::playersStatus() const
-{
-    return m_playersStatus;
-}
+///*!
+// * \brief Mediator::playersStatus
+// * \return
+//    returns the current fantasy players status that is in focus
+//*/
+//QString Mediator::playersStatus() const
+//{
+//    return m_playersStatus;
+//}
 
-/*!
- * \brief Mediator::setPlayersStatus
- * \param playersStatus
-    set the curreent fantasy players status
-*/
-void Mediator::setPlayersStatus(const QString &playersStatus)
-{
-    if(m_playersStatus == playersStatus)
-        return;
-    m_playersStatus = playersStatus;
-    emit playersStatusChanged();
-}
+///*!
+// * \brief Mediator::setPlayersStatus
+// * \param playersStatus
+//    set the curreent fantasy players status
+//*/
+//void Mediator::setPlayersStatus(const QString &playersStatus)
+//{
+//    if(m_playersStatus == playersStatus)
+//        return;
+//    m_playersStatus = playersStatus;
+//    emit playersStatusChanged();
+//}
 
-/*!
- * \brief Mediator::playersName
- * \return
-    return the current fantasys players name that is in focus
-*/
-QString Mediator::playersName()
-{
-    return m_fantasy_agent.currentClient().data();
-}
+///*!
+// * \brief Mediator::playersName
+// * \return
+//    return the current fantasys players name that is in focus
+//*/
+//QString Mediator::playersName()
+//{
+//    return m_fantasy_agent.currentClient().data();
+//}
 
-/*!
- * \brief Mediator::setPlayersName
- * \param playersName
-    Set the Current players name that is in focus
-*/
-void Mediator::setPlayersName(const QString &playersName)
-{
-    if( m_playersName == playersName)
-        return;
-    m_playersName = playersName;
-    emit playersNameChanged();
-}
+///*!
+// * \brief Mediator::setPlayersName
+// * \param playersName
+//    Set the Current players name that is in focus
+//*/
+//void Mediator::setPlayersName(const QString &playersName)
+//{
+//    if( m_playersName == playersName)
+//        return;
+//    m_playersName = playersName;
+//    emit playersNameChanged();
+//}
 
-Mediator::MyNameStatus Mediator::myNameStatus() const
-{
-    return m_myNameStatus;
-}
+//Mediator::MyNameStatus Mediator::myNameStatus() const
+//{
+//    return m_myNameStatus;
+//}
 
 //FIXME when the status of a current name is changed update this
-void Mediator::setMyNameStatus(const Mediator::MyNameStatus &myNameStatus)
-{
-    if (m_myNameStatus == myNameStatus){
-        return;
-    }else {
-        switch (myNameStatus) {
-        case None :
-            m_myNameStatus = None;
-            break;
-        case NotAvil:
-            m_myNameStatus = NotAvil;
-            break;
-        case Requested:
-            m_myNameStatus = Requested;
-            break;
-        case TransactionSent:
-            m_myNameStatus = TransactionSent;
-            break;
-        case Confirmed:
-            m_myNameStatus = Confirmed;
-            break;
-        }
-        emit myNameStatusChanged();
-    }
-}
+//void Mediator::setMyNameStatus(const Mediator::MyNameStatus &myNameStatus)
+//{
+//    if (m_myNameStatus == myNameStatus){
+//        return;
+//    }else {
+//        switch (myNameStatus) {
+//        case None :
+//            m_myNameStatus = None;
+//            break;
+//        case NotAvil:
+//            m_myNameStatus = NotAvil;
+//            break;
+//        case Requested:
+//            m_myNameStatus = Requested;
+//            break;
+//        case TransactionSent:
+//            m_myNameStatus = TransactionSent;
+//            break;
+//        case Confirmed:
+//            m_myNameStatus = Confirmed;
+//            break;
+//        }
+//        emit myNameStatusChanged();
+//    }
+//}
 
 qint64 Mediator::sendBinaryMessage(const QByteArray &data) {
     return m_webSocket.sendBinaryMessage(data);
@@ -201,13 +209,13 @@ qint64 Mediator::sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &da
 
 
 void Mediator::handleClosed() {
-//    qDebug() << "Close Reason " << m_webSocket.closeReason ();
+    qDebug() << "Close Reason " << m_webSocket.closeReason ();
     return;
 }
 
 void Mediator::onConnected() {
     QHostAddress hInfo = m_webSocket.peerAddress ();
-//    qDebug() << "connected to " <<  hInfo.toString () << " on Port " << m_webSocket.peerPort ();
+    qDebug() << "connected to " <<  hInfo.toString () << " on Port " << m_webSocket.peerPort ();
     connect(&m_webSocket, SIGNAL(binaryMessageReceived(QByteArray)),
             this, SLOT ( onBinaryMessageRecived(QByteArray) ));
 
@@ -250,7 +258,7 @@ void Mediator::handleAboutToClose()
 
 
 void Mediator::onTextMessageReceived(QString message) {
-//        qDebug() << "Message received:" << message;
+        qDebug() << "Message received:" << message;
 }
 
 
@@ -258,7 +266,11 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
     fantasybit::WSReply rep;
     rep.ParseFromString(message.toStdString());
 
-//    qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
+    if ( rep.ctype() != GETALLNAMES)
+    qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
+    else
+        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
+
     switch ( rep.ctype()) {
         case PK2FNAME:
         {
@@ -267,7 +279,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             if ( name == "" ) {
                 if ( pk2.req().pk() == lastPk2name) {
                     error(QString("import failed. please input valid secret"));
-//                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
+                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
                     QString err = "import failed. no name for: ";
                     err.append(lastPk2name.data());
                     emit importSuccess(err,false);
@@ -293,14 +305,14 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 QString goodname = name.data();
 //                m_goodFnames.append(&goodname);
                 m_goodList.append(goodname);
-//                qDebug() << " new good name! " << goodname;
+                qDebug() << " new good name! " << goodname;
             }
                 //            nameStatusChanged( name.data() , "confirmed" );
 
             if ( !m_fantasy_agent.HaveClient() ||
                  lastPk2name == pk2.req().pk()) {
                 if ( !m_fantasy_agent.UseName(name) )
-//                    qDebug() << "error using name " << name.data () ;
+                    qDebug() << "error using name " << name.data () ;
 //                    error(QString("error using name").append(name.data()));
                 usingFantasyName(m_fantasy_agent.currentClient().data());
             }
@@ -314,35 +326,35 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         }
         case CHECKNAME: {
             const CheckNameRep &cn = rep.GetExtension(CheckNameRep::rep);
-//            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
+            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
             nameCheckGet(cn.req().fantasy_name().data(),cn.isavail().data());
 //            update_checkname(rep.data().data());
             break;
         }
         case GETSTATUS:
         {
-            const NameStatusRep &np = rep.GetExtension(NameStatusRep::rep);
-            QString statusstr = fantasybit::MyNameStatus_Name(np.status()).data();
-            auto name = np.req().name();
-            m_nameStatuses[name.data()] = statusstr;
+//            const NameStatusRep &np = rep.GetExtension(NameStatusRep::rep);
+//            QString statusstr = fantasybit::MyNameStatus_Name(np.status()).data();
+//            auto name = np.req().name();
+//            m_nameStatuses[name.data()] = statusstr;
 //            qDebug() << " emit " << name.data() << statusstr;
-            nameStatusChanged( name.data() , statusstr );
+//            nameStatusChanged( name.data() , statusstr );
             break;
         }
         case GETALLNAMES: {
-        setfetchingLeaders (true);
             m_allNamesList.clear();
+//            m_allNames2.clear();
             const GetAllNamesRep &np = rep.GetExtension(GetAllNamesRep::rep);
             for (int i = np.names_size()-1; i >= 0; i--) {
                m_allNamesList.append(np.names(i).data());
+//               m_allNames2.append(np.names(i).data());
             }
             leaderBoardchanged();
-
-
 #ifdef TRACE
-//            qDebug() << "GETALLNAMES" <<  np.DebugString().data();
+            //qDebug() << "GETALLNAMES" <<  np.DebugString().data();
 #endif
-            setfetchingLeaders (false);
+
+//            setallNames2(m_allNamesList)
             break;
         }
         default:
@@ -415,8 +427,8 @@ void Mediator::signPlayer(const QString &name)  {
 
     m_txsocket.sendBinaryMessage(qb);
 
-    m_nameStatuses[name] = QString("requested");
-    nameStatusChanged(name,"requested");
+//    m_nameStatuses[name] = QString("requested");
+//    nameStatusChanged(name,"requested");
     usingFantasyName(m_fantasy_agent.currentClient().data());
     m_myPubkeyFname[m_fantasy_agent.pubKeyStr()] = "";
     m_lastSignedplayer = m_fantasy_agent.pubKeyStr();
@@ -430,8 +442,11 @@ void Mediator::getSignedPlayerStatus() {
 
 
 void Mediator::useName(const QString &name) {
-    if ( m_fantasy_agent.UseName(name.toStdString()) )
+    qDebug() << " Mediator::useName " << name;
+    if ( m_fantasy_agent.UseName(name.toStdString()) ) {
+//        qDebug() << " Mediator::useName  usingFantasyName" << name;
         usingFantasyName(name);
+    }
 
 }
 
@@ -466,46 +481,59 @@ QString Mediator::init() {
 //    return defaultName;
 }
 
-void Mediator::handdleUsingName(const QString &name)
-{
-#ifdef TRACE
+//void Mediator::handdleUsingName(const QString &name)
+//{
+//#ifdef TRACE
 //    qDebug() << " handdleUsingName " << name;
-#endif
-    setPlayersName (name);
-}
+//#endif
+//    setPlayersName (name);
+//}
 
-void Mediator::handdleNameStatus(const QString &name, const QString &status)
-{
-    setPlayersName (name);
-    setPlayersStatus (status);
-}
+//void Mediator::handdleNameStatus(const QString &name, const QString &status)
+//{
+//    setPlayersName (name);
+//    setPlayersStatus (status);
+//}
 
 
 // THIS SHOULD be a error signal that alerts others that something is going on.
 void Mediator::handleSocketError(QAbstractSocket::SocketError error)
 {
     qDebug() << error;
-
 }
 
-void Mediator::handdleNameStatuses()
-{
-    setMyNameStatus (m_myNameStatus);
-}
+//#include <QStandardPaths>
+//std::string Mediator::lastYearPath() {
+//    std::string ret = "";
+//#ifdef Q_OS_WIN32
+////    QSettings settings(QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1"), QSettings::NativeFormat);
+//    QSettings settings(QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"), QSettings::NativeFormat);
 
-#ifdef Q_OS_WIN32
-QString Mediator::lastKnowLoc() {
-    QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1", QSettings::NativeFormat);
-    return settings.value( "InstallLocation" ).toString();
-}
-#endif
+//    qDebug() << "settings " << settings.status();
+//    qDebug() << "child keys = " <<  settings.childKeys();
+//    for ( auto k : settings.allKeys() )
+//        qDebug() << "HKLM " << k;
+//    QString path = settings.value( "InstallLocation" ).toString();
+//    ret = path.toStdString();
+//#ifdef Q_OS_MAC
+//    QString path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation).append("/tradingfootball/");
+//    ret = path.toStdString();
+//#endif
+
+////    "HKCU\\SOFTWARE\\Classes\\VirtualStore\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1"
+
+//    return ret;
+//}
+
+////HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{79913283-A35B-4274-927C-1B52D286D939}_is1
+
 
 void Mediator::allNamesGet() {
     WsReq req;
     req.set_ctype(GETALLNAMES);
     auto txstr = req.SerializeAsString();
     QByteArray qb(txstr.data(),(size_t)txstr.size());
-//    qDebug() << " allNamesGet sending " << req.DebugString().data();
+    qDebug() << " allNamesGet sending " << req.DebugString().data();
     m_webSocket.sendBinaryMessage(qb);
 }
 

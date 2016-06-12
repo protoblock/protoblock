@@ -3,6 +3,7 @@
 #include <qmath.h>
 #include <QScreen>
 #include <QGuiApplication>
+#include <QDebug>
 
 ProtoScreen::ProtoScreen(QObject *parent) :
     QObject(parent),
@@ -329,12 +330,14 @@ void ProtoScreen::updateFormFactor(){
         //        FIXME
     }
     // WINDOWS LOOK FOR DPI
-    else if (
-             sysInfo.productType () == "winrt"
+    else if ( sysInfo.productType () == "winrt"
              || sysInfo.productType () == "wince"
              || sysInfo.productType () == "windows"
              )
     {
+        m_windowsDesktopScale = 1.0;
+        qDebug() << " windows " << m_screen->logicalDotsPerInch();
+
         //        SOURCE
         //      https://msdn.microsoft.com/en-us/library/windows/desktop/dn469266(v=vs.85).aspx
         if (m_169 <= 10.5){
@@ -352,21 +355,22 @@ void ProtoScreen::updateFormFactor(){
         }
         else if (m_169 >=  13.3 && m_169 <= 15.3){
             if(m_screen->logicalDotsPerInch() >= 192 && m_screen->logicalDotsPerInch() >145) {
-                m_windowsDesktopScale = 2;
+                m_windowsDesktopScale = 2.0;
             }
         }
         else if (m_169 >=  15.4 && m_169 <= 16.9){
+            qDebug() << " windows " << m_screen->logicalDotsPerInch();
             if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
                 m_windowsDesktopScale = 1.25;
             }
             else if (m_screen->logicalDotsPerInch() >= 192  )
             {
-                m_windowsDesktopScale = 2;
+                m_windowsDesktopScale = 2.0;
             }
         }
         else if (m_169 >=  23 && m_169 < 24){
             if (m_screen->logicalDotsPerInch() >= 192){
-                m_windowsDesktopScale = 2;
+                m_windowsDesktopScale = 2.0;
             }
         }
         else if (m_169 >=  23 && m_169 < 24){
@@ -375,7 +379,7 @@ void ProtoScreen::updateFormFactor(){
             }
         }
         else {
-            finalFormFactor ("windows" , 1,m_169);
+            finalFormFactor ("windows" , 1.0,m_169);
             return;
         }
         finalFormFactor ("windows", m_windowsDesktopScale,m_169);
