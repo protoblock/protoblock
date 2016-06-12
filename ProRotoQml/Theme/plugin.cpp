@@ -18,7 +18,9 @@ void ProRotoQmlThemePlugin::registerTypes(const char *uri)
 
     qmlRegisterSingletonType<Units>(uri, 1, 0, "UnitsSingle",unitsListen);
 
-    qmlRegisterSingletonType<ProtoScreen>(uri, 1, 0, "ProtoScreen", ProtoScreen::singletontype_provider);
+
+    qmlRegisterSingletonType<ProtoScreen>(uri, 1, 0, "ProtoScreen", protoScreen);
+//    qmlRegisterSingletonType<ProtoScreen>(uri, 1, 0, "ProtoScreen", ProtoScreen::singletontype_provider);
 }
 
 void ProRotoQmlThemePlugin::initializeEngine(QQmlEngine *engine, const char *uri)
@@ -97,4 +99,13 @@ QObject *unitsListen(QQmlEngine *engine, QJSEngine *scriptEngine)
                      unitsChangeListener, SLOT(updateContextProperty()));
 
     return Units::instance();
+}
+
+
+static QObject *protoScreen(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+   Q_UNUSED(engine)
+   Q_UNUSED(scriptEngine)
+   ProtoScreen *protoScreens = new ProtoScreen();
+   return protoScreens;
 }
