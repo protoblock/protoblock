@@ -6,7 +6,7 @@ ios{
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Protoblock
 }
 
-
+DEFINES = PRODFOOTBALL
 
 #android {
 #HEADERS += \
@@ -31,7 +31,7 @@ ios{
 
 #}
 
-
+DEFINES += GOOGLE_NAMESPACE=google
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Protoblock
 TARGET = ProRotoQml.Protoblock
