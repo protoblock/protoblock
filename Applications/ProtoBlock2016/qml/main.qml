@@ -240,14 +240,14 @@ ApplicationWindow{
     }// END TABED PAGE
 
 
-    Label {
-        rotation: -45
-        text: qsTr("Demo Not Live")
-        color: "#40000000"
-        anchors.centerIn: parent
-        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
-        font.bold:  true
-    }
+//    Label {
+//        rotation: -45
+//        text: qsTr("Demo Not Live")
+//        color: "#40000000"
+//        anchors.centerIn: parent
+//        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
+//        font.bold:  true
+//    }
 
 
     /////////////
