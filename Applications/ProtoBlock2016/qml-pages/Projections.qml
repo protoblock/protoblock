@@ -18,8 +18,8 @@ Item {
     CardWithBanner{
         id: gstate
         width: parent.width / 1.07
-        bannerText: "Important Update"
-        text: "Season: 2016 Week: 0  Game Status: Waiting 53 Man Roster2016 Projetion Game To Begins on Sept 3"
+        bannerText: "Season: 2016 Week: 0 "
+        text: "Game Status: Waiting 53 Man Roster2016 Projetion Game To Begins on Sept 3"
         anchors{
             top: parent.top
             topMargin:ProtoScreen.guToPx(.5)

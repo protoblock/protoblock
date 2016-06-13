@@ -23,21 +23,21 @@ Item {
             CardWithBanner{
                 id: gstate
                 width: parent.width / 1.07
-                bannerText: "2016 Season Contracts. "
+                bannerText: "2016 Season Contracts"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Starting July"
             }
 
             CardWithBanner{
                 width: parent.width / 1.07
-                bannerText: "2016 Weekly Contracts. "
+                bannerText: "2016 Weekly Contracts "
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Waiting 53 Man Rosters. "
+                text: "Waiting 53 Man Rosters"
             }
 
             CardWithBanner{
                 width: parent.width / 1.07
-                bannerText: "2017 Season Contracts. "
+                bannerText: "2017 Season Contracts "
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Stay tuned for futures contracts"
             }

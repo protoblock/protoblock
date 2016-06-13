@@ -8,6 +8,8 @@ import ProRotoQml.Torrent 1.0
 import Material 1.0 as Material
 //import Material.Componets 0.3
 //import Material.Dialog 0.1
+import Communi 3.0
+
 Window {
     id: realRoot
     title: "Protoblock 2016 "
@@ -94,13 +96,14 @@ Window {
 //    }
 
 
-    AddTorrentDialog{
-        id : addTorrentDialog
-        onAccepted: torModel.addTorrent( torrentFileUrl, destinationFolder )
-    }
+//    AddTorrentDialog{
+//        id : addTorrentDialog
+//        onAccepted: torModel.addTorrent( torrentFileUrl, destinationFolder )
+//    }
 
-    TorrentModel{
-        id: torModel
-        onCountChanged: console.log(count)
-    }
+//    TorrentModel{
+//        id: torModel
+//        onCountChanged: console.log(count)
+//    }
+
 }

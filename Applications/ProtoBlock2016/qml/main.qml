@@ -354,12 +354,12 @@ ApplicationWindow{
                 text:  errorString
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
-            Button{
-                text: "Email protoblock staff"
-                elevation: loginDialog.visible === true ?5 : 0
-                width: loginDialog.visible === true ? parent.width: 0
-                onClicked: Qt.openUrlExternally("mailto:contact@protoblock.comexample.com=Login%20support")
-            }
+//            Button{
+//                text: "Email protoblock staff"
+//                elevation: loginDialog.visible === true ?5 : 0
+//                width: loginDialog.visible === true ? parent.width: 0
+//                onClicked: Qt.openUrlExternally("mailto:contact@protoblock.comexample.com=Login%20support")
+//            }
         }
     }
 
