@@ -29,6 +29,7 @@ class FantasyAgent
     Block prevBlock{};
 
     std::vector<Secret3> m_secrets;
+    std::string secretfilename4 = "secret4.out";
     std::string secretfilename3 = "secret3.out";
 
     std::unordered_map<std::string,Secret3> m_pending;
@@ -99,7 +100,7 @@ public:
 
     MyFantasyName getCurrentNamesStatus();
 
-    bool UseName(std::string name);
+    bool UseName(const std::string &name);
 
     static pair<pb::secp256k1_privkey,string> makePrivMnemonic();
     static pb::secp256k1_privkey fromMnemonic(const string &in);
@@ -118,6 +119,7 @@ public:
     std::string currentClient();
     bool finishImportMnemonic(const std::string &pk, const std::string &name);
     std::string defaultName();
+    bool readFromSecret(const std::string &readfrom, bool transfer = false);
 };
 
 }

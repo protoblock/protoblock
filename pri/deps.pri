@@ -2,6 +2,7 @@
 ##  WINDOWS
 ##############
 
+DEFINES += PRODFOOTBALL
 win32 {
     INCLUDEPATH +=   $$PWD/../3rdParty
     INCLUDEPATH += $$PWD/../3rdParty/secp256k1
