@@ -2,9 +2,13 @@ import QtQuick 2.0
 import Material 1.0
 
 Item {
+    width: systemSettingsButton.width  * 2.2 + (name.paintedWidth + (mainROw.spacing *2 ))
+    height: systemSettingsButton.height
+
     Row{
-        width: systemSettingsButton.width  * 2.2
-        height: systemSettingsButton.height
+        id: mainROw
+        width: parent.width
+        height:parent.height
         spacing: 12
 
         IconButton {
@@ -16,7 +20,11 @@ Item {
                 pageHelper.title = "System Settings"
             }
         }
+            Label{
+            id: name
+            text: realRoot.uname
 
+            }
         IconButton {
             iconName: "qrc:/icons/action_account_circle.png"
             onClicked: {

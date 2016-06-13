@@ -41,5 +41,6 @@
         <file>Banner.qml</file>
         <file>ThemeButton.qml</file>
         <file>Trading.qml</file>
+        <file>CardWithBanner.qml</file>
     </qresource>
 </RCC>

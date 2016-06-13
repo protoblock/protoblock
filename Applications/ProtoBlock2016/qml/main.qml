@@ -239,6 +239,15 @@ ApplicationWindow{
 
     }// END TABED PAGE
 
+    Indicators{
+        id: indicators
+        anchors{
+            top: parent.top
+            topMargin: ProtoScreen.guToPx(1.7)
+            right: parent.right
+            rightMargin: ProtoScreen.guToPx(2)
+        }
+    }
 
 //    Label {
 //        rotation: -45
@@ -437,17 +446,5 @@ ApplicationWindow{
         }
     }
 
-    Indicators{
-        id: indicators
-        //        shown:  loginDialog.enabled === false ?  true : false
-        //        anchors.right: parent.right
-        //        anchors.rightMargin: ProtoScreen.guToPx(8.2)
-        anchors.top: parent.top
-        anchors.topMargin: ProtoScreen.guToPx(1.7)
-        anchors.left: parent.left
-        anchors.leftMargin: parent.width - ProtoScreen.guToPx(10)
 
-        //        anchors.topMargin: !navDrawer.enabled ? - ProtoScreen.guToPx(4) : ProtoScreen.guToPx(1.7)
-        //anchors.centerIn: parent
-    }
 }

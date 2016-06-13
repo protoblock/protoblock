@@ -37,6 +37,7 @@ Item {
             delegate:
                 ListItems.Subtitled{
                 elevation: 2
+                backgroundColor: realRoot.uname ===  modelData ? Colors.blue : "white"
                 width: parent.width
                 text: "FantasyName: " +  modelData
                 action: Image{
