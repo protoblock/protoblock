@@ -93,7 +93,11 @@ ApplicationWindow{
         "qrc:/icons/newspaper.png"
     ]
     // Level Three News
-    property var levelThree: [ "Trading" ,"SeasonLongLandingPage", "WeeklyLandingPage" ]
+    property var levelThree: [ "Trading" ]
+
+//    ,"SeasonLongLandingPage", "WeeklyLandingPage"
+
+
     property var levelThreeIcons: [
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/ic_help.png",
