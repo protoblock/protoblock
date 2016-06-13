@@ -7,16 +7,18 @@ import ProRotoQml.Theme 1.0
 
 Item{
     Card {
+        width: parent.width
+        height: parent.height
         Component.onCompleted: {
             pageHelper.title = "Import-Export"
             secretTxt.text = ""
         }
-        height: parent.height / 1.07
-        width: parent.width / 1.07
         elevation: 5
         anchors.centerIn: parent
 
         Column{
+            width: parent.width
+            height: parent.height
             anchors.fill: parent
             spacing: ProtoScreen.guToPx(1.25)
 
@@ -36,6 +38,7 @@ Item{
             ListItems.Subtitled{
                 elevation: 1
                 width: parent.width / 1.07
+                anchors.horizontalCenter: parent.horizontalCenter
                 text: "FantasyName: " + realRoot.uname
                 action:Image{
                     height: parent.height
@@ -46,72 +49,99 @@ Item{
                 valueText: "Balance : " + " 0"
             }
 
-            TextField {
-                id: nameText
-                width: parent.width / 1.07
-                font.family: "Default"
-                placeholderText: "Please enter in you last years 12 secret words"
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
 
-            Button{
-                id: importButton
-                text: "Import From Secret Backup"
+            Card{
+                id: bcard
+                height: nameText.height + importButton.height + imBan.height + ProtoScreen.guToPx(3)
                 width: parent.width / 1.07
-                elevation: 5
                 anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: {
-                    var mypk = MiddleMan.importMnemonic(nameText.text)
-                    if ( mypk === "" ) {
-                        importExportStatus = "Error: Import failed, please try again"
-                    } else {
-                        importExportStatus = "Trying to import with key: " + mypk
+
+                Column{
+                    width: parent.width
+                    height: parent.height
+                    spacing: 3
+                    Banner{
+                        id: imBan
+                        text: "Import From Secret Backup"
+                        backgroundColor: root.theme.primaryColor
                     }
-                    myImportDialog.show()
-                    nameText.text = ""
-                    statusTxt.text = importExportStatus;
-                    secretTxt.text = ""
+
+                    TextField {
+                        id: nameText
+                        width: parent.width / 1.07
+                        font.family: "Default"
+                        placeholderText: "Please enter in you last years 12 secret words"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
+                    Button{
+                        id: importButton
+                        text: "Import From Secret Backup"
+                        width: parent.width / 1.07
+                        elevation: 1
+//                        backgroundColor: root.theme.accentColor
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        onClicked: {
+                            var mypk = MiddleMan.importMnemonic(nameText.text)
+                            if ( mypk === "" ) {
+                                importExportStatus = "Error: Import failed, please try again"
+                            } else {
+                                importExportStatus = "Trying to import with key: " + mypk
+                            }
+                            myImportDialog.show()
+                            nameText.text = ""
+                            statusTxt.text = importExportStatus;
+                            secretTxt.text = ""
+                        }
+                    }
                 }
             }
 
-            Label {
-                id: statusTxt
+            Card{
+                height:bcard.height
                 width: parent.width / 1.07
-                font.pixelSize: Qt.platform.os === "android" ? 32 : 22
-                font.family: "Roboto"
-                horizontalAlignment: Text.AlignHCenter
-                text: ""
-
-                wrapMode: Text.WordWrap
-            }
-
-
-
-            Button{
-                property string mypk
-                id: exportButton
-                text: "Export Secret 12 Word for Exprt or Backup"
-                width: parent.width / 1.07
-                elevation: 5
                 anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: {
-                    secretTxt.text = ""
-                    mySecretDialog.show()
-                }
-            }
+                Column{
+                    width: parent.width
+                    height: parent.height
+                    spacing: 3
+                    Banner{
+                        text: "Import From Secret Backup"
+                        backgroundColor: root.theme.primaryColor
+                    }
+                    Label {
+                        width: parent.width / 1.07
+                        font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+                        font.family: "Roboto"
+                        horizontalAlignment: Text.AlignHCenter
+                        text: ""
 
-            Label {
-                id: secretTxt
-                width: parent.width / 1.07
-                font.pixelSize: Qt.platform.os === "android" ? 32 : 22
-                font.family: "Roboto"
-                horizontalAlignment: Text.AlignHCenter
-                text: ""
-                wrapMode: Text.WordWrap
+                        wrapMode: Text.WordWrap
+                    }
+
+
+
+                    Button{
+                        property string mypk
+                        id: exportButton
+                        text: "Export Secret 12 Word for Exprt or Backup"
+                        width: parent.width / 1.07
+                        elevation: 1
+//                        backgroundColor: root.theme.accentColor
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        onClicked: {
+                            secretTxt.text = ""
+                            mySecretDialog.show()
+                        }
+                    }
+                }
+
+
             }
             Button{
                 property string mypk
                 id: clearSecret
+                visible: secretTxt.visible
                 text: "Clear secret"
                 width: parent.width / 1.07
                 elevation: 5
@@ -120,23 +150,45 @@ Item{
                     secretTxt.text = ""
                 }
             }
+            Label {
+                id: secretTxt
+                visible: text.length >= 1? true : false
+                width: parent.width / 1.07
+                font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+                font.family: "Roboto"
+                horizontalAlignment: Text.AlignHCenter
+                text: ""
+                wrapMode: Text.WordWrap
+            }
         }
     }
 
-    Dialog {
-        id: mySecretDialog
-        title: "12 word account Secret"
-        positiveButtonText: "show secret"
-        negativeButtonText: "get me out of here!"
-        Label{
-            width: parent.width / 1.07
-            wrapMode: Text.WordWrap
-            text:  "Please make sure nobody is behind you. Secret to your account: " +realRoot.uname + ", will be displayed!"
-        }
-        onAccepted: {
-            secretTxt.text = "12 word Secret for " + realRoot.uname + ": \n\n" +
-            MiddleMan.getSecret()
-        }
-    }
 
-}
+
+
+
+
+
+
+
+
+
+
+
+        Dialog {
+            id: mySecretDialog
+            title: "12 word account Secret"
+            positiveButtonText: "show secret"
+            negativeButtonText: "get me out of here!"
+            Label{
+                width: parent.width / 1.07
+                wrapMode: Text.WordWrap
+                text:  "Please make sure nobody is behind you. Secret to your account: " +realRoot.uname + ", will be displayed!"
+            }
+            onAccepted: {
+                secretTxt.text = "12 word Secret for " + realRoot.uname + ": \n\n" +
+                        MiddleMan.getSecret()
+            }
+        }
+
+    }

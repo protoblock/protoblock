@@ -80,7 +80,7 @@ ApplicationWindow{
 
 
     // Level One
-    property var levelOne: [ "Protoblock News" , "About" , "Contact Us","FAQS"  ]
+    property var levelOne: [ "Protoblock News" , "About" , "Contact Us" ]
     property var levelOneIcons: [
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/ic_help.png",
@@ -121,7 +121,7 @@ ApplicationWindow{
     ]
 
     // Level Six
-    property var levelSix: [ "Account" , "Import-Export" , "FAQ"  ]
+    property var levelSix: [ "Account" , "Import-Export"  ]
     property var levelSixIcons: [
         "qrc:/icons/account_action_circle.png" ,
         "qrc:/icons/ic_sync.png",
@@ -329,9 +329,6 @@ ApplicationWindow{
         }
     }
 
-
-
-
     Dialog {
         id: accountErrorDialog
         title: "Error in Signup"
@@ -417,23 +414,15 @@ ApplicationWindow{
         onUsingFantasyName: {
             if ( uname !== name) {
                 uname = name
-
                 msgString = "Congraulation You are now playing as: " + name
-                        usingNameDialog.open()
-
-//                console.log("onUsingFantasyName defualtname " + defaultname)
-//                if ( defaultname !== uname ) {
-//                    msgString = "Congraulation You are now playing as: " + name +
-//                            usingNameDialog.open()
-//                }
-
+                if( pageHelper.selectedTabIndex === 5 || loginDialog.visible === true){
+                    usingNameDialog.toggle()
+                }
             }
-//            getNames()
         }
 
         onImportSuccess: {
             console.log(passfail + "onImportSucess " + name )
-
             if ( passfail ) {
                 msgString = name + " - Imported!"
                 usingNameDialog.open()
