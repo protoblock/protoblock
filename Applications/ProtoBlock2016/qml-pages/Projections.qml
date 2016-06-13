@@ -14,14 +14,25 @@ Item {
               MiddleMan.allNamesGet()
     }
 
-    Card{
+
+    CardWithBanner{
+        id: gstate
         width: parent.width / 1.07
-        height:     parent.height / 1.07
+        bannerText: "Season: 2016 Week: 0  Game Status: Waiting 53 Man Roster"
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: "2016 Projetion Game To Begins on Sept 3"
+    }
+
+    Card{
+        anchors.topMargin: 2
+        anchors.top: gstate.bottom
+        width: parent.width / 1.07
+        height: parent.height / 1.07
         anchors.centerIn: parent
         elevation: 1
         Banner{
             id: ban
-            text: "LeaderBoard"
+            text: "2016 Leaderboard"
             color: "white"
             backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
             width: parent.width
