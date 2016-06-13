@@ -18,11 +18,9 @@
         <file>LocalJsonCaller.qml</file>
         <file>PickUserName.qml</file>
         <file>News.qml</file>
-        <file>ProjectionsLevelOne.qml</file>
         <file>Welcome.qml</file>
         <file>UserSettings.qml</file>
         <file>UpdateView.qml</file>
-        <file>PnL.qml</file>
         <file>SportsRadarApiCaller.qml</file>
         <file>FantasyDataApiCaller.qml</file>
         <file>BaserModel.qml</file>
@@ -42,5 +40,7 @@
         <file>ThemeButton.qml</file>
         <file>Trading.qml</file>
         <file>CardWithBanner.qml</file>
+        <file>2015Leaderboard.qml</file>
+        <file>2015Trading.qml</file>
     </qresource>
 </RCC>
