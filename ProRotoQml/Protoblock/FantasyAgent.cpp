@@ -410,7 +410,7 @@ bool FantasyAgent::finishImportMnemonic(const std::string &pk,
         }
     }
 
-    Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename3, ios::app };
+    Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename4, ios::app };
     writer(sec);
     m_secrets.push_back(sec);
 
@@ -456,7 +456,7 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
     secret.set_public_key(pubKeyStr());
     secret.set_fantasy_name(name);
     if ( store ) {
-        Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename3, ios::app };
+        Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename4, ios::app };
         secret.set_mnemonic_key(mn);
         writer(secret);
     }
@@ -562,7 +562,7 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 //            qDebug() << "pubKeyStr |" << pubKeyStr().data() << "|";
 
 
-            Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename3, ios::app };
+            Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename4, ios::app };
 //            qDebug() << writer.good() << "file name " << (GET_ROOT_DIR() + secretfilename3).data();
             Secret3 secret{};
             secret.set_private_key(getSecret());

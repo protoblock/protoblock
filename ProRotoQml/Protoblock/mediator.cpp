@@ -90,6 +90,7 @@ void Mediator::doPk2fname(const std::string &pkstr) {
 }
 
 void Mediator::checkname(const QString &name) {
+    qDebug() << " in checkname " << name;
     WsReq req;
     req.set_ctype(CHECKNAME);
     CheckNameReq cnr;
@@ -98,6 +99,9 @@ void Mediator::checkname(const QString &name) {
     auto txstr = req.SerializeAsString();
     QByteArray qb(txstr.data(),(size_t)txstr.size());
     m_webSocket.sendBinaryMessage(qb);
+
+    qDebug() << " sent in checkname " << name;
+
 }
 
 

@@ -15,8 +15,20 @@ ApplicationWindow{
     visible: true
     width: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.width
     height: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.height
+
+    Component.onCompleted: {
+        uname = MiddleMan.init()
+        if ( uname  === "" ){
+            loginDialog.toggle()
+        }
+        else
+            rootLoader.source = "qrc:/Home.qml";
+    }
+
+    property string defaultname
+
     property string  errorString
-    property bool  reloadhome: false
+    property bool  reloadleaders: false
 
     // LOGIN STUFF
     property string importExportStatus
@@ -285,15 +297,6 @@ ApplicationWindow{
     Dialog {
         id: usingNameDialog
         title: "Account"
-        onAccepted: {
-            if (loginDialog.visible === true){
-                rootLoader.source = "qrc:/Home.qml"
-                loginDialog.toggle()
-
-            }else if (loginDialog.visible === false){
-                rootLoader.source = "qrc:/Import-Export.qml"
-            }
-        }
         Text{
             width: parent.width
             height: parent.height
@@ -378,21 +381,16 @@ ApplicationWindow{
         }
     }
 
+
     Connections {
         target: MiddleMan
-        Component.onCompleted: {
-            var defaultname = MiddleMan.init()
-            if ( defaultname  === "" ){
-                loginDialog.toggle()
-            }
-        }
 
         onNameCheckGet: {
             if(status === "true" ) {
                 MiddleMan.signPlayer(name)
-                root.reloadhome = false
-                rootLoader.source = "qrc:/ProtoblockNews.qml"
-                pageHelper.selectedTabIndex = 0;
+                root.reloadleaders = false
+                rootLoader.source = "qrc:/Projections.qml"
+                pageHelper.selectedTabIndex = 1;
             }
             else {
                 errorString = name + " is taken. Please try with a different name. Or if you feel that this is in fact your name from last year. Or would like to import from another device."
@@ -408,13 +406,19 @@ ApplicationWindow{
 
         onUsingFantasyName: {
             if ( uname !== name) {
-                if ( !isdefault ) {
-                    msgString = "Congraulation You are now playing as: " + name +
-                            usingNameDialog.open()
-                }
+                uname = name
+
+                msgString = "Congraulation You are now playing as: " + name
+                        usingNameDialog.open()
+
+//                console.log("onUsingFantasyName defualtname " + defaultname)
+//                if ( defaultname !== uname ) {
+//                    msgString = "Congraulation You are now playing as: " + name +
+//                            usingNameDialog.open()
+//                }
+
             }
-            uname = name
-            getNames()
+//            getNames()
         }
 
         onImportSuccess: {

@@ -6,12 +6,6 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 Item {
-    Component.onCompleted: {
-         if ( !root.reloadhome )
-              root.reloadhome = true
-          else
-              MiddleMan.allNamesGet()
-    }
     Image {
         id: logo
         source: "qrc:/logoFinal.png"
@@ -27,7 +21,7 @@ Item {
         anchors.top: logo.bottom
         anchors.topMargin:  paintedHeight
         width: parent.width / 1.07
-        font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+        font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
         font.family: "Roboto"
         color: realRoot.theme ===  "Pinky" ? "white" : "black"
         horizontalAlignment: Text.AlignHCenter
@@ -45,63 +39,14 @@ Item {
 
         Label {
             width: parent.width / 1.07
-            font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+            font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
             font.family: "Roboto"
             horizontalAlignment: Text.AlignHCenter
             text: "Tell your Friends"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             wrapMode: Text.WordWrap
         }
-
-
-        Card{
-            width: parent.width / 1.07
-            height:     parent.height / 2
-            elevation: 1
-            anchors.horizontalCenter: parent.horizontalCenter
-            Banner{
-                id: ban
-                text: "LeaderBoard"
-                color: "white"
-                backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
-                width: parent.width
-                height: 48
-            }
-            ListView{
-                id: leaderboard
-                width: parent.width - 5
-                anchors.top: ban.bottom
-                height: parent.height - ban.height
-                clip: true
-                model:   MiddleMan.allNamesList()
-                delegate:
-                    ListItems.Subtitled{
-                    elevation: 2
-                    width: parent.width
-                    text: "FantasyName: " +  modelData
-                    action: Image{
-                        height: parent.height
-                        width : height
-                        fillMode: Image.PreserveAspectFit
-                        source:  "qrc:/icons/action_account_circle.png"
-                    }
-                    valueText: "Balance : 0"
-                }
-            }
-
-            Scrollbar{flickableItem: leaderboard }
-            ProgressCircle {
-                id: fNameInd
-                anchors.centerIn: leaderboard
-                visible: MiddleMan.fetchingLeaders  === true ?  true : false
-            }
-        }
     }
 
-    Connections {
-        target: MiddleMan
-        onLeaderBoardchanged: {
-            leaderboard.model = MiddleMan.allNamesList()
-        }
-    }
+
 }

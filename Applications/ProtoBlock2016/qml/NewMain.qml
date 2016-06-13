@@ -21,7 +21,7 @@ Window {
     property string currentHomeTeam
     property string currentAwayTeam
     //    property string uname: "NULL"
-    property variant leaders: ListModel{}
+//    property variant leaders: ListModel{}
     property string msgString
 
     // make this into c++
@@ -54,13 +54,13 @@ Window {
         }
     }
 
-    function getNames(){
-        var nL = MiddleMan.allNamesList()
-        for (var i = 0 ; i < nL.length ;i++ )
-        {
-            realRoot.leaders.append({"fName":nL[i], "balance": 0})
-        }
-    }
+//    function getNames(){
+//        var nL = MiddleMan.allNamesList()
+//        for (var i = 0 ; i < nL.length ;i++ )
+//        {
+//            realRoot.leaders.append({"fName":nL[i], "balance": 0})
+//        }
+//    }
 
 
 //    Button {

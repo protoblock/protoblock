@@ -7,6 +7,12 @@ import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 
 Item {
+    Component.onCompleted: {
+         if ( !root.reloadleaders )
+              root.reloadleaders = true
+          else
+              MiddleMan.allNamesGet()
+    }
 
     Card{
         width: parent.width / 1.07

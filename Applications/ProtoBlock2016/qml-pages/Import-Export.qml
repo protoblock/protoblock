@@ -61,11 +61,12 @@ Item{
                 elevation: 5
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
-                    mypk = MiddleMan.importMnemonic(nameText.text)
-                    if ( mypk === "" )
+                    var mypk = MiddleMan.importMnemonic(nameText.text)
+                    if ( mypk === "" ) {
                         importExportStatus = "Error: Import failed, please try again"
-                    else
-                    importExportStatus = "Trying to import with key: " + mypk
+                    } else {
+                        importExportStatus = "Trying to import with key: " + mypk
+                    }
                     myImportDialog.show()
                     nameText.text = ""
                     statusTxt.text = importExportStatus;
