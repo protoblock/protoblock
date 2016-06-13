@@ -15,7 +15,7 @@ Item {
             sortMethod: Irc.SortByTitle
             connection: IrcConnection {
                 id: connection
-                host: "50.0.50.172"
+                host: "162.254.24.67"
                 port: 6667
                 secure: false
                 saslMechanism: ""

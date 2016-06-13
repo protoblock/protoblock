@@ -4,6 +4,7 @@ import Material 1.0
 import Material.ListItems 1.0 as ListItems
 import Material.Extras 1.0
 
+import ProRotoQml.Theme 1.0
 Item {
     property bool buying: true
     property string playerName
@@ -36,7 +37,7 @@ Item {
 
             Item {
                 Layout.fillWidth: true
-                Layout.preferredHeight: dp(8)
+                Layout.preferredHeight: Pro
             }
             ListItems.Standard {
                 action: Item {}

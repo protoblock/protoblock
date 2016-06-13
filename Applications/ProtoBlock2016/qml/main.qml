@@ -284,7 +284,8 @@ ApplicationWindow{
     // Set up the default connections to the databases
     QmlSqlDatabase{
         id: mainTfProdDb
-        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
+//        databaseName: "162.254.67/tfprod.db"
+        databaseName: "/Users/satoshi/Desktop/fc/osx/protoblock/assets/database/tfprod.db"
         databaseDriver: QmlSqlDatabase.SQLight
         connectionName: "protoblock"
         onError: console.log("DB Error:  " +  errorString)
@@ -435,9 +436,6 @@ ApplicationWindow{
             console.log(passfail + "onImportSucess " + name )
         }
     }
-
-
-
 
     Indicators{
         id: indicators
