@@ -24,7 +24,7 @@ Item {
             id: accountInfoTxt
             height:welcomeTxt.paintedHeight + 20
             width: parent.width / 1.07
-            elevation: 5
+            elevation: 0
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: ProtoScreen.guToPx(4)
             anchors.top: parent.top
@@ -123,7 +123,7 @@ Item {
                     id: clamNameButton
                     text: "Claim New Name"
                     width: parent.width / 1.07
-                    elevation: 5
+                    elevation: 2
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: nameCheckBlank(nameText.text)
                 }

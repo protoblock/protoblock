@@ -85,47 +85,47 @@ Item {
             }
         }
 
-        Card{
-            id: themPicker
-            width: parent.width / 1.07
-            height: colorPicker.height
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: colorPicker.bottom
-            anchors.topMargin: ProtoScreen.guToPx(4)
-            Banner{
-                id: themeBanner
-                width: parent.width
-                height: ProtoScreen.guToPx(6)
-                text: "Theme Picker"
-            }
-            Row{
-                width: (parent.width / 5) * 3
-                spacing: 5
-                height: themPicker.height - themeBanner.height
-                anchors.top: themeBanner.bottom
-                anchors.topMargin: ProtoScreen.guToPx(1.5)
-                anchors.horizontalCenter: parent.horizontalCenter
-                Repeater {
-                    id: themeMenu
-                    model: ["Material", "Pinky"] //Classic
-                    delegate:
-                        ThemeButton{
-                        width: parent.width / 3.2
-                        height:     parent.height / 2
-                        highlighted: modelData === realRoot.theme ? true : false
-                        img: "qrc:/logoOnly.png"
-                        name: modelData
-                        onClicked: {
-                            if(modelData !== realRoot.theme ){
-                                realRoot.theme =  modelData
-                            }else {
-                                console.log( "Current Root Object is theme")
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        Card{
+//            id: themPicker
+//            width: parent.width / 1.07
+//            height: colorPicker.height
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.top: colorPicker.bottom
+//            anchors.topMargin: ProtoScreen.guToPx(4)
+//            Banner{
+//                id: themeBanner
+//                width: parent.width
+//                height: ProtoScreen.guToPx(6)
+//                text: "Theme Picker"
+//            }
+//            Row{
+//                width: (parent.width / 5) * 3
+//                spacing: 5
+//                height: themPicker.height - themeBanner.height
+//                anchors.top: themeBanner.bottom
+//                anchors.topMargin: ProtoScreen.guToPx(1.5)
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                Repeater {
+//                    id: themeMenu
+//                    model: ["Material", "Pinky"] //Classic
+//                    delegate:
+//                        ThemeButton{
+//                        width: parent.width / 3.2
+//                        height:     parent.height / 2
+//                        highlighted: modelData === realRoot.theme ? true : false
+//                        img: "qrc:/logoOnly.png"
+//                        name: modelData
+//                        onClicked: {
+//                            if(modelData !== realRoot.theme ){
+//                                realRoot.theme =  modelData
+//                            }else {
+//                                console.log( "Current Root Object is theme")
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
 
         //        Card{

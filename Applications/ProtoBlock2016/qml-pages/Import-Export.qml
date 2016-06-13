@@ -28,9 +28,7 @@ Item{
                 font.pixelSize: Qt.platform.os === "android" ? 32 : 22
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-                text: "Protoblock account names are not stored on a central server... blah" +
-                      "Import from another device. " +
-                      "Export or backup"
+                text: "Your Protoblock Name is your Identity and is managed by your device. There is no central server, instead your device stores a secret 12 word phrase for back-up and recovery. "
 
                 wrapMode: Text.WordWrap
             }

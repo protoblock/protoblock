@@ -62,5 +62,17 @@ Item {
                 Qt.openUrlExternally("mailto:" + protoblockemail + "?Subject="+subInput.text)
             }
         }
+
+        Label {
+            id: welcomeTxt
+            width: parent.width / 1.07
+            font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+            font.family: "Roboto"
+            horizontalAlignment: Text.AlignHCenter
+            text: "contact@protoblock.com"
+            wrapMode: Text.WordWrap
+        }
+
+
     }
 }

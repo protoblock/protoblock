@@ -18,18 +18,24 @@ Item {
     CardWithBanner{
         id: gstate
         width: parent.width / 1.07
-        bannerText: "Season: 2016 Week: 0  Game Status: Waiting 53 Man Roster"
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "2016 Projetion Game To Begins on Sept 3"
+        bannerText: "Important Update"
+        text: "Season: 2016 Week: 0  Game Status: Waiting 53 Man Roster2016 Projetion Game To Begins on Sept 3"
+        anchors{
+            top: parent.top
+            topMargin:ProtoScreen.guToPx(.5)
+            horizontalCenter: parent.horizontalCenter
+        }
     }
 
     Card{
-        anchors.topMargin: 2
-        anchors.top: gstate.bottom
         width: parent.width / 1.07
-        height: parent.height / 1.07
-        anchors.centerIn: parent
+        height: parent.height / 1.07 - (gstate.height* 2)
         elevation: 1
+        anchors{
+            topMargin: ProtoScreen.guToPx(1)
+            top: gstate.bottom
+            horizontalCenter: parent.horizontalCenter
+        }
         Banner{
             id: ban
             text: "2016 Leaderboard"
