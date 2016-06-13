@@ -35,9 +35,8 @@ Item {
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
 //                color: "white"
-                text: "Protoblock players must claim a name to create an account" +
-                      "Chose your Twitter handle or fantasy team name. " +
-                      "this is your fantasy identity and we will be used for display on the projection leaderboard"
+                text: "A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. " +
+                      "Claim your name! Chose your Twitter handle or fantasy team name";
                 wrapMode: Text.WordWrap
             }
         }

@@ -4,6 +4,7 @@ import ProRotoQml.Protoblock 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
+import QtQuick.Controls 1.4 as Controls
 
 Item{
     Card {
@@ -28,9 +29,7 @@ Item{
                 font.pixelSize: Qt.platform.os === "android" ? 32 : 22
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-                text: "Protoblock account names are not stored on a central server... blah" +
-                      "Import from another device. " +
-                      "Export or backup"
+                text: "Your Protoblock Name is your Identity and is managed by your device. There is no central server, instead your device stores a secret 12 word phrase for back-up and recovery. "
 
                 wrapMode: Text.WordWrap
             }
@@ -62,11 +61,11 @@ Item{
                     spacing: 3
                     Banner{
                         id: imBan
-                        text: "Import From Secret Backup"
+                        text: "Import Protoblock Name To This Device."
                         backgroundColor: root.theme.primaryColor
                     }
 
-                    TextField {
+                    Controls.TextField {
                         id: nameText
                         width: parent.width / 1.07
                         font.family: "Default"
@@ -76,7 +75,7 @@ Item{
 
                     Button{
                         id: importButton
-                        text: "Import From Secret Backup"
+                        text: "IMPORT"
                         width: parent.width / 1.07
                         elevation: 1
 //                        backgroundColor: root.theme.accentColor
@@ -106,7 +105,7 @@ Item{
                     height: parent.height
                     spacing: 3
                     Banner{
-                        text: "Import From Secret Backup"
+                        text: "Backup / Export Prtoblck Name Secret Phrase"
                         backgroundColor: root.theme.primaryColor
                     }
                     Label {
@@ -124,7 +123,7 @@ Item{
                     Button{
                         property string mypk
                         id: exportButton
-                        text: "Export Secret 12 Word for Exprt or Backup"
+                        text: "EXPORT"
                         width: parent.width / 1.07
                         elevation: 1
 //                        backgroundColor: root.theme.accentColor
