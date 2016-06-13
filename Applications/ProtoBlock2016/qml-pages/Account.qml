@@ -15,6 +15,11 @@ Item {
         contentHeight: accountInfoTxt.height + (32* 3.2) +(namePicker.height + newNameCard.height)
         contentWidth: parent.width
         boundsBehavior:  Flickable.StopAtBounds
+
+
+
+
+
         Card {
             id: accountInfoTxt
             height:welcomeTxt.paintedHeight + 20
@@ -23,14 +28,13 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: ProtoScreen.guToPx(4)
             anchors.top: parent.top
-            backgroundColor: root.theme.primaryColor
             Label {
                 id: welcomeTxt
                 width: parent.width / 1.07
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-                color: "white"
+//                color: "white"
                 text: "Protoblock players must claim a name to create an account" +
                       "Chose your Twitter handle or fantasy team name. " +
                       "this is your fantasy identity and we will be used for display on the projection leaderboard"
@@ -54,6 +58,7 @@ Item {
                 height: ProtoScreen.guToPx(6)
                 text: "Choose Name"
                 opacity: repeater.opacity
+                backgroundColor: root.theme.primaryColor
             }
             ListView {
                 id: repeater
@@ -101,6 +106,8 @@ Item {
                     width: parent.width
                     height: ProtoScreen.guToPx(5)
                     text: "Claim New Name"
+                    backgroundColor: root.theme.primaryColor
+
                 }
 
                 TextField {

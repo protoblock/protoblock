@@ -68,8 +68,7 @@ Please use integrated Chat tab to share feedback or questions."
 
             CardWithBanner{
                 width: parent.width / 1.07
-                bannerText: "
-PROTOBLOCK at FSTA"
+                bannerText: "PROTOBLOCK at FSTA"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "We are happy to announce the new Protoblock 2016 game and launch enrollment at the annual Fantasy Sports Trade Association n New York this June 13-14.   All new accounts during the FSTA 2016 Summer Conference are entered to win a 2016 main event entry. Choose from FFPC, FFWC or NFCC.
 
