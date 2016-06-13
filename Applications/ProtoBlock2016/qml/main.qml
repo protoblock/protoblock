@@ -480,7 +480,7 @@ ApplicationWindow{
     XmlListModel {
         id: updateMachine
         source:"http://protoblock.com/version.xml"
-        query: "updatemachine"
+        query: "/updatemachine"
         XmlRole{name: "version";query: "version/string()"}
         XmlRole{name: "libs";query: "libs/string()"}
         XmlRole{name: "changelog";query: "changelog/string()"}
