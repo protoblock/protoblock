@@ -43,6 +43,7 @@ Server::Server(quint16 port, bool debug, QObject *parent) :
 
 //                fantasybit::TempApi tempapi;
 
+    AllNamesRepPtr = &AllNamesRep;
 }
 
 Server::~Server()
@@ -124,7 +125,7 @@ void Server::processTextMessage(QString message)
 
 void Server::processBinaryMessage(QByteArray message) {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    if ( mport == 4001) {
+    if ( mport == PB_WS_LITE_AGENT_PORT) {
         fantasybit::WsReq req;
         req.ParseFromString(message.toStdString());
         fantasybit::WSReply rep;
@@ -161,7 +162,7 @@ void Server::processBinaryMessage(QByteArray message) {
         }
         case GETALLNAMES: {
             rep.set_ctype(GETALLNAMES);
-            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(AllNamesRep);
+            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
             break;
         }
 //        case NameStatusReq:
@@ -177,7 +178,10 @@ void Server::processBinaryMessage(QByteArray message) {
         auto repstr = rep.SerializeAsString();
         QByteArray qb(repstr.data(),(size_t)repstr.size());
         pClient->sendBinaryMessage(qb);
-        qDebug() << rep.DebugString().data();
+        if ( rep.ctype() == GETALLNAMES)
+            qDebug() << rep.ctype() <<" size " << AllNamesRepPtr->names_size();
+        else
+            qDebug() << rep.DebugString().data();
         return;
     }
     else {
@@ -200,7 +204,11 @@ void Server::processBinaryMessage(QByteArray message) {
             mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
             qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name()) << " adding name";
             AllNamesRep.add_names(nt.fantasy_name());
-
+            AllNamesRep2.add_names(nt.fantasy_name());
+            if ( AllNamesRepPtr->names_size() >= 1000) {
+                AllNamesRepPtr->clear_names();
+                AllNamesRepPtr = (AllNamesRep.names_size() > AllNamesRep2.names_size()) ? &AllNamesRep : &AllNamesRep2;
+            }
 //            fantasybit::WSReply rep;
 //            rep.set_ctype(PK2FNAME);
 

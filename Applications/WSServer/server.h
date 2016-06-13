@@ -50,6 +50,9 @@ public:
     std::shared_ptr<FantasyName> getFNverifySt(const SignedTransaction &st);
 
     static fantasybit::GetAllNamesRep AllNamesRep;
+    fantasybit::GetAllNamesRep AllNamesRep2;
+    fantasybit::GetAllNamesRep *AllNamesRepPtr;
+
 Q_SIGNALS:
     void closed();
     void error(QString);

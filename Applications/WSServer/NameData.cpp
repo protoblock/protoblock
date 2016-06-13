@@ -46,14 +46,16 @@ void FantasyNameData::init() {
 #endif
 
 
-//        Reader<FantasyNameBal> reader4{ GET_ROOT_DIR() + "FantasyNameBal.txt"};
-//        FantasyNameBal fnb;
-//        while ( reader4.ReadNext(fnb) ) {
-//            auto hash = FantasyName::name_hash(fnb.name());
-//            leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
-//            namestore->Put(write_sync, hkey, fnb.SerializeAsString());
-//            fnb.Clear();
-//        }
+#ifdef ONE_TIME_PROD
+        Reader<FantasyNameBal> reader4{ GET_ROOT_DIR() + "FantasyNameBal.txt"};
+        FantasyNameBal fnb;
+        while ( reader4.ReadNext(fnb) ) {
+            auto hash = FantasyName::name_hash(fnb.name());
+            leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+            namestore->Put(write_sync, hkey, fnb.SerializeAsString());
+            fnb.Clear();
+        }
+#endif
 
         auto *it = namestore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
