@@ -11,64 +11,71 @@ Item {
          if ( !root.reloadleaders )
               root.reloadleaders = true
           else
-              MiddleMan.allNamesGet()
+             MiddleMan.allNamesGet()
     }
 
-
-    CardWithBanner{
-        id: gstate
-        width: parent.width / 1.07
-        bannerText: "Season: 2016 Week: 0  Game Status: Waiting 53 Man Roster"
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "2016 Projetion Game To Begins on Sept 3"
-    }
-
-    Card{
-        anchors.topMargin: 2
-        anchors.top: gstate.bottom
-        width: parent.width / 1.07
-        height: parent.height / 1.07
+    Card {
+        width: parent.width
+        height: parent.height
+        Component.onCompleted: {
+            pageHelper.title = "Projections"
+            secretTxt.text = ""
+        }
+        elevation: 5
         anchors.centerIn: parent
-        elevation: 1
-        Banner{
-            id: ban
-            text: "2016 Leaderboard"
-            color: "white"
-            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
+
+        Column{
             width: parent.width
-            height: ProtoScreen.guToPx(6)
-        }
-        ListView{
-            id: leaderboard
-            width: parent.width - 5
-            anchors.top: ban.bottom
-            height: parent.height - ban.height
-            clip: true
-            model:   MiddleMan.allNamesList()
-            delegate:
-                ListItems.Subtitled{
-                elevation: 2
-                backgroundColor: realRoot.uname ===  modelData ? Colors.blue : "white"
-                width: parent.width
-                text: "FantasyName: " +  modelData
-                action: Image{
-                    height: parent.height
-                    width : height
-                    fillMode: Image.PreserveAspectFit
-                    source:  "qrc:/icons/action_account_circle.png"
-                }
-                valueText: "Balance : 0"
+            height: parent.height
+            anchors.fill: parent
+            spacing: ProtoScreen.guToPx(1.25)
+
+            CardWithBanner{
+                id: gstate
+                width: parent.width / 1.07
+                bannerText: "Season: 2016 Week: 0  Game Status: Waiting 53 Man Roster"
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "2016 Projetion Game To Begins on Sept 3"
             }
+
+            Card{
+            elevation: 1
+            Banner{
+                id: ban
+                text: "2016 Leaderboard"
+                color: "white"
+                backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
+                width: parent.width
+                height: ProtoScreen.guToPx(6)
+            }
+            ListView{
+                id: leaderboard
+                width: parent.width - 5
+                anchors.top: ban.bottom
+                height: parent.height - ban.height
+                clip: true
+                model:   MiddleMan.allNamesList()
+                delegate:
+                    ListItems.Subtitled{
+                    elevation: 2
+                    backgroundColor: realRoot.uname ===  modelData ? Colors.blue : "white"
+                    width: parent.width
+                    text: "FantasyName: " +  modelData
+                    action: Image{
+                        height: parent.height
+                        width : height
+                        fillMode: Image.PreserveAspectFit
+                        source:  "qrc:/icons/action_account_circle.png"
+                    }
+                    valueText: "Balance : 0"
+                }
+            }
+
+            Scrollbar{flickableItem: leaderboard }
         }
 
-        Scrollbar{flickableItem: leaderboard }
-        ProgressCircle {
-            id: fNameInd
-            anchors.centerIn: leaderboard
-            visible: MiddleMan.fetchingLeaders  === true ?  true : false
         }
     }
-
 
     Connections {
         target: MiddleMan

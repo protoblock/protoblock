@@ -105,7 +105,7 @@ Item{
                     height: parent.height
                     spacing: 3
                     Banner{
-                        text: "Backup / Export Prtoblck Name Secret Phrase"
+                        text: "Backup / Export Secret"
                         backgroundColor: root.theme.primaryColor
                     }
                     Label {
