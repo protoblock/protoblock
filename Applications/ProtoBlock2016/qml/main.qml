@@ -88,12 +88,12 @@ ApplicationWindow{
         "qrc:/icons/ic_help.png"
     ]
     // Level Two
-    property var levelTwo: [ "Projections" ]
+    property var levelTwo: [ "Projections" , "2015 Leaderboard" ]
     property var levelTwoIcons: [
         "qrc:/icons/newspaper.png"
     ]
     // Level Three News
-    property var levelThree: [ "Trading" ]
+    property var levelThree: [ "Trading" , "2015 Trading" ]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 

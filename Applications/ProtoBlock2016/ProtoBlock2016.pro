@@ -17,7 +17,7 @@ qtHaveModule(webengine) {
 TEMPLATE = app
     QT += qml quick core widgets websockets network
 #sql webchannel
-CONFIG += c++11 console
+CONFIG += c++11
 
 SOURCES += \
     $$PWD/src/main.cpp \

@@ -389,7 +389,7 @@ Item {
                 RotationAnimation on rotation {
                     running: control.running
                     loops: Animation.Infinite
-                    duration: 2000
+                    duration: 20000
                     from: 0 ; to: 360
                 }
             }
