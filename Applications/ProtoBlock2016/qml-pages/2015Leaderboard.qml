@@ -301,14 +301,9 @@ Item {
             text: "Fantasy Name: " + model.name
             subText: "Balance: " +  model.score
             elevation: 2
-            height: rootLoader.height / 6
-
-            // FIXME set this as a platform.os android
-            itemLabel.font.pixelSize: 48
-            itemSubLabel.font.pixelSize: 32
             action: Image {
                 source : "qrc:/icons/action_account_circle.png"
-                width: Qt.platform.os === "android" ? 64 : 32
+                width: 32
                 height:  width
             }
             onClicked:{
@@ -331,16 +326,13 @@ Item {
         //FIXME add a team icon
         ListItem.Subtitled {
             text: model.firstName +" " + model.lastName +  " ("+ model.pos + ") " + model.team
-            subText: "Projection: " + model.projection + " Result: " + model.result + "\nAward: " + model.award
+            subText: "Projection: " + model.projection + " Result: " + model.result
             elevation: 2
-            maximumLineCount: 3
-            height: rootLoader.height / 6
+            valueText: "Award: " + model.award
             // FIXME set this as a platform.os android
-            itemLabel.font.pixelSize: 48
-            itemSubLabel.font.pixelSize: 32
             action: Image {
-             source: "qrc:/teams/" + model.team+".PNG"
-                width: Qt.platform.os === "android" ? 64 : 32
+             source: "qrc:/" + model.team+".PNG"
+                width: 32
                 height:  width
             }
             onClicked:{
@@ -361,38 +353,20 @@ Item {
         id: levelTwoDel
         ListItem.Subtitled {
             text: model.fantasyName
-            subText: "Projection: " + model.projection + " Result: " + model.result + "\nAward: " + model.award
+            subText: "Projection: " + model.projection + " Result: " + model.result
+            valueText: "Award: " + model.award
             elevation: 2
-            maximumLineCount: 3
-            height: rootLoader.height / 6
-            // FIXME set this as a platform.os android
-            itemLabel.font.pixelSize: 48
-            itemSubLabel.font.pixelSize: 32
             action: Image {
                 source: "qrc:/icons/action_account_circle.png"
-
-                width: Qt.platform.os === "android" ? 64 : 32
+                width: 32
                 height:  width
             }
             onClicked:{
             }
         }
     }
-    BusyIndicator{
+    ProgressCircle{
         anchors.centerIn: parent
-        running:  jsonGetter.running ? true : false
-        style: BusyIndicatorStyle {
-            indicator: Image {
-                fillMode: Image.PreserveAspectFit
-                visible: control.running
-                source: "qrc:/logoOnly.png"
-                RotationAnimation on rotation {
-                    running: control.running
-                    loops: Animation.Infinite
-                    duration: 20000
-                    from: 0 ; to: 360
-                }
-            }
-        }
+        visible:  jsonGetter.running ? true : false
     }
 }

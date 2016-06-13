@@ -398,15 +398,22 @@ ApplicationWindow{
 
     Dialog {
         id: updateDialog
-        title: "Update"
+        title: "Update Available"
         positiveButtonText: "Back"
         Column{
             anchors.fill: parent
+            spacing: 3
             Text{
                 width: parent.width
                 wrapMode: Text.WordWrap
-                text: "There is a update available"
+                text: "There is a update available for Protoblock."
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+            Button{
+                width: parent.width / 1.07
+                text: "Download Now"
+                elevation: 1
+                onClicked: Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
             }
         }
     }
@@ -460,14 +467,6 @@ ApplicationWindow{
     }
 
 
-
-
-
-
-
-
-
-
     function compairVersions(d){
         if (realRoot.version !== d){
             console.log("there is a update")
@@ -491,6 +490,7 @@ ApplicationWindow{
                 console.log("ERROR IN UPDATE MACHINE ")
                 break;
             case XmlListModel.Ready:
+                console.log( "HKDHFKJHEDFHKDJHFKHDHFJKD     " +updateMachine.get(0).version)
                 compairVersions(updateMachine.get(0).version)
                 break;
             }

@@ -180,13 +180,9 @@ Item {
             text: "Fantasy Name: " + model.name
             subText: "Balance: " +  model.score
             elevation: 2
-            height: rootLoader.height / 6
-            // FIXME set this as a platform.os android
-            itemLabel.font.pixelSize: 48
-            itemSubLabel.font.pixelSize: 32
             action: Image {
                 source: "qrc:/icons/action_account_circle.png"
-                width: Qt.platform.os === "android" ? 64 : 32
+                width: 32
                 height:  width
             }
             onClicked:{
@@ -209,16 +205,12 @@ Item {
         //FIXME add a team icon
         ListItem.Subtitled {
             text: model.firstName +" " + model.lastName +  " ("+ model.pos + ") " + model.team
-            subText: "Week: " + model.week + " Trade: " + model.qty + " @ " + model.price +  "\nProfit: "+ model.pnl
+            subText:  "Trade: " + model.qty + " @ " + model.price +  " Profit: "+ model.pnl
             elevation: 2
-            maximumLineCount: 3
-            height: rootLoader.height / 6
-            // FIXME set this as a platform.os android
-            itemLabel.font.pixelSize: 48
-            itemSubLabel.font.pixelSize: 32
+            valueText: "Week: " + model.week
             action: Image {
-                source: "qrc:/teams/" + model.team+".PNG"
-                width: Qt.platform.os === "android" ? 64 : 32
+                source: "qrc:/" + model.team+".PNG"
+                width:  32
                 height:  width
             }
             onClicked:{
@@ -245,36 +237,19 @@ Item {
                     model.seller + " <b>Sold to</b> " + model.buyer
                 }
             }
-            height: rootLoader.height / 6
-            subText: model.qty + " @ " + model.price /*1 buyer agressive 0 seller is agressive*/
+            subText: model.qty + " @ " + model.price
             elevation: 2
-            maximumLineCount: 3
-            // FIXME set this as a platform.os android
-            itemLabel.font.pixelSize: 48
-            itemSubLabel.font.pixelSize: 32
             action: Image {
                 source: "qrc:/icons/action_account_circle.png"
-                width: Qt.platform.os === "android" ? 64 : 32
+                width: 32
                 height:  width
             }
             onClicked:{
             }
         }
     }
-    BusyIndicator{
+    ProgressCircle{
         anchors.centerIn: parent
-        running:  jsonGetter.running ? true : false
-        style: BusyIndicatorStyle {
-            indicator: Image {
-                visible: control.running
-                source: "qrc:/logoOnly.png"
-                RotationAnimation on rotation {
-                    running: control.running
-                    loops: Animation.Infinite
-                    duration: 20000
-                    from: 0 ; to: 360
-                }
-            }
-        }
+        visible:   jsonGetter.running ? true : false
     }
 }
