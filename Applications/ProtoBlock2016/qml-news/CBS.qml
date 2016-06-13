@@ -15,8 +15,8 @@ Item {
         delegate: ListItems.Subtitled{
             elevation:  5
             text: model.title
-            subText: model.summary + " \nCopyright 2016, CBSSports.com"
-            maximumLineCount: 4
+            subText: model.summary + "  Copyright 2016, CBSSports.com"
+            maximumLineCount: 2
             onClicked:{
                 Qt.openUrlExternally(model.link)
             }

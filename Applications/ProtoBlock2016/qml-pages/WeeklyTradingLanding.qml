@@ -1,12 +1,12 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4
 
-
-import ProRotoQml.Sql 1.0
 import Material 1.0
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
 
+import ProRotoQml.Sql 1.0
+import ProRotoQml.Theme 1.0
 
 Item {
     property string  lastQuery

@@ -19,13 +19,6 @@ Item {
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
 
-        Button {
-            id: ad
-            text: "add torrent"
-            width: parent.width
-
-            onClicked: addTorrentDialog.open()
-        }
         Card {
             id: colorPicker
             width: parent.width / 1.07
@@ -114,7 +107,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 Repeater {
                     id: themeMenu
-                    model: ["Material", "Classic", "Pinky"]
+                    model: ["Material", "Pinky"] //Classic
                     delegate:
                         ThemeButton{
                         width: parent.width / 3.2
@@ -135,34 +128,35 @@ Item {
         }
 
 
-//        Card{
-//            id: torrentCard
-//            width: parent.width / 1.07
-//            height: colorPicker.height
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            anchors.top: themPicker.bottom
-//            anchors.topMargin: ProtoScreen.guToPx(4)
-//            Banner{
-//                id: torrentSettingsBanner
-//                width: parent.width
-//                height: ProtoScreen.guToPx(4)
-//                text: "Torrent Settings"
-//            }
-//            SpeedLimit{
-//                width: parent.width / 1.07
-//                height: torrentCard.height - torrentSettingsBanner.height
-//                anchors.top: torrentSettingsBanner.bottom
-//                anchors.topMargin: torrentSettingsBanner.height + 5
-//            }
-//        }
+        //        Card{
+        //            id: torrentCard
+        //            width: parent.width / 1.07
+        //            height: colorPicker.height
+        //            anchors.horizontalCenter: parent.horizontalCenter
+        //            anchors.top: themPicker.bottom
+        //            anchors.topMargin: ProtoScreen.guToPx(4)
+        //            Banner{
+        //                id: torrentSettingsBanner
+        //                width: parent.width
+        //                height: ProtoScreen.guToPx(4)
+        //                text: "Torrent Settings"
+        //            }
+        //            SpeedLimit{
+        //                width: parent.width / 1.07
+        //                height: torrentCard.height - torrentSettingsBanner.height
+        //                anchors.top: torrentSettingsBanner.bottom
+        //                anchors.topMargin: torrentSettingsBanner.height + 5
+        //            }
+        //        }
 
-//        TorrentListView{
-//            id: torrentHelper
-//            width: parent.width / 1.07
-//            height: colorPicker.height
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            anchors.top: torrentCard.bottom
-//            anchors.topMargin: ProtoScreen.guToPx(4)
-//        }
-//    }
+        //        TorrentListView{
+        //            id: torrentHelper
+        //            width: parent.width / 1.07
+        //            height: colorPicker.height
+        //            anchors.horizontalCenter: parent.horizontalCenter
+        //            anchors.top: torrentCard.bottom
+        //            anchors.topMargin: ProtoScreen.guToPx(4)
+        //        }
+        //    }
+    }
 }

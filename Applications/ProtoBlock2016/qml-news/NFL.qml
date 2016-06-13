@@ -14,9 +14,10 @@ Item {
         delegate: ListItems.Subtitled{
             elevation:  5
             text: model.title
-            subText: model.summary + " \n© 2016 NFL Enterprises LLC"
-            maximumLineCount: 4
-            onClicked:{
+            subText: model.summary + "  © 2016 NFL Enterprises LLC"
+            maximumLineCount: 2
+            onClicked:{model.link
+                console.log()
                 Qt.openUrlExternally(model.link)
             }
         }
@@ -27,7 +28,7 @@ Item {
         source: "http://www.nfl.com/rss/rsslanding?searchString=home"
         query: "/feed/entry"
         XmlRole{name: "title" ; query: "title/string()"}
-        XmlRole{name: "link" ; query: "link/string()"}
+        XmlRole{name: "link" ; query: "id/string()"}
         XmlRole{name: "categoryOne" ; query: "category[0]/string()"}
         XmlRole{name: "categoryTwo" ; query: "category[1]/string()"}
         XmlRole{name: "summary" ; query: "summary/string()"}
