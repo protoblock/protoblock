@@ -1,6 +1,7 @@
 ##############
 ##  WINDOWS
 ##############
+
 DEFINES += PRODFOOTBALL
 win32 {
     INCLUDEPATH +=   $$PWD/../3rdParty

@@ -17,7 +17,7 @@ void ProRotoQmlThemePlugin::registerTypes(const char *uri)
     qmlRegisterSingletonType<TeamColors>(uri,1,0,"TeamInfo",teamColors);
     qmlRegisterSingletonType<ProtoScreen>(uri, 1, 0, "ProtoScreen", protoScreen);
 
-    qmlRegisterUncreatableType<Units>(uri, 1, 0, "Units", "Not instantiable");
+//    qmlRegisterUncreatableType<Units>(uri, 1, 0, "Units", "Not instantiable");
 
 }
 

@@ -10,10 +10,6 @@
 #include <iostream>
 #include <utility>
 #include <memory>
-
-//#include <secp256k1/util.h>
-
-
 #include "FantasyAgent.h"
 #include "Commissioner.h"
 #include "DataPersist.h"
@@ -22,37 +18,68 @@
 #include "mnemonic.h"
 #include "utils/utils.h"
 #include <openssl/rand.h>
-#include <QFile>
-#include <QString>
-namespace fantasybit {
+//#include <QFile>
+//#include <QString>
+#include <QStandardPaths>
+
+using namespace fantasybit;
 
 FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
     if ( filename != "" )
-        secretfilename3 = filename;
+        secretfilename4 = filename;
 
-    Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename3};
-    if ( !read.good() ) {
-        // fix me log error
-        return;
+    if ( !readFromSecret( GET_ROOT_DIR() +  secretfilename4, false) ) {
+        #ifdef Q_OS_MAC
+            QString path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+//            path.append("/tradingfootball/storage/" + secretfilename3);
+            std::string oldosxsecret = path.toStdString() + "/tradingfootball/storage/" + secretfilename3;
+            qDebug() << " oldosxsecret " << oldosxsecret.data();
+            readFromSecret( oldosxsecret, true);
+        #endif
+
+         readFromSecret( GET_ROOT_DIR() +  secretfilename3, true);
+    }
+}
+
+bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
+
+    qDebug() << "readFromSecret " << readfrom.data();
+    std::vector<Secret3> temp;
+    {
+        Reader<Secret3> read{ readfrom };
+            if ( !read.good() )
+                return false;
+
+        Secret3 secret;
+        while (read.ReadNext(secret)) {
+            if (transfer) temp.push_back(secret);
+
+            if ( !testIt(secret) ) {
+                qCritical() << " secret verify fail" << secret.fantasy_name();
+                continue;
+            }
+
+            if ( secret.has_mnemonic_key() )
+                secret.clear_mnemonic_key();
+
+            m_secrets.push_back(secret);
+            qDebug() << secret.fantasy_name().data() << " have key";
+            if ( AmFantasyAgent(secret.public_key())) {
+                  auto pr = str2priv(secret.private_key());
+                  m_oracle = pr;
+                qInfo() << " is oracle key";
+            }
+        }
     }
 
-    Secret3 secret{};
-    while (read.ReadNext(secret)) {
-        if ( !testIt(secret) ) {
-            qCritical() << " secret verify fail" << secret.fantasy_name();
-            continue;
-        }
-
-        if ( secret.has_mnemonic_key() )
-            secret.clear_mnemonic_key();
-        m_secrets.push_back(secret);
-        qInfo() << secret.DebugString().data(); //fantasy_name() << " have key";
-        if ( AmFantasyAgent(secret.public_key())) {
-              auto pr = str2priv(secret.private_key());
-              m_oracle = pr;
-            qInfo() << " is oracle key";
-        }
+    if ( transfer ) {
+        Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename4, ios::app };
+        for ( auto &sec : temp)
+            writer(sec);
     }
+
+    return true;
+
 }
 
 std::string FantasyAgent::getMnemonic(std::string fname) {
@@ -449,15 +476,16 @@ void FantasyAgent::writeNomNonic(string in) {
     writer(secret);
 }
 
-bool FantasyAgent::UseName(std::string name) {
-
+bool FantasyAgent::UseName(const std::string &name) {
     for ( auto s : m_secrets ) {
+
         if ( s.fantasy_name() == name) {
             auto str = s.private_key();
             auto pr = str2priv(str);
             m_priv = pr;
             client = make_unique<FantasyName>
                     (name, m_priv.get_public_key().serialize());
+
             return true;
         }
     }
@@ -554,19 +582,19 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
 
 
 
-            QString mnF =  QString::fromStdString (GET_ROOT_DIR());
-            mnF.append (QString::fromStdString (secretfilename3.data ()));
-            QFile f(mnF);
-            if (!f.open (QFile::ReadOnly | QFile::Text)){
-                qDebug() << "could not open the  " << mnF;
-            }
-            QTextStream in(&f);
-                  while (!in.atEnd()) {
-                      QString line = in.readLine();
-                      qDebug() << line;
-                  }
-            f.close ();
-            f.flush ();
+//            QString mnF =  QString::fromStdString (GET_ROOT_DIR());
+//            mnF.append (QString::fromStdString (secretfilename3.data ()));
+//            QFile f(mnF);
+//            if (!f.open (QFile::ReadOnly | QFile::Text)){
+//                qDebug() << "could not open the  " << mnF;
+//            }
+//            QTextStream in(&f);
+//                  while (!in.atEnd()) {
+//                      QString line = in.readLine();
+//                      qDebug() << line;
+//                  }
+//            f.close ();
+//            f.flush ();
 
         }
 
@@ -926,4 +954,3 @@ sb.set_sig(p.second);
 std::cout << "\n" << sb.DebugString() << "\n";
 */
 
-}

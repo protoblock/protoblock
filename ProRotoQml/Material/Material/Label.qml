@@ -102,7 +102,8 @@ Text {
 
     property var fontInfo: fontStyles[style]
 
-    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+    font.pixelSize: (ProtoScreen.font(ProtoScreen.NORMAL))
+
     font.family: "Roboto"
 //    font.weight: {
 //        var weight = fontInfo.font

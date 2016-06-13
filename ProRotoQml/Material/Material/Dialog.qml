@@ -197,7 +197,7 @@ PopupBase {
                 left: parent.left
             }
 
-            height: hasActions ? ProtoScreen.guToPx(6.5) : 2 * Units.dp
+            height: hasActions ? ProtoScreen.guToPx(6.5) : ProtoScreen.guToPx(2)
 
             View {
                 id: buttonView

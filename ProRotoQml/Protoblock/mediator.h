@@ -21,26 +21,26 @@ class Mediator : public QObject
 
     //protoected :)
     QML_READONLY_CSTREF_PROPERTY (QString, namefrompk)
-    QML_READONLY_CSTREF_PROPERTY (bool, fetchingLeaders)
+//    QML_CONSTANT_CSTREF_PROPERTY (QVariantMap, nameStatuses)
 
-    QML_CONSTANT_CSTREF_PROPERTY (QVariantMap, nameStatuses)
-
-    QML_CONSTANT_CSTREF_PROPERTY (QString, secert3File)
+  //  QML_CONSTANT_CSTREF_PROPERTY (QString, secert3File)
     QML_READONLY_CSTREF_PROPERTY (QString, encyptPath)
     QML_READONLY_CSTREF_PROPERTY (bool, engineStatus)
 
 
-    Q_PROPERTY(QString playersName READ playersName  NOTIFY playersNameChanged)
-    Q_PROPERTY(QString  playersStatus READ playersStatus  NOTIFY playersStatusChanged)
+//    Q_PROPERTY(QString playersName READ playersName  NOTIFY playersNameChanged)
+//    Q_PROPERTY(QString  playersStatus READ playersStatus  NOTIFY playersStatusChanged)
 
-    Q_PROPERTY(MyNameStatus myNameStatus READ myNameStatus NOTIFY myNameStatusChanged)
-    Q_ENUMS (MyNameStatus)
+//    Q_PROPERTY(MyNameStatus myNameStatus READ myNameStatus NOTIFY myNameStatusChanged)
+//    Q_ENUMS (MyNameStatus)
 
     QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
 
 //    QML_LIST_PROPERTY(Mediator,goodFname,QString)
 
-//    Q_PROPERTY(QQmlListProperty<QString> goodFnames READ goodFnames NOTIFY goodFnamesChanged)
+
+//    QML_READONLY_CSTREF_PROPERTY (QStringList, allNames2)
+    //    Q_PROPERTY(QQmlListProperty<QString> goodFnames READ goodFnames NOTIFY goodFnamesChanged)
 
 public:
     QStringList m_goodList;
@@ -85,11 +85,9 @@ public:
     QHostAddress  peerAddress() const;
     QAbstractSocket::SocketState  state()const;
     QWebSocketProtocol::Version  version()const;
-#ifdef Q_OS_WIN32
-    Q_INVOKABLE QString lastKnowLoc();
-#endif
+//    std::string lastYearPath();
     Q_INVOKABLE void allNamesGet();
-    Q_INVOKABLE QString nameStatusGet(const QString&);
+//    Q_INVOKABLE QString nameStatusGet(const QString&);
     Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(const QString&);
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
@@ -116,26 +114,25 @@ signals:
     void importSuccess(const QString name, bool passfail);
 
     void usingFantasyName(const QString &name, bool isdefault = false);
-    void nameStatusChanged (QString, QString);
+//    void nameStatusChanged (QString, QString);
     void nameCheckGet( const QString & name, const QString & status );
     //    void myNameChang (const QString & name, QString status );
     void error(QString);
-    void myNameStatusChanged();
+//    void myNameStatusChanged();
     void errorStringChanged();
     void goodFnamesChanged();
 
     void playersNameChanged();
     void playersStatusChanged();
+    void leaderBoardchanged();
 
-
-     void leaderBoardchanged();
     // for QML only
     bool engineUpdate(bool);
 protected slots:
-    void handdleUsingName(const QString &name);
-    void handdleNameStatus(const QString &name,const QString &status );
+//    void handdleUsingName(const QString &name);
+//    void handdleNameStatus(const QString &name,const QString &status );
     void handleSocketError(QAbstractSocket::SocketError error);
-    void handdleNameStatuses();
+//    void handdleNameStatuses();
     void handleError(const QString err);
     void handleClosed();
     void onConnected();

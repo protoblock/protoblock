@@ -10,13 +10,13 @@ SUBDIRS += \
         $$PWD/Utils/utils.pro \
         $$PWD/Audio/audio.pro \
         $$PWD/Material/QtMaterial.pro \
-        $$PWD/libBotan \
+#        $$PWD/libBotan \
 #        $$PWD/libQSsh \
-        $$PWD/libQmlSsh \
+#        $$PWD/libQmlSsh \
         $$PWD/Protoblock/protoblock.pro \
-        $$PWD/PeerTwoPeerChat \
+#        $$PWD/PeerTwoPeerChat \
 #        $$PWD/Backend
         $$PWD/Torrent/torrent.pro
-#        $$PWD/libcommuni/libcommuni.pro
+        $$PWD/libcommuni/libcommuni.pro
 
 #Backend.depends = jsonpb

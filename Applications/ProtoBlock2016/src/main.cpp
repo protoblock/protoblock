@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+//    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 //    QSysInfo sysInfo;
 //    QString sInfo = sysInfo.productType ();
 //#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
