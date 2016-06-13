@@ -1,5 +1,5 @@
 import QtQuick 2.4
-
+import QtQuick.Controls 1.4 as Controls
 import ProRotoQml.Protoblock 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
@@ -66,7 +66,7 @@ Item{
                         backgroundColor: root.theme.primaryColor
                     }
 
-                    TextField {
+                    Controls.TextField {
                         id: nameText
                         width: parent.width / 1.07
                         font.family: "Default"

@@ -30,21 +30,18 @@ Item {
             model:  90
             delegate:
                 ListItems.Subtitled{
+                property int playerId: Math.floor((Math.random() * 665) + 1 )
                 elevation: 2
                 width: parent.width
-                text: "Player: " +  modelData  + " Status: "
-                subText: "Amount " + Math.floor((Math.random() * 30) + 1);
+                text: "Player: " + playerId
+                subText: "Buyer:  " + " Seller"
                 action: Image{
                     height: parent.height
                     width : height
                     fillMode: Image.PreserveAspectFit
                     source: index%3 == 0 ? "qrc:/icons/local_atm.png" : "qrc:/icons/ic_poll.png"
                 }
-                valueText: {
-                    if (index%3 == 0)
-                            "<b>Ask Size (Sell)</b> " + Math.floor((Math.random() * 40) + 1);
-                        else
-                            "<b>BidSize (Buy)</b> "  + Math.floor((Math.random() * 40) + 1);
+                valueText:{ Math.floor((Math.random() * 40) + 1) + "<b> @ </b>  " + Math.floor((Math.random() * 40) + 1);
                 }
             }
         }
