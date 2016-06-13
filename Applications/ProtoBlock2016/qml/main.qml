@@ -1,6 +1,6 @@
 import QtQuick 2.4
 import QtQuick.Window 2.0
-
+import QtQuick.XmlListModel 2.0
 
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Sql 1.0
@@ -95,7 +95,7 @@ ApplicationWindow{
     // Level Three News
     property var levelThree: [ "Trading" ]
 
-//    ,"SeasonLongLandingPage", "WeeklyLandingPage"
+    //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
 
     property var levelThreeIcons: [
@@ -253,14 +253,14 @@ ApplicationWindow{
         }
     }
 
-//    Label {
-//        rotation: -45
-//        text: qsTr("Demo Not Live")
-//        color: "#40000000"
-//        anchors.centerIn: parent
-//        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
-//        font.bold:  true
-//    }
+    //    Label {
+    //        rotation: -45
+    //        text: qsTr("Demo Not Live")
+    //        color: "#40000000"
+    //        anchors.centerIn: parent
+    //        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
+    //        font.bold:  true
+    //    }
 
 
     /////////////
@@ -297,7 +297,7 @@ ApplicationWindow{
     // Set up the default connections to the databases
     QmlSqlDatabase{
         id: mainTfProdDb
-//        databaseName: "162.254.67/tfprod.db"
+        //        databaseName: "162.254.67/tfprod.db"
         databaseName: "/Users/satoshi/Desktop/fc/osx/protoblock/assets/database/tfprod.db"
         databaseDriver: QmlSqlDatabase.SQLight
         connectionName: "protoblock"
@@ -354,13 +354,16 @@ ApplicationWindow{
                 text:  errorString
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
-//            Button{
-//                text: "Email protoblock staff"
-//                elevation: loginDialog.visible === true ?5 : 0
-//                width: loginDialog.visible === true ? parent.width: 0
-//                onClicked: Qt.openUrlExternally("mailto:contact@protoblock.comexample.com=Login%20support")
-//            }
+            //            Button{
+            //                text: "Email protoblock staff"
+            //                elevation: loginDialog.visible === true ?5 : 0
+            //                width: loginDialog.visible === true ? parent.width: 0
+            //                onClicked: Qt.openUrlExternally("mailto:contact@protoblock.comexample.com=Login%20support")
+            //            }
         }
+
+
+
     }
 
 
@@ -391,6 +394,23 @@ ApplicationWindow{
             }
         }
     }
+
+
+    Dialog {
+        id: updateDialog
+        title: "Update"
+        positiveButtonText: "Back"
+        Column{
+            anchors.fill: parent
+            Text{
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: "There is a update available"
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+        }
+    }
+
 
 
     Connections {
@@ -440,4 +460,40 @@ ApplicationWindow{
     }
 
 
+
+
+
+
+
+
+
+
+    function compairVersions(d){
+        if (realRoot.version !== d){
+            console.log("there is a update")
+            updateDialog.toggle()
+        }else{
+            console.log("There is NO UPDARTES ")
+        }
+    }
+
+    // check for updates
+    XmlListModel {
+        id: updateMachine
+        source:"http://protoblock.com/version.xml"
+        query: "updatemachine"
+        XmlRole{name: "version";query: "version/string()"}
+        XmlRole{name: "libs";query: "libs/string()"}
+        XmlRole{name: "changelog";query: "changelog/string()"}
+        onStatusChanged: {
+            switch(status){
+            case XmlListModel.Error :
+                console.log("ERROR IN UPDATE MACHINE ")
+                break;
+            case XmlListModel.Ready:
+                compairVersions(updateMachine.get(0).version)
+                break;
+            }
+        }
+    }
 }

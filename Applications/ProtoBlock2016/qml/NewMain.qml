@@ -26,6 +26,9 @@ Window {
 //    property variant leaders: ListModel{}
     property string msgString
 
+    property string version: "0.1"
+
+
     // make this into c++
     property var speed2Name: function( bytesPerSecond ){
         if ( bytesPerSecond < 1000 )
