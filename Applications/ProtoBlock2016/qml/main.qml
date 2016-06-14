@@ -426,6 +426,9 @@ ApplicationWindow{
         onNameCheckGet: {
             if(status === "true" ) {
                 MiddleMan.signPlayer(name)
+                if ( loginDialog.visible )
+                    loginDialog.close()
+
                 root.reloadleaders = false
                 rootLoader.source = "qrc:/Projections.qml"
                 pageHelper.selectedTabIndex = 1;

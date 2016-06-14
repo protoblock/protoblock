@@ -20,16 +20,16 @@ win32 {
     CONFIG(release, debug|release) {
 #       LIBS += -L$$PWD/../ProRotoQml/jsonpb/release/ -ljsonpb
        LIBS+= -llibprotobuf \
-              -lleveldb \
+ #             -lleveldb \
               -llibeay32 \
               -lssleay32 \
               -lsecp256k1
     }
 
-    BOOST_DIR = C:\local\boost_1_55_0
-    LIBS += -L$${BOOST_DIR}/lib64-msvc-12.0
-    LIBS += -lboost_log-vc120-1_55
-    INCLUDEPATH += $${BOOST_DIR}
+#    BOOST_DIR = C:\local\boost_1_55_0
+#    LIBS += -L$${BOOST_DIR}/lib64-msvc-12.0
+#    LIBS += -lboost_log-vc120-1_55
+ #   INCLUDEPATH += $${BOOST_DIR}
 
 }
 

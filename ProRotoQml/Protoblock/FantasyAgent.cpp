@@ -83,7 +83,7 @@ bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
 }
 
 std::string FantasyAgent::getMnemonic(std::string fname) {
-    Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename3};
+    Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename4};
     if ( !read.good() ) {
         return "";
     }

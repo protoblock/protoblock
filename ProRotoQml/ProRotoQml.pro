@@ -5,7 +5,7 @@ SUBDIRS += \
 #        $$PWD/qhttp/qhttp.pro \
         $$PWD/Files/files.pro \
         $$PWD/Models/models.pro \
-        $$PWD/Sql/sql.pro \
+       # $$PWD/Sql/sql.pro \
         $$PWD/Theme/Theme.pro \
         $$PWD/Utils/utils.pro \
         $$PWD/Audio/audio.pro \
@@ -13,10 +13,10 @@ SUBDIRS += \
 #        $$PWD/libBotan \
 #        $$PWD/libQSsh \
 #        $$PWD/libQmlSsh \
-        $$PWD/Protoblock/protoblock.pro
+        $$PWD/Protoblock/protoblock.pro \
 #        $$PWD/PeerTwoPeerChat \
 #        $$PWD/Backend
-#        $$PWD/Torrent/torrent.pro \
-#        $$PWD/libcommuni/libcommuni.pro
+        $$PWD/Torrent/torrent.pro
+      # $$PWD/libcommuni/libcommuni.pro
 
 #Backend.depends = jsonpb

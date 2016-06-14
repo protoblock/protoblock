@@ -4,7 +4,7 @@ import QtQuick.Dialogs 1.2
 
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Torrent 1.0
+//import ProRotoQml.Torrent 1.0
 import Material 1.0 as Material
 //import Material.Componets 0.3
 //import Material.Dialog 0.1
