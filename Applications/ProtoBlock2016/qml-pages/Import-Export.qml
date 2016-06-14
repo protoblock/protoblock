@@ -69,7 +69,7 @@ Item{
                         id: nameText
                         width: parent.width / 1.07
                         font.family: "Default"
-                        placeholderText: "Please enter in you last years 12 secret words"
+                        placeholderText: "Please enter in your 12 word secret"
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
 

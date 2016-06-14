@@ -310,7 +310,7 @@ ApplicationWindow{
     /// DIALOGS
     Dialog {
         id: usingNameDialog
-        title: "Account"
+        title: "Protoblock Player Name"
         Text{
             width: parent.width
             height: parent.height
@@ -335,7 +335,7 @@ ApplicationWindow{
 
     Dialog {
         id: accountErrorDialog
-        title: "Error in Signup"
+        title: "Unavailable"
         positiveButtonText: "Back"
         negativeButtonText:  loginDialog.visible ?  "" : "Import"
         onRejected: {
@@ -434,13 +434,13 @@ ApplicationWindow{
                 pageHelper.selectedTabIndex = 1;
             }
             else {
-                errorString = name + " is taken. Please try with a different name. Or if you feel that this is in fact your name from last year. Or would like to import from another device."
+                errorString = name + " is already claimed. Please try with a different name. If this is your name from last year or another device, "
                 if (loginDialog.visible){
-                    +" Please click back. Then click \"I Already Have a Name\" "
+                    errorString = errorString + "please find the import/export features within the Account tab."
                 }else if (!loginDialog.visible){
-                    + " Please click Import below."
+                    errorString = errorString + " Please click Import below."
                 }
-                + "For more assistance please contact the protoblock staff at <contact@protoblock.com>"
+                errorString = errorString + "\n\nFor more assistance please contact the protoblock staff at <contact@protoblock.com>"
                 accountErrorDialog.open()
             }
         }

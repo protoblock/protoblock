@@ -7,7 +7,9 @@ import ProRotoQml.Theme 1.0
 
 Item {
     id: loginPage
-    property string  defaultTxt: "Please fill out the fields below to claim a signup. If you played last year and would like to countiune to use your fantasy name from last year please click on the button titled \"Already Have a Name\" "
+    property string  defaultTxt: "A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. " +
+                                 "\nClaim your name! Chose your Twitter handle or fantasy team name";
+
     Card{
         id: loginCard
         width: parent.width
@@ -66,7 +68,7 @@ Item {
                     width: parent.width / 1.07
                     height: ProtoScreen.guToPx(8)
                     font.pixelSize:ProtoScreen.font(ProtoScreen.NORMAL)
-                    placeholderText: "Please enter in a new fantasy name"
+                    placeholderText: "Please enter in a name"
                     anchors.horizontalCenter: parent.horizontalCenter
                     onAccepted: clamNameButton.clicked();
                 }
