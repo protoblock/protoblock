@@ -19,10 +19,10 @@ Item {
         id: gstate
         width: parent.width / 1.07
         bannerText: "Season: 2016 Week: 0 "
-        text: "Game Status: Waiting 53 Man Roster \n2016 Projetion Game To Begin on Sept 3"
+        text: "Game Status: Waiting 53 Man Roster \n2016 Projection Game To Begin on Sept 3"
         anchors{
             top: parent.top
-            topMargin:ProtoScreen.guToPx(.5)
+            topMargin:ProtoScreen.guToPx(1)
             horizontalCenter: parent.horizontalCenter
         }
     }

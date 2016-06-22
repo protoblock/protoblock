@@ -36,7 +36,7 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
 //                color: "white"
                 text: "A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. " +
-                      "Claim your name! Chose your Twitter handle or fantasy team name";
+                      "Claim your name! Chose your Twitter handle or fantasy team name.";
                 wrapMode: Text.WordWrap
             }
         }
