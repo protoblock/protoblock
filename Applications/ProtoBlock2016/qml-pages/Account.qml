@@ -70,7 +70,6 @@ Item {
                 model: MiddleMan.goodList().length
                 delegate:
                     ListItems.Subtitled{
-
                     elevation: 2
                     width: parent.width
                     height: ProtoScreen.guToPx(11)
@@ -134,28 +133,11 @@ Item {
     function nameCheckBlank(s) {
         if ( s.length === 0 ) {
             return
-            }
-            onRejected: {
-                rootLoader.source = "qrc:/Import-Export.qml"
-        }
-        else if ( s.length > 45) {
-            errString = "name to long"
-            accountErrorDialog.show()
-                    rootLoader.source = "qrc:/Projections.qml"
-                    pageHelper.selectedTabIndex = 1;
-        }
-        else {
-            MiddleMan.checkname(s)
-    }
-    function nameCheckBlank(s) {
-        if ( s.length === 0 ) {
-            return
         }
         else if ( s.length > 45) {
             errString = "name to long"
             accountErrorDialog.show()
         }
-
         else {
             MiddleMan.checkname(s)
         }

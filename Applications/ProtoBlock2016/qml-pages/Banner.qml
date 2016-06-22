@@ -8,9 +8,7 @@ Item {
     property string backgroundColor: "black"
     height: ProtoScreen.guToPx(6)
     width: parent.width
-        height: parent.height
-    width: parent.width
-        backgroundColor: bannerRoot.backgroundColor
+    Card{
         height: parent.height
         width: parent.width
         backgroundColor: bannerRoot.backgroundColor
