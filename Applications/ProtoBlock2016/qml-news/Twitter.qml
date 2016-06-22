@@ -3,8 +3,8 @@ import "tweetsearch.js" as Helper
 
 Rectangle {
     id: main
-    width: parent.width
-    height: parent.height
+//    width: parent.width
+//    height: parent.height
     color: "transparent"
 
     property int inAnimDur: 250

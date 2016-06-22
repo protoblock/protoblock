@@ -50,7 +50,6 @@ Please use integrated Chat tab to share feedback or questions."
             }
 
 
-
             CardWithBanner{
                 width: parent.width / 1.07
                 bannerText: "PROTOBLOCK 2016"
@@ -64,7 +63,6 @@ Please use integrated Chat tab to share feedback or questions."
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Each week of the season Protoblock Players make projections for each/any player in the NFL.  At the close of each NFL game ‘fantasy-bits’, the in-game currency, are generated and distributed by the blockchain protocol in proportion to the FFP scoring and among the most accurate projections.  Those with the most fantasy-bits rise the Overall Leaderboard.  New comprehensive Leaderboards data automatically generated, with new deep information and potential to reveal unique expert niche skill for teams, players, or positions."
             }
-
 
             CardWithBanner{
                 width: parent.width / 1.07

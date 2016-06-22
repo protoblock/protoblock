@@ -13,15 +13,18 @@ qtHaveModule(webengine) {
     DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
 }
 
-
 TEMPLATE = app
     QT += xmlpatterns xml qml quick core websockets network sql widgets
 #sql webchannel
 CONFIG += c++11
+osx{
+#CONFIG-=app_bundle
+}
+
+CONFIG += c++11 console
 
 SOURCES += \
     $$PWD/src/main.cpp \
-
 
 RC_FILE = myap.rc
 
@@ -37,7 +40,6 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat
-
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
@@ -51,3 +53,4 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 #       /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.so \
 #       /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.so
 }
+

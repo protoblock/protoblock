@@ -1,7 +1,7 @@
 TEMPLATE = lib
 TARGET =  QmlSsh
 QT += qml quick core network
-CONFIG += qt plugin c++11
+CONFIG += qt plugin c++11 static
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = QmlSsh
 

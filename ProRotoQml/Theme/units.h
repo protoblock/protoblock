@@ -10,13 +10,17 @@ class Units : public QObject
     Q_OBJECT
     Q_PROPERTY(float gridUnit READ gridUnit WRITE setGridUnit NOTIFY gridUnitChanged)
 
+   explicit Units(QObject *parent = 0);
+
+    static Units *myInstance;
 public:
-    static Units& instance() {
-        static Units instance;
-        return instance;
+    static Units *instance() {
+        if (myInstance == NULL) {
+            myInstance = new Units();
+        }
+        return myInstance;
     }
 
-    explicit Units(QObject *parent = 0);
     Q_INVOKABLE float dp(float value);
     Q_INVOKABLE float gu(float value);
     QString resolveResource(const QUrl& url);
