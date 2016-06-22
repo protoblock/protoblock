@@ -256,7 +256,7 @@ ApplicationWindow{
 
     Label {
         rotation: -45
-        text: MiddleMan.isTestNet() ? "Demo Not Live" : "Live"
+        text: MiddleMan.isTestNet() ? "Demo - Testing - Not Live" : "Live"
         color: "#40000000"
         anchors.centerIn: parent
         font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
