@@ -248,7 +248,7 @@ Item {
             }
                 break;
         case 1:
-            if (list.contents.length !== undefined){
+            if (list.contents.data.length !== undefined){
                 projModelLevelOne.clear();
                 for (var ii in  list.contents.data ) {
                 projModelLevelOne.append({
