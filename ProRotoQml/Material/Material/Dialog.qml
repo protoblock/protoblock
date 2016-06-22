@@ -11,8 +11,8 @@ PopupBase {
     overlayColor: Qt.rgba(0, 0, 0, 0.3)
     opacity: showing ? 1 : 0
     visible: opacity > 0
-    width: Screen.width / 2
-    height: Screen.height / 2
+    width: ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" ? Screen.width :  Screen.width / 2
+    height: ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" ? Screen.height / 1.07 : Screen.height / 2
     property int contentMargins: ProtoScreen.guToPx(3)
     property int minimumWidth: ProtoScreen.guToPx(37.5)
     property int minimumHeight: ProtoScreen.guToPx(37.5)
