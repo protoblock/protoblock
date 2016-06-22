@@ -13,10 +13,11 @@ import Material.ListItems 1.0 as ListItem
 ApplicationWindow{
     id: root
     visible: true
-    width: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.width
-    height: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.height
+    width: Device.productType === "osx"||Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.width
+    height: Device.productType === "osx"||Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.height
 
     Component.onCompleted: {
+        console.log(" prod xxx" + Device.productType)
         uname = MiddleMan.init()
         if ( uname  === "" ){
             loginDialog.toggle()
