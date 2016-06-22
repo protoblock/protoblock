@@ -15,10 +15,6 @@
 *.exe
 *.app
 
-# the proto generated files
-
-generated/*.cc
-generated/*.h
 # Qt-es
 
 /.qmake.cache

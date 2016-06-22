@@ -140,5 +140,3 @@ float Units::gridUnitSuffixFromFileName(const QString& fileName)
         return 0;
     }
 }
-
-Units *Units::myInstance;
