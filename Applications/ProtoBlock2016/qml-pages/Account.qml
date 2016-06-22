@@ -80,7 +80,7 @@ Item {
                         fillMode: Image.PreserveAspectFit
                         opacity: MiddleMan.goodList()[index] === uname ? 1 : 0
                         source:  "qrc:/icons/action_account_circle.png"
-                        Behavior on opacity {NumberAnimation{duration: 80}}
+//                        Behavior on opacity {NumberAnimation{duration: 80}}
                     }
                     valueText: "Balance : " + " 0"
                     onClicked: MiddleMan.useName(MiddleMan.goodList()[index])

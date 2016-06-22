@@ -27,6 +27,7 @@
 namespace fantasybit {
 
 #ifndef PRODFOOTBALL
+    static bool IS_TEST_NET = true;
     static std::string PB_WS_LITE_AGENT = "app.trading.football";
     static int PB_WS_LITE_AGENT_PORT = 4001;
     static std::string PB_WS_TX = "app.trading.football";
@@ -41,6 +42,7 @@ namespace fantasybit {
     static std::string DBNAME = "tfprod";
 
 #else
+    static bool IS_TEST_NET = false;
     static std::string PB_WS_LITE_AGENT = "app.trading.football";
     static int PB_WS_LITE_AGENT_PORT = 5111;
     static std::string PB_WS_TX = "app.trading.football";

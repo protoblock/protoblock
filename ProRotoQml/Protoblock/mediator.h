@@ -12,6 +12,7 @@
 #include "FantasyAgent.h"
 #include "QQmlListPropertyHelper.h"
 #include <QTimer>
+#include "fbutils.h"
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -107,6 +108,10 @@ public:
 
     Q_INVOKABLE QStringList allNamesList() {
         return m_allNamesList;
+    }
+
+    Q_INVOKABLE bool isTestNet() {
+        return fantasybit::IS_TEST_NET;
     }
 
     qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);

@@ -253,14 +253,15 @@ ApplicationWindow{
         }
     }
 
-    //    Label {
-    //        rotation: -45
-    //        text: qsTr("Demo Not Live")
-    //        color: "#40000000"
-    //        anchors.centerIn: parent
-    //        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
-    //        font.bold:  true
-    //    }
+    Label {
+        rotation: -45
+        text: MiddleMan.isTestNet() ? "Demo Not Live" : "Live"
+        color: "#40000000"
+        anchors.centerIn: parent
+        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
+        font.bold:  true
+        visible: MiddleMan.isTestNet()
+    }
 
 
     /////////////

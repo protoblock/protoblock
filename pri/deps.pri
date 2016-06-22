@@ -8,7 +8,7 @@ win32 {
     INCLUDEPATH += $$PWD/../3rdParty/secp256k1
 
    ## FIXME
-   LIBS+= -L$$PWD/../libwin64
+   LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
 
     CONFIG(debug, debug|release) {
 #       LIBS += -L$$PWD/../ProRotoQml/jsonpb/debug/ -ljsonpb
