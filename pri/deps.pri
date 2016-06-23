@@ -9,7 +9,7 @@ win32 {
 
    ## FIXME
    LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
-
+#LIBS+= -L$$PWD/../libwin64
     CONFIG(debug, debug|release) {
 #       LIBS += -L$$PWD/../ProRotoQml/jsonpb/debug/ -ljsonpb
        LIBS+= -llibprotobufd  \
@@ -20,7 +20,7 @@ win32 {
     CONFIG(release, debug|release) {
 #       LIBS += -L$$PWD/../ProRotoQml/jsonpb/release/ -ljsonpb
        LIBS+= -llibprotobuf \
- #             -lleveldb \
+              -lleveldb \
               -llibeay32 \
               -lssleay32 \
               -lsecp256k1

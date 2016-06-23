@@ -1,0 +1,3 @@
+[submodule "ProRotoQml/irc"]
+	path = ProRotoQml/irc
+	url = https://github.com/communi/libcommuni.git

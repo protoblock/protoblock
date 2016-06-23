@@ -17,8 +17,9 @@ ApplicationWindow{
     height: Device.productType === "osx"||Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.height
 
     Component.onCompleted: {
-        console.log(" prod xxx" + Device.productType)
         uname = MiddleMan.init()
+        console.log(" prod xxx" + Device.productType + " "  + uname)
+
         if ( uname  === "" ){
             loginDialog.toggle()
         }
