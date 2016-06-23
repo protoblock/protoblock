@@ -1,8 +1,8 @@
-osx :{
-    GENERATEDDIR = $$PWD/../generated_public
-    DEFINES += GOOGLE_NAMESPACE=google_public
-    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
-    DEPENDPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
+osx {
+    GENERATEDDIR = $$PWD/../generated
+    DEFINES += GOOGLE_NAMESPACE=google
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 }
 
 ios {

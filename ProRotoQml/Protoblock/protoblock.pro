@@ -6,8 +6,6 @@ ios{
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Protoblock
 }
 
-#DEFINES = PRODFOOTBALL
-
 #android {
 #HEADERS += \
 #    $$GENERATEDDIR/ApiData.pb.h \

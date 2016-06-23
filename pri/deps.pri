@@ -39,25 +39,24 @@ win32 {
 
 osx{
 message(OSX BUILD)
-    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
-    DEPENDPATH += Users/satoshi/Desktop/fc/osx/extrenal/include
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
     ##FIXME compile levelDB
-    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+#    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+#    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
 
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
-
-    LIBS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
-    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
+    LIBS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
+    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
 
     ##FIXME compile levelDB
 #    LIBS += -L/usr/local/lib  -lleveldb
