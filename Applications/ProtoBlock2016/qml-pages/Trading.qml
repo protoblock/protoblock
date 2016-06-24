@@ -9,16 +9,10 @@ import ProRotoQml.Theme 1.0
 
 Item {
     Card {
-        id: c1
         width: parent.width
         height: parent.height
         elevation: 5
         anchors.centerIn: parent
-        anchors{
-            top: parent.top
-            topMargin:ProtoScreen.guToPx(1)
-            horizontalCenter: parent.horizontalCenter
-        }
 
         Column{
             width: parent.width
@@ -26,10 +20,6 @@ Item {
             anchors.fill: parent
             spacing: ProtoScreen.guToPx(1.25)
 
-            anchors{
-                topMargin: ProtoScreen.guToPx(1)
-                horizontalCenter: parent.horizontalCenter
-            }
             CardWithBanner{
                 id: gstate
                 width: parent.width / 1.07

@@ -8,14 +8,14 @@ import ProRotoQml.Protoblock 1.0
 import Material 1.0 as Material
 //import Material.Componets 0.3
 //import Material.Dialog 0.1
-//import Communi 3.0
+import Communi 3.0
 
 Window {
     id: realRoot
     title: "Protoblock 2016 "
     width: Device.productType === "osx"||Device.productType === "win32" ? 1200  :  Screen.width
     height: Device.productType === "osx"||Device.productType === "win32" ? 1220  :  Screen.height
-    property string theme: "Material"
+    property string theme: "MaterialMain"
     property string  uname
     onUnameChanged: console.log("USING NEW UNAME " + uname)
     property string  err
@@ -42,7 +42,7 @@ Window {
     }
     onThemeChanged:
         if(theme === "Material") {
-            newLoader.source = "qrc:/main.qml"
+            newLoader.source = "qrc:/MaterialMain.qml"
         }else{
             newLoader.source = "qrc:/"+theme+".qml"
         }
@@ -52,7 +52,7 @@ Window {
         anchors.fill: parent
         Component.onCompleted: {
             if(theme === "Material") {
-                source = "qrc:/main.qml"
+                source = "qrc:/MaterialMain.qml"
             }else{
                 source = "qrc:/"+theme+".qml"
             }

@@ -1,11 +1,14 @@
-import QtQuick 2.0
-import Material 1.0
+import QtQuick 2.4
+
 import ProRotoQml.Theme 1.0
+
+import Material 1.0
 
 Card{
     id: cardWithBanner
     property string text
     property string bannerText
+//    property alias  object: objects.children
     property int margin: ProtoScreen.guToPx(1)
     width: parent.width
     height: (cBan.height + cLab.paintedHeight) + margin
@@ -31,4 +34,18 @@ Card{
             text: cardWithBanner.text
         }
     }
+
+//    Item {
+//        id: objects
+//        width: parent.width
+//        height: children.height + ProtoScreen.guToPx(3)
+//        anchors.top: cCol.bottom
+
+//    }
+
+
+
+//    Scrollbar{
+//        flickableItem: objects.children
+//    }
 }

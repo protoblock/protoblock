@@ -29,7 +29,6 @@ Card {
         ListView {
             id: listView
             delegate: ListItems.Subtitled {
-                visible:  model.title === "162.254.24.67" ? false : true
                 property bool first: index === 0
                 property bool current: model.buffer === currentBuffer
                 elevation: 1

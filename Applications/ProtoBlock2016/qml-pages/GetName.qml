@@ -106,7 +106,6 @@ Item {
                     height: ProtoScreen.guToPx(8)
                     onClicked: {
                         loginDialog.close();
-                        rootLoader.source = "qrc:/Home.qml";
                     }
                 }
 

@@ -1,11 +1,12 @@
 import QtQuick 2.3
 import QtQuick.Window 2.2
-import Material 1.0
+
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Files 1.0
 import ProRotoQml.Theme 1.0
 import ProRotoQml.Sql 1.0
 
+import Material 1.0
 ApplicationWindow {
     id: root
     width: Screen.width
@@ -73,7 +74,6 @@ ApplicationWindow {
                 visible: (currentPage === modelData);
                 source: Qt.resolvedUrl("qrc:/%1.qml".arg(modelData))
                 onSourceChanged:{
-                    //                         console.log("source changed " + source)
                 }
                 onVisibleChanged: {
                     loadIfNotLoaded();
@@ -152,7 +152,6 @@ ApplicationWindow {
 //            console.log("onNameCheckGet " + status  + " \n" +  name )
             if(status === "true" )
             {
-//                console.log("name is not taken")
                 MiddleMan.signPlayer(uname)
             }
             else
@@ -165,31 +164,15 @@ ApplicationWindow {
         }
 
         onNameStatusChanged: {
-//            console.log("nameStatusChange " + MiddleMan.playersName  +" " + MiddleMan.playersStatus )
             uname = MiddleMan.playersName;
         }
 
         onUsingFantasyName: {
-//            console.log("usingFantasyName " + MiddleMan.playersName )
             uname = MiddleMan.playersName;
             currentPage = "WelcomeBack"
             pageHelper.buttonsEnabled = true
         }
     }
 
-
-
-    // Set up the default connections to the databases
-
-    QmlSqlDatabase{
-        id: mainTfProdDb
-        databaseName: "/Users/$$(USER)/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
-        databaseDriver: QmlSqlDatabase.SQLight
-        connectionName: "protoblock"
-        onConnectionOpened: console.log("database Open")
-        onError: console.log("DB Error:  " +  errorString)
-        Component.onCompleted: addDataBase()
-
-    }
 }
 

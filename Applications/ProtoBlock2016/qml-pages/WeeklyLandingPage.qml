@@ -71,10 +71,4 @@ Item {
                }
     }
 
-    QmlSqlQueryModel{
-        id: weekModel
-        connectionName: "protoblock"
-        queryString:"SELECT * FROM Schedules where Week='"+ weekInFocus+ "';"
-        onQueryStringChanged: console.log(" Summon Query "+  queryString)
-    }
 }

@@ -23,7 +23,6 @@ Item {
                 realName:realRoot.uname
                 userName:realRoot.uname
                 password:""
-
             }
             onMessageIgnored: serverBuffer.receiveMessage(message)
             function quit() {
@@ -40,6 +39,8 @@ Item {
             Component.onCompleted: bufferModel.add(serverBuffer)
         }
     }
+
+
 
     function init(){
         chatPage.currentBuffer = serverBuffer

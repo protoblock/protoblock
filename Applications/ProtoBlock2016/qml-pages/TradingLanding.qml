@@ -24,7 +24,7 @@ Rectangle {
         font.pixelSize: ProtoScreen.guToPx(2.75)
         font.family: "Roboto"
         horizontalAlignment: Text.AlignHCenter
-        text: "Welcome back " + realRoot.uname
+        text: "Welcome back " + root.uname
         wrapMode: Text.WordWrap
     }
     Column{

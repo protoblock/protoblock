@@ -1,10 +1,11 @@
 import QtQuick 2.4
 
+import ProRotoQml.Protoblock 1.0
+import ProRotoQml.Theme 1.0
+
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
-import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Theme 1.0
 Item {
     Flickable{
         height: parent.height
@@ -17,19 +18,19 @@ Item {
             source: "qrc:/logoFinal.png"
             fillMode: Image.PreserveAspectFit
             width: parent.width / 1.07
-            height: parent.height / 10
+            height: parent.height / 6
             anchors.horizontalCenter: parent.horizontalCenterx
         }
         Label {
             id: welcomeTxt
             anchors.top: logo.bottom
-//            anchors.topMargin:  paintedHeight
+            anchors.topMargin:  paintedHeight
             width: parent.width / 1.07
-            font.pixelSize: ProtoScreen.font( ProtoScreen.MEDIUM) //ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
+            font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
             font.family: "Roboto"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             horizontalAlignment: Text.AlignHCenter
-            text: "2016 Enrollment Open Now! Tell your friends to claim their names"
+            text: "2016 Enrollment Open Now - tell your friends to claim their names"
             wrapMode: Text.WordWrap
         }
         Column{
@@ -49,7 +50,6 @@ Item {
 Please use integrated Chat tab to share feedback or questions."
             }
 
-
             CardWithBanner{
                 width: parent.width / 1.07
                 bannerText: "PROTOBLOCK 2016"
@@ -63,6 +63,7 @@ Please use integrated Chat tab to share feedback or questions."
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Each week of the season Protoblock Players make projections for each/any player in the NFL.  At the close of each NFL game ‘fantasy-bits’, the in-game currency, are generated and distributed by the blockchain protocol in proportion to the FFP scoring and among the most accurate projections.  Those with the most fantasy-bits rise the Overall Leaderboard.  New comprehensive Leaderboards data automatically generated, with new deep information and potential to reveal unique expert niche skill for teams, players, or positions."
             }
+
 
             CardWithBanner{
                 width: parent.width / 1.07
