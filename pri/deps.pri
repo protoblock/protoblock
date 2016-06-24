@@ -3,13 +3,15 @@
 ##############
 
 #DEFINES += PRODFOOTBALL
+
+
 win32 {
     INCLUDEPATH +=   $$PWD/../3rdParty
     INCLUDEPATH += $$PWD/../3rdParty/secp256k1
 
    ## FIXME
-   LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
-#LIBS+= -L$$PWD/../libwin64
+   LIBS+= -L$$PWD/../libwin64
+
     CONFIG(debug, debug|release) {
 #       LIBS += -L$$PWD/../ProRotoQml/jsonpb/debug/ -ljsonpb
        LIBS+= -llibprotobufd  \
@@ -39,30 +41,27 @@ win32 {
 
 osx{
 message(OSX BUILD)
-    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
-    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
+    DEPENDPATH += Users/satoshi/Desktop/fc/osx/extrenal/include
 
     ##FIXME compile levelDB
-#    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-#    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
+    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
+    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
 
-    LIBS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
-    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
+    LIBS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
+    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
 
     ##FIXME compile levelDB
-#    LIBS += -L/usr/local/lib  -lleveldb
-
-
-
+    LIBS += -L/usr/local/lib  -lleveldb
 }
 
 
@@ -88,8 +87,8 @@ message (IOS BUILD)
     PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
 
     ## BOTAN
-    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
+#    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
+#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
 }
 
 
@@ -98,29 +97,34 @@ message (IOS BUILD)
 
 
 android {
-        message("deps !x86 build")
-    ​
-        DIRPREFIX = D:\work\prebuiltLibs
-        ##PATHS
-#        INCLUDEPATH += $$DIRPREFIX/android/extrenal-android-2.5.0/include
-        INCLUDEPATH += $$DIRPREFIX/android/extrenal-android/include
-        DEPENDPATH += $$DIRPREFIX/android/extrenal-android/include
+    ##PATHS
+    INCLUDEPATH +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/include
 
-        ##OPENSSL
-        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
-        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
-        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libssl.a
-        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libssl.a
+    ##OPENSSL
+    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
+    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
+    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
 
-        ##  SECP251K1
-        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
-        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
+    ##  SECP251K1
+    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
 
-        # PROTOBUFF
-        LIBS += $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so
+    # PROTOBUFF
+    LIBS +=  -L/Users/satoshi/Desktop/fc/android/protobuf-ndk-build/protobuf-2.6.1/libs/armeabi-v7a -lprotobuf
 
-        ## BOTAN
-#          LIBS += -$$DIRPREFIX/android/extrenal-android/lib -lBotan
+
+#      LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libprotobuf.a
+#      PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libprotobuf.a
+    ## BOTAN
+#      LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lBotan
+
+
+#    statc gnu c++
+#LIBS += /Users/satoshi/Desktop/ndk/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/libgnustl_static.a
+
+
 }
 
 #LATERFOOL
