@@ -16,15 +16,17 @@ qtHaveModule(webengine) {
 TEMPLATE = app
     QT += xmlpatterns xml qml quick core websockets network sql widgets
 #sql webchannel
-CONFIG += c++11
-osx{
-#CONFIG-=app_bundle
-}
+CONFIG += c++11 app_bundle
+#osx{
+#CONFIG+=app_bundle
+#}
 
 SOURCES += \
     $$PWD/src/main.cpp \
 
 RC_FILE = myap.rc
+
+ICON = myappico.ico
 
 RESOURCES += $$PWD/qml/qml.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model

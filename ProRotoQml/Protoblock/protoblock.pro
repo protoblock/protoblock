@@ -6,8 +6,6 @@ ios{
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Protoblock
 }
 
-#DEFINES = PRODFOOTBALL
-
 #android {
 #HEADERS += \
 #    $$GENERATEDDIR/ApiData.pb.h \
@@ -31,7 +29,7 @@ ios{
 
 #}
 
-DEFINES += GOOGLE_NAMESPACE=google
+#DEFINES += GOOGLE_NAMESPACE=google
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Protoblock
 TARGET = ProRotoQml.Protoblock

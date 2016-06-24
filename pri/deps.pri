@@ -2,7 +2,7 @@
 ##  WINDOWS
 ##############
 
-DEFINES += PRODFOOTBALL
+#DEFINES += PRODFOOTBALL
 win32 {
     INCLUDEPATH +=   $$PWD/../3rdParty
     INCLUDEPATH += $$PWD/../3rdParty/secp256k1
@@ -39,25 +39,24 @@ win32 {
 
 osx{
 message(OSX BUILD)
-    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
-    DEPENDPATH += Users/satoshi/Desktop/fc/osx/extrenal/include
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
     ##FIXME compile levelDB
-    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+#    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+#    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
 
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
-
-    LIBS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
-    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
+    LIBS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
+    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
 
     ##FIXME compile levelDB
 #    LIBS += -L/usr/local/lib  -lleveldb
@@ -99,26 +98,29 @@ message (IOS BUILD)
 
 
 android {
-    ##PATHS
-    INCLUDEPATH +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
-    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/include
+        message("deps !x86 build")
+    ​
+        DIRPREFIX = D:\work\prebuiltLibs
+        ##PATHS
+#        INCLUDEPATH += $$DIRPREFIX/android/extrenal-android-2.5.0/include
+        INCLUDEPATH += $$DIRPREFIX/android/extrenal-android/include
+        DEPENDPATH += $$DIRPREFIX/android/extrenal-android/include
 
-    ##OPENSSL
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.so
-#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
+        ##OPENSSL
+        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
+        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
+        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libssl.a
+        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libssl.a
 
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.so
-#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
+        ##  SECP251K1
+        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
+        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
 
-    ##  SECP251K1
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
+        # PROTOBUFF
+        LIBS += $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so
 
-    # PROTOBUFF
-      LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lprotobuf
-
-    ## BOTAN
-      LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lBotan
+        ## BOTAN
+#          LIBS += -$$DIRPREFIX/android/extrenal-android/lib -lBotan
 }
 
 #LATERFOOL

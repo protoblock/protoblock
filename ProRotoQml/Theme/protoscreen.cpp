@@ -11,7 +11,11 @@ ProtoScreen::ProtoScreen(QObject *parent) :
     m_gridUnit(8),
     m_designResolution(QGuiApplication::primaryScreen ()->availableGeometry ()),
     m_scaleSize(1.0),
-    m_formFactor("desktop")
+    m_formFactor("desktop"),
+    m_androidDpi(),
+    m_windowsDesktopScale(1.0),
+    m_androidScale(1.0),
+    m_tempMacVersion(6.0)
 {
     initialize();
 }
@@ -132,7 +136,7 @@ void ProtoScreen::finalFormFactor(const QString &systemType, const double &versi
         else if (diagonal >= 6.5 && diagonal < 10.1) {
             m_formFactor = "tablet";
         }
-        // FIXME
+        // FIXME TV
         else if (diagonal > 10.1  ){
             m_formFactor  = "desktop";
         }
@@ -192,11 +196,8 @@ void ProtoScreen::updateFormFactor(){
 
     QScreen *m_screen = QGuiApplication::primaryScreen ();
     QSysInfo sysInfo;
-    QString m_androidDpi;
     qDebug() <<"THE OS !!!  " <<  sysInfo.productType () ;
-    double m_windowsDesktopScale;
-    double m_androidScale;
-    double m_tempMacVersion;
+
 
     double m_169 =  qSqrt (pow((m_screen->physicalSize().width()), 2) +
                            qPow((m_screen->physicalSize().height()), 2)) * 0.039370;
@@ -267,7 +268,14 @@ void ProtoScreen::updateFormFactor(){
             // SOURCE:
             //            https://developer.android.com/guide/practices/screens_support.html
             //(low) 120dpi
-            if (m_screen->logicalDotsPerInch() >= 120
+
+            if(m_screen->logicalDotsPerInch () < 120)
+            {
+                m_androidDpi = "ldpi";
+                m_androidScale = 1.0;
+            }
+
+            else if (m_screen->logicalDotsPerInch() >= 120
                     && m_screen->logicalDotsPerInch() < 160)
             {
                 m_androidDpi = "ldpi";
@@ -317,7 +325,7 @@ void ProtoScreen::updateFormFactor(){
             return;
         }
 
-        qDebug() << "android" <<  m_androidScale << "  " << m_169;
+        qDebug() << "android  Scale " <<  m_androidScale << "  diag " << m_169;
         finalFormFactor ("android" , m_androidScale, m_169);
         //        delete m_screen;
         return;
