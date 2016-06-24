@@ -115,5 +115,9 @@ private:
     QMap<ProtoFont, double> m_fonts;
     double m_scaleSize;
     QString m_formFactor;
+    QString m_androidDpi;
+    double m_windowsDesktopScale;
+    double m_androidScale;
+    double m_tempMacVersion;
 };
 #endif // PROTOSCREEN_H

@@ -145,7 +145,9 @@ ApplicationWindow{
             title = sectionTitles[selectedTabIndex]
 
             var cp = sectionTitles[selectedTabIndex]
-            rootLoader.source = Qt.resolvedUrl(cp.replace(/\s/g, "") + ".qml" )
+            var theSource = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
+
+            rootLoader.source = theSource
         }
 
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
@@ -183,7 +185,8 @@ ApplicationWindow{
                                 }
                                 onClicked:{
                                     var theFile = modelData;
-                                    rootLoader.source = Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
+                                    var theSource = Qt.resolvedUrl("qrc:/"+ theFile.replace(/\s/g, "") + ".qml" )
+                                    rootLoader.source = theSource
 
                                     navDrawer.close()
                                     navDrawer.showing = false
@@ -197,8 +200,9 @@ ApplicationWindow{
                                     selected: modelData == root.currentPage
                                     onClicked: {
                                         var theFile = modelData;
-                                        Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
-                                        rootLoader.source = "qrc:/"+theFile + ".qml"
+                                        var theSource = Qt.resolvedUrl("qrc:/"+ theFile.replace(/\s/g, "") + ".qml" )
+                                        rootLoader.source = theSource
+
                                         navDrawer.close()
                                         navDrawer.showing = false
                                     }
@@ -209,7 +213,6 @@ ApplicationWindow{
                 }
             }
         }
-
 
 
         Loader {

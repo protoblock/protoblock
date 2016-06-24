@@ -29,7 +29,7 @@ ios{
 
 #}
 
-DEFINES += GOOGLE_NAMESPACE=google
+#DEFINES += GOOGLE_NAMESPACE=google
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Protoblock
 TARGET = ProRotoQml.Protoblock
