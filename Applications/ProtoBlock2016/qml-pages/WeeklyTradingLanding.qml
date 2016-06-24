@@ -79,23 +79,6 @@ Item {
         }
     }
 
-    QmlSqlQueryModel{
-        id: weekPlayersModel
-        connectionName: "protoblock"
-        queryString:{
-            "SELECT * FROM tfprod_fantasydata WHERE FantasyPosition=\'"
-                    + pPicker.currentText
-                    + "\' AND Team=\'"
-                    + teamPicker.currentText
-                    + "\' ORDER BY DepthOrder; "
-        }
-    }
-
-
-    QmlSqlQueryModel{
-        id: singleWeekPlayersModel
-        connectionName: "protoblock"
-    }
        Repeater {
         id:  tradingCard
         property bool shown: false

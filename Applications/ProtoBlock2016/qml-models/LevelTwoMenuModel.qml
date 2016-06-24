@@ -5,6 +5,10 @@ ListModel {
         icon: "qrc:/icons/newspaper.png"
     }
     ListElement{
+        text:"2015 Leaderboard"
+        icon: "qrc:/icons/newspaper.png"
+    }
+    ListElement{
         text:"Back"
         icon:"qrc:/icons/newspaper.png"
     }

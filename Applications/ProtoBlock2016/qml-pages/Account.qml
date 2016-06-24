@@ -4,6 +4,7 @@ import ProRotoQml.Protoblock 1.0
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
+
 import ProRotoQml.Theme 1.0
 
 Item {
@@ -12,17 +13,13 @@ Item {
         interactive: true
         width: parent.width
         height: parent.height
-        contentHeight: accountInfoTxt.height + (32* 3.2) +(namePicker.height + newNameCard.height)
+        contentHeight: accountInfoTxt.height + ( ProtoScreen.guToPx(4) * 3.2) +(namePicker.height + newNameCard.height)
         contentWidth: parent.width
         boundsBehavior:  Flickable.StopAtBounds
 
-
-
-
-
         Card {
             id: accountInfoTxt
-            height:welcomeTxt.paintedHeight + 20
+            height:welcomeTxt.paintedHeight + ProtoScreen.guToPx(3)
             width: parent.width / 1.07
             elevation: 0
             anchors.horizontalCenter: parent.horizontalCenter
@@ -34,7 +31,7 @@ Item {
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-//                color: "white"
+                color: "#c7c7c7"
                 text: "A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. " +
                       "Claim your name! Chose your Twitter handle or fantasy team name.";
                 wrapMode: Text.WordWrap
@@ -46,7 +43,7 @@ Item {
         Card{
             id: namePicker
             width: parent.width / 1.07
-            height: (72 * repeater.count) + (namePickerBannner.height + 10)
+            height: (ProtoScreen.guToPx(8) * repeater.count) + (namePickerBannner.height + 10)
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: accountInfoTxt.bottom
             anchors.topMargin: ProtoScreen.guToPx(4)
@@ -65,22 +62,25 @@ Item {
                 height: namePicker.height - ProtoScreen.guToPx(6)
                 clip: true
                 interactive: true
-                onCountChanged: count < 1 ? opacity = 0 : opacity = 1
+                onCountChanged: {
+                    console.log(count + " Of the names ")
+                    count < 1 ? opacity = 0 : opacity = 1
+                }
                 anchors.top: namePickerBannner.bottom
                 model: MiddleMan.goodList().length
                 delegate:
                     ListItems.Subtitled{
                     elevation: 2
                     width: parent.width
-                    height: ProtoScreen.guToPx(11)
+//                    height: ProtoScreen.guToPx(11)
                     text: "FantasyName: " +  MiddleMan.goodList()[index]
-                    action: RoundImage{
+                    action: Image{
                         height: parent.height
                         width : height
                         fillMode: Image.PreserveAspectFit
                         opacity: MiddleMan.goodList()[index] === uname ? 1 : 0
                         source:  "qrc:/icons/action_account_circle.png"
-//                        Behavior on opacity {NumberAnimation{duration: 80}}
+                        Behavior on opacity {NumberAnimation{duration: 80}}
                     }
                     valueText: "Balance : " + " 0"
                     onClicked: MiddleMan.useName(MiddleMan.goodList()[index])

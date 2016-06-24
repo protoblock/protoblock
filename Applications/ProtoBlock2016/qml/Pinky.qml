@@ -5,7 +5,9 @@ import QtQuick.Dialogs 1.2
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import ProRotoQml.Sql 1.0
+
 import Material 1.0 as Material
+
 Material.ApplicationWindow {
     id: root
     width: Screen.width
@@ -90,18 +92,6 @@ Material.ApplicationWindow {
     }
 
 
-
-    // Set up the default connections to the databases
-
-    QmlSqlDatabase{
-        id: mainTfProdDb
-        databaseName: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/database/tfprod.db"
-        databaseDriver: QmlSqlDatabase.SQLight
-        connectionName: "protoblock"
-        onConnectionOpened: console.log("database Open")
-        onError: console.log("DB Error:  " +  errorString)
-        Component.onCompleted: addDataBase()
-    }
 
     Dialog {
         id: usingNameDialog

@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
+import QtQuick.Window 2.0
 import QtMultimedia 5.5
 
 import ProRotoQml.Files 1.0
@@ -45,7 +46,7 @@ Item {
             break;
         case 4 :
             menu.model = null
-            menu.model = levelFive
+            menu.model = levelSix
             break;
         case 5 :
             menu.model = null
@@ -361,7 +362,7 @@ Item {
     QmlDir{
         id: backDir
         // FIX THIS PATH
-        dir: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/pinky/backgrounds"
+        dir: "/Users/satoshi/Desktop/fc/osx/ProRoto2016_NOSQL/assets/pinky/backgrounds"
         scanRecursively: true
         flags: QmlDir.Files
         iteratorFlag: QmlDir.Subdirectories
@@ -382,7 +383,7 @@ Item {
     QmlDir{
         id: portDir
         // FIX THIS PATH
-        dir: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/assets/pinky/player_port"
+        dir: "/Users/satoshi/Desktop/fc/osx/ProRoto2016_NOSQL/assets/pinky/player_port"
         scanRecursively: true
         flags: QmlDir.Files
         iteratorFlag: QmlDir.Subdirectories
@@ -433,7 +434,7 @@ Item {
     QmlDir{
         id: autoDir
         // FIX THIS PATH
-        dir: "/Users/satoshi/Desktop/fc/osx/ProRoto2016/pinky-Tunes"
+        dir: "/Users/satoshi/Desktop/fc/osx/ProRoto2016_NOSQL/pinky-Tunes"
         scanRecursively: true
         flags: QmlDir.Files
         iteratorFlag: QmlDir.Subdirectories

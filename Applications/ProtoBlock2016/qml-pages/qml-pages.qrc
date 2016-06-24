@@ -2,20 +2,13 @@
     <qresource prefix="/">
         <file>GetName.qml</file>
         <file>WeeklyTradingLanding.qml</file>
-        <file>MaterialComboBox.qml</file>
         <file>WeeklyLandingPage.qml</file>
         <file>SeasonLongLevelTwo.qml</file>
         <file>SeasonLongLandingPage.qml</file>
         <file>TradingLanding.qml</file>
-        <file>PageHelper.qml</file>
-        <file>Splash.qml</file>
-        <file>PlayersCard.qml</file>
-        <file>TradingCard.qml</file>
-        <file>RoundImage.qml</file>
         <file>Sc2016.qml</file>
         <file>Players.qml</file>
         <file>WelcomeBack.qml</file>
-        <file>LocalJsonCaller.qml</file>
         <file>PickUserName.qml</file>
         <file>News.qml</file>
         <file>Welcome.qml</file>
@@ -23,11 +16,8 @@
         <file>UpdateView.qml</file>
         <file>SportsRadarApiCaller.qml</file>
         <file>FantasyDataApiCaller.qml</file>
-        <file>BaserModel.qml</file>
         <file>About.qml</file>
-        <file>Themes/VersionOne.qml</file>
         <file>EncryptLogin.qml</file>
-        <file>BoxText.qml</file>
         <file>Home.qml</file>
         <file>ProtoblockNews.qml</file>
         <file>ContactUs.qml</file>
@@ -35,11 +25,8 @@
         <file>Account.qml</file>
         <file>Import-Export.qml</file>
         <file>Indicators.qml</file>
-        <file>LeftMenu.qml</file>
-        <file>Banner.qml</file>
         <file>ThemeButton.qml</file>
         <file>Trading.qml</file>
-        <file>CardWithBanner.qml</file>
         <file>2015Leaderboard.qml</file>
         <file>2015Trading.qml</file>
     </qresource>

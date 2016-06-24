@@ -19,10 +19,10 @@ Item {
         id: gstate
         width: parent.width / 1.07
         bannerText: "Season: 2016 Week: 0 "
-        text: "Game Status: Waiting 53 Man Roster \n2016 Projection Game To Begin on Sept 3"
+        text: "Game Status: Waiting 53 Man Roster \n2016 Projetion Game To Begin on Sept 3"
         anchors{
             top: parent.top
-            topMargin:ProtoScreen.guToPx(1)
+            topMargin:ProtoScreen.guToPx(.5)
             horizontalCenter: parent.horizontalCenter
         }
     }
@@ -54,7 +54,7 @@ Item {
             delegate:
                 ListItems.Subtitled{
                 elevation: 2
-                backgroundColor: realRoot.uname ===  modelData ? Colors.red : "white"
+                backgroundColor: realRoot.uname ===  modelData ? Colors.blue : "white"
                 width: parent.width
                 text: "FantasyName: " +  modelData
                 action: Image{

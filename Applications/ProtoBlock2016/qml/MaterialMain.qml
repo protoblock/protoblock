@@ -7,14 +7,15 @@ import ProRotoQml.Sql 1.0
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Theme 1.0
 
-
 import Material 1.0
 import Material.ListItems 1.0 as ListItem
+
+
 ApplicationWindow{
     id: root
     visible: true
-    width: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.width
-    height: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.height
+    width: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.width
+    height: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.height
 
     Component.onCompleted: {
         uname = MiddleMan.init()
@@ -72,12 +73,6 @@ ApplicationWindow{
         accentColor: Colors.amber
         tabHighlightColor: Colors.white
     }
-
-    //    "Welcome", "WelcomeBack", "About", "Chat", "GetName", "PickUserName",
-    //    "Players", , "UserSettings",
-    //    , "TradingLanding","PickUserName" , "WeeklyLandingPage" , "SeasonLongLandingPage"
-    //    ,"WeeklyTradingLanding","SeasonLongLevelTwo"
-
 
     // Level One
     property var levelOne: [ "Protoblock News" , "About" , "Contact Us" ]
@@ -290,7 +285,6 @@ ApplicationWindow{
     }
 
 
-
     /// DIALOGS
     Dialog {
         id: usingNameDialog
@@ -477,7 +471,7 @@ ApplicationWindow{
                 console.log("ERROR IN UPDATE MACHINE ")
                 break;
             case XmlListModel.Ready:
-                console.log( "HKDHFKJHEDFHKDJHFKHDHFJKD     " +updateMachine.get(0).version)
+//                console.log( "" + updateMachine.get(0).version)
                 compairVersions(updateMachine.get(0).version)
                 break;
             }

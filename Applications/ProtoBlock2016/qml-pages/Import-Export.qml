@@ -8,17 +8,14 @@ import QtQuick.Controls 1.4 as Controls
 
 Item{
     Card {
-        width: parent.width / 1.07
+        width: parent.width
         height: parent.height
         Component.onCompleted: {
             pageHelper.title = "Import-Export"
             secretTxt.text = ""
         }
-        elevation: 0
+        elevation: 5
         anchors.centerIn: parent
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: ProtoScreen.guToPx(4)
-        anchors.top: parent.top
 
         Column{
             width: parent.width
@@ -32,7 +29,7 @@ Item{
                 font.pixelSize: Qt.platform.os === "android" ? 32 : 22
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-                text: "Your Protoblock Name is your Identity and is managed by your device. There is no central server for login recovery. Instead, a 12 word secret phrase is used for back-up and recovery. See Export. "
+                text: "Your Protoblock Name is your Identity and is managed by your device. There is no central server, instead your device stores a secret 12 word phrase for back-up and recovery. "
 
                 wrapMode: Text.WordWrap
             }
@@ -55,7 +52,7 @@ Item{
             Card{
                 id: bcard
                 height: nameText.height + importButton.height + imBan.height + ProtoScreen.guToPx(3)
-                width: parent.width
+                width: parent.width / 1.07
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Column{
@@ -101,7 +98,7 @@ Item{
 
             Card{
                 height:bcard.height
-                width: parent.width
+                width: parent.width / 1.07
                 anchors.horizontalCenter: parent.horizontalCenter
                 Column{
                     width: parent.width
@@ -137,7 +134,6 @@ Item{
                         }
                     }
                 }
-
 
 
             }
@@ -193,7 +189,5 @@ Item{
                         MiddleMan.getSecret()
             }
         }
-
-
 
     }

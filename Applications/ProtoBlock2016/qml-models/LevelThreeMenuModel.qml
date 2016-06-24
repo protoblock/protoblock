@@ -5,12 +5,8 @@ ListModel {
         icon: "qrc:/icons/newspaper.png"
     }
     ListElement{
-        text: "SeasonLongLandingPage"
+        text: "2015 Trading"
         icon: "qrc:/icons/ic_poll.png"
-    }
-    ListElement{
-        text:"WeeklyLandingPage"
-        icon:"qrc:/icons/ic_help.png"
     }
     ListElement{
         text:"Back"
