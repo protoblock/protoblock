@@ -2,7 +2,7 @@
 ##  WINDOWS
 ##############
 
-DEFINES += PRODFOOTBALL
+#DEFINES += PRODFOOTBALL
 win32 {
     INCLUDEPATH +=   $$PWD/../3rdParty
     INCLUDEPATH += $$PWD/../3rdParty/secp256k1
@@ -98,26 +98,29 @@ message (IOS BUILD)
 
 
 android {
-    ##PATHS
-    INCLUDEPATH +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
-    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/include
+        message("deps !x86 build")
+    ​
+        DIRPREFIX = D:\work\prebuiltLibs
+        ##PATHS
+#        INCLUDEPATH += $$DIRPREFIX/android/extrenal-android-2.5.0/include
+        INCLUDEPATH += $$DIRPREFIX/android/extrenal-android/include
+        DEPENDPATH += $$DIRPREFIX/android/extrenal-android/include
 
-    ##OPENSSL
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.so
-#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
+        ##OPENSSL
+        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
+        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
+        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libssl.a
+        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libssl.a
 
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.so
-#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
+        ##  SECP251K1
+        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
+        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
 
-    ##  SECP251K1
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
+        # PROTOBUFF
+        LIBS += $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so
 
-    # PROTOBUFF
-      LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lprotobuf
-
-    ## BOTAN
-      LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lBotan
+        ## BOTAN
+#          LIBS += -$$DIRPREFIX/android/extrenal-android/lib -lBotan
 }
 
 #LATERFOOL

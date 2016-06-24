@@ -13,11 +13,16 @@ ios {
 }
 
 android{
+    message("genpro android !x86 build")
     DEFINES += GOOGLE_NAMESPACE=google
     GENERATEDDIR = $$PWD/../generated
-    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
-    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
+    DIRPREFIX = D:\work\prebuiltLibs
+#        DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
+
+    INCLUDEPATH += $$DIRPREFIX/android/extrenal-android/include
+    DEPENDPATH += $$DIRPREFIX/android/extrenal-android/include
 }
+
 
 win32:{
     GENERATEDDIR = $$PWD/../generated
