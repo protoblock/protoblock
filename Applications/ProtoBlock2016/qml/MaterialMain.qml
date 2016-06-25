@@ -211,7 +211,7 @@ ApplicationWindow{
             id: rootLoader
             // sidebar is ProtoScreen.guToPx(31.25)
             width: navDrawer.enabled === true ? (root.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
-            height: navDrawer.height
+            height: parent.height
             visible: status == Loader.Ready
             anchors.right: parent.right
         }
