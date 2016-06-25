@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Material 1.0
 
+import ProRotoQml.Theme 1.0
 Item {
     width: systemSettingsButton.width  * 2.2 + (name.paintedWidth + (mainROw.spacing *2 ))
     height: systemSettingsButton.height
@@ -23,6 +24,7 @@ Item {
             Label{
             id: name
             text: realRoot.uname
+//            text: ProtoScreen.formFactor !== "desktop" ? realRoot.uname : ""
 
             }
         IconButton {

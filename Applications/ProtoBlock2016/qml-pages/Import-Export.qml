@@ -14,14 +14,23 @@ Item{
             pageHelper.title = "Import-Export"
             secretTxt.text = ""
         }
-        elevation: 5
+        elevation: 0
         anchors.centerIn: parent
 
         Column{
-            width: parent.width
-            height: parent.height
-            anchors.fill: parent
+            width: parent.width / 1.07
+//            height: parent.height
+            anchors {
+                topMargin: ProtoScreen.guToPx(4)
+                bottom: parent.bottom
+//                right: parent.right
+//                left: parent.left
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+            }
+
             spacing: ProtoScreen.guToPx(1.25)
+
 
             Label {
                 id: welcomeTxt
@@ -35,7 +44,7 @@ Item{
 
             ListItems.Subtitled{
                 elevation: 1
-                width: parent.width / 1.07
+                width: parent.width
 //                anchors.horizontalCenter: parent.horizontalCenter
                 text: "FantasyName: " + realRoot.uname
                 action:Image{
@@ -51,7 +60,7 @@ Item{
             Card{
                 id: bcard
                 height: nameText.height + importButton.height + imBan.height + ProtoScreen.guToPx(3)
-                width: parent.width / 1.07
+                width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Column{
@@ -97,7 +106,7 @@ Item{
 
             Card{
                 height:bcard.height
-                width: parent.width / 1.07
+                width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 Column{
                     width: parent.width

@@ -13,7 +13,7 @@ Item {
         interactive: true
         width: parent.width
         height: parent.height
-        contentHeight: accountInfoTxt.height + ( ProtoScreen.guToPx(4) * 3.2) +(namePicker.height + newNameCard.height)
+        contentHeight: accountInfoTxt.height + ( ProtoScreen.guToPx(4) * 3.2) +(namePicker.height + newNameCard.height) + ProtoScreen.guToPx(4)
         contentWidth: parent.width
         boundsBehavior:  Flickable.StopAtBounds
 
@@ -31,7 +31,7 @@ Item {
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-                color: "#c7c7c7"
+//                color: "#c7c7c7"
                 text: "A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. " +
                       "Claim your name! Chose your Twitter handle or fantasy team name.";
                 wrapMode: Text.WordWrap
