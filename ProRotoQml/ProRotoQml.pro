@@ -17,6 +17,6 @@ SUBDIRS += \
 #        $$PWD/PeerTwoPeerChat \
 #        $$PWD/Backend
 #        $$PWD/Torrent/torrent.pro
-#       $$PWD/irc/libcommuni.pro
+#       $$PWD/libcommuni/libcommuni.pro
 
 #Backend.depends = jsonpb
