@@ -81,7 +81,7 @@ Item {
 
             TextEntry {
                 id: textEntry
-                width: page.width
+                width: parent.width
                 buffer: currentBuffer
                 enabled: currentBuffer
                 onMessageSent: currentBuffer.receiveMessage(message)
