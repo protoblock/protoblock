@@ -14,8 +14,8 @@ import Material.ListItems 1.0 as ListItem
 ApplicationWindow{
     id: root
     visible: true
-    width: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150) : Screen.width
-    height: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150) : Screen.height
+    width: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150) : realRoot.width
+    height: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150) : realRoot.height
 
     Component.onCompleted: {
         uname = MiddleMan.init()
@@ -211,7 +211,7 @@ ApplicationWindow{
             id: rootLoader
             // sidebar is ProtoScreen.guToPx(31.25)
             width: navDrawer.enabled === true ? (root.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
-            height:navDrawer.height
+            height: navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
         }
