@@ -3,6 +3,7 @@ import QtQuick.Controls 1.0
 import Communi 3.0
 
 Item {
+    anchors.centerIn: parent
     SystemPalette { id: palette }
     Irc { id: irc }
     IrcCommand { id: cmd }
@@ -48,6 +49,9 @@ Item {
         connection.open()
         pageHelper.title = "Protoblock Chat"
     }
-    Component.onCompleted:  init();
-    Component.onDestruction: bufferModel.quit()
+    Component.onCompleted:{
+        connection.active === false ? init(): console.log("no need to reconnect ?");
+
+    }
+//    Component.onDestruction: bufferModel.quit()
 }
