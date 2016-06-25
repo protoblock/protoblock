@@ -2,14 +2,15 @@ import QtQuick 2.0
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 
-import ProRotoQml.Torrent 1.0
+//import ProRotoQml.Torrent 1.0
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 Item {
     id: usersettingsCard
     Component.onCompleted:  pageHelper.title = "User Settings"
-    property var themes: ["Material","Pinky"]
+    property var themes: ["Material"]
+//    ,"Pinky"]
 
     Flickable{
         width: parent.width
@@ -107,7 +108,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 Repeater {
                     id: themeMenu
-                    model: ["Material", "Pinky"] //Classic
+                    model: ["Material" ] //, "Pinky"] //Classic
                     delegate:
                         ThemeButton{
                         width: parent.width / 3.2

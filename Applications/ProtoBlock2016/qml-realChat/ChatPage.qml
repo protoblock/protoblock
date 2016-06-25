@@ -6,6 +6,8 @@ import Communi 3.0
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItmes
+
+
 Item {
     id: page
     property IrcBuffer serverBuffer
@@ -71,7 +73,6 @@ Item {
 
                 UserListView {
                     width: page.width / 3
-                    height: page.height - textEntry.height
                     visible: currentChannel
                     channel: currentChannel
                     onQueried: currentBuffer = currentBuffer.model.add(user.name)

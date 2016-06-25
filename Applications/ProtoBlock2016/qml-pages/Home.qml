@@ -30,7 +30,7 @@ Item {
             font.family: "Roboto"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             horizontalAlignment: Text.AlignHCenter
-            text: "2016 Enrollment Open Now - tell your friends to claim their names"
+            text: "2016 Enrollment Open Now ! tell your friends to claim their names"
             wrapMode: Text.WordWrap
         }
         Column{
@@ -70,7 +70,6 @@ Please use integrated Chat tab to share feedback or questions."
                 bannerText: "PROTOBLOCK at FSTA"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "We are happy to announce the new Protoblock 2016 game and launch enrollment at the annual Fantasy Sports Trade Association n New York this June 13-14.   All new accounts during the FSTA 2016 Summer Conference are entered to win a 2016 main event entry. Choose from FFPC, FFWC or NFCC.
-
 Follow @protoblock for winner and general Protoblock news/info"
             }
 

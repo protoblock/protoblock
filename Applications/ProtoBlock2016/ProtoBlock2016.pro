@@ -16,8 +16,8 @@ qtHaveModule(webengine) {
 }
 
 TEMPLATE = app
-    QT += xmlpatterns xml qml quick core websockets network sql widgets
-#sql webchannel
+    QT += xmlpatterns xml qml quick core websockets network sql widgets qml-private quick-private
+# webchannel
 CONFIG += c++11 app_bundle
 #osx{
 #CONFIG+=app_bundle
@@ -46,13 +46,8 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
-                /Users/satoshi/Qt/5.6/android_armv7/lib/libprotobuf.so \
-                /Users/satoshi/Qt/5.6/android_armv7/lib/libcrypto.so \
-                /Users/satoshi/Qt/5.6/android_armv7/lib/libssl.so
-#                /Users/satoshi/Qt/5.6/android_armv7/lib/lib.so
-
-#       /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libprotobuf.so
-#       /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.so \
-#       /Users/satoshi/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.so
+               $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so \
+                $$DIRPREFIX/android/extrenal-android/lib/libcrypto.so \
+                $$DIRPREFIX/android/extrenal-android/lib/libssl.so
 }
 

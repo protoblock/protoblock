@@ -29,8 +29,7 @@ Item{
                 font.pixelSize: Qt.platform.os === "android" ? 32 : 22
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-                text: "Your Protoblock Name is your Identity and is managed by your device. There is no central server, instead your device stores a secret 12 word phrase for back-up and recovery. "
-
+                text: qsTr("Your Protoblock Name is your Identity and is managed by your device. There is no central server for login recovery. Instead, a 12 word secret phrase is used for back-up and recovery. See Export. ")
                 wrapMode: Text.WordWrap
             }
 

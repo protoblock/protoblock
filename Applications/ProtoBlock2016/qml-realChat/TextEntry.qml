@@ -1,6 +1,8 @@
 import QtQuick 2.4
+import QtQuick.Controls 1.4
 import Communi 3.1
-import Material 1.0
+// this looks real bad on android and should be tummy tucked
+import Material 1.0 as Material
 import ProRotoQml.Theme 1.0
 
 
