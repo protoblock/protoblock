@@ -63,7 +63,7 @@ bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
                 secret.clear_mnemonic_key();
 
             m_secrets.push_back(secret);
-            qDebug() << secret.fantasy_name().data() << " have key";
+//            qDebug() << secret.fantasy_name().data() << " have key";
             if ( AmFantasyAgent(secret.public_key())) {
                   auto pr = str2priv(secret.private_key());
                   m_oracle = pr;

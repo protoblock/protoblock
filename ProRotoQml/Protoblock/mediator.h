@@ -45,7 +45,19 @@ class Mediator : public QObject
     //    Q_PROPERTY(QQmlListProperty<QString> goodFnames READ goodFnames NOTIFY goodFnamesChanged)
 
 public:
+    /*!
+     * \brief webSocketErrorString
+     * For SOCKET errors only
+     */
     QString webSocketErrorString()const;
+
+    /*!
+     * \brief errorString
+     * Font NON-Socket releated errors
+     */
+    QString errorString()const;
+
+
 
     QStringList m_goodList;
     QStringList m_allNamesList;

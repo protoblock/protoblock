@@ -19,7 +19,7 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
     for ( auto &np : m_fantasy_agent.getMyNames()) {
         m_myPubkeyFname[np.second] = "";
-        qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
+//        qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
     }
 
 
@@ -92,7 +92,7 @@ void Mediator::doPk2fname(const std::string &pkstr) {
 }
 
 void Mediator::checkname(const QString &name) {
-    qDebug() << " in checkname " << name;
+//    qDebug() << " in checkname " << name;
     WsReq req;
     req.set_ctype(CHECKNAME);
     CheckNameReq cnr;
@@ -102,7 +102,7 @@ void Mediator::checkname(const QString &name) {
     QByteArray qb(txstr.data(),(size_t)txstr.size());
     m_webSocket.sendBinaryMessage(qb);
 
-    qDebug() << " sent in checkname " << name;
+//    qDebug() << " sent in checkname " << name;
 
 }
 
@@ -127,6 +127,11 @@ void Mediator::handleWebSocketError(const QString err)
 QString Mediator::webSocketErrorString() const
 {
     return m_webSocketErrorString;
+}
+
+QString Mediator::errorString() const
+{
+    return m_errorString;
 }
 
 
@@ -293,10 +298,10 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
     fantasybit::WSReply rep;
     rep.ParseFromString(message.toStdString());
 
-    if ( rep.ctype() != GETALLNAMES)
-    qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
-    else
-        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
+//    if ( rep.ctype() != GETALLNAMES)
+//        qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
+//    else
+//        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
 
     switch ( rep.ctype()) {
         case PK2FNAME:
@@ -306,7 +311,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             if ( name == "" ) {
                 if ( pk2.req().pk() == lastPk2name) {
                     error(QString("import failed. please input valid secret"));
-                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
+//                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
                     QString err = "import failed. no name for: ";
                     err.append(lastPk2name.data());
                     emit importSuccess(err,false);
@@ -332,14 +337,14 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 QString goodname = name.data();
 //                m_goodFnames.append(&goodname);
                 m_goodList.append(goodname);
-                qDebug() << " new good name! " << goodname;
+//                qDebug() << " new good name! " << goodname;
             }
                 //            nameStatusChanged( name.data() , "confirmed" );
 
             if ( !m_fantasy_agent.HaveClient() ||
                  lastPk2name == pk2.req().pk()) {
                 if ( !m_fantasy_agent.UseName(name) )
-                    qDebug() << "error using name " << name.data () ;
+//                    qDebug() << "error using name " << name.data () ;
 //                    error(QString("error using name").append(name.data()));
                 usingFantasyName(m_fantasy_agent.currentClient().data());
             }
@@ -353,7 +358,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         }
         case CHECKNAME: {
             const CheckNameRep &cn = rep.GetExtension(CheckNameRep::rep);
-            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
+//            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
             nameCheckGet(cn.req().fantasy_name().data(),cn.isavail().data());
 //            update_checkname(rep.data().data());
             break;
