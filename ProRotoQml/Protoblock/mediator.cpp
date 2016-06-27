@@ -38,6 +38,7 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
 //    init ();
     connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
+    connect (this,SIGNAL(socketError(QString)), this , SLOT ( handleWebSocketError(QString)) );
     connect(&m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
     connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
     connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
@@ -57,6 +58,7 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
 
     signPlayerStatus.setInterval(2000);
+
     connect(&signPlayerStatus, SIGNAL(timeout()),
             this, SLOT(getSignedPlayerStatus()));
 }
@@ -113,6 +115,27 @@ void Mediator::handleError(const QString err) {
     emit errorStringChanged();
 
 }
+
+void Mediator::handleWebSocketError(const QString err)
+{
+    if (m_webSocketErrorString == err)
+        return;
+    m_webSocketErrorString = err;
+    webSocketErrorStringChanged();
+}
+
+QString Mediator::webSocketErrorString() const
+{
+    return m_webSocketErrorString;
+}
+
+
+
+
+
+
+
+
 
 Mediator *Mediator::instance() {
     if (myInstance == NULL) {
@@ -485,6 +508,13 @@ QString Mediator::init() {
 //    return defaultName;
 }
 
+QString Mediator::getSecret() {
+    if ( !m_fantasy_agent.HaveClient() )
+        return "error- no name";
+    else
+        return m_fantasy_agent.getMnemonic(m_fantasy_agent.currentClient()).data();
+}
+
 //void Mediator::handdleUsingName(const QString &name)
 //{
 //#ifdef TRACE
@@ -501,9 +531,11 @@ QString Mediator::init() {
 
 
 // THIS SHOULD be a error signal that alerts others that something is going on.
-void Mediator::handleSocketError(QAbstractSocket::SocketError error)
+void Mediator::handleSocketError(QAbstractSocket::SocketError err)
 {
-    qDebug() << error;
+    qDebug()<< "Socket Error " << err << m_webSocket.errorString () ;
+    socketError ( m_webSocket.errorString () );
+
 }
 
 //#include <QStandardPaths>

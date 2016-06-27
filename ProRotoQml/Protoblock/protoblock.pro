@@ -6,30 +6,6 @@ ios{
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Protoblock
 }
 
-#android {
-#HEADERS += \
-#    $$GENERATEDDIR/ApiData.pb.h \
-#    $$GENERATEDDIR/ExData.pb.h \
-#    $$GENERATEDDIR/NameData.pb.h \
-#    $$GENERATEDDIR/ProtoData.pb.h \
-#    $$GENERATEDDIR/StateData.pb.h \
-#    $$GENERATEDDIR/StaticData.pb.h \
-#    $$GENERATEDDIR/StatusData.pb.h
-
-#SOURCES += \
-#    $$GENERATEDDIR/ApiData.pb.cc \
-#    $$GENERATEDDIR/ExData.pb.cc \
-#    $$GENERATEDDIR/NameData.pb.cc \
-#    $$GENERATEDDIR/ProtoData.pb.cc \
-#    $$GENERATEDDIR/StateData.pb.cc \
-#    $$GENERATEDDIR/StaticData.pb.cc \
-#    $$GENERATEDDIR/StatusData.pb.cc
-
-
-
-#}
-
-#DEFINES += GOOGLE_NAMESPACE=google
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Protoblock
 TARGET = ProRotoQml.Protoblock
@@ -63,7 +39,7 @@ SOURCES += \
     $$PWD/crc.cpp \
     $$PWD/plugin.cpp \
     $$PWD/socketclient.cpp \
-    mediator.cpp
+    $$PWD/mediator.cpp
 
 
 
@@ -89,7 +65,7 @@ HEADERS += \
     $$PWD/utility.hpp \
     $$PWD/plugin.h \
     $$PWD/socketclient.h \
-    mediator.h
+    $$PWD/mediator.h
 
 DISTFILES = qmldir
 
