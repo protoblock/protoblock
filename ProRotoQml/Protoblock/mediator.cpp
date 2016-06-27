@@ -5,7 +5,26 @@
 
 
 using namespace fantasybit;
-Mediator::Mediator(QObject *parent) : QObject(parent) {
+Mediator::Mediator(QObject *parent) :
+    QObject(parent),
+    m_socketState(Default),
+    m_internalSocketState(QAbstractSocket::ListeningState)
+{
+
+//    qDebug() << m_webSocket.state ();
+    connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
+    connect (this,SIGNAL(socketError(QString)), this , SLOT ( handleWebSocketError(QString)) );
+    connect(&m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
+    connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
+    connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
+
+    // socket error
+    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
+
+    // socket statte
+    connect (&m_webSocket, SIGNAL (stateChanged(QAbstractSocket::SocketState)),
+             this, SLOT(handleSocketState(QAbstractSocket::SocketState)));
+
 
     auto mynames = m_fantasy_agent.getMyNames();
 //    if ( mynames.size() == 0 ) {
@@ -22,9 +41,7 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 //        qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
     }
 
-
     QString wss("ws://%1:%2");
-
     m_chatServerAddr = wss.arg(PB_WS_CHAT.data()).arg(PB_WS_CHAT_PORT);
     QString lserver = wss.arg(PB_WS_LITE_AGENT.data()).arg(PB_WS_LITE_AGENT_PORT);
     QString txserver = wss.arg(PB_WS_TX.data()).arg(PB_WS_TX_PORT);
@@ -37,13 +54,18 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
     m_txsocket.open(QUrl(txserver));
 
 //    init ();
-    connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
-    connect (this,SIGNAL(socketError(QString)), this , SLOT ( handleWebSocketError(QString)) );
-    connect(&m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
-    connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
-    connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
+//    connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
+//    connect (this,SIGNAL(socketError(QString)), this , SLOT ( handleWebSocketError(QString)) );
+//    connect(&m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
+//    connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
+//    connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
 
-    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
+//    // socket error
+//    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
+
+//    // socket statte
+//    connect (&m_webSocket, SIGNAL (stateChanged(QAbstractSocket::SocketState)),
+//             this, SLOT(handleSocketState(QAbstractSocket::SocketState)));
 
 //    connect(this,SIGNAL (nameStatusChanged(QString,QString))
 //            ,this, SLOT (handdleNameStatus(QString,QString)));
@@ -540,8 +562,56 @@ void Mediator::handleSocketError(QAbstractSocket::SocketError err)
 {
     qDebug()<< "Socket Error " << err << m_webSocket.errorString () ;
     socketError ( m_webSocket.errorString () );
-
 }
+
+void Mediator::handleSocketState(QAbstractSocket::SocketState sta)
+{
+    if(m_internalSocketState == sta){
+        return;
+    }
+    else {
+        qDebug() << "Socket State Has Changed " << sta;
+        switch(sta){
+        case QAbstractSocket::UnconnectedState :
+            m_socketState = Unconnected;
+            m_internalSocketState = QAbstractSocket::UnconnectedState;
+            break;
+        case QAbstractSocket::HostLookupState :
+            m_socketState = Lookup;
+            m_internalSocketState = QAbstractSocket::HostLookupState;
+            break;
+        case QAbstractSocket::ConnectingState :
+            m_socketState = Connecting;
+            m_internalSocketState = QAbstractSocket::ConnectingState;
+            break;
+        case QAbstractSocket::ConnectedState :
+            m_socketState = Connected;
+            m_internalSocketState = QAbstractSocket::ConnectedState;
+            break;
+        case QAbstractSocket::BoundState :
+            m_socketState = Bound;
+            m_internalSocketState = QAbstractSocket::BoundState ;
+            break;
+        case QAbstractSocket::ClosingState :
+            m_socketState = Closing;
+            m_internalSocketState = QAbstractSocket::ClosingState;
+            break;
+        case QAbstractSocket::ListeningState :
+            m_socketState = Listening;
+            m_internalSocketState = QAbstractSocket::ListeningState;
+            break;
+        default :
+            m_socketState = Default;
+            break;
+        }
+        emit socketStateChanged ();
+    }
+}
+
+//void handleSocketState(QAbstractSocket::SocketState sta)
+//{
+
+//}
 
 //#include <QStandardPaths>
 //std::string Mediator::lastYearPath() {
@@ -580,3 +650,5 @@ void Mediator::allNamesGet() {
 
 
 Mediator *Mediator::myInstance;
+
+

@@ -449,7 +449,7 @@ ApplicationWindow{
 
 
         onWebSocketErrorStringChanged: {
-                console.log("ERROR IN SOCKET " +  webSocketErrorString)
+                console.log("ERROR IN SOCKET " +  MiddleMan.webSocketErrorString )
         }
 
     }

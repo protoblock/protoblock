@@ -30,6 +30,10 @@ class Mediator : public QObject
 
     Q_PROPERTY(QString errorString READ errorString NOTIFY errorStringChanged)
     Q_PROPERTY(QString webSocketErrorString  READ webSocketErrorString NOTIFY webSocketErrorStringChanged)
+
+    Q_PROPERTY(SocketState socketState READ socketState NOTIFY socketStateChanged)
+    Q_ENUMS (SocketState)
+
 //    Q_PROPERTY(QString playersName READ playersName  NOTIFY playersNameChanged)
 //    Q_PROPERTY(QString  playersStatus READ playersStatus  NOTIFY playersStatusChanged)
 
@@ -56,6 +60,26 @@ public:
      * Font NON-Socket releated errors
      */
     QString errorString()const;
+
+    /*!
+     * socket state used alot to check what is going on with the sockets from QML
+     */
+    enum SocketState{
+        Unconnected,
+        Lookup,
+        Connecting,
+        Connected,
+        Bound,
+        Closing,
+        Listening,
+        Default
+    };
+    SocketState socketState()const{
+        return m_socketState;
+    }
+
+
+
 
 
 
@@ -131,6 +155,7 @@ signals:
 
     void error(QString);
     void socketError(QString);
+    void socketStateChanged();
     void webSocketErrorStringChanged();
     void errorStringChanged();
 
@@ -146,7 +171,9 @@ protected slots:
 //    void handdleNameStatus(const QString &name,const QString &status );
 //    void handdleNameStatuses();
 
-    void handleSocketError(QAbstractSocket::SocketError err);
+
+
+
     void handleError(const QString err);
     void handleWebSocketError(const QString err);
 
@@ -160,6 +187,10 @@ protected slots:
     // slot to update QML ONLY propertys
     void handleEngineUpdate(const bool &sta);
 
+private slots:
+    void handleSocketError(QAbstractSocket::SocketError err);
+//    void handleSocketState(QAbstractSocket::SocketState sta);
+    void handleSocketState(QAbstractSocket::SocketState sta);
 
 private:
     QWebSocket m_webSocket, m_txsocket;
@@ -170,6 +201,8 @@ private:
     MyNameStatus m_myNameStatus;
     QString m_errorString;
     QString m_webSocketErrorString;
+    SocketState m_socketState;
+    QAbstractSocket::SocketState m_internalSocketState;
 
     QString m_playersName;
     QString m_playersStatus;

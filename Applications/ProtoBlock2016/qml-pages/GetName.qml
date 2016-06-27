@@ -76,7 +76,6 @@ Item {
                     id: clamNameButton
                     text: "Claim New Name"
                     width: parent.width / 1.07
-                    height: ProtoScreen.guToPx(8)
                     elevation: 5
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: {
