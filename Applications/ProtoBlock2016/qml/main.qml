@@ -15,8 +15,9 @@ Window {
     title: "Protoblock 2016 "
 //    width: Device.productType === "osx"||Device.productType === "windows" ? 1200  :  Screen.desktopAvailableWidthwidth
 //    height: Device.productType === "osx"||Device.productType === "windows" ? 1220  :  Screen.desktopAvailableHeight
-    width:  Screen.desktopAvailableWidth
-    height: Screen.desktopAvailableHeight
+    width:  Screen.width
+    height: Screen.height
+
     property string theme: "Material"
     property string  uname
     onUnameChanged: console.log("USING NEW UNAME " + uname)
