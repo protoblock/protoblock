@@ -69,13 +69,13 @@ Item {
                             onPressed: {
                                 switch(selection.selectedIndex) {
                                 case 0:
-                                    root.theme.primaryColor = parent.color
+                                    themeroot.theme.primaryColor = parent.color
                                     break;
                                 case 1:
-                                    root.theme.accentColor = parent.color
+                                    themeroot.theme.accentColor = parent.color
                                     break;
                                 case 2:
-                                    root.theme.backgroundColor = parent.color
+                                    themeroot.theme.backgroundColor = parent.color
                                     break;
                                 }
                             }
@@ -119,7 +119,7 @@ Item {
                             if(modelData !== realRoot.theme ){
                                 realRoot.theme =  modelData
                             }else {
-                                console.log( "Current Root Object is theme")
+                                console.log( "Current themeroot Object is theme")
                             }
                         }
                     }

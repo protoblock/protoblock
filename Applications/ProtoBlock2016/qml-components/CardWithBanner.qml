@@ -21,7 +21,7 @@ Card{
             id: cBan
             width: parent.width
             text: bannerText
-            backgroundColor:  root.theme.primaryColor
+            backgroundColor:  themeroot.theme.primaryColor
         }
         Label{
             id: cLab

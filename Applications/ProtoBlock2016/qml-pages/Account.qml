@@ -53,7 +53,7 @@ Item {
                 height: ProtoScreen.guToPx(6)
                 text: "Choose Name"
                 opacity: repeater.opacity
-                backgroundColor: root.theme.primaryColor
+                backgroundColor: themeroot.theme.primaryColor
             }
             ListView {
                 id: repeater
@@ -104,7 +104,7 @@ Item {
                     width: parent.width
                     height: ProtoScreen.guToPx(5)
                     text: "Claim New Name"
-                    backgroundColor: root.theme.primaryColor
+                    backgroundColor: themeroot.theme.primaryColor
 
                 }
 

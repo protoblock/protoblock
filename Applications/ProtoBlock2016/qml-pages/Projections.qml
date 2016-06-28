@@ -8,8 +8,8 @@ import ProRotoQml.Theme 1.0
 
 Item {
     Component.onCompleted: {
-         if ( !root.reloadleaders )
-              root.reloadleaders = true
+         if ( !themeroot.reloadleaders )
+              themeroot.reloadleaders = true
           else
               MiddleMan.allNamesGet()
     }
@@ -40,7 +40,7 @@ Item {
             id: ban
             text: "2016 Leaderboard"
             color: "white"
-            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
+            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : themeroot.theme.primaryColor
             width: parent.width
             height: ProtoScreen.guToPx(6)
         }

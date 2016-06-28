@@ -84,7 +84,7 @@ Item {
 ////            id: ban
 ////            text: "Trades "
 ////            color: "white"
-////            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
+////            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : themeroot.theme.primaryColor
 ////            width: parent.width
 //////            height: ProtoScreen.guToPx(6)
 ////        }

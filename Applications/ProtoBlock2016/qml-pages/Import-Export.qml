@@ -67,7 +67,7 @@ Item{
                     Banner{
                         id: imBan
                         text: "Import Protoblock Name To This Device."
-                        backgroundColor: root.theme.primaryColor
+                        backgroundColor: themeroot.theme.primaryColor
                     }
 
                     Controls.TextField {
@@ -83,7 +83,7 @@ Item{
                         text: "IMPORT"
                         width: parent.width / 1.07
                         elevation: 1
-//                        backgroundColor: root.theme.accentColor
+//                        backgroundColor: themeroot.theme.accentColor
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
                             var mypk = MiddleMan.importMnemonic(nameText.text)
@@ -111,7 +111,7 @@ Item{
                     spacing: 3
                     Banner{
                         text: "Backup / Export Secret"
-                        backgroundColor: root.theme.primaryColor
+                        backgroundColor: themeroot.theme.primaryColor
                     }
                     Label {
                         width: parent.width / 1.07
@@ -131,7 +131,7 @@ Item{
                         text: "EXPORT"
                         width: parent.width / 1.07
                         elevation: 1
-//                        backgroundColor: root.theme.accentColor
+//                        backgroundColor: themeroot.theme.accentColor
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
                             secretTxt.text = ""

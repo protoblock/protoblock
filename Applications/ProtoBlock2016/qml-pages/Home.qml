@@ -88,7 +88,7 @@ Follow @protoblock for winner and general Protoblock news/info"
             //        Banner{
             //                width: parent.width
             //                text: "PROTOBLOCK 2016"
-            //                backgroundColor:  root.theme.primaryColor
+            //                backgroundColor:  themeroot.theme.primaryColor
             //            }
             //            Label{
             //                width: parent.width / 1.07

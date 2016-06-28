@@ -41,7 +41,7 @@ import "ListItems" as ListItem
    \endqml
  */
 View {
-    id: root
+    id: rootsidebar
 
     backgroundColor: style === "default" ? "white" : "#333"
 
@@ -101,7 +101,7 @@ View {
             id: headerItem
 
             visible: text !== ""
-            backgroundColor: root.backgroundColor
+            backgroundColor: rootsidebar.backgroundColor
             elevation: flickable.atYBeginning ? 0 : 1
             fullWidth: true
             z: 2

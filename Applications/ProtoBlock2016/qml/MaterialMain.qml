@@ -9,17 +9,17 @@ import ProRotoQml.Theme 1.0
 
 import Material 1.0 as Material
 import Material.ListItems 1.0 as ListItem
-
+import Material.Extras 1.0
 
 Material.ApplicationWindow{
-    id: root
+    id: themeroot
     visible: true
     width:Device.productType === "windows" ? ProtoScreen.guToPx(150) : ProtoScreen.availableWidth
     height: Device.productType === "windows" ? ProtoScreen.guToPx(150) : ProtoScreen.availableHeight
 
     color: "transparent"
     Component.onCompleted: {
-        console.log(" rrrr " + root.active)
+        console.log(" rrrr " + themeroot.active)
         uname = MiddleMan.init()
         if ( uname  === "" ){
             loginDialog.toggle()
@@ -190,7 +190,7 @@ Material.ApplicationWindow{
                                 // TODO iocns
                                 delegate: ListItem.Standard {
                                     text: modelData
-                                    selected: modelData == root.currentPage
+                                    selected: modelData == themeroot.currentPage
                                     onClicked: {
                                         var theFile = modelData;
                                         var theSource = Qt.resolvedUrl("qrc:/" +theFile.replace(/\s/g, "") + ".qml" )
@@ -212,8 +212,8 @@ Material.ApplicationWindow{
         Loader {
             id: rootLoader
             // sidebar is ProtoScreen.guToPx(31.25)
-            width: navDrawer.enabled === true ? (root.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
-            height: navDrawer.enabled === true ? root.height : navDrawer.height
+            width: navDrawer.enabled === true ? (themeroot.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
+            height: navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
         }
@@ -229,6 +229,7 @@ Material.ApplicationWindow{
             delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
+
                 property string currentPage: modelData[0]
                 property var section: modelData
                 source: "qrc:/LeftMenu.qml"
@@ -262,29 +263,30 @@ Material.ApplicationWindow{
     // End OF GUI Easy Look up
     ///////////////////
     //    SIMPLE MODELS
-    ListModel{id: postionModel}
-    ListModel{
-        id: weekModel
-        Component.onCompleted: {
-            fillDefaultModels()
-        }
-    }
-    function fillDefaultModels(){
+//    ListModel{id: postionModel}
+//    ListModel{
+//        id: weekModel
+//        Component.onCompleted: {
+//            fillDefaultModels()
+//        }
+//    }
 
-        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
-        for (var i in positionArray){
-            postionModel.append({'text': positionArray[i] })
-        }
-        for (var ii = 0 ; ii < 17; ii++){
-            if(ii === 0 ){
-                weekModel.append({"text" : "all weeks"})
-            }
-            else
-            {
-                weekModel.append({"text" : ii.toString() })
-            }
-        }
-    }
+//    function fillDefaultModels(){
+
+//        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
+//        for (var i in positionArray){
+//            postionModel.append({'text': positionArray[i] })
+//        }
+//        for (var ii = 0 ; ii < 17; ii++){
+//            if(ii === 0 ){
+//                weekModel.append({"text" : "all weeks"})
+//            }
+//            else
+//            {
+//                weekModel.append({"text" : ii.toString() })
+//            }
+//        }
+//    }
 
 
     /// DIALOGS
@@ -304,12 +306,12 @@ Material.ApplicationWindow{
      Material.Dialog {
         id: loginDialog
         hasActions: false
-        width: root.width
-        height: root.height
+        width: themeroot.width
+        height: themeroot.height
         contentMargins: 0
         GetName{
-            width: root.width
-            height: root.height
+            width: themeroot.width
+            height: themeroot.height
         }
     }
 
@@ -354,7 +356,7 @@ Material.ApplicationWindow{
             width: parent.width
             height: parent.height
             wrapMode: Text.WordWrap
-            text:  root.errorString
+            text:  themeroot.errorString
             font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
         }
     }
@@ -409,7 +411,7 @@ Material.ApplicationWindow{
                 if ( loginDialog.visible )
                     loginDialog.close()
 
-                root.reloadleaders = false
+                themeroot.reloadleaders = false
                 rootLoader.source = "qrc:/Projections.qml"
                 pageHelper.selectedTabIndex = 1;
             }
