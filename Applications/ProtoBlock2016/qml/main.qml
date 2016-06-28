@@ -1,486 +1,115 @@
-import QtQuick 2.4
+import QtQuick 2.0
 import QtQuick.Window 2.0
-import QtQuick.XmlListModel 2.0
+import QtQuick.Dialogs 1.2
 
-import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Sql 1.0
 import ProRotoQml.Utils 1.0
+import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
+//import ProRotoQml.Torrent 1.0
+import Material 1.0 as Material
+//import Material.Componets 0.3
+//import Material.Dialog 0.1
+import Communi 3.0
+
+Window {
+    id: realRoot
+    title: "Protoblock 2016 "
+    width: Device.productType === "windows" ? 1200  :  ProtoScreen.availableWidth
+    height: Device.productType === "windows" ? 1220  : ProtoScreen.availableHeight
+    property string theme: "Material"
+    property string  uname
+    onUnameChanged: console.log("USING NEW UNAME " + uname)
+    property string  err
+    property string currentTeamInFocus
+    property string currentHomeTeam
+    property string currentAwayTeam
+    //    property string uname: "NULL"
+//    property variant leaders: ListModel{}
+    property string msgString
+
+    property string version: "0.1"
 
 
-import Material 1.0
-import Material.ListItems 1.0 as ListItem
-ApplicationWindow{
-    id: root
-    visible: true
-    width: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.width
-    height: Device.productType === "osx"||Device.productType === "win32" ? ProtoScreen.guToPx(150)  :  Screen.height
-
-    Component.onCompleted: {
-        uname = MiddleMan.init()
-        if ( uname  === "" ){
-            loginDialog.toggle()
-        }
+    // make this into c++
+    property var speed2Name: function( bytesPerSecond ){
+        if ( bytesPerSecond < 1000 )
+            return bytesPerSecond + " B";
+        if ( bytesPerSecond < 1024000 )
+            return Math.round( bytesPerSecond / 1024 * 100 ) / 100 + " Kb"
+        if ( bytesPerSecond < 1048576000 )
+            return Math.round( bytesPerSecond / 1048576 * 100 ) / 100 + " Mb"
         else
-            rootLoader.source = "qrc:/Home.qml";
+            return Math.round( bytesPerSecond / 1073741824 * 100 ) / 100 + " Gb"
     }
-
-    property string defaultname
-
-    property string  errorString
-    property bool  reloadleaders: false
-
-    // LOGIN STUFF
-    property string importExportStatus
-    property string secretTxt
-    property string statusTxt
-    //    property string mypk
-
-
-    // Pages
-    property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive, levelSix ]
-    property var sectionsIcons: [
-        levelOneIcons,
-        levelTwoIcons,
-        levelThreeIcons,
-        levelFourIcons,
-        levelFiveIcons,
-        levelSixIcons
-    ]
-    property var sectionTitles: [ "Home", "Projections", "Trading", "NFLNews", "ProtoChat", "Account" ]
-    property var sectionTitlesAlias: [ "Home", "Projections", "Trading","NFLNews", "ProtoChat","Account" ]
-    property var sectionTitlesIcons: [
-        "qrc:/logoOnly.png",
-        "qrc:/icons/ic_poll.png",
-        "qrc:/icons/ic_poll.png",
-        "qrc:/icons/newspaper.png",
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/action_account_circle.png"
-    ]
-
-
-    property int  currentTabInFocus: 0
-
-    property string pageSwitcher
-    property string currentPage: sections[0][0]
-    // we set this to 18 because there is no 18 so that it changes of the fly
-    property int loginCardScale: 1
-    property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
-
-    theme {
-        primaryColor: Colors.blue
-        accentColor: Colors.amber
-        tabHighlightColor: Colors.white
-    }
-
-    //    "Welcome", "WelcomeBack", "About", "Chat", "GetName", "PickUserName",
-    //    "Players", , "UserSettings",
-    //    , "TradingLanding","PickUserName" , "WeeklyLandingPage" , "SeasonLongLandingPage"
-    //    ,"WeeklyTradingLanding","SeasonLongLevelTwo"
-
-
-    // Level One
-    property var levelOne: [ "Protoblock News" , "About" , "Contact Us" ]
-    property var levelOneIcons: [
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_contact_mail.png" ,
-        "qrc:/icons/ic_help.png"
-    ]
-    // Level Two
-    property var levelTwo: [ "Projections" , "2015 Leaderboard" ]
-    property var levelTwoIcons: [
-        "qrc:/icons/newspaper.png"
-    ]
-    // Level Three News
-    property var levelThree: [ "Trading" , "2015 Trading" ]
-
-    //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
-
-
-    property var levelThreeIcons: [
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/ic_help.png",
-    ]
-    //Level four
-    property var  levelFour: [
-        "News", "Twitter" ,"CBS" , "ESPN", "NFL" ,"Roto World"
-    ]
-    property var levelFourIcons: [
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_contact_mail.png" ,
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_help.png"
-    ]
-
-    //Level Five
-    property var levelFive: [
-        "Proto Chat"
-    ]
-    property var levelFiveIcons: [
-        "qrc:/icons/newspaper.png" ,
-
-    ]
-
-    // Level Six
-    property var levelSix: [ "Account" , "Import-Export"  ]
-    property var levelSixIcons: [
-        "qrc:/icons/account_action_circle.png" ,
-        "qrc:/icons/ic_sync.png",
-        "qrc:/icons/ic_lightbulb.png"
-    ]
-    property string selectedComponent: sections[0][0]
-
-
-
-    initialPage: TabbedPage {
-        id: pageHelper
-        title: "ProtoBlock 2016"
-
-        onSelectedTabChanged: {
-            title = sectionTitles[selectedTabIndex]
-
-            var cp = sectionTitles[selectedTabIndex]
-            rootLoader.source = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
-        }
-
-        actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
-        backAction: navDrawer.action
-        NavigationDrawer {
-            id: navDrawer
-            enabled:{
-                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet"){
-                    true
-                }else if (pageHelper.width < ProtoScreen.guToPx(120)){
-                    true
-                }else{
-                    false
-                }
-            }
-            Flickable {
-                anchors.fill: parent
-                contentHeight: Math.max(content.implicitHeight, height)
-                Column {
-                    id: content
-                    anchors.fill: parent
-                    Repeater {
-                        model: sections
-                        delegate: Column {
-                            width: parent.width
-                            ListItem.Subtitled {
-                                id: tabMin
-                                backgroundColor: Colors.primaryColor
-                                text: sectionTitles[index]
-                                action: Image{
-                                    source: sectionTitlesIcons[index]
-                                    height: ProtoScreen.guToPx(4)
-                                    width:ProtoScreen.guToPx(4)
-                                    fillMode: Image.PreserveAspectFit
-                                }
-                                onClicked:{
-                                    var theFile = modelData;
-                                    var theSource = Qt.resolvedUrl("qrc:/"+ theFile.replace(/\s/g, "") + ".qml" )
-                                    rootLoader.source = theSource
-
-                                    navDrawer.close()
-                                    navDrawer.showing = false
-                                }
-                            }
-                            Repeater {
-                                model: modelData
-                                // TODO iocns
-                                delegate: ListItem.Standard {
-                                    text: modelData
-                                    selected: modelData == root.currentPage
-                                    onClicked: {
-                                        var theFile = modelData;
-                                        var theSource = Qt.resolvedUrl("qrc:/" +theFile.replace(/\s/g, "") + ".qml" )
-                                        rootLoader.source = theSource
-
-                                        navDrawer.close()
-                                        navDrawer.showing = false
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        Loader {
-            id: rootLoader
-            // sidebar is ProtoScreen.guToPx(31.25)
-            width: navDrawer.enabled === true ? (root.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
-            height:navDrawer.height
-            visible: status == Loader.Ready
-            anchors.right: parent.right
-        }
-
-        ProgressCircle {
-            id: actInd
-            anchors.centerIn: rootLoader
-            visible: rootLoader.status == Loader.Loading
-        }
-
-        Repeater {
-            model: !navDrawer.enabled ? sections : 0
-            delegate: Tab {
-                title: sectionTitles[index]
-                iconName: sectionTitlesIcons[index]
-                property string currentPage: modelData[0]
-                property var section: modelData
-                source: "qrc:/LeftMenu.qml"
-            }
-        }
-
-    }// END TABED PAGE
-
-    Indicators{
-        id: indicators
-        anchors{
-            top: parent.top
-            topMargin: ProtoScreen.guToPx(1.7)
-            right: parent.right
-            rightMargin: ProtoScreen.guToPx(2)
-        }
-    }
-
-    Label {
-        rotation: -45
-        text: MiddleMan.isTestNet() ? "Demo Not Live" : "Live"
-        color: "#40000000"
-        anchors.centerIn: parent
-        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
-        font.bold:  true
-        visible: MiddleMan.isTestNet()
-    }
-
-
-    /////////////
-    // End OF GUI Easy Look up
-    ///////////////////
-    //    SIMPLE MODELS
-    ListModel{id: postionModel}
-    ListModel{
-        id: weekModel
-        Component.onCompleted: {
-            fillDefaultModels()
-        }
-    }
-    function fillDefaultModels(){
-
-        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
-        for (var i in positionArray){
-            postionModel.append({'text': positionArray[i] })
-        }
-        for (var ii = 0 ; ii < 17; ii++){
-            if(ii === 0 ){
-                weekModel.append({"text" : "all weeks"})
-            }
-            else
-            {
-                weekModel.append({"text" : ii.toString() })
-            }
-        }
-    }
-
-
-
-    /// DIALOGS
-    Dialog {
-        id: usingNameDialog
-        title: "Protoblock Player Name"
-        Text{
-            width: parent.width
-            height: parent.height
-            wrapMode: Text.WordWrap
-            font.pixelSize:  ProtoScreen.font(ProtoScreen.LARGE)
-            text: msgString
-        }
-    }
-
-    //Login dialog (only when user does not have a secert3)
-    Dialog {
-        id: loginDialog
-        hasActions: false
-        width: root.width
-        height: root.height
-        contentMargins: 0
-        GetName{
-            width: root.width
-            height: root.height
-        }
-    }
-
-    Dialog {
-        id: accountErrorDialog
-        title: "Unavailable"
-        positiveButtonText: "Back"
-        negativeButtonText:  loginDialog.visible ?  "" : "Import"
-        onRejected: {
-            if (loginDialog.visible === false){
-                rootLoader.source = "qrc:/Import-Export.qml"
-            }
-        }
-        Column{
-            spacing: ProtoScreen.guToPx(2)
-            width: parent.width
-            height: parent.height
-            Text{
-                width: parent.width
-                height: ProtoScreen.guToPx(20)
-                wrapMode: Text.WordWrap
-                text:  errorString
-                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
-            }
-            //            Button{
-            //                text: "Email protoblock staff"
-            //                elevation: loginDialog.visible === true ?5 : 0
-            //                width: loginDialog.visible === true ? parent.width: 0
-            //                onClicked: Qt.openUrlExternally("mailto:contact@protoblock.comexample.com=Login%20support")
-            //            }
-        }
-
-
-
-    }
-
-
-    Dialog{
-        id: loginErrorDialog
-        title: "Error in Signup"
-        Label{
-            width: parent.width
-            height: parent.height
-            wrapMode: Text.WordWrap
-            text:  root.errorString
-            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
-        }
-    }
-
-
-    Dialog {
-        id: myImportDialog
-        title: "Import status"
-        positiveButtonText: "Back"
-        Column{
-            anchors.fill: parent
-            Text{
-                width: parent.width
-                wrapMode: Text.WordWrap
-                text:  importExportStatus
-                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
-            }
-        }
-    }
-
-
-    Dialog {
-        id: updateDialog
-        title: "Update Available"
-        positiveButtonText: "Back"
-        Column{
-            anchors.fill: parent
-            spacing: 3
-            Text{
-                width: parent.width
-                wrapMode: Text.WordWrap
-                text: "There is a update available for Protoblock."
-                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
-            }
-            Button{
-                width: parent.width / 1.07
-                text: "Download Now"
-                elevation: 1
-                onClicked: Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
-            }
-        }
-    }
-
-
-
-    Connections {
-        target: MiddleMan
-
-        onNameCheckGet: {
-            if(status === "true" ) {
-                MiddleMan.signPlayer(name)
-                if ( loginDialog.visible )
-                    loginDialog.close()
-
-                root.reloadleaders = false
-                rootLoader.source = "qrc:/Projections.qml"
-                pageHelper.selectedTabIndex = 1;
-            }
-            else {
-                errorString = name + " is already claimed. Please try with a different name. If this is your name from last year or another device, "
-                if (loginDialog.visible){
-                    errorString = errorString + "please find the import/export features within the Account tab."
-                }else if (!loginDialog.visible){
-                    errorString = errorString + " Please click Import below."
-                }
-                errorString = errorString + "\n\nFor more assistance please contact the protoblock staff at <contact@protoblock.com>"
-                accountErrorDialog.open()
-            }
-        }
-
-        onUsingFantasyName: {
-            if ( uname !== name) {
-                uname = name
-                msgString = "Congraulation You are now playing as: " + name
-                if( pageHelper.selectedTabIndex === 5 || loginDialog.visible === true){
-                    usingNameDialog.toggle()
-                }
-            }
-        }
-
-        onImportSuccess: {
-            console.log(passfail + "onImportSucess " + name )
-            if ( passfail ) {
-                msgString = name + " - Imported!"
-                usingNameDialog.open()
-            }
-            else {
-                errorString = name
-                loginErrorDialog.open()
-            }
-            console.log(passfail + "onImportSucess " + name )
-        }
-    }
-
-
-    function compairVersions(d){
-        if (realRoot.version !== d){
-            console.log("there is a update")
-            updateDialog.toggle()
+    onThemeChanged:
+        if(theme === "Material") {
+            newLoader.source = "qrc:/MaterialMain.qml"
         }else{
-            console.log("There is NO UPDARTES ")
+            newLoader.source = "qrc:/"+theme+".qml"
         }
-    }
-
-    // check for updates
-    XmlListModel {
-        id: updateMachine
-        source:"http://protoblock.com/version.xml"
-        query: "/updatemachine"
-        XmlRole{name: "version";query: "version/string()"}
-        XmlRole{name: "libs";query: "libs/string()"}
-        XmlRole{name: "changelog";query: "changelog/string()"}
-        onStatusChanged: {
-            switch(status){
-            case XmlListModel.Error :
-                console.log("ERROR IN UPDATE MACHINE ")
-                break;
-            case XmlListModel.Ready:
-                console.log( "HKDHFKJHEDFHKDJHFKHDHFJKD     " +updateMachine.get(0).version)
-                compairVersions(updateMachine.get(0).version)
-                break;
+    visible: false
+    Loader{
+        id: newLoader
+        width: realRoot.width
+        height: realRoot.height
+        anchors.fill: parent
+        Component.onCompleted: {
+            if(theme === "Material") {
+                source = "qrc:/MaterialMain.qml"
+            }else{
+                source = "qrc:/"+theme+".qml"
             }
         }
     }
+
+//    function getNames(){
+//        var nL = MiddleMan.allNamesList()
+//        for (var i = 0 ; i < nL.length ;i++ )
+//        {
+//            realRoot.leaders.append({"fName":nL[i], "balance": 0})
+//        }
+//    }
+
+
+//    Button {
+//        iconName: "av/play_arrow"
+//        name: "Play"
+//        onTriggered: {
+//            for ( var i = 0; i < torrentModel.count; ++i ){
+//                var res = torrentModel.data( i, TorrentModel.TorState );
+//                if ( res == TorrentModel.Paused )
+//                    torrentModel.setPause( i, false )
+//            }
+//        }
+//    },
+
+//    Button {
+//        iconName: "av/pause"
+//        name: "Pause"
+//        onTriggered: {
+//            for ( var i = 0; i < torrentModel.count; ++i ){
+//                var res = torrentModel.data( i, TorrentModel.TorState );
+//                if ( res == TorrentModel.Downloading || res == TorrentModel.Seeding )
+//                    torrentModel.setPause( i, true )
+//            }
+//        }
+//    }
+//    Button{
+//        id : addTorrentAction
+//        name: "New Torrent"
+//        iconName: "action/note_add"
+//        onTriggered: addTorrentDialog.open()
+//    }
+
+
+//    AddTorrentDialog{
+//        id : addTorrentDialog
+//        onAccepted: torModel.addTorrent( torrentFileUrl, destinationFolder )
+//    }
+
+//    TorrentModel{
+//        id: torModel
+//        onCountChanged: console.log(count)
+//    }
+
 }

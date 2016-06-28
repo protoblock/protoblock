@@ -31,7 +31,6 @@ Item {
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-                color: "#c7c7c7"
                 text: "A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. " +
                       "Claim your name! Chose your Twitter handle or fantasy team name.";
                 wrapMode: Text.WordWrap

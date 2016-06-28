@@ -3,12 +3,11 @@ import QtQuick.Controls 1.0
 import Communi 3.0
 
 Item {
-    SystemPalette { id: palette }
-    Irc { id: irc }
-    IrcCommand { id: cmd }
+
     ChatPage {
         id: chatPage
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
         visible:true
         bufferModel: IrcBufferModel {
             id: bufferModel
@@ -41,7 +40,6 @@ Item {
     }
 
 
-
     function init(){
         chatPage.currentBuffer = serverBuffer
         connection.sendCommand(cmd.createJoin("#protoblock"))
@@ -50,4 +48,8 @@ Item {
     }
     Component.onCompleted:  init();
     Component.onDestruction: bufferModel.quit()
+
+    SystemPalette { id: palette }
+    Irc { id: irc }
+    IrcCommand { id: cmd }
 }

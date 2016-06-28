@@ -6,7 +6,6 @@
         <file>MaterialAnimation.qml</file>
         <file>Object.qml</file>
         <file>Palette.qml</file>
-        <file>PlatformExtensions.qml</file>
         <file>Theme.qml</file>
         <file>ThemePalette.qml</file>
         <file>UnitsHelper.qml</file>

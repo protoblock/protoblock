@@ -14,8 +14,8 @@ import Material.ListItems 1.0 as ListItem
 ApplicationWindow{
     id: root
     visible: true
-    width: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.width
-    height: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.height
+    width:Device.productType === "windows" ? ProtoScreen.guToPx(150) : ProtoScreen.availableWidth
+    height: Device.productType === "windows" ? ProtoScreen.guToPx(150) : ProtoScreen.availableHeight
 
     Component.onCompleted: {
         uname = MiddleMan.init()
@@ -146,18 +146,17 @@ ApplicationWindow{
         NavigationDrawer {
             id: navDrawer
             enabled:{
-                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" || ProtoScreen.formFactor === "phablet" ){
+                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet"){
                     true
-                }
-                else if (pageHelper.width < ProtoScreen.guToPx(120)){
-                    true
-                }else{
+//                }else if (pageHelper.width < ProtoScreen.guToPx(120)){
+//                    true
+                }else  {
                     false
                 }
             }
             Flickable {
                 anchors.fill: parent
-                contentHeight: Math.max(content.implicitHeight, height)
+                contentHeight: Math.max( (content.implicitHeight + ProtoScreen.guToPx(1)), height)
                 Column {
                     id: content
                     anchors.fill: parent
@@ -248,7 +247,7 @@ ApplicationWindow{
 
     Label {
         rotation: -45
-        text: MiddleMan.isTestNet() ? "Demo Not Live" : "Live"
+        text: MiddleMan.isTestNet() ? qsTr("Demo Testing") : qsTr("Live")
         color: "#40000000"
         anchors.centerIn: parent
         font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
@@ -446,12 +445,6 @@ ApplicationWindow{
             }
             console.log(passfail + "onImportSucess " + name )
         }
-
-
-        onWebSocketErrorStringChanged: {
-                console.log("ERROR IN SOCKET " +  MiddleMan.webSocketErrorString )
-        }
-
     }
 
 
@@ -460,7 +453,7 @@ ApplicationWindow{
             console.log("there is a update")
             updateDialog.toggle()
         }else{
-            console.log("There is NO UPDARTES ")
+            console.log("There are NO UPDATES ")
         }
     }
 
@@ -475,10 +468,9 @@ ApplicationWindow{
         onStatusChanged: {
             switch(status){
             case XmlListModel.Error :
-                console.log("ERROR IN UPDATE MACHINE ")
+//                console.log("ERROR IN UPDATE MACHINE ")
                 break;
             case XmlListModel.Ready:
-//                console.log( "" + updateMachine.get(0).version)
                 compairVersions(updateMachine.get(0).version)
                 break;
             }

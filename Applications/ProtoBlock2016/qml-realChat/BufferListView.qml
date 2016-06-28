@@ -7,10 +7,12 @@ import Material.ListItems 1.0 as ListItems
 
 Card {
     id: background
-    elevation: 1
+    elevation: 6
     property alias bufferModel: listView.model
     property IrcBuffer currentBuffer
     signal closed(IrcBuffer buffer)
+    height: parent.height
+    width: parent.width
     Menu {
         id: menu
         MenuItem {
@@ -34,6 +36,7 @@ Card {
                 elevation: 1
                 backgroundColor:  first ? "#ddd" : current ? "#b5d5ff" : "transparent"
                 text: model.title
+                visible: model.title === "162.254.24.67" ? false : true
                 onClicked: {
                     currentBuffer = model.buffer
                 }

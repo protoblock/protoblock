@@ -56,7 +56,7 @@ Item {
                 elevation: 2
                 backgroundColor: realRoot.uname ===  modelData ? Colors.blue : "white"
                 width: parent.width
-                text: "FantasyName: " +  modelData
+                text: /*"FantasyName: " +*/  modelData
                 action: Image{
                     height: parent.height
                     width : height

@@ -13,9 +13,9 @@ import Communi 3.0
 Window {
     id: realRoot
     title: "Protoblock 2016 "
-    width: Device.productType === "osx"||Device.productType === "win32" ? 1200  :  Screen.width
-    height: Device.productType === "osx"||Device.productType === "win32" ? 1220  :  Screen.height
-    property string theme: "MaterialMain"
+    width: Device.productType === "osx"||Device.productType === "windows" ? 1200  :  Screen.width
+    height: Device.productType === "osx"||Device.productType === "windows" ? 1220  :  Screen.height
+    property string theme: "Material"
     property string  uname
     onUnameChanged: console.log("USING NEW UNAME " + uname)
     property string  err

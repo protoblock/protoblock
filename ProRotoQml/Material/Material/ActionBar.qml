@@ -119,7 +119,7 @@ Item {
      *
      * \since 0.3
      */
-    property int iconSize: Unit.gridUnit == 48 * Units.dp ? ProtoScreen.guToPx(2.5) : ProtoScreen.guToPx(3)
+    property int iconSize: Unit.gridUnit == 48 * 8 ? ProtoScreen.guToPx(2.5) : ProtoScreen.guToPx(3)
 
     /*!
      * Set to true to integrate the tab bar into a single row with the actions.
@@ -248,9 +248,12 @@ Item {
 
     Label {
         id: label
+
         anchors {
-            verticalCenter: actionsRow.verticalCenter
+            top:  parent.top //actionsRow.verticalCenter
+            topMargin: ProtoScreen.guToPx(.5)
             left: parent.left
+            bottom: parent.bottom
             right: actionsRow.left
             leftMargin:ProtoScreen.guToPx(2) + (leftItem.show ? 1 * Device.gridUnit * Units.dp : 0)
             rightMargin: ProtoScreen.guToPx(2)
@@ -277,12 +280,13 @@ Item {
         id: actionsRow
 
         anchors {
+            top:parent.top
+            bottom: parent.bottom
             right: parent.right
             rightMargin: ProtoScreen.guToPx(2)
         }
 
         height: parent.implicitHeight
-
         spacing: ProtoScreen.guToPx(3)
 
         Repeater {
@@ -307,7 +311,6 @@ Item {
 
         IconButton {
             id: overflowButton
-
             iconName: "qrc:/icons/navigation_more_vert.png"
             objectName: "action/overflow"
             size: ProtoScreen.guToPx(3.375)
@@ -322,9 +325,7 @@ Item {
 
     Item {
         id: customContentView
-
         height: parent.height
-
         anchors {
             left: label.left
             right: label.right
@@ -351,8 +352,8 @@ Item {
         height: integratedTabBar ? parent.implicitHeight : implicitHeight
 
         anchors {
-            top: integratedTabBar ? undefined : extendedContentView.bottom
-            bottom: integratedTabBar ? actionsRow.bottom : undefined
+//            top: integratedTabBar ? undefined : extendedContentView.bottom
+            bottom: integratedTabBar ? actionsRow.bottom : parent.bottom
             left: parent.left
             right: integratedTabBar ? actionsRow.left : parent.right
         }
