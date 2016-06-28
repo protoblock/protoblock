@@ -17,19 +17,19 @@ Item {
             source: "qrc:/logoFinal.png"
             fillMode: Image.PreserveAspectFit
             width: parent.width / 1.07
-            height: parent.height / 6
+            height: parent.height / ProtoScreen.guToPx(1.25)
             anchors.horizontalCenter: parent.horizontalCenterx
         }
         Label {
             id: welcomeTxt
             anchors.top: logo.bottom
-            anchors.topMargin:  paintedHeight
+             anchors.topMargin:  paintedHeight / 2
             width: parent.width / 1.07
-            font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
+            font.pixelSize: ProtoScreen.font( ProtoScreen.MEDIUM )
             font.family: "Roboto"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             horizontalAlignment: Text.AlignHCenter
-            text: "2016 Enrollment Open Now - tell your friends to claim their names"
+            text: "2016 Enrollment Open Now ! tell your friends to claim their names"
             wrapMode: Text.WordWrap
         }
         Column{

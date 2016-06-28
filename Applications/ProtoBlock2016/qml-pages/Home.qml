@@ -1,11 +1,10 @@
 import QtQuick 2.4
 
-import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Theme 1.0
-
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
+import ProRotoQml.Protoblock 1.0
+import ProRotoQml.Theme 1.0
 Item {
     Flickable{
         height: parent.height
@@ -18,19 +17,19 @@ Item {
             source: "qrc:/logoFinal.png"
             fillMode: Image.PreserveAspectFit
             width: parent.width / 1.07
-            height: parent.height / 6
+            height: parent.height / ProtoScreen.guToPx(1.25)
             anchors.horizontalCenter: parent.horizontalCenterx
         }
         Label {
             id: welcomeTxt
             anchors.top: logo.bottom
-            anchors.topMargin:  paintedHeight
+             anchors.topMargin:  paintedHeight / 2
             width: parent.width / 1.07
-            font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
+            font.pixelSize: ProtoScreen.font( ProtoScreen.MEDIUM )
             font.family: "Roboto"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             horizontalAlignment: Text.AlignHCenter
-            text: "2016 Enrollment Open Now - tell your friends to claim their names"
+            text: "2016 Enrollment Open Now ! tell your friends to claim their names"
             wrapMode: Text.WordWrap
         }
         Column{
@@ -49,6 +48,8 @@ Item {
                 text: "With a user account you’re ready for the rollout/updates. We want your early feedback to help make the game interface the best it can be in time for the 53-man roster cuts and Week 1.
 Please use integrated Chat tab to share feedback or questions."
             }
+
+
 
             CardWithBanner{
                 width: parent.width / 1.07
