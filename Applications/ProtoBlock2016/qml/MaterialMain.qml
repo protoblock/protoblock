@@ -7,17 +7,19 @@ import ProRotoQml.Sql 1.0
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Theme 1.0
 
-import Material 1.0
+import Material 1.0 as Material
 import Material.ListItems 1.0 as ListItem
 
 
-ApplicationWindow{
+Material.ApplicationWindow{
     id: root
     visible: true
     width:Device.productType === "windows" ? ProtoScreen.guToPx(150) : ProtoScreen.availableWidth
     height: Device.productType === "windows" ? ProtoScreen.guToPx(150) : ProtoScreen.availableHeight
 
+    color: "transparent"
     Component.onCompleted: {
+        console.log(" rrrr " + root.active)
         uname = MiddleMan.init()
         if ( uname  === "" ){
             loginDialog.toggle()
@@ -130,7 +132,7 @@ ApplicationWindow{
 
 
 
-    initialPage: TabbedPage {
+    initialPage:  Material.TabbedPage {
         id: pageHelper
         title: "ProtoBlock 2016"
 
@@ -143,13 +145,13 @@ ApplicationWindow{
 
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
         backAction: navDrawer.action
-        NavigationDrawer {
+        Material.NavigationDrawer {
             id: navDrawer
             enabled:{
-                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" ProtoScreen.formFactor === "phablet" ){
+                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" || ProtoScreen.formFactor === "phablet" ){
                     true
-//                }else if (pageHelper.width < ProtoScreen.guToPx(120)){
-//                    true
+                }else if (pageHelper.width < ProtoScreen.guToPx(120)){
+                    true
                 }else  {
                     false
                 }
@@ -211,12 +213,12 @@ ApplicationWindow{
             id: rootLoader
             // sidebar is ProtoScreen.guToPx(31.25)
             width: navDrawer.enabled === true ? (root.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
-            height:navDrawer.height
+            height: navDrawer.enabled === true ? root.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
         }
 
-        ProgressCircle {
+         Material.ProgressCircle {
             id: actInd
             anchors.centerIn: rootLoader
             visible: rootLoader.status == Loader.Loading
@@ -224,7 +226,7 @@ ApplicationWindow{
 
         Repeater {
             model: !navDrawer.enabled ? sections : 0
-            delegate: Tab {
+            delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
                 property string currentPage: modelData[0]
@@ -245,7 +247,7 @@ ApplicationWindow{
         }
     }
 
-    Label {
+     Material.Label {
         rotation: -45
         text: MiddleMan.isTestNet() ? qsTr("Demo Testing") : qsTr("Live")
         color: "#40000000"
@@ -286,7 +288,7 @@ ApplicationWindow{
 
 
     /// DIALOGS
-    Dialog {
+     Material.Dialog {
         id: usingNameDialog
         title: "Protoblock Player Name"
         Text{
@@ -299,7 +301,7 @@ ApplicationWindow{
     }
 
     //Login dialog (only when user does not have a secert3)
-    Dialog {
+     Material.Dialog {
         id: loginDialog
         hasActions: false
         width: root.width
@@ -311,7 +313,7 @@ ApplicationWindow{
         }
     }
 
-    Dialog {
+     Material.Dialog {
         id: accountErrorDialog
         title: "Unavailable"
         positiveButtonText: "Back"
@@ -345,10 +347,10 @@ ApplicationWindow{
     }
 
 
-    Dialog{
+     Material.Dialog{
         id: loginErrorDialog
         title: "Error in Signup"
-        Label{
+         Material.Label{
             width: parent.width
             height: parent.height
             wrapMode: Text.WordWrap
@@ -358,7 +360,7 @@ ApplicationWindow{
     }
 
 
-    Dialog {
+     Material.Dialog {
         id: myImportDialog
         title: "Import status"
         positiveButtonText: "Back"
@@ -374,7 +376,7 @@ ApplicationWindow{
     }
 
 
-    Dialog {
+     Material.Dialog {
         id: updateDialog
         title: "Update Available"
         positiveButtonText: "Back"
@@ -387,10 +389,10 @@ ApplicationWindow{
                 text: "There is a update available for Protoblock."
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
-            Button{
+             Material.Button{
                 width: parent.width / 1.07
                 text: "Download Now"
-                elevation: 1
+                elevation: 0
                 onClicked: Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
             }
         }

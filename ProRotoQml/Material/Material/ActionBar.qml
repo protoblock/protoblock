@@ -250,17 +250,17 @@ Item {
         id: label
 
         anchors {
-            top:  parent.top //actionsRow.verticalCenter
+            top:  parent.top
             topMargin: ProtoScreen.guToPx(.5)
             left: parent.left
             bottom: parent.bottom
             right: actionsRow.left
-            leftMargin:ProtoScreen.guToPx(2) + (leftItem.show ? 1 * Device.gridUnit * Units.dp : 0)
+            leftMargin: leftItem.width * 1.07
             rightMargin: ProtoScreen.guToPx(2)
 
-            Behavior on leftMargin {
-                NumberAnimation { duration: 200 }
-            }
+//            Behavior on leftMargin {
+//                NumberAnimation { duration: 200 }
+//            }
         }
 
         visible: customContentView.children.length === 0 &&

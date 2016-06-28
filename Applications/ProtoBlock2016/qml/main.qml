@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import QtQuick.Window 2.0
+import QtQuick.Window 2.0 as Quick
 import QtQuick.Dialogs 1.2
 
 import ProRotoQml.Utils 1.0
@@ -11,7 +11,7 @@ import Material 1.0 as Material
 //import Material.Dialog 0.1
 import Communi 3.0
 
-Window {
+Quick.Window {
     id: realRoot
     title: "Protoblock 2016 "
     width: Device.productType === "windows" ? 1200  :  ProtoScreen.availableWidth

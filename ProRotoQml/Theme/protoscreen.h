@@ -29,7 +29,7 @@ class ProtoScreen : public QObject
 
     QML_READONLY_CSTREF_PROPERTY ( int, availableHeight)
     QML_READONLY_CSTREF_PROPERTY ( int, availableWidth)
-    QML_READONLY_CSTREF_PROPERTY ( qreal, pixelRatio );
+    QML_READONLY_CSTREF_PROPERTY ( qreal, pixelRatio )
 
 
 public:
@@ -118,8 +118,8 @@ private:
     double m_gridUnit;
     double m_defaultGrid;
     double m_devicePixelRatio;
-    double m_dpiX;
-    double m_dpiY;
+//    double m_dpiX;
+//    double m_dpiY;
     double m_displayDiagonalSize;
     QRect m_desktopGeometry;
     QRect m_designResolution;

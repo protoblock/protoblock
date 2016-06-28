@@ -4,7 +4,6 @@
         <file>phone-main.qml</file>
         <file>FirstApp.qml</file>
         <file>Pinky.qml</file>
-        <file>NewMain.qml</file>
         <file>MaterialMain.qml</file>
     </qresource>
 </RCC>

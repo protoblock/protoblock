@@ -9,6 +9,7 @@
 #include <qqml.h>
 #include <QObject>
 #include <QDebug>
+#include <QtGlobal>
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
 //        qApp->setFont (mFont);
 //        engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 //    }
-//    else if (sInfo == "ios" )
+//    else if (sInfo == "ios" )`
 //    {
 //        QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 //        QFont mFont;
@@ -62,6 +63,7 @@ int main(int argc, char *argv[])
 //    }
 
 
+//    qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
 
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

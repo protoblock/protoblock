@@ -34,20 +34,27 @@ void ProtoScreen::initialize() {
     // maybe this should be 72
     //    m_defaultGrid = 6;
 
-#if !defined(Q_OS_IOS) && !defined(Q_OS_ANDROID)
-    m_devicePixelRatio = ( (double)m_desktopGeometry.width() ) / ((double)m_designResolution.width());
-#else
+//#if !defined(Q_OS_IOS) && !defined(Q_OS_ANDROID)
+//    m_devicePixelRatio = ( (double)m_desktopGeometry.width() ) / ((double)m_designResolution.width());
+//#else
+//    m_devicePixelRatio = desktop->devicePixelRatio();
+
+//#endif
+
     m_devicePixelRatio = desktop->devicePixelRatio();
 
-#endif
-
-    qreal m_dpi = desktop->logicalDotsPerInch() * desktop->devicePixelRatio();
+//    qreal m_dpi = desktop->logicalDotsPerInch() * desktop->devicePixelRatio();
 
 
     //set all the qscreen stuff
     setavailableHeight (desktop->availableGeometry ().height ());
     setavailableWidth (desktop->availableGeometry ().width ());
     setpixelRatio (desktop->devicePixelRatio ());
+
+    qDebug() << " desktop->availableGeometry ().height () " << desktop->availableGeometry ().height ();
+    qDebug() << " desktop->availableGeometry ().width () " << desktop->availableGeometry ().width ();
+
+    qDebug() << " desktop->devicePixelRatio () " << desktop->devicePixelRatio ();
 
     updateFormFactor ();
     m_bInitialized = true;
@@ -276,51 +283,48 @@ void ProtoScreen::updateFormFactor(){
             //            https://developer.android.com/guide/practices/screens_support.html
             //(low) 120dpi
 
-            if(m_screen->logicalDotsPerInch () < 120)
+            if(m_screen->logicalDotsPerInch () <= 120)
             {
                 m_androidDpi = "ldpi";
-                m_androidScale = 1.0;
+                m_androidScale = .75;
             }
 
-            else if (m_screen->logicalDotsPerInch() >= 120
-                    && m_screen->logicalDotsPerInch() < 160)
-            {
-                m_androidDpi = "ldpi";
-                m_androidScale = 0.75;
-            }
-            //(high) ~240dpi
-            else if (m_screen->logicalDotsPerInch() >= 160
-                     && m_screen->logicalDotsPerInch() < 240)
+            else if (m_screen->logicalDotsPerInch() <= 160)
             {
                 m_androidDpi = "mdpi";
+                m_androidScale = 1.0;
+            }
+            //(high) ~240dpi
+            else if (m_screen->logicalDotsPerInch() <= 240)
+            {
+                m_androidDpi = "hdpi";
                 m_androidScale = 1.5;
             }
             //(high) ~240dpi
-            else if (m_screen->logicalDotsPerInch() >= 240
-                     && m_screen->logicalDotsPerInch()  < 319)
-            {
-                m_androidDpi = "hdpi" ;
-                m_androidScale = 1.5;
-            }
-            // (extra-high) ~320dpi
-            else if (m_screen->logicalDotsPerInch() >= 320
-                     && m_screen->logicalDotsPerInch() < 479)
+            else if (m_screen->logicalDotsPerInch()  <= 320)
             {
                 m_androidDpi = "xhdpi" ;
-                m_androidScale  = 2.0;
+                m_androidScale = 2.0;
+            }
+            // (extra-high) ~320dpi
+            else if (m_screen->logicalDotsPerInch() <= 480)
+            {
+                m_androidDpi = "xxhdpi" ;
+                m_androidScale  = 3.0;
             }
 
             // (extra-extra-high) ~480dpi
-            else if (m_screen->logicalDotsPerInch() >= 480
-                     && m_screen->logicalDotsPerInch() < 639 )
+            else if (m_screen->logicalDotsPerInch() <= 640 )
             {
-                m_androidDpi = "xxhdpi";
-                m_androidScale = 3.0;
+                m_androidDpi = "xxxhdpi";
+                m_androidScale = 4.0;
             }
 
             //(extra-extra-extra-high) ~640dpi
-            else if (m_screen->logicalDotsPerInch() >= 640)
+            else //if (m_screen->logicalDotsPerInch() >= 640)
             {
+                qDebug() << "m_screen->logicalDotsPerInch() > 640";
+
                 m_androidDpi = "xxxhdpi";
                 m_androidScale = 4.0;
             }
@@ -332,7 +336,7 @@ void ProtoScreen::updateFormFactor(){
             return;
         }
 
-//        qDebug() << "android  Scale " <<  m_androidScale << "  diag " << m_169;
+        qDebug() << "android  Scale " <<  m_androidScale << "  diag " << m_169 << "m_screen->logicalDotsPerInch()" << m_screen->logicalDotsPerInch();
         finalFormFactor ("android" , m_androidScale, m_169);
         //        delete m_screen;
         return;

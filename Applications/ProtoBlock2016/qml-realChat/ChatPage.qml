@@ -1,7 +1,7 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.0
-import QtQuick.Controls.Styles 1.0
+import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 import Communi 3.0
 
 import Material 1.0
