@@ -155,6 +155,7 @@ Material.ApplicationWindow{
                 }else  {
                     false
                 }
+
             }
             Flickable {
                 anchors.fill: parent
@@ -177,8 +178,8 @@ Material.ApplicationWindow{
                                     fillMode: Image.PreserveAspectFit
                                 }
                                 onClicked:{
-                                    var theFile = modelData;
-                                    var theSource = Qt.resolvedUrl("qrc:/"+ theFile.replace(/\s/g, "") + ".qml" )
+                                    var theFile = sectionTitles[index];
+                                    var theSource = Qt.resolvedUrl("qrc:/" +  theFile.replace(/\s/g, "")  + ".qml" )
                                     rootLoader.source = theSource
 
                                     navDrawer.close()
@@ -240,6 +241,7 @@ Material.ApplicationWindow{
 
     Indicators{
         id: indicators
+        visible: loginDialog.visible ? false : true
         anchors{
             top: parent.top
             topMargin: ProtoScreen.guToPx(1.7)
@@ -262,31 +264,34 @@ Material.ApplicationWindow{
     /////////////
     // End OF GUI Easy Look up
     ///////////////////
+
+//     WHY !!!!!!!!!!!!!!!!!!!
+
     //    SIMPLE MODELS
-//    ListModel{id: postionModel}
-//    ListModel{
-//        id: weekModel
-//        Component.onCompleted: {
-//            fillDefaultModels()
-//        }
-//    }
+    ListModel{id: postionModel}
+    ListModel{
+        id: weekModel
+        Component.onCompleted: {
+            fillDefaultModels()
+        }
+    }
 
-//    function fillDefaultModels(){
+    function fillDefaultModels(){
 
-//        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
-//        for (var i in positionArray){
-//            postionModel.append({'text': positionArray[i] })
-//        }
-//        for (var ii = 0 ; ii < 17; ii++){
-//            if(ii === 0 ){
-//                weekModel.append({"text" : "all weeks"})
-//            }
-//            else
-//            {
-//                weekModel.append({"text" : ii.toString() })
-//            }
-//        }
-//    }
+        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
+        for (var i in positionArray){
+            postionModel.append({'text': positionArray[i] })
+        }
+        for (var ii = 0 ; ii < 17; ii++){
+            if(ii === 0 ){
+                weekModel.append({"text" : "all weeks"})
+            }
+            else
+            {
+                weekModel.append({"text" : ii.toString() })
+            }
+        }
+    }
 
 
     /// DIALOGS
@@ -306,12 +311,13 @@ Material.ApplicationWindow{
      Material.Dialog {
         id: loginDialog
         hasActions: false
-        width: themeroot.width
-        height: themeroot.height
+        width: themeroot.width / 1.07
+        anchors.centerIn: parent
+        height: themeroot.height / 1.07
         contentMargins: 0
         GetName{
-            width: themeroot.width
-            height: themeroot.height
+            width: loginDialog.width
+            height: loginDialog.height
         }
     }
 

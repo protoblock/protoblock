@@ -11,7 +11,7 @@ Item {
     Card {
         width: parent.width
         height: parent.height
-        elevation: 5
+        elevation: 0
         anchors.centerIn: parent
 
         Column{

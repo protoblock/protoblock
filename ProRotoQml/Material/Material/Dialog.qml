@@ -73,7 +73,7 @@ PopupBase {
     View {
         id: dialogContainer
         anchors.fill: parent
-        elevation: 5
+        elevation:   5
         radius: ProtoScreen.guToPx(.5)
         backgroundColor: "white"
         MouseArea {
@@ -204,7 +204,8 @@ PopupBase {
                 left: parent.left
             }
 
-            height: hasActions ? ProtoScreen.guToPx(6.5) : ProtoScreen.guToPx(2)
+            //  well then that was stupid
+            height: hasActions ? ProtoScreen.guToPx(6.5) :  0
 
             View {
                 id: buttonView

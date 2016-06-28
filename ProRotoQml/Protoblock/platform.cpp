@@ -149,7 +149,7 @@ std::string Platform::getRootDir() {
        createIosDir (pRet);
        pRet.append ("/");
        QDir::setCurrent(pRet);
-//       qDebug() << "savePath " << pRet;
+       qDebug() << "savePath " << pRet;
        return  pRet.toStdString ();
     }else{
         QString qstrPath = AppSettings::instance()->

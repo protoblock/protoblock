@@ -25,9 +25,10 @@ import QtGraphicalEffects 1.0
 */
 Item {
     id: icon
-
+    property bool hasColor: true
     property color color: Theme.light.iconColor
     property real size:  ProtoScreen.guToPx(3)
+
 
     /*!
        The name of the icon to display.
@@ -88,10 +89,10 @@ Item {
 
         anchors.fill: parent
         source: image
-        color: Theme.alpha(icon.color, 1)
+        color: hasColor  ?  Theme.alpha(icon.color, 1) : "transparent"
         cached: true
         visible: image.source != "" && colorize
-        opacity: icon.color.a
+        opacity: hasColor ? icon.color.a : 1
     }
 
     AwesomeIcon {

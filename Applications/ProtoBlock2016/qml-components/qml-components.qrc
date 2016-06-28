@@ -14,5 +14,6 @@
         <file>Splash.qml</file>
         <file>TradingCard.qml</file>
         <file>MaterialTopBar.qml</file>
+        <file>LoginBox.qml</file>
     </qresource>
 </RCC>

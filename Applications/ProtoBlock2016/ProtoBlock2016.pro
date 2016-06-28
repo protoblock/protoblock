@@ -47,6 +47,8 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat
+
+
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
