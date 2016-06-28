@@ -286,38 +286,38 @@ void ProtoScreen::updateFormFactor(){
             if(m_screen->logicalDotsPerInch () <= 120)
             {
                 m_androidDpi = "ldpi";
-                m_androidScale = .75;
+                m_androidScale = 1.0;
             }
 
             else if (m_screen->logicalDotsPerInch() <= 160)
             {
                 m_androidDpi = "mdpi";
-                m_androidScale = 1.0;
+                m_androidScale = 1.5;
             }
             //(high) ~240dpi
             else if (m_screen->logicalDotsPerInch() <= 240)
             {
                 m_androidDpi = "hdpi";
-                m_androidScale = 1.5;
+                m_androidScale = 2.0;
             }
             //(high) ~240dpi
             else if (m_screen->logicalDotsPerInch()  <= 320)
             {
                 m_androidDpi = "xhdpi" ;
-                m_androidScale = 2.0;
+                m_androidScale = 3.0;
             }
             // (extra-high) ~320dpi
             else if (m_screen->logicalDotsPerInch() <= 480)
             {
                 m_androidDpi = "xxhdpi" ;
-                m_androidScale  = 3.0;
+                m_androidScale  = 4.0;
             }
 
             // (extra-extra-high) ~480dpi
             else if (m_screen->logicalDotsPerInch() <= 640 )
             {
                 m_androidDpi = "xxxhdpi";
-                m_androidScale = 4.0;
+                m_androidScale = 5.0;
             }
 
             //(extra-extra-extra-high) ~640dpi
@@ -326,7 +326,7 @@ void ProtoScreen::updateFormFactor(){
                 qDebug() << "m_screen->logicalDotsPerInch() > 640";
 
                 m_androidDpi = "xxxhdpi";
-                m_androidScale = 4.0;
+                m_androidScale = 5.0;
             }
         }
         else
@@ -336,6 +336,7 @@ void ProtoScreen::updateFormFactor(){
             return;
         }
 
+//        m_androidScale *= 1.10;
         qDebug() << "android  Scale " <<  m_androidScale << "  diag " << m_169 << "m_screen->logicalDotsPerInch()" << m_screen->logicalDotsPerInch();
         finalFormFactor ("android" , m_androidScale, m_169);
         //        delete m_screen;

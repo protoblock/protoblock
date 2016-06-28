@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 //    }
 
 
-//    qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
+    qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
 
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
