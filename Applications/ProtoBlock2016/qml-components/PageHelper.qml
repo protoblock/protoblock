@@ -84,7 +84,7 @@ Item {
                 height: pageHelper.object.height / 8
                 elevation: 5
                 opacity: settingsMenu.opacity
-                text: name === "Home" ? root.uname : name
+                text: name === "Home" ? newRoot.uname : name
                 // FIXME set this as a platform.os android
                 itemLabel.font.pixelSize: 48
                 action: Image {
