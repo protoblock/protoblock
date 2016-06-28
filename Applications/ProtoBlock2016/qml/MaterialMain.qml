@@ -426,7 +426,7 @@ ApplicationWindow{
         onUsingFantasyName: {
             if ( uname !== name) {
                 uname = name
-                msgString = "Congraulation You are now playing as: " + name
+                msgString = "You are now playing as: " + name
                 if( pageHelper.selectedTabIndex === 5 || loginDialog.visible === true){
                     usingNameDialog.toggle()
                 }
