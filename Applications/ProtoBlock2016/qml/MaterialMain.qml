@@ -146,7 +146,7 @@ ApplicationWindow{
         NavigationDrawer {
             id: navDrawer
             enabled:{
-                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet"){
+                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" ProtoScreen.formFactor === "phablet" ){
                     true
 //                }else if (pageHelper.width < ProtoScreen.guToPx(120)){
 //                    true
