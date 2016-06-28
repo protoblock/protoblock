@@ -51,7 +51,7 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
-#             $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so \
+             $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so \
              $$DIRPREFIX/android/extrenal-android/lib/libcrypto.so \
              $$DIRPREFIX/android/extrenal-android/lib//libssl.so
 }

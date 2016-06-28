@@ -2,8 +2,8 @@
 ## Globals
 ##############
 #DEFINES += PRODFOOTBALL
-DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
-#        DIRPREFIX = D:\work\prebuiltLibs
+#DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
+        DIRPREFIX = D:\work\prebuiltLibs
 
 
 ##############
@@ -110,7 +110,7 @@ message (IOS BUILD)
 android {
         message(Android Build)
     ​
-#        DIRPREFIX = D:\work\prebuiltLibs
+        DIRPREFIX = D:\work\prebuiltLibs
 #        DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
 
         ##PATHS

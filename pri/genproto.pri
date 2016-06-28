@@ -16,8 +16,8 @@ ios{
 android{
     DEFINES += GOOGLE_NAMESPACE=google
     GENERATEDDIR = $$PWD/../generated
-    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
-    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
+#    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
+#    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
 }
 
 win32{
