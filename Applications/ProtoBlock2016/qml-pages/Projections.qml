@@ -29,7 +29,7 @@ Item {
 
     Card{
         width: parent.width / 1.07
-        height: parent.height / 1.07 - (gstate.height* 2)
+        height: rootLoader.height / 1.07 - (gstate.height + ban.height)
         elevation: 1
         anchors{
             topMargin: ProtoScreen.guToPx(1)
@@ -48,7 +48,7 @@ Item {
             id: leaderboard
             width: parent.width - 5
             anchors.top: ban.bottom
-            height: parent.height - ban.height
+            height: rootLoader.height - (ban.height + gstate.height)
             clip: true
             model:   MiddleMan.allNamesList()
             delegate:

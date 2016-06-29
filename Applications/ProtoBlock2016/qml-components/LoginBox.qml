@@ -2,12 +2,15 @@ import QtQuick 2.0
 import Material 1.0
 import ProRotoQml.Theme 1.0
 Item {
+    width: parent.width
+    height: parent.height
     Card{
         id: signInCard
         width: parent.width
         height: parent.height
         anchors.horizontalCenter: parent.horizontalCenter
-        elevation: 1
+        elevation: 8
+        Component.onCompleted: console.log(" CHECK THIS HEIGHT " + height)
         Column{
             width: parent.width
             height: parent.height /2
@@ -16,8 +19,9 @@ Item {
             TextField{
                 id: nameText
                 width: parent.width / 1.07
+                height: ProtoScreen.guToPx(6)
                 font.pixelSize:ProtoScreen.font(ProtoScreen.NORMAL)
-                placeholderText: qsTr("Please enter in a name")
+                helperText: qsTr("Please enter in a name")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onAccepted: clamNameButton.clicked();
             }
@@ -26,6 +30,7 @@ Item {
                 text: qsTr("Claim New Name")
                 width: parent.width / 1.07
                 elevation: 1
+                height: ProtoScreen.guToPx(4)
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
                     if (text === "Claim New Name" ){
@@ -49,6 +54,7 @@ Item {
             Button{
                 text: qsTr("Skip")
                 width: parent.width / 1.07
+                height: ProtoScreen.guToPx(4)
                 elevation: 1
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {

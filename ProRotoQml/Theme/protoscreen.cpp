@@ -47,8 +47,8 @@ void ProtoScreen::initialize() {
 
 
     //set all the qscreen stuff
-    setavailableHeight (desktop->availableGeometry ().height ());
-    setavailableWidth (desktop->availableGeometry ().width ());
+    setavailableHeight(desktop->availableGeometry().height() );
+    setavailableWidth(desktop->availableGeometry().width() );
     setpixelRatio (desktop->devicePixelRatio ());
 
     qDebug() << " desktop->availableGeometry ().height () " << desktop->availableGeometry ().height ();

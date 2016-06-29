@@ -9,7 +9,7 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls.Styles 1.3
+import QtQuick.Controls.Styles 1.2
 import Material 1.0
 
 

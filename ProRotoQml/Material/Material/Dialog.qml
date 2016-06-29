@@ -11,15 +11,21 @@ PopupBase {
     overlayColor: Qt.rgba(0, 0, 0, 0.3)
     opacity: showing ? 1 : 0
     visible: opacity > 0
-    width: ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" || ProtoScreen.formFactor === "phablet" ?
-               ProtoScreen.availableWidth / 1.07
-             :
-               parent.width / 1.8
-    height: ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet"|| ProtoScreen.formFactor === "phablet"?
-                ProtoScreen.availbleHeight / 1.2
-              :
-               parent.height / 1.5
-
+    width:{
+        if (ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" || ProtoScreen.formFactor === "phablet" ) {
+            Screen.width / 1.07
+        }else{
+            parent.width / 1.8
+        }
+    }
+    height:{
+        if (ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet"|| ProtoScreen.formFactor === "phablet"){
+            Screen.height / 1.2
+        }else{
+            parent.height / 1.5
+        }
+    }
+    Component.onCompleted: console.log("HERE IS THE AVAIL HEIGHT " + ProtoScreen.availableHeight )
     property int contentMargins: ProtoScreen.guToPx(3)
     property int minimumWidth: ProtoScreen.guToPx(37.5)
     property int minimumHeight: ProtoScreen.guToPx(37.5)
