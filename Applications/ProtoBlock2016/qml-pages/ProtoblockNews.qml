@@ -9,7 +9,7 @@ Item {
     Flickable{
         height: parent.height
         width: parent.width
-        contentHeight: parent.height * 2
+        contentHeight: parent.height * 4
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
         Image {

@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Material 1.0
 import ProRotoQml.Theme 1.0
+import ProRotoQml.Utils 1.0
 Item {
     width: parent.width
     height: parent.height
@@ -22,40 +23,45 @@ Item {
                 height: ProtoScreen.guToPx(6)
                 font.pixelSize:ProtoScreen.font(ProtoScreen.NORMAL)
                 helperText: qsTr("Please enter in a name")
+                placeholderText: "Please enter in a name";
                 anchors.horizontalCenter: parent.horizontalCenter
                 onAccepted: clamNameButton.clicked();
+                inputMethodHints: Qt.ImhNoPredictiveText;
             }
             Button{
                 id: clamNameButton
                 text: qsTr("Claim New Name")
                 width: parent.width / 1.07
-                elevation: 1
+                elevation: 5
+                backgroundColor: Colors.blue
                 height: ProtoScreen.guToPx(4)
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
-                    if (text === "Claim New Name" ){
+//                    if (text === "Claim New Name" ){
                         // this is to SIGNUP
                         nameCheckBlank(nameText.text)
-                    }else{
-                        // THIS IS TO USE LAST YEARS PASS   WORD
-                        var mypk = MiddleMan.importMnemonic(nameText.text)
-                        if ( mypk === "" ){
-                            importExportStatus = qsTr("Error: Import failed. Please try again")
-                            myImportDialog.toggle()
-                        }else{
-                            importExportStatus = "Trying to import with key: " + mypk
-                            nameText.text = ""
-                            statusTxt.text = importExportStatus;
-                            secretTxt.text = ""
-                        }
-                    }
+//                    }else{
+//                        // THIS IS TO USE LAST YEARS PASS   WORD
+//                        var mypk = MiddleMan.importMnemonic(nameText.text)
+//                        if ( mypk === "" ){
+//                            importExportStatus = qsTr("Error: Import failed. Please try again")
+//                            myImportDialog.toggle()
+//                        }else{
+//                            importExportStatus = "Trying to import with key: " + mypk
+//                            nameText.text = ""
+//                            statusTxt.text = importExportStatus;
+//                            secretTxt.text = ""
+//                        }
+//                    }
                 }
             }
             Button{
                 text: qsTr("Skip")
+                backgroundColor: Colors.blue
+
                 width: parent.width / 1.07
                 height: ProtoScreen.guToPx(4)
-                elevation: 1
+                elevation: 5
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
                     loginDialog.close();

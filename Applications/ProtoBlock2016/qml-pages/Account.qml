@@ -13,7 +13,7 @@ Item {
         interactive: true
         width: parent.width
         height: parent.height
-        contentHeight: accountInfoTxt.height + ( ProtoScreen.guToPx(4) * 3.2) +(namePicker.height + newNameCard.height)
+        contentHeight: accountInfoTxt.height + ( ProtoScreen.guToPx(4) * 3.2) +(namePicker.height + newNameCard.height) * (repeater.count <= 1 ? 2 : repeater.count )
         contentWidth: parent.width
         boundsBehavior:  Flickable.StopAtBounds
 
@@ -113,9 +113,10 @@ Item {
                     width: parent.width / 1.07
                     font.pixelSize: ProtoScreen.font(ProtoScreen.MEDIUM)
                     font.family: "Default"
-                    placeholderText: "please enter in a new fantasy name"
+                    helperText: "please enter in a new fantasy name"
                     anchors.horizontalCenter: parent.horizontalCenter
                     onAccepted: nameCheckBlank(nameText.text)
+                    inputMethodHints: Qt.ImhNoPredictiveText;
                 }
                 Button{
                     id: clamNameButton
@@ -124,6 +125,8 @@ Item {
                     elevation: 2
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: nameCheckBlank(nameText.text)
+                    backgroundColor: Colors.blue
+
                 }
             }
         }

@@ -76,6 +76,7 @@ Item{
                         font.family: "Default"
                         placeholderText: "Please enter in your 12 word secret"
                         anchors.horizontalCenter: parent.horizontalCenter
+                        inputMethodHints: Qt.ImhNoPredictiveText;
                     }
 
                     Button{
