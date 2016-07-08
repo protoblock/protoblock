@@ -7,9 +7,19 @@ import ProRotoQml.Theme 1.0
 import QtQuick.Controls 1.4 as Controls
 
 Item{
-    Card {
-        width: parent.width / 1.07
+    Flickable{
+        interactive: true
+        width: parent.width
         height: parent.height
+        contentHeight: topcard.height * 1.20
+        contentWidth: parent.width
+        boundsBehavior:  Flickable.StopAtBounds
+
+
+        Card {
+        id: topcard
+        width: parent.width / 1.07
+        height: welcomeTxt.height + thelist.height + bcard.height + bacard2.height + clearSecret.height + secretTxt.height
         Component.onCompleted: {
             pageHelper.title = "Import-Export"
             secretTxt.text = ""
@@ -19,7 +29,7 @@ Item{
 
         Column{
             width: parent.width
-            height: parent.height
+//            height: parent.height
             anchors{
                 left: parent.left
                 right: parent.right
@@ -41,6 +51,7 @@ Item{
             }
 
             ListItems.Subtitled{
+                id: thelist
                 elevation: 1
                 width: parent.width / 1.07
                 text: "FantasyName: " + realRoot.uname
@@ -103,7 +114,8 @@ Item{
             }
 
             Card{
-                height:bcard.height
+                id: bacard2
+                height: imBan2.height + exportButton.height
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 Column{
@@ -111,18 +123,19 @@ Item{
                     height: parent.height
                     spacing: 3
                     Banner{
+                         id: imBan2
                         text: "Backup / Export Secret"
                         backgroundColor: themeroot.theme.primaryColor
                     }
-                    Label {
-                        width: parent.width / 1.07
-                        font.pixelSize: Qt.platform.os === "android" ? 32 : 22
-                        font.family: "Roboto"
-                        horizontalAlignment: Text.AlignHCenter
-                        text: ""
+//                    Label {
+//                        width: parent.width / 1.07
+//                        font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+//                        font.family: "Roboto"
+//                        horizontalAlignment: Text.AlignHCenter
+//                        text: ""
 
-                        wrapMode: Text.WordWrap
-                    }
+//                        wrapMode: Text.WordWrap
+//                    }
 
 
 
@@ -168,18 +181,6 @@ Item{
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
         Dialog {
             id: mySecretDialog
             title: "12 word account Secret"
@@ -197,3 +198,4 @@ Item{
         }
 
     }
+}
