@@ -42,7 +42,7 @@ Item {
         Card{
             id: namePicker
             width: parent.width / 1.07
-            height: (ProtoScreen.guToPx(8) * repeater.count) + (namePickerBannner.height + 10)
+            height: (ProtoScreen.guToPx(8) * repeater.count) + (namePickerBannner.height + 10) * repeater.opacity
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: accountInfoTxt.bottom
             anchors.topMargin: ProtoScreen.guToPx(4)
