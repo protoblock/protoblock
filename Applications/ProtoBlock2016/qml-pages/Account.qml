@@ -114,6 +114,7 @@ Item {
                     font.pixelSize: ProtoScreen.font(ProtoScreen.MEDIUM)
                     font.family: "Default"
                     helperText: "please enter in a new fantasy name"
+                    placeholderText: "please enter in a new fantasy name"
                     anchors.horizontalCenter: parent.horizontalCenter
                     onAccepted: nameCheckBlank(nameText.text)
                     inputMethodHints: Qt.ImhNoPredictiveText;
