@@ -8,7 +8,7 @@ Item {
     property string backgroundColor: "black"
     property int fontSize: ProtoScreen.guToPx(4)
     property bool bold: false
-    property int elevation: 0
+    property int elevation: 2
     // FIXME set up alias on anchos for the text and not a string
 //    property alias anchorsType: bannerTxt.verticalAlignment
     property string anchrosType: "default"
@@ -19,6 +19,7 @@ Item {
         width: parent.width
         backgroundColor: bannerRoot.backgroundColor
         elevation: bannerRoot.elevation
+        radius: 0
         Label {
             id: bannerTxt
             text: bannerRoot.text

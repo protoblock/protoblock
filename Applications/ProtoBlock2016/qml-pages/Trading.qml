@@ -37,9 +37,9 @@ Item {
 
             CardWithBanner{
                 width: parent.width / 1.07
-                bannerText: "2017 Season Contracts "
+                bannerText: "2017 Season Long Contracts "
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Stay tuned for futures contracts"
+                text: "Stay tuned for futures contracts "
             }
         }
 

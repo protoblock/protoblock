@@ -29,7 +29,7 @@ Item {
             font.family: "Roboto"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             horizontalAlignment: Text.AlignHCenter
-            text: "2016 Enrollment Open Now ! tell your friends to claim their names"
+            text: "2016 Enrollment Open Now ! Tell your friends to claim their names.\n Below is a news feed of protoblocks news"
             wrapMode: Text.WordWrap
         }
         Column{
@@ -40,15 +40,6 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: welcomeTxt.bottom
             anchors.topMargin: 10
-
-            CardWithBanner{
-                width: parent.width / 1.07
-                bannerText: "BETA STARTS IN JULY"
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "With a user account you’re ready for the rollout/updates. We want your early feedback to help make the game interface the best it can be in time for the 53-man roster cuts and Week 1.
-Please use integrated Chat tab to share feedback or questions."
-            }
-
 
 
             CardWithBanner{
@@ -68,7 +59,7 @@ Please use integrated Chat tab to share feedback or questions."
 
             CardWithBanner{
                 width: parent.width / 1.07
-                bannerText: "PROTOBLOCK at FSTA"
+                bannerText: "PROTOBLOCK was at FSTA"
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "We are happy to announce the new Protoblock 2016 game and launch enrollment at the annual Fantasy Sports Trade Association in New York this June 13-14.   All new accounts during the FSTA 2016 Summer Conference are entered to win a 2016 main event entry. Choose from FFPC, FFWC or NFCC.
 

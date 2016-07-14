@@ -11,15 +11,17 @@ import Material 1.0 as Material
 import Material.ListItems 1.0 as ListItem
 import Material.Extras 1.0
 
+import Communi 3.0
+
 Material.ApplicationWindow{
     id: themeroot
     visible: true
-    width:Device.productType === "windows" ? ProtoScreen.guToPx(150) : ProtoScreen.availableWidth
-    height: Device.productType === "windows" ? ProtoScreen.guToPx(150) : ProtoScreen.availableHeight
+    width:Device.productType === "windows" ? ProtoScreen.guToPx(150) : Screen.desktopAvailableWidth
+    height: Device.productType === "windows" ? ProtoScreen.guToPx(150) : Screen.desktopAvailableHeight
 
     color: "transparent"
     Component.onCompleted: {
-        console.log(" rrrr " + themeroot.active)
+        console.log("Primary Color " +  Colors.primaryColor  +  " themeroot Active ?  " + themeroot.active)
         uname = MiddleMan.init()
         if ( uname  === "" ){
             loginDialog.toggle()
@@ -41,7 +43,7 @@ Material.ApplicationWindow{
 
 
     // Pages
-    property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive, levelSix ]
+    property var sections: [ levelOne, levelTwo, levelThree,levelFour, levelFive,levelSix ]
     property var sectionsIcons: [
         levelOneIcons,
         levelTwoIcons,
@@ -66,14 +68,13 @@ Material.ApplicationWindow{
 
     property string pageSwitcher
     property string currentPage: sections[0][0]
-    // we set this to 18 because there is no 18 so that it changes of the fly
     property int loginCardScale: 1
     property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
 
     theme {
-        primaryColor: Colors.blue
-        accentColor: Colors.amber
-        tabHighlightColor: Colors.white
+        primaryColor: Colors.primaryColor
+        accentColor: Colors.accentColor
+        tabHighlightColor: Colors.accentColor
     }
 
     // Level One
@@ -219,7 +220,7 @@ Material.ApplicationWindow{
             anchors.right: parent.right
         }
 
-         Material.ProgressCircle {
+        Material.ProgressCircle {
             id: actInd
             anchors.centerIn: rootLoader
             visible: rootLoader.status == Loader.Loading
@@ -250,7 +251,7 @@ Material.ApplicationWindow{
         }
     }
 
-     Material.Label {
+    Material.Label {
         rotation: -45
         text: MiddleMan.isTestNet() ? qsTr("Demo Testing") : qsTr("Live")
         color: "#40000000"
@@ -265,7 +266,7 @@ Material.ApplicationWindow{
     // End OF GUI Easy Look up
     ///////////////////
 
-//     WHY !!!!!!!!!!!!!!!!!!!
+    //     WHY !!!!!!!!!!!!!!!!!!!
 
     //    SIMPLE MODELS
     ListModel{id: postionModel}
@@ -295,7 +296,7 @@ Material.ApplicationWindow{
 
 
     /// DIALOGS
-     Material.Dialog {
+    Material.Dialog {
         id: usingNameDialog
         title: "Protoblock Player Name"
         Text{
@@ -308,7 +309,7 @@ Material.ApplicationWindow{
     }
 
     //Login dialog (only when user does not have a secert3)
-     Material.Dialog {
+    Material.Dialog {
         id: loginDialog
         hasActions: false
         width: themeroot.width / 1.07
@@ -321,7 +322,7 @@ Material.ApplicationWindow{
         }
     }
 
-     Material.Dialog {
+    Material.Dialog {
         id: accountErrorDialog
         title: "Unavailable"
         positiveButtonText: "Back"
@@ -355,10 +356,10 @@ Material.ApplicationWindow{
     }
 
 
-     Material.Dialog{
+    Material.Dialog{
         id: loginErrorDialog
         title: "Error in Signup"
-         Material.Label{
+        Material.Label{
             width: parent.width
             height: parent.height
             wrapMode: Text.WordWrap
@@ -368,7 +369,21 @@ Material.ApplicationWindow{
     }
 
 
-     Material.Dialog {
+    Material.Dialog{
+        id: chatErrorDialog
+        title: "Error In chat"
+        Material.Label{
+            width: parent.width
+            height: parent.height
+            wrapMode: Text.WordWrap
+            text:  "We are sorry but you are either not on the internet or have not cliamed a name"
+            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
+        }
+    }
+
+
+
+    Material.Dialog {
         id: myImportDialog
         title: "Import status"
         positiveButtonText: "Back"
@@ -384,7 +399,7 @@ Material.ApplicationWindow{
     }
 
 
-     Material.Dialog {
+    Material.Dialog {
         id: updateDialog
         title: "Update Available"
         positiveButtonText: "Back"
@@ -397,7 +412,7 @@ Material.ApplicationWindow{
                 text: "There is a update available for Protoblock."
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
-             Material.Button{
+            Material.Button{
                 width: parent.width / 1.07
                 text: "Download Now"
                 elevation: 0
@@ -460,10 +475,10 @@ Material.ApplicationWindow{
 
     function compairVersions(d){
         if (realRoot.version !== d){
-            console.log("there is a update")
+//            console.log("there is a update")
             updateDialog.toggle()
         }else{
-            console.log("There are NO UPDATES ")
+//            console.log("There are NO UPDATES ")
         }
     }
 
@@ -478,12 +493,56 @@ Material.ApplicationWindow{
         onStatusChanged: {
             switch(status){
             case XmlListModel.Error :
-//                console.log("ERROR IN UPDATE MACHINE ")
+                //                console.log("ERROR IN UPDATE MACHINE ")
                 break;
             case XmlListModel.Ready:
                 compairVersions(updateMachine.get(0).version)
                 break;
             }
         }
+    }
+    IrcConnection {
+        property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
+        property string tempName1: ""
+        id: ircConnectionPoint
+        host: "162.254.24.67"
+        port: 6667
+        secure: false
+        saslMechanism: ""
+        nickName: tempName
+        realName:tempName
+        userName:tempName
+        password:""
+//        onStatusChanged:{
+//            if(status === IrcConnection.Error){
+//                chatErrorDialog.toggle()
+//                actInd.visible = false
+//            }
+//            if(status === IrcConnection.Connecting){
+//                actInd.visible = true
+//            }
+//            else if(status !== IrcConnection.Connecting){
+//                actInd.visible = false
+//            }
+//        }
+    }
+
+    IrcBufferModel {
+        id: ircBufferModel
+        sortMethod: Irc.SortByTitle
+        connection:ircConnectionPoint
+        onMessageIgnored: ircServerBuffer.receiveMessage(message)
+        function quit() {
+            bufferModel.clear()
+            ircConnectionPoint.quit("Fantasy Just Got Real")
+            ircConnectionPoint.close()
+        }
+    }
+    IrcBuffer {
+        id: ircServerBuffer
+        sticky: true
+        persistent: true
+        name: ircConnectionPoint.displayName
+        Component.onCompleted: ircBufferModel.add(ircServerBuffer)
     }
 }

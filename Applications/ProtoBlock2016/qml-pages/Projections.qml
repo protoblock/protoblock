@@ -19,7 +19,7 @@ Item {
         id: gstate
         width: parent.width / 1.07
         bannerText: "Season: 2016 Week: 0 "
-        text: "Game Status: Waiting 53 Man Roster \n2016 Projection Game To Begin on Sept 3"
+        text: "Game Status: Waiting 53 Man Roster \n2016 Protoblock Game To Begin on Sept 3\nThis page will update with release's"
         anchors{
             top: parent.top
             topMargin:ProtoScreen.guToPx(.5)

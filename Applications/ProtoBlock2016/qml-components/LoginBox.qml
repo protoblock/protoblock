@@ -4,14 +4,13 @@ import ProRotoQml.Theme 1.0
 import ProRotoQml.Utils 1.0
 Item {
     width: parent.width
-    height: parent.height
+    height: signInCard.height + nameText.height +  (clamNameButton.height * 2) + ProtoScreen.guToPx(3)
     Card{
         id: signInCard
         width: parent.width
         height: parent.height
         anchors.horizontalCenter: parent.horizontalCenter
         elevation: 8
-        Component.onCompleted: console.log(" CHECK THIS HEIGHT " + height)
         Column{
             width: parent.width
             height: parent.height /2
@@ -23,7 +22,6 @@ Item {
                 height: ProtoScreen.guToPx(6)
                 font.pixelSize:ProtoScreen.font(ProtoScreen.NORMAL)
                 helperText: qsTr("Please enter in a name")
-                placeholderText: "Please enter in a name";
                 anchors.horizontalCenter: parent.horizontalCenter
                 onAccepted: clamNameButton.clicked();
                 inputMethodHints: Qt.ImhNoPredictiveText;
@@ -34,7 +32,7 @@ Item {
                 width: parent.width / 1.07
                 elevation: 5
                 backgroundColor: Colors.blue
-                height: ProtoScreen.guToPx(4)
+                height: ProtoScreen.guToPx(5)
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
 //                    if (text === "Claim New Name" ){
@@ -60,7 +58,7 @@ Item {
                 backgroundColor: Colors.blue
 
                 width: parent.width / 1.07
-                height: ProtoScreen.guToPx(4)
+                height: ProtoScreen.guToPx(5)
                 elevation: 5
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {

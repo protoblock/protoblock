@@ -13,9 +13,9 @@ SUBDIRS += \
 #        $$PWD/libBotan \
 #        $$PWD/libQSsh \
 #        $$PWD/libQmlSsh \
-        $$PWD/Protoblock/protoblock.pro
+        $$PWD/Protoblock/protoblock.pro \
 #        $$PWD/PeerTwoPeerChat \
-#        $$PWD/Backend
+#        $$PWD/Backend/backend.pro
 #        $$PWD/Torrent/torrent.pro
 #       $$PWD/irc/libcommuni.pro
 

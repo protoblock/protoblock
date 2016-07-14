@@ -25,7 +25,7 @@ PopupBase {
             parent.height / 1.5
         }
     }
-    Component.onCompleted: console.log("HERE IS THE AVAIL HEIGHT " + ProtoScreen.availableHeight )
+//    Component.onCompleted: console.log("HERE IS THE AVAIL HEIGHT " + ProtoScreen.availableHeight )
     property int contentMargins: ProtoScreen.guToPx(3)
     property int minimumWidth: ProtoScreen.guToPx(37.5)
     property int minimumHeight: ProtoScreen.guToPx(37.5)

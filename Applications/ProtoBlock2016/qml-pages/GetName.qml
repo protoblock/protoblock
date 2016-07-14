@@ -15,7 +15,9 @@ Item {
                 id: aboutHeader
                 width: parent.width
                 height:   parent.height / 10
-                backgroundColor:  Colors.blue
+                backgroundColor:  Colors.primaryColor
+                elevation: 2
+                anchrosType: "verticalCenter"
                 text: qsTr("Please pick a username")
                 bold: true
                 fontSize: ProtoScreen.font(ProtoScreen.NORMAL)

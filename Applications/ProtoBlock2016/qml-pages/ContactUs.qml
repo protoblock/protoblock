@@ -49,7 +49,7 @@ Item {
         TextField{
             id: subInput
             width: parent.width / 1.07
-            placeholderText: "Please enter in the subject"
+            helperText: "Please enter in the subject"
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Button{

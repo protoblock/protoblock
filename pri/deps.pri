@@ -1,30 +1,35 @@
 ##############
 ## Globals
 ##############
-#DEFINES += PRODFOOTBALL
-#DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
-        DIRPREFIX = D:\work\prebuiltLibs
+DEFINES += PRODFOOTBALL
+
+contains (QMAKE_HOST.os, Darwin){
+    message("Host is OSX")
+    DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
+}else{
+    message("Host is Windows")
+    DIRPREFIX = D:\work\prebuiltLibs
+}
 
 
 ##############
 ##  WINDOWS
 ##############
 win32 {
+    message( Windows Build)
     INCLUDEPATH +=   $$PWD/../3rdParty
     INCLUDEPATH += $$PWD/../3rdParty/secp256k1
 
    ## FIXME
-   LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
-#LIBS+= -L$$PWD/../libwin64
+    LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
+    #LIBS+= -L$$PWD/../libwin64
     CONFIG(debug, debug|release) {
-#       LIBS += -L$$PWD/../ProRotoQml/jsonpb/debug/ -ljsonpb
        LIBS+= -llibprotobufd  \
               -lleveldbd \
               -llibeay32 \
               -lssleay32 \
     }
     CONFIG(release, debug|release) {
-#       LIBS += -L$$PWD/../ProRotoQml/jsonpb/release/ -ljsonpb
        LIBS+= -llibprotobuf \
               -lleveldb \
               -llibeay32 \
@@ -43,17 +48,17 @@ win32 {
 ##     OSX
 ##############
 
-osx{
-message(OSX BUILD)
+macx{
+    message(OSX BUILD)
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
     ##FIXME compile levelDB
-#    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-#    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+#        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+#        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/lib/libprotobuf.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/lib/libprotobuf.a
 
     LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
@@ -64,11 +69,8 @@ message(OSX BUILD)
     LIBS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
     PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
 
-    ##FIXME compile levelDB
-#    LIBS += -L/usr/local/lib  -lleveldb
-
-
-
+    ## FIXME compile levelDB
+#     LIBS += -L/usr/local/lib  -lleveldb
 }
 
 ##############
@@ -76,7 +78,7 @@ message(OSX BUILD)
 ##############
 
 ios {
-message (IOS BUILD)
+    message (IOS BUILD)
     ##PATHS
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
@@ -96,8 +98,8 @@ message (IOS BUILD)
     PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
 
     ## BOTAN
-    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
+#    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
+#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
 }
 
 
@@ -109,10 +111,6 @@ message (IOS BUILD)
 ##############
 android {
         message(Android Build)
-    ​
-        DIRPREFIX = D:\work\prebuiltLibs
-#        DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
-
         ##PATHS
         INCLUDEPATH += $$DIRPREFIX/android/extrenal-android/include
         DEPENDPATH += $$DIRPREFIX/android/extrenal-android/include
@@ -140,11 +138,11 @@ android {
 ##############
 ##   LINUX
 ##############
-#LATERFOOL
 linux!android{
+        message(Linux Build)
         CONFIG += link_pkgconfig
         PKGCONFIG += openssl \
-                             protobuf \
+                                     protobuf \
 
         ##  SECP251K1
         LIBS +=$$DIRPREFIX/linux/lib/libsecp256k1.a

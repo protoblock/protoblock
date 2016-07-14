@@ -236,7 +236,6 @@ View {
 
     Component {
         id: emptyRightSidebar
-
         Item {}
     }
 }

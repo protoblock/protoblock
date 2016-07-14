@@ -187,18 +187,18 @@ double ProtoScreen::checkIphoneScaleSize(const int &width, const int &height , c
 {
     if (iPhoneVersion >= 4 ){
         if (width >= 320 && width < 321&& height < 567 ){
-            return 2.0;
+            return 1.0;
         }
         else if (height >  567 && height < 569 && width  == 320){
-            return 2.0;
+            return 1.0;
         }
         else if (height >  665  && height < 668 && width  == 375)
         {
-            return 2.0;
+            return 1.0;
         }
         else if (width >= 374  && height  >= 665 )
         {
-            return 3.0;
+            return 1.0;
         }
     }else {
         return 1.0;

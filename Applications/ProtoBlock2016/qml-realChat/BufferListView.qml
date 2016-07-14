@@ -5,6 +5,7 @@ import Communi 3.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
+import ProRotoQml.Theme 1.0
 Card {
     id: background
     elevation: 6
@@ -34,7 +35,7 @@ Card {
                 property bool first: index === 0
                 property bool current: model.buffer === currentBuffer
                 elevation: 1
-                backgroundColor:  first ? "#ddd" : current ? "#b5d5ff" : "transparent"
+                backgroundColor:  first ? Colors.grey  : current ? Colors.blue : "transparent"
                 text: model.title
                 visible: model.title === "162.254.24.67" ? false : true
                 onClicked: {

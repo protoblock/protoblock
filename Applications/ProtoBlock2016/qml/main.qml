@@ -5,11 +5,10 @@ import QtQuick.Dialogs 1.2
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
-//import ProRotoQml.Torrent 1.0
+
+
 import Material 1.0 as Material
-//import Material.Componets 0.3
-//import Material.Dialog 0.1
-import Communi 3.0
+
 
 Quick.Window {
     id: realRoot
@@ -18,13 +17,11 @@ Quick.Window {
     height: Device.productType === "windows" ? 1220  : ProtoScreen.availableHeight
     property string theme: "Material"
     property string  uname
-    onUnameChanged: console.log("USING NEW UNAME " + uname)
     property string  err
     property string currentTeamInFocus
     property string currentHomeTeam
     property string currentAwayTeam
-    //    property string uname: "NULL"
-//    property variant leaders: ListModel{}
+
     property string msgString
 
     property string version: "0.1"

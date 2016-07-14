@@ -5,14 +5,10 @@ import ProRotoQml.Theme 1.0
 
 TextField {
     id: textField
-    focus: true
-//    height:
     width: parent.width
-    //        width: rootLoader.width - bufferListView.width  -  (usersList.width* 1.07)
     property alias buffer: completer.buffer
     signal messageSent(IrcMessage message)
-    placeholderText: qsTr("Type To Chat")
-
+    helperText:   qsTr("Type To Chat")
 
     Keys.onTabPressed: completer.complete(text, cursorPosition)
     IrcCompleter {

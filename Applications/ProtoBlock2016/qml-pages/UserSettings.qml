@@ -9,7 +9,7 @@ import Material.ListItems 1.0 as ListItems
 Item {
     id: usersettingsCard
     Component.onCompleted:  pageHelper.title = "User Settings"
-    property var themes: ["Material"] //,"Pinky"]
+    property var themes: ["Material"]
 
     Flickable{
         width: parent.width
@@ -31,6 +31,7 @@ Item {
                 text: "Change Colors"
                 height:  ProtoScreen.guToPx(6)
                 width: parent.width
+                backgroundColor: themeroot.theme.primaryColor
             }
 
             MenuField {
@@ -97,6 +98,8 @@ Item {
                 width: parent.width
                 height: ProtoScreen.guToPx(6)
                 text: "Theme Picker"
+                backgroundColor: themeroot.theme.primaryColor
+
             }
             Row{
                 width: (parent.width / 5) * 3
@@ -107,11 +110,11 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 Repeater {
                     id: themeMenu
-                    model: ["Material"] //, "Pinky"] //Classic
+                    model: ["Material"]
                     delegate:
                         ThemeButton{
                         width: parent.width / 3.2
-                        height:     parent.height / 2
+                        height:  parent.height / 2
                         highlighted: modelData === realRoot.theme ? true : false
                         img: "qrc:/logoOnly.png"
                         name: modelData
