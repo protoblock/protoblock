@@ -9,7 +9,7 @@ import ProRotoQml.Theme 1.0
 import ProRotoQml.Files 1.0
 
 Material.ApplicationWindow{
-    id: root
+    id: themeroot
     width: Screen.width
     height: Screen.height
     visible: true
@@ -23,8 +23,8 @@ Material.ApplicationWindow{
     }
     PageHelper{
         id: pageHelper
-        width: root.width
-        height:root.height
+        width: themeroot.width
+        height:themeroot.height
         title: "Please Claim a name"
         buttonsEnabled: false
         object :
@@ -41,8 +41,8 @@ Material.ApplicationWindow{
         Component{
             id: login
             GetName{
-                width: root.width
-                height: root.height
+                width: themeroot.width
+                height: themeroot.height
             }
         }
 
@@ -163,9 +163,9 @@ Material.ApplicationWindow{
                 else
                 {
                     err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-                    root.loginCardScale = 0
+                    themeroot.loginCardScale = 0
                     loginErrorDialog.open()
-                    root.errorString =  err
+                    themeroot.errorString =  err
                 }
             }
 

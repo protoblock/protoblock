@@ -1,16 +1,15 @@
 import QtQuick 2.4
 
-import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Theme 1.0
-
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
+import ProRotoQml.Protoblock 1.0
+import ProRotoQml.Theme 1.0
 Item {
     Flickable{
         height: parent.height
         width: parent.width
-        contentHeight: parent.height * 2
+        contentHeight: parent.height * 4
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
         Image {
@@ -18,19 +17,19 @@ Item {
             source: "qrc:/logoFinal.png"
             fillMode: Image.PreserveAspectFit
             width: parent.width / 1.07
-            height: parent.height / 6
+            height: parent.height / ProtoScreen.guToPx(1.25)
             anchors.horizontalCenter: parent.horizontalCenterx
         }
         Label {
             id: welcomeTxt
             anchors.top: logo.bottom
-            anchors.topMargin:  paintedHeight
+             anchors.topMargin:  paintedHeight / 2
             width: parent.width / 1.07
-            font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
+            font.pixelSize: ProtoScreen.font( ProtoScreen.MEDIUM )
             font.family: "Roboto"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             horizontalAlignment: Text.AlignHCenter
-            text: "2016 Enrollment Open Now - tell your friends to claim their names"
+            text: "2016 Enrollment Open Now ! Tell your friends to claim their names.\n Below is a news feed of protoblocks news"
             wrapMode: Text.WordWrap
         }
         Column{
@@ -42,13 +41,6 @@ Item {
             anchors.top: welcomeTxt.bottom
             anchors.topMargin: 10
 
-            CardWithBanner{
-                width: parent.width / 1.07
-                bannerText: "BETA STARTS IN JULY"
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "With a user account you’re ready for the rollout/updates. We want your early feedback to help make the game interface the best it can be in time for the 53-man roster cuts and Week 1.
-Please use integrated Chat tab to share feedback or questions."
-            }
 
             CardWithBanner{
                 width: parent.width / 1.07
@@ -67,9 +59,9 @@ Please use integrated Chat tab to share feedback or questions."
 
             CardWithBanner{
                 width: parent.width / 1.07
-                bannerText: "PROTOBLOCK at FSTA"
+                bannerText: "PROTOBLOCK was at FSTA"
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "We are happy to announce the new Protoblock 2016 game and launch enrollment at the annual Fantasy Sports Trade Association n New York this June 13-14.   All new accounts during the FSTA 2016 Summer Conference are entered to win a 2016 main event entry. Choose from FFPC, FFWC or NFCC.
+                text: "We are happy to announce the new Protoblock 2016 game and launch enrollment at the annual Fantasy Sports Trade Association in New York this June 13-14.   All new accounts during the FSTA 2016 Summer Conference are entered to win a 2016 main event entry. Choose from FFPC, FFWC or NFCC.
 
 Follow @protoblock for winner and general Protoblock news/info"
             }
@@ -87,7 +79,7 @@ Follow @protoblock for winner and general Protoblock news/info"
             //        Banner{
             //                width: parent.width
             //                text: "PROTOBLOCK 2016"
-            //                backgroundColor:  root.theme.primaryColor
+            //                backgroundColor:  themeroot.theme.primaryColor
             //            }
             //            Label{
             //                width: parent.width / 1.07

@@ -20,23 +20,23 @@ namespace fantasybit {
 
 namespace {
 
-const ::google::protobuf::Descriptor* FantasyNameHash_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
+const ::google_public::protobuf::Descriptor* FantasyNameHash_descriptor_ = NULL;
+const ::google_public::protobuf::internal::GeneratedMessageReflection*
   FantasyNameHash_reflection_ = NULL;
-const ::google::protobuf::Descriptor* Distribution_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
+const ::google_public::protobuf::Descriptor* Distribution_descriptor_ = NULL;
+const ::google_public::protobuf::internal::GeneratedMessageReflection*
   Distribution_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ProjKstats_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
+const ::google_public::protobuf::Descriptor* ProjKstats_descriptor_ = NULL;
+const ::google_public::protobuf::internal::GeneratedMessageReflection*
   ProjKstats_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ProjDstats_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
+const ::google_public::protobuf::Descriptor* ProjDstats_descriptor_ = NULL;
+const ::google_public::protobuf::internal::GeneratedMessageReflection*
   ProjDstats_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ProjOstats_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
+const ::google_public::protobuf::Descriptor* ProjOstats_descriptor_ = NULL;
+const ::google_public::protobuf::internal::GeneratedMessageReflection*
   ProjOstats_reflection_ = NULL;
-const ::google::protobuf::Descriptor* ProjStats_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
+const ::google_public::protobuf::Descriptor* ProjStats_descriptor_ = NULL;
+const ::google_public::protobuf::internal::GeneratedMessageReflection*
   ProjStats_reflection_ = NULL;
 
 }  // namespace
@@ -44,8 +44,8 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 
 void protobuf_AssignDesc_ApiData_2eproto() {
   protobuf_AddDesc_ApiData_2eproto();
-  const ::google::protobuf::FileDescriptor* file =
-    ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
+  const ::google_public::protobuf::FileDescriptor* file =
+    ::google_public::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "ApiData.proto");
   GOOGLE_CHECK(file != NULL);
   FantasyNameHash_descriptor_ = file->message_type(0);
@@ -54,15 +54,15 @@ void protobuf_AssignDesc_ApiData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameHash, hash_),
   };
   FantasyNameHash_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    new ::google_public::protobuf::internal::GeneratedMessageReflection(
       FantasyNameHash_descriptor_,
       FantasyNameHash::default_instance_,
       FantasyNameHash_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameHash, _has_bits_[0]),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameHash, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
+      ::google_public::protobuf::DescriptorPool::generated_pool(),
+      ::google_public::protobuf::MessageFactory::generated_factory(),
       sizeof(FantasyNameHash));
   Distribution_descriptor_ = file->message_type(1);
   static const int Distribution_offsets_[9] = {
@@ -77,15 +77,15 @@ void protobuf_AssignDesc_ApiData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, result_),
   };
   Distribution_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    new ::google_public::protobuf::internal::GeneratedMessageReflection(
       Distribution_descriptor_,
       Distribution::default_instance_,
       Distribution_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, _has_bits_[0]),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Distribution, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
+      ::google_public::protobuf::DescriptorPool::generated_pool(),
+      ::google_public::protobuf::MessageFactory::generated_factory(),
       sizeof(Distribution));
   ProjKstats_descriptor_ = file->message_type(2);
   static const int ProjKstats_offsets_[5] = {
@@ -96,15 +96,15 @@ void protobuf_AssignDesc_ApiData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjKstats, fg60_),
   };
   ProjKstats_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    new ::google_public::protobuf::internal::GeneratedMessageReflection(
       ProjKstats_descriptor_,
       ProjKstats::default_instance_,
       ProjKstats_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjKstats, _has_bits_[0]),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjKstats, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
+      ::google_public::protobuf::DescriptorPool::generated_pool(),
+      ::google_public::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjKstats));
   ProjDstats_descriptor_ = file->message_type(3);
   static const int ProjDstats_offsets_[7] = {
@@ -117,15 +117,15 @@ void protobuf_AssignDesc_ApiData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjDstats, ptsa_),
   };
   ProjDstats_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    new ::google_public::protobuf::internal::GeneratedMessageReflection(
       ProjDstats_descriptor_,
       ProjDstats::default_instance_,
       ProjDstats_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjDstats, _has_bits_[0]),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjDstats, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
+      ::google_public::protobuf::DescriptorPool::generated_pool(),
+      ::google_public::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjDstats));
   ProjOstats_descriptor_ = file->message_type(4);
   static const int ProjOstats_offsets_[11] = {
@@ -142,15 +142,15 @@ void protobuf_AssignDesc_ApiData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjOstats, onept_),
   };
   ProjOstats_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    new ::google_public::protobuf::internal::GeneratedMessageReflection(
       ProjOstats_descriptor_,
       ProjOstats::default_instance_,
       ProjOstats_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjOstats, _has_bits_[0]),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjOstats, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
+      ::google_public::protobuf::DescriptorPool::generated_pool(),
+      ::google_public::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjOstats));
   ProjStats_descriptor_ = file->message_type(5);
   static const int ProjStats_offsets_[3] = {
@@ -159,15 +159,15 @@ void protobuf_AssignDesc_ApiData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjStats, kstats_),
   };
   ProjStats_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    new ::google_public::protobuf::internal::GeneratedMessageReflection(
       ProjStats_descriptor_,
       ProjStats::default_instance_,
       ProjStats_offsets_,
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjStats, _has_bits_[0]),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjStats, _unknown_fields_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
+      ::google_public::protobuf::DescriptorPool::generated_pool(),
+      ::google_public::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjStats));
 }
 
@@ -175,23 +175,23 @@ namespace {
 
 GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AssignDescriptors_once_);
 inline void protobuf_AssignDescriptorsOnce() {
-  ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
+  ::google_public::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
                  &protobuf_AssignDesc_ApiData_2eproto);
 }
 
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+  ::google_public::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     FantasyNameHash_descriptor_, &FantasyNameHash::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+  ::google_public::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Distribution_descriptor_, &Distribution::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+  ::google_public::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ProjKstats_descriptor_, &ProjKstats::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+  ::google_public::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ProjDstats_descriptor_, &ProjDstats::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+  ::google_public::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ProjOstats_descriptor_, &ProjOstats::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+  ::google_public::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ProjStats_descriptor_, &ProjStats::default_instance());
 }
 
@@ -218,7 +218,7 @@ void protobuf_AddDesc_ApiData_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
+  ::google_public::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\rApiData.proto\022\nfantasybit\"-\n\017FantasyNa"
     "meHash\022\014\n\004name\030\n \001(\t\022\014\n\004hash\030\036 \001(\004\"\243\001\n\014D"
     "istribution\022\016\n\006gameid\030\002 \001(\t\022\016\n\006teamid\030\004 "
@@ -239,7 +239,7 @@ void protobuf_AddDesc_ApiData_2eproto() {
     "Ostats\022&\n\006dstats\030\024 \001(\0132\026.fantasybit.Proj"
     "Dstats\022&\n\006kstats\030\036 \001(\0132\026.fantasybit.Proj"
     "Kstats", 766);
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
+  ::google_public::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ApiData.proto", &protobuf_RegisterTypes);
   FantasyNameHash::default_instance_ = new FantasyNameHash();
   Distribution::default_instance_ = new Distribution();
@@ -253,7 +253,7 @@ void protobuf_AddDesc_ApiData_2eproto() {
   ProjDstats::default_instance_->InitAsDefaultInstance();
   ProjOstats::default_instance_->InitAsDefaultInstance();
   ProjStats::default_instance_->InitAsDefaultInstance();
-  ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_ApiData_2eproto);
+  ::google_public::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_ApiData_2eproto);
 }
 
 // Force AddDescriptors() to be called at static initialization time.
@@ -271,32 +271,36 @@ const int FantasyNameHash::kHashFieldNumber;
 #endif  // !_MSC_VER
 
 FantasyNameHash::FantasyNameHash()
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:fantasybit.FantasyNameHash)
 }
 
 void FantasyNameHash::InitAsDefaultInstance() {
 }
 
 FantasyNameHash::FantasyNameHash(const FantasyNameHash& from)
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:fantasybit.FantasyNameHash)
 }
 
 void FantasyNameHash::SharedCtor() {
+  ::google_public::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  name_ = const_cast< ::std::string*>(&::google_public::protobuf::internal::GetEmptyStringAlreadyInited());
   hash_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 FantasyNameHash::~FantasyNameHash() {
+  // @@protoc_insertion_point(destructor:fantasybit.FantasyNameHash)
   SharedDtor();
 }
 
 void FantasyNameHash::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
+  if (name_ != &::google_public::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete name_;
   }
   if (this != default_instance_) {
@@ -308,7 +312,7 @@ void FantasyNameHash::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* FantasyNameHash::descriptor() {
+const ::google_public::protobuf::Descriptor* FantasyNameHash::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return FantasyNameHash_descriptor_;
 }
@@ -325,9 +329,9 @@ FantasyNameHash* FantasyNameHash::New() const {
 }
 
 void FantasyNameHash::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & 3) {
     if (has_name()) {
-      if (name_ != &::google::protobuf::internal::kEmptyString) {
+      if (name_ != &::google_public::protobuf::internal::GetEmptyStringAlreadyInited()) {
         name_->clear();
       }
     }
@@ -338,22 +342,26 @@ void FantasyNameHash::Clear() {
 }
 
 bool FantasyNameHash::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+    ::google_public::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google_public::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fantasybit.FantasyNameHash)
+  for (;;) {
+    ::std::pair< ::google_public::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google_public::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional string name = 10;
       case 10: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+        if (tag == 82) {
+          DO_(::google_public::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->name().data(), this->name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google_public::protobuf::internal::WireFormat::PARSE,
+            "name");
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(240)) goto parse_hash;
         break;
@@ -361,79 +369,90 @@ bool FantasyNameHash::MergePartialFromCodedStream(
 
       // optional uint64 hash = 30;
       case 30: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 240) {
          parse_hash:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google_public::protobuf::uint64, ::google_public::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &hash_)));
           set_has_hash();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+      handle_unusual:
+        if (tag == 0 ||
+            ::google_public::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google_public::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
+        DO_(::google_public::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
         break;
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:fantasybit.FantasyNameHash)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:fantasybit.FantasyNameHash)
+  return false;
 #undef DO_
 }
 
 void FantasyNameHash::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google_public::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fantasybit.FantasyNameHash)
   // optional string name = 10;
   if (has_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+      ::google_public::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    ::google_public::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       10, this->name(), output);
   }
 
   // optional uint64 hash = 30;
   if (has_hash()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->hash(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteUInt64(30, this->hash(), output);
   }
 
   if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+    ::google_public::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:fantasybit.FantasyNameHash)
 }
 
-::google::protobuf::uint8* FantasyNameHash::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google_public::protobuf::uint8* FantasyNameHash::SerializeWithCachedSizesToArray(
+    ::google_public::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.FantasyNameHash)
   // optional string name = 10;
   if (has_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+      ::google_public::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google_public::protobuf::internal::WireFormatLite::WriteStringToArray(
         10, this->name(), target);
   }
 
   // optional uint64 hash = 30;
   if (has_hash()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->hash(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->hash(), target);
   }
 
   if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+    target = ::google_public::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.FantasyNameHash)
   return target;
 }
 
@@ -444,21 +463,21 @@ int FantasyNameHash::ByteSize() const {
     // optional string name = 10;
     if (has_name()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google_public::protobuf::internal::WireFormatLite::StringSize(
           this->name());
     }
 
     // optional uint64 hash = 30;
     if (has_hash()) {
       total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        ::google_public::protobuf::internal::WireFormatLite::UInt64Size(
           this->hash());
     }
 
   }
   if (!unknown_fields().empty()) {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+      ::google_public::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -467,13 +486,13 @@ int FantasyNameHash::ByteSize() const {
   return total_size;
 }
 
-void FantasyNameHash::MergeFrom(const ::google::protobuf::Message& from) {
+void FantasyNameHash::MergeFrom(const ::google_public::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
   const FantasyNameHash* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const FantasyNameHash*>(
+    ::google_public::protobuf::internal::dynamic_cast_if_available<const FantasyNameHash*>(
       &from);
   if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+    ::google_public::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
     MergeFrom(*source);
   }
@@ -492,7 +511,7 @@ void FantasyNameHash::MergeFrom(const FantasyNameHash& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void FantasyNameHash::CopyFrom(const ::google::protobuf::Message& from) {
+void FantasyNameHash::CopyFrom(const ::google_public::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -519,9 +538,9 @@ void FantasyNameHash::Swap(FantasyNameHash* other) {
   }
 }
 
-::google::protobuf::Metadata FantasyNameHash::GetMetadata() const {
+::google_public::protobuf::Metadata FantasyNameHash::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
+  ::google_public::protobuf::Metadata metadata;
   metadata.descriptor = FantasyNameHash_descriptor_;
   metadata.reflection = FantasyNameHash_reflection_;
   return metadata;
@@ -543,27 +562,30 @@ const int Distribution::kResultFieldNumber;
 #endif  // !_MSC_VER
 
 Distribution::Distribution()
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:fantasybit.Distribution)
 }
 
 void Distribution::InitAsDefaultInstance() {
 }
 
 Distribution::Distribution(const Distribution& from)
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:fantasybit.Distribution)
 }
 
 void Distribution::SharedCtor() {
+  ::google_public::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  gameid_ = const_cast< ::std::string*>(&::google_public::protobuf::internal::GetEmptyStringAlreadyInited());
+  teamid_ = const_cast< ::std::string*>(&::google_public::protobuf::internal::GetEmptyStringAlreadyInited());
   season_ = 0;
   week_ = 0;
   fantasy_nameid_ = GOOGLE_ULONGLONG(0);
-  playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  playerid_ = const_cast< ::std::string*>(&::google_public::protobuf::internal::GetEmptyStringAlreadyInited());
   proj_ = 0;
   award_ = 0;
   result_ = 0;
@@ -571,17 +593,18 @@ void Distribution::SharedCtor() {
 }
 
 Distribution::~Distribution() {
+  // @@protoc_insertion_point(destructor:fantasybit.Distribution)
   SharedDtor();
 }
 
 void Distribution::SharedDtor() {
-  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+  if (gameid_ != &::google_public::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete gameid_;
   }
-  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
+  if (teamid_ != &::google_public::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete teamid_;
   }
-  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+  if (playerid_ != &::google_public::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete playerid_;
   }
   if (this != default_instance_) {
@@ -593,7 +616,7 @@ void Distribution::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Distribution::descriptor() {
+const ::google_public::protobuf::Descriptor* Distribution::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return Distribution_descriptor_;
 }
@@ -610,51 +633,63 @@ Distribution* Distribution::New() const {
 }
 
 void Distribution::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Distribution*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 255) {
+    ZR_(season_, fantasy_nameid_);
+    ZR_(proj_, award_);
     if (has_gameid()) {
-      if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+      if (gameid_ != &::google_public::protobuf::internal::GetEmptyStringAlreadyInited()) {
         gameid_->clear();
       }
     }
     if (has_teamid()) {
-      if (teamid_ != &::google::protobuf::internal::kEmptyString) {
+      if (teamid_ != &::google_public::protobuf::internal::GetEmptyStringAlreadyInited()) {
         teamid_->clear();
       }
     }
-    season_ = 0;
-    week_ = 0;
-    fantasy_nameid_ = GOOGLE_ULONGLONG(0);
     if (has_playerid()) {
-      if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+      if (playerid_ != &::google_public::protobuf::internal::GetEmptyStringAlreadyInited()) {
         playerid_->clear();
       }
     }
-    proj_ = 0;
-    award_ = 0;
   }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    result_ = 0;
-  }
+  result_ = 0;
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool Distribution::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+    ::google_public::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google_public::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fantasybit.Distribution)
+  for (;;) {
+    ::std::pair< ::google_public::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google_public::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional uint64 fantasy_nameid = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+        if (tag == 8) {
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google_public::protobuf::uint64, ::google_public::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &fantasy_nameid_)));
           set_has_fantasy_nameid();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_gameid;
         break;
@@ -662,16 +697,16 @@ bool Distribution::MergePartialFromCodedStream(
 
       // optional string gameid = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 18) {
          parse_gameid:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google_public::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_gameid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->gameid().data(), this->gameid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google_public::protobuf::internal::WireFormat::PARSE,
+            "gameid");
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(26)) goto parse_playerid;
         break;
@@ -679,16 +714,16 @@ bool Distribution::MergePartialFromCodedStream(
 
       // optional string playerid = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 26) {
          parse_playerid:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google_public::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_playerid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->playerid().data(), this->playerid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google_public::protobuf::internal::WireFormat::PARSE,
+            "playerid");
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(34)) goto parse_teamid;
         break;
@@ -696,16 +731,16 @@ bool Distribution::MergePartialFromCodedStream(
 
       // optional string teamid = 4;
       case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 34) {
          parse_teamid:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google_public::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_teamid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->teamid().data(), this->teamid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google_public::protobuf::internal::WireFormat::PARSE,
+            "teamid");
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(40)) goto parse_season;
         break;
@@ -713,15 +748,14 @@ bool Distribution::MergePartialFromCodedStream(
 
       // optional int32 season = 5;
       case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 40) {
          parse_season:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google_public::protobuf::int32, ::google_public::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &season_)));
           set_has_season();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(48)) goto parse_week;
         break;
@@ -729,15 +763,14 @@ bool Distribution::MergePartialFromCodedStream(
 
       // optional int32 week = 6;
       case 6: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 48) {
          parse_week:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google_public::protobuf::int32, ::google_public::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &week_)));
           set_has_week();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(56)) goto parse_proj;
         break;
@@ -745,15 +778,14 @@ bool Distribution::MergePartialFromCodedStream(
 
       // optional int32 proj = 7;
       case 7: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 56) {
          parse_proj:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google_public::protobuf::int32, ::google_public::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &proj_)));
           set_has_proj();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(69)) goto parse_award;
         break;
@@ -761,15 +793,14 @@ bool Distribution::MergePartialFromCodedStream(
 
       // optional float award = 8;
       case 8: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 69) {
          parse_award:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &award_)));
           set_has_award();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(77)) goto parse_result;
         break;
@@ -777,167 +808,182 @@ bool Distribution::MergePartialFromCodedStream(
 
       // optional float result = 9;
       case 9: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 77) {
          parse_result:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &result_)));
           set_has_result();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+      handle_unusual:
+        if (tag == 0 ||
+            ::google_public::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google_public::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
+        DO_(::google_public::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
         break;
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:fantasybit.Distribution)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:fantasybit.Distribution)
+  return false;
 #undef DO_
 }
 
 void Distribution::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google_public::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fantasybit.Distribution)
   // optional uint64 fantasy_nameid = 1;
   if (has_fantasy_nameid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->fantasy_nameid(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteUInt64(1, this->fantasy_nameid(), output);
   }
 
   // optional string gameid = 2;
   if (has_gameid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->gameid().data(), this->gameid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+      ::google_public::protobuf::internal::WireFormat::SERIALIZE,
+      "gameid");
+    ::google_public::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->gameid(), output);
   }
 
   // optional string playerid = 3;
   if (has_playerid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->playerid().data(), this->playerid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+      ::google_public::protobuf::internal::WireFormat::SERIALIZE,
+      "playerid");
+    ::google_public::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       3, this->playerid(), output);
   }
 
   // optional string teamid = 4;
   if (has_teamid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->teamid().data(), this->teamid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+      ::google_public::protobuf::internal::WireFormat::SERIALIZE,
+      "teamid");
+    ::google_public::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       4, this->teamid(), output);
   }
 
   // optional int32 season = 5;
   if (has_season()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->season(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteInt32(5, this->season(), output);
   }
 
   // optional int32 week = 6;
   if (has_week()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->week(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteInt32(6, this->week(), output);
   }
 
   // optional int32 proj = 7;
   if (has_proj()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->proj(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteInt32(7, this->proj(), output);
   }
 
   // optional float award = 8;
   if (has_award()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->award(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(8, this->award(), output);
   }
 
   // optional float result = 9;
   if (has_result()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(9, this->result(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(9, this->result(), output);
   }
 
   if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+    ::google_public::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:fantasybit.Distribution)
 }
 
-::google::protobuf::uint8* Distribution::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google_public::protobuf::uint8* Distribution::SerializeWithCachedSizesToArray(
+    ::google_public::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.Distribution)
   // optional uint64 fantasy_nameid = 1;
   if (has_fantasy_nameid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->fantasy_nameid(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->fantasy_nameid(), target);
   }
 
   // optional string gameid = 2;
   if (has_gameid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->gameid().data(), this->gameid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+      ::google_public::protobuf::internal::WireFormat::SERIALIZE,
+      "gameid");
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google_public::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->gameid(), target);
   }
 
   // optional string playerid = 3;
   if (has_playerid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->playerid().data(), this->playerid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+      ::google_public::protobuf::internal::WireFormat::SERIALIZE,
+      "playerid");
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google_public::protobuf::internal::WireFormatLite::WriteStringToArray(
         3, this->playerid(), target);
   }
 
   // optional string teamid = 4;
   if (has_teamid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google_public::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->teamid().data(), this->teamid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+      ::google_public::protobuf::internal::WireFormat::SERIALIZE,
+      "teamid");
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google_public::protobuf::internal::WireFormatLite::WriteStringToArray(
         4, this->teamid(), target);
   }
 
   // optional int32 season = 5;
   if (has_season()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->season(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->season(), target);
   }
 
   // optional int32 week = 6;
   if (has_week()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->week(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->week(), target);
   }
 
   // optional int32 proj = 7;
   if (has_proj()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->proj(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->proj(), target);
   }
 
   // optional float award = 8;
   if (has_award()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->award(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->award(), target);
   }
 
   // optional float result = 9;
   if (has_result()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(9, this->result(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(9, this->result(), target);
   }
 
   if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+    target = ::google_public::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.Distribution)
   return target;
 }
 
@@ -948,49 +994,49 @@ int Distribution::ByteSize() const {
     // optional string gameid = 2;
     if (has_gameid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google_public::protobuf::internal::WireFormatLite::StringSize(
           this->gameid());
     }
 
     // optional string teamid = 4;
     if (has_teamid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google_public::protobuf::internal::WireFormatLite::StringSize(
           this->teamid());
     }
 
     // optional int32 season = 5;
     if (has_season()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google_public::protobuf::internal::WireFormatLite::Int32Size(
           this->season());
     }
 
     // optional int32 week = 6;
     if (has_week()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google_public::protobuf::internal::WireFormatLite::Int32Size(
           this->week());
     }
 
     // optional uint64 fantasy_nameid = 1;
     if (has_fantasy_nameid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        ::google_public::protobuf::internal::WireFormatLite::UInt64Size(
           this->fantasy_nameid());
     }
 
     // optional string playerid = 3;
     if (has_playerid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google_public::protobuf::internal::WireFormatLite::StringSize(
           this->playerid());
     }
 
     // optional int32 proj = 7;
     if (has_proj()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google_public::protobuf::internal::WireFormatLite::Int32Size(
           this->proj());
     }
 
@@ -1009,7 +1055,7 @@ int Distribution::ByteSize() const {
   }
   if (!unknown_fields().empty()) {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+      ::google_public::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1018,13 +1064,13 @@ int Distribution::ByteSize() const {
   return total_size;
 }
 
-void Distribution::MergeFrom(const ::google::protobuf::Message& from) {
+void Distribution::MergeFrom(const ::google_public::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
   const Distribution* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Distribution*>(
+    ::google_public::protobuf::internal::dynamic_cast_if_available<const Distribution*>(
       &from);
   if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+    ::google_public::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
     MergeFrom(*source);
   }
@@ -1066,7 +1112,7 @@ void Distribution::MergeFrom(const Distribution& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void Distribution::CopyFrom(const ::google::protobuf::Message& from) {
+void Distribution::CopyFrom(const ::google_public::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1100,9 +1146,9 @@ void Distribution::Swap(Distribution* other) {
   }
 }
 
-::google::protobuf::Metadata Distribution::GetMetadata() const {
+::google_public::protobuf::Metadata Distribution::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
+  ::google_public::protobuf::Metadata metadata;
   metadata.descriptor = Distribution_descriptor_;
   metadata.reflection = Distribution_reflection_;
   return metadata;
@@ -1120,17 +1166,19 @@ const int ProjKstats::kFg60FieldNumber;
 #endif  // !_MSC_VER
 
 ProjKstats::ProjKstats()
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:fantasybit.ProjKstats)
 }
 
 void ProjKstats::InitAsDefaultInstance() {
 }
 
 ProjKstats::ProjKstats(const ProjKstats& from)
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:fantasybit.ProjKstats)
 }
 
 void ProjKstats::SharedCtor() {
@@ -1144,6 +1192,7 @@ void ProjKstats::SharedCtor() {
 }
 
 ProjKstats::~ProjKstats() {
+  // @@protoc_insertion_point(destructor:fantasybit.ProjKstats)
   SharedDtor();
 }
 
@@ -1157,7 +1206,7 @@ void ProjKstats::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ProjKstats::descriptor() {
+const ::google_public::protobuf::Descriptor* ProjKstats::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return ProjKstats_descriptor_;
 }
@@ -1174,33 +1223,46 @@ ProjKstats* ProjKstats::New() const {
 }
 
 void ProjKstats::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    pa_ = 0;
-    fg30_ = 0;
-    fg40_ = 0;
-    fg50_ = 0;
-    fg60_ = 0;
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<ProjKstats*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 31) {
+    ZR_(pa_, fg60_);
   }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool ProjKstats::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+    ::google_public::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google_public::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fantasybit.ProjKstats)
+  for (;;) {
+    ::std::pair< ::google_public::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google_public::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional float pa = 10;
       case 10: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+        if (tag == 85) {
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &pa_)));
           set_has_pa();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(165)) goto parse_fg30;
         break;
@@ -1208,15 +1270,14 @@ bool ProjKstats::MergePartialFromCodedStream(
 
       // optional float fg30 = 20;
       case 20: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 165) {
          parse_fg30:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &fg30_)));
           set_has_fg30();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(245)) goto parse_fg40;
         break;
@@ -1224,15 +1285,14 @@ bool ProjKstats::MergePartialFromCodedStream(
 
       // optional float fg40 = 30;
       case 30: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 245) {
          parse_fg40:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &fg40_)));
           set_has_fg40();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(325)) goto parse_fg50;
         break;
@@ -1240,15 +1300,14 @@ bool ProjKstats::MergePartialFromCodedStream(
 
       // optional float fg50 = 40;
       case 40: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 325) {
          parse_fg50:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &fg50_)));
           set_has_fg50();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(405)) goto parse_fg60;
         break;
@@ -1256,100 +1315,109 @@ bool ProjKstats::MergePartialFromCodedStream(
 
       // optional float fg60 = 50;
       case 50: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 405) {
          parse_fg60:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &fg60_)));
           set_has_fg60();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+      handle_unusual:
+        if (tag == 0 ||
+            ::google_public::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google_public::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
+        DO_(::google_public::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
         break;
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:fantasybit.ProjKstats)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:fantasybit.ProjKstats)
+  return false;
 #undef DO_
 }
 
 void ProjKstats::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google_public::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fantasybit.ProjKstats)
   // optional float pa = 10;
   if (has_pa()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(10, this->pa(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(10, this->pa(), output);
   }
 
   // optional float fg30 = 20;
   if (has_fg30()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(20, this->fg30(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(20, this->fg30(), output);
   }
 
   // optional float fg40 = 30;
   if (has_fg40()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(30, this->fg40(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(30, this->fg40(), output);
   }
 
   // optional float fg50 = 40;
   if (has_fg50()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(40, this->fg50(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(40, this->fg50(), output);
   }
 
   // optional float fg60 = 50;
   if (has_fg60()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(50, this->fg60(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(50, this->fg60(), output);
   }
 
   if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+    ::google_public::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:fantasybit.ProjKstats)
 }
 
-::google::protobuf::uint8* ProjKstats::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google_public::protobuf::uint8* ProjKstats::SerializeWithCachedSizesToArray(
+    ::google_public::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.ProjKstats)
   // optional float pa = 10;
   if (has_pa()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->pa(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->pa(), target);
   }
 
   // optional float fg30 = 20;
   if (has_fg30()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(20, this->fg30(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(20, this->fg30(), target);
   }
 
   // optional float fg40 = 30;
   if (has_fg40()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(30, this->fg40(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(30, this->fg40(), target);
   }
 
   // optional float fg50 = 40;
   if (has_fg50()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(40, this->fg50(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(40, this->fg50(), target);
   }
 
   // optional float fg60 = 50;
   if (has_fg60()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(50, this->fg60(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(50, this->fg60(), target);
   }
 
   if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+    target = ::google_public::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.ProjKstats)
   return target;
 }
 
@@ -1385,7 +1453,7 @@ int ProjKstats::ByteSize() const {
   }
   if (!unknown_fields().empty()) {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+      ::google_public::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1394,13 +1462,13 @@ int ProjKstats::ByteSize() const {
   return total_size;
 }
 
-void ProjKstats::MergeFrom(const ::google::protobuf::Message& from) {
+void ProjKstats::MergeFrom(const ::google_public::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
   const ProjKstats* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ProjKstats*>(
+    ::google_public::protobuf::internal::dynamic_cast_if_available<const ProjKstats*>(
       &from);
   if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+    ::google_public::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
     MergeFrom(*source);
   }
@@ -1428,7 +1496,7 @@ void ProjKstats::MergeFrom(const ProjKstats& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ProjKstats::CopyFrom(const ::google::protobuf::Message& from) {
+void ProjKstats::CopyFrom(const ::google_public::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1458,9 +1526,9 @@ void ProjKstats::Swap(ProjKstats* other) {
   }
 }
 
-::google::protobuf::Metadata ProjKstats::GetMetadata() const {
+::google_public::protobuf::Metadata ProjKstats::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
+  ::google_public::protobuf::Metadata metadata;
   metadata.descriptor = ProjKstats_descriptor_;
   metadata.reflection = ProjKstats_reflection_;
   return metadata;
@@ -1480,17 +1548,19 @@ const int ProjDstats::kPtsaFieldNumber;
 #endif  // !_MSC_VER
 
 ProjDstats::ProjDstats()
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:fantasybit.ProjDstats)
 }
 
 void ProjDstats::InitAsDefaultInstance() {
 }
 
 ProjDstats::ProjDstats(const ProjDstats& from)
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:fantasybit.ProjDstats)
 }
 
 void ProjDstats::SharedCtor() {
@@ -1506,6 +1576,7 @@ void ProjDstats::SharedCtor() {
 }
 
 ProjDstats::~ProjDstats() {
+  // @@protoc_insertion_point(destructor:fantasybit.ProjDstats)
   SharedDtor();
 }
 
@@ -1519,7 +1590,7 @@ void ProjDstats::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ProjDstats::descriptor() {
+const ::google_public::protobuf::Descriptor* ProjDstats::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return ProjDstats_descriptor_;
 }
@@ -1536,35 +1607,46 @@ ProjDstats* ProjDstats::New() const {
 }
 
 void ProjDstats::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    twopt_ = 0;
-    onept_ = 0;
-    deftd_ = 0;
-    sfty_ = 0;
-    turnovers_ = 0;
-    sacks_ = 0;
-    ptsa_ = 0;
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<ProjDstats*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 127) {
+    ZR_(twopt_, ptsa_);
   }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool ProjDstats::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+    ::google_public::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google_public::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fantasybit.ProjDstats)
+  for (;;) {
+    ::std::pair< ::google_public::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google_public::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional float twopt = 100;
       case 100: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+        if (tag == 805) {
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &twopt_)));
           set_has_twopt();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(885)) goto parse_onept;
         break;
@@ -1572,15 +1654,14 @@ bool ProjDstats::MergePartialFromCodedStream(
 
       // optional float onept = 110;
       case 110: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 885) {
          parse_onept:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &onept_)));
           set_has_onept();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(965)) goto parse_deftd;
         break;
@@ -1588,15 +1669,14 @@ bool ProjDstats::MergePartialFromCodedStream(
 
       // optional float deftd = 120;
       case 120: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 965) {
          parse_deftd:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &deftd_)));
           set_has_deftd();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(1045)) goto parse_sfty;
         break;
@@ -1604,15 +1684,14 @@ bool ProjDstats::MergePartialFromCodedStream(
 
       // optional float sfty = 130;
       case 130: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 1045) {
          parse_sfty:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &sfty_)));
           set_has_sfty();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(1125)) goto parse_turnovers;
         break;
@@ -1620,15 +1699,14 @@ bool ProjDstats::MergePartialFromCodedStream(
 
       // optional float turnovers = 140;
       case 140: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 1125) {
          parse_turnovers:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &turnovers_)));
           set_has_turnovers();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(1205)) goto parse_sacks;
         break;
@@ -1636,15 +1714,14 @@ bool ProjDstats::MergePartialFromCodedStream(
 
       // optional float sacks = 150;
       case 150: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 1205) {
          parse_sacks:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &sacks_)));
           set_has_sacks();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(1285)) goto parse_ptsa;
         break;
@@ -1652,120 +1729,129 @@ bool ProjDstats::MergePartialFromCodedStream(
 
       // optional float ptsa = 160;
       case 160: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 1285) {
          parse_ptsa:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &ptsa_)));
           set_has_ptsa();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+      handle_unusual:
+        if (tag == 0 ||
+            ::google_public::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google_public::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
+        DO_(::google_public::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
         break;
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:fantasybit.ProjDstats)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:fantasybit.ProjDstats)
+  return false;
 #undef DO_
 }
 
 void ProjDstats::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google_public::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fantasybit.ProjDstats)
   // optional float twopt = 100;
   if (has_twopt()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(100, this->twopt(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(100, this->twopt(), output);
   }
 
   // optional float onept = 110;
   if (has_onept()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(110, this->onept(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(110, this->onept(), output);
   }
 
   // optional float deftd = 120;
   if (has_deftd()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(120, this->deftd(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(120, this->deftd(), output);
   }
 
   // optional float sfty = 130;
   if (has_sfty()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(130, this->sfty(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(130, this->sfty(), output);
   }
 
   // optional float turnovers = 140;
   if (has_turnovers()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(140, this->turnovers(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(140, this->turnovers(), output);
   }
 
   // optional float sacks = 150;
   if (has_sacks()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(150, this->sacks(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(150, this->sacks(), output);
   }
 
   // optional float ptsa = 160;
   if (has_ptsa()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(160, this->ptsa(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(160, this->ptsa(), output);
   }
 
   if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+    ::google_public::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:fantasybit.ProjDstats)
 }
 
-::google::protobuf::uint8* ProjDstats::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google_public::protobuf::uint8* ProjDstats::SerializeWithCachedSizesToArray(
+    ::google_public::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.ProjDstats)
   // optional float twopt = 100;
   if (has_twopt()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(100, this->twopt(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(100, this->twopt(), target);
   }
 
   // optional float onept = 110;
   if (has_onept()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(110, this->onept(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(110, this->onept(), target);
   }
 
   // optional float deftd = 120;
   if (has_deftd()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(120, this->deftd(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(120, this->deftd(), target);
   }
 
   // optional float sfty = 130;
   if (has_sfty()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(130, this->sfty(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(130, this->sfty(), target);
   }
 
   // optional float turnovers = 140;
   if (has_turnovers()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(140, this->turnovers(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(140, this->turnovers(), target);
   }
 
   // optional float sacks = 150;
   if (has_sacks()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(150, this->sacks(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(150, this->sacks(), target);
   }
 
   // optional float ptsa = 160;
   if (has_ptsa()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(160, this->ptsa(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(160, this->ptsa(), target);
   }
 
   if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+    target = ::google_public::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.ProjDstats)
   return target;
 }
 
@@ -1811,7 +1897,7 @@ int ProjDstats::ByteSize() const {
   }
   if (!unknown_fields().empty()) {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+      ::google_public::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1820,13 +1906,13 @@ int ProjDstats::ByteSize() const {
   return total_size;
 }
 
-void ProjDstats::MergeFrom(const ::google::protobuf::Message& from) {
+void ProjDstats::MergeFrom(const ::google_public::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
   const ProjDstats* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ProjDstats*>(
+    ::google_public::protobuf::internal::dynamic_cast_if_available<const ProjDstats*>(
       &from);
   if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+    ::google_public::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
     MergeFrom(*source);
   }
@@ -1860,7 +1946,7 @@ void ProjDstats::MergeFrom(const ProjDstats& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ProjDstats::CopyFrom(const ::google::protobuf::Message& from) {
+void ProjDstats::CopyFrom(const ::google_public::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1892,9 +1978,9 @@ void ProjDstats::Swap(ProjDstats* other) {
   }
 }
 
-::google::protobuf::Metadata ProjDstats::GetMetadata() const {
+::google_public::protobuf::Metadata ProjDstats::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
+  ::google_public::protobuf::Metadata metadata;
   metadata.descriptor = ProjDstats_descriptor_;
   metadata.reflection = ProjDstats_reflection_;
   return metadata;
@@ -1918,17 +2004,19 @@ const int ProjOstats::kOneptFieldNumber;
 #endif  // !_MSC_VER
 
 ProjOstats::ProjOstats()
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:fantasybit.ProjOstats)
 }
 
 void ProjOstats::InitAsDefaultInstance() {
 }
 
 ProjOstats::ProjOstats(const ProjOstats& from)
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:fantasybit.ProjOstats)
 }
 
 void ProjOstats::SharedCtor() {
@@ -1948,6 +2036,7 @@ void ProjOstats::SharedCtor() {
 }
 
 ProjOstats::~ProjOstats() {
+  // @@protoc_insertion_point(destructor:fantasybit.ProjOstats)
   SharedDtor();
 }
 
@@ -1961,7 +2050,7 @@ void ProjOstats::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ProjOstats::descriptor() {
+const ::google_public::protobuf::Descriptor* ProjOstats::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return ProjOstats_descriptor_;
 }
@@ -1978,41 +2067,47 @@ ProjOstats* ProjOstats::New() const {
 }
 
 void ProjOstats::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    passyds_ = 0;
-    passtd_ = 0;
-    rushyds_ = 0;
-    rushtd_ = 0;
-    recyds_ = 0;
-    rectd_ = 0;
-    rec_ = 0;
-    pint_ = 0;
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<ProjOstats*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 255) {
+    ZR_(passyds_, pint_);
   }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    fumble_ = 0;
-    twopt_ = 0;
-    onept_ = 0;
-  }
+  ZR_(fumble_, onept_);
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool ProjOstats::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+    ::google_public::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google_public::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fantasybit.ProjOstats)
+  for (;;) {
+    ::std::pair< ::google_public::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google_public::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional float passyds = 10;
       case 10: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+        if (tag == 85) {
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &passyds_)));
           set_has_passyds();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(165)) goto parse_passtd;
         break;
@@ -2020,15 +2115,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float passtd = 20;
       case 20: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 165) {
          parse_passtd:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &passtd_)));
           set_has_passtd();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(245)) goto parse_rushyds;
         break;
@@ -2036,15 +2130,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float rushyds = 30;
       case 30: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 245) {
          parse_rushyds:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &rushyds_)));
           set_has_rushyds();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(325)) goto parse_rushtd;
         break;
@@ -2052,15 +2145,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float rushtd = 40;
       case 40: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 325) {
          parse_rushtd:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &rushtd_)));
           set_has_rushtd();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(405)) goto parse_recyds;
         break;
@@ -2068,15 +2160,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float recyds = 50;
       case 50: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 405) {
          parse_recyds:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &recyds_)));
           set_has_recyds();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(485)) goto parse_rectd;
         break;
@@ -2084,15 +2175,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float rectd = 60;
       case 60: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 485) {
          parse_rectd:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &rectd_)));
           set_has_rectd();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(565)) goto parse_rec;
         break;
@@ -2100,15 +2190,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float rec = 70;
       case 70: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 565) {
          parse_rec:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &rec_)));
           set_has_rec();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(645)) goto parse_pint;
         break;
@@ -2116,15 +2205,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float pint = 80;
       case 80: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 645) {
          parse_pint:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &pint_)));
           set_has_pint();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(725)) goto parse_fumble;
         break;
@@ -2132,15 +2220,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float fumble = 90;
       case 90: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 725) {
          parse_fumble:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &fumble_)));
           set_has_fumble();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(805)) goto parse_twopt;
         break;
@@ -2148,15 +2235,14 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float twopt = 100;
       case 100: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 805) {
          parse_twopt:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &twopt_)));
           set_has_twopt();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(885)) goto parse_onept;
         break;
@@ -2164,160 +2250,169 @@ bool ProjOstats::MergePartialFromCodedStream(
 
       // optional float onept = 110;
       case 110: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 885) {
          parse_onept:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+          DO_((::google_public::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google_public::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &onept_)));
           set_has_onept();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+      handle_unusual:
+        if (tag == 0 ||
+            ::google_public::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google_public::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
+        DO_(::google_public::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
         break;
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:fantasybit.ProjOstats)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:fantasybit.ProjOstats)
+  return false;
 #undef DO_
 }
 
 void ProjOstats::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google_public::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fantasybit.ProjOstats)
   // optional float passyds = 10;
   if (has_passyds()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(10, this->passyds(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(10, this->passyds(), output);
   }
 
   // optional float passtd = 20;
   if (has_passtd()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(20, this->passtd(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(20, this->passtd(), output);
   }
 
   // optional float rushyds = 30;
   if (has_rushyds()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(30, this->rushyds(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(30, this->rushyds(), output);
   }
 
   // optional float rushtd = 40;
   if (has_rushtd()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(40, this->rushtd(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(40, this->rushtd(), output);
   }
 
   // optional float recyds = 50;
   if (has_recyds()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(50, this->recyds(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(50, this->recyds(), output);
   }
 
   // optional float rectd = 60;
   if (has_rectd()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(60, this->rectd(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(60, this->rectd(), output);
   }
 
   // optional float rec = 70;
   if (has_rec()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(70, this->rec(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(70, this->rec(), output);
   }
 
   // optional float pint = 80;
   if (has_pint()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(80, this->pint(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(80, this->pint(), output);
   }
 
   // optional float fumble = 90;
   if (has_fumble()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(90, this->fumble(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(90, this->fumble(), output);
   }
 
   // optional float twopt = 100;
   if (has_twopt()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(100, this->twopt(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(100, this->twopt(), output);
   }
 
   // optional float onept = 110;
   if (has_onept()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(110, this->onept(), output);
+    ::google_public::protobuf::internal::WireFormatLite::WriteFloat(110, this->onept(), output);
   }
 
   if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+    ::google_public::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:fantasybit.ProjOstats)
 }
 
-::google::protobuf::uint8* ProjOstats::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google_public::protobuf::uint8* ProjOstats::SerializeWithCachedSizesToArray(
+    ::google_public::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.ProjOstats)
   // optional float passyds = 10;
   if (has_passyds()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->passyds(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->passyds(), target);
   }
 
   // optional float passtd = 20;
   if (has_passtd()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(20, this->passtd(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(20, this->passtd(), target);
   }
 
   // optional float rushyds = 30;
   if (has_rushyds()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(30, this->rushyds(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(30, this->rushyds(), target);
   }
 
   // optional float rushtd = 40;
   if (has_rushtd()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(40, this->rushtd(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(40, this->rushtd(), target);
   }
 
   // optional float recyds = 50;
   if (has_recyds()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(50, this->recyds(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(50, this->recyds(), target);
   }
 
   // optional float rectd = 60;
   if (has_rectd()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(60, this->rectd(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(60, this->rectd(), target);
   }
 
   // optional float rec = 70;
   if (has_rec()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(70, this->rec(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(70, this->rec(), target);
   }
 
   // optional float pint = 80;
   if (has_pint()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(80, this->pint(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(80, this->pint(), target);
   }
 
   // optional float fumble = 90;
   if (has_fumble()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(90, this->fumble(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(90, this->fumble(), target);
   }
 
   // optional float twopt = 100;
   if (has_twopt()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(100, this->twopt(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(100, this->twopt(), target);
   }
 
   // optional float onept = 110;
   if (has_onept()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(110, this->onept(), target);
+    target = ::google_public::protobuf::internal::WireFormatLite::WriteFloatToArray(110, this->onept(), target);
   }
 
   if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+    target = ::google_public::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.ProjOstats)
   return target;
 }
 
@@ -2385,7 +2480,7 @@ int ProjOstats::ByteSize() const {
   }
   if (!unknown_fields().empty()) {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+      ::google_public::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -2394,13 +2489,13 @@ int ProjOstats::ByteSize() const {
   return total_size;
 }
 
-void ProjOstats::MergeFrom(const ::google::protobuf::Message& from) {
+void ProjOstats::MergeFrom(const ::google_public::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
   const ProjOstats* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ProjOstats*>(
+    ::google_public::protobuf::internal::dynamic_cast_if_available<const ProjOstats*>(
       &from);
   if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+    ::google_public::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
     MergeFrom(*source);
   }
@@ -2448,7 +2543,7 @@ void ProjOstats::MergeFrom(const ProjOstats& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ProjOstats::CopyFrom(const ::google::protobuf::Message& from) {
+void ProjOstats::CopyFrom(const ::google_public::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2484,9 +2579,9 @@ void ProjOstats::Swap(ProjOstats* other) {
   }
 }
 
-::google::protobuf::Metadata ProjOstats::GetMetadata() const {
+::google_public::protobuf::Metadata ProjOstats::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
+  ::google_public::protobuf::Metadata metadata;
   metadata.descriptor = ProjOstats_descriptor_;
   metadata.reflection = ProjOstats_reflection_;
   return metadata;
@@ -2502,8 +2597,9 @@ const int ProjStats::kKstatsFieldNumber;
 #endif  // !_MSC_VER
 
 ProjStats::ProjStats()
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:fantasybit.ProjStats)
 }
 
 void ProjStats::InitAsDefaultInstance() {
@@ -2513,9 +2609,10 @@ void ProjStats::InitAsDefaultInstance() {
 }
 
 ProjStats::ProjStats(const ProjStats& from)
-  : ::google::protobuf::Message() {
+  : ::google_public::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:fantasybit.ProjStats)
 }
 
 void ProjStats::SharedCtor() {
@@ -2527,6 +2624,7 @@ void ProjStats::SharedCtor() {
 }
 
 ProjStats::~ProjStats() {
+  // @@protoc_insertion_point(destructor:fantasybit.ProjStats)
   SharedDtor();
 }
 
@@ -2543,7 +2641,7 @@ void ProjStats::SetCachedSize(int size) const {
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* ProjStats::descriptor() {
+const ::google_public::protobuf::Descriptor* ProjStats::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return ProjStats_descriptor_;
 }
@@ -2560,7 +2658,7 @@ ProjStats* ProjStats::New() const {
 }
 
 void ProjStats::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & 7) {
     if (has_ostats()) {
       if (ostats_ != NULL) ostats_->::fantasybit::ProjOstats::Clear();
     }
@@ -2576,19 +2674,22 @@ void ProjStats::Clear() {
 }
 
 bool ProjStats::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+    ::google_public::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google_public::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fantasybit.ProjStats)
+  for (;;) {
+    ::std::pair< ::google_public::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google_public::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional .fantasybit.ProjOstats ostats = 10;
       case 10: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+        if (tag == 82) {
+          DO_(::google_public::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_ostats()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(162)) goto parse_dstats;
         break;
@@ -2596,13 +2697,12 @@ bool ProjStats::MergePartialFromCodedStream(
 
       // optional .fantasybit.ProjDstats dstats = 20;
       case 20: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 162) {
          parse_dstats:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+          DO_(::google_public::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_dstats()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(242)) goto parse_kstats;
         break;
@@ -2610,87 +2710,96 @@ bool ProjStats::MergePartialFromCodedStream(
 
       // optional .fantasybit.ProjKstats kstats = 30;
       case 30: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 242) {
          parse_kstats:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+          DO_(::google_public::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_kstats()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+      handle_unusual:
+        if (tag == 0 ||
+            ::google_public::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google_public::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
         }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
+        DO_(::google_public::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
         break;
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:fantasybit.ProjStats)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:fantasybit.ProjStats)
+  return false;
 #undef DO_
 }
 
 void ProjStats::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
+    ::google_public::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fantasybit.ProjStats)
   // optional .fantasybit.ProjOstats ostats = 10;
   if (has_ostats()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google_public::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       10, this->ostats(), output);
   }
 
   // optional .fantasybit.ProjDstats dstats = 20;
   if (has_dstats()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google_public::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       20, this->dstats(), output);
   }
 
   // optional .fantasybit.ProjKstats kstats = 30;
   if (has_kstats()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google_public::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       30, this->kstats(), output);
   }
 
   if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+    ::google_public::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:fantasybit.ProjStats)
 }
 
-::google::protobuf::uint8* ProjStats::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google_public::protobuf::uint8* ProjStats::SerializeWithCachedSizesToArray(
+    ::google_public::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fantasybit.ProjStats)
   // optional .fantasybit.ProjOstats ostats = 10;
   if (has_ostats()) {
-    target = ::google::protobuf::internal::WireFormatLite::
+    target = ::google_public::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         10, this->ostats(), target);
   }
 
   // optional .fantasybit.ProjDstats dstats = 20;
   if (has_dstats()) {
-    target = ::google::protobuf::internal::WireFormatLite::
+    target = ::google_public::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         20, this->dstats(), target);
   }
 
   // optional .fantasybit.ProjKstats kstats = 30;
   if (has_kstats()) {
-    target = ::google::protobuf::internal::WireFormatLite::
+    target = ::google_public::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         30, this->kstats(), target);
   }
 
   if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+    target = ::google_public::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:fantasybit.ProjStats)
   return target;
 }
 
@@ -2701,28 +2810,28 @@ int ProjStats::ByteSize() const {
     // optional .fantasybit.ProjOstats ostats = 10;
     if (has_ostats()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        ::google_public::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->ostats());
     }
 
     // optional .fantasybit.ProjDstats dstats = 20;
     if (has_dstats()) {
       total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        ::google_public::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->dstats());
     }
 
     // optional .fantasybit.ProjKstats kstats = 30;
     if (has_kstats()) {
       total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        ::google_public::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->kstats());
     }
 
   }
   if (!unknown_fields().empty()) {
     total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+      ::google_public::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -2731,13 +2840,13 @@ int ProjStats::ByteSize() const {
   return total_size;
 }
 
-void ProjStats::MergeFrom(const ::google::protobuf::Message& from) {
+void ProjStats::MergeFrom(const ::google_public::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
   const ProjStats* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const ProjStats*>(
+    ::google_public::protobuf::internal::dynamic_cast_if_available<const ProjStats*>(
       &from);
   if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+    ::google_public::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
     MergeFrom(*source);
   }
@@ -2759,7 +2868,7 @@ void ProjStats::MergeFrom(const ProjStats& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void ProjStats::CopyFrom(const ::google::protobuf::Message& from) {
+void ProjStats::CopyFrom(const ::google_public::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2787,9 +2896,9 @@ void ProjStats::Swap(ProjStats* other) {
   }
 }
 
-::google::protobuf::Metadata ProjStats::GetMetadata() const {
+::google_public::protobuf::Metadata ProjStats::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
+  ::google_public::protobuf::Metadata metadata;
   metadata.descriptor = ProjStats_descriptor_;
   metadata.reflection = ProjStats_reflection_;
   return metadata;

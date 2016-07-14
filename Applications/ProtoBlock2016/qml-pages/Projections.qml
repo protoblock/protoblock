@@ -8,8 +8,8 @@ import ProRotoQml.Theme 1.0
 
 Item {
     Component.onCompleted: {
-         if ( !root.reloadleaders )
-              root.reloadleaders = true
+         if ( !themeroot.reloadleaders )
+              themeroot.reloadleaders = true
           else
               MiddleMan.allNamesGet()
     }
@@ -19,7 +19,7 @@ Item {
         id: gstate
         width: parent.width / 1.07
         bannerText: "Season: 2016 Week: 0 "
-        text: "Game Status: Waiting 53 Man Roster \n2016 Projetion Game To Begin on Sept 3"
+        text: "Game Status: Waiting 53 Man Roster \n2016 Protoblock Game To Begin on Sept 3\nThis page will update with release's"
         anchors{
             top: parent.top
             topMargin:ProtoScreen.guToPx(.5)
@@ -29,7 +29,7 @@ Item {
 
     Card{
         width: parent.width / 1.07
-        height: parent.height / 1.07 - (gstate.height* 2)
+        height: rootLoader.height / 1.07 - (gstate.height + ban.height)
         elevation: 1
         anchors{
             topMargin: ProtoScreen.guToPx(1)
@@ -40,7 +40,7 @@ Item {
             id: ban
             text: "2016 Leaderboard"
             color: "white"
-            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
+            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : themeroot.theme.primaryColor
             width: parent.width
             height: ProtoScreen.guToPx(6)
         }
@@ -48,15 +48,15 @@ Item {
             id: leaderboard
             width: parent.width - 5
             anchors.top: ban.bottom
-            height: parent.height - ban.height
+            height: rootLoader.height - (ban.height + gstate.height)
             clip: true
             model:   MiddleMan.allNamesList()
             delegate:
                 ListItems.Subtitled{
                 elevation: 2
-                backgroundColor: realRoot.uname ===  modelData ? Colors.blue : "white"
+                backgroundColor: realRoot.uname ===  modelData ? Colors.amber : "white"
                 width: parent.width
-                text: "FantasyName: " +  modelData
+                text: /*"FantasyName: " +*/  modelData
                 action: Image{
                     height: parent.height
                     width : height

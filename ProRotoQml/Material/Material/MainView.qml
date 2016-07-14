@@ -33,10 +33,6 @@ Item {
         id: __theme
     }
 
-    PlatformExtensions {
-        id: platformExtensions
-    }
-
     OverlayLayer {
         id: dialogOverlayLayer
         objectName: "dialogOverlayLayer"
@@ -54,8 +50,8 @@ Item {
         z: 100
     }
 
-    width: Unit.dp(800)
-    height: Unit.dp(600)
+    width: ProtoScreen.guToPx(100)
+    height: ProtoScreen.guToPx(75)
 
 
 }

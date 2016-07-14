@@ -1,26 +1,35 @@
 ##############
+## Globals
+##############
+DEFINES += PRODFOOTBALL
+
+contains (QMAKE_HOST.os, Darwin){
+    message("Host is OSX")
+    DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
+}else{
+    message("Host is Windows")
+    DIRPREFIX = D:\work\prebuiltLibs
+}
+
+
+##############
 ##  WINDOWS
 ##############
-
-#DEFINES += PRODFOOTBALL
-
-
 win32 {
+    message( Windows Build)
     INCLUDEPATH +=   $$PWD/../3rdParty
     INCLUDEPATH += $$PWD/../3rdParty/secp256k1
 
    ## FIXME
-   LIBS+= -L$$PWD/../libwin64
-
+    LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
+    #LIBS+= -L$$PWD/../libwin64
     CONFIG(debug, debug|release) {
-#       LIBS += -L$$PWD/../ProRotoQml/jsonpb/debug/ -ljsonpb
        LIBS+= -llibprotobufd  \
               -lleveldbd \
               -llibeay32 \
               -lssleay32 \
     }
     CONFIG(release, debug|release) {
-#       LIBS += -L$$PWD/../ProRotoQml/jsonpb/release/ -ljsonpb
        LIBS+= -llibprotobuf \
               -lleveldb \
               -llibeay32 \
@@ -39,35 +48,37 @@ win32 {
 ##     OSX
 ##############
 
-osx{
-message(OSX BUILD)
-    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/osx/extrenal/include
-    DEPENDPATH += Users/satoshi/Desktop/fc/osx/extrenal/include
+macx{
+    message(OSX BUILD)
+    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
+    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
     ##FIXME compile levelDB
-    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+#        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+#        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libprotobuf.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/lib/libprotobuf.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/lib/libprotobuf.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libsecp256k1.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libssl.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
 
-    LIBS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
-    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/osx/extrenal/lib/libcrypto.a
+    LIBS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
+    PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
 
-    ##FIXME compile levelDB
-    LIBS += -L/usr/local/lib  -lleveldb
+    ## FIXME compile levelDB
+#     LIBS += -L/usr/local/lib  -lleveldb
 }
 
-
+##############
+##     IOS
+##############
 
 ios {
-message (IOS BUILD)
+    message (IOS BUILD)
     ##PATHS
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
@@ -95,42 +106,46 @@ message (IOS BUILD)
 
 
 
-
+##############
+##  ANDROID
+##############
 android {
-    ##PATHS
-    INCLUDEPATH +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/include
-    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/include
+        message(Android Build)
+        ##PATHS
+        INCLUDEPATH += $$DIRPREFIX/android/extrenal-android/include
+        DEPENDPATH += $$DIRPREFIX/android/extrenal-android/include
 
-    ##OPENSSL
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libcrypto.a
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libssl.a
+        ##OPENSSL
+        LIBS += $$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
+        PRE_TARGETDEPS += $$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
+        LIBS += $$DIRPREFIX/android/extrenal-android/lib/libssl.a
+        PRE_TARGETDEPS += $$DIRPREFIX/android/extrenal-android/lib/libssl.a
 
-    ##  SECP251K1
-    LIBS +=/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libsecp256k1.a
+        ##  SECP251K1
+        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
+        PRE_TARGETDEPS += $$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
 
-    # PROTOBUFF
-    LIBS +=  -L/Users/satoshi/Desktop/fc/android/protobuf-ndk-build/protobuf-2.6.1/libs/armeabi-v7a -lprotobuf
-
-
-#      LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libprotobuf.a
-#      PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib/libprotobuf.a
-    ## BOTAN
-#      LIBS += -L/Users/$$(USER)/Desktop/fc/prebuilt/android/extrenal-android/lib -lBotan
-
-
-#    statc gnu c++
-#LIBS += /Users/satoshi/Desktop/ndk/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a/libgnustl_static.a
-
-
+        # PROTOBUFF
+        LIBS += $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so
+        ## BOTAN
+#          LIBS += -$$DIRPREFIX/android/extrenal-android/lib -lBotan
 }
 
-#LATERFOOL
-#unix:!macx:{
-#     Debian UbuntuMint ect
-#    LIBS += /usr/lib/x86_64-linux-gnu/libmysqlclient_r.so
-#    INCLUDEPATH += /usr/include
-#}
+
+
+
+
+##############
+##   LINUX
+##############
+linux!android{
+        message(Linux Build)
+        CONFIG += link_pkgconfig
+        PKGCONFIG += openssl \
+                                     protobuf \
+
+        ##  SECP251K1
+        LIBS +=$$DIRPREFIX/linux/lib/libsecp256k1.a
+        PRE_TARGETDEPS += $$DIRPREFIX/linux/lib/libsecp256k1.a
+}
 

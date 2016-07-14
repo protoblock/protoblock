@@ -42,3 +42,5 @@ CMakeLists.txt.user
 Applications/tradingfootball-qml/meta/**
 ProRotoQml/Backend/meta-new/**
 ProRotoQml/Backend/meta/**
+generated/**
+generated-public/**

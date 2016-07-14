@@ -7,17 +7,21 @@ import ProRotoQml.Sql 1.0
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Theme 1.0
 
-import Material 1.0
+import Material 1.0 as Material
 import Material.ListItems 1.0 as ListItem
+import Material.Extras 1.0
 
+import Communi 3.0
 
-ApplicationWindow{
-    id: root
+Material.ApplicationWindow{
+    id: themeroot
     visible: true
-    width: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.width
-    height: Device.productType === "osx"|| Device.productType === "windows" ? ProtoScreen.guToPx(150)  :  Screen.height
+    width:Device.productType === "windows" ? ProtoScreen.guToPx(150) : Screen.desktopAvailableWidth
+    height: Device.productType === "windows" ? ProtoScreen.guToPx(150) : Screen.desktopAvailableHeight
 
+    color: "transparent"
     Component.onCompleted: {
+        console.log("Primary Color " +  Colors.primaryColor  +  " themeroot Active ?  " + themeroot.active)
         uname = MiddleMan.init()
         if ( uname  === "" ){
             loginDialog.toggle()
@@ -39,7 +43,7 @@ ApplicationWindow{
 
 
     // Pages
-    property var sections: [ levelOne, levelTwo, levelThree,levelFour,levelFive, levelSix ]
+    property var sections: [ levelOne, levelTwo, levelThree,levelFour, levelFive,levelSix ]
     property var sectionsIcons: [
         levelOneIcons,
         levelTwoIcons,
@@ -64,14 +68,13 @@ ApplicationWindow{
 
     property string pageSwitcher
     property string currentPage: sections[0][0]
-    // we set this to 18 because there is no 18 so that it changes of the fly
     property int loginCardScale: 1
     property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
 
     theme {
-        primaryColor: Colors.blue
-        accentColor: Colors.amber
-        tabHighlightColor: Colors.white
+        primaryColor: Colors.primaryColor
+        accentColor: Colors.accentColor
+        tabHighlightColor: Colors.accentColor
     }
 
     // Level One
@@ -130,7 +133,7 @@ ApplicationWindow{
 
 
 
-    initialPage: TabbedPage {
+    initialPage:  Material.TabbedPage {
         id: pageHelper
         title: "ProtoBlock 2016"
 
@@ -143,20 +146,21 @@ ApplicationWindow{
 
         actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
         backAction: navDrawer.action
-        NavigationDrawer {
+        Material.NavigationDrawer {
             id: navDrawer
             enabled:{
-                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet"){
+                if ( ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "tablet" || ProtoScreen.formFactor === "phablet" ){
                     true
                 }else if (pageHelper.width < ProtoScreen.guToPx(120)){
                     true
-                }else{
+                }else  {
                     false
                 }
+
             }
             Flickable {
                 anchors.fill: parent
-                contentHeight: Math.max(content.implicitHeight, height)
+                contentHeight: Math.max( (content.implicitHeight + ProtoScreen.guToPx(1)), height)
                 Column {
                     id: content
                     anchors.fill: parent
@@ -175,8 +179,8 @@ ApplicationWindow{
                                     fillMode: Image.PreserveAspectFit
                                 }
                                 onClicked:{
-                                    var theFile = modelData;
-                                    var theSource = Qt.resolvedUrl("qrc:/"+ theFile.replace(/\s/g, "") + ".qml" )
+                                    var theFile = sectionTitles[index];
+                                    var theSource = Qt.resolvedUrl("qrc:/" +  theFile.replace(/\s/g, "")  + ".qml" )
                                     rootLoader.source = theSource
 
                                     navDrawer.close()
@@ -188,7 +192,7 @@ ApplicationWindow{
                                 // TODO iocns
                                 delegate: ListItem.Standard {
                                     text: modelData
-                                    selected: modelData == root.currentPage
+                                    selected: modelData == themeroot.currentPage
                                     onClicked: {
                                         var theFile = modelData;
                                         var theSource = Qt.resolvedUrl("qrc:/" +theFile.replace(/\s/g, "") + ".qml" )
@@ -210,13 +214,13 @@ ApplicationWindow{
         Loader {
             id: rootLoader
             // sidebar is ProtoScreen.guToPx(31.25)
-            width: navDrawer.enabled === true ? (root.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
-            height:navDrawer.height
+            width: navDrawer.enabled === true ? (themeroot.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
+            height: navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
         }
 
-        ProgressCircle {
+        Material.ProgressCircle {
             id: actInd
             anchors.centerIn: rootLoader
             visible: rootLoader.status == Loader.Loading
@@ -224,9 +228,10 @@ ApplicationWindow{
 
         Repeater {
             model: !navDrawer.enabled ? sections : 0
-            delegate: Tab {
+            delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
+
                 property string currentPage: modelData[0]
                 property var section: modelData
                 source: "qrc:/LeftMenu.qml"
@@ -237,6 +242,7 @@ ApplicationWindow{
 
     Indicators{
         id: indicators
+        visible: loginDialog.visible ? false : true
         anchors{
             top: parent.top
             topMargin: ProtoScreen.guToPx(1.7)
@@ -245,9 +251,9 @@ ApplicationWindow{
         }
     }
 
-    Label {
+    Material.Label {
         rotation: -45
-        text: MiddleMan.isTestNet() ? "Demo Not Live" : "Live"
+        text: MiddleMan.isTestNet() ? qsTr("Demo Testing") : qsTr("Live")
         color: "#40000000"
         anchors.centerIn: parent
         font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
@@ -259,6 +265,9 @@ ApplicationWindow{
     /////////////
     // End OF GUI Easy Look up
     ///////////////////
+
+    //     WHY !!!!!!!!!!!!!!!!!!!
+
     //    SIMPLE MODELS
     ListModel{id: postionModel}
     ListModel{
@@ -267,6 +276,7 @@ ApplicationWindow{
             fillDefaultModels()
         }
     }
+
     function fillDefaultModels(){
 
         var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
@@ -286,7 +296,7 @@ ApplicationWindow{
 
 
     /// DIALOGS
-    Dialog {
+    Material.Dialog {
         id: usingNameDialog
         title: "Protoblock Player Name"
         Text{
@@ -299,19 +309,20 @@ ApplicationWindow{
     }
 
     //Login dialog (only when user does not have a secert3)
-    Dialog {
+    Material.Dialog {
         id: loginDialog
         hasActions: false
-        width: root.width
-        height: root.height
+        width: themeroot.width / 1.07
+        anchors.centerIn: parent
+        height: themeroot.height / 1.07
         contentMargins: 0
         GetName{
-            width: root.width
-            height: root.height
+            width: loginDialog.width
+            height: loginDialog.height
         }
     }
 
-    Dialog {
+    Material.Dialog {
         id: accountErrorDialog
         title: "Unavailable"
         positiveButtonText: "Back"
@@ -345,20 +356,34 @@ ApplicationWindow{
     }
 
 
-    Dialog{
+    Material.Dialog{
         id: loginErrorDialog
         title: "Error in Signup"
-        Label{
+        Material.Label{
             width: parent.width
             height: parent.height
             wrapMode: Text.WordWrap
-            text:  root.errorString
+            text:  themeroot.errorString
             font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
         }
     }
 
 
-    Dialog {
+    Material.Dialog{
+        id: chatErrorDialog
+        title: "Error In chat"
+        Material.Label{
+            width: parent.width
+            height: parent.height
+            wrapMode: Text.WordWrap
+            text:  "We are sorry but you are either not on the internet or have not cliamed a name"
+            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
+        }
+    }
+
+
+
+    Material.Dialog {
         id: myImportDialog
         title: "Import status"
         positiveButtonText: "Back"
@@ -374,7 +399,7 @@ ApplicationWindow{
     }
 
 
-    Dialog {
+    Material.Dialog {
         id: updateDialog
         title: "Update Available"
         positiveButtonText: "Back"
@@ -387,10 +412,10 @@ ApplicationWindow{
                 text: "There is a update available for Protoblock."
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
-            Button{
+            Material.Button{
                 width: parent.width / 1.07
                 text: "Download Now"
-                elevation: 1
+                elevation: 0
                 onClicked: Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
             }
         }
@@ -407,7 +432,7 @@ ApplicationWindow{
                 if ( loginDialog.visible )
                     loginDialog.close()
 
-                root.reloadleaders = false
+                themeroot.reloadleaders = false
                 rootLoader.source = "qrc:/Projections.qml"
                 pageHelper.selectedTabIndex = 1;
             }
@@ -426,7 +451,7 @@ ApplicationWindow{
         onUsingFantasyName: {
             if ( uname !== name) {
                 uname = name
-                msgString = "Congraulation You are now playing as: " + name
+                msgString = "You are now playing as: " + name
                 if( pageHelper.selectedTabIndex === 5 || loginDialog.visible === true){
                     usingNameDialog.toggle()
                 }
@@ -450,10 +475,10 @@ ApplicationWindow{
 
     function compairVersions(d){
         if (realRoot.version !== d){
-            console.log("there is a update")
+//            console.log("there is a update")
             updateDialog.toggle()
         }else{
-            console.log("There is NO UPDARTES ")
+//            console.log("There are NO UPDATES ")
         }
     }
 
@@ -468,13 +493,56 @@ ApplicationWindow{
         onStatusChanged: {
             switch(status){
             case XmlListModel.Error :
-                console.log("ERROR IN UPDATE MACHINE ")
+                //                console.log("ERROR IN UPDATE MACHINE ")
                 break;
             case XmlListModel.Ready:
-//                console.log( "" + updateMachine.get(0).version)
                 compairVersions(updateMachine.get(0).version)
                 break;
             }
         }
+    }
+    IrcConnection {
+        property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
+        property string tempName1: ""
+        id: ircConnectionPoint
+        host: "162.254.24.67"
+        port: 6667
+        secure: false
+        saslMechanism: ""
+        nickName: tempName
+        realName:tempName
+        userName:tempName
+        password:""
+//        onStatusChanged:{
+//            if(status === IrcConnection.Error){
+//                chatErrorDialog.toggle()
+//                actInd.visible = false
+//            }
+//            if(status === IrcConnection.Connecting){
+//                actInd.visible = true
+//            }
+//            else if(status !== IrcConnection.Connecting){
+//                actInd.visible = false
+//            }
+//        }
+    }
+
+    IrcBufferModel {
+        id: ircBufferModel
+        sortMethod: Irc.SortByTitle
+        connection:ircConnectionPoint
+        onMessageIgnored: ircServerBuffer.receiveMessage(message)
+        function quit() {
+            bufferModel.clear()
+            ircConnectionPoint.quit("Fantasy Just Got Real")
+            ircConnectionPoint.close()
+        }
+    }
+    IrcBuffer {
+        id: ircServerBuffer
+        sticky: true
+        persistent: true
+        name: ircConnectionPoint.displayName
+        Component.onCompleted: ircBufferModel.add(ircServerBuffer)
     }
 }

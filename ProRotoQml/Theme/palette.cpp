@@ -181,6 +181,7 @@ void Palette::setDefaultIniFile()
     if( ! settingsFile.exists() ){
         //set the blue to be darker
         QColor m_color( m_yColors.blue() );
+        //FIXME make into hex
         m_color.darker(200);
         QSettings settings(m_file, QSettings::IniFormat);
         settings.beginGroup("Palette");

@@ -180,6 +180,7 @@ Item {
             text: "Fantasy Name: " + model.name
             subText: "Balance: " +  model.score
             elevation: 2
+            maximumLineCount: 3
             action: Image {
                 source: "qrc:/icons/action_account_circle.png"
                 width: 32
@@ -207,6 +208,7 @@ Item {
             text: model.firstName +" " + model.lastName +  " ("+ model.pos + ") " + model.team
             subText:  "Trade: " + model.qty + " @ " + model.price +  " Profit: "+ model.pnl
             elevation: 2
+            maximumLineCount: 3
             valueText: "Week: " + model.week
             action: Image {
                 source: "qrc:/" + model.team+".PNG"
@@ -237,8 +239,10 @@ Item {
                     model.seller + " <b>Sold to</b> " + model.buyer
                 }
             }
+            maximumLineCount: 3
             subText: model.qty + " @ " + model.price
             elevation: 2
+
             action: Image {
                 source: "qrc:/icons/action_account_circle.png"
                 width: 32

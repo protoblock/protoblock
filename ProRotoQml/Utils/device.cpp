@@ -49,79 +49,6 @@ Device::Device(QObject *parent)
 }
 
 
-
-Device::FormFactor Device::formFactor() const
-{
-    float diagonal = calculateDiagonal();
-
-
-
-    QSysInfo sysInfo ;
-
-
-    if ( sysInfo.productType () == "ios" || sysInfo.productType () == "android" ){
-        if (diagonal >= 3.5 && diagonal < 5) { //iPhone 1st generation to phablet
-            return Device::Phone;
-        } else if (diagonal >= 5 && diagonal < 6.5) {
-            return Device::Phablet;
-        } else if (diagonal >= 6.5 && diagonal < 10.1) {
-            return Device::Tablet;
-        }
-    }else{
-        if (diagonal >= 10.1 && diagonal < 29) {
-            return Device::Computer;
-        } else if (diagonal >= 29 && diagonal < 92) {
-            return Device::TV;
-        } else {
-            return Device::Unknown;
-        }
-    }
-}
-QString Device::name() const
-{
-    switch (formFactor()) {
-    case Phone:
-        return tr("phone");
-        break;
-    case Phablet:
-        return tr("phablet");
-        break;
-    case Tablet:
-        return tr("tablet");
-        break;
-    case Computer:
-        return tr("computer");
-        break;
-    case TV:
-        return tr("TV");
-    break;
-    case Unknown:
-        return tr("device");
-        break;
-    default:
-        return tr("unknown");
-        break;
-    }
-}
-
-QString Device::iconName() const
-{
-    switch (formFactor()) {
-        case Phone:
-            return "hardware/smartphone";
-        case Phablet:
-            return "hardware/tablet";
-        case Tablet:
-            return "hardware/tablet";
-        case Computer:
-            return "hardware/desktop_windows";
-        case TV:
-            return "hardware/tv";
-        case Unknown:
-            return "hardware/computer";
-    }
-}
-
 bool Device::isPortrait() const
 {
     return m_screen->physicalSize().height() > m_screen->physicalSize().width();
@@ -159,18 +86,7 @@ bool Device::hoverEnabled() const
     return !isMobile() || !hasTouchScreen();
 }
 
-int Device::gridUnit() const
-{
-    Device::FormFactor formFactor = this->formFactor();
 
-    if (formFactor == Device::Phone || formFactor == Device::Phablet) {
-        return isPortrait() ? 56 : 48;
-    } else if (formFactor == Device::Tablet) {
-        return 64;
-    } else {
-        return hasTouchScreen() ? 64 : 48;
-    }
-}
 
 void Device::screenChanged()
 {

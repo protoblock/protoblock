@@ -5,7 +5,26 @@
 
 
 using namespace fantasybit;
-Mediator::Mediator(QObject *parent) : QObject(parent) {
+Mediator::Mediator(QObject *parent) :
+    QObject(parent),
+    m_socketState(Default),
+    m_internalSocketState(QAbstractSocket::ListeningState)
+{
+
+//    qDebug() << m_webSocket.state ();
+    connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
+    connect (this,SIGNAL(socketError(QString)), this , SLOT ( handleWebSocketError(QString)) );
+    connect(&m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
+    connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
+    connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
+
+    // socket error
+    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
+
+    // socket statte
+    connect (&m_webSocket, SIGNAL (stateChanged(QAbstractSocket::SocketState)),
+             this, SLOT(handleSocketState(QAbstractSocket::SocketState)));
+
 
     auto mynames = m_fantasy_agent.getMyNames();
 //    if ( mynames.size() == 0 ) {
@@ -19,12 +38,10 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
     for ( auto &np : m_fantasy_agent.getMyNames()) {
         m_myPubkeyFname[np.second] = "";
-        qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
+//        qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
     }
 
-
     QString wss("ws://%1:%2");
-
     m_chatServerAddr = wss.arg(PB_WS_CHAT.data()).arg(PB_WS_CHAT_PORT);
     QString lserver = wss.arg(PB_WS_LITE_AGENT.data()).arg(PB_WS_LITE_AGENT_PORT);
     QString txserver = wss.arg(PB_WS_TX.data()).arg(PB_WS_TX_PORT);
@@ -37,12 +54,18 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
     m_txsocket.open(QUrl(txserver));
 
 //    init ();
-    connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
-    connect(&m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
-    connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
-    connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
+//    connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
+//    connect (this,SIGNAL(socketError(QString)), this , SLOT ( handleWebSocketError(QString)) );
+//    connect(&m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
+//    connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
+//    connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
 
-    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
+//    // socket error
+//    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
+
+//    // socket statte
+//    connect (&m_webSocket, SIGNAL (stateChanged(QAbstractSocket::SocketState)),
+//             this, SLOT(handleSocketState(QAbstractSocket::SocketState)));
 
 //    connect(this,SIGNAL (nameStatusChanged(QString,QString))
 //            ,this, SLOT (handdleNameStatus(QString,QString)));
@@ -57,6 +80,7 @@ Mediator::Mediator(QObject *parent) : QObject(parent) {
 
 
     signPlayerStatus.setInterval(2000);
+
     connect(&signPlayerStatus, SIGNAL(timeout()),
             this, SLOT(getSignedPlayerStatus()));
 }
@@ -90,7 +114,7 @@ void Mediator::doPk2fname(const std::string &pkstr) {
 }
 
 void Mediator::checkname(const QString &name) {
-    qDebug() << " in checkname " << name;
+//    qDebug() << " in checkname " << name;
     WsReq req;
     req.set_ctype(CHECKNAME);
     CheckNameReq cnr;
@@ -100,7 +124,7 @@ void Mediator::checkname(const QString &name) {
     QByteArray qb(txstr.data(),(size_t)txstr.size());
     m_webSocket.sendBinaryMessage(qb);
 
-    qDebug() << " sent in checkname " << name;
+//    qDebug() << " sent in checkname " << name;
 
 }
 
@@ -113,6 +137,32 @@ void Mediator::handleError(const QString err) {
     emit errorStringChanged();
 
 }
+
+void Mediator::handleWebSocketError(const QString err)
+{
+    if (m_webSocketErrorString == err)
+        return;
+    m_webSocketErrorString = err;
+    webSocketErrorStringChanged();
+}
+
+QString Mediator::webSocketErrorString() const
+{
+    return m_webSocketErrorString;
+}
+
+QString Mediator::errorString() const
+{
+    return m_errorString;
+}
+
+
+
+
+
+
+
+
 
 Mediator *Mediator::instance() {
     if (myInstance == NULL) {
@@ -270,10 +320,10 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
     fantasybit::WSReply rep;
     rep.ParseFromString(message.toStdString());
 
-    if ( rep.ctype() != GETALLNAMES)
-    qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
-    else
-        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
+//    if ( rep.ctype() != GETALLNAMES)
+//        qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
+//    else
+//        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
 
     switch ( rep.ctype()) {
         case PK2FNAME:
@@ -283,7 +333,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             if ( name == "" ) {
                 if ( pk2.req().pk() == lastPk2name) {
                     error(QString("import failed. please input valid secret"));
-                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
+//                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
                     QString err = "import failed. no name for: ";
                     err.append(lastPk2name.data());
                     emit importSuccess(err,false);
@@ -309,14 +359,14 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 QString goodname = name.data();
 //                m_goodFnames.append(&goodname);
                 m_goodList.append(goodname);
-                qDebug() << " new good name! " << goodname;
+//                qDebug() << " new good name! " << goodname;
             }
                 //            nameStatusChanged( name.data() , "confirmed" );
 
             if ( !m_fantasy_agent.HaveClient() ||
                  lastPk2name == pk2.req().pk()) {
                 if ( !m_fantasy_agent.UseName(name) )
-                    qDebug() << "error using name " << name.data () ;
+//                    qDebug() << "error using name " << name.data () ;
 //                    error(QString("error using name").append(name.data()));
                 usingFantasyName(m_fantasy_agent.currentClient().data());
             }
@@ -330,7 +380,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         }
         case CHECKNAME: {
             const CheckNameRep &cn = rep.GetExtension(CheckNameRep::rep);
-            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
+//            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
             nameCheckGet(cn.req().fantasy_name().data(),cn.isavail().data());
 //            update_checkname(rep.data().data());
             break;
@@ -485,6 +535,13 @@ QString Mediator::init() {
 //    return defaultName;
 }
 
+QString Mediator::getSecret() {
+    if ( !m_fantasy_agent.HaveClient() )
+        return "error- no name";
+    else
+        return m_fantasy_agent.getMnemonic(m_fantasy_agent.currentClient()).data();
+}
+
 //void Mediator::handdleUsingName(const QString &name)
 //{
 //#ifdef TRACE
@@ -501,10 +558,60 @@ QString Mediator::init() {
 
 
 // THIS SHOULD be a error signal that alerts others that something is going on.
-void Mediator::handleSocketError(QAbstractSocket::SocketError error)
+void Mediator::handleSocketError(QAbstractSocket::SocketError err)
 {
-    qDebug() << error;
+    qDebug()<< "Socket Error " << err << m_webSocket.errorString () ;
+    socketError ( m_webSocket.errorString () );
 }
+
+void Mediator::handleSocketState(QAbstractSocket::SocketState sta)
+{
+    if(m_internalSocketState == sta){
+        return;
+    }
+    else {
+        qDebug() << "Socket State Has Changed " << sta;
+        switch(sta){
+        case QAbstractSocket::UnconnectedState :
+            m_socketState = Unconnected;
+            m_internalSocketState = QAbstractSocket::UnconnectedState;
+            break;
+        case QAbstractSocket::HostLookupState :
+            m_socketState = Lookup;
+            m_internalSocketState = QAbstractSocket::HostLookupState;
+            break;
+        case QAbstractSocket::ConnectingState :
+            m_socketState = Connecting;
+            m_internalSocketState = QAbstractSocket::ConnectingState;
+            break;
+        case QAbstractSocket::ConnectedState :
+            m_socketState = Connected;
+            m_internalSocketState = QAbstractSocket::ConnectedState;
+            break;
+        case QAbstractSocket::BoundState :
+            m_socketState = Bound;
+            m_internalSocketState = QAbstractSocket::BoundState ;
+            break;
+        case QAbstractSocket::ClosingState :
+            m_socketState = Closing;
+            m_internalSocketState = QAbstractSocket::ClosingState;
+            break;
+        case QAbstractSocket::ListeningState :
+            m_socketState = Listening;
+            m_internalSocketState = QAbstractSocket::ListeningState;
+            break;
+        default :
+            m_socketState = Default;
+            break;
+        }
+        emit socketStateChanged ();
+    }
+}
+
+//void handleSocketState(QAbstractSocket::SocketState sta)
+//{
+
+//}
 
 //#include <QStandardPaths>
 //std::string Mediator::lastYearPath() {
@@ -543,3 +650,5 @@ void Mediator::allNamesGet() {
 
 
 Mediator *Mediator::myInstance;
+
+

@@ -9,44 +9,15 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls 1.3 as Controls
+import QtQuick.Controls 1.4 as Controls
 import Material.Styles 1.0 as MaterialStyle
 import Material 1.0
+//import ProRotoQml.Theme 1.0
 
-/*!
-   \qmltype Button
-   \inqmlmodule Material
-
-   \brief A push button with a text label.
-
-   A button clearly communicates what action will occur when the user touches it.
-   It consists of text, an image, or both, designed in accordance with your app’s color theme.
-
-   There are three standard types of buttons:
-
-   \list
-   \li Floating action button: A circular material button that lifts and displays
-       an ink reaction on press.
-   \li Raised button: A typically rectangular material button that lifts and
-       displays ink reactions on press.
-   \li Flat button: A button made of ink that displays ink reactions on press but
-       does not lift.
-   \endlist
-
-   This componenent provides raised and flat buttons. For floating action buttons,
-   see \l ActionButton.
-
-   Here are some example buttons:
-
-   \image buttons.png Button examples
-
-   See the \l {http://www.google.com/design/spec/components/buttons.html}
-   {Material Design spec} for details on how to use buttons.
-
-   \sa ActionButton
- */
 Controls.Button {
     id: button
+
+//    height: ProtoScreen.guToPx(4)
 
     /*!
        The background color of the button. By default, this is white for a raised

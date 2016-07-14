@@ -21,7 +21,6 @@ ProtoScreen::ProtoScreen(QObject *parent) :
 }
 
 void ProtoScreen::initialize() {
-    qDebug() << "     INIT CALLED ON BACKEND SCREEN";
     QScreen *desktop = QGuiApplication::primaryScreen();
     double mmToInch = 0.0393700787;
 
@@ -35,16 +34,28 @@ void ProtoScreen::initialize() {
     // maybe this should be 72
     //    m_defaultGrid = 6;
 
-#if !defined(Q_OS_IOS) && !defined(Q_OS_ANDROID)
-    m_devicePixelRatio = ( (double)m_desktopGeometry.width() ) / ((double)m_designResolution.width());
-#else
+//#if !defined(Q_OS_IOS) && !defined(Q_OS_ANDROID)
+//    m_devicePixelRatio = ( (double)m_desktopGeometry.width() ) / ((double)m_designResolution.width());
+//#else
+//    m_devicePixelRatio = desktop->devicePixelRatio();
+
+//#endif
+
     m_devicePixelRatio = desktop->devicePixelRatio();
 
-#endif
+//    qreal m_dpi = desktop->logicalDotsPerInch() * desktop->devicePixelRatio();
 
-    qreal m_dpi = desktop->logicalDotsPerInch() * desktop->devicePixelRatio();
 
-    qDebug() << "Here we are aboiut to update the form factor" << m_dpi;
+    //set all the qscreen stuff
+    setavailableHeight(desktop->availableGeometry().height() );
+    setavailableWidth(desktop->availableGeometry().width() );
+    setpixelRatio (desktop->devicePixelRatio ());
+
+    qDebug() << " desktop->availableGeometry ().height () " << desktop->availableGeometry ().height ();
+    qDebug() << " desktop->availableGeometry ().width () " << desktop->availableGeometry ().width ();
+
+    qDebug() << " desktop->devicePixelRatio () " << desktop->devicePixelRatio ();
+
     updateFormFactor ();
     m_bInitialized = true;
 
@@ -54,8 +65,8 @@ void ProtoScreen::initialize() {
 
 void ProtoScreen::setGridUnit(const double &unit) {
 
-    qDebug() << "CURRENT m_gridUnit " << m_gridUnit;
-    qDebug() <<  "UNITS THAT ARE GETTING SET " << unit;
+//    qDebug() << "CURRENT m_gridUnit " << m_gridUnit;
+//    qDebug() <<  "UNITS THAT ARE GETTING SET " << unit;
 
     if( m_gridUnit == unit ){
         return;
@@ -78,7 +89,7 @@ double ProtoScreen::pxToGu(double px) {
 void ProtoScreen::finalFormFactor(const QString &systemType, const double &versionORscaleSize , const double diagonal)
 {
 
-    qDebug() << "LOOK !!!!! " << systemType <<" " << versionORscaleSize << "  " << diagonal ;
+
 
     // IOS
     if ( systemType == "ios"){
@@ -164,6 +175,10 @@ void ProtoScreen::finalFormFactor(const QString &systemType, const double &versi
         setScaleSize(versionORscaleSize);
     }
 
+
+
+        qDebug() << "OS " << systemType <<" ScaleSize " << versionORscaleSize << "  Diagonal " << diagonal  << " Device Form factor is " << m_formFactor;
+
 }
 
 
@@ -172,18 +187,18 @@ double ProtoScreen::checkIphoneScaleSize(const int &width, const int &height , c
 {
     if (iPhoneVersion >= 4 ){
         if (width >= 320 && width < 321&& height < 567 ){
-            return 2.0;
+            return 1.0;
         }
         else if (height >  567 && height < 569 && width  == 320){
-            return 2.0;
+            return 1.0;
         }
         else if (height >  665  && height < 668 && width  == 375)
         {
-            return 2.0;
+            return 1.0;
         }
         else if (width >= 374  && height  >= 665 )
         {
-            return 3.0;
+            return 1.0;
         }
     }else {
         return 1.0;
@@ -196,7 +211,6 @@ void ProtoScreen::updateFormFactor(){
 
     QScreen *m_screen = QGuiApplication::primaryScreen ();
     QSysInfo sysInfo;
-    qDebug() <<"THE OS !!!  " <<  sysInfo.productType () ;
 
 
     double m_169 =  qSqrt (pow((m_screen->physicalSize().width()), 2) +
@@ -269,53 +283,50 @@ void ProtoScreen::updateFormFactor(){
             //            https://developer.android.com/guide/practices/screens_support.html
             //(low) 120dpi
 
-            if(m_screen->logicalDotsPerInch () < 120)
+            if(m_screen->logicalDotsPerInch () <= 120)
             {
                 m_androidDpi = "ldpi";
                 m_androidScale = 1.0;
             }
 
-            else if (m_screen->logicalDotsPerInch() >= 120
-                    && m_screen->logicalDotsPerInch() < 160)
-            {
-                m_androidDpi = "ldpi";
-                m_androidScale = 0.75;
-            }
-            //(high) ~240dpi
-            else if (m_screen->logicalDotsPerInch() >= 160
-                     && m_screen->logicalDotsPerInch() < 240)
+            else if (m_screen->logicalDotsPerInch() <= 160)
             {
                 m_androidDpi = "mdpi";
                 m_androidScale = 1.5;
             }
             //(high) ~240dpi
-            else if (m_screen->logicalDotsPerInch() >= 240
-                     && m_screen->logicalDotsPerInch()  < 319)
+            else if (m_screen->logicalDotsPerInch() <= 240)
             {
-                m_androidDpi = "hdpi" ;
-                m_androidScale = 1.5;
+                m_androidDpi = "hdpi";
+                m_androidScale = 2.0;
             }
-            // (extra-high) ~320dpi
-            else if (m_screen->logicalDotsPerInch() >= 320
-                     && m_screen->logicalDotsPerInch() < 479)
+            //(high) ~240dpi
+            else if (m_screen->logicalDotsPerInch()  <= 320)
             {
                 m_androidDpi = "xhdpi" ;
-                m_androidScale  = 2.0;
+                m_androidScale = 3.0;
+            }
+            // (extra-high) ~320dpi
+            else if (m_screen->logicalDotsPerInch() <= 480)
+            {
+                m_androidDpi = "xxhdpi" ;
+                m_androidScale  = 4.0;
             }
 
             // (extra-extra-high) ~480dpi
-            else if (m_screen->logicalDotsPerInch() >= 480
-                     && m_screen->logicalDotsPerInch() < 639 )
+            else if (m_screen->logicalDotsPerInch() <= 640 )
             {
-                m_androidDpi = "xxhdpi";
-                m_androidScale = 3.0;
+                m_androidDpi = "xxxhdpi";
+                m_androidScale = 5.0;
             }
 
             //(extra-extra-extra-high) ~640dpi
-            else if (m_screen->logicalDotsPerInch() >= 640)
+            else //if (m_screen->logicalDotsPerInch() >= 640)
             {
+                qDebug() << "m_screen->logicalDotsPerInch() > 640";
+
                 m_androidDpi = "xxxhdpi";
-                m_androidScale = 4.0;
+                m_androidScale = 5.0;
             }
         }
         else
@@ -325,7 +336,8 @@ void ProtoScreen::updateFormFactor(){
             return;
         }
 
-        qDebug() << "android  Scale " <<  m_androidScale << "  diag " << m_169;
+//        m_androidScale *= 1.10;
+        qDebug() << "android  Scale " <<  m_androidScale << "  diag " << m_169 << "m_screen->logicalDotsPerInch()" << m_screen->logicalDotsPerInch();
         finalFormFactor ("android" , m_androidScale, m_169);
         //        delete m_screen;
         return;
@@ -344,7 +356,7 @@ void ProtoScreen::updateFormFactor(){
              )
     {
         m_windowsDesktopScale = 1.0;
-        qDebug() << " windows " << m_screen->logicalDotsPerInch();
+//        qDebug() << " windows " << m_screen->logicalDotsPerInch();
 
         //        SOURCE
         //      https://msdn.microsoft.com/en-us/library/windows/desktop/dn469266(v=vs.85).aspx
@@ -423,8 +435,6 @@ void ProtoScreen::setScaleSize(const double &size)
 }
 
 void ProtoScreen::updateFonts() {
-
-    qDebug() << "Here is the formFactor " <<  m_formFactor;
 
     if (m_formFactor == "desktop") {
         m_fonts[XXLARGE] = guToPx(5);

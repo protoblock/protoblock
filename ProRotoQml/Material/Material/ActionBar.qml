@@ -119,7 +119,7 @@ Item {
      *
      * \since 0.3
      */
-    property int iconSize: Unit.gridUnit == 48 * Units.dp ? ProtoScreen.guToPx(2.5) : ProtoScreen.guToPx(3)
+    property int iconSize: ProtoScreen.guToPx(6)     // Unit.gridUnit == 48 * 8 ? ProtoScreen.guToPx(2.5) : ProtoScreen.guToPx(3)
 
     /*!
      * Set to true to integrate the tab bar into a single row with the actions.
@@ -224,45 +224,28 @@ Item {
 
     IconButton {
         id: leftItem
-
+        hasColor: false
         anchors {
             verticalCenter: actionsRow.verticalCenter
             left: parent.left
             leftMargin: leftItem.show ? ProtoScreen.guToPx(2): -leftItem.width
-
             Behavior on leftMargin { NumberAnimation { duration: 200 } }
         }
 
-        color: Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,
-                                                            Theme.dark.iconColor)
+//        color: null //Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,
+                            //                                Theme.dark.iconColor)
         size: iconSize
         action: backAction
-
         opacity: show ? enabled ? 1 : 0.6 : 0
         visible: opacity > 0
-
         Behavior on opacity { NumberAnimation { duration: 200 } }
-
         property bool show: backAction && backAction.visible
     }
 
     Label {
         id: label
-        anchors {
-            verticalCenter: actionsRow.verticalCenter
-            left: parent.left
-            right: actionsRow.left
-            leftMargin:ProtoScreen.guToPx(2) + (leftItem.show ? 1 * Device.gridUnit * Units.dp : 0)
-            rightMargin: ProtoScreen.guToPx(2)
-
-            Behavior on leftMargin {
-                NumberAnimation { duration: 200 }
-            }
-        }
-
         visible: customContentView.children.length === 0 &&
                 (!integratedTabBar || !tabBar.visible)
-
         textFormat: Text.PlainText
         text: actionBar.title
 //        style: "title"
@@ -271,18 +254,33 @@ Item {
         color: Theme.lightDark(actionBar.backgroundColor, Theme.light.textColor,
                                                             Theme.dark.textColor)
         elide: Text.ElideRight
+        verticalAlignment: Text.AlignVCenter
+        anchors {
+            top:  parent.top
+            left: parent.left
+            bottom: parent.bottom
+            right: actionsRow.left
+            leftMargin: (leftItem.width *1.7)
+            // FIXME need to set the indicators default size somewhere somehow
+            rightMargin: parent.width/3
+
+            Behavior on leftMargin {
+                NumberAnimation { duration: 200 }
+            }
+        }
     }
 
     Row {
         id: actionsRow
 
         anchors {
+            top:parent.top
+            bottom: parent.bottom
             right: parent.right
             rightMargin: ProtoScreen.guToPx(2)
         }
 
         height: parent.implicitHeight
-
         spacing: ProtoScreen.guToPx(3)
 
         Repeater {
@@ -307,7 +305,6 @@ Item {
 
         IconButton {
             id: overflowButton
-
             iconName: "qrc:/icons/navigation_more_vert.png"
             objectName: "action/overflow"
             size: ProtoScreen.guToPx(3.375)
@@ -315,16 +312,13 @@ Item {
                                                               Theme.dark.iconColor)
             visible: actionBar.overflowMenuAvailable
             anchors.verticalCenter: parent.verticalCenter
-
             onClicked: openOverflowMenu()
         }
     }
 
     Item {
         id: customContentView
-
         height: parent.height
-
         anchors {
             left: label.left
             right: label.right
@@ -351,8 +345,7 @@ Item {
         height: integratedTabBar ? parent.implicitHeight : implicitHeight
 
         anchors {
-            top: integratedTabBar ? undefined : extendedContentView.bottom
-            bottom: integratedTabBar ? actionsRow.bottom : undefined
+            bottom: integratedTabBar ? actionsRow.bottom : parent.bottom
             left: parent.left
             right: integratedTabBar ? actionsRow.left : parent.right
         }
@@ -361,7 +354,6 @@ Item {
     Dropdown {
         id: overflowMenu
         objectName: "overflowMenu"
-
         width: ProtoScreen.guToPx(31.25)
         height: columnView.height + ProtoScreen.guToPx(2)
 

@@ -11,7 +11,7 @@ Item {
     Card {
         width: parent.width
         height: parent.height
-        elevation: 5
+        elevation: 0
         anchors.centerIn: parent
 
         Column{
@@ -37,9 +37,9 @@ Item {
 
             CardWithBanner{
                 width: parent.width / 1.07
-                bannerText: "2017 Season Contracts "
+                bannerText: "2017 Season Long Contracts "
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Stay tuned for futures contracts"
+                text: "Stay tuned for futures contracts "
             }
         }
 
@@ -84,7 +84,7 @@ Item {
 ////            id: ban
 ////            text: "Trades "
 ////            color: "white"
-////            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : root.theme.primaryColor
+////            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : themeroot.theme.primaryColor
 ////            width: parent.width
 //////            height: ProtoScreen.guToPx(6)
 ////        }

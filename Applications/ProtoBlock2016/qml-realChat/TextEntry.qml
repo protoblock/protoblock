@@ -3,15 +3,13 @@ import Communi 3.1
 import Material 1.0
 import ProRotoQml.Theme 1.0
 
-
 TextField {
     id: textField
-    focus: true
-    height: ProtoScreen.guToPx(11)
-    placeholderText: qsTr("Type To Chat")
-
+    width: parent.width
     property alias buffer: completer.buffer
     signal messageSent(IrcMessage message)
+    helperText:   qsTr("Type To Chat")
+
     Keys.onTabPressed: completer.complete(text, cursorPosition)
     IrcCompleter {
         id: completer
@@ -23,7 +21,7 @@ TextField {
             id: parser
             tolerant: true
             triggers: ["/"]
-            channels: buffer ? buffer.model.channels : []
+            channels: buffer ? (buffer.model ? buffer.model.channels : []) : []
             target: buffer ? buffer.title : ""
 
             Component.onCompleted: {
