@@ -2,10 +2,10 @@
 #include <qqml.h>
 #include <QDebug>
 //api
-#include "blockmeta.h"
-#include "ldbhashreadertool.h"
+//#include "blockmeta.h"
+//#include "ldbhashreadertool.h"
 #include "tempapi.h"
-#include "getuserinfo.h"
+//#include "getuserinfo.h"
 
 //maps
 #include "maps/ldbhashreadermap.h"
@@ -28,7 +28,7 @@
 using namespace fantasybit;
 void ProRotoQmlBackendPlugin::registerTypes(const char *uri)
 {
-    qmlRegisterType<QBlockMeta>(uri,1,0,"BlockMeta");
+//    qmlRegisterType<QBlockMeta>(uri,1,0,"BlockMeta");
 
     // @uri Backend
 
