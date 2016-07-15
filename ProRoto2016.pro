@@ -2,7 +2,7 @@ CONFIG += ordered
 TEMPLATE = subdirs
 
 SUBDIRS += \
-#    $$PWD/GenerateProto/GenerateProto.pro \
+    $$PWD/GenerateProto/GenerateProto.pro \
     $$PWD/ProRotoQml/ProRotoQml.pro \
     $$PWD/Applications
 

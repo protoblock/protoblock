@@ -8,3 +8,5 @@ SUBDIRS += \
 #    $$PWD/../ProRotoQml/libcommuni/examples/examples.pro
 #SUBDIRS += $$PWD/WSServer
 
+
+
