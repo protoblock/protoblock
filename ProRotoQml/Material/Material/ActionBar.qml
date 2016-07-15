@@ -254,13 +254,13 @@ Item {
         color: Theme.lightDark(actionBar.backgroundColor, Theme.light.textColor,
                                                             Theme.dark.textColor)
         elide: Text.ElideRight
-        verticalAlignment: Text.AlignVCenter
+       verticalAlignment: leftItem.show ? Text.AlignVCenter : 0
         anchors {
             top:  parent.top
             left: parent.left
             bottom: parent.bottom
             right: actionsRow.left
-            leftMargin: (leftItem.width *1.7)
+            leftMargin: leftItem.show ? (leftItem.width *1.7)  :ProtoScreen.guToPx(2);
             // FIXME need to set the indicators default size somewhere somehow
             rightMargin: parent.width/3
 
