@@ -54,8 +54,8 @@ macx{
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
     ##FIXME compile levelDB
-        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+#        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+#        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
     LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
@@ -70,7 +70,7 @@ macx{
     PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
 
     ## FIXME compile levelDB
-     LIBS += -L/usr/local/lib  -lleveldb
+#     LIBS += -L/usr/local/lib  -lleveldb
 }
 
 ##############

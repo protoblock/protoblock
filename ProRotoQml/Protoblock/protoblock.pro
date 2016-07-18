@@ -36,13 +36,13 @@ DEFINES += TRACE
 SOURCES += \
 #    $$PWD/getuserinfo.cpp \
     $$PWD/plugin.cpp \
-#    $$PWD/socketclient.cpp \
+    $$PWD/socketclient.cpp \
     $$PWD/mediator.cpp
 
 HEADERS += \
 #    $$PWD/getuserinfo.h \
     $$PWD/plugin.h \
-#    $$PWD/socketclient.h \
+    $$PWD/socketclient.h \
     $$PWD/mediator.h
 
 DISTFILES = qmldir
