@@ -32,7 +32,7 @@ OTHER_FILES += \
 ## for the store.
 macx {
     # Minimum OS X version for submission is 10.stdlib++ needs 10.7
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+#    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
 
 # Copy the custom Info.plist to the app bundle

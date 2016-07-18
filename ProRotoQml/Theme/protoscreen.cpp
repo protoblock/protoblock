@@ -31,19 +31,11 @@ void ProtoScreen::initialize() {
     m_displayDiagonalSize = qSqrt(qRound(displayWidthInch*displayWidthInch) + qRound(displayHeightInch*displayHeightInch));
 
     m_displayDiagonalSize = QString::number(m_displayDiagonalSize,'g',2).toDouble();
-    // maybe this should be 72
-    //    m_defaultGrid = 6;
 
-//#if !defined(Q_OS_IOS) && !defined(Q_OS_ANDROID)
-//    m_devicePixelRatio = ( (double)m_desktopGeometry.width() ) / ((double)m_designResolution.width());
-//#else
-//    m_devicePixelRatio = desktop->devicePixelRatio();
-
-//#endif
 
     m_devicePixelRatio = desktop->devicePixelRatio();
 
-//    qreal m_dpi = desktop->logicalDotsPerInch() * desktop->devicePixelRatio();
+
 
 
     //set all the qscreen stuff
@@ -51,10 +43,6 @@ void ProtoScreen::initialize() {
     setavailableWidth(desktop->availableGeometry().width() );
     setpixelRatio (desktop->devicePixelRatio ());
 
-    qDebug() << " desktop->availableGeometry ().height () " << desktop->availableGeometry ().height ();
-    qDebug() << " desktop->availableGeometry ().width () " << desktop->availableGeometry ().width ();
-
-    qDebug() << " desktop->devicePixelRatio () " << desktop->devicePixelRatio ();
 
     updateFormFactor ();
     m_bInitialized = true;
@@ -64,10 +52,6 @@ void ProtoScreen::initialize() {
 }
 
 void ProtoScreen::setGridUnit(const double &unit) {
-
-//    qDebug() << "CURRENT m_gridUnit " << m_gridUnit;
-//    qDebug() <<  "UNITS THAT ARE GETTING SET " << unit;
-
     if( m_gridUnit == unit ){
         return;
     }else {
@@ -88,8 +72,6 @@ double ProtoScreen::pxToGu(double px) {
 
 void ProtoScreen::finalFormFactor(const QString &systemType, const double &versionORscaleSize , const double diagonal)
 {
-
-
 
     // IOS
     if ( systemType == "ios"){
@@ -455,7 +437,7 @@ void ProtoScreen::updateFonts() {
         m_fonts[SMALL] = guToPx(3);
         m_fonts[TINY] = guToPx(2);
     }
-
+    // FIXME make this with android and iphone options
     else if (m_formFactor == "tablet") {
         m_fonts[XXLARGE] = guToPx(5);
         m_fonts[XLARGE] = guToPx(4.7);
@@ -465,6 +447,8 @@ void ProtoScreen::updateFonts() {
         m_fonts[SMALL] = guToPx(2);
         m_fonts[TINY] = guToPx(1.2);
     }
+
+    // FIXME make this with android and iphone options
     else if (m_formFactor == "phone"){
         m_fonts[XXLARGE] = guToPx(7);
         m_fonts[XLARGE] = guToPx(6.6);
@@ -473,6 +457,5 @@ void ProtoScreen::updateFonts() {
         m_fonts[NORMAL] = guToPx(4.0);
         m_fonts[SMALL] = guToPx(3.5);
         m_fonts[TINY] = guToPx(2.2);
-
     }
 }
