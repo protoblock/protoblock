@@ -248,19 +248,26 @@ Item {
                 (!integratedTabBar || !tabBar.visible)
         textFormat: Text.PlainText
         text: actionBar.title
-//        style: "title"
         font.bold: true
         font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
         color: Theme.lightDark(actionBar.backgroundColor, Theme.light.textColor,
                                                             Theme.dark.textColor)
         elide: Text.ElideRight
-        verticalAlignment: Text.AlignVCenter
+        verticalAlignment:{
+            if (leftItem.show === true ){
+                Text.AlignVCenter
+            }
+            else
+            {
+                Text.AlignJustify
+            }
+        }
         anchors {
             top:  parent.top
             left: parent.left
             bottom: parent.bottom
             right: actionsRow.left
-            leftMargin: (leftItem.width *1.7)
+            leftMargin: leftItem.show ? (leftItem.width *1.7)  :ProtoScreen.guToPx(2);
             // FIXME need to set the indicators default size somewhere somehow
             rightMargin: parent.width/3
 
