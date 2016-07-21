@@ -17,13 +17,14 @@ Item {
             source: "qrc:/logoFinal.png"
             fillMode: Image.PreserveAspectFit
             width: parent.width / 1.07
-            height: parent.height / ProtoScreen.guToPx(1.25)
             anchors.horizontalCenter: parent.horizontalCenterx
+            anchors.top: parent.top
+            anchors.topMargin: ProtoScreen.guToPx(1)
         }
         Label {
             id: welcomeTxt
             anchors.top: logo.bottom
-             anchors.topMargin:  paintedHeight / 2
+            anchors.topMargin: ProtoScreen.guToPx(2)
             width: parent.width / 1.07
             font.pixelSize: ProtoScreen.font( ProtoScreen.MEDIUM )
             font.family: "Roboto"
@@ -39,7 +40,6 @@ Item {
             spacing: 5
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: welcomeTxt.bottom
-            anchors.topMargin: 10
 
 
             CardWithBanner{

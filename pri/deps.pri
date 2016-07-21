@@ -53,10 +53,6 @@ macx{
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
-    ##FIXME compile levelDB
-#        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-#        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
-
     LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
 
@@ -69,8 +65,6 @@ macx{
     LIBS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
     PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
 
-    ## FIXME compile levelDB
-#     LIBS += -L/usr/local/lib  -lleveldb
 }
 
 ##############
@@ -97,9 +91,6 @@ ios {
     LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
     PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
 
-    ## BOTAN
-#    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
-#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
 }
 
 

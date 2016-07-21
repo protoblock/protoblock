@@ -136,7 +136,6 @@ Material.ApplicationWindow{
     initialPage:  Material.TabbedPage {
         id: pageHelper
         title: "ProtoBlock 2016"
-
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
 
@@ -144,7 +143,40 @@ Material.ApplicationWindow{
             rootLoader.source = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
         }
 
-        actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
+        actionBar.customContent:
+            Material.Label{
+                font{
+                    family: "Roboto"
+                    bold: true
+                    pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                }
+                color: "white"
+                anchors.right: parent.left
+                anchors.rightMargin: ProtoScreen.guToPx(2)
+                anchors.verticalCenter: parent.verticalCenter
+                text: realRoot.uname
+            }
+        actionBar.maxActionCount: navDrawer.enabled ? 1:3
+        actions: [
+            Material.Action {
+                iconName: "qrc:/icons/action_account_circle.png"
+                name: "Account"
+                onTriggered: {
+                    rootLoader.source = "qrc:/Account.qml"
+                    pageHelper.selectedTabIndex = 5
+                    pageHelper.title = "Account Settings"
+                }
+            },
+            Material.Action {
+                iconName: "qrc:/icons/action_settings.png"
+                name: "Settings"
+                hoverAnimation: true
+                onTriggered: {
+                    rootLoader.source  = "qrc:/UserSettings.qml"
+                    pageHelper.title = "System Settings"
+                }
+            }
+        ]
         backAction: navDrawer.action
         Material.NavigationDrawer {
             id: navDrawer
@@ -214,7 +246,7 @@ Material.ApplicationWindow{
         Loader {
             id: rootLoader
             // sidebar is ProtoScreen.guToPx(31.25)
-            width: navDrawer.enabled === true ? (themeroot.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
+            width: navDrawer.enabled === true ? themeroot.width  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
             height: navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
@@ -231,7 +263,6 @@ Material.ApplicationWindow{
             delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
-
                 property string currentPage: modelData[0]
                 property var section: modelData
                 source: "qrc:/LeftMenu.qml"
@@ -240,16 +271,6 @@ Material.ApplicationWindow{
 
     }// END TABED PAGE
 
-    Indicators{
-        id: indicators
-        visible: loginDialog.visible ? false : true
-        anchors{
-            top: parent.top
-            topMargin: ProtoScreen.guToPx(1.7)
-            right: parent.right
-            rightMargin: ProtoScreen.guToPx(2)
-        }
-    }
 
     Material.Label {
         rotation: -45
@@ -314,7 +335,7 @@ Material.ApplicationWindow{
         hasActions: false
         width: themeroot.width / 1.07
         anchors.centerIn: parent
-        height: themeroot.height / 1.07
+        height: themeroot.height - 1
         contentMargins: 0
         GetName{
             width: loginDialog.width

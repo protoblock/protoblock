@@ -7,7 +7,7 @@ import ProRotoQml.Theme 1.0
 
 Item {
     id: loginPage
-    property string defaultTxt: "Please Register to play Protoblock" //"A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. Claim your name! Choose your Twitter handle or fantasy team name";
+    property string defaultTxt: "Please Register to play Protoblock"
         Column{
             anchors.fill: parent
             spacing: ProtoScreen.guToPx(2)
@@ -44,7 +44,7 @@ Item {
             Rectangle{width: 1;color: "transparent";height: ProtoScreen.guToPx(2)}
             LoginBox{
                width: parent.width / 1.07
-               height: parent.height - ( logo.height + welcomeTxt.height + aboutHeader.height ) * 2
+               height: parent.height - ( logo.height + welcomeTxt.height + aboutHeader.height ) * 1.5
                anchors.horizontalCenter: parent.horizontalCenter
              }
 

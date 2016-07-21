@@ -22,9 +22,9 @@ SOURCES += \
     ## Utils
     $$PWD/src/utils.cpp \
     $$PWD/src/tempapi.cpp \
-    #$$PWD/src/ldbwriter.cpp \
-#    $$PWD/src/ldbhashreadertool.cpp \
-#    $$PWD/src/blockmeta.cpp \
+    $$PWD/src/ldbwriter.cpp \
+    $$PWD/src/ldbhashreadertool.cpp \
+    $$PWD/src/blockmeta.cpp \
     $$PWD/src/models/playermodel.cpp \
     $$PWD/src/models/projectionsmodel.cpp \
     $$PWD/src/models/scheduledgamesmodel.cpp \
@@ -33,7 +33,7 @@ SOURCES += \
     $$PWD/src/models/leaderboardmodel.cpp \
 #    $$PWD/src/models/closedgamesmodel.cpp \
     $$PWD/src/maps/playermap.cpp \
-#    $$PWD/src/maps/ldbhashreadermap.cpp \
+    $$PWD/src/maps/ldbhashreadermap.cpp \
     $$PWD/src/maps/teammap.cpp \
     $$PWD/src/models/awardsmodels.cpp \
     $$PWD/src/models/pnlmodel.cpp \
@@ -45,9 +45,9 @@ HEADERS += \
     $$PWD/src/backend_plugin.h \
     $$PWD/src/utils.h \
     $$PWD/src/tempapi.h \
-    #$$PWD/src/ldbwriter.h \
-#    $$PWD/src/ldbhashreadertool.h \
-#    $$PWD/src/blockmeta.h \
+    $$PWD/src/ldbwriter.h \
+    $$PWD/src/ldbhashreadertool.h \
+    $$PWD/src/blockmeta.h \
     $$PWD/src/models/playermodel.h \
     $$PWD/src/models/projectionsmodel.h \
     $$PWD/src/models/scheduledgamesmodel.h \
@@ -57,7 +57,7 @@ HEADERS += \
     $$PWD/src/models/leaderboardmodel.h \
     $$PWD/src/maps/playermap.h \
     $$PWD/src/maps/teammap.h \
-#    $$PWD/src/maps/ldbhashreadermap.h \
+    $$PWD/src/maps/ldbhashreadermap.h \
     $$PWD/src/models/awardsmodels.h \
     $$PWD/src/models/pnlmodel.h \
     $$PWD/src/getuserinfo.h \
@@ -83,4 +83,11 @@ target.path = $$installPath
 
 INSTALLS += target qmldir
 
+macx {
+        ## FIXME compile levelDB
+        LIBS += -L/usr/local/lib  -lleveldb
 
+        ##FIXME compile levelDB
+        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+}

@@ -6,9 +6,10 @@ Item {
     property string text
     property string color: "white"
     property string backgroundColor: "black"
-    property int fontSize: ProtoScreen.guToPx(4)
+    property int fontSize: ProtoScreen.font(ProtoScreen.LARGE)
     property bool bold: false
     property int elevation: 2
+    property bool helpShown: false
     // FIXME set up alias on anchos for the text and not a string
 //    property alias anchorsType: bannerTxt.verticalAlignment
     property string anchrosType: "default"
@@ -53,4 +54,19 @@ Item {
         }
 
     }
+
+
+    Image {
+        id: helperArea
+        visible: helpShown
+        width: ProtoScreen.guToPx(5)
+        height: width
+        anchors.right: parent.right
+        anchors.horizontalCenter: parent.horizontalCenter
+        source: "qrc:/icons/ic_help.png"
+    }
+
+
+
+
 }

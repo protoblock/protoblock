@@ -72,7 +72,7 @@ double ProtoScreen::pxToGu(double px) {
 
 void ProtoScreen::finalFormFactor(const QString &systemType, const double &versionORscaleSize , const double diagonal)
 {
-
+    m_systemType = systemType;
     // IOS
     if ( systemType == "ios"){
         if (diagonal >= 3.5 && diagonal < 5) {
@@ -449,7 +449,16 @@ void ProtoScreen::updateFonts() {
     }
 
     // FIXME make this with android and iphone options
-    else if (m_formFactor == "phone"){
+    else if (m_formFactor == "phone" && m_systemType == "ios"){
+        m_fonts[XXLARGE] = guToPx(5);
+        m_fonts[XLARGE] = guToPx(4.6);
+        m_fonts[LARGE] = guToPx(3.0);
+        m_fonts[MEDIUM] = guToPx(2.8);
+        m_fonts[NORMAL] = guToPx(2.0);
+        m_fonts[SMALL] = guToPx(1.5);
+        m_fonts[TINY] = guToPx(.5);
+    }
+    else if (m_formFactor == "phone" && m_systemType == "android"){
         m_fonts[XXLARGE] = guToPx(7);
         m_fonts[XLARGE] = guToPx(6.6);
         m_fonts[LARGE] = guToPx(5.3);

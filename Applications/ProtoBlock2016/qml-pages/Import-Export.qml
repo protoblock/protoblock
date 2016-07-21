@@ -60,8 +60,9 @@ Item{
                 elevation: 5
                 Banner{
                     id: imBan
-                    text: "Import Protoblock Name To This Device."
+                    text: "Import"
                     backgroundColor: themeroot.theme.primaryColor
+                    helpShown: true
                 }
                 Column{
                     width: parent.width

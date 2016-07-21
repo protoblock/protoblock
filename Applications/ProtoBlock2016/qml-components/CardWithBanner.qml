@@ -26,7 +26,7 @@ Card{
         Label{
             id: cLab
             width: parent.width / 1.2
-            font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.guToPx(4):ProtoScreen.guToPx(2.75)
+            font.pixelSize: ProtoScreen.formFactor === "phone" ? ProtoScreen.font(ProtoScreen.NORMAL):ProtoScreen.guToPx(2.75)
             font.family: "Roboto"
             anchors.horizontalCenter: parent.horizontalCenter
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
