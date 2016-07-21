@@ -16,9 +16,8 @@ contains (QMAKE_HOST.os, Darwin){
 ##  WINDOWS
 ##############
 win32 {
-    message( Windows Build)
-    INCLUDEPATH +=   $$PWD/../3rdParty
-    INCLUDEPATH += $$PWD/../3rdParty/secp256k1
+    INCLUDEPATH +=   D:\work\prebuiltLibs\windows/3rdParty
+    INCLUDEPATH += D:\work\prebuiltLibs\windows/3rdParty/secp256k1
 
    ## FIXME
     LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
