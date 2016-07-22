@@ -7,6 +7,7 @@
 #include <QWebSocketServer>
 
 #include "NameData.h"
+#include "Data.h"
 #include "StateData.pb.h"
 //#include "ldbhashreadertool.h"
 //#include "pbjson.hpp"
@@ -43,7 +44,7 @@ public:
 
 
     fantasybit::FantasyNameData mNameData;
-
+    fantasybit::NFLStateData mNFLStateData;
 
     bool verify_name(const fantasybit::SignedTransaction &st, const NameTrans &nt,
                      const secp256k1_ecdsa_signature &sig, const pb::sha256 &digest);

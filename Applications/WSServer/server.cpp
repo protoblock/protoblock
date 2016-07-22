@@ -21,6 +21,7 @@ Server::Server(quint16 port, bool debug, QObject *parent) :
 {
 
     mNameData.init();
+    mNFLStateData.init();
     mport = port;
 
 

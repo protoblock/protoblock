@@ -16,7 +16,8 @@ DEFINES += USE_FIELD_10X26
 DEFINES += USE_FIELD_INV_BUILTIN
 DEFINES += USE_SCALAR_8X32
 DEFINES += USE_SCALAR_INV_BUILTIN
-DEFINES += ONE_TIME_PROD
+#DEFINES += ONE_TIME_PROD
+DEFINES += ONE_TIME_PROD_SEASON_TRADING
 #DEFINES += PRODFOOTBALL
 
 INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
@@ -38,7 +39,9 @@ SOURCES   += \
     $$PWD/../../ProRotoQml/Protoblock/mnemonic.cpp \
     $$PWD/../../ProRotoQml/Protoblock/platform.cpp \
     $$PWD/../../ProRotoQml/Protoblock/Commissioner.cpp \
-    $$PWD/NameData.cpp
+    $$PWD/NameData.cpp \
+    $$PWD/Data.cpp
+
 
 HEADERS += \
 #    $$PWD/../../ProRotoQml/Backend/src/ldbhashreadertool.h \
@@ -64,6 +67,8 @@ HEADERS += \
     $$PWD/../../ProRotoQml/Protoblock/uint128.hpp \
     $$PWD/../../ProRotoQml/Protoblock/utility.hpp \
     $$PWD/../../ProRotoQml/Protoblock/Commissioner.h \
-    $$PWD/NameData.h
+    $$PWD/NameData.h \
+    $$PWD/Data.h
+
 
 
