@@ -157,13 +157,6 @@ QString Mediator::errorString() const
 }
 
 
-
-
-
-
-
-
-
 Mediator *Mediator::instance() {
     if (myInstance == NULL) {
         myInstance = new Mediator();

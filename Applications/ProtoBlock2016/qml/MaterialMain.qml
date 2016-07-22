@@ -78,7 +78,7 @@ Material.ApplicationWindow{
     }
 
     // Level One
-    property var levelOne: [ "Protoblock News" , "About" , "Contact Us" ]
+    property var levelOne: [ "Protoblock News" , "About" , "Contact Us","Settings" ]
     property var levelOneIcons: [
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/ic_help.png",
@@ -136,7 +136,6 @@ Material.ApplicationWindow{
     initialPage:  Material.TabbedPage {
         id: pageHelper
         title: "ProtoBlock 2016"
-
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
 
@@ -144,7 +143,51 @@ Material.ApplicationWindow{
             rootLoader.source = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
         }
 
-        actionBar.maxActionCount: navDrawer.enabled ? 3 : 4
+        actionBar.customContent:
+            Material.Label{
+            text: realRoot.uname
+            verticalAlignment: navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
+            font{
+                family: "Roboto"
+                bold: true
+                pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+            }
+            color: "white"
+
+            anchors{
+                right: parent.left
+                rightMargin: ProtoScreen.guToPx(2)
+                top: parent.top
+                topMargin:{
+                    if (navDrawer.enabled === false ){
+                        ProtoScreen.guToPx(1)
+                    }
+                }
+                bottom: parent.bottom
+            }
+        }
+        actionBar.maxActionCount: navDrawer.enabled ? 1:3
+        actions: [
+            Material.Action {
+                iconName: "qrc:/icons/action_account_circle.png"
+                name: "Account"
+                onTriggered: {
+                    rootLoader.source = "qrc:/Account.qml"
+                    pageHelper.selectedTabIndex = 5
+                    pageHelper.title = "Account Settings"
+                }
+            },
+            Material.Action {
+                iconName: "qrc:/icons/action_settings.png"
+                name: "Settings"
+                hoverAnimation: true
+                onTriggered: {
+                    rootLoader.source  = "qrc:/Settings.qml"
+                    pageHelper.selectedTabIndex = 0
+                    pageHelper.title = "System Settings"
+                }
+            }
+        ]
         backAction: navDrawer.action
         Material.NavigationDrawer {
             id: navDrawer
@@ -170,7 +213,7 @@ Material.ApplicationWindow{
                             width: parent.width
                             ListItem.Subtitled {
                                 id: tabMin
-                                backgroundColor: Colors.primaryColor
+                                backgroundColor: themeroot.theme.primaryColor
                                 text: sectionTitles[index]
                                 action: Image{
                                     source: sectionTitlesIcons[index]
@@ -192,12 +235,11 @@ Material.ApplicationWindow{
                                 // TODO iocns
                                 delegate: ListItem.Standard {
                                     text: modelData
-                                    selected: modelData == themeroot.currentPage
+                                    selected: modelData == currentPage
                                     onClicked: {
                                         var theFile = modelData;
                                         var theSource = Qt.resolvedUrl("qrc:/" +theFile.replace(/\s/g, "") + ".qml" )
                                         rootLoader.source = theSource
-
                                         navDrawer.close()
                                         navDrawer.showing = false
                                     }
@@ -209,12 +251,10 @@ Material.ApplicationWindow{
             }
         }
 
-
-
         Loader {
             id: rootLoader
             // sidebar is ProtoScreen.guToPx(31.25)
-            width: navDrawer.enabled === true ? (themeroot.width - navDrawer.width)  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
+            width: navDrawer.enabled === true ? themeroot.width  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
             height: navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
@@ -231,7 +271,6 @@ Material.ApplicationWindow{
             delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
-
                 property string currentPage: modelData[0]
                 property var section: modelData
                 source: "qrc:/LeftMenu.qml"
@@ -240,16 +279,6 @@ Material.ApplicationWindow{
 
     }// END TABED PAGE
 
-    Indicators{
-        id: indicators
-        visible: loginDialog.visible ? false : true
-        anchors{
-            top: parent.top
-            topMargin: ProtoScreen.guToPx(1.7)
-            right: parent.right
-            rightMargin: ProtoScreen.guToPx(2)
-        }
-    }
 
     Material.Label {
         rotation: -45
@@ -314,7 +343,7 @@ Material.ApplicationWindow{
         hasActions: false
         width: themeroot.width / 1.07
         anchors.centerIn: parent
-        height: themeroot.height / 1.07
+        height: themeroot.height - 1
         contentMargins: 0
         GetName{
             width: loginDialog.width
@@ -343,12 +372,6 @@ Material.ApplicationWindow{
                 text:  errorString
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
-            //            Button{
-            //                text: "Email protoblock staff"
-            //                elevation: loginDialog.visible === true ?5 : 0
-            //                width: loginDialog.visible === true ? parent.width: 0
-            //                onClicked: Qt.openUrlExternally("mailto:contact@protoblock.comexample.com=Login%20support")
-            //            }
         }
 
 
@@ -422,6 +445,26 @@ Material.ApplicationWindow{
     }
 
 
+    Material.Dialog {
+        id: helperDialog
+        title: realRoot.helperHeader
+        positiveButtonText: "Ok"
+        onAccepted: {
+            realRoot.helperHeader = "Help"
+            realRoot.helperTxt = ""
+        }
+        Column{
+            anchors.fill: parent
+            spacing: 3
+            Material.Label{
+                width: parent.width
+                wrapMode: Text.WordWrap
+                text: realRoot.helperTxt
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+        }
+    }
+
 
     Connections {
         target: MiddleMan
@@ -475,10 +518,10 @@ Material.ApplicationWindow{
 
     function compairVersions(d){
         if (realRoot.version !== d){
-//            console.log("there is a update")
+            //            console.log("there is a update")
             updateDialog.toggle()
         }else{
-//            console.log("There are NO UPDATES ")
+            //            console.log("There are NO UPDATES ")
         }
     }
 
@@ -513,18 +556,6 @@ Material.ApplicationWindow{
         realName:tempName
         userName:tempName
         password:""
-//        onStatusChanged:{
-//            if(status === IrcConnection.Error){
-//                chatErrorDialog.toggle()
-//                actInd.visible = false
-//            }
-//            if(status === IrcConnection.Connecting){
-//                actInd.visible = true
-//            }
-//            else if(status !== IrcConnection.Connecting){
-//                actInd.visible = false
-//            }
-//        }
     }
 
     IrcBufferModel {
@@ -544,5 +575,56 @@ Material.ApplicationWindow{
         persistent: true
         name: ircConnectionPoint.displayName
         Component.onCompleted: ircBufferModel.add(ircServerBuffer)
+    }
+
+    /*!
+      * This is the left gesture bar that is used only for
+      * tablets and phones and phablets. It is a swipe gesture to
+      * open up the navbar. Kinda buggy but better then nothing.
+      */
+    Rectangle{
+        id:leftGesture
+        color: "transparent"
+        width:{
+            if(ProtoScreen.formFactor === "phone"
+                    || ProtoScreen.formFactor === "phablet"
+                    || ProtoScreen.formFactor === "tablet" )
+            {
+                ProtoScreen.guToPx(1)
+            }
+            else
+            {
+                0
+            }
+        }
+        height: parent.height
+        x: {
+            if (navDrawer.enabled === true && navDrawer.showing === false){
+                0
+            }else{
+                navDrawer.width
+            }
+        }
+    }
+    MouseArea{
+        anchors.fill: leftGesture
+        anchors.margins:leftGesture.width > 0 ? ProtoScreen.guToPx(3) : 0
+        drag.target: leftGesture
+        drag.minimumX: 0
+        drag.axis: Drag.XAxis
+        onPressed: {
+            if(ProtoScreen.formFactor === "phone" || ProtoScreen.formFactor === "phablet"
+                    || ProtoScreen.formFactor === "tablet" )
+            {
+                if (navDrawer.showing === false)
+                {
+                    navDrawer.showing = true
+                }
+                else if (navDrawer.showing === true)
+                {
+                    navDrawer.showing = false
+                }
+            }
+        }
     }
 }

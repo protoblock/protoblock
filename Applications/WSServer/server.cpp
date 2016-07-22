@@ -2,11 +2,9 @@
 #include "QtWebSockets/qwebsocketserver.h"
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
-//#include "tempapi.h"
 #include "StateData.pb.h"
-//#include "ldbhashreadertool.h"
-//#include "pbjson.hpp"
-//#include "src/protoblockapi.h"
+#include "src/ldbhashreadertool.h"
+#include "../../ProRotoQml/jsonpb/pbjson.hpp"
 
 #include "Commissioner.h"
 
@@ -14,24 +12,22 @@ QT_USE_NAMESPACE
 
 Server::Server(quint16 port, bool debug, QObject *parent) :
     QObject(parent),
-    m_pWebSocketServer(new QWebSocketServer(QStringLiteral("WS Server"),
-                                            QWebSocketServer::NonSecureMode, this)),
+    m_pWebSocketServer(
+        new QWebSocketServer(QStringLiteral("WS Server"),
+                             QWebSocketServer::NonSecureMode, this)
+        ),
     m_clients(),
     m_debug(debug)
 {
-
     mNameData.init();
     mport = port;
 
 
-//    LdbHashReaderTool *ldb = LdbHashReaderTool::instance();
-//    auto ret =
-//            ldb->getJsonDrill("5fa4d88d787667587fee6afd86a24743b2cb914231ea9e75a144e954b85e0346","WeekGameStatusMeta");
-    if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
 
+if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
         QHostAddress hInf = m_pWebSocketServer->serverAddress();
-
         qDebug() << "WS server " << hInf.toString() << " listening on port" << port << m_pWebSocketServer->serverName() << " ";
+
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &Server::onNewConnection);
 
@@ -40,8 +36,6 @@ Server::Server(quint16 port, bool debug, QObject *parent) :
 
 
     connect (this,SIGNAL(error(QString)),this,SLOT(handleError(QString)));
-
-//                fantasybit::TempApi tempapi;
 
     AllNamesRepPtr = &AllNamesRep;
 }
@@ -55,13 +49,6 @@ Server::~Server()
 
 Server::Incoming Server::setEnum(const QString &string)
 {
-
-    //FIXME check for argument
-
-
-
-
-
     if ( string  == "BlockMeta" ) { return GetBlockHeader; }
     if ( string == "LeaderBoardTree"){return GetLeaderBoardTree;}
     if( string == "Ticker" ) {return GetTicker;}
@@ -88,8 +75,252 @@ QStringList Server::createCommandArgument(const QString &cmd)
 //    else
 //    {
     return argument;
+    //    }
+}
+
+QString Server::getLeaderboard()
+{
+
+  return "NULL";
+
+}
+
+QString Server::getTicker()
+{
+    return  "Ticker NA";
+}
+
+QString Server::getProjections()
+{
+    return  "Projections NA";
+}
+
+QString  getTypeFromText(const QString &strings)
+{
+//    QString  messageValue
+//            // FIXME needs to be a if statement
+//            switch (strings){
+//        case "fnbalmetaroot":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "teamstatemid":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "projstateid":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "leaderboardstateid":
+//            messageValue = "LeaderBoardMeta"
+//                    break;
+//        case "txmetaid":
+//            messageValue = "TxMeta"
+//                    break;
+//        case 'trmetaid':
+//            messageValue = "TrMeta";
+//            break;
+//        case 'globalstateid':
+//            messageValue = "GlobalStateMeta";
+//            break;
+//        case 'pbstateid':
+//            messageValue = "pbstate";
+//            break;
+//        case "schedulestateid":
+//            messageValue = "MerkleTree";
+//            break;
+//        case "teamid":
+//            messageValue = "MerkleTree";
+//            break;
+//        case 'datametaroot':
+//            messageValue = "MerkleTree"
+//                    break;
+//        case 'marketstateid':
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "marketticmetaid":
+//            messageValue = 'MarketTicMeta'
+//                    break;
+//        case "playermetaidroot":
+//            messageValue = "MerkleTree";
+//            break;
+//            //    case "limitbookmetaid":
+//            //        messageValue = "MerkleTree"
+//            //        break;
+//        case "askordermetaroot":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "bidordermetaroot":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "ingameprojmetaroot":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "gameresultmetaroot":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "opengamestatusroot":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "homeresultmeta":
+//            messageValue = "TeamResultMeta"
+//                    break;
+//        case "playerresultmetaroot":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "resultdatametaid":
+//            messageValue = "DataMeta";
+//            break;
+//        case "awayresultmeta":
+//            messageValue = "TeamResultMeta"
+//                    break;
+//        case "orderstateid":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case 'awardmetaroot' :
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "pnlmetaroot":
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "awardmetaplayerroot" :
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "posstateid" :
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "orderfillmetaid" :
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "limitbookmetaid" :
+//            messageValue = "limitbook"
+//                    break;
+//        case "fantasynamestateid" :
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "projmetaroot":
+//            messageValue = "MerkleTree";
+//            break;
+//        case "ordersmetaroot" :
+//            messageValue = "MerkleTree"
+//                    break;
+//        case "playergamestatsid" :
+//            messageValue = "PlayerGameStats"
+//                    break;
+//        default:
+//            messageValue = strings
+//                    break;
+//    }
+//    return messageValue
+}
+
+
+
+
+
+QString  Server::getMerkleFromText( const QString &string ){
+    QString merkelHelper;
+//    // FIXME needs to be a if statement
+//    switch(string){
+//    case "schedulestateid":
+//        merkelHelper = "WeekGameStatusMeta"
+//        break;
+//    case "gameresultmetaroot":
+//        merkelHelper = "GameResultsMeta"
+//        break;
+//    case "ingameprojmetaroot":
+//        merkelHelper =  "InGameProjMeta"
+//        break;
+//    case "opengamestatusroot" :
+//        merkelHelper =  "GameStatusMeta"
+//        break;
+//    case "playerresultmetaroot" :
+//        merkelHelper = "PlayerResultMeta"
+//        break;
+//    case "awardmetaplayerroot" :
+//        merkelHelper = "AwardMeta"
+//        break;
+//    case "pnlmetaplayerroot" :
+//        merkelHelper = ""
+//        break;
+//    case "fnbalmetaroot" :
+//        merkelHelper = "FantasyNameBalMeta"
+//        break;
+//    case "awardmetaroot" :
+//        merkelHelper = "AwardMeta"
+//        break;
+//    case "pnlmetaroot" :
+//        merkelHelper = "PnlMeta"
+//        break;
+//    case "posstateid" :
+//        merkelHelper = "PosMeta"
+//        break;
+//    case "orderstateid" :
+//        merkelHelper = "OrderMeta"
+//        break;
+//    case "orderfillmetaid" :
+//        merkelHelper = "OrderFillMeta"
+//        break;
+//    case "marketstateid" :
+//        merkelHelper = "PlayerMarketState"
+//        break;
+//    case "bidordermetaroot" :
+//        merkelHelper = "OrderMeta"
+//        break;
+//    case "askordermetaroot":
+//        merkelHelper  = "OrderMeta"
+//        break;
+//    case  "datametaroot":
+//        merkelHelper = "DataMeta"
+//        break;
+//    case "teamstatemid" :
+//        merkelHelper = "TeamMeta"
+//        break;
+//    case "playermetaidroot" :
+//        merkelHelper = "PlayerMeta"
+//        break;
+//    case  "fantasynamestateid":
+//        merkelHelper = "FantasyNameState"
+//        break;
+//    case "projmetaroot" :
+//        merkelHelper = "ProjMeta"
+//        break;
+//    case "ordersmetaroot" :
+//       merkelHelper = "OrderMeta"
+//        break;
+//    default:
+//        merkelHelper = string
+//        break;
+//    }
+//        qDebug() <<  merkelHelper;
+//        return merkelHelper;
+
+}
+
+
+
+
+
+
+QString Server::drillMerkel(const QString &merkelType)
+{
+//    isLeaves = true;
+//    for (var i = 0 ; i <= arLeaves.length ; i ++){
+//            if (i === 0) {
+//                drillModel.clear()
+//            }
+//            if(i === arLeaves.length ){
+//                isLeaves = false
+//                console.log("isLeaves is changeing back ")
+//            }
+
+//        QString k = arLeaves[i]
+//        QString tt = k.replace(/"/g, "");
+//        LdbHashReaderTool.getDebugStr( tt , keyNames )
+//        tArea.append("Leave Id: "+ tt)
+//        tArea.append('Leave Number: ' + i)
 //    }
 }
+
+
 
 
 void Server::onNewConnection()
@@ -104,22 +335,64 @@ void Server::onNewConnection()
 }
 
 
+
+
+
+
 void Server::processTextMessage(QString message)
 {
-//    QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
+    //    QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
 
-    qDebug() << " processTextMessage ";
+
+    fantasybit::AwardMeta mAwardData;
+
+    GOOGLE_NAMESPACE::protobuf::Message *themsg = NULL;
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
 
+    if ( message == "Leaderboard" ){
+        ldb->readData (ldb->jumpToLeaderBoard ().toStdString (),mtree);
+        themsg = &mtree;
+//        ret = getLeaderboard();
+    }
+    else if (message == "BlockHeight")
+    {
+        ldb->readData(ldb->readstr("blockhead"),bm);
+        themsg = &bm;
+        ret = themsg->DebugString ().data ();
+    }
+    else if (message ==  "Ticker"){
+        ret = getTicker();
+    }
+    else if  (message == "Projections"){
+        ret = getProjections();
+    }
+    else {
+        // What the hell boy :)
+        if ( fantasybit::Commissioner::isAliasAvailable(message.toStdString()) ){
+            ret = "true";
+        }else{
+            ret = "false";
+        }
+    }
 
-    QString ret("false");
-    if ( fantasybit::Commissioner::isAliasAvailable(message.toStdString()) )
-        ret = "true";
 
-    pClient->sendTextMessage(ret);
 
-    return;
 
+    if ( themsg == NULL )
+        return;
+    std::string jsonstr;
+    pbjson::pb2json(themsg,jsonstr);
+    pClient->sendTextMessage(jsonstr.data ());
+
+
+
+    //    pClient->sendTextMessage(ret);
+
+
+
+    //    what the hell boy ?
+    // there is no reason to return as this is void
+    //    return;
 }
 
 

@@ -8,8 +8,7 @@
 
 #include "NameData.h"
 #include "StateData.pb.h"
-//#include "ldbhashreadertool.h"
-//#include "pbjson.hpp"
+#include "src/ldbhashreadertool.h"
 
 using namespace fantasybit;
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
@@ -36,13 +35,13 @@ public:
     };
 
     Incoming setEnum(const QString &string);
-
-
-
     QStringList createCommandArgument(const QString &cmd);
-
-
     fantasybit::FantasyNameData mNameData;
+
+    QString getLeaderboard();
+    QString getTicker();
+    QString getProjections();
+    QString drillMerkel(const QString &merkelType);
 
 
     bool verify_name(const fantasybit::SignedTransaction &st, const NameTrans &nt,
@@ -52,6 +51,9 @@ public:
     static fantasybit::GetAllNamesRep AllNamesRep;
     fantasybit::GetAllNamesRep AllNamesRep2;
     fantasybit::GetAllNamesRep *AllNamesRepPtr;
+
+    QString getMerkleFromText(const QString &string);
+
 
 Q_SIGNALS:
     void closed();
@@ -67,11 +69,19 @@ private:
     QString m_errorString;
     QWebSocketServer *m_pWebSocketServer;
     QList<QWebSocket *> m_clients;
-//    LdbHashReaderTool *pLdbHashReaderTool;
     bool m_debug;
     fantasybit::BlockMeta bm;
     std::string forPbJSon;
     quint16 mport;
+
+    // Text message only
+    QString ret;
+    LdbHashReaderTool *ldb = LdbHashReaderTool::instance();
+    fantasybit::MerkleTree  mtree;
+    fantasybit::FantasyNameBalMeta fnbm;
+    fantasybit::Stats mStats;
+
+
 
 
 };

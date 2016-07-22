@@ -21,6 +21,8 @@ Quick.Window {
     property string currentTeamInFocus
     property string currentHomeTeam
     property string currentAwayTeam
+    property string helperTxt
+    property string helperHeader: "Help"
 
     property string msgString
 

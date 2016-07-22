@@ -51,7 +51,10 @@ HEADERS += protoblockcore.h\
     bitcoin-core-base58/hash.h \
     utils/utils.h
 
-#unix {
-#    target.path = /usr/lib
-#    INSTALLS += target
-#}
+
+
+installPath = $$[QT_INSTALL_LIBS]/$$replace(uri, \\., /)
+target.path = $$installPath
+INSTALLS += target
+
+

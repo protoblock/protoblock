@@ -104,8 +104,8 @@ Text {
     font.pixelSize: (ProtoScreen.font(ProtoScreen.NORMAL))
     font.family: "Roboto"
 
-    // This is kinda stupid
-    font.capitalization: style == "button" ? Font.AllUppercase : Font.MixedCase
+    // This was kinda stupid
+    font.capitalization:  Font.MixedCase
 
 
     // FIXME Docs say that material should be as follows

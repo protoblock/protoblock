@@ -19,12 +19,6 @@ Platform::~Platform(){}
  * If it returns false then something went wrong and the application will not act correctly
  */
 
-
-
-
-
-
-
 bool Platform::createDefaultIOSDirs(){
     int counter = 1;
 //    if ( systemInfo.productType () == "ios" ){
@@ -141,17 +135,29 @@ AppSettings * Platform::settings() {
 
 
 
-
+//|| systemInfo.productType () == "osx"
 //FIXME this is stupid and should be set in a way different way
 std::string Platform::getRootDir() {
-    if ( systemInfo.productType () == "ios" || systemInfo.productType () == "osx" || systemInfo.productType () == "android" ){
-       QString pRet = QStandardPaths::standardLocations (QStandardPaths::AppDataLocation).value (0);
+    if ( systemInfo.productType () == "ios"
+         || systemInfo.productType () == "android" )
+    {
+
+        QString pRet = QStandardPaths::standardLocations (QStandardPaths::AppDataLocation).value (0);
        createIosDir (pRet);
        pRet.append ("/");
        QDir::setCurrent(pRet);
        qDebug() << "savePath " << pRet;
        return  pRet.toStdString ();
-    }else{
+    }
+    else if (systemInfo.productType () == "osx")
+    {
+        QString pRet = QStandardPaths::standardLocations (QStandardPaths::HomeLocation).first ();
+         pRet.append ("/Library/Application Support/ProtoBlock2016/");
+        createIosDir (pRet);
+         return pRet.toStdString ();
+    }
+    else
+    {
         QString qstrPath = AppSettings::instance()->
                 getSetting(AppSettings::ApplicationStorageDir).toString();
         createIosDir (qstrPath);

@@ -60,8 +60,11 @@ Item{
                 elevation: 5
                 Banner{
                     id: imBan
-                    text: "Import Protoblock Name To This Device."
+                    text: "Import"
                     backgroundColor: themeroot.theme.primaryColor
+                    helpShown: true
+                    helperHeader: "Import and export help"
+                    helperTxt: "Import last years fantasy name or import a name from another device. Just enter in you 12 word password and the import will happen. "
                 }
                 Column{
                     width: parent.width
@@ -82,8 +85,8 @@ Item{
                         id: importButton
                         text: "IMPORT"
                         width: parent.width / 1.07
+                        backgroundColor: themeroot.theme.primaryColor
                         elevation: 1
-                        backgroundColor: Colors.blue
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
                             var mypk = MiddleMan.importMnemonic(nameText.text)
@@ -103,7 +106,7 @@ Item{
 
             Card{
                 id: bacard2
-                height:(( imBan2.height + exportButton.height) * 2 ) + (clearSecret.height + secretTxt.paintedHeight)
+                height:(( imBan2.height + exportButton.height) * 2 ) + (clearSecret.height + secretTxt.paintedHeight + seCard.height)
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 elevation: 5
@@ -115,17 +118,20 @@ Item{
                     Banner{
                         id: imBan2
                         text: "Backup / Export Secret"
-                        backgroundColor: Colors.blue
+                        backgroundColor: themeroot.theme.primaryColor
+                        helpShown: true
+                        helperHeader: "Backup and export help"
+                        helperTxt: "Use this to export your 12 word password.  This is so that you can also sign in on other devices with the import option "
                     }
                     Button{
                         property string mypk
                         id: exportButton
                         text: "Export"
                         width: parent.width / 1.07
+                        backgroundColor: themeroot.theme.primaryColor
                         elevation: 1
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
-//                            console.log("Count of secert "+  secretTxt.contentWidth )
                             secretTxt.text = ""
                             mySecretDialog.show()
                         }
@@ -150,11 +156,28 @@ Item{
                     Label {
                         id: secretTxt
                         width: parent.width / 1.07
-                        font.pixelSize: ProtoScreen.guToPx(3)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                         horizontalAlignment: Text.AlignHCenter
                         wrapMode: Text.WordWrap
                         opacity: contentWidth > 0 ? 1 : 0
                         Behavior on visible {NumberAnimation{duration: 1200;}}
+                    }
+                    Card{
+                         id:seCard
+                         width: parent.width / 1.07
+                         height:  theSecert.height
+                         elevation: visible? 5 : 0
+                         opacity: secretTxt.opacity
+                         anchors.horizontalCenter: parent.horizontalCenter
+                        TextField{
+                            id: theSecert
+                            width: parent.width / 1.07
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            visible: secretTxt.opacity > 0? true : false
+                            readOnly: true
+                        }
+                        Behavior on visible {NumberAnimation{duration: 1200;}}
+
                     }
                 }
             }
@@ -174,8 +197,8 @@ Item{
                 text:  "Secret to your account: " +realRoot.uname + ", will be displayed!"
             }
             onAccepted: {
-                secretTxt.text = "12-word Secret for " + realRoot.uname + " Please do not share this with anyone: \n\n" +
-                        MiddleMan.getSecret()
+                secretTxt.text = "12-word password for " + realRoot.uname + "is displayed below. Please do not share this with anyone:"
+                theSecert.text =  MiddleMan.getSecret()
             }
         }
     }

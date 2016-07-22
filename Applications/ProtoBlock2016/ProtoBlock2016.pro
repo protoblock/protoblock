@@ -17,7 +17,7 @@ qtHaveModule(webengine) {
 
 
 TEMPLATE = app
-QT += xmlpatterns xml qml quick core websockets network sql qml-private quick-private testlib
+QT += xmlpatterns xml qml quick core websockets sql network qml-private quick-private testlib
 #sql webchannel
 CONFIG += c++11 app_bundle
 #osx{
@@ -32,7 +32,7 @@ OTHER_FILES += \
 ## for the store.
 macx {
     # Minimum OS X version for submission is 10.stdlib++ needs 10.7
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+#    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
 
 # Copy the custom Info.plist to the app bundle

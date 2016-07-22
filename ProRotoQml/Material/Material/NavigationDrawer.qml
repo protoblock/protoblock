@@ -49,9 +49,10 @@ PopupBase {
 
     Action {
         id: action
-        iconName: "qrc:/logoOnly.png"
+        iconName: "qrc:/icons/navigation_menu.png"
         name: "Navigation Drawer"
         onTriggered: navDrawer.toggle()
+
     }
 
     View {

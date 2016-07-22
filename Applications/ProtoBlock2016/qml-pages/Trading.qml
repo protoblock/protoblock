@@ -25,7 +25,7 @@ Item {
                 width: parent.width / 1.07
                 bannerText: "2016 Season Contracts"
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Starting July"
+                text: "Starting Preseason"
             }
 
             CardWithBanner{

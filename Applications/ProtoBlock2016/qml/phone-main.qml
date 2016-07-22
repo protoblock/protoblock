@@ -30,7 +30,7 @@ ApplicationWindow {
 
     property variant pagesList  : [
         "Welcome", "WelcomeBack", "About", "Chat", "GetName", "PickUserName",
-        "Players", "ProjectionsLevelOne", "UserSettings","News","Twitter/Tweetsearch"
+        "Players", "ProjectionsLevelOne", "Settings","News","Twitter/Tweetsearch"
         , "Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
         , "TradingLanding","PickUserName" , "WeeklyLandingPage" , "SeasonLongLandingPage"
         ,"WeeklyTradingLanding","SeasonLongLevelTwo"

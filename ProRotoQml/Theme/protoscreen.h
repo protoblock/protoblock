@@ -130,5 +130,6 @@ private:
     double m_windowsDesktopScale;
     double m_androidScale;
     double m_tempMacVersion;
+    QString m_systemType;
 };
 #endif // PROTOSCREEN_H
