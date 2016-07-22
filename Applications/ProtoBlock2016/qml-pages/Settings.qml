@@ -22,7 +22,7 @@ Item {
         Card {
             id: colorPicker
             width: parent.width / 1.07
-            height: ProtoScreen.guToPx(11.25) + (selection.height * 2) + selectionBanner.height
+            height: ProtoScreen.guToPx(12.25) + (selection.height * 2) + selectionBanner.height
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top // ProtoScreen.guToPx(4)
             anchors.topMargin: ProtoScreen.guToPx(4)

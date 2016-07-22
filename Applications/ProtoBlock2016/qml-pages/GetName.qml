@@ -18,9 +18,13 @@ Item {
                 backgroundColor:  Colors.primaryColor
                 elevation: 2
                 anchrosType: "verticalCenter"
-                text: qsTr("Please pick a username")
+                text: qsTr(" pick a username")
                 bold: true
                 fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                helpShown: true
+                helperHeader: "Username help"
+                helperTxt: "This is the user name that you would like to play protoblock 2016 with.  Pick a different name from the list and you will then be playing as that player. "
+
             }
             Image {
                 id: logo

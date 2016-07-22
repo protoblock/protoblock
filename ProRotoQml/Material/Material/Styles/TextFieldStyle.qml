@@ -117,7 +117,7 @@ TextFieldStyle {
                 id: helperTextLabel
                 visible: background.helperText && background.showBorder
                 text: background.helperText
-                font.pixelSize: ProtoTheme.ProtoScreen.guToPx(1.5)
+                font.pixelSize: ProtoTheme.ProtoScreen.font(ProtoTheme.ProtoScreen.SMALL)
                 color: background.hasError ? background.errorColor
                                            : Qt.darker(Theme.light.hintColor)
                 Behavior on color { ColorAnimation { duration: 200 } }

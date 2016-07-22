@@ -32,7 +32,7 @@ Item{
                 width: parent.width
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 horizontalAlignment: Text.AlignHCenter
-                text: "Your Protoblock name is your identity and is managed by your device. There is no central server; instead, your device stores a secret 12-word phrase for back-up and recovery. This means that you and only you control your password. This also means that if you lose your 12-word password, you will not be able to log back in and could possibly lose your saved data.  Please never share this with anyone. Use the export option to see your 12-word secret or use the import tab to import one that you may have on a different device."
+                text: "Your Protoblock name is your identity. It is managed by your device, there is no central server. A secret 12-word pass phrase is used for back-up and recovery. Only you control your password. If you lose your device and your 12-word password, access to your account will be lost. Use the export option to see your 12-word secret."
                 wrapMode: Text.WordWrap
             }
 

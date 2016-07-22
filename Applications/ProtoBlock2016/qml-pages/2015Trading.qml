@@ -48,7 +48,8 @@ Item {
             spacing: 9
             Label{
                 id: mainTitle
-                font.family: "Roboto"ProtoScreen.font(ProtoScreen.LARGE)
+                font.family: "Roboto"
+                font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
                 width: parent.width
                 wrapMode: Text.WordWrap
             }

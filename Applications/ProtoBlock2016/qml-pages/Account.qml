@@ -56,7 +56,7 @@ Item {
                 backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: "Username help"
-                helperTxt: "This is the user name that you would like to play protoblock 2016 with.  Pick a different name from the list and you will then be playing as that player. "
+                helperTxt: "This is the account that you like to play protoblock 2016 with.  Select a different name from the list and you will then be playing as that player. "
             }
             ListView {
                 id: repeater
@@ -108,7 +108,7 @@ Item {
                 backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: "Claiming a new username help"
-                helperTxt: "This is used to claim a new fantasy name to play the game with. Just enter in a name then click \"Cliam New Name\" This will make it so that you can have multiple fantasy names that you can play with. "
+                helperTxt: "This is used to claim a new fantasy name. Just enter in a name then click \"Cliam New Name\". You will then be playing with your new name."
             }
            Column{
                 height:  parent.height - claimBanner.height
