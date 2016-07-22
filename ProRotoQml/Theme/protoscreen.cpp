@@ -459,12 +459,12 @@ void ProtoScreen::updateFonts() {
         m_fonts[TINY] = guToPx(.5);
     }
     else if (m_formFactor == "phone" && m_systemType == "android"){
-        m_fonts[XXLARGE] = guToPx(7);
-        m_fonts[XLARGE] = guToPx(6.6);
-        m_fonts[LARGE] = guToPx(5.3);
-        m_fonts[MEDIUM] = guToPx(4.8);
-        m_fonts[NORMAL] = guToPx(4.0);
-        m_fonts[SMALL] = guToPx(3.5);
-        m_fonts[TINY] = guToPx(2.2);
+        m_fonts[XXLARGE] = guToPx(6);
+        m_fonts[XLARGE] = guToPx(5.6);
+        m_fonts[LARGE] = guToPx(4.3);
+        m_fonts[MEDIUM] = guToPx(3.8);
+        m_fonts[NORMAL] = guToPx(3.0);
+        m_fonts[SMALL] = guToPx(2.5);
+        m_fonts[TINY] = guToPx(1.2);
     }
 }

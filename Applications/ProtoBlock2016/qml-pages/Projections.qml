@@ -8,6 +8,8 @@ import ProRotoQml.Theme 1.0
 
 Item {
     Component.onCompleted: {
+         pageHelper.title = "Projections"
+
         if ( !themeroot.reloadleaders )
             themeroot.reloadleaders = true
         else
@@ -47,7 +49,10 @@ Item {
                 id: ban
                 text: "2016 Leaderboard"
                 color: "white"
-                backgroundColor: realRoot.theme ===  "Pinky" ? "black" : themeroot.theme.primaryColor
+                backgroundColor: themeroot.theme.primaryColor
+                helpShown: true
+                helperHeader: "Leaderboard help"
+                helperTxt: "This is a list of all the people that are playing protoblock 2016 and there balances"
                 width: parent.width
                 height: ProtoScreen.guToPx(6)
             }

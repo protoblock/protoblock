@@ -17,7 +17,7 @@ qtHaveModule(webengine) {
 
 
 TEMPLATE = app
-QT += xmlpatterns xml qml quick core websockets network sql qml-private quick-private testlib
+QT += xmlpatterns xml qml quick core websockets sql network qml-private quick-private testlib
 #sql webchannel
 CONFIG += c++11 app_bundle
 #osx{

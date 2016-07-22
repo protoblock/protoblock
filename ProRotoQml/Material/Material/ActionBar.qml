@@ -225,7 +225,7 @@ Item {
 
     IconButton {
         id: leftItem
-        hasColor: false
+        hasColor: true
         anchors {
             verticalCenter: actionsRow.verticalCenter
             left: parent.left
@@ -233,8 +233,8 @@ Item {
             Behavior on leftMargin { NumberAnimation { duration: 200 } }
         }
 
-        color: Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,
-                                                            Theme.dark.iconColor)
+        color: "white" // Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,
+//                                                            Theme.dark.iconColor)
         size: iconSize
         action: backAction
         opacity: show ? enabled ? 1 : 0.6 : 0
@@ -275,10 +275,11 @@ Item {
         }
         anchors {
             top:  parent.top
+            topMargin: ProtoScreen.guToPx(1)
             left: parent.left
             bottom: parent.bottom
             right: actionsRow.left
-            leftMargin: leftItem.show ? (leftItem.width *1.7)  :ProtoScreen.guToPx(2);
+            leftMargin: leftItem.show ? (leftItem.width *1.7)  : ProtoScreen.guToPx(2);
             // FIXME need to set the indicators default size somewhere somehow
             rightMargin: parent.width/3
             Behavior on leftMargin {
@@ -289,7 +290,6 @@ Item {
 
     Row {
         id: actionsRow
-
         anchors {
             top:parent.top
             bottom: parent.bottom
@@ -309,13 +309,13 @@ Item {
                 id: iconAction
 
                 objectName: "action/" + action.objectName
-
                 action: __internal.visibleActions[index]
-
                 color: Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,
                                                                   Theme.dark.iconColor)
                 size: iconSize
-                anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+                anchors.top: parent.top
+                anchors.topMargin: ProtoScreen.guToPx(1)
+
             }
         }
 

@@ -175,7 +175,7 @@ Item {
         id: settingsModel
         ListElement{
             name: "Home"
-            path: "UserSettings"
+            path: "Settings"
             image: "qrc:/logoOnly.png"
         }
         ListElement{
