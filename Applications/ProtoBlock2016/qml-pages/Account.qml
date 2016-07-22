@@ -56,7 +56,7 @@ Item {
                 backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: "Username help"
-                helperTxt: "This is the account that you like to play protoblock 2016 with.  Select a different name from the list and you will then be playing as that player. "
+                helperTxt: "Choose the active Protoblock account.   Select a name from the list to change users."
             }
             ListView {
                 id: repeater
@@ -107,8 +107,8 @@ Item {
                 text: "Claim New Name"
                 backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
-                helperHeader: "Claiming a new username help"
-                helperTxt: "This is used to claim a new fantasy name. Just enter in a name then click \"Cliam New Name\". You will then be playing with your new name."
+                helperHeader: "Claiming a new username"
+                helperTxt: "This is your fantasy identity. Choose a name, enter it in, then click \"Cliam New Name\". You will then be playing with your new name."
             }
            Column{
                 height:  parent.height - claimBanner.height

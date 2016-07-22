@@ -52,7 +52,7 @@ Item {
                 backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: "Leaderboard help"
-                helperTxt: "This is a list of all the people that are playing protoblock 2016 and there balances"
+                helperTxt: "Get on the leaderboard by making weekly projections."
                 width: parent.width
                 height: ProtoScreen.guToPx(6)
             }
