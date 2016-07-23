@@ -85,6 +85,9 @@ public:
 
     QStringList m_goodList;
     QStringList m_allNamesList;
+    QStringList m_allROWList;
+
+    Q_INVOKABLE void startDepth(const QString&);
 
 //     QList<QString *> m_goodFnames;
 //     QQmlListProperty<QString> goodFnames() {
@@ -139,6 +142,8 @@ public:
     Q_INVOKABLE QStringList goodList() { return m_goodList; }
     Q_INVOKABLE QStringList allNamesList() { return m_allNamesList; }
     Q_INVOKABLE bool isTestNet() { return fantasybit::IS_TEST_NET; }
+
+    Q_INVOKABLE QStringList allRowMarketList() { return m_allNamesList; }
 
     qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);
 
