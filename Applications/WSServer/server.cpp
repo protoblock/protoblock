@@ -170,6 +170,10 @@ void Server::processBinaryMessage(QByteArray message) {
 //        {
 //            rep.set_ctype(GETSTATUS);
 //        }
+        case GETDEPTH:
+            GetDepthRep rrr;
+            rrr.add_depthitems(
+            break;
         default:
             return;
         }
