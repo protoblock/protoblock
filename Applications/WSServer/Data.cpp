@@ -135,7 +135,7 @@ void NFLStateData::init() {
     }
 
 #ifdef ONE_TIME_PROD_SEASON_TRADING
-    Reader<PlayerData> reader3{ GET_ROOT_DIR() + "PlayerDatax.txt"};
+    Reader<PlayerData> reader3{ GET_ROOT_DIR() + "PlayerData.txt"};
     PlayerData pd;
     while ( reader3.ReadNext(pd) ) {
         pd.ByteSize();

@@ -89,6 +89,11 @@ public:
 
     Q_INVOKABLE void startDepth(const QString&);
 
+
+    Q_INVOKABLE void stopDepth(const QString&);
+
+
+
 //     QList<QString *> m_goodFnames;
 //     QQmlListProperty<QString> goodFnames() {
 //         return QQmlListProperty<QString>(this, m_goodFnames);
@@ -112,6 +117,8 @@ public:
     QString playersName();
     void setPlayersName(const QString &playersName);
 
+
+    Q_INVOKABLE void newOrder(const QString &id, int qty, int price);
 
     enum MyNameStatus{
         None=1,

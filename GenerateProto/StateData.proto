@@ -451,6 +451,8 @@ enum CType {
     PK2FNAME = 3;
     GETSTATUS = 4;
     GETALLNAMES = 5;
+    GETROWMARKET = 6;
+    GETDEPTH = 7;
 }
 
 //message WsReq {
@@ -539,3 +541,33 @@ message GetAllNamesRep {
     repeated string names = 10;
 }
 
+message ROWMarket {
+    optional string pid = 10;
+    optional MarketQuote quote = 30;
+    optional PlayerBase playerbase = 40;
+}
+
+message GetROWMarketRep {
+    extend WSReply {
+        optional GetROWMarketRep rep = 600;
+    }
+
+    repeated ROWMarket rowmarket = 10;
+}
+
+message GetDepthReq {
+    extend WsReq {
+        optional GetDepthReq req = 700;
+    }
+
+    optional string pid = 10;
+}
+
+message GetDepthRep {
+    extend WSReply {
+        optional GetDepthRep rep = 700;
+    }
+
+    optional string pid = 10;
+    repeated DepthItem depthitems = 20;
+}
