@@ -26,7 +26,7 @@ Quick.Window {
 
     property string msgString
 
-    property string version: "0.1"
+    property string version: "0.2"
 
 
     // make this into c++
