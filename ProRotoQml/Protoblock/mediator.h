@@ -87,10 +87,10 @@ public:
     QStringList m_allNamesList;
     QStringList m_allROWList;
 
-    Q_INVOKABLE void startDepth(const QString&);
+//    Q_INVOKABLE void startDepth(const QString&);
 
 
-    Q_INVOKABLE void stopDepth(const QString&);
+//    Q_INVOKABLE void stopDepth(const QString&);
 
 
 
@@ -118,7 +118,7 @@ public:
     void setPlayersName(const QString &playersName);
 
 
-    Q_INVOKABLE void newOrder(const QString &id, int qty, int price);
+//    Q_INVOKABLE void newOrder(const QString &id, int qty, int price);
 
     enum MyNameStatus{
         None=1,

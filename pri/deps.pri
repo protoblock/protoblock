@@ -2,6 +2,8 @@
 ## Globals
 ##############
 #DEFINES += PRODFOOTBALL
+DEFINES += USE_LOCALHOST_SERVER
+
 
 contains (QMAKE_HOST.os, Darwin){
     message("Host is OSX")

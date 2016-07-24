@@ -26,13 +26,20 @@
 
 namespace fantasybit {
 
-#ifndef PRODFOOTBALL
+#if !defined(PRODFOOTBALL) || defined(USE_LOCALHOST_SERVER)
     static bool IS_TEST_NET = true;
+
+#ifdef USE_LOCALHOST_SERVER
+    static std::string PB_WS_LITE_AGENT = "localhost";
+    static std::string PB_WS_CHAT = "localhost";
+    static std::string PB_WS_TX = "localhost";
+#else
     static std::string PB_WS_LITE_AGENT = "app.trading.football";
-    static int PB_WS_LITE_AGENT_PORT = 4001;
-    static std::string PB_WS_TX = "app.trading.football";
-    static int PB_WS_TX_PORT = 4000;
     static std::string PB_WS_CHAT = "app.trading.football";
+    static std::string PB_WS_TX = "app.trading.football";
+#endif
+    static int PB_WS_LITE_AGENT_PORT = 4001;
+    static int PB_WS_TX_PORT = 4000;
     static int PB_WS_CHAT_PORT = 4002;
 
 
@@ -43,13 +50,19 @@ namespace fantasybit {
 
 #else
     static bool IS_TEST_NET = false;
-    static std::string PB_WS_LITE_AGENT = "app.trading.football";
     static int PB_WS_LITE_AGENT_PORT = 5111;
-    static std::string PB_WS_TX = "app.trading.football";
     static int PB_WS_TX_PORT = 5110;
-    static std::string PB_WS_CHAT = "app.trading.football";
     static int PB_WS_CHAT_PORT = 5112;
 
+#ifdef USE_LOCALHOST_SERVER
+    static std::string PB_WS_LITE_AGENT = "localhost";
+    static std::string PB_WS_CHAT = "localhost";
+    static std::string PB_WS_TX = "localhost";
+#else
+    static std::string PB_WS_LITE_AGENT = "app.trading.football";
+    static std::string PB_WS_CHAT = "app.trading.football";
+    static std::string PB_WS_TX = "app.trading.football";
+#endif
 
     static std::string PAPIURL = "https://app.trading.football:4545";
     static std::string LAPIURL = "https://app.trading.football:9854";

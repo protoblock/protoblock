@@ -21,7 +21,9 @@ Server::Server(quint16 port, bool debug, QObject *parent) :
 {
 
     mNameData.init();
+#ifdef PROD_SEASON_TRADING
     mNFLStateData.init();
+#endif
     mport = port;
 
 
@@ -45,6 +47,9 @@ Server::Server(quint16 port, bool debug, QObject *parent) :
 //                fantasybit::TempApi tempapi;
 
     AllNamesRepPtr = &AllNamesRep;
+    if ( AllNamesRepPtr->names_size() > MaxNames)
+        AllNamesRepPtr->mutable_names()->DeleteSubrange(0,AllNamesRepPtr->names_size() - MaxNames);
+
 }
 
 Server::~Server()
@@ -123,16 +128,32 @@ void Server::processTextMessage(QString message)
 
 }
 
+//enum CType {
+//    CHECKNAME = 1;
+//    NEWTX = 2;
+//    PK2FNAME = 3;
+//    GETSTATUS = 4;
+//    GETALLNAMES = 5;
+//    GETROWMARKET = 6;
+//    GETDEPTH = 7;
+//}
 
-void Server::processBinaryMessage(QByteArray message) {
+
+void Server::processBinaryMessage(const QByteArray &message) {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    if ( mport == PB_WS_LITE_AGENT_PORT) {
-        fantasybit::WsReq req;
-        req.ParseFromString(message.toStdString());
-        fantasybit::WSReply rep;
 
-        qDebug() << " processBinaryMessage " << req.DebugString().data();
-        switch ( req.ctype() ) {
+    if ( mport != PB_WS_LITE_AGENT_PORT) {
+        processBinaryTxMessage(message);
+        return;
+    }
+
+    fantasybit::WsReq req;
+    req.ParseFromString(message.toStdString());
+    fantasybit::WSReply rep;
+
+//    qDebug() << " processBinaryMessage " << req.DebugString().data();
+
+    switch ( req.ctype() ) {
         case PK2FNAME:
         {
             Pk2FnameRep pkr;
@@ -146,6 +167,7 @@ void Server::processBinaryMessage(QByteArray message) {
 
 
             rep.MutableExtension(Pk2FnameRep::rep)->CopyFrom(pkr);
+            rep.SerializeToString(&mRepstr);
             break;
         }
         case CHECKNAME:
@@ -159,46 +181,69 @@ void Server::processBinaryMessage(QByteArray message) {
                 cr.set_isavail("false");
 
             rep.MutableExtension(CheckNameRep::rep)->CopyFrom(cr);
+            rep.SerializeToString(&mRepstr);
             break;
         }
         case GETALLNAMES: {
             rep.set_ctype(GETALLNAMES);
-            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
+    //            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
+            rep.SetAllocatedExtension(GetAllNamesRep::rep,AllNamesRepPtr);
+            rep.SerializeToString(&mRepstr);
+            rep.ReleaseExtension(GetAllNamesRep::rep);
             break;
         }
-//        case NameStatusReq:
-//        {
-//            rep.set_ctype(GETSTATUS);
-//        }
+
+#ifdef PROD_SEASON_TRADING
         case GETDEPTH:
-            GetDepthRep rrr;
-            rrr.add_depthitems(
+    //            GetDepthRep rrr;
+    //            rrr.add_depthitems(
+            rep.SerializeToString(&mRepstr);
             break;
+        case GETROWMARKET:
+            rep.set_ctype(GETROWMARKET);
+    //            rep.SetAllocatedExtension( MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
+            rep.SerializeToString(&mRepstr);
+            break;
+#endif
         default:
             return;
-        }
+    }
 
 //        rep.mutable_req()->CopyFrom(req);
 
-        auto repstr = rep.SerializeAsString();
-        QByteArray qb(repstr.data(),(size_t)repstr.size());
-        pClient->sendBinaryMessage(qb);
-        if ( rep.ctype() == GETALLNAMES)
-            qDebug() << rep.ctype() <<" size " << AllNamesRepPtr->names_size();
-        else
-            qDebug() << rep.DebugString().data();
-        return;
-    }
-    else {
-        fantasybit::SignedTransaction st;
-        st.ParseFromString(message.toStdString());
+    QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
+    pClient->sendBinaryMessage(qb);
+    if ( rep.ctype() == GETALLNAMES)
+        qDebug() << rep.ctype() <<" size " << AllNamesRepPtr->names_size();
+    else
+        ;///qDebug() << rep.DebugString().data();
+    return;
+}
+
+void Server::processBinaryTxMessage(const QByteArray &message) {
+    fantasybit::SignedTransaction st;
+    st.ParseFromString(message.toStdString());
 
 
-        const Transaction &t = st.trans();
-        pb::sha256 digest = pb::sha256(t.SerializeAsString());
-        secp256k1_ecdsa_signature sig = Commissioner::str2sig(st.sig());
+    const Transaction &t = st.trans();
+    pb::sha256 digest = pb::sha256(t.SerializeAsString());
+    secp256k1_ecdsa_signature sig = Commissioner::str2sig(st.sig());
 
-        if (t.type() == TransType::NAME) {
+//        enum TransType {
+//          NAME = 0,
+//          PROJECTION = 1,
+//          RESULT = 2,
+//          DATA = 3,
+//          PROJECTION_BLOCK = 4,
+//          MASTER_NAME = 5,
+//          TIME = 6,
+//          STAMPED = 7,
+//          EXCHANGE = 8,
+//          EXCHANGE_BLOCK = 9
+//        };
+    switch (t.type()) {
+
+        case TransType::NAME: {
             auto nt = t.GetExtension(fantasybit::NameTrans::name_trans);
 
             if (!verify_name(st, nt, sig, digest)) {
@@ -207,31 +252,39 @@ void Server::processBinaryMessage(QByteArray message) {
             }
 
             mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
-            qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name()) << " adding name";
-            AllNamesRep.add_names(nt.fantasy_name());
-            AllNamesRep2.add_names(nt.fantasy_name());
-            if ( AllNamesRepPtr->names_size() >= 1000) {
-                AllNamesRepPtr->clear_names();
-                AllNamesRepPtr = (AllNamesRep.names_size() > AllNamesRep2.names_size()) ? &AllNamesRep : &AllNamesRep2;
+            qDebug() <<  "verified " << FantasyName::name_hash(nt.fantasy_name()) << " adding name";
+            if ( AllNamesRepPtr->names_size() >= MaxNames) {
+                qDebug() << " post purge " << AllNamesRepPtr->names_size() << " > " << MaxNames;
+
+                int endpurge = MaxNames/10;
+                if (endpurge > 1)
+                    AllNamesRepPtr->mutable_names()->DeleteSubrange(0,endpurge);
+                qDebug() << " post purge " << AllNamesRepPtr->names_size();
             }
-//            fantasybit::WSReply rep;
-//            rep.set_ctype(PK2FNAME);
+            AllNamesRepPtr->add_names(nt.fantasy_name());
+    //            AllNamesRep.add_names(nt.fantasy_name());
+    //            AllNamesRep2.add_names(nt.fantasy_name());
+    //            if ( AllNamesRepPtr->names_size() >= 1000) {
+    //                AllNamesRepPtr->clear_names();
+    //                AllNamesRepPtr = (AllNamesRep.names_size() > AllNamesRep2.names_size()) ? &AllNamesRep : &AllNamesRep2;
+    //            }
 
-//            Pk2FnameReq req;
-//            req.set_pk(nt.public_key());
-
-//            Pk2FnameRep pkr;
-//            pkr.set_fname(nt.fantasy_name());
-//            pkr.mutable_req()->CopyFrom(req);
-
-//            rep.MutableExtension(Pk2FnameRep::rep)->CopyFrom(pkr);
-//            auto repstr = rep.SerializeAsString();
-//            QByteArray qb(repstr.data(),(size_t)repstr.size());
-//            pClient->sendBinaryMessage(qb);
-//            qDebug() << rep.DebugString().data();
-            return;
+            break;
         }
-    }
+
+#ifdef PROD_SEASON_TRADING
+        case TransType::EXCHANGE: {
+            auto emdg = t.GetExtension(fantasybit::ExchangeOrder::exchange_order);
+            mExchangeData.OnNewOrderMsg(emdg,++mySeq,fn);
+            break;
+        }
+#endif
+
+        default:
+            break;
+        }
+
+    return;
 }
 
 std::shared_ptr<FantasyName> Server::getFNverifySt(const SignedTransaction &st) {

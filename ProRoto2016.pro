@@ -21,3 +21,7 @@ OTHER_FILES += \
             $$PWD/pri/qml-utils.pri \
             $$PWD/pri/qml-realChat.pri
 
+OTHER_FILES += $$PWD/GenerateProto/*.proto
+
+
+DEFINES += USE_LOCALHOST_SERVER

@@ -45,15 +45,20 @@ void FantasyNameData::init() {
         Writer<FantasyNameBal> writer{ GET_ROOT_DIR() + "bootstrap/FantasyNameBal.txt" };
 #endif
 
+    std::set<std::string> fnames;
 
-#ifdef ONE_TIME_PROD
+#if defined(ONE_TIME_PROD) || defined(NO_WRITE_NAMES_2015_FIRST)
         Reader<FantasyNameBal> reader4{ GET_ROOT_DIR() + "FantasyNameBal.txt"};
         FantasyNameBal fnb;
         while ( reader4.ReadNext(fnb) ) {
+            fnames.insert(fnb.name());
+            Server::AllNamesRep.add_names(fnb.name());
+#ifndef NO_WRITE_NAMES_2015_FIRST
             auto hash = FantasyName::name_hash(fnb.name());
             leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
             namestore->Put(write_sync, hkey, fnb.SerializeAsString());
-            fnb.Clear();
+#endif
+           fnb.Clear();
         }
 #endif
 
@@ -75,7 +80,8 @@ void FantasyNameData::init() {
 
             }
 
-            Server::AllNamesRep.add_names(fn.name());
+            if ( fnames.find(fn.name()) ==  end(fnames))
+                Server::AllNamesRep.add_names(fn.name());
 
         }
         delete it;

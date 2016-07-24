@@ -20,3 +20,5 @@ SUBDIRS += \
 #       $$PWD/irc/libcommuni.pro
 
 #Backend.depends = jsonpb
+
+DEFINES += USE_LOCALHOST_SERVER
