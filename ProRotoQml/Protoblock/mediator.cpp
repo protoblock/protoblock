@@ -477,8 +477,16 @@ void Mediator::signPlayer(const QString &name)  {
     SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
     auto txstr = sn.SerializeAsString();
 
+    auto pk = Commissioner::str2pk(nt.public_key());
+    pb::sha256 digest(sn.id());
+    if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
+        qDebug() << " bad signature ";
+    else
+        qDebug() << " good signature ";
+
     QByteArray qb(txstr.data(),(size_t)txstr.size());
 
+    qDebug() << " mediator signPlayer" << name << sn.DebugString().data();
     m_txsocket.sendBinaryMessage(qb);
 
 //    m_nameStatuses[name] = QString("requested");
