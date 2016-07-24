@@ -330,7 +330,9 @@ bool TxServer::verify_name(const fantasybit::SignedTransaction &st, const NameTr
 
     if ( !Commissioner::verify(sig, digest, pk) ) {
         qDebug() << " bad signed sig";
+#ifdef VERIFY_NAME_TX
         return false;
+#endif
     }
 
     auto proof = nt.proof();
