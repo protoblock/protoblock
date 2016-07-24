@@ -23,5 +23,3 @@ OTHER_FILES += \
 
 OTHER_FILES += $$PWD/GenerateProto/*.proto
 
-
-DEFINES += USE_LOCALHOST_SERVER

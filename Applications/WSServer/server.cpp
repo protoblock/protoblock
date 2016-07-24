@@ -121,7 +121,7 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
     req.ParseFromString(message.toStdString());
     fantasybit::WSReply rep;
 
-//    qDebug() << " processBinaryMessage " << req.DebugString().data();
+    qDebug() << " processBinaryMessage " << req.DebugString().data();
 
     switch ( req.ctype() ) {
         case PK2FNAME:
@@ -186,7 +186,7 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
     if ( rep.ctype() == GETALLNAMES)
         qDebug() << rep.ctype() <<" size " << Server::AllNamesRep.names_size();
     else
-        ;///qDebug() << rep.DebugString().data();
+        qDebug() << rep.DebugString().data();
     return;
 }
 
