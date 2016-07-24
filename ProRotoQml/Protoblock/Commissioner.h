@@ -358,13 +358,13 @@ public:
 
     static std::string sig2str(const pb::signature &sig)
     {
-        return "";//pb::to_base58(sig.data, sig.size());
+        return pb::to_base58((char *)sig.data, 64);
     }
 
     static pb::signature str2sig(const std::string &str)
     {
         pb::signature sig;
-//        pb::from_base58(str, sig.data, sig.size());
+        pb::from_base58(str, (char *)sig.data, 64);
         return sig;
     }
 
