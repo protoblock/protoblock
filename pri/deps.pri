@@ -1,7 +1,7 @@
 ##############
 ## Globals
 ##############
-#DEFINES += PRODFOOTBALL
+DEFINES += PRODFOOTBALL
 #DEFINES += USE_LOCALHOST_SERVER
 
 
