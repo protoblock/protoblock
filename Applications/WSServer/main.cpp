@@ -23,11 +23,11 @@ int main(int argc, char *argv[])
     bool debug = parser.isSet(dbgOption);
     int port = parser.value(portOption).toInt();
 
-    Server *server = new Server(PB_WS_TX_PORT, debug);
-    QObject::connect(server, &Server::closed, &a, &QCoreApplication::quit);
+    TxServer *txserver = new TxServer(PB_WS_TX_PORT, debug);
+    QObject::connect(txserver, &TxServer::closed, &a, &QCoreApplication::quit);
 
-    Server *nameServer = new Server(PB_WS_LITE_AGENT_PORT,debug);
-    QObject::connect(nameServer, &Server::closed, &a, &QCoreApplication::quit);
+    LiteServer *nameServer = new LiteServer(PB_WS_LITE_AGENT_PORT,debug);
+    QObject::connect(nameServer, &LiteServer::closed, &a, &QCoreApplication::quit);
 
     return a.exec();
 }

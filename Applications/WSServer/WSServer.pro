@@ -45,7 +45,9 @@ SOURCES   += \
     $$PWD/../../ProRotoQml/Protoblock/platform.cpp \
     $$PWD/../../ProRotoQml/Protoblock/Commissioner.cpp \
     $$PWD/NameData.cpp \
-    $$PWD/Data.cpp
+    $$PWD/Data.cpp \
+    $$PWD/txpool.cpp
+
 
 
 HEADERS += \
@@ -73,7 +75,8 @@ HEADERS += \
     $$PWD/../../ProRotoQml/Protoblock/utility.hpp \
     $$PWD/../../ProRotoQml/Protoblock/Commissioner.h \
     $$PWD/NameData.h \
-    $$PWD/Data.h
+    $$PWD/Data.h \
+    $$PWD/txpool.h
 
 
 
