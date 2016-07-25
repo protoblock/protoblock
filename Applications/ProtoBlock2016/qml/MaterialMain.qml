@@ -517,7 +517,7 @@ Material.ApplicationWindow{
 
 
     function compairVersions(d){
-        if (realRoot.version !== d){
+        if (realRoot.version < d){
             //            console.log("there is a update")
             updateDialog.toggle()
         }else{
