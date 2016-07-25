@@ -6,6 +6,10 @@ win32 {
     include($$PWD/../../pri/core.pri)
 }
 
+android {
+    include($$PWD/../../pri/core.pri)
+}
+
 ios{
     CXX_MODULE=qml
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Protoblock
