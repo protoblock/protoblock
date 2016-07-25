@@ -15,13 +15,14 @@ contains (QMAKE_HOST.os, Darwin){
 ##############
 ##  WINDOWS
 ##############
+
 win32 {
     message(win32 Build)
-    INCLUDEPATH +=   D:/work/prebuiltLibs/windows/3rdParty
-    INCLUDEPATH += D:/work/prebuiltLibs/windows/3rdParty/secp256k1
+    INCLUDEPATH +=   $$PWD/../../prebuiltLibs/windows/3rdParty
+    INCLUDEPATH += $$PWD/../../prebuiltLibs/windows/3rdParty/secp256k1
 
    ## FIXME
-    LIBS+= -LD:/work/prebuiltLibs/windows/libwin64
+    LIBS+= -L$$PWD/../../prebuiltLibs/windows/libwin64
     #LIBS+= -L$$PWD/../libwin64
     CONFIG(debug, debug|release) {
        LIBS+= -llibprotobufd  \
