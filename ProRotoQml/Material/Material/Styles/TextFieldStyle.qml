@@ -1,10 +1,10 @@
 import QtQuick 2.4
-import QtQuick.Controls.Styles 1.3
+import QtQuick.Controls.Styles 1.3 as CStyles
 import QtQuick.Layouts 1.1
 import Material 1.0
 import ProRotoQml.Theme 1.0 as ProtoTheme
 
-TextFieldStyle {
+CStyles.TextFieldStyle {
     id: style
 
     padding {
