@@ -14,7 +14,7 @@ Item {
         Column{
             width: parent.width
             height: parent.height /2
-            spacing: ProtoScreen.guToPx(3)
+            spacing: ProtoScreen.guToPx(4) //Fix Me - android hack was 3
             anchors.centerIn: parent
             TextField{
                 id: nameText

@@ -15,13 +15,14 @@ contains (QMAKE_HOST.os, Darwin){
 ##############
 ##  WINDOWS
 ##############
+
 win32 {
-    message( Windows Build)
-    INCLUDEPATH +=   $$PWD/../3rdParty
-    INCLUDEPATH += $$PWD/../3rdParty/secp256k1
+    message(win32 Build)
+    INCLUDEPATH +=   $$PWD/../../prebuiltLibs/windows/3rdParty
+    INCLUDEPATH += $$PWD/../../prebuiltLibs/windows/3rdParty/secp256k1
 
    ## FIXME
-    LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
+    LIBS+= -L$$PWD/../../prebuiltLibs/windows/libwin64
     #LIBS+= -L$$PWD/../libwin64
     CONFIG(debug, debug|release) {
        LIBS+= -llibprotobufd  \
@@ -95,8 +96,6 @@ ios {
 
 
 
-
-
 ##############
 ##  ANDROID
 ##############
@@ -121,8 +120,6 @@ android {
         ## BOTAN
 #          LIBS += -$$DIRPREFIX/android/extrenal-android/lib -lBotan
 }
-
-
 
 
 

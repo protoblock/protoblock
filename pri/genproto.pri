@@ -23,5 +23,5 @@ android{
 win32{
     GENERATEDDIR = $$PWD/../generated
     DEFINES += GOOGLE_NAMESPACE=google
-    INCLUDEPATH +=  $$PWD/../3rdParty/
+#    INCLUDEPATH +=  $$PWD/../3rdParty/
 }

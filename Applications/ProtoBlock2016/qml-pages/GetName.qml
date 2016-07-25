@@ -7,7 +7,7 @@ import ProRotoQml.Theme 1.0
 
 Item {
     id: loginPage
-    property string defaultTxt: "Please Register to play Protoblock"
+    property string defaultTxt: "Register to play. Choose any name or your twitter id."
         Column{
             anchors.fill: parent
             spacing: ProtoScreen.guToPx(2)
@@ -21,6 +21,10 @@ Item {
                 text: qsTr("Please pick a username")
                 bold: true
                 fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                helpShown: true
+                helperHeader: "Username help"
+                helperTxt: "Your Protoblock name is your perminant fantasy identity. It is fully controlled by you and this device. We will not ask for your email address. There is no central server for recovery. See Import-Export screen for backup and recovery"
+
             }
             Image {
                 id: logo

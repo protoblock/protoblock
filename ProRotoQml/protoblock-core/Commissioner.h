@@ -335,7 +335,7 @@ public:
 
     static std::string pk2str(const pb::public_key_data &pk)
     {
-        for ( int i =0; i < 33; i++)
+//        for ( int i =0; i < 33; i++)
 //            qDebug() << pk.key_data[i];
 
 //        qDebug() << "pk2str|" << pk.begin() << "|";
@@ -358,13 +358,13 @@ public:
 
     static std::string sig2str(const pb::signature &sig)
     {
-        return "";//pb::to_base58(sig.data, sig.size());
+        return pb::to_base58((char *)sig.data, 64);
     }
 
     static pb::signature str2sig(const std::string &str)
     {
         pb::signature sig;
-//        pb::from_base58(str, sig.data, sig.size());
+        pb::from_base58(str, (char *)sig.data, 64);
         return sig;
     }
 

@@ -2,6 +2,9 @@ include($$PWD/../../pri/protos.pri)
 include($$PWD/../../pri/deps.pri)
 include($$PWD/../../pri/macrosAndModels.pri)
 
+win32 {
+    include($$PWD/../../pri/core.pri)
+}
 
 ios{
     CXX_MODULE=qml
@@ -9,10 +12,13 @@ ios{
 }
 
 
-LIBS += -L$$OUT_PWD/../protoblock-core/ -lprotoblock-core
-INCLUDEPATH += $$PWD/../protoblock-core
-DEPENDPATH += $$PWD/../protoblock-core
-INCLUDEPATH += $$PWD/../protoblock-core/bitcoin-core-base58
+macx {
+LIBS += -L$$OUT_PWD/../protoblock-core -lprotoblock-core
+}
+#INCLUDEPATH += $$PWD/../protoblock-core
+#DEPENDPATH += $$PWD/../protoblock-core
+#INCLUDEPATH += $$PWD/../protoblock-core/bitcoin-core-base58
+
 
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Protoblock
@@ -45,6 +51,7 @@ HEADERS += \
     $$PWD/socketclient.h \
     $$PWD/mediator.h
 
+
 DISTFILES = qmldir
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
@@ -61,3 +68,32 @@ installPath = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
 qmldir.path = $$installPath
 target.path = $$installPath
 INSTALLS += target qmldir
+
+#QOIL = $$[QT_INSTALL_LIBS]
+#win32:{
+#message(forlder  $$QOIL protoblock-core)
+#    LIBS += -L$$[QT_INSTALL_LIBS]/ -lprotoblock-core
+#        LIBS += -L./../../protoblock-core/release \
+#              -lprotoblock-core
+#         INCLUDEPATH += ./../../protoblock-core
+#LIBS += -LD:\Qt\5.6\msvc2013_64\lib\protoblock-core.dll
+#}
+
+#INCLUDEPATH += $$PWD/bitcoin-core-base58
+
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../protoblock-core/debug/ -lprotoblock-core
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

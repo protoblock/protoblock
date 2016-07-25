@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS += \
-        $$PWD/jsonpb \
+#        $$PWD/jsonpb \
 #        $$PWD/qhttp/qhttp.pro \
         $$PWD/Files/files.pro \
         $$PWD/Models/models.pro \
@@ -13,10 +13,10 @@ SUBDIRS += \
 #        $$PWD/libBotan \
 #        $$PWD/libQSsh \
 #        $$PWD/libQmlSsh \
-        $$PWD/protoblock-core \
-        $$PWD/Protoblock/protoblock.pro \
+#        $$PWD/protoblock-core \
+        $$PWD/Protoblock/protoblock.pro
 #        $$PWD/PeerTwoPeerChat \
-        $$PWD/Backend/backend.pro
+#        $$PWD/Backend/backend.pro
 #        $$PWD/Torrent/torrent.pro
 #       $$PWD/irc/libcommuni.pro
 

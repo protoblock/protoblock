@@ -1,0 +1,1 @@
+ .\zipalign.exe -f -v 4 "D:\work\protoblock\Applications\build-ProtoBlock2016-Android_for_armeabi_v7a_GCC_4_9_Qt_5_6_1-Release\android-build\bin\QtApp-release-signed.apk" "D:\work\protoblock\Applications\build-ProtoBlock2016-Android_for_armeabi_v7a_GCC_4_9_Qt_5_6
