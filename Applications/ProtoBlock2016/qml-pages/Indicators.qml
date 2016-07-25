@@ -17,6 +17,7 @@ Item {
             hoverAnimation: true
             onClicked: {
                 rootLoader.source  = "qrc:/Settings.qml"
+                pageHelper.selectedTabIndex = 0
                 pageHelper.title = "System Settings"
             }
         }

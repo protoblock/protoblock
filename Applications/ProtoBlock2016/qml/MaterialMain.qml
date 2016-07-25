@@ -409,7 +409,7 @@ Material.ApplicationWindow{
     Material.Dialog {
         id: myImportDialog
         title: "Import status"
-        positiveButtonText: "Back"
+        positiveButtonText: "OK"
         Column{
             anchors.fill: parent
             Text{

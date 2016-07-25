@@ -21,10 +21,10 @@ TEMPLATE = app
 QT += qml quick core websockets network
 #sql webchannel
 CONFIG += c++11
-#app_bundle
-#osx{
-#CONFIG+=app_bundle
-#}
+
+osx{
+    CONFIG+=app_bundle
+}
 
 ios{
 OTHER_FILES += \

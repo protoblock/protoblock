@@ -8,7 +8,7 @@ import Material 1.0
 import Material.ListItems 1.0 as ListItems
 Item {
     id: usersettingsCard
-    Component.onCompleted:  pageHelper.title = "User Settings"
+    Component.onCompleted:  pageHelper.title = "System Settings"
     property var themes: ["Material"]
 
     Flickable{

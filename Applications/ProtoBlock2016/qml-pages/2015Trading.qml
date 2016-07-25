@@ -15,7 +15,7 @@ Item {
 
     property string currentFPlayer
     signal modelFull()
-    Component.onCompleted: pageHelper.title = "2015 Final Trading"
+    Component.onCompleted: pageHelper.title = "2015 Trading"
     onModelFull: {
         switch(currentLevel){
         case 0:
