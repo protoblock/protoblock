@@ -39,7 +39,8 @@ SOURCES += \
     $$PWD/crc.cpp \
     $$PWD/plugin.cpp \
     $$PWD/socketclient.cpp \
-    $$PWD/mediator.cpp
+    $$PWD/mediator.cpp \
+    $$PWD/playerquoteslicemodel.cpp
 
 
 
@@ -65,7 +66,8 @@ HEADERS += \
     $$PWD/utility.hpp \
     $$PWD/plugin.h \
     $$PWD/socketclient.h \
-    $$PWD/mediator.h
+    $$PWD/mediator.h \
+    playerquoteslicemodel.h
 
 DISTFILES = qmldir
 

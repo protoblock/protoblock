@@ -13,6 +13,7 @@
 #include "QQmlListPropertyHelper.h"
 #include <QTimer>
 #include "fbutils.h"
+#include "playerquoteslicemodel.h"
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -41,6 +42,8 @@ class Mediator : public QObject
 //    Q_ENUMS (MyNameStatus)
 
     QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
+
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
 
 //    QML_LIST_PROPERTY(Mediator,goodFname,QString)
 
