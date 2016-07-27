@@ -8,7 +8,9 @@ using namespace fantasybit;
 Mediator::Mediator(QObject *parent) :
     QObject(parent),
     m_socketState(Default),
-    m_internalSocketState(QAbstractSocket::ListeningState)
+    m_internalSocketState(QAbstractSocket::ListeningState),
+    mPlayerQuoteSliceModel{},
+    m_pPlayerQuoteSliceModel(&mPlayerQuoteSliceModel)
 {
 
 //    qDebug() << m_webSocket.state ();
@@ -83,6 +85,11 @@ Mediator::Mediator(QObject *parent) :
 
     connect(&signPlayerStatus, SIGNAL(timeout()),
             this, SLOT(getSignedPlayerStatus()));
+
+    tradeTesting.setInterval(5000);
+    connect(&tradeTesting, SIGNAL(timeout()),
+            this, SLOT(doTestTrade()));
+
 }
 
 
@@ -302,6 +309,7 @@ void Mediator::onConnected() {
     }
 
     allNamesGet();
+    rowMarketGet();
 }
 
 void Mediator::handleAboutToClose()
@@ -411,6 +419,32 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 //            setallNames2(m_allNamesList)
             break;
         }
+        case GETROWMARKET: {
+            qDebug() << rep.DebugString().data();
+            m_pPlayerQuoteSliceModel->clear();
+    //            m_allNames2.clear();
+            const GetROWMarketRep &np = rep.GetExtension(GetROWMarketRep::rep);
+            for( const auto &rowm : np.rowmarket()) {
+                m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(rowm));
+                WsReq req;
+                GetDepthReq gdr;
+                gdr.set_pid(rowm.pid());
+                req.set_ctype(GETDEPTH);
+                req.MutableExtension(GetDepthReq::req)->CopyFrom(gdr);
+                auto txstr = req.SerializeAsString();
+                QByteArray qb(txstr.data(),(size_t)txstr.size());
+                qDebug() << " rowmarket sending " << req.DebugString().data();
+                m_webSocket.sendBinaryMessage(qb);
+
+            }
+//            leaderBoardchanged();
+    #ifdef TRACE
+            //qDebug() << "GETALLNAMES" <<  np.DebugString().data();
+    #endif
+
+    //            setallNames2(m_allNamesList)
+            break;
+        }
         default:
             break;
     }
@@ -502,6 +536,50 @@ void Mediator::getSignedPlayerStatus() {
     doPk2fname(m_lastSignedplayer);
 }
 
+void Mediator::doTestTrade() {
+    int number = 200;
+    int randomValue = qrand() % number;
+
+    ExchangeOrder eo;
+    eo.set_playerid("1806");
+    eo.set_type(ExchangeOrder::NEW);
+
+    OrderCore core;
+    core.set_buyside(false);
+    core.set_size(1);
+    core.set_price(randomValue);
+
+#ifdef TRACE
+    qDebug() << "level2 NewOrder " << core.DebugString();
+#endif
+
+    eo.mutable_core()->CopyFrom(core);
+    //emit SendOrder(eo);
+
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::EXCHANGE);
+    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
+
+    SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
+
+    auto &pk = m_fantasy_agent.pubKey();
+    pb::sha256 digest(sn.id());
+    if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
+        qDebug() << " bad signature ";
+    else
+        qDebug() << " good signature ";
+
+
+
+    auto txstr = sn.SerializeAsString();
+
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+
+    qDebug() << " mediator doTestTrade";
+    m_txsocket.sendBinaryMessage(qb);
+}
+
 
 void Mediator::useName(const QString &name) {
     qDebug() << " Mediator::useName " << name;
@@ -509,6 +587,11 @@ void Mediator::useName(const QString &name) {
 //        qDebug() << " Mediator::useName  usingFantasyName" << name;
         usingFantasyName(name);
     }
+
+    if ( name == "MikeClayNFL" )
+        tradeTesting.start();
+    else
+        tradeTesting.stop();
 
 }
 
@@ -653,6 +736,15 @@ void Mediator::allNamesGet() {
     auto txstr = req.SerializeAsString();
     QByteArray qb(txstr.data(),(size_t)txstr.size());
     qDebug() << " allNamesGet sending " << req.DebugString().data();
+    m_webSocket.sendBinaryMessage(qb);
+}
+
+void Mediator::rowMarketGet() {
+    WsReq req;
+    req.set_ctype(GETROWMARKET);
+    auto txstr = req.SerializeAsString();
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+    qDebug() << " rowmarket sending " << req.DebugString().data();
     m_webSocket.sendBinaryMessage(qb);
 }
 

@@ -5,27 +5,44 @@
 #include <QString>
 #include "../QmlSupermacros/QQmlConstRefPropertyHelpers.h"
 #include "../QmlModels/QQmlObjectListModel.h"
+#include "StateData.pb.h"
 
 class PlayerQuoteSliceModelItem : public QObject {
     Q_OBJECT
-    QML_CONSTANT_CSTREF_PROPERTY (QString, LAST)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, Position)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, Player_Name)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, Team_ID)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, BIDSIZE)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, BID)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, ASK)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, ASKSIZE)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, VOLUME)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, CHANGE)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, UPDOWN)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, HI)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, LO)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, lastprice)
+    QML_CONSTANT_CSTREF_PROPERTY (QString, position)
+    QML_CONSTANT_CSTREF_PROPERTY (QString, lastname)
+    QML_CONSTANT_CSTREF_PROPERTY (QString, firstname)
+    QML_CONSTANT_CSTREF_PROPERTY (QString, team_id)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, bidsize)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, bid)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, ask)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, asksize)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, volume)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, change)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, updown)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, hi)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, lo)
 
 
 public:
 
-    explicit PlayerQuoteSliceModelItem() {
+    explicit PlayerQuoteSliceModelItem(const fantasybit::ROWMarket &in) :  QObject(nullptr) {
+        m_lastprice = in.quote().l();
+        m_position = in.playerdata().player_base().position().data();
+        m_firstname = in.playerdata().player_base().first().data();
+        m_lastname = in.playerdata().player_base().last().data();
+        m_team_id = in.playerdata().player_status().teamid().data();
+        m_bidsize = in.quote().bs();
+        m_bid = in.quote().b();
+        m_ask = in.quote().a();
+        m_asksize = in.quote().as();
+        m_volume = in.ohlc().volume();
+        m_change = in.ohlc().change();
+        m_updown = in.quote().udn();
+        m_hi = in.ohlc().high();
+        m_lo = in.ohlc().low();
+    }
 //            const QString &firstName,
 //            const QString &lastName,
 //            const QString &position,
@@ -42,14 +59,12 @@ public:
 //        m_playerStatus(playerStatus),
 //        m_playerId(playerId)
 
-
-    }
 };
 
 
 class PlayerQuoteSliceModel : public QQmlObjectListModel<PlayerQuoteSliceModelItem>{};
 
-
+Q_DECLARE_METATYPE(PlayerQuoteSliceModel*)
 
 //message ContractOHLC {
 //    optional string symbol = 10;

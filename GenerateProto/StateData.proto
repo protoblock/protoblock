@@ -539,12 +539,15 @@ message GetAllNamesRep {
     }
 
     repeated string names = 10;
+    repeated FantasyNameBal fnb = 20;
 }
+
 
 message ROWMarket {
     optional string pid = 10;
     optional MarketQuote quote = 30;
-    optional PlayerBase playerbase = 40;
+    optional PlayerData playerdata = 40;
+    optional ContractOHLC ohlc = 50;
 }
 
 message GetROWMarketRep {

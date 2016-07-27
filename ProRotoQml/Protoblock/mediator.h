@@ -141,7 +141,7 @@ public:
 
 
     Q_INVOKABLE void allNamesGet();
-//    Q_INVOKABLE QString nameStatusGet(const QString&);
+    Q_INVOKABLE void rowMarketGet();
     Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(const QString&);
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
@@ -198,6 +198,7 @@ protected slots:
     void onTextMessageReceived( QString message);
     void onBinaryMessageRecived(const QByteArray &message);
     void getSignedPlayerStatus();
+    void doTestTrade();
 
     // slot to update QML ONLY propertys
     void handleEngineUpdate(const bool &sta);
@@ -228,6 +229,9 @@ private:
     void doPk2fname(const std::string &pkstr);
 
     QTimer signPlayerStatus;
+
+    QTimer tradeTesting;
+    PlayerQuoteSliceModel mPlayerQuoteSliceModel;
 };
 
 #endif // MEDIATOR_H

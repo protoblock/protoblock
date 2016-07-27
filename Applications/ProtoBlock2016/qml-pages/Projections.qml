@@ -10,8 +10,10 @@ Item {
     Component.onCompleted: {
          if ( !themeroot.reloadleaders )
               themeroot.reloadleaders = true
-          else
-              MiddleMan.allNamesGet()
+          else {
+             MiddleMan.allNamesGet()
+             MiddleMan.rowMarketGet()
+         }
     }
 
 
@@ -50,13 +52,14 @@ Item {
             anchors.top: ban.bottom
             height: rootLoader.height - (ban.height + gstate.height)
             clip: true
-            model:   MiddleMan.allNamesList()
+            model:   MiddleMan.pPlayerQuoteSliceModel// allNamesList()
             delegate:
                 ListItems.Subtitled{
                 elevation: 2
-                backgroundColor: realRoot.uname ===  modelData ? Colors.amber : "white"
+                backgroundColor: "white"//realRoot.uname ===  modelData ? Colors.amber : "white"
                 width: parent.width
-                text: /*"FantasyName: " +*/  modelData
+                text: model.lastname + ", " + model.firstname + " " + model.position + " Last: " + model.lastprice + " Bid " + model.bidsize + " " + model.bid + " Ask: " + model.asksize + " " +  model.ask + " volume " + model.volume + " chg " + model.change
+                     /*"FantasyName: " +*/ // modelData
                 action: Image{
                     height: parent.height
                     width : height
@@ -79,7 +82,7 @@ Item {
     Connections {
         target: MiddleMan
         onLeaderBoardchanged: {
-            leaderboard.model = MiddleMan.allNamesList()
+            leaderboard.model = MiddleMan.pPlayerQuoteSliceModel//allNamesList()
         }
     }
 

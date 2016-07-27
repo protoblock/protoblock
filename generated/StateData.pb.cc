@@ -918,8 +918,9 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NameStatusRep));
   GetAllNamesRep_descriptor_ = file->message_type(40);
-  static const int GetAllNamesRep_offsets_[1] = {
+  static const int GetAllNamesRep_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetAllNamesRep, names_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetAllNamesRep, fnb_),
   };
   GetAllNamesRep_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -933,10 +934,11 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetAllNamesRep));
   ROWMarket_descriptor_ = file->message_type(41);
-  static const int ROWMarket_offsets_[3] = {
+  static const int ROWMarket_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ROWMarket, pid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ROWMarket, quote_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ROWMarket, playerbase_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ROWMarket, playerdata_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ROWMarket, ohlc_),
   };
   ROWMarket_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1333,24 +1335,26 @@ void protobuf_AddDesc_StateData_2eproto() {
     "\rNameStatusRep\022(\n\006status\030\n \001(\0162\030.fantasy"
     "bit.MyNameStatus\022&\n\003req\030\024 \001(\0132\031.fantasyb"
     "it.NameStatusReq2<\n\003rep\022\023.fantasybit.WSR"
-    "eply\030\220\003 \001(\0132\031.fantasybit.NameStatusRep\"^"
-    "\n\016GetAllNamesRep\022\r\n\005names\030\n \003(\t2=\n\003rep\022\023"
-    ".fantasybit.WSReply\030\364\003 \001(\0132\032.fantasybit."
-    "GetAllNamesRep\"l\n\tROWMarket\022\013\n\003pid\030\n \001(\t"
-    "\022&\n\005quote\030\036 \001(\0132\027.fantasybit.MarketQuote"
-    "\022*\n\nplayerbase\030( \001(\0132\026.fantasybit.Player"
-    "Base\"{\n\017GetROWMarketRep\022(\n\trowmarket\030\n \003"
-    "(\0132\025.fantasybit.ROWMarket2>\n\003rep\022\023.fanta"
-    "sybit.WSReply\030\330\004 \001(\0132\033.fantasybit.GetROW"
-    "MarketRep\"T\n\013GetDepthReq\022\013\n\003pid\030\n \001(\t28\n"
-    "\003req\022\021.fantasybit.WsReq\030\274\005 \001(\0132\027.fantasy"
-    "bit.GetDepthReq\"\201\001\n\013GetDepthRep\022\013\n\003pid\030\n"
-    " \001(\t\022)\n\ndepthitems\030\024 \003(\0132\025.fantasybit.De"
-    "pthItem2:\n\003rep\022\023.fantasybit.WSReply\030\274\005 \001"
-    "(\0132\027.fantasybit.GetDepthRep*o\n\005CType\022\r\n\t"
-    "CHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\t"
-    "GETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMA"
-    "RKET\020\006\022\014\n\010GETDEPTH\020\007", 5740);
+    "eply\030\220\003 \001(\0132\031.fantasybit.NameStatusRep\"\207"
+    "\001\n\016GetAllNamesRep\022\r\n\005names\030\n \003(\t\022\'\n\003fnb\030"
+    "\024 \003(\0132\032.fantasybit.FantasyNameBal2=\n\003rep"
+    "\022\023.fantasybit.WSReply\030\364\003 \001(\0132\032.fantasybi"
+    "t.GetAllNamesRep\"\224\001\n\tROWMarket\022\013\n\003pid\030\n "
+    "\001(\t\022&\n\005quote\030\036 \001(\0132\027.fantasybit.MarketQu"
+    "ote\022*\n\nplayerdata\030( \001(\0132\026.fantasybit.Pla"
+    "yerData\022&\n\004ohlc\0302 \001(\0132\030.fantasybit.Contr"
+    "actOHLC\"{\n\017GetROWMarketRep\022(\n\trowmarket\030"
+    "\n \003(\0132\025.fantasybit.ROWMarket2>\n\003rep\022\023.fa"
+    "ntasybit.WSReply\030\330\004 \001(\0132\033.fantasybit.Get"
+    "ROWMarketRep\"T\n\013GetDepthReq\022\013\n\003pid\030\n \001(\t"
+    "28\n\003req\022\021.fantasybit.WsReq\030\274\005 \001(\0132\027.fant"
+    "asybit.GetDepthReq\"\201\001\n\013GetDepthRep\022\013\n\003pi"
+    "d\030\n \001(\t\022)\n\ndepthitems\030\024 \003(\0132\025.fantasybit"
+    ".DepthItem2:\n\003rep\022\023.fantasybit.WSReply\030\274"
+    "\005 \001(\0132\027.fantasybit.GetDepthRep*o\n\005CType\022"
+    "\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022"
+    "\r\n\tGETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETRO"
+    "WMARKET\020\006\022\014\n\010GETDEPTH\020\007", 5823);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -17384,6 +17388,7 @@ void NameStatusRep::Swap(NameStatusRep* other) {
 
 #ifndef _MSC_VER
 const int GetAllNamesRep::kNamesFieldNumber;
+const int GetAllNamesRep::kFnbFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -17443,6 +17448,7 @@ GetAllNamesRep* GetAllNamesRep::New() const {
 
 void GetAllNamesRep::Clear() {
   names_.Clear();
+  fnb_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -17468,6 +17474,21 @@ bool GetAllNamesRep::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(82)) goto parse_names;
+        if (input->ExpectTag(162)) goto parse_fnb;
+        break;
+      }
+
+      // repeated .fantasybit.FantasyNameBal fnb = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_fnb:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_fnb()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_fnb;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -17499,6 +17520,12 @@ void GetAllNamesRep::SerializeWithCachedSizes(
       10, this->names(i), output);
   }
 
+  // repeated .fantasybit.FantasyNameBal fnb = 20;
+  for (int i = 0; i < this->fnb_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      20, this->fnb(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -17516,6 +17543,13 @@ void GetAllNamesRep::SerializeWithCachedSizes(
       WriteStringToArray(10, this->names(i), target);
   }
 
+  // repeated .fantasybit.FantasyNameBal fnb = 20;
+  for (int i = 0; i < this->fnb_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        20, this->fnb(i), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -17531,6 +17565,14 @@ int GetAllNamesRep::ByteSize() const {
   for (int i = 0; i < this->names_size(); i++) {
     total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
       this->names(i));
+  }
+
+  // repeated .fantasybit.FantasyNameBal fnb = 20;
+  total_size += 2 * this->fnb_size();
+  for (int i = 0; i < this->fnb_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->fnb(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -17559,6 +17601,7 @@ void GetAllNamesRep::MergeFrom(const ::google::protobuf::Message& from) {
 void GetAllNamesRep::MergeFrom(const GetAllNamesRep& from) {
   GOOGLE_CHECK_NE(&from, this);
   names_.MergeFrom(from.names_);
+  fnb_.MergeFrom(from.fnb_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -17582,6 +17625,7 @@ bool GetAllNamesRep::IsInitialized() const {
 void GetAllNamesRep::Swap(GetAllNamesRep* other) {
   if (other != this) {
     names_.Swap(&other->names_);
+    fnb_.Swap(&other->fnb_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -17602,7 +17646,8 @@ void GetAllNamesRep::Swap(GetAllNamesRep* other) {
 #ifndef _MSC_VER
 const int ROWMarket::kPidFieldNumber;
 const int ROWMarket::kQuoteFieldNumber;
-const int ROWMarket::kPlayerbaseFieldNumber;
+const int ROWMarket::kPlayerdataFieldNumber;
+const int ROWMarket::kOhlcFieldNumber;
 #endif  // !_MSC_VER
 
 ROWMarket::ROWMarket()
@@ -17612,7 +17657,8 @@ ROWMarket::ROWMarket()
 
 void ROWMarket::InitAsDefaultInstance() {
   quote_ = const_cast< ::fantasybit::MarketQuote*>(&::fantasybit::MarketQuote::default_instance());
-  playerbase_ = const_cast< ::fantasybit::PlayerBase*>(&::fantasybit::PlayerBase::default_instance());
+  playerdata_ = const_cast< ::fantasybit::PlayerData*>(&::fantasybit::PlayerData::default_instance());
+  ohlc_ = const_cast< ::fantasybit::ContractOHLC*>(&::fantasybit::ContractOHLC::default_instance());
 }
 
 ROWMarket::ROWMarket(const ROWMarket& from)
@@ -17625,7 +17671,8 @@ void ROWMarket::SharedCtor() {
   _cached_size_ = 0;
   pid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   quote_ = NULL;
-  playerbase_ = NULL;
+  playerdata_ = NULL;
+  ohlc_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -17639,7 +17686,8 @@ void ROWMarket::SharedDtor() {
   }
   if (this != default_instance_) {
     delete quote_;
-    delete playerbase_;
+    delete playerdata_;
+    delete ohlc_;
   }
 }
 
@@ -17674,8 +17722,11 @@ void ROWMarket::Clear() {
     if (has_quote()) {
       if (quote_ != NULL) quote_->::fantasybit::MarketQuote::Clear();
     }
-    if (has_playerbase()) {
-      if (playerbase_ != NULL) playerbase_->::fantasybit::PlayerBase::Clear();
+    if (has_playerdata()) {
+      if (playerdata_ != NULL) playerdata_->::fantasybit::PlayerData::Clear();
+    }
+    if (has_ohlc()) {
+      if (ohlc_ != NULL) ohlc_->::fantasybit::ContractOHLC::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -17714,17 +17765,31 @@ bool ROWMarket::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(322)) goto parse_playerbase;
+        if (input->ExpectTag(322)) goto parse_playerdata;
         break;
       }
 
-      // optional .fantasybit.PlayerBase playerbase = 40;
+      // optional .fantasybit.PlayerData playerdata = 40;
       case 40: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_playerbase:
+         parse_playerdata:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_playerbase()));
+               input, mutable_playerdata()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(402)) goto parse_ohlc;
+        break;
+      }
+
+      // optional .fantasybit.ContractOHLC ohlc = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_ohlc:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_ohlc()));
         } else {
           goto handle_uninterpreted;
         }
@@ -17765,10 +17830,16 @@ void ROWMarket::SerializeWithCachedSizes(
       30, this->quote(), output);
   }
 
-  // optional .fantasybit.PlayerBase playerbase = 40;
-  if (has_playerbase()) {
+  // optional .fantasybit.PlayerData playerdata = 40;
+  if (has_playerdata()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      40, this->playerbase(), output);
+      40, this->playerdata(), output);
+  }
+
+  // optional .fantasybit.ContractOHLC ohlc = 50;
+  if (has_ohlc()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      50, this->ohlc(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -17796,11 +17867,18 @@ void ROWMarket::SerializeWithCachedSizes(
         30, this->quote(), target);
   }
 
-  // optional .fantasybit.PlayerBase playerbase = 40;
-  if (has_playerbase()) {
+  // optional .fantasybit.PlayerData playerdata = 40;
+  if (has_playerdata()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        40, this->playerbase(), target);
+        40, this->playerdata(), target);
+  }
+
+  // optional .fantasybit.ContractOHLC ohlc = 50;
+  if (has_ohlc()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        50, this->ohlc(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -17828,11 +17906,18 @@ int ROWMarket::ByteSize() const {
           this->quote());
     }
 
-    // optional .fantasybit.PlayerBase playerbase = 40;
-    if (has_playerbase()) {
+    // optional .fantasybit.PlayerData playerdata = 40;
+    if (has_playerdata()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->playerbase());
+          this->playerdata());
+    }
+
+    // optional .fantasybit.ContractOHLC ohlc = 50;
+    if (has_ohlc()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->ohlc());
     }
 
   }
@@ -17868,8 +17953,11 @@ void ROWMarket::MergeFrom(const ROWMarket& from) {
     if (from.has_quote()) {
       mutable_quote()->::fantasybit::MarketQuote::MergeFrom(from.quote());
     }
-    if (from.has_playerbase()) {
-      mutable_playerbase()->::fantasybit::PlayerBase::MergeFrom(from.playerbase());
+    if (from.has_playerdata()) {
+      mutable_playerdata()->::fantasybit::PlayerData::MergeFrom(from.playerdata());
+    }
+    if (from.has_ohlc()) {
+      mutable_ohlc()->::fantasybit::ContractOHLC::MergeFrom(from.ohlc());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -17896,7 +17984,8 @@ void ROWMarket::Swap(ROWMarket* other) {
   if (other != this) {
     std::swap(pid_, other->pid_);
     std::swap(quote_, other->quote_);
-    std::swap(playerbase_, other->playerbase_);
+    std::swap(playerdata_, other->playerdata_);
+    std::swap(ohlc_, other->ohlc_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -295,6 +295,13 @@ PlayerBase NFLStateData::GetPlayerBase(std::string playerid) {
     return pb;
 }
 
+PlayerStatus NFLStateData::GetPlayerStatus(const std::string &playerid) {
+    auto it = MyPlayerStatus.find(playerid);
+    if ( it != end(MyPlayerStatus))
+        return it->second;
+    else
+        return PlayerStatus::default_instance();
+}
 
 void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
     string key = "scheduleweek:" + to_string(week);

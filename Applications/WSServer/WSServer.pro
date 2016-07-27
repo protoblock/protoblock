@@ -21,9 +21,10 @@ DEFINES += USE_SCALAR_INV_BUILTIN
 #DEFINES += PRODFOOTBALL
 #DEFINES += USE_LOCALHOST_SERVER
 DEFINES += NO_WRITE_NAMES_2015_FIRST
-#DEFINES += PROD_SEASON_TRADING
-
+DEFINES += PROD_SEASON_TRADING
+DEFINES += SEASON_TRADING
 DEFINES += MAX_NAMES_LB=1000
+DEFINES += TRACE
 
 INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
 INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock/bitcoin-core-base58
@@ -46,7 +47,10 @@ SOURCES   += \
     $$PWD/../../ProRotoQml/Protoblock/Commissioner.cpp \
     $$PWD/NameData.cpp \
     $$PWD/Data.cpp \
-    $$PWD/txpool.cpp
+    $$PWD/txpool.cpp \
+    $$PWD/ExchangeData.cpp \
+    LiteServer.cpp \
+    TxServer.cpp
 
 
 
@@ -76,7 +80,10 @@ HEADERS += \
     $$PWD/../../ProRotoQml/Protoblock/Commissioner.h \
     $$PWD/NameData.h \
     $$PWD/Data.h \
-    $$PWD/txpool.h
+    $$PWD/txpool.h \
+    $$PWD/ExchangeData.h \
+    LiteServer.h \
+    TxServer.h
 
 
 

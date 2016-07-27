@@ -1,4 +1,4 @@
-#include "server.h"
+#include "liteserver.h"
 #include "QtWebSockets/qwebsocketserver.h"
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
@@ -10,47 +10,9 @@
 
 #include "Commissioner.h"
 #include "txpool.h"
+#include "server.h"
 
 QT_USE_NAMESPACE
-
-TxServer::TxServer(quint16 port, bool debug, QObject *parent) :
-    QObject(parent),
-    m_pWebSocketServer(new QWebSocketServer(QStringLiteral("WS TxServer"),
-                                            QWebSocketServer::NonSecureMode, this)),
-    m_clients(),
-    m_debug(debug)
-{
-
-    mNameData.init();
-    TxPool::init();
-#ifdef PROD_SEASON_TRADING
-    mNFLStateData.init();
-#endif
-    mport = port;
-
-    if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
-
-        QHostAddress hInf = m_pWebSocketServer->serverAddress();
-
-        qDebug() << "WS TxServer " << hInf.toString() << " listening on port" << port << m_pWebSocketServer->serverName() << " ";
-        connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
-                this, &TxServer::onNewConnection);
-
-        connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &TxServer::closed);
-    }
-
-
-    connect (this,SIGNAL(error(QString)),this,SLOT(handleError(QString)));
-    AllNamesRepPtr = &Server::AllNamesRep;
-    if ( AllNamesRepPtr->names_size() > MaxNames)
-        AllNamesRepPtr->mutable_names()->DeleteSubrange(0,AllNamesRepPtr->names_size() - MaxNames);
-}
-
-TxServer::~TxServer()
-{
-    m_pWebSocketServer->close();
-    qDeleteAll(m_clients.begin(), m_clients.end());
-}
 
 
 LiteServer::LiteServer(quint16 port, bool debug, QObject *parent) :
@@ -74,6 +36,17 @@ LiteServer::LiteServer(quint16 port, bool debug, QObject *parent) :
 
 
     connect (this,SIGNAL(error(QString)),this,SLOT(handleError(QString)));
+    QObject::connect(&Server::TheExchange,SIGNAL(NewMarketSnapShot(fantasybit::MarketSnapshot*)),
+                      this,SLOT(OnMarketSnapShot(fantasybit::MarketSnapshot*)));
+
+    QObject::connect(&Server::TheExchange,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *)),
+                      this,SLOT(OnMarketTicker(fantasybit::MarketTicker *)));
+
+    QObject::connect(&Server::TheExchange,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+                      this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
+
+    QObject::connect(&Server::TheExchange,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
+                      this,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
 
 }
 
@@ -83,22 +56,325 @@ LiteServer::~LiteServer()
     qDeleteAll(m_clients.begin(), m_clients.end());
 }
 
+void LiteServer::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
+    if ( mt->symbol() == "" )
+        return;
+#ifdef TRACE
+    qDebug() << "level2 OnMarketSnapShot " << mt->DebugString().data();
+#endif
 
-void LiteServer::onNewConnection()
-{
+#ifndef SEASON_TRADING
+/*    if ( mt->week() != mCurrentWeek )
+        SetCurrentWeekData(mt->wee*/k());
+#endif
+
+    ROWMarket *pROWMarket = getRowmarket(mt->symbol());
+
+    if ( mt->has_quote())
+        pROWMarket->set_allocated_quote(mt->release_quote());
+
+    if ( mt->has_ohlc())
+        pROWMarket->set_allocated_ohlc(mt->release_ohlc());
+
+#ifdef TRACE
+    qDebug() << "LiteServer::OnMarketSnapShot " << pROWMarket->DebugString().data();
+#endif
+
+    if ( mt->depth_size() > 0 ) {
+        GetDepthRep *depths = mPidGetDepthRep[mt->symbol()];
+        if ( depths == nullptr) {
+            qDebug() << " error bad depth LiteServer::OnMarketSnapShot" << mt->DebugString().data();
+            return;
+        }
+
+        depths->mutable_depthitems()->Swap(mt->mutable_depth());
+
+#ifdef TRACE
+        qDebug() << "LiteServer::OnMarketSnapShot depths" << depths->DebugString().data();
+#endif
+
+//        Reserve(mt->depth_size());
+//        for ( int i = mt->depth_size(); i >0 ; i--) {
+//            mt->mutable_depth()->ReleaseLast();
+//            depths->mutable_depthitems(i) add_depthitems(i) )
+//        }
+//        for ( auto *d : mt->
+//        depths->Adepthitems().AddAllocated();
+    }
+
+
+}
+
+void LiteServer::OnMarketTicker(fantasybit::MarketTicker* mt) {
+#ifdef TRACE
+    qDebug() << "level2 OnMarketTicker " << mt->DebugString().data();
+#endif
+    if ( mt->symbol() == "" ) return;
+
+    ROWMarket *pROWMarket = getRowmarket(mt->symbol());
+
+    if ( mt->type() == MarketTicker_Type_BID) {
+        pROWMarket->mutable_quote()->set_b(mt->price());
+        pROWMarket->mutable_quote()->set_bs(mt->size());
+    }
+    else if ( mt->type() == MarketTicker_Type_ASK){
+        pROWMarket->mutable_quote()->set_a(mt->price());
+        pROWMarket->mutable_quote()->set_as(mt->size());
+    }
+    else if ( mt->type() == MarketTicker_Type_LAST){
+        if ( pROWMarket->quote().l() > 0  )
+            pROWMarket->mutable_quote()->set_udn( mt->price() -pROWMarket->quote().l() );
+        pROWMarket->mutable_quote()->set_l(mt->price());
+        pROWMarket->mutable_quote()->set_ls(mt->size());
+    }
+}
+
+void LiteServer::OnTradeTick(fantasybit::TradeTic* tt) {
+#ifdef TRACE
+    qDebug() << "level2 OnTradeTick " << tt->DebugString().data();
+#endif
+
+    if ( tt->symbol() == "" ) return;
+    ROWMarket *pROWMarket = getRowmarket(tt->symbol());
+
+    pROWMarket->mutable_quote()->set_l(tt->price());
+    pROWMarket->mutable_quote()->set_ls(tt->size());
+    pROWMarket->mutable_quote()->set_udn(tt->tic());
+    pROWMarket->mutable_ohlc()->set_change(tt->change());
+    auto vol = pROWMarket->ohlc().volume() + tt->size();
+    pROWMarket->mutable_ohlc()->set_volume(vol);
+    if ( tt->ishigh() )
+       pROWMarket->mutable_ohlc()->set_high(tt->price());
+
+    if ( tt->islow() )
+       pROWMarket->mutable_ohlc()->set_low(tt->price());
+
+#ifdef TIMEAGENTWRITETWEETS
+    TweetIt(tt);
+#endif
+
+}
+
+ROWMarket * LiteServer::getRowmarket(const std::string &playerid) {
+
+    ROWMarket *pROWMarket;
+    std::unordered_map<std::string, ROWMarket *>::iterator it;
+
+    if ( (it = mPidROWMarket.find(playerid)) == end(mPidROWMarket) ) {
+        GetDepthRep *pGetDepthRep = GetDepthRep::default_instance().New();
+        pGetDepthRep->set_pid(playerid);
+        mPidGetDepthRep.insert({playerid,pGetDepthRep});
+        pROWMarket = mROWMarketRep.add_rowmarket();//new ROWMarket;
+        mPidROWMarket.insert({playerid,pROWMarket});
+        pROWMarket->set_pid(playerid);
+        PlayerData *pd = new PlayerData;
+        pd->set_playerid(playerid);
+        pd->mutable_player_base()->CopyFrom(Server::NFLData.GetPlayerBase(playerid));
+        pd->mutable_player_status()->CopyFrom(Server::NFLData.GetPlayerStatus(playerid));
+        pROWMarket->set_allocated_playerdata(pd);
+    }
+    else
+        pROWMarket = it->second;
+
+    return pROWMarket;
+}
+
+void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
+    if ( dfd->symbol() == "" )
+        return;
+#ifdef TRACE
+    qDebug() << "level2 OnDepthDelta " << dfd->DebugString().data();
+#endif
+    GetDepthRep *depths = mPidGetDepthRep[dfd->symbol()];
+    if ( depths == nullptr ) {
+        depths = GetDepthRep::default_instance().New();
+    }
+
+    qDebug() << " before " << depths->DebugString().data();
+
+    auto book = depths->mutable_depthitems()->begin();
+
+    auto bsize = depths->depthitems_size();
+//    depths->depthitems().iterator
+    if ( dfd->isbid() )
+    {
+        bool nopush = false;
+        if ( bsize > 0 ) {
+            if ( book[bsize-1].b() == 0)
+                nopush = true;;
+        }
+
+        for ( int i =0; i<bsize; i++) {
+            if ( book[i].b() == 0 ) {
+                if ( dfd->size() > 0 ) {
+                    book[i].set_b(dfd->price());
+                    book[i].set_bs(dfd->size());
+                }
+                break;
+            }
+            else if ( dfd->price() < book[i].b())  {
+                if ( i < bsize-1)
+                    continue;
+
+                if ( dfd->size() > 0) {
+                    DepthItem &bi = *(depths->add_depthitems());
+                    bi.set_a(0);
+                    bi.set_as(0);
+                    bi.set_b(dfd->price());
+                    bi.set_bs(dfd->size());
+                }
+                break;
+            }
+            else if ( dfd->price() > book[i].b() ) {
+                if ( dfd->size() > 0) {
+                    int end = bsize-1;
+                    if ( nopush )
+                        ;//end = book.size()-1;
+                    else {
+                        //end = book.size()-2;
+                        DepthItem &bi = *(depths->add_depthitems());
+                        bi.set_a(0);
+                        bi.set_as(0);
+                        bi.set_b(book[bsize-1].b());
+                        bi.set_bs(book[bsize-1].bs());
+                    }
+                    for (int j=end;j > i;--j) {
+                        if ( nopush && book[j-1].b() != 0 )
+                            nopush = false;
+
+                        if ( !nopush ) {
+                            book[j].set_b(book[j-1].b());
+                            book[j].set_bs(book[j-1].bs());
+                        }
+                    }
+
+                    book[i].set_b(dfd->price());
+                    book[i].set_bs(dfd->size());
+                }
+
+                break;
+            }
+            else {
+                if ( dfd->size() > 0 )
+                    book[i].set_bs(dfd->size());
+                else {
+                    int j=i;
+                    for (;
+                          j<bsize-1 && book[j].b() > 0;
+                          ++j) {
+                        book[j].set_b(book[j+1].b());
+                        book[j].set_bs(book[j+1].bs());
+                    }
+                    book[j].set_b(0);
+                    book[j].set_bs(0);
+                }
+
+                break;
+            }
+        }
+    }
+    /*
+    else //!isbid
+    {
+        bool nopush = false;
+        if ( book.size() > 0 ) {
+            if ( book[book.size()-1].a == 0)
+                nopush = true;
+        }
+
+        for ( int i =0; i<book.size(); i++) {
+            if ( book[i].a == 0 ) {
+                if ( dfd->size() > 0 ) {
+                    book[i].a = dfd->price();
+                    book[i].as = dfd->size();
+                }
+                break;
+            }
+            else if ( dfd->price() > book[i].a)  {
+                if ( i < book.size()-1)
+                    continue;
+
+                if ( dfd->size() > 0) {
+                    BookItem bi;
+                    bi.b = bi.bs = 0;
+                    bi.a = dfd->price();
+                    bi.as = dfd->size();
+                    book.push_back(bi);
+                }
+                break;
+            }
+            else if ( dfd->price() < book[i].a ) {
+                if ( dfd->size() > 0) {
+                    int end = book.size()-1;
+                    if ( nopush )
+                        ;//end = dfd->size()-1;
+                    else {
+                        //end = dfd->size()-2;
+                        BookItem bi;
+                        bi.b = bi.bs = 0;
+                        bi.a = book[book.size()-1].a;
+                        bi.as = book[book.size()-1].as;
+                        book.push_back(bi);
+                    }
+                    for (int j=end;j > i;--j) {
+                        if ( nopush && book[j-1].a != 0 )
+                            nopush = false;
+
+                        if ( !nopush ) {
+                            book[j].a = book[j-1].a;
+                            book[j].as = book[j-1].as;
+                        }
+                    }
+
+                    book[i].a = dfd->price();
+                    book[i].as = dfd->size();
+                }
+                break;
+            }
+            else {
+                if ( dfd->size() > 0 )
+                    book[i].as = dfd->size();
+                else {
+                    int j=i;
+                    for (;
+                          j<book.size()-1 && book[j].a > 0;
+                          ++j) {
+                       book[j].a = book[j+1].a;
+                       book[j].as = book[j+1].as;
+                    }
+                    book[j].a =
+                    book[j].as = 0;
+                }
+                break;
+            }
+        }
+    }
+*/
+    if (bsize == 0 && dfd->size() >0 && dfd->price() > 0) {
+        DepthItem &bi = *(depths->add_depthitems());
+        if ( dfd->isbid() ) {
+            bi.set_a(0);
+            bi.set_as(0);
+            bi.set_b(dfd->price());
+            bi.set_bs(dfd->size());
+        }
+        else {
+            bi.set_b(0);
+            bi.set_bs(0);
+            bi.set_a(dfd->price());
+            bi.set_as(dfd->size());
+        }
+    }
+
+    qDebug() << " after " << depths->DebugString().data();
+}
+
+
+void LiteServer::onNewConnection() {
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
 
     connect(pSocket, &QWebSocket::binaryMessageReceived, this, &LiteServer::processBinaryMessage);
     connect(pSocket, &QWebSocket::disconnected, this, &LiteServer::socketDisconnected);
-    m_clients << pSocket;
-}
-
-void TxServer::onNewConnection()
-{
-    QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
-
-    connect(pSocket, &QWebSocket::binaryMessageReceived, this, &TxServer::processBinaryMessage);
-    connect(pSocket, &QWebSocket::disconnected, this, &TxServer::socketDisconnected);
     m_clients << pSocket;
 }
 
@@ -112,8 +388,6 @@ void TxServer::onNewConnection()
 //    GETROWMARKET = 6;
 //    GETDEPTH = 7;
 //}
-
-
 void LiteServer::processBinaryMessage(const QByteArray &message) {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
 
@@ -170,9 +444,15 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             rep.SerializeToString(&mRepstr);
             break;
         case GETROWMARKET:
+//            rep.set_ctype(GETROWMARKET);
+//    //            rep.SetAllocatedExtension( MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
+//            rep.SerializeToString(&mRepstr);
+//            break;
+
             rep.set_ctype(GETROWMARKET);
-    //            rep.SetAllocatedExtension( MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
+            rep.SetAllocatedExtension(GetROWMarketRep::rep,&mROWMarketRep);
             rep.SerializeToString(&mRepstr);
+            rep.ReleaseExtension(GetROWMarketRep::rep);
             break;
 #endif
         default:
@@ -183,206 +463,14 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
 
     QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
     pClient->sendBinaryMessage(qb);
-    if ( rep.ctype() == GETALLNAMES)
+    if ( rep.ctype() == GETALLNAMES )
         qDebug() << rep.ctype() <<" size " << Server::AllNamesRep.names_size();
+    else if ( rep.ctype() == GETROWMARKET)
+        qDebug() << mROWMarketRep.DebugString().data();
     else
         qDebug() << rep.DebugString().data();
     return;
 }
-
-void TxServer::processBinaryMessage(const QByteArray &message) {
-    fantasybit::SignedTransaction st;
-    std::string ststr = message.toStdString();
-    st.ParseFromString(ststr);
-
-    TxPool::addTxPool(st.id(),ststr);
-
-    const Transaction &t = st.trans();
-    pb::sha256 digest = pb::hashit(t.SerializeAsString());
-    secp256k1_ecdsa_signature sig = Commissioner::str2sig(st.sig());
-
-//        enum TransType {
-//          NAME = 0,
-//          PROJECTION = 1,
-//          RESULT = 2,
-//          DATA = 3,
-//          PROJECTION_BLOCK = 4,
-//          MASTER_NAME = 5,
-//          TIME = 6,
-//          STAMPED = 7,
-//          EXCHANGE = 8,
-//          EXCHANGE_BLOCK = 9
-//        };
-    switch (t.type()) {
-
-        case TransType::NAME: {
-            auto nt = t.GetExtension(fantasybit::NameTrans::name_trans);
-
-            if (!verify_name(st, nt, sig, digest)) {
-                qDebug() << " !verify name";
-                return;
-            }
-
-            mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
-            qDebug() <<  "verified " << FantasyName::name_hash(nt.fantasy_name()) << " adding name";
-            if ( AllNamesRepPtr->names_size() >= MaxNames) {
-                qDebug() << " post purge " << AllNamesRepPtr->names_size() << " > " << MaxNames;
-
-                int endpurge = MaxNames/10;
-                if (endpurge > 1)
-                    AllNamesRepPtr->mutable_names()->DeleteSubrange(0,endpurge);
-                qDebug() << " post purge " << AllNamesRepPtr->names_size();
-            }
-            AllNamesRepPtr->add_names(nt.fantasy_name());
-    //            AllNamesRep.add_names(nt.fantasy_name());
-    //            AllNamesRep2.add_names(nt.fantasy_name());
-    //            if ( AllNamesRepPtr->names_size() >= 1000) {
-    //                AllNamesRepPtr->clear_names();
-    //                AllNamesRepPtr = (AllNamesRep.names_size() > AllNamesRep2.names_size()) ? &AllNamesRep : &AllNamesRep2;
-    //            }
-
-            break;
-        }
-
-#ifdef PROD_SEASON_TRADING
-        case TransType::EXCHANGE: {
-            auto emdg = t.GetExtension(fantasybit::ExchangeOrder::exchange_order);
-            mExchangeData.OnNewOrderMsg(emdg,++mySeq,fn);
-            break;
-        }
-#endif
-
-        default:
-            break;
-      }
-
-//    StampedTrans mStampedTrans;
-//    Transaction trans{};
-//    trans.set_version(Commissioner::TRANS_VERSION);
-//    trans.set_type(TransType::STAMPED);
-
-//    trans.SerializeAsString();
-//    trans.MutableExtension(StampedTrans::stamped_trans)->CopyFrom(stt);
-
-//    trans.SetAllocatedExtension(StampedTrans::stamped_trans,mStampedTrans);
-
-//    mStampedTrans.set_allocated_signed_orig();
-
-
-//    trans.SerializeToString()
-    return;
-}
-
-std::shared_ptr<FantasyName> TxServer::getFNverifySt(const SignedTransaction &st) {
-
-    std::shared_ptr<FantasyName> ret;
-    if (st.trans().version() != Commissioner::TRANS_VERSION) {
-        qCritical() << " !verifySignedTransaction wrong trans version! ";
-        return ret;
-    }
-
-    pb::sha256 digest = pb::sha256(st.trans().SerializeAsString());
-    if (digest.str() != st.id()) {
-        qCritical() << "digest.str() != st.id() ";
-        return ret;
-    }
-
-    if ( st.fantasy_name() == "") {
-        qCritical() << " Blank FantasyName";
-        return ret;
-    }
-
-    ret = Commissioner::getName(st.fantasy_name());
-    if ( !ret )
-        qCritical() << " cant find FantasyName" << st.fantasy_name();
-    else {
-        secp256k1_ecdsa_signature sig = Commissioner::str2sig(st.sig());
-        auto pk =  ret->pubkey ();
-        if ( !Commissioner::verify(sig,digest, pk) ) {
-            ret.reset();
-            qCritical() << "verify error" << st.fantasy_name() << "getFNverifySt";
-        }
-    }
-    return ret;
-}
-
-bool TxServer::verify_name(const fantasybit::SignedTransaction &st, const NameTrans &nt,
-    const secp256k1_ecdsa_signature& sig, const pb::sha256 &digest) {
-
-    if ( !Commissioner::isAliasAvailable(nt.fantasy_name()) )
-    {
-        qCritical() << std::string("Processor::process failure: FantasyName(").
-                        append(nt.fantasy_name() + ")  hash already used ");
-        return false;
-    }
-
-
-    auto pk = Commissioner::str2pk(nt.public_key());
-    auto name = Commissioner::getName(pk);
-    if ( name != nullptr ) {
-        qCritical() << std::string("verfiy_name failure: FantasyName(").
-                        append(nt.fantasy_name() + ")  pubkey already n use") +
-                         name->ToString();
-                        //.append(st.DebugString());
-
-        return false;
-    }
-
-    if ( !Commissioner::verify(sig, digest, pk) ) {
-        qDebug() << " bad signed sig";
-#ifdef VERIFY_NAME_TX
-        return false;
-#endif
-    }
-
-    auto proof = nt.proof();
-    switch (proof.type())
-    {
-        case NameProof_Type_TWEET:
-        {
-            auto tp = proof.GetExtension(TweetProof::tweet_proof);
-            //TODO verify tweet
-            return true;
-        }
-        break;
-
-        case NameProof_Type_ORACLE:
-        {
-            return true;//TODO
-            //verify oracle
-            if (!Commissioner::verifyOracle(sig, digest))
-#ifdef NO_ORACLE_CHECK_TESTING
-            if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
-#endif
-            {
-                qCritical() << std::string("Processor::process name proof oracle failed")
-                                 .append(st.DebugString());
-
-                return false;
-            }
-            else
-                return true;
-        }
-        break;
-
-        default:
-            return true;
-            break;
-    }
-}
-
-
-
-void TxServer::socketDisconnected()
-{
-    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    qDebug() << "socketDisconnected:" << pClient  << " Reason: " << pClient->closeReason ();
-    if (pClient) {
-        m_clients.removeAll(pClient);
-        pClient->deleteLater();
-    }
-}
-
 
 void LiteServer::socketDisconnected()
 {
@@ -393,15 +481,8 @@ void LiteServer::socketDisconnected()
         pClient->deleteLater();
     }
 }
+
 void LiteServer::handleError(const QString err)
 {
     qDebug() << "LiteServer ProRoto Error " << err ;
 }
-
-void TxServer::handleError(const QString err)
-{
-    qDebug() << "TxServer ProRoto Error " << err ;
-}
-
-
-fantasybit::GetAllNamesRep Server::AllNamesRep{};

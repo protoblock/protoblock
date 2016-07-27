@@ -100,6 +100,8 @@ public:
     void AddGameResult(const string &gameid, const GameResult&);
     GameResult GetGameResult(const std::string &gameid);
 
+    PlayerStatus GetPlayerStatus(const std::string &playerid);
+
     PlayerBase GetPlayerBase(std::string playerid);
 
     //void AddTeamDepth(const TeamDepth &);

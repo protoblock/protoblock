@@ -5677,6 +5677,18 @@ class GetAllNamesRep : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& names() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_names();
 
+  // repeated .fantasybit.FantasyNameBal fnb = 20;
+  inline int fnb_size() const;
+  inline void clear_fnb();
+  static const int kFnbFieldNumber = 20;
+  inline const ::fantasybit::FantasyNameBal& fnb(int index) const;
+  inline ::fantasybit::FantasyNameBal* mutable_fnb(int index);
+  inline ::fantasybit::FantasyNameBal* add_fnb();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyNameBal >&
+      fnb() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyNameBal >*
+      mutable_fnb();
+
   static const int kRepFieldNumber = 500;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetAllNamesRep >, 11, false >
@@ -5687,9 +5699,10 @@ class GetAllNamesRep : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::std::string> names_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyNameBal > fnb_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -5775,14 +5788,23 @@ class ROWMarket : public ::google::protobuf::Message {
   inline ::fantasybit::MarketQuote* release_quote();
   inline void set_allocated_quote(::fantasybit::MarketQuote* quote);
 
-  // optional .fantasybit.PlayerBase playerbase = 40;
-  inline bool has_playerbase() const;
-  inline void clear_playerbase();
-  static const int kPlayerbaseFieldNumber = 40;
-  inline const ::fantasybit::PlayerBase& playerbase() const;
-  inline ::fantasybit::PlayerBase* mutable_playerbase();
-  inline ::fantasybit::PlayerBase* release_playerbase();
-  inline void set_allocated_playerbase(::fantasybit::PlayerBase* playerbase);
+  // optional .fantasybit.PlayerData playerdata = 40;
+  inline bool has_playerdata() const;
+  inline void clear_playerdata();
+  static const int kPlayerdataFieldNumber = 40;
+  inline const ::fantasybit::PlayerData& playerdata() const;
+  inline ::fantasybit::PlayerData* mutable_playerdata();
+  inline ::fantasybit::PlayerData* release_playerdata();
+  inline void set_allocated_playerdata(::fantasybit::PlayerData* playerdata);
+
+  // optional .fantasybit.ContractOHLC ohlc = 50;
+  inline bool has_ohlc() const;
+  inline void clear_ohlc();
+  static const int kOhlcFieldNumber = 50;
+  inline const ::fantasybit::ContractOHLC& ohlc() const;
+  inline ::fantasybit::ContractOHLC* mutable_ohlc();
+  inline ::fantasybit::ContractOHLC* release_ohlc();
+  inline void set_allocated_ohlc(::fantasybit::ContractOHLC* ohlc);
 
   // @@protoc_insertion_point(class_scope:fantasybit.ROWMarket)
  private:
@@ -5790,17 +5812,20 @@ class ROWMarket : public ::google::protobuf::Message {
   inline void clear_has_pid();
   inline void set_has_quote();
   inline void clear_has_quote();
-  inline void set_has_playerbase();
-  inline void clear_has_playerbase();
+  inline void set_has_playerdata();
+  inline void clear_has_playerdata();
+  inline void set_has_ohlc();
+  inline void clear_has_ohlc();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* pid_;
   ::fantasybit::MarketQuote* quote_;
-  ::fantasybit::PlayerBase* playerbase_;
+  ::fantasybit::PlayerData* playerdata_;
+  ::fantasybit::ContractOHLC* ohlc_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -16888,6 +16913,31 @@ GetAllNamesRep::mutable_names() {
   return &names_;
 }
 
+// repeated .fantasybit.FantasyNameBal fnb = 20;
+inline int GetAllNamesRep::fnb_size() const {
+  return fnb_.size();
+}
+inline void GetAllNamesRep::clear_fnb() {
+  fnb_.Clear();
+}
+inline const ::fantasybit::FantasyNameBal& GetAllNamesRep::fnb(int index) const {
+  return fnb_.Get(index);
+}
+inline ::fantasybit::FantasyNameBal* GetAllNamesRep::mutable_fnb(int index) {
+  return fnb_.Mutable(index);
+}
+inline ::fantasybit::FantasyNameBal* GetAllNamesRep::add_fnb() {
+  return fnb_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyNameBal >&
+GetAllNamesRep::fnb() const {
+  return fnb_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyNameBal >*
+GetAllNamesRep::mutable_fnb() {
+  return &fnb_;
+}
+
 // -------------------------------------------------------------------
 
 // ROWMarket
@@ -17000,41 +17050,79 @@ inline void ROWMarket::set_allocated_quote(::fantasybit::MarketQuote* quote) {
   }
 }
 
-// optional .fantasybit.PlayerBase playerbase = 40;
-inline bool ROWMarket::has_playerbase() const {
+// optional .fantasybit.PlayerData playerdata = 40;
+inline bool ROWMarket::has_playerdata() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void ROWMarket::set_has_playerbase() {
+inline void ROWMarket::set_has_playerdata() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void ROWMarket::clear_has_playerbase() {
+inline void ROWMarket::clear_has_playerdata() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void ROWMarket::clear_playerbase() {
-  if (playerbase_ != NULL) playerbase_->::fantasybit::PlayerBase::Clear();
-  clear_has_playerbase();
+inline void ROWMarket::clear_playerdata() {
+  if (playerdata_ != NULL) playerdata_->::fantasybit::PlayerData::Clear();
+  clear_has_playerdata();
 }
-inline const ::fantasybit::PlayerBase& ROWMarket::playerbase() const {
-  return playerbase_ != NULL ? *playerbase_ : *default_instance_->playerbase_;
+inline const ::fantasybit::PlayerData& ROWMarket::playerdata() const {
+  return playerdata_ != NULL ? *playerdata_ : *default_instance_->playerdata_;
 }
-inline ::fantasybit::PlayerBase* ROWMarket::mutable_playerbase() {
-  set_has_playerbase();
-  if (playerbase_ == NULL) playerbase_ = new ::fantasybit::PlayerBase;
-  return playerbase_;
+inline ::fantasybit::PlayerData* ROWMarket::mutable_playerdata() {
+  set_has_playerdata();
+  if (playerdata_ == NULL) playerdata_ = new ::fantasybit::PlayerData;
+  return playerdata_;
 }
-inline ::fantasybit::PlayerBase* ROWMarket::release_playerbase() {
-  clear_has_playerbase();
-  ::fantasybit::PlayerBase* temp = playerbase_;
-  playerbase_ = NULL;
+inline ::fantasybit::PlayerData* ROWMarket::release_playerdata() {
+  clear_has_playerdata();
+  ::fantasybit::PlayerData* temp = playerdata_;
+  playerdata_ = NULL;
   return temp;
 }
-inline void ROWMarket::set_allocated_playerbase(::fantasybit::PlayerBase* playerbase) {
-  delete playerbase_;
-  playerbase_ = playerbase;
-  if (playerbase) {
-    set_has_playerbase();
+inline void ROWMarket::set_allocated_playerdata(::fantasybit::PlayerData* playerdata) {
+  delete playerdata_;
+  playerdata_ = playerdata;
+  if (playerdata) {
+    set_has_playerdata();
   } else {
-    clear_has_playerbase();
+    clear_has_playerdata();
+  }
+}
+
+// optional .fantasybit.ContractOHLC ohlc = 50;
+inline bool ROWMarket::has_ohlc() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ROWMarket::set_has_ohlc() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ROWMarket::clear_has_ohlc() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ROWMarket::clear_ohlc() {
+  if (ohlc_ != NULL) ohlc_->::fantasybit::ContractOHLC::Clear();
+  clear_has_ohlc();
+}
+inline const ::fantasybit::ContractOHLC& ROWMarket::ohlc() const {
+  return ohlc_ != NULL ? *ohlc_ : *default_instance_->ohlc_;
+}
+inline ::fantasybit::ContractOHLC* ROWMarket::mutable_ohlc() {
+  set_has_ohlc();
+  if (ohlc_ == NULL) ohlc_ = new ::fantasybit::ContractOHLC;
+  return ohlc_;
+}
+inline ::fantasybit::ContractOHLC* ROWMarket::release_ohlc() {
+  clear_has_ohlc();
+  ::fantasybit::ContractOHLC* temp = ohlc_;
+  ohlc_ = NULL;
+  return temp;
+}
+inline void ROWMarket::set_allocated_ohlc(::fantasybit::ContractOHLC* ohlc) {
+  delete ohlc_;
+  ohlc_ = ohlc;
+  if (ohlc) {
+    set_has_ohlc();
+  } else {
+    clear_has_ohlc();
   }
 }
 

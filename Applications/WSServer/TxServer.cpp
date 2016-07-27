@@ -1,4 +1,4 @@
-#include "server.h"
+#include "txserver.h"
 #include "QtWebSockets/qwebsocketserver.h"
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
@@ -10,6 +10,7 @@
 
 #include "Commissioner.h"
 #include "txpool.h"
+#include "server.h"
 
 QT_USE_NAMESPACE
 
@@ -24,8 +25,12 @@ TxServer::TxServer(quint16 port, bool debug, QObject *parent) :
     mNameData.init();
     TxPool::init();
 #ifdef PROD_SEASON_TRADING
-    mNFLStateData.init();
+    Server::NFLData.init();
 #endif
+
+    Server::TheExchange.init();
+    mySeq = Server::TheExchange.MAXSEQ;
+
     mport = port;
 
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
@@ -46,52 +51,11 @@ TxServer::TxServer(quint16 port, bool debug, QObject *parent) :
         AllNamesRepPtr->mutable_names()->DeleteSubrange(0,AllNamesRepPtr->names_size() - MaxNames);
 }
 
-TxServer::~TxServer()
-{
+TxServer::~TxServer() {
     m_pWebSocketServer->close();
     qDeleteAll(m_clients.begin(), m_clients.end());
 }
 
-
-LiteServer::LiteServer(quint16 port, bool debug, QObject *parent) :
-    QObject(parent),
-    m_pWebSocketServer(new QWebSocketServer(QStringLiteral("WS LiteServer"),
-                                            QWebSocketServer::NonSecureMode, this)),
-    m_clients(),
-    m_debug(debug)
-{
-
-    if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
-
-        QHostAddress hInf = m_pWebSocketServer->serverAddress();
-
-        qDebug() << "WS LiteServer " << hInf.toString() << " listening on port" << port << m_pWebSocketServer->serverName() << " ";
-        connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
-                this, &LiteServer::onNewConnection);
-
-        connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &LiteServer::closed);
-    }
-
-
-    connect (this,SIGNAL(error(QString)),this,SLOT(handleError(QString)));
-
-}
-
-LiteServer::~LiteServer()
-{
-    m_pWebSocketServer->close();
-    qDeleteAll(m_clients.begin(), m_clients.end());
-}
-
-
-void LiteServer::onNewConnection()
-{
-    QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
-
-    connect(pSocket, &QWebSocket::binaryMessageReceived, this, &LiteServer::processBinaryMessage);
-    connect(pSocket, &QWebSocket::disconnected, this, &LiteServer::socketDisconnected);
-    m_clients << pSocket;
-}
 
 void TxServer::onNewConnection()
 {
@@ -100,94 +64,6 @@ void TxServer::onNewConnection()
     connect(pSocket, &QWebSocket::binaryMessageReceived, this, &TxServer::processBinaryMessage);
     connect(pSocket, &QWebSocket::disconnected, this, &TxServer::socketDisconnected);
     m_clients << pSocket;
-}
-
-
-//enum CType {
-//    CHECKNAME = 1;
-//    NEWTX = 2;
-//    PK2FNAME = 3;
-//    GETSTATUS = 4;
-//    GETALLNAMES = 5;
-//    GETROWMARKET = 6;
-//    GETDEPTH = 7;
-//}
-
-
-void LiteServer::processBinaryMessage(const QByteArray &message) {
-    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-
-    fantasybit::WsReq req;
-    req.ParseFromString(message.toStdString());
-    fantasybit::WSReply rep;
-
-    qDebug() << " processBinaryMessage " << req.DebugString().data();
-
-    switch ( req.ctype() ) {
-        case PK2FNAME:
-        {
-            Pk2FnameRep pkr;
-            pkr.mutable_req()->CopyFrom(req.GetExtension(Pk2FnameReq::req));
-            rep.set_ctype(PK2FNAME);
-            auto fname = Commissioner::getName(Commissioner::str2pk(pkr.req().pk()));
-            if ( fname == nullptr)
-                pkr.set_fname("");
-            else
-                pkr.set_fname(fname->alias());
-
-
-            rep.MutableExtension(Pk2FnameRep::rep)->CopyFrom(pkr);
-            rep.SerializeToString(&mRepstr);
-            break;
-        }
-        case CHECKNAME:
-        {
-            rep.set_ctype(CHECKNAME);
-            CheckNameRep cr;
-            cr.mutable_req()->CopyFrom(req.GetExtension(CheckNameReq::req));
-            if ( fantasybit::Commissioner::isAliasAvailable(cr.req().fantasy_name()))
-                cr.set_isavail("true");
-            else
-                cr.set_isavail("false");
-
-            rep.MutableExtension(CheckNameRep::rep)->CopyFrom(cr);
-            rep.SerializeToString(&mRepstr);
-            break;
-        }
-        case GETALLNAMES: {
-            rep.set_ctype(GETALLNAMES);
-    //            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
-            rep.SetAllocatedExtension(GetAllNamesRep::rep,&Server::AllNamesRep);
-            rep.SerializeToString(&mRepstr);
-            rep.ReleaseExtension(GetAllNamesRep::rep);
-            break;
-        }
-
-#ifdef PROD_SEASON_TRADING
-        case GETDEPTH:
-    //            GetDepthRep rrr;
-    //            rrr.add_depthitems(
-            rep.SerializeToString(&mRepstr);
-            break;
-        case GETROWMARKET:
-            rep.set_ctype(GETROWMARKET);
-    //            rep.SetAllocatedExtension( MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
-            rep.SerializeToString(&mRepstr);
-            break;
-#endif
-        default:
-            return;
-    }
-
-//        rep.mutable_req()->CopyFrom(req);
-
-    QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
-    pClient->sendBinaryMessage(qb);
-    if ( rep.ctype() == GETALLNAMES)
-        qDebug() << rep.ctype() <<" size " << Server::AllNamesRep.names_size();
-    else
-        qDebug() << rep.DebugString().data();
-    return;
 }
 
 void TxServer::processBinaryMessage(const QByteArray &message) {
@@ -246,8 +122,10 @@ void TxServer::processBinaryMessage(const QByteArray &message) {
 
 #ifdef PROD_SEASON_TRADING
         case TransType::EXCHANGE: {
+            auto fn = Commissioner::getName(st.fantasy_name());//getFNverifySt(st);
             auto emdg = t.GetExtension(fantasybit::ExchangeOrder::exchange_order);
-            mExchangeData.OnNewOrderMsg(emdg,++mySeq,fn);
+            qDebug() << emdg.DebugString().data();
+            Server::TheExchange.OnNewOrderMsg(emdg,++mySeq,fn);
             break;
         }
 #endif
@@ -384,24 +262,7 @@ void TxServer::socketDisconnected()
 }
 
 
-void LiteServer::socketDisconnected()
-{
-    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    qDebug() << "socketDisconnected:" << pClient  << " Reason: " << pClient->closeReason ();
-    if (pClient) {
-        m_clients.removeAll(pClient);
-        pClient->deleteLater();
-    }
-}
-void LiteServer::handleError(const QString err)
-{
-    qDebug() << "LiteServer ProRoto Error " << err ;
-}
-
 void TxServer::handleError(const QString err)
 {
     qDebug() << "TxServer ProRoto Error " << err ;
 }
-
-
-fantasybit::GetAllNamesRep Server::AllNamesRep{};
