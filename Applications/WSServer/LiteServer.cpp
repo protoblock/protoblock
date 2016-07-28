@@ -81,7 +81,7 @@ void LiteServer::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
 #endif
 
     if ( mt->depth_size() > 0 ) {
-        GetDepthRep *depths = mPidGetDepthRep[mt->symbol()];
+        GetDepthRep *depths = getDepthRep(mt->symbol());
         if ( depths == nullptr) {
             qDebug() << " error bad depth LiteServer::OnMarketSnapShot" << mt->DebugString().data();
             return;
@@ -161,9 +161,6 @@ ROWMarket * LiteServer::getRowmarket(const std::string &playerid) {
     std::unordered_map<std::string, ROWMarket *>::iterator it;
 
     if ( (it = mPidROWMarket.find(playerid)) == end(mPidROWMarket) ) {
-        GetDepthRep *pGetDepthRep = GetDepthRep::default_instance().New();
-        pGetDepthRep->set_pid(playerid);
-        mPidGetDepthRep.insert({playerid,pGetDepthRep});
         pROWMarket = mROWMarketRep.add_rowmarket();//new ROWMarket;
         mPidROWMarket.insert({playerid,pROWMarket});
         pROWMarket->set_pid(playerid);
@@ -179,16 +176,29 @@ ROWMarket * LiteServer::getRowmarket(const std::string &playerid) {
     return pROWMarket;
 }
 
+GetDepthRep * LiteServer::getDepthRep(const std::string &playerid) {
+
+    GetDepthRep *pGetDepthRep;
+    std::unordered_map<std::string, GetDepthRep *>::iterator it;
+
+    if ( (it = mPidGetDepthRep.find(playerid)) == end(mPidGetDepthRep) ) {
+        pGetDepthRep = GetDepthRep::default_instance().New();
+        mPidGetDepthRep.insert({playerid,pGetDepthRep});
+        pGetDepthRep->set_pid(playerid);
+    }
+    else
+        pGetDepthRep = it->second;
+
+    return pGetDepthRep;
+}
+
 void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
     if ( dfd->symbol() == "" )
         return;
 #ifdef TRACE
     qDebug() << "level2 OnDepthDelta " << dfd->DebugString().data();
 #endif
-    GetDepthRep *depths = mPidGetDepthRep[dfd->symbol()];
-    if ( depths == nullptr ) {
-        depths = GetDepthRep::default_instance().New();
-    }
+    GetDepthRep *depths = getDepthRep(dfd->symbol());
 
     qDebug() << " before " << depths->DebugString().data();
 
@@ -218,6 +228,8 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
 
                 if ( dfd->size() > 0) {
                     DepthItem &bi = *(depths->add_depthitems());
+                    book = depths->mutable_depthitems()->begin();
+                    bsize = depths->depthitems_size();
                     bi.set_a(0);
                     bi.set_as(0);
                     bi.set_b(dfd->price());
@@ -229,10 +241,12 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
                 if ( dfd->size() > 0) {
                     int end = bsize-1;
                     if ( nopush )
-                        ;//end = book.size()-1;
+                        ;//end = bsize-1;
                     else {
-                        //end = book.size()-2;
+                        //end = bsize-2;
                         DepthItem &bi = *(depths->add_depthitems());
+                        book = depths->mutable_depthitems()->begin();
+                        bsize = depths->depthitems_size();
                         bi.set_a(0);
                         bi.set_as(0);
                         bi.set_b(book[bsize-1].b());
@@ -273,85 +287,90 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
             }
         }
     }
-    /*
     else //!isbid
     {
         bool nopush = false;
-        if ( book.size() > 0 ) {
-            if ( book[book.size()-1].a == 0)
+        if ( bsize > 0 ) {
+            if ( book[bsize-1].a() == 0)
                 nopush = true;
         }
 
-        for ( int i =0; i<book.size(); i++) {
-            if ( book[i].a == 0 ) {
+        for ( int i =0; i<bsize; i++) {
+            if ( book[i].a()== 0 ) {
                 if ( dfd->size() > 0 ) {
-                    book[i].a = dfd->price();
-                    book[i].as = dfd->size();
+                    book[i].set_a(dfd->price());
+                    book[i].set_as(dfd->size());
                 }
                 break;
             }
-            else if ( dfd->price() > book[i].a)  {
-                if ( i < book.size()-1)
+            else if ( dfd->price() > book[i].a())  {
+                if ( i < bsize-1)
                     continue;
 
                 if ( dfd->size() > 0) {
-                    BookItem bi;
-                    bi.b = bi.bs = 0;
-                    bi.a = dfd->price();
-                    bi.as = dfd->size();
-                    book.push_back(bi);
+                    DepthItem &bi = *(depths->add_depthitems());
+                    book = depths->mutable_depthitems()->begin();
+                    bsize = depths->depthitems_size();
+                    bi.set_b(0);
+                    bi.set_bs(0);
+                    bi.set_a(dfd->price());
+                    bi.set_as(dfd->size());
                 }
                 break;
             }
-            else if ( dfd->price() < book[i].a ) {
+            else if ( dfd->price() < book[i].a()) {
                 if ( dfd->size() > 0) {
-                    int end = book.size()-1;
+                    int end = bsize-1;
                     if ( nopush )
                         ;//end = dfd->size()-1;
                     else {
                         //end = dfd->size()-2;
-                        BookItem bi;
-                        bi.b = bi.bs = 0;
-                        bi.a = book[book.size()-1].a;
-                        bi.as = book[book.size()-1].as;
-                        book.push_back(bi);
+                        DepthItem &bi = *(depths->add_depthitems());
+                        book = depths->mutable_depthitems()->begin();
+                        bsize = depths->depthitems_size();
+                        bi.set_b(0);
+                        bi.set_bs(0);
+                        bi.set_a(book[bsize-1].a());
+                        bi.set_as(book[bsize-1].as());
                     }
                     for (int j=end;j > i;--j) {
-                        if ( nopush && book[j-1].a != 0 )
+                        if ( nopush && book[j-1].a()!= 0 )
                             nopush = false;
 
                         if ( !nopush ) {
-                            book[j].a = book[j-1].a;
-                            book[j].as = book[j-1].as;
+                            book[j].set_a(book[j-1].a());
+                            book[j].set_as(book[j-1].as());
                         }
                     }
 
-                    book[i].a = dfd->price();
-                    book[i].as = dfd->size();
+                    book[i].set_a(dfd->price());
+                    book[i].set_as(dfd->size());
                 }
                 break;
             }
             else {
                 if ( dfd->size() > 0 )
-                    book[i].as = dfd->size();
+                    book[i].set_as(dfd->size());
                 else {
                     int j=i;
                     for (;
-                          j<book.size()-1 && book[j].a > 0;
+                          j<bsize-1 && book[j].a()> 0;
                           ++j) {
-                       book[j].a = book[j+1].a;
-                       book[j].as = book[j+1].as;
+                       book[j].set_a(book[j+1].a());
+                       book[j].set_as(book[j+1].as());
                     }
-                    book[j].a =
-                    book[j].as = 0;
+                    book[j].set_a(0);
+                    book[j].set_as(0);
                 }
                 break;
             }
         }
     }
-*/
+
     if (bsize == 0 && dfd->size() >0 && dfd->price() > 0) {
         DepthItem &bi = *(depths->add_depthitems());
+        book = depths->mutable_depthitems()->begin();
+        bsize = depths->depthitems_size();
         if ( dfd->isbid() ) {
             bi.set_a(0);
             bi.set_as(0);
@@ -438,11 +457,19 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
         }
 
 #ifdef PROD_SEASON_TRADING
-        case GETDEPTH:
-    //            GetDepthRep rrr;
-    //            rrr.add_depthitems(
+        case GETDEPTH: {
+            rep.set_ctype(GETDEPTH);
+            GetDepthRep *depths = getDepthRep(req.GetExtension(GetDepthReq::req).pid());
+//            if ( depths == nullptr ) {
+//                qDebug() << "depths == nullptr";
+//                return;
+//            }
+            rep.SetAllocatedExtension(GetDepthRep::rep,depths);
             rep.SerializeToString(&mRepstr);
+            qDebug() << rep.DebugString().data();
+            rep.ReleaseExtension(GetDepthRep::rep);
             break;
+        }
         case GETROWMARKET:
 //            rep.set_ctype(GETROWMARKET);
 //    //            rep.SetAllocatedExtension( MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);

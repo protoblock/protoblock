@@ -23,6 +23,8 @@ class PlayerQuoteSliceModelItem : public QObject {
     QML_CONSTANT_CSTREF_PROPERTY (qint32, updown)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, hi)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, lo)
+    QML_CONSTANT_CSTREF_PROPERTY (QString, playerid)
+    QML_CONSTANT_CSTREF_PROPERTY (QString, symbol)
 
 
 public:
@@ -42,29 +44,19 @@ public:
         m_updown = in.quote().udn();
         m_hi = in.ohlc().high();
         m_lo = in.ohlc().low();
+        m_playerid = in.pid().data();
+        m_symbol = in.pid().data(); //TODO
     }
-//            const QString &firstName,
-//            const QString &lastName,
-//            const QString &position,
-//            const QString &team,
-//            const QString &playerStatus,
-//            const QString &playerId,
-//            QObject * parent = Q_NULLPTR
-//            ):
-//        QObject    (parent),
-//        m_firstName(firstName),
-//        m_lastName(lastName),
-//        m_position(position),
-//        m_team(team),
-//        m_playerStatus(playerStatus),
-//        m_playerId(playerId)
-
 };
 
 
 class PlayerQuoteSliceModel : public QQmlObjectListModel<PlayerQuoteSliceModelItem>{};
 
 Q_DECLARE_METATYPE(PlayerQuoteSliceModel*)
+
+
+//https://github.com/mkawserm/ModelsTest/blob/master/main.cpp
+
 
 //message ContractOHLC {
 //    optional string symbol = 10;
@@ -109,9 +101,6 @@ Q_DECLARE_METATYPE(PlayerQuoteSliceModel*)
 //    return data->propertyValue<PropertyNames::VOLUME>();
 //if( column == i++)
 //    return data->propertyValue<PropertyNames::CHANGE>();
-
-
-//#endif // PLAYERNEWMODEL_H
 
 
 #endif // PLAYERQUOTESLICEMODEL_H

@@ -40,7 +40,8 @@ SOURCES += \
     $$PWD/plugin.cpp \
     $$PWD/socketclient.cpp \
     $$PWD/mediator.cpp \
-    $$PWD/playerquoteslicemodel.cpp
+    $$PWD/playerquoteslicemodel.cpp \
+    depthmarketmodel.cpp
 
 
 
@@ -67,7 +68,8 @@ HEADERS += \
     $$PWD/plugin.h \
     $$PWD/socketclient.h \
     $$PWD/mediator.h \
-    playerquoteslicemodel.h
+    playerquoteslicemodel.h \
+    depthmarketmodel.h
 
 DISTFILES = qmldir
 

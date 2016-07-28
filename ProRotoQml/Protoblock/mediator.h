@@ -14,6 +14,7 @@
 #include <QTimer>
 #include "fbutils.h"
 #include "playerquoteslicemodel.h"
+#include "depthmarketmodel.h"
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -44,6 +45,9 @@ class Mediator : public QObject
     QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
 
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
+    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+
+
 
 //    QML_LIST_PROPERTY(Mediator,goodFname,QString)
 
@@ -82,18 +86,19 @@ public:
     }
 
 
-
-
-
-
     QStringList m_goodList;
     QStringList m_allNamesList;
     QStringList m_allROWList;
 
-//    Q_INVOKABLE void startDepth(const QString&);
+    Q_INVOKABLE void startDepth(const QString& symbol) {
+        changeDepthContext(symbol);
+        getDepthRep();
+        polldepth.start();
+    }
 
-
-//    Q_INVOKABLE void stopDepth(const QString&);
+    Q_INVOKABLE void stopDepth(const QString& symbol) {
+        polldepth.stop();
+    }
 
 
 
@@ -140,6 +145,12 @@ public:
 //    std::string lastYearPath();
 
 
+    Q_INVOKABLE void changeDepthContext(const QString& context) {
+        if ( mGetDepthReq.GetExtension(GetDepthReq::req).pid().data() != context )
+            mGetDepthReq.MutableExtension(GetDepthReq::req)->set_pid(context.toStdString());
+    }
+
+    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void allNamesGet();
     Q_INVOKABLE void rowMarketGet();
     Q_INVOKABLE void pk2fname(const QString&);
@@ -187,7 +198,7 @@ protected slots:
 //    void handdleNameStatuses();
 
 
-
+    void getDepthRep();
 
     void handleError(const QString err);
     void handleWebSocketError(const QString err);
@@ -230,8 +241,14 @@ private:
 
     QTimer signPlayerStatus;
 
+    QTimer polldepth;
+
     QTimer tradeTesting;
     PlayerQuoteSliceModel mPlayerQuoteSliceModel;
+    DepthMarketModel mDepthMarketModel;
+    WsReq mGetDepthReq;
+    QString testid;
+    bool isbid;
 };
 
 #endif // MEDIATOR_H

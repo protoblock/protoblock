@@ -10,8 +10,15 @@ Mediator::Mediator(QObject *parent) :
     m_socketState(Default),
     m_internalSocketState(QAbstractSocket::ListeningState),
     mPlayerQuoteSliceModel{},
-    m_pPlayerQuoteSliceModel(&mPlayerQuoteSliceModel)
+    m_pPlayerQuoteSliceModel(&mPlayerQuoteSliceModel),
+    mDepthMarketModel{},
+    m_pDepthMarketModel(&mDepthMarketModel)
 {
+
+    mGetDepthReq.set_ctype(GETDEPTH);
+    GetDepthReq dr;
+    dr.set_pid("na");
+    mGetDepthReq.MutableExtension(GetDepthReq::req)->CopyFrom(dr);
 
 //    qDebug() << m_webSocket.state ();
     connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
@@ -89,6 +96,10 @@ Mediator::Mediator(QObject *parent) :
     tradeTesting.setInterval(5000);
     connect(&tradeTesting, SIGNAL(timeout()),
             this, SLOT(doTestTrade()));
+
+    polldepth.setInterval(1000);
+    connect(&polldepth, SIGNAL(timeout()),
+            this, SLOT(getDepthRep()));
 
 }
 
@@ -333,6 +344,9 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 //    else
 //        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
 
+    qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
+
+
     switch ( rep.ctype()) {
         case PK2FNAME:
         {
@@ -426,29 +440,33 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             const GetROWMarketRep &np = rep.GetExtension(GetROWMarketRep::rep);
             for( const auto &rowm : np.rowmarket()) {
                 m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(rowm));
-                WsReq req;
-                GetDepthReq gdr;
-                gdr.set_pid(rowm.pid());
-                req.set_ctype(GETDEPTH);
-                req.MutableExtension(GetDepthReq::req)->CopyFrom(gdr);
-                auto txstr = req.SerializeAsString();
-                QByteArray qb(txstr.data(),(size_t)txstr.size());
-                qDebug() << " rowmarket sending " << req.DebugString().data();
-                m_webSocket.sendBinaryMessage(qb);
-
+//                WsReq req;
+//                GetDepthReq gdr;
+//                gdr.set_pid(rowm.pid());
+//                req.set_ctype(GETDEPTH);
+//                req.MutableExtension(GetDepthReq::req)->CopyFrom(gdr);
+//                auto txstr = req.SerializeAsString();
+//                QByteArray qb(txstr.data(),(size_t)txstr.size());
+//                qDebug() << " rowmarket sending " << req.DebugString().data();
+//                m_webSocket.sendBinaryMessage(qb);
             }
-//            leaderBoardchanged();
-    #ifdef TRACE
-            //qDebug() << "GETALLNAMES" <<  np.DebugString().data();
-    #endif
-
-    //            setallNames2(m_allNamesList)
+        }
+        break;
+        case GETDEPTH: {
+            m_pDepthMarketModel->updateFullDepth(rep.GetExtension(GetDepthRep::rep));
+            qDebug() << rep.DebugString().data();
             break;
         }
         default:
             break;
     }
     //    emit gotPk2fname(name);
+#ifdef TRACE
+        //qDebug() << "GETALLNAMES" <<  np.DebugString().data();
+#endif
+
+//            setallNames2(m_allNamesList)
+
 }
 
 
@@ -536,17 +554,64 @@ void Mediator::getSignedPlayerStatus() {
     doPk2fname(m_lastSignedplayer);
 }
 
+
+void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size) {
+    ExchangeOrder eo;
+    eo.set_playerid(symbol.toStdString());
+    eo.set_type(ExchangeOrder::NEW);
+
+    OrderCore core;
+    core.set_buyside(isbuy);
+    core.set_size(size);
+    core.set_price(price);
+
+#ifdef TRACE
+    qDebug() << "doTrade NewOrder " << core.DebugString().data();
+#endif
+    eo.mutable_core()->CopyFrom(core);
+    //emit SendOrder(eo);
+
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::EXCHANGE);
+    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
+
+    SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
+
+    auto &pk = m_fantasy_agent.pubKey();
+    pb::sha256 digest(sn.id());
+    if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
+        qDebug() << " bad signature ";
+    else
+        qDebug() << " good signature ";
+
+
+
+    auto txstr = sn.SerializeAsString();
+
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+
+    qDebug() << " mediator doTestTrade";
+    m_txsocket.sendBinaryMessage(qb);
+
+}
+
 void Mediator::doTestTrade() {
+    return;
     int number = 200;
     int randomValue = qrand() % number;
 
     ExchangeOrder eo;
-    eo.set_playerid("1806");
+    eo.set_playerid(testid.toStdString());
     eo.set_type(ExchangeOrder::NEW);
 
     OrderCore core;
-    core.set_buyside(false);
-    core.set_size(1);
+    core.set_buyside(isbid = !isbid);
+
+    number = 20;
+    int sz = qrand() % number;
+    if ( sz <= 1 ) sz = 1;
+    core.set_size(sz);
     core.set_price(randomValue);
 
 #ifdef TRACE
@@ -588,10 +653,20 @@ void Mediator::useName(const QString &name) {
         usingFantasyName(name);
     }
 
-    if ( name == "MikeClayNFL" )
+
+    if ( name == "MikeClayNFL" ) {
+        if ( testid == "1806")
+            testid = "1";
+        else
+            testid = "1806";
+
         tradeTesting.start();
-    else
+        startDepth(testid);
+    }
+    else {
         tradeTesting.stop();
+        stopDepth(testid);
+    }
 
 }
 
@@ -748,6 +823,12 @@ void Mediator::rowMarketGet() {
     m_webSocket.sendBinaryMessage(qb);
 }
 
+void Mediator::getDepthRep() {
+    auto txstr = mGetDepthReq.SerializeAsString();
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+    qDebug() << " getDepthRep sending " << mGetDepthReq.DebugString().data();
+    m_webSocket.sendBinaryMessage(qb);
+}
 
 Mediator *Mediator::myInstance;
 

@@ -50,7 +50,7 @@ Item {
             id: leaderboard
             width: parent.width - 5
             anchors.top: ban.bottom
-            height: rootLoader.height - (ban.height + gstate.height)
+            height: (rootLoader.height - (ban.height + gstate.height)) / 2
             clip: true
             model:   MiddleMan.pPlayerQuoteSliceModel// allNamesList()
             delegate:
@@ -67,6 +67,36 @@ Item {
                     source:  "qrc:/icons/action_account_circle.png"
                 }
                 valueText: "Balance : 0"
+                onClicked: {
+
+                    MiddleMan.startDepth(model.playerid)
+                }
+            }
+        }
+
+        Banner{
+            id: ban2
+            text: "Depth for: " + MiddleMan.pDepthMarketModel.playerid
+            color: "white"
+            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : themeroot.theme.primaryColor
+            width: parent.width
+            height: ProtoScreen.guToPx(6)
+            anchors.top: leaderboard.bottom
+        }
+        ListView{
+            id: depth
+            width: parent.width - 5
+            anchors.top: ban2.bottom
+            height: leaderboard.height//rootLoader.height - (ban2.height + gstate.height)
+            clip: true
+            model:   MiddleMan.pDepthMarketModel// allNamesList()
+            delegate:
+                ListItems.Subtitled{
+                elevation: 2
+                backgroundColor: "white"//realRoot.uname ===  modelData ? Colors.amber : "white"
+                width: parent.width
+                text: model.bidsize + ", " + model.bid + " " + model.ask + " " + model.asksize
+                onClicked: MiddleMan.doTrade(MiddleMan.pDepthMarketModel.playerid,true,100,1)
             }
         }
 

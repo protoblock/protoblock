@@ -72,6 +72,8 @@ private:
     std::unordered_map<std::string, GetDepthRep *> mPidGetDepthRep;
 
     ROWMarket *getRowmarket(const std::string &pid);
+    GetDepthRep * getDepthRep(const std::string &playerid);
+
 };
 
 #endif //LITE_SERVER_H
