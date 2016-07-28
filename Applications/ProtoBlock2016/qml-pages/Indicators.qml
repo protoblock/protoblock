@@ -16,7 +16,8 @@ Item {
             iconName: "qrc:/icons/action_settings.png"
             hoverAnimation: true
             onClicked: {
-                rootLoader.source  = "qrc:/UserSettings.qml"
+                rootLoader.source  = "qrc:/Settings.qml"
+                pageHelper.selectedTabIndex = 0
                 pageHelper.title = "System Settings"
             }
         }

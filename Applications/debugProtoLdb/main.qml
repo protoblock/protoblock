@@ -416,7 +416,6 @@ Window {
             Component.onCompleted: {
                 console.log( "Total Blocks " + blocknum )
             }
-
         }
 
         //FIXME add a progession indicator and a background splash

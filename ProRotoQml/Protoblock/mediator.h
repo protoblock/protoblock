@@ -3,6 +3,7 @@
 
 #include "socketclient.h"
 #include <QObject>
+
 #include "QQmlPtrPropertyHelpers.h"
 #include "QQmlConstRefPropertyHelpers.h"
 #include "QQmlAutoPropertyHelpers.h"

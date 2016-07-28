@@ -8,116 +8,95 @@ import ProRotoQml.Theme 1.0
 
 Item {
     Component.onCompleted: {
-         if ( !themeroot.reloadleaders )
-              themeroot.reloadleaders = true
-          else {
-             MiddleMan.allNamesGet()
-             MiddleMan.rowMarketGet()
-         }
+         pageHelper.title = "Projections"
+
+        if ( !themeroot.reloadleaders )
+            themeroot.reloadleaders = true
+        else
+            MiddleMan.allNamesGet()
     }
-
-
-    CardWithBanner{
-        id: gstate
-        width: parent.width / 1.07
-        bannerText: "Season: 2016 Week: 0 "
-        text: "Game Status: Waiting 53 Man Roster \n2016 Protoblock Game To Begin on Sept 3\nThis page will update with release's"
-        anchors{
-            top: parent.top
-            topMargin:ProtoScreen.guToPx(.5)
-            horizontalCenter: parent.horizontalCenter
-        }
-    }
-
-    Card{
-        width: parent.width / 1.07
-        height: rootLoader.height / 1.07 - (gstate.height + ban.height)
-        elevation: 1
-        anchors{
-            topMargin: ProtoScreen.guToPx(1)
-            top: gstate.bottom
-            horizontalCenter: parent.horizontalCenter
-        }
-        Banner{
-            id: ban
-            text: "2016 Leaderboard"
-            color: "white"
-            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : themeroot.theme.primaryColor
-            width: parent.width
-            height: ProtoScreen.guToPx(6)
-        }
-        ListView{
-            id: leaderboard
-            width: parent.width - 5
-            anchors.top: ban.bottom
-            height: (rootLoader.height - (ban.height + gstate.height)) / 2
-            clip: true
-            model:   MiddleMan.pPlayerQuoteSliceModel// allNamesList()
-            delegate:
-                ListItems.Subtitled{
-                elevation: 2
-                backgroundColor: "white"//realRoot.uname ===  modelData ? Colors.amber : "white"
-                width: parent.width
-                text: model.lastname + ", " + model.firstname + " " + model.position + " Last: " + model.lastprice + " Bid " + model.bidsize + " " + model.bid + " Ask: " + model.asksize + " " +  model.ask + " volume " + model.volume + " chg " + model.change
-                     /*"FantasyName: " +*/ // modelData
-                action: Image{
-                    height: parent.height
-                    width : height
-                    fillMode: Image.PreserveAspectFit
-                    source:  "qrc:/icons/action_account_circle.png"
-                }
-                valueText: "Balance : 0"
-                onClicked: {
-
-                    MiddleMan.startDepth(model.playerid)
-                }
+    Scrollbar{flickableItem: fl}
+    Flickable{
+        id: fl
+        width: parent.width
+        height:    parent.height
+        contentHeight: parent.height + (gstate.height +leaderboard.height )
+        contentWidth: parent.width
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
+        CardWithBanner{
+            id: gstate
+            width: parent.width / 1.07
+            bannerText: "Season: 2016 Week: 0 "
+            text: "Game Status: Waiting 53 Man Roster \n2016 Protoblock Game To Begin on Sept 3\nThis page will update with release's"
+            anchors{
+                top: parent.top
+                topMargin:ProtoScreen.guToPx(.5)
+                horizontalCenter: parent.horizontalCenter
             }
         }
 
-        Banner{
-            id: ban2
-            text: "Depth for: " + MiddleMan.pDepthMarketModel.playerid
-            color: "white"
-            backgroundColor: realRoot.theme ===  "Pinky" ? "black" : themeroot.theme.primaryColor
-            width: parent.width
-            height: ProtoScreen.guToPx(6)
-            anchors.top: leaderboard.bottom
-        }
-        ListView{
-            id: depth
-            width: parent.width - 5
-            anchors.top: ban2.bottom
-            height: leaderboard.height//rootLoader.height - (ban2.height + gstate.height)
-            clip: true
-            model:   MiddleMan.pDepthMarketModel// allNamesList()
-            delegate:
-                ListItems.Subtitled{
-                elevation: 2
-                backgroundColor: "white"//realRoot.uname ===  modelData ? Colors.amber : "white"
+        Card{
+            width: parent.width / 1.07
+            height: rootLoader.height / 1.07 - (gstate.height + ban.height)
+            elevation: 1
+            anchors{
+                topMargin: ProtoScreen.guToPx(1)
+                top: gstate.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
+            Banner{
+                id: ban
+                text: "2016 Leaderboard"
+                color: "white"
+                backgroundColor: themeroot.theme.primaryColor
+                helpShown: true
+                helperHeader: "Leaderboard help"
+                helperTxt: "Get on the leaderboard by making weekly projections."
                 width: parent.width
-                text: model.bidsize + ", " + model.bid + " " + model.ask + " " + model.asksize
-                onClicked: MiddleMan.doTrade(MiddleMan.pDepthMarketModel.playerid,true,100,1)
+                height: ProtoScreen.guToPx(6)
+            }
+            ListView{
+                id: leaderboard
+                width: parent.width - 5
+                anchors.top: ban.bottom
+                height: rootLoader.height - (ban.height + gstate.height)
+                clip: true
+                model:   MiddleMan.allNamesList()
+                delegate:
+                    ListItems.Subtitled{
+                    elevation: 2
+                    backgroundColor: realRoot.uname ===  modelData ? Colors.amber : "white"
+                    width: parent.width
+                    text: /*"FantasyName: " +*/  modelData
+                    action: Image{
+                        height: parent.height
+                        width : height
+                        fillMode: Image.PreserveAspectFit
+                        source:  "qrc:/icons/action_account_circle.png"
+                    }
+                    valueText: "Balance : 0"
+                }
+            }
+
+            Scrollbar{flickableItem: leaderboard }
+            ProgressCircle {
+                id: fNameInd
+                anchors.centerIn: leaderboard
+                visible: MiddleMan.fetchingLeaders  === true ?  true : false
             }
         }
 
-        Scrollbar{flickableItem: leaderboard }
-        ProgressCircle {
-            id: fNameInd
-            anchors.centerIn: leaderboard
-            visible: MiddleMan.fetchingLeaders  === true ?  true : false
-        }
     }
-
-
     Connections {
         target: MiddleMan
         onLeaderBoardchanged: {
-            leaderboard.model = MiddleMan.pPlayerQuoteSliceModel//allNamesList()
+            leaderboard.model = MiddleMan.allNamesList()
         }
     }
 
 }
-    //    property string cHT
+//    property string cHT
 //    property string cAT
 //    SplitView{
 //        anchors.fill: parent

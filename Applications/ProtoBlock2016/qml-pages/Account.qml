@@ -8,7 +8,7 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 
 Item {
-    Component.onCompleted: pageHelper.title = "Accounts Settings"
+    Component.onCompleted: pageHelper.title = "Account Settings"
     Flickable{
         interactive: true
         width: parent.width
@@ -54,6 +54,9 @@ Item {
                 text: "Choose Name"
                 opacity: repeater.opacity
                 backgroundColor: themeroot.theme.primaryColor
+                helpShown: true
+                helperHeader: "Username help"
+                helperTxt: "Choose the active Protoblock account.   Select a name from the list to change users."
             }
             ListView {
                 id: repeater
@@ -103,6 +106,9 @@ Item {
                 height: ProtoScreen.guToPx(5)
                 text: "Claim New Name"
                 backgroundColor: themeroot.theme.primaryColor
+                helpShown: true
+                helperHeader: "Claiming a new username"
+                helperTxt: "This is your fantasy identity. Choose a name, enter it in, then click \"Cliam New Name\". You will then be playing with your new name."
             }
            Column{
                 height:  parent.height - claimBanner.height
@@ -128,7 +134,7 @@ Item {
                     elevation: 2
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: nameCheckBlank(nameText.text)
-                    backgroundColor: Colors.blue
+                    backgroundColor: themeroot.theme.primaryColor
                 }
             }
         }

@@ -119,7 +119,7 @@ Item {
      *
      * \since 0.3
      */
-    property int iconSize: ProtoScreen.guToPx(6)     // Unit.gridUnit == 48 * 8 ? ProtoScreen.guToPx(2.5) : ProtoScreen.guToPx(3)
+    property int iconSize: ProtoScreen.guToPx(4)
 
     /*!
      * Set to true to integrate the tab bar into a single row with the actions.
@@ -170,6 +170,7 @@ Item {
        of changing this directly.
      */
     property string title
+    property int titleOpacity: 1
 
     /*!
        \internal
@@ -224,7 +225,7 @@ Item {
 
     IconButton {
         id: leftItem
-        hasColor: false
+        hasColor: true
         anchors {
             verticalCenter: actionsRow.verticalCenter
             left: parent.left
@@ -232,8 +233,8 @@ Item {
             Behavior on leftMargin { NumberAnimation { duration: 200 } }
         }
 
-//        color: null //Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,
-                            //                                Theme.dark.iconColor)
+        color: "white" // Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,
+//                                                            Theme.dark.iconColor)
         size: iconSize
         action: backAction
         opacity: show ? enabled ? 1 : 0.6 : 0
@@ -244,26 +245,43 @@ Item {
 
     Label {
         id: label
-        visible: customContentView.children.length === 0 &&
-                (!integratedTabBar || !tabBar.visible)
+//        visible: customContentView.children.length === 0 &&
+//                (!integratedTabBar || !tabBar.visible)
         textFormat: Text.PlainText
         text: actionBar.title
-//        style: "title"
         font.bold: true
+        opacity:{
+            if (ProtoScreen.formFactor === "tablet"
+                    || ProtoScreen.formFactor === "desktop" ){
+                1
+            }
+            else
+            {
+               0
+            }
+        }
         font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
         color: Theme.lightDark(actionBar.backgroundColor, Theme.light.textColor,
                                                             Theme.dark.textColor)
         elide: Text.ElideRight
-        verticalAlignment: Text.AlignVCenter
+        verticalAlignment:{
+            if (leftItem.show === true ){
+                Text.AlignVCenter
+            }
+            else
+            {
+                Text.AlignTop
+            }
+        }
         anchors {
             top:  parent.top
+            topMargin: ProtoScreen.guToPx(1)
             left: parent.left
             bottom: parent.bottom
             right: actionsRow.left
-            leftMargin: (leftItem.width *1.7)
+            leftMargin: leftItem.show ? (leftItem.width *1.7)  : ProtoScreen.guToPx(2);
             // FIXME need to set the indicators default size somewhere somehow
             rightMargin: parent.width/3
-
             Behavior on leftMargin {
                 NumberAnimation { duration: 200 }
             }
@@ -272,7 +290,6 @@ Item {
 
     Row {
         id: actionsRow
-
         anchors {
             top:parent.top
             bottom: parent.bottom
@@ -292,14 +309,13 @@ Item {
                 id: iconAction
 
                 objectName: "action/" + action.objectName
-
                 action: __internal.visibleActions[index]
-
                 color: Theme.lightDark(actionBar.backgroundColor, Theme.light.iconColor,
                                                                   Theme.dark.iconColor)
                 size: iconSize
+                anchors.top: parent.top
+                anchors.topMargin: ProtoScreen.guToPx(1)
 
-                anchors.verticalCenter: parent ? parent.verticalCenter : undefined
             }
         }
 
@@ -320,8 +336,9 @@ Item {
         id: customContentView
         height: parent.height
         anchors {
-            left: label.left
-            right: label.right
+            verticalCenter: parent.verticalCenter
+            right: actionsRow.left
+
         }
     }
 

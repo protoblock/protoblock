@@ -17,12 +17,14 @@ qtHaveModule(webengine) {
 
 
 TEMPLATE = app
-QT += xmlpatterns xml qml quick core websockets network sql qml-private quick-private testlib
+#QT += xmlpatterns xml qml quick core websockets sql network qml-private quick-private testlib
+QT += qml quick core websockets network
 #sql webchannel
-CONFIG += c++11 app_bundle
-#osx{
-#CONFIG+=app_bundle
-#}
+CONFIG += c++11
+
+osx{
+    CONFIG+=app_bundle
+}
 
 ios{
 OTHER_FILES += \
@@ -32,7 +34,7 @@ OTHER_FILES += \
 ## for the store.
 macx {
     # Minimum OS X version for submission is 10.stdlib++ needs 10.7
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+#    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 
 
 # Copy the custom Info.plist to the app bundle
@@ -49,7 +51,7 @@ macx {
 }
 
 SOURCES += \
-    $$PWD/src/main.cpp \
+    $$PWD/src/main.cpp
 
 RC_FILE = myap.rc
 
@@ -71,9 +73,9 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
-             $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so \
-             $$DIRPREFIX/android/extrenal-android/lib/libcrypto.so \
-             $$DIRPREFIX/android/extrenal-android/lib//libssl.so
+             $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so
+#             $$DIRPREFIX/android/extrenal-android/lib/libcrypto.so \
+#             $$DIRPREFIX/android/extrenal-android/lib//libssl.so
 }
 
 

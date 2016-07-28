@@ -5,7 +5,7 @@
 #include "blockmeta.h"
 #include "ldbhashreadertool.h"
 #include "tempapi.h"
-#include "getuserinfo.h"
+//#include "getuserinfo.h"
 
 //maps
 #include "maps/ldbhashreadermap.h"
@@ -34,26 +34,26 @@ void ProRotoQmlBackendPlugin::registerTypes(const char *uri)
 
     //api
 //    qmlRegisterType<GetUserInfo>(uri,1,0,"UserInfo");
-//    qmlRegisterType<TempApi>(uri,1,0,"Backend");
-//    qmlRegisterSingletonType <LdbHashReaderMap>(uri,1,0,"LdbHashReaderMap",pLdbHashReaderMap);
+    qmlRegisterType<TempApi>(uri,1,0,"Backend");
+    qmlRegisterSingletonType <LdbHashReaderMap>(uri,1,0,"LdbHashReaderMap",pLdbHashReaderMap);
     qmlRegisterSingletonType <TempApi>(uri,1,0,"Backend",pTempApi);
-//    qmlRegisterSingletonType <LdbHashReaderTool>(uri,1,0,"LdbHashReaderTool", pLdbHashReaderTool );
+    qmlRegisterSingletonType <LdbHashReaderTool>(uri,1,0,"LdbHashReaderTool", pLdbHashReaderTool );
 //    qmlRegisterSingletonType <QQmlObjectListModel<PlayerNewModelItem>>(uri,1,0,"PlayerNewModel", playerNewModel);
 
 //    //models
-//    qmlRegisterType<LeaderBoardModel>(uri,1,0,"LeaderBoardModel");
+    qmlRegisterType<LeaderBoardModel>(uri,1,0,"LeaderBoardModel");
 //    qmlRegisterType<PlayerModel>(uri,1,0,"PlayersModel");
 //    qmlRegisterType<ProjectionsModel>(uri,1,0,"ProjectionsModel");
 //    qmlRegisterType<ScheduledGamesModel>(uri,1,0,"ScheduledGamesModel");
 //    qmlRegisterType<AwardsModel>(uri,1,0,"AwardsModel");
 //    qmlRegisterType<StatsModel>(uri,1,0,"PlayerStatsModel");
 //    qmlRegisterType<PNLModel>(uri,1,0,"PnlModel");
-    //qmlRegisterType <PlayerNewModel*>(uri,1,0,"pPlayerNewModel");
+//    qmlRegisterType <PlayerNewModel*>(uri,1,0,"pPlayerNewModel");
 //    qRegisterMetaType<PlayerNewModel*>("PlayerNewModel*");
 
     //maps
-//    qmlRegisterSingletonType<PlayerMap>(uri,1,0,"PlayerMap", playerMap);
-//    qmlRegisterSingletonType <TeamMap>(uri,1,0,"TeamMap", teamMap );
+    qmlRegisterSingletonType<PlayerMap>(uri,1,0,"PlayerMap", playerMap);
+    qmlRegisterSingletonType <TeamMap>(uri,1,0,"TeamMap", teamMap );
 
 }
 

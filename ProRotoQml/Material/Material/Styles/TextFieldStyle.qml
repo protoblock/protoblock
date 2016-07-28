@@ -1,10 +1,10 @@
 import QtQuick 2.4
-import QtQuick.Controls.Styles 1.3
+import QtQuick.Controls.Styles 1.3 as CStyles
 import QtQuick.Layouts 1.1
 import Material 1.0
 import ProRotoQml.Theme 1.0 as ProtoTheme
 
-TextFieldStyle {
+CStyles.TextFieldStyle {
     id: style
 
     padding {
@@ -117,7 +117,7 @@ TextFieldStyle {
                 id: helperTextLabel
                 visible: background.helperText && background.showBorder
                 text: background.helperText
-                font.pixelSize: ProtoTheme.ProtoScreen.guToPx(1.5)
+                font.pixelSize: ProtoTheme.ProtoScreen.font(ProtoTheme.ProtoScreen.SMALL)
                 color: background.hasError ? background.errorColor
                                            : Qt.darker(Theme.light.hintColor)
                 Behavior on color { ColorAnimation { duration: 200 } }

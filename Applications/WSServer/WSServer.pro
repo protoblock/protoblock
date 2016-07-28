@@ -26,25 +26,18 @@ DEFINES += SEASON_TRADING
 DEFINES += MAX_NAMES_LB=1000
 DEFINES += TRACE
 
+
+win32 {
+    include($$PWD/../../pri/core.pri)
+}
+
+
 INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
 INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock/bitcoin-core-base58
 
 SOURCES   += \
-#    $$PWD/../../ProRotoQml/Backend/src/ldbhashreadertool.cpp \
-#    $$PWD/../../ProRotoQml/Backend/src/maps/ldbhashreadermap.cpp \
-#    $$PWD/../../ProRotoQml/Backend/src/tempapi.cpp \
     $$PWD/main.cpp \
     $$PWD/server.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/bitcoin-core-base58/base58.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/utils/utils.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/appsettings.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/city.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/crc.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/FantasyAgent.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/FantasyName.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/mnemonic.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/platform.cpp \
-    $$PWD/../../ProRotoQml/Protoblock/Commissioner.cpp \
     $$PWD/NameData.cpp \
     $$PWD/Data.cpp \
     $$PWD/txpool.cpp \
@@ -55,35 +48,34 @@ SOURCES   += \
 
 
 HEADERS += \
-#    $$PWD/../../ProRotoQml/Backend/src/ldbhashreadertool.h \
-#    $$PWD/../../ProRotoQml/Backend/src/maps/ldbhashreadermap.h \
-#    $$PWD/../../ProRotoQml/Backend/src/tempapi.h \
-#    $$PWD/../../ProRotoQml/Backend/src/models/playernewmodel.h \
     $$PWD/server.h \
-    $$PWD/../../ProRotoQml/Protoblock/bitcoin-core-base58/allocators.h \
-    $$PWD/../../ProRotoQml/Protoblock/bitcoin-core-base58/base58.h \
-    $$PWD/../../ProRotoQml/Protoblock/bitcoin-core-base58/hash.h \
-    $$PWD/../../ProRotoQml/Protoblock/utils/utils.h \
-    $$PWD/../../ProRotoQml/Protoblock/appsettings.h \
-    $$PWD/../../ProRotoQml/Protoblock/city.hpp \
-    $$PWD/../../ProRotoQml/Protoblock/DataPersist.h \
-    $$PWD/../../ProRotoQml/Protoblock/FantasyAgent.h \
-    $$PWD/../../ProRotoQml/Protoblock/FantasyName.h \
-    $$PWD/../../ProRotoQml/Protoblock/fbutils.h \
-    $$PWD/../../ProRotoQml/Protoblock/genericsingleton.h \
-    $$PWD/../../ProRotoQml/Protoblock/globals.h \
-    $$PWD/../../ProRotoQml/Protoblock/mnemonic.h \
-    $$PWD/../../ProRotoQml/Protoblock/optional.hpp \
-    $$PWD/../../ProRotoQml/Protoblock/platform.h \
-    $$PWD/../../ProRotoQml/Protoblock/uint128.hpp \
-    $$PWD/../../ProRotoQml/Protoblock/utility.hpp \
-    $$PWD/../../ProRotoQml/Protoblock/Commissioner.h \
     $$PWD/NameData.h \
     $$PWD/Data.h \
     $$PWD/txpool.h \
     $$PWD/ExchangeData.h \
     LiteServer.h \
     TxServer.h
+
+## FIXME add in libs here for levelDB as it is the only thing ATM that is using it.
+macx{
+        ## FIXME compile levelDB
+        LIBS += -L/usr/local/lib  -lleveldb
+
+        ##FIXME compile levelDB
+        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
+        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
+
+        LIBS += -L$$OUT_PWD/../../ProRotoQml/jsonpb/ -ljsonpb
+
+        INCLUDEPATH += $$PWD/../../ProRotoQml/jsonpb
+        DEPENDPATH += $$PWD/../../ProRotoQml/jsonpb
+
+        LIBS += -L$$OUT_PWD/../../ProRotoQml/protoblock-core/ -lprotoblock-core
+        INCLUDEPATH += $$PWD/../../ProRotoQml/protoblock-core/
+        DEPENDPATH += $$PWD/../../ProRotoQml/protoblock-core/
+        INCLUDEPATH += $$PWD/../../ProRotoQml/protoblock-core/bitcoin-core-base58
+        DEPENDPATH += $$PWD/../../ProRotoQml/protoblock-core/bitcoin-core-base58
+}
 
 
 

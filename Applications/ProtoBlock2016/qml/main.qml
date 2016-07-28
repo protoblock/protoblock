@@ -21,10 +21,12 @@ Quick.Window {
     property string currentTeamInFocus
     property string currentHomeTeam
     property string currentAwayTeam
+    property string helperTxt
+    property string helperHeader: "Help"
 
     property string msgString
 
-    property string version: "0.1"
+    property string version: "0.1" //TODO
 
 
     // make this into c++

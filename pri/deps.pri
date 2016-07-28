@@ -17,12 +17,14 @@ contains (QMAKE_HOST.os, Darwin){
 ##############
 ##  WINDOWS
 ##############
+
 win32 {
-    INCLUDEPATH +=   D:\work\prebuiltLibs\windows/3rdParty
-    INCLUDEPATH += D:\work\prebuiltLibs\windows/3rdParty/secp256k1
+    message(win32 Build)
+    INCLUDEPATH +=   $$PWD/../../prebuiltLibs/windows/3rdParty
+    INCLUDEPATH += $$PWD/../../prebuiltLibs/windows/3rdParty/secp256k1
 
    ## FIXME
-    LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
+    LIBS+= -L$$PWD/../../prebuiltLibs/windows/libwin64
     #LIBS+= -L$$PWD/../libwin64
     CONFIG(debug, debug|release) {
        LIBS+= -llibprotobufd  \
@@ -54,12 +56,8 @@ macx{
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
-    ##FIXME compile levelDB
-#        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-#        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
-
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/lib/libprotobuf.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/lib/libprotobuf.a
+    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
 
     LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
@@ -70,8 +68,6 @@ macx{
     LIBS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
     PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
 
-    ## FIXME compile levelDB
-#     LIBS += -L/usr/local/lib  -lleveldb
 }
 
 ##############
@@ -98,12 +94,7 @@ ios {
     LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
     PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
 
-    ## BOTAN
-#    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
-#    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
 }
-
-
 
 
 
@@ -131,8 +122,6 @@ android {
         ## BOTAN
 #          LIBS += -$$DIRPREFIX/android/extrenal-android/lib -lBotan
 }
-
-
 
 
 

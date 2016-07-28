@@ -7,7 +7,7 @@ import ProRotoQml.Theme 1.0
 
 Item {
     id: loginPage
-    property string defaultTxt: "Please Register to play Protoblock" //"A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. Claim your name! Choose your Twitter handle or fantasy team name";
+    property string defaultTxt: "Register to play. Choose any name or your twitter id."
         Column{
             anchors.fill: parent
             spacing: ProtoScreen.guToPx(2)
@@ -21,6 +21,10 @@ Item {
                 text: qsTr("Please pick a username")
                 bold: true
                 fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                helpShown: true
+                helperHeader: "Username help"
+                helperTxt: "Your Protoblock name is your perminant fantasy identity. It is fully controlled by you and this device. We will not ask for your email address. There is no central server for recovery. See Import-Export screen for backup and recovery"
+
             }
             Image {
                 id: logo
@@ -44,7 +48,7 @@ Item {
             Rectangle{width: 1;color: "transparent";height: ProtoScreen.guToPx(2)}
             LoginBox{
                width: parent.width / 1.07
-               height: parent.height - ( logo.height + welcomeTxt.height + aboutHeader.height ) * 2
+               height: parent.height - ( logo.height + welcomeTxt.height + aboutHeader.height ) * 1.5
                anchors.horizontalCenter: parent.horizontalCenter
              }
 
