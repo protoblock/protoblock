@@ -590,7 +590,7 @@ void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 si
 }
 
 void Mediator::doTestTrade() {
-    return;
+//    return;
     int number = 200;
     int randomValue = qrand() % number;
 
@@ -621,7 +621,7 @@ void Mediator::doTestTrade() {
 
     SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
 
-    auto &pk = m_fantasy_agent.pubKey();
+    auto pk = m_fantasy_agent.pubKey();
     pb::sha256 digest(sn.id());
     if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
         qDebug() << " bad signature ";
