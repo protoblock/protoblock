@@ -122,7 +122,12 @@ void TxServer::processBinaryMessage(const QByteArray &message) {
 
 #ifdef PROD_SEASON_TRADING
         case TransType::EXCHANGE: {
-            auto fn = Commissioner::getName(st.fantasy_name());//getFNverifySt(st);
+            auto fn = getFNverifySt(st);//Commissioner::getName(st.fantasy_name());//getFNverifySt(st);
+            if ( !fn ) {
+                qDebug() << "Error bad fn ";
+                break;
+            }
+
             auto emdg = t.GetExtension(fantasybit::ExchangeOrder::exchange_order);
             qDebug() << emdg.DebugString().data();
             Server::TheExchange.OnNewOrderMsg(emdg,++mySeq,fn);
@@ -159,7 +164,7 @@ std::shared_ptr<FantasyName> TxServer::getFNverifySt(const SignedTransaction &st
         return ret;
     }
 
-    pb::sha256 digest = pb::sha256(st.trans().SerializeAsString());
+    pb::sha256 digest = pb::hashit(st.trans().SerializeAsString());
     if (digest.str() != st.id()) {
         qCritical() << "digest.str() != st.id() ";
         return ret;
