@@ -16,6 +16,7 @@
 #include "fbutils.h"
 #include "playerquoteslicemodel.h"
 #include "depthmarketmodel.h"
+#include "fantasynamemodel.h"
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -47,6 +48,8 @@ class Mediator : public QObject
 
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+    QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
+    QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
 
 
 
@@ -247,6 +250,7 @@ private:
     QTimer tradeTesting;
     PlayerQuoteSliceModel mPlayerQuoteSliceModel;
     DepthMarketModel mDepthMarketModel;
+    FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
     WsReq mGetDepthReq;
     QString testid;
     bool isbid;

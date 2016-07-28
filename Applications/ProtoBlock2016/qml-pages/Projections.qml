@@ -62,20 +62,20 @@ Item {
                 anchors.top: ban.bottom
                 height: rootLoader.height - (ban.height + gstate.height)
                 clip: true
-                model:   MiddleMan.allNamesList()
+                model:   MiddleMan.pFantasyNameBalModel
                 delegate:
                     ListItems.Subtitled{
                     elevation: 2
-                    backgroundColor: realRoot.uname ===  modelData ? Colors.amber : "white"
+                    backgroundColor: realRoot.uname ===  model.name ? Colors.amber : "white"
                     width: parent.width
-                    text: /*"FantasyName: " +*/  modelData
+                    text: model.name/*"FantasyName: " + *modelData*/
                     action: Image{
                         height: parent.height
                         width : height
                         fillMode: Image.PreserveAspectFit
                         source:  "qrc:/icons/action_account_circle.png"
                     }
-                    valueText: "Balance : 0"
+                    valueText: "Skill: " + model.bits + "  ƑɃ"
                 }
             }
 
@@ -91,7 +91,7 @@ Item {
     Connections {
         target: MiddleMan
         onLeaderBoardchanged: {
-            leaderboard.model = MiddleMan.allNamesList()
+//            leaderboard.model = MiddleMan.allNamesList()
         }
     }
 

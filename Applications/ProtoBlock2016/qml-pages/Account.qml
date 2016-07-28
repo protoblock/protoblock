@@ -68,22 +68,23 @@ Item {
                     count < 1 ? opacity = 0 : opacity = 1
                 }
                 anchors.top: namePickerBannner.bottom
-                model: MiddleMan.goodList().length
+                model: MiddleMan.pGoodNameBalModel//MiddleMan.goodList().length
                 delegate:
                     ListItems.Subtitled{
                     elevation: 2
                     width: parent.width
 //                    height: ProtoScreen.guToPx(11)
-                    text: "FantasyName: " +  MiddleMan.goodList()[index]
+                    text: model.name //+ " pk(" + model.pk + ")" // MiddleMan.goodList()[index]
+                    subText: model.pk
                     action: Image{
                         height: parent.height
                         width : height
                         fillMode: Image.PreserveAspectFit
-                        opacity: MiddleMan.goodList()[index] === uname ? 1 : 0
+                        opacity: model.name === uname ? 1 : 0
                         source:  "qrc:/icons/action_account_circle.png"
                         Behavior on opacity {NumberAnimation{duration: 80}}
                     }
-                    valueText: "Balance : " + " 0"
+                    valueText: "Skill(" + model.bits + " ƑɃ) Stake(" + model.stake +" ƑɃ)"
                     onClicked: MiddleMan.useName(MiddleMan.goodList()[index])
                 }
             }

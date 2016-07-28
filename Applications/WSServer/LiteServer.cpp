@@ -425,12 +425,18 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             auto fname = Commissioner::getName(Commissioner::str2pk(pkr.req().pk()));
             if ( fname == nullptr)
                 pkr.set_fname("");
-            else
+            else {
                 pkr.set_fname(fname->alias());
-
+                auto it = Server::Pk2Bal.find(pkr.req().pk());
+                if ( it != end(Server::Pk2Bal))
+                    pkr.set_allocated_fnb(it->second);
+            }
 
             rep.MutableExtension(Pk2FnameRep::rep)->CopyFrom(pkr);
             rep.SerializeToString(&mRepstr);
+            if ( pkr.has_fnb() )
+                pkr.release_fnb();
+
             break;
         }
         case CHECKNAME:

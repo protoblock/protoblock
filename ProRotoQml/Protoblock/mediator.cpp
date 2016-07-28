@@ -12,7 +12,13 @@ Mediator::Mediator(QObject *parent) :
     mPlayerQuoteSliceModel{},
     m_pPlayerQuoteSliceModel(&mPlayerQuoteSliceModel),
     mDepthMarketModel{},
-    m_pDepthMarketModel(&mDepthMarketModel)
+    m_pDepthMarketModel(&mDepthMarketModel),
+    mFantasyNameBalModel{},
+    m_pFantasyNameBalModel(&mFantasyNameBalModel),
+    mGoodNameBalModel{},
+    m_pGoodNameBalModel(&mGoodNameBalModel)
+
+
 {
 
     mGetDepthReq.set_ctype(GETDEPTH);
@@ -374,6 +380,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 QString goodname = name.data();
 //                m_goodFnames.append(&goodname);
                 m_goodList.append(goodname);
+                mGoodNameBalModel.append(new FantasyNameBalModelItem(pk2.fnb()));
 //                qDebug() << " new good name! " << goodname;
             }
                 //            nameStatusChanged( name.data() , "confirmed" );
@@ -419,6 +426,11 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 //               m_allNames2.append(np.names(i).data());
             }
             leaderBoardchanged();
+
+            m_pFantasyNameBalModel->clear();
+            for ( const auto &fnbi : np.fnb()) {
+                m_pFantasyNameBalModel->prepend(new FantasyNameBalModelItem(fnbi));
+            }
 #ifdef TRACE
             //qDebug() << "GETALLNAMES" <<  np.DebugString().data();
 #endif

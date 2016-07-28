@@ -513,6 +513,7 @@ message Pk2FnameRep {
 
     optional string fname = 10;
     optional Pk2FnameReq req = 20;
+    optional FantasyNameBal fnb = 30;
 }
 
 message NameStatusReq {

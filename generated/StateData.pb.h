@@ -5375,6 +5375,15 @@ class Pk2FnameRep : public ::google::protobuf::Message {
   inline ::fantasybit::Pk2FnameReq* release_req();
   inline void set_allocated_req(::fantasybit::Pk2FnameReq* req);
 
+  // optional .fantasybit.FantasyNameBal fnb = 30;
+  inline bool has_fnb() const;
+  inline void clear_fnb();
+  static const int kFnbFieldNumber = 30;
+  inline const ::fantasybit::FantasyNameBal& fnb() const;
+  inline ::fantasybit::FantasyNameBal* mutable_fnb();
+  inline ::fantasybit::FantasyNameBal* release_fnb();
+  inline void set_allocated_fnb(::fantasybit::FantasyNameBal* fnb);
+
   static const int kRepFieldNumber = 300;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::Pk2FnameRep >, 11, false >
@@ -5385,14 +5394,17 @@ class Pk2FnameRep : public ::google::protobuf::Message {
   inline void clear_has_fname();
   inline void set_has_req();
   inline void clear_has_req();
+  inline void set_has_fnb();
+  inline void clear_has_fnb();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* fname_;
   ::fantasybit::Pk2FnameReq* req_;
+  ::fantasybit::FantasyNameBal* fnb_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -16653,6 +16665,44 @@ inline void Pk2FnameRep::set_allocated_req(::fantasybit::Pk2FnameReq* req) {
     set_has_req();
   } else {
     clear_has_req();
+  }
+}
+
+// optional .fantasybit.FantasyNameBal fnb = 30;
+inline bool Pk2FnameRep::has_fnb() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Pk2FnameRep::set_has_fnb() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Pk2FnameRep::clear_has_fnb() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Pk2FnameRep::clear_fnb() {
+  if (fnb_ != NULL) fnb_->::fantasybit::FantasyNameBal::Clear();
+  clear_has_fnb();
+}
+inline const ::fantasybit::FantasyNameBal& Pk2FnameRep::fnb() const {
+  return fnb_ != NULL ? *fnb_ : *default_instance_->fnb_;
+}
+inline ::fantasybit::FantasyNameBal* Pk2FnameRep::mutable_fnb() {
+  set_has_fnb();
+  if (fnb_ == NULL) fnb_ = new ::fantasybit::FantasyNameBal;
+  return fnb_;
+}
+inline ::fantasybit::FantasyNameBal* Pk2FnameRep::release_fnb() {
+  clear_has_fnb();
+  ::fantasybit::FantasyNameBal* temp = fnb_;
+  fnb_ = NULL;
+  return temp;
+}
+inline void Pk2FnameRep::set_allocated_fnb(::fantasybit::FantasyNameBal* fnb) {
+  delete fnb_;
+  fnb_ = fnb;
+  if (fnb) {
+    set_has_fnb();
+  } else {
+    clear_has_fnb();
   }
 }
 

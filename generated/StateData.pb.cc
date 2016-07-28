@@ -870,9 +870,10 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Pk2FnameReq));
   Pk2FnameRep_descriptor_ = file->message_type(37);
-  static const int Pk2FnameRep_offsets_[2] = {
+  static const int Pk2FnameRep_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pk2FnameRep, fname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pk2FnameRep, req_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pk2FnameRep, fnb_),
   };
   Pk2FnameRep_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1326,35 +1327,36 @@ void protobuf_AddDesc_StateData_2eproto() {
     "WSReply\030\310\001 \001(\0132\030.fantasybit.CheckNameRep"
     "\"S\n\013Pk2FnameReq\022\n\n\002pk\030\n \001(\t28\n\003req\022\021.fan"
     "tasybit.WsReq\030\254\002 \001(\0132\027.fantasybit.Pk2Fna"
-    "meReq\"~\n\013Pk2FnameRep\022\r\n\005fname\030\n \001(\t\022$\n\003r"
-    "eq\030\024 \001(\0132\027.fantasybit.Pk2FnameReq2:\n\003rep"
-    "\022\023.fantasybit.WSReply\030\254\002 \001(\0132\027.fantasybi"
-    "t.Pk2FnameRep\"e\n\rNameStatusReq\022\014\n\004name\030\n"
-    " \001(\t\022\n\n\002pk\030\024 \001(\t2:\n\003req\022\021.fantasybit.WsR"
-    "eq\030\220\003 \001(\0132\031.fantasybit.NameStatusReq\"\237\001\n"
-    "\rNameStatusRep\022(\n\006status\030\n \001(\0162\030.fantasy"
-    "bit.MyNameStatus\022&\n\003req\030\024 \001(\0132\031.fantasyb"
-    "it.NameStatusReq2<\n\003rep\022\023.fantasybit.WSR"
-    "eply\030\220\003 \001(\0132\031.fantasybit.NameStatusRep\"\207"
-    "\001\n\016GetAllNamesRep\022\r\n\005names\030\n \003(\t\022\'\n\003fnb\030"
-    "\024 \003(\0132\032.fantasybit.FantasyNameBal2=\n\003rep"
-    "\022\023.fantasybit.WSReply\030\364\003 \001(\0132\032.fantasybi"
-    "t.GetAllNamesRep\"\224\001\n\tROWMarket\022\013\n\003pid\030\n "
-    "\001(\t\022&\n\005quote\030\036 \001(\0132\027.fantasybit.MarketQu"
-    "ote\022*\n\nplayerdata\030( \001(\0132\026.fantasybit.Pla"
-    "yerData\022&\n\004ohlc\0302 \001(\0132\030.fantasybit.Contr"
-    "actOHLC\"{\n\017GetROWMarketRep\022(\n\trowmarket\030"
-    "\n \003(\0132\025.fantasybit.ROWMarket2>\n\003rep\022\023.fa"
-    "ntasybit.WSReply\030\330\004 \001(\0132\033.fantasybit.Get"
-    "ROWMarketRep\"T\n\013GetDepthReq\022\013\n\003pid\030\n \001(\t"
-    "28\n\003req\022\021.fantasybit.WsReq\030\274\005 \001(\0132\027.fant"
-    "asybit.GetDepthReq\"\201\001\n\013GetDepthRep\022\013\n\003pi"
-    "d\030\n \001(\t\022)\n\ndepthitems\030\024 \003(\0132\025.fantasybit"
-    ".DepthItem2:\n\003rep\022\023.fantasybit.WSReply\030\274"
-    "\005 \001(\0132\027.fantasybit.GetDepthRep*o\n\005CType\022"
-    "\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022"
-    "\r\n\tGETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETRO"
-    "WMARKET\020\006\022\014\n\010GETDEPTH\020\007", 5823);
+    "meReq\"\247\001\n\013Pk2FnameRep\022\r\n\005fname\030\n \001(\t\022$\n\003"
+    "req\030\024 \001(\0132\027.fantasybit.Pk2FnameReq\022\'\n\003fn"
+    "b\030\036 \001(\0132\032.fantasybit.FantasyNameBal2:\n\003r"
+    "ep\022\023.fantasybit.WSReply\030\254\002 \001(\0132\027.fantasy"
+    "bit.Pk2FnameRep\"e\n\rNameStatusReq\022\014\n\004name"
+    "\030\n \001(\t\022\n\n\002pk\030\024 \001(\t2:\n\003req\022\021.fantasybit.W"
+    "sReq\030\220\003 \001(\0132\031.fantasybit.NameStatusReq\"\237"
+    "\001\n\rNameStatusRep\022(\n\006status\030\n \001(\0162\030.fanta"
+    "sybit.MyNameStatus\022&\n\003req\030\024 \001(\0132\031.fantas"
+    "ybit.NameStatusReq2<\n\003rep\022\023.fantasybit.W"
+    "SReply\030\220\003 \001(\0132\031.fantasybit.NameStatusRep"
+    "\"\207\001\n\016GetAllNamesRep\022\r\n\005names\030\n \003(\t\022\'\n\003fn"
+    "b\030\024 \003(\0132\032.fantasybit.FantasyNameBal2=\n\003r"
+    "ep\022\023.fantasybit.WSReply\030\364\003 \001(\0132\032.fantasy"
+    "bit.GetAllNamesRep\"\224\001\n\tROWMarket\022\013\n\003pid\030"
+    "\n \001(\t\022&\n\005quote\030\036 \001(\0132\027.fantasybit.Market"
+    "Quote\022*\n\nplayerdata\030( \001(\0132\026.fantasybit.P"
+    "layerData\022&\n\004ohlc\0302 \001(\0132\030.fantasybit.Con"
+    "tractOHLC\"{\n\017GetROWMarketRep\022(\n\trowmarke"
+    "t\030\n \003(\0132\025.fantasybit.ROWMarket2>\n\003rep\022\023."
+    "fantasybit.WSReply\030\330\004 \001(\0132\033.fantasybit.G"
+    "etROWMarketRep\"T\n\013GetDepthReq\022\013\n\003pid\030\n \001"
+    "(\t28\n\003req\022\021.fantasybit.WsReq\030\274\005 \001(\0132\027.fa"
+    "ntasybit.GetDepthReq\"\201\001\n\013GetDepthRep\022\013\n\003"
+    "pid\030\n \001(\t\022)\n\ndepthitems\030\024 \003(\0132\025.fantasyb"
+    "it.DepthItem2:\n\003rep\022\023.fantasybit.WSReply"
+    "\030\274\005 \001(\0132\027.fantasybit.GetDepthRep*o\n\005CTyp"
+    "e\022\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020"
+    "\003\022\r\n\tGETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GET"
+    "ROWMARKET\020\006\022\014\n\010GETDEPTH\020\007", 5865);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -16560,6 +16562,7 @@ void Pk2FnameReq::Swap(Pk2FnameReq* other) {
 #ifndef _MSC_VER
 const int Pk2FnameRep::kFnameFieldNumber;
 const int Pk2FnameRep::kReqFieldNumber;
+const int Pk2FnameRep::kFnbFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -16575,6 +16578,7 @@ Pk2FnameRep::Pk2FnameRep()
 
 void Pk2FnameRep::InitAsDefaultInstance() {
   req_ = const_cast< ::fantasybit::Pk2FnameReq*>(&::fantasybit::Pk2FnameReq::default_instance());
+  fnb_ = const_cast< ::fantasybit::FantasyNameBal*>(&::fantasybit::FantasyNameBal::default_instance());
 }
 
 Pk2FnameRep::Pk2FnameRep(const Pk2FnameRep& from)
@@ -16587,6 +16591,7 @@ void Pk2FnameRep::SharedCtor() {
   _cached_size_ = 0;
   fname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   req_ = NULL;
+  fnb_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -16600,6 +16605,7 @@ void Pk2FnameRep::SharedDtor() {
   }
   if (this != default_instance_) {
     delete req_;
+    delete fnb_;
   }
 }
 
@@ -16633,6 +16639,9 @@ void Pk2FnameRep::Clear() {
     }
     if (has_req()) {
       if (req_ != NULL) req_->::fantasybit::Pk2FnameReq::Clear();
+    }
+    if (has_fnb()) {
+      if (fnb_ != NULL) fnb_->::fantasybit::FantasyNameBal::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -16668,6 +16677,20 @@ bool Pk2FnameRep::MergePartialFromCodedStream(
          parse_req:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_req()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(242)) goto parse_fnb;
+        break;
+      }
+
+      // optional .fantasybit.FantasyNameBal fnb = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_fnb:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_fnb()));
         } else {
           goto handle_uninterpreted;
         }
@@ -16708,6 +16731,12 @@ void Pk2FnameRep::SerializeWithCachedSizes(
       20, this->req(), output);
   }
 
+  // optional .fantasybit.FantasyNameBal fnb = 30;
+  if (has_fnb()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      30, this->fnb(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -16733,6 +16762,13 @@ void Pk2FnameRep::SerializeWithCachedSizes(
         20, this->req(), target);
   }
 
+  // optional .fantasybit.FantasyNameBal fnb = 30;
+  if (has_fnb()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        30, this->fnb(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -16756,6 +16792,13 @@ int Pk2FnameRep::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->req());
+    }
+
+    // optional .fantasybit.FantasyNameBal fnb = 30;
+    if (has_fnb()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->fnb());
     }
 
   }
@@ -16791,6 +16834,9 @@ void Pk2FnameRep::MergeFrom(const Pk2FnameRep& from) {
     if (from.has_req()) {
       mutable_req()->::fantasybit::Pk2FnameReq::MergeFrom(from.req());
     }
+    if (from.has_fnb()) {
+      mutable_fnb()->::fantasybit::FantasyNameBal::MergeFrom(from.fnb());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -16816,6 +16862,7 @@ void Pk2FnameRep::Swap(Pk2FnameRep* other) {
   if (other != this) {
     std::swap(fname_, other->fname_);
     std::swap(req_, other->req_);
+    std::swap(fnb_, other->fnb_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

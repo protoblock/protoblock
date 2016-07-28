@@ -52,7 +52,7 @@ void FantasyNameData::init() {
         FantasyNameBal fnb;
         while ( reader4.ReadNext(fnb) ) {
             fnames.insert(fnb.name());
-            Server::AllNamesRep.add_names(fnb.name());
+            Server::AddNames(fnb);
 #ifndef NO_WRITE_NAMES_2015_FIRST
             auto hash = FantasyName::name_hash(fnb.name());
             leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
@@ -64,7 +64,8 @@ void FantasyNameData::init() {
 
         auto *it = namestore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
-            FantasyNameBal fn;
+            FantasyNameBal *pFn = FantasyNameBal::default_instance().New();
+            FantasyNameBal &fn = *pFn;
             if ( !fn.ParseFromString(it->value().ToString())) {
                  qCritical() << "NameData error reading names";
                  break;
@@ -80,8 +81,11 @@ void FantasyNameData::init() {
 
             }
 
-            if ( fnames.find(fn.name()) ==  end(fnames))
-                Server::AllNamesRep.add_names(fn.name());
+            if ( fnames.find(fn.name()) ==  end(fnames)) {
+                Server::AddNames(pFn);
+            }
+            else
+                delete pFn;
 
         }
         delete it;
