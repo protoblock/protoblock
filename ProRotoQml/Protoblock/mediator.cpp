@@ -16,9 +16,9 @@ Mediator::Mediator(QObject *parent) :
     mFantasyNameBalModel{},
     m_pFantasyNameBalModel(&mFantasyNameBalModel),
     mGoodNameBalModel{},
-    m_pGoodNameBalModel(&mGoodNameBalModel)
-
-
+    m_pGoodNameBalModel(&mGoodNameBalModel),
+    mOpenOrdersModel{},
+    m_pOpenOrdersModel(&mOpenOrdersModel)
 {
 
     mGetDepthReq.set_ctype(GETDEPTH);
@@ -161,6 +161,19 @@ void Mediator::subscribeOrderPos(const QString &name) {
     auto txstr = req.SerializeAsString();
     qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
     req.ReleaseExtension(SubscribeReq::req);
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+    m_webSocket.sendBinaryMessage(qb);
+}
+
+void Mediator::getOrderReq(const QString &name) {
+    WsReq req;
+    req.set_ctype(GETORDERS);
+    GetOrdersReq sr;
+    sr.set_fname(name.toStdString());
+    req.SetAllocatedExtension(GetOrdersReq::req,&sr);
+    auto txstr = req.SerializeAsString();
+    qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
+    req.ReleaseExtension(GetOrdersReq::req);
     QByteArray qb(txstr.data(),(size_t)txstr.size());
     m_webSocket.sendBinaryMessage(qb);
 }
@@ -485,6 +498,12 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             qDebug() << rep.DebugString().data();
             break;
         }
+        case GETORDERS: {
+            m_pOpenOrdersModel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
+            qDebug() << rep.DebugString().data();
+
+            break;
+        }
         default:
             break;
     }
@@ -684,6 +703,7 @@ void Mediator::useName(const QString &name) {
 
 
     if ( name == "MikeClayNFL" ) {
+        getOrderReq(name);
         if ( testid == "1806")
             testid = "1";
         else

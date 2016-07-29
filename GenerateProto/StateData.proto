@@ -456,6 +456,7 @@ enum CType {
     GETORDERS = 8;
     GETPOSITIONS = 9;
     SUBSCRIBEFNAME = 10;
+    GETORDERS = 11;
 }
 
 //message WsReq {
@@ -603,7 +604,7 @@ message GetOrdersRep {
     }
 
     optional GetOrdersReq req = 10;
-    repeated AllOdersFname oorders = 20;
+    optional AllOdersFname oorders = 20;
 }
 
 message GetOrdersReq {

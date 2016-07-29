@@ -17,6 +17,7 @@
 #include "playerquoteslicemodel.h"
 #include "depthmarketmodel.h"
 #include "fantasynamemodel.h"
+#include "openordersmodel.h"
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -50,6 +51,8 @@ class Mediator : public QObject
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
+    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pOpenOrdersModel)
+
 
 
 
@@ -250,9 +253,11 @@ private:
     PlayerQuoteSliceModel mPlayerQuoteSliceModel;
     DepthMarketModel mDepthMarketModel;
     FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
+    OpenOrdersModel mOpenOrdersModel;
     WsReq mGetDepthReq;
     QString testid;
     bool isbid;
+    void getOrderReq(const QString &name);
 };
 
 #endif // MEDIATOR_H

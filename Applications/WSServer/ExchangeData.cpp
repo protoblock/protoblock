@@ -545,10 +545,11 @@ void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int
     qDebug() << "level2 OnDeltaOpenOrder !subscribed emit NewOO" << fname ;
 #endif
 
-    Order ord;
+    Order *op = Order::default_instance().New();
+    Order &ord  = *op;
     ord.mutable_core()->CopyFrom(oo.livecore);
     ord.set_refnum(seqnum);
-    emit NewOO(FullOrderDelta{fname,ord,oo.playerid});
+    emit NewOO(FullOrderDelta{fname,op,oo.playerid});
 }
 
 void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
@@ -1338,7 +1339,6 @@ qDebug() << order.refnum() << "level2 sweepbids  curr bottom" << mBb << curr.tot
     return pos;
 }
 
-
 void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
 
 #ifdef TRACE
@@ -1497,10 +1497,11 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
 #endif
             //continue;
             auto &mypair = ret[ord.playerid];
-            Order o{};
+            Order *op = Order::default_instance().New();
+            Order &o = *op;
             o.set_refnum(oid);
             o.mutable_core()->CopyFrom(ord.livecore);
-            mypair.second.push_back(o);
+            mypair.second.push_back(op);
         }
     }
 

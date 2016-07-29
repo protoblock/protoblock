@@ -6494,17 +6494,14 @@ class GetOrdersRep : public ::google::protobuf::Message {
   inline ::fantasybit::GetOrdersReq* release_req();
   inline void set_allocated_req(::fantasybit::GetOrdersReq* req);
 
-  // repeated .fantasybit.AllOdersFname oorders = 20;
-  inline int oorders_size() const;
+  // optional .fantasybit.AllOdersFname oorders = 20;
+  inline bool has_oorders() const;
   inline void clear_oorders();
   static const int kOordersFieldNumber = 20;
-  inline const ::fantasybit::AllOdersFname& oorders(int index) const;
-  inline ::fantasybit::AllOdersFname* mutable_oorders(int index);
-  inline ::fantasybit::AllOdersFname* add_oorders();
-  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname >&
-      oorders() const;
-  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname >*
-      mutable_oorders();
+  inline const ::fantasybit::AllOdersFname& oorders() const;
+  inline ::fantasybit::AllOdersFname* mutable_oorders();
+  inline ::fantasybit::AllOdersFname* release_oorders();
+  inline void set_allocated_oorders(::fantasybit::AllOdersFname* oorders);
 
   static const int kRepFieldNumber = 800;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
@@ -6514,11 +6511,13 @@ class GetOrdersRep : public ::google::protobuf::Message {
  private:
   inline void set_has_req();
   inline void clear_has_req();
+  inline void set_has_oorders();
+  inline void clear_has_oorders();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::fantasybit::GetOrdersReq* req_;
-  ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname > oorders_;
+  ::fantasybit::AllOdersFname* oorders_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -18198,29 +18197,42 @@ inline void GetOrdersRep::set_allocated_req(::fantasybit::GetOrdersReq* req) {
   }
 }
 
-// repeated .fantasybit.AllOdersFname oorders = 20;
-inline int GetOrdersRep::oorders_size() const {
-  return oorders_.size();
+// optional .fantasybit.AllOdersFname oorders = 20;
+inline bool GetOrdersRep::has_oorders() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void GetOrdersRep::set_has_oorders() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void GetOrdersRep::clear_has_oorders() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void GetOrdersRep::clear_oorders() {
-  oorders_.Clear();
+  if (oorders_ != NULL) oorders_->::fantasybit::AllOdersFname::Clear();
+  clear_has_oorders();
 }
-inline const ::fantasybit::AllOdersFname& GetOrdersRep::oorders(int index) const {
-  return oorders_.Get(index);
+inline const ::fantasybit::AllOdersFname& GetOrdersRep::oorders() const {
+  return oorders_ != NULL ? *oorders_ : *default_instance_->oorders_;
 }
-inline ::fantasybit::AllOdersFname* GetOrdersRep::mutable_oorders(int index) {
-  return oorders_.Mutable(index);
-}
-inline ::fantasybit::AllOdersFname* GetOrdersRep::add_oorders() {
-  return oorders_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname >&
-GetOrdersRep::oorders() const {
+inline ::fantasybit::AllOdersFname* GetOrdersRep::mutable_oorders() {
+  set_has_oorders();
+  if (oorders_ == NULL) oorders_ = new ::fantasybit::AllOdersFname;
   return oorders_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname >*
-GetOrdersRep::mutable_oorders() {
-  return &oorders_;
+inline ::fantasybit::AllOdersFname* GetOrdersRep::release_oorders() {
+  clear_has_oorders();
+  ::fantasybit::AllOdersFname* temp = oorders_;
+  oorders_ = NULL;
+  return temp;
+}
+inline void GetOrdersRep::set_allocated_oorders(::fantasybit::AllOdersFname* oorders) {
+  delete oorders_;
+  oorders_ = oorders;
+  if (oorders) {
+    set_has_oorders();
+  } else {
+    clear_has_oorders();
+  }
 }
 
 // -------------------------------------------------------------------

@@ -1475,7 +1475,7 @@ void protobuf_AddDesc_StateData_2eproto() {
     "rsFname\022\r\n\005fname\030\n \001(\t\022-\n\tpidorders\030\024 \003("
     "\0132\032.fantasybit.AllOdersSymbol\"\236\001\n\014GetOrd"
     "ersRep\022%\n\003req\030\n \001(\0132\030.fantasybit.GetOrde"
-    "rsReq\022*\n\007oorders\030\024 \003(\0132\031.fantasybit.AllO"
+    "rsReq\022*\n\007oorders\030\024 \001(\0132\031.fantasybit.AllO"
     "dersFname2;\n\003rep\022\023.fantasybit.WSReply\030\240\006"
     " \001(\0132\030.fantasybit.GetOrdersRep\"h\n\014GetOrd"
     "ersReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t29\n"
@@ -19693,6 +19693,7 @@ GetOrdersRep::GetOrdersRep()
 
 void GetOrdersRep::InitAsDefaultInstance() {
   req_ = const_cast< ::fantasybit::GetOrdersReq*>(&::fantasybit::GetOrdersReq::default_instance());
+  oorders_ = const_cast< ::fantasybit::AllOdersFname*>(&::fantasybit::AllOdersFname::default_instance());
 }
 
 GetOrdersRep::GetOrdersRep(const GetOrdersRep& from)
@@ -19704,6 +19705,7 @@ GetOrdersRep::GetOrdersRep(const GetOrdersRep& from)
 void GetOrdersRep::SharedCtor() {
   _cached_size_ = 0;
   req_ = NULL;
+  oorders_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -19714,6 +19716,7 @@ GetOrdersRep::~GetOrdersRep() {
 void GetOrdersRep::SharedDtor() {
   if (this != default_instance_) {
     delete req_;
+    delete oorders_;
   }
 }
 
@@ -19743,8 +19746,10 @@ void GetOrdersRep::Clear() {
     if (has_req()) {
       if (req_ != NULL) req_->::fantasybit::GetOrdersReq::Clear();
     }
+    if (has_oorders()) {
+      if (oorders_ != NULL) oorders_->::fantasybit::AllOdersFname::Clear();
+    }
   }
-  oorders_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -19768,17 +19773,16 @@ bool GetOrdersRep::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .fantasybit.AllOdersFname oorders = 20;
+      // optional .fantasybit.AllOdersFname oorders = 20;
       case 20: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_oorders:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_oorders()));
+               input, mutable_oorders()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(162)) goto parse_oorders;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -19807,10 +19811,10 @@ void GetOrdersRep::SerializeWithCachedSizes(
       10, this->req(), output);
   }
 
-  // repeated .fantasybit.AllOdersFname oorders = 20;
-  for (int i = 0; i < this->oorders_size(); i++) {
+  // optional .fantasybit.AllOdersFname oorders = 20;
+  if (has_oorders()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      20, this->oorders(i), output);
+      20, this->oorders(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -19828,11 +19832,11 @@ void GetOrdersRep::SerializeWithCachedSizes(
         10, this->req(), target);
   }
 
-  // repeated .fantasybit.AllOdersFname oorders = 20;
-  for (int i = 0; i < this->oorders_size(); i++) {
+  // optional .fantasybit.AllOdersFname oorders = 20;
+  if (has_oorders()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        20, this->oorders(i), target);
+        20, this->oorders(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -19853,15 +19857,14 @@ int GetOrdersRep::ByteSize() const {
           this->req());
     }
 
-  }
-  // repeated .fantasybit.AllOdersFname oorders = 20;
-  total_size += 2 * this->oorders_size();
-  for (int i = 0; i < this->oorders_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->oorders(i));
-  }
+    // optional .fantasybit.AllOdersFname oorders = 20;
+    if (has_oorders()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->oorders());
+    }
 
+  }
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -19887,10 +19890,12 @@ void GetOrdersRep::MergeFrom(const ::google::protobuf::Message& from) {
 
 void GetOrdersRep::MergeFrom(const GetOrdersRep& from) {
   GOOGLE_CHECK_NE(&from, this);
-  oorders_.MergeFrom(from.oorders_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_req()) {
       mutable_req()->::fantasybit::GetOrdersReq::MergeFrom(from.req());
+    }
+    if (from.has_oorders()) {
+      mutable_oorders()->::fantasybit::AllOdersFname::MergeFrom(from.oorders());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -19916,7 +19921,7 @@ bool GetOrdersRep::IsInitialized() const {
 void GetOrdersRep::Swap(GetOrdersRep* other) {
   if (other != this) {
     std::swap(req_, other->req_);
-    oorders_.Swap(&other->oorders_);
+    std::swap(oorders_, other->oorders_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

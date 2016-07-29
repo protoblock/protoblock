@@ -14,10 +14,22 @@
 #include <iostream>
 #include <stdexcept>
 #include "ExData.pb.h"
+#include <stack>
+#include "ExchangeData.h"
+#include <utility>
+#include <functional>
 
 using namespace fantasybit;
+using namespace std;
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
+
+template <typename T> struct hash<pair<T,T> > {
+    size_t operator()(pair<T,T> const &p) {
+        return hash<T>()(p.first) ^ hash<T>()(p.second);
+    }
+
+};
 
 class LiteServer : public QObject
 {
@@ -45,6 +57,7 @@ public:
 
 public slots:
     void OnDepthDelta(fantasybit::DepthFeedDelta *df);
+    void OnNewOO(fantasybit::FullOrderDelta);
 Q_SIGNALS:
     void closed();
     void error(QString);
@@ -80,6 +93,26 @@ private:
     std::unordered_map<QWebSocket *, std::vector<std::string>> mSocketSubscribed;
     std::unordered_map<std::string, std::set<QWebSocket *>> mFnameSubscribed;
 
+//    std::unordered_map< std::pair<std::string, std::string> , std::vector<Order *>>  reservedOrder;
+//    std::unordered_map< std::pair<std::string, std::string> , std::vector<AllOdersSymbol *>>  reserveAllOdersSymbol;
+
+//    std::unordered_map< std::string, std::unordered_map<std::string, AllOdersSymbol *>>  fname2symbolAllOrderss;
+
+    std::unordered_map< std::string, AllOdersFname *>  fname2sAllOdersFname;
+
+    std::unordered_map< AllOdersSymbol *, std::stack<Order *>>  openOrderSlots;
+
+    std::unordered_map< AllOdersFname *, std::stack<AllOdersSymbol *>>  openOrderSymbolSlot;
+
+    std::unordered_map< pair<string,string> ,AllOdersSymbol *>  fnamesymbolAllOrders;
+
+    std::unordered_map<int32_t,Order *> mSeqOrderMap;
+
+
+    void getFnameSnap(const std::string &fname);
+    Order *addOrder(AllOdersSymbol *allords, Order *orderin);
+    AllOdersSymbol *getAllOdersSymbol(AllOdersFname *aofp, const std::string &symbol);
+    AllOdersFname *getAllOdersFname(const std::string &fname);
 };
 
 #endif //LITE_SERVER_H

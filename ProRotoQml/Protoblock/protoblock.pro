@@ -58,7 +58,8 @@ HEADERS += \
     $$PWD/mediator.h \
     playerquoteslicemodel.h \
     depthmarketmodel.h \
-    fantasynamemodel.h
+    fantasynamemodel.h \
+    openordersmodel.h
 
 
 DISTFILES = qmldir
