@@ -456,7 +456,7 @@ enum CType {
     GETORDERS = 8;
     GETPOSITIONS = 9;
     SUBSCRIBEFNAME = 10;
-    GETORDERS = 11;
+//    GETORDERS = 11;
 }
 
 //message WsReq {
