@@ -417,6 +417,19 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
     qDebug() << " processBinaryMessage " << req.DebugString().data();
 
     switch ( req.ctype() ) {
+        case SUBSCRIBEFNAME: {
+            auto fname = req.GetExtension(SubscribeReq::req).name();
+            auto &vec = mSocketSubscribed[pClient];
+            vec.push_back(fname);
+            auto &set = mFnameSubscribed[fname];
+            if ( set.size() == 0 ) {
+                auto bigcrap = Server::TheExchange.GetOrdersPositionsByName(fname);
+                //Server::TheExchange.Subscribe(pname);
+                //todo get snap
+            }
+            set.insert(pClient);
+            return;
+        }
         case PK2FNAME:
         {
             Pk2FnameRep pkr;
@@ -509,6 +522,23 @@ void LiteServer::socketDisconnected()
 {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
     qDebug() << "socketDisconnected:" << pClient  << " Reason: " << pClient->closeReason ();
+
+    auto it = mSocketSubscribed.find(pClient);
+    if ( it != end(mSocketSubscribed)) {
+        for ( auto &fn : it->second) {
+            auto iit = mFnameSubscribed.find(fn);
+            if ( iit == end(mFnameSubscribed))
+                continue;
+
+            iit->second.erase(pClient);
+            if ( iit->second.empty() ) {
+                Server::TheExchange.UnSubscribe(fn);
+                //todo cleanup
+            }
+        }
+        mSocketSubscribed.erase(it);
+    }
+
     if (pClient) {
         m_clients.removeAll(pClient);
         pClient->deleteLater();

@@ -338,7 +338,7 @@ message pbstate {
     optional bytes schedulestateid = 10; //WeekGameStatusMetaRoot
     optional bytes leaderboardstateid = 20; //LeaderBoardMetaId
     optional bytes projstateid = 30; //ProjMetaroot
-    optional bytes posstateid = 35; //ProjMetaroot      `
+    optional bytes posstateid = 35; //ProjMetaroot
     optional bytes orderstateid = 40; //OrderMetaRoot
     optional bytes marketstateid = 50; //PlayerMarketStateRoot
     optional bytes globalstateid = 60; //GlobalStateMetaId
@@ -453,6 +453,9 @@ enum CType {
     GETALLNAMES = 5;
     GETROWMARKET = 6;
     GETDEPTH = 7;
+    GETORDERS = 8;
+    GETPOSITIONS = 9;
+    SUBSCRIBEFNAME = 10;
 }
 
 //message WsReq {
@@ -516,6 +519,14 @@ message Pk2FnameRep {
     optional FantasyNameBal fnb = 30;
 }
 
+message SubscribeReq {
+    extend WsReq {
+        optional SubscribeReq req = 350;
+    }
+
+    optional string name = 10;
+}
+
 message NameStatusReq {
     extend WsReq {
         optional NameStatusReq req = 400;
@@ -574,4 +585,32 @@ message GetDepthRep {
 
     optional string pid = 10;
     repeated DepthItem depthitems = 20;
+}
+
+message AllOdersSymbol {
+    optional string symbol = 10;
+    repeated Order orders = 20;
+}
+
+message AllOdersFname {
+    optional string fname = 10;
+    repeated AllOdersSymbol pidorders = 20;
+}
+
+message GetOrdersRep {
+    extend WSReply {
+        optional GetOrdersRep rep = 800;
+    }
+
+    optional GetOrdersReq req = 10;
+    repeated AllOdersFname oorders = 20;
+}
+
+message GetOrdersReq {
+    extend WsReq {
+        optional GetOrdersReq req = 800;
+    }
+
+    optional string symbol = 10;
+    optional string fname = 20;
 }

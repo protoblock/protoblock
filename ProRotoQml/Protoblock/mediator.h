@@ -104,8 +104,6 @@ public:
         polldepth.stop();
     }
 
-
-
 //     QList<QString *> m_goodFnames;
 //     QQmlListProperty<QString> goodFnames() {
 //         return QQmlListProperty<QString>(this, m_goodFnames);
@@ -173,6 +171,7 @@ public:
     qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);
 
 
+    void subscribeOrderPos(const QString &name);
 signals:
     void importSuccess(const QString name, bool passfail);
 

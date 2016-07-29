@@ -71,8 +71,14 @@ private:
     std::unordered_map<std::string, ROWMarket *> mPidROWMarket;
     std::unordered_map<std::string, GetDepthRep *> mPidGetDepthRep;
 
+//    std::unordered_map<std::string,std::unordered_map<std::string, AllOdersSymbol *>> mAllOdersFname;
+//    std::unordered_map<int32_t,std::unordered_map<std::string, AllOdersSymbol *>> mAllOdersFname;
+
     ROWMarket *getRowmarket(const std::string &pid);
     GetDepthRep * getDepthRep(const std::string &playerid);
+
+    std::unordered_map<QWebSocket *, std::vector<std::string>> mSocketSubscribed;
+    std::unordered_map<std::string, std::set<QWebSocket *>> mFnameSubscribed;
 
 };
 

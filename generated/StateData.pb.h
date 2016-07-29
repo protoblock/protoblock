@@ -77,6 +77,7 @@ class CheckNameReq;
 class CheckNameRep;
 class Pk2FnameReq;
 class Pk2FnameRep;
+class SubscribeReq;
 class NameStatusReq;
 class NameStatusRep;
 class GetAllNamesRep;
@@ -84,6 +85,10 @@ class ROWMarket;
 class GetROWMarketRep;
 class GetDepthReq;
 class GetDepthRep;
+class AllOdersSymbol;
+class AllOdersFname;
+class GetOrdersRep;
+class GetOrdersReq;
 
 enum CType {
   CHECKNAME = 1,
@@ -92,11 +97,14 @@ enum CType {
   GETSTATUS = 4,
   GETALLNAMES = 5,
   GETROWMARKET = 6,
-  GETDEPTH = 7
+  GETDEPTH = 7,
+  GETORDERS = 8,
+  GETPOSITIONS = 9,
+  SUBSCRIBEFNAME = 10
 };
 bool CType_IsValid(int value);
 const CType CType_MIN = CHECKNAME;
-const CType CType_MAX = GETDEPTH;
+const CType CType_MAX = SUBSCRIBEFNAME;
 const int CType_ARRAYSIZE = CType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* CType_descriptor();
@@ -5415,6 +5423,97 @@ class Pk2FnameRep : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class SubscribeReq : public ::google::protobuf::Message {
+ public:
+  SubscribeReq();
+  virtual ~SubscribeReq();
+
+  SubscribeReq(const SubscribeReq& from);
+
+  inline SubscribeReq& operator=(const SubscribeReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SubscribeReq& default_instance();
+
+  void Swap(SubscribeReq* other);
+
+  // implements Message ----------------------------------------------
+
+  SubscribeReq* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SubscribeReq& from);
+  void MergeFrom(const SubscribeReq& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string name = 10;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 10;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  static const int kReqFieldNumber = 350;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WsReq,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SubscribeReq >, 11, false >
+    req;
+  // @@protoc_insertion_point(class_scope:fantasybit.SubscribeReq)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* name_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SubscribeReq* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class NameStatusReq : public ::google::protobuf::Message {
  public:
   NameStatusReq();
@@ -6129,6 +6228,413 @@ class GetDepthRep : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static GetDepthRep* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class AllOdersSymbol : public ::google::protobuf::Message {
+ public:
+  AllOdersSymbol();
+  virtual ~AllOdersSymbol();
+
+  AllOdersSymbol(const AllOdersSymbol& from);
+
+  inline AllOdersSymbol& operator=(const AllOdersSymbol& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const AllOdersSymbol& default_instance();
+
+  void Swap(AllOdersSymbol* other);
+
+  // implements Message ----------------------------------------------
+
+  AllOdersSymbol* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const AllOdersSymbol& from);
+  void MergeFrom(const AllOdersSymbol& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string symbol = 10;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 10;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
+  // repeated .fantasybit.Order orders = 20;
+  inline int orders_size() const;
+  inline void clear_orders();
+  static const int kOrdersFieldNumber = 20;
+  inline const ::fantasybit::Order& orders(int index) const;
+  inline ::fantasybit::Order* mutable_orders(int index);
+  inline ::fantasybit::Order* add_orders();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::Order >&
+      orders() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Order >*
+      mutable_orders();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.AllOdersSymbol)
+ private:
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* symbol_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::Order > orders_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static AllOdersSymbol* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class AllOdersFname : public ::google::protobuf::Message {
+ public:
+  AllOdersFname();
+  virtual ~AllOdersFname();
+
+  AllOdersFname(const AllOdersFname& from);
+
+  inline AllOdersFname& operator=(const AllOdersFname& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const AllOdersFname& default_instance();
+
+  void Swap(AllOdersFname* other);
+
+  // implements Message ----------------------------------------------
+
+  AllOdersFname* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const AllOdersFname& from);
+  void MergeFrom(const AllOdersFname& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string fname = 10;
+  inline bool has_fname() const;
+  inline void clear_fname();
+  static const int kFnameFieldNumber = 10;
+  inline const ::std::string& fname() const;
+  inline void set_fname(const ::std::string& value);
+  inline void set_fname(const char* value);
+  inline void set_fname(const char* value, size_t size);
+  inline ::std::string* mutable_fname();
+  inline ::std::string* release_fname();
+  inline void set_allocated_fname(::std::string* fname);
+
+  // repeated .fantasybit.AllOdersSymbol pidorders = 20;
+  inline int pidorders_size() const;
+  inline void clear_pidorders();
+  static const int kPidordersFieldNumber = 20;
+  inline const ::fantasybit::AllOdersSymbol& pidorders(int index) const;
+  inline ::fantasybit::AllOdersSymbol* mutable_pidorders(int index);
+  inline ::fantasybit::AllOdersSymbol* add_pidorders();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersSymbol >&
+      pidorders() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersSymbol >*
+      mutable_pidorders();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.AllOdersFname)
+ private:
+  inline void set_has_fname();
+  inline void clear_has_fname();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* fname_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersSymbol > pidorders_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static AllOdersFname* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class GetOrdersRep : public ::google::protobuf::Message {
+ public:
+  GetOrdersRep();
+  virtual ~GetOrdersRep();
+
+  GetOrdersRep(const GetOrdersRep& from);
+
+  inline GetOrdersRep& operator=(const GetOrdersRep& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GetOrdersRep& default_instance();
+
+  void Swap(GetOrdersRep* other);
+
+  // implements Message ----------------------------------------------
+
+  GetOrdersRep* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const GetOrdersRep& from);
+  void MergeFrom(const GetOrdersRep& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.GetOrdersReq req = 10;
+  inline bool has_req() const;
+  inline void clear_req();
+  static const int kReqFieldNumber = 10;
+  inline const ::fantasybit::GetOrdersReq& req() const;
+  inline ::fantasybit::GetOrdersReq* mutable_req();
+  inline ::fantasybit::GetOrdersReq* release_req();
+  inline void set_allocated_req(::fantasybit::GetOrdersReq* req);
+
+  // repeated .fantasybit.AllOdersFname oorders = 20;
+  inline int oorders_size() const;
+  inline void clear_oorders();
+  static const int kOordersFieldNumber = 20;
+  inline const ::fantasybit::AllOdersFname& oorders(int index) const;
+  inline ::fantasybit::AllOdersFname* mutable_oorders(int index);
+  inline ::fantasybit::AllOdersFname* add_oorders();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname >&
+      oorders() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname >*
+      mutable_oorders();
+
+  static const int kRepFieldNumber = 800;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetOrdersRep >, 11, false >
+    rep;
+  // @@protoc_insertion_point(class_scope:fantasybit.GetOrdersRep)
+ private:
+  inline void set_has_req();
+  inline void clear_has_req();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::GetOrdersReq* req_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname > oorders_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static GetOrdersRep* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class GetOrdersReq : public ::google::protobuf::Message {
+ public:
+  GetOrdersReq();
+  virtual ~GetOrdersReq();
+
+  GetOrdersReq(const GetOrdersReq& from);
+
+  inline GetOrdersReq& operator=(const GetOrdersReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GetOrdersReq& default_instance();
+
+  void Swap(GetOrdersReq* other);
+
+  // implements Message ----------------------------------------------
+
+  GetOrdersReq* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const GetOrdersReq& from);
+  void MergeFrom(const GetOrdersReq& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string symbol = 10;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 10;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
+  // optional string fname = 20;
+  inline bool has_fname() const;
+  inline void clear_fname();
+  static const int kFnameFieldNumber = 20;
+  inline const ::std::string& fname() const;
+  inline void set_fname(const ::std::string& value);
+  inline void set_fname(const char* value);
+  inline void set_fname(const char* value, size_t size);
+  inline ::std::string* mutable_fname();
+  inline ::std::string* release_fname();
+  inline void set_allocated_fname(::std::string* fname);
+
+  static const int kReqFieldNumber = 800;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WsReq,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetOrdersReq >, 11, false >
+    req;
+  // @@protoc_insertion_point(class_scope:fantasybit.GetOrdersReq)
+ private:
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
+  inline void set_has_fname();
+  inline void clear_has_fname();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* symbol_;
+  ::std::string* fname_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static GetOrdersReq* default_instance_;
 };
 // ===================================================================
 
@@ -16708,6 +17214,80 @@ inline void Pk2FnameRep::set_allocated_fnb(::fantasybit::FantasyNameBal* fnb) {
 
 // -------------------------------------------------------------------
 
+// SubscribeReq
+
+// optional string name = 10;
+inline bool SubscribeReq::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SubscribeReq::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SubscribeReq::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SubscribeReq::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& SubscribeReq::name() const {
+  return *name_;
+}
+inline void SubscribeReq::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void SubscribeReq::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void SubscribeReq::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SubscribeReq::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* SubscribeReq::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SubscribeReq::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
 // NameStatusReq
 
 // optional string name = 10;
@@ -17376,6 +17956,415 @@ GetDepthRep::depthitems() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >*
 GetDepthRep::mutable_depthitems() {
   return &depthitems_;
+}
+
+// -------------------------------------------------------------------
+
+// AllOdersSymbol
+
+// optional string symbol = 10;
+inline bool AllOdersSymbol::has_symbol() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void AllOdersSymbol::set_has_symbol() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void AllOdersSymbol::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void AllOdersSymbol::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& AllOdersSymbol::symbol() const {
+  return *symbol_;
+}
+inline void AllOdersSymbol::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void AllOdersSymbol::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void AllOdersSymbol::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* AllOdersSymbol::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* AllOdersSymbol::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void AllOdersSymbol::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .fantasybit.Order orders = 20;
+inline int AllOdersSymbol::orders_size() const {
+  return orders_.size();
+}
+inline void AllOdersSymbol::clear_orders() {
+  orders_.Clear();
+}
+inline const ::fantasybit::Order& AllOdersSymbol::orders(int index) const {
+  return orders_.Get(index);
+}
+inline ::fantasybit::Order* AllOdersSymbol::mutable_orders(int index) {
+  return orders_.Mutable(index);
+}
+inline ::fantasybit::Order* AllOdersSymbol::add_orders() {
+  return orders_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::Order >&
+AllOdersSymbol::orders() const {
+  return orders_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Order >*
+AllOdersSymbol::mutable_orders() {
+  return &orders_;
+}
+
+// -------------------------------------------------------------------
+
+// AllOdersFname
+
+// optional string fname = 10;
+inline bool AllOdersFname::has_fname() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void AllOdersFname::set_has_fname() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void AllOdersFname::clear_has_fname() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void AllOdersFname::clear_fname() {
+  if (fname_ != &::google::protobuf::internal::kEmptyString) {
+    fname_->clear();
+  }
+  clear_has_fname();
+}
+inline const ::std::string& AllOdersFname::fname() const {
+  return *fname_;
+}
+inline void AllOdersFname::set_fname(const ::std::string& value) {
+  set_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    fname_ = new ::std::string;
+  }
+  fname_->assign(value);
+}
+inline void AllOdersFname::set_fname(const char* value) {
+  set_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    fname_ = new ::std::string;
+  }
+  fname_->assign(value);
+}
+inline void AllOdersFname::set_fname(const char* value, size_t size) {
+  set_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    fname_ = new ::std::string;
+  }
+  fname_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* AllOdersFname::mutable_fname() {
+  set_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    fname_ = new ::std::string;
+  }
+  return fname_;
+}
+inline ::std::string* AllOdersFname::release_fname() {
+  clear_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = fname_;
+    fname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void AllOdersFname::set_allocated_fname(::std::string* fname) {
+  if (fname_ != &::google::protobuf::internal::kEmptyString) {
+    delete fname_;
+  }
+  if (fname) {
+    set_has_fname();
+    fname_ = fname;
+  } else {
+    clear_has_fname();
+    fname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .fantasybit.AllOdersSymbol pidorders = 20;
+inline int AllOdersFname::pidorders_size() const {
+  return pidorders_.size();
+}
+inline void AllOdersFname::clear_pidorders() {
+  pidorders_.Clear();
+}
+inline const ::fantasybit::AllOdersSymbol& AllOdersFname::pidorders(int index) const {
+  return pidorders_.Get(index);
+}
+inline ::fantasybit::AllOdersSymbol* AllOdersFname::mutable_pidorders(int index) {
+  return pidorders_.Mutable(index);
+}
+inline ::fantasybit::AllOdersSymbol* AllOdersFname::add_pidorders() {
+  return pidorders_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersSymbol >&
+AllOdersFname::pidorders() const {
+  return pidorders_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersSymbol >*
+AllOdersFname::mutable_pidorders() {
+  return &pidorders_;
+}
+
+// -------------------------------------------------------------------
+
+// GetOrdersRep
+
+// optional .fantasybit.GetOrdersReq req = 10;
+inline bool GetOrdersRep::has_req() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GetOrdersRep::set_has_req() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GetOrdersRep::clear_has_req() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GetOrdersRep::clear_req() {
+  if (req_ != NULL) req_->::fantasybit::GetOrdersReq::Clear();
+  clear_has_req();
+}
+inline const ::fantasybit::GetOrdersReq& GetOrdersRep::req() const {
+  return req_ != NULL ? *req_ : *default_instance_->req_;
+}
+inline ::fantasybit::GetOrdersReq* GetOrdersRep::mutable_req() {
+  set_has_req();
+  if (req_ == NULL) req_ = new ::fantasybit::GetOrdersReq;
+  return req_;
+}
+inline ::fantasybit::GetOrdersReq* GetOrdersRep::release_req() {
+  clear_has_req();
+  ::fantasybit::GetOrdersReq* temp = req_;
+  req_ = NULL;
+  return temp;
+}
+inline void GetOrdersRep::set_allocated_req(::fantasybit::GetOrdersReq* req) {
+  delete req_;
+  req_ = req;
+  if (req) {
+    set_has_req();
+  } else {
+    clear_has_req();
+  }
+}
+
+// repeated .fantasybit.AllOdersFname oorders = 20;
+inline int GetOrdersRep::oorders_size() const {
+  return oorders_.size();
+}
+inline void GetOrdersRep::clear_oorders() {
+  oorders_.Clear();
+}
+inline const ::fantasybit::AllOdersFname& GetOrdersRep::oorders(int index) const {
+  return oorders_.Get(index);
+}
+inline ::fantasybit::AllOdersFname* GetOrdersRep::mutable_oorders(int index) {
+  return oorders_.Mutable(index);
+}
+inline ::fantasybit::AllOdersFname* GetOrdersRep::add_oorders() {
+  return oorders_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname >&
+GetOrdersRep::oorders() const {
+  return oorders_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::AllOdersFname >*
+GetOrdersRep::mutable_oorders() {
+  return &oorders_;
+}
+
+// -------------------------------------------------------------------
+
+// GetOrdersReq
+
+// optional string symbol = 10;
+inline bool GetOrdersReq::has_symbol() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GetOrdersReq::set_has_symbol() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GetOrdersReq::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GetOrdersReq::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& GetOrdersReq::symbol() const {
+  return *symbol_;
+}
+inline void GetOrdersReq::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void GetOrdersReq::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void GetOrdersReq::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* GetOrdersReq::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* GetOrdersReq::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void GetOrdersReq::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string fname = 20;
+inline bool GetOrdersReq::has_fname() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void GetOrdersReq::set_has_fname() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void GetOrdersReq::clear_has_fname() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void GetOrdersReq::clear_fname() {
+  if (fname_ != &::google::protobuf::internal::kEmptyString) {
+    fname_->clear();
+  }
+  clear_has_fname();
+}
+inline const ::std::string& GetOrdersReq::fname() const {
+  return *fname_;
+}
+inline void GetOrdersReq::set_fname(const ::std::string& value) {
+  set_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    fname_ = new ::std::string;
+  }
+  fname_->assign(value);
+}
+inline void GetOrdersReq::set_fname(const char* value) {
+  set_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    fname_ = new ::std::string;
+  }
+  fname_->assign(value);
+}
+inline void GetOrdersReq::set_fname(const char* value, size_t size) {
+  set_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    fname_ = new ::std::string;
+  }
+  fname_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* GetOrdersReq::mutable_fname() {
+  set_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    fname_ = new ::std::string;
+  }
+  return fname_;
+}
+inline ::std::string* GetOrdersReq::release_fname() {
+  clear_has_fname();
+  if (fname_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = fname_;
+    fname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void GetOrdersReq::set_allocated_fname(::std::string* fname) {
+  if (fname_ != &::google::protobuf::internal::kEmptyString) {
+    delete fname_;
+  }
+  if (fname) {
+    set_has_fname();
+    fname_ = fname;
+  } else {
+    clear_has_fname();
+    fname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 

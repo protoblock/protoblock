@@ -138,7 +138,7 @@ void Mediator::doPk2fname(const std::string &pkstr) {
 }
 
 void Mediator::checkname(const QString &name) {
-//    qDebug() << " in checkname " << name;
+    qDebug() << " in checkname " << name;
     WsReq req;
     req.set_ctype(CHECKNAME);
     CheckNameReq cnr;
@@ -152,6 +152,18 @@ void Mediator::checkname(const QString &name) {
 
 }
 
+void Mediator::subscribeOrderPos(const QString &name) {
+    WsReq req;
+    req.set_ctype(SUBSCRIBEFNAME);
+    SubscribeReq sr;
+    sr.set_name(name.toStdString());
+    req.SetAllocatedExtension(SubscribeReq::req,&sr);
+    auto txstr = req.SerializeAsString();
+    qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
+    req.ReleaseExtension(SubscribeReq::req);
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+    m_webSocket.sendBinaryMessage(qb);
+}
 
 
 void Mediator::handleError(const QString err) {
@@ -305,6 +317,7 @@ void Mediator::onConnected() {
     if ( m_fantasy_agent.HaveClient() ) {
         sent = m_fantasy_agent.pubKeyStr();
         if ( m_myPubkeyFname[sent] == "" ) {
+//            subscribeOrderPos(m_fantasy_agent.currentClient().data());
             doPk2fname(sent);
         }
     }
@@ -336,7 +349,11 @@ void Mediator::onTextMessageReceived(QString message) {
 
 void Mediator::onBinaryMessageRecived(const QByteArray &message) {
     fantasybit::WSReply rep;
-    rep.ParseFromString(message.toStdString());
+    if ( !rep.ParseFromString(message.toStdString()) ) {
+        qDebug() << "Mediator::onBinaryMessageRecived error";
+        return;
+    }
+
 
 //    if ( rep.ctype() != GETALLNAMES)
 //        qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
@@ -381,21 +398,27 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 //                m_goodFnames.append(&goodname);
                 m_goodList.append(goodname);
                 mGoodNameBalModel.append(new FantasyNameBalModelItem(pk2.fnb()));
+                subscribeOrderPos(name.data());
 //                qDebug() << " new good name! " << goodname;
             }
                 //            nameStatusChanged( name.data() , "confirmed" );
 
             if ( !m_fantasy_agent.HaveClient() ||
                  lastPk2name == pk2.req().pk()) {
-                if ( !m_fantasy_agent.UseName(name) )
-//                    qDebug() << "error using name " << name.data () ;
+                if ( !m_fantasy_agent.UseName(name) ) {
+                    qDebug() << "error using name " << name.data () ;
 //                    error(QString("error using name").append(name.data()));
-                usingFantasyName(m_fantasy_agent.currentClient().data());
+                }
+                else {
+                    usingFantasyName(m_fantasy_agent.currentClient().data());
+//                    subscribeOrderPos(currname.data());
+                }
             }
 
             if ( was_pending ) {
                 importSuccess(m_fantasy_agent.currentClient().data(), true);
                 usingFantasyName(m_fantasy_agent.currentClient().data());
+//                subscribeOrderPos(currname.data());
             }
 
             break;
@@ -655,6 +678,7 @@ void Mediator::useName(const QString &name) {
     qDebug() << " Mediator::useName " << name;
     if ( m_fantasy_agent.UseName(name.toStdString()) ) {
 //        qDebug() << " Mediator::useName  usingFantasyName" << name;
+//        subscribeOrderPos(name);
         usingFantasyName(name);
     }
 
@@ -694,6 +718,7 @@ QString Mediator::init() {
 //    qDebug() << " Mediator::init() " << dname.data();
     QString defaultName = QString::fromStdString (m_fantasy_agent.currentClient().data());
     usingFantasyName( defaultName, true ) ;
+
 
 
     return defaultName;
@@ -834,6 +859,8 @@ void Mediator::getDepthRep() {
     qDebug() << " getDepthRep sending " << mGetDepthReq.DebugString().data();
     m_webSocket.sendBinaryMessage(qb);
 }
+
+
 
 Mediator *Mediator::myInstance;
 

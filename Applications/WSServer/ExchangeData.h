@@ -336,7 +336,7 @@ public:
 
     void Subscribe(std::string in) {
 #ifdef TRACE
-        qDebug() << "level2 ExchangeData Subscribe" << in;
+        qDebug() << "level2 ExchangeData Subscribe" << in.data();
 #endif
 
         mSubscribed.insert(in);
@@ -344,7 +344,7 @@ public:
 
     void UnSubscribe(std::string in) {
 #ifdef TRACE
-        qDebug() << "level2 ExchangeData UnSubscribe" << in;
+        qDebug() << "level2 ExchangeData UnSubscribe" << in.data();
 #endif
 
         mSubscribed.erase(in);
