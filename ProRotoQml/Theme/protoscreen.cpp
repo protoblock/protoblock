@@ -13,7 +13,7 @@ ProtoScreen::ProtoScreen(QObject *parent) :
     m_scaleSize(1.0),
     m_formFactor("desktop"),
     m_androidDpi(),
-    m_windowsDesktopScale(1.0),
+    m_windowsDesktopScale(.90),
     m_androidScale(1.0),
     m_tempMacVersion(6.0)
 {
@@ -340,7 +340,7 @@ void ProtoScreen::updateFormFactor(){
              || sysInfo.productType () == "windows"
              )
     {
-        m_windowsDesktopScale = 1.0;
+        double newwindowsscale = 1.0;
         qDebug() << " windows " << m_screen->logicalDotsPerInch();
 
         //        SOURCE
@@ -350,52 +350,53 @@ void ProtoScreen::updateFormFactor(){
         }
         else if (m_169 <=  11.5){
             if (m_screen->size().width() >= 1920 && m_screen->size().height() >= 1080){
-                m_windowsDesktopScale = 1.5;
+                newwindowsscale = 1.5;
             }
         }
         else if (m_169 <= 13.2){
             if (m_screen->size().width() >= 1920 && m_screen->size().height() >= 1200){
-                m_windowsDesktopScale = 1.5;
+                newwindowsscale = 1.5;
             }
         }
         else if (m_169  <= 15.3){
             if(m_screen->logicalDotsPerInch() >= 192)
-                m_windowsDesktopScale = 2.0;
+                newwindowsscale = 2.0;
             else if ( m_screen->logicalDotsPerInch() >= 144) {
-                m_windowsDesktopScale = 1.5;
+                newwindowsscale = 1.5;
             }
         }       
         else if (m_169 <= 16.9){
             qDebug() << " windows " << m_screen->logicalDotsPerInch();
             if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
-                m_windowsDesktopScale = 1.25;
+                newwindowsscale = 1.25;
             }
             else if (m_screen->logicalDotsPerInch() >= 192  )
             {
-                m_windowsDesktopScale = 2.0;
+                newwindowsscale = 2.0;
             }
         }
         else if (m_169 < 23){
             if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
-                m_windowsDesktopScale = 1.25;
+                newwindowsscale = 1.25;
             }
             if (m_screen->logicalDotsPerInch() >= 192){
-                m_windowsDesktopScale = 2.0;
+                newwindowsscale = 2.0;
             }
         }
         else if (m_169 >=  23 ){
             if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
-                m_windowsDesktopScale = 1.25;
+                newwindowsscale = 1.25;
             }
             else if (m_screen->logicalDotsPerInch() >= 192  )
             {
-                m_windowsDesktopScale = 2.0;
+                newwindowsscale = 2.0;
             }
         }
         else {
-            m_windowsDesktopScale = 1.0;
+            newwindowsscale = 1.0;
         }
 
+        m_windowsDesktopScale *= newwindowsscale;
         finalFormFactor ("windows", m_windowsDesktopScale,m_169);
         return;
     }
