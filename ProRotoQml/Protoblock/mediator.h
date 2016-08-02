@@ -33,6 +33,9 @@ class Mediator : public QObject
     QML_READONLY_CSTREF_PROPERTY (QString, encyptPath)
     QML_READONLY_CSTREF_PROPERTY (bool, engineStatus)
 
+    QML_READONLY_CSTREF_PROPERTY (QString, currentPidContext)
+
+
     Q_PROPERTY(QString errorString READ errorString NOTIFY errorStringChanged)
     Q_PROPERTY(QString webSocketErrorString  READ webSocketErrorString NOTIFY webSocketErrorStringChanged)
 
@@ -53,6 +56,7 @@ class Mediator : public QObject
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pOpenOrdersModel)
 
+//    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
 
 
 
@@ -153,6 +157,8 @@ public:
     Q_INVOKABLE void changeDepthContext(const QString& context) {
         if ( mGetDepthReq.GetExtension(GetDepthReq::req).pid().data() != context )
             mGetDepthReq.MutableExtension(GetDepthReq::req)->set_pid(context.toStdString());
+
+        m_currentPidContext = context;
     }
 
     Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);

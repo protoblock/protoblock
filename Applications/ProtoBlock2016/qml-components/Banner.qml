@@ -2,6 +2,10 @@ import QtQuick 2.4
 import Material 1.0
 import ProRotoQml.Theme  1.0
 Item {
+//    Component.objectName: {
+//        listProperty(bannerRoot);
+//    }
+
     id: bannerRoot
     property string text
     property string color: "white"
@@ -31,23 +35,24 @@ Item {
             font.pixelSize: bannerRoot.fontSize
             font.bold: bannerRoot.bold
             color: bannerRoot.color
-            verticalAlignment: {
-                if(anchrosType === "default"){
-                    Text.AlignVCenter
-                }
-                else if (anchrosType === "verticalCenter")
-                {
-                    Text.AlignVCenter
-                }
-                else if (anchrosType === "top")
-                {
-                    Text.AlignTop
-                }
-                else if (anchrosType === "bottom")
-                {
-                    Text.AlignBottom
-                }
+
+            Binding on verticalAlignment {
+                when: anchrosType === "default"
+                value: Text.AlignVCenter
             }
+            Binding on verticalAlignment {
+                when: anchrosType === "verticalCenter"
+                value: Text.AlignVCenter
+            }
+            Binding on verticalAlignment {
+                when: anchrosType === "top"
+                value: Text.AlignTop
+            }
+            Binding on verticalAlignment {
+                when: anchrosType === "bottom"
+                value: Text.AlignBottom
+            }
+
             anchors{
                 left: parent.left
                 leftMargin:  ProtoScreen.guToPx(1.25)
@@ -75,4 +80,16 @@ Item {
             }
         }
     }
+
+
+function listProperty(item)
+{
+    for (var p in item)
+    {
+        if( typeof item[p] != "function" )
+            if(p != "objectName")
+                console.log(p + ":" + item[p]);
+    }
+
+}
 }

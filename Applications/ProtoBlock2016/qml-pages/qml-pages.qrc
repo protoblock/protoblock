@@ -26,8 +26,11 @@
         <file>Import-Export.qml</file>
         <file>Indicators.qml</file>
         <file>ThemeButton.qml</file>
-        <file>Trading.qml</file>
         <file>2015Leaderboard.qml</file>
-        <file>2015Trading.qml</file>
+        <file>Trading.qml</file>
+        <file>2016Weekly.qml</file>
+        <file>2017Season.qml</file>
+        <file>2015Final.qml</file>
+        <file>2016Season.qml</file>
     </qresource>
 </RCC>

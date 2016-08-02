@@ -63,5 +63,8 @@
         <file>icons/done.png</file>
         <file>icons/pause.png</file>
         <file>icons/local_atm.png</file>
+        <file>icons/ic_trending_down.png</file>
+        <file>icons/ic_trending_flat.png</file>
+        <file>icons/ic_trending_up.png</file>
     </qresource>
 </RCC>

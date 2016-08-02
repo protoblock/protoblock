@@ -15,6 +15,7 @@ class PlayerQuoteSliceModelItem : public QObject {
     QML_CONSTANT_CSTREF_PROPERTY (QString, firstname)
     QML_CONSTANT_CSTREF_PROPERTY (QString, team_id)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, bidsize)
+    QML_CONSTANT_CSTREF_PROPERTY (QString , fullname)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, bid)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, ask)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, asksize)
@@ -35,6 +36,9 @@ public:
         m_firstname = in.playerdata().player_base().first().data();
         m_lastname = in.playerdata().player_base().last().data();
         m_team_id = in.playerdata().player_status().teamid().data();
+        m_fullname =  QString("%1 %2")
+                .arg ( in.playerdata ().player_base ().first ().data () )
+                .arg ( in.playerdata ().player_base ().last ().data () );
         m_bidsize = in.quote().bs();
         m_bid = in.quote().b();
         m_ask = in.quote().a();

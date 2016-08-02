@@ -28,6 +28,7 @@ Quick.Window {
 
     property string version: "0.1" //TODO
 
+    property string playerInView
 
     // make this into c++
     property var speed2Name: function( bytesPerSecond ){

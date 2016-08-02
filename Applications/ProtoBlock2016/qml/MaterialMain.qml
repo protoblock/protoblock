@@ -27,7 +27,7 @@ Material.ApplicationWindow{
             loginDialog.toggle()
         }
         else
-            rootLoader.source = "qrc:/Home.qml";
+            rootLoader.source = "qrc:/2016Season.qml";
     }
 
     property string defaultname
@@ -91,14 +91,16 @@ Material.ApplicationWindow{
         "qrc:/icons/newspaper.png"
     ]
     // Level Three News
-    property var levelThree: [ "Trading" , "2015 Trading" ]
+    property var levelThree: [ "2016 Season" , "2016 Weekly", "2017 Season", "2015 Final" ]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
 
     property var levelThreeIcons: [
         "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/ic_help.png",
+        "qrc:/icons/newspaper.png" ,
+        "qrc:/icons/newspaper.png",
+        "qrc:/icons/newspaper.png"
     ]
     //Level four
     property var  levelFour: [

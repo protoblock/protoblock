@@ -372,9 +372,9 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 //        qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
 //    else
 //        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
-
+#ifdef TRACE2
     qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
-
+#endif
 
     switch ( rep.ctype()) {
         case PK2FNAME:
@@ -495,7 +495,9 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         break;
         case GETDEPTH: {
             m_pDepthMarketModel->updateFullDepth(rep.GetExtension(GetDepthRep::rep));
+#ifdef TRACE2
             qDebug() << rep.DebugString().data();
+#endif
             break;
         }
         case GETORDERS: {
@@ -876,7 +878,7 @@ void Mediator::rowMarketGet() {
 void Mediator::getDepthRep() {
     auto txstr = mGetDepthReq.SerializeAsString();
     QByteArray qb(txstr.data(),(size_t)txstr.size());
-    qDebug() << " getDepthRep sending " << mGetDepthReq.DebugString().data();
+//    qDebug() << " getDepthRep sending " << mGetDepthReq.DebugString().data();
     m_webSocket.sendBinaryMessage(qb);
 }
 
