@@ -4,10 +4,19 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4
 import Material 1.0
 import ProRotoQml.Protoblock 1.0
+import QtQuick.Controls.Styles 1.3 as ControlStyles
+
+
 //import ProRotoQml.Theme 1.0
 Item {
 //    id: name
 //    property bool  weekly: false
+
+//    property string color: "white"
+//    property string backgroundColor: "black"
+//    property int fontSize: ProtoScreen.font(ProtoScreen.SMALL)
+//    property bool bold: false
+
     property int numweeks: 15
     property bool isbuyCard: true
     property int price: (isbuyCard ? 1 : 26) * numweeks
@@ -41,7 +50,7 @@ Item {
             anchors.bottomMargin: 11
             anchors.leftMargin: -49
             anchors.topMargin: -38
-            scale: 0.7
+            scale: 1
             rows: 0
             columnSpacing: 0
             rowSpacing: 0
@@ -69,7 +78,41 @@ Item {
                     text: qsTr("Average Points")
                     Layout.fillWidth: true
                 }
+
+//                MaterialComboBox{
+//                    id: avgPoints
+//                    width: Layout.width
+//                    model: 40
+//                    currentIndex: 0
+//                    onCurrentIndexChanged: {
+//                        if ( currentIndex > 0 ) {
+//                            avgpoints = currentIndex
+//                            console.log(side + " avgPoints " + currentIndex)
+////                            var points = avgPoints.currentText
+////                            var numberOfWeeks = comboBox2.currentText
+////                            yearVal.text = (avgpoints * numberOfWeeks)
+////                            weeklyAvg.text = avgPoints.currentText
+////                            howManyWeeks.text = comboBox2.currentText
+
+//                            if ( !changing ) {
+//                                changing = true;
+//                                priceCombo.currentIndex = currentIndex *  comboBox2.currentIndex
+//                                changing = false;
+//                            }
+//                        }
+//                    }
+//                }
+
                 ComboBox {
+////                    style: ControlStyles.ComboBoxStyle{
+////                        font{
+////                            family: "Roboto"
+////                            bold: bold
+////                            pixelSize: fontSize
+////                        }
+
+//                    }
+                    editable: true
                     id: avgPoints
                     Layout.fillWidth: true
                     model: 40

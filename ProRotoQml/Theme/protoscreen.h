@@ -30,6 +30,7 @@ class ProtoScreen : public QObject
     QML_READONLY_CSTREF_PROPERTY ( int, availableHeight)
     QML_READONLY_CSTREF_PROPERTY ( int, availableWidth)
     QML_READONLY_CSTREF_PROPERTY ( qreal, pixelRatio )
+    QML_READONLY_CSTREF_PROPERTY ( QRect, availrect)
 
 
 public:

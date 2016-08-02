@@ -44,6 +44,7 @@ void ProtoScreen::initialize() {
     setpixelRatio (desktop->devicePixelRatio ());
 
 
+    setavailrect(desktop->availableGeometry());
     updateFormFactor ();
     m_bInitialized = true;
 
@@ -70,7 +71,9 @@ double ProtoScreen::pxToGu(double px) {
 }
 
 
-void ProtoScreen::finalFormFactor(const QString &systemType, const double &versionORscaleSize , const double diagonal)
+void ProtoScreen::finalFormFactor(const QString &systemType,
+                                  const double &versionORscaleSize ,
+                                  const double diagonal)
 {
     m_systemType = systemType;
     // IOS
@@ -338,29 +341,31 @@ void ProtoScreen::updateFormFactor(){
              )
     {
         m_windowsDesktopScale = 1.0;
-//        qDebug() << " windows " << m_screen->logicalDotsPerInch();
+        qDebug() << " windows " << m_screen->logicalDotsPerInch();
 
         //        SOURCE
         //      https://msdn.microsoft.com/en-us/library/windows/desktop/dn469266(v=vs.85).aspx
         if (m_169 <= 10.5){
             qDebug() << "This shit is small !";
         }
-        else if (m_169 >=  10.6 && m_169 <=  11.5){
+        else if (m_169 <=  11.5){
             if (m_screen->size().width() >= 1920 && m_screen->size().height() >= 1080){
                 m_windowsDesktopScale = 1.5;
             }
         }
-        else if (m_169 >=  11.6 && m_169 <= 13.2){
+        else if (m_169 <= 13.2){
             if (m_screen->size().width() >= 1920 && m_screen->size().height() >= 1200){
                 m_windowsDesktopScale = 1.5;
             }
         }
-        else if (m_169 >=  13.3 && m_169 <= 15.3){
-            if(m_screen->logicalDotsPerInch() >= 192 && m_screen->logicalDotsPerInch() >145) {
+        else if (m_169  <= 15.3){
+            if(m_screen->logicalDotsPerInch() >= 192)
                 m_windowsDesktopScale = 2.0;
+            else if ( m_screen->logicalDotsPerInch() >= 144) {
+                m_windowsDesktopScale = 1.5;
             }
-        }
-        else if (m_169 >=  15.4 && m_169 <= 16.9){
+        }       
+        else if (m_169 <= 16.9){
             qDebug() << " windows " << m_screen->logicalDotsPerInch();
             if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
                 m_windowsDesktopScale = 1.25;
@@ -370,20 +375,27 @@ void ProtoScreen::updateFormFactor(){
                 m_windowsDesktopScale = 2.0;
             }
         }
-        else if (m_169 >=  23 && m_169 < 24){
+        else if (m_169 < 23){
+            if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
+                m_windowsDesktopScale = 1.25;
+            }
             if (m_screen->logicalDotsPerInch() >= 192){
                 m_windowsDesktopScale = 2.0;
             }
         }
-        else if (m_169 >=  23 && m_169 < 24){
-            if (m_screen->logicalDotsPerInch() == 120 ){
+        else if (m_169 >=  23 ){
+            if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
                 m_windowsDesktopScale = 1.25;
+            }
+            else if (m_screen->logicalDotsPerInch() >= 192  )
+            {
+                m_windowsDesktopScale = 2.0;
             }
         }
         else {
-            finalFormFactor ("windows" , 1.0,m_169);
-            return;
+            m_windowsDesktopScale = 1.0;
         }
+
         finalFormFactor ("windows", m_windowsDesktopScale,m_169);
         return;
     }

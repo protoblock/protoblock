@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import QtQuick.Window 2.0 as Quick
+import QtQuick.Window 2.2 as Quick
 import QtQuick.Dialogs 1.2
 
 import ProRotoQml.Utils 1.0
@@ -12,9 +12,18 @@ import Material 1.0 as Material
 
 Quick.Window {
     id: realRoot
-    title: "Protoblock 2016 "
-    width: Device.productType === "windows" ? 1200  :  ProtoScreen.availableWidth
-    height: Device.productType === "windows" ? 1220  : ProtoScreen.availableHeight
+    title: "Protoblock 2016 xxxxxx"
+//    x: ( ProtoScreen.desktopWidth - ProtoScreen.availableWidth)
+//    y: ( ProtoScreen.desktopHeight - ProtoScreen.availableHeight)
+//    width: ProtoScreen.availableWidth
+//           (Device.productType === "windows") ? 0 : ( ProtoScreen.desktopWidth - ProtoScreen.availableWidth)
+//    height: ProtoScreen.availableHeight
+//            (Device.productType === "windows") ? 0 : ( ProtoScreen.desktopHeight - ProtoScreen.availableHeight)
+
+//    visibility: "FullScreen"
+    maximumHeight: ProtoScreen.availableHeight
+    maximumWidth: ProtoScreen.availableWidth
+
     property string theme: "Material"
     property string  uname
     property string  err

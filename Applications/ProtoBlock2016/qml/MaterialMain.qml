@@ -16,11 +16,19 @@ import Communi 3.0
 Material.ApplicationWindow{
     id: themeroot
     visible: true
-    width:Device.productType === "windows" ? ProtoScreen.guToPx(150) : Screen.desktopAvailableWidth
-    height: Device.productType === "windows" ? ProtoScreen.guToPx(150) : Screen.desktopAvailableHeight
+    width: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableWidth * .95)
+                                                                              : ProtoScreen.availableWidth
+    height: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableHeight * .95)
+                                                                               : ProtoScreen.availableHeight
+
 
     color: "transparent"
     Component.onCompleted: {
+        setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
+        setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
+
+        console.log( "actual " + height + " ProtoScreen.guToPx(150) "  + ProtoScreen.guToPx(150) + " real " + realRoot.height
+                    + " avail " + ProtoScreen.availableHeight + " all " + ProtoScreen.desktopHeight + " design " + ProtoScreen.designHeight)
         console.log("Primary Color " +  Colors.primaryColor  +  " themeroot Active ?  " + themeroot.active)
         uname = MiddleMan.init()
         if ( uname  === "" ){
@@ -264,7 +272,7 @@ Material.ApplicationWindow{
 
         Material.ProgressCircle {
             id: actInd
-            anchors.centerIn: rootLoader
+            anchors.centerIn: er
             visible: rootLoader.status == Loader.Loading
         }
 
