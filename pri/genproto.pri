@@ -1,13 +1,13 @@
 osx{
     DEFINES += GOOGLE_NAMESPACE=google_public
-    GENERATEDDIR = $$PWD/../generated
+    GENERATEDDIR = $$PWD/../generated-public
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
     DEPENDPATH+= /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 }
 
 ios{
     DEFINES += GOOGLE_NAMESPACE=google_public
-    GENERATEDDIR = $$PWD/../generated
+    GENERATEDDIR = $$PWD/../generated-public
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/include
 
