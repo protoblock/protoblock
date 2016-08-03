@@ -90,14 +90,6 @@ struct InsideBook {
         return end(mOList);
     }
 
-    list<Order>::reverse_iterator rtop() {
-        return rbegin(mOList);
-    }
-
-    list<Order>::reverse_iterator rbot() {
-        return rend(mOList);
-    }
-
     void New(Order& order) {
         totSize += order.core().size();
         mOMap.insert(make_pair(order.refnum(),mOList.insert(mOList.end(),order)));
