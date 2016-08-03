@@ -32,5 +32,6 @@
         <file>2017Season.qml</file>
         <file>2015Final.qml</file>
         <file>2016Season.qml</file>
+        <file>ROW2016.qml</file>
     </qresource>
 </RCC>

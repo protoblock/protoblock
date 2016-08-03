@@ -89,7 +89,7 @@ Text {
         },
 
         "button": {
-            "size": 14,
+            "size": ProtoScreen.guToPx(1.75),
             "font": "medium"
         },
 

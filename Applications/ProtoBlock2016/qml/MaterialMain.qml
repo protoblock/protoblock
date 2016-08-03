@@ -99,12 +99,13 @@ Material.ApplicationWindow{
         "qrc:/icons/newspaper.png"
     ]
     // Level Three News
-    property var levelThree: [ "2016 Season" , "2016 Weekly", "2017 Season", "2015 Final" ]
+    property var levelThree: [ "ROW 2016", "2016 Season" , "2016 Weekly", "2017 Season", "2015 Final" ]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
 
     property var levelThreeIcons: [
+        "qrc:/icons/newspaper.png" ,
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/newspaper.png",

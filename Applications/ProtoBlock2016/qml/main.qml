@@ -12,7 +12,7 @@ import Material 1.0 as Material
 
 Quick.Window {
     id: realRoot
-    title: "Protoblock 2016 xxxxxx"
+    title: "Protoblock 2016"
 //    x: ( ProtoScreen.desktopWidth - ProtoScreen.availableWidth)
 //    y: ( ProtoScreen.desktopHeight - ProtoScreen.availableHeight)
 //    width: ProtoScreen.availableWidth
@@ -32,7 +32,7 @@ Quick.Window {
     property string currentAwayTeam
     property string helperTxt
     property string helperHeader: "Help"
-
+    property bool reloadrowquote: true
     property string msgString
 
     property string version: "0.1" //TODO

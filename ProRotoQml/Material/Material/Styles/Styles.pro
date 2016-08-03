@@ -27,7 +27,8 @@ DISTFILES = qmldir \
     SwitchStyle.qml \
     TextFieldStyle.qml \
     ToolBarStyle.qml \
-    ToolButtonStyle.qml
+    ToolButtonStyle.qml \
+    ComboBoxStyle.qml
 
 
 

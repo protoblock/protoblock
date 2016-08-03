@@ -75,7 +75,7 @@ public:
 
     /*!
      * \brief errorString
-     * Font NON-Socket releated errors
+     * Font NON -Socket releated errors
      */
     QString errorString()const;
 

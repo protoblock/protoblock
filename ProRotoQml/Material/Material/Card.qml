@@ -10,6 +10,7 @@
 
 import QtQuick 2.4
 import ProRotoQml.Utils 1.0
+import ProRotoQml.Theme 1.0
 
 /*!
    \qmltype Card
@@ -19,13 +20,13 @@ import ProRotoQml.Utils 1.0
    to more detailed information.
  */
 View {
-    width: 300 * Units.dp
-    height: 250 * Units.dp
+    width: ProtoScreen.guToPx(37.5)
+    height: ProtoScreen.guToPx(31.25)
     elevation: flat ? 0 : 1
 
     property bool flat: false
 
     border.color: flat ? Qt.rgba(0,0,0,0.2) : "transparent"
-    radius: fullWidth || fullHeight ? 0 : 2 * Units.dp
+    radius: fullWidth || fullHeight ? 0 : ProtoScreen.guToPx(.25)
 
 }
