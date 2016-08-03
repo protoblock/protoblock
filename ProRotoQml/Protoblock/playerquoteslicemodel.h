@@ -57,7 +57,7 @@ public:
 class PlayerQuoteSliceModel : public QQmlObjectListModel<PlayerQuoteSliceModelItem>{};
 
 Q_DECLARE_METATYPE(PlayerQuoteSliceModel*)
-
+Q_DECLARE_METATYPE(PlayerQuoteSliceModelItem*)
 
 //https://github.com/mkawserm/ModelsTest/blob/master/main.cpp
 

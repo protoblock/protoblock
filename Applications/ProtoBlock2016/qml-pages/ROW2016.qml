@@ -50,7 +50,7 @@ Item {
                 anchrosType: "center"
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                bannerText: "Acive Markets - Rest of the Way 2016"
+                bannerText: "Active Markets - Rest of the Way 2016"
                 backgroundColor: Theme.alpha(Colors.white, 1.5)
                 helpShown: true
                 helperHeader: "2016 Rest of the Way"
@@ -197,6 +197,25 @@ Item {
                             width: ProtoScreen.guToPx(6)
                             height: width
                         }
+                        onClicked: {
+//                            MiddleMan.set_pPlayerQuoteSliceModelItem(playersListView.model[playersListView.currentIndex]);
+                            MiddleMan.startDepth(model.playerid)
+//                            depthload.source = "qrc:/DepthTrader.qml"
+                            depthload.source = "qrc:/Projections.qml"
+
+//                            var dataViewer = Qt.createComponent("qrc:/DepthTrader.qml").
+//                                createObject(realRoot, {inplay: playersListView.model[playersListView.currentIndex]});
+//                              dataViewer.show()
+                        }
+                        Loader{
+                            id: depthload
+//                            Binding {
+//                              target: depthload.item
+//                              property: "inplay"
+//                              value:  model
+//                              when: depthload.status === Loader.Ready
+//                            }
+                       }
 
                     }
                 }

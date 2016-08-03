@@ -55,6 +55,7 @@ class Mediator : public QObject
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pOpenOrdersModel)
+    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 
 //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
 
@@ -230,7 +231,7 @@ private slots:
     void handleSocketError(QAbstractSocket::SocketError err);
 //    void handleSocketState(QAbstractSocket::SocketState sta);
     void handleSocketState(QAbstractSocket::SocketState sta);
-
+    void OnpPlayerQuoteSliceModelItemChanged (PlayerQuoteSliceModelItem * name); \
 private:
     QWebSocket m_webSocket, m_txsocket;
     std::string lastPk2name;
