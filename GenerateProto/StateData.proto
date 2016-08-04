@@ -586,6 +586,7 @@ message GetDepthRep {
 
     optional string pid = 10;
     repeated DepthItem depthitems = 20;
+    optional ROWMarket rowmarket = 30;
 }
 
 message AllOdersSymbol {

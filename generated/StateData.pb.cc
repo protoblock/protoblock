@@ -1013,9 +1013,10 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetDepthReq));
   GetDepthRep_descriptor_ = file->message_type(45);
-  static const int GetDepthRep_offsets_[2] = {
+  static const int GetDepthRep_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetDepthRep, pid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetDepthRep, depthitems_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetDepthRep, rowmarket_),
   };
   GetDepthRep_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1466,25 +1467,26 @@ void protobuf_AddDesc_StateData_2eproto() {
     ">\n\003rep\022\023.fantasybit.WSReply\030\330\004 \001(\0132\033.fan"
     "tasybit.GetROWMarketRep\"T\n\013GetDepthReq\022\013"
     "\n\003pid\030\n \001(\t28\n\003req\022\021.fantasybit.WsReq\030\274\005"
-    " \001(\0132\027.fantasybit.GetDepthReq\"\201\001\n\013GetDep"
+    " \001(\0132\027.fantasybit.GetDepthReq\"\253\001\n\013GetDep"
     "thRep\022\013\n\003pid\030\n \001(\t\022)\n\ndepthitems\030\024 \003(\0132\025"
-    ".fantasybit.DepthItem2:\n\003rep\022\023.fantasybi"
-    "t.WSReply\030\274\005 \001(\0132\027.fantasybit.GetDepthRe"
-    "p\"C\n\016AllOdersSymbol\022\016\n\006symbol\030\n \001(\t\022!\n\006o"
-    "rders\030\024 \003(\0132\021.fantasybit.Order\"M\n\rAllOde"
-    "rsFname\022\r\n\005fname\030\n \001(\t\022-\n\tpidorders\030\024 \003("
-    "\0132\032.fantasybit.AllOdersSymbol\"\236\001\n\014GetOrd"
-    "ersRep\022%\n\003req\030\n \001(\0132\030.fantasybit.GetOrde"
-    "rsReq\022*\n\007oorders\030\024 \001(\0132\031.fantasybit.AllO"
-    "dersFname2;\n\003rep\022\023.fantasybit.WSReply\030\240\006"
-    " \001(\0132\030.fantasybit.GetOrdersRep\"h\n\014GetOrd"
-    "ersReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t29\n"
-    "\003req\022\021.fantasybit.WsReq\030\240\006 \001(\0132\030.fantasy"
-    "bit.GetOrdersReq*\244\001\n\005CType\022\r\n\tCHECKNAME\020"
-    "\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS\020"
-    "\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n\010"
-    "GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITION"
-    "S\020\t\022\022\n\016SUBSCRIBEFNAME\020\n", 6423);
+    ".fantasybit.DepthItem\022(\n\trowmarket\030\036 \001(\013"
+    "2\025.fantasybit.ROWMarket2:\n\003rep\022\023.fantasy"
+    "bit.WSReply\030\274\005 \001(\0132\027.fantasybit.GetDepth"
+    "Rep\"C\n\016AllOdersSymbol\022\016\n\006symbol\030\n \001(\t\022!\n"
+    "\006orders\030\024 \003(\0132\021.fantasybit.Order\"M\n\rAllO"
+    "dersFname\022\r\n\005fname\030\n \001(\t\022-\n\tpidorders\030\024 "
+    "\003(\0132\032.fantasybit.AllOdersSymbol\"\236\001\n\014GetO"
+    "rdersRep\022%\n\003req\030\n \001(\0132\030.fantasybit.GetOr"
+    "dersReq\022*\n\007oorders\030\024 \001(\0132\031.fantasybit.Al"
+    "lOdersFname2;\n\003rep\022\023.fantasybit.WSReply\030"
+    "\240\006 \001(\0132\030.fantasybit.GetOrdersRep\"h\n\014GetO"
+    "rdersReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t2"
+    "9\n\003req\022\021.fantasybit.WsReq\030\240\006 \001(\0132\030.fanta"
+    "sybit.GetOrdersReq*\244\001\n\005CType\022\r\n\tCHECKNAM"
+    "E\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATU"
+    "S\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014"
+    "\n\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITI"
+    "ONS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n", 6465);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -18877,6 +18879,7 @@ void GetDepthReq::Swap(GetDepthReq* other) {
 #ifndef _MSC_VER
 const int GetDepthRep::kPidFieldNumber;
 const int GetDepthRep::kDepthitemsFieldNumber;
+const int GetDepthRep::kRowmarketFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -18891,6 +18894,7 @@ GetDepthRep::GetDepthRep()
 }
 
 void GetDepthRep::InitAsDefaultInstance() {
+  rowmarket_ = const_cast< ::fantasybit::ROWMarket*>(&::fantasybit::ROWMarket::default_instance());
 }
 
 GetDepthRep::GetDepthRep(const GetDepthRep& from)
@@ -18902,6 +18906,7 @@ GetDepthRep::GetDepthRep(const GetDepthRep& from)
 void GetDepthRep::SharedCtor() {
   _cached_size_ = 0;
   pid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  rowmarket_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -18914,6 +18919,7 @@ void GetDepthRep::SharedDtor() {
     delete pid_;
   }
   if (this != default_instance_) {
+    delete rowmarket_;
   }
 }
 
@@ -18944,6 +18950,9 @@ void GetDepthRep::Clear() {
       if (pid_ != &::google::protobuf::internal::kEmptyString) {
         pid_->clear();
       }
+    }
+    if (has_rowmarket()) {
+      if (rowmarket_ != NULL) rowmarket_->::fantasybit::ROWMarket::Clear();
     }
   }
   depthitems_.Clear();
@@ -18984,6 +18993,20 @@ bool GetDepthRep::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(162)) goto parse_depthitems;
+        if (input->ExpectTag(242)) goto parse_rowmarket;
+        break;
+      }
+
+      // optional .fantasybit.ROWMarket rowmarket = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_rowmarket:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_rowmarket()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -19021,6 +19044,12 @@ void GetDepthRep::SerializeWithCachedSizes(
       20, this->depthitems(i), output);
   }
 
+  // optional .fantasybit.ROWMarket rowmarket = 30;
+  if (has_rowmarket()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      30, this->rowmarket(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -19046,6 +19075,13 @@ void GetDepthRep::SerializeWithCachedSizes(
         20, this->depthitems(i), target);
   }
 
+  // optional .fantasybit.ROWMarket rowmarket = 30;
+  if (has_rowmarket()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        30, this->rowmarket(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -19062,6 +19098,13 @@ int GetDepthRep::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->pid());
+    }
+
+    // optional .fantasybit.ROWMarket rowmarket = 30;
+    if (has_rowmarket()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->rowmarket());
     }
 
   }
@@ -19103,6 +19146,9 @@ void GetDepthRep::MergeFrom(const GetDepthRep& from) {
     if (from.has_pid()) {
       set_pid(from.pid());
     }
+    if (from.has_rowmarket()) {
+      mutable_rowmarket()->::fantasybit::ROWMarket::MergeFrom(from.rowmarket());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -19128,6 +19174,7 @@ void GetDepthRep::Swap(GetDepthRep* other) {
   if (other != this) {
     std::swap(pid_, other->pid_);
     depthitems_.Swap(&other->depthitems_);
+    std::swap(rowmarket_, other->rowmarket_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

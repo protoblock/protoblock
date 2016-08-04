@@ -482,15 +482,18 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
 #ifdef PROD_SEASON_TRADING
         case GETDEPTH: {
             rep.set_ctype(GETDEPTH);
-            GetDepthRep *depths = getDepthRep(req.GetExtension(GetDepthReq::req).pid());
+            auto &pid = req.GetExtension(GetDepthReq::req).pid();
+            GetDepthRep *depths = getDepthRep(pid);
 //            if ( depths == nullptr ) {
 //                qDebug() << "depths == nullptr";
 //                return;
 //            }
+            depths->set_allocated_rowmarket(getRowmarket(pid));
             rep.SetAllocatedExtension(GetDepthRep::rep,depths);
             rep.SerializeToString(&mRepstr);
             qDebug() << rep.DebugString().data();
             rep.ReleaseExtension(GetDepthRep::rep);
+            depths->release_rowmarket();
             break;
         }
         case GETROWMARKET:

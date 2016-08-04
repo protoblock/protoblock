@@ -6205,6 +6205,15 @@ class GetDepthRep : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >*
       mutable_depthitems();
 
+  // optional .fantasybit.ROWMarket rowmarket = 30;
+  inline bool has_rowmarket() const;
+  inline void clear_rowmarket();
+  static const int kRowmarketFieldNumber = 30;
+  inline const ::fantasybit::ROWMarket& rowmarket() const;
+  inline ::fantasybit::ROWMarket* mutable_rowmarket();
+  inline ::fantasybit::ROWMarket* release_rowmarket();
+  inline void set_allocated_rowmarket(::fantasybit::ROWMarket* rowmarket);
+
   static const int kRepFieldNumber = 700;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetDepthRep >, 11, false >
@@ -6213,14 +6222,17 @@ class GetDepthRep : public ::google::protobuf::Message {
  private:
   inline void set_has_pid();
   inline void clear_has_pid();
+  inline void set_has_rowmarket();
+  inline void clear_has_rowmarket();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* pid_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem > depthitems_;
+  ::fantasybit::ROWMarket* rowmarket_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -17955,6 +17967,44 @@ GetDepthRep::depthitems() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem >*
 GetDepthRep::mutable_depthitems() {
   return &depthitems_;
+}
+
+// optional .fantasybit.ROWMarket rowmarket = 30;
+inline bool GetDepthRep::has_rowmarket() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void GetDepthRep::set_has_rowmarket() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void GetDepthRep::clear_has_rowmarket() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void GetDepthRep::clear_rowmarket() {
+  if (rowmarket_ != NULL) rowmarket_->::fantasybit::ROWMarket::Clear();
+  clear_has_rowmarket();
+}
+inline const ::fantasybit::ROWMarket& GetDepthRep::rowmarket() const {
+  return rowmarket_ != NULL ? *rowmarket_ : *default_instance_->rowmarket_;
+}
+inline ::fantasybit::ROWMarket* GetDepthRep::mutable_rowmarket() {
+  set_has_rowmarket();
+  if (rowmarket_ == NULL) rowmarket_ = new ::fantasybit::ROWMarket;
+  return rowmarket_;
+}
+inline ::fantasybit::ROWMarket* GetDepthRep::release_rowmarket() {
+  clear_has_rowmarket();
+  ::fantasybit::ROWMarket* temp = rowmarket_;
+  rowmarket_ = NULL;
+  return temp;
+}
+inline void GetDepthRep::set_allocated_rowmarket(::fantasybit::ROWMarket* rowmarket) {
+  delete rowmarket_;
+  rowmarket_ = rowmarket;
+  if (rowmarket) {
+    set_has_rowmarket();
+  } else {
+    clear_has_rowmarket();
+  }
 }
 
 // -------------------------------------------------------------------
