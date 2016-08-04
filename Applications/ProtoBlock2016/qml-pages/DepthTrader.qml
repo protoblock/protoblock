@@ -31,7 +31,7 @@ Item {
         MiddleMan.stopDepth(symbol)
     }
 
-    Scrollbar{flickableItem: fl}
+    Scrollbar{flickableItem: f2}
     Flickable{
         id: fl
         width: parent.width
@@ -167,60 +167,72 @@ Item {
                 height: ProtoScreen.guToPx(6)
             }
 ////                object:
+
+        Flickable{
+            property int depthsize: 5
+            property int dihight: ProtoScreen.guToPx(4)
+            id: f2
+            width: depthvm.width
+            height:    depthvm.height
+            contentHeight: dihight * Math.max(depthsize,depthvm.count);
+            contentWidth: parent.width
+            interactive: true
+            boundsBehavior: Flickable.StopAtBounds
+
             ListView {
-                    id: depthvm
+                id: depthvm
 //                    anchors.top: bandepth.bottom
-                    anchors.fill: parent
-                    width: parent.width
-                    height: parent.height
+                anchors.fill: parent
+                width: parent.width
+                height: ProtoScreen.guToPx(4) * depthsize;
 //                    height: parent.height
-                    clip: true
-                    model:  MiddleMan.pDepthMarketModel
-                    header: RowLayout {
-                        width: parent.width
-                        height: ProtoScreen.guToPx(2)
-                        spacing: 0
-                        Rectangle{width: 2; height: 1;color: "transparent"}
-                        Repeater{
-                            model: ["Bid Size","Bid","Ask","Ask Size"]
-                            Card{
-                                Layout.fillHeight: true
-                                Layout.fillWidth: true
+                clip: true
+                model:  MiddleMan.pDepthMarketModel
+                header: RowLayout {
+                    width: parent.width
+                    height: ProtoScreen.guToPx(2)
+                    spacing: 0
+                    Rectangle{width: 2; height: 1;color: "transparent"}
+                    Repeater{
+                        model: ["Bid Size","Bid","Ask","Ask Size"]
+                        Card{
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
 //                                Layout.preferredWidth: (parent.width / 4) - 2
-                                border.color:"black"
-                                backgroundColor: Colors.blue
-                                Label{
+                            border.color:"black"
+                            backgroundColor: Colors.blue
+                            Label{
 //                                    anchors.centerIn: parent
-                                    text: modelData
-                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                                    color: "white"
-                                }
+                                text: modelData
+                                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                color: "white"
                             }
                         }
                     }
-                    remove: Transition {
-                        ParallelAnimation{
-                            NumberAnimation { property: "opacity";from:.1; to: 9; duration: 400 }
-                        }
+                }
+                remove: Transition {
+                    ParallelAnimation{
+                        NumberAnimation { property: "opacity";from:.1; to: 9; duration: 400 }
                     }
-                    add: Transition {
-                        ParallelAnimation{
-                            NumberAnimation { property: "opacity";from:.9; to: 1; duration: 400 }
-                            //                                    NumberAnimation{property: "scale";from:.98; to:1; duration:200; easing.type: Easing.OutBack}
-                        }
+                }
+                add: Transition {
+                    ParallelAnimation{
+                        NumberAnimation { property: "opacity";from:.9; to: 1; duration: 400 }
+                        //                                    NumberAnimation{property: "scale";from:.98; to:1; duration:200; easing.type: Easing.OutBack}
                     }
-                    delegate: MarketDepthCard{
-                        height: ProtoScreen.guToPx(4)
-                        elevation: 2
-                        width: parent.width
-                        buySize:  model.bidsize
-                        buy: model.bid
-                        sellSize: model.asksize
-                        sell: model.ask
-                    }
+                }
+                delegate: MarketDepthCard {
+                    height: f2.dihight
+                    elevation: 2
+                    width: parent.width
+                    buySize:  model.bidsize
+                    buy: model.bid
+                    sellSize: model.asksize
+                    sell: model.ask
+                }
 //                }// listView
             }
-
+        }
 //            Card {
 //                id: buySell
 //                width: parent.width /1.7
