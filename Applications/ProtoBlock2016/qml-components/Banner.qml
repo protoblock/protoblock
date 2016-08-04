@@ -53,6 +53,16 @@ Item {
                 value: Text.AlignBottom
             }
 
+            Binding on verticalAlignment {
+                when: anchrosType === "center"
+                value: Text.AlignVCenter
+            }
+
+            Binding on horizontalAlignment {
+                when: anchrosType === "center"
+                value: Text.AlignHCenter
+            }
+
             anchors{
                 left: parent.left
                 leftMargin:  ProtoScreen.guToPx(1.25)
@@ -64,7 +74,7 @@ Item {
     Icon {
         id: helperArea
         visible: helpShown
-        width: ProtoScreen.guToPx(5)
+        width: ProtoScreen.guToPx(4)
         height: width
         anchors.right: parent.right
         anchors.rightMargin: ProtoScreen.guToPx(1)

@@ -99,7 +99,7 @@ Item {
 
 //                object:
                ListView{
-                    anchors.margins: 1
+                   anchors.margins: 1
                    width: cccc.width
                    height: cccc.height - ProtoScreen.guToPx(6)
                     id: playersListView
@@ -164,7 +164,7 @@ Item {
                             height: ProtoScreen.guToPx(8)
                             Label{
                                 id: las
-                                text: "Last: " + model.lastprice
+                                text: "Last: " + model.lastprice.toString() + arrow.text
 
                                 color: model.updown < 0 ? Colors.red :
                                          model.updown > 0 ? Colors.green : "black"
@@ -176,8 +176,8 @@ Item {
                             }
                             Text {
                                 id: arrow
-                                text: (model.updown < 0) ? " ↓" : " ↑";
-                                color: las.color
+                                text: (model.updown < 0) ? " ↓" : (model.updown > 0) ? " ↑" : " ";
+                                color: "transparent"
                             }
 
                             Label{
@@ -192,7 +192,7 @@ Item {
                                 Layout.fillHeight: true
                                 hasColor:true
                                 color: { model.change < 0 ? Colors.red :
-                                         model.change > 0 ? Colors.green : "transparent"
+                                         model.change > 0 ? Colors.green : Colors.black
                                 }
                                 source: {
                                     if (model.change < 0 ){

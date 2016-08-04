@@ -13,6 +13,10 @@ Item {
     property string contract
     property string symbol
     property variant inplay: MiddleMan.pDepthMarketModel.pPlayerQuoteSliceModelItem
+
+    property int depthsize: dihight
+    property double dihight: ProtoScreen.guToPx(4)
+
     Component.onCompleted: {
          pageHelper.title = "Trading " + symbol
 
@@ -28,19 +32,19 @@ Item {
         MiddleMan.stopDepth(symbol)
     }
 
-    Scrollbar{flickableItem: f2}
-    Flickable{
-        id: fl
-        width: parent.width
-        height:    parent.height
-        contentHeight: parent.height * 2
-        contentWidth: parent.width
-        interactive: true
-        boundsBehavior: Flickable.StopAtBounds
+//    Scrollbar{flickableItem: f1}
+//    Flickable{
+//        id: fl
+//        width: parent.width
+//        height:    parent.height
+//        contentHeight: parent.height * 2
+//        contentWidth: parent.width
+//        interactive: true
+//        boundsBehavior: Flickable.StopAtBounds
 
         Card{
             id: topcard
-            width: parent.width / 1.07
+            width: parent.width * .90
             height: parent.height
             elevation: 0
 //            anchors.centerIn: parent
@@ -48,6 +52,7 @@ Item {
                 top: parent.top
                 topMargin:ProtoScreen.guToPx(.5)
                 horizontalCenter: parent.horizontalCenter
+                margins: 1
             }
 
             // spacer
@@ -72,9 +77,9 @@ Item {
                            "with all the know risks, how much are you willing to \"pay\" for the contract, and for how much would you be willing to " +
                            " write, or sell, the contract, knowing that you keep all the points in cae of injury, but have to pay up in case of a breakout"
 
-                width: fl.width / 1.07
+                width: parent.width / 1.10
 //                width: parent.width
-                height: ProtoScreen.guToPx(6)
+//                height: ProtoScreen.guToPx(6)
                 anchors.bottomMargin:ProtoScreen.guToPx(1)
                 anchors.topMargin:ProtoScreen.guToPx(.5)
                 anchors{
@@ -84,94 +89,139 @@ Item {
                 }
             }
 
-//                object:
-            ListItems.Subtitled{
+    //                object:
 
-                id: listquote
-                clip: true
-                elevation:  2
-//                anchors: parent.width
-                backgroundColor:  themeroot.theme.accentColor
-                anchors.top: cwc.bottom
-                width: parent.width
-                text:  "High: " + inplay.hi
-                        + " | Low: "+inplay.lo
-                        + " | Volume: "+ inplay.volume
-//                        + " | OI: " + inplay.asksize
-                subText:{
-                    "Bid Size: " + inplay.bidsize
-                            + " | Bid: "+inplay.bid
-                            + " | Ask: "+ inplay.ask
-                            + " | Ask Size: " + inplay.asksize
-                }
-                secondaryItem: RowLayout {
-                width: ProtoScreen.guToPx(32)
+
+            Rectangle {
+                id: boundquote
+                width: parent.width / 1.10
                 height: ProtoScreen.guToPx(8)
-                Label{
-                    id: las
-                    text: "Last: " + inplay.lastprice + "" + arrow.text
+                anchors{
+                    top: cwc.bottom
 
-                    color: inplay.updown < 0 ? Colors.red :
-                             inplay.updown > 0 ? Colors.green : "black"
-
-
-                    Layout.fillHeight: true
-                    Layout.fillWidth:  true
-                    verticalAlignment: Text.AlignVCenter
-                }
-                Text {
-                    id: arrow
-                    text: (inplay.updown < 0) ? " ↓" : " ↑";
-                    color: "transparent"
+                    horizontalCenter: cwc.horizontalCenter
                 }
 
-                Label{
-                        text: inplay.change
-                    Layout.fillHeight: true
-                    Layout.fillWidth:  false
-                    verticalAlignment: Text.AlignVCenter
-                }
 
-                Icon{
-                    Layout.fillWidth:  false
-                    Layout.fillHeight: true
-                    hasColor:true
-                    color: { inplay.change < 0 ? Colors.red :
-                             inplay.change > 0 ? Colors.green : "transparent"
+                ListItems.Subtitled{
+                    anchors.fill: parent
+                    id: listquote
+                    clip: false
+                    elevation:  2
+    //                anchors.horizontalCenter: cwc.horizontalCenter
+    //                anchors.horizontalCenter: topcard.horizontalCenter
+                    backgroundColor:  themeroot.theme.accentColor
+                    width: parent.width
+                    subText: {   "Vol: "+ inplay.volume
+                            + " | Hi: " + inplay.hi
+                            + " | Lo: "+inplay.lo
+
+    //                        + " | OI: " + inplay.asksize
                     }
-                    source: {
-                        if (inplay.change < 0 ){
-                            "qrc:/icons/ic_trending_down.png"
+
+                    text: {
+//                        "Bid Size: " + inplay.bidsize
+                                "Bid: "+ inplay.bidsize + " @ " +inplay.bid
+                                + " | Ask: "+ inplay.asksize + " @ " + inplay.ask
+//                                + " | Last: "+ inplay.lastprice + " " + arrow.text
+
+//                                + " | Ask Size: " + inplay.asksize
+
+                    }
+                    secondaryItem: RowLayout {
+//                        width: ProtoScreen.guToPx(32)
+                        layoutDirection: "LeftToRight"
+                        height: ProtoScreen.guToPx(8)
+
+
+                        Label{
+                            id: las
+                            text: "Last: " + inplay.lastprice.toString()
+
+                            Layout.fillHeight: true
+                            Layout.fillWidth:  false
+                            verticalAlignment: Text.AlignVCenter
+                            color: "black"
+//                            horizontalAlignment: Text.Right
+//                            anchors.left: parent.left
                         }
-                        else
-                        {
-                            if (inplay.change === 0 )
-                            {
-                                "qrc:/icons/ic_trending_flat.png"
+
+                        Text {
+                            id: arrow
+                            text: (inplay.updown < 0) ? "↓ " : (inplay.updown > 0) ? "↑ " : " ";
+//                            color: "transparent"
+                            color: inplay.updown < 0 ? Colors.red :
+                                     inplay.updown > 0 ? Colors.green : "transparent"
+                            verticalAlignment: Text.AlignVCenter
+//                            horizontalAlignment: Text.Right
+
+                            anchors.left: las.right;
+                        }
+
+
+                        Label{
+                            text: "Change: "
+                            Layout.fillHeight: true
+                            Layout.fillWidth:  false
+                            verticalAlignment: Text.AlignVCenter
+                            anchors.right: change.left
+                            horizontalAlignment: Text.Right
+                        }
+
+                        Label{
+                            id: change
+                            text: ((inplay.change > 0) ? "+" : "" ) + inplay.change.toString() + " "
+                            Layout.fillHeight: true
+                            Layout.fillWidth:  false
+                            verticalAlignment: Text.AlignVCenter
+//                            horizontalAlignment: Text.Right
+                            color: icon.color
+                        }
+
+                        Icon{
+                            id: icon
+//                            anchors.left: change.right
+                            Layout.fillWidth:  false
+                            Layout.fillHeight: true
+                            hasColor:true
+                            color: { inplay.change < 0 ? Colors.red :
+                                     inplay.change > 0 ? Colors.green : Colors.black
                             }
-                            else
-                            {
-                                "qrc:/icons/ic_trending_up.png"
+                            source: {
+                                if (inplay.change < 0 ){
+                                    "qrc:/icons/ic_trending_down.png"
+                                }
+                                else
+                                {
+                                    if (inplay.change === 0 )
+                                    {
+                                        "qrc:/icons/ic_trending_flat.png"
+                                    }
+                                    else
+                                    {
+                                        "qrc:/icons/ic_trending_up.png"
+                                    }
+                                }
                             }
                         }
+                    }
+
+                    action: Icon{
+                        hasColor:false
+                        source: "qrc:/"+ inplay.team_id+".PNG"
+                        width: ProtoScreen.guToPx(6)
+                        height: width
                     }
                 }
             }
-            action: Icon{
-                hasColor:false
-                source: "qrc:/"+ inplay.team_id+".PNG"
-                width: ProtoScreen.guToPx(6)
-                height: width
-            }
-        }
 
             Banner {
                 id: bandepth
-                anchors.top: listquote.bottom
-                anchors.horizontalCenter: listquote.horizontalCenter
+                anchors.top: boundquote.bottom
+                anchors.horizontalCenter: boundquote.horizontalCenter
     //                height: parent.height - cwc.height - buySell.heigth
                 text: "Market Depth"
-                    anchrosType: "verticalCenter"
+                anchrosType: "center"
                 helperHeader: "Market Depth Help"
                 helperTxt: " "
                 helpShown: true
@@ -179,83 +229,112 @@ Item {
                 backgroundColor: themeroot.theme.primaryColor
                 anchors.bottomMargin:ProtoScreen.guToPx(.5)
                 anchors.topMargin:ProtoScreen.guToPx(.5)
-                width: parent.width / 1.10
-                anchors.right: parent.right
+                width: parent.width * .75
+                fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                bold: true
+//                anchors.right: parent.right
 
             }
 
 
-        Flickable{
-            property int depthsize: 5
-            property int dihight: ProtoScreen.guToPx(4)
-            id: f2
-            width: depthvm.width
-            height:    depthvm.height
-            contentHeight: dihight * Math.max(depthsize,depthvm.count);
-            contentWidth: parent.width
-            interactive: true
-            boundsBehavior: Flickable.StopAtBounds
+//            Scrollbar{flickableItem: f1}
 
-              ListView {
-                id: depthvm
-                    anchors.top: bandepth.bottom
+//            Flickable{
+//                anchors.top: bandepth.bottom
+
+//                property int depthsize: dihight
+//                property int dihight: ProtoScreen.guToPx(4)
+//                id: f2
+//                width: depthvm.width
+//                height:    (parent.height - cwc.height - listquote.height - buySell.height )
+////                dihight * Math.max(depthsize,depthvm.count);
+//                contentHeight: dihight * depthvm.count;
+//                contentWidth: parent.width
+//                interactive: true
+//                boundsBehavior: Flickable.StopAtBounds
+
+            Rectangle {
+                id: boundingRect
+                anchors.top: bandepth.bottom
+                height:    (parent.height - cwc.height - listquote.height - buySell.height )
+                anchors.margins: 1
+                anchors.horizontalCenter: bandepth.horizontalCenter
+                width: bandepth.width
+
+                ListView {
+                    anchors.fill: parent
+
+
+    //                    id: f2
+    //                    width: depthvm.width
+                    height: parent.height
+    //                    (parent.height - cwc.height - listquote.height - buySell.height )
+    //                dihight * Math.max(depthsize,depthvm.count);
+    //                    contentHeight: dihight * count;
+    //                    contentWidth: bandepth.width
+    //                    interactive: true
+    //                    boundsBehavior: Flickable.StopAtBounds
+
+
+                    id: depthvm
+    //                    anchors.top: bandepth.bottom
                     anchors.margins: 1
-                    anchors.horizontalCenter: bandepth.horizontalCenter
-                height: ProtoScreen.guToPx(4) * depthsize;
-//                    anchors.fill: parent
-                    width: bandepth.width
-                    height: parent.height - bandepth.height - cwc.height - listquote.height
-//                    height: parent.height
-                clip: true
-                model:  MiddleMan.pDepthMarketModel
-                header: RowLayout {
+                    anchors.horizontalCenter: boundingRect.horizontalCenter
+    //                    anchors.fill: parent
                     width: parent.width
-                        height: ProtoScreen.guToPx(4)
+    //                height: parent.height - bandepth.height - cwc.height - listquote.height
+    //                    height: parent.height
+                    clip: true
+                    model:  MiddleMan.pDepthMarketModel
+                    headerPositioning: ListView.OverlayHeader
+                    header: RowLayout {
+                        width: parent.width
+                        height: dihight * .75
                         spacing: 1
-                    Rectangle{width: 2; height: 1;color: "transparent"}
-                    Repeater{
-                        model: ["Bid Size","Bid","Ask","Ask Size"]
-                        Card{
-                            Layout.fillHeight: true
+                        Rectangle{width: 2; height: 1;color: "transparent"}
+                        Repeater{
+                            model: ["Bid Size","Bid","Ask","Ask Size"]
+                            Card{
+                                Layout.fillHeight: true
                                 Layout.fillWidth: false
-                                Layout.preferredWidth: (parent.width / 4) - 2;                                border.color:"black"
-                            border.color:"black"
-                            backgroundColor: Colors.blue
-                            Label{
+                                Layout.preferredWidth: (parent.width / 4) - 2;
+                                border.color:"black"
+                                backgroundColor: Colors.blue
+                                Label{
                                     anchors.centerIn: parent
-                                text: modelData
-                                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                                color: "white"
+                                    text: modelData
+                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                    color: "white"
+                                }
                             }
                         }
                     }
-                }
-                remove: Transition {
-                    ParallelAnimation{
-                        NumberAnimation { property: "opacity";from:.1; to: 9; duration: 400 }
+                    remove: Transition {
+                        ParallelAnimation{
+                            NumberAnimation { property: "opacity";from:.1; to: 9; duration: 400 }
+                        }
                     }
-                }
-                add: Transition {
-                    ParallelAnimation{
-                        NumberAnimation { property: "opacity";from:.9; to: 1; duration: 400 }
-                        //                                    NumberAnimation{property: "scale";from:.98; to:1; duration:200; easing.type: Easing.OutBack}
+                    add: Transition {
+                        ParallelAnimation{
+                            NumberAnimation { property: "opacity";from:.9; to: 1; duration: 400 }
+                            //                                    NumberAnimation{property: "scale";from:.98; to:1; duration:200; easing.type: Easing.OutBack}
+                        }
                     }
-                }
-                delegate: MarketDepthCard {
-                    height: f2.dihight
-                    elevation: 2
-                    width: parent.width
-                    buySize:  model.bidsize
-                    buy: model.bid
-                    sellSize: model.asksize
-                    sell: model.ask
+                    delegate: MarketDepthCard {
+                        height: dihight
+                        elevation: 2
+                        width: parent.width
+                        buySize:  model.bidsize
+                        buy: model.bid
+                        sellSize: model.asksize
+                        sell: model.ask
+                    }
                 }
             }
-        }
             Card {
             id: buySell
-            width: depthvm.width
-            anchors.top: depthvm.bottom
+            width: boundingRect.width
+            anchors.top: boundingRect.bottom
 //            anchors.bottom: parent.bottom
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -282,7 +361,6 @@ Item {
                 }
 
             }
-        }
         }
     }
 }
