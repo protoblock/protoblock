@@ -52,11 +52,6 @@ Item {
                 when: anchrosType === "bottom"
                 value: Text.AlignBottom
             }
-            Binding on verticalAlignment {
-                when: anchrosType === "center"
-                value: Text.AlignHCenter | Text.AlignHCenter
-            }
-
 
             anchors{
                 left: parent.left
