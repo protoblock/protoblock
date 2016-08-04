@@ -8,6 +8,8 @@
 #include "../QmlSuperMacros/QQmlHelpersCommon.h"
 #include "StateData.pb.h"
 #include <QQmlHelpersCommon.h>
+#include "QQmlPtrPropertyHelpers.h"
+#include "playerquoteslicemodel.h"
 
 using namespace fantasybit;
 
@@ -32,11 +34,20 @@ public:
 class DepthMarketModel : public QQmlObjectListModel<DepthMarketModelItem> {
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY(QString, playerid)
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 
 public:
     void updateFullDepth(const GetDepthRep &depthrep) {
         setplayerid(depthrep.pid().data());
-
+        if ( depthrep.has_rowmarket() ) {
+            if ( m_pPlayerQuoteSliceModelItem == nullptr)
+                update_pPlayerQuoteSliceModelItem(new PlayerQuoteSliceModelItem(depthrep.rowmarket()) );
+            else {
+                m_pPlayerQuoteSliceModelItem->setProperties(depthrep.rowmarket());
+                emit pPlayerQuoteSliceModelItemChanged(m_pPlayerQuoteSliceModelItem);
+            }
+//            setplayerQuoteSliceModelItem(PlayerQuoteSliceModelItem(depthrep.rowmarket()));
+        }
         clear();
 
         for ( auto &di : depthrep.depthitems())

@@ -15,7 +15,7 @@ Item {
 
     property string contract
     property string symbol
-    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
+    property variant inplay // realRoot.holdvar//MiddleMan.pPlayerQuoteSliceModelItem
     Component.onCompleted: {
          pageHelper.title = "Trading " + symbol
 
@@ -56,116 +56,116 @@ Item {
 //            // spacer
 //            Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
 
-//            Banner {
-//                id: cwc
-//                Layout.fillWidth: true;
-////                anchrosType: "center"
-//                anchors.horizontalCenter: parent.horizontalCenter
-//                anchors.top: parent.top
-//                text: "2016 Season - Settle 12/27"
-//                backgroundColor: Theme.alpha(Colors.white, 1.5)
-//                helpShown: true
-//                helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
-//                helperTxt: "Contract expires after week 15 at the total fantasy points scored by " + inplay.fullname +
-//                           "the \"Writer\" (seller) must give the \"buyer\" the equivanlat amount of fantsy points scored in fantasy bits." +
-//                           "the game is to try to buy well below the actual settlement number, or alternativly to sell at a price well above the actual final number" +
-//                           "with all the know risks, how much are you willing to \"pay\" for the contract, and for how much would you be willing to " +
-//                           " write, or sell, the contract, knowing that you keep all the points in cae of injury, but have to pay up in case of a breakout"
+            Banner {
+                id: cwc
+                Layout.fillWidth: true;
+//                anchrosType: "center"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                text: "2016 Season - Settle 12/27"
+                backgroundColor: Theme.alpha(Colors.white, 1.5)
+                helpShown: true
+                helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
+                helperTxt: "Contract expires after week 15 at the total fantasy points scored by " + inplay.fullname +
+                           "the \"Writer\" (seller) must give the \"buyer\" the equivanlat amount of fantsy points scored in fantasy bits." +
+                           "the game is to try to buy well below the actual settlement number, or alternativly to sell at a price well above the actual final number" +
+                           "with all the know risks, how much are you willing to \"pay\" for the contract, and for how much would you be willing to " +
+                           " write, or sell, the contract, knowing that you keep all the points in cae of injury, but have to pay up in case of a breakout"
 
-//                width: fl.width / 1.07
-//                height: ProtoScreen.guToPx(6)
-//            }
+                width: fl.width / 1.07
+                height: ProtoScreen.guToPx(6)
+            }
 
 //                object:
-//                ListItems.Subtitled{
-//                    id: listquote
-//                    elevation:  2
-//                    backgroundColor:  themeroot.theme.accentColor
-//                    anchors.top: cwc.bottom
-//                    width: parent.width
-//                    text:  "2016 Season - Settle 12/27"
-//                            + " High: " + inplay.bidsize
-//                            + " | Low: "+inplay.bid
-//                            + " | Volume: "+ inplay.ask
-//                            + " | OI: " + inplay.asksize
-//                    subText:{
-//                        "Bid Size: " + inplay.bidsize
-//                                + " | Bid: "+inplay.bid
-//                                + " | Ask: "+ inplay.ask
-//                                + " | Ask Size: " + inplay.asksize
-//                    }
-//                    secondaryItem: RowLayout {
-//                    width: ProtoScreen.guToPx(32)
-//                    height: ProtoScreen.guToPx(8)
-//                    Label{
-//                        id: las
-//                        text: model.lastprice + arrow.text
+                ListItems.Subtitled{
+                    id: listquote
+                    elevation:  2
+                    backgroundColor:  themeroot.theme.accentColor
+                    anchors.top: cwc.bottom
+                    width: parent.width
+                    text:  "2016 Season - Settle 12/27"
+                            + " High: " + inplay.bidsize
+                            + " | Low: "+inplay.bid
+                            + " | Volume: "+ inplay.ask
+                            + " | OI: " + inplay.asksize
+                    subText:{
+                        "Bid Size: " + inplay.bidsize
+                                + " | Bid: "+inplay.bid
+                                + " | Ask: "+ inplay.ask
+                                + " | Ask Size: " + inplay.asksize
+                    }
+                    secondaryItem: RowLayout {
+                    width: ProtoScreen.guToPx(32)
+                    height: ProtoScreen.guToPx(8)
+                    Label{
+                        id: las
+                        text: inplay.lastprice + arrow.text
 
-//                        color: inplay.updown < 0 ? Colors.red :
-//                                 inplay.updown > 0 ? Colors.green : "black"
+                        color: inplay.updown < 0 ? Colors.red :
+                                 inplay.updown > 0 ? Colors.green : "black"
 
 
-//                        Layout.fillHeight: true
-//                        Layout.fillWidth:  true
-////                        verticalAlignment: Text.AlignVCenter
-//                    }
-//                    Text {
-//                        id: arrow
-//                        text: (inplay.updown < 0) ? " ↓" : " ↑";
-//                        color: "transparent"
-//                    }
+                        Layout.fillHeight: true
+                        Layout.fillWidth:  true
+//                        verticalAlignment: Text.AlignVCenter
+                    }
+                    Text {
+                        id: arrow
+                        text: (inplay.updown < 0) ? " ↓" : " ↑";
+                        color: "transparent"
+                    }
 
-//                    Label{
-//                        text: inplay.change
-//                        Layout.fillHeight: true
-//                        Layout.fillWidth:  false
-////                        verticalAlignment: Text.AlignVCenter
-//                    }
+                    Label{
+                        text: inplay.change
+                        Layout.fillHeight: true
+                        Layout.fillWidth:  false
+//                        verticalAlignment: Text.AlignVCenter
+                    }
 
-//                    Icon{
-//                        Layout.fillWidth:  false
-//                        Layout.fillHeight: true
-//                        hasColor:true
-//                        color: { inplay.change < 0 ? Colors.red :
-//                                 inplay.change > 0 ? Colors.green : "transparent"
-//                        }
-//                        source: {
-//                            if (inplay.change < 0 ){
-//                                "qrc:/icons/ic_trending_down.png"
-//                            }
-//                            else
-//                            {
-//                                if (inplay.change === 0 )
-//                                {
-//                                    "qrc:/icons/ic_trending_flat.png"
-//                                }
-//                                else
-//                                {
-//                                    "qrc:/icons/ic_trending_up.png"
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                action: Icon{
-//                    hasColor:false
-//                    source: "qrc:/"+ model.team_id+".PNG"
-//                    width: ProtoScreen.guToPx(6)
-//                    height: width
-//                }
-//            }
+                    Icon{
+                        Layout.fillWidth:  false
+                        Layout.fillHeight: true
+                        hasColor:true
+                        color: { inplay.change < 0 ? Colors.red :
+                                 inplay.change > 0 ? Colors.green : "transparent"
+                        }
+                        source: {
+                            if (inplay.change < 0 ){
+                                "qrc:/icons/ic_trending_down.png"
+                            }
+                            else
+                            {
+                                if (inplay.change === 0 )
+                                {
+                                    "qrc:/icons/ic_trending_flat.png"
+                                }
+                                else
+                                {
+                                    "qrc:/icons/ic_trending_up.png"
+                                }
+                            }
+                        }
+                    }
+                }
+                action: Icon{
+                    hasColor:false
+                    source: "qrc:/"+ inplay.team_id+".PNG"
+                    width: ProtoScreen.guToPx(6)
+                    height: width
+                }
+            }
 
-//            Banner {
-//                id: bandepth
-//                anchors.top: listquote.bottom
-////                height: parent.height - cwc.height - buySell.heigth
-//                text: "Market Depth"
-////                anchrosType: "center"
-//                helperHeader: "Market Depth Help"
-//                helperTxt: " "
-//                helpShown: true
-//                height: ProtoScreen.guToPx(6)
-//            }
+            Banner {
+                id: bandepth
+                anchors.top: listquote.bottom
+//                height: parent.height - cwc.height - buySell.heigth
+                text: "Market Depth"
+//                anchrosType: "center"
+                helperHeader: "Market Depth Help"
+                helperTxt: " "
+                helpShown: true
+                height: ProtoScreen.guToPx(6)
+            }
 ////                object:
             ListView {
                     id: depthvm

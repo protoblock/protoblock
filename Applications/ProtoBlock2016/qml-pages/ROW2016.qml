@@ -44,18 +44,25 @@ Item {
             // spacer
             Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
 
-            CardWithContent {
-                id: cwc
-                height: parent.height
+            Banner {
+                id: ban1
+//                height: parent.height
                 anchrosType: "center"
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                bannerText: "Active Markets - Rest of the Way 2016"
+                text: "Active Markets - Rest of the Way 2016"
                 backgroundColor: Theme.alpha(Colors.white, 1.5)
                 helpShown: true
                 helperHeader: "2016 Rest of the Way"
                 helperTxt: "List of active markets for Season long trading. This is the 3rd level of the Protoblock Fantasy Football skill test. Click a player to see in-depth market and to trade."
                 width: fl.width / 1.07
+                anchors{
+                    top: parent.top
+                    topMargin:ProtoScreen.guToPx(.5)
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+            }
 //                               width: parent.width
                 /*
 //                bannerObject:
@@ -85,8 +92,8 @@ Item {
 //                    }
 //                }*/
 
-                object:
-                    ListView{
+//                object:
+               ListView{
                     id: playersListView
                     anchors.fill: parent
                     focus:   true
@@ -198,29 +205,82 @@ Item {
                             height: width
                         }
                         onClicked: {
-//                            MiddleMan.set_pPlayerQuoteSliceModelItem(playersListView.model[playersListView.currentIndex]);
-                            MiddleMan.startDepth(model.playerid)
-//                            depthload.source = "qrc:/DepthTrader.qml"
-                            depthload.source = "qrc:/Projections.qml"
+//                            rootLoader.binder = mybinder
 
+//                            MiddleMan.set_pPlayerQuoteSliceModelItem(playersListView.model[playersListView.currentIndex]);
+                            MiddleMan
+                            MiddleMan.startDepth(model.playerid)
+//                                                        realRoot.holdvar = model
+//                            depthload.source = "qrc:/DepthTrader.qml"
+//                            depthload1.source = "qrc:/DepthTrader.qml"
+//                            depthload1.source = "qrc:/Projections.qml"
+                            binder2.value = model
+
+                              rootLoader.source = "qrc:/DepthTrader.qml"
 //                            var dataViewer = Qt.createComponent("qrc:/DepthTrader.qml").
 //                                createObject(realRoot, {inplay: playersListView.model[playersListView.currentIndex]});
 //                              dataViewer.show()
+
+                            rootLoader
+
                         }
-                        Loader{
-                            id: depthload
+
+
+                    }
+                }
+
+//               Loader{
+//                   id: depthload
 //                            Binding {
 //                              target: depthload.item
 //                              property: "inplay"
 //                              value:  model
 //                              when: depthload.status === Loader.Ready
 //                            }
-                       }
+//              }
 
-                    }
-                }
-            }
+
+//               Loader {
+//                   id: depthload1
+//                   // sidebar is ProtoScreen.guToPx(31.25)
+//                   width: rootLoader.width
+//                   height: rootLoader.height
+//                   visible: status == Loader.Ready
+//                   anchors.fill: themeroot
+//               }
+
+//               Binding {
+//                   id: binder
+//               target: rootLoader.item
+//               property: "inplay"
+//               value:  model
+//               when: rootLoader.status === Loader.Ready
+//               }
+
+
+               Loader {
+                   id: myloader
+                   // sidebar is ProtoScreen.guToPx(31.25)
+                   width: rootLoader.width
+                   height: rootLoader,height
+                   visible: status == Loader.Ready
+                   anchors.right: parent.right
+
+               }
+
+
+               Binding {
+                   id: binder2
+                   target: rootLoader.item
+                   property: "inplay"
+
+                   when: rootLoader.status === Loader.Ready
+               }
+
+
+
         }
+
     }
 }
 

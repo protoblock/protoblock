@@ -41,6 +41,8 @@ Mediator::Mediator(QObject *parent) :
              this, SLOT(handleSocketState(QAbstractSocket::SocketState)));
 
 
+    connect(this,SIGNAL(pPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)),
+            this,SLOT(OnpPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)));
     auto mynames = m_fantasy_agent.getMyNames();
 //    if ( mynames.size() == 0 ) {
 //        auto filepath = lastYearPath();
@@ -479,8 +481,16 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             m_pPlayerQuoteSliceModel->clear();
     //            m_allNames2.clear();
             const GetROWMarketRep &np = rep.GetExtension(GetROWMarketRep::rep);
+            bool first = true;
             for( const auto &rowm : np.rowmarket()) {
-                m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(rowm));
+
+                auto mynew = new PlayerQuoteSliceModelItem(rowm);
+                if ( first ) {
+                    m_pPlayerQuoteSliceModelItem = mynew;
+                    first = false;
+                }
+
+                m_pPlayerQuoteSliceModel->append(mynew);
 //                WsReq req;
 //                GetDepthReq gdr;
 //                gdr.set_pid(rowm.pid());
@@ -824,6 +834,11 @@ void Mediator::handleSocketState(QAbstractSocket::SocketState sta)
         }
         emit socketStateChanged ();
     }
+}
+
+void Mediator::OnpPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *name)
+{
+    qDebug() << name;
 }
 
 //void handleSocketState(QAbstractSocket::SocketState sta)

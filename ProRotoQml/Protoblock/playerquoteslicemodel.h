@@ -51,6 +51,30 @@ public:
         m_playerid = in.pid().data();
         m_symbol = in.pid().data(); //TODO
     }
+
+    void setProperties(const fantasybit::ROWMarket &in)   {
+       setProperty("playerid",in.pid().data());
+       setProperty("symbol",in.pid().data()); //TODO
+       setProperty("lastprice",in.quote().l());
+       setProperty("position",in.playerdata().player_base().first().data());
+       setProperty("lastname",in.playerdata().player_base().last().data());
+       setProperty("firstname",in.playerdata().player_base().first().data());
+       setProperty("team_id",in.playerdata().player_status().teamid().data());
+       setProperty("bidsize",in.quote().bs());
+       setProperty("fullname", QString("%1 %2")
+                   .arg ( in.playerdata ().player_base ().first ().data () )
+                   .arg ( in.playerdata ().player_base ().last ().data () ));
+
+       setProperty("bid",in.quote().b());
+       setProperty("ask",in.quote().a());
+       setProperty("asksize",in.quote().as());
+       setProperty("volume",in.ohlc().volume());
+       setProperty("change",in.ohlc().change());
+       setProperty("updown",in.quote().udn());
+       setProperty("hi", in.ohlc().high());
+       setProperty("lo",in.ohlc().low());
+
+    }
 };
 
 

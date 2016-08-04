@@ -68,7 +68,8 @@ DISTFILES += \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
     qml-components/testqml.qml \
-    qml-pages/ROW2016.qml
+    qml-pages/ROW2016.qml \
+    qml-pages/DepthTrader.qml
 
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

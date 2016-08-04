@@ -98,7 +98,7 @@ public:
     Q_INVOKABLE double pxToGu(double px);
 //    Q_INVOKABLE void setDesignResolution(int width, int height);
     Q_INVOKABLE double font(ProtoFont fontSize) {
-        qDebug() << " font " << fontSize << " ret " << m_fonts[fontSize];
+//        qDebug() << " font " << fontSize << " ret " << m_fonts[fontSize];
         return m_fonts[fontSize];
     }
     void initialize();
