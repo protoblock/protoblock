@@ -31,7 +31,8 @@ Item {
         boundsBehavior: Flickable.StopAtBounds
 
         Card{
-            width: parent.width
+            id: cccc
+            width: parent.width / 1.07
             height: parent.height
             elevation: 0
 //            anchors.centerIn: parent
@@ -45,22 +46,26 @@ Item {
             Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
 
             Banner {
-                id: ban1
+                id: mybanner
 //                height: parent.height
-                anchrosType: "center"
+//                anchrosType: "center"
                 anchors.horizontalCenter: parent.horizontalCenter
-
+                bold: true
                 text: "Active Markets - Rest of the Way 2016"
-                backgroundColor: Theme.alpha(Colors.white, 1.5)
+                color: "white"
+                backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: "2016 Rest of the Way"
                 helperTxt: "List of active markets for Season long trading. This is the 3rd level of the Protoblock Fantasy Football skill test. Click a player to see in-depth market and to trade."
                 width: fl.width / 1.07
+                height: ProtoScreen.guToPx(6)
+                anchors.bottomMargin:ProtoScreen.guToPx(.5)
+                anchors.topMargin:ProtoScreen.guToPx(.5)
                 anchors{
                     top: parent.top
-                    topMargin:ProtoScreen.guToPx(.5)
-                    horizontalCenter: parent.horizontalCenter
+//                    horizontalCenter: parent.horizontalCenter
                 }
+//                anchors.margins: 1
 
             }
 //                               width: parent.width
@@ -94,20 +99,30 @@ Item {
 
 //                object:
                ListView{
+                    anchors.margins: 1
+                   width: cccc.width
+                   height: cccc.height - ProtoScreen.guToPx(6)
                     id: playersListView
-                    anchors.fill: parent
-                    focus:   true
-                    Keys.onDownPressed: {
-                        console.log("Down pressed ")
-                        if (playersListView.currentIndex + 1 < playersListView.count - 1)
-                            playersListView.currentIndex += 1;
-                    }
-                    Keys.onUpPressed: {
-                        console.log("Up pressed ")
-                        if (playersListView.currentIndex - 1 >= 0)
-                            playersListView.currentIndex -= 1;
-                    }
-                              // Keys.onDownPressed: model.currentIndex=index +1
+                    anchors.top: mybanner.bottom
+//                    anchors.fill: parent.width
+//                    clip: true
+//                    spacing: 3
+//                    focus:   true
+//                    Layout.fillHeight: true
+//                    Layout.fillWidth: true
+//                    anchors.fill: parent.width
+
+//                    Keys.onDownPressed: {
+//                        console.log("Down pressed ")
+//                        if (playersListView.currentIndex + 1 < playersListView.count - 1)
+//                            playersListView.currentIndex += 1;
+//                    }
+//                    Keys.onUpPressed: {
+//                        console.log("Up pressed ")
+//                        if (playersListView.currentIndex - 1 >= 0)
+//                            playersListView.currentIndex -= 1;
+//                    }
+//                              // Keys.onDownPressed: model.currentIndex=index +1
                               //NOt till 5.7
                               //     keyNavigationEnabled: true
 //                    model: SortModel {
@@ -118,13 +133,12 @@ Item {
 //                        filterSyntax: SortModel.Wildcard
 //                        filterCaseSensitivity: Qt.CaseSensitive
 //                    }
-                    clip: true
                     model: MiddleMan.pPlayerQuoteSliceModel
                     delegate:
                         ListItems.Subtitled{
 
-                        elevation:  ListView.isCurrentItem ? 2 : 1
-                        backgroundColor:  ListView.isCurrentItem ? themeroot.theme.accentColor : "white"
+                        elevation: 1 // ListView.isCurrentItem ? 2 : 1
+                        backgroundColor: "white"//  ListView.isCurrentItem ? themeroot.theme.accentColor : "white"
 
 /*//                                onBackgroundColorChanged: {
 //                                    if ( ListView.isCurrentItem){
@@ -150,7 +164,7 @@ Item {
                             height: ProtoScreen.guToPx(8)
                             Label{
                                 id: las
-                                text: model.lastprice + arrow.text
+                                text: "Last: " + model.lastprice
 
                                 color: model.updown < 0 ? Colors.red :
                                          model.updown > 0 ? Colors.green : "black"
@@ -163,7 +177,7 @@ Item {
                             Text {
                                 id: arrow
                                 text: (model.updown < 0) ? " ↓" : " ↑";
-                                color: "transparent"
+                                color: las.color
                             }
 
                             Label{
@@ -208,26 +222,24 @@ Item {
 //                            rootLoader.binder = mybinder
 
 //                            MiddleMan.set_pPlayerQuoteSliceModelItem(playersListView.model[playersListView.currentIndex]);
-                            MiddleMan
                             MiddleMan.startDepth(model.playerid)
 //                                                        realRoot.holdvar = model
 //                            depthload.source = "qrc:/DepthTrader.qml"
 //                            depthload1.source = "qrc:/DepthTrader.qml"
 //                            depthload1.source = "qrc:/Projections.qml"
-                            binder2.value = model
 
                               rootLoader.source = "qrc:/DepthTrader.qml"
 //                            var dataViewer = Qt.createComponent("qrc:/DepthTrader.qml").
 //                                createObject(realRoot, {inplay: playersListView.model[playersListView.currentIndex]});
 //                              dataViewer.show()
 
-                            rootLoader
-
                         }
 
 
                     }
                 }
+
+               Scrollbar{flickableItem: playersListView }
 
 //               Loader{
 //                   id: depthload
@@ -258,24 +270,24 @@ Item {
 //               }
 
 
-               Loader {
-                   id: myloader
-                   // sidebar is ProtoScreen.guToPx(31.25)
-                   width: rootLoader.width
-                   height: rootLoader,height
-                   visible: status == Loader.Ready
-                   anchors.right: parent.right
+//               Loader {
+//                   id: myloader
+//                   // sidebar is ProtoScreen.guToPx(31.25)
+//                   width: rootLoader.width
+//                   height: rootLoader,height
+//                   visible: status == Loader.Ready
+//                   anchors.right: parent.right
 
-               }
+//               }
 
 
-               Binding {
-                   id: binder2
-                   target: rootLoader.item
-                   property: "inplay"
+//               Binding {
+//                   id: binder2
+//                   target: rootLoader.item
+//                   property: "inplay"
 
-                   when: rootLoader.status === Loader.Ready
-               }
+//                   when: rootLoader.status === Loader.Ready
+//               }
 
 
 

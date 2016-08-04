@@ -10,12 +10,9 @@ import ProRotoQml.Theme 1.0
 import ProRotoQml.Models 1.0
 
 Item {
-    width: themeroot.width
-    height: ~themeroot.height
-
     property string contract
     property string symbol
-    property variant inplay // realRoot.holdvar//MiddleMan.pPlayerQuoteSliceModelItem
+    property variant inplay: MiddleMan.pDepthMarketModel.pPlayerQuoteSliceModelItem
     Component.onCompleted: {
          pageHelper.title = "Trading " + symbol
 
@@ -42,7 +39,8 @@ Item {
         boundsBehavior: Flickable.StopAtBounds
 
         Card{
-            width: parent.width
+            id: topcard
+            width: parent.width / 1.07
             height: parent.height
             elevation: 0
 //            anchors.centerIn: parent
@@ -50,20 +48,22 @@ Item {
                 top: parent.top
                 topMargin:ProtoScreen.guToPx(.5)
                 horizontalCenter: parent.horizontalCenter
-                fill:parent
             }
 
-//            // spacer
-//            Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
+            // spacer
+            Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
 
             Banner {
                 id: cwc
-                Layout.fillWidth: true;
+//                Layout.fillWidth: true;
 //                anchrosType: "center"
+                fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                bold: true
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: parent.top
-                text: "2016 Season - Settle 12/27"
-                backgroundColor: Theme.alpha(Colors.white, 1.5)
+                text: inplay.fullname + " (" + inplay.position +")" +
+                    " 2016 Season Trading (12/27)"
+                color: "white"
+                backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
                 helperTxt: "Contract expires after week 15 at the total fantasy points scored by " + inplay.fullname +
@@ -73,124 +73,143 @@ Item {
                            " write, or sell, the contract, knowing that you keep all the points in cae of injury, but have to pay up in case of a breakout"
 
                 width: fl.width / 1.07
+//                width: parent.width
                 height: ProtoScreen.guToPx(6)
+                anchors.bottomMargin:ProtoScreen.guToPx(1)
+                anchors.topMargin:ProtoScreen.guToPx(.5)
+                anchors{
+                    top: parent.top
+
+//                    horizontalCenter: parent.horizontalCenter
+                }
             }
 
 //                object:
-                ListItems.Subtitled{
-                    id: listquote
-                    elevation:  2
-                    backgroundColor:  themeroot.theme.accentColor
-                    anchors.top: cwc.bottom
-                    width: parent.width
-                    text:  "2016 Season - Settle 12/27"
-                            + " High: " + inplay.bidsize
-                            + " | Low: "+inplay.bid
-                            + " | Volume: "+ inplay.ask
-                            + " | OI: " + inplay.asksize
-                    subText:{
-                        "Bid Size: " + inplay.bidsize
-                                + " | Bid: "+inplay.bid
-                                + " | Ask: "+ inplay.ask
-                                + " | Ask Size: " + inplay.asksize
-                    }
-                    secondaryItem: RowLayout {
-                    width: ProtoScreen.guToPx(32)
-                    height: ProtoScreen.guToPx(8)
-                    Label{
-                        id: las
-                        text: inplay.lastprice + arrow.text
+            ListItems.Subtitled{
 
-                        color: inplay.updown < 0 ? Colors.red :
-                                 inplay.updown > 0 ? Colors.green : "black"
+                id: listquote
+                clip: true
+                elevation:  2
+//                anchors: parent.width
+                backgroundColor:  themeroot.theme.accentColor
+                anchors.top: cwc.bottom
+                width: parent.width
+                text:  "High: " + inplay.hi
+                        + " | Low: "+inplay.lo
+                        + " | Volume: "+ inplay.volume
+//                        + " | OI: " + inplay.asksize
+                subText:{
+                    "Bid Size: " + inplay.bidsize
+                            + " | Bid: "+inplay.bid
+                            + " | Ask: "+ inplay.ask
+                            + " | Ask Size: " + inplay.asksize
+                }
+                secondaryItem: RowLayout {
+                width: ProtoScreen.guToPx(32)
+                height: ProtoScreen.guToPx(8)
+                Label{
+                    id: las
+                    text: "Last: " + inplay.lastprice + "" + arrow.text
+
+                    color: inplay.updown < 0 ? Colors.red :
+                             inplay.updown > 0 ? Colors.green : "black"
 
 
-                        Layout.fillHeight: true
-                        Layout.fillWidth:  true
-//                        verticalAlignment: Text.AlignVCenter
-                    }
-                    Text {
-                        id: arrow
-                        text: (inplay.updown < 0) ? " ↓" : " ↑";
-                        color: "transparent"
-                    }
+                    Layout.fillHeight: true
+                    Layout.fillWidth:  true
+                    verticalAlignment: Text.AlignVCenter
+                }
+                Text {
+                    id: arrow
+                    text: (inplay.updown < 0) ? " ↓" : " ↑";
+                    color: "transparent"
+                }
 
-                    Label{
+                Label{
                         text: inplay.change
-                        Layout.fillHeight: true
-                        Layout.fillWidth:  false
-//                        verticalAlignment: Text.AlignVCenter
-                    }
+                    Layout.fillHeight: true
+                    Layout.fillWidth:  false
+                    verticalAlignment: Text.AlignVCenter
+                }
 
-                    Icon{
-                        Layout.fillWidth:  false
-                        Layout.fillHeight: true
-                        hasColor:true
-                        color: { inplay.change < 0 ? Colors.red :
-                                 inplay.change > 0 ? Colors.green : "transparent"
+                Icon{
+                    Layout.fillWidth:  false
+                    Layout.fillHeight: true
+                    hasColor:true
+                    color: { inplay.change < 0 ? Colors.red :
+                             inplay.change > 0 ? Colors.green : "transparent"
+                    }
+                    source: {
+                        if (inplay.change < 0 ){
+                            "qrc:/icons/ic_trending_down.png"
                         }
-                        source: {
-                            if (inplay.change < 0 ){
-                                "qrc:/icons/ic_trending_down.png"
+                        else
+                        {
+                            if (inplay.change === 0 )
+                            {
+                                "qrc:/icons/ic_trending_flat.png"
                             }
                             else
                             {
-                                if (inplay.change === 0 )
-                                {
-                                    "qrc:/icons/ic_trending_flat.png"
-                                }
-                                else
-                                {
-                                    "qrc:/icons/ic_trending_up.png"
-                                }
+                                "qrc:/icons/ic_trending_up.png"
                             }
                         }
                     }
                 }
-                action: Icon{
-                    hasColor:false
-                    source: "qrc:/"+ inplay.team_id+".PNG"
-                    width: ProtoScreen.guToPx(6)
-                    height: width
-                }
             }
+            action: Icon{
+                hasColor:false
+                source: "qrc:/"+ inplay.team_id+".PNG"
+                width: ProtoScreen.guToPx(6)
+                height: width
+            }
+        }
 
             Banner {
                 id: bandepth
                 anchors.top: listquote.bottom
-//                height: parent.height - cwc.height - buySell.heigth
+                anchors.horizontalCenter: listquote.horizontalCenter
+    //                height: parent.height - cwc.height - buySell.heigth
                 text: "Market Depth"
-//                anchrosType: "center"
+                    anchrosType: "verticalCenter"
                 helperHeader: "Market Depth Help"
                 helperTxt: " "
                 helpShown: true
                 height: ProtoScreen.guToPx(6)
+                backgroundColor: themeroot.theme.primaryColor
+                anchors.bottomMargin:ProtoScreen.guToPx(.5)
+                anchors.topMargin:ProtoScreen.guToPx(.5)
+                width: parent.width / 1.10
+                anchors.right: parent.right
+
             }
-////                object:
-            ListView {
+
+              ListView {
                     id: depthvm
-//                    anchors.top: bandepth.bottom
-                    anchors.fill: parent
-                    width: parent.width
-                    height: parent.height
+                    anchors.top: bandepth.bottom
+                    anchors.margins: 1
+                    anchors.horizontalCenter: bandepth.horizontalCenter
+
+//                    anchors.fill: parent
+                    width: bandepth.width
+                    height: parent.height - bandepth.height - cwc.height - listquote.height
 //                    height: parent.height
                     clip: true
                     model:  MiddleMan.pDepthMarketModel
                     header: RowLayout {
                         width: parent.width
-                        height: ProtoScreen.guToPx(2)
-                        spacing: 0
+                        height: ProtoScreen.guToPx(4)
+                        spacing: 1
                         Rectangle{width: 2; height: 1;color: "transparent"}
                         Repeater{
                             model: ["Bid Size","Bid","Ask","Ask Size"]
                             Card{
                                 Layout.fillHeight: true
-                                Layout.fillWidth: true
-//                                Layout.preferredWidth: (parent.width / 4) - 2
-                                border.color:"black"
+                                Layout.fillWidth: false
+                                Layout.preferredWidth: (parent.width / 4) - 2;                                border.color:"black"
                                 backgroundColor: Colors.blue
                                 Label{
-//                                    anchors.centerIn: parent
+                                    anchors.centerIn: parent
                                     text: modelData
                                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                                     color: "white"
@@ -218,41 +237,41 @@ Item {
                         sellSize: model.asksize
                         sell: model.ask
                     }
-//                }// listView
             }
 
-//            Card {
-//                id: buySell
-//                width: parent.width /1.7
-//                anchors.top: depthvm.bottom
-//                anchors.bottom: parent.bottom
-//                Layout.fillHeight: true
-//                Layout.fillWidth: true
+            Card {
+            id: buySell
+            width: depthvm.width
+            anchors.top: depthvm.bottom
+//            anchors.bottom: parent.bottom
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            height: ProtoScreen.guToPx(8)
 
-//                Row{
-//                    width: parent.width
-//                    height:parent.height
-//                    Button {
-//                        elevation: 5
-//                        text: "BUY"
-//                        width: parent.width / 2
-//                        height: parent.height
-//                        onClicked: {
-//                        }
-//                    }
-//                    Button {
-//                        elevation: 5
-//                        text: "SELL"
-//                        width: parent.width / 2
-//                        height: parent.height
-//                        onClicked: {
-//                        }
-//                    }
+            Row{
+                width: parent.width
+                height:parent.height
+                Button {
+                    elevation: 5
+                    text: "BUY"
+                    width: parent.width / 2
+                    height: width /2
+                    onClicked: {
+                    }
+                }
+                Button {
+                    elevation: 5
+                    text: "SELL"
+                    width: parent.width / 2
+                    height: width /2
+                    onClicked: {
+                    }
+                }
 
-//                }
-//            }
+            }
         }
-
+        }
     }
 }
+
 

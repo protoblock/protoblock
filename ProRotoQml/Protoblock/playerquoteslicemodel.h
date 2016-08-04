@@ -56,7 +56,7 @@ public:
        setplayerid(in.pid().data());
        setsymbol(in.pid().data()); //TODO
        setlastprice(in.quote().l());
-       setposition(in.playerdata().player_base().first().data());
+       setposition(in.playerdata().player_base().position().data());
 
        setlastname(in.playerdata().player_base().last().data());
        setfirstname(in.playerdata().player_base().first().data());
