@@ -9,23 +9,23 @@
 
 class PlayerQuoteSliceModelItem : public QObject {
     Q_OBJECT
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, lastprice)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, position)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, lastname)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, firstname)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, team_id)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, bidsize)
-    QML_CONSTANT_CSTREF_PROPERTY (QString , fullname)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, bid)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, ask)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, asksize)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, volume)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, change)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, updown)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, hi)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, lo)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, playerid)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, symbol)
+    QML_READONLY_CSTREF_PROPERTY (qint32, lastprice)
+    QML_READONLY_CSTREF_PROPERTY (QString, position)
+    QML_READONLY_CSTREF_PROPERTY (QString, lastname)
+    QML_READONLY_CSTREF_PROPERTY (QString, firstname)
+    QML_READONLY_CSTREF_PROPERTY (QString, team_id)
+    QML_READONLY_CSTREF_PROPERTY (qint32, bidsize)
+    QML_READONLY_CSTREF_PROPERTY (QString , fullname)
+    QML_READONLY_CSTREF_PROPERTY (qint32, bid)
+    QML_READONLY_CSTREF_PROPERTY (qint32, ask)
+    QML_READONLY_CSTREF_PROPERTY (qint32, asksize)
+    QML_READONLY_CSTREF_PROPERTY (qint32, volume)
+    QML_READONLY_CSTREF_PROPERTY (qint32, change)
+    QML_READONLY_CSTREF_PROPERTY (qint32, updown)
+    QML_READONLY_CSTREF_PROPERTY (qint32, hi)
+    QML_READONLY_CSTREF_PROPERTY (qint32, lo)
+    QML_READONLY_CSTREF_PROPERTY (QString, playerid)
+    QML_READONLY_CSTREF_PROPERTY (QString, symbol)
 
 
 public:
@@ -53,26 +53,26 @@ public:
     }
 
     void setProperties(const fantasybit::ROWMarket &in)   {
-       setProperty("playerid",in.pid().data());
-       setProperty("symbol",in.pid().data()); //TODO
-       setProperty("lastprice",in.quote().l());
-       setProperty("position",in.playerdata().player_base().first().data());
-       setProperty("lastname",in.playerdata().player_base().last().data());
-       setProperty("firstname",in.playerdata().player_base().first().data());
-       setProperty("team_id",in.playerdata().player_status().teamid().data());
-       setProperty("bidsize",in.quote().bs());
-       setProperty("fullname", QString("%1 %2")
+       setplayerid(in.pid().data());
+       setsymbol(in.pid().data()); //TODO
+       setlastprice(in.quote().l());
+       setposition(in.playerdata().player_base().first().data());
+
+       setlastname(in.playerdata().player_base().last().data());
+       setfirstname(in.playerdata().player_base().first().data());
+       setteam_id(in.playerdata().player_status().teamid().data());
+       setbidsize(in.quote().bs());
+       setfullname(QString("%1 %2")
                    .arg ( in.playerdata ().player_base ().first ().data () )
                    .arg ( in.playerdata ().player_base ().last ().data () ));
-
-       setProperty("bid",in.quote().b());
-       setProperty("ask",in.quote().a());
-       setProperty("asksize",in.quote().as());
-       setProperty("volume",in.ohlc().volume());
-       setProperty("change",in.ohlc().change());
-       setProperty("updown",in.quote().udn());
-       setProperty("hi", in.ohlc().high());
-       setProperty("lo",in.ohlc().low());
+       setbid(in.quote().b());
+       setask(in.quote().a());
+       setasksize(in.quote().as());
+       setvolume(in.ohlc().volume());
+       setchange(in.ohlc().change());
+       setupdown(in.quote().udn());
+       sethi(in.ohlc().high());
+       setlo(in.ohlc().low());
 
     }
 };

@@ -37,6 +37,7 @@ class DepthMarketModel : public QQmlObjectListModel<DepthMarketModelItem> {
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 
 public:
+    explicit DepthMarketModel() :  m_pPlayerQuoteSliceModelItem(nullptr) {}
     void updateFullDepth(const GetDepthRep &depthrep) {
         setplayerid(depthrep.pid().data());
         if ( depthrep.has_rowmarket() ) {
@@ -44,7 +45,7 @@ public:
                 update_pPlayerQuoteSliceModelItem(new PlayerQuoteSliceModelItem(depthrep.rowmarket()) );
             else {
                 m_pPlayerQuoteSliceModelItem->setProperties(depthrep.rowmarket());
-                emit pPlayerQuoteSliceModelItemChanged(m_pPlayerQuoteSliceModelItem);
+//                emit pPlayerQuoteSliceModelItemChanged(m_pPlayerQuoteSliceModelItem);
             }
 //            setplayerQuoteSliceModelItem(PlayerQuoteSliceModelItem(depthrep.rowmarket()));
         }
