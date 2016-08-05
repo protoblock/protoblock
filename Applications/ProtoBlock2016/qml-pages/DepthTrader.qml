@@ -112,6 +112,7 @@ Item {
     //                anchors.horizontalCenter: cwc.horizontalCenter
     //                anchors.horizontalCenter: topcard.horizontalCenter
                     backgroundColor:  themeroot.theme.accentColor
+
                     width: parent.width
                     subText: {   "Vol: "+ inplay.volume
                             + " | Hi: " + inplay.hi
@@ -378,7 +379,7 @@ Item {
                             onClicked : {
                                 console.log(" price " + pint.txtN )
                                  MiddleMan.doTrade(
-                                        pid.txtN
+                                        inplay.symbol
                                         ,true
                                         ,pint.txtN
                                         ,qint.txtN
@@ -408,8 +409,8 @@ Item {
                             onClicked : {
                                 console.log(" price " + pint.txtN )
                                  MiddleMan.doTrade(
-//                                        inplay.playerid
-                                        pid.txtN
+                                        inplay.symbol
+//                                        pid.txtN
                                         ,false
                                         ,pint.txtN
                                         ,qint.txtN
@@ -471,20 +472,19 @@ Item {
 
                     IntHelper {
                         id: pid
-//                            width: parent.width / 2
-                        labelTxt: "pid"
+                        labelTxt: "oid"
                         lo: 1
                         hi: 10000
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: pint.left
                         anchors.rightMargin: ProtoScreen.guToPx(2)
-//                        helpShown: true
+//                        txtN: inplay.playerid
+                        onChanged: {
+                            MiddleMan.doCancel(txtN);
+                        }
                     }
-
-
-//                }
-
             }
+
 //                Row {
 //                    id: row2
 //                    anchors.top: row1.bottom

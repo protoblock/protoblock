@@ -103,13 +103,33 @@ public:
     QStringList m_allROWList;
 
     Q_INVOKABLE void startDepth(const QString& symbol) {
+        depthBackup--;
+        if ( depthBackup < 0 ) {
+            depthBackup = 0;
+            depthInterval = 1000;
+        }
+        else
+            depthInterval = 1000 * (depthBackup / 5);
+
+        depthCount = 0;
+        depthInterval = 1000 * (depthBackup / 5);
+        if ( depthInterval < 1000 )
+           depthInterval = 1000;
+
         changeDepthContext(symbol);
         getDepthRep();
-        polldepth.start();
+        qDebug() << " depthInterval " << depthInterval;
+
+        polldepth.start(depthInterval);
+        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+
     }
 
     Q_INVOKABLE void stopDepth(const QString& symbol) {
         polldepth.stop();
+        depthBackup -= 5;
+        if ( depthBackup < 0 ) depthBackup = 0;
+        depthCount = 0;
     }
 
 //     QList<QString *> m_goodFnames;
@@ -162,6 +182,7 @@ public:
         m_currentPidContext = context;
     }
 
+    Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void allNamesGet();
     Q_INVOKABLE void rowMarketGet();
@@ -269,6 +290,9 @@ private:
     QString testid;
     bool isbid;
     void getOrderReq(uint64_t cname);
+    int depthCount;
+    int depthBackup;
+    int depthInterval;
 };
 
 #endif // MEDIATOR_H

@@ -109,6 +109,10 @@ Mediator::Mediator(QObject *parent) :
     connect(&polldepth, SIGNAL(timeout()),
             this, SLOT(getDepthRep()));
 
+    depthCount = 0;
+    depthBackup = 0;
+    depthInterval = 1000;
+
 }
 
 
@@ -192,6 +196,7 @@ void Mediator::getOrderReq(uint64_t hname) {
     req.set_ctype(GETORDERS);
     GetOrdersReq sr;
     sr.set_fchash(hname);
+    sr.set_fname(m_myHashFname[hname]);
     req.SetAllocatedExtension(GetOrdersReq::req,&sr);
     auto txstr = req.SerializeAsString();
     qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
@@ -529,7 +534,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             break;
         }
         case GETROWMARKET: {
-            qDebug() << rep.DebugString().data();
+//            qDebug() << rep.DebugString().data();
             m_pPlayerQuoteSliceModel->clear();
     //            m_allNames2.clear();
             const GetROWMarketRep &np = rep.GetExtension(GetROWMarketRep::rep);
@@ -560,11 +565,12 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 #ifdef TRACE2
             qDebug() << rep.DebugString().data();
 #endif
+            depthBackup--;
             break;
         }
         case GETORDERS: {
-            m_pOpenOrdersModel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
             qDebug() << rep.DebugString().data();
+            m_pOpenOrdersModel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
 
             break;
         }
@@ -669,7 +675,7 @@ void Mediator::getSignedPlayerStatus() {
 void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size) {
 
     if ( !m_fantasy_agent.HaveClient() ) {
-        qDebug() << "error no CLient" << " doTrade NewOrder " << symbol;
+        qDebug() << "error no CLient" << "  " << symbol;
 
         return;
     }
@@ -683,7 +689,7 @@ void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 si
     core.set_price(price);
 
 #ifdef TRACE
-    qDebug() << "doTrade NewOrder " << core.DebugString().data();
+    qDebug() << symbol << "doTrade NewOrder " << core.DebugString().data();
 #endif
     eo.mutable_core()->CopyFrom(core);
     //emit SendOrder(eo);
@@ -710,6 +716,78 @@ void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 si
 
     qDebug() << " mediator doTestTrade";
     m_txsocket.sendBinaryMessage(qb);
+
+    depthCount = 0;
+    depthBackup-=10;
+    if ( depthBackup < 0 ) {
+        depthBackup = 0;
+        depthInterval = 1000;
+    }
+    else
+        depthInterval = 1000 * (depthBackup / 5);
+
+    if ( depthInterval < 1600 ) {
+       getDepthRep();
+       depthInterval = 1000;
+    }
+    polldepth.start(depthInterval);
+    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
+    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+
+}
+
+void Mediator::doCancel(qint32 id) {
+
+    if ( !m_fantasy_agent.HaveClient() ) {
+        qDebug() << "error no CLient";
+
+        return;
+    }
+    ExchangeOrder eo;
+    eo.set_type(ExchangeOrder::CANCEL);
+    eo.set_cancel_oref(id);
+
+#ifdef TRACE
+    qDebug() << "cancelTrade id " << id;
+#endif
+
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::EXCHANGE);
+    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
+
+    SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
+
+    auto pk = m_fantasy_agent.pubKey();
+    pb::sha256 digest(sn.id());
+    if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
+        qDebug() << " bad signature ";
+    else
+        qDebug() << " good signature ";
+
+    auto txstr = sn.SerializeAsString();
+
+    QByteArray qb(txstr.data(),(size_t)txstr.size());
+
+    qDebug() << " mediator doTestTrade";
+    m_txsocket.sendBinaryMessage(qb);
+
+    depthCount = 0;
+    depthBackup-=10;
+    if ( depthBackup < 0 ) {
+        depthBackup = 0;
+        depthInterval = 1000;
+    }
+    else
+        depthInterval = 1000 * (depthBackup / 5);
+
+    if ( depthInterval < 1600 ) {
+       getDepthRep();
+       depthInterval = 1000;
+    }
+    polldepth.start(depthInterval);
+    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
+    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 
 }
 
@@ -954,6 +1032,19 @@ void Mediator::getDepthRep() {
     QByteArray qb(txstr.data(),(size_t)txstr.size());
 //    qDebug() << " getDepthRep sending " << mGetDepthReq.DebugString().data();
     m_webSocket.sendBinaryMessage(qb);
+    depthBackup++;
+    depthCount++;
+
+    if ( depthBackup > 5 || depthCount > 20 ) {
+        depthInterval *= 2;
+        depthCount = 0;
+        depthBackup -= 5;
+        if ( depthBackup < 0 ) depthBackup = 0;
+        if ( polldepth.isActive() ) {
+            polldepth.start(depthInterval);
+            qDebug() << " depthInterval " << depthInterval << " depthBackup " << depthBackup;
+        }
+    }
 }
 
 
