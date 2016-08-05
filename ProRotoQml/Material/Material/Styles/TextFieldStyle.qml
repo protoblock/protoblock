@@ -37,13 +37,13 @@ CStyles.TextFieldStyle {
                 ? control.hasError : characterLimit && control.length > characterLimit
         property int characterLimit: control.hasOwnProperty("characterLimit") ? control.characterLimit : 0
         property bool showBorder: control.hasOwnProperty("showBorder") ? control.showBorder : true
+        property color bcolor: control.hasOwnProperty("bcolor") ? control.bcolor : Theme.light.hintColor
 
         Rectangle {
             id: underline
             color: background.hasError ? background.errorColor
                                     : control.activeFocus ? background.color
-                                                          : Theme.light.hintColor
-
+                                                          : background.bcolor
             height: control.activeFocus ? 2  : 1
             visible: background.showBorder
 

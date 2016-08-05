@@ -217,6 +217,7 @@ Item {
                             source: "qrc:/"+ model.team_id+".PNG"
                             width: ProtoScreen.guToPx(6)
                             height: width
+                            smooth: true
                         }
                         onClicked: {
 //                            rootLoader.binder = mybinder

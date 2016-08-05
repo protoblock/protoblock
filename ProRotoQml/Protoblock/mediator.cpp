@@ -615,6 +615,12 @@ void Mediator::getSignedPlayerStatus() {
 
 
 void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size) {
+
+    if ( !m_fantasy_agent.HaveClient() ) {
+        qDebug() << "error no CLient" << " doTrade NewOrder " << symbol;
+
+        return;
+    }
     ExchangeOrder eo;
     eo.set_playerid(symbol.toStdString());
     eo.set_type(ExchangeOrder::NEW);

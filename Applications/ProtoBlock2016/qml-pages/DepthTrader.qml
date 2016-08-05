@@ -14,12 +14,13 @@ Item {
     property string symbol
     property variant inplay: MiddleMan.pDepthMarketModel.pPlayerQuoteSliceModelItem
 
-    property int depthsize: 10
+    property int depthsize: 5
     property double dihight: ProtoScreen.guToPx(4)
 
     Component.onCompleted: {
          pageHelper.title = "Trading " + symbol
 
+         pid.txtN = inplay.playerid
 //        if ( !realRoot.reloadrowquote )
 //            realRoot.reloadrowquote = true
 //        else {
@@ -361,6 +362,7 @@ Item {
                         height: parent.height - ProtoScreen.guToPx(2)
                         radius: ProtoScreen.guToPx(1)
                         anchors.verticalCenter: parent.verticalCenter
+
                         Button {
 //                            anchors.fill: parent
                             width: parent.width / 2 // ProtoScreen.guToPx(4)
@@ -373,10 +375,18 @@ Item {
                             text: "BUY"
                             backgroundColor:  Colors.green
                             textColor: "white"
-                            onClicked: {
+                            onClicked : {
+                                console.log(" price " + pint.txtN )
+                                 MiddleMan.doTrade(
+                                        pid.txtN
+                                        ,true
+                                        ,pint.txtN
+                                        ,qint.txtN
+                                        )
                             }
                         }
                     }
+
                     Rectangle {
                         color: "transparent"
                         width: parent.width / 2
@@ -395,63 +405,137 @@ Item {
                             text: "SELL"
                             backgroundColor:  Colors.red
                             textColor: "white"
-                            onClicked: {
+                            onClicked : {
+                                console.log(" price " + pint.txtN )
+                                 MiddleMan.doTrade(
+//                                        inplay.playerid
+                                        pid.txtN
+                                        ,false
+                                        ,pint.txtN
+                                        ,qint.txtN
+                                        )
+
                             }
-                        }
-                    }
+                         }
+
+                     }
 
                 }
-                Row {
-                    id: row2
-                    anchors.top: row1.bottom
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-
-                    Label{
-                        style: "menu"
-                        id: qytCombotxt
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
-                        text: "Qty: "
-                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    }
-                    TextField {
-                        anchors.left: qytCombotxt.right
-                        id: qytCombo
-                        validator: IntValidator {bottom: 1; top: 999;}
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
-                    }
+            }
+            Card {
+                id: inputs
+                width: buySell.width
+                anchors.top: buySell.bottom
+//                Layout.fillHeight: true
+//                Layout.fillWidth: true
+                height: ProtoScreen.guToPx(8)
+                anchors.topMargin: ProtoScreen.guToPx(.25)
+                anchors {
+                    horizontalCenter: buySell.horizontalCenter
+//                    margins: ProtoScreen.guToPx(.25)
                 }
+                elevation: 0
 
-                Row {
-                    anchors.top: row2.bottom
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
+//                Row {
+//                    width: (pint.width + qint.width) * 1.20
+//                    height: ProtoScreen.guToPx(4)
+//                    anchors.centerIn: parent
+//                    anchors.fill: parent
+//                    anchors.margins: ProtoScreen.guToPx(.5)
+//                    anchors.horizontalCenter: parent.horizontalCenter
 
-                    Label{
-                        id: priceCombotxt
-                        text: " Price: "
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                    id: row2
 
+                    IntHelper {
+                        id: pint
+//                            width: parent.width / 2
+                        labelTxt: "Price"
+                        lo: 1
+                        hi: 400
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.horizontalCenter
+                        anchors.rightMargin:ProtoScreen.guToPx(1)
+//                        helpShown: true
                     }
-                    TextField {
-                        anchors.left: priceCombotxt.right
-                        id: priceCombo
-                        validator: IntValidator {bottom: 1; top: 400;}
-                        text: "1"
-//                        onAccepted: {
-//                            price = parseInt(text,10)
-//                            avgpoints = (1.0 * price) / (1.0 * (numweeks.currentIndex >0 ? numweeks.currentIndex : 15))
-//                            avgPoints.currentIndex = avgpoints < 1 ? 1 : avgpoints
-//                        }
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                    IntHelper {
+                        id: qint
+//                            width: parent.width / 2
+                        labelTxt: "Qty"
+                        lo: 1
+                        hi: 100
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: pint.right
+                        anchors.leftMargin: ProtoScreen.guToPx(2)
+//                        helpShown: true
                     }
-                }
+
+                    IntHelper {
+                        id: pid
+//                            width: parent.width / 2
+                        labelTxt: "pid"
+                        lo: 1
+                        hi: 10000
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: pint.left
+                        anchors.rightMargin: ProtoScreen.guToPx(2)
+//                        helpShown: true
+                    }
+
+
+//                }
 
             }
+//                Row {
+//                    id: row2
+//                    anchors.top: row1.bottom
+//                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+//                    Layout.fillHeight: true
+//                    Layout.fillWidth: true
+
+//                    Label{
+//                        style: "menu"
+//                        id: qytCombotxt
+//                        horizontalAlignment: Text.AlignRight
+//                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                        text: "Qty: "
+//                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+//                    }
+//                    TextField {
+//                        anchors.left: qytCombotxt.right
+//                        id: qytCombo
+//                        validator: IntValidator {bottom: 1; top: 999;}
+//                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                    }
+//                }
+
+//                Row {
+//                    anchors.top: row2.bottom
+//                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+//                    Layout.fillHeight: true
+//                    Layout.fillWidth: true
+
+//                    Label{
+//                        id: priceCombotxt
+//                        text: " Price: "
+//                        horizontalAlignment: Text.AlignRight
+//                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+
+//                    }
+//                    TextField {
+//                        anchors.left: priceCombotxt.right
+//                        id: priceCombo
+//                        validator: IntValidator {bottom: 1; top: 400;}
+//                        text: "1"
+////                        onAccepted: {
+////                            price = parseInt(text,10)
+////                            avgpoints = (1.0 * price) / (1.0 * (numweeks.currentIndex >0 ? numweeks.currentIndex : 15))
+////                            avgPoints.currentIndex = avgpoints < 1 ? 1 : avgpoints
+////                        }
+//                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                    }
+//                }
+
+//            }
 
         }
     }
