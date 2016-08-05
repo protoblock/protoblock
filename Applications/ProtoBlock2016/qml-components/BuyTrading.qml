@@ -59,7 +59,7 @@ Item {
 //            clip: false
             Row {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.fillHeight: true
+                Layout.fillHeight: false
                 Layout.fillWidth: true
                 Label{
                     horizontalAlignment: Text.AlignJustify
@@ -85,8 +85,8 @@ Item {
                         id: avgPointsid
                         horizontalAlignment: Text.AlignRight
                         text: "Average Points:"
-//                        font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
-                        font.pixelSize: ProtoScreen.guToPx(.50)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                        font.pixelSize: ProtoScreen.guToPx(.50)
 
                         Component.onCompleted: {
                             console.log(" fp " + font.pixelSize + " pp " + ProtoScreen.guToPx(.50))
@@ -119,7 +119,7 @@ Item {
                         horizontalAlignment: Text.AlignRight
                         id: numweekstxt
                         text: "Weeks:"
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                     }
 
                     ComboBox {
@@ -154,7 +154,7 @@ Item {
                         id: priceCombotxt
                         text: side + " Price: "
                         horizontalAlignment: Text.AlignRight
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
 
                     }
                     TextField {
@@ -167,7 +167,7 @@ Item {
                             avgpoints = (1.0 * price) / (1.0 * (numweeks.currentIndex >0 ? numweeks.currentIndex : 15))
                             avgPoints.currentIndex = avgpoints < 1 ? 1 : avgpoints
                         }
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                     }
                 }
 
@@ -180,7 +180,7 @@ Item {
                         style: "menu"
                         id: qytCombotxt
                         horizontalAlignment: Text.AlignRight
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                         text: "Qty to " + side + ":"
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                     }
@@ -188,8 +188,7 @@ Item {
                         anchors.left: qytCombotxt.right
                         id: qytCombo
                         validator: IntValidator {bottom: 1; top: 999;}
-                        font.pixelSize: ProtoScreen.guToPx(.50)
-                        //ProtoScreen.font(ProtoScreen.TINY)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                     }
                 }
             }

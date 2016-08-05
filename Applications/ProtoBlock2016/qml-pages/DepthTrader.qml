@@ -347,6 +347,7 @@ Item {
                 elevation: 0
                 Row {
 //                    spacing: 2
+                    id: row1
                     width: (parent.width / 3) * 2
                     height: ProtoScreen.guToPx(4)
                     anchors.centerIn: parent
@@ -400,6 +401,56 @@ Item {
                     }
 
                 }
+                Row {
+                    id: row2
+                    anchors.top: row1.bottom
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    Label{
+                        style: "menu"
+                        id: qytCombotxt
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        text: "Qty: "
+                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                    }
+                    TextField {
+                        anchors.left: qytCombotxt.right
+                        id: qytCombo
+                        validator: IntValidator {bottom: 1; top: 999;}
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                    }
+                }
+
+                Row {
+                    anchors.top: row2.bottom
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    Label{
+                        id: priceCombotxt
+                        text: " Price: "
+                        horizontalAlignment: Text.AlignRight
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+
+                    }
+                    TextField {
+                        anchors.left: priceCombotxt.right
+                        id: priceCombo
+                        validator: IntValidator {bottom: 1; top: 400;}
+                        text: "1"
+//                        onAccepted: {
+//                            price = parseInt(text,10)
+//                            avgpoints = (1.0 * price) / (1.0 * (numweeks.currentIndex >0 ? numweeks.currentIndex : 15))
+//                            avgPoints.currentIndex = avgpoints < 1 ? 1 : avgpoints
+//                        }
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                    }
+                }
+
             }
 
         }
