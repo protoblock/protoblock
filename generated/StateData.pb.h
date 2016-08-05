@@ -5489,6 +5489,13 @@ class SubscribeReq : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
+  // optional uint64 fchash = 30;
+  inline bool has_fchash() const;
+  inline void clear_fchash();
+  static const int kFchashFieldNumber = 30;
+  inline ::google::protobuf::uint64 fchash() const;
+  inline void set_fchash(::google::protobuf::uint64 value);
+
   static const int kReqFieldNumber = 350;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WsReq,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SubscribeReq >, 11, false >
@@ -5497,13 +5504,16 @@ class SubscribeReq : public ::google::protobuf::Message {
  private:
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_fchash();
+  inline void clear_has_fchash();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* name_;
+  ::google::protobuf::uint64 fchash_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -6621,6 +6631,13 @@ class GetOrdersReq : public ::google::protobuf::Message {
   inline ::std::string* release_fname();
   inline void set_allocated_fname(::std::string* fname);
 
+  // optional uint64 fchash = 30;
+  inline bool has_fchash() const;
+  inline void clear_fchash();
+  static const int kFchashFieldNumber = 30;
+  inline ::google::protobuf::uint64 fchash() const;
+  inline void set_fchash(::google::protobuf::uint64 value);
+
   static const int kReqFieldNumber = 800;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WsReq,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetOrdersReq >, 11, false >
@@ -6631,14 +6648,17 @@ class GetOrdersReq : public ::google::protobuf::Message {
   inline void clear_has_symbol();
   inline void set_has_fname();
   inline void clear_has_fname();
+  inline void set_has_fchash();
+  inline void clear_has_fchash();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* symbol_;
   ::std::string* fname_;
+  ::google::protobuf::uint64 fchash_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -17297,6 +17317,28 @@ inline void SubscribeReq::set_allocated_name(::std::string* name) {
   }
 }
 
+// optional uint64 fchash = 30;
+inline bool SubscribeReq::has_fchash() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SubscribeReq::set_has_fchash() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SubscribeReq::clear_has_fchash() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SubscribeReq::clear_fchash() {
+  fchash_ = GOOGLE_ULONGLONG(0);
+  clear_has_fchash();
+}
+inline ::google::protobuf::uint64 SubscribeReq::fchash() const {
+  return fchash_;
+}
+inline void SubscribeReq::set_fchash(::google::protobuf::uint64 value) {
+  set_has_fchash();
+  fchash_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // NameStatusReq
@@ -18427,6 +18469,28 @@ inline void GetOrdersReq::set_allocated_fname(::std::string* fname) {
     clear_has_fname();
     fname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional uint64 fchash = 30;
+inline bool GetOrdersReq::has_fchash() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void GetOrdersReq::set_has_fchash() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void GetOrdersReq::clear_has_fchash() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void GetOrdersReq::clear_fchash() {
+  fchash_ = GOOGLE_ULONGLONG(0);
+  clear_has_fchash();
+}
+inline ::google::protobuf::uint64 GetOrdersReq::fchash() const {
+  return fchash_;
+}
+inline void GetOrdersReq::set_fchash(::google::protobuf::uint64 value) {
+  set_has_fchash();
+  fchash_ = value;
 }
 
 

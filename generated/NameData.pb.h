@@ -134,6 +134,13 @@ class FantasyNameBal : public ::google::protobuf::Message {
   inline ::google::protobuf::int64 stake() const;
   inline void set_stake(::google::protobuf::int64 value);
 
+  // optional uint64 chash = 50;
+  inline bool has_chash() const;
+  inline void clear_chash();
+  static const int kChashFieldNumber = 50;
+  inline ::google::protobuf::uint64 chash() const;
+  inline void set_chash(::google::protobuf::uint64 value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyNameBal)
  private:
   inline void set_has_name();
@@ -144,6 +151,8 @@ class FantasyNameBal : public ::google::protobuf::Message {
   inline void clear_has_bits();
   inline void set_has_stake();
   inline void clear_has_stake();
+  inline void set_has_chash();
+  inline void clear_has_chash();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -151,9 +160,10 @@ class FantasyNameBal : public ::google::protobuf::Message {
   ::std::string* public_key_;
   ::google::protobuf::uint64 bits_;
   ::google::protobuf::int64 stake_;
+  ::google::protobuf::uint64 chash_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_NameData_2eproto();
   friend void protobuf_AssignDesc_NameData_2eproto();
@@ -777,6 +787,28 @@ inline ::google::protobuf::int64 FantasyNameBal::stake() const {
 inline void FantasyNameBal::set_stake(::google::protobuf::int64 value) {
   set_has_stake();
   stake_ = value;
+}
+
+// optional uint64 chash = 50;
+inline bool FantasyNameBal::has_chash() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void FantasyNameBal::set_has_chash() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void FantasyNameBal::clear_has_chash() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void FantasyNameBal::clear_chash() {
+  chash_ = GOOGLE_ULONGLONG(0);
+  clear_has_chash();
+}
+inline ::google::protobuf::uint64 FantasyNameBal::chash() const {
+  return chash_;
+}
+inline void FantasyNameBal::set_chash(::google::protobuf::uint64 value) {
+  set_has_chash();
+  chash_ = value;
 }
 
 // -------------------------------------------------------------------

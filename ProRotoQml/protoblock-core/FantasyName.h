@@ -138,6 +138,20 @@ public:
     static hash_t name_hash( const alias_t& n );
 };
 
+struct FantasyNameCHash : FantasyName {
+    FantasyNameCHash(const alias_t &inalias, const pb::public_key_data &inpubkey) :
+            FantasyName(inalias, inpubkey), chash(hash()) {}
+
+    FantasyNameCHash ( const FantasyName &in ) :
+        FantasyName(in), chash(hash()) {}
+
+private:
+    hash_t chash;
+
+    hash_t hash() const {
+        return chash;
+    }
+};
 
 /*
 class KeyPair

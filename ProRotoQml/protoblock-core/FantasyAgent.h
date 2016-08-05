@@ -25,6 +25,7 @@ class FantasyAgent
 {
     pb::secp256k1_privkey m_priv, m_oracle;
     std::shared_ptr<FantasyName> client;
+    std::shared_ptr<FantasyNameCHash> client2;
     std::vector<SignedTransaction> pendingTrans{};
     Block prevBlock{};
 

@@ -46,11 +46,12 @@ void protobuf_AssignDesc_NameData_2eproto() {
       "NameData.proto");
   GOOGLE_CHECK(file != NULL);
   FantasyNameBal_descriptor_ = file->message_type(0);
-  static const int FantasyNameBal_offsets_[4] = {
+  static const int FantasyNameBal_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBal, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBal, public_key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBal, bits_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBal, stake_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyNameBal, chash_),
   };
   FantasyNameBal_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -178,16 +179,17 @@ void protobuf_AddDesc_NameData_2eproto() {
   ::fantasybit::protobuf_AddDesc_ExData_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\016NameData.proto\022\nfantasybit\032\014ExData.pro"
-    "to\"O\n\016FantasyNameBal\022\014\n\004name\030\n \001(\t\022\022\n\npu"
+    "to\"^\n\016FantasyNameBal\022\014\n\004name\030\n \001(\t\022\022\n\npu"
     "blic_key\030\024 \001(\t\022\014\n\004bits\030\036 \001(\004\022\r\n\005stake\030( "
-    "\001(\003\"<\n\017FantasyBitAward\022\014\n\004name\030\n \001(\t\022\014\n\004"
-    "proj\030\024 \001(\005\022\r\n\005award\030\036 \001(\004\"A\n\rFantasyBitP"
-    "nl\022#\n\004spos\030\024 \001(\0132\025.fantasybit.SettlePos\022"
-    "\013\n\003pnl\030\036 \001(\003\">\n\016FantasyBitProj\022\014\n\004name\030\n"
-    " \001(\t\022\014\n\004proj\030\024 \001(\005\022\020\n\010playerid\030\036 \001(\t\"x\n\022"
-    "GameFantasyBitProj\022\016\n\006gameid\030\n \001(\t\022(\n\004ho"
-    "me\030\024 \003(\0132\032.fantasybit.FantasyBitProj\022(\n\004"
-    "away\030\036 \003(\0132\032.fantasybit.FantasyBitProj", 438);
+    "\001(\003\022\r\n\005chash\0302 \001(\004\"<\n\017FantasyBitAward\022\014\n"
+    "\004name\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\r\n\005award\030\036 \001(\004"
+    "\"A\n\rFantasyBitPnl\022#\n\004spos\030\024 \001(\0132\025.fantas"
+    "ybit.SettlePos\022\013\n\003pnl\030\036 \001(\003\">\n\016FantasyBi"
+    "tProj\022\014\n\004name\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\020\n\010pla"
+    "yerid\030\036 \001(\t\"x\n\022GameFantasyBitProj\022\016\n\006gam"
+    "eid\030\n \001(\t\022(\n\004home\030\024 \003(\0132\032.fantasybit.Fan"
+    "tasyBitProj\022(\n\004away\030\036 \003(\0132\032.fantasybit.F"
+    "antasyBitProj", 453);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NameData.proto", &protobuf_RegisterTypes);
   FantasyNameBal::default_instance_ = new FantasyNameBal();
@@ -217,6 +219,7 @@ const int FantasyNameBal::kNameFieldNumber;
 const int FantasyNameBal::kPublicKeyFieldNumber;
 const int FantasyNameBal::kBitsFieldNumber;
 const int FantasyNameBal::kStakeFieldNumber;
+const int FantasyNameBal::kChashFieldNumber;
 #endif  // !_MSC_VER
 
 FantasyNameBal::FantasyNameBal()
@@ -239,6 +242,7 @@ void FantasyNameBal::SharedCtor() {
   public_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   bits_ = GOOGLE_ULONGLONG(0);
   stake_ = GOOGLE_LONGLONG(0);
+  chash_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -292,6 +296,7 @@ void FantasyNameBal::Clear() {
     }
     bits_ = GOOGLE_ULONGLONG(0);
     stake_ = GOOGLE_LONGLONG(0);
+    chash_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -364,6 +369,22 @@ bool FantasyNameBal::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(400)) goto parse_chash;
+        break;
+      }
+
+      // optional uint64 chash = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_chash:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &chash_)));
+          set_has_chash();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -414,6 +435,11 @@ void FantasyNameBal::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(40, this->stake(), output);
   }
 
+  // optional uint64 chash = 50;
+  if (has_chash()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(50, this->chash(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -450,6 +476,11 @@ void FantasyNameBal::SerializeWithCachedSizes(
   // optional int64 stake = 40;
   if (has_stake()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(40, this->stake(), target);
+  }
+
+  // optional uint64 chash = 50;
+  if (has_chash()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(50, this->chash(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -491,6 +522,13 @@ int FantasyNameBal::ByteSize() const {
           this->stake());
     }
 
+    // optional uint64 chash = 50;
+    if (has_chash()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->chash());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -530,6 +568,9 @@ void FantasyNameBal::MergeFrom(const FantasyNameBal& from) {
     if (from.has_stake()) {
       set_stake(from.stake());
     }
+    if (from.has_chash()) {
+      set_chash(from.chash());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -557,6 +598,7 @@ void FantasyNameBal::Swap(FantasyNameBal* other) {
     std::swap(public_key_, other->public_key_);
     std::swap(bits_, other->bits_);
     std::swap(stake_, other->stake_);
+    std::swap(chash_, other->chash_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

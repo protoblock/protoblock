@@ -17,6 +17,7 @@ class FantasyNameBalModelItem : public QObject {
     QML_CONSTANT_CSTREF_PROPERTY (QString, pk)
     QML_CONSTANT_CSTREF_PROPERTY (qint64, stake)
     QML_CONSTANT_CSTREF_PROPERTY (quint64, bits)
+    QML_CONSTANT_CSTREF_PROPERTY (quint64, chash)
 
 public:
 
@@ -25,6 +26,7 @@ public:
         m_pk = in.public_key().data();
         m_stake = in.stake() + in.bits();
         m_bits = in.bits();
+        m_chash = in.chash();
     }
 };
 

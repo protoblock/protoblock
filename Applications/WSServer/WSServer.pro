@@ -43,7 +43,8 @@ SOURCES   += \
     $$PWD/txpool.cpp \
     $$PWD/ExchangeData.cpp \
     LiteServer.cpp \
-    TxServer.cpp
+    TxServer.cpp \
+    combinations.cpp
 
 
 

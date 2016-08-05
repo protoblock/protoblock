@@ -155,10 +155,17 @@ void Mediator::checkname(const QString &name) {
 }
 
 void Mediator::subscribeOrderPos(const QString &name) {
+    auto stdname = name.toStdString();
+    uint64_t cname = FantasyName::name_hash(stdname);//m_myPubkeyHash[m_myHashFname[stdname]];
+    if ( cname != 0 )
+        m_myHashFname.insert({cname,stdname});
+
+
     WsReq req;
     req.set_ctype(SUBSCRIBEFNAME);
     SubscribeReq sr;
     sr.set_name(name.toStdString());
+    sr.set_fchash(cname);
     req.SetAllocatedExtension(SubscribeReq::req,&sr);
     auto txstr = req.SerializeAsString();
     qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
@@ -167,11 +174,24 @@ void Mediator::subscribeOrderPos(const QString &name) {
     m_webSocket.sendBinaryMessage(qb);
 }
 
-void Mediator::getOrderReq(const QString &name) {
+//void Mediator::getOrderReq(const QString &name) {
+//    WsReq req;
+//    req.set_ctype(GETORDERS);
+//    GetOrdersReq sr;
+//    sr.set_fname(name.toStdString());
+//    req.SetAllocatedExtension(GetOrdersReq::req,&sr);
+//    auto txstr = req.SerializeAsString();
+//    qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
+//    req.ReleaseExtension(GetOrdersReq::req);
+//    QByteArray qb(txstr.data(),(size_t)txstr.size());
+//    m_webSocket.sendBinaryMessage(qb);
+//}
+
+void Mediator::getOrderReq(uint64_t hname) {
     WsReq req;
     req.set_ctype(GETORDERS);
     GetOrdersReq sr;
-    sr.set_fname(name.toStdString());
+    sr.set_fchash(hname);
     req.SetAllocatedExtension(GetOrdersReq::req,&sr);
     auto txstr = req.SerializeAsString();
     qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
@@ -400,7 +420,35 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 
             //FIXME lets make this as a real map to pass to a string
 //            m_nameStatuses[name.data()] = QString("confirmed");
-            std::string currname = m_myPubkeyFname[pk2.req().pk()] ;
+
+            std::string currname;
+            uint64_t chash = 0;
+            auto it = m_myPubkeyHash.find(pk2.req().pk());
+            if ( it != end(m_myPubkeyHash))
+                chash = it->second;
+
+            auto it2 = m_myPubkeyFname.find(pk2.req().pk());
+            if ( it2 != end(m_myPubkeyFname))
+                currname = it2->second;
+
+            if ( currname == "" && chash == 0);
+            else {
+                if ( chash != 0 ) {
+                    qDebug() << " bad chash - fname - should not be here!";
+                }
+                else { //currname != ""
+                    chash = FantasyName::name_hash(currname);
+                    auto it3 = m_myHashFname.find(chash);
+                    if ( it3 == end(m_myHashFname)) {
+                        m_myHashFname[chash] = currname;
+                    }
+//                    else
+//                        chash = it3->second;
+                }
+            }
+
+
+//            std::string currname = m_myPubkeyFname[pk2.req().pk()] ;
             if ( currname == "") {
                 if ( m_lastSignedplayer == pk2.req().pk()) {
                     signPlayerStatus.stop();
@@ -409,6 +457,10 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 }
 
                 m_myPubkeyFname[pk2.req().pk()] = name;
+                chash = FantasyName::name_hash(name);
+                m_myHashFname[chash] = name;
+                m_myPubkeyHash[pk2.req().pk()] = chash;
+
                 QString goodname = name.data();
 //                m_goodFnames.append(&goodname);
                 m_goodList.append(goodname);
@@ -426,7 +478,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 }
                 else {
                     usingFantasyName(m_fantasy_agent.currentClient().data());
-//                    subscribeOrderPos(currname.data());
+//                  subscribeOrderPos(currname.data());
                 }
             }
 
@@ -719,7 +771,7 @@ void Mediator::useName(const QString &name) {
         usingFantasyName(name);
     }
 
-
+#ifdef CRAZY__no_TESTINGit
     if ( name == "MikeClayNFL" ) {
         getOrderReq(name);
         if ( testid == "1806")
@@ -734,6 +786,7 @@ void Mediator::useName(const QString &name) {
         tradeTesting.stop();
         stopDepth(testid);
     }
+#endif
 
 }
 

@@ -47,6 +47,7 @@ public:
     }
 };
 
+
 Q_DECLARE_METATYPE(OpenOrdersModel*)
 
 #endif // OPENORDERSMODEL_H

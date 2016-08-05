@@ -6,6 +6,32 @@
 
 
 #include "Commissioner.h"
+void sortedPermutations ( char str[] );
+
+// Driver program to test above function
+int main()
+{
+    char str[] = "ABCD";
+    sortedPermutations( str );
+    return 0;
+}
+
+#ifdef NOT_NOW
+
+const unsigned long num_elements = 17;
+const unsigned long comb_len = 4;
+void combinations_r(const vector<char> &elems, unsigned long req_len);
+
+int main()
+{
+    vector<char> elements(num_elements);
+    char elements_str[num_elements + 1] = "ACEFGHIJKNOPSTUXY";
+    copy(elements_str, elements_str + num_elements, elements.begin());
+
+    combinations_r(elements, comb_len);
+    cout << " count " << elements.size() << endl;
+    return 0;
+}
 
 
 QDebug operator<<(QDebug out, const std::string& str)
@@ -69,3 +95,101 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
+
+
+static std::map<char,char> CHARMAPS
+{
+{"B","C"},
+{"D","E"},
+{"L","N"},
+{"M","O"},
+{"Q","S"},
+{"R","T"},
+{"V","X"},
+{"W","Y"},
+{"Z","A"},
+};
+
+
+void sequnces() {
+    static const char* valids = "ACEFGHIJKNOPSTUXY";
+    static const char* invalids = "BDLMQRVWZ";
+    static const char* invalid2validmap = "CENOSTXYA";
+
+    static const char* maptoperiod = "-_.";
+
+    //weeks:
+    //A  C  E  F  G  H  I  J  K  N  O  P  S  T  U  X  Y
+    //01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17
+    /*
+     *
+     * 1. get initials - replace invalid chars
+     * 2. get unique seq of 0-4 chars from these initials
+     * 4. append  initials.unique.year.week
+     * */
+
+    std::set<std::string> validInitials;
+    for ( char valid1 : valids ) {
+        for ( char valid2 : valids ) {
+            std::string v;
+            v.append(valid1);
+            v.append(valid2);
+            validInitials.insert(v);
+        }
+    }
+}
+
+std::string convertToValid(char first, char second) {
+    std::string v;
+    v.append(convertToValid(first));
+    v.append(convertToValid(second));
+    return v;
+}
+
+char convertToValid(char in) {
+    if ( srtchr(invalids, in) )
+        return CHARMAPS[in];
+    else if ( strchr( valids,in) )
+        return in;
+    else
+        return "";
+}
+
+std::vector<std::string> orderSequence() {
+    std::vector<std::string> ret;
+    ret.push_back(".");
+
+
+
+}
+
+std::vector<std::string> getValid(int picks) {
+    std::vector<std::string> ret;
+
+    for ( auto i : picks ) {
+        for ( char valid1 : valids ) {
+            for ( char valid2 : valids ) {
+                std::string v;
+                v.append(valid1);
+                v.append(valid2);
+                validInitials.insert(v);
+            }
+        }
+    }
+
+    std::string base;
+    base.append(".");
+    for ( int i = 0; i < picks; i++ ) {
+        for ( char valid1 : valids ) {
+            return getValid(base + valid1);
+        }
+    }
+    ret.push_back(base + valid1);
+    if ( picks < 4)
+        return getValid(base, picks+1);
+    else
+        return ret;
+}
+
+
+#endif

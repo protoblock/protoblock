@@ -156,6 +156,49 @@ namespace fantasybit {
         return ret;
     }
 
+
+    static std::string PID2Symbol(uint64_t pid) {
+        /*
+        // digits:
+
+        1-2: first initial, last initial
+        3-4: seq (0a,0b...0z,1a,1b,1c,9z,Aa,Ab,....Za)
+        4-5: year (16,17,18,19)
+        6: (contract type, W - weekly, S - Season)
+        7: week# ( hexadecimal 0=season  1=week1,2,3,4,5,6,7,8,9,a,b,c,d,e,f=15)
+
+        Arizona Cardinals 2016 Season contract = AC0a16S0
+        AC = Arizona Cardinals
+        0a = the first sequece of "AC"
+        16 = 2016
+        S = season long
+        0 = week 0 = season long
+
+
+        Adrian Peterson 2016 Week 14 Contract
+        AP0a16We
+        AP = initials
+        0a = first one
+        16 = year
+        W = weekly
+        e = 14 in hex
+
+
+        to generate symbols from player ids - start with player id 1 , and keep track of seqence for initals
+
+        so keep a count of all initals
+
+        SS0a - steve smith 1a - 1st one
+        SS0b - steve smith 1b - 2nd one
+        SS0
+
+
+        AC0a16S0 can be shotened to  AC16
+        AP0a16We can be shotened to  AP16We  - or APe for on the run - current year - weeklys  APS - season
+        */
+
+    }
+
 //	template < typename T >
 //	typename T::Type input_proto_enum_map() {
 //		auto in = proto_enum_map<T>();

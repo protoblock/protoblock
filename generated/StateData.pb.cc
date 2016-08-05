@@ -902,8 +902,9 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Pk2FnameRep));
   SubscribeReq_descriptor_ = file->message_type(38);
-  static const int SubscribeReq_offsets_[1] = {
+  static const int SubscribeReq_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubscribeReq, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubscribeReq, fchash_),
   };
   SubscribeReq_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1078,9 +1079,10 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetOrdersRep));
   GetOrdersReq_descriptor_ = file->message_type(49);
-  static const int GetOrdersReq_offsets_[2] = {
+  static const int GetOrdersReq_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetOrdersReq, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetOrdersReq, fname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetOrdersReq, fchash_),
   };
   GetOrdersReq_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1446,47 +1448,48 @@ void protobuf_AddDesc_StateData_2eproto() {
     "req\030\024 \001(\0132\027.fantasybit.Pk2FnameReq\022\'\n\003fn"
     "b\030\036 \001(\0132\032.fantasybit.FantasyNameBal2:\n\003r"
     "ep\022\023.fantasybit.WSReply\030\254\002 \001(\0132\027.fantasy"
-    "bit.Pk2FnameRep\"W\n\014SubscribeReq\022\014\n\004name\030"
-    "\n \001(\t29\n\003req\022\021.fantasybit.WsReq\030\336\002 \001(\0132\030"
-    ".fantasybit.SubscribeReq\"e\n\rNameStatusRe"
-    "q\022\014\n\004name\030\n \001(\t\022\n\n\002pk\030\024 \001(\t2:\n\003req\022\021.fan"
-    "tasybit.WsReq\030\220\003 \001(\0132\031.fantasybit.NameSt"
-    "atusReq\"\237\001\n\rNameStatusRep\022(\n\006status\030\n \001("
-    "\0162\030.fantasybit.MyNameStatus\022&\n\003req\030\024 \001(\013"
-    "2\031.fantasybit.NameStatusReq2<\n\003rep\022\023.fan"
-    "tasybit.WSReply\030\220\003 \001(\0132\031.fantasybit.Name"
-    "StatusRep\"\207\001\n\016GetAllNamesRep\022\r\n\005names\030\n "
-    "\003(\t\022\'\n\003fnb\030\024 \003(\0132\032.fantasybit.FantasyNam"
-    "eBal2=\n\003rep\022\023.fantasybit.WSReply\030\364\003 \001(\0132"
-    "\032.fantasybit.GetAllNamesRep\"\224\001\n\tROWMarke"
-    "t\022\013\n\003pid\030\n \001(\t\022&\n\005quote\030\036 \001(\0132\027.fantasyb"
-    "it.MarketQuote\022*\n\nplayerdata\030( \001(\0132\026.fan"
-    "tasybit.PlayerData\022&\n\004ohlc\0302 \001(\0132\030.fanta"
-    "sybit.ContractOHLC\"{\n\017GetROWMarketRep\022(\n"
-    "\trowmarket\030\n \003(\0132\025.fantasybit.ROWMarket2"
-    ">\n\003rep\022\023.fantasybit.WSReply\030\330\004 \001(\0132\033.fan"
-    "tasybit.GetROWMarketRep\"T\n\013GetDepthReq\022\013"
-    "\n\003pid\030\n \001(\t28\n\003req\022\021.fantasybit.WsReq\030\274\005"
-    " \001(\0132\027.fantasybit.GetDepthReq\"\253\001\n\013GetDep"
-    "thRep\022\013\n\003pid\030\n \001(\t\022)\n\ndepthitems\030\024 \003(\0132\025"
-    ".fantasybit.DepthItem\022(\n\trowmarket\030\036 \001(\013"
-    "2\025.fantasybit.ROWMarket2:\n\003rep\022\023.fantasy"
-    "bit.WSReply\030\274\005 \001(\0132\027.fantasybit.GetDepth"
-    "Rep\"C\n\016AllOdersSymbol\022\016\n\006symbol\030\n \001(\t\022!\n"
-    "\006orders\030\024 \003(\0132\021.fantasybit.Order\"M\n\rAllO"
-    "dersFname\022\r\n\005fname\030\n \001(\t\022-\n\tpidorders\030\024 "
-    "\003(\0132\032.fantasybit.AllOdersSymbol\"\236\001\n\014GetO"
-    "rdersRep\022%\n\003req\030\n \001(\0132\030.fantasybit.GetOr"
-    "dersReq\022*\n\007oorders\030\024 \001(\0132\031.fantasybit.Al"
-    "lOdersFname2;\n\003rep\022\023.fantasybit.WSReply\030"
-    "\240\006 \001(\0132\030.fantasybit.GetOrdersRep\"h\n\014GetO"
-    "rdersReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t2"
-    "9\n\003req\022\021.fantasybit.WsReq\030\240\006 \001(\0132\030.fanta"
-    "sybit.GetOrdersReq*\244\001\n\005CType\022\r\n\tCHECKNAM"
-    "E\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATU"
-    "S\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014"
-    "\n\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITI"
-    "ONS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n", 6465);
+    "bit.Pk2FnameRep\"g\n\014SubscribeReq\022\014\n\004name\030"
+    "\n \001(\t\022\016\n\006fchash\030\036 \001(\00429\n\003req\022\021.fantasybi"
+    "t.WsReq\030\336\002 \001(\0132\030.fantasybit.SubscribeReq"
+    "\"e\n\rNameStatusReq\022\014\n\004name\030\n \001(\t\022\n\n\002pk\030\024 "
+    "\001(\t2:\n\003req\022\021.fantasybit.WsReq\030\220\003 \001(\0132\031.f"
+    "antasybit.NameStatusReq\"\237\001\n\rNameStatusRe"
+    "p\022(\n\006status\030\n \001(\0162\030.fantasybit.MyNameSta"
+    "tus\022&\n\003req\030\024 \001(\0132\031.fantasybit.NameStatus"
+    "Req2<\n\003rep\022\023.fantasybit.WSReply\030\220\003 \001(\0132\031"
+    ".fantasybit.NameStatusRep\"\207\001\n\016GetAllName"
+    "sRep\022\r\n\005names\030\n \003(\t\022\'\n\003fnb\030\024 \003(\0132\032.fanta"
+    "sybit.FantasyNameBal2=\n\003rep\022\023.fantasybit"
+    ".WSReply\030\364\003 \001(\0132\032.fantasybit.GetAllNames"
+    "Rep\"\224\001\n\tROWMarket\022\013\n\003pid\030\n \001(\t\022&\n\005quote\030"
+    "\036 \001(\0132\027.fantasybit.MarketQuote\022*\n\nplayer"
+    "data\030( \001(\0132\026.fantasybit.PlayerData\022&\n\004oh"
+    "lc\0302 \001(\0132\030.fantasybit.ContractOHLC\"{\n\017Ge"
+    "tROWMarketRep\022(\n\trowmarket\030\n \003(\0132\025.fanta"
+    "sybit.ROWMarket2>\n\003rep\022\023.fantasybit.WSRe"
+    "ply\030\330\004 \001(\0132\033.fantasybit.GetROWMarketRep\""
+    "T\n\013GetDepthReq\022\013\n\003pid\030\n \001(\t28\n\003req\022\021.fan"
+    "tasybit.WsReq\030\274\005 \001(\0132\027.fantasybit.GetDep"
+    "thReq\"\253\001\n\013GetDepthRep\022\013\n\003pid\030\n \001(\t\022)\n\nde"
+    "pthitems\030\024 \003(\0132\025.fantasybit.DepthItem\022(\n"
+    "\trowmarket\030\036 \001(\0132\025.fantasybit.ROWMarket2"
+    ":\n\003rep\022\023.fantasybit.WSReply\030\274\005 \001(\0132\027.fan"
+    "tasybit.GetDepthRep\"C\n\016AllOdersSymbol\022\016\n"
+    "\006symbol\030\n \001(\t\022!\n\006orders\030\024 \003(\0132\021.fantasyb"
+    "it.Order\"M\n\rAllOdersFname\022\r\n\005fname\030\n \001(\t"
+    "\022-\n\tpidorders\030\024 \003(\0132\032.fantasybit.AllOder"
+    "sSymbol\"\236\001\n\014GetOrdersRep\022%\n\003req\030\n \001(\0132\030."
+    "fantasybit.GetOrdersReq\022*\n\007oorders\030\024 \001(\013"
+    "2\031.fantasybit.AllOdersFname2;\n\003rep\022\023.fan"
+    "tasybit.WSReply\030\240\006 \001(\0132\030.fantasybit.GetO"
+    "rdersRep\"x\n\014GetOrdersReq\022\016\n\006symbol\030\n \001(\t"
+    "\022\r\n\005fname\030\024 \001(\t\022\016\n\006fchash\030\036 \001(\00429\n\003req\022\021"
+    ".fantasybit.WsReq\030\240\006 \001(\0132\030.fantasybit.Ge"
+    "tOrdersReq*\244\001\n\005CType\022\r\n\tCHECKNAME\020\001\022\t\n\005N"
+    "EWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS\020\004\022\017\n\013G"
+    "ETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n\010GETDEP"
+    "TH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITIONS\020\t\022\022\n"
+    "\016SUBSCRIBEFNAME\020\n", 6497);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -17037,6 +17040,7 @@ void Pk2FnameRep::Swap(Pk2FnameRep* other) {
 
 #ifndef _MSC_VER
 const int SubscribeReq::kNameFieldNumber;
+const int SubscribeReq::kFchashFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -17062,6 +17066,7 @@ SubscribeReq::SubscribeReq(const SubscribeReq& from)
 void SubscribeReq::SharedCtor() {
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  fchash_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -17105,6 +17110,7 @@ void SubscribeReq::Clear() {
         name_->clear();
       }
     }
+    fchash_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -17125,6 +17131,22 @@ bool SubscribeReq::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_fchash;
+        break;
+      }
+
+      // optional uint64 fchash = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_fchash:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &fchash_)));
+          set_has_fchash();
         } else {
           goto handle_uninterpreted;
         }
@@ -17159,6 +17181,11 @@ void SubscribeReq::SerializeWithCachedSizes(
       10, this->name(), output);
   }
 
+  // optional uint64 fchash = 30;
+  if (has_fchash()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->fchash(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -17177,6 +17204,11 @@ void SubscribeReq::SerializeWithCachedSizes(
         10, this->name(), target);
   }
 
+  // optional uint64 fchash = 30;
+  if (has_fchash()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->fchash(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -17193,6 +17225,13 @@ int SubscribeReq::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->name());
+    }
+
+    // optional uint64 fchash = 30;
+    if (has_fchash()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->fchash());
     }
 
   }
@@ -17225,6 +17264,9 @@ void SubscribeReq::MergeFrom(const SubscribeReq& from) {
     if (from.has_name()) {
       set_name(from.name());
     }
+    if (from.has_fchash()) {
+      set_fchash(from.fchash());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -17249,6 +17291,7 @@ bool SubscribeReq::IsInitialized() const {
 void SubscribeReq::Swap(SubscribeReq* other) {
   if (other != this) {
     std::swap(name_, other->name_);
+    std::swap(fchash_, other->fchash_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -19989,6 +20032,7 @@ void GetOrdersRep::Swap(GetOrdersRep* other) {
 #ifndef _MSC_VER
 const int GetOrdersReq::kSymbolFieldNumber;
 const int GetOrdersReq::kFnameFieldNumber;
+const int GetOrdersReq::kFchashFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -20015,6 +20059,7 @@ void GetOrdersReq::SharedCtor() {
   _cached_size_ = 0;
   symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   fname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  fchash_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -20066,6 +20111,7 @@ void GetOrdersReq::Clear() {
         fname_->clear();
       }
     }
+    fchash_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -20103,6 +20149,22 @@ bool GetOrdersReq::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->fname().data(), this->fname().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_fchash;
+        break;
+      }
+
+      // optional uint64 fchash = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_fchash:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &fchash_)));
+          set_has_fchash();
         } else {
           goto handle_uninterpreted;
         }
@@ -20146,6 +20208,11 @@ void GetOrdersReq::SerializeWithCachedSizes(
       20, this->fname(), output);
   }
 
+  // optional uint64 fchash = 30;
+  if (has_fchash()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->fchash(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -20174,6 +20241,11 @@ void GetOrdersReq::SerializeWithCachedSizes(
         20, this->fname(), target);
   }
 
+  // optional uint64 fchash = 30;
+  if (has_fchash()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->fchash(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -20197,6 +20269,13 @@ int GetOrdersReq::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->fname());
+    }
+
+    // optional uint64 fchash = 30;
+    if (has_fchash()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->fchash());
     }
 
   }
@@ -20232,6 +20311,9 @@ void GetOrdersReq::MergeFrom(const GetOrdersReq& from) {
     if (from.has_fname()) {
       set_fname(from.fname());
     }
+    if (from.has_fchash()) {
+      set_fchash(from.fchash());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -20257,6 +20339,7 @@ void GetOrdersReq::Swap(GetOrdersReq* other) {
   if (other != this) {
     std::swap(symbol_, other->symbol_);
     std::swap(fname_, other->fname_);
+    std::swap(fchash_, other->fchash_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

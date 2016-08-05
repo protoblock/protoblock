@@ -526,6 +526,7 @@ message SubscribeReq {
     }
 
     optional string name = 10;
+    optional uint64 fchash = 30;
 }
 
 message NameStatusReq {
@@ -615,4 +616,5 @@ message GetOrdersReq {
 
     optional string symbol = 10;
     optional string fname = 20;
+    optional uint64 fchash = 30;
 }

@@ -263,7 +263,8 @@ void FantasyAgent::onSignedTransaction(SignedTransaction &sn)
 }
 
 bool FantasyAgent::HaveClient() const {
-    return client != nullptr;
+
+    return client2 != nullptr || client != nullptr;
 }
 
 

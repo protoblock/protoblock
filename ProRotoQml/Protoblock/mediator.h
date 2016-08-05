@@ -250,6 +250,10 @@ private:
 
     std::unordered_map<std::string, std::string> m_myPubkeyFname;
 
+    std::unordered_map<std::string, uint64_t> m_myPubkeyHash;
+
+    std::unordered_map<uint64_t, std::string> m_myHashFname;
+
     void doPk2fname(const std::string &pkstr);
 
     QTimer signPlayerStatus;
@@ -264,7 +268,7 @@ private:
     WsReq mGetDepthReq;
     QString testid;
     bool isbid;
-    void getOrderReq(const QString &name);
+    void getOrderReq(uint64_t cname);
 };
 
 #endif // MEDIATOR_H
