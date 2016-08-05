@@ -78,10 +78,11 @@ Item {
             }
         }
 
-        sourceSize {
-            width: size * Screen.devicePixelRatio
-            height: size * Screen.devicePixelRatio
-        }
+        sourceSize: undefined
+//        sourceSize {
+//            width: size * Screen.devicePixelRatio
+//            height: size * Screen.devicePixelRatio
+//        }
     }
 
     ColorOverlay {
