@@ -14,6 +14,7 @@ Item {
     property int elevation : 0
     property int maximumLineCount: 2
     height: maximumLineCount == 2 ? ProtoScreen.guToPx(8)  : ProtoScreen.guToPx(10)
+
     Card{
         elevation: marketDepthCard.elevation
         anchors.fill: parent
@@ -30,7 +31,7 @@ Item {
             }
             Label {
                 id: label1
-                text: buySize
+                text: buySize > 0 ? buySize.toString() : ""
                 Layout.fillHeight: true
                 Layout.fillWidth: false
                 Layout.preferredWidth: (parent.width / 4) - 2
@@ -40,7 +41,7 @@ Item {
 
             Label {
                 id: label2
-                text: buy
+                text: buy > 0 ? buy.toString() : ""
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
@@ -50,7 +51,7 @@ Item {
 
             Label {
                 id: label3
-                text: sell
+                text: sell > 0 ? sell.toString() : ""
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
@@ -60,7 +61,7 @@ Item {
 
             Label {
                 id: label4
-                text: sellSize
+                text: sellSize >0 ? sellSize.toString() : ""
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
