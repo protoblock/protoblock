@@ -14,7 +14,7 @@ Item {
     property string symbol
     property variant inplay: MiddleMan.pDepthMarketModel.pPlayerQuoteSliceModelItem
 
-    property int depthsize: dihight
+    property int depthsize: 10
     property double dihight: ProtoScreen.guToPx(4)
 
     Component.onCompleted: {
@@ -256,14 +256,14 @@ Item {
             Rectangle {
                 id: boundingRect
                 anchors.top: bandepth.bottom
-                height:    (parent.height - cwc.height - listquote.height - buySell.height )
+//                height:    (topcard.height - bandepth.height - boundquote.height - buySell.height )
+                height: dihight * ( 1 + Math.min(depthsize,depthvm.count))
                 anchors.margins: 1
                 anchors.horizontalCenter: bandepth.horizontalCenter
                 width: bandepth.width
 
                 ListView {
                     anchors.fill: parent
-
 
     //                    id: f2
     //                    width: depthvm.width
@@ -285,13 +285,13 @@ Item {
     //                height: parent.height - bandepth.height - cwc.height - listquote.height
     //                    height: parent.height
                     clip: true
-                    model:  MiddleMan.pDepthMarketModel
+                    model: MiddleMan.pDepthMarketModel
                     headerPositioning: ListView.OverlayHeader
                     header: RowLayout {
                         width: parent.width
                         height: dihight * .75
                         spacing: 1
-                        Rectangle{width: 2; height: 1;color: "transparent"}
+//                        Rectangle{width: 2; height: 1;color: "transparent"}
                         Repeater{
                             model: ["Bid Size","Bid","Ask","Ask Size"]
                             Card{
@@ -332,37 +332,78 @@ Item {
                 }
             }
             Card {
-            id: buySell
-            width: boundingRect.width
-            anchors.top: boundingRect.bottom
-//            anchors.bottom: parent.bottom
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            height: ProtoScreen.guToPx(8)
-
-            Row{
-                width: parent.width
-                height:parent.height
-                Button {
-                    elevation: 5
-                    text: "BUY"
-                    width: parent.width / 2
-                    height: width /2
-                    onClicked: {
-                    }
-                }
-                Button {
-                    elevation: 5
-                    text: "SELL"
-                    width: parent.width / 2
-                    height: width /2
-                    onClicked: {
-                    }
+                id: buySell
+                width: boundingRect.width
+                anchors.top: boundingRect.bottom
+//                Layout.fillHeight: true
+//                Layout.fillWidth: true
+                height: ProtoScreen.guToPx(12)
+                anchors.topMargin: ProtoScreen.guToPx(.25)
+                anchors {
+                    horizontalCenter: boundingRect.horizontalCenter
+//                    margins: ProtoScreen.guToPx(.25)
                 }
 
+                elevation: 0
+                Row {
+//                    spacing: 2
+                    width: (parent.width / 3) * 2
+                    height: ProtoScreen.guToPx(4)
+                    anchors.centerIn: parent
+                    anchors.fill: parent
+                    anchors.margins: ProtoScreen.guToPx(.5)
+//                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    Rectangle {
+                        color: "transparent"
+                        width: parent.width / 2
+                        height: parent.height - ProtoScreen.guToPx(2)
+                        radius: ProtoScreen.guToPx(1)
+                        anchors.verticalCenter: parent.verticalCenter
+                        Button {
+//                            anchors.fill: parent
+                            width: parent.width / 2 // ProtoScreen.guToPx(4)
+                            height: width / 2.7
+//                            anchors.rightMargin: ProtoScreen.guToPx(1)
+//                            anchors.right: parent.right
+//                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.centerIn: parent
+//                            anchors.margins: ProtoScreen.guToPx(.25)
+                            text: "BUY"
+                            backgroundColor:  Colors.green
+                            textColor: "white"
+                            onClicked: {
+                            }
+                        }
+                    }
+                    Rectangle {
+                        color: "transparent"
+                        width: parent.width / 2
+                        height: parent.height - ProtoScreen.guToPx(2)
+                        radius: ProtoScreen.guToPx(1)
+                        anchors.verticalCenter: parent.verticalCenter
+                        Button {
+                            width: parent.width / 2 // ProtoScreen.guToPx(4)
+                            height: width / 2.7
+//                            anchors.leftMargin: ProtoScreen.guToPx(1)
+//                            anchors.left: parent.left
+//                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.centerIn: parent
+
+//                            anchors.margins: ProtoScreen.guToPx(.25)
+                            text: "SELL"
+                            backgroundColor:  Colors.red
+                            textColor: "white"
+                            onClicked: {
+                            }
+                        }
+                    }
+
+                }
             }
+
         }
     }
-}
+
 
 
