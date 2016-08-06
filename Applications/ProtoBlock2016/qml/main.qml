@@ -34,6 +34,7 @@ Quick.Window {
     property string helperHeader: "Help"
     property bool reloadrowquote: true
     property string msgString
+    property bool reloadorderpos: true
 
     property string version: "0.1" //TODO
 

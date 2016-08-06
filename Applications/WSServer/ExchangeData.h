@@ -51,12 +51,12 @@ struct FullPosition {
 
 struct FullOrderDelta {
     string fname;
-    Order *openorder;
+    Order openorder;
     string playerid;
 };
 
 
-typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order *> > > ordsnap_t;
+typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order> > > ordsnap_t;
 
 /*
 struct Order {

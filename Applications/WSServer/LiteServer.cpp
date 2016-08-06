@@ -63,7 +63,7 @@ LiteServer::~LiteServer()
 void LiteServer::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
     if ( mt->symbol() == "" )
         return;
-#ifdef TRACE
+#ifdef TRACE2
     qDebug() << "level2 OnMarketSnapShot " << mt->DebugString().data();
 #endif
 
@@ -80,7 +80,7 @@ void LiteServer::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
     if ( mt->has_ohlc())
         pROWMarket->set_allocated_ohlc(mt->release_ohlc());
 
-#ifdef TRACE
+#ifdef TRACE2
     qDebug() << "LiteServer::OnMarketSnapShot " << pROWMarket->DebugString().data();
 #endif
 
@@ -93,7 +93,7 @@ void LiteServer::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
 
         depths->mutable_depthitems()->Swap(mt->mutable_depth());
 
-#ifdef TRACE
+#ifdef TRACE2
         qDebug() << "LiteServer::OnMarketSnapShot depths" << depths->DebugString().data();
 #endif
 
@@ -491,7 +491,9 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             depths->set_allocated_rowmarket(getRowmarket(pid));
             rep.SetAllocatedExtension(GetDepthRep::rep,depths);
             rep.SerializeToString(&mRepstr);
+#ifdef TRACE2
             qDebug() << rep.DebugString().data();
+#endif
             rep.ReleaseExtension(GetDepthRep::rep);
             depths->release_rowmarket();
             break;
@@ -591,7 +593,7 @@ void LiteServer::getFnameSnap(const std::string &fname) {
             AllOdersSymbol *allords = getAllOdersSymbol(allof,p.first);
             for ( auto o : myorders) {
                 Order *po = addOrder(allords,o);
-                mSeqOrderMap[o->refnum()] = po;
+                mSeqOrderMap[o.refnum()] = po;
             }
 //            allof->mutable_pidorders()->AddAllocated(allords);
         }
@@ -636,10 +638,10 @@ void LiteServer::getFnameSnap(const std::string &fname) {
 
 //}
 
-void LiteServer::OnNewOO(fantasybit::FullOrderDelta fo) {
-    qDebug() << "level2 Trading::OnNewOO " << fo.fname.data() << fo.openorder->DebugString().data();
+void LiteServer::OnNewOO(const fantasybit::FullOrderDelta &fo) {
+    qDebug() << "level2 Trading::OnNewOO " << fo.fname.data() << fo.openorder.DebugString().data();
 
-    auto &o = *fo.openorder;
+    auto &o = fo.openorder;
 
     auto it = mSeqOrderMap.find(o.refnum());
     bool found =  ( it != end(mSeqOrderMap));
@@ -677,7 +679,7 @@ void LiteServer::OnNewOO(fantasybit::FullOrderDelta fo) {
         }
     }
     else if ( found ) {
-        it->second->Swap(fo.openorder);
+        it->second->mutable_core()->set_size(fo.openorder.core().size());
     }
     else {
         AllOdersFname *allof = getAllOdersFname(fo.fname);
@@ -725,18 +727,19 @@ AllOdersSymbol * LiteServer::getAllOdersSymbol(AllOdersFname *aofp,const std::st
         return it->second;
 }
 
-Order * LiteServer::addOrder(AllOdersSymbol *allords,Order *orderin) {
+Order * LiteServer::addOrder(AllOdersSymbol *allords,const Order &orderin) {
     auto &s = openOrderSlots[allords];
     if ( !s.empty() ) {
         Order *op = s.top();
         s.pop();
-        op->Swap(orderin);
-        delete orderin;
+        op->CopyFrom(orderin);
+//        delete orderin;
         return op;
     }
     else {
-        allords->mutable_orders()->AddAllocated(orderin);
-        return orderin;
+        auto ret = allords->add_orders();
+        ret->CopyFrom(orderin);
+        return ret;
     }
 
 

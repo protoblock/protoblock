@@ -57,6 +57,9 @@ class Mediator : public QObject
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pOpenOrdersModel)
     QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 
+    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
+
+
 //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
 
 
@@ -186,6 +189,7 @@ public:
     Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void allNamesGet();
     Q_INVOKABLE void rowMarketGet();
+    Q_INVOKABLE void getOrderPos();
     Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(const QString&);
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
@@ -293,6 +297,7 @@ private:
     int depthCount;
     int depthBackup;
     int depthInterval;
+    TradingPositionsModel mTradingPositionsModel;
 };
 
 #endif // MEDIATOR_H

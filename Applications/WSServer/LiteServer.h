@@ -57,7 +57,7 @@ public:
 
 public slots:
     void OnDepthDelta(fantasybit::DepthFeedDelta *df);
-    void OnNewOO(fantasybit::FullOrderDelta);
+    void OnNewOO(const fantasybit::FullOrderDelta &);
 Q_SIGNALS:
     void closed();
     void error(QString);
@@ -110,7 +110,7 @@ private:
 
 
     void getFnameSnap(const std::string &fname);
-    Order *addOrder(AllOdersSymbol *allords, Order *orderin);
+    Order *addOrder(AllOdersSymbol *allords, const Order &orderin);
     AllOdersSymbol *getAllOdersSymbol(AllOdersFname *aofp, const std::string &symbol);
     AllOdersFname *getAllOdersFname(const std::string &fname);
 };

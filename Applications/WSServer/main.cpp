@@ -1,3 +1,4 @@
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
@@ -7,7 +8,7 @@
 
 #include "Commissioner.h"
 void sortedPermutations ( char str[] );
-
+#ifdef NOT_NOW
 // Driver program to test above function
 int main()
 {
@@ -16,7 +17,7 @@ int main()
     return 0;
 }
 
-#ifdef NOT_NOW
+
 
 const unsigned long num_elements = 17;
 const unsigned long comb_len = 4;
@@ -40,7 +41,7 @@ QDebug operator<<(QDebug out, const std::string& str)
     return out;
 }
 
-
+#endif
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -96,7 +97,7 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
-
+#ifdef NOT_NOT
 static std::map<char,char> CHARMAPS
 {
 {"B","C"},

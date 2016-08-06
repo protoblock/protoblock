@@ -545,11 +545,11 @@ void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int
     qDebug() << "level2 OnDeltaOpenOrder !subscribed emit NewOO" << fname ;
 #endif
 
-    Order *op = Order::default_instance().New();
-    Order &ord  = *op;
+//    Order *op = Order::default_instance().New();
+    Order ord;//  = *op;
     ord.mutable_core()->CopyFrom(oo.livecore);
     ord.set_refnum(seqnum);
-    emit NewOO(FullOrderDelta{fname,op,oo.playerid});
+    emit NewOO(FullOrderDelta{fname,ord,oo.playerid});
 }
 
 void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
@@ -1497,11 +1497,11 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
 #endif
             //continue;
             auto &mypair = ret[ord.playerid];
-            Order *op = Order::default_instance().New();
-            Order &o = *op;
+//            Order *op = Order::default_instance().New();
+            Order o{};
             o.set_refnum(oid);
             o.mutable_core()->CopyFrom(ord.livecore);
-            mypair.second.push_back(op);
+            mypair.second.push_back(o);
         }
     }
 

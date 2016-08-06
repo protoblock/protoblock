@@ -6319,6 +6319,20 @@ class AllOdersSymbol : public ::google::protobuf::Message {
   inline ::std::string* release_symbol();
   inline void set_allocated_symbol(::std::string* symbol);
 
+  // optional int32 netqty = 30;
+  inline bool has_netqty() const;
+  inline void clear_netqty();
+  static const int kNetqtyFieldNumber = 30;
+  inline ::google::protobuf::int32 netqty() const;
+  inline void set_netqty(::google::protobuf::int32 value);
+
+  // optional int32 netprice = 40;
+  inline bool has_netprice() const;
+  inline void clear_netprice();
+  static const int kNetpriceFieldNumber = 40;
+  inline ::google::protobuf::int32 netprice() const;
+  inline void set_netprice(::google::protobuf::int32 value);
+
   // repeated .fantasybit.Order orders = 20;
   inline int orders_size() const;
   inline void clear_orders();
@@ -6335,14 +6349,20 @@ class AllOdersSymbol : public ::google::protobuf::Message {
  private:
   inline void set_has_symbol();
   inline void clear_has_symbol();
+  inline void set_has_netqty();
+  inline void clear_has_netqty();
+  inline void set_has_netprice();
+  inline void clear_has_netprice();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* symbol_;
+  ::google::protobuf::int32 netqty_;
+  ::google::protobuf::int32 netprice_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::Order > orders_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -18121,6 +18141,50 @@ inline void AllOdersSymbol::set_allocated_symbol(::std::string* symbol) {
     clear_has_symbol();
     symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional int32 netqty = 30;
+inline bool AllOdersSymbol::has_netqty() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void AllOdersSymbol::set_has_netqty() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void AllOdersSymbol::clear_has_netqty() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void AllOdersSymbol::clear_netqty() {
+  netqty_ = 0;
+  clear_has_netqty();
+}
+inline ::google::protobuf::int32 AllOdersSymbol::netqty() const {
+  return netqty_;
+}
+inline void AllOdersSymbol::set_netqty(::google::protobuf::int32 value) {
+  set_has_netqty();
+  netqty_ = value;
+}
+
+// optional int32 netprice = 40;
+inline bool AllOdersSymbol::has_netprice() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void AllOdersSymbol::set_has_netprice() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void AllOdersSymbol::clear_has_netprice() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void AllOdersSymbol::clear_netprice() {
+  netprice_ = 0;
+  clear_has_netprice();
+}
+inline ::google::protobuf::int32 AllOdersSymbol::netprice() const {
+  return netprice_;
+}
+inline void AllOdersSymbol::set_netprice(::google::protobuf::int32 value) {
+  set_has_netprice();
+  netprice_ = value;
 }
 
 // repeated .fantasybit.Order orders = 20;

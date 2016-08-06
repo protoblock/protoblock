@@ -592,6 +592,8 @@ message GetDepthRep {
 
 message AllOdersSymbol {
     optional string symbol = 10;
+    optional int32 netqty = 30;
+    optional int32 netprice = 40;
     repeated Order orders = 20;
 }
 

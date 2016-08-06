@@ -18,7 +18,9 @@ Mediator::Mediator(QObject *parent) :
     mGoodNameBalModel{},
     m_pGoodNameBalModel(&mGoodNameBalModel),
     mOpenOrdersModel{},
-    m_pOpenOrdersModel(&mOpenOrdersModel)
+    m_pOpenOrdersModel(&mOpenOrdersModel),
+    mTradingPositionsModel(this,"display","symbol"),
+    m_pTradingPositionsModel{&mTradingPositionsModel}
 {
 
     mGetDepthReq.set_ctype(GETDEPTH);
@@ -570,7 +572,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         }
         case GETORDERS: {
             qDebug() << rep.DebugString().data();
-            m_pOpenOrdersModel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
+            m_pTradingPositionsModel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
 
             break;
         }
@@ -874,6 +876,7 @@ void Mediator::useName(const QString &name) {
     ? There might be a reace on on this ?
  */
 QString Mediator::init() {
+
     engineUpdate(true);
 
     std::string dname = m_fantasy_agent.defaultName();
