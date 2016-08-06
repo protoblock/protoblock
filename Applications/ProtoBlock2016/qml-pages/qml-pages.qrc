@@ -34,5 +34,6 @@
         <file>2016Season.qml</file>
         <file>ROW2016.qml</file>
         <file>DepthTrader.qml</file>
+        <file>OrderPositions.qml</file>
     </qresource>
 </RCC>

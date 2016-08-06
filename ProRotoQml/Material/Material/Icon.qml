@@ -71,7 +71,7 @@ Item {
                     return   name //+ '.svg'
             }
             else if (icon.source.indexOf("qrc:/") === 0 ){
-                console.log("QRC icon " +  icon.source)
+//                console.log("QRC icon " +  icon.source)
                 return icon.source
             }else {
                 return ""

@@ -145,12 +145,13 @@ struct FantasyNameCHash : FantasyName {
     FantasyNameCHash ( const FantasyName &in ) :
         FantasyName(in), chash(hash()) {}
 
-private:
-    hash_t chash;
-
     hash_t hash() const {
         return chash;
     }
+private:
+    hash_t chash;
+
+
 };
 
 /*

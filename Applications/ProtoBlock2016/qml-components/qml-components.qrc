@@ -18,11 +18,11 @@
         <file>LoginBox.qml</file>
         <file>Coverflow.qml</file>
         <file>CardWithContent.qml</file>
-        <file>BuyTrading.qml</file>
         <file>UserPicker.qml</file>
         <file>PlayerCard.qml</file>
         <file>MaterialListPlayer.qml</file>
         <file>MarketDepthCard.qml</file>
         <file>IntHelper.qml</file>
+        <file>OMSCard.qml</file>
     </qresource>
 </RCC>

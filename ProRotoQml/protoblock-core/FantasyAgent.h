@@ -123,6 +123,8 @@ public:
     }
 
     std::string currentClient();
+    uint64_t currentClient2();
+
     bool finishImportMnemonic(const std::string &pk, const std::string &name);
     std::string defaultName();
     bool readFromSecret(const std::string &readfrom, bool transfer = false);

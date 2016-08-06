@@ -13,7 +13,7 @@ class PlayerQuoteSliceModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, position)
     QML_READONLY_CSTREF_PROPERTY (QString, lastname)
     QML_READONLY_CSTREF_PROPERTY (QString, firstname)
-    QML_READONLY_CSTREF_PROPERTY (QString, team_id)
+    QML_READONLY_CSTREF_PROPERTY (QString, teamid)
     QML_READONLY_CSTREF_PROPERTY (qint32, bidsize)
     QML_READONLY_CSTREF_PROPERTY (QString , fullname)
     QML_READONLY_CSTREF_PROPERTY (qint32, bid)
@@ -35,7 +35,7 @@ public:
         m_position = in.playerdata().player_base().position().data();
         m_firstname = in.playerdata().player_base().first().data();
         m_lastname = in.playerdata().player_base().last().data();
-        m_team_id = in.playerdata().player_status().teamid().data();
+        m_teamid = in.playerdata().player_status().teamid().data();
         m_fullname =  QString("%1 %2")
                 .arg ( in.playerdata ().player_base ().first ().data () )
                 .arg ( in.playerdata ().player_base ().last ().data () );
@@ -60,7 +60,7 @@ public:
 
        setlastname(in.playerdata().player_base().last().data());
        setfirstname(in.playerdata().player_base().first().data());
-       setteam_id(in.playerdata().player_status().teamid().data());
+       setteamid(in.playerdata().player_status().teamid().data());
        setbidsize(in.quote().bs());
        setfullname(QString("%1 %2")
                    .arg ( in.playerdata ().player_base ().first ().data () )
@@ -78,7 +78,13 @@ public:
 };
 
 
-class PlayerQuoteSliceModel : public QQmlObjectListModel<PlayerQuoteSliceModelItem>{};
+class PlayerQuoteSliceModel : public QQmlObjectListModel<PlayerQuoteSliceModelItem>{
+public:
+    explicit PlayerQuoteSliceModel (QObject *          parent      = Q_NULLPTR,
+                                  const QByteArray & displayRole = QByteArray (),
+                                  const QByteArray & uidRole     = QByteArray ())
+        : QQmlObjectListModel (parent,displayRole,uidRole) {}
+};
 
 Q_DECLARE_METATYPE(PlayerQuoteSliceModel*)
 Q_DECLARE_METATYPE(PlayerQuoteSliceModelItem*)

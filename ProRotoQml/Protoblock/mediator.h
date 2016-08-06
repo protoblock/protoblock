@@ -54,7 +54,7 @@ class Mediator : public QObject
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
-    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pOpenOrdersModel)
+    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
     QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
@@ -124,8 +124,8 @@ public:
         qDebug() << " depthInterval " << depthInterval;
 
         polldepth.start(depthInterval);
-        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
-
+//        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+        getOrderPos();
     }
 
     Q_INVOKABLE void stopDepth(const QString& symbol) {
@@ -203,10 +203,31 @@ public:
 
     Q_INVOKABLE QStringList allRowMarketList() { return m_allNamesList; }
 
+    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
+        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
+        if ( model == nullptr ) {
+            qDebug() << " bad data for getPlayerNamePos " << uid;
+            return "";
+        }
+        else
+            return model->get_fullname() + " (" + model->get_position() +")" ;
+    }
+
+    Q_INVOKABLE QString getTeamid(const QString &uid) {
+        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
+        if ( model == nullptr ) {
+            qDebug() << " bad data for getTeamid " << uid;
+            return "";
+        }
+        else
+            return model->get_teamid();
+    }
+
     qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);
 
 
     void subscribeOrderPos(const QString &name);
+    void getOrderReq(const QString &name);
 signals:
     void importSuccess(const QString name, bool passfail);
 
@@ -293,7 +314,7 @@ private:
     WsReq mGetDepthReq;
     QString testid;
     bool isbid;
-    void getOrderReq(uint64_t cname);
+//    void getOrderReq(uint64_t cname);
     int depthCount;
     int depthBackup;
     int depthInterval;

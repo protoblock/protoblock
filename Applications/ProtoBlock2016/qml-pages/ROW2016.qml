@@ -214,7 +214,7 @@ Item {
                         }
                         action: Icon{
                             hasColor:false
-                            source: "qrc:/"+ model.team_id+".PNG"
+                            source: "qrc:/"+ model.teamid+".PNG"
                             width: ProtoScreen.guToPx(6)
                             height: width
                             smooth: true

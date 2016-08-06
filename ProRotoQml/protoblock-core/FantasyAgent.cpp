@@ -282,6 +282,10 @@ std::string FantasyAgent::currentClient() {
     return client->alias();
 }
 
+uint64_t FantasyAgent::currentClient2() {
+    return client2->hash();
+}
+
 
 bool FantasyAgent::amDataAgent() {
     //Todo: fix
@@ -444,7 +448,7 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
     qInfo() << "name found" << fn->ToString();
 
     client = make_unique<FantasyName>(name, m_priv.get_public_key().serialize());
-
+    client2 = make_unique<FantasyNameCHash>(name, m_priv.get_public_key().serialize());
     mfn.set_status(MyNameStatus::confirmed);
     mfn.set_name(name);
 
@@ -486,6 +490,8 @@ bool FantasyAgent::UseName(const std::string &name) {
             m_priv = pr;
             client = make_unique<FantasyName>
                     (name, m_priv.get_public_key().serialize());
+            client2 = make_unique<FantasyNameCHash>
+                    (name, m_priv.get_public_key().serialize());
 
             return true;
         }
@@ -505,6 +511,9 @@ std::string FantasyAgent::defaultName() {
             m_priv = pr;
             client = make_unique<FantasyName>
                     (name, m_priv.get_public_key().serialize());
+            client2 = make_unique<FantasyNameCHash>
+                    (name, m_priv.get_public_key().serialize());
+
             return name;
         }
     }
@@ -544,6 +553,8 @@ FantasyAgent::status FantasyAgent::signPlayer(std::string name) {
                 auto pr = str2priv(fn.private_key());
                 m_priv = pr;
                 client = make_unique<FantasyName>(name, m_priv.get_public_key().serialize());
+                client2 = make_unique<FantasyNameCHash>(name, m_priv.get_public_key().serialize());
+
                 ret = AVAIL;
                 //LOG(lg, info) << "name available, already have it in secret file " << name;
                 qInfo() <<"name available, already have it in secret file " << name;

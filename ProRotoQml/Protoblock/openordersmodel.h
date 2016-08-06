@@ -65,6 +65,8 @@ class TradingPositionsModelItem : public QObject {
     QML_CONSTANT_CSTREF_PROPERTY (QString, symbol)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, netprice)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, netqty)
+    QML_CONSTANT_CSTREF_PROPERTY (double, openpnl)
+
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pOpenOrdersModel)
 public:
     explicit TradingPositionsModelItem(const AllOdersSymbol &allordersymbol,
@@ -72,7 +74,8 @@ public:
                 : m_symbol{allordersymbol.symbol().data()},
                   m_netprice{allordersymbol.netprice()},
                   m_netqty{allordersymbol.netqty()},
-                  mOpenOrdersModel(parent,"playername,fantasy_name,side,size,price","refnum,symbol,fname"),
+                  m_openpnl{0.0},
+                  mOpenOrdersModel(parent,"display","refnum"),
                   m_pOpenOrdersModel{&mOpenOrdersModel},
                   QObject{parent}
     {

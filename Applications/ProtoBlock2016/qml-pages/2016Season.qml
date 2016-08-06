@@ -58,18 +58,18 @@ FocusScope {
                             Row{
                             width: parent.width
                             height:parent.height
-                            BuyTrading {
-                                id: buycard
-                                width: parent.width / 2
-                                height: parent.height
-                            }
-                            BuyTrading {
-                                id: sellCard
-                                width: parent.width / 2
-                                height: parent.height
-                                isbuyCard: false
+//                            BuyTrading {
+//                                id: buycard
+//                                width: parent.width / 2
+//                                height: parent.height
+//                            }
+//                            BuyTrading {
+//                                id: sellCard
+//                                width: parent.width / 2
+//                                height: parent.height
+//                                isbuyCard: false
 
-                            }
+//                            }
                         }
                     }
 
@@ -599,7 +599,7 @@ FocusScope {
                                 }
                                 action: Icon{
                                     hasColor:false
-                                    source: "qrc:/"+ model.team_id+".PNG"
+                                    source: "qrc:/"+ model.teamid+".PNG"
                                     width: ProtoScreen.guToPx(6)
                                     height: width
                                 }
