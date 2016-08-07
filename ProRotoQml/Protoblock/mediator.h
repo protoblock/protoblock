@@ -128,7 +128,7 @@ public:
 
         polldepth.start(depthInterval);
 //        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
-        getOrderPos();
+//        getOrderPos();
     }
 
     Q_INVOKABLE void stopDepth(const QString& symbol) {
@@ -201,6 +201,10 @@ public:
         }
         else
             m_pGlobalOpenOrdersModel = model->get_pOpenOrdersModel();
+    }
+
+    Q_INVOKABLE QString getOrderModelSymbol() {
+        return m_pGlobalOpenOrdersModel->get_pidsymbol();
     }
 
     Q_INVOKABLE void pk2fname(const QString&);

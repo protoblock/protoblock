@@ -483,7 +483,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 m_goodList.append(goodname);
                 mGoodNameBalModel.append(new FantasyNameBalModelItem(pk2.fnb()));
                 subscribeOrderPos(name.data());
-                getOrderPos();
+//                getOrderPos();
 //                qDebug() << " new good name! " << goodname;
             }
                 //            nameStatusChanged( name.data() , "confirmed" );
@@ -504,7 +504,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 importSuccess(m_fantasy_agent.currentClient().data(), true);
                 usingFantasyName(m_fantasy_agent.currentClient().data());
 //                subscribeOrderPos(currname.data());
-                getOrderPos();
+//                getOrderPos();
             }
 
             break;
@@ -766,7 +766,7 @@ void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 si
     qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
 //    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 
-    getOrderPos();
+//    getOrderPos();
 }
 
 void Mediator::doCancel(qint32 id) {
@@ -821,7 +821,7 @@ void Mediator::doCancel(qint32 id) {
     polldepth.start(depthInterval);
     qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
 //    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
-    getOrderPos();
+//    getOrderPos();
 }
 
 void Mediator::doTestTrade() {

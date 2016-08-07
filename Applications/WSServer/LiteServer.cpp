@@ -564,11 +564,11 @@ void LiteServer::socketDisconnected()
 
             iit->second.erase(pClient);
             if ( iit->second.empty() ) {
-                Server::TheExchange.UnSubscribe(fn);
+//                Server::TheExchange.UnSubscribe(fn);
                 cleanIt(fn);
             }
         }
-        mSocketSubscribed.erase(it);
+//        mSocketSubscribed.erase(it);
     }
 
     if (pClient) {

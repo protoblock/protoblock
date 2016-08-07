@@ -16,9 +16,9 @@ import Communi 3.0
 Material.ApplicationWindow{
     id: themeroot
     visible: true
-    width: (.80) * (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableWidth * .95)
+    width: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableWidth * .95)
                                                                               : ProtoScreen.availableWidth
-    height: (.5) * (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableHeight * .95)
+    height: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableHeight * .95)
                                                                                : ProtoScreen.availableHeight
 
 
@@ -84,16 +84,13 @@ Material.ApplicationWindow{
     }
 
     // Level One Trading
-    property var levelOne: [ "Quotes", "Portfolio", "Trading Floor" , "Orders" ]
+    property var levelOne: [ "Quotes", "Portfolio", "Trading Floor"]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
 
     property var levelOneIcons: [
         "qrc:/icons/trending_up.png",
-        "qrc:/icons/trending_up.png",
-        "qrc:/icons/trending_up.png",
-        "qrc:/icons/navigation_close.png",
         "qrc:/icons/trending_up.png",
         "qrc:/icons/trending_up.png",
     ]

@@ -134,7 +134,7 @@ Item {
                         }
                         onClicked: {
                             MiddleMan.setOrderModel(symbol)
-                            rootLoader.source = "qrc:/TradingFloor.qml"
+                            rootLoader.source = "qrc:/Orders.qml"
                         }
 
                     }
