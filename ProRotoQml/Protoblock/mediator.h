@@ -59,6 +59,7 @@ class Mediator : public QObject
 
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
 
+    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
 //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
 
@@ -322,3 +323,45 @@ private:
 };
 
 #endif // MEDIATOR_H
+
+
+
+
+/*
+
+int netqty = p.second.first.netqty;
+double avg = 0;
+double pnl = 0;
+if ( netqty ==0 ) {
+    pnl = p.second.first.netprice * 100;
+}
+else  {
+    ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
+    int bid = item->propertyValue<PropertyNames::BID>().toInt();
+    int ask = item->propertyValue<PropertyNames::ASK>().toInt();
+    int price = (netqty > 0) ? bid :  ask;
+
+    if ( bid == 0 && ask == 0 )
+        pnl = 0;
+    else
+        pnl = 100 * ((price * netqty) + p.second.first.netprice);
+
+}
+
+mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),netqty);
+mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(p.first.data(),avg);
+mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(p.first.data(),pnl);
+
+if ( p.first == myPlayerid) {
+    ui->posQty->setValue(netqty);
+    ui->posAvgPrice->setValue(avg);
+    ui->posOpenPnl->setValue(pnl);
+}
+
+totpnl += pnl;
+
+}
+
+ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+totpnl);
+
+}*/

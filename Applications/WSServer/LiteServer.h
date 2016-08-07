@@ -50,14 +50,29 @@ public:
         UnKnown
     };
 
+    struct fnameptrs {
+        fnameptrs(AllOdersFname *ao = nullptr) : fnameAllOdersFname(ao) {}
+        AllOdersFname *fnameAllOdersFname;
+        std::unordered_map<int32_t,Order *> mSeqOrderMap;
+        std::unordered_map<string, AllOdersSymbol *>  fnamesymbolAllOrders;
+        std::unordered_map< AllOdersSymbol *, std::stack<Order *>>  openOrderSlots;
+        std::stack<AllOdersSymbol *> openOrderSymbolSlot;
+    };
+
     Incoming setEnum(const QString &string);
 
     QStringList createCommandArgument(const QString &cmd);
 
-
+    
+    Order *addOrder(fnameptrs &fptr, AllOdersSymbol *allords, const Order &orderin);
+    void cleanIt(fnameptrs &fptr);
+    fnameptrs &getfnameptrs(const std::string &fname, bool clean = false);
+    void cleanIt(const std::string &fname);
 public slots:
     void OnDepthDelta(fantasybit::DepthFeedDelta *df);
     void OnNewOO(const fantasybit::FullOrderDelta &);
+    void OnNewPos(const fantasybit::FullPosition &);
+
 Q_SIGNALS:
     void closed();
     void error(QString);
@@ -98,21 +113,16 @@ private:
 
 //    std::unordered_map< std::string, std::unordered_map<std::string, AllOdersSymbol *>>  fname2symbolAllOrderss;
 
-    std::unordered_map< std::string, AllOdersFname *>  fname2sAllOdersFname;
 
-    std::unordered_map< AllOdersSymbol *, std::stack<Order *>>  openOrderSlots;
 
-    std::unordered_map< AllOdersFname *, std::stack<AllOdersSymbol *>>  openOrderSymbolSlot;
-
-    std::unordered_map< pair<string,string> ,AllOdersSymbol *>  fnamesymbolAllOrders;
-
-    std::unordered_map<int32_t,Order *> mSeqOrderMap;
-
+    std::unordered_map< std::string, fnameptrs>  fnameptrsmap;
 
     void getFnameSnap(const std::string &fname);
-    Order *addOrder(AllOdersSymbol *allords, const Order &orderin);
-    AllOdersSymbol *getAllOdersSymbol(AllOdersFname *aofp, const std::string &symbol);
+    AllOdersSymbol * getAllOdersSymbol(fnameptrs &fptr,const std::string &symbol);
     AllOdersFname *getAllOdersFname(const std::string &fname);
+
+
+
 };
 
 #endif //LITE_SERVER_H

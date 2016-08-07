@@ -52,6 +52,10 @@ LiteServer::LiteServer(quint16 port, bool debug, QObject *parent) :
                      SIGNAL(NewOO(fantasybit::FullOrderDelta)),
                       this,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
 
+    QObject::connect(&Server::TheExchange,
+                     SIGNAL(NewPos(fantasybit::FullPosition)),
+                      this,SLOT(OnNewPos(fantasybit::FullPosition)));
+
 }
 
 LiteServer::~LiteServer()
@@ -186,6 +190,8 @@ GetDepthRep * LiteServer::getDepthRep(const std::string &playerid) {
     std::unordered_map<std::string, GetDepthRep *>::iterator it;
 
     if ( (it = mPidGetDepthRep.find(playerid)) == end(mPidGetDepthRep) ) {
+        if ( !Server::goodPid(playerid) )
+            return nullptr;
         pGetDepthRep = GetDepthRep::default_instance().New();
         mPidGetDepthRep.insert({playerid,pGetDepthRep});
         pGetDepthRep->set_pid(playerid);
@@ -207,7 +213,6 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
     qDebug() << " before " << depths->DebugString().data();
 
     auto book = depths->mutable_depthitems()->begin();
-
     auto bsize = depths->depthitems_size();
 //    depths->depthitems().iterator
     if ( dfd->isbid() )
@@ -231,7 +236,7 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
                     continue;
 
                 if ( dfd->size() > 0) {
-                    DepthItem &bi = *(depths->add_depthitems());
+                    DepthItem &bi = *(depths->mutable_depthitems()->Add());
                     book = depths->mutable_depthitems()->begin();
                     bsize = depths->depthitems_size();
                     bi.set_a(0);
@@ -248,13 +253,13 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
                         ;//end = bsize-1;
                     else {
                         //end = bsize-2;
-                        DepthItem &bi = *(depths->add_depthitems());
+                        DepthItem *bi = depths->mutable_depthitems()->Add();
                         book = depths->mutable_depthitems()->begin();
                         bsize = depths->depthitems_size();
-                        bi.set_a(0);
-                        bi.set_as(0);
-                        bi.set_b(book[bsize-1].b());
-                        bi.set_bs(book[bsize-1].bs());
+                        bi->set_a(0);
+                        bi->set_as(0);
+                        bi->set_b(book[bsize-2].b());
+                        bi->set_bs(book[bsize-2].bs());
                     }
                     for (int j=end;j > i;--j) {
                         if ( nopush && book[j-1].b() != 0 )
@@ -266,6 +271,8 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
                         }
                     }
 
+                    qDebug() << " book[i] " << book[i].b() << " i " << i;
+                    qDebug() << " book[i] " << book[i].b() << " i " << i;
                     book[i].set_b(dfd->price());
                     book[i].set_bs(dfd->size());
                 }
@@ -312,7 +319,7 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
                     continue;
 
                 if ( dfd->size() > 0) {
-                    DepthItem &bi = *(depths->add_depthitems());
+                    DepthItem &bi = *(depths->mutable_depthitems()->Add());
                     book = depths->mutable_depthitems()->begin();
                     bsize = depths->depthitems_size();
                     bi.set_b(0);
@@ -329,13 +336,13 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
                         ;//end = dfd->size()-1;
                     else {
                         //end = dfd->size()-2;
-                        DepthItem &bi = *(depths->add_depthitems());
+                        DepthItem &bi = *(depths->mutable_depthitems()->Add());
                         book = depths->mutable_depthitems()->begin();
                         bsize = depths->depthitems_size();
                         bi.set_b(0);
                         bi.set_bs(0);
-                        bi.set_a(book[bsize-1].a());
-                        bi.set_as(book[bsize-1].as());
+                        bi.set_a(book[bsize-2].a());
+                        bi.set_as(book[bsize-2].as());
                     }
                     for (int j=end;j > i;--j) {
                         if ( nopush && book[j-1].a()!= 0 )
@@ -372,7 +379,7 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
     }
 
     if (bsize == 0 && dfd->size() >0 && dfd->price() > 0) {
-        DepthItem &bi = *(depths->add_depthitems());
+        DepthItem &bi = *(depths->mutable_depthitems()->Add());
         book = depths->mutable_depthitems()->begin();
         bsize = depths->depthitems_size();
         if ( dfd->isbid() ) {
@@ -484,6 +491,10 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             rep.set_ctype(GETDEPTH);
             auto &pid = req.GetExtension(GetDepthReq::req).pid();
             GetDepthRep *depths = getDepthRep(pid);
+            if ( depths == nullptr ) {
+                qDebug() << " bad market request " << pid;
+                return;
+            }
 //            if ( depths == nullptr ) {
 //                qDebug() << "depths == nullptr";
 //                return;
@@ -512,8 +523,9 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
 #endif
         case GETORDERS: {
             rep.set_ctype(GETORDERS);
-            GetOrdersRep gor;
-            gor.set_allocated_oorders(fname2sAllOdersFname[req.GetExtension(GetOrdersReq::req).fname()]);
+                GetOrdersRep gor;
+            auto &fp = getfnameptrs(req.GetExtension(GetOrdersReq::req).fname());
+            gor.set_allocated_oorders(fp.fnameAllOdersFname);
             rep.SetAllocatedExtension(GetOrdersRep::rep,&gor);
             rep.SerializeToString(&mRepstr);
             gor.release_oorders();
@@ -553,7 +565,7 @@ void LiteServer::socketDisconnected()
             iit->second.erase(pClient);
             if ( iit->second.empty() ) {
                 Server::TheExchange.UnSubscribe(fn);
-                //todo cleanup
+                cleanIt(fn);
             }
         }
         mSocketSubscribed.erase(it);
@@ -576,9 +588,9 @@ void LiteServer::getFnameSnap(const std::string &fname) {
 #ifdef TRACE
     qDebug() << "level2 Trading SetMyPositions" << fname.data() << myorderpositions.size();
 #endif
-    double totpnl = 0.0;
+//    double totpnl = 0.0;
 
-    AllOdersFname *allof = getAllOdersFname(fname);
+    fnameptrs &fptr = getfnameptrs(fname);
     for ( auto &p : myorderpositions ) {
 
         //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;
@@ -589,14 +601,59 @@ void LiteServer::getFnameSnap(const std::string &fname) {
 //            stack.push(allords);
 //        }
 //        else {
-        if ( !myorders.empty()) {
-            AllOdersSymbol *allords = getAllOdersSymbol(allof,p.first);
+        if ( !myorders.empty() || p.second.first.netprice != 0 ) {
+            AllOdersSymbol *allords = getAllOdersSymbol(fptr,p.first);
+            if ( allords == nullptr ) return;
+
             for ( auto o : myorders) {
-                Order *po = addOrder(allords,o);
-                mSeqOrderMap[o.refnum()] = po;
+                Order *po = addOrder(fptr,allords,o);
+                fptr.mSeqOrderMap[o.refnum()] = po;
             }
-//            allof->mutable_pidorders()->AddAllocated(allords);
+
+            allords->set_netprice(p.second.first.netprice);
+            if ( p.second.first.netqty != 0 ) {
+                allords->set_netqty(p.second.first.netqty);
+                allords->set_avg(p.second.first.netprice / (allords->netqty() * -1));
+            }
+            else
+                allords->set_pnl(p.second.first.netprice * 100);
         }
+
+//        int netqty = p.second.first.netqty;
+//        double avg = 0;
+//        double pnl = 0;
+//        if ( netqty ==0 ) {
+//            pnl = p.second.first.netprice * 100;
+//        }
+//        else  {
+//            ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
+//            int bid = item->propertyValue<PropertyNames::BID>().toInt();
+//            int ask = item->propertyValue<PropertyNames::ASK>().toInt();
+//            int price = (netqty > 0) ? bid :  ask;
+
+//            if ( bid == 0 && ask == 0 )
+//                pnl = 0;
+//            else
+//                pnl = 100 * ((price * netqty) + p.second.first.netprice);
+
+//        }
+
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),netqty);
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(p.first.data(),avg);
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(p.first.data(),pnl);
+
+//        if ( p.first == myPlayerid) {
+//            ui->posQty->setValue(netqty);
+//            ui->posAvgPrice->setValue(avg);
+//            ui->posOpenPnl->setValue(pnl);
+//        }
+
+//        totpnl += pnl;
+
+//    }
+
+//    ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+totpnl);
+
     }
 }
 
@@ -643,37 +700,34 @@ void LiteServer::OnNewOO(const fantasybit::FullOrderDelta &fo) {
 
     auto &o = fo.openorder;
 
-    auto it = mSeqOrderMap.find(o.refnum());
-    bool found =  ( it != end(mSeqOrderMap));
+    auto &fptr = getfnameptrs(fo.fname);
+    auto it = fptr.mSeqOrderMap.find(o.refnum());
+    bool found =  ( it != end(fptr.mSeqOrderMap));
 
     if ( o.core().size() <= 0) {
-        if ( found ) {
+        if ( !found )
+            return;
+        else {
             Order *hold = it->second;
             hold->set_refnum(0);
-            mSeqOrderMap.erase(it);
-            auto mp = std::make_pair(fo.fname,fo.playerid);
-            auto it2 = fnamesymbolAllOrders.find(mp);
-            if ( it2 != end(fnamesymbolAllOrders)) {
-                auto &s = openOrderSlots[it2->second];
+            fptr.mSeqOrderMap.erase(it);
+            auto it2 = fptr.fnamesymbolAllOrders.find(fo.playerid);
+            if ( it2 != end(fptr.fnamesymbolAllOrders)) {
+                auto &s = fptr.openOrderSlots[it2->second];
                 s.push(hold);
                 if ( s.size() == it2->second->orders_size() ) {
                    AllOdersSymbol *hold2 = it2->second;
                    hold2->clear_symbol();
                    hold2->clear_orders();
-                   fnamesymbolAllOrders.erase(it2);
-                   auto it3 = fname2sAllOdersFname.find(fo.playerid);
-                   if ( it3 != end(fname2sAllOdersFname)) {
-                        auto &s2 = openOrderSymbolSlot[it3->second];
-                        s2.push(hold2);
-                        if ( s2.size() == it3->second->pidorders_size() ) {
-                            AllOdersFname *hold3 = it3->second;
-                            openOrderSymbolSlot.erase(it3->second);
-                            fname2sAllOdersFname.erase(it3);
-                            hold3->Clear();
-                            delete hold3;
-                        }
+                   fptr.fnamesymbolAllOrders.erase(it2);
+//                   auto it3 = fname2sAllOdersFname.find(fo.playerid);
+                   if ( fptr.fnameAllOdersFname != nullptr) {
+//                        auto &s2 = fptr.openOrderSymbolSlot[fptr.fnameAllOdersFname];
+                        if ( fptr.openOrderSymbolSlot.size() +1 == fptr.fnameAllOdersFname->pidorders_size() )
+                            cleanIt(fptr);
+                        else
+                            fptr.openOrderSymbolSlot.push(hold2);
                    }
-
                 }
             }
         }
@@ -682,53 +736,73 @@ void LiteServer::OnNewOO(const fantasybit::FullOrderDelta &fo) {
         it->second->mutable_core()->set_size(fo.openorder.core().size());
     }
     else {
-        AllOdersFname *allof = getAllOdersFname(fo.fname);
-        AllOdersSymbol *allords = getAllOdersSymbol(allof,fo.playerid);
-        Order *po = addOrder(allords,fo.openorder);
-        mSeqOrderMap[po->refnum()] = po;
+        AllOdersSymbol *allords = getAllOdersSymbol(fptr,fo.playerid);
+        Order *po = addOrder(fptr,allords,fo.openorder);
+        fptr.mSeqOrderMap[po->refnum()] = po;
     }
 
+    //                            AllOdersFname *hold3 = it3->second;
+    //                            openOrderSymbolSlot.erase(it3->second);
+    //                            fname2sAllOdersFname.erase(it3);
+    //                            hold3->Clear();
+    //                            delete hold3;
 
 }
 
-AllOdersFname * LiteServer::getAllOdersFname(const std::string &fname) {
-    auto it = fname2sAllOdersFname.find(fname);
-    if ( it == end(fname2sAllOdersFname)) {
-        AllOdersFname *allof = AllOdersFname::default_instance().New();
-        allof->set_fname(fname);
-        fname2sAllOdersFname.insert({fname,allof});
-        openOrderSymbolSlot.insert({allof,{}});
-        return allof;
+LiteServer::fnameptrs & LiteServer::getfnameptrs(const std::string &fname, bool clean) {
+    auto it = fnameptrsmap.find(fname);
+    if ( it == end(fnameptrsmap)) {
+        auto *aof = AllOdersFname::default_instance().New();
+        aof->set_fname(fname);
+        auto it2 = fnameptrsmap.insert({fname,aof});
+        return it2.first->second;
     }
-    else
+    else {
+        if ( clean )
+            cleanIt(it->second);
         return it->second;
+    }
 }
 
-AllOdersSymbol * LiteServer::getAllOdersSymbol(AllOdersFname *aofp,const std::string &symbol) {
-    auto mp = std::make_pair(aofp->fname(),symbol);
-    auto it = fnamesymbolAllOrders.find(mp);
-    if ( it == end(fnamesymbolAllOrders)) {
+AllOdersSymbol * LiteServer::getAllOdersSymbol(fnameptrs &fptr,const std::string &symbol) {
+    auto it = fptr.fnamesymbolAllOrders.find(symbol);
+    if ( it == end(fptr.fnamesymbolAllOrders)) {
         AllOdersSymbol *allords;
-        auto &s = openOrderSymbolSlot[aofp];
+        auto &s = fptr.openOrderSymbolSlot;
         if ( !s.empty() ) {
             allords = s.top();
             s.pop();
         }
         else {
-            allords = aofp->mutable_pidorders()->Add();
+            allords = fptr.fnameAllOdersFname->mutable_pidorders()->Add();
 //            allords = AllOdersSymbol::default_instance().New();
         }
 
         allords->set_symbol(symbol);
-        fnamesymbolAllOrders.insert({mp,allords});
+        fptr.fnamesymbolAllOrders.insert({symbol,allords});
         return allords;
     }
     else
         return it->second;
 }
 
-Order * LiteServer::addOrder(AllOdersSymbol *allords,const Order &orderin) {
-    auto &s = openOrderSlots[allords];
+void LiteServer::cleanIt(fnameptrs &fptr) {
+    fptr.fnameAllOdersFname->Clear();
+    fptr.mSeqOrderMap.clear();
+    fptr.fnamesymbolAllOrders.clear();
+    fptr.openOrderSlots.clear();
+    fptr.openOrderSymbolSlot = std::stack<AllOdersSymbol *> {};
+}
+
+void LiteServer::cleanIt(const std::string &fname) {
+    auto it = fnameptrsmap.find(fname);
+    if ( it != end(fnameptrsmap))
+        cleanIt(it->second);
+}
+
+
+Order * LiteServer::addOrder(fnameptrs &fptr,AllOdersSymbol *allords,const Order &orderin) {
+    auto &s = fptr.openOrderSlots[allords];
     if ( !s.empty() ) {
         Order *op = s.top();
         s.pop();
@@ -741,6 +815,45 @@ Order * LiteServer::addOrder(AllOdersSymbol *allords,const Order &orderin) {
         ret->CopyFrom(orderin);
         return ret;
     }
-
-
 }
+
+void LiteServer::OnNewPos(const fantasybit::FullPosition &fp) {
+    qDebug() << "level2 Trading::OnNewPos " << fp.pos.ToString().data() << fp.playerid.data() << fp.fname.data();
+
+    fnameptrs &fptr = getfnameptrs(fp.fname);
+    AllOdersSymbol *allords = getAllOdersSymbol(fptr,fp.playerid);
+    if ( allords == nullptr ) return;
+
+    allords->set_netprice(fp.pos.netprice);
+    if ( fp.pos.netqty != 0 ) {
+        allords->set_netqty(fp.pos.netqty);
+        allords->set_avg(fp.pos.netprice / (allords->netqty() * -1));
+    }
+    else
+        allords->set_pnl(fp.pos.netprice * 100);
+}
+//        int netqty = fp.pos.netqty;
+//        double avg = 0;
+//        double pnl = 0;
+//        if ( netqty ==0 ) {
+//            double pnl = fp.pos.netprice * 100;
+//        }
+//        else  {
+//            ViewModel * item = mPlayerListModel.itemByKey(fp.playerid.data());
+//            int price = item->propertyValue<PropertyNames::LAST>().toInt();
+//            pnl = (price * netqty) + fp.pos.netprice;
+//            avg = fp.pos.netprice / (netqty * -1);
+//        }
+
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(fp.playerid.data(),netqty);
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(fp.playerid.data(),pnl);
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(fp.playerid.data(),avg);
+//        invalidateFilters();
+
+//        if ( fp.playerid == myPlayerid ) {
+//            ui->posQty->setValue(netqty);
+//            ui->posAvgPrice->setValue(avg);
+//            ui->posOpenPnl->setValue(pnl);
+//        }
+//    }
+//}

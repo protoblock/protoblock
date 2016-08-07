@@ -6333,6 +6333,20 @@ class AllOdersSymbol : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 netprice() const;
   inline void set_netprice(::google::protobuf::int32 value);
 
+  // optional double avg = 50;
+  inline bool has_avg() const;
+  inline void clear_avg();
+  static const int kAvgFieldNumber = 50;
+  inline double avg() const;
+  inline void set_avg(double value);
+
+  // optional double pnl = 60;
+  inline bool has_pnl() const;
+  inline void clear_pnl();
+  static const int kPnlFieldNumber = 60;
+  inline double pnl() const;
+  inline void set_pnl(double value);
+
   // repeated .fantasybit.Order orders = 20;
   inline int orders_size() const;
   inline void clear_orders();
@@ -6353,16 +6367,22 @@ class AllOdersSymbol : public ::google::protobuf::Message {
   inline void clear_has_netqty();
   inline void set_has_netprice();
   inline void clear_has_netprice();
+  inline void set_has_avg();
+  inline void clear_has_avg();
+  inline void set_has_pnl();
+  inline void clear_has_pnl();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* symbol_;
   ::google::protobuf::int32 netqty_;
   ::google::protobuf::int32 netprice_;
+  double avg_;
+  double pnl_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::Order > orders_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -18185,6 +18205,50 @@ inline ::google::protobuf::int32 AllOdersSymbol::netprice() const {
 inline void AllOdersSymbol::set_netprice(::google::protobuf::int32 value) {
   set_has_netprice();
   netprice_ = value;
+}
+
+// optional double avg = 50;
+inline bool AllOdersSymbol::has_avg() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void AllOdersSymbol::set_has_avg() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void AllOdersSymbol::clear_has_avg() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void AllOdersSymbol::clear_avg() {
+  avg_ = 0;
+  clear_has_avg();
+}
+inline double AllOdersSymbol::avg() const {
+  return avg_;
+}
+inline void AllOdersSymbol::set_avg(double value) {
+  set_has_avg();
+  avg_ = value;
+}
+
+// optional double pnl = 60;
+inline bool AllOdersSymbol::has_pnl() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void AllOdersSymbol::set_has_pnl() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void AllOdersSymbol::clear_has_pnl() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void AllOdersSymbol::clear_pnl() {
+  pnl_ = 0;
+  clear_has_pnl();
+}
+inline double AllOdersSymbol::pnl() const {
+  return pnl_;
+}
+inline void AllOdersSymbol::set_pnl(double value) {
+  set_has_pnl();
+  pnl_ = value;
 }
 
 // repeated .fantasybit.Order orders = 20;

@@ -10,8 +10,8 @@ Item {
     property int side
     property int qty
     property int price
-    property int symbol
-    property int refnum
+    property string symbol
+    property string refnum
     property int elevation : 0
     property int maximumLineCount: 2
     height: maximumLineCount == 2 ? ProtoScreen.guToPx(8)  : ProtoScreen.guToPx(10)
@@ -47,7 +47,7 @@ Item {
 //            }
             Label {
                 id: label1
-                text: side > 0 ? "buy" : side < 0 ? "sell" : "?"
+                text: symbol
                 Layout.fillHeight: true
                 Layout.fillWidth: false
                 Layout.preferredWidth: (parent.width / 6) - 2
@@ -57,7 +57,7 @@ Item {
 
             Label {
                 id: label2
-                text: qty.toString()
+                text: refnum
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
@@ -67,7 +67,7 @@ Item {
 
             Label {
                 id: label3
-                text: price.toString()
+                text: side > 0 ? "buy" : side < 0 ? "sell" : "?"
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
@@ -77,7 +77,7 @@ Item {
 
             Label {
                 id: label4
-                text: symbol
+                text: price.toString()
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
@@ -87,7 +87,7 @@ Item {
 
             Label {
                 id: label5
-                text: refnum
+                text:  qty.toString()
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false

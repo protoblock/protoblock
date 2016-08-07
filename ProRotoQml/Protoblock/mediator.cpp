@@ -19,7 +19,7 @@ Mediator::Mediator(QObject *parent) :
     m_pGoodNameBalModel(&mGoodNameBalModel),
     mOpenOrdersModel{},
     m_pGlobalOpenOrdersModel(&mOpenOrdersModel),
-    mTradingPositionsModel(this,{"display"},{"symbol"}),
+    mTradingPositionsModel(),//this,{"display"},{"symbol"}),
     m_pTradingPositionsModel{&mTradingPositionsModel}
 {
 
@@ -573,7 +573,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         break;
         case GETDEPTH: {
             m_pDepthMarketModel->updateFullDepth(rep.GetExtension(GetDepthRep::rep));
-#ifdef TRACE2
+#ifdef TRACE
             qDebug() << rep.DebugString().data();
 #endif
             depthBackup--;
@@ -581,8 +581,18 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         }
         case GETORDERS: {
             qDebug() << rep.DebugString().data();
-            m_pTradingPositionsModel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
+            auto fname = rep.GetExtension(GetOrdersRep::rep).oorders().fname();
+            TradingPositionsModel *tmodel;
+            auto it = modelMap.find(fname);
+            if ( it ==  end(modelMap))
+                tmodel = modelMap[fname] = new TradingPositionsModel();//this,{"display"},{"symbol"});
+            else
+                tmodel = it->second;
 
+            tmodel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
+            if ( fname == m_fantasy_agent.currentClient()) {
+                m_pTradingPositionsModel = tmodel;
+            }
             break;
         }
         default:
@@ -1049,10 +1059,12 @@ void Mediator::getOrderPos() {
 }
 
 void Mediator::getDepthRep() {
-    auto txstr = mGetDepthReq.SerializeAsString();
-    QByteArray qb(txstr.data(),(size_t)txstr.size());
-//    qDebug() << " getDepthRep sending " << mGetDepthReq.DebugString().data();
-    m_webSocket.sendBinaryMessage(qb);
+    if ( m_currentPidContext != "" ) {
+        auto txstr = mGetDepthReq.SerializeAsString();
+        QByteArray qb(txstr.data(),(size_t)txstr.size());
+    //    qDebug() << " getDepthRep sending " << mGetDepthReq.DebugString().data();
+        m_webSocket.sendBinaryMessage(qb);
+    }
     depthBackup++;
     depthCount++;
 

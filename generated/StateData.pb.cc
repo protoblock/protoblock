@@ -1031,10 +1031,12 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetDepthRep));
   AllOdersSymbol_descriptor_ = file->message_type(46);
-  static const int AllOdersSymbol_offsets_[4] = {
+  static const int AllOdersSymbol_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersSymbol, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersSymbol, netqty_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersSymbol, netprice_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersSymbol, avg_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersSymbol, pnl_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersSymbol, orders_),
   };
   AllOdersSymbol_reflection_ =
@@ -1476,23 +1478,23 @@ void protobuf_AddDesc_StateData_2eproto() {
     "pthitems\030\024 \003(\0132\025.fantasybit.DepthItem\022(\n"
     "\trowmarket\030\036 \001(\0132\025.fantasybit.ROWMarket2"
     ":\n\003rep\022\023.fantasybit.WSReply\030\274\005 \001(\0132\027.fan"
-    "tasybit.GetDepthRep\"e\n\016AllOdersSymbol\022\016\n"
+    "tasybit.GetDepthRep\"\177\n\016AllOdersSymbol\022\016\n"
     "\006symbol\030\n \001(\t\022\016\n\006netqty\030\036 \001(\005\022\020\n\010netpric"
-    "e\030( \001(\005\022!\n\006orders\030\024 \003(\0132\021.fantasybit.Ord"
-    "er\"M\n\rAllOdersFname\022\r\n\005fname\030\n \001(\t\022-\n\tpi"
-    "dorders\030\024 \003(\0132\032.fantasybit.AllOdersSymbo"
-    "l\"\236\001\n\014GetOrdersRep\022%\n\003req\030\n \001(\0132\030.fantas"
-    "ybit.GetOrdersReq\022*\n\007oorders\030\024 \001(\0132\031.fan"
-    "tasybit.AllOdersFname2;\n\003rep\022\023.fantasybi"
-    "t.WSReply\030\240\006 \001(\0132\030.fantasybit.GetOrdersR"
-    "ep\"x\n\014GetOrdersReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fn"
-    "ame\030\024 \001(\t\022\016\n\006fchash\030\036 \001(\00429\n\003req\022\021.fanta"
-    "sybit.WsReq\030\240\006 \001(\0132\030.fantasybit.GetOrder"
-    "sReq*\244\001\n\005CType\022\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002"
-    "\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS\020\004\022\017\n\013GETALLN"
-    "AMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n\010GETDEPTH\020\007\022\r"
-    "\n\tGETORDERS\020\010\022\020\n\014GETPOSITIONS\020\t\022\022\n\016SUBSC"
-    "RIBEFNAME\020\n", 6531);
+    "e\030( \001(\005\022\013\n\003avg\0302 \001(\001\022\013\n\003pnl\030< \001(\001\022!\n\006ord"
+    "ers\030\024 \003(\0132\021.fantasybit.Order\"M\n\rAllOders"
+    "Fname\022\r\n\005fname\030\n \001(\t\022-\n\tpidorders\030\024 \003(\0132"
+    "\032.fantasybit.AllOdersSymbol\"\236\001\n\014GetOrder"
+    "sRep\022%\n\003req\030\n \001(\0132\030.fantasybit.GetOrders"
+    "Req\022*\n\007oorders\030\024 \001(\0132\031.fantasybit.AllOde"
+    "rsFname2;\n\003rep\022\023.fantasybit.WSReply\030\240\006 \001"
+    "(\0132\030.fantasybit.GetOrdersRep\"x\n\014GetOrder"
+    "sReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t\022\016\n\006f"
+    "chash\030\036 \001(\00429\n\003req\022\021.fantasybit.WsReq\030\240\006"
+    " \001(\0132\030.fantasybit.GetOrdersReq*\244\001\n\005CType"
+    "\022\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003"
+    "\022\r\n\tGETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETR"
+    "OWMARKET\020\006\022\014\n\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022"
+    "\020\n\014GETPOSITIONS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n", 6557);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -19242,6 +19244,8 @@ void GetDepthRep::Swap(GetDepthRep* other) {
 const int AllOdersSymbol::kSymbolFieldNumber;
 const int AllOdersSymbol::kNetqtyFieldNumber;
 const int AllOdersSymbol::kNetpriceFieldNumber;
+const int AllOdersSymbol::kAvgFieldNumber;
+const int AllOdersSymbol::kPnlFieldNumber;
 const int AllOdersSymbol::kOrdersFieldNumber;
 #endif  // !_MSC_VER
 
@@ -19264,6 +19268,8 @@ void AllOdersSymbol::SharedCtor() {
   symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   netqty_ = 0;
   netprice_ = 0;
+  avg_ = 0;
+  pnl_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -19309,6 +19315,8 @@ void AllOdersSymbol::Clear() {
     }
     netqty_ = 0;
     netprice_ = 0;
+    avg_ = 0;
+    pnl_ = 0;
   }
   orders_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -19380,6 +19388,38 @@ bool AllOdersSymbol::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(401)) goto parse_avg;
+        break;
+      }
+
+      // optional double avg = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_avg:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &avg_)));
+          set_has_avg();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(481)) goto parse_pnl;
+        break;
+      }
+
+      // optional double pnl = 60;
+      case 60: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_pnl:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &pnl_)));
+          set_has_pnl();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -19427,6 +19467,16 @@ void AllOdersSymbol::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(40, this->netprice(), output);
   }
 
+  // optional double avg = 50;
+  if (has_avg()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(50, this->avg(), output);
+  }
+
+  // optional double pnl = 60;
+  if (has_pnl()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(60, this->pnl(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -19462,6 +19512,16 @@ void AllOdersSymbol::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(40, this->netprice(), target);
   }
 
+  // optional double avg = 50;
+  if (has_avg()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(50, this->avg(), target);
+  }
+
+  // optional double pnl = 60;
+  if (has_pnl()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(60, this->pnl(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -19492,6 +19552,16 @@ int AllOdersSymbol::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->netprice());
+    }
+
+    // optional double avg = 50;
+    if (has_avg()) {
+      total_size += 2 + 8;
+    }
+
+    // optional double pnl = 60;
+    if (has_pnl()) {
+      total_size += 2 + 8;
     }
 
   }
@@ -19539,6 +19609,12 @@ void AllOdersSymbol::MergeFrom(const AllOdersSymbol& from) {
     if (from.has_netprice()) {
       set_netprice(from.netprice());
     }
+    if (from.has_avg()) {
+      set_avg(from.avg());
+    }
+    if (from.has_pnl()) {
+      set_pnl(from.pnl());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -19565,6 +19641,8 @@ void AllOdersSymbol::Swap(AllOdersSymbol* other) {
     std::swap(symbol_, other->symbol_);
     std::swap(netqty_, other->netqty_);
     std::swap(netprice_, other->netprice_);
+    std::swap(avg_, other->avg_);
+    std::swap(pnl_, other->pnl_);
     orders_.Swap(&other->orders_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

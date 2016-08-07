@@ -82,7 +82,8 @@ public:
 //        mOpenOrdersModel.setfantasyname(allordersymbol.fname().data());
 //        for ( auto &pio : allordersymbol())
             for ( auto &ord : allordersymbol.orders() )
-                mOpenOrdersModel.append(new OpenOrdersModelItem(allordersymbol.symbol(),ord));
+                if ( ord.refnum() != 0 )
+                    mOpenOrdersModel.append(new OpenOrdersModelItem(allordersymbol.symbol(),ord));
     }
 
     OpenOrdersModel mOpenOrdersModel;
@@ -95,17 +96,18 @@ class TradingPositionsModel : public QQmlObjectListModel<TradingPositionsModelIt
     QML_READONLY_CSTREF_PROPERTY(QString, fantasyname)
 
 public:
-    explicit TradingPositionsModel (QObject *          parent      = Q_NULLPTR,
-                                    const QByteArray & displayRole = QByteArray (),
-                                    const QByteArray & uidRole     = QByteArray ()) :
-                                    QQmlObjectListModel<TradingPositionsModelItem>
-                                                    (parent,displayRole,uidRole)
-    {}
+//    explicit TradingPositionsModel (QObject *          parent      = Q_NULLPTR,
+//                                    const QByteArray & displayRole = QByteArray (),
+//                                    const QByteArray & uidRole     = QByteArray ()) :
+//                                    QQmlObjectListModel<TradingPositionsModelItem>
+//                                                    (parent,displayRole,uidRole)
+//    {}
 
     void updateAllOrders(const AllOdersFname &allordersfn) {
         clear();
 
         setfantasyname(allordersfn.fname().data());
+
         for ( auto &aos : allordersfn.pidorders() )
            append(new TradingPositionsModelItem(aos,this));
     }

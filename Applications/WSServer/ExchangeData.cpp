@@ -15,6 +15,8 @@
 #include "playerloader.h"
 #endif
 
+#include "server.h"
+
 using namespace std;
 using namespace fantasybit;
 
@@ -270,6 +272,7 @@ void ExchangeData::init() {
 
             auto it3 = mLimitBooks.find(nflplayer);
             if ( it3 == end(mLimitBooks) ) {
+
                 auto it2 = mLimitBooks.insert(make_pair(nflplayer,
                                unique_ptr<MatchingEngine>(new MatchingEngine(nflplayer,false))));
 
@@ -383,6 +386,10 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnOrderNew create new book " << eo.playerid();
 #endif
+        if ( !Server::goodPid(eo.playerid())) {
+            qWarning() << "invalid order, bad playerid for" << eo.playerid();
+            return;
+        }
 
         auto it2 = mLimitBooks.insert(make_pair(eo.playerid(),
                unique_ptr<MatchingEngine>(new MatchingEngine(eo.playerid()))));
@@ -542,7 +549,7 @@ void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int
 
 #ifdef TRACE
     }
-    qDebug() << "level2 OnDeltaOpenOrder !subscribed emit NewOO" << fname ;
+    qDebug() << "level2 OnDeltaOpenOrder subscribed emit NewOO" << fname ;
 #endif
 
 //    Order *op = Order::default_instance().New();

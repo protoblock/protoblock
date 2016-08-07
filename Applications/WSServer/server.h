@@ -30,6 +30,12 @@ public:
         Pk2Bal.insert({pFn->public_key(),pFn});
 
     }
+
+    static bool goodPid(const std::string &pid) {
+        auto pb = NFLData.GetPlayerBase(pid);
+        return pb.has_last() && pb.last() != "";
+    }
+
 };
 
 

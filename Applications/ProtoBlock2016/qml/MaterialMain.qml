@@ -16,9 +16,9 @@ import Communi 3.0
 Material.ApplicationWindow{
     id: themeroot
     visible: true
-    width: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableWidth * .95)
+    width: (.80) * (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableWidth * .95)
                                                                               : ProtoScreen.availableWidth
-    height: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableHeight * .95)
+    height: (.5) * (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableHeight * .95)
                                                                                : ProtoScreen.availableHeight
 
 
@@ -65,7 +65,7 @@ Material.ApplicationWindow{
     property var sectionTitlesIcons: [
         "qrc:/logoOnly.png",
         "qrc:/icons/ic_poll.png",
-        "qrc:/icons/ic_poll.png",
+        "qrc:/icons/ic_trending_up.png",
         "qrc:/icons/newspaper.png",
         "qrc:/icons/ic_help.png",
         "qrc:/icons/action_account_circle.png"
@@ -99,18 +99,18 @@ Material.ApplicationWindow{
         "qrc:/icons/newspaper.png"
     ]
     // Level Three News
-    property var levelThree: [ "ROW 2016", "Order Positions", "2016 Season" , "2016 Weekly", "2017 Season", "2015 Final" ]
+    property var levelThree: [ "ROW 2016", "Order Positions", "2016 Season" , "2016 Weekly", "2017 Season", "2015 Final", "Depth Trader" ]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
 
     property var levelThreeIcons: [
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/newspaper.png",
-        "qrc:/icons/newspaper.png"
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/trending_up.png",
     ]
     //Level four
     property var  levelFour: [

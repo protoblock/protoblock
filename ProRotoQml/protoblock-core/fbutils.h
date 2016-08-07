@@ -29,11 +29,16 @@ namespace fantasybit {
 #if !defined(PRODFOOTBALL) || defined(USE_LOCALHOST_SERVER)
     static bool IS_TEST_NET = true;
 
-#ifdef USE_LOCALHOST_SERVER
+#ifdef USE_LOCALNETWORKHOST_SERVER
     static std::string PB_WS_LITE_AGENT = "192.168.42.80";
     static std::string PB_WS_CHAT = "192.168.42.80";
     static std::string PB_WS_TX = "192.168.42.80";
+#elif USE_LOCALHOST_SERVER
+    static std::string PB_WS_LITE_AGENT = "localhost";
+    static std::string PB_WS_CHAT = "localhost";
+    static std::string PB_WS_TX = "localhost";
 #else
+
     static std::string PB_WS_LITE_AGENT = "app.trading.football";
     static std::string PB_WS_CHAT = "app.trading.football";
     static std::string PB_WS_TX = "app.trading.football";
