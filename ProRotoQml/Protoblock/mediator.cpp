@@ -180,11 +180,13 @@ void Mediator::subscribeOrderPos(const QString &name) {
     m_webSocket.sendBinaryMessage(qb);
 }
 
-void Mediator::getOrderReq(const QString &name) {
+void Mediator::getOrderReq(const QString &name,const QString symbol) {
     WsReq req;
     req.set_ctype(GETORDERS);
     GetOrdersReq sr;
     sr.set_fname(name.toStdString());
+    if ( symbol != "" )
+        sr.set_symbol(symbol);
     req.SetAllocatedExtension(GetOrdersReq::req,&sr);
     auto txstr = req.SerializeAsString();
     qDebug() << " subscribeOrderPos sending " << req.DebugString().data();

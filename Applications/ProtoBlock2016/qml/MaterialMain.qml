@@ -51,19 +51,17 @@ Material.ApplicationWindow{
 
 
     // Pages
-    property var sections: [ levelOne, levelTwo, levelThree,levelFour, levelFive,levelSix ]
+    property var sections: [ levelOne, levelTwo, levelThree,levelFour, levelFive ]
     property var sectionsIcons: [
         levelOneIcons,
         levelTwoIcons,
         levelThreeIcons,
         levelFourIcons,
-        levelFiveIcons,
-        levelSixIcons
+        levelFiveIcons
     ]
-    property var sectionTitles: [ "Home", "Projections", "Trading", "NFLNews", "ProtoChat", "Account" ]
-    property var sectionTitlesAlias: [ "Home", "Projections", "Trading","NFLNews", "ProtoChat","Account" ]
+    property var sectionTitles: [ "Trading", "Projections", "NFLNews", "Account", "Protoblock",  ]
+    property var sectionTitlesAlias: [ "Trading", "Projections", "NFLNews", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
-        "qrc:/logoOnly.png",
         "qrc:/icons/ic_poll.png",
         "qrc:/icons/ic_trending_up.png",
         "qrc:/icons/newspaper.png",
@@ -85,62 +83,60 @@ Material.ApplicationWindow{
         tabHighlightColor: Colors.accentColor
     }
 
-    // Level One
-    property var levelOne: [ "Protoblock News" , "About" , "Contact Us","Settings" ]
+    // Level One Trading
+    property var levelOne: [ "Quotes", "Portfolio", "Trading Floor" , "Order Management" ]
+
+    //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
+
+
     property var levelOneIcons: [
-        "qrc:/icons/newspaper.png" ,
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_contact_mail.png" ,
-        "qrc:/icons/ic_help.png"
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/navigation_close.png",
+        "qrc:/icons/trending_up.png",
+        "qrc:/icons/trending_up.png",
     ]
+
+
     // Level Two
     property var levelTwo: [ "Projections" , "2015 Leaderboard" ]
     property var levelTwoIcons: [
         "qrc:/icons/newspaper.png"
     ]
-    // Level Three News
-    property var levelThree: [ "ROW 2016", "Order Positions", "2016 Season" , "2016 Weekly", "2017 Season", "2015 Final", "Depth Trader" ]
 
-    //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
-
-
+    //Level Three
+    property var  levelThree: [
+        "Roto World", "Twitter" ,"CBS" , "ESPN", "NFL" ,
+    ]
     property var levelThreeIcons: [
-        "qrc:/icons/trending_up.png",
-        "qrc:/icons/trending_up.png",
-        "qrc:/icons/trending_up.png",
-        "qrc:/icons/trending_up.png",
-        "qrc:/icons/trending_up.png",
-        "qrc:/icons/trending_up.png",
-    ]
-    //Level four
-    property var  levelFour: [
-        "News", "Twitter" ,"CBS" , "ESPN", "NFL" ,"Roto World"
-    ]
-    property var levelFourIcons: [
-        "qrc:/icons/newspaper.png" ,
         "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_contact_mail.png" ,
+        "qrc:/icons/ic_help.png",
         "qrc:/icons/ic_help.png",
         "qrc:/icons/ic_help.png",
         "qrc:/icons/ic_help.png"
     ]
 
-    //Level Five
-    property var levelFive: [
-        "Proto Chat"
-    ]
-    property var levelFiveIcons: [
-        "qrc:/icons/newspaper.png" ,
-
-    ]
-
-    // Level Six
-    property var levelSix: [ "Account" , "Import-Export"  ]
-    property var levelSixIcons: [
+    // Level Four
+    property var levelFour: [ "Account" , "Import-Export", "Settings", "Proto Chat" ]
+    property var levelFourIcons: [
         "qrc:/icons/account_action_circle.png" ,
         "qrc:/icons/ic_sync.png",
-        "qrc:/icons/ic_lightbulb.png"
+        "qrc:/icons/ic_lightbulb.png",
+        "qrc:/icons/ic_help.png"
     ]
+
+    // Level Five
+    property var levelFive: [ "Protoblock" , "About" , "Contact Us", "2015 Final", "2017 Season"]
+    property var levelFiveIcons: [
+        "qrc:/icons/newspaper.png" ,
+        "qrc:/icons/ic_help.png",
+        "qrc:/icons/ic_contact_mail.png" ,
+        "qrc:/icons/ic_help.png",
+        "qrc:/icons/ic_help.png"
+    ]
+
+
     property string selectedComponent: sections[0][0]
 
 

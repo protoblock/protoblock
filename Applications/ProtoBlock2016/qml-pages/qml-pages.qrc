@@ -10,7 +10,7 @@
         <file>Players.qml</file>
         <file>WelcomeBack.qml</file>
         <file>PickUserName.qml</file>
-        <file>News.qml</file>
+        <file>NFLNews.qml</file>
         <file>Welcome.qml</file>
         <file>Settings.qml</file>
         <file>UpdateView.qml</file>
@@ -19,7 +19,7 @@
         <file>About.qml</file>
         <file>EncryptLogin.qml</file>
         <file>Home.qml</file>
-        <file>ProtoblockNews.qml</file>
+        <file>Protoblock.qml</file>
         <file>ContactUs.qml</file>
         <file>Projections.qml</file>
         <file>Account.qml</file>
@@ -32,8 +32,9 @@
         <file>2017Season.qml</file>
         <file>2015Final.qml</file>
         <file>2016Season.qml</file>
-        <file>ROW2016.qml</file>
-        <file>DepthTrader.qml</file>
-        <file>OrderPositions.qml</file>
+        <file>Quotes.qml</file>
+        <file>TradingFloor.qml</file>
+        <file>Portfolio.qml</file>
+        <file>Quotes.qml</file>
     </qresource>
 </RCC>

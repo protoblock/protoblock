@@ -117,7 +117,10 @@ Item {
                             height: width
                             smooth: true
                         }
-    //                        onClicked: {}
+                        onClicked: {
+                            MiddleMan.getOrderPos(model.playerid)
+                            rootLoader.source = "qrc:/OpenOrders.qml"
+                        }
 
                     }
             }

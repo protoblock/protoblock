@@ -616,7 +616,7 @@ void LiteServer::getFnameSnap(const std::string &fname) {
                 allords->set_avg(p.second.first.netprice / (allords->netqty() * -1));
             }
             else
-                allords->set_pnl(p.second.first.netprice * 100);
+                allords->set_pnl(p.second.first.netprice);
         }
 
 //        int netqty = p.second.first.netqty;
@@ -830,7 +830,7 @@ void LiteServer::OnNewPos(const fantasybit::FullPosition &fp) {
         allords->set_avg(fp.pos.netprice / (allords->netqty() * -1));
     }
     else
-        allords->set_pnl(fp.pos.netprice * 100);
+        allords->set_pnl(fp.pos.netprice);
 }
 //        int netqty = fp.pos.netqty;
 //        double avg = 0;

@@ -190,7 +190,7 @@ public:
     Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void allNamesGet();
     Q_INVOKABLE void rowMarketGet();
-    Q_INVOKABLE void getOrderPos();
+    Q_INVOKABLE void getOrderPos(const QString&);
     Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(const QString&);
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
