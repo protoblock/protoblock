@@ -1,24 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>GetName.qml</file>
-        <file>WeeklyTradingLanding.qml</file>
-        <file>WeeklyLandingPage.qml</file>
-        <file>SeasonLongLevelTwo.qml</file>
-        <file>SeasonLongLandingPage.qml</file>
-        <file>TradingLanding.qml</file>
-        <file>Sc2016.qml</file>
         <file>Players.qml</file>
-        <file>WelcomeBack.qml</file>
         <file>PickUserName.qml</file>
-        <file>NFLNews.qml</file>
         <file>Welcome.qml</file>
         <file>Settings.qml</file>
-        <file>UpdateView.qml</file>
-        <file>SportsRadarApiCaller.qml</file>
-        <file>FantasyDataApiCaller.qml</file>
         <file>About.qml</file>
-        <file>EncryptLogin.qml</file>
-        <file>Home.qml</file>
         <file>Protoblock.qml</file>
         <file>ContactUs.qml</file>
         <file>Projections.qml</file>
@@ -28,13 +15,13 @@
         <file>ThemeButton.qml</file>
         <file>2015Leaderboard.qml</file>
         <file>Trading.qml</file>
+        <file>TradingFloor.qml</file>
         <file>2016Weekly.qml</file>
         <file>2017Season.qml</file>
         <file>2015Final.qml</file>
         <file>2016Season.qml</file>
         <file>Quotes.qml</file>
-        <file>TradingFloor.qml</file>
+        <file>Orders.qml</file>
         <file>Portfolio.qml</file>
-        <file>Quotes.qml</file>
     </qresource>
 </RCC>

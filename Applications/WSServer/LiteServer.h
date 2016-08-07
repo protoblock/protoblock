@@ -54,7 +54,7 @@ public:
         fnameptrs(AllOdersFname *ao = nullptr) : fnameAllOdersFname(ao) {}
         AllOdersFname *fnameAllOdersFname;
         std::unordered_map<int32_t,Order *> mSeqOrderMap;
-        std::unordered_map<string, AllOdersSymbol *>  fnamesymbolAllOrders;
+        std::unordered_map<string, AllOdersSymbol *>    fnamesymbolAllOrders;
         std::unordered_map< AllOdersSymbol *, std::stack<Order *>>  openOrderSlots;
         std::stack<AllOdersSymbol *> openOrderSymbolSlot;
     };

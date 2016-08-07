@@ -590,10 +590,10 @@ void LiteServer::getFnameSnap(const std::string &fname) {
 #endif
 //    double totpnl = 0.0;
 
-    fnameptrs &fptr = getfnameptrs(fname);
+    fnameptrs &fptr = getfnameptrs(fname,true);
     for ( auto &p : myorderpositions ) {
 
-        //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;
+        qDebug() << "level2 Trading SetMyPositions" << p.first << p.second.first.ToString();
         auto &mypair = p.second;
         auto &myorders = mypair.second;
 //        {
@@ -601,7 +601,7 @@ void LiteServer::getFnameSnap(const std::string &fname) {
 //            stack.push(allords);
 //        }
 //        else {
-        if ( !myorders.empty() || p.second.first.netprice != 0 ) {
+        if ( !myorders.empty() || p.second.first.netprice != 0 || p.second.first.netqty != 0) {
             AllOdersSymbol *allords = getAllOdersSymbol(fptr,p.first);
             if ( allords == nullptr ) return;
 
@@ -613,7 +613,11 @@ void LiteServer::getFnameSnap(const std::string &fname) {
             allords->set_netprice(p.second.first.netprice);
             if ( p.second.first.netqty != 0 ) {
                 allords->set_netqty(p.second.first.netqty);
-                allords->set_avg(p.second.first.netprice / (allords->netqty() * -1));
+                if (  p.second.first.netprice != 0 ) {
+                    double avg = (double)p.second.first.netprice / (double)p.second.first.netprice ;
+                    avg  = avg * -1.0;
+                    allords->set_avg(avg);
+                }
             }
             else
                 allords->set_pnl(p.second.first.netprice);
@@ -713,21 +717,27 @@ void LiteServer::OnNewOO(const fantasybit::FullOrderDelta &fo) {
             fptr.mSeqOrderMap.erase(it);
             auto it2 = fptr.fnamesymbolAllOrders.find(fo.playerid);
             if ( it2 != end(fptr.fnamesymbolAllOrders)) {
-                auto &s = fptr.openOrderSlots[it2->second];
-                s.push(hold);
-                if ( s.size() == it2->second->orders_size() ) {
-                   AllOdersSymbol *hold2 = it2->second;
-                   hold2->clear_symbol();
-                   hold2->clear_orders();
-                   fptr.fnamesymbolAllOrders.erase(it2);
-//                   auto it3 = fname2sAllOdersFname.find(fo.playerid);
-                   if ( fptr.fnameAllOdersFname != nullptr) {
-//                        auto &s2 = fptr.openOrderSymbolSlot[fptr.fnameAllOdersFname];
-                        if ( fptr.openOrderSymbolSlot.size() +1 == fptr.fnameAllOdersFname->pidorders_size() )
-                            cleanIt(fptr);
-                        else
-                            fptr.openOrderSymbolSlot.push(hold2);
-                   }
+/*                if ( *hold == it2->second->mutable_orders()->rbegin() )
+                    it2->second->orders().RemoveLast();
+                else */
+                {
+                    auto &s = fptr.openOrderSlots[it2->second];
+                    s.push(hold);
+                    if ( s.size() == it2->second->orders_size() ) {
+                       AllOdersSymbol *hold2 = it2->second;
+                       hold2->clear_orders();
+                       if ( hold2->netprice() == 0 && hold2->netqty() == 0 && hold2->pnl() == 0) {
+                           hold2->clear_symbol();
+
+                           fptr.fnamesymbolAllOrders.erase(it2);
+                           if ( fptr.fnameAllOdersFname != nullptr) {
+                                if ( fptr.openOrderSymbolSlot.size() +1 == fptr.fnameAllOdersFname->pidorders_size() )
+                                    cleanIt(fptr);
+                                else
+                                    fptr.openOrderSymbolSlot.push(hold2);
+                           }
+                       }
+                    }
                 }
             }
         }
@@ -787,6 +797,9 @@ AllOdersSymbol * LiteServer::getAllOdersSymbol(fnameptrs &fptr,const std::string
 }
 
 void LiteServer::cleanIt(fnameptrs &fptr) {
+//    for ( auto &all : fptr.fnamesymbolAllOrders ) {
+//        all.second->orders.clear();
+//    }
     fptr.fnameAllOdersFname->Clear();
     fptr.mSeqOrderMap.clear();
     fptr.fnamesymbolAllOrders.clear();

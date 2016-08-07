@@ -57,6 +57,8 @@ class Mediator : public QObject
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
     QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 
+//    QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
+
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
 
     std::unordered_map<std::string,TradingPositionsModel *> modelMap;
@@ -191,6 +193,16 @@ public:
     Q_INVOKABLE void allNamesGet();
     Q_INVOKABLE void rowMarketGet();
     Q_INVOKABLE void getOrderPos(const QString&);
+    Q_INVOKABLE void getOrderPos();
+    Q_INVOKABLE void setOrderModel(const QString& symbol) {
+        auto model = m_pTradingPositionsModel->getByUid(symbol);
+        if ( model == nullptr ) {
+            qDebug() << " bad data for m_pTradingPositionsModel " << symbol;
+        }
+        else
+            m_pGlobalOpenOrdersModel = model->get_pOpenOrdersModel();
+    }
+
     Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(const QString&);
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
@@ -228,7 +240,7 @@ public:
 
 
     void subscribeOrderPos(const QString &name);
-    void getOrderReq(const QString &name);
+    void getOrderReq(const QString &name,const QString symbol="");
 signals:
     void importSuccess(const QString name, bool passfail);
 
@@ -249,6 +261,7 @@ signals:
     void playersNameChanged();
     void playersStatusChanged();
     void leaderBoardchanged();
+    void portfolioChanged();
     // for QML only
     bool engineUpdate(bool);
 

@@ -22,9 +22,9 @@ class OpenOrdersModelItem : public QObject {
 
 public:
 
-    explicit OpenOrdersModelItem(const std::string &pid, const fantasybit::Order &in,  QObject *parent = Q_NULLPTR)
+    explicit OpenOrdersModelItem(const fantasybit::Order &in,  QObject *parent = Q_NULLPTR)
                     :  QObject(parent) {
-        m_symbol = pid.data();
+//        m_symbol = pid.data();
         m_refnum = in.refnum();
         m_isbuy = in.core().buyside();
         m_size = in.core().size();
@@ -35,7 +35,7 @@ public:
 
 class OpenOrdersModel : public QQmlObjectListModel<OpenOrdersModelItem> {
     Q_OBJECT
-
+    QML_READONLY_CSTREF_PROPERTY(QString, pidsymbol)
 
 public:
     explicit OpenOrdersModel (QObject *  parent  = Q_NULLPTR,
@@ -62,10 +62,11 @@ Q_DECLARE_METATYPE(OpenOrdersModel*)
 
 class TradingPositionsModelItem : public QObject {
     Q_OBJECT
-    QML_CONSTANT_CSTREF_PROPERTY (QString, symbol)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, netprice)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, netqty)
-    QML_CONSTANT_CSTREF_PROPERTY (double, openpnl)
+    QML_READONLY_CSTREF_PROPERTY (QString, symbol)
+    QML_READONLY_CSTREF_PROPERTY (qint32, netprice)
+    QML_READONLY_CSTREF_PROPERTY (qint32, netqty)
+    QML_READONLY_CSTREF_PROPERTY (double, openpnl)
+    QML_READONLY_CSTREF_PROPERTY (double, avgprice)
 
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pOpenOrdersModel)
 public:
@@ -74,19 +75,30 @@ public:
                 : m_symbol{allordersymbol.symbol().data()},
                   m_netprice{allordersymbol.netprice()},
                   m_netqty{allordersymbol.netqty()},
-                  m_openpnl{0.0},
-                  mOpenOrdersModel(parent,"display","refnum"),
-                  m_pOpenOrdersModel{&mOpenOrdersModel},
+                  m_openpnl{allordersymbol.pnl()},
+//                  mOpenOrdersModel(),
+                  m_pOpenOrdersModel{nullptr},
+                  m_avgprice(0.0),
                   QObject{parent}
     {
 //        mOpenOrdersModel.setfantasyname(allordersymbol.fname().data());
 //        for ( auto &pio : allordersymbol())
-            for ( auto &ord : allordersymbol.orders() )
-                if ( ord.refnum() != 0 )
-                    mOpenOrdersModel.append(new OpenOrdersModelItem(allordersymbol.symbol(),ord));
+
+        if ( m_pOpenOrdersModel == nullptr )
+            m_pOpenOrdersModel = new OpenOrdersModel();
+        else
+            m_pOpenOrdersModel->clear();
+
+        m_pOpenOrdersModel->setpidsymbol(allordersymbol.symbol().data());
+        for ( auto &ord : allordersymbol.orders() )
+            if ( ord.refnum() != 0 )
+                m_pOpenOrdersModel->append(new OpenOrdersModelItem(ord));
+
+        if (allordersymbol.has_avg() ) setavgprice(allordersymbol.avg());
+
     }
 
-    OpenOrdersModel mOpenOrdersModel;
+//    OpenOrdersModel mOpenOrdersModel;
 };
 
 
@@ -96,12 +108,12 @@ class TradingPositionsModel : public QQmlObjectListModel<TradingPositionsModelIt
     QML_READONLY_CSTREF_PROPERTY(QString, fantasyname)
 
 public:
-//    explicit TradingPositionsModel (QObject *          parent      = Q_NULLPTR,
-//                                    const QByteArray & displayRole = QByteArray (),
-//                                    const QByteArray & uidRole     = QByteArray ()) :
-//                                    QQmlObjectListModel<TradingPositionsModelItem>
-//                                                    (parent,displayRole,uidRole)
-//    {}
+    explicit TradingPositionsModel (QObject *          parent      = Q_NULLPTR,
+                                    const QByteArray & displayRole = QByteArray (),
+                                    const QByteArray & uidRole     = QByteArray ()) :
+                                    QQmlObjectListModel<TradingPositionsModelItem>
+                                                    (parent,displayRole,uidRole)
+    {}
 
     void updateAllOrders(const AllOdersFname &allordersfn) {
         clear();

@@ -62,11 +62,11 @@ Material.ApplicationWindow{
     property var sectionTitles: [ "Trading", "Projections", "NFLNews", "Account", "Protoblock",  ]
     property var sectionTitlesAlias: [ "Trading", "Projections", "NFLNews", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
-        "qrc:/icons/ic_poll.png",
         "qrc:/icons/ic_trending_up.png",
+        "qrc:/icons/ic_poll.png",
         "qrc:/icons/newspaper.png",
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/action_account_circle.png"
+        "qrc:/icons/action_account_circle.png",
+        "qrc:/icons/ic_help.png"
     ]
 
 
@@ -84,7 +84,7 @@ Material.ApplicationWindow{
     }
 
     // Level One Trading
-    property var levelOne: [ "Quotes", "Portfolio", "Trading Floor" , "Order Management" ]
+    property var levelOne: [ "Quotes", "Portfolio", "Trading Floor" , "Orders" ]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
@@ -181,7 +181,7 @@ Material.ApplicationWindow{
                 name: "Account"
                 onTriggered: {
                     rootLoader.source = "qrc:/Account.qml"
-                    pageHelper.selectedTabIndex = 5
+                    pageHelper.selectedTabIndex = 3
                     pageHelper.title = "Account Settings"
                 }
             },
@@ -191,7 +191,7 @@ Material.ApplicationWindow{
                 hoverAnimation: true
                 onTriggered: {
                     rootLoader.source  = "qrc:/Settings.qml"
-                    pageHelper.selectedTabIndex = 0
+                    pageHelper.selectedTabIndex = 3
                     pageHelper.title = "System Settings"
                 }
             }
@@ -334,6 +334,8 @@ Material.ApplicationWindow{
 
     /// DIALOGS
     Material.Dialog {
+        height: parent.height / 2
+        width: parent.width / 2
         id: usingNameDialog
         title: "Protoblock Player Name"
         Text{
@@ -462,7 +464,8 @@ Material.ApplicationWindow{
             realRoot.helperTxt = ""
         }
         Column{
-            anchors.fill: parent
+            anchors.centerIn: parent
+
             spacing: 3
             Material.Label{
                 width: parent.width
@@ -503,7 +506,7 @@ Material.ApplicationWindow{
             if ( uname !== name) {
                 uname = name
                 msgString = "You are now playing as: " + name
-                if( pageHelper.selectedTabIndex === 5 || loginDialog.visible === true){
+                if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
                     usingNameDialog.toggle()
                 }
             }

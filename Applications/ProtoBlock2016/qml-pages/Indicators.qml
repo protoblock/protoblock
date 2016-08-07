@@ -17,7 +17,7 @@ Item {
             hoverAnimation: true
             onClicked: {
                 rootLoader.source  = "qrc:/Settings.qml"
-                pageHelper.selectedTabIndex = 0
+                pageHelper.selectedTabIndex = 3
                 pageHelper.title = "System Settings"
             }
         }
@@ -30,7 +30,7 @@ Item {
             iconName: "qrc:/icons/action_account_circle.png"
             onClicked: {
                 rootLoader.source = "qrc:/Account.qml"
-                pageHelper.selectedTabIndex = 5
+                pageHelper.selectedTabIndex = 3
                 pageHelper.title = "Account Settings"
             }
         }

@@ -17,10 +17,11 @@ Mediator::Mediator(QObject *parent) :
     m_pFantasyNameBalModel(&mFantasyNameBalModel),
     mGoodNameBalModel{},
     m_pGoodNameBalModel(&mGoodNameBalModel),
-    mOpenOrdersModel{},
-    m_pGlobalOpenOrdersModel(&mOpenOrdersModel),
-    mTradingPositionsModel(),//this,{"display"},{"symbol"}),
-    m_pTradingPositionsModel{&mTradingPositionsModel}
+//    mOpenOrdersModel{},
+//    m_pGlobalOpenOrdersModel(&mOpenOrdersModel),
+//    mTradingPositionsModel(this,{"display"},{"symbol"}),
+    m_pTradingPositionsModel{new TradingPositionsModel(this,{"display"},{"symbol"})},
+    m_currentPidContext("1")
 {
 
     mGetDepthReq.set_ctype(GETDEPTH);
@@ -186,7 +187,7 @@ void Mediator::getOrderReq(const QString &name,const QString symbol) {
     GetOrdersReq sr;
     sr.set_fname(name.toStdString());
     if ( symbol != "" )
-        sr.set_symbol(symbol);
+        sr.set_symbol(symbol.toStdString());
     req.SetAllocatedExtension(GetOrdersReq::req,&sr);
     auto txstr = req.SerializeAsString();
     qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
@@ -585,16 +586,22 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             qDebug() << rep.DebugString().data();
             auto fname = rep.GetExtension(GetOrdersRep::rep).oorders().fname();
             TradingPositionsModel *tmodel;
-            auto it = modelMap.find(fname);
-            if ( it ==  end(modelMap))
-                tmodel = modelMap[fname] = new TradingPositionsModel();//this,{"display"},{"symbol"});
-            else
-                tmodel = it->second;
 
-            tmodel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
             if ( fname == m_fantasy_agent.currentClient()) {
-                m_pTradingPositionsModel = tmodel;
+                tmodel = modelMap[fname] = m_pTradingPositionsModel;
             }
+            else {
+                auto it = modelMap.find(fname);
+
+                if ( it ==  end(modelMap))
+                    tmodel = new TradingPositionsModel();//this,{"display"},{"symbol"});
+                else
+                    tmodel = it->second;
+            }
+
+            tmodel->clear();
+            tmodel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
+
             break;
         }
         default:
@@ -1056,9 +1063,14 @@ void Mediator::rowMarketGet() {
 }
 
 void Mediator::getOrderPos() {
-    if ( m_fantasy_agent.HaveClient() )
-        getOrderReq(m_fantasy_agent.currentClient().data());
+    getOrderPos("");
 }
+
+void Mediator::getOrderPos(const QString &in) {
+    if ( m_fantasy_agent.HaveClient() )
+        getOrderReq(m_fantasy_agent.currentClient().data(),in);
+}
+
 
 void Mediator::getDepthRep() {
     if ( m_currentPidContext != "" ) {

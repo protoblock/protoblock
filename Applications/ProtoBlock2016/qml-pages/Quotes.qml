@@ -11,7 +11,7 @@ import ProRotoQml.Models 1.0
 
 Item {
     Component.onCompleted: {
-         pageHelper.title = "2016 Futures Live"
+         pageHelper.title = "Quote Page"
 
         if ( !realRoot.reloadrowquote )
             realRoot.reloadrowquote = true
@@ -108,7 +108,7 @@ Item {
                                     MiddleMan.startDepth(mysymbol)
                                 }
 
-                                rootLoader.source = "qrc:/DepthTrader.qml"
+                                rootLoader.source = "qrc:/Orders.qml"
                             }
                             backgroundColor: themeroot.theme.primaryColor
                         }
@@ -197,7 +197,7 @@ Item {
 //                            depthload1.source = "qrc:/DepthTrader.qml"
 //                            depthload1.source = "qrc:/Projections.qml"
 
-                      rootLoader.source = "qrc:/DepthTrader.qml"
+                     rootLoader.source = "qrc:/TradingFloor.qml"
 //                            var dataViewer = Qt.createComponent("qrc:/DepthTrader.qml").
 //                                createObject(realRoot, {inplay: playersListView.model[playersListView.currentIndex]});
 //                              dataViewer.show()

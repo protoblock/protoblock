@@ -63,7 +63,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
                     loginDialog.close();
-                    rootLoader.source = "qrc:/Home.qml";
+                    rootLoader.source = "qrc:/Trading.qml";
                 }
             }
         }
