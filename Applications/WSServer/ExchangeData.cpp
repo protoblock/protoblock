@@ -1500,7 +1500,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
             }
             OpenOrder &ord = mOpenOrders.at(oid);
 #ifdef TRACE
-            qDebug() << "level2 GetOrdersPositionsByName" << ord.playerid << ord.livecore.DebugString();
+            qDebug() << "level2 GetOrdersPositionsByName ord.playerid" << ord.playerid << ord.livecore.DebugString();
 #endif
             //continue;
             auto &mypair = ret[ord.playerid];
@@ -1513,7 +1513,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
     }
 
 #ifdef TRACE
-    qDebug() << "level2 GetOrdersPositionsByName" << ret.size();
+    qDebug() << "level2 GetOrdersPositionsByName ret.size() " << ret.size();
 #endif
     //ret.clear();
 

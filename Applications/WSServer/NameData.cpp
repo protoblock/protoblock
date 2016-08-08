@@ -143,8 +143,10 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
     qDebug() << fn.DebugString();
 
     auto fnp = Commissioner::AddName(name,pubkey);
-    if ( fnp  != nullptr)
+    if ( fnp  != nullptr) {
         OnFantasyName(fnp);
+        Server::AddNames(fn);
+    }
 }
 
 void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {

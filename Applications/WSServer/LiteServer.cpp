@@ -271,8 +271,6 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
                         }
                     }
 
-                    qDebug() << " book[i] " << book[i].b() << " i " << i;
-                    qDebug() << " book[i] " << book[i].b() << " i " << i;
                     book[i].set_b(dfd->price());
                     book[i].set_bs(dfd->size());
                 }
@@ -395,8 +393,6 @@ void LiteServer::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
             bi.set_as(dfd->size());
         }
     }
-
-    qDebug() << " after " << depths->DebugString().data();
 }
 
 
@@ -545,8 +541,8 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
         qDebug() << rep.ctype() <<" size " << Server::AllNamesRep.names_size();
     else if ( rep.ctype() == GETROWMARKET)
         qDebug() << mROWMarketRep.DebugString().data();
-    else
-        qDebug() << rep.DebugString().data();
+//    else
+//        qDebug() << rep.DebugString().data();
     return;
 }
 
@@ -564,11 +560,11 @@ void LiteServer::socketDisconnected()
 
             iit->second.erase(pClient);
             if ( iit->second.empty() ) {
-//                Server::TheExchange.UnSubscribe(fn);
+                Server::TheExchange.UnSubscribe(fn);
                 cleanIt(fn);
             }
         }
-//        mSocketSubscribed.erase(it);
+        mSocketSubscribed.erase(it);
     }
 
     if (pClient) {
@@ -586,14 +582,14 @@ void LiteServer::getFnameSnap(const std::string &fname) {
     auto myorderpositions = Server::TheExchange.GetOrdersPositionsByName(fname);
 
 #ifdef TRACE
-    qDebug() << "level2 Trading SetMyPositions" << fname.data() << myorderpositions.size();
+    qDebug() << "lite getFnameSnap 1" << fname.data() << myorderpositions.size();
 #endif
 //    double totpnl = 0.0;
 
     fnameptrs &fptr = getfnameptrs(fname,true);
     for ( auto &p : myorderpositions ) {
 
-        qDebug() << "level2 Trading SetMyPositions" << p.first << p.second.first.ToString();
+        qDebug() << "lite getFnameSnap 2" << p.first << p.second.first.ToString();
         auto &mypair = p.second;
         auto &myorders = mypair.second;
 //        {
@@ -765,6 +761,9 @@ LiteServer::fnameptrs & LiteServer::getfnameptrs(const std::string &fname, bool 
         auto *aof = AllOdersFname::default_instance().New();
         aof->set_fname(fname);
         auto it2 = fnameptrsmap.insert({fname,aof});
+#ifdef TRACE
+        qDebug() << " getfnameptrs " << fname.data() << " new " << it2.first->second.fnameAllOdersFname->DebugString().data();
+#endif
         return it2.first->second;
     }
     else {
@@ -800,7 +799,7 @@ void LiteServer::cleanIt(fnameptrs &fptr) {
 //    for ( auto &all : fptr.fnamesymbolAllOrders ) {
 //        all.second->orders.clear();
 //    }
-    fptr.fnameAllOdersFname->Clear();
+    fptr.fnameAllOdersFname->clear_pidorders();
     fptr.mSeqOrderMap.clear();
     fptr.fnamesymbolAllOrders.clear();
     fptr.openOrderSlots.clear();

@@ -109,7 +109,7 @@ void TxServer::processBinaryMessage(const QByteArray &message) {
                     AllNamesRepPtr->mutable_names()->DeleteSubrange(0,endpurge);
                 qDebug() << " post purge " << AllNamesRepPtr->names_size();
             }
-            AllNamesRepPtr->add_names(nt.fantasy_name());
+//            AllNamesRepPtr->add_names(nt.fantasy_name());
     //            AllNamesRep.add_names(nt.fantasy_name());
     //            AllNamesRep2.add_names(nt.fantasy_name());
     //            if ( AllNamesRepPtr->names_size() >= 1000) {
