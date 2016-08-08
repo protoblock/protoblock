@@ -17,7 +17,6 @@ Item {
             realRoot.reloadorderpos = true
         else {
             MiddleMan.getOrderPos()
-            realRoot.reloadorderpos = false
         }
 
 //        if ( realRoot.reloadrowquote ) {

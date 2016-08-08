@@ -195,8 +195,17 @@ public:
     Q_INVOKABLE void getOrderPos(const QString&);
     Q_INVOKABLE void getOrderPos();
     Q_INVOKABLE void setOrderModel(const QString& symbol) {
+        if  ( !m_fantasy_agent.HaveClient() )
+            return;
+
         auto model = m_pTradingPositionsModel->getByUid(symbol);
         if ( model == nullptr ) {
+//            auto model2 = m_pPlayerQuoteSliceModel->getByUid(uid);
+//            if ( model2 != nullptr) {
+//                AllOdersFname allf{};
+//                allf.set_fname(m_fantasy_agent);
+//                m_pTradingPositionsModel->append(new TradingPositionsMode);
+//            }
             qDebug() << " bad data for m_pTradingPositionsModel " << symbol;
         }
         else
@@ -245,6 +254,7 @@ public:
 
     void subscribeOrderPos(const QString &name);
     void getOrderReq(const QString &name,const QString symbol="");
+    void OnGoodName(const QString &goodname, const fantasybit::FantasyNameBal &fnb);
 signals:
     void importSuccess(const QString name, bool passfail);
 
@@ -336,7 +346,7 @@ private:
     int depthCount;
     int depthBackup;
     int depthInterval;
-    TradingPositionsModel mTradingPositionsModel;
+//    TradingPositionsModel mTradingPositionsModel;
 };
 
 #endif // MEDIATOR_H

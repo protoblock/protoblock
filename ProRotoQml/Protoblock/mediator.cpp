@@ -190,7 +190,7 @@ void Mediator::getOrderReq(const QString &name,const QString symbol) {
         sr.set_symbol(symbol.toStdString());
     req.SetAllocatedExtension(GetOrdersReq::req,&sr);
     auto txstr = req.SerializeAsString();
-    qDebug() << " subscribeOrderPos sending " << req.DebugString().data();
+    qDebug() << " getOrderReq sending " << req.DebugString().data();
     req.ReleaseExtension(GetOrdersReq::req);
     QByteArray qb(txstr.data(),(size_t)txstr.size());
     m_webSocket.sendBinaryMessage(qb);
@@ -479,10 +479,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 m_myPubkeyHash[pk2.req().pk()] = chash;
 
                 QString goodname = name.data();
-//                m_goodFnames.append(&goodname);
-                m_goodList.append(goodname);
-                mGoodNameBalModel.append(new FantasyNameBalModelItem(pk2.fnb()));
-                subscribeOrderPos(name.data());
+                OnGoodName(goodname,pk2.fnb());
 //                getOrderPos();
 //                qDebug() << " new good name! " << goodname;
             }
@@ -587,8 +584,13 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
             auto fname = rep.GetExtension(GetOrdersRep::rep).oorders().fname();
             TradingPositionsModel *tmodel;
 
+            bool dosignal;
             if ( fname == m_fantasy_agent.currentClient()) {
                 tmodel = modelMap[fname] = m_pTradingPositionsModel;
+
+                if ( m_pTradingPositionsModel->get_fantasyname().toStdString() != fname )
+                    dosignal = true;
+
             }
             else {
                 auto it = modelMap.find(fname);
@@ -599,7 +601,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                     tmodel = it->second;
             }
 
-            tmodel->clear();
+//            tmodel->clear();
             tmodel->updateAllOrders(rep.GetExtension(GetOrdersRep::rep).oorders());
 
             break;
@@ -614,6 +616,12 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
 
 //            setallNames2(m_allNamesList)
 
+}
+
+void Mediator::OnGoodName(const QString &goodname, const fantasybit::FantasyNameBal &fnb) {
+    m_goodList.append(goodname);
+    mGoodNameBalModel.append(new FantasyNameBalModelItem(fnb));
+    subscribeOrderPos(goodname);
 }
 
 
@@ -880,7 +888,7 @@ void Mediator::useName(const QString &name) {
 //        qDebug() << " Mediator::useName  usingFantasyName" << name;
 //        subscribeOrderPos(name);
         usingFantasyName(name);
-        getOrderPos();
+//        getOrderPos();
     }
 
 #ifdef CRAZY__no_TESTINGit
