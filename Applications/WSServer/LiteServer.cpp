@@ -607,16 +607,19 @@ void LiteServer::getFnameSnap(const std::string &fname) {
             }
 
             allords->set_netprice(p.second.first.netprice);
+            allords->set_avg(0);
             if ( p.second.first.netqty != 0 ) {
                 allords->set_netqty(p.second.first.netqty);
                 if (  p.second.first.netprice != 0 ) {
-                    double avg = (double)p.second.first.netprice / (double)p.second.first.netprice ;
+                    double avg = (double)p.second.first.netprice / (double)p.second.first.netqty ;
                     avg  = avg * -1.0;
                     allords->set_avg(avg);
                 }
             }
-            else
+            else {
                 allords->set_pnl(p.second.first.netprice);
+                allords->set_netqty(0);
+            }
         }
 
 //        int netqty = p.second.first.netqty;
@@ -837,12 +840,16 @@ void LiteServer::OnNewPos(const fantasybit::FullPosition &fp) {
     if ( allords == nullptr ) return;
 
     allords->set_netprice(fp.pos.netprice);
+    allords->set_avg(0);
     if ( fp.pos.netqty != 0 ) {
         allords->set_netqty(fp.pos.netqty);
-        allords->set_avg(fp.pos.netprice / (allords->netqty() * -1));
+        if ( fp.pos.netprice != 0  )
+           allords->set_avg(fp.pos.netprice / (allords->netqty() * -1));
     }
-    else
+    else {
         allords->set_pnl(fp.pos.netprice);
+        allords->set_netqty(0);
+    }
 }
 //        int netqty = fp.pos.netqty;
 //        double avg = 0;

@@ -59,8 +59,8 @@ Material.ApplicationWindow{
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Trading", "Projections", "NFLNews", "Account", "Protoblock",  ]
-    property var sectionTitlesAlias: [ "Trading", "Projections", "NFLNews", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Trading", "Projections", "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Trading", "Projections", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
         "qrc:/icons/ic_trending_up.png",
         "qrc:/icons/ic_poll.png",
@@ -84,13 +84,12 @@ Material.ApplicationWindow{
     }
 
     // Level One Trading
-    property var levelOne: [ "Quotes", "Portfolio", "Trading Floor"]
+    property var levelOne: [ "Quotes", "Portfolio"]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
 
     property var levelOneIcons: [
-        "qrc:/icons/trending_up.png",
         "qrc:/icons/trending_up.png",
         "qrc:/icons/trending_up.png",
     ]
@@ -115,11 +114,12 @@ Material.ApplicationWindow{
     ]
 
     // Level Four
-    property var levelFour: [ "Account" , "Import-Export", "Settings", "Proto Chat" ]
+    property var levelFour: [ "Account" , "Import-Export", "Settings", "Proto Chat", "Portfolio" ]
     property var levelFourIcons: [
         "qrc:/icons/account_action_circle.png" ,
         "qrc:/icons/ic_sync.png",
         "qrc:/icons/ic_lightbulb.png",
+        "qrc:/icons/ic_help.png",
         "qrc:/icons/ic_help.png"
     ]
 

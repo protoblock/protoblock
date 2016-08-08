@@ -71,11 +71,13 @@ Item {
                 model: MiddleMan.pGoodNameBalModel//MiddleMan.goodList().length
                 delegate:
                     ListItems.Subtitled{
+                    itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                     elevation: 2
                     width: parent.width
 //                    height: ProtoScreen.guToPx(11)
                     text: model.name //+ " pk(" + model.pk + ")" // MiddleMan.goodList()[index]
                     subText: model.pk
+
                     action: Image{
                         height: parent.height
                         width : height

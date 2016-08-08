@@ -50,7 +50,7 @@ void ExchangeData::init() {
                 continue;
 
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData init GameSettlePos llllll" << gsp.gameid();
+            qDebug() << "level2 ExchangeData init GameSettlePos llllll" << gsp.gameid().data();
 #endif
 
             for (auto ha : {QString("home"),QString("away")} )
@@ -179,7 +179,7 @@ void ExchangeData::init() {
             InsideBook *ib;
             if ( bd.has_newnew()) {
 #ifdef TRACE
-                qDebug() << "level2 ExchangeData new llllll" <<bd.fantasy_name() << bd.newnew().DebugString();
+                qDebug() << "level2 ExchangeData new llllll" <<bd.fantasy_name().data() << bd.newnew().DebugString().data();
 #endif
                 ib = lb->getInside(bd.newnew().buyside(),bd.newnew().price());
                 Order o;
@@ -263,7 +263,7 @@ void ExchangeData::init() {
                 continue;
 
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData posstore llllll" << str << sp.DebugString();
+            qDebug() << "level2 ExchangeData posstore llllll" << str.data() << sp.DebugString().data() << " |";
 #endif
             auto &plist = mPositions[fname];
             Position &pos = plist[nflplayer];
@@ -277,12 +277,12 @@ void ExchangeData::init() {
                                unique_ptr<MatchingEngine>(new MatchingEngine(nflplayer,false))));
 
                 if ( !it2.second ) {
-                    qWarning() << "level2 unable to insert for" << nflplayer;
+                    qWarning() << "level2 unable to insert for" << nflplayer.data();
                     continue;
                 }
 
 #ifdef TRACE
-                qDebug() << "level2 ExchangeData new for pos" << nflplayer;
+                qDebug() << "level2 ExchangeData new for pos" << nflplayer.data();
 #endif
 
                 it2.first->second->ResetLimitBook();//mLimitBook.reset(new LimitBook());

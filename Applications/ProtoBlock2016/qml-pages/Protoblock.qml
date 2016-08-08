@@ -30,7 +30,7 @@ Item {
             font.family: "Roboto"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             horizontalAlignment: Text.AlignHCenter
-            text: "2016 Enrollment Open Now ! Tell your friends to claim their names.\n Below is a news feed of protoblocks news"
+            text: "2016 Enrollment Open Now ! Claim your name, tell your friends."
             wrapMode: Text.WordWrap
         }
         Column{

@@ -109,10 +109,10 @@ Item {
 
                                 }
                                 text:
-                                    (( netqty > 0 ) ?  "Long " :
-                                      ( netqty < 0 ) ? "Short " :
+                                    (( netqty > 0 ) ?  "Long " + Math.abs(netqty).toString() + " @ " + Math.abs(avgprice).toString() :
+                                      ( netqty < 0 ) ? "Short " + Math.abs(netqty).toString() + " @ " + Math.abs(avgprice).toString() :
                                                        "Flat ")
-                                      + netqty.toString() + " @ " + avgprice.toString()
+
 
                                 Layout.fillHeight: true
                                 Layout.fillWidth:  false
