@@ -20,7 +20,7 @@ Item {
     property double dihight: ProtoScreen.guToPx(4)
 
     Component.onCompleted: {
-         pageHelper.title = "Open Orders" + symbol
+         pageHelper.title = "Open Orders: " + pnamep
 
 //         pid.txtN = inplay.playerid
     }

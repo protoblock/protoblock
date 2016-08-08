@@ -20,7 +20,7 @@ Mediator::Mediator(QObject *parent) :
 //    mOpenOrdersModel{},
 //    m_pGlobalOpenOrdersModel(&mOpenOrdersModel),
 //    mTradingPositionsModel(this,{"display"},{"symbol"}),
-    m_pTradingPositionsModel{new TradingPositionsModel(this,{"display"},{"symbol"})},
+    m_pTradingPositionsModel{new TradingPositionsModel()},
     m_currentPidContext("1")
 {
 

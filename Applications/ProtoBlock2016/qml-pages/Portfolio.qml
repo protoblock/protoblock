@@ -11,7 +11,7 @@ import ProRotoQml.Models 1.0
 
 Item {
     Component.onCompleted: {
-         pageHelper.title = "Orders Positions " + realRoot.uname
+         pageHelper.title = "Portfolio: " + realRoot.uname
 
         if ( !realRoot.reloadorderpos )
             realRoot.reloadorderpos = true
