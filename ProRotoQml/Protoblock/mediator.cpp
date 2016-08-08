@@ -20,7 +20,7 @@ Mediator::Mediator(QObject *parent) :
 //    mOpenOrdersModel{},
 //    m_pGlobalOpenOrdersModel(&mOpenOrdersModel),
 //    mTradingPositionsModel(this,{"display"},{"symbol"}),
-    m_pTradingPositionsModel{new TradingPositionsModel()},
+    m_pTradingPositionsModel{new TradingPositionsModel(this,QByteArray (),{"symbol"})},
     m_currentPidContext("1")
 {
 
@@ -596,7 +596,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
                 auto it = modelMap.find(fname);
 
                 if ( it ==  end(modelMap))
-                    tmodel = new TradingPositionsModel();//this,{"display"},{"symbol"});
+                    tmodel = new TradingPositionsModel{new TradingPositionsModel(this,QByteArray (),{"symbol"})};
                 else
                     tmodel = it->second;
             }

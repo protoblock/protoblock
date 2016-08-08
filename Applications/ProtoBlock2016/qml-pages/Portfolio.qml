@@ -96,36 +96,52 @@ Item {
                         secondaryItem: RowLayout{
                             width: ProtoScreen.guToPx(32)
                             height: ProtoScreen.guToPx(8)
+
+                            Label{
+                                color: {
+                                    if ( model.openpnl == 0) {
+                                        (netqty < 0) ? Colors.red :
+                                           netqty > 0 ? Colors.green : "black"
+                                    }
+                                    else {
+                                        "white"
+                                    }
+
+                                }
+                                text:
+                                    (( netqty > 0 ) ?  "Long " :
+                                      ( netqty < 0 ) ? "Short " :
+                                                       "Flat ")
+                                      + netqty.toString() + " @ " + avgprice.toString()
+
+                                Layout.fillHeight: true
+                                Layout.fillWidth:  false
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+
+                            }
+
                             Label{
                                 id: pnl
-                                text: "Open Pnl: " + openpnl.toString()
+                                text: "PNL: " + openpnl.toString()
 
-                                color: "white"
+
 //                                color: model.openpnl < 0 ? Colors.red :
 //                                         model.openpnl > 0 ? Colors.green : "black"
 
                                 Layout.fillHeight: true
                                 Layout.fillWidth:  true
                                 verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
                             }
-                        }
 
-                        Label{
-                            text: model.avgprice
-                            Layout.fillHeight: true
-                            Layout.fillWidth:  false
-                            verticalAlignment: Text.AlignVCenter
-                        }
 
-                       valueText: {
-                           ( netqty > 0 ) ? "Long (" + netqty.toString() +")" :
-                           ( netqty < 0 ) ? "Short (" + netqty.toString() +")" :
-                                            "Flat"
-                        }
 
+
+                        }
                         action: Icon {
 //                            visible: tid != "" && tid != undefined
-                            hasColor:false
+                            hasColor: false
                             source: "qrc:/"+ tid  + ".PNG"
                             width: ProtoScreen.guToPx(6)
                             height: width
