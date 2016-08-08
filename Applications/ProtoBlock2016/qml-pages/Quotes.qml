@@ -92,7 +92,6 @@ Item {
                     font.family: "Default"
                     helperText: "Enter in new symbol"
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onAccepted: nameCheckBlank(nameText.text)
                     inputMethodHints: Qt.ImhNoPredictiveText;
                 }
 
@@ -108,7 +107,7 @@ Item {
                                     MiddleMan.startDepth(mysymbol)
                                 }
 
-                                rootLoader.source = "qrc:/Orders.qml"
+//                                rootLoader.source = "qrc:/Orders.qml"
                             }
                             backgroundColor: themeroot.theme.primaryColor
                         }
