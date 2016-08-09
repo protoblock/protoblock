@@ -7,7 +7,7 @@ import Material 1.0
 
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
-import ProRotoQml.Models 1.0
+//import ProRotoQml.Models 1.0
 
 Item {
     property string isymbol: MiddleMan.getOrderModelSymbol()

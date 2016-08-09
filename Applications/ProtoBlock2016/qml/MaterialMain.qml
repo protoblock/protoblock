@@ -3,7 +3,6 @@ import QtQuick.Window 2.0
 import QtQuick.XmlListModel 2.0
 
 import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Sql 1.0
 import ProRotoQml.Utils 1.0
 import ProRotoQml.Theme 1.0
 
