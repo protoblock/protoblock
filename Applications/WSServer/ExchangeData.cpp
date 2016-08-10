@@ -354,6 +354,11 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
     qDebug() << eo.playerid().data() << ":newOrder:" << seqnum << " : " << fn->alias().data();
 
     bool exitonly = fn->getStakeBalance() <= 0;
+
+#ifndef PRODFOOTBALL
+    exitonly = false;
+#endif
+
     auto pos = getPosition(fn->alias(),eo.playerid());
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnOrderNew exitonly" << exitonly << "pos " << pos.ToString().data() << " stake "
