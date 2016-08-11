@@ -52,7 +52,7 @@ BaseListItem {
         anchors.leftMargin: listItem.margins
         anchors.rightMargin: listItem.margins
 
-        columns: 4
+        columns: 3
         rows: 1
         columnSpacing: ProtoScreen.guToPx(2)
 
@@ -146,7 +146,7 @@ BaseListItem {
             Layout.alignment: Qt.AlignCenter
             Layout.preferredWidth: childrenRect.width
             Layout.preferredHeight: parent.height
-            Layout.column: 4
+            Layout.column: 3
 
             visible: children.length > 0
         }

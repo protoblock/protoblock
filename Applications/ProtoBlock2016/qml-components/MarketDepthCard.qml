@@ -66,6 +66,7 @@ Item {
                         ? "red" : Theme.light.textColor
             }
 
+
             Label {
                 id: label1
                 text: buySize > 0 ? buySize.toString() : ""
@@ -86,6 +87,13 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 color: label01.text != "" ? label01.color :
                        label0.text != "" ? label0.color : Theme.light.textColor
+            }
+
+            Rectangle {
+                height: parent.height
+                width: ProtoScreen.guToPx(2)
+                color: "gray"
+                anchors.top: parent.top
             }
 
             Label {

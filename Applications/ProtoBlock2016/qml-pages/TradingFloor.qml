@@ -374,13 +374,35 @@ Item {
                         height: dihight * .75
                         spacing: 1
 //                        Rectangle{width: 2; height: 1;color: "transparent"}
+
                         Repeater{
-                            property string firstcol: isppgslider ? "GP" : "PPG"
-                            model: ["GP","PPG","Size","Bid","Ask","Size","PPG","GP"]
+                            model: ["PPG","Qty","Bid"]
                             Card{
                                 Layout.fillHeight: true
                                 Layout.fillWidth: false
-                                Layout.preferredWidth: ((parent.width / 8) - 2)
+                                Layout.preferredWidth: ((parent.width / 6) - 2)
+                                border.color:"black"
+                                backgroundColor: Colors.blue
+                                Label{
+                                    anchors.centerIn: parent
+                                    text: modelData
+                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                    color: "white"
+                                }
+                            }
+                        }
+                        Rectangle {
+                            height: boundingRect.height
+                            color: "grey"
+                            width: ProtoScreen.guToPx(2)
+                        }
+
+                        Repeater{
+                            model: ["Ask","Qty","PPG"]
+                            Card{
+                                Layout.fillHeight: true
+                                Layout.fillWidth: false
+                                Layout.preferredWidth: ((parent.width / 6) - 2)
                                 border.color:"black"
                                 backgroundColor: Colors.blue
                                 Label{
@@ -392,6 +414,7 @@ Item {
                             }
                         }
                     }
+
                     remove: Transition {
                         ParallelAnimation{
                             NumberAnimation { property: "opacity";from:.1; to: 9; duration: 400 }

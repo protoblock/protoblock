@@ -38,7 +38,7 @@ Item {
         contentWidth: parent.width / 1.20
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
-
+        anchors.horizontalCenter: parent.horizontalCenter
     Card{
         id: cccc
         width: parent.width / 1.07
