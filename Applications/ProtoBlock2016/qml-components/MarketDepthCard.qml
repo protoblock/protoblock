@@ -17,7 +17,7 @@ Item {
     property int maxnumgames: 16
     property int numppg: 20
     property int maxppg: 40
-    property int colums: 8
+    property int colums: 3
 //    property bool isppg: false
     height: maximumLineCount == 2 ? ProtoScreen.guToPx(8)  : ProtoScreen.guToPx(10)
 
@@ -35,21 +35,21 @@ Item {
 //                Layout.preferredWidth:   2
 //                color: infoColor
 //            }
-            spacing: 1
-            Label {
-                id: label0
-                text: { (buySize * numppg * buy) === 0 ? "" :
-                       Math.round(buy / numppg).toString()
-                }
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / colums) - 2
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                color:  ((buySize * numppg * buy) === 0 ? 0 :
-                        Math.round(buy / numppg) ) > numgames
-                        ? "red" : Theme.light.textColor
-            }
+            spacing: 0
+//            Label {
+//                id: label0
+//                text: { (buySize * numppg * buy) === 0 ? "" :
+//                       Math.round(buy / numppg).toString()
+//                }
+//                Layout.fillHeight: true
+//                Layout.fillWidth: false
+//                Layout.preferredWidth: (parent.width / colums) - 2
+//                verticalAlignment: Text.AlignVCenter
+//                horizontalAlignment: Text.AlignHCenter
+//                color:  ((buySize * numppg * buy) === 0 ? 0 :
+//                        Math.round(buy / numppg) ) > numgames
+//                        ? "red" : Theme.light.textColor
+//            }
 
             Label {
                 id: label01
@@ -58,21 +58,23 @@ Item {
                 }
                 Layout.fillHeight: true
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / colums) - 2
+                Layout.preferredWidth: (parent.width / 5.0)
+                width: (parent.width / 5.0)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 color:  ((buySize * numgames * buy) === 0 ? 0 :
                         Math.round(buy / numgames) ) > numppg
                         ? "red" : Theme.light.textColor
-            }
 
+                font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
+            }
 
             Label {
                 id: label1
                 text: buySize > 0 ? buySize.toString() : ""
                 Layout.fillHeight: true
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / colums) - 2
+                Layout.preferredWidth: (parent.width / 5.0) * 2.0
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
             }
@@ -83,72 +85,11 @@ Item {
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / colums) - 2
+                Layout.preferredWidth: (parent.width / 5.0) * 2.0
                 horizontalAlignment: Text.AlignHCenter
-                color: label01.text != "" ? label01.color :
-                       label0.text != "" ? label0.color : Theme.light.textColor
+                color: label01.text != "" ? label01.color : Theme.light.textColor
+//                       label0.text != "" ? label0.color : Theme.light.textColor
             }
-
-            Rectangle {
-                height: parent.height
-                width: ProtoScreen.guToPx(2)
-                color: "gray"
-                anchors.top: parent.top
-            }
-
-            Label {
-                id: label3
-                text: sell > 0 ? sell.toString() : ""
-                Layout.fillHeight: true
-                verticalAlignment: Text.AlignVCenter
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / colums) - 2
-                horizontalAlignment: Text.AlignHCenter
-                color: label7.text != "" ? label7.color :
-                       label6.text != "" ? label6.color : Theme.light.textColor
-            }
-
-            Label {
-                id: label4
-                text: sellSize >0 ? sellSize.toString() : ""
-                Layout.fillHeight: true
-                verticalAlignment: Text.AlignVCenter
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / colums) - 2
-                horizontalAlignment: Text.AlignHCenter
-            }
-
-            Label {
-                id: label7
-                text: { (sellSize * numgames * sell) === 0 ? "" :
-                       Math.round(sell / numgames).toString()
-                }
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / colums) - 2
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                color:  ((sellSize * numgames * sell) === 0 ? 0 :
-                        Math.round(sell / numgames) ) < numppg
-                        ? "green" : Theme.light.textColor
-            }
-            Label {
-                id: label6
-                text: { (sellSize * numppg * sell) === 0 ? "" :
-                       Math.round(sell / numppg).toString()
-                }
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / colums) - 2
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                color:  ((sellSize * numppg * sell) === 0 ? 0 :
-                        Math.round(sell / numppg) ) < numgames
-                        ? "green" : Theme.light.textColor
-            }
-
-
-
 
         }
     }

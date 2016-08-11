@@ -573,7 +573,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         break;
         case GETDEPTH: {
             m_pDepthMarketModel->updateFullDepth(rep.GetExtension(GetDepthRep::rep));
-#ifdef TRACE
+#ifdef TRACE3
             qDebug() << rep.DebugString().data();
 #endif
             depthBackup--;

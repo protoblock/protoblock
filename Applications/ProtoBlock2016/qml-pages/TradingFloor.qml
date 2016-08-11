@@ -10,13 +10,14 @@ import ProRotoQml.Theme 1.0
 //import ProRotoQml.Models 1.0
 
 Item {
+    id: pit
     property string contract
     property string symbol
     property variant inplay: MiddleMan.pDepthMarketModel.pPlayerQuoteSliceModelItem
 
     property int depthsize: 5
     property double dihight: ProtoScreen.guToPx(4)
-
+    property int price
     property bool isppgslider: false
 
     Component.onCompleted: {
@@ -55,11 +56,11 @@ Item {
                 top: parent.top
                 topMargin:ProtoScreen.guToPx(.5)
                 horizontalCenter: parent.horizontalCenter
-                margins: 1
+                margins: ProtoScreen.guToPx(.125)
             }
 
             // spacer
-            Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
+            Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
 
             Banner {
                 id: cwc
@@ -70,7 +71,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
 //                anchors.horizontalCenterOffset: ppgslider.
                 text: inplay.fullname + " (" + inplay.position +")" +
-                    " 2016 Season Trading (12/27)"
+                    " 2016 Season Trading (0/16)"
                 color: "white"
                 backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
@@ -242,7 +243,7 @@ Item {
 //                anchors.right: parent.right
 
             }
-
+/*
             Slider {
                 id: gamesslider
                 anchors.bottom: boundingRect.top
@@ -317,7 +318,7 @@ Item {
                 activeFocusOnPress: true
             }
 
-
+*/
 //            Scrollbar{flickableItem: f1}
 
 //            Flickable{
@@ -340,10 +341,18 @@ Item {
 //                anchors.topMargin: ProtoScreen.guToPx(1)
 //                height:    (topcard.height - bandepth.height - boundquote.height - buySell.height )
                 height: dihight * ( 1 + Math.min(depthsize,depthvm.count))
-                anchors.margins: 1
+//                anchors.margins: ProtoScreen.guToPx(.125)
                 anchors.horizontalCenter: bandepth.horizontalCenter
                 width: bandepth.width
 
+                Rectangle {
+                    id: middlebar
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: parent.height
+                    color: "grey"
+                    width: ProtoScreen.guToPx(2)
+                    border.color: "grey"
+                }
                 ListView {
                     anchors.fill: parent
 
@@ -360,62 +369,111 @@ Item {
 
                     id: depthvm
     //                    anchors.top: bandepth.bottom
-                    anchors.margins: 1
+//                    anchors.margins: ProtoScreen.guToPx(.125)
                     anchors.horizontalCenter: boundingRect.horizontalCenter
     //                    anchors.fill: parent
-                    width: parent.width
+                    width: boundingRect.width
     //                height: parent.height - bandepth.height - cwc.height - listquote.height
     //                    height: parent.height
                     clip: true
                     model: MiddleMan.pDepthMarketModel
                     headerPositioning: ListView.OverlayHeader
-                    header: RowLayout {
+                    header: Item {
+                        height: leftrow.height
                         width: parent.width
-                        height: dihight * .75
-                        spacing: 1
-//                        Rectangle{width: 2; height: 1;color: "transparent"}
+                        RowLayout {
+                            id: leftrow
+                            width: ((parent.width - middlebar.width)/2.0)
+                            height: dihight * .75
+                            spacing: 0 //ProtoScreen.guToPx(.125)
+                            anchors.left:parent.left
+//                            anchors.right: parent.horizontalCenter
+//                            anchors.rightMargin: ProtoScreen.guToPx(1)
+                            anchors.right: rightrow.left
+                            anchors.rightMargin: middlebar.width
+//                            anchors.rightMargin: middlebar.width / 2
+    //                        Rectangle{width: 2; height: 1;color: "transparent"}
 
-                        Repeater{
-                            model: ["PPG","Qty","Bid"]
                             Card{
                                 Layout.fillHeight: true
                                 Layout.fillWidth: false
-                                Layout.preferredWidth: ((parent.width / 6) - 2)
+                                Layout.preferredWidth: (parent.width / 5.0) //- ProtoScreen.guToPx(.125) * 2
                                 border.color:"black"
-                                backgroundColor: Colors.blue
+                                backgroundColor: "grey"
                                 Label{
                                     anchors.centerIn: parent
-                                    text: modelData
-                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                    text: "PPG"
+                                    font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
                                     color: "white"
                                 }
                             }
-                        }
-                        Rectangle {
-                            height: boundingRect.height
-                            color: "grey"
-                            width: ProtoScreen.guToPx(2)
+                            Repeater{
+                                model: ["Qty","Bid"]
+                                Card{
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: false
+                                    Layout.preferredWidth: (parent.width / 5.0) * 2.0 //- ProtoScreen.guToPx(.125) * 2
+                                    border.color:"black"
+                                    backgroundColor: Colors.blue
+                                    Label{
+                                        anchors.centerIn: parent
+                                        text: modelData
+                                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                        color: "white"
+                                    }
+                                }
+                            }
+
+
+
+
                         }
 
-                        Repeater{
-                            model: ["Ask","Qty","PPG"]
+                        RowLayout {
+                            id: rightrow
+                            anchors.right:parent.right
+//                            anchors.left: leftrow.right
+//                            anchors.leftMargin: middlebar.width
+                            width: ((parent.width - middlebar.width)/2.0)
+                            height: dihight * .75
+                            spacing: 0
+//                            anchors.right:parent.right
+
+                            Repeater{
+//                                model: ["Ask","Qty","PPG"]
+                                model: ["Ask","Qty",]
+                                Card{
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: false
+                                    Layout.preferredWidth: (parent.width / 5.0) * 2.0// - 2)
+                                    border.color:"black"
+                                    backgroundColor: Colors.blue
+                                    Label{
+                                        anchors.centerIn: parent
+                                        text: modelData
+                                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                        color: "white"
+                                    }
+                                }
+                            }
+
                             Card{
                                 Layout.fillHeight: true
                                 Layout.fillWidth: false
-                                Layout.preferredWidth: ((parent.width / 6) - 2)
+                                Layout.preferredWidth: (parent.width / 5.0) // - 2)
                                 border.color:"black"
-                                backgroundColor: Colors.blue
+                                backgroundColor: "grey"
                                 Label{
                                     anchors.centerIn: parent
-                                    text: modelData
-                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                    text: "PPG"
+                                    font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
                                     color: "white"
                                 }
                             }
                         }
                     }
 
-                    remove: Transition {
+                   remove: Transition {
                         ParallelAnimation{
                             NumberAnimation { property: "opacity";from:.1; to: 9; duration: 400 }
                         }
@@ -426,19 +484,41 @@ Item {
                             //                                    NumberAnimation{property: "scale";from:.98; to:1; duration:200; easing.type: Easing.OutBack}
                         }
                     }
-                    delegate: MarketDepthCard {
-                        numgames: gamesslider.value
-                        maxnumgames: gamesslider.value
-                        numppg: ppgslider.value
-                        maxppg: ppgslider.value
-                        height: dihight
-                        elevation: 2
-                        width: parent.width
-                        buySize:  model.bidsize
-                        buy: model.bid
-                        sellSize: model.asksize
-                        sell: model.ask
-                    }
+
+                    delegate: Item {
+                            width: parent.width
+                            height: dihight
+                            MarketDepthCard {
+                                id: biddepth
+//                                width: parent.width // ((parent.width - middlebar.width)/2)
+                                anchors.left:parent.left
+                                width: ((parent.width - middlebar.width)/2.0)
+                                numgames: gamesslider.value
+                                maxnumgames: gamesslider.value
+                                numppg: ppgslider.value
+                                maxppg: ppgslider.value
+                                height: dihight
+                                elevation: 2
+                                buySize:  model.bidsize
+                                buy: model.bid
+                            }
+                            MarketDepthCardAsk {
+                                id: askdepth
+        //                                width: parent.width // ((parent.width - middlebar.width)/2)
+                                anchors.right:parent.right
+                                width: ((parent.width - middlebar.width)/2.0)
+                                numgames: gamesslider.value
+                                maxnumgames: gamesslider.value
+                                numppg: ppgslider.value
+                                maxppg: ppgslider.value
+                                height: dihight
+                                elevation: 2
+                                sellSize: model.asksize
+                                sell: model.ask
+
+                            }
+                        }
+                   // }
                 }
             }
             Card {

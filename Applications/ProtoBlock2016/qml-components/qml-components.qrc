@@ -22,6 +22,7 @@
         <file>PlayerCard.qml</file>
         <file>MaterialListPlayer.qml</file>
         <file>MarketDepthCard.qml</file>
+        <file>MarketDepthCardAsk.qml</file>
         <file>IntHelper.qml</file>
         <file>OMSCard.qml</file>
     </qresource>
