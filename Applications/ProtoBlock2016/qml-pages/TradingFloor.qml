@@ -521,10 +521,32 @@ Item {
                    // }
                 }
             }
+
+            Row{
+                id: row3
+                width: boundingRect.width
+                anchors.top: boundingRect.bottom
+                anchors.topMargin: ProtoScreen.guToPx(2)
+                anchors.horizontalCenter: boundingRect.horizontalCenter
+                height: ProtoScreen.guToPx(12)
+                    BuyTrading {
+                        id: buycard
+                        width: parent.width
+                        height: parent.height
+                    }
+//                    BuyTrading {
+//                        id: sellCard
+//                        width: parent.width / 2
+//                        height: parent.height
+//                        isbuyCard: false
+
+//                    }
+            }
+
             Card {
                 id: buySell
                 width: boundingRect.width
-                anchors.top: boundingRect.bottom
+                anchors.top: row3.bottom
 //                Layout.fillHeight: true
 //                Layout.fillWidth: true
                 height: ProtoScreen.guToPx(12)
@@ -611,6 +633,8 @@ Item {
 
                 }
             }
+
+
             Card {
                 id: inputs
                 width: buySell.width
@@ -676,7 +700,6 @@ Item {
 
 
             }
-
 
 //                Row {
 //                    id: row2

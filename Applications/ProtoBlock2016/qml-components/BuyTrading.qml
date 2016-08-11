@@ -64,11 +64,12 @@ Item {
                 Label{
                     horizontalAlignment: Text.AlignJustify
                     verticalAlignment: Text.AlignJustify
-                    text: side + " Season Contracts"
+                    text: "Trade calculator"
                     style: Text.Raised
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                 }
             }
+
             RowLayout{
                 spacing: 1
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -84,8 +85,8 @@ Item {
                         Layout.alignment: Qt.AlignVCenter
                         id: avgPointsid
                         horizontalAlignment: Text.AlignRight
-                        text: "Average Points:"
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        text: "Avg PPG:"
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
 //                        font.pixelSize: ProtoScreen.guToPx(.50)
 
                         Component.onCompleted: {
@@ -119,7 +120,7 @@ Item {
                         horizontalAlignment: Text.AlignRight
                         id: numweekstxt
                         text: "Weeks:"
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     }
 
                     ComboBox {
@@ -154,7 +155,7 @@ Item {
                         id: priceCombotxt
                         text: side + " Price: "
                         horizontalAlignment: Text.AlignRight
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
 
                     }
                     TextField {
@@ -167,7 +168,7 @@ Item {
                             avgpoints = (1.0 * price) / (1.0 * (numweeks.currentIndex >0 ? numweeks.currentIndex : 15))
                             avgPoints.currentIndex = avgpoints < 1 ? 1 : avgpoints
                         }
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     }
                 }
 
@@ -180,7 +181,7 @@ Item {
                         style: "menu"
                         id: qytCombotxt
                         horizontalAlignment: Text.AlignRight
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                         text: "Qty to " + side + ":"
                         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                     }
@@ -188,10 +189,11 @@ Item {
                         anchors.left: qytCombotxt.right
                         id: qytCombo
                         validator: IntValidator {bottom: 1; top: 999;}
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     }
                 }
             }
+
             RowLayout{
                 spacing: 1
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

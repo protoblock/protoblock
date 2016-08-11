@@ -25,5 +25,6 @@
         <file>MarketDepthCardAsk.qml</file>
         <file>IntHelper.qml</file>
         <file>OMSCard.qml</file>
+        <file>BuyTrading.qml</file>
     </qresource>
 </RCC>
