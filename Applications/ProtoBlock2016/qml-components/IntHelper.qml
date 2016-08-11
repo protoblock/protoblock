@@ -113,6 +113,7 @@ Item {
                     console.log("onEditingFinished" + text)
 //                    inthelperroot.txtNumber = parseInt(text,10)
                     itext = parseInt(text,10)
+
                     changed()
                 }
 

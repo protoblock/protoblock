@@ -12,6 +12,7 @@ import QtQuick 2.4
 import QtQuick.Controls.Styles 1.3
 import Material 1.0
 import ProRotoQml.Utils 1.0
+import ProRotoQml.Theme 1.0
 
 SliderStyle {
     id: style
@@ -32,7 +33,7 @@ SliderStyle {
             ? control.knobLabel : control.value
 
     property int knobDiameter: control.hasOwnProperty("knobDiameter")
-            ? control.knobDiameter : 32 * Units.dp
+            ? control.knobDiameter : ProtoScreen.guToPx(4)
 
     property Component knob : Item {
         implicitHeight: control.pressed || control.focus || control.alwaysShowValueLabel
@@ -43,18 +44,18 @@ SliderStyle {
         Label {
             anchors {
                 fill: parent
-                topMargin: 4 * Units.dp
-                bottomMargin: 2 * Units.dp
-                leftMargin: 4 * Units.dp
-                rightMargin: 4 * Units.dp
+                topMargin: ProtoScreen.guToPx(.5)
+                bottomMargin: ProtoScreen.guToPx(.25)
+                leftMargin: ProtoScreen.guToPx(.5)
+                rightMargin: ProtoScreen.guToPx(.5)
             }
 
             horizontalAlignment: Qt.AlignHCenter
             verticalAlignment: Qt.AlignVCenter
             text: knobLabel
             fontSizeMode: Text.Fit
-            font.pixelSize: knobDiameter - 19 * Units.dp
-            minimumPixelSize: 6 * Units.dp
+            font.pixelSize: knobDiameter - ProtoScreen.guToPx(2.375)
+            minimumPixelSize: ProtoScreen.guToPx(.75)
             wrapMode: Text.WordWrap
             color: Theme.lightDark(styleColor,
                                     Theme.light.textColor,
@@ -107,7 +108,7 @@ SliderStyle {
 
     groove: Rectangle {
         implicitWidth: 200
-        implicitHeight: 2 * Units.dp
+        implicitHeight: ProtoScreen.guToPx(.25)
 
         anchors.verticalCenter: parent.verticalCenter
 
@@ -117,34 +118,34 @@ SliderStyle {
         Rectangle {
             height: parent.height
             width: styleData.handlePosition
-            implicitHeight: 2 * Units.dp
-            implicitWidth: 200
+            implicitHeight: ProtoScreen.guToPx(.25)
+            implicitWidth: ProtoScreen.guToPx(25)
             color: style.color
         }
     }
 
     handle: Item {
         anchors.centerIn: parent
-        implicitHeight: 8 * Units.dp
-        implicitWidth: 8 * Units.dp
+        implicitHeight: ProtoScreen.guToPx(1)
+        implicitWidth: ProtoScreen.guToPx(1)
 
         Loader {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.top
-            anchors.bottomMargin: 16 * Units.dp
+            anchors.bottomMargin: ProtoScreen.guToPx(2)
             sourceComponent: style.numericValueLabel ? knob : null
         }
 
         Rectangle {
             anchors.centerIn: parent
-            implicitHeight: 32 * Units.dp
-            implicitWidth: 32 * Units.dp
+            implicitHeight: ProtoScreen.guToPx(4)
+            implicitWidth: ProtoScreen.guToPx(4)
             color: control.focus ?
                        Theme.alpha(style.color, 0.20) :
                        "transparent"
             radius: implicitHeight / 2
             Rectangle {
-                property var diameter: control.enabled ? 16 * Units.dp : 12 * Units.dp
+                property var diameter: control.enabled ?ProtoScreen.guToPx(2) : ProtoScreen.guToPx(1.5) * Units.dp
                 anchors.centerIn: parent
                 color: control.value === control.minimumValue ?
                            Theme.backgroundColor : style.color
@@ -154,14 +155,14 @@ SliderStyle {
                                                        : Theme.alpha("#000000", 0.26)
                               : style.color
 
-                border.width: 2 * Units.dp
+                border.width: ProtoScreen.guToPx(.25)
 
                 implicitHeight: control.pressed && !control.focus && !style.numericValueLabel ?
-                                    diameter + 8 * Units.dp :
+                                    diameter + ProtoScreen.guToPx(1) :
                                     diameter
 
                 implicitWidth: control.pressed && !control.focus && !style.numericValueLabel ?
-                                   diameter + 8 * Units.dp :
+                                   diameter + ProtoScreen.guToPx(1) :
                                    diameter
 
                 radius: implicitWidth / 2
@@ -183,7 +184,7 @@ SliderStyle {
 
         Rectangle {
             color: style.darkBackground ? "#FFFFFF" : "#000000"
-            width: Math.round(2 * Units.dp); height: 2 * Units.dp
+            width: Math.round(ProtoScreen.guToPx(.25)); height: ProtoScreen.guToPx(.25)
             y: repeater.height / 2
             x: styleData.handleWidth / 2 + index * ((repeater.width - styleData.handleWidth) / (repeater.count-1))
         }

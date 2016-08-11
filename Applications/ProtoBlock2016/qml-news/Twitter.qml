@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import "tweetsearch.js" as Helper
 
+
 Rectangle {
     id: main
     width: parent.width
@@ -22,6 +23,19 @@ Rectangle {
                 return 1
         return 0
     }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        onClicked: {
+            tweetsModel
+            flipBar.flipUp()
+            flipBar.flipped = true
+            timer.stop ()
+
+        }
+    }
+
 
     TweetsModel {
         id: tweetsModel
@@ -73,8 +87,8 @@ Rectangle {
             id: header
             y: -mainListView.contentY - height
         }
-
-        footer: ListFooter { }
+        header: ListFooter { }
+//        footer:
 
         function clear() {
             ids = new Array()

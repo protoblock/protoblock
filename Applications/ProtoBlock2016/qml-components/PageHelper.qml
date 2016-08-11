@@ -149,26 +149,26 @@ Item {
                 leftMargin: 15
             }
         }
-        Image {
-            id: cog
-            source: "qrc:/icons/action_settings.png"
-            anchors.right: parent.right
-            anchors.rightMargin: 15
-            anchors.verticalCenter: parent.verticalCenter
-            width: height
-            height: parent.height / 2
-            rotation: 0
-            Behavior on rotation{RotationAnimation{duration: 600; from : 0 ; to : 360 ; }}
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    if(buttonsEnabled === true){
-                        cog.rotation = 1
-                        settingsMenu.shown ?  settingsMenu.shown = false : settingsMenu.shown = true
-                    }
-                }
-            }
-        }
+//        Image {
+//            id: cog
+//            source: "qrc:/icons/action_settings.png"
+//            anchors.right: parent.right
+//            anchors.rightMargin: 15
+//            anchors.verticalCenter: parent.verticalCenter
+//            width: height
+//            height: parent.height / 2
+//            rotation: 0
+//            Behavior on rotation{RotationAnimation{duration: 600; from : 0 ; to : 360 ; }}
+//            MouseArea{
+//                anchors.fill: parent
+//                onClicked: {
+//                    if(buttonsEnabled === true){
+//                        cog.rotation = 1
+//                        settingsMenu.shown ?  settingsMenu.shown = false : settingsMenu.shown = true
+//                    }
+//                }
+//            }
+//        }
     }
 
     ListModel{

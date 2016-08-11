@@ -7,7 +7,7 @@ include ($$PWD/../../pri/qml-news.pri)
 include ($$PWD/../../pri/qml-utils.pri)
 include ($$PWD/../../pri/qml-models.pri)
 #include ($$PWD/../../pri/qml-torrent.pri)
-#include ($$PWD/../../pri/qml-realChat.pri)
+include ($$PWD/../../pri/qml-realChat.pri)
 
 
 qtHaveModule(webengine) {

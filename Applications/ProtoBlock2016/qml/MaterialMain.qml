@@ -58,11 +58,11 @@ Material.ApplicationWindow{
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Trading", "Projections", "NFL News", "Account", "Protoblock"  ]
-    property var sectionTitlesAlias: [ "Trading", "Projections", "NFL News", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Projections","Trading",  "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
-        "qrc:/icons/ic_trending_up.png",
         "qrc:/icons/ic_poll.png",
+        "qrc:/icons/ic_trending_up.png",
         "qrc:/icons/newspaper.png",
         "qrc:/icons/action_account_circle.png",
         "qrc:/icons/ic_help.png"
@@ -83,26 +83,27 @@ Material.ApplicationWindow{
     }
 
     // Level One Trading
-    property var levelOne: [ "Quotes", "Portfolio"]
+    property var levelTwo: [ "Quotes", "Portfolio"]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
 
-    property var levelOneIcons: [
+    property var levelTwoIcons: [
         "qrc:/icons/trending_up.png",
         "qrc:/icons/trending_up.png",
     ]
 
 
     // Level Two
-    property var levelTwo: [ "Projections" , "2015 Leaderboard" ]
-    property var levelTwoIcons: [
+    property var levelOne: [ "2016 Projections" , "2015 Leaderboard" ]
+    property var levelOneIcons: [
+        "qrc:/icons/newspaper.png",
         "qrc:/icons/newspaper.png"
     ]
 
     //Level Three
     property var  levelThree: [
-        "Roto World", "Twitter" ,"CBS" , "ESPN", "NFL" ,
+        "Roto World", "CBS" , "ESPN", "NFL","Twitter"
     ]
     property var levelThreeIcons: [
         "qrc:/icons/ic_help.png",
@@ -113,7 +114,7 @@ Material.ApplicationWindow{
     ]
 
     // Level Four
-    property var levelFour: [ "Account" , "Import-Export", "Settings", "Proto Chat", "Portfolio" ]
+    property var levelFour: [ "Account" , "Import-Export", "Proto Chat", ]
     property var levelFourIcons: [
         "qrc:/icons/account_action_circle.png" ,
         "qrc:/icons/ic_sync.png",
@@ -123,13 +124,11 @@ Material.ApplicationWindow{
     ]
 
     // Level Five
-    property var levelFive: [ "Protoblock" , "About" , "Contact Us", "2015 Final", "2017 Season"]
+    property var levelFive: [ "Protoblock" , "About" , "Contact Us"]
     property var levelFiveIcons: [
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/ic_help.png",
         "qrc:/icons/ic_contact_mail.png" ,
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_help.png"
     ]
 
 
@@ -180,17 +179,17 @@ Material.ApplicationWindow{
                     pageHelper.selectedTabIndex = 3
                     pageHelper.title = "Account Settings"
                 }
-            },
-            Material.Action {
-                iconName: "qrc:/icons/action_settings.png"
-                name: "Settings"
-                hoverAnimation: true
-                onTriggered: {
-                    rootLoader.source  = "qrc:/Settings.qml"
-                    pageHelper.selectedTabIndex = 3
-                    pageHelper.title = "System Settings"
-                }
             }
+//            Material.Action {
+//                iconName: "qrc:/icons/action_settings.png"
+//                name: "Settings"
+//                hoverAnimation: true
+//                onTriggered: {
+//                    rootLoader.source  = "qrc:/Settings.qml"
+//                    pageHelper.selectedTabIndex = 3
+//                    pageHelper.title = "System Settings"
+//                }
+//            }
         ]
         backAction: navDrawer.action
         Material.NavigationDrawer {
@@ -264,11 +263,11 @@ Material.ApplicationWindow{
             anchors.right: parent.right
         }
 
-//        Material.ProgressCircle {
-//            id: actInd
-//            anchors.centerIn: er
-//            visible: rootLoader.status == Loader.Loading
-//        }
+        Material.ProgressCircle {
+            id: actInd
+            anchors.centerIn: rootLoader
+            visible: rootLoader.status == Loader.Loading
+        }
 
         Repeater {
             model: !navDrawer.enabled ? sections : 0
@@ -338,7 +337,7 @@ Material.ApplicationWindow{
             width: parent.width
             height: parent.height
             wrapMode: Text.WordWrap
-            font.pixelSize:  ProtoScreen.font(ProtoScreen.LARGE)
+            font.pixelSize:  ProtoScreen.font(ProtoScreen.NORMAL)
             text: msgString
         }
     }
@@ -459,15 +458,15 @@ Material.ApplicationWindow{
             realRoot.helperHeader = "Help"
             realRoot.helperTxt = ""
         }
-        Column{
-            anchors.centerIn: parent
+        Material.Label{
+            width: parent.width
+            height: parent.height
+            wrapMode: Text.WordWrap
+            text: realRoot.helperTxt
+            font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            Component.onCompleted: {
+                console.log (" Material.Label " + parent.width)
 
-            spacing: 3
-            Material.Label{
-                width: parent.width
-                wrapMode: Text.WordWrap
-                text: realRoot.helperTxt
-                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
         }
     }

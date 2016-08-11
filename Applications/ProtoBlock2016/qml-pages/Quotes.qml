@@ -32,10 +32,10 @@ Item {
     Scrollbar{flickableItem: fl}
     Flickable{
         id: fl
-        width: parent.width
+        width: parent.width / 1.20
         height:    parent.height
         contentHeight: parent.height * 2
-        contentWidth: parent.width
+        contentWidth: parent.width / 1.20
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
 
@@ -59,8 +59,9 @@ Item {
 //                height: parent.height
 //                anchrosType: "center"
             anchors.horizontalCenter: parent.horizontalCenter
+            fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
             bold: true
-            text: "Active Markets - Rest of the Way 2016"
+            text: "Prices - 2016 Rest of the Way (0/16)"
             color: "white"
             backgroundColor: themeroot.theme.primaryColor
             helpShown: true
@@ -120,18 +121,20 @@ Item {
                 backgroundColor: "white"//  ListView.isCurrentItem ? themeroot.theme.accentColor : "white"
                 width: parent.width
                 text:   model.fullname + " (" + model.position +")"
+                itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
+//                secondaryItem.anchors.left: itemSubLabel.anchors.right
                 subText:{
-                    "Bid Size: " + model.bidsize
-                            + " | Bid: "+model.bid
-                            + " | Ask: "+ model.ask
-                            + " | Ask Size: " + model.asksize
+                    if ( model.volume > 0 )
+                    "Symbol: " + model.symbol
+                            + " | Volume: "+model.volume
+                    else  "Symbol: " + model.symbol
                 }
                 secondaryItem: RowLayout{
                     width: ProtoScreen.guToPx(32)
                     height: ProtoScreen.guToPx(8)
                     Label{
                         id: las
-                        text: "Last: " + model.lastprice.toString() + arrow.text
+                        text: model.lastprice === 0 ?  "" : ("Price: " + model.lastprice.toString() + arrow.text)
 
                         color: model.updown < 0 ? Colors.red :
                                  model.updown > 0 ? Colors.green : "black"
@@ -148,34 +151,28 @@ Item {
                     }
 
                     Label{
-                        text: model.change
+                        text: model.change === 0 ? "" : model.change.toString()
                         Layout.fillHeight: true
                         Layout.fillWidth:  false
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     Icon{
+                        enabled: model.change !== 0
                         Layout.fillWidth:  false
                         Layout.fillHeight: true
                         hasColor:true
                         color: { model.change < 0 ? Colors.red :
-                                 model.change > 0 ? Colors.green : Colors.black
+                                 model.change > 0 ? Colors.green : "transparent"
                         }
                         source: {
                             if (model.change < 0 ){
                                 "qrc:/icons/ic_trending_down.png"
                             }
-                            else
-                            {
-                                if (model.change === 0 )
-                                {
-                                    "qrc:/icons/ic_trending_flat.png"
-                                }
-                                else
-                                {
+                            else if (model.change > 0 )
                                     "qrc:/icons/ic_trending_up.png"
-                                }
-                            }
+                            else ""
+
                         }
                     }
                 }

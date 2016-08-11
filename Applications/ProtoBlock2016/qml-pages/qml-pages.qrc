@@ -9,6 +9,7 @@
         <file>Protoblock.qml</file>
         <file>ContactUs.qml</file>
         <file>Projections.qml</file>
+        <file>2016Projections.qml</file>
         <file>Account.qml</file>
         <file>Import-Export.qml</file>
         <file>Indicators.qml</file>

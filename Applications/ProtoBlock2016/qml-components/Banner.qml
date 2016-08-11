@@ -3,7 +3,7 @@ import Material 1.0
 import ProRotoQml.Theme  1.0
 Item {
 //    Component.objectName: {
-//        listProperty(bannerRoot);
+////        listProperty(bannerRoot);
 //    }
 
     id: bannerRoot
@@ -19,6 +19,7 @@ Item {
     // FIXME set up alias on anchos for the text and not a string
 //    property alias anchorsType: bannerTxt.verticalAlignment
     property string anchrosType: "default"
+    property string anchrosHType: "default"
     height: ProtoScreen.guToPx(6)
     width: parent.width
     Card{
@@ -31,37 +32,59 @@ Item {
             id: bannerTxt
             text: bannerRoot.text
             height:parent.height
-            width: parent.width - 10
+            width: parent.width - ProtoScreen.guToPx(1.25)
             font.pixelSize: bannerRoot.fontSize
             font.bold: bannerRoot.bold
             color: bannerRoot.color
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+//            Binding on verticalAlignment {
+//                when: anchrosType === "default"
+//                value: Text.AlignVCenter
+//            }
+//            Binding on verticalAlignment {
+//                when: anchrosType === "verticalCenter"
+//                value: Text.AlignVCenter
+//            }
+//            Binding on verticalAlignment {
+//                when: anchrosType === "top"
+//                value: Text.AlignTop
+//            }
+//            Binding on verticalAlignment {
+//                when: anchrosType === "bottom"
+//                value: Text.AlignBottom
+//            }
 
-            Binding on verticalAlignment {
-                when: anchrosType === "default"
-                value: Text.AlignVCenter
-            }
-            Binding on verticalAlignment {
-                when: anchrosType === "verticalCenter"
-                value: Text.AlignVCenter
-            }
-            Binding on verticalAlignment {
-                when: anchrosType === "top"
-                value: Text.AlignTop
-            }
-            Binding on verticalAlignment {
-                when: anchrosType === "bottom"
-                value: Text.AlignBottom
-            }
+//            Binding on verticalAlignment {
+//                when: anchrosType === "center"
+//                value: Text.AlignVCenter
+//            }
 
-            Binding on verticalAlignment {
-                when: anchrosType === "center"
-                value: Text.AlignVCenter
-            }
+//            Binding on horizontalAlignment {
+//                when: anchrosHType === "default"
+//                value: (anchrosType === "center") ? Text.AlignHCenter : Text.AlignLeft
+//            }
+//            Binding on horizontalAlignment {
+//                when: anchrosHType === "horizontalCenter"
+//                value: Text.AlignHCenter
+//            }
+//            Binding on horizontalAlignment {
+//                when: anchrosHType === "center"
+//                value: Text.AlignHCenter
+//            }
+//            Binding on verticalAlignment {
+//                when: anchrosHType === "right"
+//                value: Text.AlignRight
+//            }
+//            Binding on verticalAlignment {
+//                when: anchrosHType === "left"
+//                value: Text.AlignLeft
+//            }
+//            Binding on verticalAlignment {
+//                when: anchrosHType === "justify"
+//                value: Text.AlignJustify
+//            }
 
-            Binding on horizontalAlignment {
-                when: anchrosType === "center"
-                value: Text.AlignHCenter
-            }
 
             anchors{
                 left: parent.left

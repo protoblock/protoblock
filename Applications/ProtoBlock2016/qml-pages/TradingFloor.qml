@@ -17,10 +17,12 @@ Item {
     property int depthsize: 5
     property double dihight: ProtoScreen.guToPx(4)
 
+    property bool isppgslider: false
+
     Component.onCompleted: {
          pageHelper.title = "Trading " + symbol
 
-         pid.txtN = inplay.playerid
+//         pid.txtN = inplay.playerid
 //        if ( !realRoot.reloadrowquote )
 //            realRoot.reloadrowquote = true
 //        else {
@@ -66,6 +68,7 @@ Item {
                 fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 bold: true
                 anchors.horizontalCenter: parent.horizontalCenter
+//                anchors.horizontalCenterOffset: ppgslider.
                 text: inplay.fullname + " (" + inplay.position +")" +
                     " 2016 Season Trading (12/27)"
                 color: "white"
@@ -209,6 +212,7 @@ Item {
                     }
 
                     action: Icon{
+                        id: teamicon
                         hasColor:false
                         source: "qrc:/"+ inplay.teamid+".PNG"
                         width: ProtoScreen.guToPx(6)
@@ -223,7 +227,8 @@ Item {
                 anchors.horizontalCenter: boundquote.horizontalCenter
     //                height: parent.height - cwc.height - buySell.heigth
                 text: "Market Depth"
-                anchrosType: "center"
+                anchrosType: "top"
+                anchrosHType: "center"
                 helperHeader: "Market Depth Help"
                 helperTxt: " "
                 helpShown: true
@@ -236,6 +241,80 @@ Item {
                 bold: true
 //                anchors.right: parent.right
 
+            }
+
+            Slider {
+                id: gamesslider
+                anchors.bottom: boundingRect.top
+                anchors.horizontalCenter: bandepth.horizontalCenter
+                width: bandepth.width / 1.20
+                numericValueLabel: true
+//                alwaysShowValueLabel: true
+                tickmarksEnabled: true
+                minimumValue: 0
+                value: 16
+                maximumValue: 16
+                stepSize: 1
+                knobLabel: value + " Games"
+                knobDiameter: ProtoScreen.guToPx(6)
+                darkBackground: false
+                color: "white"
+                onPressedChanged: {
+//                    if ( pressed && isppgslider ) {
+//                        isppgslider = false;
+//                        ppgslider.value = 1;
+//                    }
+                    if ( pressed )
+                        ppgslider.forceActiveFocus();
+                    else
+                        forceActiveFocus()
+                }
+//                onValueChanged: {
+//                    if ( focus )
+//                        ppgslider.forceActiveFocus();
+
+//                }
+
+                activeFocusOnPress: true
+//                onHoveredChanged: {
+//                    if ( hovered && !focus )
+//                        forceActiveFocus();
+//                }
+            }
+
+
+            Slider {
+                id: ppgslider
+                orientation: Qt.Vertical
+                anchors.top: boundquote.bottom
+                anchors.right: bandepth.left
+                anchors.rightMargin: ProtoScreen.guToPx(2)
+                anchors.left: boundquote.left
+                height: boundquote.height + boundingRect.height
+                width: (boundquote.width - bandepth.width) / 2
+//                anchors.horizontalCenter: teamicon.horizontalCenter
+                numericValueLabel: true
+//                alwaysShowValueLabel: true
+                tickmarksEnabled: true
+                minimumValue: 1
+                value: 10
+                maximumValue: 40
+                stepSize: 1
+                knobLabel: value + " PPG"
+                knobDiameter: ProtoScreen.guToPx(6)
+//                darkBackground: false
+//                color: "white"
+                onPressedChanged: {
+//                    if ( pressed && !isppgslider ) {
+//                        isppgslider = true;
+//                        gamesslider.value = 0;
+//                    }
+                    if ( pressed )
+                        gamesslider.forceActiveFocus()
+                    else
+                        forceActiveFocus()
+                }
+                activeFocusOnPress: true
             }
 
 
@@ -258,6 +337,7 @@ Item {
             Rectangle {
                 id: boundingRect
                 anchors.top: bandepth.bottom
+//                anchors.topMargin: ProtoScreen.guToPx(1)
 //                height:    (topcard.height - bandepth.height - boundquote.height - buySell.height )
                 height: dihight * ( 1 + Math.min(depthsize,depthvm.count))
                 anchors.margins: 1
@@ -295,11 +375,12 @@ Item {
                         spacing: 1
 //                        Rectangle{width: 2; height: 1;color: "transparent"}
                         Repeater{
-                            model: ["Bid Size","Bid","Ask","Ask Size"]
+                            property string firstcol: isppgslider ? "GP" : "PPG"
+                            model: ["GP","PPG","Size","Bid","Ask","Size","PPG","GP"]
                             Card{
                                 Layout.fillHeight: true
                                 Layout.fillWidth: false
-                                Layout.preferredWidth: (parent.width / 4) - 2;
+                                Layout.preferredWidth: ((parent.width / 8) - 2)
                                 border.color:"black"
                                 backgroundColor: Colors.blue
                                 Label{
@@ -323,6 +404,10 @@ Item {
                         }
                     }
                     delegate: MarketDepthCard {
+                        numgames: gamesslider.value
+                        maxnumgames: gamesslider.value
+                        numppg: ppgslider.value
+                        maxppg: ppgslider.value
                         height: dihight
                         elevation: 2
                         width: parent.width
@@ -457,6 +542,7 @@ Item {
                         anchors.right: parent.horizontalCenter
                         anchors.rightMargin:ProtoScreen.guToPx(1)
 //                        helpShown: true
+
                     }
                     IntHelper {
                         id: qint
@@ -468,22 +554,26 @@ Item {
                         anchors.left: pint.right
                         anchors.leftMargin: ProtoScreen.guToPx(2)
 //                        helpShown: true
+                        txtN: gamesslider.value * ppgslider.value
                     }
 
-                    IntHelper {
-                        id: pid
-                        labelTxt: "oid"
-                        lo: 1
-                        hi: 10000
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: pint.left
-                        anchors.rightMargin: ProtoScreen.guToPx(2)
-//                        txtN: inplay.playerid
-                        onChanged: {
-                            MiddleMan.doCancel(txtN);
-                        }
-                    }
+//                    IntHelper {
+//                        id: pid
+//                        labelTxt: "oid"
+//                        lo: 1
+//                        hi: 10000
+//                        anchors.verticalCenter: parent.verticalCenter
+//                        anchors.right: pint.left
+//                        anchors.rightMargin: ProtoScreen.guToPx(2)
+////                        txtN: inplay.playerid
+//                        onChanged: {
+//                            MiddleMan.doCancel(txtN);
+//                        }
+//                    }
+
+
             }
+
 
 //                Row {
 //                    id: row2

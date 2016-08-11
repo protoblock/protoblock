@@ -30,7 +30,7 @@ Item {
             font.family: "Roboto"
             color: realRoot.theme ===  "Pinky" ? "white" : "black"
             horizontalAlignment: Text.AlignHCenter
-            text: "2016 Enrollment Open Now ! Claim your name, tell your friends."
+            text: "2016 Rest Of Way trading avilable now! Claim your name, get in the game."
             wrapMode: Text.WordWrap
         }
         Column{
@@ -61,7 +61,14 @@ Item {
                 width: parent.width / 1.07
                 bannerText: "Trading Game"
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Protoblock players who disagree on their projections can trade with each other. The player with the higher projection is the buyers, and the player with the lower projection is the seller. The trade occur at some point in-between. Who ever is ultimately correct will receive the others points."
+                text: "Protoblock players who disagree on their projections can trade with each other. The player with the higher projection is the buyer, and the player with the lower projection is the seller. The trade occur at some point in-between. Who ever is ultimately correct will receive the others points."
+            }
+
+            CardWithBanner{
+                width: parent.width / 1.07
+                bannerText: "2017 Season Long Contracts "
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Hedge dynasty risk, with  future season long 2017 contracts. Contact us for more info. contact@protoblock.com"
             }
 
 
