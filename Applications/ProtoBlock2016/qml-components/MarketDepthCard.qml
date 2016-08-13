@@ -55,9 +55,9 @@ Item {
                 id: label01
                 text: { (buySize * numgames * buy) === 0 ? "" :
                        Math.round(buy / numgames).toString()
-                }
-                Layout.fillHeight: true
+                }                Layout.fillHeight: true
                 Layout.fillWidth: false
+
                 Layout.preferredWidth: (parent.width / 5.0)
                 width: (parent.width / 5.0)
                 verticalAlignment: Text.AlignVCenter

@@ -15,6 +15,7 @@ Item {
     property string symbol
     property variant inplay: MiddleMan.pDepthMarketModel.pPlayerQuoteSliceModelItem
 
+
     property int depthsize: 5
     property double dihight: ProtoScreen.guToPx(4)
     property int price
@@ -340,18 +341,20 @@ Item {
                 anchors.top: bandepth.bottom
 //                anchors.topMargin: ProtoScreen.guToPx(1)
 //                height:    (topcard.height - bandepth.height - boundquote.height - buySell.height )
-                height: dihight * ( 1 + Math.min(depthsize,depthvm.count))
+                height: dihight * ( .75 + Math.min(depthsize,depthvm.count))
 //                anchors.margins: ProtoScreen.guToPx(.125)
                 anchors.horizontalCenter: bandepth.horizontalCenter
                 width: bandepth.width
-
+                color: "transparent"
                 Rectangle {
                     id: middlebar
                     anchors.horizontalCenter: parent.horizontalCenter
                     height: parent.height
                     color: "grey"
                     width: ProtoScreen.guToPx(2)
-                    border.color: "grey"
+                    border.color: "black"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
                 }
                 ListView {
                     anchors.fill: parent
@@ -383,20 +386,20 @@ Item {
                         width: parent.width
                         RowLayout {
                             id: leftrow
-                            width: ((parent.width - middlebar.width)/2.0)
+                            width: ((parent.width - middlebar.width)/2.0)  + 1
                             height: dihight * .75
                             spacing: 0 //ProtoScreen.guToPx(.125)
-                            anchors.left:parent.left
-//                            anchors.right: parent.horizontalCenter
-//                            anchors.rightMargin: ProtoScreen.guToPx(1)
-                            anchors.right: rightrow.left
-                            anchors.rightMargin: middlebar.width
+//                            anchors.left:parent.left
+                            anchors.right: parent.horizontalCenter
+                            anchors.rightMargin: (middlebar.width / 2.0) - .5
+//                            anchors.right: rightrow.left
+//                            anchors.rightMargin: middlebar.width
 //                            anchors.rightMargin: middlebar.width / 2
     //                        Rectangle{width: 2; height: 1;color: "transparent"}
 
                             Card{
                                 Layout.fillHeight: true
-                                Layout.fillWidth: false
+                                Layout.fillWidth: true
                                 Layout.preferredWidth: (parent.width / 5.0) //- ProtoScreen.guToPx(.125) * 2
                                 border.color:"black"
                                 backgroundColor: "grey"
@@ -411,8 +414,8 @@ Item {
                                 model: ["Qty","Bid"]
                                 Card{
                                     Layout.fillHeight: true
-                                    Layout.fillWidth: false
-                                    Layout.preferredWidth: (parent.width / 5.0) * 2.0 //- ProtoScreen.guToPx(.125) * 2
+                                    Layout.fillWidth: true
+                                    Layout.preferredWidth: ((parent.width / 5.0) * 2.0) + .5 //- ProtoScreen.guToPx(.125) * 2
                                     border.color:"black"
                                     backgroundColor: Colors.blue
                                     Label{
@@ -420,6 +423,8 @@ Item {
                                         text: modelData
                                         font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                                         color: "white"
+                                        verticalAlignment: Text.AlignVCenter
+                                        horizontalAlignment: Text.AlignHCenter
                                     }
                                 }
                             }
@@ -434,7 +439,7 @@ Item {
                             anchors.right:parent.right
 //                            anchors.left: leftrow.right
 //                            anchors.leftMargin: middlebar.width
-                            width: ((parent.width - middlebar.width)/2.0)
+                            width: ((parent.width - middlebar.width)/2.0) + .5
                             height: dihight * .75
                             spacing: 0
 //                            anchors.right:parent.right
@@ -444,7 +449,7 @@ Item {
                                 model: ["Ask","Qty",]
                                 Card{
                                     Layout.fillHeight: true
-                                    Layout.fillWidth: false
+                                    Layout.fillWidth: true
                                     Layout.preferredWidth: (parent.width / 5.0) * 2.0// - 2)
                                     border.color:"black"
                                     backgroundColor: Colors.blue
@@ -459,7 +464,7 @@ Item {
 
                             Card{
                                 Layout.fillHeight: true
-                                Layout.fillWidth: false
+                                Layout.fillWidth: true
                                 Layout.preferredWidth: (parent.width / 5.0) // - 2)
                                 border.color:"black"
                                 backgroundColor: "grey"
@@ -489,14 +494,16 @@ Item {
                             width: parent.width
                             height: dihight
                             MarketDepthCard {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
                                 id: biddepth
 //                                width: parent.width // ((parent.width - middlebar.width)/2)
                                 anchors.left:parent.left
-                                width: ((parent.width - middlebar.width)/2.0)
-                                numgames: gamesslider.value
-                                maxnumgames: gamesslider.value
-                                numppg: ppgslider.value
-                                maxppg: ppgslider.value
+                                width: ((parent.width - middlebar.width)/2.0) + 1
+                                numgames: buycard.numgames
+//                                maxnumgames: gamesslider.value
+                                numppg: buycard.avgppg
+//                                maxppg: ppgslider.value
                                 height: dihight
                                 elevation: 2
                                 buySize:  model.bidsize
@@ -507,10 +514,8 @@ Item {
         //                                width: parent.width // ((parent.width - middlebar.width)/2)
                                 anchors.right:parent.right
                                 width: ((parent.width - middlebar.width)/2.0)
-                                numgames: gamesslider.value
-                                maxnumgames: gamesslider.value
-                                numppg: ppgslider.value
-                                maxppg: ppgslider.value
+                                numgames: buycard.numgames
+                                numppg: buycard.avgppg
                                 height: dihight
                                 elevation: 2
                                 sellSize: model.asksize
@@ -522,18 +527,115 @@ Item {
                 }
             }
 
-            Row{
+            Item {
                 id: row3
-                width: boundingRect.width
+                width: boundingRect.width * .85
+                height: parent.height - boundingRect.height - bandepth.height - boundquote.height - cwc.height
                 anchors.top: boundingRect.bottom
-                anchors.topMargin: ProtoScreen.guToPx(2)
-                anchors.horizontalCenter: boundingRect.horizontalCenter
-                height: ProtoScreen.guToPx(12)
+                anchors.topMargin: ProtoScreen.guToPx(1)
+                anchors.right: boundingRect.right
+//                anchors.rightMargin: width * .10
+
+                Item {
+                    height: ProtoScreen.guToPx(14)
+                    id: bcardrow;
+                    width: parent.width
+//                    height: parent.height
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+
                     BuyTrading {
                         id: buycard
-                        width: parent.width
-                        height: parent.height
+//                        width: parent.width
+//                        height: parent.height
+                        calcprice: inplay.lastprice
                     }
+                }
+
+                    Item {
+                        anchors.top: bcardrow.bottom
+                        id: row1
+                        width: (parent.width / 3.0) * 2.0
+                        height: ProtoScreen.guToPx(14)//parent.height / 2
+                         anchors.right: parent.right
+                        anchors.margins: ProtoScreen.guToPx(.5)
+//                        anchors.horizontalCenter: parent.horizontalCenter
+
+
+                        Rectangle {
+                            color: "transparent"
+                            width: parent.width / 2.0
+//                            height: parent.height - ProtoScreen.guToPx(2)
+//                            radius: ProtoScreen.guToPx(1)
+//                            anchors.right: parent.right
+                            height: parent.height - ProtoScreen.guToPx(2)
+                            radius: ProtoScreen.guToPx(1)
+                            anchors.right: parent.horizontalCenter
+
+
+                            Button {
+    //                            anchors.fill: parent
+                                width: parent.width / 2.0 // ProtoScreen.guToPx(4)
+                                height: width / 2.0
+    //                            anchors.rightMargin: ProtoScreen.guToPx(1)
+    //                            anchors.right: parent.right
+    //                            anchors.verticalCenter: parent.verticalCenter
+                                anchors.centerIn: parent
+    //                            anchors.margins: ProtoScreen.guToPx(.25)
+                                text: "BUY"
+                                backgroundColor:  Colors.green
+                                textColor: "white"
+                                onClicked : {
+                                    focus = true;
+                                    console.log(" price " + pint.txtN )
+                                     MiddleMan.doTrade(
+                                            inplay.symbol
+                                            ,true
+                                            ,buycard.calcprice
+                                            ,buycard.qty
+                                            )
+
+
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            color: "transparent"
+                            width: parent.width / 2
+                            height: parent.height - ProtoScreen.guToPx(2)
+                            radius: ProtoScreen.guToPx(1)
+                            anchors.left: parent.horizontalCenter
+                            Button {
+                                width: parent.width / 2 // ProtoScreen.guToPx(4)
+                                height: width / 2.0
+    //                            anchors.leftMargin: ProtoScreen.guToPx(1)
+    //                            anchors.left: parent.left
+    //                            anchors.verticalCenter: parent.verticalCenter
+                                anchors.centerIn: parent
+
+    //                            anchors.margins: ProtoScreen.guToPx(.25)
+                                text: "SELL"
+                                backgroundColor:  Colors.red
+                                textColor: "white"
+                                onClicked : {
+                                    focus = true;
+
+//                                    console.log(" price " + pint.txtN )
+//                                     MiddleMan.doTrade(
+//                                            inplay.symbol
+//                                            ,false
+//                                            ,pint.txtN
+//                                            ,qint.txtN
+//                                            )
+
+                                }
+                             }
+
+                         }
+
+                    }
+
 //                    BuyTrading {
 //                        id: sellCard
 //                        width: parent.width / 2
@@ -543,163 +645,163 @@ Item {
 //                    }
             }
 
-            Card {
-                id: buySell
-                width: boundingRect.width
-                anchors.top: row3.bottom
-//                Layout.fillHeight: true
-//                Layout.fillWidth: true
-                height: ProtoScreen.guToPx(12)
-                anchors.topMargin: ProtoScreen.guToPx(.25)
-                anchors {
-                    horizontalCenter: boundingRect.horizontalCenter
-//                    margins: ProtoScreen.guToPx(.25)
-                }
+//            Card {
+//                id: buySell
+//                width: boundingRect.width
+//                anchors.top: row3.bottom
+////                Layout.fillHeight: true
+////                Layout.fillWidth: true
+//                height: ProtoScreen.guToPx(12)
+//                anchors.topMargin: ProtoScreen.guToPx(.25)
+//                anchors {
+//                    horizontalCenter: boundingRect.horizontalCenter
+////                    margins: ProtoScreen.guToPx(.25)
+//                }
 
-                elevation: 0
-                Row {
-//                    spacing: 2
-                    id: row1
-                    width: (parent.width / 3) * 2
-                    height: ProtoScreen.guToPx(4)
-                    anchors.centerIn: parent
-                    anchors.fill: parent
-                    anchors.margins: ProtoScreen.guToPx(.5)
-//                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    Rectangle {
-                        color: "transparent"
-                        width: parent.width / 2
-                        height: parent.height - ProtoScreen.guToPx(2)
-                        radius: ProtoScreen.guToPx(1)
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        Button {
-//                            anchors.fill: parent
-                            width: parent.width / 2 // ProtoScreen.guToPx(4)
-                            height: width / 2.7
-//                            anchors.rightMargin: ProtoScreen.guToPx(1)
-//                            anchors.right: parent.right
-//                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.centerIn: parent
-//                            anchors.margins: ProtoScreen.guToPx(.25)
-                            text: "BUY"
-                            backgroundColor:  Colors.green
-                            textColor: "white"
-                            onClicked : {
-                                console.log(" price " + pint.txtN )
-                                 MiddleMan.doTrade(
-                                        inplay.symbol
-                                        ,true
-                                        ,pint.txtN
-                                        ,qint.txtN
-                                        )
-                            }
-                        }
-                    }
-
-                    Rectangle {
-                        color: "transparent"
-                        width: parent.width / 2
-                        height: parent.height - ProtoScreen.guToPx(2)
-                        radius: ProtoScreen.guToPx(1)
-                        anchors.verticalCenter: parent.verticalCenter
-                        Button {
-                            width: parent.width / 2 // ProtoScreen.guToPx(4)
-                            height: width / 2.7
-//                            anchors.leftMargin: ProtoScreen.guToPx(1)
-//                            anchors.left: parent.left
-//                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.centerIn: parent
-
-//                            anchors.margins: ProtoScreen.guToPx(.25)
-                            text: "SELL"
-                            backgroundColor:  Colors.red
-                            textColor: "white"
-                            onClicked : {
-                                console.log(" price " + pint.txtN )
-                                 MiddleMan.doTrade(
-                                        inplay.symbol
-//                                        pid.txtN
-                                        ,false
-                                        ,pint.txtN
-                                        ,qint.txtN
-                                        )
-
-                            }
-                         }
-
-                     }
-
-                }
-            }
-
-
-            Card {
-                id: inputs
-                width: buySell.width
-                anchors.top: buySell.bottom
-//                Layout.fillHeight: true
-//                Layout.fillWidth: true
-                height: ProtoScreen.guToPx(8)
-                anchors.topMargin: ProtoScreen.guToPx(.25)
-                anchors {
-                    horizontalCenter: buySell.horizontalCenter
-//                    margins: ProtoScreen.guToPx(.25)
-                }
-                elevation: 0
-
+//                elevation: 0
 //                Row {
-//                    width: (pint.width + qint.width) * 1.20
+////                    spacing: 2
+//                    id: row1
+//                    width: (parent.width / 3) * 2
 //                    height: ProtoScreen.guToPx(4)
 //                    anchors.centerIn: parent
 //                    anchors.fill: parent
 //                    anchors.margins: ProtoScreen.guToPx(.5)
-//                    anchors.horizontalCenter: parent.horizontalCenter
+////                    anchors.horizontalCenter: parent.horizontalCenter
 
-//                    id: row2
-
-                    IntHelper {
-                        id: pint
-//                            width: parent.width / 2
-                        labelTxt: "Price"
-                        lo: 1
-                        hi: 400
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.horizontalCenter
-                        anchors.rightMargin:ProtoScreen.guToPx(1)
-//                        helpShown: true
-
-                    }
-                    IntHelper {
-                        id: qint
-//                            width: parent.width / 2
-                        labelTxt: "Qty"
-                        lo: 1
-                        hi: 100
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: pint.right
-                        anchors.leftMargin: ProtoScreen.guToPx(2)
-//                        helpShown: true
-                        txtN: gamesslider.value * ppgslider.value
-                    }
-
-//                    IntHelper {
-//                        id: pid
-//                        labelTxt: "oid"
-//                        lo: 1
-//                        hi: 10000
+//                    Rectangle {
+//                        color: "transparent"
+//                        width: parent.width / 2
+//                        height: parent.height - ProtoScreen.guToPx(2)
+//                        radius: ProtoScreen.guToPx(1)
 //                        anchors.verticalCenter: parent.verticalCenter
-//                        anchors.right: pint.left
-//                        anchors.rightMargin: ProtoScreen.guToPx(2)
-////                        txtN: inplay.playerid
-//                        onChanged: {
-//                            MiddleMan.doCancel(txtN);
+
+//                        Button {
+////                            anchors.fill: parent
+//                            width: parent.width / 2 // ProtoScreen.guToPx(4)
+//                            height: width / 2.7
+////                            anchors.rightMargin: ProtoScreen.guToPx(1)
+////                            anchors.right: parent.right
+////                            anchors.verticalCenter: parent.verticalCenter
+//                            anchors.centerIn: parent
+////                            anchors.margins: ProtoScreen.guToPx(.25)
+//                            text: "BUY"
+//                            backgroundColor:  Colors.green
+//                            textColor: "white"
+//                            onClicked : {
+//                                console.log(" price " + pint.txtN )
+//                                 MiddleMan.doTrade(
+//                                        inplay.symbol
+//                                        ,true
+//                                        ,pint.txtN
+//                                        ,qint.txtN
+//                                        )
+//                            }
 //                        }
 //                    }
 
+//                    Rectangle {
+//                        color: "transparent"
+//                        width: parent.width / 2
+//                        height: parent.height - ProtoScreen.guToPx(2)
+//                        radius: ProtoScreen.guToPx(1)
+//                        anchors.verticalCenter: parent.verticalCenter
+//                        Button {
+//                            width: parent.width / 2 // ProtoScreen.guToPx(4)
+//                            height: width / 2.7
+////                            anchors.leftMargin: ProtoScreen.guToPx(1)
+////                            anchors.left: parent.left
+////                            anchors.verticalCenter: parent.verticalCenter
+//                            anchors.centerIn: parent
 
-            }
+////                            anchors.margins: ProtoScreen.guToPx(.25)
+//                            text: "SELL"
+//                            backgroundColor:  Colors.red
+//                            textColor: "white"
+//                            onClicked : {
+//                                console.log(" price " + pint.txtN )
+//                                 MiddleMan.doTrade(
+//                                        inplay.symbol
+////                                        pid.txtN
+//                                        ,false
+//                                        ,pint.txtN
+//                                        ,qint.txtN
+//                                        )
+
+//                            }
+//                         }
+
+//                     }
+
+//                }
+//            }
+
+
+//            Card {
+//                id: inputs
+//                width: buySell.width
+//                anchors.top: buySell.bottom
+////                Layout.fillHeight: true
+////                Layout.fillWidth: true
+//                height: ProtoScreen.guToPx(8)
+//                anchors.topMargin: ProtoScreen.guToPx(.25)
+//                anchors {
+//                    horizontalCenter: buySell.horizontalCenter
+////                    margins: ProtoScreen.guToPx(.25)
+//                }
+//                elevation: 0
+
+////                Row {
+////                    width: (pint.width + qint.width) * 1.20
+////                    height: ProtoScreen.guToPx(4)
+////                    anchors.centerIn: parent
+////                    anchors.fill: parent
+////                    anchors.margins: ProtoScreen.guToPx(.5)
+////                    anchors.horizontalCenter: parent.horizontalCenter
+
+////                    id: row2
+
+//                    IntHelper {
+//                        id: pint
+////                            width: parent.width / 2
+//                        labelTxt: "Price"
+//                        lo: 1
+//                        hi: 400
+//                        anchors.verticalCenter: parent.verticalCenter
+//                        anchors.right: parent.horizontalCenter
+//                        anchors.rightMargin:ProtoScreen.guToPx(1)
+////                        helpShown: true
+
+//                    }
+//                    IntHelper {
+//                        id: qint
+////                            width: parent.width / 2
+//                        labelTxt: "Qty"
+//                        lo: 1
+//                        hi: 100
+//                        anchors.verticalCenter: parent.verticalCenter
+//                        anchors.left: pint.right
+//                        anchors.leftMargin: ProtoScreen.guToPx(2)
+////                        helpShown: true
+////                        txtN: gamesslider.value * ppgslider.value
+//                    }
+
+////                    IntHelper {
+////                        id: pid
+////                        labelTxt: "oid"
+////                        lo: 1
+////                        hi: 10000
+////                        anchors.verticalCenter: parent.verticalCenter
+////                        anchors.right: pint.left
+////                        anchors.rightMargin: ProtoScreen.guToPx(2)
+//////                        txtN: inplay.playerid
+////                        onChanged: {
+////                            MiddleMan.doCancel(txtN);
+////                        }
+////                    }
+
+
+//            }
 
 //                Row {
 //                    id: row2

@@ -1,5 +1,6 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.4 as Controls
 
 import Material 1.0
 
@@ -17,7 +18,7 @@ Item {
 //    property int fontSize: ProtoScreen.font(ProtoScreen.SMALL)
 //    property bool bold: false
 
-    property int weeksleft: 15
+    property int weeksleft: 16
     property bool isbuyCard: true
     property int price: (isbuyCard ? 1 : 26) * weeksleft
     property int qty: 1
@@ -25,304 +26,346 @@ Item {
     property string side:  isbuyCard ? "Buy" : "Sell"
     property bool  changing: false
 
-
-    property alias setprice: priceCombo.text
+    property int avgppg: Math.round(calcprice / numgames)
+    property int numgames: 16
+    property int calcprice
+//    property int qty: 1
+//    property alias setprice: priceCombo.text
     property double avgpoints: 1.0
 
-    Component.onCompleted: {
-//        console.log(" bycard " + side + " price " + price + " combo " + priceCombo.currentIndex )
-    }
+//    Component.onCompleted: {
+////        console.log(" bycard " + side + " price " + price + " combo " + priceCombo.currentIndex )
+//    }
+    width: parent.width
+    height: parent.height
+//    CardWithContent {
+//        id: card1
+//        width: parent.width
+//        height: parent.height
+////        property alias tVal: tVal
+////        bannerColor: "white"
+//        bannerText: "Trade Calculator"
+////        bannerbottom: true
+//        object:
 
-    Card {
-        id: card1
+//    }
+//}
+
+    RowLayout {
+        anchors.fill: parent
         width: parent.width
         height: parent.height
-//        property alias tVal: tVal
-
-        //Fixme do math
         ColumnLayout {
-            anchors.fill: parent
-            spacing: 2
-//            bottom: parent.bottom
-//            anchors.top: parent.top
-//            anchors.right: parent.right
-//            anchors.left: parent.left
-//            anchors.rightMargin: ProtoScreen.guToPx(-6.125)
-//            anchors.bottomMargin: ProtoScreen.guToPx(1.38)
-//            anchors.leftMargin: ProtoScreen.guToPx(-6.125)
-//            anchors.topMargin: ProtoScreen.guToPx(4.75)/*
-//            scale: 1
-//            rows: 0
-//            columnSpacing: 0
-//            rowSpacing: 0
-//            columns: 1
-//            clip: false
-            Row {
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.fillHeight: false
-                Layout.fillWidth: true
-                Label{
-                    horizontalAlignment: Text.AlignJustify
-                    verticalAlignment: Text.AlignJustify
-                    text: "Trade calculator"
-                    style: Text.Raised
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                }
+
+            width: parent.width * .40
+            height: parent.height
+            Label {
+                id: btban
+        //                Layout.preferredWidth:
+                text: "Trading Calculator"
+                style: "subheading"
+//                anchors.top: parent.top
+                height: calcutt.height
+                verticalAlignment: Text.AlignTop
+
             }
-
-            RowLayout{
-                spacing: 1
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.fillHeight: true
+            RowLayout {
+                id: rl1
+                anchors.top: parent.verticalCenter
+                height: parent.height - btban.height
                 Layout.fillWidth: true
-
-                Row {
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                width: parent.width
+                Layout.fillHeight: false
+                spacing: ProtoScreen.guToPx(3)
+                ColumnLayout {
+                    height: parent.height
+                    width: parent.width / 2.0
                     Layout.fillHeight: true
                     Layout.fillWidth: true
 
-                    Label {
-                        Layout.alignment: Qt.AlignVCenter
-                        id: avgPointsid
-                        horizontalAlignment: Text.AlignRight
-                        text: "Avg PPG:"
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-//                        font.pixelSize: ProtoScreen.guToPx(.50)
 
-                        Component.onCompleted: {
-                            console.log(" fp " + font.pixelSize + " pp " + ProtoScreen.guToPx(.50))
-                        }
-
-                    }
-
-                    ComboBox {
-                        Layout.alignment: Qt.AlignVCenter
-                        anchors.left: avgPointsid.right
-                        editable: true
+                    Controls.ComboBox {
+            //                    anchors.fill: parent
+            //                    Layout.alignment: Qt.AlignVCenter
+            //                    anchors.left: avgPointsid.right
+            //                    editable: true
+            //                    anchors.top: avgl.top
+            //                    anchors.topMargin: avgl.height
+                        inputMethodHints : Qt.ImhDigitsOnly
                         validator: IntValidator {bottom: 1; top: 40;}
-    //                    focus: true
+                        editable: true
                         id: avgPoints
                         model: 40
-                        currentIndex: 1
-
+                        currentIndex: avgppg
+                        activeFocusOnPress: true
+//                        focus: true
                         onActivated: {
-                            priceCombo.text = index *  numweeks.currentIndex
-                        }
-                    }
-                }
-
-                Row {
-                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-
-                    Label {
-                        horizontalAlignment: Text.AlignRight
-                        id: numweekstxt
-                        text: "Weeks:"
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    }
-
-                    ComboBox {
-                        anchors.left: numweekstxt.right
-                        id: numweeks
-                        editable: true
-                        validator: IntValidator {bottom: 1; top: weeksleft;}
-    //                    focus: true
-                        currentIndex: weeksleft
-                        onActivated: {
-                            priceCombo.currentIndex = index *  avgPoints.currentIndex
+                            avgppg = index
+                            console.log("onActivated avgPoints " + index)
+                            pricecombo.currentIndex = Math.round(index * numgames)
                         }
 
-                        model: 16
-                    }
-                }
 
-            }
-
-            RowLayout{
-                spacing: 1
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-
-                Row {
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-
-                    Label{
-                        id: priceCombotxt
-                        text: side + " Price: "
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-
-                    }
-                    TextField {
-                        anchors.left: priceCombotxt.right
-                        id: priceCombo
-                        validator: IntValidator {bottom: 1; top: 400;}
-                        text: "1"
                         onAccepted: {
-                            price = parseInt(text,10)
-                            avgpoints = (1.0 * price) / (1.0 * (numweeks.currentIndex >0 ? numweeks.currentIndex : 15))
-                            avgPoints.currentIndex = avgpoints < 1 ? 1 : avgpoints
+                            avgppg = currentIndex
+                            console.log("accepted avgPoints " + currentIndex)
+                            pricecombo.currentIndex = Math.round(currentIndex * numgames)
                         }
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+
+                        onFocusChanged: {
+                            if ( !focus ) {
+                                if ( editText != "" && currentIndex.toString() != editText ) {
+                                    currentIndex = parseInt(editText)
+                                    avgppg = currentIndex
+                                    pricecombo.currentIndex = Math.round(currentIndex * numgames)
+                                }
+                            }
+                           console.log("onFocusChanged avgPoints " + currentIndex)
+                        }
+                    }
+                    Label {
+                        id: avgl
+            //                Layout.preferredWidth:
+                        text: "Avg PPG"
+                        style: "caption"
                     }
                 }
 
-                Row {
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                ColumnLayout {
+                    height: parent.height
+                    width: parent.width / 2.0
                     Layout.fillHeight: true
                     Layout.fillWidth: true
 
-                    Label{
-                        style: "menu"
-                        id: qytCombotxt
-                        horizontalAlignment: Text.AlignRight
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                        text: "Qty to " + side + ":"
-                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+
+                    Controls.ComboBox {
+            //                    Layout.alignment: Qt.AlignVCenter
+            //                    anchors.left: avgPointsid.right
+            //                    editable: true
+            //                    anchors.fill: parent
+            //                    id: numgames
+                        inputMethodHints : Qt.ImhDigitsOnly
+                        editable: true
+                        id: numgamescb
+                        validator: IntValidator {bottom: 1; top: 16;}
+        //                displayText: currentIndex+1
+                        model: 17
+                        currentIndex: 16
+                        activeFocusOnPress: true
+//                        focus: true
+                        onAccepted: {
+                            numgames = currentIndex
+                            pricecombo.currentIndex = Math.round(currentIndex * avgppg)
+                        }
+
+                        onActivated: {
+                            numgames = index
+                            console.log("onActivated numg " + index)
+                            pricecombo.currentIndex = Math.round(index * numgames)
+                        }
+
+                        onFocusChanged: {
+                            if ( !focus ) {
+                                if ( editText != "" && currentIndex !== parseInt(editText) ) {
+                                    currentIndex = parseInt(editText)
+                                    numgames = currentIndex
+                                    pricecombo.currentIndex = Math.round(currentIndex * numgames)
+                                }
+                            }
+                           console.log("onFocusChanged numg " + currentIndex)
+                        }
                     }
-                    TextField {
-                        anchors.left: qytCombotxt.right
-                        id: qytCombo
-                        validator: IntValidator {bottom: 1; top: 999;}
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    Label {
+                        id: ngl
+            //                Layout.preferredWidth:
+                        text: "# Weeks"
+                        style: "caption"
+
                     }
                 }
             }
+        }
 
-            RowLayout{
-                spacing: 1
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        ColumnLayout {
+//            anchors.fill: parent
+            width: parent.width * .20
+            height: parent.height
+
+            Button {
+                focus: true
+                id: calcutt
+        //                Layout.preferredWidth:
+                text: "Calc"
+                backgroundColor: "grey"
+                onClicked: {
+                    focus = true;
+                    console.log(" numgame" + numgames + " avgppg " + avgppg + " price " + calcprice)
+                }
+            }
+
+            ColumnLayout {
+                height: parent.height
+                width: parent.width
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Button{
-                    anchors.fill: parent
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    Layout.fillHeight: false
-                    Layout.fillWidth: true
-                    text:{
-                        side + " NOW"
+                anchors.top: parent.verticalCenter
+                Controls.ComboBox {
+        //                    anchors.fill: parent
+        //                    Layout.alignment: Qt.AlignVCenter
+        //                    anchors.left: avgPointsid.right
+        //                    editable: true
+        //                    anchors.top: avgl.top
+        //                    anchors.topMargin: avgl.height
+                    inputMethodHints : Qt.ImhDigitsOnly
+                    validator: IntValidator {bottom: 1; top: 400;}
+                    model: 400
+                    editable: true
+                    id: pricecombo
+                    currentIndex: calcprice
+
+                    activeFocusOnPress: true
+                    focus: true
+                    onAccepted: {
+                        calcprice = currentIndex
+                        avgPoints.currentIndex = Math.round(currentIndex / numgames)
+                        console.log("pricecombo acc" + currentIndex)
                     }
 
-                    elevation: 3
-                    backgroundColor: themeroot.theme.accentColor
-                    onClicked:{ //ToDo PopUp
-                        MiddleMan.doTrade(
-                                    realRoot.playerInView
-                                    ,isbuyCard
-                                    ,priceCombo.currentIndex
-                                    ,qytCombo.currentIndex
-                                    )
+                    onActivated: {
+                        console.log("pricecombo act " + index)
+                        calcprice = index
+                        avgPoints.currentIndex = Math.round(index / numgames)
+                    }
+
+                    onFocusChanged: {
+                        if ( !focus ) {
+                            if ( editText != "" && currentIndex !==  parseInt(editText) ) {
+                                currentIndex = parseInt(editText)
+                                calcprice = currentIndex
+                                avgPoints.currentIndex = Math.round(calcprice / numgames)
+                            }
+                        }
+                       console.log("pricecombo onFocusChanged " + currentIndex + " edittext" + editText + " cp " + calcprice)
+                    }
+
+                    onCurrentIndexChanged: {
+                        console.log("pricecombo currindex " + currentIndex)
+
+                    }
+
+                }
+                Label {
+                    id: prl
+        //                Layout.preferredWidth:
+                    text: "Price "
+                    style: "caption"
+                }
+            }
+        }
+        ColumnLayout {
+
+            width: parent.width * .40
+            height: parent.height
+            Label {
+                id: totall
+        //                Layout.preferredWidth:
+                text: "Total"
+                style: "Total"
+                height: calcutt.height
+            }
+            RowLayout {
+                spacing: ProtoScreen.guToPx(3)
+
+                height: parent.height - totall.height
+                width: parent.width
+                Layout.fillHeight: true
+//                anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.verticalCenter
+                ColumnLayout {
+                    height: parent.height
+                    width: parent.width * .35
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+
+                    Controls.ComboBox {
+            //                    anchors.fill: parent
+            //                    Layout.alignment: Qt.AlignVCenter
+            //                    anchors.left: avgPointsid.right
+            //                    editable: true
+            //                    anchors.top: avgl.top
+            //                    anchors.topMargin: avgl.height
+                        inputMethodHints : Qt.ImhDigitsOnly
+                        validator: IntValidator {bottom: 1; top: 1000;}
+                        editable: true
+                        id: qtyCB
+                        model: 1000
+                        currentIndex: 1
+                        activeFocusOnPress: true
+//                        focus: true
+                        onActivated: {
+                            qty = index
+                            console.log("onActivated qty " + index)
+                            pricecombo.currentIndex = Math.round(index * numgames)
+                        }
+
+
+                        onAccepted: {
+                            qty = currentIndex
+                            console.log("accepted qtyCB " + currentIndex)
+                        }
+
+                        onFocusChanged: {
+                            if ( !focus ) {
+                                if ( editText != "" &&  currentIndex !== parseInt(editText) ) {
+                                    currentIndex = parseInt(editText)
+                                    qty = currentIndex
+                                }
+                            }
+                           console.log("onFocusChanged qtyCB " + currentIndex)
+                        }
+                    }
+                    Label {
+                        id: qtyl
+            //                Layout.preferredWidth:
+                        text: "* Qty"
+                        style: "caption"
+                    }
+                }
+
+                ColumnLayout {
+                    height: parent.height
+                    width: parent.width * .65
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+
+//                    Rectangle {
+//                       id: rectot
+//                       border.color: "grey"
+//                       color: "light grey"
+
+//                       anchors.verticalCenter: qtyCB.verticalCenter;
+                       Label {
+                          height: qtyCB.height
+                          width: qtyCB.width * 2.0
+//                            anchors.fill: parent
+                            id: totalval
+                            text: Math.round(pricecombo.currentIndex * qtyCB.currentIndex) + " ƑɃ"
+                            color: "darkred"
+                       }
+//                    }
+                    Label {
+                        id: totallb
+            //                Layout.preferredWidth:
+                        text: "= Total Value"
+                        style: "caption"
 
                     }
                 }
             }
-            //col
         }
+
     }
+
 }
-
-
-//                MaterialComboBox{
-//                    id: avgPoints
-//                    width: Layout.width
-//                    model: 40
-//                    currentIndex: 0
-//                    onCurrentIndexChanged: {
-//                        if ( currentIndex > 0 ) {
-//                            avgpoints = currentIndex
-//                            console.log(side + " avgPoints " + currentIndex)
-////                            var points = avgPoints.currentText
-////                            var numberOfWeeks = comboBox2.currentText
-////                            yearVal.text = (avgpoints * numberOfWeeks)
-////                            weeklyAvg.text = avgPoints.currentText
-////                            howManyWeeks.text = comboBox2.currentText
-
-//                            if ( !changing ) {
-//                                changing = true;
-//                                priceCombo.currentIndex = currentIndex *  comboBox2.currentIndex
-//                                changing = false;
-//                            }
-//                        }
-//                    }
-//                }
-            //                    onCurrentIndexChanged: {
-            //                        if ( currentIndex > 0 ) {
-            //                            avgpoints = currentIndex
-            //                            console.log(side + " avgPoints " + currentIndex)
-
-            //                            if ( !changing ) {
-            //                                changing = true;
-            //                                priceCombo.currentIndex = currentIndex *  comboBox2.currentIndex
-            //                                changing = false;
-            //                            }
-            //                        }
-            //                    }
-//                            }
-
-
-
-
-                //                    onCurrentIndexChanged: {
-//                        if ( currentIndex > 0 ) {
-//                            console.log(side + " comboBox2 " + currentIndex)
-//                            if ( !changing ) {
-//                                changing = true
-//                                priceCombo.currentIndex = currentIndex *  avgPoints.currentIndex
-//                                changing = false;
-//                            }
-//                        }
-//                    }
-//                }
-
-
-
-//            RowLayout{
-//                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-//                Layout.fillHeight: true
-//                Layout.fillWidth: true
-//                Label{
-//                    id:tVal
-//                    text: "Yearly Value"
-//                    Layout.fillWidth: true
-//                }
-//                Label{
-//                    id: yearVal
-//                    text:  "0"
-//                    Layout.fillWidth: true
-//                }
-//            }
-//            RowLayout{
-//                Layout.fillHeight: true
-//                Layout.fillWidth: true
-//                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-//                Label{
-//                    text:  "Average Weeks "
-//                    Layout.fillWidth: true
-//                }
-//                Label{
-//                    id: howManyWeeks
-//                    text: "0"
-//                    horizontalAlignment: Text.AlignHCenter
-//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-//                    Layout.fillWidth: true
-//                }
-//                Label{
-//                    text: "Weekly Avg"
-//                    Layout.fillWidth: true
-//                }
-//                Label{
-//                    id: weeklyAvg
-//                    text: "0"
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignHCenter
-//                    Layout.fillWidth: true
-//                }
-//            }
-
-

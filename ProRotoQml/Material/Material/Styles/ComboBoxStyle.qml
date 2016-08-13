@@ -17,34 +17,34 @@ import QtQuick.Controls 1.2
 import QtQuick.Controls.Private 1.0
 
 ComboBoxStyle {
-    id: style
+//    id: style
 
-    __popupStyle: Style {
-        property int __maxPopupHeight: 400
-        property int submenuOverlap: 0
-        property int submenuPopupDelay: 0
+//    __popupStyle: Style {
+//        property int __maxPopupHeight: 400
+//        property int submenuOverlap: 0
+//        property int submenuPopupDelay: 0
 
-        property Component frame: Rectangle {
-            id: popupFrame
-            border.color: "white"
-            Text {
-                text: "NOT IMPLEMENTED"
-                color: "red"
-                font {
-                    pixelSize: 10
-                    bold: true
-                }
-                anchors.centerIn: parent
-                rotation: -Math.atan2(popupFrame.height, popupFrame.width) * 180 / Math.PI
-            }
-        }
+//        property Component frame: Rectangle {
+//            id: popupFrame
+//            border.color: "white"
+//            Text {
+//                text: "NOT IMPLEMENTED"
+//                color: "red"
+//                font {
+//                    pixelSize: 10
+//                    bold: true
+//                }
+//                anchors.centerIn: parent
+//                rotation: -Math.atan2(popupFrame.height, popupFrame.width) * 180 / Math.PI
+//            }
+//        }
 
-        property Component menuItemPanel: Text {
-            text: styleData.text
-        }
+//        property Component menuItemPanel: Text {
+//            text: styleData.text
+//        }
 
-        property Component __scrollerStyle: null
-    }
+//        property Component __scrollerStyle: null
+//    }
 
 }
 //    font {
