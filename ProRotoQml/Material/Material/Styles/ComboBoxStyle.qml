@@ -27,11 +27,11 @@ ComboBoxStyle {
 
 
 
-    Component.onCompleted: {
-        console.log(" jjtextsingletom " + TextSingleton.implicitHeight)
-        console.log("scaler " + scaler + " gutopx " + ProtoScreen.guToPx(1));
+//    Component.onCompleted: {
+//        console.log(" jjtextsingletom " + TextSingleton.implicitHeight)
+//        console.log("scaler " + scaler + " gutopx " + ProtoScreen.guToPx(1));
 
-    }
+//    }
 
     property double scaler: 1.0
     //ProtoScreen.pxToGu(1) / 8.0``

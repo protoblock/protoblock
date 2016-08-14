@@ -34,7 +34,7 @@ Material.ApplicationWindow{
             loginDialog.toggle()
         }
         else
-            rootLoader.source = "qrc:/2016Season.qml";
+            rootLoader.source = "qrc:/Quote.qml";
     }
 
     property string defaultname
@@ -301,30 +301,32 @@ Material.ApplicationWindow{
     //     WHY !!!!!!!!!!!!!!!!!!!
 
     //    SIMPLE MODELS
-    ListModel{id: postionModel}
-    ListModel{
-        id: weekModel
-        Component.onCompleted: {
-            fillDefaultModels()
-        }
-    }
 
-    function fillDefaultModels(){
 
-        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
-        for (var i in positionArray){
-            postionModel.append({'text': positionArray[i] })
-        }
-        for (var ii = 0 ; ii < 17; ii++){
-            if(ii === 0 ){
-                weekModel.append({"text" : "all weeks"})
-            }
-            else
-            {
-                weekModel.append({"text" : ii.toString() })
-            }
-        }
-    }
+//    ListModel{id: postionModel}
+//    ListModel{
+//        id: weekModel
+//        Component.onCompleted: {
+//            fillDefaultModels()
+//        }
+//    }
+
+//    function fillDefaultModels(){
+
+//        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
+//        for (var i in positionArray){
+//            postionModel.append({'text': positionArray[i] })
+//        }
+//        for (var ii = 0 ; ii < 17; ii++){
+//            if(ii === 0 ){
+//                weekModel.append({"text" : "all weeks"})
+//            }
+//            else
+//            {
+//                weekModel.append({"text" : ii.toString() })
+//            }
+//        }
+//    }
 
 
     /// DIALOGS

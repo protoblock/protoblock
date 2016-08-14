@@ -88,12 +88,12 @@ Item {
                 helperTxt: "16 games 16 weeks. Season long contracts settle at the total points from a 16 game season. " +
                             "the season is from week1-week16. (week 16 is counted twice instead of using week 17)." +
                             "These expire at the total fantasy points scored by " + inplay.fullname +
-                            "the \"Writer\" (seller) must give the \"buyer\" the equivanlat amount of fantsy points scored in fantasy bits." +
-                            "It is 1 Fantasy Bit pe Fantaasy Point in these season long contracts" +
-                            "the game is to try to buy well below the actual settlement number," +
-                            "or alternativly to write (sell) at a price well above the actual final number" +
-                            "with all the know risks, how much are you willing to \"pay\" for the contract," +
-                            " and for how much would you be willing to " +
+                            ". The \"Writer\" (seller) must give the \"buyer\" fantasy bits equal to the amount of fantsy points scored " +
+                            "It is 1 Fantasy Bit per Fantasy Point in these season long contracts." +
+                            "The game is to try to buy below the actual settlement number," +
+                            "or alternativly to write (sell) at a price above the actual final number. " +
+                            "With all the known risks, how much are you willing to \"pay\" for the contract? " +
+                            "For how much would you be willing to " +
                             " write, or sell, the contract, knowing that you keep all the points in cae of injury," +
                             " but have to pay up in case of a breakout?"
 
@@ -615,12 +615,18 @@ Item {
                                 onClicked : {
                                     focus = true;
 //                                    console.log(" price " + pint.txtN )
-                                     MiddleMan.doTrade(
-                                            inplay.symbol
-                                            ,true
-                                         ,buycard.calcprice
-                                         ,buycard.qty
-                                            )
+                                    myTradeDialog.price = buycard.calcprice
+                                    myTradeDialog.qty = buycard.qty
+                                    myTradeDialog.side = "Buy"
+                                    myTradeDialog.player = inplay.fullname + " (" + inplay.position +") "
+                                            + "Symbol(" + inplay.symbol +")"
+                                    myTradeDialog.show()
+//                                    MiddleMan.doTrade(
+//                                            inplay.symbol
+//                                            ,true
+//                                         ,buycard.calcprice
+//                                         ,buycard.qty
+//                                            )
 
 
                                 }
@@ -657,15 +663,12 @@ Item {
                                 textColor: "white"
                                 onClicked : {
                                     focus = true;
-
-//                                    console.log(" price " + pint.txtN )
-                                     MiddleMan.doTrade(
-                                            inplay.symbol
-                                            ,false
-                                         ,buycard.calcprice
-                                         ,buycard.qty
-                                            )
-
+                                    myTradeDialog.price = buycard.calcprice
+                                    myTradeDialog.qty = buycard.qty
+                                    myTradeDialog.side = "Sell"
+                                    myTradeDialog.player = inplay.fullname + " (" + inplay.position +") "
+                                            + "Symbol(" + inplay.symbol +")"
+                                    myTradeDialog.show()
                                 }
                              }
 
@@ -895,6 +898,58 @@ Item {
         }
     }
 
+    Dialog {
+        height: ProtoScreen.guToPx(34)
+        minimumHeight: ProtoScreen.guToPx(8)
+        width: ProtoScreen.guToPx(77)
+        minimumWidth: ProtoScreen.guToPx(16)
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        property string side: "none"
+        property int price
+        property int qty
+        property string player
+        id: myTradeDialog
+        positiveButtonText: side + " Now"
+        title: "Confirm Trade - 2016 Season Rest-of-The-way"
+        text: "Protoblock Player: " + realRoot.uname
+        dialogContent: Column {
+            anchors.fill: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+//            anchors.centerIn: parent
+            spacing: ProtoScreen.guToPx(.5)
+
+
+            Text{
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                wrapMode: Text.WordWrap
+                text:  myTradeDialog.side + " " + myTradeDialog.qty.toString() +
+                       " contract(s) at price " + myTradeDialog.price.toString()
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+
+            Text{
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                wrapMode: Text.WordWrap
+                text:  "of " + myTradeDialog.player
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+
+        }
+
+        onAccepted: {
+            MiddleMan.doTrade(
+                    inplay.symbol
+                    ,(side == "Buy") ? true : false
+                 ,myTradeDialog.price
+                 ,myTradeDialog.qty
+                    )
+        }
+
+    }
 
 
 }

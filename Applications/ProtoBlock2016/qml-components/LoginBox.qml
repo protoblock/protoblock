@@ -54,7 +54,7 @@ Item {
                 }
             }
             Button{
-                text: qsTr("Skip")
+                text: "Skip"
                 backgroundColor: Colors.blue
 
                 width: parent.width / 1.07
@@ -62,8 +62,8 @@ Item {
                 elevation: 5
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
+                    rootLoader.source = "qrc:/Projections.qml";
                     loginDialog.close();
-                    rootLoader.source = "qrc:/Trading.qml";
                 }
             }
         }

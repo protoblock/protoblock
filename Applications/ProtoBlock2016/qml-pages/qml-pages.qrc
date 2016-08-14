@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>GetName.qml</file>
-        <file>Players.qml</file>
-        <file>PickUserName.qml</file>
         <file>Welcome.qml</file>
         <file>Settings.qml</file>
         <file>About.qml</file>
@@ -17,10 +15,7 @@
         <file>2015Leaderboard.qml</file>
         <file>Trading.qml</file>
         <file>TradingFloor.qml</file>
-        <file>2016Weekly.qml</file>
-        <file>2017Season.qml</file>
         <file>2015Final.qml</file>
-        <file>2016Season.qml</file>
         <file>Quotes.qml</file>
         <file>Orders.qml</file>
         <file>Portfolio.qml</file>
