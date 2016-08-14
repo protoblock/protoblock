@@ -28,7 +28,7 @@ ComboBoxStyle {
 
 
     Component.onCompleted: {
-        console.log("textsingletom " + TextSingleton.implicitHeight)
+        console.log(" jjtextsingletom " + TextSingleton.implicitHeight)
         console.log("scaler " + scaler + " gutopx " + ProtoScreen.guToPx(1));
 
     }
@@ -42,10 +42,10 @@ ComboBoxStyle {
     /*! The padding between the background and the label components. */
     padding { top: ProtoScreen.guToPx(.50) ; left: ProtoScreen.guToPx(.75) ; right: ProtoScreen.guToPx(.75) ; bottom: ProtoScreen.guToPx(.50) }
 
-   dropDownButtonWidth: Math.round(implicitheighttext) //ProtoScreen.guToPx(1.5)//20//scaler * 35 * maxdigits //ProtoScreen.guToPx(1.5)
+   dropDownButtonWidth: ProtoScreen.guToPx(2.5) //ProtoScreen.guToPx(1.5)//20//scaler * 35 * maxdigits //ProtoScreen.guToPx(1.5)
     __editor: Item {
-        implicitWidth: ProtoScreen.guToPx(4.125 * maxdigits)
-        implicitHeight:  (Math.max( ProtoScreen.guToPx(3.125), Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight * 1.2)/8.0))))
+        implicitWidth: ProtoScreen.guToPx(9)
+        implicitHeight:  ProtoScreen.guToPx(4) //(Math.max( ProtoScreen.guToPx(3.125), Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight )/8.0)* 1.2)))
         clip: true
         Rectangle {
             anchors.fill: parent
@@ -62,7 +62,7 @@ ComboBoxStyle {
                 GradientStop {color: "#fff" ; position: 0.1}
                 GradientStop {color: "#fff" ; position: 1}
             }
-            radius: ProtoScreen.guToPx((TextSingleton.implicitHeight * .16)/8.0)
+            radius: ProtoScreen.guToPx(.1)
             anchors.fill: parent
             border.color: control.activeFocus ? "#47b" : "#999"
         }
@@ -79,9 +79,9 @@ ComboBoxStyle {
 
 //    /*! This defines the background of the button. */
     background: Item {
-        implicitWidth:  Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight * 4.5)/8.0))
+        implicitWidth: ProtoScreen.guToPx(9)// ProtoScreen.guToPx(4 * maxdigits)//ProtoScreen.guToPx(1.25 * maxdigits)//Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight * 4.5)/8.0))
 //        implicitHeight:  scaler * Math.max(ProtoScreen.guToPx(3.125), Math.round(implicitheighttext * 1.2))
-        implicitHeight:  Math.max( ProtoScreen.guToPx(3.125), Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight * 1.2)/8.0)))
+        implicitHeight:  ProtoScreen.guToPx(4) //Math.max( ProtoScreen.guToPx(3.125), Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight )/8.0)* 1.2))
 
         Rectangle {
             anchors.fill: parent
@@ -95,7 +95,7 @@ ComboBoxStyle {
                 GradientStop {color: control.pressed ? "#bababa" : "#fefefe" ; position: 0}
                 GradientStop {color: control.pressed ? "#ccc" : "#e3e3e3" ; position: 1}
             }
-            radius: ProtoScreen.guToPx((TextSingleton.implicitHeight * .16)/8.0)
+            radius: ProtoScreen.guToPx(.1)
             anchors.fill: parent
             border.color: control.activeFocus ? "#47b" : "#999"
             Rectangle {
@@ -121,7 +121,7 @@ ComboBoxStyle {
 //            hasColor:true
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: -dropDownButtonWidth * .18
+            anchors.rightMargin: -dropDownButtonWidth * .10
 //            opacity: control.enabled ? 0.6 : 0.3
 //            size: ProtoScreen.guToPx(4)
             opacity: control.enabled ? 0.6 : 0.3
