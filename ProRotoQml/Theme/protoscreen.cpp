@@ -364,7 +364,7 @@ void ProtoScreen::updateFormFactor(){
             else if ( m_screen->logicalDotsPerInch() >= 144) {
                 newwindowsscale = 1.5;
             }
-        }       
+        }
         else if (m_169 <= 16.9){
             qDebug() << " windows " << m_screen->logicalDotsPerInch();
             if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
@@ -405,7 +405,7 @@ void ProtoScreen::updateFormFactor(){
     // MACOSX
 
     if(sysInfo.productType() == "osx"){
-        finalFormFactor ("osx", 1 , m_169);
+        finalFormFactor ("osx", m_windowsDesktopScale , m_169);
         return;
     }
     // START LINUX (SOMETIMES ANDROID COes back as Linux)
