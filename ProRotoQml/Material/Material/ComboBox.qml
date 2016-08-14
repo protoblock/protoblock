@@ -46,11 +46,12 @@ Controls.ComboBox {
 
 //    property bool darkBackground: Theme.isDarkColor(backgroundColor)
 
-////    property int elevation: 0
+//    property int elevation: 0
 //    property color textColor: combobox.darkBackground ? Theme.light.textColor : Theme.dark.textColor
 
-////    activeFocusOnPress: true
-////    menu: null
+    property double maxdigits: 3
+    activeFocusOnPress: true
+    menu: null
 
     style: MaterialStyle.ComboBoxStyle {}
 }

@@ -109,6 +109,8 @@ Item {
                     console.log("accepted itext" + itext + " ? " + parseInt(text,10))
 
                 }
+
+
                 onEditingFinished: {
                     console.log("onEditingFinished" + text)
 //                    inthelperroot.txtNumber = parseInt(text,10)

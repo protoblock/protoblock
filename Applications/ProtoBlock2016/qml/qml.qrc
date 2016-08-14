@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>phone-main.qml</file>
-        <file>FirstApp.qml</file>
         <file>Pinky.qml</file>
         <file>MaterialMain.qml</file>
     </qresource>

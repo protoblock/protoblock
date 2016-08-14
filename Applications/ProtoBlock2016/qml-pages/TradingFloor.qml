@@ -77,11 +77,17 @@ Item {
                 backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
-                helperTxt: "Contract expires after week 15 at the total fantasy points scored by " + inplay.fullname +
-                           "the \"Writer\" (seller) must give the \"buyer\" the equivanlat amount of fantsy points scored in fantasy bits." +
-                           "the game is to try to buy well below the actual settlement number, or alternativly to sell at a price well above the actual final number" +
-                           "with all the know risks, how much are you willing to \"pay\" for the contract, and for how much would you be willing to " +
-                           " write, or sell, the contract, knowing that you keep all the points in cae of injury, but have to pay up in case of a breakout"
+                helperTxt: "16 games 16 weeks. Season long contracts settle at the total points from a 16 game season. " +
+                            "the season is from week1-week16. (week 16 is counted twice instead of using week 17)." +
+                            "These expire at the total fantasy points scored by " + inplay.fullname +
+                            "the \"Writer\" (seller) must give the \"buyer\" the equivanlat amount of fantsy points scored in fantasy bits." +
+                            "It is 1 Fantasy Bit pe Fantaasy Point in these season long contracts" +
+                            "the game is to try to buy well below the actual settlement number," +
+                            "or alternativly to write (sell) at a price well above the actual final number" +
+                            "with all the know risks, how much are you willing to \"pay\" for the contract," +
+                            " and for how much would you be willing to " +
+                            " write, or sell, the contract, knowing that you keep all the points in cae of injury," +
+                            " but have to pay up in case of a breakout?"
 
                 width: parent.width / 1.10
 //                width: parent.width
@@ -197,6 +203,9 @@ Item {
                             source: {
                                 if (inplay.change < 0 ){
                                     "qrc:/icons/ic_trending_down.png"
+
+                                    ////ic_trending_down.png"
+
                                 }
                                 else
                                 {
@@ -587,7 +596,7 @@ Item {
                                 textColor: "white"
                                 onClicked : {
                                     focus = true;
-                                    console.log(" price " + pint.txtN )
+//                                    console.log(" price " + pint.txtN )
                                      MiddleMan.doTrade(
                                             inplay.symbol
                                             ,true
@@ -599,6 +608,16 @@ Item {
                                 }
                             }
                         }
+
+//                        Text {
+//                            id: ttt
+//                            text: "a"
+//                            Component.onCompleted: {
+//                                console.log(" implic width " + ttt.implicitWidth)
+//                                console.log(" implic height " + ttt.implicitHeight)
+
+//                            }
+//                        }
 
                         Rectangle {
                             color: "transparent"

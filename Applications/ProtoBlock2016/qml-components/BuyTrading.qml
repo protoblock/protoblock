@@ -84,7 +84,7 @@ Item {
                     Layout.fillWidth: true
 
 
-                    Controls.ComboBox {
+                    ComboBox {
             //                    anchors.fill: parent
             //                    Layout.alignment: Qt.AlignVCenter
             //                    anchors.left: avgPointsid.right
@@ -138,7 +138,7 @@ Item {
                     Layout.fillWidth: true
 
 
-                    Controls.ComboBox {
+                    ComboBox {
             //                    Layout.alignment: Qt.AlignVCenter
             //                    anchors.left: avgPointsid.right
             //                    editable: true
@@ -209,7 +209,7 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 anchors.top: parent.verticalCenter
-                Controls.ComboBox {
+                ComboBox {
         //                    anchors.fill: parent
         //                    Layout.alignment: Qt.AlignVCenter
         //                    anchors.left: avgPointsid.right
@@ -288,7 +288,7 @@ Item {
                     Layout.fillWidth: true
 
 
-                    Controls.ComboBox {
+                    ComboBox {
             //                    anchors.fill: parent
             //                    Layout.alignment: Qt.AlignVCenter
             //                    anchors.left: avgPointsid.right
