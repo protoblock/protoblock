@@ -574,7 +574,7 @@ void Mediator::onBinaryMessageRecived(const QByteArray &message) {
         case GETDEPTH: {
             depthBackup--;
             m_pDepthMarketModel->updateFullDepth(rep.GetExtension(GetDepthRep::rep));
-#ifdef TRACE
+#ifdef TRACE3
             qDebug() << " got depth " << depthBackup;//rep.DebugString().data();
 #endif
 
@@ -772,7 +772,7 @@ void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 si
        depthInterval = 1000;
     }
     polldepth.start(depthInterval);
-    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
+//    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
 //    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 
 //    getOrderPos();
@@ -828,7 +828,7 @@ void Mediator::doCancel(qint32 id) {
        depthInterval = 1000;
     }
     polldepth.start(depthInterval);
-    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
+//    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
 //    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 //    getOrderPos();
 }
@@ -1097,23 +1097,23 @@ void Mediator::getDepthRep() {
         if ( depthBackup < 0 ) depthBackup = 0;
         if ( polldepth.isActive() ) {
             polldepth.start(depthInterval);
-            qDebug() << "getDepthRep depthInterval " << depthInterval << " depthBackup " << depthBackup;
+//            qDebug() << "getDepthRep depthInterval " << depthInterval << " depthBackup " << depthBackup;
         }
     }
     else if ( depthInterval > 1000 && depthCount <= 0 ){
         //reset
-        qDebug() << "getDepthRep depthInterval " << depthInterval << " depthBackup " << depthBackup;
+//        qDebug() << "getDepthRep depthInterval " << depthInterval << " depthBackup " << depthBackup;
         depthInterval = 100 * depthBackup * 2;
         if ( depthInterval < 1000 ) depthInterval = 1000;
 
         if ( polldepth.isActive() ) {
             polldepth.stop();
             polldepth.start(depthInterval);
-            qDebug() << "getDepthRep depthInterval " << depthInterval << " depthBackup " << depthBackup;
+//            qDebug() << "getDepthRep depthInterval " << depthInterval << " depthBackup " << depthBackup;
         }
     }
 
-    qDebug() << "getDepthRep depthInterval " << depthInterval << " depthBackup " << depthBackup;
+//    qDebug() << "getDepthRep depthInterval " << depthInterval << " depthBackup " << depthBackup;
 
     depthBackup++;
     depthCount++;

@@ -34,7 +34,7 @@ Item {
         id: fl
         width: parent.width / 1.20
         height:    parent.height
-        contentHeight: parent.height * 2
+        contentHeight: parent.height * 3
         contentWidth: parent.width / 1.20
         interactive: true
         boundsBehavior: Flickable.StopAtBounds

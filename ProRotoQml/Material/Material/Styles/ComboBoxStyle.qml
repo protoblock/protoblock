@@ -121,13 +121,33 @@ ComboBoxStyle {
 //            hasColor:true
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: -dropDownButtonWidth * .10
+            anchors.rightMargin: 0//-dropDownButtonWidth
 //            opacity: control.enabled ? 0.6 : 0.3
 //            size: ProtoScreen.guToPx(4)
             opacity: control.enabled ? 0.6 : 0.3
 
         }
     }
+
+    /*! This defines the label of the button. */
+    label: Item {
+        implicitWidth: textitem.implicitWidth + ProtoScreen.guToPx(2.5)
+        baselineOffset: textitem.y + textitem.baselineOffset
+        Text {
+            id: textitem
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: ProtoScreen.guToPx(.5)
+            anchors.rightMargin: ProtoScreen.guToPx(1.25)
+            anchors.verticalCenter: parent.verticalCenter
+            text: control.currentText
+            renderType: renderType
+            font: font
+            color: textColor
+            elide: Text.ElideRight
+        }
+    }
+
 
 
 //    background: Item {

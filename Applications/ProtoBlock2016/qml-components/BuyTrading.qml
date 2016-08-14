@@ -307,7 +307,6 @@ Item {
                         onActivated: {
                             qty = index
                             console.log("onActivated qty " + index)
-                            pricecombo.currentIndex = Math.round(index * numgames)
                         }
 
 

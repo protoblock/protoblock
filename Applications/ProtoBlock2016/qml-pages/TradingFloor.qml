@@ -10,6 +10,7 @@ import ProRotoQml.Theme 1.0
 //import ProRotoQml.Models 1.0
 
 Item {
+
     id: pit
     property string contract
     property string symbol
@@ -38,6 +39,12 @@ Item {
         MiddleMan.stopDepth(symbol)
     }
 
+    Flickable{
+        height: parent.height
+        width: parent.width
+        contentHeight: parent.height * 3
+        interactive: true
+        boundsBehavior: Flickable.StopAtBounds
 //    Scrollbar{flickableItem: f1}
 //    Flickable{
 //        id: fl
@@ -543,7 +550,7 @@ Item {
                 height: parent.height - boundingRect.height - bandepth.height - boundquote.height - cwc.height
                 anchors.top: boundingRect.bottom
                 anchors.topMargin: ProtoScreen.guToPx(1)
-                anchors.right: boundingRect.right
+                anchors.horizontalCenter: boundingRect.horizontalCenter
 //                anchors.rightMargin: width * .10
 
                 Item {
@@ -577,9 +584,9 @@ Item {
                         id: row1
                         width: (parent.width / 3.0) * 2.0
                         height: ProtoScreen.guToPx(14)//parent.height / 2
-                         anchors.right: parent.right
+//                        anchors.top: bcardrow.right
                         anchors.margins: ProtoScreen.guToPx(.5)
-//                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
 
 
                         Rectangle {
@@ -890,3 +897,4 @@ Item {
 
 
 
+}

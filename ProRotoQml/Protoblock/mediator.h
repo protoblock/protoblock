@@ -130,7 +130,7 @@ public:
 
         changeDepthContext(symbol);
         getDepthRep();
-        qDebug() << "startDepth depthInterval " << depthInterval << " bu " << depthBackup;
+//        qDebug() << "startDepth depthInterval " << depthInterval << " bu " << depthBackup;
 
         if ( !polldepth.isActive() )
             polldepth.start(depthInterval);
