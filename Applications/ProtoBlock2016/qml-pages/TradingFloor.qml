@@ -22,6 +22,7 @@ Item {
     property bool isppgslider: false
 
     Component.onCompleted: {
+         symbol = inplay.symbol
          pageHelper.title = "Trading " + symbol
 
 //         pid.txtN = inplay.playerid
@@ -553,13 +554,23 @@ Item {
                     anchors.top: parent.top
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    BuyTrading {
-                        id: buycard
-//                        width: parent.width
-//                        height: parent.height
-                        calcprice: inplay.lastprice
+                        BuyTrading {
+                            symbol: symbol
+                            id: buycard
+    //                        width: parent.width
+    //                        height: parent.height
+                            calcprice: inplay.lastprice
+    //                        onCalculate:
+
+                            Component.onCompleted: {
+                                buycard.calculate.connect(doCalc)
+                            }
+
+                            function doCalc() {
+                                MiddleMan.doDepth();                                                }
+                        }
                     }
-                }
+
 
                     Item {
                         anchors.top: bcardrow.bottom

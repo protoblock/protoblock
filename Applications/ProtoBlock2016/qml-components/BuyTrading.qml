@@ -22,10 +22,10 @@ Item {
     property bool isbuyCard: true
     property int price: (isbuyCard ? 1 : 26) * weeksleft
     property int qty: 1
-    property string playerId
+    property string symbol
     property string side:  isbuyCard ? "Buy" : "Sell"
     property bool  changing: false
-
+    signal calculate()
     property int avgppg: Math.round(calcprice / numgames)
     property int numgames: 16
     property int calcprice
@@ -200,6 +200,7 @@ Item {
                 onClicked: {
                     focus = true;
                     console.log(" numgame" + numgames + " avgppg " + avgppg + " price " + calcprice)
+                    calculate()
                 }
             }
 
