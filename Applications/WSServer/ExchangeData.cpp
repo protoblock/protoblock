@@ -883,7 +883,8 @@ void ExchangeData::OnTrade(const string &playerid, fantasybit::TradeTic *tt) {
     myphlc.set_close(tt->price());
     myphlc.set_volume(myphlc.volume()+tt->size());
     auto chg  = myphlc.close() - myphlc.open();
-    if ( !myphlc.has_change() || chg != myphlc.change()) {
+//    if ( !myphlc.has_change() || chg != myphlc.change())
+    {
         myphlc.set_change(chg);
         tt->set_change(chg);
     }
