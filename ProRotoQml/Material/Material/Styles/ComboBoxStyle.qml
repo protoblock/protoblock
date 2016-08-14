@@ -19,23 +19,33 @@ import QtQuick.Controls.Private 1.0
 import QtQuick.Controls 1.2 as Controls
 //import QtQuick.Controls.Styles 1.2
 
+
 ComboBoxStyle {
 //    property color borderColor: "#222"
 //    property color highlightColor: "orange"
 //    property color textColor: "#eee"
 
-    property double scaler: ProtoScreen.guToPx(1) / 8.0
 
-    property double implicitheighttext: ProtoScreen.pxToGu(13)
-    property double implicitwidthtext: ProtoScreen.pxToGu(6)
+
+    Component.onCompleted: {
+        console.log("textsingletom " + TextSingleton.implicitHeight)
+        console.log("scaler " + scaler + " gutopx " + ProtoScreen.guToPx(1));
+
+    }
+
+    property double scaler: 1.0
+    //ProtoScreen.pxToGu(1) / 8.0``
+
+    property double implicitheighttext: ProtoScreen.guToPx(TextSingleton.implicitHeight/8.0)
+//    property double implicitwidthtext: ProtoScreen.pxToGu(TextSingleton.implicitWidth/8.0)
 
     /*! The padding between the background and the label components. */
-    padding { top: scaler * 4.0 ; left: scaler * 6.0 ; right: scaler *6 ; bottom:scaler *4 }
+    padding { top: ProtoScreen.guToPx(.50) ; left: ProtoScreen.guToPx(.75) ; right: ProtoScreen.guToPx(.75) ; bottom: ProtoScreen.guToPx(.50) }
 
-   dropDownButtonWidth: scaler * Math.round(TextSingleton.implicitHeight) //ProtoScreen.guToPx(1.5)//20//scaler * 35 * maxdigits //ProtoScreen.guToPx(1.5)
+   dropDownButtonWidth: Math.round(implicitheighttext) //ProtoScreen.guToPx(1.5)//20//scaler * 35 * maxdigits //ProtoScreen.guToPx(1.5)
     __editor: Item {
-        implicitWidth: scaler * 33.33 * maxdigits
-        implicitHeight: scaler * (Math.max(25, Math.round(TextSingleton.implicitHeight * 1.2)))
+        implicitWidth: ProtoScreen.guToPx(4.125 * maxdigits)
+        implicitHeight:  (Math.max( ProtoScreen.guToPx(3.125), Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight * 1.2)/8.0))))
         clip: true
         Rectangle {
             anchors.fill: parent
@@ -46,44 +56,46 @@ ComboBoxStyle {
         Rectangle {
             id: baserect
             anchors.rightMargin: -radius
-            anchors.bottomMargin: scaler
+            anchors.bottomMargin: ProtoScreen.guToPx(.0125)
             gradient: Gradient {
                 GradientStop {color: "#e0e0e0" ; position: 0}
                 GradientStop {color: "#fff" ; position: 0.1}
                 GradientStop {color: "#fff" ; position: 1}
             }
-            radius: scaler * (TextSingleton.implicitHeight * 0.16)
+            radius: ProtoScreen.guToPx((TextSingleton.implicitHeight * .16)/8.0)
             anchors.fill: parent
             border.color: control.activeFocus ? "#47b" : "#999"
         }
         Rectangle {
             color: "#aaa"
-            anchors.bottomMargin: scaler * 2.0
-            anchors.topMargin: scaler * 1.0
+            anchors.bottomMargin: ProtoScreen.guToPx(.25)
+            anchors.topMargin: ProtoScreen.guToPx(.0125)
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            width: scaler * 1.0
+            width: ProtoScreen.guToPx(.0125)
         }
     }
 
 //    /*! This defines the background of the button. */
     background: Item {
-        implicitWidth: scaler *  Math.round(TextSingleton.implicitHeight * 4.5)
-        implicitHeight:  scaler * Math.max(25, Math.round(TextSingleton.implicitHeight * 1.2))
+        implicitWidth:  Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight * 4.5)/8.0))
+//        implicitHeight:  scaler * Math.max(ProtoScreen.guToPx(3.125), Math.round(implicitheighttext * 1.2))
+        implicitHeight:  Math.max( ProtoScreen.guToPx(3.125), Math.round(ProtoScreen.guToPx((TextSingleton.implicitHeight * 1.2)/8.0)))
+
         Rectangle {
             anchors.fill: parent
-            anchors.bottomMargin: /*scaler * */ (control.pressed ? 0 : -scaler)
+            anchors.bottomMargin: /*scaler * */ (control.pressed ? 0 :  ProtoScreen.guToPx(-.125))
             color: "black" //#10000000"
-            radius: baserect.radius * scaler
+            radius: baserect2.radius
         }
         Rectangle {
-            id: baserect
+            id: baserect2
             gradient: Gradient {
                 GradientStop {color: control.pressed ? "#bababa" : "#fefefe" ; position: 0}
                 GradientStop {color: control.pressed ? "#ccc" : "#e3e3e3" ; position: 1}
             }
-            radius: scaler * TextSingleton.implicitHeight * 0.16
+            radius: ProtoScreen.guToPx((TextSingleton.implicitHeight * .16)/8.0)
             anchors.fill: parent
             border.color: control.activeFocus ? "#47b" : "#999"
             Rectangle {
@@ -109,7 +121,7 @@ ComboBoxStyle {
 //            hasColor:true
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: dropDownButtonWidth * -.15
+            anchors.rightMargin: -dropDownButtonWidth * .18
 //            opacity: control.enabled ? 0.6 : 0.3
 //            size: ProtoScreen.guToPx(4)
             opacity: control.enabled ? 0.6 : 0.3

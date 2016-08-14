@@ -501,7 +501,7 @@ Item {
                     }
 
                     delegate: Item {
-                            width: parent.width
+                            width: boundingRect.width
                             height: dihight
                             MarketDepthCard {
                                 Layout.fillHeight: true
