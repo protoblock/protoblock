@@ -600,8 +600,8 @@ Item {
                                      MiddleMan.doTrade(
                                             inplay.symbol
                                             ,true
-                                            ,buycard.calcprice
-                                            ,buycard.qty
+                                         ,buycard.calcprice
+                                         ,buycard.qty
                                             )
 
 
@@ -641,12 +641,12 @@ Item {
                                     focus = true;
 
 //                                    console.log(" price " + pint.txtN )
-//                                     MiddleMan.doTrade(
-//                                            inplay.symbol
-//                                            ,false
-//                                            ,pint.txtN
-//                                            ,qint.txtN
-//                                            )
+                                     MiddleMan.doTrade(
+                                            inplay.symbol
+                                            ,false
+                                         ,buycard.calcprice
+                                         ,buycard.qty
+                                            )
 
                                 }
                              }
