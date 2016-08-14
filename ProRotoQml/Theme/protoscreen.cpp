@@ -15,9 +15,15 @@ ProtoScreen::ProtoScreen(QObject *parent) :
     m_androidDpi(),
     m_windowsDesktopScale(.80),
     m_androidScale(1.0),
-    m_tempMacVersion(6.0)
-{
+    m_tempMacVersion(6.0),
+    m_os("windows") {
     initialize();
+}
+
+
+QString ProtoScreen::os() const
+{
+    return  m_os;
 }
 
 void ProtoScreen::initialize() {
@@ -164,6 +170,7 @@ void ProtoScreen::finalFormFactor(const QString &systemType,
 
         qDebug() << "OS " << systemType <<" ScaleSize " << versionORscaleSize << "  Diagonal " << diagonal  << " Device Form factor is " << m_formFactor;
 
+           m_os = systemType;
 }
 
 

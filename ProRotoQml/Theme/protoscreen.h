@@ -23,6 +23,7 @@ class ProtoScreen : public QObject
     Q_PROPERTY( double gridUnit READ gridUnit NOTIFY gridUnitChanged )
     Q_PROPERTY(double scaleSize READ scaleSize NOTIFY scaleSizeChanged )
     Q_PROPERTY (QString formFactor READ formFactor NOTIFY formFactorChanged)
+    Q_PROPERTY (QString os READ os NOTIFY osChanged)
     Q_ENUMS( ProtoFont )
 
 
@@ -107,10 +108,12 @@ public:
 
 
 
+    QString os() const;
 signals:
     void gridUnitChanged();
     void scaleSizeChanged();
     void formFactorChanged();
+    void osChanged();
 private:
     //            double desktopDistanceToDisplay = 0.5;
     //            int desktopPixelDensity = 112;
@@ -133,5 +136,6 @@ private:
     double m_androidScale;
     double m_tempMacVersion;
     QString m_systemType;
+    QString m_os;
 };
 #endif // PROTOSCREEN_H

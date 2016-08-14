@@ -34,7 +34,7 @@ Material.ApplicationWindow{
             loginDialog.toggle()
         }
         else
-            rootLoader.source = "qrc:/Quote.qml";
+            rootLoader.source = "qrc:/Quotes.qml";
     }
 
     property string defaultname
@@ -303,30 +303,30 @@ Material.ApplicationWindow{
     //    SIMPLE MODELS
 
 
-//    ListModel{id: postionModel}
-//    ListModel{
-//        id: weekModel
-//        Component.onCompleted: {
-//            fillDefaultModels()
-//        }
-//    }
+    ListModel{id: postionModel}
+    ListModel{
+        id: weekModel
+        Component.onCompleted: {
+            fillDefaultModels()
+        }
+    }
 
-//    function fillDefaultModels(){
+    function fillDefaultModels(){
 
-//        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
-//        for (var i in positionArray){
-//            postionModel.append({'text': positionArray[i] })
-//        }
-//        for (var ii = 0 ; ii < 17; ii++){
-//            if(ii === 0 ){
-//                weekModel.append({"text" : "all weeks"})
-//            }
-//            else
-//            {
-//                weekModel.append({"text" : ii.toString() })
-//            }
-//        }
-//    }
+        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
+        for (var i in positionArray){
+            postionModel.append({'text': positionArray[i] })
+        }
+        for (var ii = 0 ; ii < 17; ii++){
+            if(ii === 0 ){
+                weekModel.append({"text" : "all weeks"})
+            }
+            else
+            {
+                weekModel.append({"text" : ii.toString() })
+            }
+        }
+    }
 
 
     /// DIALOGS
@@ -446,7 +446,22 @@ Material.ApplicationWindow{
                 width: parent.width / 1.07
                 text: "Download Now"
                 elevation: 0
-                onClicked: Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
+                onClicked: {
+                    if ( ProtoScreen.os === "osx" ) {
+                        Qt.openUrlExternally("http://protoblock.com/Downloads/MacOS/64/protoblock.dmg")
+                    }
+                    else if ( ProtoScreen.os === "windows" ) {
+                        Qt.openUrlExternally("http://protoblock.com/Downloads/Windows/64/protoblock.exe")
+                    }
+                    else if ( ProtoScreen.os === "ios"  ) {
+                        Qt.openUrlExternally("https://itunes.apple.com/us/app/protoblock-2016/id1133758199");
+                    }
+                    else if ( ProtoScreen.os === "android") {
+                        Qt.openUrlExternally("https://play.google.com/store/apps/details?id=org.proto.protoblock")
+                    }
+                    else
+                        Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
+                }
             }
         }
     }
@@ -536,7 +551,7 @@ Material.ApplicationWindow{
     // check for updates
     XmlListModel {
         id: updateMachine
-        source:"http://protoblock.com/version.xml"
+        source: "http://protoblock.com/version-" + ProtoScreen.os + ".xml"
         query: "/updatemachine"
         XmlRole{name: "version";query: "version/string()"}
         XmlRole{name: "libs";query: "libs/string()"}
@@ -544,7 +559,7 @@ Material.ApplicationWindow{
         onStatusChanged: {
             switch(status){
             case XmlListModel.Error :
-                //                console.log("ERROR IN UPDATE MACHINE ")
+                console.log("ERROR IN UPDATE MACHINE " + source)
                 break;
             case XmlListModel.Ready:
                 compairVersions(updateMachine.get(0).version)
