@@ -99,7 +99,7 @@ Item {
 
                             Label{
                                 color: {
-                                    if ( model.openpnl == 0) {
+                                    if ( model.openpnl === 0) {
                                         (netqty < 0) ? Colors.red :
                                            netqty > 0 ? Colors.green : "black"
                                     }
@@ -109,8 +109,8 @@ Item {
 
                                 }
                                 text:
-                                    (( netqty > 0 ) ?  "Long " + Math.abs(netqty).toString() + " @ " + Math.abs(avgprice).toString() :
-                                      ( netqty < 0 ) ? "Short " + Math.abs(netqty).toString() + " @ " + Math.abs(avgprice).toString() :
+                                    (( netqty > 0 ) ?  "Long " + Math.abs(netqty).toString() + " @ " + Math.abs(Math.round(avgprice)).toString() :
+                                      ( netqty < 0 ) ? "Short " + Math.abs(netqty).toString() + " @ " + Math.abs(Math.round(avgprice)).toString() :
                                                        "Flat ")
 
 
