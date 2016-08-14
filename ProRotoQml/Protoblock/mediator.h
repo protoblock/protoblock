@@ -108,25 +108,33 @@ public:
     QStringList m_allNamesList;
     QStringList m_allROWList;
 
+    Q_INVOKABLE void doDepth() {
+        depthCount = 0;
+        if ( polldepth.interval() >= 3000 )
+            getDepthRep();
+    }
+
     Q_INVOKABLE void startDepth(const QString& symbol) {
         depthBackup--;
-        if ( depthBackup < 0 ) {
+        if ( depthBackup <= 0 ) {
             depthBackup = 0;
-            depthInterval = 1000;
+//            depthInterval = 1000;
         }
-        else
-            depthInterval = 1000 * (depthBackup / 5);
+//        else
+//            depthInterval = 1000 * (depthBackup / 5);
 
         depthCount = 0;
-        depthInterval = 1000 * (depthBackup / 5);
-        if ( depthInterval < 1000 )
-           depthInterval = 1000;
+//        depthInterval = 1000 * (depthBackup / 5);
+//        if ( depthInterval < 1000 )
+//           depthInterval = 1000;
 
         changeDepthContext(symbol);
         getDepthRep();
-        qDebug() << " depthInterval " << depthInterval;
+        qDebug() << "startDepth depthInterval " << depthInterval << " bu " << depthBackup;
 
-        polldepth.start(depthInterval);
+        if ( !polldepth.isActive() )
+            polldepth.start(depthInterval);
+//        11
 //        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 //        getOrderPos();
     }
