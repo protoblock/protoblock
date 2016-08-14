@@ -17,7 +17,9 @@ ios{
 
 
 macx {
-LIBS += -L$$OUT_PWD/../protoblock-core -lprotoblock-core
+    include($$PWD/../../pri/core.pri)
+
+//LIBS += -L$$OUT_PWD/../protoblock-core -lprotoblock-core
 }
 #INCLUDEPATH += $$PWD/../protoblock-core
 #DEPENDPATH += $$PWD/../protoblock-core
