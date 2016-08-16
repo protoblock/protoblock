@@ -548,7 +548,7 @@ Material.ApplicationWindow{
         }
     }
 
-    // check for updates
+//    // check for updates
     XmlListModel {
         id: updateMachine
         source: "http://protoblock.com/version-" + ProtoScreen.os + ".xml"
@@ -567,6 +567,27 @@ Material.ApplicationWindow{
             }
         }
     }
+
+//    // check for updates
+//    XmlListModel {
+//        id: updateMachine
+//        source:"http://protoblock.com/version.xml"
+//        query: "/updatemachine"
+//        XmlRole{name: "version";query: "version/string()"}
+//        XmlRole{name: "libs";query: "libs/string()"}
+//        XmlRole{name: "changelog";query: "changelog/string()"}
+//        onStatusChanged: {
+//            switch(status){
+//            case XmlListModel.Error :
+//                                console.log("ERROR IN UPDATE MACHINE ")
+//                break;
+//            case XmlListModel.Ready:
+//                compairVersions(updateMachine.get(0).version)
+//                break;
+//            }
+//        }
+//    }
+
     IrcConnection {
         property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
         property string tempName1: ""
