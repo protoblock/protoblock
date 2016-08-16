@@ -11,7 +11,7 @@
 #define APP_SETTINGS
 #define ORGANIZATION_NAME "Satoshi Fantasy LLC"
 #define ORGANIZATION_DOMAIN "satoshifantasy.com"
-#define APPLICATION_NAME "Trading.Football"
+#define APPLICATION_NAME "Protoblock2016 "
 #endif
 
 
@@ -29,7 +29,7 @@
 
 
 #ifndef MAJOR_VERSION
-  #define MAJOR_VERSION  2
+  #define MAJOR_VERSION  1
 #endif
 
 #ifndef MINOR_VERSION
