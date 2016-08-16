@@ -28,7 +28,7 @@ Item {
     signal calculate()
     property int avgppg: Math.round(calcprice / numgames)
     property int numgames: 16
-    property int calcprice
+    property alias calcprice: pricecombo.currentIndex
 //    property int qty: 1
 //    property alias setprice: priceCombo.text
     property double avgpoints: 1.0
@@ -251,6 +251,7 @@ Item {
 
                     onCurrentIndexChanged: {
                         console.log("pricecombo currindex " + currentIndex)
+                        calcprice = currentIndex
 
                     }
 
