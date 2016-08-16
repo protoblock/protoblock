@@ -27,8 +27,8 @@ PopupBase {
     }
 //    Component.onCompleted: console.log("HERE IS THE AVAIL HEIGHT " + ProtoScreen.availableHeight )
     property int contentMargins: ProtoScreen.guToPx(3)
-    property int minimumWidth: ProtoScreen.guToPx(37.5)
-    property int minimumHeight: ProtoScreen.guToPx(37.5)
+    property int minimumWidth: ProtoScreen.guToPx(27.5)
+    property int minimumHeight: ProtoScreen.guToPx(27.5)
     property alias title: titleLabel.text
     property alias text: textLabel.text
     property alias negativeButton: negativeButton
