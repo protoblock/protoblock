@@ -69,6 +69,8 @@ Item {
                     backgroundColor: realRoot.uname ===  model.name ? Colors.amber : "white"
                     width: parent.width
                     text: model.name/*"FantasyName: " + *modelData*/
+                    itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
+                    subText: model.pk
                     action: Image{
                         height: parent.height
                         width : height
