@@ -222,19 +222,19 @@ Item {
                     model: 400
                     editable: true
                     id: pricecombo
-                    currentIndex: calcprice
+//                    currentIndex: calcprice
 
                     activeFocusOnPress: true
                     focus: true
                     onAccepted: {
-                        calcprice = currentIndex
+//                        calcprice = currentIndex
                         avgPoints.currentIndex = Math.round(currentIndex / numgames)
                         console.log("pricecombo acc" + currentIndex)
                     }
 
                     onActivated: {
                         console.log("pricecombo act " + index)
-                        calcprice = index
+//                        calcprice = index
                         avgPoints.currentIndex = Math.round(index / numgames)
                     }
 
@@ -242,7 +242,7 @@ Item {
                         if ( !focus ) {
                             if ( editText != "" && currentIndex !==  parseInt(editText) ) {
                                 currentIndex = parseInt(editText)
-                                calcprice = currentIndex
+//                                calcprice = currentIndex
                                 avgPoints.currentIndex = Math.round(calcprice / numgames)
                             }
                         }
@@ -251,7 +251,7 @@ Item {
 
                     onCurrentIndexChanged: {
                         console.log("pricecombo currindex " + currentIndex)
-                        calcprice = currentIndex
+//                        calcprice = currentIndex
 
                     }
 

@@ -614,7 +614,7 @@ Item {
                                 textColor: "white"
                                 onClicked : {
                                     focus = true;
-//                                    console.log(" price " + pint.txtN )
+                                    console.log(" price " + buycard.calcprice )
                                     myTradeDialog.price = buycard.calcprice
                                     myTradeDialog.qty = buycard.qty
                                     myTradeDialog.side = "Buy"
