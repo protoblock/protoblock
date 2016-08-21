@@ -33,8 +33,10 @@ Material.ApplicationWindow{
         if ( uname  === "" ){
             loginDialog.toggle()
         }
-        else
-            rootLoader.source = "qrc:/Quotes.qml";
+        else {
+            rootLoader.source = "qrc:/Projections.qml";
+            themeroot.showMaximized()
+        }
     }
 
     property string defaultname
@@ -134,16 +136,20 @@ Material.ApplicationWindow{
 
     property string selectedComponent: sections[0][0]
 
-
+    property var sectionLeftEnable: [ false, true, true, true, true]
 
     initialPage:  Material.TabbedPage {
+        property bool expanded: true
         id: pageHelper
         title: "ProtoBlock 2016"
+
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
-
             var cp = sectionTitles[selectedTabIndex]
             rootLoader.source = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
+            console.log(" onSelectedTabChanged " + selectedTabIndex)
+//            navDrawer.enabled = sectionTitles[selectedTabIndex] === "Projections"
+            expanded = sectionLeftEnable[selectedTabIndex];
         }
 
         actionBar.customContent:
@@ -199,7 +205,8 @@ Material.ApplicationWindow{
                     true
                 }else if (pageHelper.width < ProtoScreen.guToPx(120)){
                     true
-                }else  {
+                }
+                else {
                     false
                 }
 
@@ -257,7 +264,8 @@ Material.ApplicationWindow{
         Loader {
             id: rootLoader
             // sidebar is ProtoScreen.guToPx(31.25)
-            width: navDrawer.enabled === true ? themeroot.width  :  (pageHelper.width - ProtoScreen.guToPx(31.25) )
+            width: (navDrawer.enabled === true) ? themeroot.width  :
+                  pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
             height: navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
@@ -270,14 +278,16 @@ Material.ApplicationWindow{
         }
 
         Repeater {
-            model: !navDrawer.enabled ? sections : 0
+            model: !navDrawer.enabled  ? sections : 0
             delegate:  Material.Tab {
                 title: sectionTitles[index]
                 iconName: sectionTitlesIcons[index]
                 property string currentPage: modelData[0]
                 property var section: modelData
                 source: "qrc:/LeftMenu.qml"
+
             }
+
         }
 
     }// END TABED PAGE
@@ -500,7 +510,8 @@ Material.ApplicationWindow{
 
                 themeroot.reloadleaders = false
                 rootLoader.source = "qrc:/Projections.qml"
-                pageHelper.selectedTabIndex = 1;
+                pageHelper.selectedTabIndex = 0;
+                rootLoader.showMaximized()
             }
             else {
                 errorString = name + " is already claimed. Please try with a different name. If this is your name from last year or another device, "

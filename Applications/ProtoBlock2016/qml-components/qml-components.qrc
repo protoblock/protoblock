@@ -14,5 +14,6 @@
         <file>MarketDepthCardAsk.qml</file>
         <file>OMSCard.qml</file>
         <file>BuyTrading.qml</file>
+        <file>ScheduleView.qml</file>
     </qresource>
 </RCC>

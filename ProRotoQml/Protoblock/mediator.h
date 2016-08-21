@@ -18,6 +18,7 @@
 #include "depthmarketmodel.h"
 #include "fantasynamemodel.h"
 #include "openordersmodel.h"
+#include "weeklyschedulemodel.h"
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -61,6 +62,7 @@ class Mediator : public QObject
 
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
 
+    QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeeklyScheduleModel)
     std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
 //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)

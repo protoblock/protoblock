@@ -61,7 +61,8 @@ HEADERS += \
     playerquoteslicemodel.h \
     depthmarketmodel.h \
     fantasynamemodel.h \
-    openordersmodel.h
+    openordersmodel.h \
+    weeklyschedulemodel.h
 
 
 DISTFILES = qmldir

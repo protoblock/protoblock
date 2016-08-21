@@ -2,7 +2,7 @@
 #include "StateData.pb.h"
 #include <QSettings>
 #include "Commissioner.h"
-
+#include "DataPersist.h"
 
 using namespace fantasybit;
 Mediator::Mediator(QObject *parent) :
@@ -115,6 +115,20 @@ Mediator::Mediator(QObject *parent) :
     depthCount = 0;
     depthBackup = 0;
     depthInterval = 1000;
+
+
+    fantasybit::Reader<ScheduleData> reader5{ GET_ROOT_DIR() + "WeeklySchedule.txt" };
+    ScheduleData sd;
+    while ( reader5.ReadNext(sd) ) {
+        qDebug() << sd.DebugString().data();
+
+        m_pWeeklyScheduleModel = new WeeklyScheduleModel();
+        m_pWeeklyScheduleModel->updateWeeklySchedule(sd.week(),sd.weekly());
+
+        break;
+    }
+
+
 
 }
 
