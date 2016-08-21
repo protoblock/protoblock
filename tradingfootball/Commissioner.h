@@ -17,6 +17,10 @@
 
 #include "FantasyAgent.h"
 
+#ifdef TESTING_PB
+#include "utils.h"
+#endif
+
 namespace fantasybit {
 
 uint64_t difficulty( const fc::sha224& hash_value );
@@ -312,7 +316,30 @@ public:
     
 
     static bool verify(const fc::ecc::signature &sig, const fc::sha256 &digest, pubkey_t& pk) {
-          return fc::ecc::public_key(pk).verify(digest, sig);// fc::ecc::public_key(sig, digest) == pub;
+//          bool fcret =
+
+#ifdef TESTING_PB
+            pb::public_key_data pkd(pk.data);
+//            pkd.key_data = pk.data;
+            secp256k1_ecdsa_signature psig = pb::parse_der((unsigned char *)sig.begin(),72);
+            psig = pb::signature_normalize(psig);
+//            memcpy(psig.data,sig.begin()+8,64);
+            pb::public_key  mypk(pkd);
+            bool pbverify = pb::public_key::verify(&psig,(unsigned char *)digest.data(),&mypk.key);
+#endif
+            bool fcverify =
+             fc::ecc::public_key(pk).verify(digest, sig);// fc::ecc::public_key(sig, digest) == pub;
+//
+#ifdef TESTING_PB
+            if ( pbverify != fcverify) {
+                qDebug() << " pbverify != fcverify ";
+            }
+            else {
+
+            }
+
+#endif
+            return fcverify;
 	}
 
 	static bool verifyOracle(const fc::ecc::signature &sig, const fc::sha256 &digest)

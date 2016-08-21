@@ -974,6 +974,12 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
         return false;
     }
 
+    if ( !Commissioner::verify(sig,digest,pk)) {
+        qCritical() << "verfiy_name verify failure";
+        return false;
+    }
+    else qDebug() << " ssssss veroify name";
+
 	auto proof = nt.proof();
 	switch (proof.type())
 	{

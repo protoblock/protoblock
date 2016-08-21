@@ -134,6 +134,27 @@ contains(DEFINES, BLOCK_EXPLORER) {
     #DISTFILES += ./../../block-explorer/proto/StateData.proto
 }
 
+contains(DEFINES, TESTING_PB) {
+    PB = ../../protoblock\ProRotoQml\Protoblock-core\
+
+    SOURCES += \
+        $$PB/bitcoin-core-base58/base58.cpp \
+        $$PB/utils/utils.cpp \
+        $$PB/crc.cpp
+
+
+    HEADERS += \
+        $$PB/bitcoin-core-base58/allocators.h \
+        $$PB/bitcoin-core-base58/base58.h \
+        $$PB/bitcoin-core-base58/hash.h \
+        $$PB/utils/utils.h \
+        $$PB/optional.hpp \
+        $$PB/uint128.hpp
+
+}
+
+
+
     SOURCES += \
     $$PWD/../generated/ProtoData.pb.cc \
     $$PWD/../generated/StaticData.pb.cc \
