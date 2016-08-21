@@ -46,7 +46,7 @@
 #include "utility.hpp"
 #include "uint128.hpp"
 
-namespace fc {
+namespace pb {
 
 // Hash function for a byte array.
 uint64_t city_hash64(const char *buf, size_t len);

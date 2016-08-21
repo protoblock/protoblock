@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace fc 
+namespace pb
 {
   class bigint;
   /**
@@ -22,10 +22,10 @@ namespace fc
       uint128( const std::string& s );
       uint128( uint64_t _h, uint64_t _l )
       :hi(_h),lo(_l){}
-      uint128( const fc::bigint& bi );
+      uint128( const pb::bigint& bi );
 
       operator std::string()const;
-      operator fc::bigint()const;
+      operator pb::bigint()const;
 
       bool     operator == ( const uint128& o )const{ return hi == o.hi && lo == o.lo;             }
       bool     operator != ( const uint128& o )const{ return hi != o.hi || lo != o.lo;             }

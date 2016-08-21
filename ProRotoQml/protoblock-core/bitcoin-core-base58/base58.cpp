@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "base58.h"
-#include "utils/utils.h"
+#include "../utils/utils.h"
 
 #include <assert.h>
 #include <stdint.h>

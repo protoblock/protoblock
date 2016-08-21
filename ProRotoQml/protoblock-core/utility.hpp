@@ -15,7 +15,7 @@ namespace std {
   typedef decltype(nullptr) nullptr_t;
 }
 
-namespace fc {
+namespace pb {
   using std::size_t;
   typedef decltype(nullptr) nullptr_t;
 
@@ -30,7 +30,7 @@ namespace fc {
   template<typename T> struct deduce<const T&&>{ typedef T type; };
 
   template<typename T>
-  typename fc::remove_reference<T>::type&& move( T&& t ) { return static_cast<typename fc::remove_reference<T>::type&&>(t); }
+  typename pb::remove_reference<T>::type&& move( T&& t ) { return static_cast<typename pb::remove_reference<T>::type&&>(t); }
 
   template<typename T, typename U>
   inline T&& forward( U&& u ) { return static_cast<T&&>(u); }
@@ -39,8 +39,8 @@ namespace fc {
   struct false_type { enum _value { value = 0 }; };
 
   namespace detail {
-    template<typename T> fc::true_type is_class_helper(void(T::*)());
-    template<typename T> fc::false_type is_class_helper(...);
+    template<typename T> pb::true_type is_class_helper(void(T::*)());
+    template<typename T> pb::false_type is_class_helper(...);
   }
 
   template<typename T>
@@ -54,8 +54,8 @@ namespace fc {
 }
   // outside of namespace fc becuase of VC++ conflict with std::swap
   template<typename T>
-  void fc_swap( T& a, T& b ) {     
-    T tmp = fc::move(a);
-    a = fc::move(b);
-    b = fc::move(tmp);
+  void pb_swap( T& a, T& b ) {
+    T tmp = pb::move(a);
+    a = pb::move(b);
+    b = pb::move(tmp);
   }

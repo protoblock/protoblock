@@ -364,7 +364,14 @@ public:
     static pb::signature str2sig(const std::string &str)
     {
         pb::signature sig;
-        pb::from_base58(str, (char *)sig.data, 64);
+        if ( pb::from_base58(str, (char *)sig.data, 64) > 64 ) {
+            //ToDo: test
+            //in case using 2015 bad sigs
+            unsigned char data[72];
+            pb::from_base58(str, (char *)data, 72);
+            sig = pb::parse_der(data,72);
+            sig = pb::signature_normalize(sig);
+        }
         return sig;
     }
 

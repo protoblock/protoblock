@@ -156,7 +156,7 @@ uint64_t  FantasyName::name_hash( const std::string& n )
   pb::sha256 h = pb::hashit( asciiName );
 
   // compress it down to 64 bits
-  return fc::city_hash64( (char *)h.data, 32 );
+    return pb::city_hash64( (char *)h.data, 32 );
 }
 
 

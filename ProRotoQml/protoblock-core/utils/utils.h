@@ -9,7 +9,7 @@
 
 #include <google/protobuf/message.h>
 
-#include "city.hpp"
+#include "../city.hpp"
 #include "base58.h"
 
 namespace pb {
@@ -56,6 +56,10 @@ namespace pb {
         public_key_data(const public_key_data &other) {
             memcpy(key_data,other.key_data,33);
         }
+        public_key_data(char indata[33]) {
+            memcpy(key_data,indata,33);
+        }
+
         public_key_data() {}
         unsigned char key_data[33];
         unsigned char * begin() {  return &key_data[0]; }
@@ -97,6 +101,7 @@ namespace pb {
                            const secp256k1_pubkey *pubkey) {
             return secp256k1_ecdsa_verify(CTX, sig, msg32, pubkey) == 1;
         }
+
 
         secp256k1_pubkey key;
     };
@@ -166,6 +171,22 @@ namespace pb {
         secp256k1_sha256_finalize(&hasher, out32);
     }
 
+    inline secp256k1_ecdsa_signature  parse_der(const unsigned char *input, size_t inputlen) {
+        secp256k1_ecdsa_signature sig;
+        auto ret = secp256k1_ecdsa_signature_parse_der(CTX,&sig,input,inputlen);
+        return sig;
+    }
+
+    inline secp256k1_ecdsa_signature signature_normalize(const secp256k1_ecdsa_signature &insig) {
+        secp256k1_ecdsa_signature sig;
+
+        if ( secp256k1_ecdsa_signature_normalize(CTX, &sig, &insig ) == 1 )
+             return sig;
+        else
+            return insig;
+    }
+
+
     inline pb::sha256 hashit(const std::string &in) {
         pb::sha256 ret;
         const unsigned char* uc = (const unsigned char*)in.c_str();
@@ -218,7 +239,7 @@ namespace std {
     struct hash<pb::public_key_data>
     {
        size_t operator()( const pb::public_key_data& e )const {
-           return  fc::city_hash64((char *)e.begin(), 33);
+           return  pb::city_hash64((char *)e.begin(), 33);
        }
     };
 }

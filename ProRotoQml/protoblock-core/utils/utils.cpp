@@ -1,4 +1,4 @@
-#include "utils/utils.h"
+#include "utils.h"
 #include <secp256k1/secp256k1.c>
 
 namespace pb {
