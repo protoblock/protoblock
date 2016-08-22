@@ -21,7 +21,9 @@ Mediator::Mediator(QObject *parent) :
 //    m_pGlobalOpenOrdersModel(&mOpenOrdersModel),
 //    mTradingPositionsModel(this,{"display"},{"symbol"}),
     m_pTradingPositionsModel{new TradingPositionsModel(this,QByteArray (),{"symbol"})},
-    m_currentPidContext("1")
+    m_currentPidContext("1"),
+    myGamesSelectionModel{},
+    m_pQItemSelectionModel(&myGamesSelectionModel)
 {
 
     mGetDepthReq.set_ctype(GETDEPTH);
@@ -128,8 +130,13 @@ Mediator::Mediator(QObject *parent) :
         break;
     }
 
+    myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
+//    m_pQItemSelectionModel = new QItemSelectionModel();
+//    m_pQItemSelectionModel->setModel(m_pWeeklyScheduleModel);
+    connect(&myGamesSelectionModel,SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+            this,SLOT(selectionChanged(QItemSelection, QItemSelection)));
 
-
+//    connect(m_pWeeklyScheduleModel,SLOT())
 }
 
 

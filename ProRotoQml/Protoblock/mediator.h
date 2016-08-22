@@ -19,6 +19,7 @@
 #include "fantasynamemodel.h"
 #include "openordersmodel.h"
 #include "weeklyschedulemodel.h"
+#include <QItemSelectionModel>
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -63,6 +64,8 @@ class Mediator : public QObject
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
 
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeeklyScheduleModel)
+    QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pQItemSelectionModel)
+
     std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
 //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
@@ -74,6 +77,8 @@ class Mediator : public QObject
 
 //    QML_READONLY_CSTREF_PROPERTY (QStringList, allNames2)
     //    Q_PROPERTY(QQmlListProperty<QString> goodFnames READ goodFnames NOTIFY goodFnamesChanged)
+
+    QItemSelectionModel myGamesSelectionModel;
 
 public:
     /*!
@@ -226,6 +231,11 @@ public:
         return m_pGlobalOpenOrdersModel->get_pidsymbol();
     }
 
+    Q_INVOKABLE void select(int row, int command) {
+        qDebug() << " meiator selected" << row << " commsnd " << command;
+        m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
+    }
+
     Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(const QString&);
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
@@ -310,6 +320,11 @@ protected slots:
 
     // slot to update QML ONLY propertys
     void handleEngineUpdate(const bool &sta);
+
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
+        qDebug() << " mediator selectionChanged " << selected << deselected;
+
+    }
 
 private slots:
     void handleSocketError(QAbstractSocket::SocketError err);

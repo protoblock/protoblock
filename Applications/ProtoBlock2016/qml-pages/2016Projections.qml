@@ -14,6 +14,9 @@ Item {
             themeroot.reloadleaders = true
         else
             MiddleMan.allNamesGet()
+
+//        pageHelper.expanded = false
+
     }
     Scrollbar{flickableItem: fl}
     Flickable{
