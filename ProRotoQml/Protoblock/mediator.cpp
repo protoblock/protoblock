@@ -3,6 +3,7 @@
 #include <QSettings>
 #include "Commissioner.h"
 #include "DataPersist.h"
+#include <unordered_set>
 
 using namespace fantasybit;
 Mediator::Mediator(QObject *parent) :
@@ -119,6 +120,7 @@ Mediator::Mediator(QObject *parent) :
     depthInterval = 1000;
 
 
+    WeeklySchedule ws;
     fantasybit::Reader<ScheduleData> reader5{ GET_ROOT_DIR() + "WeeklySchedule.txt" };
     ScheduleData sd;
     while ( reader5.ReadNext(sd) ) {
@@ -126,9 +128,100 @@ Mediator::Mediator(QObject *parent) :
 
         m_pWeeklyScheduleModel = new WeeklyScheduleModel();
         m_pWeeklyScheduleModel->updateWeeklySchedule(sd.week(),sd.weekly());
+        ws = sd.weekly();
 
         break;
     }
+
+    std::map<std::string, std::unordered_set<std::string>> MyTeamRoster;
+    std::map<std::string, PlayerStatus> MyPlayerStatus;
+    std::map<std::string, PlayerData> MyPlayerData;
+
+    Reader<PlayerData> reader3{ GET_ROOT_DIR() + "PlayerData.txt"};
+    PlayerData pd;
+    while ( reader3.ReadNext(pd) ) {
+        pd.ByteSize();
+        auto &ps = pd.player_status();
+        MyPlayerStatus[pd.playerid()] = ps;
+        MyPlayerData[pd.playerid()] = pd;
+        if (ps.has_teamid()) {
+            //qDebug() << ps.teamid();
+            auto itr = MyTeamRoster.find(ps.teamid());
+            if ( itr == end(MyTeamRoster))
+                MyTeamRoster[ps.teamid()] =  std::unordered_set<std::string>{};
+
+            MyTeamRoster[ps.teamid()].insert(pd.playerid());
+        }
+
+    }
+
+    vector<GameRoster>  vgr;
+    for (const auto g : ws.games()) {
+        GameRoster gr{};
+        gr.info = g;
+        gr.status = GameStatus_Status_SCHEDULED;
+//        GameStatus gs = g;
+//        if ( gs.datetime() != -1)
+//        {
+//            if ( gs.has_datetime() )
+//                gr.info.set_time(gs.datetime());
+
+//            if ( gs.has_status())
+//               gr.status = gs.status();
+//        }
+
+        {
+            auto teamid = g.home();
+            auto it = MyTeamRoster.find(teamid);
+            if ( it != end(MyTeamRoster))
+                qDebug() << " found it" << it->second.size();
+
+            auto &teamroster = MyTeamRoster[teamid];
+            qDebug() << teamroster.size();
+            for ( auto p : teamroster) {
+                auto ps = MyPlayerStatus[p];
+                if ( ps.teamid() != teamid  ||
+                     false)//ps.status() != PlayerStatus::ACTIVE)
+                    continue;
+
+                PlayerData &ppd = MyPlayerData[p];
+                PlayerDetail pd;
+                pd.base = ppd.player_base();
+                pd.team_status = ps.status();
+                pd.game_status = PlayerGameStatus::NA;
+                gr.homeroster[p] = pd;
+            }
+        }
+        {
+            auto teamid = g.away();
+            auto it = MyTeamRoster.find(teamid);
+            if ( it != end(MyTeamRoster))
+                qDebug() << " found it" << it->second.size();
+
+            auto &teamroster = MyTeamRoster[teamid];
+            qDebug() << teamroster.size();
+            for ( auto p : teamroster) {
+                auto ps = MyPlayerStatus[p];
+                if ( ps.teamid() != teamid  ||
+                     false)//ps.status() != PlayerStatus::ACTIVE)
+                    continue;
+
+                PlayerData &ppd = MyPlayerData[p];
+                PlayerDetail pd;
+                pd.base = ppd.player_base();
+                pd.team_status = ps.status();
+                pd.game_status = PlayerGameStatus::NA;
+                gr.awayroster[p] = pd;
+            }
+        }
+
+
+//        gr.homeroster = GetTeamRoster(g.home());
+//        gr.awayroster = GetTeamRoster(g.away());
+        vgr.push_back(gr);
+    }
+
+
 
     myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
 //    m_pQItemSelectionModel = new QItemSelectionModel();
@@ -137,6 +230,21 @@ Mediator::Mediator(QObject *parent) :
             this,SLOT(selectionChanged(QItemSelection, QItemSelection)));
 
 //    connect(m_pWeeklyScheduleModel,SLOT())
+
+    m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
+    m_pProjectionsViewFilterProxyModel->setSourceModel(&mPlayerProjModel);
+//    m_pProjectionsViewFilterProxyModel->setFilterRole(mPlayerProjModel.roleForName("pos"));
+    mPlayerProjModel.updateRosters(vgr);
+//    m_pProjectionsViewFilterProxyModel->setFilterFixedString("WR");
+
+    m_pProjectionsViewFilterProxyModel->setSortRole("pos");//mPlayerProjModel.roleForName("pos"));
+//    m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(true);
+
+    m_pPosFilter = new QStringListModel();
+    QStringList list;
+    list << "All" << "QB" << "RB" << "WR" << "TE" << "K" << "DEF";
+    m_pPosFilter->setStringList(list);
+    m_pProjectionsViewFilterProxyModel->sort(0);
 }
 
 

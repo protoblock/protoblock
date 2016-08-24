@@ -100,19 +100,21 @@ Card {
     Component {
          id: header
         Item {
+            id: ih
             height: ProtoScreen.guToPx(4)
             width: parent.width
+            property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
+
         RowLayout {
             spacing: 0
             anchors.fill: parent
-            property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
 
             Repeater{
                 model: [" Time "," Away "," Home ","  Status  "]
                 Card{
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    Layout.preferredWidth: (parent.width * widths[index])
+                    Layout.preferredWidth: (parent.width * ih.widths[index])
                     border.color:"black"
                     backgroundColor: Colors.blue
                     Label{

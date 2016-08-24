@@ -15,5 +15,11 @@
         <file>OMSCard.qml</file>
         <file>BuyTrading.qml</file>
         <file>ScheduleView.qml</file>
+        <file>PlayerProjTable.qml</file>
+        <file>TableView2.qml</file>
+        <file>TableViewStyle2.qml</file>
+        <file>BasicTableViewStyle2.qml</file>
+        <file>BasicTableView2.qml</file>
+
     </qresource>
 </RCC>

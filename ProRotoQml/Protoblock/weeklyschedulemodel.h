@@ -14,6 +14,7 @@ class WeeklyScheduleModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, away)
     QML_READONLY_CSTREF_PROPERTY (QString, home)
     QML_READONLY_CSTREF_PROPERTY (QString, status)
+    QML_READONLY_CSTREF_PROPERTY (QString, gameid)
 
 public:
 
@@ -22,6 +23,7 @@ public:
         m_away = in.away().data();
         m_home = in.home().data();
         m_status = "Scheduled";
+        m_gameid = in.id().data();
 
         qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
     }
@@ -32,6 +34,11 @@ class WeeklyScheduleModel : public QQmlObjectListModel<WeeklyScheduleModelItem>{
     QML_READONLY_CSTREF_PROPERTY(int, week)
 
 public:
+    explicit WeeklyScheduleModel (QObject *          parent      = Q_NULLPTR,
+                                  const QByteArray & displayRole = QByteArray (),
+                                  const QByteArray & uidRole     = "gameid")
+
+            : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
     void updateWeeklySchedule(int week, const fantasybit::WeeklySchedule &weekly) {
 

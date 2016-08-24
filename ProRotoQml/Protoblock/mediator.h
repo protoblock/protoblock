@@ -20,6 +20,8 @@
 #include "openordersmodel.h"
 #include "weeklyschedulemodel.h"
 #include <QItemSelectionModel>
+#include "playerprojmodel.h"
+#include <QStringListModel>
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 
@@ -65,6 +67,11 @@ class Mediator : public QObject
 
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeeklyScheduleModel)
     QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pQItemSelectionModel)
+
+    QML_READONLY_PTR_PROPERTY(ProjectionsViewFilterProxyModel, pProjectionsViewFilterProxyModel)
+    QML_READONLY_PTR_PROPERTY(QStringListModel, pPosFilter)
+
+    PlayerProjModel mPlayerProjModel;
 
     std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
@@ -152,6 +159,8 @@ public:
         if ( depthBackup < 0 ) depthBackup = 0;
         depthCount = 0;
     }
+
+//    QStringList
 
 //     QList<QString *> m_goodFnames;
 //     QQmlListProperty<QString> goodFnames() {
@@ -323,7 +332,7 @@ protected slots:
 
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
         qDebug() << " mediator selectionChanged " << selected << deselected;
-
+        m_pProjectionsViewFilterProxyModel->invalidate();
     }
 
 private slots:

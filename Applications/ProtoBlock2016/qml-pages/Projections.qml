@@ -21,16 +21,24 @@ SplitView {
               anchors.fill: parent
           }
       }
-      Rectangle {
-          id: centerItem
+      Card {
           width: parent.width * .60
           Layout.maximumWidth: parent.width * .80
-          color: "lightgray"
-          Text {
-              text: "View 2"
-              anchors.centerIn: parent
+//          color: "lightblue"
+          PlayerProjTable {
+              anchors.fill: parent
           }
       }
+//      Rectangle {
+//          id: centerItem
+//          width: parent.width * .60
+//          Layout.maximumWidth: parent.width * .80
+//          color: "lightgray"
+//          Text {
+//              text: "View 2"
+//              anchors.centerIn: parent
+//          }
+//      }
       Rectangle {
           width: parent.width * .20
           Layout.maximumWidth: parent.width * .50

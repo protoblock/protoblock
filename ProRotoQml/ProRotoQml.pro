@@ -4,7 +4,7 @@ SUBDIRS += \
 #        $$PWD/jsonpb \
 #        $$PWD/qhttp/qhttp.pro \
 #        $$PWD/Files/files.pro \
-#        $$PWD/Models/models.pro \
+        $$PWD/Models/models.pro \
 #        $$PWD/Sql/sql.pro \
         $$PWD/Theme/Theme.pro \
         $$PWD/Utils/utils.pro \

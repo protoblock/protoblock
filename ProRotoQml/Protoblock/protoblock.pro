@@ -51,7 +51,9 @@ SOURCES += \
     $$PWD/socketclient.cpp \
     $$PWD/mediator.cpp \
     $$PWD/playerquoteslicemodel.cpp \
-    depthmarketmodel.cpp
+    depthmarketmodel.cpp \
+    sortfilterproxymodel.cpp
+
 
 HEADERS += \
 #    $$PWD/getuserinfo.h \
@@ -62,7 +64,10 @@ HEADERS += \
     depthmarketmodel.h \
     fantasynamemodel.h \
     openordersmodel.h \
-    weeklyschedulemodel.h
+    weeklyschedulemodel.h \
+    playerprojmodel.h \
+    sortfilterproxymodel.h
+
 
 
 DISTFILES = qmldir
