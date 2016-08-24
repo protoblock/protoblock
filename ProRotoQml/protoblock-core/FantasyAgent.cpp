@@ -13,7 +13,7 @@
 #include "FantasyAgent.h"
 #include "Commissioner.h"
 #include "DataPersist.h"
-#include "optional.hpp"
+//#include "optional.hpp"
 #include "FantasyName.h"
 #include "mnemonic.h"
 #include "utils/utils.h"

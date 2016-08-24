@@ -11,7 +11,7 @@
 
 #include <map>
 
-#include "optional.hpp"
+//#include "optional.hpp"
 #include "ProtoData.pb.h"
 #include "FantasyName.h"
 #include "utils/utils.h"

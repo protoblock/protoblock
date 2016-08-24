@@ -80,18 +80,19 @@ SplitView {
       orientation: Qt.Horizontal
 //      width: parent.width
       Card {
-          width: parent.width * .20
+          Layout.minimumWidth: parent.width * .10
           Layout.maximumWidth: parent.width * .50
+//          Layout.fillWidth: true
 //          color: "lightblue"
           ScheduleView {
               anchors.fill: parent
           }
       }
       Card {
-          width: parent.width * .60
+          Layout.minimumWidth: parent.width * .30
           Layout.maximumWidth: parent.width * .80
 //          color: "lightblue"
-
+//          Layout.fillWidth: true
           PlayerProjTable {
               id: ppt
               anchors.fill: parent
@@ -150,9 +151,9 @@ SplitView {
 //      }
       Card {
           id: rightr
-          width: parent.width * .20
-          Layout.maximumWidth: parent.width * .50
-
+          Layout.minimumWidth: parent.width * .20
+          Layout.maximumWidth: parent.width * .60
+          Layout.fillWidth: true
           LeaderProjView {
               id: lpv
 //              dragtarget: "dropProxy"

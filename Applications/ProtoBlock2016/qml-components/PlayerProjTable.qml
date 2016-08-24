@@ -179,9 +179,14 @@ Item {
         TableView {
             id: tv
             Component.onCompleted: {
-    //            resizeColumnsToContents()
+                resizeColumnsToContents()
+//                width = Qt.binding(function(){
+//                   return ProtoScreen.guToPx(6) * columnCount
+//                })
+
             }
 
+//            width: parent.width
             highlightOnFocus:   false
             anchors.fill: parent
 
@@ -213,6 +218,8 @@ Item {
 
     //            }
             Item {
+                id: idd
+            implicitWidth: textItem2.implicitWidth
             width: parent.width
             height: ProtoScreen.guToPx(6)
 
@@ -260,7 +267,7 @@ Item {
 
                 Label{
                     id: textItem2
-                    text: styleData.value
+                    text: " " + styleData.value + " ";
                     anchors.fill: parent
     //                width: parent.width
     //                height: parent.height * .40
@@ -316,6 +323,7 @@ Item {
                 role: "fullname"
                 title: "Name"
                 horizontalAlignment : Text.AlignHCenter
+
 
             }
             TableViewColumn{
