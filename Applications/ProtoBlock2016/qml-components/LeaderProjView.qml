@@ -60,21 +60,21 @@ Item {
 //            }
 
             headerDelegate:  Item {
-                implicitWidth: textItem2.implicitWidth
+                implicitWidth: textItem2.implicitWidth / 2.0
             width: parent.width
             height: ProtoScreen.guToPx(6)
 
-            Rectangle {
-                id: rec
-                height: parent.height * .60
-                width: parent.width
-                color: "white"
-                anchors.top: parent.top
-            }
+//            Rectangle {
+//                id: rec
+//                height: parent.height * .60
+//                width: parent.width
+//                color: "white"
+//                anchors.top: parent.top
+//            }
 
             Card {
                 width: parent.width
-                height: parent.height * .40
+                height: parent.height //* .40
                 backgroundColor: themeroot.theme.primaryColor
                 anchors.bottom: parent.bottom
                 radius: 0
