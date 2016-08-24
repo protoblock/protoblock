@@ -25,8 +25,37 @@ SplitView {
           width: parent.width * .60
           Layout.maximumWidth: parent.width * .80
 //          color: "lightblue"
+
           PlayerProjTable {
               anchors.fill: parent
+          }
+
+          DropArea {
+              id: dragTarget
+
+              property string colorKey
+              property alias dropProxy: dragTarget
+
+              anchors.fill: parent
+              anchors.centerIn: parent
+              keys: [ "red" ]
+
+              Rectangle {
+                  id: dropRectangle
+
+                  anchors.fill: parent
+                  color: "transparent"
+
+                  states: [
+                      State {
+                          when: dragTarget.containsDrag
+                          PropertyChanges {
+                              target: dropRectangle
+                              color: "grey"
+                          }
+                      }
+                  ]
+              }
           }
       }
 //      Rectangle {
@@ -40,11 +69,40 @@ SplitView {
 //          }
 //      }
       Rectangle {
+          id: rightp
           width: parent.width * .20
           Layout.maximumWidth: parent.width * .50
-          Text {
-              text: "View 3"
+          MouseArea {
+              id: mouseArea
+
+//              anchors.fill: parent
               anchors.centerIn: parent
+              width: parent.width * .30
+              height: parent.height / 2.0
+              drag.target: tile
+
+              onReleased: parent = tile.Drag.target !== null ? tile.Drag.target : dragTarget
+
+              Rectangle {
+                  id: tile
+
+                  anchors.fill: parent
+                  anchors.verticalCenter: parent.verticalCenter
+                  anchors.horizontalCenter: parent.horizontalCenter
+
+                  color: "red"
+
+                  Drag.keys: [ "red" ]
+                  Drag.active: mouseArea.drag.active
+//                  Drag.hotSpot.x: parent.x
+//                  Drag.hotSpot.y: 32
+                  states: State {
+                      when: mouseArea.drag.active
+                      ParentChange { target: tile; parent: rightp }
+                      AnchorChanges { target: tile; anchors.verticalCenter: undefined; anchors.horizontalCenter: undefined }
+                  }
+
+              }
           }
       }
   }
