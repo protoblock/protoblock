@@ -38,7 +38,8 @@ Item {
 ////            filterCaseSensitivity: Qt.CaseInsensitive
 ////        }
 
-//    signal wchanged
+    signal indrop
+    signal donedrop
 
 
     ComboBox {
@@ -181,6 +182,7 @@ Item {
     //            resizeColumnsToContents()
             }
 
+            highlightOnFocus:   false
             anchors.fill: parent
 
 //            anchors.top: parent.top
@@ -218,7 +220,7 @@ Item {
                 id: rec
                 height: parent.height * .60
                 width: parent.width
-                color: styleData.column < 3 ? "transparent" : "grey"
+                color: styleData.column < 3 ? "white" : "grey"
                 anchors.top: parent.top
 
                 ComboBox {
@@ -280,6 +282,32 @@ Item {
 //                topw.wchanged()
 //            }
 
+            function tmyMethod() {
+//                console.log(" col " + styleData.column + " " + widths[styleData.column] )
+
+                rec.color = Qt.binding(function() {
+//                    console.log(" col " + styleData.column + " " + widths[styleData.column] )
+                    if ( styleData.column >= 3)
+                        return "green"
+                    else
+                        return rec.color
+                })
+            }
+
+            function donedropM() {
+                rec.color = Qt.binding(function() {
+                    if ( styleData.column >= 3)
+                        return "grey"
+                    else
+                        return rec.color
+                })
+            }
+
+
+            Component.onCompleted: {
+                topw.indrop.connect(tmyMethod)
+                topw.donedrop.connect(donedropM)
+            }
 
         }
 
