@@ -1027,8 +1027,12 @@ void TestingWindow::on_Update_PLayers_2_clicked()
 }
 */
 
-void TestingWindow::on_fix363_clicked()
-{
+void TestingWindow::on_fix363_clicked() {
+    FantasyDataAllAvailable fda;
+    auto mapret = fda.loadPLayers();
+    qDebug() << " mapret " << mapret.size();
+
+    /*
     auto b = Node::getLocalBlock(2377,true);
 
     Block &bb = *b;

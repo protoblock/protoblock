@@ -189,7 +189,12 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         //construct url with parameters
-        QString url = myBaseUrl.toString()+"/"+route;
+        QString url;
+        if ( route != "" )
+            url = myBaseUrl.toString()+"/"+route;
+        else
+            url = myBaseUrl.toString();
+
         if (parameters.count()> 1) url+="/";
 
         foreach (QString paramName, parameters.keys()) {

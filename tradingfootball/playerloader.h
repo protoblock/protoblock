@@ -2338,6 +2338,19 @@ public:
 
     }
 
+    /*
+    "FantasyAlarmPlayerID": 303022,
+    "SportRadarPlayerID": "bb78a66a-a8ec-4294-8858-c7e5a1d15106",
+    "RotoworldPlayerID": 10361,
+    "RotoWirePlayerID": 10082,
+    "StatsPlayerID": 590921,
+    "SportsDirectPlayerID": 51639,
+    "FanDuelPlayerID": 46882,
+    "DraftKingsPlayerID": 590921,
+    "YahooPlayerID": 28537,
+*/
+
+
     std::unordered_map<pmatch,ids> loadFantasyData(std::string team) {
         std::unordered_map<pmatch,ids> fddata{};
         auto myteam = team;
@@ -2444,7 +2457,135 @@ public:
 
 };
 
+class FantasyDataAllAvailable {
+    QString fduribase = "https://api.fantasydata.net/v3/nfl/stats/JSON/Players";
+    QMap<QString,QString>  fdheaders;
 
+    SqlStuff sqls;
+
+public:
+    FantasyDataAllAvailable() : sqls(true,"FantasyDataAllAvailable") {}
+
+    std::unordered_map<int,int> loadPLayers() {
+        unordered_map<string,int> trdr_map = sqls.getallpid("TRDR");
+        unordered_map<string,int> fndr_map = sqls.getallpid("FNDATA");
+
+        std::unordered_map<int,int>  pidmret{};
+        std::unordered_map<int,int>  revret{};
+        fdheaders["Ocp-Apim-Subscription-Key"] = "c2b787e00846409384d295f34afcfe82";
+
+        auto url = QUrl(fduribase);
+
+        RestfullClient trrest(url);
+//        qDebug() << truribase << route;
+        trrest.getData("",QMap<QString,QVariant>(),fdheaders);
+
+
+        auto resp = trrest.lastReply();
+
+        QJsonDocument ret = QJsonDocument::fromJson(resp);
+        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject() << ret.isArray();
+        QJsonArray parr = ret.array();
+        for (int i=0;i< parr.size();i++  ) {
+            QJsonValueRef data = parr[i];
+
+            QJsonObject playerData = data.toObject();
+
+            auto pos = playerData.value("FantasyPosition").toString();
+
+            if   (! (pos == "QB"
+                 || pos == "RB"
+                 || pos == "WR"
+                 || pos == "TE"
+                 || pos == "K"
+                 )) { continue; }
+
+
+            auto SportRadarPlayerID = playerData.value("SportRadarPlayerID").toString().toStdString();
+
+            auto PlayerID = playerData.value("PlayerID");
+            int fdpid = PlayerID.toInt();
+
+            auto name_last = playerData.value("LastName").toString();
+            auto name_first = playerData.value("FirstName").toString().toStdString();
+
+
+            if ( SportRadarPlayerID == "" ) {
+                if   (! (pos == "QB"
+                     || pos == "RB"
+                     || pos == "WR"
+                     || pos == "TE"
+                     || pos == "K"
+                     )) { continue; }
+                qDebug() << "FantasyDataAllAvailable" << fdpid << " no SportRadarPlayerID "
+                         << name_first << name_last << pos;
+                continue;
+            }
+
+            auto it = trdr_map.find(SportRadarPlayerID);
+            if ( it == end(trdr_map)) {
+//                qDebug() << "FantasyDataAllAvailable" << fdpid << " no pid match"
+//                         << name_first << name_last << pos;
+                continue;
+            }
+
+
+            int pid = it->second;
+//            auto &pbase = DataService::instance()->GetPlayerBase(to_string(pid));
+//            auto it2 = pbase.find(pid);
+//            if ( it2 == end(pbase)) {
+//                qDebug() << "FantasyDataAllAvailable" << fdpid << " " << pid << " no playerDetail!"
+//                         << name_first << name_last << pos;
+//                continue;
+//            }
+
+//            if ( pbase.first().data() != name_first &&f
+
+//                 pbase.last().data() !=  name_last ) {
+//                qDebug() << "FantasyDataAllAvailable" << fdpid << " " << pid << " !name match"
+//                         << pbase.first().data() << name_first
+//                         << pbase.last().data()  << name_last << pos;
+//                continue;
+//            }
+
+
+            auto it3 = fndr_map.find(to_string(fdpid));
+            if ( it3 != end(fndr_map)) {
+                if ( it3->second != pid )
+                    qDebug() << "FantasyDataAllAvailable" << fdpid << " wrong map!! " << pid
+                             << name_first << name_last << pos << it3->second;
+                continue;
+            }
+
+            int &npid = pidmret[fdpid];
+            if ( npid != 0 ) {
+                qDebug() << "FantasyDataAllAvailable" << fdpid << " " << pid << " duplicate " << npid
+                         << name_first
+                         << name_last << pos;
+                continue;
+            }
+            else qDebug() << " adding " << fdpid << " " << pid << name_first
+                          << name_last << pos;
+
+            npid = pid;
+            int &rpid = revret[pid];
+            if ( rpid != 0 ) {
+                qDebug() << "FantasyDataAllAvailable" << fdpid << " " << pid << " duplicate " << rpid
+                         <<  name_first << name_last << pos;
+                continue;
+            }
+            rpid = fdpid;
+
+//            qDebug() << " *** writng sql " << pid << fdpid;
+//            sqls.playermapFeed("FNDATA",pid,to_string(fdpid));
+
+
+        }
+
+        return pidmret;
+    }
+
+};
 
 #endif // PLAYERLOADER
 

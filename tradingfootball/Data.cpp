@@ -164,6 +164,12 @@ void NFLStateData::init() {
             pd.mutable_player_base()->CopyFrom(pb);
             pd.set_playerid(it->key().ToString());
 #endif
+            PlayerBase pb;
+            pb.ParseFromString(it->value().ToString());
+            PlayerData pd;
+            pd.mutable_player_base()->CopyFrom(pb);
+            pd.set_playerid(it->key().ToString());
+            qDebug() << pd.DebugString().data();
             string temp;
             if ( !statusstore->Get(leveldb::ReadOptions(), it->key(), &temp).ok() )
                 continue;
