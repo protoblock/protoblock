@@ -164,12 +164,14 @@ void NFLStateData::init() {
             pd.mutable_player_base()->CopyFrom(pb);
             pd.set_playerid(it->key().ToString());
 #endif
+            /*
             PlayerBase pb;
             pb.ParseFromString(it->value().ToString());
             PlayerData pd;
             pd.mutable_player_base()->CopyFrom(pb);
             pd.set_playerid(it->key().ToString());
             qDebug() << pd.DebugString().data();
+            */
             string temp;
             if ( !statusstore->Get(leveldb::ReadOptions(), it->key(), &temp).ok() )
                 continue;
@@ -275,6 +277,47 @@ PlayerBase NFLStateData::GetPlayerBase(std::string playerid) {
     return pb;
 }
 
+void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase &pb,
+                                  const PlayerStatus &ps) {
+    AddNewPlayer(playerid,pb);
+    string temp;
+    if ( !statusstore->Get(leveldb::ReadOptions(), playerid, &temp).ok() ) {
+        qDebug() << " error TeamNameChange " << pb.DebugString().data();
+        return;
+    }
+    PlayerStatus mps;
+    mps.ParseFromString(temp);
+    if ( mps.teamid() == ps.teamid() || ps.teamid() == "" ) {
+        qDebug() << " error TeamNameChange mps.teamid() == ps.teamid()";
+        return;
+    }
+
+    statusstore->Put(write_sync, playerid, ps.SerializeAsString());
+    MyPlayerStatus[playerid] = ps;
+    auto it = MyTeamRoster.find(mps.teamid());
+    if ( it == end(MyTeamRoster)) {
+        qDebug() << " cant find  it" << mps.teamid().data();
+    }
+
+    std::swap(MyTeamRoster[ps.teamid()], it->second);
+
+
+    PlayerStatus newps;
+    newps.set_teamid(ps.teamid());
+    for ( auto &p : it->second) {
+        auto it2 = MyPlayerStatus.find(playerid);
+        if ( it2 == end(MyPlayerStatus)) {
+            newps.set_status(PlayerStatus_Status_OTHER);
+        }
+        else {
+            newps.set_status(it2->second.status());
+        }
+
+        MyPlayerStatus[playerid] = newps;
+    }
+
+    MyTeamRoster.erase(mps.teamid());
+}
 
 void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
     string key = "scheduleweek:" + to_string(week);

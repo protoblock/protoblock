@@ -215,20 +215,21 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
         GameData ttd{};
         ResultData rd{};
         switch (d.type()) {
-            case Data_Type_PLAYER:
+            case Data_Type_PLAYER: {
                 tpd = d.GetExtension(PlayerData::player_data);
                 if ( !tpd.has_playerid() ) {
                     qCritical() << "no playerid" + QTD(tpd.DebugString());
                     break;
                 }
                 int pid = std::stoi(tpd.playerid());
-                else if (pid > 0 & pid <= 32 ) { //Team DEF
+                if (pid > 0 & pid <= 32 ) { //Team DEF
                     if ( transtype !=  SEASONSTART) {
                         qCritical() << "Teams cant change names" << d.DebugString().data();
                         break;
                     }
 
                     mData.TeamNameChange(tpd.playerid(),tpd.player_base(),tpd.player_status());
+                    break;
                 }
                 if ( tpd.has_player_base() )
                     mData.AddNewPlayer(tpd.playerid(),tpd.player_base());
@@ -238,6 +239,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     ;//ToDo
 
                 break;
+            }
             case Data_Type_GAME:
                 ttd = d.GetExtension(GameData::game_data);
                 if ( ttd.has_status() && ttd.has_gameid() )

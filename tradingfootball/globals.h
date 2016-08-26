@@ -73,6 +73,17 @@ static QString fromTime_t_toFantasyString(uint dtt) {
     return QDateTime::fromTime_t(dtt,tz).toString("ddd h:mm a").remove(" pm");
 }
 
+static uint fromISO_toTime_t(const QString &iso) {
+    QByteArray zone = "America/New_York";
+    QTimeZone tz(zone);//str.c_str();
+
+    auto dt = QDateTime::fromString(iso,Qt::ISODate);
+
+    dt.setTimeZone(tz);
+    return dt.toTime_t();
+}
+
+
 static QString TimetoTweetString() {
     QByteArray zone = "America/New_York";
     QTimeZone tz(zone);//str.c_str();

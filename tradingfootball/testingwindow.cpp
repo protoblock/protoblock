@@ -1028,9 +1028,13 @@ void TestingWindow::on_Update_PLayers_2_clicked()
 */
 
 void TestingWindow::on_fix363_clicked() {
-    FantasyDataAllAvailable fda;
-    auto mapret = fda.loadPLayers();
-    qDebug() << " mapret " << mapret.size();
+//    FantasyDataAllAvailable fda;
+//    fda.loadDefenses();
+
+
+     ScheduleLoader sl;
+     sl.loadScheduleMovingFwdFromFD(0,true);
+//    qDebug() << " mapret " << mapret.size();
 
     /*
     auto b = Node::getLocalBlock(2377,true);
@@ -1091,7 +1095,7 @@ void TestingWindow::on_fix363_clicked() {
 //    return;
 
 //    SqlStuff sql("satoshifantasy","on_fix363_clicked");
-//   for ( int i =6237; i<6246; i++) {
+//   for ( int i =6237; i<6246; i++) {kgloba
 //       sql.dumpTx(i);
 //   }
 /*

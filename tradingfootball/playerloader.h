@@ -317,11 +317,11 @@ struct SqlStuff {
 
     }
 
-    void gamemap(string gameid, string id) {
+    void gamemap(string gameid, string id,string feed = "TRDR") {
         QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery insertQuery(db);
         insertQuery.prepare("INSERT INTO gid (feed, id, gameid) VALUES(:feed, :mid,:mgameid)");
-        insertQuery.bindValue(":feed","TRDR");
+        insertQuery.bindValue(":feed",QString::fromStdString(feed));
 
         insertQuery.bindValue(":mgameid",QString::fromStdString(gameid));
         insertQuery.bindValue(":mid",QString::fromStdString(id));
@@ -832,16 +832,84 @@ class ScheduleLoader
 {
     SqlStuff sqls;
 public:
-    ScheduleLoader() : sqls(true,"ScheduleLoader") {}
+    ScheduleLoader() : sqls(true,"ScheduleLoader") {
+        for (int i=0;i< Commissioner::GENESIS_NFL_TEAMS.size();i++) {
+            teamIdKey[Commissioner::GENESIS_NFL_TEAMS[i]] = i+1;
+        }
+    }
     ~ScheduleLoader(){}
     std::map<string,string> gid{};
 
     map<string,int> teamIdKey{};
     void Dump() {
         for ( auto p : gid ) {
-            sqls.gamemap(p.first,p.second);
+            sqls.gamemap(p.first,p.second,"FNDATA");
         }
     }
+
+    std::vector<fantasybit::ScheduleData> loadScheduleMovingFwdFromFD(int startweek,bool isgenesis = false) {
+        std::vector<fantasybit::ScheduleData> result;
+        QString fduribase = "https://api.fantasydata.net/v3/nfl/scores/JSON/Schedules/2016";
+
+        QMap<QString,QString> fdheaders;
+        fdheaders["Ocp-Apim-Subscription-Key"] = "c2b787e00846409384d295f34afcfe82";
+
+        auto url = QUrl(fduribase);
+
+        RestfullClient rest(url);
+
+        rest.getData("",QMap<QString,QVariant>(),fdheaders);
+        auto resp = rest.lastReply();
+
+        std::unordered_map<int,WeeklySchedule> weekly;
+        QJsonDocument ret = QJsonDocument::fromJson(resp);
+        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject() << ret.isArray();
+        QJsonArray parr = ret.array();
+        for (int i=0;i< parr.size();i++  ) {
+            QJsonValueRef data = parr[i];
+
+            QJsonObject gamedata = data.toObject();
+
+            auto seasontype = gamedata.value("SeasonType");
+            if ( seasontype.toInt() != 1)
+                continue;
+
+            auto weeks = gamedata.value("Week");
+            int week = weeks.toInt();
+            if ( week < startweek && !isgenesis)
+                continue;
+
+            if ( isgenesis ) {
+                QString errorParsingObject;
+                fantasybit::GameInfo gi =
+                        makeGameIdFromFNDATA(gamedata,week,errorParsingObject);
+
+                if (!errorParsingObject.isEmpty()) {
+                    qDebug() << " loadScheduleMovingFwdFromFD " <<  errorParsingObject;
+                    continue;
+                }
+
+                WeeklySchedule &ws = weekly[week];
+                if ( gi.away() == "BYE")
+                    ws.add_byes(gi.home());
+                else
+                    ws.add_games()->CopyFrom(gi);
+            }
+        }
+
+        ScheduleData sd;
+        for ( auto &wm : weekly) {
+            sd.set_week(wm.first);
+            sd.mutable_weekly()->CopyFrom(wm.second);
+            result.push_back(sd);
+
+            qDebug() << sd.DebugString().data();
+        }
+
+        Dump();
+        return result;
+    }
+
 
     std::vector<fantasybit::ScheduleData> loadScheduleFromJsonFile() {
         std::vector<fantasybit::ScheduleData> result;
@@ -880,9 +948,7 @@ public:
     std::vector<fantasybit::ScheduleData> getScheduleDatafromJSON(QByteArray jsonData, int startweek) {
         std::vector<fantasybit::ScheduleData> result;
 
-        for (int i=0;i< Commissioner::GENESIS_NFL_TEAMS.size();i++) {
-            teamIdKey[Commissioner::GENESIS_NFL_TEAMS[i]] = i+1;
-        }
+
 
         QJsonParseError * error = NULL;
         QJsonDocument doc = QJsonDocument::fromJson(jsonData,error);
@@ -1013,9 +1079,9 @@ public:
       fantasybit::GameInfo pd{};
 
       /*
-1500122
-year season_type(0) week(01) homeis(22)
-   */
+            1500122
+            year season_type(0) week(01) homeis(22)
+      */
       string swk = to_string(wk);
       if ( swk.size() == 1)
           swk = "0" + swk;
@@ -1039,6 +1105,57 @@ year season_type(0) week(01) homeis(22)
       auto qdt = QDateTime::fromString(datetime,Qt::ISODate);
 
       pd.set_time(qdt.toTime_t());
+
+      qDebug() << pd.DebugString();
+
+      return pd;
+
+    }
+
+    fantasybit::GameInfo makeGameIdFromFNDATA(QJsonObject & jsonObject, int wk,
+                                                  QString & errorParsingObject) {
+      fantasybit::GameInfo pd{};
+
+      /*
+            1500122
+            year season_type(0) week(01) homeis(22)
+      */
+      string swk = to_string(wk);
+      if ( swk.size() == 1)
+          swk = "0" + swk;
+
+      string home = jsonObject.value("HomeTeam").toString().toStdString();
+      if ( home == "JAX")
+          home = "JAC";
+      string team = to_string(teamIdKey[home]);
+
+
+      if ( team.size() == 1)
+          team = "0" + team;
+
+      string myid("20160");
+      myid = myid.append(swk).append(team);
+
+
+
+      pd.set_id(myid);
+      pd.set_home(home);
+      string away = jsonObject.value("AwayTeam").toString().toStdString();
+      if ( away == "JAX")
+          away = "JAC";
+
+      pd.set_away(away);
+
+      if ( away != "BYE")
+          gid[myid] =  jsonObject.value("GameKey").toString().toStdString();
+
+      auto datetime = jsonObject.value("Date").toString();
+
+      // qdt = QDateTime::fromString(datetime,Qt::TextDate);
+
+      pd.set_time(fromISO_toTime_t(datetime));
+
+      qDebug() << fromTime_t_toFantasyString(pd.time());
 
       qDebug() << pd.DebugString();
 
@@ -2585,6 +2702,21 @@ public:
         return pidmret;
     }
 
+    void loadDefenses() {
+
+
+        std::unordered_map<string,string> goodmap;
+        for (auto pr : fantasybit::Commissioner::GENESIS_NFL_PLAYERS) {
+            goodmap[pr.second] = pr.first;
+        }
+
+        for ( int i=0;i< fantasybit::Commissioner::GENESIS_NFL_TEAMS.size(); i++) {
+            string team = fantasybit::Commissioner::GENESIS_NFL_TEAMS[i];
+            if ( team == "JAC") team = "JAX";
+            qDebug() << "will write " << i+1 << goodmap[team];
+            sqls.playermapFeed("FNDATA",i+1,goodmap[team]);
+        }
+    }
 };
 
 #endif // PLAYERLOADER

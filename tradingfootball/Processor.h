@@ -68,7 +68,8 @@ public:
     //bool isInWeekGame(const std::string &id, int week );
     //bool sanity(const FantasyPlayerPoints &fpp);
 	void process(decltype(DataTransition::default_instance().data()) in, 
-                const std::string &blocksigner );
+                const std::string &blocksigner,
+                 const TrType);
     void process(const DataTransition &indt);
     bool isValidTx(const SignedTransaction &st);
     void processTxfrom(const Block &b,int start = 0);

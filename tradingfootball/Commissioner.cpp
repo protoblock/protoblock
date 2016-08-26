@@ -611,7 +611,7 @@ decltype(Commissioner::GENESIS_NFL_TEAMS) Commissioner::GENESIS_NFL_TEAMS {
     "SD" ,
     "SEA" ,
     "SF" ,
-    "STL" ,
+    "LA" ,
     "TB" ,
     "TEN" ,
     "WAS"
@@ -645,10 +645,11 @@ decltype(Commissioner::GENESIS_NFL_PLAYERS) Commissioner::GENESIS_NFL_PLAYERS{
     { "84" , "SD" },
     { "90" , "SEA" },
     { "93" , "SF" },
-    { "32" , "STL" },
+    { "32" , "LA" },
     { "95" , "TB" },
     { "34" , "TEN" },
     { "97" , "WAS" },
+/*
     { "2428" , "ARI" },
     { "4737" , "ARI" },
     { "16656" , "ARI" },
@@ -1456,6 +1457,7 @@ decltype(Commissioner::GENESIS_NFL_PLAYERS) Commissioner::GENESIS_NFL_PLAYERS{
     { "15100" , "WAS" },
     { "16574" , "WAS" },
     { "6767" , "WAS" },
+    */
 };
 decltype(Commissioner::STATS_ID) Commissioner::STATS_ID {
 "5228",
