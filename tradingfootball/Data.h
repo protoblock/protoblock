@@ -100,6 +100,7 @@ public:
     void AddGameResult(const string &gameid, const GameResult&);
     GameResult GetGameResult(const std::string &gameid);
 
+    void TeamNameChange(const std::string playerid, const PlayerBase &, const PlayerStatus &);
     PlayerBase GetPlayerBase(std::string playerid);
 
     //void AddTeamDepth(const TeamDepth &);
@@ -137,7 +138,7 @@ private:
     int week();
 
     static std::string filedir(const std::string &in);
-};
+
 
 }
 

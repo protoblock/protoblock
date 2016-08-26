@@ -171,7 +171,7 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
 
     auto dt = st.trans().GetExtension(DataTransition::data_trans);
     if (dt.data_size() > 0)
-        process(dt.data(), st.fantasy_name());
+        process(dt.data(), st.fantasy_name(), dt.type());
 
     if (sblock.signed_transactions_size() > 1)
         processTxfrom(sblock, 1);
@@ -205,7 +205,7 @@ bool BlockProcessor::sanity(const FantasyPlayerPoints &fpp) {
 }
 */
 void BlockProcessor::process(decltype(DataTransition::default_instance().data()) in,
-            const std::string &blocksigner )  {
+            const std::string &blocksigner,TrType transtype )  {
 
     //outDelta.mutable_datas()->CopyFrom(in);
 
@@ -220,6 +220,15 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( !tpd.has_playerid() ) {
                     qCritical() << "no playerid" + QTD(tpd.DebugString());
                     break;
+                }
+                int pid = std::stoi(tpd.playerid());
+                else if (pid > 0 & pid <= 32 ) { //Team DEF
+                    if ( transtype !=  SEASONSTART) {
+                        qCritical() << "Teams cant change names" << d.DebugString().data();
+                        break;
+                    }
+
+                    mData.TeamNameChange(tpd.playerid(),tpd.player_base(),tpd.player_status());
                 }
                 if ( tpd.has_player_base() )
                     mData.AddNewPlayer(tpd.playerid(),tpd.player_base());
