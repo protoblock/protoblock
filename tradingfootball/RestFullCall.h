@@ -124,7 +124,7 @@ public:
         //when done reading quit the waiting loop if it's on exec state.
         connect(this, SIGNAL(doneReading()),&myEventLoop, SLOT(quit()));
 
-        //when ssl errors, report them.
+        //when ssl errors, report them.0
         connect(&myNetworkManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)),
                 this, SLOT(sslErrorsSlot(QNetworkReply*,QList<QSslError>)));
 
@@ -183,7 +183,7 @@ public:
         return true;
     }
 
-    bool getData(const QString & route,
+    bool    getData(const QString & route,
                  const QMap<QString,QVariant> parameters,
                  const QMap<QString,QString> headersMap)  {
         QNetworkRequest request;
@@ -315,6 +315,7 @@ private slots:
         if (errors.count()>1)
             qDebug() << "ssl error for: ";
         myCurentSSLErrors.append(errors);
+        reply->ignoreSslErrors();
     }
 
     void networkErrorSlot(QNetworkReply::NetworkError error ) {
@@ -496,7 +497,7 @@ public:
     }
 
     static int32_t getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
-        //qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
+        qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
