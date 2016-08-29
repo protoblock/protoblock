@@ -20,10 +20,11 @@
 #include "FantasyName.h"
 #include "ExData.pb.h"
 #include <list>
-#include <fc/filesystem.hpp>
 #include <string>       // std::string
 #include <iostream>     // std::cout
 #include <sstream>      // std::stringstrea
+#include <set>
+#include <leveldb/comparator.h>
 
 using namespace std;
 
@@ -87,14 +88,6 @@ struct InsideBook {
 
     list<Order>::iterator bot() {
         return end(mOList);
-    }
-
-    list<Order>::reverse_iterator rtop() {
-        return rbegin(mOList);
-    }
-
-    list<Order>::reverse_iterator rbot() {
-        return rend(mOList);
     }
 
     void New(Order& order) {
@@ -212,7 +205,7 @@ struct Level1 {
 
 };
 
-#define BOOK_SIZE 40
+#define BOOK_SIZE 400
 class LimitBook {
     InsideBook mBids[BOOK_SIZE], mAsks[BOOK_SIZE];
     int mBb, mBa;
@@ -285,7 +278,6 @@ struct MatchingEngine {
 
 
 class ExchangeData : public QObject {
-
     Q_OBJECT
 
     std::shared_ptr<leveldb::DB> settlestore;
@@ -313,6 +305,7 @@ class ExchangeData : public QObject {
 public:
     ExchangeData() {}
 
+    int64_t MAXSEQ;
     void init();
     void closeAll();
     bool amlive = false;
@@ -329,7 +322,7 @@ public:
 
     void Subscribe(std::string in) {
 #ifdef TRACE
-        qDebug() << "level2 ExchangeData Subscribe" << in;
+        qDebug() << "level2 ExchangeData Subscribe" << in.data();
 #endif
 
         mSubscribed.insert(in);
@@ -337,7 +330,7 @@ public:
 
     void UnSubscribe(std::string in) {
 #ifdef TRACE
-        qDebug() << "level2 ExchangeData UnSubscribe" << in;
+        qDebug() << "level2 ExchangeData UnSubscribe" << in.data();
 #endif
 
         mSubscribed.erase(in);
@@ -384,6 +377,8 @@ public:
 
     int mWeek;
 
+    GlobalState mGlobalState;
+
     void OnWeekOver(int week);
     void OnWeekStart(int week) {
         mWeek = week;
@@ -393,9 +388,9 @@ public:
         return GET_ROOT_DIR() + "trade/" + in;
     }
 
-    void removeAll() {
-       fc::remove_all(GET_ROOT_DIR() + "trade/");
-    }
+//    void removeAll() {
+//       fc::remove_all(GET_ROOT_DIR() + "trade/");
+//    }
 
     //void MergeMarketQuote(const string &playerid,const MarketQuote & );
     void OnTrade(const string &playerid, fantasybit::TradeTic *tt);
@@ -480,6 +475,28 @@ public:
         mutable_ohlc()->set_symbol(ticker);
     }
 
+};
+
+class Int32Comparator : public leveldb::Comparator {
+ public:
+  // Three-way comparison function:
+  //   if a < b: negative result
+  //   if a > b: positive result
+  //   else: zero result
+  int Compare(const leveldb::Slice& a, const leveldb::Slice& b) const {
+    int32_t ia = *(reinterpret_cast<const int32_t *>(a.data()));
+    int32_t ib = *(reinterpret_cast<const int32_t *>(b.data()));
+
+    //qDebug() << ia << ib << "yoyo";
+    if (ia < ib) return -1;
+    if (ia > ib) return +1;
+    return 0;
+  }
+
+  // Ignore the following methods for now:
+  const char* Name() const { return "Int32Comparator"; }
+  void FindShortestSeparator(std::string*, const leveldb::Slice&) const { }
+  void FindShortSuccessor(std::string*) const { }
 };
 
 

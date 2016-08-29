@@ -1029,11 +1029,18 @@ void TestingWindow::on_Update_PLayers_2_clicked()
 
 void TestingWindow::on_fix363_clicked() {
 //    FantasyDataAllAvailable fda;
+//    fda.loadPLayers();
 //    fda.loadDefenses();
 
-
+    {
      ScheduleLoader sl;
-     sl.loadScheduleMovingFwdFromFD(0,true);
+     auto sdmap = sl.loadScheduleMovingFwdFromFD(0,true);
+     Writer<ScheduleData> writer{ GET_ROOT_DIR() + "bootstrap20160/WeeklySchedule.txt" };
+     for (auto &sd : sdmap )
+         writer(sd);
+    }
+
+
 //    qDebug() << " mapret " << mapret.size();
 
     /*

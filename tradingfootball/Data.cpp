@@ -215,6 +215,8 @@ void NFLStateData::init() {
                 qCritical() << "bad read WeeklySchedule ";
                 continue;
             }
+
+
 #ifdef WRITE_BOOTSTRAP
             ScheduleData sd;
             sd.set_week(i);

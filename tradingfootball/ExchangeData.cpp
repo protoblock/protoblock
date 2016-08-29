@@ -50,7 +50,7 @@ void ExchangeData::init() {
                 continue;
 
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData init GameSettlePos llllll" << gsp.gameid();
+            qDebug() << "level2 ExchangeData init GameSettlePos llllll" << gsp.gameid().data();
 #endif
 
             for (auto ha : {QString("home"),QString("away")} )
@@ -136,6 +136,7 @@ void ExchangeData::init() {
 #endif
     */
     {
+        MAXSEQ = 0;
         auto *it = bookdeltastore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             BookDelta bd;
@@ -143,6 +144,9 @@ void ExchangeData::init() {
                 qCritical() << "level2 ExchanegData bad read BookDelta";
                 continue;
             }
+
+            if ( bd.seqnum() > MAXSEQ)
+                MAXSEQ = bd.seqnum();
 #ifdef TRACE
             qDebug() << "level2 ExchangeData init BookDelta " << bd.playerid() << bd.seqnum();
 #endif
@@ -175,7 +179,7 @@ void ExchangeData::init() {
             InsideBook *ib;
             if ( bd.has_newnew()) {
 #ifdef TRACE
-                qDebug() << "level2 ExchangeData new llllll" <<bd.fantasy_name() << bd.newnew().DebugString();
+                qDebug() << "level2 ExchangeData new llllll" <<bd.fantasy_name().data() << bd.newnew().DebugString().data();
 #endif
                 ib = lb->getInside(bd.newnew().buyside(),bd.newnew().price());
                 Order o;
@@ -259,7 +263,7 @@ void ExchangeData::init() {
                 continue;
 
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData posstore llllll" << str << sp.DebugString();
+            qDebug() << "level2 ExchangeData posstore llllll" << str.data() << sp.DebugString().data() << " |";
 #endif
             auto &plist = mPositions[fname];
             Position &pos = plist[nflplayer];
@@ -268,16 +272,17 @@ void ExchangeData::init() {
 
             auto it3 = mLimitBooks.find(nflplayer);
             if ( it3 == end(mLimitBooks) ) {
+
                 auto it2 = mLimitBooks.insert(make_pair(nflplayer,
                                unique_ptr<MatchingEngine>(new MatchingEngine(nflplayer,false))));
 
                 if ( !it2.second ) {
-                    qWarning() << "level2 unable to insert for" << nflplayer;
+                    qWarning() << "level2 unable to insert for" << nflplayer.data();
                     continue;
                 }
 
 #ifdef TRACE
-                qDebug() << "level2 ExchangeData new for pos" << nflplayer;
+                qDebug() << "level2 ExchangeData new for pos" << nflplayer.data();
 #endif
 
                 it2.first->second->ResetLimitBook();//mLimitBook.reset(new LimitBook());
@@ -346,19 +351,24 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
                               shared_ptr<FantasyName> fn) {
 
 
-    qDebug() << eo.playerid() << ":newOrder:" << seqnum << " : " << fn->alias();
+    qDebug() << eo.playerid().data() << ":newOrder:" << seqnum << " : " << fn->alias().data();
 
     bool exitonly = fn->getStakeBalance() <= 0;
+
+#ifndef PRODFOOTBALL
+    exitonly = false;
+#endif
+
     auto pos = getPosition(fn->alias(),eo.playerid());
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData OnOrderNew exitonly" << exitonly << "pos " << pos.ToString() << " stake "
-             << fn->getStakeBalance() <<  fn->alias() << " fn " << &fn << fn->ToString();
+    qDebug() << "level2 ExchangeData OnOrderNew exitonly" << exitonly << "pos " << pos.ToString().data() << " stake "
+             << fn->getStakeBalance() <<  fn->alias().data() << " fn " << &fn << fn->ToString().data();
 #endif
     if ( exitonly &&
          (pos.netqty == 0 || (
          (eo.core().buyside() && pos.netqty > 0) ||
          (!eo.core().buyside() && pos.netqty < 0) ))) {
-        qWarning() << "invalid order, exitonly for" << eo.playerid();
+        qWarning() << "invalid order, exitonly for" << eo.playerid().data();
         return;
     }
 
@@ -371,7 +381,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
     }
 
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData OnOrderNew oooooo " << fn->alias() << eo.DebugString();
+    qDebug() << "level2 ExchangeData OnOrderNew oooooo " << fn->alias().data() << eo.DebugString().data();
 #endif
 
     //MatchingEngine &ma;
@@ -381,6 +391,10 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnOrderNew create new book " << eo.playerid();
 #endif
+        if ( !Server::goodPid(eo.playerid())) {
+            qWarning() << "invalid order, bad playerid for" << eo.playerid();
+            return;
+        }
 
         auto it2 = mLimitBooks.insert(make_pair(eo.playerid(),
                unique_ptr<MatchingEngine>(new MatchingEngine(eo.playerid()))));
@@ -406,7 +420,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 
     if ( haveinstapos ) {
 #ifdef TRACE
-        qDebug() << "level2 OnOrderNew haveinstapos" << instapos.ToString();
+        qDebug() << "level2 OnOrderNew haveinstapos" << instapos.ToString().data();
 #endif
 
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
@@ -415,7 +429,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
         mypos.netqty += instapos.netqty;
         OnNewPosition(fn->alias(),mypos, eo.playerid());
 #ifdef TRACE
-        qDebug() << "level2 OnOrderNew haveinstapos" << fn->alias() << mypos.ToString();
+        qDebug() << "level2 OnOrderNew haveinstapos" << fn->alias().data() << mypos.ToString().data();
 #endif
 
     }
@@ -442,7 +456,7 @@ void ExchangeData::OnNewPosition(const string &fname,
     spos.set_price(pos.netprice);
 
 #ifdef TRACE
-        qDebug() << "level2 OnOrderNew OnNewPosition" << fname << pos.ToString() << playerid;
+        qDebug() << "level2 OnOrderNew OnNewPosition" << fname.data() << pos.ToString().data() << playerid.data();
 #endif
 
     string key(fname + ":" + playerid);
@@ -456,14 +470,14 @@ void ExchangeData::OnNewPosition(const string &fname,
     if ( mSubscribed.find(fname) == end(mSubscribed))
 #ifdef TRACE
     {
-        qDebug() << "level2 OnOrderNew !subscribed" << fname << pos.ToString() << playerid;
+        qDebug() << "level2 OnOrderNew !subscribed" << fname.data() << pos.ToString().data() << playerid.data();
 #endif
 
          return;
 
 #ifdef TRACE
     }
-        qDebug() << "level2 OnOrderNew subscribed emit newPos!! " << fname << pos.ToString() << playerid;
+        qDebug() << "level2 OnOrderNew subscribed emit newPos!! " << fname.data() << pos.ToString().data() << playerid.data();
 #endif
 
     emit NewPos(FullPosition{playerid,fname,pos});
@@ -485,14 +499,14 @@ void ExchangeData::OnDeltaPos(const string &pid, int32_t seqnum,
 
     Position &mypos = mPositions[it->second][pid];
 #ifdef TRACE
-        qDebug() << "level2 OnDeltaPos mypos" << pid << mypos.ToString();
+        qDebug() << "level2 OnDeltaPos mypos" << pid.data() << mypos.ToString().data();
 #endif
 
     mypos.netprice += deltapos;
     mypos.netqty += deltaqty;
 
 #ifdef TRACE
-        qDebug() << "level2 OnDeltaPos new mypos" << pid << mypos.ToString();
+        qDebug() << "level2 OnDeltaPos new mypos" << pid.data() << mypos.ToString().data();
 #endif
 
     OnNewPosition(it->second,mypos,pid);
@@ -501,7 +515,7 @@ void ExchangeData::OnDeltaPos(const string &pid, int32_t seqnum,
 
 void ExchangeData::SaveBookDelta() {
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData SaveBookDelta" << mBookDelta->DebugString();
+    qDebug() << "level2 ExchangeData SaveBookDelta" << mBookDelta->DebugString().data();
 #endif
 
     int32_t seqnum = mBookDelta->seqnum();
@@ -552,7 +566,7 @@ void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int
 void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
 
 #ifdef TRACE
-        qDebug() << "level2 ProcessBookDelta add" << bd.seqnum() << bd.fantasy_name();
+        qDebug() << "level2 ProcessBookDelta add" << bd.seqnum() << bd.fantasy_name().data();
 #endif
 
     auto &myset = mNameSeqMap[bd.fantasy_name()];
@@ -561,7 +575,7 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
 
     if ( bd.has_newnew() ) {
         if ( mOpenOrders.find(bd.seqnum()) != end(mOpenOrders) )
-            qCritical() << "level2 ExchangeData already have this NEW order" << bd.newnew().DebugString();
+            qCritical() << "level2 ExchangeData already have this NEW order" << bd.newnew().DebugString().data();
 
         OpenOrder openorder{bd.playerid(), bd.newnew()};
         mOpenOrders.insert(make_pair(static_cast<int32_t>(bd.seqnum()),
@@ -570,7 +584,7 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
         OnDeltaOpenOrder(bd.fantasy_name(),openorder,bd.seqnum());
 
 #ifdef TRACE
-        qDebug() << "level2 ProcessBookDelta add open ord" << bd.seqnum() << bd.playerid();
+        qDebug() << "level2 ProcessBookDelta add open ord" << bd.seqnum() << bd.playerid().data();
 #endif
 
     }
@@ -582,7 +596,7 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
             OrderCore &core = iter->second.livecore;
 
 #ifdef TRACE
-        qDebug() << "level2 ProcessBookDelta remove" << core.DebugString();
+        qDebug() << "level2 ProcessBookDelta remove" << core.DebugString().data();
 #endif
 
             auto sz = core.size();
@@ -868,7 +882,8 @@ void ExchangeData::OnTrade(const string &playerid, fantasybit::TradeTic *tt) {
     myphlc.set_close(tt->price());
     myphlc.set_volume(myphlc.volume()+tt->size());
     auto chg  = myphlc.close() - myphlc.open();
-    if ( !myphlc.has_change() || chg != myphlc.change()) {
+//    if ( !myphlc.has_change() || chg != myphlc.change())
+    {
         myphlc.set_change(chg);
         tt->set_change(chg);
     }
@@ -927,7 +942,7 @@ void LimitBook::NewTop(int price, int32_t qty, bool isbuy) {
 
 #ifdef TRACE
     string s = isbuy ? "Bid" : "Ask";
-    qDebug() << "level2 NewTop " <<  s << price << qty;
+    qDebug() << "level2 NewTop " <<  s.data() << price << qty;
 #endif
 
 }
@@ -946,7 +961,7 @@ void LimitBook::NewDepth(bool isbuy,int price) {
 
 
 #ifdef TRACE
-        qDebug() << "level2 NewDepth " << df->DebugString();
+        qDebug() << "level2 NewDepth " << df->DebugString().data();
 #endif
 
     pExchangeData->get()->OnNewDepth(mPlayerid,df);
@@ -965,7 +980,7 @@ bool LimitBook::NewOrder(Order &o, Position &posdelta) {
             qWarning() << "level2 invalid order";
     }
     else {
-        if ( o.core().price() <= 40 && o.core().size() > 0 && o.core().size() <= 100000 )
+        if ( o.core().price() <= BOOK_SIZE && o.core().size() > 0 && o.core().size() <= 100000 )
             haspos = NewAsk(o,posdelta);
         else
             qWarning() << "level2 invalid order";
@@ -1250,7 +1265,7 @@ qDebug() << order.refnum() << "level2 SweepAsks  fillqty continue " << fillqty;
              iiter != curr.bot() && left > 0;) {
             Order &ord = *iiter;
 #ifdef TRACE
-qDebug() << order.refnum() << "level2 SweepAsks  curr ord iityer" << mBb << ord.DebugString() << " left " << left;
+qDebug() << order.refnum() << "level2 SweepAsks  curr ord iityer" << mBb << ord.DebugString().data() << " left " << left;
 #endif
             fillqty = min(ord.core().size(), left);
             if (fillqty <= 0)
@@ -1336,11 +1351,10 @@ qDebug() << order.refnum() << "level2 sweepbids  curr bottom" << mBb << curr.tot
     return pos;
 }
 
-
 void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
 
 #ifdef TRACE
-        qDebug() << o.refnum() << "level2 SendFill " << q << price << ispassive << o.DebugString();
+        qDebug() << o.refnum() << "level2 SendFill " << q << price << ispassive << o.DebugString().data();
 #endif
 
     price += 1;
@@ -1419,9 +1433,9 @@ for (  auto n : fnames ) {
 
 #endif
 
-    auto st = DataService::instance()->GetGlobalState();
-
+    auto &st = mGlobalState;//DataService::instance()->GetGlobalState();
     mWeek = st.week();
+
     for (auto &it : mLimitBooks) {
 #ifdef TRACE
 qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
@@ -1491,7 +1505,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
             }
             OpenOrder &ord = mOpenOrders.at(oid);
 #ifdef TRACE
-            qDebug() << "level2 GetOrdersPositionsByName" << ord.playerid << ord.livecore.DebugString();
+            qDebug() << "level2 GetOrdersPositionsByName ord.playerid" << ord.playerid << ord.livecore.DebugString();
 #endif
             //continue;
             auto &mypair = ret[ord.playerid];
@@ -1503,7 +1517,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
     }
 
 #ifdef TRACE
-    qDebug() << "level2 GetOrdersPositionsByName" << ret.size();
+    qDebug() << "level2 GetOrdersPositionsByName ret.size() " << ret.size();
 #endif
     //ret.clear();
 

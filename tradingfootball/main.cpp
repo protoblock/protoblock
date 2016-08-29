@@ -27,7 +27,7 @@
 
 #include "playerloader.h"
 
-int domain(int argc, char *argv[]){
+int domain(int argc, char *argv[]){0
 
     RunGuard guard( "tradingfootballprodapp" );
         if ( !guard.tryToRun() )

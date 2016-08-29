@@ -906,7 +906,7 @@ public:
             qDebug() << sd.DebugString().data();
         }
 
-        Dump();
+//        Dump();
         return result;
     }
 
