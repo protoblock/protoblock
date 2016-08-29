@@ -1,7 +1,7 @@
 ##############
 ## Globals
 ##############
-DEFINES += PRODFOOTBALL
+#DEFINES += PRODFOOTBALL
 #DEFINES += USE_LOCALHOST_SERVER
 
 
@@ -10,7 +10,7 @@ contains (QMAKE_HOST.os, Darwin){
     DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
 }else{
     message("Host is Windows")
-    DIRPREFIX = D:\work\prebuiltLibs
+    DIRPREFIX = C:\work\prebuiltLibs
 }
 
 
@@ -31,6 +31,7 @@ win32 {
               -lleveldbd \
               -llibeay32 \
               -lssleay32 \
+              -lsecp256k1
     }
     CONFIG(release, debug|release) {
        LIBS+= -llibprotobuf \
