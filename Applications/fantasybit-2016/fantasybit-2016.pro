@@ -4,13 +4,13 @@ include($$PWD/../../pri/deps.pri)
 QT += core network
 QT -= gui
 
-CONFIG += c++11
+CONFIG += c++11 static
 
-TARGET = fantasybit-2016
-CONFIG += console
+TARGET = fantasybit-2016D
+CONFIG += qt console
 CONFIG -= app_bundle
 
-TEMPLATE = app
+TEMPLATE = lib
 
 
 DEFINES += USE_NUM_NONE
@@ -54,7 +54,13 @@ SOURCES += \
     $$PWD/ExchangeData.cpp \
 #    $$PWD/trading.cpp \
     $$PWD/NameData.cpp \
-    $$PWD/core.cpp
+    $$PWD/core.cpp \
+    $$PWD/LAPIWorker.cpp \
+    $$PWD/NodeWorker.cpp \
+    $$PWD/iresolvable.cpp \
+    $$PWD/dataservice.cpp
+
+
 
 HEADERS += \
     $$PWD/PeerNode.h \
@@ -64,4 +70,10 @@ HEADERS += \
     $$PWD/NameData.h \
     $$PWD/Processor.h \
     $$PWD/ExchangeData.h \
-    $$PWD/RestFullCall.h
+    $$PWD/RestFullCall.h \
+    $$PWD/LAPIWorker.h \
+    $$PWD/NodeWorker.h \
+    $$PWD/threadedqobject.h \
+    $$PWD/iresolvable.h \
+    $$PWD/dataservice.h
+

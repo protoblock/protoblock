@@ -10,8 +10,8 @@
 #include "platform.h"
 #include "appsettings.h"
 #include <QDebug>
-//#include "threadedqobject.h"
-//#include "LAPIWorker.h"
+#include "threadedqobject.h"
+#include "LAPIWorker.h"
 #include "ProtoData.pb.h"
 #include "ApiData.pb.h"
 #include "ExchangeData.h"
@@ -27,8 +27,9 @@ class Core : public GenericSingleton<Core>
 {
     friend class GenericSingleton<Core>;
 
-    Core();    
+    Core();
 
+    bool oldstuff;
 public:
 
     ~Core();   
@@ -78,13 +79,13 @@ private:
     QWaitCondition myWaitForGUI;
     QMutex myMutex;
     QMutex myWaitForGuiMutex;
-//    ThreadedQObject<MainLAPIWorker> myCoreApi;
+    ThreadedQObject<MainLAPIWorker> myCoreApi;
 
 };
 
-void messageHandler(QtMsgType type,
-                    const QMessageLogContext &context,
-                    const QString &message);
+//void messageHandler(QtMsgType type,
+//                    const QMessageLogContext &context,
+//                    const QString &message);
 
 Q_DECLARE_METATYPE(fantasybit::GlobalState)
 Q_DECLARE_METATYPE(fantasybit::MyFantasyName)

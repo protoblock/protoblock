@@ -55,14 +55,14 @@
 
 #include <QDebug>
 inline QDebug operator<<(QDebug  &debug ,const std::string &msg) {
-//#ifndef ALLOW_DEBUG
-//    return debug;
-//#else
+#ifndef ALLOW_DEBUG
+    return debug;
+#else
 //    static QMutex messageHandlerMutex;
 //    QMutexLocker locker(&messageHandlerMutex);
     debug << msg.data();
     return debug;
-//#endif
+#endif
 }
 
 #include <QDateTime>

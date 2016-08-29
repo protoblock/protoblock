@@ -165,6 +165,7 @@ public:
         return iret;
     }
 
+    void OnSeasonStart(int season);
 };
 
 }

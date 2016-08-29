@@ -33,11 +33,11 @@ void Core::bootstrap(){
 
 
     qRegisterMetaType<string>("string");
-    qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
-    qInstallMessageHandler(messageHandler);
-//    registerNamedInstance("coreapi",myCoreApi.object());
-//    QObject::connect(myCoreApi.thread(),SIGNAL(started()),myCoreApi.object(),SLOT(startPoint()));
-//    myCoreApi.thread()->start();
+//    qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
+//    qInstallMessageHandler(messageHandler);
+    registerNamedInstance("coreapi",myCoreApi.object());
+    QObject::connect(myCoreApi.thread(),SIGNAL(started()),myCoreApi.object(),SLOT(startPoint()));
+    myCoreApi.thread()->start();
 }
 
 void Core::waitForGui(){
@@ -51,27 +51,27 @@ void Core::guiIsAwake(){
 
 Core::~Core(){}
 
-void messageHandler(QtMsgType type,
-                    const QMessageLogContext &context,
-                    const QString &message)
-{
+//void messageHandler(QtMsgType type,
+//                    const QMessageLogContext &context,
+//                    const QString &message)
+//{
 
-#ifndef ALLOW_DEBUG
-    return;
-#else
-    static QMutex messageHandlerMutex ;
-    QMutexLocker lock(&messageHandlerMutex);
-    QString logFileName = AppSettings::instance()->getSetting(AppSettings::LogFilePath).toString();
-    static std::ofstream  logFile(logFileName.toStdString(),std::ofstream::app);
-    if (logFile)
-        logFile << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
-#endif
+//#ifndef ALLOW_DEBUG
+//    return;
+//#else
+//    static QMutex messageHandlerMutex ;
+//    QMutexLocker lock(&messageHandlerMutex);
+//    QString logFileName = AppSettings::instance()->getSetting(AppSettings::LogFilePath).toString();
+//    static std::ofstream  logFile(logFileName.toStdString(),std::ofstream::app);
+//    if (logFile)
+//        logFile << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
+//#endif
 
-#ifdef QT_DEBUG    
- //   std::cerr  << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
+//#ifdef QT_DEBUG
+// //   std::cerr  << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
 
-#endif
+//#endif
 
     /**/
-}
+//}
 

@@ -61,14 +61,14 @@ public:
     static void setLastGlobalBlockNum(int32_t num);
     static std::mutex blockchain_mutex;
 
-    static void ClearTx(const Block &);
+//    static void ClearTx(const Block &);
 	static std::shared_ptr<leveldb::DB> blockchain;
-    static std::shared_ptr<leveldb::DB> txpool;
+//    static std::shared_ptr<leveldb::DB> txpool;
     static int32_t GlobalHeight;
-    static bool addTxPool(const std::string &id, std::string &txstr)  {
-        return (txpool->Put(leveldb::WriteOptions(), id, txstr ).ok());
+//    static bool addTxPool(const std::string &id, std::string &txstr)  {
+//        return (txpool->Put(leveldb::WriteOptions(), id, txstr ).ok());
 
-    }
+//    }
 
     static bool forking;
 

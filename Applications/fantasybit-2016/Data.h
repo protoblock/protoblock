@@ -18,6 +18,8 @@
 #include <leveldb/db.h>
 #include <utility>
 #include <memory>
+#include <QDir>
+#include "fbutils.h"
 
 using namespace std;
 
@@ -127,6 +129,21 @@ public:
 
     void TeamNameChange(const std::string &playerid, const PlayerBase &pb, const PlayerStatus &ps);
 
+    void OnSeasonStart(int season) {
+        seasonFreeze(season-1);
+    }
+
+    void seasonFreeze(int season) {
+        closeAll();
+        string moveto = GET_ROOT_DIR() + "freeze-" + std::to_string(season);
+        QDir dir(moveto.data());
+        if ( !dir.exists() )
+            dir.mkdir(moveto.data());
+        dir.rename(filedir("staticstore").data(), (moveto + "/staticstore").data());
+        dir.rename(filedir("statusstore").data(), (moveto + "/statusstore").data());
+        dir.rename(filedir("playerstore").data(), (moveto + "/playerstore").data());
+        init();
+    }
 private:
     void OnNewPlayer(const std::string &pid);
     void OnPlayerTrade(const std::string &pid, const std::string &tid, const std::string &ntid);
@@ -138,6 +155,8 @@ private:
     int week();
 
     static std::string filedir(const std::string &in);
+
+
 };
 
 }

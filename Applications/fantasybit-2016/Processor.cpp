@@ -551,7 +551,9 @@ void BlockProcessor::process(const DataTransition &indt) {
             mGlobalState.set_week(indt.week());
             mGlobalState.set_state(GlobalState_State_INSEASON);
             mData.OnGlobalState(mGlobalState);
-            OnWeekStart(indt.week());
+            OnSeasonStart(indt.season());
+            if ( indt.week() != 0)
+                OnWeekStart(indt.week());
         }
         break;
     case TrType::SEASONEND:
@@ -864,6 +866,13 @@ void BlockProcessor::OnWeekStart(int week) {
     mData.OnWeekStart(week);
     mExchangeData.OnWeekStart(week);
     emit WeekStart(week);
+}
+
+void BlockProcessor::OnSeasonStart(int season) {
+    mNameData.OnSeasonStart(season);
+    mData.OnSeasonStart(season);
+//    mExchangeData.OnSeasonStart(season);
+//    emit WeekStart(week);
 }
 
 bool BlockProcessor::verifySignedBlock(const Block &sblock)

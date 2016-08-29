@@ -18,6 +18,7 @@
 #include <memory>
 #include "ApiData.pb.h"
 #include "FantasyName.h"
+#include <QDir>
 
 using std::string;
 namespace fantasybit
@@ -109,6 +110,19 @@ public:
 
     void dumpProj();
 
+    void OnSeasonStart(int season) {
+        seasonFreeze(season-1);
+    }
+
+    void seasonFreeze(int season) {
+        closeAll();
+        string moveto = GET_ROOT_DIR() + "freeze-" + std::to_string(season);
+        QDir dir(moveto.data());
+        if ( !dir.exists() )
+            dir.mkdir(moveto.data());
+        dir.rename(filedir("namestore").data(), (moveto + "/namestore").data());
+        init();
+    }
 };
 
 }

@@ -9,6 +9,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
+    Core::instance()->bootstrap();
+
+    Core::instance()->guiIsAwake();
+    if ( false ) {
     Node node;
 
     node.init();
@@ -59,6 +63,11 @@ int main(int argc, char *argv[])
             }
         }
     }
+    }
+
+    QThread::currentThread()->msleep(10000);
+    Core::resolveByName<MainLAPIWorker>("coreapi")->NFLState().seasonFreeze(2015);
+    Core::resolveByName<MainLAPIWorker>("coreapi")->NameData().seasonFreeze(2015);
 
     return a.exec();
 }

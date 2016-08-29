@@ -323,6 +323,7 @@ void ExchangeData::clearNewWeek() {
     init();
 }
 
+
 void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
                                  int32_t seqnum,
                                  shared_ptr<FantasyName> fn) {

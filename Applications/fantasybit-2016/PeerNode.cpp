@@ -55,9 +55,9 @@ void Node::init() {
     }
     Node::blockchain.reset(db2);
 
-    leveldb::DB *db4;
-    status = leveldb::DB::Open(options, filedir("tx/txpool"), &db4);
-    Node::txpool.reset(db4);
+//    leveldb::DB *db4;
+//    status = leveldb::DB::Open(options, filedir("tx/txpool"), &db4);
+//    Node::txpool.reset(db4);
 
     current_hight = getLastLocalBlockNum();
     qInfo() <<  "current_hight" << current_hight;
@@ -483,11 +483,11 @@ std::vector<Block> Node::getGlobalBlock(int32_t num, int32_t bend) {
 }
 
 
-void Node::ClearTx(const Block &b) {
-    for (const auto &st : b.signed_transactions()) {
-        Node::txpool->Delete(leveldb::WriteOptions(), st.id());
-    }
-}
+//void Node::ClearTx(const Block &b) {
+//    for (const auto &st : b.signed_transactions()) {
+//        Node::txpool->Delete(leveldb::WriteOptions(), st.id());
+//    }
+//}
 
 void Node::Cleaner() {
     Block b{};
@@ -549,7 +549,7 @@ bool Node::Cleanit(Block *b) {
 }
 
 decltype(Node::blockchain) Node::blockchain;
-decltype(Node::txpool) Node::txpool;
+//decltype(Node::txpool) Node::txpool;
 
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};
