@@ -32,8 +32,8 @@ win32 {
 }
 
 
-INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
-INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock/bitcoin-core-base58
+#INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
+#INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock/bitcoin-core-base58
 
 SOURCES   += \
     $$PWD/main.cpp \

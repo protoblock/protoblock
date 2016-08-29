@@ -70,26 +70,26 @@ int main(int argc, char *argv[])
 
     Server::TheExchange.OnLive(true);
 
-    ExchangeOrder eo;
+//    ExchangeOrder eo;
 
-    eo.set_playerid("1");
-    eo.set_type(ExchangeOrder::NEW);
+//    eo.set_playerid("1");
+//    eo.set_type(ExchangeOrder::NEW);
 
-    OrderCore core;
-    core.set_buyside(true);
-    core.set_size(1);
-    core.set_price(10);
+//    OrderCore core;
+//    core.set_buyside(true);
+//    core.set_size(1);
+//    core.set_price(10);
 
-    eo.mutable_core()->CopyFrom(core);
-    auto fn = Commissioner::getName("JayBNY");
+//    eo.mutable_core()->CopyFrom(core);
+//    auto fn = Commissioner::getName("JayBNY");
 
-//    Server::TheExchange.OnNewOrderMsg(eo,1,fn);
+////    Server::TheExchange.OnNewOrderMsg(eo,1,fn);
 
-    core.set_buyside(false);
-    core.set_size(1);
-    core.set_price(25);
-    eo.mutable_core()->CopyFrom(core);
-    fn = Commissioner::getName("clarity");
+//    core.set_buyside(false);
+//    core.set_size(1);
+//    core.set_price(25);
+//    eo.mutable_core()->CopyFrom(core);
+//    fn = Commissioner::getName("clarity");
 
 //    Server::TheExchange.OnNewOrderMsg(eo,2,fn);
 
