@@ -568,10 +568,12 @@ pb::public_key_data Commissioner::MASTER_PUB_KEY {
 
 pb::public_key_data Commissioner::GENESIS_PUB_KEY
 {
+    Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"))
+
 #ifndef PRODFOOTBALL
-      Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"))
+//      Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"))
 #else
-      Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
+//      Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
 #endif
 };
 

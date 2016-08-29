@@ -76,5 +76,6 @@ std::string sha256::str() const {
     return to_hex( (char*)begin(), 32 );
 }
 
+sha256::operator std::string()const { return  str(); }
 
 }

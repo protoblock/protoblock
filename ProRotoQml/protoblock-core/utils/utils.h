@@ -31,6 +31,8 @@ namespace pb {
           from_hex( hex_str, (char*)begin(), 32 );
         }
 
+        operator std::string()const;
+
         std::string str()const;
 //        sha256::operator string()const { return  str(); }
         sha256(const sha256 &other) {

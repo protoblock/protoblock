@@ -368,8 +368,8 @@ public:
             //ToDo: test
             //in case using 2015 bad sigs
             unsigned char data[72];
-            pb::from_base58(str, (char *)data, 72);
-            sig = pb::parse_der(data,72);
+            auto sz = pb::from_base58(str, (char *)data, 72);
+            sig = pb::parse_der(data,sz < 72 ? sz : 72);
             sig = pb::signature_normalize(sig);
         }
         return sig;
