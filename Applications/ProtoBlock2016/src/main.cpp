@@ -11,6 +11,8 @@
 #include <QDebug>
 #include <QtGlobal>
 
+#include "RunGuard.h"
+
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
 #endif // QT_WEBVIEW_WEBENGINE_BACKEND
@@ -20,9 +22,13 @@
 // add help page
 int main(int argc, char *argv[])
 {
+    RunGuard guard( "protoblockprodapp" );
+        if ( !guard.tryToRun() )
+            return 0;
+
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-//    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 //    QSysInfo sysInfo;
 //    QString sInfo = sysInfo.productType ();
 //#ifdef QT_WEBVIEW_WEBENGINE_BACKEND

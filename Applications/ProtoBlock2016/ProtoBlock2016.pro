@@ -51,7 +51,8 @@ macx {
 }
 
 SOURCES += \
-    $$PWD/src/main.cpp
+    $$PWD/src/main.cpp \
+    $$PWD/src/runguard.cpp
 
 RC_FILE = myap.rc
 

@@ -6,6 +6,8 @@ import Material 1.0
 import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
+
+//import "../qml-components"
 /*
 Item {
     id: win
@@ -76,6 +78,7 @@ Item {
 */
 
 SplitView {
+    property alias scheduleView1: scheduleView1
       anchors.fill: parent
       orientation: Qt.Horizontal
 //      width: parent.width
@@ -83,8 +86,9 @@ SplitView {
           Layout.minimumWidth: parent.width * .10
           Layout.maximumWidth: parent.width * .50
 //          Layout.fillWidth: true
-//          color: "lightblue"
+          //          color: "lightblue"
           ScheduleView {
+              id: scheduleView1
               anchors.fill: parent
           }
       }

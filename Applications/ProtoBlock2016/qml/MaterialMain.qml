@@ -10,9 +10,20 @@ import Material 1.0 as Material
 import Material.ListItems 1.0 as ListItem
 import Material.Extras 1.0
 
+import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.0
+
 import Communi 3.0
 
 Material.ApplicationWindow{
+
+    statusBar: StatusBar {
+        RowLayout {
+            anchors.fill: parent
+            Material.Label { text: "Read Only" }
+        }
+    }
+
     id: themeroot
     visible: true
     width: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableWidth * .95)
