@@ -100,6 +100,7 @@ void Node::init() {
 
         qInfo() <<  "done";
 
+        qDebug() << sb.DebugString().data();
         if (!BlockProcessor::verifySignedBlock(sb)) {
             qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
             //return;
@@ -256,7 +257,7 @@ bool Node::SyncTo(int32_t gh) {
             qInfo() << "yoyo getLastLocalBlockNum()" << getLastLocalBlockNum() << "current_hight" << current_hight;
 
             count = 0;
-            Node::ClearTx(*sb);
+            //Node::ClearTx(*sb);
 
             previd = FantasyAgent::BlockHash(*sb);
 

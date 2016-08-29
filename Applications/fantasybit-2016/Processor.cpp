@@ -220,16 +220,16 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     qCritical() << "no playerid" + QTD(tpd.DebugString());
                     break;
                 }
-                int pid = std::stoi(tpd.playerid());
-                if (pid > 0 & pid <= 32 ) { //Team DEF
-                    if ( transtype !=  SEASONSTART) {
-                        qCritical() << "Teams cant change names" << d.DebugString().data();
-                        break;
-                    }
+//                int pid = std::stoi(tpd.playerid());
+//                if (pid > 0 && pid <= 32 ) { //Team DEF
+//                    if ( transtype !=  SEASONSTART) {
+//                        qCritical() << "Teams cant change names" << d.DebugString().data();
+//                        break;
+//                    }
 
-                    mData.TeamNameChange(tpd.playerid(),tpd.player_base(),tpd.player_status());
-                    break;
-                }
+//                    mData.TeamNameChange(tpd.playerid(),tpd.player_base(),tpd.player_status());
+//                    break;
+//                }
                 if ( tpd.has_player_base() )
                     mData.AddNewPlayer(tpd.playerid(),tpd.player_base());
                 if ( tpd.has_player_status() )
@@ -270,7 +270,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( !mExchangeData.GetGameSettlePos(rd.game_result().gameid(),gsp) )
                    nopnl = true;
 
-                qDebug() << gsp.DebugString();
+                qDebug() << gsp.DebugString().data();
 
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
                 unordered_map<string,BookPos *> posmap;
@@ -876,7 +876,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
     //    return false;
     }
     pb::sha256 digest = pb::hashit(sblock.signedhead().head().SerializeAsString());
-    qDebug() << "qqqqqq" << sblock.signedhead().head().num() << digest.str() << sblock.signedhead().head().prev_id();
+    qDebug() << "qqqqqq" << sblock.signedhead().head().num() << digest.str().data() << sblock.signedhead().head().prev_id();
     //if (digest.str() != sblock.signedhead().id())
     //	return
     //fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));

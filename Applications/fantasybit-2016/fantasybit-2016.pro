@@ -20,6 +20,8 @@ DEFINES += USE_SCALAR_8X32
 DEFINES += USE_SCALAR_INV_BUILTIN
 DEFINES += TRACE
 
+DEFINES += TRADE_FEATURE
+
 
 win32 {
     include($$PWD/../../pri/core.pri)

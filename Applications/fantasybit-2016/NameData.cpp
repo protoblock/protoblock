@@ -113,7 +113,7 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
     leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
     namestore->Put(write_sync, hkey, fn.SerializeAsString());
 
-    qDebug() << fn.DebugString();
+    qDebug() << fn.DebugString().data();
 
     auto fnp = Commissioner::AddName(name,pubkey);
     if ( fnp  != nullptr)
@@ -173,6 +173,7 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
 
     leveldb::Slice bval((char*)&proj, sizeof(uint32_t));
     string key(name + ":" + player);
+
     if (!projstore->Put(write_sync, key, bval).ok())
         qWarning() << " error writing proj" << player << name << proj;
     else

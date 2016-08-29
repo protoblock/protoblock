@@ -27,7 +27,7 @@ void BlockRecorder::init() {
     leveldb::Status status;
 
     status = leveldb::DB::Open(options, filedir("blockstatus"), &db1);
-    qDebug() << filedir("blockstatus");
+    qDebug() << filedir("blockstatus").data();
     if (!status.ok()) {
         std::string err = status.ToString();
         qWarning() << err;
