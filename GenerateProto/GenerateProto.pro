@@ -16,11 +16,14 @@ PROTOS += \
     $$PWD/ProtoData.proto \
     $$PWD/StateData.proto
 
+
+DEFINES += BUILD_PROTO
+
 protobuf_decl.name = protobuf headers
 protobuf_decl.input = PROTOS
 protobuf_decl.output = $$GENERATEDDIR/${QMAKE_FILE_BASE}.pb.h
 
-
+contains(DEFINES, BUILD_PROTO) {
 osx{
 protobuf_decl.commands = /Users/$$(USER)/Desktop/fc/prebuilt/osx/bin/protoc --cpp_out=$$GENERATEDDIR/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
 }
@@ -55,4 +58,4 @@ protobuf_impl.depends = $$GENERATEDDIR/${QMAKE_FILE_BASE}.pb.h
 protobuf_impl.commands = $$escape_expand(\n)
 protobuf_impl.variable_out = SOURCES
 QMAKE_EXTRA_COMPILERS += protobuf_impl
-
+}

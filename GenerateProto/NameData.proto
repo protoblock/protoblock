@@ -6,8 +6,8 @@ message FantasyNameBal {
     optional string name = 10;
     optional string public_key = 20;
     optional uint64 bits = 30;
-        optional int64 stake = 40;
-        optional uint64 chash = 50;
+    optional int64 stake = 40;
+    optional uint64 chash = 50;
 
 }
 
@@ -18,6 +18,7 @@ message FantasyBitAward {
 }
 
 message FantasyBitPnl {
+        optional string name = 10;
         optional SettlePos spos = 20;
         optional int64 pnl = 30;
 }
