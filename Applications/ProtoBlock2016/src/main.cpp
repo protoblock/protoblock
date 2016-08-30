@@ -31,9 +31,9 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 //    QSysInfo sysInfo;
 //    QString sInfo = sysInfo.productType ();
-//#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
-//    QtWebEngine::initialize();
-//#endif // QT_WEBVIEW_WEBENGINE_BACKEND
+#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
+    QtWebEngine::initialize();
+#endif // QT_WEBVIEW_WEBENGINE_BACKEND
 
 //    if (sInfo == "windows"){
 //        engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 //    }
 
 
-    qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
+//    qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
 
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

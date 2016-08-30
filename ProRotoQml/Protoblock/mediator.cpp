@@ -120,13 +120,14 @@ Mediator::Mediator(QObject *parent) :
     depthInterval = 1000;
 
 
+    m_pWeeklyScheduleModel = new WeeklyScheduleModel;
+
     WeeklySchedule ws;
     fantasybit::Reader<ScheduleData> reader5{ GET_ROOT_DIR() + "WeeklySchedule.txt" };
     ScheduleData sd;
     while ( reader5.ReadNext(sd) ) {
         qDebug() << sd.DebugString().data();
 
-        m_pWeeklyScheduleModel = new WeeklyScheduleModel();
         m_pWeeklyScheduleModel->updateWeeklySchedule(sd.week(),sd.weekly());
         ws = sd.weekly();
 
@@ -137,6 +138,8 @@ Mediator::Mediator(QObject *parent) :
     std::map<std::string, PlayerStatus> MyPlayerStatus;
     std::map<std::string, PlayerData> MyPlayerData;
 
+//file:///C:/work/build-ProRoto2016-Release-57/Applications/ProtoBlock2016/release/storage/WeeklySchedule.txt
+//file:///C:/work/build-ProRoto2016-Release-57/Applications/ProtoBlock2016/release/storage/PlayerData.txt
     Reader<PlayerData> reader3{ GET_ROOT_DIR() + "PlayerData.txt"};
     PlayerData pd;
     while ( reader3.ReadNext(pd) ) {
@@ -244,7 +247,7 @@ Mediator::Mediator(QObject *parent) :
     QStringList list;
     list << "All" << "QB" << "RB" << "WR" << "TE" << "K" << "DEF";
     m_pPosFilter->setStringList(list);
-    m_pProjectionsViewFilterProxyModel->sort(0);
+//    m_pProjectionsViewFilterProxyModel->sort(0);
 }
 
 

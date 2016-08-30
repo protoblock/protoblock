@@ -46,8 +46,9 @@ Material.ApplicationWindow{
         }
         else {
             rootLoader.source = "qrc:/Projections.qml";
-            themeroot.showMaximized()
         }
+
+        themeroot.showMaximized()
     }
 
     property string defaultname

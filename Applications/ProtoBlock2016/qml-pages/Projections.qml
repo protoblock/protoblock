@@ -82,6 +82,14 @@ SplitView {
       anchors.fill: parent
       orientation: Qt.Horizontal
 //      width: parent.width
+
+      Component.onCompleted: {
+          lpv.releasedit.connect(releaseditMethod)
+      }
+      function releaseditMethod(fname) {
+          ppt.addcolumn(fname)
+          console.log(" releaseditMethod " )
+      }
       Card {
           Layout.minimumWidth: parent.width * .10
           Layout.maximumWidth: parent.width * .50
@@ -95,52 +103,48 @@ SplitView {
       Card {
           Layout.minimumWidth: parent.width * .30
           Layout.maximumWidth: parent.width * .80
-//          color: "lightblue"
-//          Layout.fillWidth: true
+    //          color: "lightblue"
+    //          Layout.fillWidth: true
           PlayerProjTable {
               id: ppt
               anchors.fill: parent
           }
 
-            Rectangle {
-                id: myrec
-                anchors {
-                    top: parent.top
-                    right:  parent.right
-                    bottom:  parent.bottom
+          Rectangle {
+            id: myrec
+            anchors {
+                top: parent.top
+                right:  parent.right
+                bottom:  parent.bottom
+            }
+            width: parent.width
+            color: "transparent"
+            DropArea {
+                anchors.fill: parent
+                onEntered: {
+                    console.log(" entered ")
+                    drag.source.caught = true;
+                    myrec.color = Qt.binding( function() {
+                       return "green"})
+
+                    myrec.opacity = Qt.binding(function() {
+                        return .20})
+
+                    ppt.indrop()
                 }
-                width: parent.width
-                color: "transparent"
-                DropArea {
-                    anchors.fill: parent
-                    onEntered: {
-                        console.log(" entered ")
-                        drag.source.caught = true;
-                        myrec.color = Qt.binding( function() {
-                           return "green"
-                        })
+                onExited: {
+                    console.log(" exit ")
+                    drag.source.caught = false;
+                    myrec.color = Qt.binding( function() {
+                       return "transparent"})
 
-                        myrec.opacity = Qt.binding(function() {
-                            return .20
-                         })
+                    myrec.opacity = Qt.binding(function() {
+                        return 0})
 
-                        ppt.indrop()
-                    }
-                    onExited: {
-                        console.log(" exit ")
-                        drag.source.caught = false;
-                        myrec.color = Qt.binding( function() {
-                           return "transparent"
-                        })
-
-                        myrec.opacity = Qt.binding(function() {
-                            return 0
-                         })
-
-                         ppt.donedrop()
-                    }
+                     ppt.donedrop()
                 }
             }
+        }
 
       }
 //      Rectangle {
@@ -163,6 +167,7 @@ SplitView {
 //              dragtarget: "dropProxy"
               anchors.fill: parent
           }
+
       }
   }
 

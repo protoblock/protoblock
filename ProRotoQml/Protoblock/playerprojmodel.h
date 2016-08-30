@@ -213,6 +213,27 @@ protected:
         return true;
     }
 
+    bool setData (const QModelIndex & index, const QVariant & value, int role) {
+        if ( index.row() < 0 )
+            return true;
+
+        qDebug() << "setDatasetDatasetDatasetData setting data" << index.row() << index.column();
+
+        auto myindex = mapToSource(index);
+
+        qDebug() << "setDatasetDatasetDatasetData after map" << myindex.row() << myindex.column();
+
+        PlayerProjModel * model = dynamic_cast<PlayerProjModel *>(sourceModel());
+        if (model==NULL) return true;
+
+        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
+
+        model->at(myindex.row())->set_projection(value.toInt());
+//        if ( model->at(index.row())->get_firstname() )
+//            return false;
+
+        return true;
+    }
 
 //        if (myPositionCombobox!=NULL){
 //            //get current postion from position combo box

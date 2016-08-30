@@ -11,24 +11,15 @@ import ProRotoQml.Protoblock 1.0
 Item {
     id: topi
 
+    signal releasedit(string fname)
     property string dragtarget: "dropProxy"
 
     anchors.fill: parent
 
-    ComboBox {
-        model: 16
-        enabled: true
-        currentIndex: 0
-        onCurrentTextChanged: {
-//           MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
-        }
-        id: cb
-    }
-
     Item {
-        anchors.top: cb.bottom
+//        anchors.top: cb.bottom
         width: parent.width
-        height: parent.height - cb.height
+        height: parent.height //- cb.height
 
         TableView {
             id: tv
@@ -61,8 +52,8 @@ Item {
 
             headerDelegate:  Item {
 //                implicitWidth: textItem2.implicitWidth / 2.0
-            width: parent.width
-//            height: ProtoScreen.guToPx(3)
+                width: parent.width
+                height: ProtoScreen.guToPx(6)
 
 //            Rectangle {
 //                id: rec
@@ -172,8 +163,11 @@ Item {
                             }
 
                             onReleased: {
+//                                 MiddleMan.newProjColumn(tx.text)
+
                                  console.log(" mouse released   " + rect.caught)
                                  if(rect.caught) {
+                                    lpv.releasedit(styleData.value)
                                     backAnimX.duration = 4000;
                                     backAnimY.duration = 4000;
                                      backAnimX.spring = .1;

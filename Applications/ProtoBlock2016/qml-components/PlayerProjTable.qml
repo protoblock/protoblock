@@ -1,7 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 
-import Material 1.0
+import Material 1.0 as Material
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
@@ -40,18 +40,19 @@ Item {
 
     signal indrop
     signal donedrop
+    signal addcolumn(string fname)
 
 
-    ComboBox {
-        model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
-//            height: tv.height
-        enabled: true
-        currentIndex: 0
-        onCurrentTextChanged: {
-           MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
-        }
-        id: cb
-    }
+//    ComboBox {
+//        model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
+////            height: tv.height
+//        enabled: true
+//        currentIndex: 0
+//        onCurrentTextChanged: {
+//           MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
+//        }
+//        id: cb
+//    }
 
 
 //    property var widths: [0,0,0,0,0,0,0]
@@ -171,10 +172,16 @@ Item {
 //        }
 //    }
 
+    Component
+    {
+        id: columnComponent
+        TableViewColumn{width: 100 }
+    }
+
     Item {
-        anchors.top: cb.bottom
+//        anchors.top: cb.bottom
         width: parent.width
-        height: parent.height - cb.height
+        height: parent.height //- cb.height
 
         TableView {
             id: tv
@@ -183,7 +190,13 @@ Item {
 //                width = Qt.binding(function(){
 //                   return ProtoScreen.guToPx(6) * columnCount
 //                })
+                ppt.addcolumn.connect(addcolumnMethod)
+            }
 
+            function addcolumnMethod(fname) {
+                console.log(" addColumn " )
+                tv.addColumn(columnComponent.createObject(tv, { "role": fname, "title": fname}))
+                tv.resizeColumnsToContents()
             }
 
 //            width: parent.width
@@ -219,9 +232,9 @@ Item {
     //            }
             Item {
                 id: idd
-            implicitWidth: textItem2.implicitWidth
-            width: parent.width
-            height: ProtoScreen.guToPx(6)
+                implicitWidth: textItem2.implicitWidth
+                width: parent.width
+                height: ProtoScreen.guToPx(6)
 
             Rectangle {
                 id: rec
@@ -251,11 +264,9 @@ Item {
                         console.log(" YES FUCKER ")
                     }
                 }
-
-
             }
 
-            Card {
+            Material.Card {
                 width: parent.width
                 height: parent.height * .40
                 backgroundColor: themeroot.theme.primaryColor
@@ -334,7 +345,7 @@ Item {
             }
             TableViewColumn{
                 role: "pos"
-                title: "Pos"
+                title: "Position"
                 horizontalAlignment : Text.AlignHCenter
 
             }
@@ -350,10 +361,18 @@ Item {
 
                 horizontalAlignment : Text.AlignHCenter
                 delegate:
-                    ComboBox {
-                        model: 40
-                        anchors.fill: parent
-                        editable: true
+                    SpinBox {
+                        decimals: 0
+                        stepSize: 1.0
+                        maximumValue: 40
+                        minimumValue: 0
+                        value: styleData.value
+                        onEditingFinished: {
+//                           styleData.value = value
+                            console.log(" editing done " + styleData.row + " " + styleData.column + " s " + styleData.selected + "v  " + styleData.value);
+                           tv.model.setData(tv.model.index(styleData.row,0),
+                                            value, 0)
+                        }
                     }
             }
         }
