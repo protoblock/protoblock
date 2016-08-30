@@ -60,9 +60,9 @@ Item {
 //            }
 
             headerDelegate:  Item {
-                implicitWidth: textItem2.implicitWidth / 2.0
+//                implicitWidth: textItem2.implicitWidth / 2.0
             width: parent.width
-            height: ProtoScreen.guToPx(6)
+//            height: ProtoScreen.guToPx(3)
 
 //            Rectangle {
 //                id: rec
@@ -74,7 +74,7 @@ Item {
 
             Card {
                 width: parent.width
-                height: parent.height //* .40
+                height: parent.height * .40
                 backgroundColor: themeroot.theme.primaryColor
                 anchors.bottom: parent.bottom
                 radius: 0
@@ -104,49 +104,54 @@ Item {
                 role: "name"
                 title: "xFantasy Name"
                 horizontalAlignment : Text.AlignHCenter
-                width: tv.width / 4.0
+
+
+
+                //                width: tv.width / 4.0
+                //                    width: tv.width / 4.0
+                //                    height: ProtoScreen.guToPx(6)
+                //                        height: ProtoScreen.guToPx(3)
+                //                        width: win.width * .75
+                //Qt.rgba(Math.random(), Math.random(), Math.random(), 1)
+//                    x: Math.random() * (win.width / 2 - 100)
+//                    y: Math.random() * (win.height - 100)
+                //                        radius: 1
+                //                        anchors.fill: parent
+
 
                 delegate: Item {
                     id: win
-                    width: tv.width / 4.0
-                    height: ProtoScreen.guToPx(6)
-
+                    anchors.fill: parent
+                    height: tx.height
                     Rectangle {
                         id: rect
-                        height: ProtoScreen.guToPx(3)
-                        width: win.width * .75
+                        height: parent.height
+                        width: parent.width
 //                        anchors.fill: parent
-
+//                        anchors.centerIn: parent;
                         z: mouseArea.drag.active ||  mouseArea.pressed ? -20 : -10
-
-                        color: "Grey" //Qt.rgba(Math.random(), Math.random(), Math.random(), 1)
-//                    x: Math.random() * (win.width / 2 - 100)
-//                    y: Math.random() * (win.height - 100)
+                        color: "Grey"
                         property point beginDrag
                         property bool caught: false
                         border { width:1; color: "white" }
-                        radius: 1
-//                        anchors.fill: parent
                         Drag.active: mouseArea.drag.active
 
-                        Text {
+                        Label {
                             id: tx
+//                            anchors.fill: parent
                             anchors.centerIn: parent
                             text: styleData.value
+//                            style: Text.Raised
                             color: "white"
+                            font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
                         }
                         MouseArea {
                             id: mouseArea
                             anchors.fill: parent
                             drag.target: rect
-                            onClicked: {
-                                console.log(" mouse click")
-                            }
+                            onClicked: { console.log(" mouse click")}
 
-                            onHoveredChanged: {
-                                console.log(" mouse hover")
-
-                            }
+                            onHoveredChanged: {console.log(" mouse hover")}
 
                             property int startX
                             property int startY
@@ -165,6 +170,7 @@ Item {
                                 console.log(" mouse pressed")
                                 rect.beginDrag = Qt.point(rect.x, rect.y);
                             }
+
                             onReleased: {
                                  console.log(" mouse released   " + rect.caught)
                                  if(rect.caught) {
@@ -188,6 +194,7 @@ Item {
                             }
 
                         }
+
                         ParallelAnimation {
                             id: backAnim
                             SpringAnimation { id: backAnimX; target: rect; property: "x"; duration: 500; spring: 2; damping: 0.2 }
