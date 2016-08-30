@@ -223,6 +223,7 @@ public:
     }
 
     void seasonFreeze(int season) {
+        return;
         closeAll();
         string moveto = GET_ROOT_DIR() + "freeze-" + std::to_string(season);
         QDir dir(moveto.data());
@@ -230,7 +231,7 @@ public:
             dir.mkdir(moveto.data());
         dir.rename(filedir("staticstore").data(), (moveto + "/staticstore").data());
         dir.rename(filedir("statusstore").data(), (moveto + "/statusstore").data());
-        dir.rename(filedir("playerstore").data(), (moveto + "/playerstore").data());
+//        dir.rename(filedir("playerstore").data(), (moveto + "/playerstore").data());
         init();
     }
 private:

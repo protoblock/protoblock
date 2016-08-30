@@ -154,6 +154,7 @@ public:
     }
 
     void seasonFreeze(int season) {
+        return;
         closeAll();
         string moveto = GET_ROOT_DIR() + "freeze-" + std::to_string(season);
         QDir dir(moveto.data());

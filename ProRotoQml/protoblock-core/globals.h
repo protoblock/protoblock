@@ -88,4 +88,15 @@ static QDateTime currentNewYorkTime() {
     return QDateTime::currentDateTime().toTimeZone(tz);
 }
 
+static uint fromISO_toTime_t(const QString &iso) {
+    QByteArray zone = "America/New_York";
+    QTimeZone tz(zone);//str.c_str();
+
+    auto dt = QDateTime::fromString(iso,Qt::ISODate);
+
+    dt.setTimeZone(tz);
+    return dt.toTime_t();
+}
+
+
 #endif

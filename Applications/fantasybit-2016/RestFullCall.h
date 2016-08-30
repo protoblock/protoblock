@@ -331,6 +331,7 @@ private slots:
             }
         }
         myCurrentNetworkError = error;
+        myCurrentNetworkReply->ignoreSslErrors();
     }
 
     void networkAccessibleChangedSlot(QNetworkAccessManager::NetworkAccessibility accessible){
