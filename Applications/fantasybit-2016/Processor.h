@@ -166,6 +166,8 @@ public:
     }
 
     void OnSeasonStart(int season);
+    void OnSeasonEnd(int season);
+
 };
 
 }

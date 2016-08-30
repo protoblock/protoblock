@@ -47,6 +47,7 @@ void Node::init() {
     options.create_if_missing = true;
     leveldb::Status status;
 
+
     leveldb::DB *db2;
     status = leveldb::DB::Open(optionsInt, filedir("block/blockchain"), &db2);
     if ( !status.ok()) {
@@ -54,6 +55,17 @@ void Node::init() {
         return;
     }
     Node::blockchain.reset(db2);
+
+    leveldb::Options options2;
+    options2.create_if_missing = true;
+    leveldb::DB *db3;
+    status = leveldb::DB::Open(options2, filedir("block/bootstrap"), &db3);
+    if ( !status.ok()) {
+        qCritical() << " error opening block/bootstrap";
+        return;
+    }
+    Node::bootstrap.reset(db3);
+
 
 //    leveldb::DB *db4;
 //    status = leveldb::DB::Open(options, filedir("tx/txpool"), &db4);
@@ -549,7 +561,7 @@ bool Node::Cleanit(Block *b) {
 }
 
 decltype(Node::blockchain) Node::blockchain;
-//decltype(Node::txpool) Node::txpool;
+decltype(Node::bootstrap) Node::bootstrap;
 
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};

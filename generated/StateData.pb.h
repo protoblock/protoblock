@@ -89,6 +89,8 @@ class AllOdersSymbol;
 class AllOdersFname;
 class GetOrdersRep;
 class GetOrdersReq;
+class KeyValue;
+class Bootstrap;
 
 enum CType {
   CHECKNAME = 1,
@@ -6706,6 +6708,270 @@ class GetOrdersReq : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static GetOrdersReq* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class KeyValue : public ::google::protobuf::Message {
+ public:
+  KeyValue();
+  virtual ~KeyValue();
+
+  KeyValue(const KeyValue& from);
+
+  inline KeyValue& operator=(const KeyValue& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const KeyValue& default_instance();
+
+  void Swap(KeyValue* other);
+
+  // implements Message ----------------------------------------------
+
+  KeyValue* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const KeyValue& from);
+  void MergeFrom(const KeyValue& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string key = 10;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 10;
+  inline const ::std::string& key() const;
+  inline void set_key(const ::std::string& value);
+  inline void set_key(const char* value);
+  inline void set_key(const char* value, size_t size);
+  inline ::std::string* mutable_key();
+  inline ::std::string* release_key();
+  inline void set_allocated_key(::std::string* key);
+
+  // optional string value = 20;
+  inline bool has_value() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 20;
+  inline const ::std::string& value() const;
+  inline void set_value(const ::std::string& value);
+  inline void set_value(const char* value);
+  inline void set_value(const char* value, size_t size);
+  inline ::std::string* mutable_value();
+  inline ::std::string* release_value();
+  inline void set_allocated_value(::std::string* value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.KeyValue)
+ private:
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_value();
+  inline void clear_has_value();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* key_;
+  ::std::string* value_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static KeyValue* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Bootstrap : public ::google::protobuf::Message {
+ public:
+  Bootstrap();
+  virtual ~Bootstrap();
+
+  Bootstrap(const Bootstrap& from);
+
+  inline Bootstrap& operator=(const Bootstrap& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Bootstrap& default_instance();
+
+  void Swap(Bootstrap* other);
+
+  // implements Message ----------------------------------------------
+
+  Bootstrap* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Bootstrap& from);
+  void MergeFrom(const Bootstrap& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string key = 1;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 1;
+  inline const ::std::string& key() const;
+  inline void set_key(const ::std::string& value);
+  inline void set_key(const char* value);
+  inline void set_key(const char* value, size_t size);
+  inline ::std::string* mutable_key();
+  inline ::std::string* release_key();
+  inline void set_allocated_key(::std::string* key);
+
+  // optional int32 blocknum = 2;
+  inline bool has_blocknum() const;
+  inline void clear_blocknum();
+  static const int kBlocknumFieldNumber = 2;
+  inline ::google::protobuf::int32 blocknum() const;
+  inline void set_blocknum(::google::protobuf::int32 value);
+
+  // optional int32 week = 3;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 3;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
+  // optional int32 season = 4;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 4;
+  inline ::google::protobuf::int32 season() const;
+  inline void set_season(::google::protobuf::int32 value);
+
+  // optional bytes gamemetaroot = 10;
+  inline bool has_gamemetaroot() const;
+  inline void clear_gamemetaroot();
+  static const int kGamemetarootFieldNumber = 10;
+  inline const ::std::string& gamemetaroot() const;
+  inline void set_gamemetaroot(const ::std::string& value);
+  inline void set_gamemetaroot(const char* value);
+  inline void set_gamemetaroot(const void* value, size_t size);
+  inline ::std::string* mutable_gamemetaroot();
+  inline ::std::string* release_gamemetaroot();
+  inline void set_allocated_gamemetaroot(::std::string* gamemetaroot);
+
+  // optional bytes playermetaroot = 20;
+  inline bool has_playermetaroot() const;
+  inline void clear_playermetaroot();
+  static const int kPlayermetarootFieldNumber = 20;
+  inline const ::std::string& playermetaroot() const;
+  inline void set_playermetaroot(const ::std::string& value);
+  inline void set_playermetaroot(const char* value);
+  inline void set_playermetaroot(const void* value, size_t size);
+  inline ::std::string* mutable_playermetaroot();
+  inline ::std::string* release_playermetaroot();
+  inline void set_allocated_playermetaroot(::std::string* playermetaroot);
+
+  // optional bytes fnamemetaroot = 30;
+  inline bool has_fnamemetaroot() const;
+  inline void clear_fnamemetaroot();
+  static const int kFnamemetarootFieldNumber = 30;
+  inline const ::std::string& fnamemetaroot() const;
+  inline void set_fnamemetaroot(const ::std::string& value);
+  inline void set_fnamemetaroot(const char* value);
+  inline void set_fnamemetaroot(const void* value, size_t size);
+  inline ::std::string* mutable_fnamemetaroot();
+  inline ::std::string* release_fnamemetaroot();
+  inline void set_allocated_fnamemetaroot(::std::string* fnamemetaroot);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Bootstrap)
+ private:
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_blocknum();
+  inline void clear_has_blocknum();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_gamemetaroot();
+  inline void clear_has_gamemetaroot();
+  inline void set_has_playermetaroot();
+  inline void clear_has_playermetaroot();
+  inline void set_has_fnamemetaroot();
+  inline void clear_has_fnamemetaroot();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* key_;
+  ::google::protobuf::int32 blocknum_;
+  ::google::protobuf::int32 week_;
+  ::std::string* gamemetaroot_;
+  ::std::string* playermetaroot_;
+  ::std::string* fnamemetaroot_;
+  ::google::protobuf::int32 season_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Bootstrap* default_instance_;
 };
 // ===================================================================
 
@@ -18619,6 +18885,500 @@ inline ::google::protobuf::uint64 GetOrdersReq::fchash() const {
 inline void GetOrdersReq::set_fchash(::google::protobuf::uint64 value) {
   set_has_fchash();
   fchash_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// KeyValue
+
+// optional string key = 10;
+inline bool KeyValue::has_key() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void KeyValue::set_has_key() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void KeyValue::clear_has_key() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void KeyValue::clear_key() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    key_->clear();
+  }
+  clear_has_key();
+}
+inline const ::std::string& KeyValue::key() const {
+  return *key_;
+}
+inline void KeyValue::set_key(const ::std::string& value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void KeyValue::set_key(const char* value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void KeyValue::set_key(const char* value, size_t size) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* KeyValue::mutable_key() {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  return key_;
+}
+inline ::std::string* KeyValue::release_key() {
+  clear_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = key_;
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void KeyValue::set_allocated_key(::std::string* key) {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (key) {
+    set_has_key();
+    key_ = key;
+  } else {
+    clear_has_key();
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string value = 20;
+inline bool KeyValue::has_value() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void KeyValue::set_has_value() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void KeyValue::clear_has_value() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void KeyValue::clear_value() {
+  if (value_ != &::google::protobuf::internal::kEmptyString) {
+    value_->clear();
+  }
+  clear_has_value();
+}
+inline const ::std::string& KeyValue::value() const {
+  return *value_;
+}
+inline void KeyValue::set_value(const ::std::string& value) {
+  set_has_value();
+  if (value_ == &::google::protobuf::internal::kEmptyString) {
+    value_ = new ::std::string;
+  }
+  value_->assign(value);
+}
+inline void KeyValue::set_value(const char* value) {
+  set_has_value();
+  if (value_ == &::google::protobuf::internal::kEmptyString) {
+    value_ = new ::std::string;
+  }
+  value_->assign(value);
+}
+inline void KeyValue::set_value(const char* value, size_t size) {
+  set_has_value();
+  if (value_ == &::google::protobuf::internal::kEmptyString) {
+    value_ = new ::std::string;
+  }
+  value_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* KeyValue::mutable_value() {
+  set_has_value();
+  if (value_ == &::google::protobuf::internal::kEmptyString) {
+    value_ = new ::std::string;
+  }
+  return value_;
+}
+inline ::std::string* KeyValue::release_value() {
+  clear_has_value();
+  if (value_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = value_;
+    value_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void KeyValue::set_allocated_value(::std::string* value) {
+  if (value_ != &::google::protobuf::internal::kEmptyString) {
+    delete value_;
+  }
+  if (value) {
+    set_has_value();
+    value_ = value;
+  } else {
+    clear_has_value();
+    value_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// Bootstrap
+
+// optional string key = 1;
+inline bool Bootstrap::has_key() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Bootstrap::set_has_key() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Bootstrap::clear_has_key() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Bootstrap::clear_key() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    key_->clear();
+  }
+  clear_has_key();
+}
+inline const ::std::string& Bootstrap::key() const {
+  return *key_;
+}
+inline void Bootstrap::set_key(const ::std::string& value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void Bootstrap::set_key(const char* value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void Bootstrap::set_key(const char* value, size_t size) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bootstrap::mutable_key() {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  return key_;
+}
+inline ::std::string* Bootstrap::release_key() {
+  clear_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = key_;
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bootstrap::set_allocated_key(::std::string* key) {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (key) {
+    set_has_key();
+    key_ = key;
+  } else {
+    clear_has_key();
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 blocknum = 2;
+inline bool Bootstrap::has_blocknum() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Bootstrap::set_has_blocknum() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Bootstrap::clear_has_blocknum() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Bootstrap::clear_blocknum() {
+  blocknum_ = 0;
+  clear_has_blocknum();
+}
+inline ::google::protobuf::int32 Bootstrap::blocknum() const {
+  return blocknum_;
+}
+inline void Bootstrap::set_blocknum(::google::protobuf::int32 value) {
+  set_has_blocknum();
+  blocknum_ = value;
+}
+
+// optional int32 week = 3;
+inline bool Bootstrap::has_week() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Bootstrap::set_has_week() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Bootstrap::clear_has_week() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Bootstrap::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 Bootstrap::week() const {
+  return week_;
+}
+inline void Bootstrap::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional int32 season = 4;
+inline bool Bootstrap::has_season() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Bootstrap::set_has_season() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Bootstrap::clear_has_season() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Bootstrap::clear_season() {
+  season_ = 0;
+  clear_has_season();
+}
+inline ::google::protobuf::int32 Bootstrap::season() const {
+  return season_;
+}
+inline void Bootstrap::set_season(::google::protobuf::int32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional bytes gamemetaroot = 10;
+inline bool Bootstrap::has_gamemetaroot() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Bootstrap::set_has_gamemetaroot() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Bootstrap::clear_has_gamemetaroot() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Bootstrap::clear_gamemetaroot() {
+  if (gamemetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    gamemetaroot_->clear();
+  }
+  clear_has_gamemetaroot();
+}
+inline const ::std::string& Bootstrap::gamemetaroot() const {
+  return *gamemetaroot_;
+}
+inline void Bootstrap::set_gamemetaroot(const ::std::string& value) {
+  set_has_gamemetaroot();
+  if (gamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    gamemetaroot_ = new ::std::string;
+  }
+  gamemetaroot_->assign(value);
+}
+inline void Bootstrap::set_gamemetaroot(const char* value) {
+  set_has_gamemetaroot();
+  if (gamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    gamemetaroot_ = new ::std::string;
+  }
+  gamemetaroot_->assign(value);
+}
+inline void Bootstrap::set_gamemetaroot(const void* value, size_t size) {
+  set_has_gamemetaroot();
+  if (gamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    gamemetaroot_ = new ::std::string;
+  }
+  gamemetaroot_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bootstrap::mutable_gamemetaroot() {
+  set_has_gamemetaroot();
+  if (gamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    gamemetaroot_ = new ::std::string;
+  }
+  return gamemetaroot_;
+}
+inline ::std::string* Bootstrap::release_gamemetaroot() {
+  clear_has_gamemetaroot();
+  if (gamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gamemetaroot_;
+    gamemetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bootstrap::set_allocated_gamemetaroot(::std::string* gamemetaroot) {
+  if (gamemetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete gamemetaroot_;
+  }
+  if (gamemetaroot) {
+    set_has_gamemetaroot();
+    gamemetaroot_ = gamemetaroot;
+  } else {
+    clear_has_gamemetaroot();
+    gamemetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes playermetaroot = 20;
+inline bool Bootstrap::has_playermetaroot() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Bootstrap::set_has_playermetaroot() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Bootstrap::clear_has_playermetaroot() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Bootstrap::clear_playermetaroot() {
+  if (playermetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    playermetaroot_->clear();
+  }
+  clear_has_playermetaroot();
+}
+inline const ::std::string& Bootstrap::playermetaroot() const {
+  return *playermetaroot_;
+}
+inline void Bootstrap::set_playermetaroot(const ::std::string& value) {
+  set_has_playermetaroot();
+  if (playermetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    playermetaroot_ = new ::std::string;
+  }
+  playermetaroot_->assign(value);
+}
+inline void Bootstrap::set_playermetaroot(const char* value) {
+  set_has_playermetaroot();
+  if (playermetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    playermetaroot_ = new ::std::string;
+  }
+  playermetaroot_->assign(value);
+}
+inline void Bootstrap::set_playermetaroot(const void* value, size_t size) {
+  set_has_playermetaroot();
+  if (playermetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    playermetaroot_ = new ::std::string;
+  }
+  playermetaroot_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bootstrap::mutable_playermetaroot() {
+  set_has_playermetaroot();
+  if (playermetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    playermetaroot_ = new ::std::string;
+  }
+  return playermetaroot_;
+}
+inline ::std::string* Bootstrap::release_playermetaroot() {
+  clear_has_playermetaroot();
+  if (playermetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = playermetaroot_;
+    playermetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bootstrap::set_allocated_playermetaroot(::std::string* playermetaroot) {
+  if (playermetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete playermetaroot_;
+  }
+  if (playermetaroot) {
+    set_has_playermetaroot();
+    playermetaroot_ = playermetaroot;
+  } else {
+    clear_has_playermetaroot();
+    playermetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes fnamemetaroot = 30;
+inline bool Bootstrap::has_fnamemetaroot() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Bootstrap::set_has_fnamemetaroot() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Bootstrap::clear_has_fnamemetaroot() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Bootstrap::clear_fnamemetaroot() {
+  if (fnamemetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    fnamemetaroot_->clear();
+  }
+  clear_has_fnamemetaroot();
+}
+inline const ::std::string& Bootstrap::fnamemetaroot() const {
+  return *fnamemetaroot_;
+}
+inline void Bootstrap::set_fnamemetaroot(const ::std::string& value) {
+  set_has_fnamemetaroot();
+  if (fnamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    fnamemetaroot_ = new ::std::string;
+  }
+  fnamemetaroot_->assign(value);
+}
+inline void Bootstrap::set_fnamemetaroot(const char* value) {
+  set_has_fnamemetaroot();
+  if (fnamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    fnamemetaroot_ = new ::std::string;
+  }
+  fnamemetaroot_->assign(value);
+}
+inline void Bootstrap::set_fnamemetaroot(const void* value, size_t size) {
+  set_has_fnamemetaroot();
+  if (fnamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    fnamemetaroot_ = new ::std::string;
+  }
+  fnamemetaroot_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bootstrap::mutable_fnamemetaroot() {
+  set_has_fnamemetaroot();
+  if (fnamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    fnamemetaroot_ = new ::std::string;
+  }
+  return fnamemetaroot_;
+}
+inline ::std::string* Bootstrap::release_fnamemetaroot() {
+  clear_has_fnamemetaroot();
+  if (fnamemetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = fnamemetaroot_;
+    fnamemetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bootstrap::set_allocated_fnamemetaroot(::std::string* fnamemetaroot) {
+  if (fnamemetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete fnamemetaroot_;
+  }
+  if (fnamemetaroot) {
+    set_has_fnamemetaroot();
+    fnamemetaroot_ = fnamemetaroot;
+  } else {
+    clear_has_fnamemetaroot();
+    fnamemetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 

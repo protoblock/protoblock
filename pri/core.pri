@@ -14,7 +14,8 @@ SOURCES += \
     $$PWD/../ProRotoQml/protoblock-core/mnemonic.cpp \
     $$PWD/../ProRotoQml/protoblock-core/platform.cpp \
     $$PWD/../ProRotoQml/protoblock-core/bitcoin-core-base58/base58.cpp \
-    $$PWD/../ProRotoQml/protoblock-core/utils/utils.cpp
+    $$PWD/../ProRotoQml/protoblock-core/utils/utils.cpp \
+    $$PWD/../ProRotoQml/protoblock-core/ldbwriter.cpp
 
 HEADERS += \
 #protoblockcore.h\
@@ -36,4 +37,6 @@ HEADERS += \
     $$PWD/../ProRotoQml/protoblock-core/bitcoin-core-base58/allocators.h \
     $$PWD/../ProRotoQml/protoblock-core/bitcoin-core-base58/base58.h \
     $$PWD/../ProRotoQml/protoblock-core/bitcoin-core-base58/hash.h \
-    $$PWD/../ProRotoQml/protoblock-core/utils/utils.h
+    $$PWD/../ProRotoQml/protoblock-core/utils/utils.h \
+    $$PWD/../ProRotoQml/protoblock-core/ldbwriter.h
+

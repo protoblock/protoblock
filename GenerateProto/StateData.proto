@@ -622,3 +622,19 @@ message GetOrdersReq {
     optional string fname = 20;
     optional uint64 fchash = 30;
 }
+
+
+message KeyValue {
+    optional string key = 10;
+    optional string value = 20;
+}
+
+message Bootstrap {
+    optional string key = 1;
+    optional int32 blocknum = 2;
+    optional int32 week = 3;
+    optional int32 season = 4;
+    optional bytes gamemetaroot = 10;
+    optional bytes playermetaroot = 20;
+    optional bytes fnamemetaroot = 30;
+}

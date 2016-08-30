@@ -170,6 +170,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* GetOrdersReq_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   GetOrdersReq_reflection_ = NULL;
+const ::google::protobuf::Descriptor* KeyValue_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  KeyValue_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Bootstrap_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Bootstrap_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* CType_descriptor_ = NULL;
 
 }  // namespace
@@ -1099,6 +1105,43 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetOrdersReq));
+  KeyValue_descriptor_ = file->message_type(50);
+  static const int KeyValue_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyValue, key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyValue, value_),
+  };
+  KeyValue_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      KeyValue_descriptor_,
+      KeyValue::default_instance_,
+      KeyValue_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyValue, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyValue, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(KeyValue));
+  Bootstrap_descriptor_ = file->message_type(51);
+  static const int Bootstrap_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, blocknum_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, week_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, season_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, gamemetaroot_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, playermetaroot_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, fnamemetaroot_),
+  };
+  Bootstrap_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Bootstrap_descriptor_,
+      Bootstrap::default_instance_,
+      Bootstrap_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Bootstrap));
   CType_descriptor_ = file->enum_type(0);
 }
 
@@ -1212,6 +1255,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
     GetOrdersRep_descriptor_, &GetOrdersRep::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     GetOrdersReq_descriptor_, &GetOrdersReq::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    KeyValue_descriptor_, &KeyValue::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Bootstrap_descriptor_, &Bootstrap::default_instance());
 }
 
 }  // namespace
@@ -1317,6 +1364,10 @@ void protobuf_ShutdownFile_StateData_2eproto() {
   delete GetOrdersRep_reflection_;
   delete GetOrdersReq::default_instance_;
   delete GetOrdersReq_reflection_;
+  delete KeyValue::default_instance_;
+  delete KeyValue_reflection_;
+  delete Bootstrap::default_instance_;
+  delete Bootstrap_reflection_;
 }
 
 void protobuf_AddDesc_StateData_2eproto() {
@@ -1490,11 +1541,16 @@ void protobuf_AddDesc_StateData_2eproto() {
     "(\0132\030.fantasybit.GetOrdersRep\"x\n\014GetOrder"
     "sReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t\022\016\n\006f"
     "chash\030\036 \001(\00429\n\003req\022\021.fantasybit.WsReq\030\240\006"
-    " \001(\0132\030.fantasybit.GetOrdersReq*\244\001\n\005CType"
-    "\022\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003"
-    "\022\r\n\tGETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETR"
-    "OWMARKET\020\006\022\014\n\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022"
-    "\020\n\014GETPOSITIONS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n", 6557);
+    " \001(\0132\030.fantasybit.GetOrdersReq\"&\n\010KeyVal"
+    "ue\022\013\n\003key\030\n \001(\t\022\r\n\005value\030\024 \001(\t\"\215\001\n\tBoots"
+    "trap\022\013\n\003key\030\001 \001(\t\022\020\n\010blocknum\030\002 \001(\005\022\014\n\004w"
+    "eek\030\003 \001(\005\022\016\n\006season\030\004 \001(\005\022\024\n\014gamemetaroo"
+    "t\030\n \001(\014\022\026\n\016playermetaroot\030\024 \001(\014\022\025\n\rfname"
+    "metaroot\030\036 \001(\014*\244\001\n\005CType\022\r\n\tCHECKNAME\020\001\022"
+    "\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS\020\004\022"
+    "\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n\010GE"
+    "TDEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITIONS\020"
+    "\t\022\022\n\016SUBSCRIBEFNAME\020\n", 6741);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -1547,6 +1603,8 @@ void protobuf_AddDesc_StateData_2eproto() {
   AllOdersFname::default_instance_ = new AllOdersFname();
   GetOrdersRep::default_instance_ = new GetOrdersRep();
   GetOrdersReq::default_instance_ = new GetOrdersReq();
+  KeyValue::default_instance_ = new KeyValue();
+  Bootstrap::default_instance_ = new Bootstrap();
   BlockMeta::default_instance_->InitAsDefaultInstance();
   TxMeta::default_instance_->InitAsDefaultInstance();
   TrMeta::default_instance_->InitAsDefaultInstance();
@@ -1649,6 +1707,8 @@ void protobuf_AddDesc_StateData_2eproto() {
     &::fantasybit::WsReq::default_instance(),
     800, 11, false, false,
     &::fantasybit::GetOrdersReq::default_instance());
+  KeyValue::default_instance_->InitAsDefaultInstance();
+  Bootstrap::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_StateData_2eproto);
 }
 
@@ -20512,6 +20572,777 @@ void GetOrdersReq::Swap(GetOrdersReq* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = GetOrdersReq_descriptor_;
   metadata.reflection = GetOrdersReq_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int KeyValue::kKeyFieldNumber;
+const int KeyValue::kValueFieldNumber;
+#endif  // !_MSC_VER
+
+KeyValue::KeyValue()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void KeyValue::InitAsDefaultInstance() {
+}
+
+KeyValue::KeyValue(const KeyValue& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void KeyValue::SharedCtor() {
+  _cached_size_ = 0;
+  key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  value_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+KeyValue::~KeyValue() {
+  SharedDtor();
+}
+
+void KeyValue::SharedDtor() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (value_ != &::google::protobuf::internal::kEmptyString) {
+    delete value_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void KeyValue::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* KeyValue::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return KeyValue_descriptor_;
+}
+
+const KeyValue& KeyValue::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_StateData_2eproto();
+  return *default_instance_;
+}
+
+KeyValue* KeyValue::default_instance_ = NULL;
+
+KeyValue* KeyValue::New() const {
+  return new KeyValue;
+}
+
+void KeyValue::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_key()) {
+      if (key_ != &::google::protobuf::internal::kEmptyString) {
+        key_->clear();
+      }
+    }
+    if (has_value()) {
+      if (value_ != &::google::protobuf::internal::kEmptyString) {
+        value_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool KeyValue::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string key = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_key()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->key().data(), this->key().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_value;
+        break;
+      }
+
+      // optional string value = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_value:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_value()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->value().data(), this->value().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void KeyValue::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string key = 10;
+  if (has_key()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->key().data(), this->key().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      10, this->key(), output);
+  }
+
+  // optional string value = 20;
+  if (has_value()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->value().data(), this->value().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      20, this->value(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* KeyValue::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string key = 10;
+  if (has_key()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->key().data(), this->key().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        10, this->key(), target);
+  }
+
+  // optional string value = 20;
+  if (has_value()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->value().data(), this->value().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        20, this->value(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int KeyValue::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string key = 10;
+    if (has_key()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->key());
+    }
+
+    // optional string value = 20;
+    if (has_value()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->value());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void KeyValue::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const KeyValue* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const KeyValue*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void KeyValue::MergeFrom(const KeyValue& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_key()) {
+      set_key(from.key());
+    }
+    if (from.has_value()) {
+      set_value(from.value());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void KeyValue::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void KeyValue::CopyFrom(const KeyValue& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool KeyValue::IsInitialized() const {
+
+  return true;
+}
+
+void KeyValue::Swap(KeyValue* other) {
+  if (other != this) {
+    std::swap(key_, other->key_);
+    std::swap(value_, other->value_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata KeyValue::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = KeyValue_descriptor_;
+  metadata.reflection = KeyValue_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Bootstrap::kKeyFieldNumber;
+const int Bootstrap::kBlocknumFieldNumber;
+const int Bootstrap::kWeekFieldNumber;
+const int Bootstrap::kSeasonFieldNumber;
+const int Bootstrap::kGamemetarootFieldNumber;
+const int Bootstrap::kPlayermetarootFieldNumber;
+const int Bootstrap::kFnamemetarootFieldNumber;
+#endif  // !_MSC_VER
+
+Bootstrap::Bootstrap()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void Bootstrap::InitAsDefaultInstance() {
+}
+
+Bootstrap::Bootstrap(const Bootstrap& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void Bootstrap::SharedCtor() {
+  _cached_size_ = 0;
+  key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  blocknum_ = 0;
+  week_ = 0;
+  season_ = 0;
+  gamemetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  playermetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  fnamemetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Bootstrap::~Bootstrap() {
+  SharedDtor();
+}
+
+void Bootstrap::SharedDtor() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (gamemetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete gamemetaroot_;
+  }
+  if (playermetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete playermetaroot_;
+  }
+  if (fnamemetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete fnamemetaroot_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void Bootstrap::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Bootstrap::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Bootstrap_descriptor_;
+}
+
+const Bootstrap& Bootstrap::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_StateData_2eproto();
+  return *default_instance_;
+}
+
+Bootstrap* Bootstrap::default_instance_ = NULL;
+
+Bootstrap* Bootstrap::New() const {
+  return new Bootstrap;
+}
+
+void Bootstrap::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_key()) {
+      if (key_ != &::google::protobuf::internal::kEmptyString) {
+        key_->clear();
+      }
+    }
+    blocknum_ = 0;
+    week_ = 0;
+    season_ = 0;
+    if (has_gamemetaroot()) {
+      if (gamemetaroot_ != &::google::protobuf::internal::kEmptyString) {
+        gamemetaroot_->clear();
+      }
+    }
+    if (has_playermetaroot()) {
+      if (playermetaroot_ != &::google::protobuf::internal::kEmptyString) {
+        playermetaroot_->clear();
+      }
+    }
+    if (has_fnamemetaroot()) {
+      if (fnamemetaroot_ != &::google::protobuf::internal::kEmptyString) {
+        fnamemetaroot_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Bootstrap::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string key = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_key()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->key().data(), this->key().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_blocknum;
+        break;
+      }
+
+      // optional int32 blocknum = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_blocknum:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &blocknum_)));
+          set_has_blocknum();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_week;
+        break;
+      }
+
+      // optional int32 week = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_week:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &week_)));
+          set_has_week();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_season;
+        break;
+      }
+
+      // optional int32 season = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_season:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &season_)));
+          set_has_season();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(82)) goto parse_gamemetaroot;
+        break;
+      }
+
+      // optional bytes gamemetaroot = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_gamemetaroot:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_gamemetaroot()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_playermetaroot;
+        break;
+      }
+
+      // optional bytes playermetaroot = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_playermetaroot:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_playermetaroot()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(242)) goto parse_fnamemetaroot;
+        break;
+      }
+
+      // optional bytes fnamemetaroot = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_fnamemetaroot:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_fnamemetaroot()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void Bootstrap::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string key = 1;
+  if (has_key()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->key().data(), this->key().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->key(), output);
+  }
+
+  // optional int32 blocknum = 2;
+  if (has_blocknum()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->blocknum(), output);
+  }
+
+  // optional int32 week = 3;
+  if (has_week()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->week(), output);
+  }
+
+  // optional int32 season = 4;
+  if (has_season()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->season(), output);
+  }
+
+  // optional bytes gamemetaroot = 10;
+  if (has_gamemetaroot()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      10, this->gamemetaroot(), output);
+  }
+
+  // optional bytes playermetaroot = 20;
+  if (has_playermetaroot()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      20, this->playermetaroot(), output);
+  }
+
+  // optional bytes fnamemetaroot = 30;
+  if (has_fnamemetaroot()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      30, this->fnamemetaroot(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* Bootstrap::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string key = 1;
+  if (has_key()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->key().data(), this->key().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->key(), target);
+  }
+
+  // optional int32 blocknum = 2;
+  if (has_blocknum()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->blocknum(), target);
+  }
+
+  // optional int32 week = 3;
+  if (has_week()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->week(), target);
+  }
+
+  // optional int32 season = 4;
+  if (has_season()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->season(), target);
+  }
+
+  // optional bytes gamemetaroot = 10;
+  if (has_gamemetaroot()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        10, this->gamemetaroot(), target);
+  }
+
+  // optional bytes playermetaroot = 20;
+  if (has_playermetaroot()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        20, this->playermetaroot(), target);
+  }
+
+  // optional bytes fnamemetaroot = 30;
+  if (has_fnamemetaroot()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        30, this->fnamemetaroot(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int Bootstrap::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string key = 1;
+    if (has_key()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->key());
+    }
+
+    // optional int32 blocknum = 2;
+    if (has_blocknum()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->blocknum());
+    }
+
+    // optional int32 week = 3;
+    if (has_week()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->week());
+    }
+
+    // optional int32 season = 4;
+    if (has_season()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->season());
+    }
+
+    // optional bytes gamemetaroot = 10;
+    if (has_gamemetaroot()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->gamemetaroot());
+    }
+
+    // optional bytes playermetaroot = 20;
+    if (has_playermetaroot()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->playermetaroot());
+    }
+
+    // optional bytes fnamemetaroot = 30;
+    if (has_fnamemetaroot()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->fnamemetaroot());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Bootstrap::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Bootstrap* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Bootstrap*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Bootstrap::MergeFrom(const Bootstrap& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_key()) {
+      set_key(from.key());
+    }
+    if (from.has_blocknum()) {
+      set_blocknum(from.blocknum());
+    }
+    if (from.has_week()) {
+      set_week(from.week());
+    }
+    if (from.has_season()) {
+      set_season(from.season());
+    }
+    if (from.has_gamemetaroot()) {
+      set_gamemetaroot(from.gamemetaroot());
+    }
+    if (from.has_playermetaroot()) {
+      set_playermetaroot(from.playermetaroot());
+    }
+    if (from.has_fnamemetaroot()) {
+      set_fnamemetaroot(from.fnamemetaroot());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Bootstrap::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Bootstrap::CopyFrom(const Bootstrap& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Bootstrap::IsInitialized() const {
+
+  return true;
+}
+
+void Bootstrap::Swap(Bootstrap* other) {
+  if (other != this) {
+    std::swap(key_, other->key_);
+    std::swap(blocknum_, other->blocknum_);
+    std::swap(week_, other->week_);
+    std::swap(season_, other->season_);
+    std::swap(gamemetaroot_, other->gamemetaroot_);
+    std::swap(playermetaroot_, other->playermetaroot_);
+    std::swap(fnamemetaroot_, other->fnamemetaroot_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Bootstrap::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Bootstrap_descriptor_;
+  metadata.reflection = Bootstrap_reflection_;
   return metadata;
 }
 

@@ -70,6 +70,8 @@ public:
 
 //    }
 
+    static std::shared_ptr<leveldb::DB> bootstrap;
+
     static bool forking;
 
     void Cleaner();

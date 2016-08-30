@@ -19,6 +19,10 @@
 #include "ApiData.pb.h"
 #include "FantasyName.h"
 #include <QDir>
+#include "StateData.pb.h"
+#include "ldbwriter.h"
+#include "PeerNode.h"
+#include "pbutils.h"
 
 using std::string;
 namespace fantasybit
@@ -111,7 +115,42 @@ public:
     void dumpProj();
 
     void OnSeasonStart(int season) {
-        seasonFreeze(season-1);
+//        bootStrap(season,1);
+    }
+
+    void OnSeasonEnd(int season) {
+        seasonFreeze(season);
+    }
+
+    void addBootStrap(Bootstrap *in) {
+        LdbWriter ldb;
+        ldb.init(Node::bootstrap.get());
+        Bootstrap &bs = *in;
+
+        bs.set_fnamemetaroot(BootStrapFantasyName(ldb));
+
+        ldb.write(in->key(),ldb.write(bs));
+        return;
+    }
+
+    std::string BootStrapFantasyName(LdbWriter &ldb) {
+        auto *it = namestore->NewIterator(leveldb::ReadOptions());
+        FantasyNameBalMeta fnm;
+        MerkleTree tree;
+
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            FantasyNameBal fn;
+            fn.ParseFromArray(it->value().data(),it->value().size());
+            fnm.set_name(fn.name());
+            fnm.set_public_key(fn.public_key());
+            fnm.set_bits(fn.bits());
+            fnm.set_stake(fn.stake());
+            tree.add_leaves(ldb.write(fnm));
+        }
+        delete it;
+
+        tree.set_root(pb::makeMerkleRoot(tree.leaves()));
+        return ldb.write(tree.root(),tree.SerializeAsString());
     }
 
     void seasonFreeze(int season) {

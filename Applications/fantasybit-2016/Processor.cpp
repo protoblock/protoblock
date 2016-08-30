@@ -574,6 +574,8 @@ void BlockProcessor::process(const DataTransition &indt) {
         mGlobalState.set_state(GlobalState_State_OFFSEASON);
         mData.OnGlobalState(mGlobalState);
 
+        OnSeasonEnd(indt.season());
+
         //outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
         break;
 
@@ -874,6 +876,14 @@ void BlockProcessor::OnSeasonStart(int season) {
 //    mExchangeData.OnSeasonStart(season);
 //    emit WeekStart(week);
 }
+
+void BlockProcessor::OnSeasonEnd(int season) {
+    mNameData.OnSeasonEnd(season);
+    mData.OnSeasonEnd(season);
+//    mExchangeData.OnSeasonStart(season);
+//    emit WeekStart(week);
+}
+
 
 bool BlockProcessor::verifySignedBlock(const Block &sblock)
 {

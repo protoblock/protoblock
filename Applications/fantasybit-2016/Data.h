@@ -20,6 +20,10 @@
 #include <memory>
 #include <QDir>
 #include "fbutils.h"
+#include "StateData.pb.h"
+#include "ldbwriter.h"
+#include "PeerNode.h"
+#include "pbutils.h"
 
 using namespace std;
 
@@ -130,7 +134,92 @@ public:
     void TeamNameChange(const std::string &playerid, const PlayerBase &pb, const PlayerStatus &ps);
 
     void OnSeasonStart(int season) {
-        seasonFreeze(season-1);
+//        makeBootStrap(season,1,0);
+    }
+
+    void OnSeasonEnd(int season) {
+        seasonFreeze(season);
+//        makeBootStrap(season,18,0);
+    }
+
+    Bootstrap makeBootStrap(int season, int week, int blocknum) {
+        LdbWriter ldb;
+        ldb.init(Node::bootstrap.get());
+        Bootstrap bs;
+        bs.set_blocknum(blocknum);
+        bs.set_week(week);
+        bs.set_season(season);
+        bs.set_gamemetaroot(BootStrapSchedule(ldb));
+        bs.set_playermetaroot(BootStrapPlayer(ldb));
+
+        return bs;
+    }
+
+    std::string BootStrapPlayer(LdbWriter &ldb) {
+        auto *it = playerstore->NewIterator(leveldb::ReadOptions());
+        PlayerMeta pm;
+        MerkleTree tree;
+
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            PlayerBase pb;
+            pb.ParseFromArray(it->value().data(),it->value().size());
+            pm.set_allocated_player_base(&pb);
+
+            string temp;
+            if ( !statusstore->Get(leveldb::ReadOptions(), it->key(), &temp).ok() )
+                continue;
+
+            PlayerStatus ps;
+            if (!ps.ParseFromString(temp) )
+                continue;
+
+            pm.set_playerid(it->key().ToString());
+
+            tree.add_leaves(ldb.write(pm));
+            pm.release_player_base();
+            pm.Clear();
+        }
+        delete it;
+
+        tree.set_root(pb::makeMerkleRoot(tree.leaves()));
+        return ldb.write(tree.root(),tree.SerializeAsString());
+    }
+
+    std::string BootStrapSchedule(LdbWriter &ldb) {
+        GameStatusMeta gsm;
+        WeeklySchedule ws;
+        MerkleTree tree;
+        string temp;
+        for (int i=1; i<=17;i++) {
+            string key = "scheduleweek:" + to_string(i);
+
+            if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+                qWarning() << "cant find schedule " << key.c_str();
+                break;
+            }
+
+            if ( !ws.ParseFromString(temp) ) {
+                qCritical() << "bad read WeeklySchedule ";
+                continue;
+            }
+
+            for ( auto game : *ws.mutable_games()) {
+//                GameInfo &game = *gm;
+                gsm.set_allocated_gameinfo(&game);
+                gsm.set_week(i);
+                gsm.set_id(game.id());
+
+                string key = "gamestatus:" + game.id();
+                if ( statusstore->Get(leveldb::ReadOptions(), key, &temp).ok() )
+                    gsm.mutable_gamesatus()->ParseFromString(temp);
+
+                tree.add_leaves(ldb.write(gsm));
+                gsm.release_gameinfo();
+                gsm.Clear();
+            }
+        }
+        tree.set_root(pb::makeMerkleRoot(tree.leaves()));
+        return ldb.write(tree.root(),tree.SerializeAsString());
     }
 
     void seasonFreeze(int season) {
