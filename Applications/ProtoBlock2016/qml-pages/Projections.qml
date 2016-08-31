@@ -130,7 +130,8 @@ SplitView {
                     myrec.opacity = Qt.binding(function() {
                         return .20})
 
-                    ppt.indrop()
+                    ppt.indrop(drag.source.fname)
+
                 }
                 onExited: {
                     console.log(" exit ")
@@ -141,7 +142,7 @@ SplitView {
                     myrec.opacity = Qt.binding(function() {
                         return 0})
 
-                     ppt.donedrop()
+                    ppt.donedrop()
                 }
             }
         }

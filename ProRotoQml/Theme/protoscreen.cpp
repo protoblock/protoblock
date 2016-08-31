@@ -13,7 +13,7 @@ ProtoScreen::ProtoScreen(QObject *parent) :
     m_scaleSize(1.0),
     m_formFactor("desktop"),
     m_androidDpi(),
-    m_windowsDesktopScale(1.0),
+    m_windowsDesktopScale(.75),
     m_androidScale(1.0),
     m_tempMacVersion(6.0),
     m_os("windows") {

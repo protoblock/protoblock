@@ -42,7 +42,7 @@ Material.ApplicationWindow{
         console.log("Primary Color " +  Colors.primaryColor  +  " themeroot Active ?  " + themeroot.active)
         uname = MiddleMan.init()
         if ( uname  === "" ){
-            loginDialog.toggle()
+//            loginDialog.toggle()
         }
         else {
             rootLoader.source = "qrc:/Projections.qml";

@@ -1,13 +1,13 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
-import Material 1.0
+import Material 1.0 as Material
 import ProRotoQml.Protoblock 1.0
 import  ProRotoQml.Theme 1.0
 import QtQml.Models 2.2
 
 
-Card {
+Material.Card {
     id: topc
 //    property alias scheduleModel: lv.model
 //    width: parent.width
@@ -21,6 +21,7 @@ Card {
     signal changed
     property var isl: MiddleMan.pQItemSelectionModel
     property var secsel: [["section"]]
+    property string statusfilter: "Scheduled"
 //    ItemSelectionModel {
 //        id: isl
 //        model: MiddleMan.pWeeklyScheduleModel
@@ -98,47 +99,111 @@ Card {
 
 //     | ItemSelectionModel.Rows
     Component {
-         id: header
+        id: header
         Item {
             id: ih
-            height: ProtoScreen.guToPx(4)
+            height: ProtoScreen.guToPx(8)
             width: parent.width
             property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
 
-        RowLayout {
-            spacing: 0
-            anchors.fill: parent
+//            ColumnLayout {
+//                spacing: 0
+//                anchors.fill: parent
+//                ComboBox {
+//                    id: combo
+//                    Layout.preferredHeight: ProtoScreen.guToPx(4)
+//                    width: parent.width * (4.0/11.0)
+////                    anchors.bottom: rrr.top
+//                    anchors.right: parent.right
+//                    model: ["Scheduled", "Scored" , "Locked", "All" ]
+//    //                enabled: modelData === "  Status  "
+//                    currentIndex: 0
+//    //                visible: modelData === "  Status  "
+//                    //                            anchors.fill: parent
+//                    onCurrentTextChanged: {
+//    //                               MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
+//                    }
+//                }
+//            Rectangle {
+//                id: rec
+//                height: ProtoScreen.guToPx(8)
+//                width: parent.width
+//                color: "transparent"
+//                anchors.bottom: parent.bottom
+                RowLayout {
+                    spacing: 0
+                    anchors.fill: parent
+//                    width: parent.width
+//                    Layout.preferredHeight: ProtoScreen.guToPx(4)
+                    Repeater {
+                        model: [" Time "," Away "," Home "," Status "]
+                        Item {
+                            Layout.preferredWidth: (parent.width * ih.widths[index])
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            height: parent.height
+                            Rectangle {
+                                id: rec2
+                                height: parent.height * .50
+    //                            Layout.fillHeight: true
+    //                            Layout.fillWidth: true
+    //                            Layout.preferredWidth: (parent.width * ih.widths[index])
+    //                            width: parent.width
+//                                color: "green"
+                                anchors.top: parent.top
+                                width: parent.width
+                                ComboBox {
+                                    id: combo
+//                                    anchors.bottom: rrr.top
+//                                    anchors.right: parent.right
+                                    model: ["Scheduled", "Scored" , "Locked", "All" ]
+                                    enabled: modelData === " Status "
+                                    currentIndex: 0
+                                    visible: modelData === " Status "
+                                    anchors.fill: parent
+                                    onCurrentTextChanged: {
+                    //                               MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
+//                                        topc.statusfilter = Qt.binding(function(){return currentText})
+                                        MiddleMan.SetScheduleFilter(currentText)
+                                    }
+                                }
+                            }
+                            Material.Card{
+                                anchors.bottom: parent.bottom
+                                width: parent.width
+    //                            Layout.fillHeight: true
+    //                            Layout.fillWidth: true
+    //                            Layout.preferredWidth: (parent.width * ih.widths[index])
+                                border.color:"black"
+                                backgroundColor: Colors.blue
+                                height: parent.height * .50
+                                Material.Label {
+                                    anchors.centerIn: parent
+    //                                anchors.fill: parent
+                                    text: modelData
+                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                    color: "white"
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                }
 
-            Repeater{
-                model: [" Time "," Away "," Home ","  Status  "]
-                Card{
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: (parent.width * ih.widths[index])
-                    border.color:"black"
-                    backgroundColor: Colors.blue
-                    Label{
-                        anchors.centerIn: parent
-                        text: modelData
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                        color: "white"
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        secsel = [["section"]]
+                                        isl.clear()
+                                        topc.changed()
+                                    }
+                                }
+
+                            }
+                        }
                     }
                 }
-            }
 
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                secsel = [["section"]]
-                isl.clear()
-                topc.changed()
-            }
-        }
-        }
-
+//            }
+//            }
+       }
     }
 //    Component {
 //        id: sectionDelegate
@@ -202,7 +267,7 @@ Card {
     Component {
 
         id: gamedel
-        Card {
+        Material.Card {
             id: dcard
             function myMethod() {
                 console.log("Button was clicked!" + secsel[time])
@@ -272,7 +337,7 @@ Card {
             spacing: 0
             id: rr
 
-            Label{
+            Material.Label {
 //                anchors.centerIn: parent
 
                 text: time
@@ -284,7 +349,7 @@ Card {
                 Layout.preferredWidth: (parent.width * widths[0])
 //                width: (parent.width * widths[0])
             }
-            Label{
+            Material.Label{
 //                anchors.centerIn: parent
                 text: away
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
@@ -297,7 +362,7 @@ Card {
                 ColorAnimation on color { to: TeamInfo.getPrimaryAt(away); duration: 10000 }
                 font.bold: true
             }
-            Label{
+            Material.Label{
 //                anchors.centerIn: parent
                 text: "@"
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
@@ -309,7 +374,7 @@ Card {
 //                width: (parent.width * widths[1])
             }
 
-            Label{
+            Material.Label{
 //                anchors.centerIn: parent
                 text: home
 
@@ -326,7 +391,7 @@ Card {
                 font.bold: true
 //                width: (parent.width * widths[2])
             }
-            Label{
+            Material.Label{
 //                anchors.centerIn: parent
                 text: status
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)

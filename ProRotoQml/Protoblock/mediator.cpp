@@ -49,6 +49,8 @@ Mediator::Mediator(QObject *parent) :
 
     connect(this,SIGNAL(pPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)),
             this,SLOT(OnpPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)));
+
+//    connect(this,SIGNAL(gameFilterChanged(QString &)),m_pQItemSelectionModel,SLOT(gameFilter(QString&)));
     auto mynames = m_fantasy_agent.getMyNames();
 //    if ( mynames.size() == 0 ) {
 //        auto filepath = lastYearPath();
@@ -121,14 +123,14 @@ Mediator::Mediator(QObject *parent) :
 
 
     m_pWeeklyScheduleModel = new WeeklyScheduleModel;
-
+    m_gameFilter = "Scheduled";
     WeeklySchedule ws;
     fantasybit::Reader<ScheduleData> reader5{ GET_ROOT_DIR() + "WeeklySchedule.txt" };
     ScheduleData sd;
     while ( reader5.ReadNext(sd) ) {
         qDebug() << sd.DebugString().data();
 
-        m_pWeeklyScheduleModel->updateWeeklySchedule(sd.week(),sd.weekly());
+        m_pWeeklyScheduleModel->updateWeeklySchedule(sd.week(),sd.weekly(),m_gameFilter);
         ws = sd.weekly();
 
         break;
@@ -153,6 +155,7 @@ Mediator::Mediator(QObject *parent) :
             if ( itr == end(MyTeamRoster))
                 MyTeamRoster[ps.teamid()] =  std::unordered_set<std::string>{};
 
+            if ( MyTeamRoster[ps.teamid()].size() > 20) continue;
             MyTeamRoster[ps.teamid()].insert(pd.playerid());
         }
 

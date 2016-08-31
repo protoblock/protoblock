@@ -70,7 +70,7 @@ class Mediator : public QObject
 
     QML_READONLY_PTR_PROPERTY(ProjectionsViewFilterProxyModel, pProjectionsViewFilterProxyModel)
     QML_READONLY_PTR_PROPERTY(QStringListModel, pPosFilter)
-
+    QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
     PlayerProjModel mPlayerProjModel;
 
     std::unordered_map<std::string,TradingPositionsModel *> modelMap;
@@ -278,6 +278,11 @@ public:
             return model->get_teamid();
     }
 
+    Q_INVOKABLE void SetScheduleFilter(const QString& filter) {
+        setgameFilter(filter);
+//        m_pWeeklyScheduleModel->clear();
+    }
+
     qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);
 
 
@@ -369,6 +374,7 @@ private:
     QTimer polldepth;
 
     QTimer tradeTesting;
+//    WeeklyScheduleModel mWeeklyScheduleModel;
     PlayerQuoteSliceModel mPlayerQuoteSliceModel;
     DepthMarketModel mDepthMarketModel;
     FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;

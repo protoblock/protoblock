@@ -15,7 +15,7 @@ Item {
     property string dragtarget: "dropProxy"
 
     anchors.fill: parent
-
+    anchors.margins: ProtoScreen.guToPx(1)
     Item {
 //        anchors.top: cb.bottom
         width: parent.width
@@ -30,118 +30,101 @@ Item {
             highlightOnFocus:   false
             anchors.fill: parent
 
-            selectionMode: SelectionMode.SingleSelection
-
-//            anchors.top: parent.top
-//            width: parent.width
-//            height: parent.heigh//t - tv0.height
+            selectionMode: SelectionMode.NoSelection
             model: MiddleMan.pFantasyNameBalModel
-//            sortIndicatorVisible: true
-//            sortIndicatorOrder: Qt.AscendingOrder
-//            onSortIndicatorColumnChanged: {
-//    //            accountErrorDialog.show();
-//    //            MiddleMan.pProjectionsViewFilterProxyModel.sort(sortIndicatorColumn, sortIndicatorOrder)
-//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-//            }
+            sortIndicatorVisible: true
+            sortIndicatorOrder: Qt.AscendingOrder
+            onSortIndicatorColumnChanged: {
+//                MiddleMan.pFantasyNameBalModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+            }
 
-//            onSortIndicatorOrderChanged: {
-//    //            MiddleMan.pProjectionsViewFilterProxyModel.sort(sortIndicatorColumn, sortIndicatorOrder)
+            onSortIndicatorOrderChanged: {
+//                MiddleMan.pFantasyNameBalModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+            }
 
-//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-//            }
 
-            headerDelegate:  Item {
-//                implicitWidth: textItem2.implicitWidth / 2.0
+
+            headerDelegate:  Rectangle {
                 width: parent.width
                 height: ProtoScreen.guToPx(6)
+                color: "white"
+//                anchors.fill: parent
+                Card {
+                    width: parent.width
+                    height: parent.height * .40
+                    backgroundColor: themeroot.theme.primaryColor
+                    anchors.bottom: parent.bottom
+                    radius: 0
+                    border.color:
+                        styleData.column  === tv.sortIndicatorColumn ? "green" : "black"
 
-//            Rectangle {
-//                id: rec
-//                height: parent.height * .60
-//                width: parent.width
-//                color: "white"
-//                anchors.top: parent.top
-//            }
-
-            Card {
-                width: parent.width
-                height: parent.height * .40
-                backgroundColor: themeroot.theme.primaryColor
-                anchors.bottom: parent.bottom
-                radius: 0
-                border.color:
-                    styleData.column  === tv.sortIndicatorColumn ? "green" : "black"
-
-
-                Label{
-                    id: textItem2
-                    text: " " + styleData.value + " "
-                    anchors.fill: parent
-    //                width: parent.width
-    //                height: parent.height * .40
-    //                anchors.bottom: parent.bottom
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    elide: Text.ElideRight
-                    wrapMode: Text.WordWrap
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    color: "white"
+                    Label {
+                        id: textItem2
+                        text: " " + styleData.value + " "
+                        anchors.fill: parent
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        elide: Text.ElideRight
+                        wrapMode: Text.WordWrap
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        color: "white"
+                    }
                 }
             }
-            }
 
-            frameVisible: true
+            frameVisible: false
+
+            //                width: tv.width / 4.0
+            //                    width: tv.width / 4.0
+            //                    height: ProtoScreen.guToPx(6)
+            //                        height: ProtoScreen.guToPx(3)
+            //                        width: win.width * .75
+            //Qt.rgba(Math.random(), Math.random(), Math.random(), 1)
+//                    x: Math.random() * (win.width / 2 - 100)
+//                    y: Math.random() * (win.height - 100)
+            //                        radius: 1
+            //                        anchors.fill: parent
+
+
             TableViewColumn {
                 role: "name"
                 title: "xFantasy Name"
                 horizontalAlignment : Text.AlignHCenter
 
-
-
-                //                width: tv.width / 4.0
-                //                    width: tv.width / 4.0
-                //                    height: ProtoScreen.guToPx(6)
-                //                        height: ProtoScreen.guToPx(3)
-                //                        width: win.width * .75
-                //Qt.rgba(Math.random(), Math.random(), Math.random(), 1)
-//                    x: Math.random() * (win.width / 2 - 100)
-//                    y: Math.random() * (win.height - 100)
-                //                        radius: 1
-                //                        anchors.fill: parent
-
-
                 delegate: Item {
                     id: win
                     anchors.fill: parent
                     height: tx.height
+                    //                        anchors.fill: parent
+                    //                        anchors.centerIn: parent;
                     Rectangle {
                         id: rect
                         height: parent.height
                         width: parent.width
-//                        anchors.fill: parent
-//                        anchors.centerIn: parent;
-                        z: mouseArea.drag.active ||  mouseArea.pressed ? -20 : -10
-                        color: "Grey"
+//                        z: mouseArea.drag.active || mouseArea.pressed ? -20 : -10
+                        color: "grey"
                         property point beginDrag
                         property bool caught: false
+                        property string fname: styleData.value
                         border { width:1; color: "white" }
                         Drag.active: mouseArea.drag.active
 
+                        //                            anchors.fill: parent
+                        //                            style: Text.Raised
                         Label {
                             id: tx
-//                            anchors.fill: parent
                             anchors.centerIn: parent
                             text: styleData.value
-//                            style: Text.Raised
                             color: "white"
-                            font.pixelSize: ProtoScreen.font(ProtoScreen.TINY)
+                            font.bold: true
+                            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                         }
+
                         MouseArea {
                             id: mouseArea
                             anchors.fill: parent
                             drag.target: rect
                             onClicked: { console.log(" mouse click")}
-
                             onHoveredChanged: {console.log(" mouse hover")}
 
                             property int startX
@@ -149,10 +132,10 @@ Item {
 
                             onPositionChanged: {
                                 console.log(" mouse onPositionChanged   " + rect.caught)
-//                                rect.x += mouseX - startX
-//                                rect.y += mouseY - startY
-//                                startX = mouseX
-//                                startY = mouseY
+//                                                                rect.x += mouseX - startX
+//                                                                rect.y += mouseY - startY
+//                                                                startX = mouseX
+//                                                                startY = mouseY
                             }
 
                             onPressed: {
@@ -162,23 +145,22 @@ Item {
                                 rect.beginDrag = Qt.point(rect.x, rect.y);
                             }
 
-                            onReleased: {
-//                                 MiddleMan.newProjColumn(tx.text)
+                            //                                 MiddleMan.newProjColumn(tx.text)
 
+                            onReleased: {
                                  console.log(" mouse released   " + rect.caught)
                                  if(rect.caught) {
                                     lpv.releasedit(styleData.value)
                                     backAnimX.duration = 4000;
                                     backAnimY.duration = 4000;
-                                     backAnimX.spring = .1;
-                                     backAnimY.spring = .1;
-                                     rect.color = Qt.binding( function() {
+                                    backAnimX.spring = .1;
+                                    backAnimY.spring = .1;
+                                    rect.color = Qt.binding( function() {
                                         return "transparent"
-                                     })
+                                    })
                                      tx.color = Qt.binding( function() {
-                                        return "grey"
+                                        return "black"
                                      })
-
                                  }
                                  backAnimX.from = rect.x;
                                  backAnimX.to = rect.beginDrag.x;
@@ -186,7 +168,6 @@ Item {
                                  backAnimY.to = rect.beginDrag.y;
                                  backAnim.start()
                             }
-
                         }
 
                         ParallelAnimation {
@@ -197,7 +178,6 @@ Item {
                     }
                 }
             }
-
             TableViewColumn{
                 role: "stake"
                 title: "2016 Rank"
@@ -215,7 +195,6 @@ Item {
                 title: "#"
                 horizontalAlignment : Text.AlignHCenter
             }
-
             TableViewColumn{
                 role: "time"
                 title: "Recent"
