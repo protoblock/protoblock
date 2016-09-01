@@ -73,6 +73,11 @@ class Mediator : public QObject
     QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
     PlayerProjModel mPlayerProjModel;
 
+
+
+    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pLeaderBoardSortModel)
+
+
     std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
 //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
@@ -278,7 +283,7 @@ public:
             return model->get_teamid();
     }
 
-    Q_INVOKABLE void SetScheduleFilter(const QString& filter) {
+    Q_INVOKABLE void setScheduleFilter(const QString& filter) {
         setgameFilter(filter);
 //        m_pWeeklyScheduleModel->clear();
     }

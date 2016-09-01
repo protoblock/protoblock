@@ -62,6 +62,7 @@ public:
         m_playerid = playerid.data();
         m_gameid = gameid;
         m_projection = 0;
+        m_knownProjection = 0;
 
         qDebug() << " PlayerProjModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
     }
@@ -278,6 +279,49 @@ protected:
 //    }
 
 };
+
+
+
+
+class LeaderBaordFantasyNameModelItem : public QObject {
+    Q_OBJECT
+    QML_CONSTANT_CSTREF_PROPERTY (QString, name)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, skill)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, lastseason)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, thisseason)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, thisweek)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, lastweek)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, lastupdate)
+    QML_CONSTANT_CSTREF_PROPERTY (qint32, numcomplete)
+    QML_CONSTANT_CSTREF_PROPERTY (quint64, hash)
+    QML_CONSTANT_CSTREF_PROPERTY (QString, pk)
+
+public:
+
+    explicit LeaderBaordFantasyNameModelItem(const fantasybit::FantasyNameBal &in) :  QObject(nullptr) {
+        m_name = in.name().data();
+        m_pk = in.public_key().data();
+        m_skill = in.stake();
+        m_hash = in.chash();
+    }
+};
+
+
+class LeaderBaordFantasyNameModel : public QQmlObjectListModel<LeaderBaordFantasyNameModelItem> {};
+
+Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif // PLAYERPROJMODEL_H
 

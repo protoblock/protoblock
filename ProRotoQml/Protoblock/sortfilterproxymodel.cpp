@@ -100,20 +100,20 @@ void SortFilterProxyModel::setFilterSyntax(SortFilterProxyModel::FilterSyntax sy
     setFilterRegExp(QRegExp(filterString(), filterCaseSensitivity(), static_cast<QRegExp::PatternSyntax>(syntax)));
 }
 
-QJSValue SortFilterProxyModel::get(int idx) const
-{
-    QJSEngine *engine = qmlEngine(this);
-    QJSValue value = engine->newObject();
-    if (idx >= 0 && idx < count()) {
-        QHash<int, QByteArray> roles = roleNames();
-        QHashIterator<int, QByteArray> it(roles);
-        while (it.hasNext()) {
-            it.next();
-            value.setProperty(QString::fromUtf8(it.value()), data(index(idx, 0), it.key()).toString());
-        }
-    }
-    return value;
-}
+//QJSValue SortFilterProxyModel::get(int idx) const
+//{
+//    QJSEngine *engine = qmlEngine(this);
+//    QJSValue value = engine->newObject();
+//    if (idx >= 0 && idx < count()) {
+//        QHash<int, QByteArray> roles = roleNames();
+//        QHashIterator<int, QByteArray> it(roles);
+//        while (it.hasNext()) {
+//            it.next();
+//            value.setProperty(QString::fromUtf8(it.value()), data(index(idx, 0), it.key()).toString());
+//        }
+//    }
+//    return value;
+//}
 
 void SortFilterProxyModel::sortAgain(const QString &role, Qt::SortOrder order)
 {

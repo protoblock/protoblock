@@ -50,6 +50,10 @@ public:
     QString filterString() const;
     void setFilterString(const QString &filter);
 
+    Q_INVOKABLE void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
+        QSortFilterProxyModel::sort(column, order);
+    }
+
     enum FilterSyntax {
         RegExp,
         Wildcard,
@@ -60,7 +64,7 @@ public:
     void setFilterSyntax(FilterSyntax syntax);
 
     int count() const;
-    Q_INVOKABLE QJSValue get(int index) const;
+//    Q_INVOKABLE QJSValue get(int index) const;
     Q_INVOKABLE void sortAgain(const QString &role,Qt::SortOrder order);
     void classBegin();
     void componentComplete();

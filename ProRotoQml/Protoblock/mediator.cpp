@@ -24,8 +24,10 @@ Mediator::Mediator(QObject *parent) :
     m_pTradingPositionsModel{new TradingPositionsModel(this,QByteArray (),{"symbol"})},
     m_currentPidContext("1"),
     myGamesSelectionModel{},
-    m_pQItemSelectionModel(&myGamesSelectionModel)
+    m_pQItemSelectionModel(&myGamesSelectionModel),
+    m_pLeaderBoardSortModel(new SortFilterProxyModel)
 {
+    m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
 
     mGetDepthReq.set_ctype(GETDEPTH);
     GetDepthReq dr;
@@ -244,7 +246,7 @@ Mediator::Mediator(QObject *parent) :
 //    m_pProjectionsViewFilterProxyModel->setFilterFixedString("WR");
 
     m_pProjectionsViewFilterProxyModel->setSortRole("pos");//mPlayerProjModel.roleForName("pos"));
-//    m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(true);
+    m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(false);
 
     m_pPosFilter = new QStringListModel();
     QStringList list;

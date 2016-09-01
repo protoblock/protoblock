@@ -11,7 +11,7 @@
 #include <QDebug>
 #include <QtGlobal>
 
-#include "RunGuard.h"
+//#include "RunGuard.h"
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
@@ -22,9 +22,9 @@
 // add help page
 int main(int argc, char *argv[])
 {
-    RunGuard guard( "protoblockprodapp" );
-        if ( !guard.tryToRun() )
-            return 0;
+//    RunGuard guard( "protoblockprodapp" );
+//        if ( !guard.tryToRun() )
+//            return 0;
 
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;

@@ -5,7 +5,6 @@
 #include <QMap>
 #include <QMapIterator>
 
-
 class TeamColors : public QObject
 {
     Q_OBJECT
@@ -13,6 +12,7 @@ public:
     explicit TeamColors(QObject *parent = 0);
     Q_INVOKABLE QString getPrimaryAt(const QString &team);
     Q_INVOKABLE QString getSecondaryAt(const QString &team);
+    Q_INVOKABLE QString getPosColor(const QString &pos);
     void setPrimaryMap();
 
 
@@ -32,6 +32,8 @@ private:
 //    QMap m_longTeamMap;
     //testing map
     QMap<QString , QString> m_testMap;
+
+    QMap<QString,QString> m_pos;
 };
 
 #endif // TEAMCOLORS_H

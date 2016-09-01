@@ -1,11 +1,12 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 
-import Material 1.0
+import Material 1.0 as Material
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 import ProRotoQml.Protoblock 1.0
+import QtQuick.Layouts 1.1
 
 
 Item {
@@ -25,21 +26,23 @@ Item {
             id: tv
             Component.onCompleted: {
                 resizeColumnsToContents()
+                model.sortAgain("stake",Qt.DescendingOrder)
             }
 
+            sortIndicatorColumn: 1
             highlightOnFocus:   false
             anchors.fill: parent
 
             selectionMode: SelectionMode.NoSelection
-            model: MiddleMan.pFantasyNameBalModel
-            sortIndicatorVisible: true
-            sortIndicatorOrder: Qt.AscendingOrder
+            model: MiddleMan.pLeaderBoardSortModel
+//            sortIndicatorVisible: true
+            sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-//                MiddleMan.pFantasyNameBalModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             onSortIndicatorOrderChanged: {
-//                MiddleMan.pFantasyNameBalModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
 
@@ -49,16 +52,16 @@ Item {
                 height: ProtoScreen.guToPx(6)
                 color: "white"
 //                anchors.fill: parent
-                Card {
+                Material.Card {
                     width: parent.width
-                    height: parent.height * .40
+                    height: parent.height * .50
                     backgroundColor: themeroot.theme.primaryColor
                     anchors.bottom: parent.bottom
-                    radius: 0
+                    radius: 1
                     border.color:
-                        styleData.column  === tv.sortIndicatorColumn ? "green" : "black"
+                        styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor : "black"
 
-                    Label {
+                    Material.Label {
                         id: textItem2
                         text: " " + styleData.value + " "
                         anchors.fill: parent
@@ -91,33 +94,49 @@ Item {
                 title: "xFantasy Name"
                 horizontalAlignment : Text.AlignHCenter
 
-                delegate: Item {
-                    id: win
-                    anchors.fill: parent
-                    height: tx.height
+                delegate:
+
+//                    Item {
+//                    id: win
+//                    height: tx.height
                     //                        anchors.fill: parent
                     //                        anchors.centerIn: parent;
-                    Rectangle {
-                        id: rect
-                        height: parent.height
-                        width: parent.width
+                    Material.Card {
+                        id: mcard
+                        anchors.fill: parent
+                        backgroundColor: "#AFE1FF"
+
+//                        height: parent.height
+//                        width: parent.width
 //                        z: mouseArea.drag.active || mouseArea.pressed ? -20 : -10
-                        color: "grey"
+                        //Qt.lighter(Colors.blue,1.20)
+
+                        Rectangle {
+
+                        id: rect
+                        width: parent.width
+                        height: parent.height
                         property point beginDrag
                         property bool caught: false
                         property string fname: styleData.value
-                        border { width:1; color: "white" }
+                        border { width:ProtoScreen.guToPx(.125); color: "black" }
                         Drag.active: mouseArea.drag.active
+                        color: "transparent"
 
                         //                            anchors.fill: parent
                         //                            style: Text.Raised
-                        Label {
-                            id: tx
+                        Material.Label {
+//                            id: tx
+                            anchors.fill: parent
                             anchors.centerIn: parent
                             text: styleData.value
-                            color: "white"
-                            font.bold: true
+//                            color: "white"
+//                            font.bold: true
                             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            Layout.fillHeight: true
+                            Layout.fillWidth: false
                         }
 
                         MouseArea {
@@ -151,15 +170,18 @@ Item {
                                  console.log(" mouse released   " + rect.caught)
                                  if(rect.caught) {
                                     lpv.releasedit(styleData.value)
-                                    backAnimX.duration = 4000;
-                                    backAnimY.duration = 4000;
-                                    backAnimX.spring = .1;
-                                    backAnimY.spring = .1;
-                                    rect.color = Qt.binding( function() {
+//                                    backAnimX.duration = 1;
+//                                    backAnimY.duration = 1;
+//                                    backAnimX.spring = 0;
+//                                    backAnimY.spring = 0;
+//                                    rect.color = Qt.binding( function() {
+//                                        return "transparent"
+//                                    })
+
+                                    rect.x = rect.beginDrag.x;
+                                    rect.y = rect.beginDrag.y;
+                                     mcard.backgroundColor = Qt.binding( function() {
                                         return "transparent"
-                                    })
-                                     tx.color = Qt.binding( function() {
-                                        return "black"
                                      })
                                  }
                                  backAnimX.from = rect.x;
@@ -175,8 +197,9 @@ Item {
                             SpringAnimation { id: backAnimX; target: rect; property: "x"; duration: 500; spring: 2; damping: 0.2 }
                             SpringAnimation { id: backAnimY; target: rect; property: "y"; duration: 500; spring: 2; damping: 0.2 }
                         }
+                        }
                     }
-                }
+//                }
             }
             TableViewColumn{
                 role: "stake"
