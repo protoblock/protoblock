@@ -38,52 +38,52 @@ Item {
             color: bannerRoot.color
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
-//            Binding on verticalAlignment {
-//                when: anchrosType === "default"
-//                value: Text.AlignVCenter
-//            }
-//            Binding on verticalAlignment {
-//                when: anchrosType === "verticalCenter"
-//                value: Text.AlignVCenter
-//            }
-//            Binding on verticalAlignment {
-//                when: anchrosType === "top"
-//                value: Text.AlignTop
-//            }
-//            Binding on verticalAlignment {
-//                when: anchrosType === "bottom"
-//                value: Text.AlignBottom
-//            }
+            Binding on verticalAlignment {
+                when: anchrosType === "default"
+                value: Text.AlignVCenter
+            }
+            Binding on verticalAlignment {
+                when: anchrosType === "verticalCenter"
+                value: Text.AlignVCenter
+            }
+            Binding on verticalAlignment {
+                when: anchrosType === "top"
+                value: Text.AlignTop
+            }
+            Binding on verticalAlignment {
+                when: anchrosType === "bottom"
+                value: Text.AlignBottom
+            }
 
-//            Binding on verticalAlignment {
-//                when: anchrosType === "center"
-//                value: Text.AlignVCenter
-//            }
+            Binding on verticalAlignment {
+                when: anchrosType === "center"
+                value: Text.AlignVCenter
+            }
 
-//            Binding on horizontalAlignment {
-//                when: anchrosHType === "default"
-//                value: (anchrosType === "center") ? Text.AlignHCenter : Text.AlignLeft
-//            }
-//            Binding on horizontalAlignment {
-//                when: anchrosHType === "horizontalCenter"
-//                value: Text.AlignHCenter
-//            }
-//            Binding on horizontalAlignment {
-//                when: anchrosHType === "center"
-//                value: Text.AlignHCenter
-//            }
-//            Binding on verticalAlignment {
-//                when: anchrosHType === "right"
-//                value: Text.AlignRight
-//            }
-//            Binding on verticalAlignment {
-//                when: anchrosHType === "left"
-//                value: Text.AlignLeft
-//            }
-//            Binding on verticalAlignment {
-//                when: anchrosHType === "justify"
-//                value: Text.AlignJustify
-//            }
+            Binding on horizontalAlignment {
+                when: anchrosHType === "default"
+                value: (anchrosType === "center") ? Text.AlignHCenter : Text.AlignLeft
+            }
+            Binding on horizontalAlignment {
+                when: anchrosHType === "horizontalCenter"
+                value: Text.AlignHCenter
+            }
+            Binding on horizontalAlignment {
+                when: anchrosHType === "center"
+                value: Text.AlignHCenter
+            }
+            Binding on verticalAlignment {
+                when: anchrosHType === "right"
+                value: Text.AlignRight
+            }
+            Binding on verticalAlignment {
+                when: anchrosHType === "left"
+                value: Text.AlignLeft
+            }
+            Binding on verticalAlignment {
+                when: anchrosHType === "justify"
+                value: Text.AlignJustify
+            }
 
 
             anchors{

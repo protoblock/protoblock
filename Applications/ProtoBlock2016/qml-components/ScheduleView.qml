@@ -19,6 +19,9 @@ Material.Card {
 //    height: parent.height
 //    border.color: "grey"
     elevation: 0
+    radius: 0
+    flat: true
+    border.width: 0
     signal changed
     property var isl: MiddleMan.pQItemSelectionModel
     property var secsel: [["section"]]
@@ -49,7 +52,6 @@ Material.Card {
 //        }
 
         property bool first: true
-
         anchors.fill: parent
         width: parent.width
 //        height: parent.height
@@ -221,11 +223,11 @@ Material.Card {
         Rectangle {
             width: parent.width
             height: t.height//ProtoScreen.guToPx(1.5);
-            color: Qt.lighter(Colors.blue,1.20)
+            color: "#AFE1FF"//Qt.lighter(Colors.blue,1.20)
             Layout.fillHeight: true
             Layout.fillWidth: false
 
-            Text {
+            Material.Label {
                 id: t
                 text: section
 //                font.bold: true
@@ -233,7 +235,7 @@ Material.Card {
                 verticalAlignment: Text.AlignVCenter
 //                horizontalAlignment: Text.AlignHCenter
 //                anchors.centerIn: parent
-                color: "white"
+//                color:
 //                anchors.horizontalCenterOffset:  -parent.width * .20
                 anchors.horizontalCenter: parent.horizontalCenter
 //                anchors.fill: parent

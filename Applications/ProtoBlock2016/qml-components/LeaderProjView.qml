@@ -16,7 +16,7 @@ Item {
     property string dragtarget: "dropProxy"
 
     anchors.fill: parent
-    anchors.margins: ProtoScreen.guToPx(1)
+//    anchors.margins: ProtoScreen.guToPx(1)
     Item {
 //        anchors.top: cb.bottom
         width: parent.width
@@ -26,7 +26,7 @@ Item {
             id: tv
             Component.onCompleted: {
                 resizeColumnsToContents()
-                model.sortAgain("stake",Qt.DescendingOrder)
+//                model.sortAgain("stake",Qt.DescendingOrder)
             }
 
             sortIndicatorColumn: 1
@@ -50,6 +50,7 @@ Item {
             headerDelegate:  Rectangle {
                 width: parent.width
                 height: ProtoScreen.guToPx(6)
+                implicitWidth: textItem2.implicitWidth
                 color: "white"
 //                anchors.fill: parent
                 Material.Card {
@@ -91,7 +92,7 @@ Item {
 
             TableViewColumn {
                 role: "name"
-                title: "xFantasy Name"
+                title: "Fantasy Name"
                 horizontalAlignment : Text.AlignHCenter
 
                 delegate:
@@ -102,8 +103,10 @@ Item {
                     //                        anchors.fill: parent
                     //                        anchors.centerIn: parent;
                     Material.Card {
+                        anchors.margins: 0
                         id: mcard
                         anchors.fill: parent
+                        flat: true
                         backgroundColor: "#AFE1FF"
 
 //                        height: parent.height
@@ -112,21 +115,22 @@ Item {
                         //Qt.lighter(Colors.blue,1.20)
 
                         Rectangle {
-
+                        anchors.margins: 0
                         id: rect
                         width: parent.width
                         height: parent.height
                         property point beginDrag
                         property bool caught: false
                         property string fname: styleData.value
-                        border { width:ProtoScreen.guToPx(.125); color: "black" }
+                        border { width:ProtoScreen.guToPx(.125); color: "grey" }
                         Drag.active: mouseArea.drag.active
                         color: "transparent"
+
 
                         //                            anchors.fill: parent
                         //                            style: Text.Raised
                         Material.Label {
-//                            id: tx
+                            id: tx
                             anchors.fill: parent
                             anchors.centerIn: parent
                             text: styleData.value
@@ -181,8 +185,9 @@ Item {
                                     rect.x = rect.beginDrag.x;
                                     rect.y = rect.beginDrag.y;
                                      mcard.backgroundColor = Qt.binding( function() {
-                                        return "transparent"
+                                        return themeroot.theme.primaryColor
                                      })
+                                     tx.color = "white"
                                  }
                                  backAnimX.from = rect.x;
                                  backAnimX.to = rect.beginDrag.x;
@@ -201,26 +206,33 @@ Item {
                     }
 //                }
             }
+
             TableViewColumn{
                 role: "stake"
-                title: "2016 Rank"
+                title: "Rank"
                 horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(7)
 
             }
             TableViewColumn{
                 role: "bits"
-                title: "Wk 1 rank"
+                title: "Wk1"
                 horizontalAlignment : Text.AlignHCenter
-
+                width: ProtoScreen.guToPx(5)
             }
+
             TableViewColumn{
                 role: "index"
-                title: "#"
+                title: "Complete"
                 horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(5)
             }
+
             TableViewColumn{
                 role: "time"
                 title: "Recent"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(5)
             }
         }
     }

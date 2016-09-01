@@ -10,14 +10,15 @@ import QtQuick.Layouts 1.1
 
 Item {
     id: topw
-//    anchors.fill: parent
-    anchors.horizontalCenter: parent.Center
-    anchors.margins: ProtoScreen.guToPx(1)
+    anchors.fill: parent
+//    anchors.horizontalCenter: parent.Center
+//    anchors.margins: ProtoScreen.guToPx(1)
 
     signal indrop(string fname)
     signal donedrop
     signal addcolumn(string fname)
 
+    property int focuscount: 0
 //    Material.Label {
 //        id: mm
 //        text: "LA LA LA"
@@ -69,6 +70,7 @@ Item {
 //                   return ProtoScreen.guToPx(6) * columnCount
 //                })
                 ppt.addcolumn.connect(addcolumnMethod)
+
             }
 
             function addcolumnMethod(fname) {
@@ -130,22 +132,29 @@ Item {
             */
 
             TableViewColumn {
-                role: "fullname"
+                role: "lastname"
                 title: "Player Name"
                 horizontalAlignment : Text.AlignLeft
                 movable: false
                 delegate:
                     Material.Card {
+                    flat: true
+                    radius: 0
+                    border.width: 0
                     anchors.fill: parent
+//                    anchors.leftMargin: ProtoScreen.guToPx(1)
                      backgroundColor: "transparent" //TeamInfo.getPosColor(model.pos)
                      Material.Label{
-//                                 anchors.centerIn: parent
+                         id: lll
+                                 anchors.margins: ProtoScreen.guToPx(.25)
+                                 anchors.left: parent.left
                                  text: styleData.value
                                  font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                                  verticalAlignment: Text.AlignVCenter
                                  horizontalAlignment: Text.AlignHCenter
                                  Layout.fillHeight: true
                                  Layout.fillWidth: false
+
                     }
 
                     Component.onCompleted: {
@@ -155,6 +164,14 @@ Item {
 //                            else
 //                                return "transparent"
 //                        })
+
+                        lll.text = Qt.binding(function() {
+                            if ( !model )
+                                return styleData.value
+                            else
+                                return model.fullname
+
+                        })
 
                         backgroundColor = Qt.binding(function() {
                             if ( !model )
@@ -188,11 +205,15 @@ Item {
                 title: "Position"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
+
 //                width: parent.width
 //                anchors.fill: parent
 //                width: lbl.implicitWidth + 2
                 width: ProtoScreen.guToPx(6)
                 delegate: Material.Card {
+                    flat: true
+                    radius: 0
+                    border.width: 0
                     anchors.fill: parent
                     anchors.centerIn: parent
                     backgroundColor: "transparent" //TeamInfo.getPosColor(styleData.value)
@@ -376,6 +397,9 @@ Item {
                    tv.model.setData(tv.model.index(styleData.row,0),
                                     value, 0)
 
+                    if ( model.knownProjection !==  value)
+                        topw.focuscount = 1
+
                    lbl.text = Qt.binding(function(){
                        if ( model.knownProjection !==  value)
                            return model.knownProjection
@@ -397,19 +421,20 @@ Item {
 
     Component {
         id: headerdel
-        Item {
+        Rectangle {
             id: idd
             implicitWidth: textItem2.implicitWidth
             width: parent.width
             height: ProtoScreen.guToPx(6)
-
+//            anchors.fill: parent
+            color: "white"
             Rectangle {
-                enabled: styleData.column > 3
-                visible: styleData.column > 3
+//                enabled: styleData.column > 3
+//                visible: styleData.column > 3
                 id: rec
                 height: parent.height * .50
                 width: parent.width
-                color: "white"
+                color: "transparent"
                 //styleData.column < 3 ? "white" : "grey"
                 anchors.top: parent.top
 //                border.width: ProtoScreen.guToPx(.125)
@@ -442,6 +467,7 @@ Item {
                     onClicked: {
 //                        MiddleMan.doCancel(refnum)
                         console.log("clicked icon")
+                        topw.focuscount = 0
                     }
 
                     size: ProtoScreen.guToPx(2.5)
@@ -456,6 +482,7 @@ Item {
                 }
 
                 Material.Button {
+                    focus: (topw.focuscount > 0) ? true : false
                     width: parent.width - lbl.width
                     anchors.left: lbl.right
                     anchors.right: parent.right
@@ -465,6 +492,7 @@ Item {
                     text: "Send"
                     onClicked : {
                         console.log("clicked send")
+                        topw.focuscount = 0
                     }
                     backgroundColor: themeroot.theme.accentColor
                     textColor: "white"
@@ -483,8 +511,8 @@ Item {
                     onClicked : {
                         console.log("clicked send")
 
-                        tv.model.setData(tv.model.index(1,styleData.column),
-                                         tv.model.get(1), 0)
+//                        tv.model.setData(tv.model.index(1,styleData.column),
+//                                         tv.model.get(1), 0)
 
                     }
 
