@@ -14,6 +14,8 @@
 #include <set>
 
 #include "FantasyAgent.h"
+#include "StateData.pb.h"
+#include "ldbwriter.h"
 
 namespace fantasybit {
 
@@ -302,6 +304,7 @@ public:
 
     static Block makeGenesisBlockRaw();
     static Block makeGenesisBlock();
+    static Bootstrap makeGenesisBoot(LdbWriter &ldb);
 
     static const int BLOCK_VERSION = 1;
     static const int TRANS_VERSION = 1;

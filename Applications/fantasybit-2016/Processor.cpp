@@ -23,6 +23,7 @@
 #include "RestFullCall.h"
 #include "fbutils.h"
 #include "pbutils.h"
+#include "ldbwriter.h"
 
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT || defined SQL
 #include "playerloader.h"
@@ -945,6 +946,36 @@ bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
 
             return false;;
         }
+
+    return true;
+}
+
+bool BlockProcessor::verifyBootstrap(LdbWriter &ldb,const Bootstrap &bs) {
+
+//    std::string errorstr;
+//    std::unordered_map<std::string,PlayerMeta> m_playermetamap;
+    //    auto mroot = loadMerkleMap(ldb,bs.playermetaroot(),m_playermetamap);
+
+    std::vector<std::string> roots{bs.playermetaroot(), bs.gamemetaroot(), bs.fnamemetaroot() };
+    for ( auto root : roots) {
+        MerkleTree mtree;
+        ldb.read(root,mtree);
+        if ( mtree.root() != root )
+            return false;
+
+        mtree.set_root(pb::makeMerkleRoot(mtree.leaves()));
+        if ( mtree.root() != root )
+            return false;
+
+        MerkleTree mtree2;
+        for ( auto shp : mtree.leaves()) {
+            mtree2.add_leaves(pb::hashit(ldb.read(shp)).str());
+        }
+
+        mtree.set_root(pb::makeMerkleRoot(mtree2.leaves()));
+        if ( mtree.root() != root )
+            return false;
+    }
 
     return true;
 }

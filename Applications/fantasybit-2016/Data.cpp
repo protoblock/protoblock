@@ -101,6 +101,106 @@ void NFLStateData::InitCheckpoint() {
 }
 #endif
 
+#ifndef NOUSE_GENESIS_BOOT
+#include "PeerNode.h"
+void NFLStateData::InitCheckpoint() {
+
+    leveldb::WriteOptions write_sync;
+    write_sync.sync = true;
+    leveldb::Options options;
+    options.create_if_missing = true;
+    leveldb::Status status;
+
+    leveldb::DB *db2;
+    leveldb::DB::Open(options, filedir("statusstore"), &db2);
+    leveldb::DB *db4;
+    leveldb::DB::Open(options, filedir("staticstore"), &db4);
+    leveldb::DB *db3;
+    leveldb::DB::Open(options, filedir("playerstore"), &db3);
+    leveldb::DB *db5;
+    leveldb::DB::Open(options, filedir("namestore"), &db5);
+
+
+
+    Bootstrap head;
+    LdbWriter ldb;
+    ldb.init(Node::bootstrap.get());
+    ldb.read(ldb.read("201600"),head);
+
+    GlobalState gs;
+    gs.set_season(head.season());
+    gs.set_week(head.week());
+    gs.set_state(GlobalState_State_INSEASON);
+    db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
+
+    {
+        MerkleTree mtree;
+        std::vector< std::pair<std::string,  GameStatusMeta> > mapt;
+        pb::loadMerkleMap(ldb,head.gamemetaroot(),mtree,mapt);
+
+        std::unordered_map<int,WeeklySchedule> wsm;
+        for ( auto p : mapt) {
+            GameStatusMeta &gsm = p.second;
+            auto it = wsm.find(gsm.week());
+            if ( it == end(wsm) ) {
+                wsm.insert({gsm.week(),WeeklySchedule::default_instance()});
+            }
+            WeeklySchedule &ws = wsm[gsm.week()];
+            ws.add_games()->CopyFrom(gsm.gameinfo());
+            string key = "gamestatus:" + gsm.id();
+            db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
+        }
+        for ( auto wg : wsm ) {
+            string key = "scheduleweek:" + to_string(wg.first);
+            db4->Put(write_sync, key,
+                           wg.second.SerializeAsString() );
+        }
+    }
+
+
+    {
+        MerkleTree mtree;
+        std::vector< std::pair<std::string,  PlayerMeta> > mapt;
+        pb::loadMerkleMap(ldb,head.playermetaroot(),mtree,mapt);
+
+        for ( auto p : mapt) {
+            PlayerMeta &pm = p.second;
+            if ( pm.has_player_status() )
+                db2->Put(write_sync, pm.playerid(),
+                               pm.player_status().SerializeAsString() );
+            db3->Put(write_sync, pm.playerid(),
+                           pm.player_base().SerializeAsString() );
+        }
+    }
+
+
+    {
+        MerkleTree mtree;
+        std::vector< std::pair<std::string,  FantasyNameBalMeta> > mapt;
+        pb::loadMerkleMap(ldb,head.fnamemetaroot(),mtree,mapt);
+
+        for ( auto p : mapt) {
+            FantasyNameBalMeta &pm = p.second;
+            FantasyNameBal fnb;
+            fnb.set_name(pm.name());
+            fnb.set_public_key(pm.public_key());
+            fnb.set_bits(pm.bits());
+            fnb.set_stake(pm.stake());
+            auto hash = FantasyName::name_hash(fnb.name());
+            leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+            db5->Put(write_sync, hkey, fnb.SerializeAsString());
+            qDebug() << "zxcvbn" << fnb.DebugString();
+            fnb.Clear();
+        }
+    }
+
+    delete db2;
+    delete db3;
+    delete db4;
+    delete db5;
+}
+#endif
+
 void NFLStateData::init() {
     write_sync.sync = true;
     leveldb::Options options;

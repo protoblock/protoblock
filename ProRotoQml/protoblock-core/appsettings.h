@@ -7,6 +7,7 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <QMutex>
+#include <QCoreApplication>
 #include "genericsingleton.h"
 #include <QStandardPaths>
 #include <QDir>
@@ -31,7 +32,8 @@ public:
         LogMessagePattern,
         LeaderBoardRefreshInterval,
         ConfirmSendAndCopyProjections,
-        GenesisTranactionLocation
+        GenesisTranactionLocation,
+        GenesisBootLocation2016
     };
 
 private:
@@ -56,6 +58,7 @@ private:
         case LeaderBoardRefreshInterval : return "leaderboardrefreshinterval";
         case ConfirmSendAndCopyProjections : return "confirmsendandcopyprojections";
         case GenesisTranactionLocation : return "genesistranactionlocation";
+        case GenesisBootLocation2016 : return "GenesisBootLocation2016";
         default:
             return "";
         }
@@ -69,8 +72,8 @@ private:
         DefaultAppSettings(){}
         ~DefaultAppSettings() {}
         static QVariant getDefaultSetting(SettingsKeys settingKey){
-            QString storageDirName =QString("storage");
-            QString logFileName = QString("tradingfootball.log");
+            QString storageDirName =QString("storage-2016");
+            QString logFileName = QString("tradingfootball-2016.log");
 
             switch (settingKey) {
             case LastFantasyName:  return "";
@@ -97,15 +100,26 @@ private:
             case GenesisTranactionLocation :
             #ifdef Q_OS_WIN
                 return storagePath(storageDirName)+"/"+"GenesisTransition-Tr-Transaction.txt";
-            #else
-                QDir dir(QCoreApplication::applicationDirPath());
+            #endif
+            #ifdef Q_OS_MAC
+                QDir dir(QApplication::applicationDirPath());
+                dir.cdUp();
+                dir.cd("Resources");
+                return dir.absolutePath()+QString("/GenesisTransition-Tr-Transaction.txt");
+            #endif
+            case GenesisBootLocation2016 :
+            #ifdef Q_OS_WIN
+                return storagePath(storageDirName)+"/"+"bootstraptest2015.out";
+            #endif
+            #ifdef Q_OS_MAC
+                QDir dir(QApplication::applicationDirPath());
                 dir.cdUp();
                 dir.cd("Resources");
                 return dir.absolutePath()+QString("/GenesisTransition-Tr-Transaction.txt");
             #endif
 
 
-            ;}
+            }
         }
     };
 
@@ -119,7 +133,7 @@ public:
 private:
     static QString storagePath(const QString & dirName){
         #ifdef Q_OS_WIN
-            return QCoreApplication::applicationDirPath()+"/storage/";
+            return QCoreApplication::applicationDirPath()+"/storage-2016/";
         #endif
         #ifdef Q_OS_MAC
             return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/tradingfootball/"+dirName);
@@ -128,7 +142,7 @@ private:
 
     static QString logPath(const QString & fileName){
         #ifdef Q_OS_WIN
-            return "./cutefantasy.log";
+            return "./cutefantasy-2016.log";
         #endif
         #ifdef Q_OS_MAC
            return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation))+"/tradingfootball/"+fileName;

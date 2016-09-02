@@ -73,6 +73,7 @@ public:
     void processTxfrom(const Block &b,int start = 0);
     static bool verifySignedBlock(const Block &sblock);
     static bool verifySignedTransaction(const SignedTransaction &st);
+    static bool verifyBootstrap(LdbWriter &ldb, const Bootstrap &bs);
     static std::shared_ptr<FantasyName>
             getFNverifySt(const SignedTransaction &st);
     void processResultProj(PlayerResult* playerresult,
@@ -167,6 +168,7 @@ public:
 
     void OnSeasonStart(int season);
     void OnSeasonEnd(int season);
+
 
 };
 

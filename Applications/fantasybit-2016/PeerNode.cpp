@@ -74,6 +74,15 @@ void Node::init() {
     current_hight = getLastLocalBlockNum();
     qInfo() <<  "current_hight" << current_hight;
 
+#ifndef NOCHECK_LOCAL_BOOTSTRAP
+    current_boot = getLastLocalBoot();
+    qInfo() <<  "current_boot" << current_boot.DebugString().data();
+
+    if ( current_boot.blocknum() > 0 )
+        if ( current_boot.blocknum() > current_hight )
+            current_hight = current_boot.blocknum();
+#endif
+
 #ifdef CHECKPOINTS
     if ( current_hight < Commissioner::DeveloperCheckpointHigh() ) {
         auto dc = Commissioner::getCheckPoint();
@@ -90,8 +99,47 @@ void Node::init() {
     }
 #endif
 
+#ifndef NOUSE_GENESIS_BOOT
+    if ( current_hight == 0 ) {
+        LdbWriter ldb;
+        ldb.init(Node::bootstrap.get());
+        current_boot = Commissioner::makeGenesisBoot(ldb);
+        if ( current_boot.blocknum() <= 0 ) {
+            qCritical() << " !current_boot.blocknum() <= 0 ";
+        }
+        else if (current_boot.blocknum() < current_hight)
+            qCritical() << " current_boot.blocknum() < current_hight" << current_boot.blocknum() <<  current_hight;
+        else {
+            qDebug() << " processing " << current_boot.DebugString().data();
+
+            if (!BlockProcessor::verifyBootstrap(ldb,current_boot)) {
+                qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
+                //return;
+            }
+            else {
+                ldb.write("head",current_boot.key());
+                current_hight = current_boot.blocknum();
+                Block sb;
+                leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
+                blockchain->Put(write_sync, value, sb.SerializeAsString());
+                current_hight = getLastLocalBlockNum();
+
+                NFLStateData::InitCheckpoint();
+
+                BlockRecorder::InitCheckpoint(current_hight);
+            }
+        }
+    }
+#endif
+
+#ifndef USE_LOCAL_GENESIS
     if (current_hight == 0)
-    {
+        qDebug() << " ERROR? - NO Boot - No Local Genesis!";
+    else
+        qDebug() << " current_hight " << current_hight << current_boot.DebugString().data();
+#else
+    if (current_hight == 0) {
+
   /*
         Block sb{};
         Reader<Block> b1r{GET_ROOT_DIR() +   "fantasybit-genesis-9-8-14-block.data"};
@@ -145,6 +193,7 @@ void Node::init() {
 */
 
     }
+#endif
 
     //assert(getLastBlockNum() > 0);
 
@@ -378,6 +427,14 @@ int32_t Node::myLastGlobalBlockNum() {
     }
 
     return myglobalheight;
+}
+
+Bootstrap Node::getLastLocalBoot() {
+    Bootstrap head;
+    LdbWriter ldb;
+    ldb.init(Node::bootstrap.get());
+    ldb.read(ldb.read(ldb.read("head")),head);
+    return head;
 }
 
 fc::optional<int32_t> Node::getLastGlobalBlockNum() {

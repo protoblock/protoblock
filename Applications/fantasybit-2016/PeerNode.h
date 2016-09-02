@@ -25,6 +25,7 @@
 #include "ProtoData.pb.h"
 #include <memory>
 #include <leveldb/comparator.h>
+#include "StateData.pb.h"
 
 namespace fantasybit
 {
@@ -33,6 +34,7 @@ class Node
 {
     int32_t current_hight = 0;
     int32_t global_height = 0;
+    Bootstrap current_boot{};
 public:
     Node();
     void init();
@@ -56,6 +58,7 @@ public:
 
     static std::vector<Block> getGlobalBlock(int32_t num, int32_t bend) ;
 
+    static Bootstrap getLastLocalBoot();
     static int32_t getLastLocalBlockNum();
     static int32_t myLastGlobalBlockNum();
     static void setLastGlobalBlockNum(int32_t num);

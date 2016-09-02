@@ -98,6 +98,10 @@ public:
     static void InitCheckpoint();
 #endif
 
+#ifndef NOUSE_GENESIS_BOOT
+    static void InitCheckpoint();
+#endif
+
     void init();
     void closeAll();
 
@@ -174,9 +178,10 @@ public:
                 continue;
 
             pm.set_playerid(it->key().ToString());
-
+            pm.set_allocated_player_status(&ps);
             tree.add_leaves(ldb.write(pm));
             pm.release_player_base();
+            pm.release_player_status();
             pm.Clear();
         }
         delete it;

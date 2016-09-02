@@ -161,7 +161,7 @@ Block Commissioner::makeGenesisBlock() {
     return b;
 
     b.ParseFromArray(genesis_data,sizeof(genesis_data));
-`
+
     return b;
 */
     Reader<Block> reader{GET_ROOT_DIR() + "genesisAlpha.out"};
@@ -286,126 +286,29 @@ Block Commissioner::makeGenesisBlock() {
     return b;
 
 }
-    /*
-    Block b1{};
 
-    Reader<Block> b1r{GET_ROOT_DIR() +   "FantasyBit-Genesis-1-block.data"};
-    if ( !b1r.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !b1r.ReadNext(b1) )*
-            qCritical() << " No genesis ";
-    //qDebug() << b.DebugString();
-
-    Block b0{};
-    Reader<Block> b0r{GET_ROOT_DIR() +   "FantasyBit-Genesis-0-block.data"};
-    if ( !b1r.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !b0r.ReadNext(b0) )
-            qCritical() << " No genesis ";
-
-    Writer<Block> writer{ GET_ROOT_DIR() + "fantasybit-genesis-9-8-14-block.data"};
-    writer(b0);
-    writer(b1);
-
-    return make_pair(b0,b1);
-
-*/
-    /*
-    FantasyAgent fa;
-    fa.beDataAgent();
-
-
-    SignedTransaction dasn;
-    Reader<SignedTransaction> reader{GET_ROOT_DIR() +   "dasn"};
-    if ( !reader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !reader.ReadNext(dasn) )
-            qCritical() << " No genesis ";
-
-    qDebug() << dasn.DebugString();
-
-    //return;
-    Block b;
-
-    Reader<Block> breader{GET_ROOT_DIR() +   "FantasyBit-Genesis-0-block.data"};
-    if ( !breader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !breader.ReadNext(b) )
-            qCritical() << " No genesis ";
-    qDebug() << b.DebugString();
-
-
-    //return makeGenesisBlockRaw();
-    SignedTransaction masn;
-    {
-    Reader<SignedTransaction> mreader{GET_ROOT_DIR() + "mansn"};
-    if ( !mreader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !mreader.ReadNext(masn) )
-            qCritical() << " No genesis ";
-    }
-    qDebug() << masn.DebugString();
-
-
-
-    //auto gt = GenesisTransition();
-    Transaction gt;
-
-    {
-    Reader<Transaction> treader{GET_ROOT_DIR() +  "GenesisTransition-Tr-Transaction.txt"};
-    if ( !treader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !treader.ReadNext(gt) )
-            qCritical() << " No genesis ";
-    }
-    //qDebug() << gt.DebugString();
-
-
-    auto p = fa.getIdSig(gt.SerializeAsString());
-
-
-    SignedTransaction st;
-    st.mutable_trans()->CopyFrom(gt);
-    st.set_id(p.first);
-    st.set_sig(p.second);
-
-
-
-    BlockHeader onehead = GenesisBlockHeader(b.signedhead().head(),fa,dasn,st);
-    SignedBlockHeader dasbh{};
-    dasbh = fa.makeSigned(onehead);
-
-
-    Block b1{};
-    b1.mutable_signedhead()->CopyFrom(dasbh);
-    b.add_signed_transactions()->CopyFrom(st);
-    b.add_signed_transactions()->CopyFrom(masn);
-    b.add_signed_transactions()->CopyFrom(dasn);
-
-    Writer<Block> writer{ GET_ROOT_DIR() + "FantasyBit-Genesis-1-block.data"};
-    writer(b);
-    writer(b1);
-
-
-    return make_pair(b,b1);
-
-
-/*
-    pb::signature sig = Commissioner::str2sig(sn.sig());
-    pb::sha256 digest = pb::hashit(sn.id());
-
-
-    if ( Commissioner::verifyOracle(sig, digest) ) {
-        qDebug() << " verfy ";
+Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb) {
+    Bootstrap head;
+    string headhash;
+    string genesiskey = "201600";
+    QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
+    Reader<KeyValue> reader{genesisBootFile.toStdString()};
+    KeyValue kv;
+    while ( reader.ReadNext(kv)) {
+        if ( kv.key() == genesiskey ) {
+            headhash = kv.value();
+        }
+        string wrote = ldb.write(kv);
+        if ( wrote != kv.key() || wrote == "" )
+            qDebug() << " error writing bootstrap" << kv.DebugString().data();
     }
 
-*/
+
+    if ( headhash != "" )
+        ldb.read(headhash,head);
+
+    return head;
+}
 
 #endif
 

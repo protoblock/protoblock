@@ -20,8 +20,9 @@ public:
 
     std::string write(const std::string &key, const std::string &val) {
         //qDebug() << key.data() << val.data();
-        db->Put(write_sync,key,val);
-        return key;
+        if (db->Put(write_sync,key,val).ok())
+            return key;
+        else return "";
     }
     std::string write(const std::string &val) {
         auto ret = pb::hashit(val).str();
@@ -36,6 +37,11 @@ public:
     std::string write(const fantasybit::MerkleTree &tree) {
         return write(tree.root(),tree.SerializeAsString());
     }
+
+    std::string write(const fantasybit::KeyValue &kv) {
+        return write(kv.key(),kv.value());
+    }
+
 
     std::string read(const std::string &id) ;
 
