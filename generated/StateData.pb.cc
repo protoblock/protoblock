@@ -1542,7 +1542,7 @@ void protobuf_AddDesc_StateData_2eproto() {
     "sReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t\022\016\n\006f"
     "chash\030\036 \001(\00429\n\003req\022\021.fantasybit.WsReq\030\240\006"
     " \001(\0132\030.fantasybit.GetOrdersReq\"&\n\010KeyVal"
-    "ue\022\013\n\003key\030\n \001(\t\022\r\n\005value\030\024 \001(\t\"\215\001\n\tBoots"
+    "ue\022\013\n\003key\030\n \001(\014\022\r\n\005value\030\024 \001(\014\"\215\001\n\tBoots"
     "trap\022\013\n\003key\030\001 \001(\t\022\020\n\010blocknum\030\002 \001(\005\022\014\n\004w"
     "eek\030\003 \001(\005\022\016\n\006season\030\004 \001(\005\022\024\n\014gamemetaroo"
     "t\030\n \001(\014\022\026\n\016playermetaroot\030\024 \001(\014\022\025\n\rfname"
@@ -20663,15 +20663,12 @@ bool KeyValue::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string key = 10;
+      // optional bytes key = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_key()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->key().data(), this->key().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -20679,16 +20676,13 @@ bool KeyValue::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string value = 20;
+      // optional bytes value = 20;
       case 20: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_value:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_value()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->value().data(), this->value().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -20714,21 +20708,15 @@ bool KeyValue::MergePartialFromCodedStream(
 
 void KeyValue::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string key = 10;
+  // optional bytes key = 10;
   if (has_key()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key().data(), this->key().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       10, this->key(), output);
   }
 
-  // optional string value = 20;
+  // optional bytes value = 20;
   if (has_value()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->value().data(), this->value().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       20, this->value(), output);
   }
 
@@ -20740,23 +20728,17 @@ void KeyValue::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* KeyValue::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string key = 10;
+  // optional bytes key = 10;
   if (has_key()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key().data(), this->key().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         10, this->key(), target);
   }
 
-  // optional string value = 20;
+  // optional bytes value = 20;
   if (has_value()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->value().data(), this->value().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         20, this->value(), target);
   }
 
@@ -20771,17 +20753,17 @@ int KeyValue::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string key = 10;
+    // optional bytes key = 10;
     if (has_key()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->key());
     }
 
-    // optional string value = 20;
+    // optional bytes value = 20;
     if (has_value()) {
       total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->value());
     }
 

@@ -6765,26 +6765,26 @@ class KeyValue : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string key = 10;
+  // optional bytes key = 10;
   inline bool has_key() const;
   inline void clear_key();
   static const int kKeyFieldNumber = 10;
   inline const ::std::string& key() const;
   inline void set_key(const ::std::string& value);
   inline void set_key(const char* value);
-  inline void set_key(const char* value, size_t size);
+  inline void set_key(const void* value, size_t size);
   inline ::std::string* mutable_key();
   inline ::std::string* release_key();
   inline void set_allocated_key(::std::string* key);
 
-  // optional string value = 20;
+  // optional bytes value = 20;
   inline bool has_value() const;
   inline void clear_value();
   static const int kValueFieldNumber = 20;
   inline const ::std::string& value() const;
   inline void set_value(const ::std::string& value);
   inline void set_value(const char* value);
-  inline void set_value(const char* value, size_t size);
+  inline void set_value(const void* value, size_t size);
   inline ::std::string* mutable_value();
   inline ::std::string* release_value();
   inline void set_allocated_value(::std::string* value);
@@ -18891,7 +18891,7 @@ inline void GetOrdersReq::set_fchash(::google::protobuf::uint64 value) {
 
 // KeyValue
 
-// optional string key = 10;
+// optional bytes key = 10;
 inline bool KeyValue::has_key() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -18924,7 +18924,7 @@ inline void KeyValue::set_key(const char* value) {
   }
   key_->assign(value);
 }
-inline void KeyValue::set_key(const char* value, size_t size) {
+inline void KeyValue::set_key(const void* value, size_t size) {
   set_has_key();
   if (key_ == &::google::protobuf::internal::kEmptyString) {
     key_ = new ::std::string;
@@ -18961,7 +18961,7 @@ inline void KeyValue::set_allocated_key(::std::string* key) {
   }
 }
 
-// optional string value = 20;
+// optional bytes value = 20;
 inline bool KeyValue::has_value() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -18994,7 +18994,7 @@ inline void KeyValue::set_value(const char* value) {
   }
   value_->assign(value);
 }
-inline void KeyValue::set_value(const char* value, size_t size) {
+inline void KeyValue::set_value(const void* value, size_t size) {
   set_has_value();
   if (value_ == &::google::protobuf::internal::kEmptyString) {
     value_ = new ::std::string;

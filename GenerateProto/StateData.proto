@@ -625,8 +625,8 @@ message GetOrdersReq {
 
 
 message KeyValue {
-    optional string key = 10;
-    optional string value = 20;
+    optional bytes key = 10;
+    optional bytes value = 20;
 }
 
 message Bootstrap {

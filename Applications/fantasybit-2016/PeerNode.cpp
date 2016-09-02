@@ -79,8 +79,26 @@ void Node::init() {
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
 
     if ( current_boot.blocknum() > 0 )
-        if ( current_boot.blocknum() > current_hight )
+        if ( current_boot.blocknum() > current_hight ) {
             current_hight = current_boot.blocknum();
+            LdbWriter ldb;
+            ldb.init(Node::bootstrap.get());
+            if (!BlockProcessor::verifyBootstrap(ldb,current_boot)) {
+                qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
+                //return;
+            }
+            else {
+                current_hight = current_boot.blocknum();
+                Block sb;
+                leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
+                blockchain->Put(write_sync, value, sb.SerializeAsString());
+                current_hight = getLastLocalBlockNum();
+
+                NFLStateData::InitCheckpoint();
+
+                BlockRecorder::InitCheckpoint(current_hight);
+            }
+        }
 #endif
 
 #ifdef CHECKPOINTS
@@ -412,8 +430,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 21199 )
-        num = 21199;
+    if (num > 4063 )
+        num = 4063;
 #endif
 
     return num;
@@ -447,7 +465,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     //qDebug() << " after rest height" << height;
 
 #ifdef STOP_HEIGHT_TEST
-    height = 11321;
+    height = 4063;
 #endif
 
     if ( myLastGlobalBlockNum() < height )

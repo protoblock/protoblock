@@ -3,7 +3,7 @@
 ##############
 #DEFINES += PRODFOOTBALL
 #DEFINES += USE_LOCALHOST_SERVER
-
+#DEFINES += STOP_HEIGHT_TEST
 
 contains (QMAKE_HOST.os, Darwin){
     message("Host is OSX")
