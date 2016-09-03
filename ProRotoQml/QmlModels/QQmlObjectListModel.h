@@ -142,7 +142,7 @@ public:
              ret.setValue (role != baseRole () ? item->property (rolename) : QVariant::fromValue (static_cast<QObject *> (item)));
         }
 
-        qDebug() << "index " << index.row() << " " << index.column() << "rolename " << rolename << " prop " << item->property (rolename);
+//        qDebug() << "index " << index.row() << " " << index.column() << "rolename " << rolename << " prop " << item->property (rolename);
         return ret;
     }
     QHash<int, QByteArray> roleNames (void) const {

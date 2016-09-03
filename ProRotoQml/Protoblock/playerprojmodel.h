@@ -177,7 +177,7 @@ public:
         qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
 
-                qDebug() << " << cc " << columnCount();
+//                qDebug() << " << cc " << columnCount();
 //        QSortFilterProxyModel::setSortRole(column);
 //        QSortFilterProxyModel::sort(0, order);
     }
@@ -187,7 +187,7 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         if (!myIsEnabled) return true;
 
-                qDebug() << " << cc " << columnCount();
+//                qDebug() << " << cc " << columnCount();
 //        if ( !QSortFilterProxyModel::filterAcceptsRow(sourceRow,sourceParent)) {
 //            qDebug() << " filterAcceptsRow  no parent" << sourceRow;
 //            return false;
@@ -247,7 +247,7 @@ protected:
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE {
         return SortFilterProxyModel::data(index, role);
-        qDebug() <<role << " << cc " << columnCount();
+//        qDebug() <<role << " << cc " << columnCount();
     }
 
 //        if (myPositionCombobox!=NULL){

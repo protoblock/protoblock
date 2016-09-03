@@ -38,8 +38,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
     m_gameFilter = "Scheduled";
 
-    connect(&myGamesSelectionModel,SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-            this,SLOT(selectionChanged(QItemSelection, QItemSelection)));
+
 
     //player selection
     m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
@@ -149,6 +148,8 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
         m_goodList.append(myname.name().data());
 
     emit usingFantasyName(myname.name().data());
+
+    myFantasyName = myname.name();
 }
 
 void Mediator::LiveProj(FantasyBitProj) {
@@ -610,6 +611,10 @@ QString Mediator::init() {
             this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
 
     ready();
+
+    connect(&myGamesSelectionModel,SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+            this,SLOT(selectionChanged(QItemSelection, QItemSelection)));
+
     return ""; //todo check if missed live event
 }
 

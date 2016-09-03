@@ -40,7 +40,7 @@ Item {
                 console.log(" addColumn " )
                 var role = MiddleMan.addFnameColumn(fname)
                 tv.addColumn(columnComponent.createObject(tv, { "role": role, "title": fname}))
-                tv.resizeColumnsToContents()
+//                tv.resizeColumnsToContents()
             }
             highlightOnFocus: false
             anchors.fill: parent
@@ -246,7 +246,7 @@ Item {
                 title: "Avg"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(5)
+                width: ProtoScreen.guToPx(6)
             }
 
         }
@@ -421,6 +421,7 @@ Item {
                     onClicked : {
                         console.log("clicked send")
                         topw.focuscount = 0
+                        MiddleMan.sendProjections()
                     }
                     backgroundColor: themeroot.theme.accentColor
                     textColor: "white"

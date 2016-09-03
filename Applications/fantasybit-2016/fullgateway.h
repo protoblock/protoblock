@@ -115,8 +115,11 @@ public:
 
         connect(Mediator::instance(),&Mediator::ready,
                 [this](){
-                       if ( this->amLive )
+                       if ( this->amLive ) {
+                           connect(Mediator::instance(),&Mediator::NewProjection,
+                                   mlapi,&MainLAPIWorker::OnProjTX);
                            emit LiveGui(m_gs);
+                       }
 
                        if ( !m_mynames.empty())
                             emit MyNames(m_mynames);
@@ -149,6 +152,9 @@ public slots:
         m_gs = gs;
         emit LiveGui(gs);
         if ( heslive ) {
+            connect(Mediator::instance(),&Mediator::NewProjection,
+                    mlapi,&MainLAPIWorker::OnProjTX);
+
             if ( !m_mynames.empty())
                  emit MyNames(m_mynames);
             for( auto &v : holdfresh)

@@ -22,14 +22,15 @@
 #include <QItemSelectionModel>
 #include "playerprojmodel.h"
 #include <QStringListModel>
-
+#include <vector>
 #include "pbgateways.h"
 
+using namespace std;
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 namespace pb {
 
-using namespace std;
+
 class Mediator : public QObject {
     Q_OBJECT
 
@@ -168,16 +169,6 @@ public:
 
     // Q_INVOKABLE void newOrder(const QString &id, int qty, int price);
 
-    enum MyNameStatus{
-        None=1,
-        NotAvil=2,
-        Requested=3,
-        TransactionSent=4,
-        Confirmed=5
-    };
-    MyNameStatus myNameStatus()const;
-    void setMyNameStatus(const MyNameStatus &myNameStatus);
-
 
     Q_INVOKABLE void allNamesGet();
 
@@ -210,6 +201,35 @@ public:
     Q_INVOKABLE void select(int row, int command) {
         qDebug() << " meiator selected" << row << " commsnd " << command;
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
+    }
+
+
+
+    Q_INVOKABLE void sendProjections() {
+        std::unordered_map<string,vector<FantasyBitProj>> projbygame{};
+        for ( auto it : mPlayerProjModel) {
+            int projection = it->get_projection();
+            if (projection == 0)
+                continue;
+
+            auto gameid = it->get_gameid();
+
+            int knownprojection = it->get_knownProjection();
+            if ( knownprojection == projection)
+                continue;
+
+            vector<FantasyBitProj> &vproj = projbygame[gameid.toStdString()];
+
+            FantasyBitProj fproj;
+            fproj.set_name(myFantasyName);
+            fproj.set_proj(projection);
+            fproj.set_playerid(it->get_playerid().toStdString());
+            vproj.push_back(fproj);
+
+        }
+
+        for ( auto &vg : projbygame)
+            emit NewProjection(vg.second);
     }
 
     Q_INVOKABLE QString addFnameColumn(QString fname) {
@@ -259,6 +279,7 @@ public:
             return model->get_fullname() + " (" + model->get_position() +")" ;
     }
 
+
     //data
     Q_INVOKABLE QString getTeamid(const QString &uid) {
         auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
@@ -302,7 +323,9 @@ signals:
     void leaderBoardchanged();
     void portfolioChanged();
     */
-    // for QML only   bool engineUpdate(bool);
+
+    void NewProjection(vector<fantasybit::FantasyBitProj>);
+
 
 protected slots:
 //    void handdleUsingName(const QString &name);
@@ -335,9 +358,8 @@ private slots:
 private:
     std::string lastPk2name;
     //fantasybit::FantasyAgent m_fantasy_agent;
+    std::string myFantasyName;
 
-
-    MyNameStatus m_myNameStatus;
     QString m_playersName;
     QString m_playersStatus;
     std::string m_lastSignedplayer;
