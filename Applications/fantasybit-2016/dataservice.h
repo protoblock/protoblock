@@ -7,8 +7,9 @@
 //#include "LAPIWorker.h"
 #include "Data.h"
 //#include <QMutexLocker>
+#include "pbgateways.h"
 
-class DataService : public GenericSingleton<DataService>  {
+class DataService : public GenericSingleton<DataService>, public pb::IDataService {
     friend class GenericSingleton<DataService>;
     DataService(){}
     //QMutex myMutex;

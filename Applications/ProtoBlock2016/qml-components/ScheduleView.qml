@@ -3,7 +3,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.1
 import Material 1.0 as Material
-import ProRotoQml.Protoblock 1.0
+//import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import QtQml.Models 2.2
 

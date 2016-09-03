@@ -41,7 +41,7 @@ public:
 
             : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
-    void updateWeeklySchedule(int week, const fantasybit::WeeklySchedule &weekly,QString &filter) {
+    void updateWeeklySchedule(int week, const fantasybit::WeeklySchedule &weekly) {
 
         qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
 

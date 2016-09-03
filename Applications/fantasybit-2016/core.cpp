@@ -1,10 +1,14 @@
 #include "core.h"
 #include <iostream>
 #include "ApiData.pb.h"
-
+#include "mediator.h"
 
 Core::Core(){}
 void Core::bootstrap(){
+
+
+//    engine.rootContext()->setContextProperty("MiddleMan", pb::Mediator::instance());
+
 
     qRegisterMetaType<fantasybit::GlobalState>("fantasybit::GlobalState");
     qRegisterMetaType<fantasybit::MyFantasyName>("fantasybit::MyFantasyName");

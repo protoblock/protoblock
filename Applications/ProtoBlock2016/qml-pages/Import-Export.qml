@@ -1,6 +1,6 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4 as Controls
-import ProRotoQml.Protoblock 1.0
+//import ProRotoQml.Protoblock 1.0
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0

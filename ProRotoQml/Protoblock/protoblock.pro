@@ -33,7 +33,7 @@ TARGET = ProRotoQml.Protoblock
 uri = ProRotoQml.Protoblock
 
 QT += qml quick network websockets core
-CONFIG += qt plugin c++11 warn_off
+CONFIG += qt c++11 warn_off
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = ProRotoQml.Protoblock
 
@@ -66,7 +66,8 @@ HEADERS += \
     openordersmodel.h \
     weeklyschedulemodel.h \
     playerprojmodel.h \
-    sortfilterproxymodel.h
+    sortfilterproxymodel.h \
+    pbgateways.h
 
 
 

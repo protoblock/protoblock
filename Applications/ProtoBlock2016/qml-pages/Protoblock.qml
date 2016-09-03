@@ -3,7 +3,7 @@ import QtQuick 2.4
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 
-import ProRotoQml.Protoblock 1.0
+//import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 Item {
     Flickable{

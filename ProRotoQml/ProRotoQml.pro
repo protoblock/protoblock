@@ -13,7 +13,7 @@ SUBDIRS += \
 #        $$PWD/libBotan \
 #        $$PWD/libQSsh \
 #        $$PWD/libQmlSsh \
-#        $$PWD/protoblock-core \
+        $$PWD/protoblock-core \
         $$PWD/Protoblock/protoblock.pro \
 #        $$PWD/PeerTwoPeerChat \
 #        $$PWD/Backend/backend.pro

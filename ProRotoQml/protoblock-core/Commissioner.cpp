@@ -14,6 +14,7 @@
 #include "DataPersist.h"
 #include "platform.h"
 #include "appsettings.h"
+#include "ldbwriter.h"
 
 using namespace std;
 

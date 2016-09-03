@@ -10,6 +10,10 @@
 #include <QObject>
 #include <QDebug>
 #include <QtGlobal>
+#include "dataservice.h"
+
+#include "core.h"
+#include "mediator.h"
 
 //#include "RunGuard.h"
 
@@ -28,7 +32,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+//    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 //    QSysInfo sysInfo;
 //    QString sInfo = sysInfo.productType ();
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
@@ -71,7 +75,16 @@ int main(int argc, char *argv[])
 
 //    qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
 
+    Core::instance()->bootstrap();
 
+    MainLAPIWorker *mw = Core::resolveByName<MainLAPIWorker>("coreapi");
+    mw->dataService = DataService::instance();
+    pb::Mediator::instance()->setContext(qobject_cast<pb::IPBGateway *>(mw));
+
+    engine.rootContext()->setContextProperty("MiddleMan", pb::Mediator::instance());
+//    qmlRegisterSingletonType<pb::Mediator>(uri,1,0,"MiddleMan",middleMan);
+
+    engine.dumpObjectInfo();
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     return app.exec();
 }

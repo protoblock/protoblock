@@ -15,22 +15,11 @@
 #include <QtCore/qsortfilterproxymodel.h>
 
 #include "sortfilterproxymodel.h"
+#include "fbutils.h"
 
-namespace fantasybit {
+namespace pb {
+using namespace fantasybit;
 
-struct PlayerDetail {
-    PlayerBase base;
-    PlayerStatus::Status team_status;
-    PlayerGameStatus game_status;
-};
-
-struct GameRoster {
-    GameInfo info;
-    GameStatus::Status  status;
-    std::unordered_map<std::string,PlayerDetail> homeroster;
-    std::unordered_map<std::string,PlayerDetail> awayroster;
-
-};
 
 class PlayerProjModelItem : public QObject {
     Q_OBJECT
@@ -75,7 +64,7 @@ class PlayerProjModel : public QQmlObjectListModel<PlayerProjModelItem>{
 public:
 
 
-    void updateRosters(const std::vector<fantasybit::GameRoster> &inrosters) {
+    void updateRosters(std::vector<pb::GameRoster> &inrosters) {
 
 //        qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
 
@@ -83,7 +72,7 @@ public:
 
 //        setweek(week);
 
-        for(const fantasybit::GameRoster & game  : inrosters) {
+        for(const pb::GameRoster & game  : inrosters) {
             // add game
             QString gameId = game.info.id().data();
             //add home players
@@ -323,7 +312,6 @@ Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
 
 
 
-#endif // PLAYERPROJMODEL_H
 
 
 //struct PlayerDetail {
@@ -347,3 +335,6 @@ Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
 //std::vector<fantasybit::GameRoster> DataService::GetCurrentWeekGameRosters()
 
 }
+
+#endif // PLAYERPROJMODEL_H
+

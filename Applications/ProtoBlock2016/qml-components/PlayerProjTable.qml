@@ -5,7 +5,7 @@ import Material 1.0 as Material
 import Material.Extras 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
-import ProRotoQml.Protoblock 1.0
+//import ProRotoQml.Protoblock 1.0
 import QtQuick.Layouts 1.1
 
 Item {
@@ -70,7 +70,6 @@ Item {
 //                   return ProtoScreen.guToPx(6) * columnCount
 //                })
                 ppt.addcolumn.connect(addcolumnMethod)
-
             }
 
             function addcolumnMethod(fname) {

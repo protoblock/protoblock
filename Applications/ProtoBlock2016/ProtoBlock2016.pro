@@ -86,3 +86,36 @@ ios{
                 /Users/satoshi/Qt/5.6/ios/lib/libIrcModel.a \
                 /Users/satoshi/Qt/5.6/ios/lib/libIrcUtil.a
 }
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/release/ -lfantasybit-2016D
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/debug/ -lfantasybit-2016D
+else:macx: LIBS += -L$$OUT_PWD/../fantasybit-2016/ -lfantasybit-2016D
+
+INCLUDEPATH += $$PWD/../fantasybit-2016
+DEPENDPATH += $$PWD/../fantasybit-2016
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/libfantasybit-2016D.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/libfantasybit-2016D.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/fantasybit-2016D.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/fantasybit-2016D.lib
+else:macx: PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/libfantasybit-2016D.a
+
+INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
+INCLUDEPATH +=  $$PWD/../../ProRotoQml/protoblock-core
+INCLUDEPATH +=  $$PWD/../../ProRotoQml/protoblock-core/bitcoin-core-base58
+INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlModels
+INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlSuperMacros
+INCLUDEPATH +=  $$PWD/../../../prebuiltLibs/windows/3rdParty
+INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty/secp256k1
+
+include ($$PWD/../../pri/genproto.pri)
+
+#message(win32 $$INCLUDEPATH)
+
+#win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/release/ -lProRotoQml.Protoblockd
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/debug/ -lProRotoQml.Protoblockd
+#else:unix: LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/ -lProRotoQml.Protoblockd
+
+INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
+DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock

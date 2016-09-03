@@ -8,6 +8,7 @@
 #include "../QmlSuperMacros/QQmlHelpersCommon.h"
 #include "NameData.pb.h"
 #include <QQmlHelpersCommon.h>
+#include "FantasyName.h"
 
 using namespace fantasybit;
 
@@ -28,10 +29,34 @@ public:
         m_bits = in.bits();
         m_chash = in.chash();
     }
+
+    explicit FantasyNameBalModelItem(fantasybit::FantasyName &in) :  QObject(nullptr) {
+        m_name = in.alias().data();
+//        m_pk = in.pubkey().data();
+        m_stake = in.getStakeBalance();
+        m_bits = in.getBalance();
+        m_chash = in.hash();
+    }
 };
 
 
-class FantasyNameBalModel : public QQmlObjectListModel<FantasyNameBalModelItem> {};
+class FantasyNameBalModel : public QQmlObjectListModel<FantasyNameBalModelItem> {
+
+public:
+    explicit FantasyNameBalModel (QObject *          parent      = Q_NULLPTR,
+                                    const QByteArray & displayRole = QByteArray (),
+                                    const QByteArray & uidRole     = QByteArray ()) :
+                                    QQmlObjectListModel<FantasyNameBalModelItem>
+                                                    (parent,displayRole,uidRole)
+    {}
+
+    void updateleaders(std::vector<std::shared_ptr<fantasybit::FantasyName>> &in) {
+        clear();
+        for(std::shared_ptr<fantasybit::FantasyName> fPlayer  : in) {
+            append(new FantasyNameBalModelItem(*fPlayer));
+        }
+    }
+};
 
 Q_DECLARE_METATYPE(FantasyNameBalModel*)
 #endif // FANTASYNAMEMODEL_H

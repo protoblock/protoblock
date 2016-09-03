@@ -10,7 +10,7 @@
 #include "QQmlEnumClassHelper.h"
 #include "QMap"
 #include "StateData.pb.h"
-#include "FantasyAgent.h"
+//#include "FantasyAgent.h"
 #include "QQmlListPropertyHelper.h"
 #include <QTimer>
 #include "fbutils.h"
@@ -23,105 +23,88 @@
 #include "playerprojmodel.h"
 #include <QStringListModel>
 
-//QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
+#include "pbgateways.h"
 
-class Mediator : public QObject
-{
+//QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
+namespace pb {
+class Mediator : public QObject {
     Q_OBJECT
 
-    //protoected :)
-    QML_READONLY_CSTREF_PROPERTY (QString, namefrompk)
-//    QML_CONSTANT_CSTREF_PROPERTY (QVariantMap, nameStatuses)
-
-  //  QML_CONSTANT_CSTREF_PROPERTY (QString, secert3File)
-    QML_READONLY_CSTREF_PROPERTY (QString, encyptPath)
-    QML_READONLY_CSTREF_PROPERTY (bool, engineStatus)
-
-    QML_READONLY_CSTREF_PROPERTY (QString, currentPidContext)
+    explicit Mediator(QObject *parent = 0);
+    //    QML_READONLY_CSTREF_PROPERTY (QString, namefrompk)
+    //    QML_READONLY_CSTREF_PROPERTY (QString, encyptPath)
+    //    QML_READONLY_CSTREF_PROPERTY (bool, engineStatus)
+    //    QML_READONLY_CSTREF_PROPERTY (QString, currentPidContext)
 
 
-    Q_PROPERTY(QString errorString READ errorString NOTIFY errorStringChanged)
-    Q_PROPERTY(QString webSocketErrorString  READ webSocketErrorString NOTIFY webSocketErrorStringChanged)
+    //    Q_PROPERTY(QString playersName READ playersName  NOTIFY playersNameChanged)
+    //    Q_PROPERTY(QString  playersStatus READ playersStatus  NOTIFY playersStatusChanged)
 
-    Q_PROPERTY(SocketState socketState READ socketState NOTIFY socketStateChanged)
-    Q_ENUMS (SocketState)
+    //    Q_PROPERTY(MyNameStatus myNameStatus READ myNameStatus NOTIFY myNameStatusChanged)
+    //    Q_ENUMS (MyNameStatus)
 
-//    Q_PROPERTY(QString playersName READ playersName  NOTIFY playersNameChanged)
-//    Q_PROPERTY(QString  playersStatus READ playersStatus  NOTIFY playersStatusChanged)
+    //    QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
 
-//    Q_PROPERTY(MyNameStatus myNameStatus READ myNameStatus NOTIFY myNameStatusChanged)
-//    Q_ENUMS (MyNameStatus)
+    QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
 
-    QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
 
+    //Trading
+    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
-    QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
-    QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
-    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
-
-//    QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
-
+    //QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
-
-    QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeeklyScheduleModel)
-    QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pQItemSelectionModel)
-
-    QML_READONLY_PTR_PROPERTY(ProjectionsViewFilterProxyModel, pProjectionsViewFilterProxyModel)
-    QML_READONLY_PTR_PROPERTY(QStringListModel, pPosFilter)
-    QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
-    PlayerProjModel mPlayerProjModel;
+    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
 
+    //fantasyname
+    QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
 
+
+    //leaderboard
     QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pLeaderBoardSortModel)
 
 
-    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
+    //schedule
+    QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeeklyScheduleModel)
+    QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pQItemSelectionModel)
 
-//    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
+    //projections
+    QML_READONLY_PTR_PROPERTY(ProjectionsViewFilterProxyModel, pProjectionsViewFilterProxyModel)
+    QML_READONLY_PTR_PROPERTY(QStringListModel, pPosFilter)
+    QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
+
+    QML_READONLY_CSTREF_PROPERTY (qint32, week)
+    QML_READONLY_CSTREF_PROPERTY (qint32, season)
+    QML_READONLY_CSTREF_PROPERTY (QString, seasonstring)
 
 
 
-//    QML_LIST_PROPERTY(Mediator,goodFname,QString)
-
-
-//    QML_READONLY_CSTREF_PROPERTY (QStringList, allNames2)
+    //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
+    //    QML_LIST_PROPERTY(Mediator,goodFname,QString)
+    //    QML_READONLY_CSTREF_PROPERTY (QStringList, allNames2)
     //    Q_PROPERTY(QQmlListProperty<QString> goodFnames READ goodFnames NOTIFY goodFnamesChanged)
 
+
+
+    PlayerProjModel mPlayerProjModel;
     QItemSelectionModel myGamesSelectionModel;
+    pb::IPBGateway *mGateway = nullptr;
+    void setupConnection(pb::IPBGateway *ingateway);
 
+    static Mediator *myInstance;
 public:
-    /*!
-     * \brief webSocketErrorString
-     * For SOCKET errors only
-     */
-    QString webSocketErrorString()const;
+    static Mediator *instance();
 
-    /*!
-     * \brief errorString
-     * Font NON -Socket releated errors
-     */
-    QString errorString()const;
-
-    /*!
-     * socket state used alot to check what is going on with the sockets from QML
-     */
-    enum SocketState{
-        Unconnected,
-        Lookup,
-        Connecting,
-        Connected,
-        Bound,
-        Closing,
-        Listening,
-        Default
-    };
-    SocketState socketState()const{
-        return m_socketState;
+    void setContext(pb::IPBGateway *ingateway) {
+        mGateway = ingateway;
+        setupConnection(mGateway);
     }
 
+    Q_INVOKABLE QString init();
+
+    Q_INVOKABLE bool isTestNet() { return fantasybit::IS_TEST_NET; }
 
     QStringList m_goodList;
     QStringList m_allNamesList;
@@ -164,25 +147,14 @@ public:
         if ( depthBackup < 0 ) depthBackup = 0;
         depthCount = 0;
     }
+    Q_INVOKABLE void changeDepthContext(const QString& context) {
+        if ( mGetDepthReq.GetExtension(GetDepthReq::req).pid().data() != context )
+            mGetDepthReq.MutableExtension(GetDepthReq::req)->set_pid(context.toStdString());
 
-//    QStringList
-
-//     QList<QString *> m_goodFnames;
-//     QQmlListProperty<QString> goodFnames() {
-//         return QQmlListProperty<QString>(this, m_goodFnames);
-//     }
-
-//     QString *goodFname(int index) const
-//     {
-//         return m_goodFnames.at(index);
-//     }
-
-//    int goodFnameCount() const{
-//        return m_goodFnames.count();
-//    }
-
-    //FIXME make destroctor as this wikl leak
-    static Mediator *instance();
+//            m_currentPidContext = context;
+    }
+    Q_INVOKABLE void doCancel(qint32 id);
+    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
 
     QString playersStatus()const;
     void setPlayersStatus(const QString &playersStatus);
@@ -190,8 +162,7 @@ public:
     QString playersName();
     void setPlayersName(const QString &playersName);
 
-
-//    Q_INVOKABLE void newOrder(const QString &id, int qty, int price);
+    // Q_INVOKABLE void newOrder(const QString &id, int qty, int price);
 
     enum MyNameStatus{
         None=1,
@@ -202,29 +173,16 @@ public:
     };
     MyNameStatus myNameStatus()const;
     void setMyNameStatus(const MyNameStatus &myNameStatus);
-    qint64 sendBinaryMessage(const QByteArray &data);
-    qint64 sendTextMessage(const QString &message);
-    QHostAddress  peerAddress() const;
-    QAbstractSocket::SocketState  state()const;
-    QWebSocketProtocol::Version  version()const;
-//    std::string lastYearPath();
 
 
-    Q_INVOKABLE void changeDepthContext(const QString& context) {
-        if ( mGetDepthReq.GetExtension(GetDepthReq::req).pid().data() != context )
-            mGetDepthReq.MutableExtension(GetDepthReq::req)->set_pid(context.toStdString());
-
-        m_currentPidContext = context;
-    }
-
-    Q_INVOKABLE void doCancel(qint32 id);
-    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void allNamesGet();
+
+    //trading
     Q_INVOKABLE void rowMarketGet();
     Q_INVOKABLE void getOrderPos(const QString&);
     Q_INVOKABLE void getOrderPos();
     Q_INVOKABLE void setOrderModel(const QString& symbol) {
-        if  ( !m_fantasy_agent.HaveClient() )
+        if  ( amLive )
             return;
 
         auto model = m_pTradingPositionsModel->getByUid(symbol);
@@ -240,29 +198,29 @@ public:
         else
             m_pGlobalOpenOrdersModel = model->get_pOpenOrdersModel();
     }
-
     Q_INVOKABLE QString getOrderModelSymbol() {
         return m_pGlobalOpenOrdersModel->get_pidsymbol();
     }
 
+    //projections
     Q_INVOKABLE void select(int row, int command) {
         qDebug() << " meiator selected" << row << " commsnd " << command;
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
     }
 
+
+    //fantasy name - manage
     Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(const QString&);
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
     Q_INVOKABLE void signPlayer(const QString &name);
     Q_INVOKABLE void useName(const QString &name);
-    Q_INVOKABLE QString init();
+
     Q_INVOKABLE QString getSecret();
     Q_INVOKABLE QStringList goodList() { return m_goodList; }
     Q_INVOKABLE QStringList allNamesList() { return m_allNamesList; }
-    Q_INVOKABLE bool isTestNet() { return fantasybit::IS_TEST_NET; }
 
-    Q_INVOKABLE QStringList allRowMarketList() { return m_allNamesList; }
-
+    //portfolio
     Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
         auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
         if ( model == nullptr ) {
@@ -273,6 +231,7 @@ public:
             return model->get_fullname() + " (" + model->get_position() +")" ;
     }
 
+    //data
     Q_INVOKABLE QString getTeamid(const QString &uid) {
         auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
         if ( model == nullptr ) {
@@ -283,40 +242,38 @@ public:
             return model->get_teamid();
     }
 
+    //schedule
     Q_INVOKABLE void setScheduleFilter(const QString& filter) {
         setgameFilter(filter);
-//        m_pWeeklyScheduleModel->clear();
+        //m_pWeeklyScheduleModel->clear();
     }
 
-    qint64 sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data);
 
-
+    //oms
     void subscribeOrderPos(const QString &name);
     void getOrderReq(const QString &name,const QString symbol="");
+
+    //name
     void OnGoodName(const QString &goodname, const fantasybit::FantasyNameBal &fnb);
+
 signals:
     void importSuccess(const QString name, bool passfail);
-
     void usingFantasyName(const QString &name, bool isdefault = false);
-//    void nameStatusChanged (QString, QString);
     void nameCheckGet( const QString & name, const QString & status );
     //    void myNameChang (const QString & name, QString status );
-//    void myNameStatusChanged();
+    //    void myNameStatusChanged();
+    //    void nameStatusChanged (QString, QString);
+
+    void OnClaimName(QString name);
 
 
-    void error(QString);
-    void socketError(QString);
-    void socketStateChanged();
-    void webSocketErrorStringChanged();
-    void errorStringChanged();
-
-    void goodFnamesChanged();
+    /*
     void playersNameChanged();
     void playersStatusChanged();
     void leaderBoardchanged();
     void portfolioChanged();
-    // for QML only
-    bool engineUpdate(bool);
+    */
+    // for QML only   bool engineUpdate(bool);
 
 protected slots:
 //    void handdleUsingName(const QString &name);
@@ -324,76 +281,87 @@ protected slots:
 //    void handdleNameStatuses();
 
 
+    //quotes
     void getDepthRep();
 
-    void handleError(const QString err);
-    void handleWebSocketError(const QString err);
-
-    void handleClosed();
-    void onConnected();
-    void handleAboutToClose();
-    void onTextMessageReceived( QString message);
-    void onBinaryMessageRecived(const QByteArray &message);
+    //name
     void getSignedPlayerStatus();
-    void doTestTrade();
+
+    //trade
+//    void doTestTrade();
 
     // slot to update QML ONLY propertys
-    void handleEngineUpdate(const bool &sta);
+    //void handleEngineUpdate(const bool &sta);
 
+    //projections
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
         qDebug() << " mediator selectionChanged " << selected << deselected;
         m_pProjectionsViewFilterProxyModel->invalidate();
     }
 
 private slots:
-    void handleSocketError(QAbstractSocket::SocketError err);
-//    void handleSocketState(QAbstractSocket::SocketState sta);
-    void handleSocketState(QAbstractSocket::SocketState sta);
     void OnpPlayerQuoteSliceModelItemChanged (PlayerQuoteSliceModelItem * name); \
-private:
-    QWebSocket m_webSocket, m_txsocket;
-    std::string lastPk2name;
-    fantasybit::FantasyAgent m_fantasy_agent;
-    static Mediator *myInstance;
-    explicit Mediator(QObject *parent = 0);
-    MyNameStatus m_myNameStatus;
-    QString m_errorString;
-    QString m_webSocketErrorString;
-    SocketState m_socketState;
-    QAbstractSocket::SocketState m_internalSocketState;
 
+
+private:
+    std::string lastPk2name;
+    //fantasybit::FantasyAgent m_fantasy_agent;
+
+
+    MyNameStatus m_myNameStatus;
     QString m_playersName;
     QString m_playersStatus;
     std::string m_lastSignedplayer;
 
     std::unordered_map<std::string, std::string> m_myPubkeyFname;
-
     std::unordered_map<std::string, uint64_t> m_myPubkeyHash;
-
     std::unordered_map<uint64_t, std::string> m_myHashFname;
 
     void doPk2fname(const std::string &pkstr);
 
+    //timers
     QTimer signPlayerStatus;
-
     QTimer polldepth;
-
     QTimer tradeTesting;
-//    WeeklyScheduleModel mWeeklyScheduleModel;
+
+    //    WeeklyScheduleModel mWeeklyScheduleModel;
+
+    //quotes
     PlayerQuoteSliceModel mPlayerQuoteSliceModel;
+    //depth
     DepthMarketModel mDepthMarketModel;
+
+    //fnamebal
     FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
+
+    //oms
     OpenOrdersModel mOpenOrdersModel;
-    WsReq mGetDepthReq;
+
+    //depth todo
     QString testid;
+    WsReq mGetDepthReq;
     bool isbid;
-//    void getOrderReq(uint64_t cname);
+    //    void getOrderReq(uint64_t cname);
     int depthCount;
     int depthBackup;
     int depthInterval;
-//    TradingPositionsModel mTradingPositionsModel;
-};
+    //    TradingPositionsModel mTradingPositionsModel;
 
+    bool amLive = false;
+public slots:
+    void NameStatus(fantasybit::MyFantasyName);
+    void LiveProj(fantasybit::FantasyBitProj);
+    void MyNames(std::vector<fantasybit::MyFantasyName>);
+    void NameBal(fantasybit::FantasyNameBal);
+    void PlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus> in);
+    void GlobalStateChange(fantasybit::GlobalState);
+    void LiveGui(fantasybit::GlobalState);
+    void NewWeek(int);
+    void GameStart(std::string);
+    void GameOver(std::string);
+    void onControlMessage(QString);
+};
+}
 #endif // MEDIATOR_H
 
 

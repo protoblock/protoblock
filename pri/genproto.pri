@@ -25,3 +25,6 @@ win32{
     DEFINES += GOOGLE_NAMESPACE=google
 #    INCLUDEPATH +=  $$PWD/../3rdParty/
 }
+
+
+INCLUDEPATH += $$GENERATEDDIR

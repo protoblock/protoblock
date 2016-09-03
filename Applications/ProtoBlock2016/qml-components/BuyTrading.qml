@@ -4,7 +4,7 @@ import QtQuick.Controls 1.4 as Controls
 
 import Material 1.0
 
-import ProRotoQml.Protoblock 1.0
+//import ProRotoQml.Protoblock 1.0
 
 import ProRotoQml.Theme 1.0
 

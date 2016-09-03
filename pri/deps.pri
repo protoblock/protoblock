@@ -4,6 +4,13 @@
 #DEFINES += PRODFOOTBALL
 #DEFINES += USE_LOCALHOST_SERVER
 #DEFINES += STOP_HEIGHT_TEST
+#DEFINES += FULL_NODE_CLIENT
+
+DEFINES += USE_NUM_NONE
+DEFINES += USE_FIELD_10X26
+DEFINES += USE_FIELD_INV_BUILTIN
+DEFINES += USE_SCALAR_8X32
+DEFINES += USE_SCALAR_INV_BUILTIN
 
 contains (QMAKE_HOST.os, Darwin){
     message("Host is OSX")
@@ -30,8 +37,8 @@ win32 {
        LIBS+= -llibprotobufd  \
               -lleveldbd \
               -llibeay32 \
-              -lssleay32 \
-              -lsecp256k1
+              -lssleay32
+#              -lsecp256k1
     }
     CONFIG(release, debug|release) {
        LIBS+= -llibprotobuf \

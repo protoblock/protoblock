@@ -30,19 +30,6 @@ using namespace std;
 namespace fantasybit
 {
 
-struct PlayerDetail {
-    PlayerBase base;
-    PlayerStatus::Status team_status;
-    PlayerGameStatus game_status;
-};
-
-struct GameRoster {
-    GameInfo info;
-    GameStatus::Status  status;
-    std::unordered_map<std::string,PlayerDetail> homeroster;
-    std::unordered_map<std::string,PlayerDetail> awayroster;
-
-};
 
 class NFLStateData : public QObject {
 

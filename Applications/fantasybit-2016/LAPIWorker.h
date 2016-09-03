@@ -7,7 +7,6 @@
 #include "NodeWorker.h"
 #include "FantasyAgent.h"
 #include "Processor.h"
-#include "FantasyAgent.h"
 #include "NameData.h"
 #include "Data.h"
 #include "NameData.pb.h"
@@ -17,13 +16,14 @@
 #include <vector>
 #include <mutex>
 #include "iresolvable.h"
+#include "pbgateways.h"
 
 using fantasybit::GlobalState;
 using namespace fantasybit;
 using namespace std;
-class MainLAPIWorker : public QObject , public IResolvable
-{
+class MainLAPIWorker : public QObject , public IResolvable, public pb::IPBGateway {
     Q_OBJECT
+    Q_INTERFACES(pb::IPBGateway)
 
     int intervalmax = 60000;
     int intervalstart = 500;

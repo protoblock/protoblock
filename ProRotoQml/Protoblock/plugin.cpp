@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include "mediator.h"
 //#include "getuserinfo.h"
+using namespace pb;
 void ProRotoQmlProtoblockPlugin::registerTypes(const char *uri)
 {
     // @uri ProRotoQml.Protoblock
@@ -18,6 +19,6 @@ QObject *middleMan(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
-    return Mediator::instance();
+    return pb::Mediator::instance();
 }
 
