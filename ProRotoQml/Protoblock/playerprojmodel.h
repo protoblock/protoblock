@@ -34,6 +34,11 @@ class PlayerProjModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (int, knownProjection)
     QML_WRITABLE_VAR_PROPERTY (int, projectionStatus)
     QML_READONLY_CSTREF_PROPERTY (QString, gameid)
+    QML_READONLY_CSTREF_PROPERTY (int, fname1)
+    QML_READONLY_CSTREF_PROPERTY (int, fname2)
+    QML_READONLY_CSTREF_PROPERTY (int, fname3)
+    QML_READONLY_CSTREF_PROPERTY (int, fname4)
+    QML_READONLY_CSTREF_PROPERTY (int, fname5)
 
 public:
 
@@ -52,7 +57,11 @@ public:
         m_gameid = gameid;
         m_projection = 0;
         m_knownProjection = 0;
-
+        m_fname1 = 1;
+        m_fname2 = 2;
+        m_fname3 = 3;
+        m_fname4 = 4;
+        m_fname5 = 5;
         qDebug() << " PlayerProjModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
     }
 };
@@ -103,6 +112,7 @@ class ProjectionsViewFilterProxyModel : public SortFilterProxyModel
     QString myPos = "All";
 
 public:
+    Q_PROPERTY(QStringList userRoleNames READ userRoleNames CONSTANT)
 
     ProjectionsViewFilterProxyModel(//QStringListModel * positionCombobox = NULL,
                                     WeeklyScheduleModel  * gameModelProxy= NULL,
@@ -114,6 +124,14 @@ public:
         myGameModelProxy = gameModelProxy;
 //        if (myGameModelProxy != NULL) mySelectedGames = gameSelectionModel;
         mySelectedGames = gameSelectionModel;
+    }
+
+    QStringList ret;
+    QStringList userRoleNames() // Return ordered List of user-defined roles
+    {
+
+
+        return ret;
     }
 
     bool isEnabled(){
@@ -159,6 +177,7 @@ public:
         qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
 
+                qDebug() << " << cc " << columnCount();
 //        QSortFilterProxyModel::setSortRole(column);
 //        QSortFilterProxyModel::sort(0, order);
     }
@@ -168,11 +187,12 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         if (!myIsEnabled) return true;
 
+                qDebug() << " << cc " << columnCount();
 //        if ( !QSortFilterProxyModel::filterAcceptsRow(sourceRow,sourceParent)) {
 //            qDebug() << " filterAcceptsRow  no parent" << sourceRow;
 //            return false;
 //        }
-        qDebug() << " filterAcceptsRow" << sourceRow;
+//        qDebug() << " filterAcceptsRow" << sourceRow;
 
         PlayerProjModel * model = dynamic_cast<PlayerProjModel *>(sourceModel());
         if (model==NULL) return true;
@@ -186,7 +206,7 @@ protected:
 //        QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
         auto gameid = model->at(sourceRow)->get_gameid();
 
-        qDebug() << " filterAcceptsRow gameid" << gameid;
+//        qDebug() << " filterAcceptsRow gameid" << gameid;
 //        if (item == NULL) return true;
 //        QString gameId = item->propertyValue<PropertyNames::Game_ID>().toString();
 
@@ -194,7 +214,7 @@ protected:
         if (mySelectedGames!=NULL && myGameModelProxy != NULL){
             if ( !mySelectedGames->hasSelection() ) return true;
 
-            qDebug() << " filterAcceptsRow hasselection";
+//            qDebug() << " filterAcceptsRow hasselection";
 
             int i = myGameModelProxy->indexOf(myGameModelProxy->getByUid(gameid));
             return mySelectedGames->isSelected(myGameModelProxy->index(i));
@@ -223,6 +243,11 @@ protected:
 //            return false;
 
         return true;
+    }
+
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE {
+        return SortFilterProxyModel::data(index, role);
+        qDebug() <<role << " << cc " << columnCount();
     }
 
 //        if (myPositionCombobox!=NULL){

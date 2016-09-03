@@ -11,50 +11,12 @@ import QtQuick.Layouts 1.1
 Item {
     id: topw
     anchors.fill: parent
-//    anchors.horizontalCenter: parent.Center
-//    anchors.margins: ProtoScreen.guToPx(1)
-
     signal indrop(string fname)
     signal donedrop
     signal addcolumn(string fname)
 
+    property alias ccount: tv.columnCount
     property int focuscount: 0
-//    Material.Label {
-//        id: mm
-//        text: "LA LA LA"
-//        color: "#40000000"
-//        anchors.centerIn: parent
-//        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
-//        font.bold:  true
-//        visible: true
-//        function donedropM() {
-//            mm.visible = false;
-//        }
-
-//        function tmyMethod(fname) {
-//            mm.text = fname
-//            mm.visible = true;
-//        }
-
-//        Component.onCompleted: {
-//            topw.indrop.connect(tmyMethod)
-//            topw.donedrop.connect(donedropM)
-//        }
-//        z: i2.z-1
-//    }
-
-//    Material.IconButton {
-//        id: lblll
-//        anchors.top: parent.top;
-////        anchors.centerIn: parent
-////                    anchors.left: parent.left
-////                    anchors.top: parent.top
-//////                    Layout.fillHeight: true
-//////                    Layout.fillWidth: false
-////                    width: ProtoScreen.guToPx(4)
-////                    height: parent.height
-//            iconName: "qrc:/icons/navigation_close.png"
-//    }
 
     Item {
         id: i2
@@ -66,18 +28,20 @@ Item {
             id: tv
             Component.onCompleted: {
                 resizeColumnsToContents()
-//                width = Qt.binding(function(){
+
+                //                width = Qt.binding(function(){
 //                   return ProtoScreen.guToPx(6) * columnCount
 //                })
                 ppt.addcolumn.connect(addcolumnMethod)
             }
 
             function addcolumnMethod(fname) {
+//                customRoleNames[0] = fname
                 console.log(" addColumn " )
-                tv.addColumn(columnComponent.createObject(tv, { "role": fname, "title": fname}))
+                var role = MiddleMan.addFnameColumn(fname)
+                tv.addColumn(columnComponent.createObject(tv, { "role": role, "title": fname}))
                 tv.resizeColumnsToContents()
             }
-
             highlightOnFocus: false
             anchors.fill: parent
             model: MiddleMan.pProjectionsViewFilterProxyModel
@@ -95,48 +59,13 @@ Item {
             headerDelegate: headerdel
             frameVisible: false
             selectionMode: SelectionMode.NoSelection
-//            itemDelegate: Material.Label {
-//                anchors.centerIn: parent
-//                verticalAlignment: Text.AlignVCenter
-//                horizontalAlignment: Text.AlignHCenter
-//                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-//                text: styleData.value
-//           }
-
-//            rowDelegate: Rectangle {
-////                    color: TeamInfo.getPosColor(model.pos)
-//            }
-
-/*
-            TableViewColumn {
-                role: "firstname"
-                title: "First Name"
-                horizontalAlignment : Text.AlignLeft
-                movable: false
-                delegate:
-                    Material.Card {
-
-                     backgroundColor: TeamInfo.getPosColor(model.pos)
-                     Material.Label{
-//                                 anchors.centerIn: parent
-                                 text: styleData.value
-                                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                                 verticalAlignment: Text.AlignVCenter
-                                 horizontalAlignment: Text.AlignHCenter
-                                 Layout.fillHeight: true
-                                 Layout.fillWidth: false
-                    }
-                }
-            }
-            */
 
             TableViewColumn {
                 role: "lastname"
                 title: "Player Name"
                 horizontalAlignment : Text.AlignLeft
                 movable: false
-                delegate:
-                    Material.Card {
+                delegate: Material.Card {
                     flat: true
                     radius: 0
                     border.width: 0
@@ -198,7 +127,7 @@ Item {
                 }
 
             }
-            TableViewColumn{
+            TableViewColumn {
                 id: tvm
                 role: "pos"
                 title: "Position"
@@ -299,7 +228,7 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
 
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: styleData.value === 0 ? "on" : "off";
+                    text: styleData.value === 0 ? "on" : "off"
                 }
             }
 
@@ -585,7 +514,7 @@ Item {
                                                                  : "black"
                 Material.Label {
                     id: textItem2
-                    text: " " + styleData.value + " ";
+                    text: styleData.value
                     anchors.fill: parent
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     elide: Text.ElideRight
@@ -627,7 +556,74 @@ Item {
 
     Component {
         id: columnComponent
-        TableViewColumn { width: 100}
-    }
+        TableViewColumn {
+            width: 100
+//            horizontalAlignment : Text.AlignHCenter
+//            movable: false
+//            delegate: itdel
+        }
 
+    }
 }
+//    Component {
+//        id: itdel
+//        Material.Label {
+//                   anchors.centerIn: parent
+//                   verticalAlignment: Text.AlignVCenter
+//                   horizontalAlignment: Text.AlignHCenter
+//                   font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                   text: " value" + styleData.value + " : "
+//              }
+//
+
+//            resources: {
+//                var roleList = MiddleMan.pProjectionsViewFilterProxyModel.userRoleNames
+//                var temp = []
+//                for(var i=0; i<roleList.length; i++)
+//                {
+//                    var role  = roleList[i]
+//                    temp.push(columnComponent.createObject(tv, { "role": role, "title": role, size: 100, horizontalAlignment: Text.AlignLeft}))
+//                }
+
+////                temp.push(columnComponent.createObject(tv, { "role": "fullname", "title": "fullname"}))
+
+////                temp.push(columnComponent.createObject(tv, { "role": "CAB", "title": "CAB"}))
+
+//                return temp
+//            }
+
+
+//            itemDelegate: Material.Label {
+//                anchors.centerIn: parent
+//                verticalAlignment: Text.AlignVCenter
+//                horizontalAlignment: Text.AlignHCenter
+//                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                text: " value" + styleData.value " : "
+//           }
+
+//            rowDelegate: Rectangle {
+////                    color: TeamInfo.getPosColor(model.pos)
+//            }
+
+/*
+            TableViewColumn {
+                role: "firstname"
+                title: "First Name"
+                horizontalAlignment : Text.AlignLeft
+                movable: false
+                delegate:
+                    Material.Card {
+
+                     backgroundColor: TeamInfo.getPosColor(model.pos)
+                     Material.Label{
+//                                 anchors.centerIn: parent
+                                 text: styleData.value
+                                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                 verticalAlignment: Text.AlignVCenter
+                                 horizontalAlignment: Text.AlignHCenter
+                                 Layout.fillHeight: true
+                                 Layout.fillWidth: false
+                    }
+                }
+            }
+            */

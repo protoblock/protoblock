@@ -2,9 +2,6 @@
 
 namespace  pb {
 
-FullGateway::FullGateway()
-{
 
-}
 
 }

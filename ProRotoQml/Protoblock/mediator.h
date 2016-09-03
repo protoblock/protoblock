@@ -25,8 +25,11 @@
 
 #include "pbgateways.h"
 
+
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
 namespace pb {
+
+using namespace std;
 class Mediator : public QObject {
     Q_OBJECT
 
@@ -91,6 +94,7 @@ class Mediator : public QObject {
     PlayerProjModel mPlayerProjModel;
     QItemSelectionModel myGamesSelectionModel;
     pb::IPBGateway *mGateway = nullptr;
+    QObject *mOGateway;
     void setupConnection(pb::IPBGateway *ingateway);
 
     static Mediator *myInstance;
@@ -208,6 +212,30 @@ public:
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
     }
 
+    Q_INVOKABLE QString addFnameColumn(QString fname) {
+//        mPlayerProjModel.AddColumn(fname.toUtf8());
+//        m_pProjectionsViewFilterProxyModel->ret.append(fname);
+//        qDebug() << " ret " << m_pProjectionsViewFilterProxyModel->ret;
+//        m_pProjectionsViewFilterProxyModel->ret.append("pos");
+//        m_pProjectionsViewFilterProxyModel->invalidate();
+//        m_pProjectionsViewFilterProxyModel->insertColumn(5);
+//        for (int i =0;i<5;i++)
+//            if ( fnametorole)
+        QString ret = fnames[fnameindex].data();
+        if ( ++fnameindex >= 5 )
+            fnameindex = 0;
+        return ret;
+    }
+
+//    std::unordered_map<std::string,> fnametorole;
+
+//    Q_INVOKABLE QString removeFnameColumn(QString fname) {
+//        fnames[fname] = "";
+//    }
+
+
+    std::vector<std::string> fnames;
+    int fnameindex;
 
     //fantasy name - manage
     Q_INVOKABLE void pk2fname(const QString&);
@@ -266,7 +294,8 @@ signals:
 
     void OnClaimName(QString name);
 
-
+    void OnUseName(QString); //tell agent to use the name
+    void ready();
     /*
     void playersNameChanged();
     void playersStatusChanged();
@@ -351,14 +380,14 @@ private:
 public slots:
     void NameStatus(fantasybit::MyFantasyName);
     void LiveProj(fantasybit::FantasyBitProj);
-    void MyNames(std::vector<fantasybit::MyFantasyName>);
+    void MyNames(vector<fantasybit::MyFantasyName>);
     void NameBal(fantasybit::FantasyNameBal);
-    void PlayerStatusChange(std::pair<std::string,fantasybit::PlayerStatus> in);
+    void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
     void GlobalStateChange(fantasybit::GlobalState);
     void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
-    void GameStart(std::string);
-    void GameOver(std::string);
+    void GameStart(string);
+    void GameOver(string);
     void onControlMessage(QString);
 };
 }

@@ -14,7 +14,7 @@
 
 #include "core.h"
 #include "mediator.h"
-
+#include "fullgateway.h"
 //#include "RunGuard.h"
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
@@ -77,12 +77,15 @@ int main(int argc, char *argv[])
 
     Core::instance()->bootstrap();
 
-    MainLAPIWorker *mw = Core::resolveByName<MainLAPIWorker>("coreapi");
-    mw->dataService = DataService::instance();
-    pb::Mediator::instance()->setContext(qobject_cast<pb::IPBGateway *>(mw));
+    //MainLAPIWorker *mw = ;
+    //mw->dataService = DataService::instance();
+    pb::FullGateway *fg = new pb::FullGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
+                                     DataService::instance());
+
+    pb::Mediator::instance()->setContext(fg);
 
     engine.rootContext()->setContextProperty("MiddleMan", pb::Mediator::instance());
-//    qmlRegisterSingletonType<pb::Mediator>(uri,1,0,"MiddleMan",middleMan);
+    //qmlRegisterSingletonType<pb::Mediator>(uri,1,0,"MiddleMan",middleMan);
 
     engine.dumpObjectInfo();
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

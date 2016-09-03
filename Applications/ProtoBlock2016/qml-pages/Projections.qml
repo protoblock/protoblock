@@ -94,9 +94,12 @@ Item {
                         anchors.fill: parent
                         onEntered: {
                             console.log(" entered ")
-                            drag.source.caught = true;
+                            drag.source.caught = (ppt.ccount > 10) ? false : true
                             myrec.color = Qt.binding( function() {
-                               return "green"})
+                               if( ppt.ccount > 10) return "red";
+                               else
+                                return "green";
+                            })
 
                             myrec.opacity = Qt.binding(function() {
                                 return .20})

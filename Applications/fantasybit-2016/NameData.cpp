@@ -57,7 +57,7 @@ void FantasyNameData::init() {
             if ( fnp != nullptr ) {
                 fnp->initBalance(fn.bits());
                 fnp->initStakePNL(fn.stake());
-                qDebug() << "zxcvbn2222" << fnp->ToString();
+                qDebug() << fnp->ToString().data();
 
             }
         }

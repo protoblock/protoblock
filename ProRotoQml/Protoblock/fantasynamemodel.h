@@ -14,11 +14,11 @@ using namespace fantasybit;
 
 class FantasyNameBalModelItem : public QObject {
     Q_OBJECT
-    QML_CONSTANT_CSTREF_PROPERTY (QString, name)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, pk)
-    QML_CONSTANT_CSTREF_PROPERTY (qint64, stake)
-    QML_CONSTANT_CSTREF_PROPERTY (quint64, bits)
-    QML_CONSTANT_CSTREF_PROPERTY (quint64, chash)
+    QML_WRITABLE_CSTREF_PROPERTY (QString, name)
+    QML_WRITABLE_CSTREF_PROPERTY (QString, pk)
+    QML_WRITABLE_CSTREF_PROPERTY (qint64, stake)
+    QML_WRITABLE_CSTREF_PROPERTY (quint64, bits)
+    QML_WRITABLE_CSTREF_PROPERTY (quint64, chash)
 
 public:
 
@@ -36,6 +36,30 @@ public:
         m_stake = in.getStakeBalance();
         m_bits = in.getBalance();
         m_chash = in.hash();
+    }
+
+    explicit    FantasyNameBalModelItem(const FantasyNameBalModelItem &in) : QObject(nullptr) {
+        set_name( in.get_name());
+        set_pk(in.get_pk());
+        set_stake(in.get_stake());
+        set_bits(in.get_bits());
+        set_chash(in.get_chash());
+    }
+
+    void    update(const fantasybit::FantasyNameBal &in) {
+        set_name(in.name().data());
+        set_pk (in.public_key().data());
+        set_stake ( in.stake() + in.bits());
+        set_bits ( in.bits());
+        set_chash(in.chash());
+    }
+
+    void    update(const FantasyNameBalModelItem &in) {
+        set_name( in.get_name());
+        set_pk(in.get_pk());
+        set_stake(in.get_stake());
+        set_bits(in.get_bits());
+        set_chash(in.get_chash());
     }
 };
 
@@ -55,6 +79,18 @@ public:
         for(std::shared_ptr<fantasybit::FantasyName> fPlayer  : in) {
             append(new FantasyNameBalModelItem(*fPlayer));
         }
+    }
+
+    void update (FantasyNameBalModelItem *in) {
+        FantasyNameBalModelItem *my = (FantasyNameBalModelItem *)get(in->get_name());
+        if ( my )
+            my->update(*in);
+        else {
+            FantasyNameBalModelItem *n = new FantasyNameBalModelItem(*in);
+//            n->update(*in);
+            append(n);
+        }
+
     }
 };
 

@@ -105,7 +105,7 @@ protected:
 //            qDebug() << " filterAcceptsRow  no parent" << sourceRow;
 //            return false;
 //        }
-        qDebug() << " filterAcceptsRow" << sourceRow;
+//        qDebug() << " filterAcceptsRow" << sourceRow;
 
         WeeklyScheduleModel * model = dynamic_cast<WeeklyScheduleModel *>(sourceModel());
         if (model==NULL) return true;

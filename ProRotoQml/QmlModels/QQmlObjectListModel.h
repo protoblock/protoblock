@@ -116,6 +116,15 @@ public:
             }
         }
     }
+
+    void AddColumn(QByteArray &in){
+        for ( auto *its : m_items ) {
+            its->setProperty(in.data(),12);
+        }
+
+        int role  = baseRole () + m_roles.count();
+        m_roles.insert (role, in);
+    }
     bool setData (const QModelIndex & index, const QVariant & value, int role) {
         bool ret = false;
         ItemType * item = at (index.row ());
@@ -130,8 +139,10 @@ public:
         ItemType * item = at (index.row ());
         const QByteArray rolename = (role != Qt::DisplayRole ? m_roles.value (role, emptyBA ()) : m_dispRoleName);
         if (item != Q_NULLPTR && !rolename.isEmpty ()) {
-            ret.setValue (role != baseRole () ? item->property (rolename) : QVariant::fromValue (static_cast<QObject *> (item)));
+             ret.setValue (role != baseRole () ? item->property (rolename) : QVariant::fromValue (static_cast<QObject *> (item)));
         }
+
+        qDebug() << "index " << index.row() << " " << index.column() << "rolename " << rolename << " prop " << item->property (rolename);
         return ret;
     }
     QHash<int, QByteArray> roleNames (void) const {

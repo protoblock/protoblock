@@ -40,6 +40,7 @@ Material.ApplicationWindow{
         console.log( "actual " + height + " ProtoScreen.guToPx(150) "  + ProtoScreen.guToPx(150) + " real " + realRoot.height
                     + " avail " + ProtoScreen.availableHeight + " all " + ProtoScreen.desktopHeight + " design " + ProtoScreen.designHeight)
         console.log("Primary Color " +  Colors.primaryColor  +  " themeroot Active ?  " + themeroot.active)
+
         uname = MiddleMan.init()
         if ( uname  === "" ){
 //            loginDialog.toggle()

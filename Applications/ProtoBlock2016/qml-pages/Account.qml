@@ -8,7 +8,7 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 
 Item {
-    Component.onCompleted: pageHelper.title = "Account Settings"
+    Component.onCompleted: { pageHelper.title = "Account Settings"; }
     Flickable{
         interactive: true
         width: parent.width

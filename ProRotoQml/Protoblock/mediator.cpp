@@ -25,8 +25,11 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 //    m_currentPidContext("1"),
     myGamesSelectionModel{},
     m_pQItemSelectionModel(&myGamesSelectionModel),
-    m_pLeaderBoardSortModel(new SortFilterProxyModel)
-{
+    m_pLeaderBoardSortModel(new SortFilterProxyModel) {
+
+    fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
+
+    fnameindex = 0;
     //leader models
     m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
 
@@ -45,7 +48,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pProjectionsViewFilterProxyModel->setSortRole("pos");//mPlayerProjModel.roleForName("pos"));
     m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(false);
 
-
+//setProperty
 //    connect(this,SIGNAL(pPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)),
 //            this,SLOT(OnpPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)));
 
@@ -141,8 +144,11 @@ void Mediator::doPk2fname(const std::string &pkstr) {
 
 }
 
-void Mediator::NameStatus(MyFantasyName) {
+void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
+    if (!m_goodList.contains(myname.name().data()))
+        m_goodList.append(myname.name().data());
 
+    emit usingFantasyName(myname.name().data());
 }
 
 void Mediator::LiveProj(FantasyBitProj) {
@@ -157,7 +163,15 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
     }
 }
 
-void Mediator::NameBal(FantasyNameBal) {
+void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
+    FantasyNameBalModelItem *item = (FantasyNameBalModelItem *)mGoodNameBalModel.get(fnb.name().data());
+    if ( !item || item->get_name() != fnb.name().data()) {
+        //mGoodNameBalModel.insert(mGoodNameBalModel.size(),FantasyNameBalModelItem(fnb));
+    }
+    else {
+        item->update(fnb);
+        mFantasyNameBalModel.update(item);
+    }
 
 }
 
@@ -172,6 +186,8 @@ void Mediator::GlobalStateChange(GlobalState)
 }
 
 void Mediator::LiveGui(GlobalState gs) {
+
+    qDebug() << "Mediator received Livegui ";
     if ( !amLive ) {
         amLive = true;
         m_season = gs.season();
@@ -296,7 +312,7 @@ void Mediator::getOrderReq(const QString &name,const QString symbol) {
 void Mediator::setupConnection(pb::IPBGateway *ingateway) {
 
     QObject* that = dynamic_cast<QObject*>(ingateway);
-
+    mOGateway = that;
     connect(that, SIGNAL(NameStatus(fantasybit::MyFantasyName)),
             this, SLOT(NameStatus(fantasybit::MyFantasyName)));
 
@@ -316,8 +332,7 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     connect( that, SIGNAL(  GlobalStateChange(fantasybit::GlobalState)  ),
             this,      SLOT(    GlobalStateChange(fantasybit::GlobalState)        ));
 
-    connect( that, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
-            this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
+
     connect( that, SIGNAL   (  NewWeek(int)    ),
             this,      SLOT     (  NewWeek(int)     ));
     connect( that, SIGNAL   (  GameStart(string)    ),
@@ -329,6 +344,10 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
 
     QObject::connect(this,SIGNAL(OnClaimName(QString)),that,SLOT(OnClaimName(QString)));
 
+    connect( this, SIGNAL(OnUseName(QString)),
+             that, SLOT(UseName(QString)));
+
+//    return that;
 }
 
 Mediator *Mediator::instance() {
@@ -583,26 +602,14 @@ void Mediator::doCancel(qint32 id) {
 void Mediator::useName(const QString &name) {
     qDebug() << " Mediator::useName " << name;
 
-#ifdef CRAZY__no_TESTINGit
-    if ( name == "MikeClayNFL" ) {
-        getOrderReq(name);
-        if ( testid == "1806")
-            testid = "1";
-        else
-            testid = "1806";
-
-        tradeTesting.start();
-        startDepth(testid);
-    }
-    else {
-        tradeTesting.stop();
-        stopDepth(testid);
-    }
-#endif
-
+    emit OnUseName(name);
 }
 
 QString Mediator::init() {  
+    connect( mOGateway, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
+            this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
+
+    ready();
     return ""; //todo check if missed live event
 }
 
