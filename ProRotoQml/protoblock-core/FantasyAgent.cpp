@@ -39,6 +39,9 @@ FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
 
          readFromSecret( GET_ROOT_DIR() +  secretfilename3, true);
     }
+    else
+
+        readFromSecret( GET_ROOT_DIR() +  secretfilename3, false);
 }
 
 bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {

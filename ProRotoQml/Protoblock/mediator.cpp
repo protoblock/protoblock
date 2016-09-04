@@ -150,10 +150,18 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     emit usingFantasyName(myname.name().data());
 
     myFantasyName = myname.name();
+    updateCurrentFantasyPlayerProjections();
 }
 
-void Mediator::LiveProj(FantasyBitProj) {
+void Mediator::LiveProj(FantasyBitProj proj) {
+    if ( proj.name() == myFantasyName ) {
+        if ( proj.proj() <= 0 )
+            return;
 
+        auto *item = mPlayerProjModel.getByUid(proj.playerid().data());
+        item->setknownProjection(proj.proj());
+        item->set_projection(proj.proj());
+    }
 }
 
 void Mediator::MyNames(vector<MyFantasyName> mfn) {
@@ -212,7 +220,22 @@ void Mediator::LiveGui(GlobalState gs) {
             m_pWeeklyScheduleModel->updateWeeklySchedule(m_week,
                                                          mGateway->dataService->GetWeeklySchedule(m_week));
             mPlayerProjModel.updateRosters(mGateway->dataService->GetCurrentWeekGameRosters());
+            if (myFantasyName != "" )
+                updateCurrentFantasyPlayerProjections();
+
         }
+    }
+}
+
+void Mediator::updateCurrentFantasyPlayerProjections(){
+    //update to recent projection projection and mark them a sent
+    auto  recentProjections = mGateway->dataService->GetProjByName(myFantasyName);
+    qDebug() << "updateCurrentFantasyPlayerProjections " << recentProjections.size();
+
+    for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
+        auto *item = mPlayerProjModel.getByUid(it->first.data());
+        item->setknownProjection(it->second);
+        item->set_projection(it->second);
     }
 }
 

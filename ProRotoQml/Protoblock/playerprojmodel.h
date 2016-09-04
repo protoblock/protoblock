@@ -57,12 +57,12 @@ public:
         m_gameid = gameid;
         m_projection = 0;
         m_knownProjection = 0;
-        m_fname1 = 1;
-        m_fname2 = 2;
-        m_fname3 = 3;
-        m_fname4 = 4;
-        m_fname5 = 5;
-        qDebug() << " PlayerProjModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
+        m_fname1 = 0;
+        m_fname2 = 0;
+        m_fname3 = 0;
+        m_fname4 = 0;
+        m_fname5 = 0;
+//        qDebug() << " PlayerProjModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
     }
 };
 
@@ -71,6 +71,10 @@ class PlayerProjModel : public QQmlObjectListModel<PlayerProjModelItem>{
 //    QML_READONLY_CSTREF_PROPERTY(int, week)
 
 public:
+    explicit PlayerProjModel (QObject *          parent      = Q_NULLPTR,
+                                  const QByteArray & displayRole = QByteArray (),
+                                  const QByteArray & uidRole     = {"playerid"})
+        : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
 
     void updateRosters(std::vector<pb::GameRoster> &inrosters) {

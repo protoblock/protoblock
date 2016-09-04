@@ -44,8 +44,8 @@ win32 {
        LIBS+= -llibprotobuf \
               -lleveldb \
               -llibeay32 \
-              -lssleay32 \
-              -lsecp256k1
+              -lssleay32
+#              -lsecp256k1
     }
 
 #    BOOST_DIR = C:\local\boost_1_55_0

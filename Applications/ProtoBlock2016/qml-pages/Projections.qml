@@ -34,7 +34,7 @@ Item {
             backgroundColor: "white"
             color: themeroot.theme.primaryColor
             anchrosHType: "center"
-            text: "text"
+            text: "NFL 2016 SEASON - Week 1 - Live "
             id: cBan
             width: parent.width
             elevation: 0

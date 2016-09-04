@@ -244,6 +244,8 @@ public:
         QString ret = fnames[fnameindex].data();
         if ( ++fnameindex >= 5 )
             fnameindex = 0;
+
+        toggleFantasyNameColumn(fname,ret);
         return ret;
     }
 
@@ -253,6 +255,33 @@ public:
 //        fnames[fname] = "";
 //    }
 
+    void toggleFantasyNameColumn(const QString & fantasyName, QString &column){
+        //refresheing is done when leaderboard model refresh
+        std::unordered_map<std::string,int> theOtherGuyProjection = mGateway->dataService->GetProjByName(fantasyName.toStdString());
+        qDebug() << "toggleFantasyNameColumn " << fantasyName << column << theOtherGuyProjection.size();
+
+        //        bool(PlayerProjModelItem::*fnamefunc)(int &)
+        for ( auto it = theOtherGuyProjection.begin(); it != theOtherGuyProjection.end(); ++it ){
+            auto *item = mPlayerProjModel.getByUid(it->first.data());
+
+            if ( column == "fname1")
+                item->setfname1(it->second);
+            else if ( column == "fname2")
+                item->setfname1(it->second);
+            else if ( column == "fname3")
+                item->setfname1(it->second);
+            else if ( column == "fname4")
+                item->setfname1(it->second);
+            else if ( column == "fname5")
+                item->setfname1(it->second);
+        }
+    }
+
+
+    Q_INVOKABLE void copyProj(int column, QString value, bool clone) {
+        qDebug() << "CopyProj " << column << value << clone;
+
+    }
 
     std::vector<std::string> fnames;
     int fnameindex;
@@ -305,6 +334,7 @@ public:
     //name
     void OnGoodName(const QString &goodname, const fantasybit::FantasyNameBal &fnb);
 
+    void updateCurrentFantasyPlayerProjections();
 signals:
     void importSuccess(const QString name, bool passfail);
     void usingFantasyName(const QString &name, bool isdefault = false);
@@ -348,7 +378,7 @@ protected slots:
     //projections
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
         qDebug() << " mediator selectionChanged " << selected << deselected;
-        m_pProjectionsViewFilterProxyModel->invalidate();
+//        m_pProjectionsViewFilterProxyModel->invalidate();
     }
 
 private slots:

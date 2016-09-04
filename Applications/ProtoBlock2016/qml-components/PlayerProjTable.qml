@@ -39,7 +39,7 @@ Item {
 //                customRoleNames[0] = fname
                 console.log(" addColumn " )
                 var role = MiddleMan.addFnameColumn(fname)
-                tv.addColumn(columnComponent.createObject(tv, { "role": role, "title": fname}))
+                tv.addColumn(columnComponent.createObject(tv, { "role": role, "title": fname, "horizontalAlignment": Text.AlignHCenter}))
 //                tv.resizeColumnsToContents()
             }
             highlightOnFocus: false
@@ -243,10 +243,10 @@ Item {
 
             TableViewColumn{
 //                role: "knownProjection"
-                title: "Avg"
+                title: " Avg "
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(6)
+                width: ProtoScreen.guToPx(7)
             }
 
         }
@@ -466,6 +466,7 @@ Item {
                     size: ProtoScreen.guToPx(2)
                     onClicked : {
                         console.log("clicked send")
+                        MiddleMan.copyProj(styleData.column, styleData.value, true)
                     }
                     action: Material.Action {
 //                        name: "Copy-Clone Projection"
