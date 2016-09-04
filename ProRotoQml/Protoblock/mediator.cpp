@@ -397,6 +397,7 @@ Mediator *Mediator::instance() {
  * This will return the mn for import
  */
 QString Mediator::importMnemonic(const QString &importStr) {
+    mGateway->dataService->importMnemonic(importStr.toStdString());
 //    auto pk = m_fantasy_agent.startImportMnemonic(importStr.toStdString());
 //    if ( pk == "" )
 //        return "";
@@ -418,6 +419,7 @@ QString Mediator::importMnemonic(const QString &importStr) {
 }
 
 void Mediator::signPlayer(const QString &name)  {
+    emit OnClaimName(name);
 //    emit OnClaimName(name);
 
 //    m_fantasy_agent.signPlayer(name.toStdString());
@@ -643,7 +645,7 @@ QString Mediator::init() {
 
 QString Mediator::getSecret() {
 
-    return ""; //exportMnemonic
+    return mGateway->dataService->exportMnemonic(myFantasyName).data();
 }
 
 //void Mediator::handdleUsingName(const QString &name)

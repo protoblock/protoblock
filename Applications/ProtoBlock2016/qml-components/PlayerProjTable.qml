@@ -393,7 +393,7 @@ Item {
 //                    color: "black"
 //                    iconSource: "icon://" + "awesome/undo"// "qrc:/icons/navigation_close.png"
                     onClicked: {
-//                        MiddleMan.doCancel(refnum)
+                        MiddleMan.undoProj()
                         console.log("clicked icon")
                         topw.focuscount = 0
                     }

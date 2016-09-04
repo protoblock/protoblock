@@ -203,7 +203,16 @@ public:
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
     }
 
+    Q_INVOKABLE void undoProj() {
+        for ( auto it : mPlayerProjModel) {
+            int projection = it->get_projection();
+            int knownprojection = it->get_knownProjection();
+            if ( knownprojection == projection)
+                continue;
 
+            it->set_projection(it->get_knownProjection());
+        }
+    }
 
     Q_INVOKABLE void sendProjections() {
         std::unordered_map<string,vector<FantasyBitProj>> projbygame{};

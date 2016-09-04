@@ -87,7 +87,7 @@ Item {
                         Behavior on opacity {NumberAnimation{duration: 80}}
                     }
                     valueText: "Skill(" + model.bits + " ƑɃ) Stake(" + model.stake +" ƑɃ)"
-                    onClicked: MiddleMan.useName(MiddleMan.goodList()[index])
+                    onClicked: MiddleMan.useName(model.name)
                 }
             }
         }
