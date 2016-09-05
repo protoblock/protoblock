@@ -32,7 +32,8 @@ public:
 //        mlapi->dataService = dataservice;
         this->dataService = datain;
         connect(mlapi, &MainLAPIWorker::NameStatus,
-                this, [this](fantasybit::MyFantasyName &inname) {
+                this, [this](fantasybit::MyFantasyName inname) {
+            qDebug() << " FullGateway namestatus" << inname.DebugString().data();
             myName = inname;
             emit NameStatus(inname);
         });
@@ -43,17 +44,19 @@ public:
         connect( mlapi, &MainLAPIWorker::MyNames,
                 this,  [this](vector<fantasybit::MyFantasyName> &mynames) {
             m_mynames = mynames;
-            emit MyNames(mynames);
+            if ( heslive )
+                emit MyNames(mynames);
+
             for ( auto name : m_mynames) {
                  std::shared_ptr<FantasyName> &s = mynamebal[name.name()];
                  if ( s ) continue;
                  s = fantasybit::Commissioner::getName(name.name());
                  if ( !s ) continue;
-                 if ( myName.name() == "" ) {
-                     myName.set_name(s->alias());
-                     myName.set_status(MyNameStatus::confirmed);
-                     emit OnUseName(myName.name().data());
-                 }
+//                 if ( myName.name() == "" ) {
+//                     myName.set_name(s->alias());
+//                     myName.set_status(MyNameStatus::confirmed);
+//                     emit OnUseName(myName.name().data());
+//                 }
                  FantasyNameBal fnb;
                  fnb.set_name(s->alias());
                  fnb.set_public_key(fantasybit::Commissioner::pk2str(s->pubkey()));
@@ -107,7 +110,7 @@ public:
 
 //        QObject::connect(this,SIGNAL(OnClaimName(QString)),mlapi,SLOT(OnClaimName(QString)));
 
-        connect( this,   &FullGateway::OnClaimName,
+        connect( this,   &FullGateway::doOnClaimName,
                  mlapi, &MainLAPIWorker::OnClaimName);
 
         connect( this, &FullGateway::OnUseName,
@@ -116,8 +119,6 @@ public:
         connect(Mediator::instance(),&Mediator::ready,
                 [this](){
                        if ( this->amLive ) {
-                           connect(Mediator::instance(),&Mediator::NewProjection,
-                                   mlapi,&MainLAPIWorker::OnProjTX);
                            emit LiveGui(m_gs);
                        }
 
@@ -137,7 +138,7 @@ signals:
     void LiveProj(fantasybit::FantasyBitProj);
     void MyNames(vector<fantasybit::MyFantasyName>);
     void NameBal(fantasybit::FantasyNameBal);
-    void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
+    void PlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
     void GlobalStateChange(fantasybit::GlobalState);
     void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
@@ -145,6 +146,9 @@ signals:
     void GameOver(string);
     void onControlMessage(QString);
     void OnUseName(QString);
+    void doOnClaimName(QString);
+
+    void nameAvail(QString &, bool);
 public slots:
     void OnLiveGui(fantasybit::GlobalState gs) {
         qDebug() << "FullGateway received Livegui ";
@@ -163,9 +167,18 @@ public slots:
         }
     }
 
-    void OnClaimName(QString) {}
+    void OnClaimName(QString s) {
+        emit doOnClaimName(s);
+    }
+
+    void nameCheck(QString s) {
+        qDebug() << " in name check " << s;
+        emit nameAvail(s,Commissioner::isAliasAvailable(s.toStdString()));
+    }
+
     void OnGetMyNames() {}
     void UseName(QString s) {
+        qDebug() << "fullgate  slot use name";
         emit OnUseName(s);
     }
 

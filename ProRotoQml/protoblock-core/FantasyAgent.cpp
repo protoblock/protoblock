@@ -39,9 +39,6 @@ FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
 
          readFromSecret( GET_ROOT_DIR() +  secretfilename3, true);
     }
-    else
-
-        readFromSecret( GET_ROOT_DIR() +  secretfilename3, false);
 }
 
 bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
@@ -88,24 +85,29 @@ bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
 std::string FantasyAgent::getMnemonic(std::string fname) {
     Reader<Secret3> read{ GET_ROOT_DIR() +  secretfilename4};
     if ( !read.good() ) {
-        return "";
+        qDebug() << "getMnemonic bad read";
+        return "bad read";
     }
 
+    string ret = fname;
     Secret3 secret{};
     while (read.ReadNext(secret)) {
 
         if ( secret.fantasy_name() == fname ) {
             if ( !testIt(secret) ) {
                 qCritical() << " secret verify fail" << secret.fantasy_name();
+                ret += " verify fail";
                 continue;
             }
 
             if ( secret.has_mnemonic_key() )
                 return secret.mnemonic_key();
+            else
+                ret += " no has_mnemonic_key";
         }
     }
 
-    return "";
+    return ret + " not found";
 }
 
 bool FantasyAgent::testIt(Secret3 secret) {
@@ -450,8 +452,8 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
     string name = fn->alias();
     qInfo() << "name found" << fn->ToString();
 
-    client = make_unique<FantasyName>(name, m_priv.get_public_key().serialize());
-    client2 = make_unique<FantasyNameCHash>(name, m_priv.get_public_key().serialize());
+//    client = make_unique<FantasyName>(name, m_priv.get_public_key().serialize());
+//    client2 = make_unique<FantasyNameCHash>(name, m_priv.get_public_key().serialize());
     mfn.set_status(MyNameStatus::confirmed);
     mfn.set_name(name);
 
@@ -471,6 +473,7 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
     m_secrets.push_back(secret);
     qInfo() << secretfilename4 << "name available saving secret to file " << name;
 
+    UseName(name);
     return mfn;
 }
 

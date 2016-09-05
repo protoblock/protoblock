@@ -46,10 +46,12 @@ Material.ApplicationWindow{
 //            loginDialog.toggle()
         }
         else {
-            rootLoader.source = "qrc:/Projections.qml";
+
         }
 
         themeroot.showMaximized()
+        rootLoader.source = "qrc:/Projections.qml";
+
     }
 
     property string defaultname
@@ -516,6 +518,7 @@ Material.ApplicationWindow{
         target: MiddleMan
 
         onNameCheckGet: {
+            console.log( "namehcek material main" + name + status)
             if(status === "true" ) {
                 MiddleMan.signPlayer(name)
                 if ( loginDialog.visible )
@@ -524,7 +527,7 @@ Material.ApplicationWindow{
                 themeroot.reloadleaders = false
                 rootLoader.source = "qrc:/Projections.qml"
                 pageHelper.selectedTabIndex = 0;
-                rootLoader.showMaximized()
+                rootLoader.showMaximized
             }
             else {
                 errorString = name + " is already claimed. Please try with a different name. If this is your name from last year or another device, "
@@ -539,13 +542,17 @@ Material.ApplicationWindow{
         }
 
         onUsingFantasyName: {
-            if ( uname !== name) {
+            console.log(uname + " qml usingfantay name " + name)
+            if ( uname !== name || uname === "") {
                 uname = name
                 msgString = "You are now playing as: " + name
                 if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
                     usingNameDialog.toggle()
                 }
+                else
+                    console.log(" no popup")
             }
+            else console.log("ignoring usingfantasyname")
         }
 
         onImportSuccess: {
@@ -555,10 +562,10 @@ Material.ApplicationWindow{
                 usingNameDialog.open()
             }
             else {
-                errorString = name
-                loginErrorDialog.open()
+                importExportStatus = "Error: Import failed, please try again"
+                myImportDialog.open()
             }
-            console.log(passfail + "onImportSucess " + name )
+//            console.log(passfail + "onImportSucess " + name )
         }
     }
 

@@ -144,12 +144,34 @@ void Mediator::doPk2fname(const std::string &pkstr) {
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
-    if (!m_goodList.contains(myname.name().data()))
-        m_goodList.append(myname.name().data());
+    qDebug() << myFantasyName.data() << " mediator namestatus " << myname.DebugString().data();
 
-    emit usingFantasyName(myname.name().data());
+    if ( myname.name() == myFantasyName )
+        return;
+
+    if ( nullptr != mGoodNameBalModel.getByUid(myname.name().data()) ) {
+//        if ( myFantasyName != "" ) return;
+    }
+    else {
+        auto it = mFantasyNameBalModel.getByUid(myname.name().data());
+        if ( it != nullptr)
+            mGoodNameBalModel.append(new FantasyNameBalModelItem(*it));
+        else {
+            qDebug() <<  " mediator namestatus not in  mFantasyNameBalModel";
+            if ( myname.status() < MyNameStatus::requested) {
+                qDebug() << " not comfirmed ";
+                return;
+            }
+            else {
+                QString nn = myname.name().data();
+                mGoodNameBalModel.append(new FantasyNameBalModelItem(nn));
+            }
+        }
+    }
 
     myFantasyName = myname.name();
+    qDebug() << "Mediator  emitting using fanetay name " << myname.name().data();
+    emit usingFantasyName(myname.name().data());
     updateCurrentFantasyPlayerProjections();
 }
 
@@ -165,11 +187,29 @@ void Mediator::LiveProj(FantasyBitProj proj) {
 }
 
 void Mediator::MyNames(vector<MyFantasyName> mfn) {
+
+    qDebug() << " mediator myname " << mfn.size();
+    int heighest = 0;
+    string hname  = "";
     for ( auto m : mfn ) {
+        if ( m.status() >= heighest) {
+            heighest = m.status();
+            hname = m.name();
+        }
+        if ( m.name() == myFantasyName )
+            continue;
+
+        if ( nullptr != mGoodNameBalModel.getByUid(m.name().data()) ) continue;
+
         auto it = mFantasyNameBalModel.getByUid(m.name().data());
         if ( it != nullptr)
             mGoodNameBalModel.insert(mGoodNameBalModel.size(),it);
     }
+
+    qDebug() << " namename wins " << heighest << hname.data();
+    if ( myFantasyName == "" && hname != "" )
+        useName(hname.data());
+
 }
 
 void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
@@ -264,7 +304,7 @@ void Mediator::onControlMessage(QString)
 /*****************************************/
 
 
-void Mediator::checkname(const QString &name) {
+//void Mediator::checkname(const QString &name) {
 //    qDebug() << " in checkname " << name;
 //    WsReq req;
 //    req.set_ctype(CHECKNAME);
@@ -274,7 +314,7 @@ void Mediator::checkname(const QString &name) {
 //    auto txstr = req.SerializeAsString();
 //    QByteArray qb(txstr.data(),(size_t)txstr.size());
 //    m_webSocket.sendBinaryMessage(qb);
-}
+//}
 /*
 void Mediator::subscribeOrderPos(const QString &name) {
     auto stdname = name.toStdString();
@@ -343,8 +383,6 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     connect( that, SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
             this, SLOT(LiveProj(fantasybit::FantasyBitProj )));
 
-    connect( that, SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
-            this, SLOT(LiveProj(fantasybit::FantasyBitProj )));
     connect( that, SIGNAL(MyNames(vector<fantasybit::MyFantasyName>)),
             this, SLOT(MyNames(vector<fantasybit::MyFantasyName> )));
     connect( that, SIGNAL(NameBal(fantasybit::FantasyNameBal)),
@@ -370,6 +408,13 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
 
     connect( this, SIGNAL(OnUseName(QString)),
              that, SLOT(UseName(QString)));
+
+    connect( this, SIGNAL(doNameCheck(QString)),
+             that, SLOT(nameCheck(QString)));
+
+    connect( that, SIGNAL(nameAvail(QString &,bool)),
+             this, SLOT(nameAvail(QString &,bool)));
+
 
 //    return that;
 }
@@ -397,7 +442,20 @@ Mediator *Mediator::instance() {
  * This will return the mn for import
  */
 QString Mediator::importMnemonic(const QString &importStr) {
-    mGateway->dataService->importMnemonic(importStr.toStdString());
+    qDebug() << " try import";
+    auto ret = mGateway->dataService->importMnemonic(importStr.toStdString());
+
+    qDebug() << " try import";
+    if ( ret.status() == MyNameStatus::confirmed) {
+        emit importSuccess(ret.name().data(),true);
+//        useName(ret.name().data());
+        useName(ret.name().data());
+        return ret.name().data();
+    }
+    else {
+        emit importSuccess(ret.name().data(),false);
+        return "";
+    }
 //    auto pk = m_fantasy_agent.startImportMnemonic(importStr.toStdString());
 //    if ( pk == "" )
 //        return "";
@@ -415,10 +473,11 @@ QString Mediator::importMnemonic(const QString &importStr) {
 //    m_myPubkeyFname[pk] = "";
 //    pk2fname(pk.data());
 //    return pk.data();
-    return "";
+    return ret.name().data();
 }
 
 void Mediator::signPlayer(const QString &name)  {
+    qDebug() << " emit claim name " << name;
     emit OnClaimName(name);
 //    emit OnClaimName(name);
 
@@ -640,12 +699,13 @@ QString Mediator::init() {
     connect(&myGamesSelectionModel,SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
             this,SLOT(selectionChanged(QItemSelection, QItemSelection)));
 
-    return ""; //todo check if missed live event
+    return myFantasyName.data(); //todo check if missed live event
 }
 
 QString Mediator::getSecret() {
-
-    return mGateway->dataService->exportMnemonic(myFantasyName).data();
+    auto sec = mGateway->dataService->exportMnemonic(myFantasyName);
+    qDebug() << " returned secert" << sec.data();
+    return sec.data();
 }
 
 //void Mediator::handdleUsingName(const QString &name)

@@ -23,10 +23,10 @@ class Writer
 public:
     typedef T indata;
     Writer(const std::string &file,std::ios::openmode flags =  std::ios::in)
-//        :
-//        mFs(file,std::ios::out | std::ios::binary | flags)
+        :
+        mFs(file,std::ios::out | std::ios::binary | flags)
     {
-        mFs.open(file, std::ios::out | std::ios::binary);
+//        mFs.open(file, std::ios::out | std::ios::binary);
         if (mFs.good())
         {
             gd = true;

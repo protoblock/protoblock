@@ -341,6 +341,7 @@ void MainLAPIWorker::OnGetMyNames() {
 
 //from Gui
 void MainLAPIWorker::OnUseName(QString name) {
+    qDebug() << " OnUseName " << name;
     myCurrentName.set_name(name.toStdString());
     myCurrentName.set_status(MyNameStatus::requested);
 
@@ -353,10 +354,10 @@ void MainLAPIWorker::OnUseName(QString name) {
         }
     }
 
-    if ( myCurrentName.status() < MyNameStatus::confirmed)
+    if ( myCurrentName.status() >= MyNameStatus::requested)
         DoSubscribe(myCurrentName.name(),true);
 
-    qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
+    qDebug() << "malpi NameStatus(myCurrentName)" << myCurrentName.DebugString().data();
     emit NameStatus(myCurrentName);
 }
 

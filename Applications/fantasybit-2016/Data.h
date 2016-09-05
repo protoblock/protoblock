@@ -157,12 +157,12 @@ public:
             pm.set_allocated_player_base(&pb);
 
             string temp;
-            if ( !statusstore->Get(leveldb::ReadOptions(), it->key(), &temp).ok() )
-                continue;
-
             PlayerStatus ps;
-            if (!ps.ParseFromString(temp) )
-                continue;
+            if ( !statusstore->Get(leveldb::ReadOptions(), it->key(), &temp).ok() )
+               qDebug() << "no status  " << it->key().ToString().data();
+            else {
+                !ps.ParseFromString(temp);
+            }
 
             pm.set_playerid(it->key().ToString());
             pm.set_allocated_player_status(&ps);

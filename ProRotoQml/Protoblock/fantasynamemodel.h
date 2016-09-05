@@ -9,6 +9,7 @@
 #include "NameData.pb.h"
 #include <QQmlHelpersCommon.h>
 #include "FantasyName.h"
+#include "Commissioner.h"
 
 using namespace fantasybit;
 
@@ -22,6 +23,11 @@ class FantasyNameBalModelItem : public QObject {
 
 public:
 
+    explicit FantasyNameBalModelItem(QString &name) :  QObject(nullptr) {
+        m_name = name;
+        m_stake = 0;
+        m_bits = 0;
+    }
     explicit FantasyNameBalModelItem(const fantasybit::FantasyNameBal &in) :  QObject(nullptr) {
         m_name = in.name().data();
         m_pk = in.public_key().data();
@@ -32,7 +38,7 @@ public:
 
     explicit FantasyNameBalModelItem(fantasybit::FantasyName &in) :  QObject(nullptr) {
         m_name = in.alias().data();
-//        m_pk = in.pubkey().data();
+        m_pk = Commissioner::pk2str(in.pubkey()).data();
         m_stake = in.getStakeBalance();
         m_bits = in.getBalance();
         m_chash = in.hash();

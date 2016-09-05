@@ -7,6 +7,7 @@ import ProRotoQml.Theme 1.0
 import QtQuick.Controls 1.4 as Controls
 
 Item{
+
     Component.onCompleted: {
         pageHelper.title = "Import-Export"
         secretTxt.text = ""
@@ -14,7 +15,7 @@ Item{
     Flickable{
         width: parent.width
         height: parent.height
-        contentHeight: (parent.height + bacard2.height) * 1.2
+        contentHeight: parent.height //(parent.height + bacard2.height + bacard) * 1.2
         contentWidth: parent.width
         boundsBehavior:  Flickable.StopAtBounds
         interactive: true
@@ -90,12 +91,12 @@ Item{
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
                             var mypk = MiddleMan.importMnemonic(nameText.text)
-                            if ( mypk === "" ) {
-                                importExportStatus = "Error: Import failed, please try again"
-                            } else {
-                                importExportStatus = "Trying to import with key: " + mypk
-                            }
-                            myImportDialog.show()
+//                            if ( mypk === "" ) {
+//                                importExportStatus = "Error: Import failed, please try again"
+//                            } else {
+//                                importExportStatus = "Trying to import with key: " + mypk
+//                            }
+//                            myImportDialog.show()
                             nameText.text = ""
                             statusTxt.text = importExportStatus;
                             secretTxt.text = ""
@@ -106,7 +107,7 @@ Item{
 
             Card{
                 id: bacard2
-                height:(( imBan2.height + exportButton.height) * 2 ) + (clearSecret.height + secretTxt.paintedHeight + seCard.height)
+                height:(( imBan2.height + exportButton.height) * 2 ) + (clearSecret.height + secretTxt.paintedHeight + seCard.height) * 2
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 elevation: 5
@@ -165,18 +166,22 @@ Item{
                     Card{
                          id:seCard
                          width: parent.width / 1.07
-                         height:  theSecert.height
+                         height:  imBan2.height * 2
                          elevation: visible? 5 : 0
                          opacity: secretTxt.opacity
                          anchors.horizontalCenter: parent.horizontalCenter
-                        TextField{
+                        Label{
+                            anchors.fill: parent
                             id: theSecert
-                            width: parent.width / 1.07
+//                            width: parent.width / 1.07
                             anchors.horizontalCenter: parent.horizontalCenter
-                            visible: secretTxt.opacity > 0? true : false
-                            readOnly: true
+                            anchors.verticalCenter: parent.verticalCenter
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+//                            visible: secretTxt.opacity > 0? true : false
+//                            readOnly: true
                         }
-                        Behavior on visible {NumberAnimation{duration: 1200;}}
+//                        Behavior on visible {NumberAnimation{duration: 1200;}}
 
                     }
                 }
@@ -197,7 +202,8 @@ Item{
                 text:  "Secret to your account: " +realRoot.uname + ", will be displayed!"
             }
             onAccepted: {
-                secretTxt.text = "12-word password for " + realRoot.uname + "is displayed below. Please do not share this with anyone:"
+                secretTxt.text = "12-word password for " + realRoot.uname + " is displayed below. Please do not share this with anyone:"
+                        //+ MiddleMan.getSecret()
                 theSecert.text =  MiddleMan.getSecret()
             }
         }

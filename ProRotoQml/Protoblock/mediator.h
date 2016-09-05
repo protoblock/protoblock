@@ -297,7 +297,11 @@ public:
 
     //fantasy name - manage
     Q_INVOKABLE void pk2fname(const QString&);
-    Q_INVOKABLE void checkname(const QString&);
+    Q_INVOKABLE void checkname(QString s) {
+        qDebug() << " inside checkname" << s;
+        emit doNameCheck(s);
+    }
+
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
     Q_INVOKABLE void signPlayer(const QString &name);
     Q_INVOKABLE void useName(const QString &name);
@@ -346,7 +350,7 @@ public:
     void updateCurrentFantasyPlayerProjections();
 signals:
     void importSuccess(const QString name, bool passfail);
-    void usingFantasyName(const QString &name, bool isdefault = false);
+    void usingFantasyName(const QString &name);
     void nameCheckGet( const QString & name, const QString & status );
     //    void myNameChang (const QString & name, QString status );
     //    void myNameStatusChanged();
@@ -363,6 +367,7 @@ signals:
     void portfolioChanged();
     */
 
+    void doNameCheck(QString);
     void NewProjection(vector<fantasybit::FantasyBitProj>);
 
 
@@ -371,6 +376,10 @@ protected slots:
 //    void handdleNameStatus(const QString &name,const QString &status );
 //    void handdleNameStatuses();
 
+    void nameAvail(QString &s, bool tf) {
+        qDebug() << " in side name availa" << s << tf;
+       nameCheckGet(s, tf ?  "true" : "false");
+    }
 
     //quotes
     void getDepthRep();
