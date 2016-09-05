@@ -146,6 +146,30 @@ public:
         return bs;
     }
 
+    std::unordered_map<int,pair<bool,string>> myKnownPlayerStatus() {
+        std::unordered_map<int,pair<bool,string>> ret;
+
+        auto *it = playerstore->NewIterator(leveldb::ReadOptions());
+
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            PlayerBase pb;
+            pb.ParseFromArray(it->value().data(),it->value().size());
+//            pm.set_allocated_player_base(&pb);
+
+            string temp;
+            PlayerStatus ps;
+            if ( !statusstore->Get(leveldb::ReadOptions(), it->key(), &temp).ok() )
+               qDebug() << "no status  " << it->key().ToString().data();
+            else {
+                !ps.ParseFromString(temp);
+            }
+
+            ret.insert({std::stoi(it->key().ToString()),{ps.status() == PlayerStatus_Status_ACTIVE,ps.teamid()}});
+        }
+        return  ret;
+    }
+
+
     std::string BootStrapPlayer(LdbWriter &ldb) {
         auto *it = playerstore->NewIterator(leveldb::ReadOptions());
         PlayerMeta pm;

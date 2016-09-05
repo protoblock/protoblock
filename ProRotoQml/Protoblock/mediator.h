@@ -212,6 +212,7 @@ public:
 
             it->set_projection(it->get_knownProjection());
         }
+        m_pProjectionsViewFilterProxyModel->invalidate();
     }
 
     Q_INVOKABLE void sendProjections() {
@@ -276,14 +277,15 @@ public:
             if ( column == "fname1")
                 item->setfname1(it->second);
             else if ( column == "fname2")
-                item->setfname1(it->second);
+                item->setfname2(it->second);
             else if ( column == "fname3")
-                item->setfname1(it->second);
+                item->setfname3(it->second);
             else if ( column == "fname4")
-                item->setfname1(it->second);
+                item->setfname4(it->second);
             else if ( column == "fname5")
-                item->setfname1(it->second);
+                item->setfname5(it->second);
         }
+        m_pProjectionsViewFilterProxyModel->invalidate();
     }
 
 
@@ -396,7 +398,7 @@ protected slots:
     //projections
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
         qDebug() << " mediator selectionChanged " << selected << deselected;
-//        m_pProjectionsViewFilterProxyModel->invalidate();
+        m_pProjectionsViewFilterProxyModel->invalidate();
     }
 
 private slots:

@@ -9,7 +9,9 @@
 //#include <QMutexLocker>
 #include "pbgateways.h"
 
-class DataService : public GenericSingleton<DataService>, public pb::IDataService {
+class DataService : public GenericSingleton<DataService>
+        , public pb::IDataService
+{
     friend class GenericSingleton<DataService>;
     DataService(){}
     //QMutex myMutex;
@@ -41,6 +43,7 @@ public:
     ordsnap_t
         GetOrdersPositionsByName(const std::string &fname);
 
+    std::unordered_map<int,pair<bool,string>> getAllKnownPlayerStatus();
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);
 };

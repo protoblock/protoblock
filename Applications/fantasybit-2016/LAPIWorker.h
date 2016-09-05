@@ -16,12 +16,16 @@
 #include <vector>
 #include <mutex>
 #include "iresolvable.h"
+#ifdef USE_PB_GATEWAYS
+#endif
 #include "pbgateways.h"
-
 using fantasybit::GlobalState;
 using namespace fantasybit;
 using namespace std;
-class MainLAPIWorker : public QObject , public IResolvable, public pb::IPBGateway {
+class MainLAPIWorker : public QObject , public IResolvable
+        , public pb::IPBGateway
+
+{
     Q_OBJECT
     Q_INTERFACES(pb::IPBGateway)
 

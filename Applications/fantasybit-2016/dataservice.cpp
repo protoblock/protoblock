@@ -85,3 +85,8 @@ ordsnap_t DataService::GetOrdersPositionsByName(const std::string &fname) {
     return worker->ExData().GetOrdersPositionsByName(fname);
 }
 
+
+std::unordered_map<int, pair<bool, std::string> > DataService::getAllKnownPlayerStatus(){
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().myKnownPlayerStatus();
+}

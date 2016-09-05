@@ -40,7 +40,7 @@ Item {
                 console.log(" addColumn " )
                 var role = MiddleMan.addFnameColumn(fname)
                 tv.addColumn(columnComponent.createObject(tv, { "role": role, "title": fname, "horizontalAlignment": Text.AlignHCenter}))
-//                tv.resizeColumnsToContents()
+                tv.resizeColumnsToContents()
             }
             highlightOnFocus: false
             anchors.fill: parent
@@ -411,7 +411,7 @@ Item {
 
                 Material.Button {
                     focus: (topw.focuscount > 0) ? true : false
-                    width: parent.width - lbl.width
+                    width: parent.width - ProtoScreen.guToPx(4)
                     anchors.left: lbl.right
                     anchors.right: parent.right
                     height: parent.height

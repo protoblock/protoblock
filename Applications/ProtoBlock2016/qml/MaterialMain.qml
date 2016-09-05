@@ -17,12 +17,12 @@ import Communi 3.0
 
 Material.ApplicationWindow{
 
-    statusBar: StatusBar {
-        RowLayout {
-            anchors.fill: parent
-            Material.Label { text: "Read Only" }
-        }
-    }
+//    statusBar: StatusBar {
+//        RowLayout {
+//            anchors.fill: parent
+//            Material.Label { text: "Read Only" }
+//        }
+//    }
 
     id: themeroot
     visible: true
