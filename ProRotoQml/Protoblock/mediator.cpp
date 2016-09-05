@@ -181,7 +181,7 @@ void Mediator::LiveProj(FantasyBitProj proj) {
             return;
 
         auto *item = mPlayerProjModel.getByUid(proj.playerid().data());
-        item->setknownProjection(proj.proj());
+        item->set_knownProjection(proj.proj());
         item->set_projection(proj.proj());
     }
 }
@@ -274,7 +274,8 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 
     for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
         auto *item = mPlayerProjModel.getByUid(it->first.data());
-        item->setknownProjection(it->second);
+        if ( !item ) continue;
+        item->set_knownProjection(it->second);
         item->set_projection(it->second);
     }
 }

@@ -31,14 +31,14 @@ class PlayerProjModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (int, status)
     QML_READONLY_CSTREF_PROPERTY (QString, playerid)
     QML_WRITABLE_VAR_PROPERTY(int, projection)
-    QML_READONLY_CSTREF_PROPERTY (int, knownProjection)
+    QML_WRITABLE_VAR_PROPERTY (int, knownProjection)
     QML_WRITABLE_VAR_PROPERTY (int, projectionStatus)
     QML_READONLY_CSTREF_PROPERTY (QString, gameid)
-    QML_READONLY_CSTREF_PROPERTY (int, fname1)
-    QML_READONLY_CSTREF_PROPERTY (int, fname2)
-    QML_READONLY_CSTREF_PROPERTY (int, fname3)
-    QML_READONLY_CSTREF_PROPERTY (int, fname4)
-    QML_READONLY_CSTREF_PROPERTY (int, fname5)
+    QML_WRITABLE_VAR_PROPERTY (int, fname1)
+    QML_WRITABLE_VAR_PROPERTY (int, fname2)
+    QML_WRITABLE_VAR_PROPERTY (int, fname3)
+    QML_WRITABLE_VAR_PROPERTY (int, fname4)
+    QML_WRITABLE_VAR_PROPERTY (int, fname5)
 
 public:
 

@@ -242,7 +242,8 @@ public:
             emit NewProjection(vg.second);
     }
 
-    Q_INVOKABLE QString addFnameColumn(QString fname) {
+    std::unordered_map<int,std::string> coltorole;
+    Q_INVOKABLE QString addFnameColumn(QString fname,int col) {
 //        mPlayerProjModel.AddColumn(fname.toUtf8());
 //        m_pProjectionsViewFilterProxyModel->ret.append(fname);
 //        qDebug() << " ret " << m_pProjectionsViewFilterProxyModel->ret;
@@ -255,6 +256,7 @@ public:
         if ( ++fnameindex >= 5 )
             fnameindex = 0;
 
+        coltorole[col] = ret.toStdString();
         toggleFantasyNameColumn(fname,ret);
         return ret;
     }
@@ -267,30 +269,50 @@ public:
 
     void toggleFantasyNameColumn(const QString & fantasyName, QString &column){
         //refresheing is done when leaderboard model refresh
+//        m_pProjectionsViewFilterProxyModel->beginResetModel();
         std::unordered_map<std::string,int> theOtherGuyProjection = mGateway->dataService->GetProjByName(fantasyName.toStdString());
         qDebug() << "toggleFantasyNameColumn " << fantasyName << column << theOtherGuyProjection.size();
 
         //        bool(PlayerProjModelItem::*fnamefunc)(int &)
         for ( auto it = theOtherGuyProjection.begin(); it != theOtherGuyProjection.end(); ++it ){
             auto *item = mPlayerProjModel.getByUid(it->first.data());
-
+            if ( !item ) continue;
             if ( column == "fname1")
-                item->setfname1(it->second);
+                item->set_fname1(it->second);
             else if ( column == "fname2")
-                item->setfname2(it->second);
+                item->set_fname2(it->second);
             else if ( column == "fname3")
-                item->setfname3(it->second);
+                item->set_fname3(it->second);
             else if ( column == "fname4")
-                item->setfname4(it->second);
+                item->set_fname4(it->second);
             else if ( column == "fname5")
-                item->setfname5(it->second);
+                item->set_fname5(it->second);
         }
         m_pProjectionsViewFilterProxyModel->invalidate();
+//        m_pProjectionsViewFilterProxyModel->endResetModel();
+
+
     }
 
 
     Q_INVOKABLE void copyProj(int column, QString value, bool clone) {
         qDebug() << "CopyProj " << column << value << clone;
+
+        std::unordered_map<std::string,int> theOtherGuyProjection = mGateway->dataService->GetProjByName(value.toStdString());
+//        qDebug() << "toggleFantasyNameColumn " << fantasyName << column << theOtherGuyProjection.size();
+
+        //        bool(PlayerProjModelItem::*fnamefunc)(int &)
+        for ( auto it = theOtherGuyProjection.begin(); it != theOtherGuyProjection.end(); ++it ){
+            auto *item = mPlayerProjModel.getByUid(it->first.data());
+            if ( !item ) continue;
+            if ( it->second == 0 ) continue;
+            if ( clone || item->get_projection() == 0 ||
+                 item->get_projection() != it->second) {
+                item->set_projection(it->second);
+                qDebug() << " set " << it->first.data() << " to " << it->second;
+            }
+        }
+        m_pProjectionsViewFilterProxyModel->invalidate();
 
     }
 

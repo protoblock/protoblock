@@ -27,7 +27,7 @@ Item {
         TableView {
             id: tv
             Component.onCompleted: {
-                resizeColumnsToContents()
+                tv.resizeColumnsToContents()
 
                 //                width = Qt.binding(function(){
 //                   return ProtoScreen.guToPx(6) * columnCount
@@ -38,8 +38,15 @@ Item {
             function addcolumnMethod(fname) {
 //                customRoleNames[0] = fname
                 console.log(" addColumn " )
-                var role = MiddleMan.addFnameColumn(fname)
-                tv.addColumn(columnComponent.createObject(tv, { "role": role, "title": fname, "horizontalAlignment": Text.AlignHCenter}))
+                var role = MiddleMan.addFnameColumn(fname,tv.columnCount)
+                tv.addColumn(columnComponent.createObject(tv, {
+                                                              "role": role,
+                                                              "title": fname,
+                                                              "horizontalAlignment": Text.AlignHCenter
+                                                          })
+                             )
+
+
                 tv.resizeColumnsToContents()
             }
             highlightOnFocus: false
@@ -246,7 +253,7 @@ Item {
                 title: " Avg "
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(7)
+                width: ProtoScreen.guToPx(14)
             }
 
         }
@@ -257,10 +264,11 @@ Item {
         Rectangle {
             id: rec
             anchors.fill: parent
-            border.width: 0
+            border.width: (model.knownProjection !==  model.projection) ?
+                                ProtoScreen.guToPx(.25) : 0
 //                          (model.projection === model.knownProjection) ? 0 : ProtoScreen.guToPx(.125)
             border.color: themeroot.theme.accentColor
-            //            width: ProtoScreen.guToPx(14)
+                        width: ProtoScreen.guToPx(14)
             color: "transparent"
 
             Material.Label {
@@ -271,7 +279,8 @@ Item {
                 id: lbl
                 width: ProtoScreen.guToPx(4) - 1
                 height: parent.height
-                text: " "
+                text: (model.knownProjection !==  model.projection)
+                      ? model.knownProjection : ""
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -304,7 +313,7 @@ Item {
 
             SpinBox {
                 id: sb
-                anchors.left: lbl.right
+//                anchors.left: lbl.right
                 anchors.right: parent.right
                 anchors.margins: 1
 //                anchors.right: parent.right
@@ -316,7 +325,7 @@ Item {
                 stepSize: 1.0
                 maximumValue: 40
                 minimumValue:       0
-                value: styleData.value
+                value: model.projection
                 horizontalAlignment: Text.AlignHCenter
 
                 onEditingFinished: {
@@ -352,7 +361,7 @@ Item {
         Rectangle {
             id: idd
             implicitWidth: textItem2.implicitWidth
-            width: parent.width
+//            width: parent.width
             height: ProtoScreen.guToPx(6)
 //            anchors.fill: parent
             color: "white"
@@ -411,8 +420,8 @@ Item {
 
                 Material.Button {
                     focus: (topw.focuscount > 0) ? true : false
-                    width: parent.width - ProtoScreen.guToPx(4)
-                    anchors.left: lbl.right
+                    width: ProtoScreen.guToPx(16)
+//                    anchors.left: lbl.right
                     anchors.right: parent.right
                     height: parent.height
                     visible: styleData.column === 4
@@ -429,12 +438,13 @@ Item {
 
                 Material.IconButton {
                     id: li
-                    width: ProtoScreen.guToPx(4)//parent.width * .50
-                    anchors.left: parent.left
+//                    width: ProtoScreen.guToPx(5)//parent.width * .50
+                    anchors.right: parent.horizontalCenter
+                    anchors.rightMargin: ProtoScreen.guToPx(.25)
                     height: parent.height
                     anchors.bottom: parent.bottom
                     Layout.fillHeight: true
-                    Layout.fillWidth: true
+                    Layout.fillWidth: false
                     visible: styleData.column > 4
                     enabled: styleData.column > 4
                     onClicked : {
@@ -442,10 +452,12 @@ Item {
 
 //                        tv.model.setData(tv.model.index(1,styleData.column),
 //                                         tv.model.get(1), 0)
+                        MiddleMan.copyProj(styleData.column, styleData.value, false)
+
 
                     }
 
-                    size: ProtoScreen.guToPx(2)
+                    size: ProtoScreen.guToPx(3)
                     action: Material.Action {
                         name: "Copy-Merge Projection"
                         iconName: "awesome/copy"
@@ -454,16 +466,19 @@ Item {
                 }
 
                 Material.IconButton {
-                    width: ProtoScreen.guToPx(4)//parent.width * .50
-                    anchors.right: parent.right
-                    anchors.left: li.right
+//                    width: ProtoScreen.guToPx(5)//parent.width * .50
+//                    anchors.right: parent.right
+                    anchors.left: parent.horizontalCenter
+                    anchors.leftMargin: ProtoScreen.guToPx(.25)
+
+//                    anchors.left: li.right
                     height: parent.height
                     anchors.bottom: parent.bottom
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     visible: styleData.column > 4
                     enabled: styleData.column > 4
-                    size: ProtoScreen.guToPx(2)
+                    size: ProtoScreen.guToPx(3)
                     onClicked : {
                         console.log("clicked send")
                         MiddleMan.copyProj(styleData.column, styleData.value, true)
