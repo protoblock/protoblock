@@ -978,7 +978,14 @@ bool BlockProcessor::verifyBootstrap(LdbWriter &ldb,const Bootstrap &bs) {
 }
 
 std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransaction &st) {
+    {
+    auto ret = Commissioner::getName(st.fantasy_name());
 
+    if ( !isValidTx(st) )
+        ret.reset();
+
+    return ret;
+    }
     std::shared_ptr<FantasyName> ret;
     if (st.trans().version() != Commissioner::TRANS_VERSION) {
         qCritical() << " !verifySignedTransaction wrong trans version! ";
@@ -995,6 +1002,8 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
         qCritical() << " Blank FantasyName";
         return ret;
     }
+
+
 
     ret = Commissioner::getName(st.fantasy_name());
     if ( !ret )

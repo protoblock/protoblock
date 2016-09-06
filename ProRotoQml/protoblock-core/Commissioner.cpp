@@ -291,8 +291,9 @@ Block Commissioner::makeGenesisBlock() {
 Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb) {
     Bootstrap head;
     string headhash;
-    string genesiskey = "201600";
+    string genesiskey = "201601";
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
+    qDebug() << " reading genesisBootFile" << genesisBootFile;
     Reader<KeyValue> reader{genesisBootFile.toStdString()};
     KeyValue kv;
     while ( reader.ReadNext(kv)) {

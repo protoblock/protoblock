@@ -109,13 +109,13 @@ private:
             #endif
             case GenesisBootLocation2016 :
             #ifdef Q_OS_WIN
-                return storagePath(storageDirName)+"/"+"bootstraptest2015.out";
+                return storagePath(storageDirName)+"/"+"bootstraptest201601.out";
             #endif
             #ifdef Q_OS_MAC
                 QDir dir(QApplication::applicationDirPath());
                 dir.cdUp();
                 dir.cd("Resources");
-                return dir.absolutePath()+QString("/GenesisTransition-Tr-Transaction.txt");
+                return dir.absolutePath()+QString("/bootstraptest201601.out");
             #endif
 
 

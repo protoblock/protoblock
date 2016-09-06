@@ -125,7 +125,7 @@ void NFLStateData::InitCheckpoint() {
     Bootstrap head;
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
-    ldb.read(ldb.read("201600"),head);
+    ldb.read(ldb.read("201601"),head);
 
     GlobalState gs;
     gs.set_season(head.season());
