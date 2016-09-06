@@ -210,7 +210,7 @@ Item {
             }
 
             TableViewColumn {
-                role: "stake"
+                role: "bits"
                 title: "Overall"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(7)
