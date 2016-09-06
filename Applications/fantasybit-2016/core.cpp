@@ -1,7 +1,7 @@
 #include "core.h"
 #include <iostream>
 #include "ApiData.pb.h"
-#include "mediator.h"
+//#include "mediator.h"
 
 Core::Core(){}
 void Core::bootstrap(){

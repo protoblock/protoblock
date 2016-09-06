@@ -2,15 +2,14 @@ include($$PWD/../../pri/protos.pri)
 include($$PWD/../../pri/deps.pri)
 include($$PWD/../../pri/macrosAndModels.pri)
 
-QT += core network qml
 #QT -= gui
-QT += qml quick network websockets core
-CONFIG += qt c++11 warn_off
+QT += core network websockets
+CONFIG += qt c++11 static
 
-CONFIG += c++11 static
+#CONFIG += c++11
 
 TARGET = fantasybit-2016D
-CONFIG += qt console
+#CONFIG += qt console
 CONFIG -= app_bundle
 
 TEMPLATE = lib
@@ -27,7 +26,7 @@ win32 {
 }
 
 
-INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
+#INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/protoblock-core
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/protoblock-core/bitcoin-core-base58
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlModels
@@ -60,8 +59,8 @@ SOURCES += \
     $$PWD/LAPIWorker.cpp \
     $$PWD/NodeWorker.cpp \
     $$PWD/iresolvable.cpp \
-    $$PWD/dataservice.cpp \
-    fullgateway.cpp
+    $$PWD/dataservice.cpp
+#    fullgateway.cpp
 
 
 
@@ -78,8 +77,8 @@ HEADERS += \
     $$PWD/NodeWorker.h \
     $$PWD/threadedqobject.h \
     $$PWD/iresolvable.h \
-    $$PWD/dataservice.h \
-    fullgateway.h
+    $$PWD/dataservice.h
+#    fullgateway.h
 
 
 
@@ -114,5 +113,5 @@ HEADERS += \
 #else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/debug/ -lProRotoQml.Protoblockd
 #else:unix: LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/ -lProRotoQml.Protoblockd
 
-INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
-DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
+#INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
+#DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock

@@ -79,9 +79,10 @@ class Mediator : public QObject {
     QML_READONLY_PTR_PROPERTY(QStringListModel, pPosFilter)
     QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
 
-    QML_READONLY_CSTREF_PROPERTY (qint32, week)
+    QML_READONLY_CSTREF_PROPERTY (qint32, theWeek)
     QML_READONLY_CSTREF_PROPERTY (qint32, season)
-    QML_READONLY_CSTREF_PROPERTY (QString, seasonstring)
+    QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
+    QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
 
 
 

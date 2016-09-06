@@ -34,7 +34,7 @@ Item {
             backgroundColor: "white"
             color: themeroot.theme.primaryColor
             anchrosHType: "center"
-            text: "NFL 2016 SEASON - Week 1 - Live "
+            text: MiddleMan.seasonString + " 2016 - Week " + MiddleMan.theWeek + " - " + MiddleMan.liveSync;
             id: cBan
             width: parent.width
             elevation: 0
@@ -74,11 +74,7 @@ Item {
             //          color: "lightblue"
                       Layout.fillWidth: true
                   PlayerProjTable {
-        //              anchors.leftMargin: ProtoScreen.guToPx(1);
-
                       id: ppt
-        //              anchors.fill: parent
-
                   }
 
                   Rectangle {

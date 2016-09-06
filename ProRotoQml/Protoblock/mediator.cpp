@@ -39,7 +39,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_gameFilter = "Scheduled";
 
 
-
+    m_theWeek = 0;
+    m_liveSync ="Sync";
+    m_seasonString = "";
     //player selection
     m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
     m_pProjectionsViewFilterProxyModel->setSourceModel(&mPlayerProjModel);
@@ -229,9 +231,10 @@ void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in)
 
 }
 
-void Mediator::GlobalStateChange(GlobalState)
+void Mediator::GlobalStateChange(GlobalState gs)
 {
-
+    if ( gs.week() > 0 && gs.week() < 18)
+        m_theWeek = gs.week();
 }
 
 void Mediator::LiveGui(GlobalState gs) {
@@ -240,8 +243,9 @@ void Mediator::LiveGui(GlobalState gs) {
     if ( !amLive ) {
         amLive = true;
         m_season = gs.season();
-        m_week = gs.week();
-        m_seasonstring = gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season";
+        settheWeek(gs.week());
+        setliveSync("Live");
+        setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
     }
 
     if ( mGateway == nullptr ) {
@@ -254,11 +258,11 @@ void Mediator::LiveGui(GlobalState gs) {
         m_pLeaderBoardSortModel->invalidate();
 
 
-        if ( m_week > 0  && m_week < 17) {
+        if ( m_theWeek > 0  && m_theWeek < 17) {
             //setCurrentWeekData();
 
-            m_pWeeklyScheduleModel->updateWeeklySchedule(m_week,
-                                                         mGateway->dataService->GetWeeklySchedule(m_week));
+            m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
+                          mGateway->dataService->GetWeeklySchedule(m_theWeek));
             mPlayerProjModel.updateRosters(mGateway->dataService->GetCurrentWeekGameRosters());
             if (myFantasyName != "" )
                 updateCurrentFantasyPlayerProjections();

@@ -47,7 +47,7 @@ Item {
                              )
 
 
-                tv.resizeColumnsToContents()
+//                tv.resizeColumnsToContents()
             }
             highlightOnFocus: false
             anchors.fill: parent
@@ -202,6 +202,8 @@ Item {
                 role: "teamid"
                 title: "Team"
                 horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(6)
+
                 delegate:
                     Material.Label{
                     //                anchors.centerIn: parent
@@ -229,6 +231,7 @@ Item {
                 title: "Roster"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
+                width: ProtoScreen.guToPx(6)
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -245,15 +248,15 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 delegate: projdel
                 movable: false
-                width: ProtoScreen.guToPx(14)
+                width: ProtoScreen.guToPx(16)
             }
 
             TableViewColumn{
 //                role: "knownProjection"
-                title: " Avg "
+                title: "Average"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(14)
+                width: ProtoScreen.guToPx(10)
             }
 
         }
@@ -268,16 +271,19 @@ Item {
                                 ProtoScreen.guToPx(.25) : 0
 //                          (model.projection === model.knownProjection) ? 0 : ProtoScreen.guToPx(.125)
             border.color: themeroot.theme.accentColor
-                        width: ProtoScreen.guToPx(14)
+                        width: ProtoScreen.guToPx(16)
             color: "transparent"
 
             Material.Label {
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.margins: 1
+                anchors.right: sb.left
+                anchors.leftMargin: ProtoScreen.guToPx(.125)
+
+                anchors.margins: ProtoScreen.guToPx(.125)
+
 //                focus: true
                 id: lbl
-                width: ProtoScreen.guToPx(4) - 1
+                width: ProtoScreen.guToPx(6) - ProtoScreen.guToPx(.125)
+
                 height: parent.height
                 text: (model.knownProjection !==  model.projection)
                       ? model.knownProjection : ""
@@ -393,11 +399,11 @@ Item {
                     id: lbl
 //                    anchors.fill: parent;
 //                    anchors.centerIn: parent
-                    anchors.left: parent.left
+                    anchors.right: but.left
                     anchors.top: parent.top
                     Layout.fillHeight: true
                     Layout.fillWidth: false
-                    width: ProtoScreen.guToPx(4)
+                    width: ProtoScreen.guToPx(6)
                     height: parent.height
 //                    color: "black"
 //                    iconSource: "icon://" + "awesome/undo"// "qrc:/icons/navigation_close.png"
@@ -419,8 +425,9 @@ Item {
                 }
 
                 Material.Button {
+                    id: but
                     focus: (topw.focuscount > 0) ? true : false
-                    width: ProtoScreen.guToPx(16)
+                    width: ProtoScreen.guToPx(10)
 //                    anchors.left: lbl.right
                     anchors.right: parent.right
                     height: parent.height
@@ -440,7 +447,7 @@ Item {
                     id: li
 //                    width: ProtoScreen.guToPx(5)//parent.width * .50
                     anchors.right: parent.horizontalCenter
-                    anchors.rightMargin: ProtoScreen.guToPx(.25)
+                    anchors.rightMargin: ProtoScreen.guToPx(.50)
                     height: parent.height
                     anchors.bottom: parent.bottom
                     Layout.fillHeight: true
@@ -461,7 +468,7 @@ Item {
                     action: Material.Action {
                         name: "Copy-Merge Projection"
                         iconName: "awesome/copy"
-                        hoverAnimation: true
+//                        hoverAnimation: true
                     }
                 }
 
@@ -469,7 +476,7 @@ Item {
 //                    width: ProtoScreen.guToPx(5)//parent.width * .50
 //                    anchors.right: parent.right
                     anchors.left: parent.horizontalCenter
-                    anchors.leftMargin: ProtoScreen.guToPx(.25)
+                    anchors.leftMargin: ProtoScreen.guToPx(.50)
 
 //                    anchors.left: li.right
                     height: parent.height
@@ -488,7 +495,7 @@ Item {
                         iconName: "awesome/clone"
                         text: "Copy-Clone Projection"
                         tooltip: "Copy and Replace your projection"
-                        hoverAnimation: true
+//                        hoverAnimation: true
                     }
 
                 }

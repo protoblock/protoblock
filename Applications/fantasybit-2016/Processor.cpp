@@ -566,11 +566,8 @@ void BlockProcessor::process(const DataTransition &indt) {
 
         if (mGlobalState.season() == indt.season() - 1) {}
         else if (mGlobalState.season() != indt.season()) {
-            qWarning() << "wrong season! " << indt.DebugString();
-            mGlobalState.set_season(indt.season());
+            qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
         }
-
-        mGlobalState.set_season(mGlobalState.season() + 1);
 
         mGlobalState.set_state(GlobalState_State_OFFSEASON);
         mData.OnGlobalState(mGlobalState);
@@ -879,8 +876,8 @@ void BlockProcessor::OnSeasonStart(int season) {
 }
 
 void BlockProcessor::OnSeasonEnd(int season) {
-    mNameData.OnSeasonEnd(season);
-    mData.OnSeasonEnd(season);
+//    mNameData.OnSeasonEnd(season);
+//    mData.OnSeasonEnd(season);
 //    mExchangeData.OnSeasonStart(season);
 //    emit WeekStart(week);
 }
@@ -1035,8 +1032,10 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
     }
 
     if ( !Commissioner::verify(sig,digest,pk)) {
-        qCritical() << "verfiy_name verify failure";
-        return false;
+        if ( !Commissioner::verifyOracle(sig,digest)) {
+            qCritical() << "verfiy_name verify failure";
+            return false;
+        }
     }
     else qDebug() << " ssssss veroify name";
 

@@ -67,7 +67,7 @@ namespace fantasybit {
     static std::string PB_WS_TX = "app.trading.football";
 #endif
 
-    static std::string PAPIURL = "app.trading.football:4545";
+    static std::string PAPIURL = "https://app.trading.football:4545";
     static std::string LAPIURL = "https://app.trading.football:9854";
     //static std::string DBIP = "192.96.159.216";
     static std::string DBIP = "158.222.102.83";
