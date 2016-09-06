@@ -46,6 +46,7 @@ public:
     std::unordered_map<int,pair<bool,string>> getAllKnownPlayerStatus();
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);
+    int GetAvgProjection(const string &playerid);
 };
 
 

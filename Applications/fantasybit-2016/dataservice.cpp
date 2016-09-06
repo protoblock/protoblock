@@ -16,6 +16,11 @@ std::vector<fantasybit::GameRoster> DataService::GetCurrentWeekGameRosters(){
     return worker->NFLState().GetCurrentWeekGameRosters();
 }
 
+int DataService::GetAvgProjection(const string &playerid) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NameData().GetAvgProj(playerid);
+}
+
 std::vector<fantasybit::GameResult> DataService::GetPrevWeekGameResults(int week){
     //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
@@ -41,15 +46,15 @@ fantasybit::GameStatus DataService::GetGameStatus(string gid) {
 
 
 std::vector<std::shared_ptr<fantasybit::FantasyName>> DataService::GetLeaderBoard() {
-    auto v = Commissioner::GetFantasyNames();
+    return Commissioner::GetFantasyNames();
 
-    std::sort(v.begin(), v.end(),
-        [](shared_ptr<FantasyName> f1, shared_ptr<FantasyName> f2){
-            return (f2->getBalance() == f1->getBalance()) ? (f1->hash() < f2->hash() ) :
-                                                       (f2->getBalance() < f1->getBalance());
-        });
+//    std::sort(v.begin(), v.end(),
+//        [](shared_ptr<FantasyName> f1, shared_ptr<FantasyName> f2){
+//            return (f2->getBalance() == f1->getBalance()) ? (f1->hash() < f2->hash() ) :
+//                                                       (f2->getBalance() < f1->getBalance());
+//        });
 
-    return v;
+//    return v;
 }
 
 // curent week

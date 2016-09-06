@@ -42,6 +42,9 @@ class FantasyNameData : public QObject {
     std::unordered_map<std::string,
             std::unordered_map<std::string,int>> PlayerIDProjections;
 
+    std::unordered_map<std::string,long> PlayerIDSumProj;
+
+
     std::set<std::string> mSubscribed{};
     bool amlive = false;
     int week = 0;
@@ -67,6 +70,16 @@ public slots:
 public:
     void OnWeekOver(int week);
     void OnWeekStart(int week);
+    int GetAvgProj(const string &playerid) {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        int count = PlayerIDProjections[playerid].size();
+        long sum = PlayerIDSumProj[playerid];
+        if  (count > 0 && sum > 0)
+            return  sum / count;
+        else
+            return 0;
+    }
+
 
 public:
     FantasyNameData() {}
@@ -82,7 +95,7 @@ public:
     void AddNewName(std::string name, std::string pubkey);
     void AddBalance(const std::string name,uint64_t amount);
     void AddPnL(const std::string name, int64_t pnl);
-    void AddProjection(const std::string &name, const std::string &player, uint32_t proj);
+    void AddProjection(const std::string &name, const std::string &player, uint32_t proj,int32_t);
     void OnProjection(const std::string &name, const std::string &player, uint32_t proj);
     void OnFantasyName(std::shared_ptr<FantasyName> fn);
 

@@ -16,6 +16,7 @@
 
 #include "sortfilterproxymodel.h"
 #include "fbutils.h"
+#include "pbgateways.h"
 
 namespace pb {
 using namespace fantasybit;
@@ -34,6 +35,7 @@ class PlayerProjModelItem : public QObject {
     QML_WRITABLE_VAR_PROPERTY (int, knownProjection)
     QML_WRITABLE_VAR_PROPERTY (int, projectionStatus)
     QML_READONLY_CSTREF_PROPERTY (QString, gameid)
+    QML_WRITABLE_VAR_PROPERTY (int, avg)
     QML_WRITABLE_VAR_PROPERTY (int, fname1)
     QML_WRITABLE_VAR_PROPERTY (int, fname2)
     QML_WRITABLE_VAR_PROPERTY (int, fname3)
@@ -44,6 +46,7 @@ public:
 
     explicit PlayerProjModelItem(const fantasybit::PlayerDetail &pd, const std::string &teamid,
                                  const std::string &playerid, const QString &gameid,
+                                 int avg,
                                  QObject *parent = nullptr) :  QObject(parent) {
         m_fullname =  QString("%1 %2")
                 .arg ( pd.base.first ().data () )
@@ -62,6 +65,7 @@ public:
         m_fname3 = 0;
         m_fname4 = 0;
         m_fname5 = 0;
+        set_avg(avg);
 //        qDebug() << " PlayerProjModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
     }
 };
@@ -77,7 +81,7 @@ public:
         : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
 
-    void updateRosters(std::vector<pb::GameRoster> &inrosters) {
+    void updateRosters(std::vector<pb::GameRoster> &inrosters, pb::IDataService *ds) {
 
 //        qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
 
@@ -90,12 +94,18 @@ public:
             QString gameId = game.info.id().data();
             //add home players
             for(const auto& player : game.homeroster) {
-                append(new PlayerProjModelItem(player.second,game.info.home(),player.first.data(),gameId,this));
+                append(new PlayerProjModelItem(player.second,game.info.home(),
+                                               player.first.data(),gameId,
+                                               ds->GetAvgProjection(player.first),
+                                               this));
             }
 
             //add away players
             for(const auto& player : game.awayroster) {
-                append(new PlayerProjModelItem(player.second,game.info.away(),player.first.data(),gameId,this));
+                append(new PlayerProjModelItem(player.second,game.info.away(),
+                                               player.first.data(),gameId,
+                                               ds->GetAvgProjection(player.first),
+                                               this));
             }
         }
     }

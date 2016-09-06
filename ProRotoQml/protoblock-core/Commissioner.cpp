@@ -305,6 +305,8 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb) {
             qDebug() << " error writing bootstrap" << kv.DebugString().data();
     }
 
+    qDebug() << kv.DebugString().data();
+
 
     if ( headhash != "" )
         ldb.read(headhash,head);

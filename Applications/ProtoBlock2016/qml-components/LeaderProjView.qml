@@ -26,7 +26,7 @@ Item {
             id: tv
             Component.onCompleted: {
                 resizeColumnsToContents()
-//                model.sortAgain("stake",Qt.DescendingOrder)
+                model.sortAgain("lastupdate",Qt.DescendingOrder)
             }
 
             sortIndicatorColumn: 1
@@ -39,10 +39,12 @@ Item {
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
                 model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                resizeColumnsToContents();
             }
 
             onSortIndicatorOrderChanged: {
                 model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                resizeColumnsToContents()
             }
 
 
@@ -207,34 +209,80 @@ Item {
 //                }
             }
 
-            TableViewColumn{
+            TableViewColumn {
                 role: "stake"
-                title: "Rank"
+                title: "Overall"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(7)
 
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
             }
+
             TableViewColumn{
-                role: "bits"
-                title: "Wk1"
+//                role: "Overall"
+                title: "wk1"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
             }
 
             TableViewColumn{
-                role: "index"
-                title: "Complete"
+                role: "numberproj"
+                title: "Count"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
             }
 
             TableViewColumn{
-                role: "time"
-                title: "Recent"
+                role: "lastupdate"
+                title: "Block"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(5)
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: styleData.value
+                }
             }
         }
+    }
+
+    function timeSince(date) {
+
+        var seconds = Math.floor((new Date() - date) / 1000);
+
+        var interval = Math.floor(seconds / 31536000);
+
+        if (interval > 1) {
+            return interval + " years";
+        }
+        interval = Math.floor(seconds / 2592000);
+        if (interval > 1) {
+            return interval + " months";
+        }
+        interval = Math.floor(seconds / 86400);
+        if (interval > 1) {
+            return interval + " days";
+        }
+        interval = Math.floor(seconds / 3600);
+        if (interval > 1) {
+            return interval + " hours";
+        }
+        interval = Math.floor(seconds / 60);
+        if (interval > 1) {
+            return interval + " minutes";
+        }
+        return Math.floor(seconds) + " seconds";
     }
 }
 

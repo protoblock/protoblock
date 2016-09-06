@@ -32,6 +32,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     fnameindex = 0;
     //leader models
     m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
+    m_pLeaderBoardSortModel->setSortRole("updatetime");//mPlayerProjModel.roleForName("pos"));
+    m_pLeaderBoardSortModel->setDynamicSortFilter(true);
 
     //schedule models
     m_pWeeklyScheduleModel = new WeeklyScheduleModel;
@@ -263,7 +265,8 @@ void Mediator::LiveGui(GlobalState gs) {
 
             m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
                           mGateway->dataService->GetWeeklySchedule(m_theWeek));
-            mPlayerProjModel.updateRosters(mGateway->dataService->GetCurrentWeekGameRosters());
+            mPlayerProjModel.updateRosters(mGateway->dataService->GetCurrentWeekGameRosters(),mGateway->dataService);
+
             if (myFantasyName != "" )
                 updateCurrentFantasyPlayerProjections();
 

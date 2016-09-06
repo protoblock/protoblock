@@ -6,7 +6,7 @@
 #include "ProtoData.pb.h"
 #include <memory>
 #include "FantasyName.h"
-#include "playerprojmodel.h"
+//#include "playerprojmodel.h"
 
 namespace pb {
 
@@ -28,12 +28,14 @@ public:
 
     virtual fantasybit::GlobalState GetGlobalState()= 0;
 
-    virtual std::unordered_map<std::string,pb::PlayerDetail> GetTeamRoster(const std::string &teamid)= 0;
+    virtual std::unordered_map<std::string,fantasybit::PlayerDetail> GetTeamRoster(const std::string &teamid)= 0;
     virtual fantasybit::GameStatus GetGameStatus(std::string gid)= 0;
 
 
     virtual fantasybit::MyFantasyName importMnemonic(std::string &in)= 0;
     virtual std::string exportMnemonic(std::string &in)= 0;
+    virtual int GetAvgProjection(const std::string &playerid) = 0;
+
 
 //    virtual ordsnap_t
 //        GetOrdersPositionsByName(const std::string &fname)= 0;

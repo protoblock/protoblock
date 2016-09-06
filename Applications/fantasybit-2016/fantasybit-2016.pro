@@ -59,8 +59,8 @@ SOURCES += \
     $$PWD/LAPIWorker.cpp \
     $$PWD/NodeWorker.cpp \
     $$PWD/iresolvable.cpp \
-    $$PWD/dataservice.cpp
-#    fullgateway.cpp
+    $$PWD/dataservice.cpp \
+    fullgateway.cpp
 
 
 
@@ -77,8 +77,8 @@ HEADERS += \
     $$PWD/NodeWorker.h \
     $$PWD/threadedqobject.h \
     $$PWD/iresolvable.h \
-    $$PWD/dataservice.h
-#    fullgateway.h
+    $$PWD/dataservice.h \
+    fullgateway.h
 
 
 
@@ -113,5 +113,5 @@ HEADERS += \
 #else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/debug/ -lProRotoQml.Protoblockd
 #else:unix: LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/ -lProRotoQml.Protoblockd
 
-#INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
-#DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
+INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
+DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock

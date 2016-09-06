@@ -252,7 +252,7 @@ Item {
             }
 
             TableViewColumn{
-//                role: "knownProjection"
+                role: "avg"
                 title: "Average"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
@@ -267,7 +267,7 @@ Item {
         Rectangle {
             id: rec
             anchors.fill: parent
-            border.width: (model.knownProjection !==  model.projection) ?
+            border.width: !model ? 0 : (model.knownProjection !==  model.projection) ?
                                 ProtoScreen.guToPx(.25) : 0
 //                          (model.projection === model.knownProjection) ? 0 : ProtoScreen.guToPx(.125)
             border.color: themeroot.theme.accentColor
@@ -276,7 +276,7 @@ Item {
 
             Material.Label {
                 anchors.right: sb.left
-                anchors.leftMargin: ProtoScreen.guToPx(.125)
+//                anchors.leftMargin: ProtoScreen.guToPx(.125)
 
                 anchors.margins: ProtoScreen.guToPx(.125)
 
@@ -285,7 +285,7 @@ Item {
                 width: ProtoScreen.guToPx(6) - ProtoScreen.guToPx(.125)
 
                 height: parent.height
-                text: (model.knownProjection !==  model.projection)
+                text: !model ? "" : (model.knownProjection !==  model.projection)
                       ? model.knownProjection : ""
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                 verticalAlignment: Text.AlignVCenter
@@ -300,14 +300,16 @@ Item {
                             tv.model.setData(tv.model.index(styleData.row,0),
                                              parseInt(lbl.text), 0)
                             lbl.text = Qt.binding(function(){
-                                if ( model.knownProjection !==  model.projection)
+                                if ( !model ) return "";
+                                else if (model.knownProjection !==  model.projection)
                                     return model.knownProjection
                                 else
                                     return "  "
                             })
 
                              rec.border.width = Qt.binding(function(){
-                                 if ( model.knownProjection !==  model.projection)
+                                 if ( !model ) return 0;
+                                 else if (model.knownProjection !==  model.projection)
                                      return ProtoScreen.guToPx(.25)
                                  else
                                      return 0
@@ -331,7 +333,7 @@ Item {
                 stepSize: 1.0
                 maximumValue: 40
                 minimumValue:       0
-                value: model.projection
+                value: !model ? 0 : model.projection
                 horizontalAlignment: Text.AlignHCenter
 
                 onEditingFinished: {

@@ -48,7 +48,8 @@ void FantasyNameData::init() {
     std::set<std::string> fnames;
 
 #if defined(ONE_TIME_PROD) || defined(NO_WRITE_NAMES_2015_FIRST)
-        Reader<FantasyNameBal> reader4{ GET_ROOT_DIR() + "FantasyNameBal.txt"};
+    std::string fname = "C:/work/prodWsserver0905/wsserver/storage/FantasyNameBal.txt";
+        Reader<FantasyNameBal> reader4{fname};// GET_ROOT_DIR() + "FantasyNameBal.txt"};
         FantasyNameBal fnb;
         while ( reader4.ReadNext(fnb) ) {
             fnames.insert(fnb.name());
@@ -83,6 +84,7 @@ void FantasyNameData::init() {
 
             if ( fnames.find(fn.name()) ==  end(fnames)) {
                 Server::AddNames(pFn);
+                Server::myNewNames.insert({fn.name(),fn});
             }
             else
                 delete pFn;
@@ -91,6 +93,7 @@ void FantasyNameData::init() {
         delete it;
     }
 
+    return;
     leveldb::DB *db2;
     status = leveldb::DB::Open(options, filedir("projstore"), &db2);
     projstore.reset(db2);
@@ -389,7 +392,8 @@ void FantasyNameData::OnWeekStart(int in) {
 }
 
 std::string FantasyNameData::filedir(const std::string &in) {
-    return GET_ROOT_DIR() + "index/" + in;
+    return "C:/work/prodWsserver0905/wsserver/storage/index/"+in;
+    //GET_ROOT_DIR() + "index/" + in;
 }
 
 void FantasyNameData::dump(mapmapi &mm) {

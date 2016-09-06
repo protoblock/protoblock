@@ -6,3 +6,5 @@ fantasybit::ExchangeData Server::TheExchange{};
 fantasybit::NFLStateData Server::NFLData;
 
 decltype(Server::Pk2Bal) Server::Pk2Bal{};
+decltype(Server::myNewNames) Server::myNewNames{};
+

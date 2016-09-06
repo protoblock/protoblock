@@ -109,7 +109,7 @@ private:
             #endif
             case GenesisBootLocation2016 :
             #ifdef Q_OS_WIN
-                return storagePath(storageDirName)+"/"+"bootstraptest201601.out";
+                return storagePath(storageDirName)+"bootstraptest201601.out";
             #endif
             #ifdef Q_OS_MAC
                 QDir dir(QApplication::applicationDirPath());

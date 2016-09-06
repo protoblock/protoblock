@@ -136,6 +136,9 @@ public:
     }
 
     static hash_t name_hash( const alias_t& n );
+
+    int numberproj;
+    int32_t lastupdate;
 };
 
 struct FantasyNameCHash : FantasyName {

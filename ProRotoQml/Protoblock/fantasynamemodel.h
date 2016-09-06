@@ -19,7 +19,8 @@ class FantasyNameBalModelItem : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (QString, pk)
     QML_WRITABLE_CSTREF_PROPERTY (qint64, stake)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, bits)
-    QML_WRITABLE_CSTREF_PROPERTY (quint64, chash)
+    QML_WRITABLE_CSTREF_PROPERTY (int, numberproj)
+    QML_WRITABLE_CSTREF_PROPERTY (int, lastupdate)
 
 public:
 
@@ -33,7 +34,7 @@ public:
         m_pk = in.public_key().data();
         m_stake = in.stake() + in.bits();
         m_bits = in.bits();
-        m_chash = in.chash();
+//        m_chash = in.chash();
     }
 
     explicit FantasyNameBalModelItem(fantasybit::FantasyName &in) :  QObject(nullptr) {
@@ -41,7 +42,9 @@ public:
         m_pk = Commissioner::pk2str(in.pubkey()).data();
         m_stake = in.getStakeBalance();
         m_bits = in.getBalance();
-        m_chash = in.hash();
+//        m_chash = in.hash();
+        set_numberproj(in.numberproj);
+        set_lastupdate(in.lastupdate);
     }
 
     explicit    FantasyNameBalModelItem(const FantasyNameBalModelItem &in) : QObject(nullptr) {
@@ -49,7 +52,7 @@ public:
         set_pk(in.get_pk());
         set_stake(in.get_stake());
         set_bits(in.get_bits());
-        set_chash(in.get_chash());
+//        set_chash(in.get_chash());
     }
 
     void    update(const fantasybit::FantasyNameBal &in) {
@@ -57,7 +60,7 @@ public:
         set_pk (in.public_key().data());
         set_stake ( in.stake() + in.bits());
         set_bits ( in.bits());
-        set_chash(in.chash());
+//        set_chash(in.chash());
     }
 
     void    update(const FantasyNameBalModelItem &in) {
@@ -65,7 +68,7 @@ public:
         set_pk(in.get_pk());
         set_stake(in.get_stake());
         set_bits(in.get_bits());
-        set_chash(in.get_chash());
+//        set_chash(in.get_chash());
     }
 };
 

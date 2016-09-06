@@ -299,6 +299,15 @@ public:
     Q_INVOKABLE void copyProj(int column, QString value, bool clone) {
         qDebug() << "CopyProj " << column << value << clone;
 
+        if ( value == "Average") {
+            for ( auto *it : mPlayerProjModel) {
+                if ( it->get_avg() > 0 )
+                    it->set_projection(it->get_avg());
+            }
+            m_pProjectionsViewFilterProxyModel->invalidate();
+
+        }
+
         std::unordered_map<std::string,int> theOtherGuyProjection = mGateway->dataService->GetProjByName(value.toStdString());
 //        qDebug() << "toggleFantasyNameColumn " << fantasyName << column << theOtherGuyProjection.size();
 

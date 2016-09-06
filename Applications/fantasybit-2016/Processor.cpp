@@ -790,7 +790,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             const ProjectionTransBlock & ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
             qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
             for (const PlayerPoints & pt : ptb.player_points() ) {
-                mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
+                mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
             }
 
             break;
@@ -801,7 +801,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
         {
             auto pt = t.GetExtension(ProjectionTrans::proj_trans);
             qDebug() << st.fantasy_name() << "new projection " << pt.DebugString();
-            mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
+            mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
             break;
         }
 
@@ -893,7 +893,8 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
     //    return false;
     }
     pb::sha256 digest = pb::hashit(sblock.signedhead().head().SerializeAsString());
-    qDebug() << "qqqqqq" << sblock.signedhead().head().num() << digest.str().data() << sblock.signedhead().head().prev_id();
+    qDebug() << "qqqqqq" << sblock.signedhead().head().num()
+             << digest.str().data() << sblock.signedhead().head().prev_id();
     //if (digest.str() != sblock.signedhead().id())
     //	return
     //fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));

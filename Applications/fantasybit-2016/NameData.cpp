@@ -57,6 +57,8 @@ void FantasyNameData::init() {
             if ( fnp != nullptr ) {
                 fnp->initBalance(fn.bits());
                 fnp->initStakePNL(fn.stake());
+                fnp->lastupdate = 0;
+                fnp->numberproj = 0;
                 qDebug() << fnp->ToString().data();
 
             }
@@ -76,18 +78,32 @@ void FantasyNameData::init() {
         auto *it = projstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             auto str = it->key().ToString();
-            int pos =  str.find_first_of(':');
-            auto fantasyname = str.substr(0, pos);
-            auto nflplayer = str.substr(pos + 1);
-            uint32_t proj = *(reinterpret_cast<const uint32_t *>(it->value().data()));
+            int pos =  str.find_last_of(':');
+            if ( pos != string::npos) {
+                auto fantasyname = str.substr(0, pos);
+                auto nflplayer = str.substr(pos+1);
+                uint32_t proj = *(reinterpret_cast<const uint32_t *>(it->value().data()));
 
-            FantasyNameProjections[fantasyname].insert(make_pair(nflplayer,proj));
-            PlayerIDProjections[nflplayer].insert(make_pair(fantasyname,proj));
+                FantasyNameProjections[fantasyname].insert(make_pair(nflplayer,proj));
+                PlayerIDProjections[nflplayer].insert(make_pair(fantasyname,proj));
+                PlayerIDSumProj[nflplayer] += proj;
+            }
+            else {
+                if ( 0 == strncmp(str.c_str(), "time^", 5) ) {
+                    int32_t ts = *(reinterpret_cast<const int32_t *>(it->value().data()));
+                    auto fnp = Commissioner::getName(str.substr(5));
+                    if ( fnp && ts)
+                        fnp->lastupdate = ts;
+                }
+            }
         }
         delete it;
     }
 
-
+    for ( auto fff : FantasyNameProjections) {
+        auto fnp = Commissioner::getName(fff.first);
+        fnp->numberproj = fff.second.size();
+    }
 }
 
 void FantasyNameData::closeAll() {
@@ -98,8 +114,10 @@ void FantasyNameData::closeAll() {
     mSubscribed.clear();
     PlayerIDProjections.clear();
     FantasyNameProjections.clear();
+    PlayerIDSumProj.clear();
     namestore.reset();
     projstore.reset();
+    //reset num for week todo:
 }
 
 void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
@@ -169,7 +187,7 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
 }
 
 void FantasyNameData::AddProjection(const string &name, const string &player,
-                             uint32_t proj) {
+                             uint32_t proj, int32_t blocknum) {
 
     leveldb::Slice bval((char*)&proj, sizeof(uint32_t));
     string key(name + ":" + player);
@@ -179,11 +197,24 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
     else
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        int prev = FantasyNameProjections[name][player];
         FantasyNameProjections[name][player] = proj;
         PlayerIDProjections[player][name] = proj;
+        PlayerIDSumProj[player] +=  proj - prev;
+
+        auto fnp = Commissioner::getName(name);
+        if ( fnp != nullptr) {
+            fnp->numberproj = FantasyNameProjections[name].size();
+            fnp->lastupdate = blocknum;
+
+            key = "time^" + name;
+            leveldb::Slice bval((char*)&fnp->lastupdate, sizeof(int32_t));
+            projstore->Put(write_sync, key, bval);
+        }
     }
-//    qDebug() << "proj: " << key << ":" << proj;
+
     OnProjection(name,player,proj);
+
 
     if ( name == "The Savages" && player == "1122" && proj == 5)
         qDebug() << "";
