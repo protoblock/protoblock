@@ -498,7 +498,7 @@ public:
     }
 
     static int32_t getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
-        qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
+//        qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;

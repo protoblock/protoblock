@@ -7,6 +7,7 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 //import ProRotoQml.Protoblock 1.0
 import QtQuick.Layouts 1.1
+import QtQuick.Controls.Private 1.0
 
 Item {
     id: topw
@@ -50,7 +51,9 @@ Item {
 //                tv.resizeColumnsToContents()
             }
             highlightOnFocus: false
-            anchors.fill: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: parent.height
+            implicitWidth: parent.width
             model: MiddleMan.pProjectionsViewFilterProxyModel
 
             sortIndicatorVisible: true
@@ -72,16 +75,21 @@ Item {
                 title: "Player Name"
                 horizontalAlignment : Text.AlignLeft
                 movable: false
+
                 delegate: Material.Card {
                     flat: true
+//                    elevation: 0
                     radius: 0
                     border.width: 0
                     anchors.fill: parent
-//                    anchors.leftMargin: ProtoScreen.guToPx(1)
                      backgroundColor: "transparent" //TeamInfo.getPosColor(model.pos)
                      Material.Label{
                          id: lll
-                                 anchors.margins: ProtoScreen.guToPx(.25)
+
+                                 anchors.leftMargin: ProtoScreen.guToPx(.25)
+                                 anchors.topMargin: ProtoScreen.guToPx(.25)
+                                 anchors.bottomMargin: ProtoScreen.guToPx(.25)
+                                 anchors.verticalCenter: parent.verticalCenter
                                  anchors.left: parent.left
                                  text: styleData.value
                                  font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
@@ -132,8 +140,8 @@ Item {
                         })
                     }
                 }
-
             }
+
             TableViewColumn {
                 id: tvm
                 role: "pos"
@@ -224,8 +232,6 @@ Item {
                                 }
             }
 
-
-
             TableViewColumn {
                 role: "status"
                 title: "Roster"
@@ -258,7 +264,6 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(10)
             }
-
         }
     }
 
@@ -282,7 +287,8 @@ Item {
 
 //                focus: true
                 id: lbl
-                width: ProtoScreen.guToPx(6) - ProtoScreen.guToPx(.125)
+
+                width: ProtoScreen.guToPx(6) - ProtoScreen.guToPx(.125 * 2.0)
 
                 height: parent.height
                 text: !model ? "" : (model.knownProjection !==  model.projection)
@@ -323,12 +329,13 @@ Item {
                 id: sb
 //                anchors.left: lbl.right
                 anchors.right: parent.right
-                anchors.margins: 1
+                anchors.margins: ProtoScreen.guToPx(.125)
 //                anchors.right: parent.right
                 width: ProtoScreen.guToPx(10)
                 height: parent.height
     //            width: parent.width * .70
                 font: lbl.font
+
                 decimals: 0
                 stepSize: 1.0
                 maximumValue: 40
@@ -416,6 +423,7 @@ Item {
                     }
 
                     size: ProtoScreen.guToPx(2.5)
+
 
                     visible: styleData.column === 4
                     enabled: styleData.column === 4

@@ -31,7 +31,9 @@ Item {
 
             sortIndicatorColumn: 1
             highlightOnFocus:   false
-            anchors.fill: parent
+//            anchors.fill: parent
+            height: parent.height
+            implicitWidth: parent.width
 
             selectionMode: SelectionMode.NoSelection
             model: MiddleMan.pLeaderBoardSortModel

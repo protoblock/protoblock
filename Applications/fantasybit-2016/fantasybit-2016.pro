@@ -108,6 +108,28 @@ HEADERS += \
     $$PWD/../../ProRotoQml/protoblock/sortfilterproxymodel.h \
     $$PWD/../../ProRotoQml/protoblock/pbgateways.h
 
+#SOURCES += \
+#    $$PWD/../../ProRotoQml/Theme/plugin.cpp \
+#    $$PWD/../../ProRotoQml/Theme/colors.cpp \
+#    $$PWD/../../ProRotoQml/Theme/formfactor.cpp \
+#    $$PWD/../../ProRotoQml/Theme/palette.cpp \
+#    $$PWD/../../ProRotoQml/Theme/units.cpp \
+#    $$PWD/../../ProRotoQml/Theme/listener.cpp \
+#    $$PWD/../../ProRotoQml/Theme/teamcolors.cpp \
+#    $$PWD/../../ProRotoQml/Theme/protoscreen.cpp
+
+#HEADERS += \
+#    $$PWD/../../ProRotoQml/Theme/plugin.h \
+#    $$PWD/../../ProRotoQml/Theme/formfactor.h \
+#    $$PWD/../../ProRotoQml/Theme/colors.h \
+#    $$PWD/../../ProRotoQml/Theme/palette.h \
+#    $$PWD/../../ProRotoQml/Theme/units.h \
+#    $$PWD/../../ProRotoQml/Theme/listener.h \
+#    $$PWD/../../ProRotoQml/Theme/teamcolors.h \
+#    $$PWD/../../ProRotoQml/Theme/protoscreen.h
+
+#INCLUDEPATH += $$PWD/../../ProRotoQml/Theme
+#DEPENDPATH += $$PWD/../../ProRotoQml/Theme
 
 #win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/release/ -lProRotoQml.Protoblockd
 #else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/debug/ -lProRotoQml.Protoblockd
