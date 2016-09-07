@@ -9,9 +9,9 @@
 
 #ifndef APP_SETTINGS
 #define APP_SETTINGS
-#define ORGANIZATION_NAME "Satoshi Fantasy LLC"
-#define ORGANIZATION_DOMAIN "satoshifantasy.com"
-#define APPLICATION_NAME "Protoblock2016 "
+#define ORGANIZATION_NAME "Protoblock LLC"
+#define ORGANIZATION_DOMAIN "protoblock.com"
+#define APPLICATION_NAME "Protoblock 2016"
 #endif
 
 
@@ -33,7 +33,7 @@
 #endif
 
 #ifndef MINOR_VERSION
-  #define MINOR_VERSION  2
+  #define MINOR_VERSION  0
 #endif
 
 #ifndef REVISION_NUMBER
@@ -45,7 +45,7 @@
 #endif
 
 #ifndef COPYRIGHT_DATE
-    #define COPYRIGHT_DATE "2015"
+    #define COPYRIGHT_DATE "2016"
 #endif
 
 #ifndef VERSION_STRING

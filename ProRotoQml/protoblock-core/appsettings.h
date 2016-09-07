@@ -72,8 +72,8 @@ private:
         DefaultAppSettings(){}
         ~DefaultAppSettings() {}
         static QVariant getDefaultSetting(SettingsKeys settingKey){
-            QString storageDirName =QString("storage-2016");
-            QString logFileName = QString("tradingfootball-2016.log");
+            QString storageDirName =QString("storage");
+            QString logFileName = QString("protoblock-2016.log");
 
             switch (settingKey) {
             case LastFantasyName:  return "";
@@ -133,7 +133,7 @@ public:
 private:
     static QString storagePath(const QString & dirName){
         #ifdef Q_OS_WIN
-            return QCoreApplication::applicationDirPath()+"/storage-2016/";
+            return QCoreApplication::applicationDirPath()+"/storage/";
         #endif
         #ifdef Q_OS_MAC
             return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/tradingfootball/"+dirName);

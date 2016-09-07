@@ -10,17 +10,17 @@ include ($$PWD/../../pri/qml-utils.pri)
 include ($$PWD/../../pri/qml-realChat.pri)
 
 
-qtHaveModule(webengine) {
-    QT += webengine
-    DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
-}
+#qtHaveModule(webengine) {
+#    QT += webengine
+#    DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
+#}
 
 
 TEMPLATE = app
 #QT += xmlpatterns xml qml quick core websockets sql network qml-private quick-private testlib
 QT += qml quick core websockets network xmlpatterns qml-private quick-private
 #sql webchannel
-CONFIG += c++11
+CONFIG += c++11 console
 
 osx{
     CONFIG+=app_bundle
