@@ -433,15 +433,17 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
     MyFantasyName mfn;
     mfn.set_status(MyNameStatus::none);
     mfn.set_name("");
+    pb::secp256k1_privkey priv;
     try {
-        auto priv = fromMnemonic(mn);
-        m_priv = priv;
+        priv = fromMnemonic(mn);
+//        m_priv = priv;
     }
     catch (MnemonicException) {
         return mfn;
     }
 
-    auto pk = pubKey();
+
+    auto pk = priv.get_public_key().serialize();
     auto fn = Commissioner::getName(pk);
 
     if ( !fn ) {
@@ -462,15 +464,16 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
         return mfn;
 
     Secret3 secret{};
-    secret.set_private_key(getSecret());
-    secret.set_public_key(pubKeyStr());
+    secret.set_private_key(priv.get_secret().str());
+    secret.set_public_key(Commissioner::pk2str(pk));
     secret.set_fantasy_name(name);
+    m_secrets.push_back(secret);
+
     if ( store ) {
         Writer<Secret3> writer{ GET_ROOT_DIR() + secretfilename4, ios::app };
         secret.set_mnemonic_key(mn);
         writer(secret);
     }
-    m_secrets.push_back(secret);
     qInfo() << secretfilename4 << "name available saving secret to file " << name;
 
     UseName(name);

@@ -301,7 +301,7 @@ Material.Card {
 
             Component.onCompleted: {
                 topc.changed.connect(myMethod)
-                console.log("complete is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))
+//                console.log("complete is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))
 //                if ( isl.hasSelection  ) {
 //                    console.log("complete is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))
 //                    elevation =  isl.isSelected(lv.model.index(index,0)) ? 5 : 0

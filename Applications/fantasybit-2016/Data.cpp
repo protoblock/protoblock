@@ -189,7 +189,7 @@ void NFLStateData::InitCheckpoint() {
             auto hash = FantasyName::name_hash(fnb.name());
             leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
             db5->Put(write_sync, hkey, fnb.SerializeAsString());
-            qDebug() << "zxcvbn" << fnb.DebugString();
+//            qDebug() << "zxcvbn" << fnb.DebugString();
             fnb.Clear();
         }
     }

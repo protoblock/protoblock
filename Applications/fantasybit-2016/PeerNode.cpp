@@ -256,11 +256,15 @@ bool Node::SyncTo(int32_t gh) {
     bool forked  = false;
     string previd;
     int count = 0;
+
+    if ( current_hight == current_boot.blocknum() )
+        previd = "5d36c22996521c97c0bb69406a3df9c15d2ca6be79224eced13b2522824dd951";
 #ifdef CHECKPOINTS
     if ( current_hight == Commissioner::DeveloperCheckpointHigh())
         previd = Commissioner::DeveloperCheckPointId();
     else
 #endif
+    else
     {
         auto ob = getLocalBlock(current_hight, true);
         if ( ob )
