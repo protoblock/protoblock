@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Window 2.2 as Quick
 import QtQuick.Dialogs 1.2
 
-import ProRotoQml.Utils 1.0
+//import ProRotoQml.Utils 1.0
 //import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 
