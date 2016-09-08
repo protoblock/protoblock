@@ -16,6 +16,7 @@
 #include "ApiData.pb.h"
 #include "RestFullCall.h"
 #include "fbutils.h"
+#include "globals.h"
 
 #include "DataPersist.h"
 
@@ -35,7 +36,7 @@ void FantasyNameData::init() {
     status = leveldb::DB::Open(options, filedir("namestore"), &db1);
     namestore.reset(db1);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("namestore");
+        qCritical() << " cant open " << filedir("namestore");
         //todo emit fatal
         return;
     }
@@ -57,8 +58,7 @@ void FantasyNameData::init() {
             if ( fnp != nullptr ) {
                 fnp->initBalance(fn.bits());
                 fnp->initStakePNL(fn.stake());
-                fnp->lastupdate = 0;
-                fnp->numberproj = 0;
+                fnp->setBlockNump (0,0);
                 qDebug() << fnp->ToString().data();
 
             }
@@ -70,11 +70,11 @@ void FantasyNameData::init() {
     status = leveldb::DB::Open(options, filedir("projstore"), &db2);
     projstore.reset(db2);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("projstore");
+        qCritical() << " cant open " << filedir("projstore");
         //todo emit fatal shit
         return;
     }
-    else {       
+    else {
         auto *it = projstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             auto str = it->key().ToString();
@@ -93,7 +93,7 @@ void FantasyNameData::init() {
                     int32_t ts = *(reinterpret_cast<const int32_t *>(it->value().data()));
                     auto fnp = Commissioner::getName(str.substr(5));
                     if ( fnp && ts)
-                        fnp->lastupdate = ts;
+                        fnp->setBlockNum(ts);
                 }
             }
         }
@@ -102,7 +102,7 @@ void FantasyNameData::init() {
 
     for ( auto fff : FantasyNameProjections) {
         auto fnp = Commissioner::getName(fff.first);
-        fnp->numberproj = fff.second.size();
+        fnp->setNump (fff.second.size());
     }
 }
 
@@ -181,8 +181,7 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     }
     //if ( name == "Windo")
     //    qDebug() << "abcdefg" << fn.DebugString();
-    qDebug() << "adding pnl" << pnl << " :: " << name <<
-             fn.public_key() << fn.stake() << fn.bits();
+    qDebug() << "adding pnl" << pnl << " :: " << name.data ()<< fn.public_key().data ()<< fn.stake() << fn.bits();
     OnFantasyNamePnl(fn);
 }
 
@@ -193,7 +192,7 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
     string key(name + ":" + player);
 
     if (!projstore->Put(write_sync, key, bval).ok())
-        qWarning() << " error writing proj" << player << name << proj;
+        qWarning() << " error writing proj" << player.data ()<< name.data ()<< proj;
     else
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
@@ -204,16 +203,18 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
 
         auto fnp = Commissioner::getName(name);
         if ( fnp != nullptr) {
-            fnp->numberproj = FantasyNameProjections[name].size();
-            fnp->lastupdate = blocknum;
+            int nump = FantasyNameProjections[name].size();
+            fnp->setBlockNump (blocknum,nump);
 
             key = "time^" + name;
-            leveldb::Slice bval((char*)&fnp->lastupdate, sizeof(int32_t));
+            leveldb::Slice bval((char*)&blocknum, sizeof(int32_t));
             projstore->Put(write_sync, key, bval);
+
+            OnProjection(name,player,proj,blocknum,nump);
+
         }
     }
 
-    OnProjection(name,player,proj);
 
 
     if ( name == "The Savages" && player == "1122" && proj == 5)
@@ -309,7 +310,7 @@ void FantasyNameData::UnSubscribe(std::string in) {
 
 
 void FantasyNameData::OnProjection(const std::string &name, const std::string &player,
-                            uint32_t proj) {
+                            uint32_t proj, int32_t blocknum, int nump) {
     if ( !amlive )
         return;
 
@@ -397,14 +398,14 @@ std::string FantasyNameData::filedir(const std::string &in) {
 
 void FantasyNameData::dump(mapmapi &mm) {
     for ( auto fn : mm ) {
-        qDebug() << fn.first;
+        qDebug() << fn.first.data ();
         dump ( fn.second );
     }
 }
 
 void FantasyNameData::dump(std::unordered_map<std::string,int> &m) {
     for ( auto pa : m)
-        qDebug() << pa.first << pa.second;
+        qDebug() << pa.first.data ()<< pa.second;
 
 }
 

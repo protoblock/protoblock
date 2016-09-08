@@ -50,6 +50,9 @@ private:
     pb::public_key_data mPubkey;
     skillbits balance;
     stakebits stakedelta;
+    int numberproj;
+    int32_t lastupdate;
+
     std::recursive_mutex bal_mutex{};
 public:
     FantasyName(const alias_t &inalias, const pb::public_key_data &inpubkey)
@@ -76,6 +79,27 @@ public:
     void addProfitLoss(stakebits b) {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
         stakedelta.add(b);
+    }
+
+    void setBlockNump(int32_t num, int nump) {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        lastupdate = num;
+        numberproj = nump;
+    }
+
+    void setNump(int nump) {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        numberproj = nump;
+    }
+
+    void setBlockNum(int32_t num) {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        lastupdate = num;
+    }
+
+    std::pair<int32_t,int> getBlockNump() {
+        std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
+        return {lastupdate,numberproj};
     }
 
     /*
@@ -125,20 +149,18 @@ public:
         return stream.str();
     }
 
-
     std::string ToString() {
       return "alias(" + alias() + ") hash(" + To_String(hash()) + ") public-key(" +
               pb::to_base58(pubkey()) + ") skill-balance(" +
               To_String(getBalance()) + ") stake-delta(" +
               To_String(stakedelta.bits()) + ") stake-balance(" +
-              To_String(getStakeBalance()) +")";
-
+              To_String(getStakeBalance()) +") lastupdate(" +
+              To_String(getBlockNump ().first)+") lastupdate(" +
+                        To_String(getBlockNump ().second);
     }
 
     static hash_t name_hash( const alias_t& n );
 
-    int numberproj;
-    int32_t lastupdate;
 };
 
 struct FantasyNameCHash : FantasyName {

@@ -43,8 +43,9 @@ public:
         m_stake = in.getStakeBalance();
         m_bits = in.getBalance();
 //        m_chash = in.hash();
-        set_numberproj(in.numberproj);
-        set_lastupdate(in.lastupdate);
+        auto blocknump = in.getBlockNump ();
+        set_numberproj(blocknump.second);
+        set_lastupdate(blocknump.first);
     }
 
     explicit    FantasyNameBalModelItem(const FantasyNameBalModelItem &in) : QObject(nullptr) {
@@ -83,7 +84,7 @@ public:
                                                     (parent,displayRole,uidRole)
     {}
 
-    void updateleaders(std::vector<std::shared_ptr<fantasybit::FantasyName>> &in) {
+    void updateleaders(const std::vector<std::shared_ptr<fantasybit::FantasyName>> &in) {
         clear();
         for(std::shared_ptr<fantasybit::FantasyName> fPlayer  : in) {
             append(new FantasyNameBalModelItem(*fPlayer));

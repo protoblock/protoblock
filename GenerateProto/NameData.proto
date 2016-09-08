@@ -27,6 +27,8 @@ message FantasyBitProj {
         optional string name = 10;
         optional int32 proj = 20;
         optional string playerid = 30;
+        optional int32 count = 40;
+        optional int32 block = 50;
 }
 
 message GameFantasyBitProj {

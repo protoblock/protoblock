@@ -475,6 +475,20 @@ class FantasyBitProj : public ::google::protobuf::Message {
   inline ::std::string* release_playerid();
   inline void set_allocated_playerid(::std::string* playerid);
 
+  // optional int32 count = 40;
+  inline bool has_count() const;
+  inline void clear_count();
+  static const int kCountFieldNumber = 40;
+  inline ::google::protobuf::int32 count() const;
+  inline void set_count(::google::protobuf::int32 value);
+
+  // optional int32 block = 50;
+  inline bool has_block() const;
+  inline void clear_block();
+  static const int kBlockFieldNumber = 50;
+  inline ::google::protobuf::int32 block() const;
+  inline void set_block(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyBitProj)
  private:
   inline void set_has_name();
@@ -483,15 +497,21 @@ class FantasyBitProj : public ::google::protobuf::Message {
   inline void clear_has_proj();
   inline void set_has_playerid();
   inline void clear_has_playerid();
+  inline void set_has_count();
+  inline void clear_has_count();
+  inline void set_has_block();
+  inline void clear_has_block();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* name_;
   ::std::string* playerid_;
   ::google::protobuf::int32 proj_;
+  ::google::protobuf::int32 count_;
+  ::google::protobuf::int32 block_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_NameData_2eproto();
   friend void protobuf_AssignDesc_NameData_2eproto();
@@ -1242,6 +1262,50 @@ inline void FantasyBitProj::set_allocated_playerid(::std::string* playerid) {
     clear_has_playerid();
     playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional int32 count = 40;
+inline bool FantasyBitProj::has_count() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void FantasyBitProj::set_has_count() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void FantasyBitProj::clear_has_count() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void FantasyBitProj::clear_count() {
+  count_ = 0;
+  clear_has_count();
+}
+inline ::google::protobuf::int32 FantasyBitProj::count() const {
+  return count_;
+}
+inline void FantasyBitProj::set_count(::google::protobuf::int32 value) {
+  set_has_count();
+  count_ = value;
+}
+
+// optional int32 block = 50;
+inline bool FantasyBitProj::has_block() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void FantasyBitProj::set_has_block() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void FantasyBitProj::clear_has_block() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void FantasyBitProj::clear_block() {
+  block_ = 0;
+  clear_has_block();
+}
+inline ::google::protobuf::int32 FantasyBitProj::block() const {
+  return block_;
+}
+inline void FantasyBitProj::set_block(::google::protobuf::int32 value) {
+  set_has_block();
+  block_ = value;
 }
 
 // -------------------------------------------------------------------

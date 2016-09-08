@@ -96,7 +96,7 @@ public:
     void AddBalance(const std::string name,uint64_t amount);
     void AddPnL(const std::string name, int64_t pnl);
     void AddProjection(const std::string &name, const std::string &player, uint32_t proj,int32_t);
-    void OnProjection(const std::string &name, const std::string &player, uint32_t proj);
+    void OnProjection(const std::string &name, const std::string &player, uint32_t pro,int32_t,int);
     void OnFantasyName(std::shared_ptr<FantasyName> fn);
 
     void OnFantasyNameBalance(FantasyNameBal &fn);
