@@ -78,7 +78,8 @@ void Node::init() {
     current_boot = getLastLocalBoot();
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
 
-    if ( current_boot.blocknum() > 0 )
+    if ( current_boot.blocknum() > 0 ) {
+        BlockRecorder::zeroblock = current_boot.blocknum();
         if ( current_boot.blocknum() > current_hight ) {
             current_hight = current_boot.blocknum();
             LdbWriter ldb;
@@ -99,6 +100,7 @@ void Node::init() {
                 BlockRecorder::InitCheckpoint(current_hight);
             }
         }
+    }
 #endif
 
 #ifdef CHECKPOINTS

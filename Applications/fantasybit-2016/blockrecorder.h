@@ -21,6 +21,7 @@ public:
 //    //void BadState(int);
 
 public:
+        static int zeroblock;
 
     void init();
     /*

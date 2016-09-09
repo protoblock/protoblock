@@ -225,6 +225,8 @@ public:
 
             auto gameid = it->get_gameid();
 
+            if ( !it->get_isopen()) return;
+
             int knownprojection = it->get_knownProjection();
             if ( knownprojection == projection)
                 continue;
@@ -301,6 +303,8 @@ public:
 
         if ( value == "Average") {
             for ( auto *it : mPlayerProjModel) {
+                if ( !it->get_isopen() )
+                    continue;
                 if ( it->get_avg() > 0 )
                     it->set_projection(it->get_avg());
             }
@@ -315,6 +319,10 @@ public:
         for ( auto it = theOtherGuyProjection.begin(); it != theOtherGuyProjection.end(); ++it ){
             auto *item = mPlayerProjModel.getByUid(it->first.data());
             if ( !item ) continue;
+
+            if ( !item->get_isopen() )
+                continue;
+
             if ( it->second == 0 ) continue;
             if ( clone || item->get_projection() == 0 ||
                  item->get_projection() != it->second) {

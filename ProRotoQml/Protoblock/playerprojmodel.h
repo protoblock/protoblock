@@ -35,6 +35,7 @@ class PlayerProjModelItem : public QObject {
     QML_WRITABLE_VAR_PROPERTY (int, knownProjection)
     QML_WRITABLE_VAR_PROPERTY (int, projectionStatus)
     QML_READONLY_CSTREF_PROPERTY (QString, gameid)
+    QML_READONLY_CSTREF_PROPERTY ( bool, isopen)
     QML_WRITABLE_VAR_PROPERTY (int, avg)
     QML_WRITABLE_VAR_PROPERTY (int, fname1)
     QML_WRITABLE_VAR_PROPERTY (int, fname2)
@@ -47,6 +48,7 @@ public:
     explicit PlayerProjModelItem(const fantasybit::PlayerDetail &pd, const std::string &teamid,
                                  const std::string &playerid, const QString &gameid,
                                  int avg,
+                                 bool gameopen,
                                  QObject *parent = nullptr) :  QObject(parent) {
         m_fullname =  QString("%1 %2")
                 .arg ( pd.base.first ().data () )
@@ -65,6 +67,7 @@ public:
         m_fname3 = 0;
         m_fname4 = 0;
         m_fname5 = 0;
+        m_isopen = gameopen;
         set_avg(avg);
 //        qDebug() << " PlayerProjModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
     }
@@ -97,6 +100,7 @@ public:
                 append(new PlayerProjModelItem(player.second,game.info.home(),
                                                player.first.data(),gameId,
                                                ds->GetAvgProjection(player.first),
+                                               game.status < GameStatus_Status_INGAME,
                                                this));
             }
 
@@ -105,6 +109,7 @@ public:
                 append(new PlayerProjModelItem(player.second,game.info.away(),
                                                player.first.data(),gameId,
                                                ds->GetAvgProjection(player.first),
+                                               game.status < GameStatus_Status_INGAME,
                                                this));
             }
         }

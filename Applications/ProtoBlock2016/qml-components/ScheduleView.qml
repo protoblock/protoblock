@@ -159,9 +159,9 @@ Material.Card {
                                     id: combo
 //                                    anchors.bottom: rrr.top
 //                                    anchors.right: parent.right
-                                    model: ["Scheduled", "Scored" , "Locked", "All" ]
+                                    model: ["All"]//, "Scored" , "Locked", "All" ]
                                     enabled: modelData === " Status "
-                                    currentIndex: 0
+                                    currentIndex: 0 //3
                                     visible: modelData === " Status "
                                     anchors.fill: parent
                                     onCurrentTextChanged: {

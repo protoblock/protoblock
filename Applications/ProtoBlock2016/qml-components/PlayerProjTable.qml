@@ -28,7 +28,7 @@ Item {
         TableView {
             id: tv
             Component.onCompleted: {
-                tv.resizeColumnsToContents()
+//                tv.resizeColumnsToContents()
 
                 //                width = Qt.binding(function(){
 //                   return ProtoScreen.guToPx(6) * columnCount
@@ -152,7 +152,7 @@ Item {
 //                width: parent.width
 //                anchors.fill: parent
 //                width: lbl.implicitWidth + 2
-                width: ProtoScreen.guToPx(6)
+                width: ProtoScreen.guToPx(7)
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -327,6 +327,7 @@ Item {
 
             SpinBox {
                 id: sb
+                enabled: !model ? false : model.isopen
 //                anchors.left: lbl.right
                 anchors.right: parent.right
                 anchors.margins: ProtoScreen.guToPx(.125)

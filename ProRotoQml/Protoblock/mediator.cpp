@@ -265,8 +265,12 @@ void Mediator::LiveGui(GlobalState gs) {
 
             m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
                           mGateway->dataService->GetWeeklySchedule(m_theWeek));
-            mPlayerProjModel.updateRosters(mGateway->dataService->GetCurrentWeekGameRosters(),mGateway->dataService);
+            auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
+            mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
 
+            for ( auto gr : vgr ) {
+                m_pWeeklyScheduleModel->UpdateStatus(gr.info.id(),gr.status);
+            }
             if (myFantasyName != "" )
                 updateCurrentFantasyPlayerProjections();
 
@@ -292,9 +296,20 @@ void Mediator::NewWeek(int)
 
 }
 
-void Mediator::GameStart(string)
-{
+void Mediator::GameStart(string gameid) {
+    m_pWeeklyScheduleModel->UpdateStatus(gameid,GameStatus_Status_INGAME);
 
+    for ( auto it : mPlayerProjModel) {
+        if ( it->get_gameid() != gameid.data() )
+            continue;
+
+        int projection = it->get_projection();
+        int knownprojection = it->get_knownProjection();
+        if ( knownprojection == projection)
+            it->set_projection(knownprojection);
+        it->setisopen(false);
+    }
+    m_pProjectionsViewFilterProxyModel->invalidate();
 }
 
 void Mediator::GameOver(string)

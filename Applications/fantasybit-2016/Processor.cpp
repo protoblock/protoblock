@@ -53,7 +53,6 @@ void BlockProcessor::hardReset() {
     mExchangeData.removeAll();
 #endif
 
-
     pb::remove_all(Platform::instance()->getRootDir() + "index/");
 }
 
@@ -72,6 +71,9 @@ int32_t BlockProcessor::init() {
             InvalidState(mRecorder.getLastBlockId());
             return -1;
         }
+
+        NFLStateData::InitCheckpoint();
+        BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
     }
 
     mData.init();

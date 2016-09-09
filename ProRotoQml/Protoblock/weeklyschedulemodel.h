@@ -5,16 +5,20 @@
 #include <QString>
 #include "../QmlSupermacros/QQmlConstRefPropertyHelpers.h"
 #include "../QmlModels/QQmlObjectListModel.h"
+#include "../QmlSupermacros/QQmlVarPropertyHelpers.h"
 #include "StateData.pb.h"
 #include "globals.h"
 #include "sortfilterproxymodel.h"
+#include "StatusData.pb.h"
+
+using namespace  fantasybit;
 
 class WeeklyScheduleModelItem : public QObject {
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY (QString, time)
     QML_READONLY_CSTREF_PROPERTY (QString, away)
     QML_READONLY_CSTREF_PROPERTY (QString, home)
-    QML_READONLY_CSTREF_PROPERTY (QString, status)
+    QML_WRITABLE_VAR_PROPERTY (QString, status)
     QML_READONLY_CSTREF_PROPERTY (QString, gameid)
 
 public:
@@ -23,7 +27,7 @@ public:
         m_time = fromTime_t_toFantasyString(in.time());
         m_away = in.away().data();
         m_home = in.home().data();
-        m_status = "Scheduled";
+        set_status("Scheduled");
         m_gameid = in.id().data();
 
         qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
@@ -51,6 +55,33 @@ public:
 
         for ( auto &gi : weekly.games())
            append(new WeeklyScheduleModelItem(gi,this));
+    }
+
+    void UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs) {
+        this->getByUid(gameid.data())->set_status(toStatus(gs));
+    }
+
+    static QString toStatus(fantasybit::GameStatus_Status gs) {
+        switch (gs) {
+        case GameStatus_Status_SCHEDULED:
+            return "Scheduled";
+            break;
+        case GameStatus_Status_PREGAME:
+            return "Pregame";
+            break;
+        case GameStatus_Status_INGAME:
+            return "Ingame";
+            break;
+        case GameStatus_Status_POSTGAME:
+            return "Postgame";
+            break;
+        case GameStatus_Status_CLOSED:
+            return "Closed";
+            break;
+
+        default:
+            break;
+        }
     }
 };
 

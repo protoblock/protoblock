@@ -273,8 +273,13 @@ void MainLAPIWorker::Timer() {
         emit GetNext();
         //emit ProcessNext();
         int interval = count*intervalstart*2;
-        if ( interval < intervalmax && interval > 10)
+//        qInfo() << " timerr " << interval;
+        if ( interval < intervalmax && interval > 10) {
             timer->start(interval);
+//            qInfo() << " timeout ";
+//            if ( true )
+//                emit GameStart("201600110");
+        }
     }
 
 }

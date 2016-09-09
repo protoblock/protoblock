@@ -158,7 +158,7 @@ Item {
                             property int startY
 
                             onPositionChanged: {
-                                console.log(" mouse onPositionChanged   " + rect.caught)
+//                                console.log(" mouse onPositionChanged   " + rect.caught)
 //                                                                rect.x += mouseX - startX
 //                                                                rect.y += mouseY - startY
 //                                                                startX = mouseX

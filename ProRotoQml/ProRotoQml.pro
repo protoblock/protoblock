@@ -14,7 +14,7 @@ SUBDIRS += \
 #        $$PWD/libQSsh \
 #        $$PWD/libQmlSsh \
 #        $$PWD/protoblock-core \
-        $$PWD/Protoblock/protoblock.pro \
+#        $$PWD/Protoblock/protoblock.pro \
 #        $$PWD/PeerTwoPeerChat \
 #        $$PWD/Backend/backend.pro
 #        $$PWD/Torrent/torrent.pro
