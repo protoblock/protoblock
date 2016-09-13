@@ -225,7 +225,7 @@ public:
 
             auto gameid = it->get_gameid();
 
-            if ( !it->get_isopen()) return;
+            if ( !it->get_isopen()) continue;
 
             int knownprojection = it->get_knownProjection();
             if ( knownprojection == projection)
