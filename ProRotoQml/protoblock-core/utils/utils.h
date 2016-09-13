@@ -156,7 +156,7 @@ namespace pb {
              return secp256k1_privkey(secret);
          }
 
-         secp256k1_privkey operator = ( secp256k1_privkey &pk ) {
+         secp256k1_privkey operator = ( const secp256k1_privkey &pk ) {
             _secret = pk.get_secret();
             key_data = _secret.begin();
             return *this;

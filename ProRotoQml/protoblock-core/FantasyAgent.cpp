@@ -474,7 +474,7 @@ MyFantasyName FantasyAgent::UseMnemonic(std::string mn, bool store) {
         secret.set_mnemonic_key(mn);
         writer(secret);
     }
-    qInfo() << secretfilename4 << "name available saving secret to file " << name;
+    qInfo() << secretfilename4.data ()<< "name available saving secret to file " << name.data ();
 
     UseName(name);
     return mfn;

@@ -86,6 +86,7 @@ void FantasyNameData::init() {
 
                 FantasyNameProjections[fantasyname].insert(make_pair(nflplayer,proj));
                 PlayerIDProjections[nflplayer].insert(make_pair(fantasyname,proj));
+                qDebug() << "read sumplusproj" <<  PlayerIDSumProj[nflplayer] << " + " << proj;
                 PlayerIDSumProj[nflplayer] += proj;
             }
             else {
@@ -134,6 +135,7 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
     qDebug() << fn.DebugString().data();
 
     auto fnp = Commissioner::AddName(name,pubkey);
+    fnp->setBlockNump (0,0);
     if ( fnp  != nullptr)
         OnFantasyName(fnp);
 }
@@ -199,7 +201,15 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
         int prev = FantasyNameProjections[name][player];
         FantasyNameProjections[name][player] = proj;
         PlayerIDProjections[player][name] = proj;
-        PlayerIDSumProj[player] +=  proj - prev;
+        int sum;
+        if ( PlayerIDSumProj.find (player) == end(PlayerIDSumProj))
+            sum = 0;
+        else
+            sum =  PlayerIDSumProj[player];
+
+        qDebug() << "sumplusproj" <<  sum << " + " << proj << " -  " << prev;
+        sum += proj - prev;
+        PlayerIDSumProj[player] =  sum;
 
         auto fnp = Commissioner::getName(name);
         if ( fnp != nullptr) {

@@ -265,7 +265,7 @@ void Mediator::LiveGui(GlobalState gs) {
 
             m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
                           mGateway->dataService->GetWeeklySchedule(m_theWeek));
-            auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
+            const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
 
             for ( auto gr : vgr ) {
@@ -283,12 +283,19 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
     auto  recentProjections = mGateway->dataService->GetProjByName(myFantasyName);
     qDebug() << "updateCurrentFantasyPlayerProjections " << recentProjections.size();
 
+    for ( auto it : mPlayerProjModel)  {
+        if ( !it ) continue;
+        it->set_knownProjection (0);
+        it->set_projection(0);
+    }
+
     for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
         auto *item = mPlayerProjModel.getByUid(it->first.data());
         if ( !item ) continue;
         item->set_knownProjection(it->second);
         item->set_projection(it->second);
     }
+
 }
 
 void Mediator::NewWeek(int)

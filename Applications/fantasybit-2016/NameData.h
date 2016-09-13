@@ -74,6 +74,8 @@ public:
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
         int count = PlayerIDProjections[playerid].size();
         long sum = PlayerIDSumProj[playerid];
+
+//        qDebug() << " sum " << sum << " count " << count;
         if  (count > 0 && sum > 0)
             return  sum / count;
         else

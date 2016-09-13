@@ -575,7 +575,8 @@ Material.ApplicationWindow{
             //            console.log("there is a update")
             updateDialog.toggle()
         }else{
-            //            console.log("There are NO UPDATES ")
+
+             console.log("There are NO UPDATES " + ProtoScreen.os)
         }
     }
 

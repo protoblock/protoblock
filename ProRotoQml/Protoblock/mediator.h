@@ -306,7 +306,9 @@ public:
                 if ( !it->get_isopen() )
                     continue;
                 if ( it->get_avg() > 0 )
-                    it->set_projection(it->get_avg());
+                    if ( clone || it->get_projection () == 0)
+                        if  ( it->get_projection() != it->get_avg())
+                            it->set_projection(it->get_avg());
             }
             m_pProjectionsViewFilterProxyModel->invalidate();
 
@@ -324,9 +326,9 @@ public:
                 continue;
 
             if ( it->second == 0 ) continue;
-            if ( clone || item->get_projection() == 0 ||
-                 item->get_projection() != it->second) {
-                item->set_projection(it->second);
+            if ( clone || item->get_projection() == 0 ) {
+                 if  ( item->get_projection() != it->second)
+                    item->set_projection(it->second);
                 qDebug() << " set " << it->first.data() << " to " << it->second;
             }
         }
