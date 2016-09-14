@@ -21,7 +21,7 @@
 #include "DataPersist.h"
 
 #ifdef DATAAGENTWRITENAMES
-#include "playerloader.h"
+#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
 using namespace std;
 using namespace fantasybit;
@@ -86,7 +86,7 @@ void FantasyNameData::init() {
 
                 FantasyNameProjections[fantasyname].insert(make_pair(nflplayer,proj));
                 PlayerIDProjections[nflplayer].insert(make_pair(fantasyname,proj));
-                qDebug() << "read sumplusproj" <<  PlayerIDSumProj[nflplayer] << " + " << proj;
+//                qDebug() << "read sumplusproj" <<  PlayerIDSumProj[nflplayer] << " + " << proj;
                 PlayerIDSumProj[nflplayer] += proj;
             }
             else {
@@ -207,7 +207,7 @@ void FantasyNameData::AddProjection(const string &name, const string &player,
         else
             sum =  PlayerIDSumProj[player];
 
-        qDebug() << "sumplusproj" <<  sum << " + " << proj << " -  " << prev;
+//        qDebug() << "sumplusproj" <<  sum << " + " << proj << " -  " << prev;
         sum += proj - prev;
         PlayerIDSumProj[player] =  sum;
 
@@ -303,7 +303,7 @@ GameFantasyBitProj FantasyNameData::GetGameProj(const std::string &gid) {
         return gfp;
     }
     else
-        qInfo() << "GetGameProj" << gid;
+        qInfo() << "GetGameProj" << gid.data();
 
 
     gfp.ParseFromString(temp);

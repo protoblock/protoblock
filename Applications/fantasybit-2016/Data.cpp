@@ -17,6 +17,11 @@
 using namespace std;
 using namespace fantasybit;
 
+#ifdef DATAAGENTWRITENAMES
+#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
+#endif
+
+
 #ifdef CHECKPOINTS
 void NFLStateData::InitCheckpoint() {
 
@@ -179,6 +184,9 @@ void NFLStateData::InitCheckpoint() {
         std::vector< std::pair<std::string,  FantasyNameBalMeta> > mapt;
         pb::loadMerkleMap(ldb,head.fnamemetaroot(),mtree,mapt);
 
+#ifdef DATAAGENTWRITENAMES_FORCE
+            SqlStuff sql("satoshifantasy","OnFantasyName");
+#endif
         for ( auto p : mapt) {
             FantasyNameBalMeta &pm = p.second;
             FantasyNameBal fnb;
@@ -189,8 +197,16 @@ void NFLStateData::InitCheckpoint() {
             auto hash = FantasyName::name_hash(fnb.name());
             leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
             db5->Put(write_sync, hkey, fnb.SerializeAsString());
-//            qDebug() << "zxcvbn" << fnb.DebugString();
+            qDebug() << "zxcvbn" << fnb.DebugString();
+#ifdef DATAAGENTWRITENAMES_FORCE
+            FantasyNameHash fnh{};
+            fnh.set_name(fnb.name());
+            fnh.set_hash(hash);
+            qDebug() << " data write fnh " << fnh.DebugString();
+            sql.fantasyname(fnh);
+#endif
             fnb.Clear();
+
         }
     }
 

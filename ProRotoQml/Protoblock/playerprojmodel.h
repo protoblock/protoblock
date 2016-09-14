@@ -84,7 +84,7 @@ public:
         : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
 
-    void updateRosters(std::vector<pb::GameRoster> &inrosters, pb::IDataService *ds) {
+    void updateRosters(const std::vector<pb::GameRoster> &inrosters, pb::IDataService *ds) {
 
 //        qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
 

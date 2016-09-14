@@ -26,7 +26,9 @@
 #include "ldbwriter.h"
 
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT || defined SQL
-#include "playerloader.h"
+//#include "playerloader.h"
+#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
+
 #endif
 
 #ifdef BLOCK_EXPLORER
@@ -39,7 +41,7 @@
 namespace fantasybit
 {
 
-#ifdef SQL
+#if defined(SQL) || defined(DATAAGENTWRITENAMES)
     SqlStuff sql("satoshifantasy","distribution");
 #endif
 
@@ -273,7 +275,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( !mExchangeData.GetGameSettlePos(rd.game_result().gameid(),gsp) )
                    nopnl = true;
 
-                qDebug() << gsp.DebugString().data();
+                qDebug() << allprojs.DebugString().data();
 
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
                 unordered_map<string,BookPos *> posmap;
