@@ -50,7 +50,7 @@ Material.Card {
 //        selection: ItemSelectionModel {
 //            model: MiddleMan.pWeeklyScheduleModel
 //        }
-
+        clip: true
         property bool first: true
         anchors.fill: parent
         width: parent.width

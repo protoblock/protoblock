@@ -75,11 +75,11 @@ Material.ApplicationWindow{
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Projections","Trading",  "NFL News", "Account", "Protoblock"  ]
-    property var sectionTitlesAlias: [ "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Projections","Leaderboard",  "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Projections", "Leaderboard", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
         "qrc:/icons/ic_poll.png",
-        "qrc:/icons/ic_trending_up.png",
+        "qrc:/icons/ic_timeline.png",
         "qrc:/icons/newspaper.png",
         "qrc:/icons/action_account_circle.png",
         "qrc:/icons/ic_help.png"
@@ -100,14 +100,13 @@ Material.ApplicationWindow{
     }
 
     // Level One Trading
-    property var levelTwo: [ "Quotes", "Portfolio"]
+    property var levelTwo: [ "Leaderboard"]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
 
     property var levelTwoIcons: [
-        "qrc:/icons/trending_up.png",
-        "qrc:/icons/trending_up.png",
+        "qrc:/icons/newspaper.png"
     ]
 
 
@@ -332,17 +331,17 @@ Material.ApplicationWindow{
     ListModel{
         id: weekModel
         Component.onCompleted: {
-            fillDefaultModels()
+            fillDefaultModels(MiddleMan.theWeek)
         }
     }
 
-    function fillDefaultModels(){
+    function fillDefaultModels(theweek){
 
         var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
         for (var i in positionArray){
             postionModel.append({'text': positionArray[i] })
         }
-        for (var ii = 0 ; ii < 17; ii++){
+        for (var ii = 0 ; ii < theweek+1; ii++){
             if(ii === 0 ){
                 weekModel.append({"text" : "all weeks"})
             }
@@ -516,6 +515,12 @@ Material.ApplicationWindow{
 
     Connections {
         target: MiddleMan
+
+
+        onTheWeekChanged: {
+            console.log( "onTheWeekChanged")
+            fillDefaultModels(MiddleMan.theWeek)
+        }
 
         onNameCheckGet: {
             console.log( "namehcek material main" + name + status)

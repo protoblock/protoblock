@@ -19,6 +19,8 @@ class FantasyNameBalModelItem : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (QString, pk)
     QML_WRITABLE_CSTREF_PROPERTY (qint64, stake)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, bits)
+    QML_WRITABLE_CSTREF_PROPERTY (quint64, thisweek)
+    QML_WRITABLE_CSTREF_PROPERTY (quint64, lastweek)
     QML_WRITABLE_CSTREF_PROPERTY (int, numberproj)
     QML_WRITABLE_CSTREF_PROPERTY (int, lastupdate)
 
@@ -28,12 +30,18 @@ public:
         m_name = name;
         m_stake = 0;
         m_bits = 0;
+        m_thisweek = 0;
+        m_lastweek = 0;
+        m_numberproj = m_lastupdate = 0;
     }
     explicit FantasyNameBalModelItem(const fantasybit::FantasyNameBal &in) :  QObject(nullptr) {
         m_name = in.name().data();
         m_pk = in.public_key().data();
         m_stake = in.stake() + in.bits();
         m_bits = in.bits();
+        m_thisweek = 0;
+        m_lastweek = 0;
+        m_numberproj = m_lastupdate = 0;
 //        m_chash = in.chash();
     }
 
@@ -46,6 +54,9 @@ public:
         auto blocknump = in.getBlockNump ();
         set_numberproj(blocknump.second);
         set_lastupdate(blocknump.first);
+        m_thisweek = 0;
+        m_lastweek = 0;
+
     }
 
     explicit    FantasyNameBalModelItem(const FantasyNameBalModelItem &in) : QObject(nullptr) {
@@ -54,6 +65,10 @@ public:
         set_stake(in.get_stake());
         set_bits(in.get_bits());
 //        set_chash(in.get_chash());
+        m_thisweek = 0;
+        m_lastweek = 0;
+        m_numberproj = m_lastupdate = 0;
+
     }
 
     void    update(const fantasybit::FantasyNameBal &in) {
@@ -61,6 +76,7 @@ public:
         set_pk (in.public_key().data());
         set_stake ( in.stake() + in.bits());
         set_bits ( in.bits());
+
 //        set_chash(in.chash());
     }
 

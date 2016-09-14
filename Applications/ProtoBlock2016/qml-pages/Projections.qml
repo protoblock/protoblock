@@ -39,7 +39,58 @@ Item {
             width: parent.width
             elevation: 0
         }
+        SystemPalette { id: pal }
+
         SplitView {
+            handleDelegate: Item {
+//                width: ProtoScreen.guToPx(.5)
+//                implicitWidth: rec.width + rec3.width + rec2.width
+                height: parent.height
+//                width: styleData.hovered ? ProtoScreen.guToPx(.85) : ProtoScreen.guToPx(.3)
+                anchors.margins: 0
+                    Rectangle {
+                        border.width: 0
+                        id: rec
+    //                    width: styleData.hovered ?
+                        width: styleData.hovered ? ProtoScreen.guToPx(.25) : ProtoScreen.guToPx(.1)
+    //                                             : ProtoScreen.guToPx(.375)
+                        color: styleData.hovered ? "black" : Qt.darker(pal.window, 1.5)
+                        height: parent.height
+                        anchors.right: rec3.left
+
+    //                    MouseArea {
+    //                        hoverEnabled: true
+    //                        anchors.fill: parent
+    //                        onEntered: {
+    //                            console.log(" entered ")
+    //                            rec.color = "red"
+    //                            cursorShape = Qt.SizeHorCursor
+    //                        }
+    //                    }
+
+                   }
+                    Rectangle {
+                        border.width: 0
+                        id: rec3
+                        width: styleData.hovered ? ProtoScreen.guToPx(.35) : ProtoScreen.guToPx(.1)
+
+//                        width: ProtoScreen.guToPx(.1)//styleData.hovered ? ProtoScreen.guToPx(.125) : ProtoScreen.guToPx(.375)
+                        height: parent.height
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: styleData.hovered ? "white" : Qt.darker(pal.window, 1.5)
+                    }
+                    Rectangle {
+                       border.width: 0
+                       id: rec2
+                       width: styleData.hovered ? ProtoScreen.guToPx(.25) : ProtoScreen.guToPx(.1)
+
+//                       width: ProtoScreen.guToPx(.1)//styleData.hovered ? ProtoScreen.guToPx(.125) : ProtoScreen.guToPx(.375)
+                       height: parent.height
+                       anchors.left: rec3.right
+                       color: styleData.hovered ? "black" : Qt.darker(pal.window, 1.5)
+                    }
+
+            }
             property alias scheduleView1: scheduleView1
         //    anchors.margins: ProtoScreen.guToPx(1)
               anchors.top: cBan.bottom

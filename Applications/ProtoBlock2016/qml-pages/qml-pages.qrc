@@ -19,5 +19,6 @@
         <file>Quotes.qml</file>
         <file>Orders.qml</file>
         <file>Portfolio.qml</file>
+        <file>Leaderboard.qml</file>
     </qresource>
 </RCC>

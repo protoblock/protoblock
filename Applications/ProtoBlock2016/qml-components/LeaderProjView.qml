@@ -14,7 +14,7 @@ Item {
 
     signal releasedit(string fname)
     property string dragtarget: "dropProxy"
-
+    property int myTheWeek: MiddleMan.theWeek
     anchors.fill: parent
 //    anchors.margins: ProtoScreen.guToPx(1)
     Item {
@@ -211,6 +211,58 @@ Item {
 //                }
             }
 
+
+
+            TableViewColumn{
+                role: "lastupdate"
+                title: "Block"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: styleData.value
+                }
+            }
+
+            TableViewColumn{
+                role: "numberproj"
+                title: "Count"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(7)
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            TableViewColumn{
+                role:  "lastweek"
+                title: "wk" + (myTheWeek-1)
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(7)
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+
             TableViewColumn {
                 role: "bits"
                 title: "Overall"
@@ -228,34 +280,26 @@ Item {
                 }
             }
 
-            TableViewColumn{
-//                role: "Overall"
-                title: "wk1"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(5)
-            }
 
             TableViewColumn{
-                role: "numberproj"
-                title: "Count"
+                role:  "thisweek"
+                title: "wk" + myTheWeek
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(5)
-            }
+                width: ProtoScreen.guToPx(7)
 
-            TableViewColumn{
-                role: "lastupdate"
-                title: "Block"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(10)
+
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
 
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: styleData.value
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
                 }
             }
+
+
+
         }
     }
 

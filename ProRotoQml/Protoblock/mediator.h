@@ -24,6 +24,7 @@
 #include <QStringListModel>
 #include <vector>
 #include "pbgateways.h"
+#include "RestFullCall.h"
 
 using namespace std;
 
@@ -491,6 +492,50 @@ private:
     //    TradingPositionsModel mTradingPositionsModel;
 
     bool amLive = false;
+
+    void getLeaders(int week,bool lastweek) {
+        QString links("https://158.222.102.83:4545");
+        QString route("fantasy/leaders?position=all%20positions&week=%1");
+
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+
+        QUrl url;
+        url.setUrl(links);
+        RestfullClient rest (url);
+        rest.getData(route.arg(week));
+        auto resp = rest.lastReply();
+
+        qDebug() << resp;
+        QJsonDocument ret = QJsonDocument::fromJson(resp);
+        qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+        QJsonArray parr = ret.array();
+        for (int i=0;i< parr.size();i++  ) {
+            QJsonValueRef data = parr[i];
+
+            QJsonObject leaderData = data.toObject();
+            auto name = leaderData.value("name").toString();
+            auto scoreStr = leaderData.value("score").toString();
+            double score = std::stod(scoreStr.toStdString());
+
+            auto *item = mFantasyNameBalModel.getByUid(name);
+            if ( item == nullptr ) continue;
+            if ( lastweek )
+                item->set_lastweek(score);
+            else
+                item->set_thisweek(score);
+        }
+    }
+
+    void updateLiveLeaders() {
+        mFantasyNameBalModel.updateleaders(mGateway->dataService->GetLeaderBoard());
+        if ( m_theWeek-1 > 0 )
+            getLeaders(m_theWeek-1,true);
+        getLeaders(m_theWeek,false);
+        m_pLeaderBoardSortModel->invalidate();
+    }
+
 public slots:
     void NameStatus(fantasybit::MyFantasyName);
     void LiveProj(fantasybit::FantasyBitProj);

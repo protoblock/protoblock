@@ -43,7 +43,8 @@ Item {
                 tv.addColumn(columnComponent.createObject(tv, {
                                                               "role": role,
                                                               "title": fname,
-                                                              "horizontalAlignment": Text.AlignHCenter
+                                                              "horizontalAlignment": Text.AlignHCenter,
+                                                              "delegate": copydel
                                                           })
                              )
 
@@ -263,6 +264,16 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
+                delegate: copydel
+//                delegate: Material.Label {
+//                    anchors.centerIn: parent
+//                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignHCenter
+
+//                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+//                }
+
             }
         }
     }
@@ -587,6 +598,20 @@ Item {
 ////                topw.donedrop.connect(donedropM)
 //            }
         }
+    }
+
+    Component {
+        id: copydel
+
+        Material.Label {
+            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+        }
+
     }
 
     Component {

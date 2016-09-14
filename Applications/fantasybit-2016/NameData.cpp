@@ -344,7 +344,7 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
     auto name = fn->alias();
 
 #ifdef DATAAGENTWRITENAMES
-#ifndef DATAAGENTWRITENAMES_FORCE
+#if !defined(DATAAGENTWRITENAMES_FORCE) || defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
     if ( amlive )
 #endif
     if ( name != Commissioner::FantasyAgentName())
@@ -395,6 +395,10 @@ void FantasyNameData::OnWeekOver(int in) {
     auto *it = projstore->NewIterator(leveldb::ReadOptions());
     for (it->SeekToFirst(); it->Valid(); it->Next())
         projstore->Delete(write_sync, it->key());
+
+    for ( auto fnb : Commissioner::GetFantasyNames() )
+        fnb->setBlockNump(0,0);
+
     delete it;
     qDebug() << " clearProjections ";
 }

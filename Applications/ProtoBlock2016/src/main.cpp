@@ -16,6 +16,10 @@
 #include "mediator.h"
 #include "fullgateway.h"
 //#include "RunGuard.h"
+#ifdef DATAAGENTWRITENAMES
+#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
+#endif
+
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
@@ -86,6 +90,10 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("MiddleMan", pb::Mediator::instance());
     //qmlRegisterSingletonType<pb::Mediator>(uri,1,0,"MiddleMan",middleMan);
+
+//    SqlStuff sql(true,"testingmain");
+//    qDebug() << " last seq " << sql.lastSeq() << " last seq";
+//    return 0;
 
     engine.dumpObjectInfo();
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

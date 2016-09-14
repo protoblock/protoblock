@@ -234,15 +234,15 @@ void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
 
 }
 
-void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in)
-{
+void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {
+
 
 }
 
 void Mediator::GlobalStateChange(GlobalState gs)
 {
     if ( gs.week() > 0 && gs.week() < 18)
-        m_theWeek = gs.week();
+        settheWeek(gs.week());
 }
 
 void Mediator::LiveGui(GlobalState gs) {
@@ -262,9 +262,7 @@ void Mediator::LiveGui(GlobalState gs) {
     else if ( mGateway->dataService == nullptr)
         qDebug() << " mGateway->dataService null ";
     else {
-        mFantasyNameBalModel.updateleaders(mGateway->dataService->GetLeaderBoard());
-        m_pLeaderBoardSortModel->invalidate();
-
+        updateLiveLeaders();
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
             //setCurrentWeekData();
@@ -304,9 +302,11 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 
 }
 
-void Mediator::NewWeek(int)
-{
-
+void Mediator::NewWeek(int week) {
+    settheWeek(week);
+    if ( amLive ) {
+        updateLiveLeaders();
+    }
 }
 
 void Mediator::GameStart(string gameid) {
@@ -325,13 +325,11 @@ void Mediator::GameStart(string gameid) {
     m_pProjectionsViewFilterProxyModel->invalidate();
 }
 
-void Mediator::GameOver(string)
-{
+void Mediator::GameOver(string) {
 
 }
 
-void Mediator::onControlMessage(QString)
-{
+void Mediator::onControlMessage(QString) {
 
 }
 

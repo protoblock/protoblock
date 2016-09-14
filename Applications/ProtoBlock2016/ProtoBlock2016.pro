@@ -18,9 +18,9 @@ include ($$PWD/../../pri/qml-realChat.pri)
 
 TEMPLATE = app
 #QT += xmlpatterns xml qml quick core websockets sql network qml-private quick-private testlib
-QT += qml quick core websockets network xmlpatterns qml-private quick-private
+QT += qml quick core websockets network xmlpatterns qml-private quick-private sql
 #sql webchannel
-CONFIG += c++11 console
+CONFIG += c++11
 
 osx{
     CONFIG+=app_bundle
@@ -119,3 +119,4 @@ include ($$PWD/../../pri/genproto.pri)
 
 INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
 DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
+
