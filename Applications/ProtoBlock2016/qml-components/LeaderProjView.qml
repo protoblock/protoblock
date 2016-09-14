@@ -41,12 +41,12 @@ Item {
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
                 model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                resizeColumnsToContents();
+//                resizeColumnsToContents();
             }
 
             onSortIndicatorOrderChanged: {
                 model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                resizeColumnsToContents()
+//                resizeColumnsToContents()
             }
 
 
