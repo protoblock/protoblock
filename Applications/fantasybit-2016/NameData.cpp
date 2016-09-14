@@ -324,13 +324,15 @@ void FantasyNameData::OnProjection(const std::string &name, const std::string &p
     if ( !amlive )
         return;
 
-    if ( mSubscribed.find(name) == end(mSubscribed))
-        return;
+//    if ( mSubscribed.find(name) == end(mSubscribed))
+//        return;
 
     fantasybit::FantasyBitProj fpj{};
     fpj.set_name(name);
     fpj.set_playerid(player);
     fpj.set_proj(proj);
+    fpj.set_count(nump);
+    fpj.set_block(blocknum);
 
     emit ProjectionLive(fpj);
 }

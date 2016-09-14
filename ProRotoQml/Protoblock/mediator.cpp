@@ -185,9 +185,15 @@ void Mediator::LiveProj(FantasyBitProj proj) {
             return;
 
         auto *item = mPlayerProjModel.getByUid(proj.playerid().data());
+        if ( !item ) return;
         item->set_knownProjection(proj.proj());
         item->set_projection(proj.proj());
     }
+
+    auto *item2 = mFantasyNameBalModel.getByUid(proj.name().data());
+    if ( !item2 ) return;
+    item2->set_lastupdate(proj.block());
+    item2->set_numberproj(proj.count());
 }
 
 void Mediator::MyNames(vector<MyFantasyName> mfn) {
