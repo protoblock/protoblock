@@ -180,15 +180,20 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
 }
 
 void Mediator::LiveProj(FantasyBitProj proj) {
-    if ( proj.name() == myFantasyName ) {
-        if ( proj.proj() <= 0 )
-            return;
+    auto *item = mPlayerProjModel.getByUid(proj.playerid().data());
+    if ( item ) {
 
-        auto *item = mPlayerProjModel.getByUid(proj.playerid().data());
-        if ( !item ) return;
-        item->set_knownProjection(proj.proj());
-        item->set_projection(proj.proj());
+        item->set_avg(mGateway->dataService->GetAvgProjection(proj.playerid()));
+
+        if ( proj.name() == myFantasyName ) {
+            if ( proj.proj() > 0 ) {
+                item->set_knownProjection(proj.proj());
+                item->set_projection(proj.proj());
+            }
+        }
+
     }
+
 
     auto *item2 = mFantasyNameBalModel.getByUid(proj.name().data());
     if ( !item2 ) return;
