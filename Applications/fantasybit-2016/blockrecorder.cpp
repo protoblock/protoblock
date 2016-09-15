@@ -37,12 +37,12 @@ void BlockRecorder::init() {
     std::string value;
     status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);
     if (!status.ok()) {
-        lastBlock =  0;// BlockRecorder::zeroblock;
+        lastBlock =  BlockRecorder::zeroblock -1;
         qWarning() << "!ok no blocks start from " << lastBlock;
     }
     else {
         lastBlock = *(reinterpret_cast<const int32_t *>(value.data()));
-        qInfo() << "lastBLock: " << lastBlock;
+        qInfo() << "BlockRecorder::init lastBLock: " << lastBlock;
 
     }
 
@@ -83,7 +83,7 @@ bool BlockRecorder::isValid() {
         return true;
 
     int32_t num = *(reinterpret_cast<const int32_t *>(value.data()));
-    return num < 0 || lastBlock < BlockRecorder::zeroblock;
+    return num < 0 || lastBlock > BlockRecorder::zeroblock;
 }
 
 

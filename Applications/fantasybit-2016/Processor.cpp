@@ -56,6 +56,8 @@ void BlockProcessor::hardReset() {
 #endif
 
     pb::remove_all(Platform::instance()->getRootDir() + "index/");
+    NFLStateData::InitCheckpoint();
+    BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
 }
 
 int32_t BlockProcessor::init() {
@@ -67,6 +69,11 @@ int32_t BlockProcessor::init() {
         mRecorder.closeAll();
         pb::remove_all(Platform::instance()->getRootDir() + "index/");
         qInfo() <<  "delete all leveldb, should have nothing";
+
+        NFLStateData::InitCheckpoint();
+        BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
+        qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
+
         mRecorder.init();
         if (!mRecorder.isValid() ) {
             qInfo() <<  "mRecorder not valid! ";
@@ -74,8 +81,6 @@ int32_t BlockProcessor::init() {
             return -1;
         }
 
-        NFLStateData::InitCheckpoint();
-        BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
     }
 
     mData.init();

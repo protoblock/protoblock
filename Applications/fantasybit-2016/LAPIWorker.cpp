@@ -117,6 +117,7 @@ void MainLAPIWorker::startPoint(){
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         last_block = processor.init();
+        qDebug() << " startPoint last_block " << last_block;
 #ifdef NOSYNC
         Node node;
         node.init();
@@ -130,8 +131,9 @@ void MainLAPIWorker::startPoint(){
 #endif
 
         if ( last_block < 0 ) {
-        //emit OnError();
-            last_block = 0;
+            //emit OnError();
+            qDebug() << " lapi last_block < 0 ";
+            last_block = BlockRecorder::zeroblock -1;
         }
         emit BlockNum(last_block);
     }
@@ -145,7 +147,7 @@ void MainLAPIWorker::ResetIndex() {
     processor.hardReset();
     last_block = processor.init();
     if ( last_block < 0 ) {
-        last_block = 0;
+        last_block = BlockRecorder::zeroblock;
     }
 }
 
