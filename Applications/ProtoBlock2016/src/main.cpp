@@ -15,6 +15,7 @@
 #include "core.h"
 #include "mediator.h"
 #include "fullgateway.h"
+#include "importLoader.h"
 //#include "RunGuard.h"
 #ifdef DATAAGENTWRITENAMES
 #include "../../../fantasybit-2015/tradingfootball/playerloader.h"
@@ -89,6 +90,9 @@ int main(int argc, char *argv[])
     pb::Mediator::instance()->setContext(fg);
 
     engine.rootContext()->setContextProperty("MiddleMan", pb::Mediator::instance());
+    pb::ImportLoader il;
+    engine.rootContext()->setContextProperty("ImportLoader", &il);
+
     //qmlRegisterSingletonType<pb::Mediator>(uri,1,0,"MiddleMan",middleMan);
 
 //    SqlStuff sql(true,"testingmain");

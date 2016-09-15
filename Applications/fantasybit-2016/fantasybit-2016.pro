@@ -60,7 +60,9 @@ SOURCES += \
     $$PWD/NodeWorker.cpp \
     $$PWD/iresolvable.cpp \
     $$PWD/dataservice.cpp \
-    fullgateway.cpp
+    fullgateway.cpp \
+    $$PWD/importLoader.cpp
+
 
 
 
@@ -78,7 +80,8 @@ HEADERS += \
     $$PWD/threadedqobject.h \
     $$PWD/iresolvable.h \
     $$PWD/dataservice.h \
-    fullgateway.h
+    fullgateway.h \
+    $$PWD/importLoader.h
 
 
 

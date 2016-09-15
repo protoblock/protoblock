@@ -417,6 +417,34 @@ Item {
                 }
 
                 Material.IconButton {
+                    id: exportit
+//                    anchors.fill: parent;
+//                    anchors.centerIn: parent
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+//                    color: "black"
+//                    iconSource: "icon://" + "awesome/undo"// "qrc:/icons/navigation_close.png"
+                    onClicked: {
+                        importexportDialog.show();
+                    }
+
+                    size: ProtoScreen.guToPx(2.5)
+
+
+                    visible: styleData.column === 0
+                    enabled: styleData.column === 0
+                    action: Material.Action {
+//                        name: "cod"
+                        iconName: "awesome/code"
+                        hoverAnimation: true
+                    }
+                }
+
+                Material.IconButton {
                     id: lbl
 //                    anchors.fill: parent;
 //                    anchors.centerIn: parent
