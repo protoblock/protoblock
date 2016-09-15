@@ -76,10 +76,19 @@ public:
         long sum = PlayerIDSumProj[playerid];
 
 //        qDebug() << " sum " << sum << " count " << count;
-        if  (count > 0 && sum > 0)
-            return  sum / count;
-        else
+        if  (count > 0 && sum > 0) {
+            int ret = sum / count;
+            if ( ret > count * 40)
+                return PlayerIDProjections[playerid][0];
+            else
+                return ret;
+        }
+        else {
+            if ( count == 0 && sum > 0 )
+                PlayerIDSumProj[playerid] = 0;
+
             return 0;
+        }
     }
 
 

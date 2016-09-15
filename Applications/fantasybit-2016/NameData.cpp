@@ -391,6 +391,7 @@ void FantasyNameData::OnWeekOver(int in) {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
         FantasyNameProjections.clear();
         PlayerIDProjections.clear();
+        PlayerIDSumProj.clear();
     }
     auto *it = projstore->NewIterator(leveldb::ReadOptions());
     for (it->SeekToFirst(); it->Valid(); it->Next())
