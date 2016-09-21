@@ -460,6 +460,9 @@ Item {
                         console.log("clicked send")
                         topw.focuscount = 0
                         MiddleMan.sendProjections()
+//                        MiddleMan.randomUseNames()
+
+
                     }
                     backgroundColor: themeroot.theme.accentColor
                     textColor: "white"

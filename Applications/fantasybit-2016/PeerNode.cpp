@@ -259,13 +259,16 @@ bool Node::SyncTo(int32_t gh) {
     string previd;
     int count = 0;
 
-    if ( current_hight == current_boot.blocknum() )
-        previd = "5d36c22996521c97c0bb69406a3df9c15d2ca6be79224eced13b2522824dd951";
+    if ( current_hight == current_boot.blocknum() ) {
+        previd = current_boot.previd();
+        if ( previd == "" )
+            previd = "5d36c22996521c97c0bb69406a3df9c15d2ca6be79224eced13b2522824dd951";
 #ifdef CHECKPOINTS
-    if ( current_hight == Commissioner::DeveloperCheckpointHigh())
-        previd = Commissioner::DeveloperCheckPointId();
-    else
+//    if ( current_hight == Commissioner::DeveloperCheckpointHigh())
+//        previd = Commissioner::DeveloperCheckPointId();
+//    else
 #endif
+    }
     else
     {
         auto ob = getLocalBlock(current_hight, true);
@@ -308,6 +311,7 @@ bool Node::SyncTo(int32_t gh) {
 
         //fork
         if ( (*sb).signedhead().head().prev_id() != previd ) {
+            qWarning() << (*sb).signedhead().head().prev_id() << " != prev " << previd.data();
             forking = true;
             if ( !BackFork((*sb).signedhead().head().prev_id(),current_hight) )
                 return forking = false;
@@ -359,7 +363,7 @@ bool Node::SyncTo(int32_t gh) {
 }
 
 bool Node::BackFork(const string &goodid, int32_t num) {
-
+    qWarning() << " back forking " << goodid.data() << num;
     string prevprev = goodid;
     string id = "";
     int count = 0;
@@ -454,9 +458,45 @@ int32_t Node::myLastGlobalBlockNum() {
 }
 
 Bootstrap Node::getLastLocalBoot() {
+    QString links("https://158.222.102.83:4545");
+    QString route("week");
+
+    QMap<QString,QString>  headers;
+    QMap<QString,QVariant> params;
+
+    QUrl url;
+    url.setUrl(links);
+    RestfullClient rest (url);
+    rest.getData(route);
+    auto resp = rest.lastReply();
+
+    qDebug() << resp;
+    QJsonDocument ret = QJsonDocument::fromJson(resp);
+    qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+    QJsonObject jo = ret.object();
+    auto weekstr = jo.value("week").toString().toStdString();
+    string globalhead = (weekstr.length() < 2 ? "20160" : "2016") +weekstr;
+
     Bootstrap head;
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
+    string localhead = ldb.read("head");
+    if ( globalhead > localhead ) {
+        head = Commissioner::makeGenesisBoot(ldb,globalhead);
+        if ( head.blocknum() <= 0 ) {
+            qCritical() << globalhead.data() <<  " !current_boot.blocknum() <= 0 ";
+        }
+        else if (!BlockProcessor::verifyBootstrap(ldb,head)) {
+            qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
+            //return;
+        }
+        else {
+            qDebug() << " getLastLocalBoot " << head.DebugString().data();
+            ldb.write("head",head.key());
+        }
+    }
+
     ldb.read(ldb.read(ldb.read("head")),head);
     return head;
 }

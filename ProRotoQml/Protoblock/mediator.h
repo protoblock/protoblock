@@ -299,7 +299,7 @@ public:
     }
 
 
-    Q_INVOKABLE void copyProj(int column, QString value, bool clone) {
+    Q_INVOKABLE void copyProj(int column, QString value, bool clone, bool random = true) {
         qDebug() << "CopyProj " << column << value << clone;
 
         if ( value == "Average") {
@@ -310,9 +310,10 @@ public:
                     if ( clone || it->get_projection () == 0)
                         if  ( it->get_projection() != it->get_avg())
                             it->set_projection(it->get_avg());
+
             }
             m_pProjectionsViewFilterProxyModel->invalidate();
-
+            return;
         }
 
         std::unordered_map<std::string,int> theOtherGuyProjection = mGateway->dataService->GetProjByName(value.toStdString());
@@ -328,14 +329,34 @@ public:
 
             if ( it->second == 0 ) continue;
             if ( clone || item->get_projection() == 0 ) {
-                 if  ( item->get_projection() != it->second)
-                    item->set_projection(it->second);
-                qDebug() << " set " << it->first.data() << " to " << it->second;
+
+                int projection = it->second;
+                if ( random ) {
+                     int num = qrand() % ((200 + 1) - 1) + 1;
+                     double percent = num / 100.0;
+                     projection = (double)projection * percent;
+                 }
+
+                 if  ( item->get_projection() != projection)
+                    item->set_projection(projection);
+
+                 qDebug() << " set " << it->first.data() << " to " << projection;
             }
+
         }
         m_pProjectionsViewFilterProxyModel->invalidate();
 
     }
+
+//    Q_INVOKABLE void randomUseNames() {
+//        for ( auto *it : mGoodNameBalModel) {
+//            useName(it->get_name());
+//            copyProj(6,"@SpreadSheetFF",false,true);
+//            sendProjections();
+//        }
+//    }
+
+    bool usingRandomNames = false;
 
     std::vector<std::string> fnames;
     int fnameindex;
@@ -548,6 +569,9 @@ public slots:
     void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);
+
+private:
+    vector<MyFantasyName> myGoodNames;
 };
 }
 #endif // MEDIATOR_H

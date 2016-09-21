@@ -130,14 +130,14 @@ void NFLStateData::InitCheckpoint() {
     Bootstrap head;
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
-    ldb.read(ldb.read("201601"),head);
+    ldb.read(ldb.read(ldb.read("head")),head);
 
     GlobalState gs;
     gs.set_season(head.season());
     gs.set_week(head.week());
     gs.set_state(GlobalState_State_INSEASON);
     db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
-
+    qDebug() << "InitCheckpoint wrote GlobalState" << gs.DebugString().data();
     {
         MerkleTree mtree;
         std::vector< std::pair<std::string,  GameStatusMeta> > mapt;

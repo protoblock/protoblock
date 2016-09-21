@@ -288,13 +288,17 @@ Block Commissioner::makeGenesisBlock() {
 
 }
 
-Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb) {
+Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
     string headhash;
-    string genesiskey = "201601";
+
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
+    genesisBootFile = genesisBootFile +  "bootstraptest" + genesiskey.data() + ".out";
     qDebug() << " reading genesisBootFile" << genesisBootFile;
     Reader<KeyValue> reader{genesisBootFile.toStdString()};
+    qDebug() << "makeGenesisBoot good?" << reader.good() ;
+    if ( !reader.good() )
+        return head;
     KeyValue kv;
     while ( reader.ReadNext(kv)) {
         if ( kv.key() == genesiskey ) {
