@@ -13,19 +13,23 @@ Item {
     property string  lastUrl: "NULL"
     property string lastTitle
     property string lastSubText
+    property string currPID
 
     property int  currentLevel: 0
-//    onCurrentLevelChanged: console.log(currentLevel)
+    onCurrentLevelChanged: console.log("currentlevel " + currentLevel)
+//    property string  baseUrl: "https://158.222.102.83:4545/"
     property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
     property string currentFPlayer
 
     signal modelFull()
-    Component.onCompleted: pageHelper.title = "Leaderboard"
+    Component.onCompleted: {
+        pageHelper.title = "Leaderboard"
+        console.log(" on completeed  leaderboard ")
+    }
     onModelFull: {
 
         switch(currentLevel){
         case 0:
-
             projectionsView.model = null
             projectionsView.model = projModel
             projectionsView.delegate = levelZeroDel
@@ -47,7 +51,7 @@ Item {
         id: pickers
         color: "transparent"
         width: parent.width / 1.07
-        height : (pos.height * 2.1) + 10 + (mainTitle.paintedHeight + mainSubText.paintedHeight) + backButton.height
+        height : (week.height * 1.05) + 10 + (mainTitle.paintedHeight + mainSubText.paintedHeight) + backButton.height
         anchors.horizontalCenter: parent.horizontalCenter
         Column{
             anchors.fill: parent
@@ -59,6 +63,7 @@ Item {
                 font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
                 width: parent.width
                 wrapMode: Text.WordWrap
+                text: "2016 Leaderboard"
             }
             Label{
                 id: mainSubText
@@ -67,56 +72,59 @@ Item {
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 width: parent.width
                 wrapMode: Text.WordWrap
+                text: "Week: " + week.currentText
             }
-            Row{
-                width: parent.width
-                height: pos.height
-                spacing: posLable.paintedWidth / 2
-                Label{
-                    id: posLable
-                    text: "Postion"
-                    height: pos.height
-                    font{
-                        family: "Roboto"
-                        weight: Font.Light
-                        pixelSize: pos.height / 2
-                    }
-                    verticalAlignment: Text.AlignVCenter
-                }
-                ComboBox{
-                    id:  pos
-                    width: (parent.width / 1.07)  - (posLable.paintedWidth + 5 )
-                    model: postionModel
-                    enabled: true
-                    onCurrentTextChanged: {
-                        switch(currentLevel){
-                        case 0 :
-                            jsonGetter.source  = baseUrl + "fantasy/leaders?position="
-                                    + replaceSpace(pos.currentText)
-                                    +"&week=" + replaceSpace(week.currentText)
-                            break;
-                        case 1:
-                            jsonGetter.source =  baseUrl +"fantasy/players/" + replaceSpace( currentFPlayer )
-                                    + "/awards?position="
-                                    +  replaceAllAny(  replaceSpace(pos.currentText) )
-                                    + "&week="
-                                    + replaceAllAny( replaceSpace(week.currentText) )
-                            break;
-                        case 2:
-                            break;
-                        }
-                    }
-                }
-            }
+//            Row{
+//                width: parent.width
+//                height: pos.height
+//                spacing: posLable.paintedWidth / 2
+//                Label{
+//                    id: posLable
+//                    text: "Postion"
+//                    height: pos.height
+//                    font{
+//                        family: "Roboto"
+//                        weight: Font.Light
+//                        pixelSize: pos.height / 2
+//                    }
+//                    verticalAlignment: Text.AlignVCenter
+//                }
+//                ComboBox{
+//                    id:  pos
+//                    width: (parent.width / 1.07)  - (posLable.paintedWidth + 5 )
+//                    model: postionModel
+//                    enabled: !jsonGetter.running
+//                    onCurrentTextChanged: {
+//                        console.log("onCurrentTextChanged " + "pos" + pos.currentText + " week " + week.currentText)
+//                        if ( jsonGetter.running ) return
+//                        switch(currentLevel){
+//                        case 0 :
+//                            jsonGetter.source  = baseUrl + "fantasy/leaders?position="
+//                                    + replaceSpace(pos.currentText)
+//                                    +"&week=" + replaceSpace(week.currentText)
+//                            break;
+//                        case 1:
+//                            jsonGetter.source =  baseUrl +"fantasy/players/" + replaceSpace( currentFPlayer )
+//                                    + "/awards?position="
+//                                    +  replaceAllAny(  replaceSpace(pos.currentText) )
+//                                    + "&week="
+//                                    + replaceAllAny( replaceSpace(week.currentText) )
+//                            break;
+//                        case 2:
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
             Row{
                 width: parent.width
                 height: week.height
-                spacing: posLable.paintedWidth / 2
+                spacing: weekLable.paintedWidth / 2
                 Label{
                     id: weekLable
                     text: "Week"
                     height: week.height
-                    width: posLable.paintedWidth
+//                    width: posLable.paintedWidth
                     verticalAlignment: Text.AlignVCenter
                     font{
                         family: "Roboto"
@@ -128,24 +136,29 @@ Item {
 
                 ComboBox{
                     id:  week
-                    width: pos.width
+                    width: (parent.width / 1.07)  - (weekLable.paintedWidth + 5 )
                     model: weekModel
+                    enabled: !jsonGetter.running && currentLevel != 2
                     onCurrentTextChanged: {
+                        if (jsonGetter.running ) return;
                         switch(currentLevel){
                         case 0 :
-                            if (pos.currentText === "all positions" ){
-                                jsonGetter.source  = baseUrl + "fantasy/leaders?week=" + replaceSpace(currentText)
-                            }else{
-                                jsonGetter.source  = baseUrl + "fantasy/leaders?position="
-                                        +replaceSpace(pos.currentText) +"&week="
-                                        + replaceSpace(week.currentText)
-                            }
+                            jsonGetter.source  = baseUrl + "fantasy/leaders?week=" + replaceSpace(week.currentText)
+                            mainSubText.text = "Week " + week.currentText
                             break;
+//                            if (pos.currentText === "all positions" ){
+//                                jsonGetter.source  = baseUrl + "fantasy/leaders?week=" + replaceSpace(currentText)
+//                            }else{
+//                                jsonGetter.source  = baseUrl + "fantasy/leaders?position="
+//                                        +replaceSpace(pos.currentText) +"&week="
+//                                        + replaceSpace(week.currentText)
+//                            }
+//                            break;
                         case 1:
                             jsonGetter.source =  baseUrl +"fantasy/players/" + replaceSpace( currentFPlayer )
-                                    + "/awards?position="
-                                    +  replaceAllAny(  replaceSpace(pos.currentText) )
-                                    + "&week="
+//                                    + "/awards?position="
+//                                    +  replaceAllAny(  replaceSpace(pos.currentText) )
+                                    + "/awards?week="
                                     + replaceAllAny( replaceSpace(week.currentText) )
                             break;
                         case 2:
@@ -168,14 +181,15 @@ Item {
                 width: parent.width
                 text: "back"
                 elevation: 1
-                visible: currentLevel > 0 ? true : false
-                height: currentLevel === 0 ? 0 : rootLoader.height / 10
+                visible: true//(currentLevel > 0 ? true : false)
+                enabled: !jsonGetter.running && currentLevel > 0
+                height: week.height * 2
                 onClicked: {
                     currentLevel = currentLevel -1
                     if(currentLevel === 0 ){
-                        mainTitle.text = ""
-                        mainSubText.text = ""
-                        jsonGetter.source =  baseUrl + "fantasy/leaders"
+                        mainTitle.text = "2016 Leaderboard"
+                        mainSubText.text = "Week " + week.currentText
+                        jsonGetter.source =  baseUrl + "fantasy/leaders?week=" + replaceSpace(week.currentText)
                     }else{
                         mainTitle.text = lastTitle
                         mainSubText.text = lastSubText
@@ -224,7 +238,6 @@ Item {
         //        onSourceChanged: console.log(source)
         source:  baseUrl + "fantasy/leaders"
         onUpdated:{
-
             fillProjectionsModel(json)
             currentPage = "Leaderboard"
         }
@@ -236,7 +249,7 @@ Item {
         switch(currentLevel){
         case 0:
             if(list.contents.length !== undefined ){
-//                console.log('refilling ' + list.contents.length)
+                console.log('refilling ' + list.contents.length)
                 projModel.clear()
                 for (var i in  list.contents ) {
                     projModel.append({ 'name' : list.contents[i].name  ,'score' : list.contents[i].score });
@@ -260,10 +273,11 @@ Item {
             }
             modelFull()
             }else{
-//                console.log("Error " + list.contents.data.length)
+                console.log("Error " + list.contents.data.length)
             }
             break;
         case 2:
+            projModelLevelTwo.clear()
             for (var iii in  list.contents.data ) {
                 projModelLevelTwo.append({
                                              'firstName' : list.contents.data[iii].FIRST , 'lastName' : list.contents.data[iii].LAST
@@ -279,7 +293,7 @@ Item {
     }
 
     function resetPickers(){
-        pos.currentIndex=0
+//        pos.currentIndex=0
         week.currentIndex=0
     }
 
@@ -298,7 +312,7 @@ Item {
         id: levelZeroDel
         ListItem.Subtitled {
             text: "Fantasy Name: " + model.name
-            subText: "Balance: " +  model.score
+            subText: (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText ) + " Balance: " +  model.score
             elevation: 2
             action: Image {
                 source : "qrc:/icons/action_account_circle.png"
@@ -310,11 +324,11 @@ Item {
                 lastSubText = mainSubText.text
                 lastTitle = mainTitle.text
 
-                mainTitle.text = "Fantasy Name: "+ model.name
-                mainSubText.text ="Balance: " + model.score
+                mainTitle.text = text//"Fantasy Name: "+ model.name
+                mainSubText.text = subText//"Balance: " + model.score
                 currentFPlayer = model.name
-                resetPickers()
-                jsonGetter.source =  baseUrl  + "fantasy/players/"+model.name+"/awards"
+//                resetPickers()
+                jsonGetter.source =  baseUrl  + "fantasy/players/"+model.name+"/awards?week=" + replaceAllAny( replaceSpace(week.currentText) )
                 currentLevel = 1
             }
         }
@@ -324,7 +338,8 @@ Item {
         id: levelOneDel
         //FIXME add a team icon
         ListItem.Subtitled {
-            text: model.firstName +" " + model.lastName +  " ("+ model.pos + ") " + model.team
+
+            text: model.firstName +" " + model.lastName +  " ("+ model.pos + ") - Week " + model.week
             subText: "Projection: " + model.projection + " Result: " + model.result
             elevation: 2
             valueText: "Award: " + model.award
@@ -334,14 +349,16 @@ Item {
                 width: 32
                 height:  width
             }
+
+
             onClicked:{
                 lastUrl = jsonGetter.source
                 lastSubText = mainSubText.text
                 lastTitle = mainTitle.text
 
-                mainTitle.text = "Players Name : "+model.firstName +" " + model.lastName +  " ("+ model.pos + ") " + model.team
-                mainSubText.text ="Results: " + model.result
-
+                mainTitle.text = "Player Name : "+model.firstName +" " + model.lastName +  " ("+ model.pos + ") " + model.team
+                mainSubText.text = "Week " + model.week + " - Fantasy Points: " + model.result
+                currPID = model.playerId
                 jsonGetter.source = baseUrl + "fantasy/nfl/" + model.playerId + "/week/" + model.week
                 currentLevel = 2
             }

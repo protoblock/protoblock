@@ -514,9 +514,14 @@ private:
 
     bool amLive = false;
 
-    void getLeaders(int week,bool lastweek) {
+    void getLeaders(int week,bool lastweek, bool all2016 = false) {
         QString links("https://158.222.102.83:4545");
-        QString route("fantasy/leaders?position=all%20positions&week=%1");
+        QString route("fantasy/leaders");
+        if ( !all2016 )
+            route = route.append("?position=all%20positions&week=%1").arg(week);
+
+
+        qDebug() << " calling route " << route;
 
         QMap<QString,QString>  headers;
         QMap<QString,QVariant> params;
@@ -524,7 +529,7 @@ private:
         QUrl url;
         url.setUrl(links);
         RestfullClient rest (url);
-        rest.getData(route.arg(week));
+        rest.getData(route);
         auto resp = rest.lastReply();
 
         qDebug() << resp;
@@ -542,7 +547,9 @@ private:
 
             auto *item = mFantasyNameBalModel.getByUid(name);
             if ( item == nullptr ) continue;
-            if ( lastweek )
+            if ( all2016 )
+                item->set_leaders2016(score);
+            else if ( lastweek )
                 item->set_lastweek(score);
             else
                 item->set_thisweek(score);
@@ -552,8 +559,9 @@ private:
     void updateLiveLeaders() {
         mFantasyNameBalModel.updateleaders(mGateway->dataService->GetLeaderBoard());
         if ( m_theWeek-1 > 0 )
-            getLeaders(m_theWeek-1,true);
-        getLeaders(m_theWeek,false);
+            getLeaders(m_theWeek-1,true,false);
+        getLeaders(m_theWeek,false,false);
+        getLeaders(0,false,true);
         m_pLeaderBoardSortModel->invalidate();
     }
 

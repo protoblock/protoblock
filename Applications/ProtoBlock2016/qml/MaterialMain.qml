@@ -337,6 +337,8 @@ Material.ApplicationWindow{
 
     function fillDefaultModels(theweek){
 
+        weekModel.clear()
+        postionModel.clear()
         var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
         for (var i in positionArray){
             postionModel.append({'text': positionArray[i] })
