@@ -197,7 +197,7 @@ void NFLStateData::InitCheckpoint() {
             auto hash = FantasyName::name_hash(fnb.name());
             leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
             db5->Put(write_sync, hkey, fnb.SerializeAsString());
-            qDebug() << "zxcvbn" << fnb.DebugString();
+//            qDebug() << "zxcvbn" << fnb.DebugString();
 #ifdef DATAAGENTWRITENAMES_FORCE
             FantasyNameHash fnh{};
             fnh.set_name(fnb.name());
@@ -728,9 +728,9 @@ std::unordered_map<std::string,PlayerDetail>
     qDebug() << "get team roster" << teamid;
     std::unordered_map<std::string,PlayerDetail> vpb{};
 
-    auto it = MyTeamRoster.find(teamid);
-    if ( it != end(MyTeamRoster))
-        qDebug() << " found it" << it->second.size();
+//    auto it = MyTeamRoster.find(teamid);
+//    if ( it != end(MyTeamRoster))
+//        qDebug() << " found it" << it->second.size();
 
     auto teamroster = MyTeamRoster[teamid];
     qDebug() << teamroster.size();
