@@ -188,7 +188,8 @@ Item {
                     currentLevel = currentLevel -1
                     if(currentLevel === 0 ){
                         mainTitle.text = "2016 Leaderboard"
-                        mainSubText.text = "Week " + week.currentText
+                        mainSubText.text = (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText ) + " Balance: " +  model.score
+
                         jsonGetter.source =  baseUrl + "fantasy/leaders?week=" + replaceSpace(week.currentText)
                     }else{
                         mainTitle.text = lastTitle
