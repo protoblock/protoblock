@@ -104,6 +104,17 @@ class Mediator : public QObject {
 public:
     static Mediator *instance();
 
+    void CopyTheseProjections(std::vector<fantasybit::PlayerPoints> &these) {
+        for ( auto t : these) {
+            auto *item = mPlayerProjModel.getByUid(t.playerid().data());
+            if ( !item ) continue;
+            if ( !item->get_isopen() ) continue;
+            if ( t.points() <= 0 ) continue;
+            item->set_projection(t.points());
+        }
+        m_pProjectionsViewFilterProxyModel->invalidate();
+    }
+
     void setContext(pb::IPBGateway *ingateway) {
         mGateway = ingateway;
         setupConnection(mGateway);

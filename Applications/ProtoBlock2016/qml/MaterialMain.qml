@@ -370,6 +370,32 @@ Material.ApplicationWindow{
         }
     }
 
+    Material.Dialog {
+        id: importexportDialog
+        height: parent.height / 2
+        width: parent.width / 2
+        title: "Import/Export projections CSV"
+        Text{
+            width: parent.width
+            height: parent.height
+            wrapMode: Text.WordWrap
+            font.pixelSize:  ProtoScreen.font(ProtoScreen.NORMAL)
+            text: "using csv file: " + ImportLoader.filename
+        }
+
+        positiveButtonText: "Export"
+        negativeButtonText: "Import"
+        onAccepted: {
+            ImportLoader.doExport(uname)
+        }
+
+        onRejected: {
+            ImportLoader.doImport(uname)
+
+        }
+    }
+
+
     //Login dialog (only when user does not have a secert3)
     Material.Dialog {
         id: loginDialog
