@@ -484,7 +484,7 @@ Item {
 
 //                        tv.model.setData(tv.model.index(1,styleData.column),
 //                                         tv.model.get(1), 0)
-                        MiddleMan.copyProj(styleData.column, styleData.value, false)
+                        MiddleMan.copyProj(styleData.column, styleData.value, false, false)
 
 
                     }
@@ -513,7 +513,7 @@ Item {
                     size: ProtoScreen.guToPx(3)
                     onClicked : {
                         console.log("clicked send")
-                        MiddleMan.copyProj(styleData.column, styleData.value, false)
+                        MiddleMan.copyProj(styleData.column, styleData.value, true, false)
                     }
                     action: Material.Action {
 //                        name: "Copy-Clone Projection"

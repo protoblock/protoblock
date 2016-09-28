@@ -95,6 +95,7 @@ void Node::init() {
                 blockchain->Put(write_sync, value, sb.SerializeAsString());
                 current_hight = getLastLocalBlockNum();
 
+                pb::remove_all(Platform::instance()->getRootDir() + "index/");
                 NFLStateData::InitCheckpoint();
 
                 BlockRecorder::InitCheckpoint(current_hight);
@@ -144,6 +145,7 @@ void Node::init() {
                 blockchain->Put(write_sync, value, sb.SerializeAsString());
                 current_hight = getLastLocalBlockNum();
 
+                pb::remove_all(Platform::instance()->getRootDir() + "index/");
                 NFLStateData::InitCheckpoint();
 
                 BlockRecorder::InitCheckpoint(current_hight);
