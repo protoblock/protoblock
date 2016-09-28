@@ -15,6 +15,8 @@
 #include "platform.h"
 #include "appsettings.h"
 #include "ldbwriter.h"
+#include "qurl.h"
+#include "RestFullCall.h"
 
 using namespace std;
 
@@ -292,8 +294,49 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
     string headhash;
 
+    QString filename = string("bootstraptest" + genesiskey + ".out").data();
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
-    genesisBootFile = genesisBootFile +  "bootstraptest" + genesiskey.data() + ".out";
+    genesisBootFile = genesisBootFile +  filename;
+    QFileInfo check_file(genesisBootFile);
+    if ( !check_file.exists() ) {
+        qDebug() << "! check_file.exists() genesisBootFile" << genesisBootFile;
+
+        QString links("http://protoblock.com");
+        QString route(filename);
+
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+
+
+        QUrl url;
+        url.setUrl(links);
+        qDebug() << " chec url " << url.toString() << route << "|";
+        RestfullClient rest (url);
+        rest.getData(route);
+        auto resp = rest.lastReply();
+        if ( rest.lastCode() > 400 || resp.size() < 100 ) {
+            qDebug() << rest.lastCode() << "did not got it url genesisBootFile" << filename;
+            return head;
+        }
+
+//        qDebug() << "not got it url resp.size()" << resp.size() << resp;
+//        return head;
+
+        qDebug() << " got it url genesisBootFile" << filename;
+        QFile *m_file = new QFile();
+        m_file->setFileName(genesisBootFile);
+        m_file->open(QIODevice::WriteOnly);
+
+        m_file->write(resp);
+        m_file->close(); //
+
+    }
+    check_file.refresh();
+    if ( !check_file.exists() ) {
+        qDebug() << " after !check_file.exists() genesisBootFile" << genesisBootFile;
+        return head;
+    }
+
     qDebug() << " reading genesisBootFile" << genesisBootFile;
     Reader<KeyValue> reader{genesisBootFile.toStdString()};
     qDebug() << "makeGenesisBoot good?" << reader.good() ;

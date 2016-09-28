@@ -246,8 +246,12 @@ void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {
 
 void Mediator::GlobalStateChange(GlobalState gs)
 {
-    if ( gs.week() > 0 && gs.week() < 18)
+    if ( gs.week() > 0 && gs.week() < 18) {
+        if ( amLive && gs.week() > m_theWeek) {
+            updateWeek();
+        }
         settheWeek(gs.week());
+    }
 }
 
 void Mediator::LiveGui(GlobalState gs) {
@@ -259,8 +263,11 @@ void Mediator::LiveGui(GlobalState gs) {
         settheWeek(gs.week());
         setliveSync("Live");
         setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
+        updateWeek();
     }
+}
 
+void Mediator::updateWeek() {
     if ( mGateway == nullptr ) {
         qDebug() << " mGateway null ";
     }

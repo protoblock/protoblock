@@ -45,7 +45,7 @@ Item {
             handleDelegate: Item {
 //                width: ProtoScreen.guToPx(.5)
 //                implicitWidth: rec.width + rec3.width + rec2.width
-                height: parent.height
+                height: parent.height-cBan.height
 //                width: styleData.hovered ? ProtoScreen.guToPx(.85) : ProtoScreen.guToPx(.3)
                 anchors.margins: 0
                     Rectangle {

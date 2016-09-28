@@ -237,9 +237,9 @@ void Node::BackSync(int32_t to) {
 bool Node::Sync() {
     qDebug() << "cureent thread" << QThread::currentThread();
     fc::optional<int32_t> gh = getLastGlobalBlockNum();
-    if ( !gh ) {
+    if ( !gh || gh == 0 ) {
         qCritical() << " no getLastGlobalBlockNum";
-        return false;
+        return true;
     }
     else setLastGlobalBlockNum(*gh);
 
@@ -476,25 +476,47 @@ Bootstrap Node::getLastLocalBoot() {
 
     QJsonObject jo = ret.object();
     auto weekstr = jo.value("week").toString().toStdString();
-    string globalhead = (weekstr.length() < 2 ? "20160" : "2016") +weekstr;
+
+    int week;
+    if ( weekstr == "")
+        week = 3;
+    else
+        week = stoi(weekstr);
+
+    if ( week == 0 )
+        week = 3;
 
     Bootstrap head;
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
     string localhead = ldb.read("head");
-    if ( globalhead > localhead ) {
-        head = Commissioner::makeGenesisBoot(ldb,globalhead);
-        if ( head.blocknum() <= 0 ) {
-            qCritical() << globalhead.data() <<  " !current_boot.blocknum() <= 0 ";
+
+    bool done = false;
+    while ( !done ) {
+        if ( week <= 1 ) {
+            done = true;
+            break;
         }
-        else if (!BlockProcessor::verifyBootstrap(ldb,head)) {
-            qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
-            //return;
+
+        string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
+        if ( globalhead > localhead ) {
+            head = Commissioner::makeGenesisBoot(ldb,globalhead);
+            if ( head.blocknum() <= 0 ) {
+                qCritical() << globalhead.data() <<  " !current_boot.blocknum() <= 0 ";
+                week--;
+            }
+            else if (!BlockProcessor::verifyBootstrap(ldb,head)) {
+                qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
+                week--;
+                //return;
+            }
+            else {
+                qDebug() << " getLastLocalBoot " << head.DebugString().data();
+                ldb.write("head",head.key());
+                done = true;
+            }
         }
-        else {
-            qDebug() << " getLastLocalBoot " << head.DebugString().data();
-            ldb.write("head",head.key());
-        }
+        else done = true;
     }
 
     ldb.read(ldb.read(ldb.read("head")),head);

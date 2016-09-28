@@ -146,7 +146,7 @@ public:
         seasonFreeze(season);
     }
 
-    void addBootStrap(Bootstrap *in) {
+    void addBootStrap(Bootstrap *in,bool writehead = false) {
         LdbWriter ldb;
         ldb.init(Node::bootstrap.get());
         Bootstrap &bs = *in;
@@ -154,6 +154,9 @@ public:
         bs.set_fnamemetaroot(BootStrapFantasyName(ldb));
 
         ldb.write(in->key(),ldb.write(bs));
+        if ( writehead )
+            ldb.write("head",in->key());
+
         return;
     }
 

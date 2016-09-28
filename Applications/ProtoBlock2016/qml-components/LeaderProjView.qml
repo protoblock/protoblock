@@ -32,7 +32,7 @@ Item {
             sortIndicatorColumn: 1
             highlightOnFocus:   false
 //            anchors.fill: parent
-            height: parent.height
+            height: parent.height - ProtoScreen.guToPx(8)
             implicitWidth: parent.width
 
             selectionMode: SelectionMode.NoSelection

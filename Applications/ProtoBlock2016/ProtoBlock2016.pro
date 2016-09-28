@@ -23,6 +23,10 @@ QT += qml quick core websockets network xmlpatterns qml-private quick-private
 #sql webchannel
 CONFIG += c++11
 
+contains(DEFINES, DATAAGENTWRITENAMES){
+    QT += sql
+}
+
 osx{
     CONFIG+=app_bundle
 }

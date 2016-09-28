@@ -60,7 +60,24 @@ void FantasyNameData::init() {
                 fnp->initStakePNL(fn.stake());
                 fnp->setBlockNump (0,0);
                 qDebug() << fnp->ToString().data();
+#ifdef DATAAGENTWRITENAMES_SPECIAL
+                auto name = fnp->alias();
+                if ( name != Commissioner::FantasyAgentName())
+                {
+                    FantasyNameHash fnh2{};
+                    SqlStuff sql("satoshifantasy","OnFantasyName");
 
+                    fnh2.set_name(name);
+                    fnh2.set_hash(fnp->hash());
+//                    emit new_dataFantasyNameHash(fnh);
+
+//                    auto fnhstr = fnh.SerializeAsString();
+                    sql.fantasyname(fnh2);
+
+                    //RestfullClient rest(QUrl(LAPIURL.data()));
+                    //rest.postRawData("fantasy/name","oc",fnhstr.data(),((size_t)fnhstr.size()));
+                }
+#endif
             }
         }
         delete it;

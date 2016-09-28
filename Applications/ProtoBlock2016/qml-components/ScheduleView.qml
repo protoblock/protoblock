@@ -52,9 +52,9 @@ Material.Card {
 //        }
         clip: true
         property bool first: true
-        anchors.fill: parent
+//        anchors.fill: parent
         width: parent.width
-//        height: parent.height
+        height: parent.height - ProtoScreen.guToPx(8)
         id: lv
         model: MiddleMan.pWeeklyScheduleModel
 //        MiddleMan.pWeeklyScheduleModel

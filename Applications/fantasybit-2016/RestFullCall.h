@@ -248,6 +248,11 @@ public:
         return myLastRepliedData;
     }
 
+    int lastCode() {
+        return statusCode;
+    }
+
+    int statusCode = 0;
 
     bool postTData(const QString & route,
                  const QMap<QString,QString> parameters,
@@ -302,6 +307,9 @@ private slots:
         //qDebug() << "finishedSlot";
         if (reply != NULL){
             myLastRepliedData = reply->readAll();
+            statusCode =
+                    reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
             reply->deleteLater();
         }
         else
@@ -319,20 +327,25 @@ private slots:
     }
 
     void networkErrorSlot(QNetworkReply::NetworkError error ) {
-        if (myCurrentNetworkReply != NULL){
-            QUrl redirection =
-                    myCurrentNetworkReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        if (myCurrentNetworkReply == NULL)
+            return;
 
-            if (redirection.isValid()) //no action is taken we're always allowing redirection
-                qDebug() << "server redirection : " << redirection.toString() ;
-            else {
-                qDebug() << "net error : " << myCurrentNetworkReply->errorString();
-                //the finsihed signal will follow
-            }
+        QUrl redirection =
+                myCurrentNetworkReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+
+        if (redirection.isValid()) //no action is taken we're always allowing redirection
+            qDebug() << "server redirection : " << redirection.toString() ;
+        else {
+            qDebug() << "net error : " << myCurrentNetworkReply->errorString();
+            //the finsihed signal will follow
         }
+
         myCurrentNetworkError = error;
         myCurrentNetworkReply->ignoreSslErrors();
-    }
+
+        statusCode =
+                myCurrentNetworkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+   }
 
     void networkAccessibleChangedSlot(QNetworkAccessManager::NetworkAccessibility accessible){
         if (accessible != QNetworkAccessManager::Accessible)

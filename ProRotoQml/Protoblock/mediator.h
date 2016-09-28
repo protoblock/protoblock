@@ -299,7 +299,7 @@ public:
     }
 
 
-    Q_INVOKABLE void copyProj(int column, QString value, bool clone, bool random = true) {
+    Q_INVOKABLE void copyProj(int column, QString value, bool clone, bool random = false) {
         qDebug() << "CopyProj " << column << value << clone;
 
         if ( value == "Average") {
@@ -572,6 +572,7 @@ public slots:
 
 private:
     vector<MyFantasyName> myGoodNames;
+    void updateWeek();
 };
 }
 #endif // MEDIATOR_H

@@ -138,6 +138,18 @@ int32_t BlockProcessor::process(Block &sblock) {
 
     qInfo() << " BLOCK(" << sblock.signedhead().head().num() << ") processed! ";
     lastidprocessed = mRecorder.endBlock(sblock.signedhead().head().num());
+
+    if ( mLastWeekStart ) {
+        mLastWeekStart = false;
+        int week = mData.GetGlobalState().week();
+        auto boot = mData.makeBootStrap(2016,
+                                        mData.GetGlobalState().week(),
+                                        lastidprocessed-1);
+        boot.set_key((week < 10 ? "20160" : "2016") + to_string(week));
+        boot.set_previd(sblock.signedhead().head().prev_id());
+        mNameData.addBootStrap(&boot,true);
+
+    }
 #ifdef CLEAN_BLOCKS
     mRecorder.endBlock();
 #ifdef BLOCK_EXPLORER
@@ -874,6 +886,8 @@ void BlockProcessor::OnWeekStart(int week) {
     mNameData.OnWeekStart(week);
     mData.OnWeekStart(week);
     mExchangeData.OnWeekStart(week);
+    mLastWeekStart = true;
+
     emit WeekStart(week);
 }
 
