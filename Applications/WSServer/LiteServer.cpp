@@ -72,8 +72,8 @@ void LiteServer::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
 #endif
 
 #ifndef SEASON_TRADING
-/*    if ( mt->week() != mCurrentWeek )
-        SetCurrentWeekData(mt->wee*/k());
+///*    if ( mt->week() != mCurrentWeek )
+//        SetCurrentWeekData(mt->wee*/k());
 #endif
 
     ROWMarket *pROWMarket = getRowmarket(mt->symbol());

@@ -12,6 +12,8 @@
 #include "txpool.h"
 #include "server.h"
 
+#include "RestfullCall.h"
+
 QT_USE_NAMESPACE
 
 TxServer::TxServer(quint16 port, bool debug, QObject *parent) :
@@ -67,6 +69,10 @@ void TxServer::onNewConnection()
 }
 
 void TxServer::processBinaryMessage(const QByteArray &message) {
+    RestfullClient rest(QUrl(PAPIURL.data()));
+    rest.postRawData("tx","octet-stream",message);
+
+    /*
     fantasybit::SignedTransaction st;
     std::string ststr = message.toStdString();
     st.ParseFromString(ststr);
@@ -153,6 +159,7 @@ void TxServer::processBinaryMessage(const QByteArray &message) {
 
 
 //    trans.SerializeToString()
+*/
     return;
 }
 

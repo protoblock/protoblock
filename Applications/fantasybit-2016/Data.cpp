@@ -395,6 +395,14 @@ PlayerBase NFLStateData::GetPlayerBase(std::string playerid) {
     return pb;
 }
 
+PlayerStatus NFLStateData::GetPlayerStatus(const std::string &playerid) {
+    auto it = MyPlayerStatus.find(playerid);
+    if ( it != end(MyPlayerStatus))
+        return it->second;
+    else
+        return PlayerStatus::default_instance();
+}
+
 void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase &pb,
                                   const PlayerStatus &ps) {
     AddNewPlayer(playerid,pb);
