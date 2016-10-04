@@ -6,15 +6,24 @@
 #include "LiteServer.h"
 #include "ExchangeData.h"
 #include "Data.h"
+#include "pbgateways.h"
+#include "dataservice.h"
 
 using namespace fantasybit;
 
-class Server {
+class Server : public QObject {
+    Q_OBJECT
+
+    explicit Server(QObject *parent = 0) :  QObject(parent) {}
+
+    static Server *myInstance;
+    void setupConnection(pb::IPBGateway *ingateway);
 public:
+    static Server *instance();
     static fantasybit::GetAllNamesRep AllNamesRep;
     static fantasybit::ExchangeData TheExchange;
 //    static fantasybit::GetROWMarketRep ROWMarketRep;
-    static NFLStateData  NFLData;
+//    static NFLStateData  NFLData;
     static std::unordered_map<std::string,FantasyNameBal *> Pk2Bal;
 
     static void AddNames(const FantasyNameBal &fnb) {
@@ -32,9 +41,25 @@ public:
     }
 
     static bool goodPid(const std::string &pid) {
-        auto pb = NFLData.GetPlayerBase(pid);
+        auto pb = DataService::instance()->GetPlayerBase(pid);
         return pb.has_last() && pb.last() != "";
     }
+
+    pb::IPBGateway *mGateway = nullptr;
+    void setContext(pb::IPBGateway *ingateway) {
+        mGateway = ingateway;
+        setupConnection(mGateway);
+    }
+
+protected slots:
+    void OnNewFantasyName(fantasybit::FantasyNameBal fnb) {
+        AddNames(fnb);
+    }
+
+    void OnAnyFantasyNameBalance(fantasybit::FantasyNameBal fnb) {
+
+    }
+
 
 };
 

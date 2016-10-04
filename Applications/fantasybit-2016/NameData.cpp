@@ -153,8 +153,12 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
 
     auto fnp = Commissioner::AddName(name,pubkey);
     fnp->setBlockNump (0,0);
-    if ( fnp  != nullptr)
+    if ( fnp  != nullptr) {
         OnFantasyName(fnp);
+        if ( amlive )
+            NewFantasyName(fn);
+    }
+
 }
 
 void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
@@ -171,12 +175,15 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     fn.set_bits(fn.bits() + amount);
     namestore->Put(write_sync, hkey, fn.SerializeAsString());
     auto fnp = Commissioner::getName(hash);
-    if ( fnp != nullptr)
+    if ( fnp != nullptr) {
         fnp->addBalance(amount);
 
     //if ( name == "Windo")
 //    qDebug() << "adding award" << amount << " :: " << fn.DebugString() << fnp->ToString();
-    OnFantasyNameBalance(fn);
+        OnFantasyNameBalance(fn);
+        if ( amlive )
+            AnyFantasyNameBalance(fn);
+    }
 }
 
 void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {

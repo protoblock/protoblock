@@ -59,6 +59,9 @@ signals:
     void FantasyNamePnl(fantasybit::FantasyNameBal);
     void new_dataFantasyNameHash(fantasybit::FantasyNameHash);
     void NewFantasyNameOrder(fantasybit::Order&);
+    void NewFantasyName(fantasybit::FantasyNameBal);
+
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
 
 public slots:
     void OnLive(bool subscribe) {

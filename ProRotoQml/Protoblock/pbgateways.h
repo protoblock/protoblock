@@ -64,6 +64,8 @@ protected: //signals: // <- ignored by moc and only serves as documentation aid
     virtual void GameOver(std::string) = 0;
     virtual void onControlMessage(QString) = 0;
 
+    virtual void NewFantasyName(fantasybit::FantasyNameBal) = 0;
+    virtual void AnyFantasyNameBalance(fantasybit::FantasyNameBal) = 0;
 //    virtual void Height(int) = 0;
 //    virtual void BlockNum(int) = 0;
 

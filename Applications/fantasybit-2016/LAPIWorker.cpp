@@ -86,6 +86,15 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&processor,SIGNAL(onControlMessage(QString)),
                      this,SIGNAL(onControlMessage(QString)));
 
+    QObject::connect(&namedata,SIGNAL(FantasyNameFound(string)),
+                     this,SLOT(OnFoundName(string)));
+
+    QObject::connect(&namedata,SIGNAL(NewFantasyName(fantasybit::FantasyNameBal)),
+                     this,SIGNAL(NewFantasyName(fantasybit::FantasyNameBal)));
+
+    QObject::connect(&namedata,SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)),
+                     this,SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)));
+
 }
 
 void MainLAPIWorker::GoLive() {

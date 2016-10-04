@@ -1,7 +1,7 @@
 #include($$PWD/../../pri/protos.pri)
 include($$PWD/../../pri/deps.pri)
 #include($$PWD/../../pri/macrosAndModels.pri)
-QT += core websockets network
+QT += core websockets network qml
 QT -= gui
 
 CONFIG += c++11 warn_off
@@ -21,8 +21,8 @@ OTHER_FILES += $$PWD/sslechoclient.html
 ##DEFINES += PRODFOOTBALL
 ##DEFINES += USE_LOCALHOST_SERVER
 #DEFINES += NO_WRITE_NAMES_2015_FIRST
-DEFINES += PROD_SEASON_TRADING
-DEFINES += SEASON_TRADING
+#DEFINES += PROD_SEASON_TRADING
+#DEFINES += SEASON_TRADING
 DEFINES += MAX_NAMES_LB=1000
 #DEFINES += TRACE
 

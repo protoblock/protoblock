@@ -48,7 +48,7 @@ private:
     quint16 mport;
     bool m_debug;
     fantasybit::GetAllNamesRep *AllNamesRepPtr;
-    fantasybit::FantasyNameData mNameData;
+//    fantasybit::FantasyNameData mNameData;
 
 
     const uint MaxNames = ((MAX_NAMES_LB + 0) > 10 ) ? (MAX_NAMES_LB + 0) : std::numeric_limits<int>::max();

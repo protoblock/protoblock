@@ -4,6 +4,8 @@
 #include <QtCore/QCommandLineOption>
 #include "server.h"
 
+#include "core.h"
+#include "fullgateway.h"
 
 
 #include "Commissioner.h"
@@ -62,36 +64,20 @@ int main(int argc, char *argv[])
     bool debug = parser.isSet(dbgOption);
     int port = parser.value(portOption).toInt();
 
+    Core::instance()->bootstrap();
+
+    pb::FullGateway *fg = new pb::FullGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
+                                     DataService::instance());
+
+    Server::instance()->setContext(fg);
+
     TxServer *txserver = new TxServer(PB_WS_TX_PORT, debug);
     QObject::connect(txserver, &TxServer::closed, &a, &QCoreApplication::quit);
 
     LiteServer *nameServer = new LiteServer(PB_WS_LITE_AGENT_PORT,debug);
     QObject::connect(nameServer, &LiteServer::closed, &a, &QCoreApplication::quit);
 
-    Server::TheExchange.OnLive(true);
-
-    ExchangeOrder eo;
-
-    eo.set_playerid("1");
-    eo.set_type(ExchangeOrder::NEW);
-
-    OrderCore core;
-    core.set_buyside(true);
-    core.set_size(1);
-    core.set_price(10);
-
-    eo.mutable_core()->CopyFrom(core);
-    auto fn = Commissioner::getName("JayBNY");
-
-//    Server::TheExchange.OnNewOrderMsg(eo,1,fn);
-
-    core.set_buyside(false);
-    core.set_size(1);
-    core.set_price(25);
-    eo.mutable_core()->CopyFrom(core);
-    fn = Commissioner::getName("clarity");
-
-//    Server::TheExchange.OnNewOrderMsg(eo,2,fn);
+//    Server::TheExchange.OnLive(true);
 
 
     return a.exec();

@@ -93,6 +93,13 @@ public:
         connect( mlapi, &MainLAPIWorker::onControlMessage,
                 this,   &FullGateway::onControlMessage);
 
+        connect( mlapi, &MainLAPIWorker::NewFantasyName,
+                this,   &FullGateway::NewFantasyName);
+
+        connect( mlapi, &MainLAPIWorker::AnyFantasyNameBalance,
+                this,   &FullGateway::AnyFantasyNameBalance);
+
+
 
 //        connect( mlapi, SIGNAL(  GlobalStateChange(fantasybit::GlobalState)  ),
 //                this,      SLOT(    GlobalStateChange(fantasybit::GlobalState)        ));
@@ -149,6 +156,10 @@ signals:
     void doOnClaimName(QString);
 
     void nameAvail(QString &, bool);
+
+    void NewFantasyName(fantasybit::FantasyNameBal);
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
+
 public slots:
     void OnLiveGui(fantasybit::GlobalState gs) {
         qDebug() << "FullGateway received Livegui ";
