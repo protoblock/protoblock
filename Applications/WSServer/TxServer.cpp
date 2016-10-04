@@ -24,7 +24,7 @@ TxServer::TxServer(quint16 port, bool debug, QObject *parent) :
     m_debug(debug)
 {
 
-    mNameData.init();
+//    mNameData.init();
     TxPool::init();
 #ifdef PROD_SEASON_TRADING
     Server::NFLData.init();

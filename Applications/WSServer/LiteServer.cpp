@@ -34,6 +34,7 @@ LiteServer::LiteServer(quint16 port, bool debug, QObject *parent) :
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &LiteServer::closed);
     }
 
+    Server *server = Server::instance();
 
     connect (this,SIGNAL(error(QString)),this,SLOT(handleError(QString)));
     QObject::connect(&Server::TheExchange,SIGNAL(NewMarketSnapShot(fantasybit::MarketSnapshot*)),
@@ -174,8 +175,8 @@ ROWMarket * LiteServer::getRowmarket(const std::string &playerid) {
         pROWMarket->set_pid(playerid);
         PlayerData *pd = new PlayerData;
         pd->set_playerid(playerid);
-        pd->mutable_player_base()->CopyFrom(Server::NFLData.GetPlayerBase(playerid));
-        pd->mutable_player_status()->CopyFrom(Server::NFLData.GetPlayerStatus(playerid));
+        pd->mutable_player_base()->CopyFrom(DataService::instance()->GetPlayerBase(playerid));
+        pd->mutable_player_status()->CopyFrom(DataService::instance()->GetPlayerStatus(playerid));
         pROWMarket->set_allocated_playerdata(pd);
     }
     else
