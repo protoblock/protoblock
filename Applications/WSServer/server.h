@@ -36,8 +36,6 @@ public:
         return pb.has_last() && pb.last() != "";
     }
 
-    static std::unordered_map<std::string,FantasyNameBal> myNewNames;
-
 };
 
 

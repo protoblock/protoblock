@@ -3,7 +3,7 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
 #include "server.h"
-#include "txpool.h"
+
 
 
 #include "Commissioner.h"
@@ -62,23 +62,6 @@ int main(int argc, char *argv[])
     bool debug = parser.isSet(dbgOption);
     int port = parser.value(portOption).toInt();
 
-
-    TxPool::init();
-
-    qDebug() << " num tx st " << TxPool::myTxSt.size();
-    fantasybit::FantasyNameData mNameData;
-    mNameData.init();
-
-
-    for ( auto mnm : Server::myNewNames) {
-        if ( mnm.first == "" ) continue;
-        if ( TxPool::myTxSt.find(mnm.first) == end(TxPool::myTxSt)) {
-            qDebug() << mnm.first << " no tx found " << mnm.second.DebugString().data();
-        }
-        else qDebug() << mnm.first << "yes tx found " << TxPool::myTxSt[mnm.first].DebugString().data();
-    }
-
-    return 0;
     TxServer *txserver = new TxServer(PB_WS_TX_PORT, debug);
     QObject::connect(txserver, &TxServer::closed, &a, &QCoreApplication::quit);
 
@@ -87,26 +70,26 @@ int main(int argc, char *argv[])
 
     Server::TheExchange.OnLive(true);
 
-//    ExchangeOrder eo;
+    ExchangeOrder eo;
 
-//    eo.set_playerid("1");
-//    eo.set_type(ExchangeOrder::NEW);
+    eo.set_playerid("1");
+    eo.set_type(ExchangeOrder::NEW);
 
-//    OrderCore core;
-//    core.set_buyside(true);
-//    core.set_size(1);
-//    core.set_price(10);
+    OrderCore core;
+    core.set_buyside(true);
+    core.set_size(1);
+    core.set_price(10);
 
-//    eo.mutable_core()->CopyFrom(core);
-//    auto fn = Commissioner::getName("JayBNY");
+    eo.mutable_core()->CopyFrom(core);
+    auto fn = Commissioner::getName("JayBNY");
 
-////    Server::TheExchange.OnNewOrderMsg(eo,1,fn);
+//    Server::TheExchange.OnNewOrderMsg(eo,1,fn);
 
-//    core.set_buyside(false);
-//    core.set_size(1);
-//    core.set_price(25);
-//    eo.mutable_core()->CopyFrom(core);
-//    fn = Commissioner::getName("clarity");
+    core.set_buyside(false);
+    core.set_size(1);
+    core.set_price(25);
+    eo.mutable_core()->CopyFrom(core);
+    fn = Commissioner::getName("clarity");
 
 //    Server::TheExchange.OnNewOrderMsg(eo,2,fn);
 

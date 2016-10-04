@@ -18,27 +18,26 @@
 #include <leveldb/db.h>
 #include <utility>
 #include <memory>
-#include "fbutils.h"
+
 using namespace std;
 
 namespace fantasybit
 {
 
-//struct PlayerDetail {
-//    PlayerBase base;
-//    PlayerStatus::Status team_status;
-//    PlayerGameStatus game_status;
-//};
+struct PlayerDetail {
+    PlayerBase base;
+    PlayerStatus::Status team_status;
+    PlayerGameStatus game_status;
+};
 
-//struct GameRoster {
-//    GameInfo info;
-//    GameStatus::Status  status;
-//    std::unordered_map<std::string,PlayerDetail> homeroster;
-//    std::unordered_map<std::string,PlayerDetail> awayroster;
+struct GameRoster {
+    GameInfo info;
+    GameStatus::Status  status;
+    std::unordered_map<std::string,PlayerDetail> homeroster;
+    std::unordered_map<std::string,PlayerDetail> awayroster;
 
-//};
+};
 
-using namespace  fantasybit;
 class NFLStateData : public QObject {
 
     Q_OBJECT
