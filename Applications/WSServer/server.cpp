@@ -1,11 +1,11 @@
 #include "server.h"
 
-fantasybit::GetAllNamesRep Server::AllNamesRep{};
+//fantasybit::GetAllNamesRep Server::AllNamesRep{};
 fantasybit::ExchangeData Server::TheExchange{};
 //fantasybit::GetROWMarketRep Server::ROWMarketRep{};
 //fantasybit::NFLStateData Server::NFLData;
 
-decltype(Server::Pk2Bal) Server::Pk2Bal{};
+//decltype(Server::Pk2Bal) Server::Pk2Bal{};
 
 Server *Server::instance() {
     if (myInstance == NULL) {
@@ -68,6 +68,58 @@ void Server::setupConnection(pb::IPBGateway *ingateway) {
 
 
 //    return that;
+}
+
+void Server::LiveGui(GlobalState gs) {
+
+    qDebug() << "Server received Livegui ";
+    if ( !amLive ) {
+        amLive = true;
+//        m_season = gs.season();
+//        settheWeek(gs.week());
+//        setliveSync("Live");
+//        setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
+        GlobalStateRep.mutable_globalstate()->CopyFrom(gs);
+        initData();
+    }
+}
+
+void Server::initData() {
+    if ( mGateway == nullptr ) {
+        qDebug() << " mGateway null ";
+    }
+    else if ( mGateway->dataService == nullptr)
+        qDebug() << " mGateway->dataService null ";
+    else {
+//        updateLiveLeaders();
+
+        auto lb = mGateway->dataService->GetLeaderBoard();
+        qDebug() << " mGateway->dataService->GetLeaderBoard() " << lb.size();
+        for(auto fPlayer  : lb ) {
+            AddNames(FantasyName::toFantasyNameBal(*fPlayer));
+        }
+
+        ScheduleRep.mutable_scheduledata()->set_week(GlobalStateRep.globalstate().week());
+
+        ScheduleRep.mutable_scheduledata()->mutable_weekly()->CopyFrom(
+        mGateway->dataService->GetWeeklySchedule(GlobalStateRep.globalstate().week()));
+
+//        if ( m_theWeek > 0  && m_theWeek < 17) {
+//            //setCurrentWeekData();
+
+//            m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
+//                          mGateway->dataService->GetWeeklySchedule(m_theWeek));
+//            const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
+//            mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
+
+//            for ( auto gr : vgr ) {
+//                m_pWeeklyScheduleModel->UpdateStatus(gr.info.id(),gr.status);
+//            }
+//            if (myFantasyName != "" )
+//                updateCurrentFantasyPlayerProjections();
+
+//        }
+    }
 }
 
 

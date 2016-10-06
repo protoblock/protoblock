@@ -37,18 +37,18 @@ class LiteServer : public QObject
 public:
     explicit LiteServer(quint16 port, bool debug = false, QObject *parent = Q_NULLPTR);
     ~LiteServer();
-    enum Incoming{
-        GetBlockHeader,
-        GetLeaderBoardTree,
-        GetLeaderBoardItem,
-        GetTicker,
-        GetStats,
-        GetPlayerInfo,
-        GetAwardsItem,
-        GetMerkleTree,
-        GetDrillMerkle,
-        UnKnown
-    };
+//    enum Incoming{
+//        GetBlockHeader,
+//        GetLeaderBoardTree,
+//        GetLeaderBoardItem,
+//        GetTicker,
+//        GetStats,
+//        GetPlayerInfo,
+//        GetAwardsItem,
+//        GetMerkleTree,
+//        GetDrillMerkle,
+//        UnKnown
+//    };
 
     struct fnameptrs {
         fnameptrs(AllOdersFname *ao = nullptr) : fnameAllOdersFname(ao) {}
@@ -59,9 +59,9 @@ public:
         std::stack<AllOdersSymbol *> openOrderSymbolSlot;
     };
 
-    Incoming setEnum(const QString &string);
+//    Incoming setEnum(const QString &string);
 
-    QStringList createCommandArgument(const QString &cmd);
+//    QStringList createCommandArgument(const QString &cmd);
 
     
     Order *addOrder(fnameptrs &fptr, AllOdersSymbol *allords, const Order &orderin);
@@ -86,13 +86,13 @@ private Q_SLOTS:
     void OnMarketTicker(fantasybit::MarketTicker *);
     void OnTradeTick(fantasybit::TradeTic*);
 private:
-    void processBinaryTxMessage(const QByteArray &message);
+//    void processBinaryTxMessage(const QByteArray &message);
     QString m_errorString;
     QWebSocketServer *m_pWebSocketServer;
     QList<QWebSocket *> m_clients;
     bool m_debug;
-    fantasybit::BlockMeta bm;
-    std::string forPbJSon;
+//    fantasybit::BlockMeta bm;
+//    std::string forPbJSon;
     quint16 mport;
     std::string mRepstr;
     fantasybit::GetROWMarketRep mROWMarketRep;

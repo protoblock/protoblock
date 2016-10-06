@@ -156,7 +156,7 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
     if ( fnp  != nullptr) {
         OnFantasyName(fnp);
         if ( amlive )
-            NewFantasyName(fn);
+            emit NewFantasyName(fn);
     }
 
 }
@@ -182,7 +182,7 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
 //    qDebug() << "adding award" << amount << " :: " << fn.DebugString() << fnp->ToString();
         OnFantasyNameBalance(fn);
         if ( amlive )
-            AnyFantasyNameBalance(fn);
+            emit AnyFantasyNameBalance(fn);
     }
 }
 

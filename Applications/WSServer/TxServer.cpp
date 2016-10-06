@@ -48,7 +48,7 @@ TxServer::TxServer(quint16 port, bool debug, QObject *parent) :
 
 
     connect (this,SIGNAL(error(QString)),this,SLOT(handleError(QString)));
-    AllNamesRepPtr = &Server::AllNamesRep;
+    AllNamesRepPtr = &Server::instance()->AllNamesRep;
     if ( AllNamesRepPtr->names_size() > MaxNames)
         AllNamesRepPtr->mutable_names()->DeleteSubrange(0,AllNamesRepPtr->names_size() - MaxNames);
 }

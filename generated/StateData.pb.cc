@@ -122,6 +122,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* WSReply_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   WSReply_reflection_ = NULL;
+const ::google::protobuf::Descriptor* GetGlobalStateRep_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  GetGlobalStateRep_reflection_ = NULL;
+const ::google::protobuf::Descriptor* GetScheduleRep_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  GetScheduleRep_reflection_ = NULL;
 const ::google::protobuf::Descriptor* CheckNameReq_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   CheckNameReq_reflection_ = NULL;
@@ -844,7 +850,37 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(WSReply));
-  CheckNameReq_descriptor_ = file->message_type(34);
+  GetGlobalStateRep_descriptor_ = file->message_type(34);
+  static const int GetGlobalStateRep_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetGlobalStateRep, globalstate_),
+  };
+  GetGlobalStateRep_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      GetGlobalStateRep_descriptor_,
+      GetGlobalStateRep::default_instance_,
+      GetGlobalStateRep_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetGlobalStateRep, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetGlobalStateRep, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(GetGlobalStateRep));
+  GetScheduleRep_descriptor_ = file->message_type(35);
+  static const int GetScheduleRep_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetScheduleRep, scheduledata_),
+  };
+  GetScheduleRep_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      GetScheduleRep_descriptor_,
+      GetScheduleRep::default_instance_,
+      GetScheduleRep_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetScheduleRep, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetScheduleRep, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(GetScheduleRep));
+  CheckNameReq_descriptor_ = file->message_type(36);
   static const int CheckNameReq_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CheckNameReq, fantasy_name_),
   };
@@ -859,7 +895,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CheckNameReq));
-  CheckNameRep_descriptor_ = file->message_type(35);
+  CheckNameRep_descriptor_ = file->message_type(37);
   static const int CheckNameRep_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CheckNameRep, isavail_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CheckNameRep, req_),
@@ -875,7 +911,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CheckNameRep));
-  Pk2FnameReq_descriptor_ = file->message_type(36);
+  Pk2FnameReq_descriptor_ = file->message_type(38);
   static const int Pk2FnameReq_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pk2FnameReq, pk_),
   };
@@ -890,7 +926,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Pk2FnameReq));
-  Pk2FnameRep_descriptor_ = file->message_type(37);
+  Pk2FnameRep_descriptor_ = file->message_type(39);
   static const int Pk2FnameRep_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pk2FnameRep, fname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pk2FnameRep, req_),
@@ -907,7 +943,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Pk2FnameRep));
-  SubscribeReq_descriptor_ = file->message_type(38);
+  SubscribeReq_descriptor_ = file->message_type(40);
   static const int SubscribeReq_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubscribeReq, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubscribeReq, fchash_),
@@ -923,7 +959,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SubscribeReq));
-  NameStatusReq_descriptor_ = file->message_type(39);
+  NameStatusReq_descriptor_ = file->message_type(41);
   static const int NameStatusReq_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NameStatusReq, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NameStatusReq, pk_),
@@ -939,7 +975,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NameStatusReq));
-  NameStatusRep_descriptor_ = file->message_type(40);
+  NameStatusRep_descriptor_ = file->message_type(42);
   static const int NameStatusRep_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NameStatusRep, status_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NameStatusRep, req_),
@@ -955,7 +991,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NameStatusRep));
-  GetAllNamesRep_descriptor_ = file->message_type(41);
+  GetAllNamesRep_descriptor_ = file->message_type(43);
   static const int GetAllNamesRep_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetAllNamesRep, names_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetAllNamesRep, fnb_),
@@ -971,7 +1007,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetAllNamesRep));
-  ROWMarket_descriptor_ = file->message_type(42);
+  ROWMarket_descriptor_ = file->message_type(44);
   static const int ROWMarket_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ROWMarket, pid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ROWMarket, quote_),
@@ -989,7 +1025,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ROWMarket));
-  GetROWMarketRep_descriptor_ = file->message_type(43);
+  GetROWMarketRep_descriptor_ = file->message_type(45);
   static const int GetROWMarketRep_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetROWMarketRep, rowmarket_),
   };
@@ -1004,7 +1040,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetROWMarketRep));
-  GetDepthReq_descriptor_ = file->message_type(44);
+  GetDepthReq_descriptor_ = file->message_type(46);
   static const int GetDepthReq_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetDepthReq, pid_),
   };
@@ -1019,7 +1055,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetDepthReq));
-  GetDepthRep_descriptor_ = file->message_type(45);
+  GetDepthRep_descriptor_ = file->message_type(47);
   static const int GetDepthRep_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetDepthRep, pid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetDepthRep, depthitems_),
@@ -1036,7 +1072,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetDepthRep));
-  AllOdersSymbol_descriptor_ = file->message_type(46);
+  AllOdersSymbol_descriptor_ = file->message_type(48);
   static const int AllOdersSymbol_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersSymbol, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersSymbol, netqty_),
@@ -1056,7 +1092,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AllOdersSymbol));
-  AllOdersFname_descriptor_ = file->message_type(47);
+  AllOdersFname_descriptor_ = file->message_type(49);
   static const int AllOdersFname_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersFname, fname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AllOdersFname, pidorders_),
@@ -1072,7 +1108,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AllOdersFname));
-  GetOrdersRep_descriptor_ = file->message_type(48);
+  GetOrdersRep_descriptor_ = file->message_type(50);
   static const int GetOrdersRep_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetOrdersRep, req_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetOrdersRep, oorders_),
@@ -1088,7 +1124,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetOrdersRep));
-  GetOrdersReq_descriptor_ = file->message_type(49);
+  GetOrdersReq_descriptor_ = file->message_type(51);
   static const int GetOrdersReq_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetOrdersReq, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetOrdersReq, fname_),
@@ -1105,7 +1141,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetOrdersReq));
-  KeyValue_descriptor_ = file->message_type(50);
+  KeyValue_descriptor_ = file->message_type(52);
   static const int KeyValue_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyValue, key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyValue, value_),
@@ -1121,7 +1157,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(KeyValue));
-  Bootstrap_descriptor_ = file->message_type(51);
+  Bootstrap_descriptor_ = file->message_type(53);
   static const int Bootstrap_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, blocknum_),
@@ -1224,6 +1260,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
     WsReq_descriptor_, &WsReq::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     WSReply_descriptor_, &WSReply::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    GetGlobalStateRep_descriptor_, &GetGlobalStateRep::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    GetScheduleRep_descriptor_, &GetScheduleRep::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     CheckNameReq_descriptor_, &CheckNameReq::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -1333,6 +1373,10 @@ void protobuf_ShutdownFile_StateData_2eproto() {
   delete WsReq_reflection_;
   delete WSReply::default_instance_;
   delete WSReply_reflection_;
+  delete GetGlobalStateRep::default_instance_;
+  delete GetGlobalStateRep_reflection_;
+  delete GetScheduleRep::default_instance_;
+  delete GetScheduleRep_reflection_;
   delete CheckNameReq::default_instance_;
   delete CheckNameReq_reflection_;
   delete CheckNameRep::default_instance_;
@@ -1492,66 +1536,74 @@ void protobuf_AddDesc_StateData_2eproto() {
     "antasybit.CType*\010\010d\020\200\200\200\200\002\"f\n\007WSReply\022\017\n\007"
     "version\030\001 \001(\005\022 \n\005ctype\030\002 \001(\0162\021.fantasybi"
     "t.CType\022\036\n\003req\030\024 \001(\0132\021.fantasybit.WsReq*"
-    "\010\010d\020\200\200\200\200\002\"_\n\014CheckNameReq\022\024\n\014fantasy_nam"
-    "e\030\n \001(\t29\n\003req\022\021.fantasybit.WsReq\030\310\001 \001(\013"
-    "2\030.fantasybit.CheckNameReq\"\203\001\n\014CheckName"
-    "Rep\022\017\n\007isavail\030\n \001(\t\022%\n\003req\030\024 \001(\0132\030.fant"
-    "asybit.CheckNameReq2;\n\003rep\022\023.fantasybit."
-    "WSReply\030\310\001 \001(\0132\030.fantasybit.CheckNameRep"
-    "\"S\n\013Pk2FnameReq\022\n\n\002pk\030\n \001(\t28\n\003req\022\021.fan"
-    "tasybit.WsReq\030\254\002 \001(\0132\027.fantasybit.Pk2Fna"
-    "meReq\"\247\001\n\013Pk2FnameRep\022\r\n\005fname\030\n \001(\t\022$\n\003"
-    "req\030\024 \001(\0132\027.fantasybit.Pk2FnameReq\022\'\n\003fn"
-    "b\030\036 \001(\0132\032.fantasybit.FantasyNameBal2:\n\003r"
-    "ep\022\023.fantasybit.WSReply\030\254\002 \001(\0132\027.fantasy"
-    "bit.Pk2FnameRep\"g\n\014SubscribeReq\022\014\n\004name\030"
-    "\n \001(\t\022\016\n\006fchash\030\036 \001(\00429\n\003req\022\021.fantasybi"
-    "t.WsReq\030\336\002 \001(\0132\030.fantasybit.SubscribeReq"
-    "\"e\n\rNameStatusReq\022\014\n\004name\030\n \001(\t\022\n\n\002pk\030\024 "
-    "\001(\t2:\n\003req\022\021.fantasybit.WsReq\030\220\003 \001(\0132\031.f"
-    "antasybit.NameStatusReq\"\237\001\n\rNameStatusRe"
-    "p\022(\n\006status\030\n \001(\0162\030.fantasybit.MyNameSta"
-    "tus\022&\n\003req\030\024 \001(\0132\031.fantasybit.NameStatus"
-    "Req2<\n\003rep\022\023.fantasybit.WSReply\030\220\003 \001(\0132\031"
-    ".fantasybit.NameStatusRep\"\207\001\n\016GetAllName"
-    "sRep\022\r\n\005names\030\n \003(\t\022\'\n\003fnb\030\024 \003(\0132\032.fanta"
-    "sybit.FantasyNameBal2=\n\003rep\022\023.fantasybit"
-    ".WSReply\030\364\003 \001(\0132\032.fantasybit.GetAllNames"
-    "Rep\"\224\001\n\tROWMarket\022\013\n\003pid\030\n \001(\t\022&\n\005quote\030"
-    "\036 \001(\0132\027.fantasybit.MarketQuote\022*\n\nplayer"
-    "data\030( \001(\0132\026.fantasybit.PlayerData\022&\n\004oh"
-    "lc\0302 \001(\0132\030.fantasybit.ContractOHLC\"{\n\017Ge"
-    "tROWMarketRep\022(\n\trowmarket\030\n \003(\0132\025.fanta"
-    "sybit.ROWMarket2>\n\003rep\022\023.fantasybit.WSRe"
-    "ply\030\330\004 \001(\0132\033.fantasybit.GetROWMarketRep\""
-    "T\n\013GetDepthReq\022\013\n\003pid\030\n \001(\t28\n\003req\022\021.fan"
-    "tasybit.WsReq\030\274\005 \001(\0132\027.fantasybit.GetDep"
-    "thReq\"\253\001\n\013GetDepthRep\022\013\n\003pid\030\n \001(\t\022)\n\nde"
-    "pthitems\030\024 \003(\0132\025.fantasybit.DepthItem\022(\n"
-    "\trowmarket\030\036 \001(\0132\025.fantasybit.ROWMarket2"
-    ":\n\003rep\022\023.fantasybit.WSReply\030\274\005 \001(\0132\027.fan"
-    "tasybit.GetDepthRep\"\177\n\016AllOdersSymbol\022\016\n"
-    "\006symbol\030\n \001(\t\022\016\n\006netqty\030\036 \001(\005\022\020\n\010netpric"
-    "e\030( \001(\005\022\013\n\003avg\0302 \001(\001\022\013\n\003pnl\030< \001(\001\022!\n\006ord"
-    "ers\030\024 \003(\0132\021.fantasybit.Order\"M\n\rAllOders"
-    "Fname\022\r\n\005fname\030\n \001(\t\022-\n\tpidorders\030\024 \003(\0132"
-    "\032.fantasybit.AllOdersSymbol\"\236\001\n\014GetOrder"
-    "sRep\022%\n\003req\030\n \001(\0132\030.fantasybit.GetOrders"
-    "Req\022*\n\007oorders\030\024 \001(\0132\031.fantasybit.AllOde"
-    "rsFname2;\n\003rep\022\023.fantasybit.WSReply\030\240\006 \001"
-    "(\0132\030.fantasybit.GetOrdersRep\"x\n\014GetOrder"
-    "sReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t\022\016\n\006f"
-    "chash\030\036 \001(\00429\n\003req\022\021.fantasybit.WsReq\030\240\006"
-    " \001(\0132\030.fantasybit.GetOrdersReq\"&\n\010KeyVal"
-    "ue\022\013\n\003key\030\n \001(\014\022\r\n\005value\030\024 \001(\014\"\235\001\n\tBoots"
-    "trap\022\013\n\003key\030\001 \001(\t\022\020\n\010blocknum\030\002 \001(\005\022\014\n\004w"
-    "eek\030\003 \001(\005\022\016\n\006season\030\004 \001(\005\022\024\n\014gamemetaroo"
-    "t\030\n \001(\014\022\026\n\016playermetaroot\030\024 \001(\014\022\025\n\rfname"
-    "metaroot\030\036 \001(\014\022\016\n\006previd\030( \001(\014*\244\001\n\005CType"
-    "\022\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003"
-    "\022\r\n\tGETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETR"
-    "OWMARKET\020\006\022\014\n\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022"
-    "\020\n\014GETPOSITIONS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n", 6757);
+    "\010\010d\020\200\200\200\200\002\"\203\001\n\021GetGlobalStateRep\022,\n\013globa"
+    "lstate\030\n \001(\0132\027.fantasybit.GlobalState2@\n"
+    "\003rep\022\023.fantasybit.WSReply\030\204\007 \001(\0132\035.fanta"
+    "sybit.GetGlobalStateRep\"\177\n\016GetScheduleRe"
+    "p\022.\n\014scheduledata\030\n \001(\0132\030.fantasybit.Sch"
+    "eduleData2=\n\003rep\022\023.fantasybit.WSReply\030\216\007"
+    " \001(\0132\032.fantasybit.GetScheduleRep\"_\n\014Chec"
+    "kNameReq\022\024\n\014fantasy_name\030\n \001(\t29\n\003req\022\021."
+    "fantasybit.WsReq\030\310\001 \001(\0132\030.fantasybit.Che"
+    "ckNameReq\"\203\001\n\014CheckNameRep\022\017\n\007isavail\030\n "
+    "\001(\t\022%\n\003req\030\024 \001(\0132\030.fantasybit.CheckNameR"
+    "eq2;\n\003rep\022\023.fantasybit.WSReply\030\310\001 \001(\0132\030."
+    "fantasybit.CheckNameRep\"S\n\013Pk2FnameReq\022\n"
+    "\n\002pk\030\n \001(\t28\n\003req\022\021.fantasybit.WsReq\030\254\002 "
+    "\001(\0132\027.fantasybit.Pk2FnameReq\"\247\001\n\013Pk2Fnam"
+    "eRep\022\r\n\005fname\030\n \001(\t\022$\n\003req\030\024 \001(\0132\027.fanta"
+    "sybit.Pk2FnameReq\022\'\n\003fnb\030\036 \001(\0132\032.fantasy"
+    "bit.FantasyNameBal2:\n\003rep\022\023.fantasybit.W"
+    "SReply\030\254\002 \001(\0132\027.fantasybit.Pk2FnameRep\"g"
+    "\n\014SubscribeReq\022\014\n\004name\030\n \001(\t\022\016\n\006fchash\030\036"
+    " \001(\00429\n\003req\022\021.fantasybit.WsReq\030\336\002 \001(\0132\030."
+    "fantasybit.SubscribeReq\"e\n\rNameStatusReq"
+    "\022\014\n\004name\030\n \001(\t\022\n\n\002pk\030\024 \001(\t2:\n\003req\022\021.fant"
+    "asybit.WsReq\030\220\003 \001(\0132\031.fantasybit.NameSta"
+    "tusReq\"\237\001\n\rNameStatusRep\022(\n\006status\030\n \001(\016"
+    "2\030.fantasybit.MyNameStatus\022&\n\003req\030\024 \001(\0132"
+    "\031.fantasybit.NameStatusReq2<\n\003rep\022\023.fant"
+    "asybit.WSReply\030\220\003 \001(\0132\031.fantasybit.NameS"
+    "tatusRep\"\207\001\n\016GetAllNamesRep\022\r\n\005names\030\n \003"
+    "(\t\022\'\n\003fnb\030\024 \003(\0132\032.fantasybit.FantasyName"
+    "Bal2=\n\003rep\022\023.fantasybit.WSReply\030\364\003 \001(\0132\032"
+    ".fantasybit.GetAllNamesRep\"\224\001\n\tROWMarket"
+    "\022\013\n\003pid\030\n \001(\t\022&\n\005quote\030\036 \001(\0132\027.fantasybi"
+    "t.MarketQuote\022*\n\nplayerdata\030( \001(\0132\026.fant"
+    "asybit.PlayerData\022&\n\004ohlc\0302 \001(\0132\030.fantas"
+    "ybit.ContractOHLC\"{\n\017GetROWMarketRep\022(\n\t"
+    "rowmarket\030\n \003(\0132\025.fantasybit.ROWMarket2>"
+    "\n\003rep\022\023.fantasybit.WSReply\030\330\004 \001(\0132\033.fant"
+    "asybit.GetROWMarketRep\"T\n\013GetDepthReq\022\013\n"
+    "\003pid\030\n \001(\t28\n\003req\022\021.fantasybit.WsReq\030\274\005 "
+    "\001(\0132\027.fantasybit.GetDepthReq\"\253\001\n\013GetDept"
+    "hRep\022\013\n\003pid\030\n \001(\t\022)\n\ndepthitems\030\024 \003(\0132\025."
+    "fantasybit.DepthItem\022(\n\trowmarket\030\036 \001(\0132"
+    "\025.fantasybit.ROWMarket2:\n\003rep\022\023.fantasyb"
+    "it.WSReply\030\274\005 \001(\0132\027.fantasybit.GetDepthR"
+    "ep\"\177\n\016AllOdersSymbol\022\016\n\006symbol\030\n \001(\t\022\016\n\006"
+    "netqty\030\036 \001(\005\022\020\n\010netprice\030( \001(\005\022\013\n\003avg\0302 "
+    "\001(\001\022\013\n\003pnl\030< \001(\001\022!\n\006orders\030\024 \003(\0132\021.fanta"
+    "sybit.Order\"M\n\rAllOdersFname\022\r\n\005fname\030\n "
+    "\001(\t\022-\n\tpidorders\030\024 \003(\0132\032.fantasybit.AllO"
+    "dersSymbol\"\236\001\n\014GetOrdersRep\022%\n\003req\030\n \001(\013"
+    "2\030.fantasybit.GetOrdersReq\022*\n\007oorders\030\024 "
+    "\001(\0132\031.fantasybit.AllOdersFname2;\n\003rep\022\023."
+    "fantasybit.WSReply\030\240\006 \001(\0132\030.fantasybit.G"
+    "etOrdersRep\"x\n\014GetOrdersReq\022\016\n\006symbol\030\n "
+    "\001(\t\022\r\n\005fname\030\024 \001(\t\022\016\n\006fchash\030\036 \001(\00429\n\003re"
+    "q\022\021.fantasybit.WsReq\030\240\006 \001(\0132\030.fantasybit"
+    ".GetOrdersReq\"&\n\010KeyValue\022\013\n\003key\030\n \001(\014\022\r"
+    "\n\005value\030\024 \001(\014\"\235\001\n\tBootstrap\022\013\n\003key\030\001 \001(\t"
+    "\022\020\n\010blocknum\030\002 \001(\005\022\014\n\004week\030\003 \001(\005\022\016\n\006seas"
+    "on\030\004 \001(\005\022\024\n\014gamemetaroot\030\n \001(\014\022\026\n\016player"
+    "metaroot\030\024 \001(\014\022\025\n\rfnamemetaroot\030\036 \001(\014\022\016\n"
+    "\006previd\030( \001(\014*\311\001\n\005CType\022\r\n\tCHECKNAME\020\001\022\t"
+    "\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS\020\004\022\017"
+    "\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n\010GET"
+    "DEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITIONS\020\t"
+    "\022\022\n\016SUBSCRIBEFNAME\020\n\022\022\n\016GETGLOBALSTATE\020\013"
+    "\022\017\n\013GETSCHEDULE\020\014", 7057);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -1588,6 +1640,8 @@ void protobuf_AddDesc_StateData_2eproto() {
   NewPlayerModel::default_instance_ = new NewPlayerModel();
   WsReq::default_instance_ = new WsReq();
   WSReply::default_instance_ = new WSReply();
+  GetGlobalStateRep::default_instance_ = new GetGlobalStateRep();
+  GetScheduleRep::default_instance_ = new GetScheduleRep();
   CheckNameReq::default_instance_ = new CheckNameReq();
   CheckNameRep::default_instance_ = new CheckNameRep();
   Pk2FnameReq::default_instance_ = new Pk2FnameReq();
@@ -1640,6 +1694,16 @@ void protobuf_AddDesc_StateData_2eproto() {
   NewPlayerModel::default_instance_->InitAsDefaultInstance();
   WsReq::default_instance_->InitAsDefaultInstance();
   WSReply::default_instance_->InitAsDefaultInstance();
+  GetGlobalStateRep::default_instance_->InitAsDefaultInstance();
+  ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
+    &::fantasybit::WSReply::default_instance(),
+    900, 11, false, false,
+    &::fantasybit::GetGlobalStateRep::default_instance());
+  GetScheduleRep::default_instance_->InitAsDefaultInstance();
+  ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
+    &::fantasybit::WSReply::default_instance(),
+    910, 11, false, false,
+    &::fantasybit::GetScheduleRep::default_instance());
   CheckNameReq::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
     &::fantasybit::WsReq::default_instance(),
@@ -1735,6 +1799,8 @@ bool CType_IsValid(int value) {
     case 8:
     case 9:
     case 10:
+    case 11:
+    case 12:
       return true;
     default:
       return false;
@@ -16039,6 +16105,444 @@ void WSReply::Swap(WSReply* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = WSReply_descriptor_;
   metadata.reflection = WSReply_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int GetGlobalStateRep::kGlobalstateFieldNumber;
+#endif  // !_MSC_VER
+
+#ifndef _MSC_VER
+const int GetGlobalStateRep::kRepFieldNumber;
+#endif
+::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
+    ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetGlobalStateRep >, 11, false >
+  GetGlobalStateRep::rep(kRepFieldNumber, ::fantasybit::GetGlobalStateRep::default_instance());
+GetGlobalStateRep::GetGlobalStateRep()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void GetGlobalStateRep::InitAsDefaultInstance() {
+  globalstate_ = const_cast< ::fantasybit::GlobalState*>(&::fantasybit::GlobalState::default_instance());
+}
+
+GetGlobalStateRep::GetGlobalStateRep(const GetGlobalStateRep& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void GetGlobalStateRep::SharedCtor() {
+  _cached_size_ = 0;
+  globalstate_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+GetGlobalStateRep::~GetGlobalStateRep() {
+  SharedDtor();
+}
+
+void GetGlobalStateRep::SharedDtor() {
+  if (this != default_instance_) {
+    delete globalstate_;
+  }
+}
+
+void GetGlobalStateRep::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* GetGlobalStateRep::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return GetGlobalStateRep_descriptor_;
+}
+
+const GetGlobalStateRep& GetGlobalStateRep::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_StateData_2eproto();
+  return *default_instance_;
+}
+
+GetGlobalStateRep* GetGlobalStateRep::default_instance_ = NULL;
+
+GetGlobalStateRep* GetGlobalStateRep::New() const {
+  return new GetGlobalStateRep;
+}
+
+void GetGlobalStateRep::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_globalstate()) {
+      if (globalstate_ != NULL) globalstate_->::fantasybit::GlobalState::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool GetGlobalStateRep::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .fantasybit.GlobalState globalstate = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_globalstate()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void GetGlobalStateRep::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .fantasybit.GlobalState globalstate = 10;
+  if (has_globalstate()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      10, this->globalstate(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* GetGlobalStateRep::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .fantasybit.GlobalState globalstate = 10;
+  if (has_globalstate()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        10, this->globalstate(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int GetGlobalStateRep::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .fantasybit.GlobalState globalstate = 10;
+    if (has_globalstate()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->globalstate());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void GetGlobalStateRep::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const GetGlobalStateRep* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const GetGlobalStateRep*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void GetGlobalStateRep::MergeFrom(const GetGlobalStateRep& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_globalstate()) {
+      mutable_globalstate()->::fantasybit::GlobalState::MergeFrom(from.globalstate());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void GetGlobalStateRep::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void GetGlobalStateRep::CopyFrom(const GetGlobalStateRep& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool GetGlobalStateRep::IsInitialized() const {
+
+  return true;
+}
+
+void GetGlobalStateRep::Swap(GetGlobalStateRep* other) {
+  if (other != this) {
+    std::swap(globalstate_, other->globalstate_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata GetGlobalStateRep::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = GetGlobalStateRep_descriptor_;
+  metadata.reflection = GetGlobalStateRep_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int GetScheduleRep::kScheduledataFieldNumber;
+#endif  // !_MSC_VER
+
+#ifndef _MSC_VER
+const int GetScheduleRep::kRepFieldNumber;
+#endif
+::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
+    ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetScheduleRep >, 11, false >
+  GetScheduleRep::rep(kRepFieldNumber, ::fantasybit::GetScheduleRep::default_instance());
+GetScheduleRep::GetScheduleRep()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void GetScheduleRep::InitAsDefaultInstance() {
+  scheduledata_ = const_cast< ::fantasybit::ScheduleData*>(&::fantasybit::ScheduleData::default_instance());
+}
+
+GetScheduleRep::GetScheduleRep(const GetScheduleRep& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void GetScheduleRep::SharedCtor() {
+  _cached_size_ = 0;
+  scheduledata_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+GetScheduleRep::~GetScheduleRep() {
+  SharedDtor();
+}
+
+void GetScheduleRep::SharedDtor() {
+  if (this != default_instance_) {
+    delete scheduledata_;
+  }
+}
+
+void GetScheduleRep::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* GetScheduleRep::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return GetScheduleRep_descriptor_;
+}
+
+const GetScheduleRep& GetScheduleRep::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_StateData_2eproto();
+  return *default_instance_;
+}
+
+GetScheduleRep* GetScheduleRep::default_instance_ = NULL;
+
+GetScheduleRep* GetScheduleRep::New() const {
+  return new GetScheduleRep;
+}
+
+void GetScheduleRep::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_scheduledata()) {
+      if (scheduledata_ != NULL) scheduledata_->::fantasybit::ScheduleData::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool GetScheduleRep::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .fantasybit.ScheduleData scheduledata = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_scheduledata()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void GetScheduleRep::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .fantasybit.ScheduleData scheduledata = 10;
+  if (has_scheduledata()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      10, this->scheduledata(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* GetScheduleRep::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .fantasybit.ScheduleData scheduledata = 10;
+  if (has_scheduledata()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        10, this->scheduledata(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int GetScheduleRep::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .fantasybit.ScheduleData scheduledata = 10;
+    if (has_scheduledata()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->scheduledata());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void GetScheduleRep::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const GetScheduleRep* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const GetScheduleRep*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void GetScheduleRep::MergeFrom(const GetScheduleRep& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_scheduledata()) {
+      mutable_scheduledata()->::fantasybit::ScheduleData::MergeFrom(from.scheduledata());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void GetScheduleRep::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void GetScheduleRep::CopyFrom(const GetScheduleRep& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool GetScheduleRep::IsInitialized() const {
+
+  return true;
+}
+
+void GetScheduleRep::Swap(GetScheduleRep* other) {
+  if (other != this) {
+    std::swap(scheduledata_, other->scheduledata_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata GetScheduleRep::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = GetScheduleRep_descriptor_;
+  metadata.reflection = GetScheduleRep_reflection_;
   return metadata;
 }
 

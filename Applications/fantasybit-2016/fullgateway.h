@@ -123,20 +123,20 @@ public:
         connect( this, &FullGateway::OnUseName,
                  mlapi, &MainLAPIWorker::OnUseName);
 
-        connect(Mediator::instance(),&Mediator::ready,
-                [this](){
-                       if ( this->amLive ) {
-                           emit LiveGui(m_gs);
-                       }
+        connect(Mediator::instance(),&Mediator::ready,this, &FullGateway::ClientReady);
+//                [this](){
+//                       if ( this->amLive ) {
+//                           emit LiveGui(m_gs);
+//                       }
 
-                       if ( !m_mynames.empty())
-                            emit MyNames(m_mynames);
-                       for( auto &v : holdfresh)
-                            emit NameBal(v);
-                       holdfresh.clear();
+//                       if ( !m_mynames.empty())
+//                            emit MyNames(m_mynames);
+//                       for( auto &v : holdfresh)
+//                            emit NameBal(v);
+//                       holdfresh.clear();
 
-                       heslive = true;
-                 });
+//                       heslive = true;
+//                 });
 
     }
 
@@ -191,6 +191,20 @@ public slots:
     void UseName(QString s) {
         qDebug() << "fullgate  slot use name";
         emit OnUseName(s);
+    }
+
+    void ClientReady() {
+        if ( amLive ) {
+            emit LiveGui(m_gs);
+        }
+
+        if ( !m_mynames.empty())
+             emit MyNames(m_mynames);
+        for( auto &v : holdfresh)
+             emit NameBal(v);
+        holdfresh.clear();
+
+        heslive = true;
     }
 
 private:

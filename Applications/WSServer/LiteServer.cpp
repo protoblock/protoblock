@@ -72,11 +72,6 @@ void LiteServer::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
     qDebug() << "level2 OnMarketSnapShot " << mt->DebugString().data();
 #endif
 
-#ifndef SEASON_TRADING
-///*    if ( mt->week() != mCurrentWeek )
-//        SetCurrentWeekData(mt->wee*/k());
-#endif
-
     ROWMarket *pROWMarket = getRowmarket(mt->symbol());
 
     if ( mt->has_quote())
@@ -438,7 +433,7 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             set.insert(pClient);
             return;
         }
-        case PK2FNAME:
+        case PK2FNAME: //return Fantasy Name given public Key
         {
             Pk2FnameRep pkr;
             pkr.mutable_req()->CopyFrom(req.GetExtension(Pk2FnameReq::req));
@@ -448,8 +443,8 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
                 pkr.set_fname("");
             else {
                 pkr.set_fname(fname->alias());
-                auto it = Server::Pk2Bal.find(pkr.req().pk());
-                if ( it != end(Server::Pk2Bal))
+                auto it = Server::instance()->Pk2Bal.find(pkr.req().pk());
+                if ( it != end(Server::instance()->Pk2Bal))
                     pkr.set_allocated_fnb(it->second);
             }
 
@@ -460,7 +455,7 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
 
             break;
         }
-        case CHECKNAME:
+        case CHECKNAME: //is name available
         {
             rep.set_ctype(CHECKNAME);
             CheckNameRep cr;
@@ -474,10 +469,11 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             rep.SerializeToString(&mRepstr);
             break;
         }
-        case GETALLNAMES: {
+        case GETALLNAMES: { //get all names
+                            // todo: replace with leaderboard
             rep.set_ctype(GETALLNAMES);
     //            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
-            rep.SetAllocatedExtension(GetAllNamesRep::rep,&Server::AllNamesRep);
+            rep.SetAllocatedExtension(GetAllNamesRep::rep,&Server::instance()->AllNamesRep);
             rep.SerializeToString(&mRepstr);
             rep.ReleaseExtension(GetAllNamesRep::rep);
             break;
@@ -530,6 +526,19 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
         }
         break;
 
+        case GETGLOBALSTATE:
+            rep.set_ctype(GETGLOBALSTATE);
+            rep.SetAllocatedExtension(GetGlobalStateRep::rep,&Server::instance()->GlobalStateRep);
+            rep.SerializeToString(&mRepstr);
+            rep.ReleaseExtension(GetGlobalStateRep::rep);
+            break;
+        case GETSCHEDULE:
+            rep.set_ctype(GETSCHEDULE);
+            rep.SetAllocatedExtension(GetScheduleRep::rep,&Server::instance()->ScheduleRep);
+            rep.SerializeToString(&mRepstr);
+            rep.ReleaseExtension(GetScheduleRep::rep);
+            break;
+
         default:
             return;
     }
@@ -539,7 +548,7 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
     QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
     pClient->sendBinaryMessage(qb);
     if ( rep.ctype() == GETALLNAMES )
-        qDebug() << rep.ctype() <<" size " << Server::AllNamesRep.names_size();
+        qDebug() << rep.ctype() <<" size " << Server::instance()->AllNamesRep.names_size();
     else if ( rep.ctype() == GETROWMARKET)
         qDebug() << mROWMarketRep.DebugString().data();
 //    else

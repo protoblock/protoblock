@@ -18,27 +18,41 @@ class Server : public QObject {
 
     static Server *myInstance;
     void setupConnection(pb::IPBGateway *ingateway);
+    void initData();
 public:
     static Server *instance();
-    static fantasybit::GetAllNamesRep AllNamesRep;
+    fantasybit::GetAllNamesRep AllNamesRep;
     static fantasybit::ExchangeData TheExchange;
+
+    GetGlobalStateRep GlobalStateRep;
+    GetScheduleRep ScheduleRep;
+
 //    static fantasybit::GetROWMarketRep ROWMarketRep;
 //    static NFLStateData  NFLData;
-    static std::unordered_map<std::string,FantasyNameBal *> Pk2Bal;
+    std::unordered_map<std::string,FantasyNameBal *> Pk2Bal;
+    std::unordered_map<std::string,int> Pk2Index;
 
-    static void AddNames(const FantasyNameBal &fnb) {
-        Server::AllNamesRep.add_names(fnb.name());
-        FantasyNameBal *p = Server::AllNamesRep.add_fnb();
+    void AddNames(const FantasyNameBal &fnb) {
+        FantasyNameBal *p;
+        auto it = Pk2Index.find(fnb.public_key());
+        if ( it == end(Pk2Index)) {
+            p = Server::AllNamesRep.add_fnb();
+            Server::AllNamesRep.add_names(fnb.name());
+        }
+        else
+            p = Server::AllNamesRep.mutable_fnb(it->second);
+
+        // = Server::AllNamesRep.add_fnb();
         p->CopyFrom(fnb);
         Pk2Bal.insert({fnb.public_key(),p});
     }
 
-    static void AddNames(FantasyNameBal *pFn) {
-        Server::AllNamesRep.add_names(pFn->name());
-        Server::AllNamesRep.mutable_fnb()->AddAllocated(pFn);
-        Pk2Bal.insert({pFn->public_key(),pFn});
+//    static void AddNames(FantasyNameBal *pFn) {
+//        Server::AllNamesRep.add_names(pFn->name());
+//        Server::AllNamesRep.mutable_fnb()->AddAllocated(pFn);
+//        Pk2Bal.insert({pFn->public_key(),pFn});
 
-    }
+//    }
 
     static bool goodPid(const std::string &pid) {
         auto pb = DataService::instance()->GetPlayerBase(pid);
@@ -51,14 +65,17 @@ public:
         setupConnection(mGateway);
     }
 
+    bool amLive = false;
 protected slots:
     void OnNewFantasyName(fantasybit::FantasyNameBal fnb) {
         AddNames(fnb);
     }
 
     void OnAnyFantasyNameBalance(fantasybit::FantasyNameBal fnb) {
-
+        AddNames(fnb);
     }
+
+    void LiveGui(fantasybit::GlobalState gs);
 
 
 };

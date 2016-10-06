@@ -73,6 +73,8 @@ class MerkleTree;
 class NewPlayerModel;
 class WsReq;
 class WSReply;
+class GetGlobalStateRep;
+class GetScheduleRep;
 class CheckNameReq;
 class CheckNameRep;
 class Pk2FnameReq;
@@ -102,11 +104,13 @@ enum CType {
   GETDEPTH = 7,
   GETORDERS = 8,
   GETPOSITIONS = 9,
-  SUBSCRIBEFNAME = 10
+  SUBSCRIBEFNAME = 10,
+  GETGLOBALSTATE = 11,
+  GETSCHEDULE = 12
 };
 bool CType_IsValid(int value);
 const CType CType_MIN = CHECKNAME;
-const CType CType_MAX = SUBSCRIBEFNAME;
+const CType CType_MAX = GETSCHEDULE;
 const int CType_ARRAYSIZE = CType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* CType_descriptor();
@@ -5022,6 +5026,182 @@ class WSReply : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static WSReply* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class GetGlobalStateRep : public ::google::protobuf::Message {
+ public:
+  GetGlobalStateRep();
+  virtual ~GetGlobalStateRep();
+
+  GetGlobalStateRep(const GetGlobalStateRep& from);
+
+  inline GetGlobalStateRep& operator=(const GetGlobalStateRep& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GetGlobalStateRep& default_instance();
+
+  void Swap(GetGlobalStateRep* other);
+
+  // implements Message ----------------------------------------------
+
+  GetGlobalStateRep* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const GetGlobalStateRep& from);
+  void MergeFrom(const GetGlobalStateRep& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.GlobalState globalstate = 10;
+  inline bool has_globalstate() const;
+  inline void clear_globalstate();
+  static const int kGlobalstateFieldNumber = 10;
+  inline const ::fantasybit::GlobalState& globalstate() const;
+  inline ::fantasybit::GlobalState* mutable_globalstate();
+  inline ::fantasybit::GlobalState* release_globalstate();
+  inline void set_allocated_globalstate(::fantasybit::GlobalState* globalstate);
+
+  static const int kRepFieldNumber = 900;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetGlobalStateRep >, 11, false >
+    rep;
+  // @@protoc_insertion_point(class_scope:fantasybit.GetGlobalStateRep)
+ private:
+  inline void set_has_globalstate();
+  inline void clear_has_globalstate();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::GlobalState* globalstate_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static GetGlobalStateRep* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class GetScheduleRep : public ::google::protobuf::Message {
+ public:
+  GetScheduleRep();
+  virtual ~GetScheduleRep();
+
+  GetScheduleRep(const GetScheduleRep& from);
+
+  inline GetScheduleRep& operator=(const GetScheduleRep& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GetScheduleRep& default_instance();
+
+  void Swap(GetScheduleRep* other);
+
+  // implements Message ----------------------------------------------
+
+  GetScheduleRep* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const GetScheduleRep& from);
+  void MergeFrom(const GetScheduleRep& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.ScheduleData scheduledata = 10;
+  inline bool has_scheduledata() const;
+  inline void clear_scheduledata();
+  static const int kScheduledataFieldNumber = 10;
+  inline const ::fantasybit::ScheduleData& scheduledata() const;
+  inline ::fantasybit::ScheduleData* mutable_scheduledata();
+  inline ::fantasybit::ScheduleData* release_scheduledata();
+  inline void set_allocated_scheduledata(::fantasybit::ScheduleData* scheduledata);
+
+  static const int kRepFieldNumber = 910;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetScheduleRep >, 11, false >
+    rep;
+  // @@protoc_insertion_point(class_scope:fantasybit.GetScheduleRep)
+ private:
+  inline void set_has_scheduledata();
+  inline void clear_has_scheduledata();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::ScheduleData* scheduledata_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StateData_2eproto();
+  friend void protobuf_AssignDesc_StateData_2eproto();
+  friend void protobuf_ShutdownFile_StateData_2eproto();
+
+  void InitAsDefaultInstance();
+  static GetScheduleRep* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -17151,6 +17331,90 @@ inline void WSReply::set_allocated_req(::fantasybit::WsReq* req) {
     set_has_req();
   } else {
     clear_has_req();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// GetGlobalStateRep
+
+// optional .fantasybit.GlobalState globalstate = 10;
+inline bool GetGlobalStateRep::has_globalstate() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GetGlobalStateRep::set_has_globalstate() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GetGlobalStateRep::clear_has_globalstate() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GetGlobalStateRep::clear_globalstate() {
+  if (globalstate_ != NULL) globalstate_->::fantasybit::GlobalState::Clear();
+  clear_has_globalstate();
+}
+inline const ::fantasybit::GlobalState& GetGlobalStateRep::globalstate() const {
+  return globalstate_ != NULL ? *globalstate_ : *default_instance_->globalstate_;
+}
+inline ::fantasybit::GlobalState* GetGlobalStateRep::mutable_globalstate() {
+  set_has_globalstate();
+  if (globalstate_ == NULL) globalstate_ = new ::fantasybit::GlobalState;
+  return globalstate_;
+}
+inline ::fantasybit::GlobalState* GetGlobalStateRep::release_globalstate() {
+  clear_has_globalstate();
+  ::fantasybit::GlobalState* temp = globalstate_;
+  globalstate_ = NULL;
+  return temp;
+}
+inline void GetGlobalStateRep::set_allocated_globalstate(::fantasybit::GlobalState* globalstate) {
+  delete globalstate_;
+  globalstate_ = globalstate;
+  if (globalstate) {
+    set_has_globalstate();
+  } else {
+    clear_has_globalstate();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// GetScheduleRep
+
+// optional .fantasybit.ScheduleData scheduledata = 10;
+inline bool GetScheduleRep::has_scheduledata() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GetScheduleRep::set_has_scheduledata() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GetScheduleRep::clear_has_scheduledata() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GetScheduleRep::clear_scheduledata() {
+  if (scheduledata_ != NULL) scheduledata_->::fantasybit::ScheduleData::Clear();
+  clear_has_scheduledata();
+}
+inline const ::fantasybit::ScheduleData& GetScheduleRep::scheduledata() const {
+  return scheduledata_ != NULL ? *scheduledata_ : *default_instance_->scheduledata_;
+}
+inline ::fantasybit::ScheduleData* GetScheduleRep::mutable_scheduledata() {
+  set_has_scheduledata();
+  if (scheduledata_ == NULL) scheduledata_ = new ::fantasybit::ScheduleData;
+  return scheduledata_;
+}
+inline ::fantasybit::ScheduleData* GetScheduleRep::release_scheduledata() {
+  clear_has_scheduledata();
+  ::fantasybit::ScheduleData* temp = scheduledata_;
+  scheduledata_ = NULL;
+  return temp;
+}
+inline void GetScheduleRep::set_allocated_scheduledata(::fantasybit::ScheduleData* scheduledata) {
+  delete scheduledata_;
+  scheduledata_ = scheduledata;
+  if (scheduledata) {
+    set_has_scheduledata();
+  } else {
+    clear_has_scheduledata();
   }
 }
 

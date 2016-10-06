@@ -456,6 +456,9 @@ enum CType {
     GETORDERS = 8;
     GETPOSITIONS = 9;
     SUBSCRIBEFNAME = 10;
+    GETGLOBALSTATE = 11;
+    GETSCHEDULE = 12;
+    GETGAMEROSTER = 12;
 //    GETORDERS = 11;
 }
 
@@ -484,6 +487,23 @@ message WSReply {
 
     extensions 100 to max;
 }
+
+message GetGlobalStateRep {
+    extend WSReply {
+        optional GetGlobalStateRep rep = 900;
+    }
+
+    optional GlobalState globalstate = 10;
+}
+
+message GetScheduleRep {
+    extend WSReply {
+        optional GetScheduleRep rep = 910;
+    }
+
+    optional ScheduleData scheduledata = 10;
+}
+
 
 message CheckNameReq {
     extend WsReq {
@@ -622,7 +642,6 @@ message GetOrdersReq {
     optional string fname = 20;
     optional uint64 fchash = 30;
 }
-
 
 message KeyValue {
     optional bytes key = 10;

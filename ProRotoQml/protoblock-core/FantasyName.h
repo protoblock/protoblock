@@ -161,6 +161,17 @@ public:
 
     static hash_t name_hash( const alias_t& n );
 
+    static FantasyNameBal toFantasyNameBal(FantasyName &in) {
+        FantasyNameBal fnb;
+        fnb.set_name(in.alias());
+        fnb.set_public_key(pb::to_base58(in.pubkey()));
+        fnb.set_bits(in.getBalance());
+        fnb.set_stake(in.getStakeBalance());
+        fnb.set_chash(in.hash());
+
+        return fnb;
+    }
+
 };
 
 struct FantasyNameCHash : FantasyName {
