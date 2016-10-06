@@ -238,7 +238,7 @@ Material.Card {
 //                                            height: parent.height * .50
 //                                            width: parent.width //anchors.left: parent.left
                                             text: qsTr("Selected Only")
-                                            checked: modelData === " Status "
+
                                             exclusiveGroup: tabPositionGroup
                         //                    Layout.minimumWidth: 100
 //                                            Component.onCompleted:  {
@@ -255,7 +255,7 @@ Material.Card {
                                             visible: modelData === " Home "
 //                                            height: parent.height * .50
                                             anchors.fill: parent
-
+                                            checked: modelData === " Home "
                                             text: qsTr("All")
                                             exclusiveGroup: tabPositionGroup
                                             onClicked: {
