@@ -39,6 +39,33 @@ Item {
             width: parent.width
             elevation: 0
         }
+
+//        GroupBox {
+//            id: group2
+//            height: cBan.height
+//            anchors.left: parent.left
+//            anchors.horizontalCenter: scheduleView1.horizontalCenter
+//            anchors.verticalCenter: parent.parent.verticalCenter
+//            title: qsTr("Which Games onCopy?")
+//            Layout.fillWidth: true
+//            ColumnLayout {
+//                ExclusiveGroup { id: tabPositionGroup }
+////                Material.
+//                RadioButton {
+//                    id: topButton
+//                    text: qsTr("Selection Only")
+//                    checked: true
+//                    exclusiveGroup: tabPositionGroup
+////                    Layout.minimumWidth: 100
+//                }
+//                RadioButton {
+//                    id: bottomButton
+//                    text: qsTr("All - Ignore Selection")
+//                    exclusiveGroup: tabPositionGroup
+////                    Layout.minimumWidth: 100
+//                }
+//            }
+//        }
         SystemPalette { id: pal }
 
         SplitView {

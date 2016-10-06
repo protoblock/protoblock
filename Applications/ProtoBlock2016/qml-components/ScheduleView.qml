@@ -109,6 +109,33 @@ Material.Card {
             width: parent.width
             property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
 
+//            GroupBox {
+//                id: group2
+//                height: parent.height * .50
+//                anchors.left: parent.left
+//                anchors.horizontalCenter: scheduleView1.horizontalCenter
+//                anchors.verticalCenter: parent.parent.verticalCenter
+//                title: qsTr("Which Games onCopy?")
+//                Layout.fillWidth: true
+//                RowLayout {
+//                    ExclusiveGroup { id: tabPositionGroup }
+//    //                Material.
+//                    RadioButton {
+//                        id: topButton
+//                        text: qsTr("Selection Only")
+//                        checked: true
+//                        exclusiveGroup: tabPositionGroup
+//    //                    Layout.minimumWidth: 100
+//                    }
+//                    RadioButton {
+//                        id: bottomButton
+//                        text: qsTr("All - Ignore Selection")
+//                        exclusiveGroup: tabPositionGroup
+//    //                    Layout.minimumWidth: 100
+//                    }
+//                }
+//            }
+
 //            ColumnLayout {
 //                spacing: 0
 //                anchors.fill: parent
@@ -136,6 +163,7 @@ Material.Card {
                 RowLayout {
                     spacing: 0
                     anchors.fill: parent
+                    ExclusiveGroup { id: tabPositionGroup }
 //                    width: parent.width
 //                    Layout.preferredHeight: ProtoScreen.guToPx(4)
                     Repeater {
@@ -162,7 +190,7 @@ Material.Card {
                                     model: ["All"]//, "Scored" , "Locked", "All" ]
                                     enabled: modelData === " Status "
                                     currentIndex: 0 //3
-                                    visible: modelData === " Status "
+                                    visible: false//modelData === " Status "
                                     anchors.fill: parent
                                     onCurrentTextChanged: {
                     //                               MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
@@ -170,6 +198,79 @@ Material.Card {
                                         MiddleMan.setScheduleFilter(currentText)
                                     }
                                 }
+//                                GroupBox {
+//                                    id: groupbox
+//                                    visible: modelData === " Time "
+//                                    height: parent.height * .50
+//                                    width: parent.width * 2//anchors.left: parent.left
+//                                    anchors.horizontalCenter: scheduleView1.horizontalCenter
+//                                    anchors.verticalCenter: parent.parent.verticalCenter
+//                                    title: qsTr("Which Games onCopy?")
+//                                    Layout.fillWidth: true
+//                                    RowLayout {
+//                                        ExclusiveGroup { id: tabPositionGroup }
+                        //                Material.
+                                        Label {
+                                            text: "Use Teams For"
+                                            visible: modelData === " Time "
+//                                            anchors.bottom: topButton.top
+//                                            anchors.centerIn: parent
+                                            horizontalAlignment: Text.Right
+                                            id: pt
+                                            anchors.right: parent.right
+                                            anchors.verticalCenter: parent.verticalCenter
+                                        }
+
+                                        Label {
+                                            id: pc
+                                            text: " Copy:"
+                                            visible: modelData === " Away "
+//                                            anchors.bottom: topButton.top
+//                                            anchors.fill: parent
+//                                            anchors.centerIn: parent
+                                            anchors.left: parent.left
+                                            anchors.verticalCenter: parent.verticalCenter
+                                        }
+                                        RadioButton {
+                                            id: topButton
+                                            anchors.fill: parent
+                                            visible: modelData === " Status "
+//                                            height: parent.height * .50
+//                                            width: parent.width //anchors.left: parent.left
+                                            text: qsTr("Selected Only")
+                                            checked: modelData === " Status "
+                                            exclusiveGroup: tabPositionGroup
+                        //                    Layout.minimumWidth: 100
+//                                            Component.onCompleted:  {
+//                                                if (exclusiveGroup)
+//                                                    exclusiveGroup.bindCheckable(topButton)
+//                                            }
+                                            onClicked: {
+                                                MiddleMan.set_useSelected(true)
+                                            }
+
+                                        }
+                                        RadioButton {
+                                            id: bottomButton
+                                            visible: modelData === " Home "
+//                                            height: parent.height * .50
+                                            anchors.fill: parent
+
+                                            text: qsTr("All")
+                                            exclusiveGroup: tabPositionGroup
+                                            onClicked: {
+                                                MiddleMan.set_useSelected(false)
+                                            }
+
+                        //                    Layout.minimumWidth: 100
+
+//                                            Component.onCompleted:  {
+//                                                if (exclusiveGroup)
+//                                                    exclusiveGroup.bindCheckable(bottomButton)
+//                                            }
+                                        }
+//                                    }
+//                                }
                             }
                             Material.Card{
                                 anchors.bottom: parent.bottom

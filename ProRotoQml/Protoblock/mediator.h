@@ -85,6 +85,8 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
 
+    QML_WRITABLE_CSTREF_PROPERTY(bool,useSelected)
+
 
 
     //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
@@ -309,7 +311,6 @@ public:
 
     }
 
-
     Q_INVOKABLE void copyProj(int column, QString value, bool clone, bool random = false) {
         qDebug() << "CopyProj " << column << value << clone;
 
@@ -317,6 +318,12 @@ public:
             for ( auto *it : mPlayerProjModel) {
                 if ( !it->get_isopen() )
                     continue;
+                if ( m_useSelected) {
+                    auto gameid = it->get_gameid();
+                    int i = m_pWeeklyScheduleModel->indexOf(m_pWeeklyScheduleModel->getByUid(gameid));
+                    if ( !m_pQItemSelectionModel->isSelected(m_pWeeklyScheduleModel->index(i)) )
+                        continue;
+                }
                 if ( it->get_avg() > 0 )
                     if ( clone || it->get_projection () == 0)
                         if  ( it->get_projection() != it->get_avg())
