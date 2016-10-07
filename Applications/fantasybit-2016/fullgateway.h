@@ -93,6 +93,13 @@ public:
         connect( mlapi, &MainLAPIWorker::onControlMessage,
                 this,   &FullGateway::onControlMessage);
 
+        connect( mlapi, &MainLAPIWorker::NewFantasyName,
+                this,   &FullGateway::NewFantasyName);
+
+        connect( mlapi, &MainLAPIWorker::AnyFantasyNameBalance,
+                this,   &FullGateway::AnyFantasyNameBalance);
+
+
 
 //        connect( mlapi, SIGNAL(  GlobalStateChange(fantasybit::GlobalState)  ),
 //                this,      SLOT(    GlobalStateChange(fantasybit::GlobalState)        ));
@@ -116,20 +123,20 @@ public:
         connect( this, &FullGateway::OnUseName,
                  mlapi, &MainLAPIWorker::OnUseName);
 
-        connect(Mediator::instance(),&Mediator::ready,
-                [this](){
-                       if ( this->amLive ) {
-                           emit LiveGui(m_gs);
-                       }
+        connect(Mediator::instance(),&Mediator::ready,this, &FullGateway::ClientReady);
+//                [this](){
+//                       if ( this->amLive ) {
+//                           emit LiveGui(m_gs);
+//                       }
 
-                       if ( !m_mynames.empty())
-                            emit MyNames(m_mynames);
-                       for( auto &v : holdfresh)
-                            emit NameBal(v);
-                       holdfresh.clear();
+//                       if ( !m_mynames.empty())
+//                            emit MyNames(m_mynames);
+//                       for( auto &v : holdfresh)
+//                            emit NameBal(v);
+//                       holdfresh.clear();
 
-                       heslive = true;
-                 });
+//                       heslive = true;
+//                 });
 
     }
 
@@ -149,6 +156,10 @@ signals:
     void doOnClaimName(QString);
 
     void nameAvail(QString &, bool);
+
+    void NewFantasyName(fantasybit::FantasyNameBal);
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
+
 public slots:
     void OnLiveGui(fantasybit::GlobalState gs) {
         qDebug() << "FullGateway received Livegui ";
@@ -180,6 +191,20 @@ public slots:
     void UseName(QString s) {
         qDebug() << "fullgate  slot use name";
         emit OnUseName(s);
+    }
+
+    void ClientReady() {
+        if ( amLive ) {
+            emit LiveGui(m_gs);
+        }
+
+        if ( !m_mynames.empty())
+             emit MyNames(m_mynames);
+        for( auto &v : holdfresh)
+             emit NameBal(v);
+        holdfresh.clear();
+
+        heslive = true;
     }
 
 private:

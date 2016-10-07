@@ -112,6 +112,11 @@ signals:
     void Height(int);
     void BlockNum(int);
 
+    void NewFantasyName(fantasybit::FantasyNameBal);
+
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
+
+
 public slots:
 
     //void getLivePlayers(int );
