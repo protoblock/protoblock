@@ -25,7 +25,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 //    m_currentPidContext("1"),
     myGamesSelectionModel{},
     m_pQItemSelectionModel(&myGamesSelectionModel),
-    m_pLeaderBoardSortModel(new SortFilterProxyModel) {
+    m_pLeaderBoardSortModel(new SortFilterProxyModel),
+    m_blocknum(0),
+    m_height(0) {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
@@ -265,6 +267,10 @@ void Mediator::LiveGui(GlobalState gs) {
         setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
         updateWeek();
     }
+
+//    FantasyNameBal fnb;
+//    fnb.set_name("testname");
+//    NewFantasyName(fnb);
 }
 
 void Mediator::updateWeek() {
@@ -460,6 +466,18 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
 
     connect( that, SIGNAL(nameAvail(QString &,bool)),
              this, SLOT(nameAvail(QString &,bool)));
+
+    connect( that, SIGNAL(NewFantasyName(fantasybit::FantasyNameBal)),
+             this, SLOT(NewFantasyName(fantasybit::FantasyNameBal)));
+
+    connect( that, SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)),
+             this, SLOT(AnyFantasyNameBalance(fantasybit::FantasyNameBal)));
+
+    connect( that, SIGNAL(Height(int)),
+             this, SLOT(Height(int)));
+
+    connect( that, SIGNAL(BlockNum(int)),
+             this, SLOT(BlockNum(int)));
 
 
 //    return that;

@@ -66,8 +66,8 @@ protected: //signals: // <- ignored by moc and only serves as documentation aid
 
     virtual void NewFantasyName(fantasybit::FantasyNameBal) = 0;
     virtual void AnyFantasyNameBalance(fantasybit::FantasyNameBal) = 0;
-//    virtual void Height(int) = 0;
-//    virtual void BlockNum(int) = 0;
+    virtual void Height(int) = 0;
+    virtual void BlockNum(int) = 0;
 
 public: //slots:
     virtual void OnGetMyNames() = 0;

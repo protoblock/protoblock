@@ -206,6 +206,7 @@ void MainLAPIWorker::ProcessBlock() {
     do {
         if ( !doProcessBlock() ) return;
         count = pcount = 0;
+        emit BlockNum(last_block);
         {
             std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
             catchingup = !amlive && last_block < numto;
@@ -213,7 +214,7 @@ void MainLAPIWorker::ProcessBlock() {
 
         if ( catchingup )
         {
-            emit BlockNum(last_block);
+//            emit BlockNum(last_block);
             if ( docount++ == 50 ) {
                 QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
                 docount = 0;
@@ -225,6 +226,7 @@ void MainLAPIWorker::ProcessBlock() {
                 std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
                 amlive = true;
             }
+
             GoLive();
         }
 //        else if ( docount < numto) {
@@ -248,6 +250,7 @@ void MainLAPIWorker::OnSeenBlock(int32_t num) {
     }
     timer->start(intervalstart);
     count = bcount = 0;
+    emit Height(num);
 }
 
 void MainLAPIWorker::OnBlockError(int32_t last) {
@@ -283,13 +286,15 @@ void MainLAPIWorker::Timer() {
         count++;
         emit GetNext();
         //emit ProcessNext();
-        int interval = count*intervalstart*2;
-//        qInfo() << " timerr " << interval;
-        if ( interval < intervalmax && interval > 10) {
-            timer->start(interval);
-//            qInfo() << " timeout ";
-//            if ( true )
-//                emit GameStart("201600110");
+        if ( count%10 == 0 ) {
+            int interval = count/10*intervalstart*2;
+    //        qInfo() << " timerr " << interval;
+            if ( interval < intervalmax && interval > 500) {
+                timer->start(interval);
+    //            qInfo() << " timeout ";
+    //            if ( true )
+    //                emit GameStart("201600110");
+            }
         }
     }
 
@@ -415,6 +420,8 @@ void MainLAPIWorker::OnClaimName(QString name) {
         agent.onSignedTransaction(sn);
         DoSubscribe(myCurrentName.name(),true);
         DoPostTx(sn);
+        count = bcount = 0;
+        timer->start(intervalstart);
     }
 
     qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
@@ -466,6 +473,10 @@ void MainLAPIWorker::OnProjTX(vector<fantasybit::FantasyBitProj> vinp) {
     agent.onSignedTransaction(sn);
     DoPostTx(sn);
     DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+//    timer->stop();
+//    Timer();
+    timer->start(intervalstart);
 }
 
 //tx status
