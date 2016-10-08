@@ -85,6 +85,11 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
 
+    QML_WRITABLE_CSTREF_PROPERTY(bool,useSelected)
+
+    QML_READONLY_CSTREF_PROPERTY (qint32, height)
+    QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
+
 
 
     //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
@@ -309,7 +314,6 @@ public:
 
     }
 
-
     Q_INVOKABLE void copyProj(int column, QString value, bool clone, bool random = false) {
         qDebug() << "CopyProj " << column << value << clone;
 
@@ -317,6 +321,12 @@ public:
             for ( auto *it : mPlayerProjModel) {
                 if ( !it->get_isopen() )
                     continue;
+                if ( m_useSelected) {
+                    auto gameid = it->get_gameid();
+                    int i = m_pWeeklyScheduleModel->indexOf(m_pWeeklyScheduleModel->getByUid(gameid));
+                    if ( !m_pQItemSelectionModel->isSelected(m_pWeeklyScheduleModel->index(i)) )
+                        continue;
+                }
                 if ( it->get_avg() > 0 )
                     if ( clone || it->get_projection () == 0)
                         if  ( it->get_projection() != it->get_avg())
@@ -340,6 +350,13 @@ public:
 
             if ( it->second == 0 ) continue;
             if ( clone || item->get_projection() == 0 ) {
+
+                if ( m_useSelected) {
+                    auto gameid = item->get_gameid();
+                    int i = m_pWeeklyScheduleModel->indexOf(m_pWeeklyScheduleModel->getByUid(gameid));
+                    if ( !m_pQItemSelectionModel->isSelected(m_pWeeklyScheduleModel->index(i)) )
+                        continue;
+                }
 
                 int projection = it->second;
                 if ( random ) {
@@ -588,6 +605,28 @@ public slots:
     void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);
+    void NewFantasyName(fantasybit::FantasyNameBal fnb) {
+        qDebug() << "NewFantasyName " << fnb.DebugString().data();
+        auto it = mFantasyNameBalModel.getByUid(fnb.name().data());
+        if ( it == nullptr) {
+            auto *item = new FantasyNameBalModelItem(fnb);
+            item->set_lastupdate(get_blocknum());
+            mFantasyNameBalModel.append(item);
+            m_pLeaderBoardSortModel->invalidate();
+        }
+    }
+
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal) {}
+
+    void Height(int h) {
+        qDebug() << " height " << h;
+        setheight(h);
+    }
+
+    void BlockNum(int n) {
+        qDebug() << " BlockNum " << n;
+        setblocknum(n);
+    }
 
 private:
     vector<MyFantasyName> myGoodNames;

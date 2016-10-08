@@ -757,7 +757,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 #endif
 
         const NameTrans & nt = b.signed_transactions(i).trans().GetExtension(NameTrans::name_trans);
-        mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
+        mNameData.AddNewName(nt.fantasy_name(), nt.public_key(), b.signedhead().head().num() );
         qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
 
     }

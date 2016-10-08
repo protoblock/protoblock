@@ -59,6 +59,9 @@ signals:
     void FantasyNamePnl(fantasybit::FantasyNameBal);
     void new_dataFantasyNameHash(fantasybit::FantasyNameHash);
     void NewFantasyNameOrder(fantasybit::Order&);
+    void NewFantasyName(fantasybit::FantasyNameBal);
+
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
 
 public slots:
     void OnLive(bool subscribe) {
@@ -103,7 +106,7 @@ public:
     }
     */
 
-    void AddNewName(std::string name, std::string pubkey);
+    void AddNewName(std::string name, std::string pubkey,int32_t blocknum = 0);
     void AddBalance(const std::string name,uint64_t amount);
     void AddPnL(const std::string name, int64_t pnl);
     void AddProjection(const std::string &name, const std::string &player, uint32_t proj,int32_t);

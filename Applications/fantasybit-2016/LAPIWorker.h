@@ -29,7 +29,7 @@ class MainLAPIWorker : public QObject , public IResolvable
     Q_OBJECT
     Q_INTERFACES(pb::IPBGateway)
 
-    int intervalmax = 60000;
+    int intervalmax = 30000;
     int intervalstart = 500;
     int bcount =0;
     int pcount =0;
@@ -111,6 +111,11 @@ signals:
 
     void Height(int);
     void BlockNum(int);
+
+    void NewFantasyName(fantasybit::FantasyNameBal);
+
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
+
 
 public slots:
 
