@@ -488,6 +488,7 @@ Bootstrap Node::getLastLocalBoot() {
     if ( week == 0 )
         week = 3;
 
+//    week = 5;
     Bootstrap head;
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
