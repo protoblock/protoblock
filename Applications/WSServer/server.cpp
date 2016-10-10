@@ -111,7 +111,41 @@ void Server::initData() {
         ScheduleRep.mutable_scheduledata()->set_week(GlobalStateRep.globalstate().week());
 
         ScheduleRep.mutable_scheduledata()->mutable_weekly()->CopyFrom(
-        mGateway->dataService->GetWeeklySchedule(GlobalStateRep.globalstate().week()));
+            mGateway->dataService->GetWeeklySchedule(GlobalStateRep.globalstate().week()));
+
+
+        mGetCurrRostersReply.set_ctype(GETGAMEROSTER);
+        mGetCurrRostersRep = mGetCurrRostersReply.MutableExtension(GetCurrRostersRep::rep);
+        for (GameRoster &gr : mGateway->dataService->GetCurrentWeekGameRosters() ) {
+            GameDataRoster *gdr = mGetCurrRostersRep->add_gamerosters();
+            GameData *gd = gdr->mutable_game_data();
+            gd->set_gameid(gr.info.id());
+            gd->mutable_status()->set_status(gr.status);
+
+            TeamRoster *homet = gdr->mutable_homeroster();
+            homet->set_teamid(gr.info.home());
+            for ( auto &h : gr.homeroster) {
+                PlayerData *pd = homet->add_players();
+                pd->mutable_player_base()->CopyFrom(&h.second.base);
+                pd->set_playerid(h.first);
+                pd->mutable_player_status()->set_status(h.second.team_status);
+            }
+
+            TeamRoster *awayt = gdr->mutable_awayroster();
+            awayt->set_teamid(gr.info.away());
+            for ( auto &h : gr.awayroster()) {
+                PlayerData *pd = awayt->add_players();
+                pd->mutable_player_base()->CopyFrom(&h.second.base);
+                pd->set_playerid(h.first);
+                pd->mutable_player_status()->set_status(h.second.team_status);
+            }
+        }
+        mGetCurrRostersRep->set_week(GlobalStateRep.globalstate().week());
+        mGetCurrRostersReply.SerializeToArray(mGetCurrRostersRepStrBytes.data(),
+                                            mGetCurrRostersReply.ByteSize());
+
+
+
 
 //        if ( m_theWeek > 0  && m_theWeek < 17) {
 //            //setCurrentWeekData();

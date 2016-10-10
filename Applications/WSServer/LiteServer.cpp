@@ -402,13 +402,21 @@ void LiteServer::onNewConnection() {
 
 
 //enum CType {
-//    CHECKNAME = 1;
-//    NEWTX = 2;
-//    PK2FNAME = 3;
-//    GETSTATUS = 4;
-//    GETALLNAMES = 5;
-//    GETROWMARKET = 6;
-//    GETDEPTH = 7;
+//CHECKNAME = 1;
+//NEWTX = 2;
+//PK2FNAME = 3;
+//GETSTATUS = 4;
+//GETALLNAMES = 5;
+//GETROWMARKET = 6;
+//GETDEPTH = 7;
+//GETORDERS = 8;
+//GETPOSITIONS = 9;
+//SUBSCRIBEFNAME = 10;
+//GETGLOBALSTATE = 11;
+//GETSCHEDULE = 12;
+//GETGAMEROSTER = 13;
+//GETAVGPROJECTION = 14;
+//GETPROJECTIONS = 15;
 //}
 void LiteServer::processBinaryMessage(const QByteArray &message) {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
@@ -575,6 +583,13 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             break;
         case GETSCHEDULE:
             rep.set_ctype(GETSCHEDULE);
+            rep.SetAllocatedExtension(GetScheduleRep::rep,&Server::instance()->ScheduleRep);
+            rep.SerializeToString(&mRepstr);
+            rep.ReleaseExtension(GetScheduleRep::rep);
+            break;
+        case GETGAMEROSTER:
+            pClient->sendBinaryMessage(Server::instance()->mGetCurrRostersRepStrBytes);
+            rep.set_ctype(GETGAMEROSTER);
             rep.SetAllocatedExtension(GetScheduleRep::rep,&Server::instance()->ScheduleRep);
             rep.SerializeToString(&mRepstr);
             rep.ReleaseExtension(GetScheduleRep::rep);

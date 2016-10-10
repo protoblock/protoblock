@@ -21,7 +21,11 @@ class Server : public QObject {
     void initData();
 public:
     static Server *instance();
+    WSReply mGetCurrRostersReply;
     fantasybit::GetAllNamesRep mAllNamesRep;
+    fantasybit::GetCurrRostersRep *mGetCurrRostersRep;
+    QByteArray mGetCurrRostersRepStrBytesWSReply;
+
     static fantasybit::ExchangeData TheExchange;
 
     GetGlobalStateRep GlobalStateRep;

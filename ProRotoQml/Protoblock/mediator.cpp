@@ -207,6 +207,7 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
     int heighest = 0;
     string hname  = "";
     for ( auto m : mfn ) {
+        qDebug() << " mediator myname2 " << m.DebugString().data();
         if ( m.status() >= heighest) {
             heighest = m.status();
             hname = m.name();

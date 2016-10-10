@@ -168,6 +168,9 @@ public:
         fnb.set_bits(in.getBalance());
         fnb.set_stake(in.getStakeBalance());
         fnb.set_chash(in.hash());
+        auto pr = in.getBlockNump();
+        fnb.set_block(pr.first);
+        fnb.set_count(pr.second);
 
         return fnb;
     }
