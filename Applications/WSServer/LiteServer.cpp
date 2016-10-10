@@ -9,7 +9,7 @@
 //#include "src/protoblockapi.h"
 
 #include "Commissioner.h"
-#include "txpool.h"
+//#include "txpool.h"
 #include "server.h"
 
 QT_USE_NAMESPACE
@@ -417,7 +417,7 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
     req.ParseFromString(message.toStdString());
     fantasybit::WSReply rep;
 
-    qDebug() << " processBinaryMessage " << req.DebugString().data();
+    qDebug() << " LITESERVER processBinaryMessage " << req.DebugString().data();
 
     switch ( req.ctype() ) {
         case SUBSCRIBEFNAME: {
@@ -443,8 +443,8 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
                 pkr.set_fname("");
             else {
                 pkr.set_fname(fname->alias());
-                auto it = Server::instance()->Pk2Bal.find(pkr.req().pk());
-                if ( it != end(Server::instance()->Pk2Bal))
+                auto it = Server::instance()->mPk2Bal.find(pkr.req().pk());
+                if ( it != end(Server::instance()->mPk2Bal))
                     pkr.set_allocated_fnb(it->second);
             }
 
@@ -465,16 +465,54 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             else
                 cr.set_isavail("false");
 
+            qDebug() << " liteserver " << cr.req().fantasy_name().data() << cr.isavail().data();
+
+            cr.set_isavail("false");
             rep.MutableExtension(CheckNameRep::rep)->CopyFrom(cr);
             rep.SerializeToString(&mRepstr);
             break;
         }
         case GETALLNAMES: { //get all names
                             // todo: replace with leaderboard
+            qDebug() << " GETALLNAMESGETALLNAMES ";
             rep.set_ctype(GETALLNAMES);
+//            rep.SerializeToString(&mRepstr);
+//            break;
     //            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
-            rep.SetAllocatedExtension(GetAllNamesRep::rep,&Server::instance()->AllNamesRep);
+            GetAllNamesRep &ganp = Server::instance()->mAllNamesRep;
+            rep.SetAllocatedExtension(GetAllNamesRep::rep,&(Server::instance()->mAllNamesRep));
+//            qDebug() << "GETALLNAMES liteserver " << rep.DebugString().data();
+            qDebug() << "GETALLNAMES liteserver1 ";
+            qDebug() << " ganp.names_size() " << ganp.names_size();
+
+            for ( auto it : ganp.fnb())
+                qDebug() << it.DebugString().data();
+
+//            qDebug() << ganp.DebugString().data();
+
+            qDebug() << "GETALLNAMES liteserver2 ";
+            qDebug() << " rep.names_size() " << rep.GetExtension(GetAllNamesRep::rep).names_size();
+            for ( auto it : rep.GetExtension(GetAllNamesRep::rep).fnb())
+                qDebug() << it.DebugString().data();
+
+//            qDebug() << rep.DebugString().data();
+            qDebug() << "GETALLNAMES liteserver3 ";
+            qDebug() << "names-size " << Server::instance()->mAllNamesRep.names_size();
+            for ( auto it : Server::instance()->mAllNamesRep.fnb())
+                qDebug() << it.DebugString().data();
+
+//            qDebug() << Server::instance()->mAllNamesRep.DebugString().data();
+                // << Server::instance()->AllNamesRep.DebugString().data();
             rep.SerializeToString(&mRepstr);
+            WSReply rep2;
+            rep2.ParseFromString(mRepstr);
+            qDebug() << "GETALLNAMES liteserver4 ";
+            qDebug() << " rep2.names_size() " << rep2.GetExtension(GetAllNamesRep::rep).names_size();
+
+            for ( auto it : rep2.GetExtension(GetAllNamesRep::rep).fnb())
+                qDebug() << it.DebugString().data();
+
+
             rep.ReleaseExtension(GetAllNamesRep::rep);
             break;
         }
@@ -527,9 +565,12 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
         break;
 
         case GETGLOBALSTATE:
+            qDebug() << "LiteServer server GlobalStateRep " << Server::instance()->GlobalStateRep.DebugString().data();
+
             rep.set_ctype(GETGLOBALSTATE);
             rep.SetAllocatedExtension(GetGlobalStateRep::rep,&Server::instance()->GlobalStateRep);
             rep.SerializeToString(&mRepstr);
+            qDebug() << "LiteServer GlobalStateRep " << rep.DebugString().data();
             rep.ReleaseExtension(GetGlobalStateRep::rep);
             break;
         case GETSCHEDULE:
@@ -547,12 +588,26 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
 
     QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
     pClient->sendBinaryMessage(qb);
-    if ( rep.ctype() == GETALLNAMES )
-        qDebug() << rep.ctype() <<" size " << Server::instance()->AllNamesRep.names_size();
+    if ( rep.ctype() == GETALLNAMES ) {
+        qDebug() << rep.ctype() <<" size " << Server::instance()->mAllNamesRep.names_size();
+        WSReply rep2;
+        rep2.ParseFromString(mRepstr);
+        qDebug() << "GETALLNAMES liteserver5 ";
+        qDebug() << " rep2.names_size() " << rep2.GetExtension(GetAllNamesRep::rep).names_size();
+
+        for ( auto it : rep2.GetExtension(GetAllNamesRep::rep).fnb())
+            qDebug() << it.DebugString().data();
+
+    }
     else if ( rep.ctype() == GETROWMARKET)
         qDebug() << mROWMarketRep.DebugString().data();
-//    else
-//        qDebug() << rep.DebugString().data();
+    else if ( rep.ctype() == GETGLOBALSTATE) {
+        WSReply gsr;
+        gsr.ParseFromString(mRepstr);
+        qDebug() << " LITESERVER out" << gsr.DebugString().data();
+    }
+
+    mRepstr.clear();
     return;
 }
 

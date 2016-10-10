@@ -40,11 +40,11 @@ SOURCES   += \
     $$PWD/server.cpp \
 #    $$PWD/NameData.cpp \
 #    $$PWD/Data.cpp \
-    $$PWD/txpool.cpp \
+#    $$PWD/txpool.cpp \
 #    $$PWD/ExchangeData.cpp \
-    LiteServer.cpp \
-    TxServer.cpp \
-    combinations.cpp
+    LiteServer.cpp
+#    TxServer.cpp \
+#    combinations.cpp
 
 
 
@@ -52,10 +52,10 @@ HEADERS += \
     $$PWD/server.h \
 #    $$PWD/NameData.h \
 #    $$PWD/Data.h \
-    $$PWD/txpool.h \
+#    $$PWD/txpool.h \
 #    $$PWD/ExchangeData.h \
-    LiteServer.h \
-    TxServer.h
+    LiteServer.h
+#    TxServer.h
 
 ## FIXME add in libs here for levelDB as it is the only thing ATM that is using it.
 #macx{

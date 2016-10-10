@@ -1,6 +1,6 @@
 #include "server.h"
 
-//fantasybit::GetAllNamesRep Server::AllNamesRep{};
+//fantasybit::GetAllNamesRep mAllNamesRep{};
 fantasybit::ExchangeData Server::TheExchange{};
 //fantasybit::GetROWMarketRep Server::ROWMarketRep{};
 //fantasybit::NFLStateData Server::NFLData;
@@ -72,7 +72,7 @@ void Server::setupConnection(pb::IPBGateway *ingateway) {
 
 void Server::LiveGui(GlobalState gs) {
 
-    qDebug() << "Server received Livegui ";
+    qDebug() << "Server received Livegui " << gs.DebugString().data();
     if ( !amLive ) {
         amLive = true;
 //        m_season = gs.season();
@@ -82,6 +82,9 @@ void Server::LiveGui(GlobalState gs) {
         GlobalStateRep.mutable_globalstate()->CopyFrom(gs);
         initData();
     }
+
+    qDebug() << "Server GlobalStateRep " << GlobalStateRep.DebugString().data();
+
 }
 
 void Server::initData() {
@@ -95,9 +98,15 @@ void Server::initData() {
 
         auto lb = mGateway->dataService->GetLeaderBoard();
         qDebug() << " mGateway->dataService->GetLeaderBoard() " << lb.size();
+        int i = 0;
         for(auto fPlayer  : lb ) {
             AddNames(FantasyName::toFantasyNameBal(*fPlayer));
+//            if ( i++ > 250 )
+//                break;
         }
+
+        qDebug() << " all " << mAllNamesRep.DebugString().data();
+
 
         ScheduleRep.mutable_scheduledata()->set_week(GlobalStateRep.globalstate().week());
 

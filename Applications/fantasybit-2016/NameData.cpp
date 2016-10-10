@@ -59,7 +59,7 @@ void FantasyNameData::init() {
                 fnp->initBalance(fn.bits());
                 fnp->initStakePNL(fn.stake());
                 fnp->setBlockNump (0,0);
-                qDebug() << fnp->ToString().data();
+//                qDebug() << fnp->ToString().data();
 #ifdef DATAAGENTWRITENAMES_SPECIAL
                 auto name = fnp->alias();
                 if ( name != Commissioner::FantasyAgentName())

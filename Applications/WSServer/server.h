@@ -2,7 +2,7 @@
 #define SERVER_H
 
 #include "StateData.pb.h"
-#include "TxServer.h"
+//#include "TxServer.h"
 #include "LiteServer.h"
 #include "ExchangeData.h"
 #include "Data.h"
@@ -21,7 +21,7 @@ class Server : public QObject {
     void initData();
 public:
     static Server *instance();
-    fantasybit::GetAllNamesRep AllNamesRep;
+    fantasybit::GetAllNamesRep mAllNamesRep;
     static fantasybit::ExchangeData TheExchange;
 
     GetGlobalStateRep GlobalStateRep;
@@ -29,27 +29,28 @@ public:
 
 //    static fantasybit::GetROWMarketRep ROWMarketRep;
 //    static NFLStateData  NFLData;
-    std::unordered_map<std::string,FantasyNameBal *> Pk2Bal;
-    std::unordered_map<std::string,int> Pk2Index;
+    std::unordered_map<std::string,FantasyNameBal *> mPk2Bal;
+    std::unordered_map<std::string,int> mPk2Index;
 
     void AddNames(const FantasyNameBal &fnb) {
+//        qDebug() << " server::addnames " << fnb.DebugString().data();
         FantasyNameBal *p;
-        auto it = Pk2Index.find(fnb.public_key());
-        if ( it == end(Pk2Index)) {
-            p = Server::AllNamesRep.add_fnb();
-            Server::AllNamesRep.add_names(fnb.name());
+        auto it = mPk2Index.find(fnb.public_key());
+        if ( it == end(mPk2Index)) {
+            p = mAllNamesRep.add_fnb();
+            mAllNamesRep.add_names(fnb.name());
         }
         else
-            p = Server::AllNamesRep.mutable_fnb(it->second);
+            p = mAllNamesRep.mutable_fnb(it->second);
 
-        // = Server::AllNamesRep.add_fnb();
+        // = mAllNamesRep.add_fnb();
         p->CopyFrom(fnb);
-        Pk2Bal.insert({fnb.public_key(),p});
+        mPk2Bal.insert({fnb.public_key(),p});
     }
 
 //    static void AddNames(FantasyNameBal *pFn) {
-//        Server::AllNamesRep.add_names(pFn->name());
-//        Server::AllNamesRep.mutable_fnb()->AddAllocated(pFn);
+//        mAllNamesRep.add_names(pFn->name());
+//        mAllNamesRep.mutable_fnb()->AddAllocated(pFn);
 //        Pk2Bal.insert({pFn->public_key(),pFn});
 
 //    }

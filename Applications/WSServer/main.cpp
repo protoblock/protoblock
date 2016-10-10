@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
     Server::instance()->setContext(fg);
     fg->ClientReady();
 
-    TxServer *txserver = new TxServer(PB_WS_TX_PORT, debug);
-    QObject::connect(txserver, &TxServer::closed, &a, &QCoreApplication::quit);
+//    TxServer *txserver = new TxServer(PB_WS_TX_PORT, debug);
+//    QObject::connect(txserver, &TxServer::closed, &a, &QCoreApplication::quit);
 
     LiteServer *nameServer = new LiteServer(PB_WS_LITE_AGENT_PORT,debug);
     QObject::connect(nameServer, &LiteServer::closed, &a, &QCoreApplication::quit);

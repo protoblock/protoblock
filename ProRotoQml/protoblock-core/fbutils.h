@@ -26,7 +26,7 @@
 
 namespace fantasybit {
 
-#if !defined(PRODFOOTBALL) || defined(USE_LOCALHOST_SERVER)
+#if !defined(PRODFOOTBALL)
 
 #ifdef USE_LOCALNETWORKHOST_SERVER
     static std::string PB_WS_LITE_AGENT = "192.168.42.80";
