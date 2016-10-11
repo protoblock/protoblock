@@ -286,6 +286,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     break;
                 }
                 */
+                auto st = mData.GetUpdatedGameStatus(rd.game_result().gameid());
+                if ( st.status() == GameStatus::CLOSED ) {
+                    qWarning() << rd.game_result().gameid().data() << " game already closed - ignorning result ";
+                    break;
+                }
+
                 auto allprojs = mNameData.GetGameProj(rd.game_result().gameid());
                 bool nopnl = false;
                 GameSettlePos gsp;

@@ -103,7 +103,7 @@ public:
     void UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &);
     //void UpdatePlayerStatus(std::string playerid, const PlayerGameStatus &);
 
-    void UpdateGameStatus(const std::string &gameid, const GameStatus &gs);
+    void UpdateGameStatus(const std::string &gameid, const GameStatus &gs, bool force = false);
 
     void OnGameStart(const std::string &gameid, const GameStatus &gs);
     bool GetGameResult(const std::string &gameid, GameResult &result);
@@ -250,6 +250,13 @@ public:
 //        dir.rename(filedir("playerstore").data(), (moveto + "/playerstore").data());
         init();
     }
+
+    void OnGameClosed(const std::string &gameid) {
+        GameStatus gs = GetUpdatedGameStatus(gameid);
+        gs.set_status(GameStatus::CLOSED);
+        UpdateGameStatus(gameid,gs, true);
+    }
+
 private:
     void OnNewPlayer(const std::string &pid);
     void OnPlayerTrade(const std::string &pid, const std::string &tid, const std::string &ntid);

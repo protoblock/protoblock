@@ -466,6 +466,8 @@ void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs)
     qDebug() << key << QString::fromStdString(gs.DebugString());
     if ( amlive )
         emit NewGameResult(gameid);
+
+    OnGameClosed(gameid);
 }
 
 bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) {
@@ -555,9 +557,9 @@ void NFLStateData::OnPlayerStatus(const std::string &pid,PlayerStatus ps) {
     }
 }
 
-void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs) {
+void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs, bool force) {
     GameStatus use;
-    if ( gs.status() == GameStatus_Status_SCHEDULED ) {
+    if ( gs.status() == GameStatus_Status_SCHEDULED || force) {
         use.CopyFrom(gs);
     }
     else {
