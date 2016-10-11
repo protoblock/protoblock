@@ -211,7 +211,7 @@ Material.Card {
 //                                        ExclusiveGroup { id: tabPositionGroup }
                         //                Material.
                                         Label {
-                                            text: "Use Teams For"
+                                            text: "Games to"
                                             visible: modelData === " Time "
 //                                            anchors.bottom: topButton.top
 //                                            anchors.centerIn: parent

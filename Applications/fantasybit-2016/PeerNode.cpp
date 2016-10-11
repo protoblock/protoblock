@@ -442,8 +442,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 4063 )
-        num = 4063;
+    if (num > 5391 )
+        num = 5391;
 #endif
 
     return num;
@@ -488,7 +488,13 @@ Bootstrap Node::getLastLocalBoot() {
     if ( week == 0 )
         week = 3;
 
-//    week = 5;
+#ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
+    week = 1;
+#endif
+
+#ifdef NOCHECK_LOCAL_BOOTSTRAP_MINUS1
+    week--;
+#endif
     Bootstrap head;
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
@@ -536,7 +542,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     //qDebug() << " after rest height" << height;
 
 #ifdef STOP_HEIGHT_TEST
-    height = 4063;
+    height = 5391;
 #endif
 
     if ( myLastGlobalBlockNum() < height )
