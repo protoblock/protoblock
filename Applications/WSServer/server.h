@@ -25,11 +25,17 @@ public:
     fantasybit::GetAllNamesRep mAllNamesRep;
     fantasybit::GetCurrRostersRep *mGetCurrRostersRep;
     QByteArray mGetCurrRostersRepStrBytesWSReply;
+    std::string mGetCurrRostersRepStrWSreply;
 
     static fantasybit::ExchangeData TheExchange;
 
     GetGlobalStateRep GlobalStateRep;
     GetScheduleRep ScheduleRep;
+
+    ProjByName avgProjByName, zeroProjByName;
+    std::unordered_map<std::string,ProjByName> mProjByNames;
+    std::unordered_map<std::string,int> mPlayerId2Index;
+
 
 //    static fantasybit::GetROWMarketRep ROWMarketRep;
 //    static NFLStateData  NFLData;
@@ -50,6 +56,10 @@ public:
         // = mAllNamesRep.add_fnb();
         p->CopyFrom(fnb);
         mPk2Bal.insert({fnb.public_key(),p});
+        ProjByName &pbn = mProjByNames[fnb.name()];
+        pbn.set_count(fnb.count());
+        pbn.set_block(fnb.block());
+        pbn.set_name(fnb.name());
     }
 
 //    static void AddNames(FantasyNameBal *pFn) {
@@ -82,7 +92,19 @@ protected slots:
 
     void LiveGui(fantasybit::GlobalState gs);
 
+    void LiveProj(fantasybit::FantasyBitProj);
 
+    /*
+    void NameStatus(fantasybit::MyFantasyName);
+    void MyNames(vector<fantasybit::MyFantasyName>);
+    void NameBal(fantasybit::FantasyNameBal);
+    void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
+    void GlobalStateChange(fantasybit::GlobalState);
+    void NewWeek(int);
+    void GameStart(string);
+    void GameOver(string);
+    void onControlMessage(QString);
+    */
 };
 
 

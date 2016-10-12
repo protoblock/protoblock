@@ -493,21 +493,19 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             qDebug() << "GETALLNAMES liteserver1 ";
             qDebug() << " ganp.names_size() " << ganp.names_size();
 
-            for ( auto it : ganp.fnb())
-                qDebug() << it.DebugString().data();
+//            for ( auto it : ganp.fnb())
+//                qDebug() << it.DebugString().data();
 
-//            qDebug() << ganp.DebugString().data();
-
-            qDebug() << "GETALLNAMES liteserver2 ";
-            qDebug() << " rep.names_size() " << rep.GetExtension(GetAllNamesRep::rep).names_size();
-            for ( auto it : rep.GetExtension(GetAllNamesRep::rep).fnb())
-                qDebug() << it.DebugString().data();
+//            qDebug() << "GETALLNAMES liteserver2 ";
+//            qDebug() << " rep.names_size() " << rep.GetExtension(GetAllNamesRep::rep).names_size();
+//            for ( auto it : rep.GetExtension(GetAllNamesRep::rep).fnb())
+//                qDebug() << it.DebugString().data();
 
 //            qDebug() << rep.DebugString().data();
             qDebug() << "GETALLNAMES liteserver3 ";
             qDebug() << "names-size " << Server::instance()->mAllNamesRep.names_size();
-            for ( auto it : Server::instance()->mAllNamesRep.fnb())
-                qDebug() << it.DebugString().data();
+//            for ( auto it : Server::instance()->mAllNamesRep.fnb())
+//                qDebug() << it.DebugString().data();
 
 //            qDebug() << Server::instance()->mAllNamesRep.DebugString().data();
                 // << Server::instance()->AllNamesRep.DebugString().data();
@@ -517,8 +515,8 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             qDebug() << "GETALLNAMES liteserver4 ";
             qDebug() << " rep2.names_size() " << rep2.GetExtension(GetAllNamesRep::rep).names_size();
 
-            for ( auto it : rep2.GetExtension(GetAllNamesRep::rep).fnb())
-                qDebug() << it.DebugString().data();
+//            for ( auto it : rep2.GetExtension(GetAllNamesRep::rep).fnb())
+//                qDebug() << it.DebugString().data();
 
 
             rep.ReleaseExtension(GetAllNamesRep::rep);
@@ -587,14 +585,30 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             rep.SerializeToString(&mRepstr);
             rep.ReleaseExtension(GetScheduleRep::rep);
             break;
-        case GETGAMEROSTER:
-            pClient->sendBinaryMessage(Server::instance()->mGetCurrRostersRepStrBytes);
-            rep.set_ctype(GETGAMEROSTER);
-            rep.SetAllocatedExtension(GetScheduleRep::rep,&Server::instance()->ScheduleRep);
+        case GETGAMEROSTER: {
+            QByteArray qb(Server::instance()->mGetCurrRostersRepStrWSreply.data(),
+                          (size_t)Server::instance()->mGetCurrRostersRepStrWSreply.size());
+            pClient->sendBinaryMessage(qb);
+//            rep.set_ctype(GETGAMEROSTER);
+//            rep.SetAllocatedExtension(GetScheduleRep::rep,&Server::instance()->ScheduleRep);
+//            rep.SerializeToString(&mRepstr);
+//            rep.ReleaseExtension(GetScheduleRep::rep);
+            return;
+            break;
+        }
+
+        case GETPROJECTIONS: {
+            rep.set_ctype(GETPROJECTIONS);
+            ProjByName &ppn = Server::instance()->mProjByNames[req.GetExtension(GetProjectionReq::req).fname()];
+            mGetProjectionRep.set_allocated_projs(&ppn);
+            mGetProjectionRep.set_allocated_avg(&Server::instance()->avgProjByName);
+            rep.SetAllocatedExtension(GetProjectionRep::rep,&mGetProjectionRep);
             rep.SerializeToString(&mRepstr);
             rep.ReleaseExtension(GetScheduleRep::rep);
+            mGetProjectionRep.release_avg();
+            mGetProjectionRep.release_projs();
             break;
-
+        }
         default:
             return;
     }
@@ -610,8 +624,8 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
         qDebug() << "GETALLNAMES liteserver5 ";
         qDebug() << " rep2.names_size() " << rep2.GetExtension(GetAllNamesRep::rep).names_size();
 
-        for ( auto it : rep2.GetExtension(GetAllNamesRep::rep).fnb())
-            qDebug() << it.DebugString().data();
+//        for ( auto it : rep2.GetExtension(GetAllNamesRep::rep).fnb())
+//            qDebug() << it.DebugString().data();
 
     }
     else if ( rep.ctype() == GETROWMARKET)

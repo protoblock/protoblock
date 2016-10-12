@@ -102,6 +102,7 @@ class KeyValue;
 class Bootstrap;
 
 enum CType {
+  NONE = 0,
   CHECKNAME = 1,
   NEWTX = 2,
   PK2FNAME = 3,
@@ -118,7 +119,7 @@ enum CType {
   GETPROJECTIONS = 15
 };
 bool CType_IsValid(int value);
-const CType CType_MIN = CHECKNAME;
+const CType CType_MIN = NONE;
 const CType CType_MAX = GETPROJECTIONS;
 const int CType_ARRAYSIZE = CType_MAX + 1;
 
@@ -7381,30 +7382,20 @@ class PlayerProj : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 proj() const;
   inline void set_proj(::google::protobuf::int32 value);
 
-  // optional int32 avg = 30;
-  inline bool has_avg() const;
-  inline void clear_avg();
-  static const int kAvgFieldNumber = 30;
-  inline ::google::protobuf::int32 avg() const;
-  inline void set_avg(::google::protobuf::int32 value);
-
   // @@protoc_insertion_point(class_scope:fantasybit.PlayerProj)
  private:
   inline void set_has_playerid();
   inline void clear_has_playerid();
   inline void set_has_proj();
   inline void clear_has_proj();
-  inline void set_has_avg();
-  inline void clear_has_avg();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* playerid_;
   ::google::protobuf::int32 proj_;
-  ::google::protobuf::int32 avg_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -7598,6 +7589,15 @@ class GetProjectionRep : public ::google::protobuf::Message {
   inline ::fantasybit::ProjByName* release_projs();
   inline void set_allocated_projs(::fantasybit::ProjByName* projs);
 
+  // optional .fantasybit.ProjByName avg = 30;
+  inline bool has_avg() const;
+  inline void clear_avg();
+  static const int kAvgFieldNumber = 30;
+  inline const ::fantasybit::ProjByName& avg() const;
+  inline ::fantasybit::ProjByName* mutable_avg();
+  inline ::fantasybit::ProjByName* release_avg();
+  inline void set_allocated_avg(::fantasybit::ProjByName* avg);
+
   static const int kRepFieldNumber = 940;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::WSReply,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::GetProjectionRep >, 11, false >
@@ -7606,13 +7606,16 @@ class GetProjectionRep : public ::google::protobuf::Message {
  private:
   inline void set_has_projs();
   inline void clear_has_projs();
+  inline void set_has_avg();
+  inline void clear_has_avg();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::fantasybit::ProjByName* projs_;
+  ::fantasybit::ProjByName* avg_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -17967,7 +17970,7 @@ inline void WsReq::clear_has_ctype() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void WsReq::clear_ctype() {
-  ctype_ = 1;
+  ctype_ = 0;
   clear_has_ctype();
 }
 inline ::fantasybit::CType WsReq::ctype() const {
@@ -18016,7 +18019,7 @@ inline void WSReply::clear_has_ctype() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void WSReply::clear_ctype() {
-  ctype_ = 1;
+  ctype_ = 0;
   clear_has_ctype();
 }
 inline ::fantasybit::CType WSReply::ctype() const {
@@ -20358,28 +20361,6 @@ inline void PlayerProj::set_proj(::google::protobuf::int32 value) {
   proj_ = value;
 }
 
-// optional int32 avg = 30;
-inline bool PlayerProj::has_avg() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void PlayerProj::set_has_avg() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void PlayerProj::clear_has_avg() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void PlayerProj::clear_avg() {
-  avg_ = 0;
-  clear_has_avg();
-}
-inline ::google::protobuf::int32 PlayerProj::avg() const {
-  return avg_;
-}
-inline void PlayerProj::set_avg(::google::protobuf::int32 value) {
-  set_has_avg();
-  avg_ = value;
-}
-
 // -------------------------------------------------------------------
 
 // ProjByName
@@ -20562,6 +20543,44 @@ inline void GetProjectionRep::set_allocated_projs(::fantasybit::ProjByName* proj
     set_has_projs();
   } else {
     clear_has_projs();
+  }
+}
+
+// optional .fantasybit.ProjByName avg = 30;
+inline bool GetProjectionRep::has_avg() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void GetProjectionRep::set_has_avg() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void GetProjectionRep::clear_has_avg() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void GetProjectionRep::clear_avg() {
+  if (avg_ != NULL) avg_->::fantasybit::ProjByName::Clear();
+  clear_has_avg();
+}
+inline const ::fantasybit::ProjByName& GetProjectionRep::avg() const {
+  return avg_ != NULL ? *avg_ : *default_instance_->avg_;
+}
+inline ::fantasybit::ProjByName* GetProjectionRep::mutable_avg() {
+  set_has_avg();
+  if (avg_ == NULL) avg_ = new ::fantasybit::ProjByName;
+  return avg_;
+}
+inline ::fantasybit::ProjByName* GetProjectionRep::release_avg() {
+  clear_has_avg();
+  ::fantasybit::ProjByName* temp = avg_;
+  avg_ = NULL;
+  return temp;
+}
+inline void GetProjectionRep::set_allocated_avg(::fantasybit::ProjByName* avg) {
+  delete avg_;
+  avg_ = avg;
+  if (avg) {
+    set_has_avg();
+  } else {
+    clear_has_avg();
   }
 }
 

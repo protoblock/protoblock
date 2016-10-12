@@ -1228,10 +1228,9 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetProjectionReq));
   PlayerProj_descriptor_ = file->message_type(56);
-  static const int PlayerProj_offsets_[3] = {
+  static const int PlayerProj_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerProj, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerProj, proj_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerProj, avg_),
   };
   PlayerProj_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1263,8 +1262,9 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjByName));
   GetProjectionRep_descriptor_ = file->message_type(58);
-  static const int GetProjectionRep_offsets_[1] = {
+  static const int GetProjectionRep_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetProjectionRep, projs_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetProjectionRep, avg_),
   };
   GetProjectionRep_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1769,25 +1769,26 @@ void protobuf_AddDesc_StateData_2eproto() {
     "fantasybit.GetOrdersReq\"p\n\020GetProjection"
     "Req\022\r\n\005fname\030\024 \001(\t\022\016\n\006getavg\030\036 \001(\0102=\n\003re"
     "q\022\021.fantasybit.WsReq\030\204\007 \001(\0132\034.fantasybit"
-    ".GetProjectionReq\"9\n\nPlayerProj\022\020\n\010playe"
-    "rid\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\022\013\n\003avg\030\036 \001(\005\"d\n\n"
-    "ProjByName\022\014\n\004name\030\n \001(\t\022*\n\nplayerproj\030\024"
-    " \003(\0132\026.fantasybit.PlayerProj\022\r\n\005count\030( "
-    "\001(\005\022\r\n\005block\0302 \001(\005\"z\n\020GetProjectionRep\022%"
-    "\n\005projs\030\024 \001(\0132\026.fantasybit.ProjByName2\?\n"
-    "\003rep\022\023.fantasybit.WSReply\030\254\007 \001(\0132\034.fanta"
-    "sybit.GetProjectionRep\"&\n\010KeyValue\022\013\n\003ke"
-    "y\030\n \001(\014\022\r\n\005value\030\024 \001(\014\"\235\001\n\tBootstrap\022\013\n\003"
-    "key\030\001 \001(\t\022\020\n\010blocknum\030\002 \001(\005\022\014\n\004week\030\003 \001("
-    "\005\022\016\n\006season\030\004 \001(\005\022\024\n\014gamemetaroot\030\n \001(\014\022"
-    "\026\n\016playermetaroot\030\024 \001(\014\022\025\n\rfnamemetaroot"
-    "\030\036 \001(\014\022\016\n\006previd\030( \001(\014*\360\001\n\005CType\022\r\n\tCHEC"
-    "KNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETS"
-    "TATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET"
-    "\020\006\022\014\n\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPO"
-    "SITIONS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n\022\022\n\016GETGLOB"
-    "ALSTATE\020\013\022\017\n\013GETSCHEDULE\020\014\022\021\n\rGETGAMEROS"
-    "TER\020\r\022\022\n\016GETPROJECTIONS\020\017", 7865);
+    ".GetProjectionReq\",\n\nPlayerProj\022\020\n\010playe"
+    "rid\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\"d\n\nProjByName\022\014\n"
+    "\004name\030\n \001(\t\022*\n\nplayerproj\030\024 \003(\0132\026.fantas"
+    "ybit.PlayerProj\022\r\n\005count\030( \001(\005\022\r\n\005block\030"
+    "2 \001(\005\"\237\001\n\020GetProjectionRep\022%\n\005projs\030\024 \001("
+    "\0132\026.fantasybit.ProjByName\022#\n\003avg\030\036 \001(\0132\026"
+    ".fantasybit.ProjByName2\?\n\003rep\022\023.fantasyb"
+    "it.WSReply\030\254\007 \001(\0132\034.fantasybit.GetProjec"
+    "tionRep\"&\n\010KeyValue\022\013\n\003key\030\n \001(\014\022\r\n\005valu"
+    "e\030\024 \001(\014\"\235\001\n\tBootstrap\022\013\n\003key\030\001 \001(\t\022\020\n\010bl"
+    "ocknum\030\002 \001(\005\022\014\n\004week\030\003 \001(\005\022\016\n\006season\030\004 \001"
+    "(\005\022\024\n\014gamemetaroot\030\n \001(\014\022\026\n\016playermetaro"
+    "ot\030\024 \001(\014\022\025\n\rfnamemetaroot\030\036 \001(\014\022\016\n\006previ"
+    "d\030( \001(\014*\372\001\n\005CType\022\010\n\004NONE\020\000\022\r\n\tCHECKNAME"
+    "\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS"
+    "\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n"
+    "\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITIO"
+    "NS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n\022\022\n\016GETGLOBALSTA"
+    "TE\020\013\022\017\n\013GETSCHEDULE\020\014\022\021\n\rGETGAMEROSTER\020\r"
+    "\022\022\n\016GETPROJECTIONS\020\017", 7900);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -1999,6 +2000,7 @@ const ::google::protobuf::EnumDescriptor* CType_descriptor() {
 }
 bool CType_IsValid(int value) {
   switch(value) {
+    case 0:
     case 1:
     case 2:
     case 3:
@@ -15751,7 +15753,7 @@ WsReq::WsReq(const WsReq& from)
 void WsReq::SharedCtor() {
   _cached_size_ = 0;
   version_ = 0;
-  ctype_ = 1;
+  ctype_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -15789,7 +15791,7 @@ void WsReq::Clear() {
   _extensions_.Clear();
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     version_ = 0;
-    ctype_ = 1;
+    ctype_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -16026,7 +16028,7 @@ WSReply::WSReply(const WSReply& from)
 void WSReply::SharedCtor() {
   _cached_size_ = 0;
   version_ = 0;
-  ctype_ = 1;
+  ctype_ = 0;
   req_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -16066,7 +16068,7 @@ void WSReply::Clear() {
   _extensions_.Clear();
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     version_ = 0;
-    ctype_ = 1;
+    ctype_ = 0;
     if (has_req()) {
       if (req_ != NULL) req_->::fantasybit::WsReq::Clear();
     }
@@ -22389,7 +22391,6 @@ void GetProjectionReq::Swap(GetProjectionReq* other) {
 #ifndef _MSC_VER
 const int PlayerProj::kPlayeridFieldNumber;
 const int PlayerProj::kProjFieldNumber;
-const int PlayerProj::kAvgFieldNumber;
 #endif  // !_MSC_VER
 
 PlayerProj::PlayerProj()
@@ -22410,7 +22411,6 @@ void PlayerProj::SharedCtor() {
   _cached_size_ = 0;
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   proj_ = 0;
-  avg_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -22455,7 +22455,6 @@ void PlayerProj::Clear() {
       }
     }
     proj_ = 0;
-    avg_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -22495,22 +22494,6 @@ bool PlayerProj::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(240)) goto parse_avg;
-        break;
-      }
-
-      // optional int32 avg = 30;
-      case 30: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_avg:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &avg_)));
-          set_has_avg();
-        } else {
-          goto handle_uninterpreted;
-        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -22547,11 +22530,6 @@ void PlayerProj::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(20, this->proj(), output);
   }
 
-  // optional int32 avg = 30;
-  if (has_avg()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(30, this->avg(), output);
-  }
-
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -22573,11 +22551,6 @@ void PlayerProj::SerializeWithCachedSizes(
   // optional int32 proj = 20;
   if (has_proj()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(20, this->proj(), target);
-  }
-
-  // optional int32 avg = 30;
-  if (has_avg()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(30, this->avg(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -22603,13 +22576,6 @@ int PlayerProj::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->proj());
-    }
-
-    // optional int32 avg = 30;
-    if (has_avg()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->avg());
     }
 
   }
@@ -22645,9 +22611,6 @@ void PlayerProj::MergeFrom(const PlayerProj& from) {
     if (from.has_proj()) {
       set_proj(from.proj());
     }
-    if (from.has_avg()) {
-      set_avg(from.avg());
-    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -22673,7 +22636,6 @@ void PlayerProj::Swap(PlayerProj* other) {
   if (other != this) {
     std::swap(playerid_, other->playerid_);
     std::swap(proj_, other->proj_);
-    std::swap(avg_, other->avg_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -23038,6 +23000,7 @@ void ProjByName::Swap(ProjByName* other) {
 
 #ifndef _MSC_VER
 const int GetProjectionRep::kProjsFieldNumber;
+const int GetProjectionRep::kAvgFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -23053,6 +23016,7 @@ GetProjectionRep::GetProjectionRep()
 
 void GetProjectionRep::InitAsDefaultInstance() {
   projs_ = const_cast< ::fantasybit::ProjByName*>(&::fantasybit::ProjByName::default_instance());
+  avg_ = const_cast< ::fantasybit::ProjByName*>(&::fantasybit::ProjByName::default_instance());
 }
 
 GetProjectionRep::GetProjectionRep(const GetProjectionRep& from)
@@ -23064,6 +23028,7 @@ GetProjectionRep::GetProjectionRep(const GetProjectionRep& from)
 void GetProjectionRep::SharedCtor() {
   _cached_size_ = 0;
   projs_ = NULL;
+  avg_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -23074,6 +23039,7 @@ GetProjectionRep::~GetProjectionRep() {
 void GetProjectionRep::SharedDtor() {
   if (this != default_instance_) {
     delete projs_;
+    delete avg_;
   }
 }
 
@@ -23103,6 +23069,9 @@ void GetProjectionRep::Clear() {
     if (has_projs()) {
       if (projs_ != NULL) projs_->::fantasybit::ProjByName::Clear();
     }
+    if (has_avg()) {
+      if (avg_ != NULL) avg_->::fantasybit::ProjByName::Clear();
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -23120,6 +23089,20 @@ bool GetProjectionRep::MergePartialFromCodedStream(
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_projs()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(242)) goto parse_avg;
+        break;
+      }
+
+      // optional .fantasybit.ProjByName avg = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_avg:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_avg()));
         } else {
           goto handle_uninterpreted;
         }
@@ -23151,6 +23134,12 @@ void GetProjectionRep::SerializeWithCachedSizes(
       20, this->projs(), output);
   }
 
+  // optional .fantasybit.ProjByName avg = 30;
+  if (has_avg()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      30, this->avg(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -23164,6 +23153,13 @@ void GetProjectionRep::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         20, this->projs(), target);
+  }
+
+  // optional .fantasybit.ProjByName avg = 30;
+  if (has_avg()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        30, this->avg(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -23182,6 +23178,13 @@ int GetProjectionRep::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->projs());
+    }
+
+    // optional .fantasybit.ProjByName avg = 30;
+    if (has_avg()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->avg());
     }
 
   }
@@ -23214,6 +23217,9 @@ void GetProjectionRep::MergeFrom(const GetProjectionRep& from) {
     if (from.has_projs()) {
       mutable_projs()->::fantasybit::ProjByName::MergeFrom(from.projs());
     }
+    if (from.has_avg()) {
+      mutable_avg()->::fantasybit::ProjByName::MergeFrom(from.avg());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -23238,6 +23244,7 @@ bool GetProjectionRep::IsInitialized() const {
 void GetProjectionRep::Swap(GetProjectionRep* other) {
   if (other != this) {
     std::swap(projs_, other->projs_);
+    std::swap(avg_, other->avg_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

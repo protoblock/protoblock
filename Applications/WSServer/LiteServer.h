@@ -121,7 +121,7 @@ private:
     AllOdersSymbol * getAllOdersSymbol(fnameptrs &fptr,const std::string &symbol);
     AllOdersFname *getAllOdersFname(const std::string &fname);
 
-
+    GetProjectionRep mGetProjectionRep;
 
 };
 
