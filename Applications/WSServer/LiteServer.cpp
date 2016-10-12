@@ -426,7 +426,7 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
     fantasybit::WSReply rep;
 
     qDebug() << " LITESERVER processBinaryMessage " << req.DebugString().data();
-
+int i =0;
     switch ( req.ctype() ) {
         case SUBSCRIBEFNAME: {
             auto fname = req.GetExtension(SubscribeReq::req).name();
@@ -598,15 +598,36 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
         }
 
         case GETPROJECTIONS: {
+
+            qDebug() << " GETPROJECTIONS " << i++;
             rep.set_ctype(GETPROJECTIONS);
+            qDebug() << " GETPROJECTIONS " << i++;
+
             ProjByName &ppn = Server::instance()->mProjByNames[req.GetExtension(GetProjectionReq::req).fname()];
-            mGetProjectionRep.set_allocated_projs(&ppn);
-            mGetProjectionRep.set_allocated_avg(&Server::instance()->avgProjByName);
+            if ( ppn.name() != "" )
+//                mGetProjectionRep.set_allocated_projs(&ppn);
+                mGetProjectionRep.mutable_projs()->CopyFrom(ppn);
+            qDebug() << " GETPROJECTIONS " << i++;
+
+            mGetProjectionRep.mutable_avg()->CopyFrom(Server::instance()->avgProjByName);
+//                        set_allocated_avg(&Server::instance()->avgProjByName);
             rep.SetAllocatedExtension(GetProjectionRep::rep,&mGetProjectionRep);
+            qDebug() << " GETPROJECTIONS " << i++;
+
             rep.SerializeToString(&mRepstr);
-            rep.ReleaseExtension(GetScheduleRep::rep);
-            mGetProjectionRep.release_avg();
-            mGetProjectionRep.release_projs();
+            qDebug() << " GETPROJECTIONS " << i++;
+
+            rep.ReleaseExtension(GetProjectionRep::rep);
+//            mGetProjectionRep.release_avg();
+            qDebug() << " GETPROJECTIONS ppn" << i++ << ppn.name().data();
+
+            if ( ppn.name() != "" ) {
+                qDebug() << " GETPROJECTIONS ppn try" << i++ << ppn.name().data();
+
+//                mGetProjectionRep.release_projs();
+            }
+            qDebug() << " GETPROJECTIONS " << i++;
+
             break;
         }
         default:
@@ -616,7 +637,11 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
 //        rep.mutable_req()->CopyFrom(req);
 
     QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
+    qDebug() << "qb GETPROJECTIONS " << i++;
+
     pClient->sendBinaryMessage(qb);
+    qDebug() << "sent qb GETPROJECTIONS " << i++;
+
     if ( rep.ctype() == GETALLNAMES ) {
         qDebug() << rep.ctype() <<" size " << Server::instance()->mAllNamesRep.names_size();
         WSReply rep2;
@@ -635,6 +660,8 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
         gsr.ParseFromString(mRepstr);
         qDebug() << " LITESERVER out" << gsr.DebugString().data();
     }
+
+    qDebug() << "clear GETPROJECTIONS " << i++;
 
     mRepstr.clear();
     return;
