@@ -172,8 +172,19 @@ void Server::initData() {
         qDebug() << " avgProjByName size" << avgProjByName.playerproj_size();
 
 
+        for(auto &mpm : mProjByNames ) {
+            ProjByName &ppn = mpm.second;//mProjByNames[fPlayer.name()];
+            ppn.mutable_playerproj()->CopyFrom(zeroProjByName.playerproj());
+        }
 
 
+        for ( auto ii : mPlayerId2Index) {
+            auto projmap = mGateway->dataService->GetProjById(ii.first);
+            for ( auto proj : projmap ) {
+                ProjByName &ppm = mProjByNames[proj.first];
+                ppm.mutable_playerproj(ii.second)->set_proj(proj.second);
+            }
+        }
     }
 }
 
