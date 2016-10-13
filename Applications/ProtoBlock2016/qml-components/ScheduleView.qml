@@ -13,7 +13,7 @@ Material.Card {
 //    property alias scheduleModel: lv.model
 //    width: parent.width
 //    height: parent.height
-    anchors.margins: ProtoScreen.guToPx(1)
+//    anchors.margins: ProtoScreen.guToPx(1)
     anchors.fill: parent
 //    width: parent.width
 //    height: parent.height

@@ -71,6 +71,9 @@ Item {
             frameVisible: false
             selectionMode: SelectionMode.NoSelection
 
+            rowDelegate: Item {
+               height: ProtoScreen.guToPx(3)
+            }
             TableViewColumn {
                 role: "lastname"
                 title: "Player Name"
@@ -389,7 +392,7 @@ Item {
             id: idd
             implicitWidth: textItem2.implicitWidth
 //            width: parent.width
-            height: ProtoScreen.guToPx(6)
+            height: ProtoScreen.guToPx(8)
 //            anchors.fill: parent
             color: "white"
             Rectangle {
@@ -484,6 +487,7 @@ Item {
                     visible: styleData.column === 4
                     enabled: styleData.column === 4
                     text: "Send"
+
                     onClicked : {
                         console.log("clicked send")
                         topw.focuscount = 0
@@ -493,7 +497,8 @@ Item {
 
                     }
                     backgroundColor: themeroot.theme.accentColor
-                    textColor: "white"
+                    textColor: themeroot.theme.secondaryColor
+                    elevation: 2
                 }
 
                 Material.IconButton {
@@ -590,6 +595,7 @@ Item {
                     styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor
                                                                  : "black"
                 Material.Label {
+                    anchors.margins: ProtoScreen.guToPx(.25)
                     id: textItem2
                     text: styleData.value
                     anchors.fill: parent
@@ -598,8 +604,8 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column < 6 ? "white" : Material.Theme.light.textColor
-                    font.bold: styleData.column === 4
+                    color: styleData.column === 4 ? themeroot.theme.secondaryColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
+//                    font.bold: styleData.column === 4
                 }
             }
 

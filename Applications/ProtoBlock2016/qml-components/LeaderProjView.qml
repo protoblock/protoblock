@@ -50,10 +50,12 @@ Item {
             }
 
 
-
+            rowDelegate: Item {
+               height: ProtoScreen.guToPx(3)
+            }
             headerDelegate:  Rectangle {
                 width: parent.width
-                height: ProtoScreen.guToPx(6)
+                height: ProtoScreen.guToPx(8)
                 implicitWidth: textItem2.implicitWidth
                 color: "white"
 //                anchors.fill: parent
