@@ -8,6 +8,8 @@
 #include "Data.h"
 #include "pbgateways.h"
 #include "dataservice.h"
+#include "Commissioner.h"
+#include <unordered_set>
 
 using namespace fantasybit;
 
@@ -36,11 +38,16 @@ public:
     std::unordered_map<std::string,ProjByName> mProjByNames;
     std::unordered_map<std::string,int> mPlayerId2Index;
 
+//    std::unordered_map<std::string,std::pair<int,int>> mFname2BlockCount;
+    std::unordered_set<std::string> blocknames;
+    int currblock = 0;
+
 
 //    static fantasybit::GetROWMarketRep ROWMarketRep;
 //    static NFLStateData  NFLData;
     std::unordered_map<std::string,FantasyNameBal *> mPk2Bal;
     std::unordered_map<std::string,int> mPk2Index;
+
 
     void AddNames(const FantasyNameBal &fnb) {
 //        qDebug() << " server::addnames " << fnb.DebugString().data();
@@ -61,6 +68,22 @@ public:
         pbn.set_block(fnb.block());
         pbn.set_name(fnb.name());
     }
+
+    void SaveProj(const FantasyBitProj &fbp) {
+        if ( fbp.block() > currblock) {
+            for ( auto name : blocknames) {
+                auto fnptr = Commissioner::getName(name);
+                if ( fnptr )
+                    AddNames(FantasyName::toFantasyNameBal(*fnptr));
+            }
+            blocknames.clear();
+            currblock = fbp.block();
+        }
+
+        blocknames.insert(fbp.name());
+//        = {fbp.count(),fbp.block()};
+    }
+
 
 //    static void AddNames(FantasyNameBal *pFn) {
 //        mAllNamesRep.add_names(pFn->name());
