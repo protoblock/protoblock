@@ -321,7 +321,7 @@ public:
             for ( auto *it : mPlayerProjModel) {
                 if ( !it->get_isopen() )
                     continue;
-                if ( m_useSelected) {
+                if ( m_useSelected && m_pQItemSelectionModel->hasSelection()) {
                     auto gameid = it->get_gameid();
                     int i = m_pWeeklyScheduleModel->indexOf(m_pWeeklyScheduleModel->getByUid(gameid));
                     if ( !m_pQItemSelectionModel->isSelected(m_pWeeklyScheduleModel->index(i)) )
