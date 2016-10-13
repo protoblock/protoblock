@@ -7,7 +7,8 @@
 #DEFINES += DATAAGENTWRITENAMES_SPECIAL
 DEFINES += NOTHING
 DEFINES += PRODFOOTBALL
-DEFINES += USE_LOCALHOST_SERVER
+#DEFINES += USE_LOCALHOST_SERVER
+DEFINES += USE_LOCALNETWORKHOST_SERVER
 #DEFINES += STOP_HEIGHT_TEST
 #DEFINES += FULL_NODE_CLIENT
 #DEFINES += USE_PB_GATEWAYS
@@ -26,7 +27,7 @@ contains (QMAKE_HOST.os, Darwin){
     DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
 }else{
     message("Host is Windows")
-    DIRPREFIX = C:\work\prebuiltLibs
+    DIRPREFIX = D:\work\prebuiltLibs
 }
 
 
@@ -36,11 +37,11 @@ contains (QMAKE_HOST.os, Darwin){
 
 win32 {
     message(win32 Build)
-    INCLUDEPATH +=   $$PWD/../../../prebuiltLibs/windows/3rdParty
-    INCLUDEPATH += $$PWD/../../../prebuiltLibs/windows/3rdParty/secp256k1
+    INCLUDEPATH +=   $$DIRPREFIX/windows/3rdParty
+    INCLUDEPATH += $$DIRPREFIX/windows/3rdParty/secp256k1
 
    ## FIXME
-    LIBS+= -L$$PWD/../../../prebuiltLibs/windows/libwin64
+    LIBS+= -L$$DIRPREFIX/windows/libwin64
     #LIBS+= -L$$PWD/../libwin64
     CONFIG(debug, debug|release) {
        LIBS+= -llibprotobufd  \
