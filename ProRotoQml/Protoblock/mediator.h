@@ -351,7 +351,7 @@ public:
             if ( it->second == 0 ) continue;
             if ( clone || item->get_projection() == 0 ) {
 
-                if ( m_useSelected) {
+                 if ( m_useSelected && m_pQItemSelectionModel->hasSelection()) {
                     auto gameid = item->get_gameid();
                     int i = m_pWeeklyScheduleModel->indexOf(m_pWeeklyScheduleModel->getByUid(gameid));
                     if ( !m_pQItemSelectionModel->isSelected(m_pWeeklyScheduleModel->index(i)) )

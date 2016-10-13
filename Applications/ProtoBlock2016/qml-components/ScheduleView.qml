@@ -245,9 +245,11 @@ Material.Card {
 //                                                if (exclusiveGroup)
 //                                                    exclusiveGroup.bindCheckable(topButton)
 //                                            }
-                                            onClicked: {
-                                                MiddleMan.set_useSelected(true)
-                                            }
+//                                            onClicked: {
+//                                                MiddleMan.set_useSelected(checked)
+
+//                                            }
+
 
                                         }
                                         RadioButton {
@@ -258,8 +260,8 @@ Material.Card {
                                             checked: modelData === " Home "
                                             text: qsTr("All")
                                             exclusiveGroup: tabPositionGroup
-                                            onClicked: {
-                                                MiddleMan.set_useSelected(false)
+                                            onCheckedChanged: {
+                                                MiddleMan.set_useSelected(!checked)
                                             }
 
                         //                    Layout.minimumWidth: 100
