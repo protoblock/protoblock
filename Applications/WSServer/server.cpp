@@ -41,7 +41,7 @@ void Server::setupConnection(pb::IPBGateway *ingateway) {
     connect( that, SIGNAL   (  NewWeek(int)    ),
             this,      SLOT     (  NewWeek(int)     ));
     connect( that, SIGNAL   (  GameStart(string)    ),
-            this,      SLOT     (  GameStart(string)     ));
+            this,      SIGNAL     (  GameStart(string)     ));
     connect( that, SIGNAL   (  GameOver(string)    ),
             this,      SLOT     (  GameOver(string)     ));
     connect( that, SIGNAL   (  onControlMessage(QString)    ),
@@ -54,6 +54,11 @@ void Server::setupConnection(pb::IPBGateway *ingateway) {
     connect( that, SIGNAL   (  AnyFantasyNameBalance(fantasybit::FantasyNameBal)    ),
             this,  SLOT     (  OnAnyFantasyNameBalance(fantasybit::FantasyNameBal)      ));
 
+    connect( that, SIGNAL(Height(int)),
+             this, SLOT(Height(int)));
+
+    connect( that, SIGNAL(BlockNum(int)),
+             this, SLOT(BlockNum(int)));
 
 //    QObject::connect(this,SIGNAL(OnClaimName(QString)),that,SLOT(OnClaimName(QString)));
 
@@ -81,6 +86,14 @@ void Server::LiveGui(GlobalState gs) {
 //        setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
         GlobalStateRep.mutable_globalstate()->CopyFrom(gs);
         initData();
+
+        #ifdef TESTING_ONLY
+            testGameStart.setInterval(10000);
+            connect(&testGameStart, SIGNAL(timeout()),
+                    this, SLOT(setTestGameStart()));
+            testGameStart.start();
+        #endif
+
     }
 
     qDebug() << "Server GlobalStateRep " << GlobalStateRep.DebugString().data();
@@ -88,6 +101,7 @@ void Server::LiveGui(GlobalState gs) {
 }
 
 void Server::initData() {
+    avgProjByName = ProjByName::default_instance().New();
     if ( mGateway == nullptr ) {
         qDebug() << " mGateway null ";
     }
@@ -121,7 +135,9 @@ void Server::initData() {
             GameData *gd = gdr->mutable_game_data();
             gd->set_gameid(gr.info.id());
             gd->mutable_status()->set_status(gr.status);
-
+#ifdef TESTING_ONLY
+            holdGameData.push_back(*gd);
+#endif
             TeamRoster *homet = gdr->mutable_homeroster();
             homet->set_teamid(gr.info.home());
             for ( auto &h : gr.homeroster) {
@@ -163,26 +179,28 @@ void Server::initData() {
         qDebug() << " zeroProjByName " << zeroProjByName.DebugString().data();
         qDebug() << " zeroProjByName size" << zeroProjByName.playerproj_size();
 
-        avgProjByName.mutable_playerproj()->CopyFrom(zeroProjByName.playerproj());
+        avgProjByName->mutable_playerproj()->CopyFrom(zeroProjByName.playerproj());
 
-        for ( auto &pp : *avgProjByName.mutable_playerproj()) {
+        for ( auto &pp : *avgProjByName->mutable_playerproj()) {
             pp.set_proj(mGateway->dataService->GetAvgProjection(pp.playerid()));
         }
-        qDebug() << " avgProjByName " << avgProjByName.DebugString().data();
-        qDebug() << " avgProjByName size" << avgProjByName.playerproj_size();
+        qDebug() << " avgProjByName " << avgProjByName->DebugString().data();
+        qDebug() << " avgProjByName size" << avgProjByName->playerproj_size();
 
 
-        for(auto &mpm : mProjByNames ) {
-            ProjByName &ppn = mpm.second;//mProjByNames[fPlayer.name()];
-            ppn.mutable_playerproj()->CopyFrom(zeroProjByName.playerproj());
+        for(auto mpm : mProjByNames ) {
+            ProjByName *ppn = mpm.second;//mProjByNames[fPlayer.name()];
+            if ( ppn == nullptr )
+                ppn = ProjByName::default_instance().New();
+            ppn->mutable_playerproj()->CopyFrom(zeroProjByName.playerproj());
         }
 
 
         for ( auto ii : mPlayerId2Index) {
             auto projmap = mGateway->dataService->GetProjById(ii.first);
             for ( auto proj : projmap ) {
-                ProjByName &ppm = mProjByNames[proj.first];
-                ppm.mutable_playerproj(ii.second)->set_proj(proj.second);
+                ProjByName *ppm = mProjByNames[proj.first];
+                ppm->mutable_playerproj(ii.second)->set_proj(proj.second);
             }
         }
     }
@@ -199,32 +217,37 @@ void Server::LiveProj(FantasyBitProj proj) {
         index = zeroProjByName.playerproj_size()-1;
         mPlayerId2Index.insert({pp->playerid(),index});
         qWarning() << " Server::LiveProj not found - added " << proj.DebugString().data();
-        avgpp = avgProjByName.add_playerproj();
+        avgpp = avgProjByName->add_playerproj();
         avgpp->CopyFrom(*pp);
     }
     else {
         index = it->second;
-        avgpp = avgProjByName.mutable_playerproj(index);
+        avgpp = avgProjByName->mutable_playerproj(index);
     }
     avgpp->set_proj(mGateway->dataService->GetAvgProjection(avgpp->playerid()));
 
     qDebug() << " avgpp " << avgpp->DebugString().data();
 
-    ProjByName &ppn = mProjByNames[proj.name()];
-    if ( ppn.playerproj_size() == 0 ) {
-        ppn.mutable_playerproj()->CopyFrom(zeroProjByName.playerproj());
+    ProjByName *ppn = mProjByNames[proj.name()];
+    if ( ppn == nullptr )
+        ppn = ProjByName::default_instance().New();
+
+    if ( ppn->playerproj_size() == 0 ) {
+        ppn->mutable_playerproj()->CopyFrom(zeroProjByName.playerproj());
     }
-    else if ( index > ppn.playerproj_size()-1) {
-        for ( int i = ppn.playerproj_size()-1; i <= index; i++ )
-            ppn.add_playerproj()->CopyFrom(zeroProjByName.playerproj(i));
+    else if ( index > ppn->playerproj_size()-1) {
+        for ( int i = ppn->playerproj_size()-1; i <= index; i++ )
+            ppn->add_playerproj()->CopyFrom(zeroProjByName.playerproj(i));
     }
 
-    ppn.set_block(proj.block());
-    ppn.set_count(proj.count());
-    ppn.mutable_playerproj(index)->set_proj(proj.proj());
+//    ppn->set_block(proj.block());
+//    ppn->set_count(proj.count());
+    ppn->mutable_playerproj(index)->set_proj(proj.proj());
 
-    qDebug() << " LiveProj ProjByName playerproj_size" << ppn.playerproj_size();
-    qDebug() << " LiveProj avgProjByName playerproj_size" << avgProjByName.playerproj_size();
+    qDebug() << " LiveProj ProjByName playerproj_size" << ppn->playerproj_size();
+    qDebug() << " LiveProj avgProjByName playerproj_size" << avgProjByName->playerproj_size();
+    SaveProj(proj);
+
 
 }
 

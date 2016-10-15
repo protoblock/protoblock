@@ -855,10 +855,11 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(WsReq));
   WSReply_descriptor_ = file->message_type(33);
-  static const int WSReply_offsets_[3] = {
+  static const int WSReply_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WSReply, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WSReply, ctype_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WSReply, req_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WSReply, data_),
   };
   WSReply_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1697,98 +1698,99 @@ void protobuf_AddDesc_StateData_2eproto() {
     "\022\016\n\006leaves\030\024 \003(\014\"9\n\016NewPlayerModel\022\'\n\007pl"
     "ayers\030\n \003(\0132\026.fantasybit.PlayerMeta\"D\n\005W"
     "sReq\022\017\n\007version\030\001 \001(\005\022 \n\005ctype\030\002 \001(\0162\021.f"
-    "antasybit.CType*\010\010d\020\200\200\200\200\002\"f\n\007WSReply\022\017\n\007"
+    "antasybit.CType*\010\010d\020\200\200\200\200\002\"t\n\007WSReply\022\017\n\007"
     "version\030\001 \001(\005\022 \n\005ctype\030\002 \001(\0162\021.fantasybi"
-    "t.CType\022\036\n\003req\030\024 \001(\0132\021.fantasybit.WsReq*"
-    "\010\010d\020\200\200\200\200\002\"\203\001\n\021GetGlobalStateRep\022,\n\013globa"
-    "lstate\030\n \001(\0132\027.fantasybit.GlobalState2@\n"
-    "\003rep\022\023.fantasybit.WSReply\030\204\007 \001(\0132\035.fanta"
-    "sybit.GetGlobalStateRep\"\177\n\016GetScheduleRe"
-    "p\022.\n\014scheduledata\030\n \001(\0132\030.fantasybit.Sch"
-    "eduleData2=\n\003rep\022\023.fantasybit.WSReply\030\216\007"
-    " \001(\0132\032.fantasybit.GetScheduleRep\"_\n\014Chec"
-    "kNameReq\022\024\n\014fantasy_name\030\n \001(\t29\n\003req\022\021."
-    "fantasybit.WsReq\030\310\001 \001(\0132\030.fantasybit.Che"
-    "ckNameReq\"\203\001\n\014CheckNameRep\022\017\n\007isavail\030\n "
-    "\001(\t\022%\n\003req\030\024 \001(\0132\030.fantasybit.CheckNameR"
-    "eq2;\n\003rep\022\023.fantasybit.WSReply\030\310\001 \001(\0132\030."
-    "fantasybit.CheckNameRep\"S\n\013Pk2FnameReq\022\n"
-    "\n\002pk\030\n \001(\t28\n\003req\022\021.fantasybit.WsReq\030\254\002 "
-    "\001(\0132\027.fantasybit.Pk2FnameReq\"\247\001\n\013Pk2Fnam"
-    "eRep\022\r\n\005fname\030\n \001(\t\022$\n\003req\030\024 \001(\0132\027.fanta"
-    "sybit.Pk2FnameReq\022\'\n\003fnb\030\036 \001(\0132\032.fantasy"
-    "bit.FantasyNameBal2:\n\003rep\022\023.fantasybit.W"
-    "SReply\030\254\002 \001(\0132\027.fantasybit.Pk2FnameRep\"g"
-    "\n\014SubscribeReq\022\014\n\004name\030\n \001(\t\022\016\n\006fchash\030\036"
-    " \001(\00429\n\003req\022\021.fantasybit.WsReq\030\336\002 \001(\0132\030."
-    "fantasybit.SubscribeReq\"e\n\rNameStatusReq"
-    "\022\014\n\004name\030\n \001(\t\022\n\n\002pk\030\024 \001(\t2:\n\003req\022\021.fant"
-    "asybit.WsReq\030\220\003 \001(\0132\031.fantasybit.NameSta"
-    "tusReq\"\237\001\n\rNameStatusRep\022(\n\006status\030\n \001(\016"
-    "2\030.fantasybit.MyNameStatus\022&\n\003req\030\024 \001(\0132"
-    "\031.fantasybit.NameStatusReq2<\n\003rep\022\023.fant"
-    "asybit.WSReply\030\220\003 \001(\0132\031.fantasybit.NameS"
-    "tatusRep\"\207\001\n\016GetAllNamesRep\022\r\n\005names\030\n \003"
-    "(\t\022\'\n\003fnb\030\024 \003(\0132\032.fantasybit.FantasyName"
-    "Bal2=\n\003rep\022\023.fantasybit.WSReply\030\364\003 \001(\0132\032"
-    ".fantasybit.GetAllNamesRep\"E\n\nTeamRoster"
-    "\022\016\n\006teamid\030\n \001(\t\022\'\n\007players\030\024 \003(\0132\026.fant"
-    "asybit.PlayerData\"\221\001\n\016GameDataRoster\022\'\n\t"
-    "game_data\030\n \001(\0132\024.fantasybit.GameData\022*\n"
-    "\nhomeroster\030\024 \001(\0132\026.fantasybit.TeamRoste"
-    "r\022*\n\nawayroster\030\036 \001(\0132\026.fantasybit.TeamR"
-    "oster\"\224\001\n\021GetCurrRostersRep\022\014\n\004week\030\n \001("
-    "\005\022/\n\013gamerosters\030\024 \003(\0132\032.fantasybit.Game"
-    "DataRoster2@\n\003rep\022\023.fantasybit.WSReply\030\230"
-    "\007 \001(\0132\035.fantasybit.GetCurrRostersRep\"\224\001\n"
-    "\tROWMarket\022\013\n\003pid\030\n \001(\t\022&\n\005quote\030\036 \001(\0132\027"
-    ".fantasybit.MarketQuote\022*\n\nplayerdata\030( "
-    "\001(\0132\026.fantasybit.PlayerData\022&\n\004ohlc\0302 \001("
-    "\0132\030.fantasybit.ContractOHLC\"{\n\017GetROWMar"
-    "ketRep\022(\n\trowmarket\030\n \003(\0132\025.fantasybit.R"
-    "OWMarket2>\n\003rep\022\023.fantasybit.WSReply\030\330\004 "
-    "\001(\0132\033.fantasybit.GetROWMarketRep\"T\n\013GetD"
-    "epthReq\022\013\n\003pid\030\n \001(\t28\n\003req\022\021.fantasybit"
-    ".WsReq\030\274\005 \001(\0132\027.fantasybit.GetDepthReq\"\253"
-    "\001\n\013GetDepthRep\022\013\n\003pid\030\n \001(\t\022)\n\ndepthitem"
-    "s\030\024 \003(\0132\025.fantasybit.DepthItem\022(\n\trowmar"
-    "ket\030\036 \001(\0132\025.fantasybit.ROWMarket2:\n\003rep\022"
-    "\023.fantasybit.WSReply\030\274\005 \001(\0132\027.fantasybit"
-    ".GetDepthRep\"\177\n\016AllOdersSymbol\022\016\n\006symbol"
-    "\030\n \001(\t\022\016\n\006netqty\030\036 \001(\005\022\020\n\010netprice\030( \001(\005"
-    "\022\013\n\003avg\0302 \001(\001\022\013\n\003pnl\030< \001(\001\022!\n\006orders\030\024 \003"
-    "(\0132\021.fantasybit.Order\"M\n\rAllOdersFname\022\r"
-    "\n\005fname\030\n \001(\t\022-\n\tpidorders\030\024 \003(\0132\032.fanta"
-    "sybit.AllOdersSymbol\"\236\001\n\014GetOrdersRep\022%\n"
-    "\003req\030\n \001(\0132\030.fantasybit.GetOrdersReq\022*\n\007"
-    "oorders\030\024 \001(\0132\031.fantasybit.AllOdersFname"
-    "2;\n\003rep\022\023.fantasybit.WSReply\030\240\006 \001(\0132\030.fa"
-    "ntasybit.GetOrdersRep\"x\n\014GetOrdersReq\022\016\n"
-    "\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001(\t\022\016\n\006fchash\030\036"
-    " \001(\00429\n\003req\022\021.fantasybit.WsReq\030\240\006 \001(\0132\030."
-    "fantasybit.GetOrdersReq\"p\n\020GetProjection"
-    "Req\022\r\n\005fname\030\024 \001(\t\022\016\n\006getavg\030\036 \001(\0102=\n\003re"
-    "q\022\021.fantasybit.WsReq\030\204\007 \001(\0132\034.fantasybit"
-    ".GetProjectionReq\",\n\nPlayerProj\022\020\n\010playe"
-    "rid\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\"d\n\nProjByName\022\014\n"
-    "\004name\030\n \001(\t\022*\n\nplayerproj\030\024 \003(\0132\026.fantas"
-    "ybit.PlayerProj\022\r\n\005count\030( \001(\005\022\r\n\005block\030"
-    "2 \001(\005\"\237\001\n\020GetProjectionRep\022%\n\005projs\030\024 \001("
-    "\0132\026.fantasybit.ProjByName\022#\n\003avg\030\036 \001(\0132\026"
-    ".fantasybit.ProjByName2\?\n\003rep\022\023.fantasyb"
-    "it.WSReply\030\254\007 \001(\0132\034.fantasybit.GetProjec"
-    "tionRep\"&\n\010KeyValue\022\013\n\003key\030\n \001(\014\022\r\n\005valu"
-    "e\030\024 \001(\014\"\235\001\n\tBootstrap\022\013\n\003key\030\001 \001(\t\022\020\n\010bl"
-    "ocknum\030\002 \001(\005\022\014\n\004week\030\003 \001(\005\022\016\n\006season\030\004 \001"
-    "(\005\022\024\n\014gamemetaroot\030\n \001(\014\022\026\n\016playermetaro"
-    "ot\030\024 \001(\014\022\025\n\rfnamemetaroot\030\036 \001(\014\022\016\n\006previ"
-    "d\030( \001(\014*\372\001\n\005CType\022\010\n\004NONE\020\000\022\r\n\tCHECKNAME"
-    "\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS"
-    "\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n"
-    "\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITIO"
-    "NS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n\022\022\n\016GETGLOBALSTA"
-    "TE\020\013\022\017\n\013GETSCHEDULE\020\014\022\021\n\rGETGAMEROSTER\020\r"
-    "\022\022\n\016GETPROJECTIONS\020\017", 7900);
+    "t.CType\022\036\n\003req\030\024 \001(\0132\021.fantasybit.WsReq\022"
+    "\014\n\004data\030\036 \001(\t*\010\010d\020\200\200\200\200\002\"\203\001\n\021GetGlobalSta"
+    "teRep\022,\n\013globalstate\030\n \001(\0132\027.fantasybit."
+    "GlobalState2@\n\003rep\022\023.fantasybit.WSReply\030"
+    "\204\007 \001(\0132\035.fantasybit.GetGlobalStateRep\"\177\n"
+    "\016GetScheduleRep\022.\n\014scheduledata\030\n \001(\0132\030."
+    "fantasybit.ScheduleData2=\n\003rep\022\023.fantasy"
+    "bit.WSReply\030\216\007 \001(\0132\032.fantasybit.GetSched"
+    "uleRep\"_\n\014CheckNameReq\022\024\n\014fantasy_name\030\n"
+    " \001(\t29\n\003req\022\021.fantasybit.WsReq\030\310\001 \001(\0132\030."
+    "fantasybit.CheckNameReq\"\203\001\n\014CheckNameRep"
+    "\022\017\n\007isavail\030\n \001(\t\022%\n\003req\030\024 \001(\0132\030.fantasy"
+    "bit.CheckNameReq2;\n\003rep\022\023.fantasybit.WSR"
+    "eply\030\310\001 \001(\0132\030.fantasybit.CheckNameRep\"S\n"
+    "\013Pk2FnameReq\022\n\n\002pk\030\n \001(\t28\n\003req\022\021.fantas"
+    "ybit.WsReq\030\254\002 \001(\0132\027.fantasybit.Pk2FnameR"
+    "eq\"\247\001\n\013Pk2FnameRep\022\r\n\005fname\030\n \001(\t\022$\n\003req"
+    "\030\024 \001(\0132\027.fantasybit.Pk2FnameReq\022\'\n\003fnb\030\036"
+    " \001(\0132\032.fantasybit.FantasyNameBal2:\n\003rep\022"
+    "\023.fantasybit.WSReply\030\254\002 \001(\0132\027.fantasybit"
+    ".Pk2FnameRep\"g\n\014SubscribeReq\022\014\n\004name\030\n \001"
+    "(\t\022\016\n\006fchash\030\036 \001(\00429\n\003req\022\021.fantasybit.W"
+    "sReq\030\336\002 \001(\0132\030.fantasybit.SubscribeReq\"e\n"
+    "\rNameStatusReq\022\014\n\004name\030\n \001(\t\022\n\n\002pk\030\024 \001(\t"
+    "2:\n\003req\022\021.fantasybit.WsReq\030\220\003 \001(\0132\031.fant"
+    "asybit.NameStatusReq\"\237\001\n\rNameStatusRep\022("
+    "\n\006status\030\n \001(\0162\030.fantasybit.MyNameStatus"
+    "\022&\n\003req\030\024 \001(\0132\031.fantasybit.NameStatusReq"
+    "2<\n\003rep\022\023.fantasybit.WSReply\030\220\003 \001(\0132\031.fa"
+    "ntasybit.NameStatusRep\"\207\001\n\016GetAllNamesRe"
+    "p\022\r\n\005names\030\n \003(\t\022\'\n\003fnb\030\024 \003(\0132\032.fantasyb"
+    "it.FantasyNameBal2=\n\003rep\022\023.fantasybit.WS"
+    "Reply\030\364\003 \001(\0132\032.fantasybit.GetAllNamesRep"
+    "\"E\n\nTeamRoster\022\016\n\006teamid\030\n \001(\t\022\'\n\007player"
+    "s\030\024 \003(\0132\026.fantasybit.PlayerData\"\221\001\n\016Game"
+    "DataRoster\022\'\n\tgame_data\030\n \001(\0132\024.fantasyb"
+    "it.GameData\022*\n\nhomeroster\030\024 \001(\0132\026.fantas"
+    "ybit.TeamRoster\022*\n\nawayroster\030\036 \001(\0132\026.fa"
+    "ntasybit.TeamRoster\"\224\001\n\021GetCurrRostersRe"
+    "p\022\014\n\004week\030\n \001(\005\022/\n\013gamerosters\030\024 \003(\0132\032.f"
+    "antasybit.GameDataRoster2@\n\003rep\022\023.fantas"
+    "ybit.WSReply\030\230\007 \001(\0132\035.fantasybit.GetCurr"
+    "RostersRep\"\224\001\n\tROWMarket\022\013\n\003pid\030\n \001(\t\022&\n"
+    "\005quote\030\036 \001(\0132\027.fantasybit.MarketQuote\022*\n"
+    "\nplayerdata\030( \001(\0132\026.fantasybit.PlayerDat"
+    "a\022&\n\004ohlc\0302 \001(\0132\030.fantasybit.ContractOHL"
+    "C\"{\n\017GetROWMarketRep\022(\n\trowmarket\030\n \003(\0132"
+    "\025.fantasybit.ROWMarket2>\n\003rep\022\023.fantasyb"
+    "it.WSReply\030\330\004 \001(\0132\033.fantasybit.GetROWMar"
+    "ketRep\"T\n\013GetDepthReq\022\013\n\003pid\030\n \001(\t28\n\003re"
+    "q\022\021.fantasybit.WsReq\030\274\005 \001(\0132\027.fantasybit"
+    ".GetDepthReq\"\253\001\n\013GetDepthRep\022\013\n\003pid\030\n \001("
+    "\t\022)\n\ndepthitems\030\024 \003(\0132\025.fantasybit.Depth"
+    "Item\022(\n\trowmarket\030\036 \001(\0132\025.fantasybit.ROW"
+    "Market2:\n\003rep\022\023.fantasybit.WSReply\030\274\005 \001("
+    "\0132\027.fantasybit.GetDepthRep\"\177\n\016AllOdersSy"
+    "mbol\022\016\n\006symbol\030\n \001(\t\022\016\n\006netqty\030\036 \001(\005\022\020\n\010"
+    "netprice\030( \001(\005\022\013\n\003avg\0302 \001(\001\022\013\n\003pnl\030< \001(\001"
+    "\022!\n\006orders\030\024 \003(\0132\021.fantasybit.Order\"M\n\rA"
+    "llOdersFname\022\r\n\005fname\030\n \001(\t\022-\n\tpidorders"
+    "\030\024 \003(\0132\032.fantasybit.AllOdersSymbol\"\236\001\n\014G"
+    "etOrdersRep\022%\n\003req\030\n \001(\0132\030.fantasybit.Ge"
+    "tOrdersReq\022*\n\007oorders\030\024 \001(\0132\031.fantasybit"
+    ".AllOdersFname2;\n\003rep\022\023.fantasybit.WSRep"
+    "ly\030\240\006 \001(\0132\030.fantasybit.GetOrdersRep\"x\n\014G"
+    "etOrdersReq\022\016\n\006symbol\030\n \001(\t\022\r\n\005fname\030\024 \001"
+    "(\t\022\016\n\006fchash\030\036 \001(\00429\n\003req\022\021.fantasybit.W"
+    "sReq\030\240\006 \001(\0132\030.fantasybit.GetOrdersReq\"p\n"
+    "\020GetProjectionReq\022\r\n\005fname\030\024 \001(\t\022\016\n\006geta"
+    "vg\030\036 \001(\0102=\n\003req\022\021.fantasybit.WsReq\030\204\007 \001("
+    "\0132\034.fantasybit.GetProjectionReq\",\n\nPlaye"
+    "rProj\022\020\n\010playerid\030\n \001(\t\022\014\n\004proj\030\024 \001(\005\"d\n"
+    "\nProjByName\022\014\n\004name\030\n \001(\t\022*\n\nplayerproj\030"
+    "\024 \003(\0132\026.fantasybit.PlayerProj\022\r\n\005count\030("
+    " \001(\005\022\r\n\005block\0302 \001(\005\"\237\001\n\020GetProjectionRep"
+    "\022%\n\005projs\030\024 \001(\0132\026.fantasybit.ProjByName\022"
+    "#\n\003avg\030\036 \001(\0132\026.fantasybit.ProjByName2\?\n\003"
+    "rep\022\023.fantasybit.WSReply\030\254\007 \001(\0132\034.fantas"
+    "ybit.GetProjectionRep\"&\n\010KeyValue\022\013\n\003key"
+    "\030\n \001(\014\022\r\n\005value\030\024 \001(\014\"\235\001\n\tBootstrap\022\013\n\003k"
+    "ey\030\001 \001(\t\022\020\n\010blocknum\030\002 \001(\005\022\014\n\004week\030\003 \001(\005"
+    "\022\016\n\006season\030\004 \001(\005\022\024\n\014gamemetaroot\030\n \001(\014\022\026"
+    "\n\016playermetaroot\030\024 \001(\014\022\025\n\rfnamemetaroot\030"
+    "\036 \001(\014\022\016\n\006previd\030( \001(\014*\214\002\n\005CType\022\010\n\004NONE\020"
+    "\000\022\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020"
+    "\003\022\r\n\tGETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GET"
+    "ROWMARKET\020\006\022\014\n\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010"
+    "\022\020\n\014GETPOSITIONS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n\022\022"
+    "\n\016GETGLOBALSTATE\020\013\022\017\n\013GETSCHEDULE\020\014\022\021\n\rG"
+    "ETGAMEROSTER\020\r\022\022\n\016GETPROJECTIONS\020\017\022\020\n\014GE"
+    "TGAMESTART\020\020", 7932);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -2015,6 +2017,7 @@ bool CType_IsValid(int value) {
     case 12:
     case 13:
     case 15:
+    case 16:
       return true;
     default:
       return false;
@@ -16008,6 +16011,7 @@ void WsReq::Swap(WsReq* other) {
 const int WSReply::kVersionFieldNumber;
 const int WSReply::kCtypeFieldNumber;
 const int WSReply::kReqFieldNumber;
+const int WSReply::kDataFieldNumber;
 #endif  // !_MSC_VER
 
 WSReply::WSReply()
@@ -16030,6 +16034,7 @@ void WSReply::SharedCtor() {
   version_ = 0;
   ctype_ = 0;
   req_ = NULL;
+  data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -16038,6 +16043,9 @@ WSReply::~WSReply() {
 }
 
 void WSReply::SharedDtor() {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    delete data_;
+  }
   if (this != default_instance_) {
     delete req_;
   }
@@ -16071,6 +16079,11 @@ void WSReply::Clear() {
     ctype_ = 0;
     if (has_req()) {
       if (req_ != NULL) req_->::fantasybit::WsReq::Clear();
+    }
+    if (has_data()) {
+      if (data_ != &::google::protobuf::internal::kEmptyString) {
+        data_->clear();
+      }
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -16129,6 +16142,23 @@ bool WSReply::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(242)) goto parse_data;
+        break;
+      }
+
+      // optional string data = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_data:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_data()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->data().data(), this->data().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -16173,6 +16203,15 @@ void WSReply::SerializeWithCachedSizes(
       20, this->req(), output);
   }
 
+  // optional string data = 30;
+  if (has_data()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->data().data(), this->data().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      30, this->data(), output);
+  }
+
   // Extension range [100, 536870912)
   _extensions_.SerializeWithCachedSizes(
       100, 536870912, output);
@@ -16201,6 +16240,16 @@ void WSReply::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         20, this->req(), target);
+  }
+
+  // optional string data = 30;
+  if (has_data()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->data().data(), this->data().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        30, this->data(), target);
   }
 
   // Extension range [100, 536870912)
@@ -16236,6 +16285,13 @@ int WSReply::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->req());
+    }
+
+    // optional string data = 30;
+    if (has_data()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->data());
     }
 
   }
@@ -16276,6 +16332,9 @@ void WSReply::MergeFrom(const WSReply& from) {
     if (from.has_req()) {
       mutable_req()->::fantasybit::WsReq::MergeFrom(from.req());
     }
+    if (from.has_data()) {
+      set_data(from.data());
+    }
   }
   _extensions_.MergeFrom(from._extensions_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -16307,6 +16366,7 @@ void WSReply::Swap(WSReply* other) {
     std::swap(version_, other->version_);
     std::swap(ctype_, other->ctype_);
     std::swap(req_, other->req_);
+    std::swap(data_, other->data_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

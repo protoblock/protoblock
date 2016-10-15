@@ -205,6 +205,7 @@ void MainLAPIWorker::ProcessBlock() {
     bool catchingup;
     do {
         if ( !doProcessBlock() ) return;
+        emit BlockNum(last_block);
         count = pcount = 0;
         {
             std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
@@ -213,7 +214,7 @@ void MainLAPIWorker::ProcessBlock() {
 
         if ( catchingup )
         {
-            emit BlockNum(last_block);
+
             if ( docount++ == 50 ) {
                 QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
                 docount = 0;

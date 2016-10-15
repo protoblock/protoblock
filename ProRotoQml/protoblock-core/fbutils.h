@@ -53,9 +53,9 @@ namespace fantasybit {
     static bool IS_TEST_NET = true;
 #else
     static bool IS_TEST_NET = false;
-    static int PB_WS_LITE_AGENT_PORT = 5111;
-    static int PB_WS_TX_PORT = 5110;
-    static int PB_WS_CHAT_PORT = 5112;
+    static int PB_WS_LITE_AGENT_PORT = 6111;
+    static int PB_WS_TX_PORT = 6110;
+    static int PB_WS_CHAT_PORT = 6112;
 
 #ifdef USE_LOCALHOST_SERVER
     static std::string PB_WS_LITE_AGENT = "localhost";

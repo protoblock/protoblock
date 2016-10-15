@@ -116,11 +116,12 @@ enum CType {
   GETGLOBALSTATE = 11,
   GETSCHEDULE = 12,
   GETGAMEROSTER = 13,
-  GETPROJECTIONS = 15
+  GETPROJECTIONS = 15,
+  GETGAMESTART = 16
 };
 bool CType_IsValid(int value);
 const CType CType_MIN = NONE;
-const CType CType_MAX = GETPROJECTIONS;
+const CType CType_MAX = GETGAMESTART;
 const int CType_ARRAYSIZE = CType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* CType_descriptor();
@@ -5009,6 +5010,18 @@ class WSReply : public ::google::protobuf::Message {
   inline ::fantasybit::WsReq* release_req();
   inline void set_allocated_req(::fantasybit::WsReq* req);
 
+  // optional string data = 30;
+  inline bool has_data() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 30;
+  inline const ::std::string& data() const;
+  inline void set_data(const ::std::string& value);
+  inline void set_data(const char* value);
+  inline void set_data(const char* value, size_t size);
+  inline ::std::string* mutable_data();
+  inline ::std::string* release_data();
+  inline void set_allocated_data(::std::string* data);
+
   GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(WSReply)
   // @@protoc_insertion_point(class_scope:fantasybit.WSReply)
  private:
@@ -5018,6 +5031,8 @@ class WSReply : public ::google::protobuf::Message {
   inline void clear_has_ctype();
   inline void set_has_req();
   inline void clear_has_req();
+  inline void set_has_data();
+  inline void clear_has_data();
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
@@ -5026,9 +5041,10 @@ class WSReply : public ::google::protobuf::Message {
   ::google::protobuf::int32 version_;
   int ctype_;
   ::fantasybit::WsReq* req_;
+  ::std::string* data_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -18066,6 +18082,76 @@ inline void WSReply::set_allocated_req(::fantasybit::WsReq* req) {
     set_has_req();
   } else {
     clear_has_req();
+  }
+}
+
+// optional string data = 30;
+inline bool WSReply::has_data() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void WSReply::set_has_data() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void WSReply::clear_has_data() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void WSReply::clear_data() {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    data_->clear();
+  }
+  clear_has_data();
+}
+inline const ::std::string& WSReply::data() const {
+  return *data_;
+}
+inline void WSReply::set_data(const ::std::string& value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void WSReply::set_data(const char* value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void WSReply::set_data(const char* value, size_t size) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* WSReply::mutable_data() {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  return data_;
+}
+inline ::std::string* WSReply::release_data() {
+  clear_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = data_;
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void WSReply::set_allocated_data(::std::string* data) {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    delete data_;
+  }
+  if (data) {
+    set_has_data();
+    data_ = data;
+  } else {
+    clear_has_data();
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
