@@ -101,6 +101,9 @@ void MainLAPIWorker::GoLive() {
     amlive = true;
     numto = 0;
     intervalstart = 1000;
+#ifdef LIGHT_CLIENT_ONLY
+    intervalstart = 500;
+#endif
     timer->start(intervalstart);
 
     qDebug() << "emit LiveData(true)";
@@ -280,6 +283,9 @@ void MainLAPIWorker::Timer() {
         if ( bcount < 3)
             emit GetNext();
     }
+#ifdef LIGHT_CLIENT_ONLY
+    emit GetNext();
+#else
     else {
         count++;
         emit GetNext();
@@ -293,7 +299,7 @@ void MainLAPIWorker::Timer() {
 //                emit GameStart("201600110");
         }
     }
-
+#endif
 }
 
 bool MainLAPIWorker::Process(fantasybit::Block &b) {
