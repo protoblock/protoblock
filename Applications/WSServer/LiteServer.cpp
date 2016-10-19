@@ -220,7 +220,8 @@ int i =0;
         case GETPROJECTIONS: {
 
             auto &name = req.GetExtension(GetProjectionReq::req).fname();
-            mFnameSubscribed[name] = pClient;
+            if ( name != "")
+                mFnameSubscribed[name] = pClient;
             doSendProjections(pClient,name);
             return;
             break;
@@ -260,10 +261,9 @@ int i =0;
 //        rep.mutable_req()->CopyFrom(req);
 
     QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
-    qDebug() << "qb GETPROJECTIONS " << i++;
 
     pClient->sendBinaryMessage(qb);
-    qDebug() << "sent qb GETPROJECTIONS " << i++;
+
 
     if ( rep.ctype() == GETALLNAMES ) {
         qDebug() << rep.ctype() <<" size " << Server::instance()->mAllNamesRep.names_size();
@@ -291,13 +291,18 @@ int i =0;
 
 
 void LiteServer::doSendProjections(QWebSocket *pClient,const std::string & fname ) {
-    ProjByName *ppn = Server::instance()->mProjByNames[fname];
-    mGetProjectionRep->set_allocated_projs(ppn);
+    ProjByName *ppn = nullptr;
+    if ( fname != "" ) {
+        ppn = Server::instance()->mProjByNames[fname];
+        mGetProjectionRep->set_allocated_projs(ppn);
+    }
+
     mGetProjectionRep->set_allocated_avg(Server::instance()->avgProjByName);
     mWSReplybyteArray.resize(mWSReplyGetProjectionRep.ByteSize());
     mWSReplyGetProjectionRep.SerializeToArray(mWSReplybyteArray.data(), mWSReplybyteArray.size());
     Server::instance()->avgProjByName = mGetProjectionRep->release_avg();
-    ppn = mGetProjectionRep->release_projs();
+    if ( ppn != nullptr )
+        ppn = mGetProjectionRep->release_projs();
     pClient->sendBinaryMessage(mWSReplybyteArray);
 }
 
