@@ -90,7 +90,7 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (qint32, height)
     QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
 
-
+    QML_WRITABLE_CSTREF_PROPERTY(bool,busySend)
 
     //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
     //    QML_LIST_PROPERTY(Mediator,goodFname,QString)
@@ -231,6 +231,7 @@ public:
             it->set_projection(it->get_knownProjection());
         }
         m_pProjectionsViewFilterProxyModel->invalidate();
+        set_busySend(false);
     }
 
     Q_INVOKABLE void sendProjections() {
@@ -257,6 +258,9 @@ public:
             vproj.push_back(fproj);
 
         }
+
+        if ( projbygame.size() > 0 )
+            set_busySend(true);
 
         for ( auto &vg : projbygame)
             emit NewProjection(vg.second);

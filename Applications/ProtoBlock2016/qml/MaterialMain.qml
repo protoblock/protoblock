@@ -557,6 +557,11 @@ Material.ApplicationWindow{
         }
     }
 
+    BusyIndicator {
+        id: newnameInd
+        running: MiddleMan.busySend
+        anchors.centerIn: parent
+    }
 
     Connections {
         target: MiddleMan

@@ -53,7 +53,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pProjectionsViewFilterProxyModel->setSortRole("pos");//mPlayerProjModel.roleForName("pos"));
     m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(false);
     m_useSelected = false;
-
+    m_busySend = false;
 //setProperty
 //    connect(this,SIGNAL(pPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)),
 //            this,SLOT(OnpPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)));
@@ -180,6 +180,7 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     qDebug() << "Mediator  emitting using fanetay name " << myname.name().data();
     emit usingFantasyName(myname.name().data());
     updateCurrentFantasyPlayerProjections();
+    set_busySend(false);
 }
 
 void Mediator::LiveProj(FantasyBitProj proj) {
@@ -189,14 +190,13 @@ void Mediator::LiveProj(FantasyBitProj proj) {
         item->set_avg(mGateway->dataService->GetAvgProjection(proj.playerid()));
 
         if ( proj.name() == myFantasyName ) {
+            set_busySend(false);
             if ( proj.proj() > 0 ) {
                 item->set_knownProjection(proj.proj());
                 item->set_projection(proj.proj());
             }
         }
-
     }
-
 
     auto *item2 = mFantasyNameBalModel.getByUid(proj.name().data());
     if ( !item2 ) return;
@@ -254,6 +254,7 @@ void Mediator::GlobalStateChange(GlobalState gs)
             updateWeek();
         }
         settheWeek(gs.week());
+        set_busySend(false);
     }
 }
 
@@ -281,6 +282,7 @@ void Mediator::updateWeek() {
     else if ( mGateway->dataService == nullptr)
         qDebug() << " mGateway->dataService null ";
     else {
+        set_busySend(false);
         updateLiveLeaders();
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
@@ -322,6 +324,7 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 }
 
 void Mediator::NewWeek(int week) {
+    set_busySend(false);
     settheWeek(week);
     if ( amLive ) {
         updateLiveLeaders();
