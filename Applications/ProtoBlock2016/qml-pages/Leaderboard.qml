@@ -188,8 +188,7 @@ Item {
                     currentLevel = currentLevel -1
                     if(currentLevel === 0 ){
                         mainTitle.text = "2016 Leaderboard"
-                        mainSubText.text = (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText ) + " Balance: " +  model.score
-
+                        mainSubText.text = (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText )
                         jsonGetter.source =  baseUrl + "fantasy/leaders?week=" + replaceSpace(week.currentText)
                     }else{
                         mainTitle.text = lastTitle
@@ -317,7 +316,7 @@ Item {
             elevation: 2
             action: Image {
                 source : "qrc:/icons/action_account_circle.png"
-                width: 32
+                width: ProtoScreen.guToPx(4)
                 height:  width
             }
             onClicked:{
@@ -347,7 +346,7 @@ Item {
             // FIXME set this as a platform.os android
             action: Image {
              source: "qrc:/" + model.team+".PNG"
-                width: 32
+                width: ProtoScreen.guToPx(4)
                 height:  width
             }
 
@@ -375,7 +374,7 @@ Item {
             elevation: 2
             action: Image {
                 source: "qrc:/icons/action_account_circle.png"
-                width: 32
+                width: ProtoScreen.guToPx(4)
                 height:  width
             }
             onClicked:{
