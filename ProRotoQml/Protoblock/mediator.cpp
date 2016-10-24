@@ -165,7 +165,7 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
             mGoodNameBalModel.append(new FantasyNameBalModelItem(*it));
         else {
             qDebug() <<  " mediator namestatus not in  mFantasyNameBalModel";
-            if ( myname.status() < MyNameStatus::confirmed) {
+            if ( myname.status() < MyNameStatus::requested) {
                 qDebug() << " not comfirmed ";
                 return;
             }

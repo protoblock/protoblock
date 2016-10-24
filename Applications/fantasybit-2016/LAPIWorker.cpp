@@ -337,14 +337,15 @@ void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal bal) {
 
 void MainLAPIWorker::OnGetMyNames() {
     vector<MyFantasyName> my;
-    myfantasynames = agent.getMyNamesStatus();
-    for(auto p : myfantasynames) {
+
+    my = agent.getMyNamesStatus();
+    for(auto p : my) {
         /*
         if ( amlive )
         if ( p.second.status() < MyNameStatus::confirmed )
             namedata.Subscribe(p.first);
         */
-        my.push_back(p.second);
+        myfantasynames[p.name()] = p;
     }
 
 
@@ -366,7 +367,7 @@ void MainLAPIWorker::OnUseName(QString name) {
     myCurrentName.set_name(name.toStdString());
     myCurrentName.set_status(MyNameStatus::requested);
 
-    myfantasynames = agent.getMyNamesStatus();
+    //myfantasynames = agent.getMyNamesStatus();
 
     auto it = myfantasynames.find(name.toStdString());
     if ( it != end(myfantasynames)) {
@@ -424,6 +425,7 @@ void MainLAPIWorker::OnClaimName(QString name) {
         timer->start(intervalstart);
     }
 
+    myfantasynames[myCurrentName.name()] = myCurrentName;
     qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
     emit NameStatus(myCurrentName);
 }

@@ -193,10 +193,10 @@ std::multimap<std::string,std::string> FantasyAgent::getMyNames() {
     return ret;
 }
 
-std::map<string,MyFantasyName> FantasyAgent::getMyNamesStatus(bool selectlast) {
+std::vector<MyFantasyName> FantasyAgent::getMyNamesStatus(bool selectlast) {
     MyFantasyName selected;
     selected.set_status(MyNameStatus::none);
-    std::map<string,MyFantasyName> ret{};
+    std::vector<MyFantasyName> ret{};
     for ( auto s2 : m_secrets ) {
         MyFantasyName fn{};
         fn.set_name(s2.fantasy_name());
@@ -216,13 +216,13 @@ std::map<string,MyFantasyName> FantasyAgent::getMyNamesStatus(bool selectlast) {
         else
             fn.set_status(MyNameStatus::none);
 
-        auto s = ret.find(fn.name());
-        if ( s != end(ret) ) {
-            if ( s->second.status() >= fn.status() )
-                continue;
-        }
+//        auto s = ret.find(fn.name());
+//        if ( s != end(ret) ) {
+//            if ( s->second.status() >= fn.status() )
+//                continue;
+//        }
 
-        ret[fn.name()] = fn;
+        ret.push_back(fn);
         if (fn.status() >= selected.status()) {
             selected = fn;
         }
