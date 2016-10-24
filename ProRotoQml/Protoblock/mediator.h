@@ -218,6 +218,11 @@ public:
     //projections
     Q_INVOKABLE void select(int row, int command) {
         qDebug() << " meiator selected" << row << " commsnd " << command;
+        m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Select);
+    }
+
+    Q_INVOKABLE void toggle(int row, int command) {
+        qDebug() << " meiator selected" << row << " commsnd " << command;
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
     }
 

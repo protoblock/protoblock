@@ -329,9 +329,9 @@ Material.Card {
             function myMethod() {
                 console.log("Button was clicked!" + secsel[time])
                 if ( secsel[time] === "on" && !isl.isSelected(lv.model.index(index,0)))
-                    MiddleMan.select(index,ItemSelectionModel.Toggle)
+                    MiddleMan.toggle(index,ItemSelectionModel.Toggle)
                 else if ( secsel[time] === "off" && isl.isSelected(lv.model.index(index,0)) )
-                    MiddleMan.select(index,ItemSelectionModel.Toggle)
+                    MiddleMan.toggle(index,ItemSelectionModel.Toggle)
 
                 dcard.elevation = Qt.binding(
                     function() {
@@ -469,7 +469,7 @@ Material.Card {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    MiddleMan.select(index,ItemSelectionModel.Toggle)
+                    MiddleMan.toggle(index,ItemSelectionModel.Toggle)
                     dcard.elevation = Qt.binding(
                         function() {
                             if ( isl.isSelected(lv.model.index(index,0)) )
