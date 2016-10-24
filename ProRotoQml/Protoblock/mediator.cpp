@@ -178,6 +178,7 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
 
     myFantasyName = myname.name();
     qDebug() << "Mediator  emitting using fanetay name " << myname.name().data();
+    myGamesSelectionModel.reset();
     emit usingFantasyName(myname.name().data());
     updateCurrentFantasyPlayerProjections();
     set_busySend(false);

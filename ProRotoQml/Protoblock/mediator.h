@@ -222,7 +222,7 @@ public:
     }
 
     Q_INVOKABLE void deselect(int row, int command) {
-        qDebug() << " meiator selected" << row << " commsnd " << command;
+        qDebug() << " meiator deselected" << row << " commsnd " << command;
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Deselect);
     }
 
