@@ -52,7 +52,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     m_pProjectionsViewFilterProxyModel->setSortRole("pos");//mPlayerProjModel.roleForName("pos"));
     m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(false);
-    m_useSelected = false;
+    m_useSelected = true;
     m_busySend = false;
 //setProperty
 //    connect(this,SIGNAL(pPlayerQuoteSliceModelItemChanged(PlayerQuoteSliceModelItem *)),

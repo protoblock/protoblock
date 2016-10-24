@@ -176,116 +176,67 @@ Material.Card {
                             Rectangle {
                                 id: rec2
                                 height: parent.height * .50
-    //                            Layout.fillHeight: true
-    //                            Layout.fillWidth: true
-    //                            Layout.preferredWidth: (parent.width * ih.widths[index])
-    //                            width: parent.width
-//                                color: "green"
                                 anchors.top: parent.top
                                 width: parent.width
                                 ComboBox {
                                     id: combo
-//                                    anchors.bottom: rrr.top
-//                                    anchors.right: parent.right
                                     model: ["All"]//, "Scored" , "Locked", "All" ]
                                     enabled: modelData === " Status "
                                     currentIndex: 0 //3
                                     visible: false//modelData === " Status "
                                     anchors.fill: parent
                                     onCurrentTextChanged: {
-                    //                               MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
-//                                        topc.statusfilter = Qt.binding(function(){return currentText})
                                         MiddleMan.setScheduleFilter(currentText)
                                     }
                                 }
-//                                GroupBox {
-//                                    id: groupbox
+
+//                                Label {
+//                                    text: "Games to"
 //                                    visible: modelData === " Time "
-//                                    height: parent.height * .50
-//                                    width: parent.width * 2//anchors.left: parent.left
-//                                    anchors.horizontalCenter: scheduleView1.horizontalCenter
-//                                    anchors.verticalCenter: parent.parent.verticalCenter
-//                                    title: qsTr("Which Games onCopy?")
-//                                    Layout.fillWidth: true
-//                                    RowLayout {
-//                                        ExclusiveGroup { id: tabPositionGroup }
-                        //                Material.
-                                        Label {
-                                            text: "Games to"
-                                            visible: modelData === " Time "
-//                                            anchors.bottom: topButton.top
-//                                            anchors.centerIn: parent
-                                            horizontalAlignment: Text.Right
-                                            id: pt
-                                            anchors.right: parent.right
-                                            anchors.verticalCenter: parent.verticalCenter
-                                        }
+//                                    horizontalAlignment: Text.Right
+//                                    id: pt
+//                                    anchors.right: parent.right
+//                                    anchors.verticalCenter: parent.verticalCenter
+//                                }
 
-                                        Label {
-                                            id: pc
-                                            text: " Copy:"
-                                            visible: modelData === " Away "
-//                                            anchors.bottom: topButton.top
-//                                            anchors.fill: parent
-//                                            anchors.centerIn: parent
-                                            anchors.left: parent.left
-                                            anchors.verticalCenter: parent.verticalCenter
-                                        }
-                                        RadioButton {
-                                            id: topButton
-                                            anchors.fill: parent
-                                            visible: modelData === " Status "
-//                                            height: parent.height * .50
-//                                            width: parent.width //anchors.left: parent.left
-                                            text: qsTr("Selected Only")
+//                                Label {
+//                                    id: pc
+//                                    text: " Copy:"
+//                                    visible: modelData === " Away "
+//                                    anchors.left: parent.left
+//                                    anchors.verticalCenter: parent.verticalCenter
+//                                }
+//                                RadioButton {
+//                                    id: topButton
+//                                    anchors.fill: parent
+//                                    visible: modelData === " Status "
+//                                    text: qsTr("Selected Only")
 
-                                            exclusiveGroup: tabPositionGroup
-                        //                    Layout.minimumWidth: 100
-//                                            Component.onCompleted:  {
-//                                                if (exclusiveGroup)
-//                                                    exclusiveGroup.bindCheckable(topButton)
-//                                            }
-//                                            onClicked: {
-//                                                MiddleMan.set_useSelected(checked)
+//                                    exclusiveGroup: tabPositionGroup
 
-//                                            }
-
-
-                                        }
-                                        RadioButton {
-                                            id: bottomButton
-                                            visible: modelData === " Home "
-//                                            height: parent.height * .50
-                                            anchors.fill: parent
-                                            checked: modelData === " Home "
-                                            text: qsTr("All")
-                                            exclusiveGroup: tabPositionGroup
-                                            onCheckedChanged: {
-                                                MiddleMan.set_useSelected(!checked)
-                                            }
-
-                        //                    Layout.minimumWidth: 100
-
-//                                            Component.onCompleted:  {
-//                                                if (exclusiveGroup)
-//                                                    exclusiveGroup.bindCheckable(bottomButton)
-//                                            }
-                                        }
+//                                }
+//                                RadioButton {
+//                                    id: bottomButton
+//                                    visible: modelData === " Home "
+//                                    anchors.fill: parent
+//                                    checked: modelData === " Home "
+//                                    text: qsTr("All")
+//                                    exclusiveGroup: tabPositionGroup
+//                                    onCheckedChanged: {
+//                                        MiddleMan.set_useSelected(!checked)
 //                                    }
+
 //                                }
                             }
+
                             Material.Card{
                                 anchors.bottom: parent.bottom
                                 width: parent.width
-    //                            Layout.fillHeight: true
-    //                            Layout.fillWidth: true
-    //                            Layout.preferredWidth: (parent.width * ih.widths[index])
                                 border.color:"black"
                                 backgroundColor: Colors.blue
                                 height: parent.height * .50
                                 Material.Label {
                                     anchors.centerIn: parent
-    //                                anchors.fill: parent
                                     text: modelData
                                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                                     color: "white"
