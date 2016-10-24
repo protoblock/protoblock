@@ -491,11 +491,14 @@ Item {
                     onClicked : {
                         console.log("clicked send")
                         topw.focuscount = 0
-                        MiddleMan.sendProjections()
-//                        MiddleMan.randomUseNames()
-
-
+                        if ( realRoot.uname === "" ) {
+                            rootLoader.source = "qrc:/Account.qml"
+                            pageHelper.selectedTabIndex = 3;
+                        }
+                        else
+                            MiddleMan.sendProjections()
                     }
+
                     backgroundColor: themeroot.theme.accentColor
                     textColor: themeroot.theme.secondaryColor
                     elevation: 2
