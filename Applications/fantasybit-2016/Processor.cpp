@@ -230,6 +230,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
     //outDelta.mutable_datas()->CopyFrom(in);
 
+    bool haveresults = false;
     for (const auto d : in) {
         Data *nd;
         PlayerData tpd{};
@@ -346,12 +347,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     for ( int i =0; i < size; i++) {
                         qDebug() << haresult.Get(i).playerid()
                                  << haresult.Get(i).result();
-                        if ( haresult.Get(i).playerid() == "1122")
-                            qDebug() << "1122";
 
                         auto proj = projmaps[haresult.Get(i).playerid()];
-                        //if ( proj.size() == 0 )
-                        //    continue;
 
                         BookPos  *bpos = nullptr;
                         if ( !nopnl ) {
@@ -359,7 +356,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         }
 
                         processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
-                        }
+                    }
                 }
 
                 /*
@@ -386,6 +383,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 */
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+                haveresults = true;
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT
                 {
 #ifndef DATAAGENTWRITENAMES_FORCE
@@ -518,6 +516,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 break;
         }
     }
+
+    if ( haveresults && amlive )
+        emit FinishedResults();
 }
 
 

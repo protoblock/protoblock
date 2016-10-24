@@ -95,6 +95,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&namedata,SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)),
                      this,SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)));
 
+    connect(&processor,&BlockProcessor::FinishedResults,this, &MainLAPIWorker::FinishedResults);
+
 }
 
 void MainLAPIWorker::GoLive() {

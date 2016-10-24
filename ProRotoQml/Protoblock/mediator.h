@@ -602,9 +602,9 @@ private:
         }
     }
 
-    void updateLiveLeaders() {
+    void updateLiveLeaders(bool getLastWeek = true) {
         mFantasyNameBalModel.updateleaders(mGateway->dataService->GetLeaderBoard());
-        if ( m_theWeek-1 > 0 )
+        if ( m_theWeek-1 > 0 && getLastWeek)
             getLeaders(m_theWeek-1,true,false);
         getLeaders(m_theWeek,false,false);
         getLeaders(0,false,true);
@@ -634,7 +634,12 @@ public slots:
         }
     }
 
-    void AnyFantasyNameBalance(fantasybit::FantasyNameBal) {}
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal fnb) {
+        auto *item = mFantasyNameBalModel.getByUid(fnb.name().data());
+        if ( item == nullptr ) return;
+        item->update(fnb);
+        mFantasyNameBalModel.update(item);
+    }
 
     void Height(int h) {
         qDebug() << " height " << h;
@@ -644,6 +649,11 @@ public slots:
     void BlockNum(int n) {
         qDebug() << " BlockNum " << n;
         setblocknum(n);
+    }
+
+    void OnFinishedResults() {
+        if ( amLive )
+            updateLiveLeaders(false);
     }
 
 private:

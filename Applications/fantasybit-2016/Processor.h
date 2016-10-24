@@ -54,7 +54,7 @@ signals:
     void InvalidState(int);   
     void new_dataDistribution(fantasybit::Distribution);
     void onControlMessage(QString);
-
+    void FinishedResults();
 
 public:
     BlockProcessor(NFLStateData &data, FantasyNameData &namedata,
