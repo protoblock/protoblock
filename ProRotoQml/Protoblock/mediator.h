@@ -281,6 +281,10 @@ public:
         return ret;
     }
 
+    Q_INVOKABLE bool isMyName(QString fname) {
+        return m_pGoodNameBalModel->getByUid(fname) != nullptr;
+    }
+
 //    std::unordered_map<std::string,> fnametorole;
 
 //    Q_INVOKABLE QString removeFnameColumn(QString fname) {

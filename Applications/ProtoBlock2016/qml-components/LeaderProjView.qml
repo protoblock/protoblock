@@ -8,6 +8,8 @@ import ProRotoQml.Theme 1.0
 //import ProRotoQml.Protoblock 1.0
 import QtQuick.Layouts 1.1
 
+import ProRotoQml.Theme 1.0
+
 
 Item {
     id: topi
@@ -113,7 +115,10 @@ Item {
                         id: mcard
                         anchors.fill: parent
                         flat: true
-                        backgroundColor: "#AFE1FF"
+                        backgroundColor: MiddleMan.isMyName(styleData.value) ?
+                                             (styleData.value !== uname ? Material.Theme.light.textColor : themeroot.theme.accentColor )
+                                           : "#AFE1FF"
+
 
 //                        height: parent.height
 //                        width: parent.width
@@ -147,6 +152,9 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                             Layout.fillHeight: true
                             Layout.fillWidth: false
+                            color: MiddleMan.isMyName(styleData.value) ?
+                                       (styleData.value !== uname ? themeroot.theme.accentColor : Material.Theme.light.textColor)
+                                     : Material.Theme.light.textColor
                         }
 
                         MouseArea {
