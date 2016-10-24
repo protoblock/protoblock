@@ -295,10 +295,14 @@ void Mediator::updateWeek() {
 
             for ( auto gr : vgr ) {
                 m_pWeeklyScheduleModel->UpdateStatus(gr.info.id(),gr.status);
+                mPlayerProjModel.ongameStatusChange(gr.info.id(),gr.status);
             }
+
+//            m_pQItemSelectionModel->reset();
+
             if (myFantasyName != "" )
                 updateCurrentFantasyPlayerProjections();
-
+//            m_pProjectionsViewFilterProxyModel->invalidate();
         }
     }
 }
@@ -313,6 +317,7 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
         it->set_knownProjection (0);
         it->set_projection(0);
     }
+
 
     for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
         auto *item = mPlayerProjModel.getByUid(it->first.data());

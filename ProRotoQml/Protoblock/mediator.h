@@ -221,6 +221,11 @@ public:
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
     }
 
+    Q_INVOKABLE void deselect(int row, int command) {
+        qDebug() << " meiator selected" << row << " commsnd " << command;
+        m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Deselect);
+    }
+
     Q_INVOKABLE void undoProj() {
         for ( auto it : mPlayerProjModel) {
             int projection = it->get_projection();

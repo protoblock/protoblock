@@ -36,7 +36,7 @@ Material.Card {
 //        onCurrentIndexChanged: {
 //            console.log(" isl onCurrentIndexChanged" + isl.selection)
 //        }
-//        onSelectionChanged: {
+//        onSelectifnged: {
 //            console.log(" isl selection changed" + isl.selection)
 //            console.log(" isl selection isSelected " + isl.isSelected(lv.model.index(currentIndex,0)))
 //        }
@@ -403,7 +403,13 @@ Material.Card {
             }
 
             Component.onCompleted: {
+                if ( status === "Scheduled" )
+                    MiddleMan.select(index, ItemSelectionModel.Select)
+                else
+                    MiddleMan.deselect(index, ItemSelectionModel.Deselect)
+
                 topc.changed.connect(myMethod)
+//                topc.changed()
 //                console.log("complete is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))
 //                if ( isl.hasSelection  ) {
 //                    console.log("complete is row" + index + " is " + isl.isSelected(lv.model.index(index,0)))

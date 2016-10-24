@@ -93,6 +93,9 @@ public:
 //        setweek(week);
 
         for(const pb::GameRoster & game  : inrosters) {
+            if ( game.status > GameStatus_Status_INGAME)
+                continue;
+
             // add game
             QString gameId = game.info.id().data();
             //add home players
@@ -111,6 +114,15 @@ public:
                                                ds->GetAvgProjection(player.first),
                                                game.status < GameStatus_Status_INGAME,
                                                this));
+            }
+        }
+    }
+
+    void ongameStatusChange(std::string gameid,fantasybit::GameStatus_Status gs) {
+        if ( gs == GameStatus_Status_CLOSED ) {
+            for ( auto it : toList()) {
+                if ( it->get_gameid() == gameid.data())
+                    remove(it);
             }
         }
     }
