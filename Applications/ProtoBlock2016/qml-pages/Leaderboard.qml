@@ -311,8 +311,22 @@ Item {
     Component{
         id: levelZeroDel
         ListItem.Subtitled {
+            backgroundColor: MiddleMan.isMyName(model.name) ?
+                                 (model.name !== uname ? Theme.light.textColor : themeroot.theme.accentColor )
+                               : (elevation > 0 ? "white" : "transparent")
+
+            textColor: MiddleMan.isMyName(model.name) ?
+                       (model.name !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             text: "Fantasy Name: " + model.name
+
             subText: (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText ) + " Balance: " +  model.score
+
+            subColor: MiddleMan.isMyName(model.name) ?
+                       (model.name !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             elevation: 2
             action: Image {
                 source : "qrc:/icons/action_account_circle.png"
@@ -368,9 +382,26 @@ Item {
     Component{
         id: levelTwoDel
         ListItem.Subtitled {
+            backgroundColor: MiddleMan.isMyName(model.fantasyName) ?
+                                 (model.fantasyName !== uname ? Theme.light.textColor : themeroot.theme.accentColor )
+                               : (elevation > 0 ? "white" : "transparent")
+
+            textColor: MiddleMan.isMyName(model.fantasyName) ?
+                       (model.fantasyName !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             text: model.fantasyName
             subText: "Projection: " + model.projection + " Result: " + model.result
+
+            subColor: MiddleMan.isMyName(model.fantasyName) ?
+                       (model.fantasyName !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             valueText: "Award: " + model.award
+            valueColor: MiddleMan.isMyName(model.fantasyName) ?
+                       (model.fantasyName !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             elevation: 2
             action: Image {
                 source: "qrc:/icons/action_account_circle.png"
