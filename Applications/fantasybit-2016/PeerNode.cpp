@@ -35,6 +35,7 @@ namespace fantasybit
 
 Node::Node() { }
 void Node::init() {
+    doSpecialResults = false;
     write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
@@ -100,6 +101,9 @@ void Node::init() {
 
                 BlockRecorder::InitCheckpoint(current_hight);
             }
+        }
+        else if ( doSpecialResults ) {
+            NFLStateData::InitCheckpoint(true);
         }
     }
 #endif
@@ -460,6 +464,7 @@ int32_t Node::myLastGlobalBlockNum() {
 }
 
 Bootstrap Node::getLastLocalBoot() {
+
     QString links("https://158.222.102.83:4545");
     QString route("week");
 
@@ -523,6 +528,8 @@ Bootstrap Node::getLastLocalBoot() {
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
                 done = true;
+                if ( week == 8 )
+                    doSpecialResults = true;
             }
         }
         else done = true;

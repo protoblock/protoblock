@@ -86,7 +86,7 @@ public:
 #endif
 
 #ifndef NOUSE_GENESIS_BOOT
-    static void InitCheckpoint();
+    static void InitCheckpoint(bool = false);
 #endif
 
     void init();
@@ -142,6 +142,7 @@ public:
         bs.set_season(season);
         bs.set_gamemetaroot(BootStrapSchedule(ldb));
         bs.set_playermetaroot(BootStrapPlayer(ldb));
+        bs.set_gameresultroot(BootStrapResult(ldb));
 
         return bs;
     }
@@ -232,6 +233,34 @@ public:
                 tree.add_leaves(ldb.write(gsm));
                 gsm.release_gameinfo();
                 gsm.Clear();
+            }
+        }
+        tree.set_root(pb::makeMerkleRoot(tree.leaves()));
+        return ldb.write(tree.root(),tree.SerializeAsString());
+    }
+
+    std::string BootStrapResult(LdbWriter &ldb) {
+        WeeklySchedule ws;
+        MerkleTree tree;
+        string temp;
+        for (int i=1; i<=17;i++) {
+            string key = "scheduleweek:" + to_string(i);
+
+            if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+                qWarning() << "cant find schedule " << key.c_str();
+                break;
+            }
+
+            if ( !ws.ParseFromString(temp) ) {
+                qCritical() << "bad read WeeklySchedule ";
+                continue;
+            }
+
+            for ( auto game : ws.games()) {
+                GameResult gr;
+                if ( GetGameResult(game.id(),gr) ) {
+                   tree.add_leaves(ldb.write(gr));
+                }
             }
         }
         tree.set_root(pb::makeMerkleRoot(tree.leaves()));

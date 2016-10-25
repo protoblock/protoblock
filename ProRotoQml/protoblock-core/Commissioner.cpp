@@ -294,7 +294,10 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
     string headhash;
 
-    QString filename = string("bootstraptest" + genesiskey + ".out").data();
+    string prefix = "bootstrap";
+    if ( stoi(genesiskey) < 201607 )
+        prefix += "test";
+    QString filename = string(prefix + genesiskey + ".out").data();
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
     genesisBootFile = genesisBootFile +  filename;
     QFileInfo check_file(genesisBootFile);
