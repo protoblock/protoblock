@@ -216,7 +216,10 @@ public:
 protected:
     //filtering
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
-        if (!myIsEnabled) return true;
+        if (!myIsEnabled) {
+//            qDebug() << " ! enabled";
+            return true;
+        }
 
 //                qDebug() << " << cc " << columnCount();
 //        if ( !QSortFilterProxyModel::filterAcceptsRow(sourceRow,sourceParent)) {

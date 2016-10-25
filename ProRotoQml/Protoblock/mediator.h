@@ -117,7 +117,7 @@ class Mediator : public QObject {
     QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pPrevQItemSelectionModel)
 
         //results
-    QML_READONLY_PTR_PROPERTY(ProjectionsViewFilterProxyModel, pResultsViewFilterProxyModel)
+    QML_READONLY_PTR_PROPERTY(ResultsViewFilterProxyModel, pResultsViewFilterProxyModel)
     QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
 
     static Mediator *myInstance;
@@ -419,7 +419,7 @@ public:
     }
 
     Q_INVOKABLE void toggleP(int row, int command) {
-        qDebug() << " meiator selectedP" << row << " commsnd " << command;
+        qDebug() << " meiator toggleP" << row << " commsnd " << command;
         m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Toggle);
     }
 
@@ -440,14 +440,17 @@ public:
         if ( week == m_thePrevWeek )
             return;
 
+        qDebug() << " 1 ";
         setthePrevWeek(week);
         m_pPreviousWeekScheduleModel->updateWeeklySchedule(m_thePrevWeek,
                                   mGateway->dataService->GetWeeklySchedule(m_thePrevWeek));
+        qDebug() << " 2 ";
 
         const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevWeek);
         mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel);
         myPrevGamesSelectionModel.reset();
         m_pResultsViewFilterProxyModel->invalidate();
+        qDebug() << " 3 ";
 
     }
 
@@ -561,7 +564,7 @@ protected slots:
     }
 
     void selectionPrevChanged(const QItemSelection &selected, const QItemSelection &deselected) {
-        qDebug() << " mediator selectionChanged " << selected << deselected;
+        qDebug() << " mediator selectionPrevChanged " << selected << deselected;
         m_pResultsViewFilterProxyModel->invalidate();
     }
 

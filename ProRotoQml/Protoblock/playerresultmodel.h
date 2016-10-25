@@ -18,6 +18,7 @@
 #include "fbutils.h"
 #include "pbgateways.h"
 #include "weeklyschedulemodel.h"
+#include <QItemSelectionModel>
 
 namespace pb {
 using namespace fantasybit;
@@ -151,6 +152,202 @@ public:
         }
     }
 };
+
+class ResultsViewFilterProxyModel : public SortFilterProxyModel
+{
+    Q_OBJECT
+
+    WeeklyScheduleModel  * myGameModelProxy;
+    QItemSelectionModel * mySelectedGames;
+//    QStringListModel * myPositionCombobox;
+    bool myIsEnabled = true;
+    QString myPos = "All";
+
+public:
+    Q_PROPERTY(QStringList userRoleNames READ userRoleNames CONSTANT)
+
+    ResultsViewFilterProxyModel(//QStringListModel * positionCombobox = NULL,
+                                    WeeklyScheduleModel  * gameModelProxy= NULL,
+                                    QItemSelectionModel * gameSelectionModel=NULL,
+                                    QObject *parent = 0)
+        : SortFilterProxyModel(parent)
+    {
+//        myPositionCombobox = positionCombobox;
+        myGameModelProxy = gameModelProxy;
+//        if (myGameModelProxy != NULL) mySelectedGames = gameSelectionModel;
+        mySelectedGames = gameSelectionModel;
+    }
+
+    QStringList ret;
+    QStringList userRoleNames() // Return ordered List of user-defined roles
+    {
+
+
+        return ret;
+    }
+
+    bool isEnabled(){
+        return myIsEnabled;
+    }
+
+    void disable(){
+        myIsEnabled = false;
+    }
+
+    void enable(){
+        myIsEnabled = true;
+    }
+
+    void bindFilter(){
+//        if (myPositionCombobox!=NULL){
+//            QObject::connect(myPositionCombobox,
+//                             SIGNAL(currentTextChanged(QString)),
+//                             this,SLOT(invalidate()));
+//        }
+
+        if (myGameModelProxy!=NULL){
+            QObject::connect(myGameModelProxy,
+                             SIGNAL(modelReset()),
+                             this,SLOT(invalidate()));
+        }
+
+        if (mySelectedGames!=NULL){
+            QObject::connect(mySelectedGames,
+                             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                             this,SLOT(invalidate()));
+        }
+    }
+
+    Q_INVOKABLE void setPos(const QString &pos) {
+        if ( pos != myPos ) {
+            myPos = pos;
+            invalidate();
+        }
+    }
+
+    Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
+        qDebug() << " sort called" << column;
+        QSortFilterProxyModel::sort(column, order);
+
+//                qDebug() << " << cc " << columnCount();
+//        QSortFilterProxyModel::setSortRole(column);
+//        QSortFilterProxyModel::sort(0, order);
+    }
+
+protected:
+    //filtering
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
+        if (!myIsEnabled) {
+            qDebug() << " ! enabled";
+            return true;
+        }
+
+        qDebug() << " << cc " << " ResultsViewFilterProxyModel " << sourceRow;
+//        if ( !QSortFilterProxyModel::filterAcceptsRow(sourceRow,sourceParent)) {
+//            qDebug() << " filterAcceptsRow  no parent" << sourceRow;
+//            return false;
+//        }
+        qDebug() << " filterAcceptsRow" << sourceRow;
+
+        PlayerResultModel * model = dynamic_cast<PlayerResultModel *>(sourceModel());
+        if (model==NULL) return true;
+
+        qDebug() << " !null " << myPos;
+
+        if ( myPos != "All")
+            if ( model->at(sourceRow)->get_pos() != myPos )
+                return false;
+
+
+//        QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+        auto gameid = model->at(sourceRow)->get_gameid();
+
+        qDebug() << " filterAcceptsRow gameid" << gameid;
+//        if (item == NULL) return true;
+//        QString gameId = item->propertyValue<PropertyNames::Game_ID>().toString();
+
+        if (gameid=="")  return false;
+        if (mySelectedGames!=NULL && myGameModelProxy != NULL){
+            if ( !mySelectedGames->hasSelection() ) return true;
+
+            qDebug() << " filterAcceptsRow hasselection";
+
+            int i = myGameModelProxy->indexOf(myGameModelProxy->getByUid(gameid));
+            return mySelectedGames->isSelected(myGameModelProxy->index(i));
+        }
+
+        return true;
+    }
+
+//    bool setData (const QModelIndex & index, const QVariant & value, int role) {
+//        if ( index.row() < 0 )
+//            return true;
+
+//        qDebug() << "setDatasetDatasetDatasetData setting data" << index.row() << index.column();
+
+//        auto myindex = mapToSource(index);
+
+//        qDebug() << "setDatasetDatasetDatasetData after map" << myindex.row() << myindex.column();
+
+//        PlayerResultModel * model = dynamic_cast<PlayerResultModel *>(sourceModel());
+//        if (model==NULL) return true;
+
+//        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
+
+//        model->at(myindex.row())->set_projection(value.toInt());
+//        return true;
+//    }
+
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE {
+        return SortFilterProxyModel::data(index, role);
+//        qDebug() <<role << " << cc " << columnCount();
+    }
+
+//        if (myPositionCombobox!=NULL){
+//            //get current postion from position combo box
+//            QString position= myPositionCombobox->currentText().trimmed().toUpper();
+//            if (position != "ALL"){
+//                QString playerPosition=item->propertyValue<PropertyNames::Position>().toString();
+//                if (playerPosition != position)
+//                    return false;
+//            }
+//        }
+
+//        if (myGameModelProxy!=NULL){
+//            GamesFilter gameFilter = myGameModelProxy->filter();
+//            if (gameFilter != GamesFilter::All) {
+//            GameTableModel * allGames = dynamic_cast<GameTableModel *>(myGameModelProxy->sourceModel());
+//            if (allGames==NULL) return false;
+//            QVariant vvalue;
+//            GameStatus_Status gameStatus;
+//            bool propertyFound = allGames->itemPropertyValue<PropertyNames::Game_Status>(gameId,vvalue);
+//            if (!propertyFound) return false;
+//            gameStatus = qvariant_cast<GameStatus_Status>(vvalue);
+//            if (!GameViewFilterProxyModel::testGameStatus(gameFilter,gameStatus))
+//                return false;
+//            }
+//        }
+
+
+//    bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const{
+
+
+//    }
+
+//    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const{
+//        ProjectionSheetTableModel * model = dynamic_cast<ProjectionSheetTableModel *>(sourceModel());
+//        if (model==NULL) return false;
+//        QVariant lefData = model->columnData(source_left.column(),source_left);
+//        QVariant rightData = model->columnData(source_right.column(),source_right);
+//        if (lefData.isNull())  return true;
+//        if (rightData.isNull())  return false;
+//        if (lefData.type()!=rightData.type()) return false;
+//        return lefData < rightData;
+//    }
+
+};
+
+
 
 Q_DECLARE_METATYPE(PlayerResultModelItem*)
 Q_DECLARE_METATYPE(PlayerResultModel*)

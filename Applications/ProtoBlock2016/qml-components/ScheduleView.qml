@@ -354,10 +354,10 @@ Material.Card {
             }
 
             Component.onCompleted: {
-                if ( status === "Scheduled" )
-                    MiddleMan.select(index, ItemSelectionModel.Select)
-                else
-                    MiddleMan.deselect(index, ItemSelectionModel.Deselect)
+//                if ( status === "Scheduled" )
+//                    MiddleMan.select(index, ItemSelectionModel.Select)
+//                else
+//                    MiddleMan.deselect(index, ItemSelectionModel.Deselect)
 
                 topc.changed.connect(myMethod)
 //                topc.changed()
