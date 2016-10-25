@@ -60,8 +60,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultsViewFilterProxyModel =  new ResultsViewFilterProxyModel(m_pPreviousWeekScheduleModel,&myPrevGamesSelectionModel);
     m_pResultsViewFilterProxyModel->setSourceModel(&mPlayerResultModel);
 
-    m_pResultsViewFilterProxyModel->setSortRole("pos");//mPlayerProjModel.roleForName("pos"));
-    m_pResultsViewFilterProxyModel->setDynamicSortFilter(false);
+    m_pResultsViewFilterProxyModel->setSortRole("result");//mPlayerProjModel.roleForName("pos"));
+    m_pResultsViewFilterProxyModel->setDynamicSortFilter(true);
 
 
 

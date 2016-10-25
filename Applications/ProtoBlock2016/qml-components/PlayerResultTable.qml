@@ -18,7 +18,7 @@ Item {
     property alias ccount: tv.columnCount
     property int focuscount: 0
     property string who: "default"
-    property int rw: 6
+    property int rw: 8
     Item {
         id: i2
         anchors.top: parent.top
@@ -29,6 +29,7 @@ Item {
             id: tv
             Component.onCompleted: {
                 ppt.addcolumn.connect(addcolumnMethod)
+                MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
             }
 
 //            onClicked: {
@@ -435,7 +436,7 @@ Item {
                 width: parent.width
                 height: parent.height * .50
                 backgroundColor: styleData.column === 4 ? themeroot.theme.accentColor :
-                                 styleData.column < 6 ? themeroot.theme.primaryColor : "#AFE1FF"
+                                 themeroot.theme.primaryColor
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
@@ -451,7 +452,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === 4 ? themeroot.theme.secondaryColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
+                    color: styleData.column === 4 ? themeroot.theme.secondaryColor : "white"
                     //                    font.bold: styleData.column === 4
                 }
             }

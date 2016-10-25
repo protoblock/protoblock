@@ -80,7 +80,7 @@ public:
         const Ostats &os = pr.stats().ostats();
         m_PassTD = os.passtd();
         m_PassYd = os.passyds();
-        m_RushTD = os.rushyds();
+        m_RushTD = os.rushtd();
         m_RushYd = os.rushyds();
         m_RecTD = os.rectd();
         m_RecYd = os.recyds();
@@ -106,6 +106,7 @@ public:
             for (int i=1; i<sz ;i++)
                 fgs.append(QString(",%1").arg(ks.fg(i)));
         }
+        m_FG = fgs;
 
 
         //qDebug() << " PlayerResultModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
