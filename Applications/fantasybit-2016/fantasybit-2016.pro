@@ -106,6 +106,7 @@ HEADERS += \
     $$PWD/../../ProRotoQml/protoblock/openordersmodel.h \
     $$PWD/../../ProRotoQml/protoblock/weeklyschedulemodel.h \
     $$PWD/../../ProRotoQml/protoblock/playerprojmodel.h \
+    $$PWD/../../ProRotoQml/protoblock/playerresultmodel.h \
     $$PWD/../../ProRotoQml/protoblock/sortfilterproxymodel.h \
     $$PWD/../../ProRotoQml/protoblock/pbgateways.h
 

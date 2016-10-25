@@ -71,9 +71,11 @@ Item {
             frameVisible: false
             selectionMode: SelectionMode.NoSelection
 
-            rowDelegate: Item {
+            rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
+               color: styleData.alternate?"#f5f5f5":"transparent"
             }
+
             TableViewColumn {
                 role: "lastname"
                 title: who + "Player Name"

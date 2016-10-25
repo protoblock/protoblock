@@ -10,7 +10,9 @@ import QtQuick.Layouts 1.1
 
 Item {
     id: topi
-    property int week: 1
+    property int week: stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : MiddleMan.theWeek
+    property string seasontext: MiddleMan.seasonString + " 2016 - Week "
+    property string liveorresult: stack.currentItem.objectName === "prevWeekS" ? "Result" : MiddleMan.liveSync
 
     Component.onCompleted: {
 //         pageHelper.title = "Projections 2016 Week" + week
@@ -49,24 +51,32 @@ Item {
 
             size: ProtoScreen.guToPx(5)
 
+            enabled: stack || stack.currentItem.objectName === "pptS" || MiddleMan.thePrevWeek > 1
+
             action: Action {
                 iconName: "awesome/caret_left"
 //                    hoverAnimation: true
                 tooltip: "Previous"
             }
             onClicked : {
-                console.log( "left" + stack.currentItem)
-                if ( stack.currentItem === pptS )
+                console.log( "left" + stack.currentItem.objectName)
+                if ( stack.currentItem.objectName === "pptS" ) {
                     stack.pop();
-                else if ( stack.currentItem === nextWeekS )
+                    MiddleMan.setPrevWeekData(MiddleMan.theWeek-1)
+                }
+                else if ( stack.currentItem.objectName === "nextWeekS" )
                     stack.pop();
                 else
-                    stack.pop();
+                    MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek-1)
             }
         }
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: MiddleMan.seasonString + " 2016 - Week " + MiddleMan.theWeek + " - " + MiddleMan.liveSync;
+            text: seasontext + week + " - " + liveorresult
+//                                            (stack && stack.currentItem.objectName === "prevWeekS") ?
+//                                                (MiddleMan.thePrevWeek + " - Results") :
+//                                                (MiddleMan.theWeek + " - " + MiddleMan.liveSync);
+
             font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
             color: themeroot.theme.primaryColor
             Layout.fillHeight: true
@@ -74,7 +84,6 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             id: cBan
-//                width: parent.width
         }
         IconButton {
             anchors.left: cBan.right
@@ -94,15 +103,19 @@ Item {
 //                    hoverAnimation: true
                 tooltip: "Previous"
             }
+            enabled: stack && stack.currentItem.objectName === "prevWeekS"
             onClicked : {
-                console.log( "right" + stack.currentItem)
-                if ( stack.currentItem === prevWeekS)
-                    stack.push({item: pptS});
-                else if ( stack.currentItem === pptS )
-                    stack.push({item: nextWeekS});
+                console.log( "right" + stack.currentItem.objectName + prevWeekS)
+                if ( stack.currentItem.objectName === "prevWeekS") {
+                    if ( MiddleMan.thePrevWeek === MiddleMan.theWeek-1)
+                        stack.push({item: pptS, properties:{objectName:"pptS"}});
+                    else
+                        MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek+1)
+                }
+                else if ( stack.currentItem.objectName === "pptS" )
+                    stack.push({item: nextWeekS, properties:{objectName:"nextWeekS"}})
             }
         }
-
 
         SystemPalette { id: pal }
 
@@ -137,8 +150,8 @@ Item {
                     anchors.fill: parent
 
                     Component.onCompleted: {
-                       stack.push({item: prevWeekS})
-                       stack.push({item: pptS})
+                       stack.push({item: prevWeekS, properties:{objectName:"prevWeekS"}})
+                       stack.push({item: pptS, properties:{objectName:"pptS"}})
                     }
 
                     Item {
@@ -223,7 +236,7 @@ Item {
                                 Layout.minimumWidth: parent.width * .20
                                 Layout.maximumWidth: parent.width * .40
 
-                                ScheduleView {
+                                ScheduleViewPrev {
                                     id: scheduleView2
                                 }
                             }
@@ -232,7 +245,7 @@ Item {
                                 Layout.maximumWidth: parent.width * .90
                                 Layout.fillWidth: true
 
-                                PlayerProjTable {
+                                PlayerResultTable {
                                     id: prevPPT
                                     who: "prev"
                                 }

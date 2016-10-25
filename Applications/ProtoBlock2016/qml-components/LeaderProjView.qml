@@ -52,9 +52,11 @@ Item {
             }
 
 
-            rowDelegate: Item {
+            rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
+               color: styleData.alternate?"#f5f5f5":"transparent"
             }
+
             headerDelegate:  Rectangle {
                 width: parent.width
                 height: ProtoScreen.guToPx(8)
