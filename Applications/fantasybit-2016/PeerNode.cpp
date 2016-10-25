@@ -725,5 +725,5 @@ decltype(Node::bootstrap) Node::bootstrap;
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};
 bool Node::forking = false;
-
+bool Node::doSpecialResults = false;
 }	

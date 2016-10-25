@@ -227,7 +227,7 @@ public:
     }
 
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
-        qDebug() << " sort called" << column;
+//        qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
 
 //                qDebug() << " << cc " << columnCount();
@@ -243,17 +243,17 @@ protected:
             return true;
         }
 
-        qDebug() << " << cc " << " ResultsViewFilterProxyModel " << sourceRow;
+//        qDebug() << " << cc " << " ResultsViewFilterProxyModel " << sourceRow;
 //        if ( !QSortFilterProxyModel::filterAcceptsRow(sourceRow,sourceParent)) {
 //            qDebug() << " filterAcceptsRow  no parent" << sourceRow;
 //            return false;
 //        }
-        qDebug() << " filterAcceptsRow" << sourceRow;
+//        qDebug() << " filterAcceptsRow" << sourceRow;
 
         PlayerResultModel * model = dynamic_cast<PlayerResultModel *>(sourceModel());
         if (model==NULL) return true;
 
-        qDebug() << " !null " << myPos;
+//        qDebug() << " !null " << myPos;
 
         if ( myPos != "All")
             if ( model->at(sourceRow)->get_pos() != myPos )
@@ -263,7 +263,7 @@ protected:
 //        QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
         auto gameid = model->at(sourceRow)->get_gameid();
 
-        qDebug() << " filterAcceptsRow gameid" << gameid;
+//        qDebug() << " filterAcceptsRow gameid" << gameid;
 //        if (item == NULL) return true;
 //        QString gameId = item->propertyValue<PropertyNames::Game_ID>().toString();
 
@@ -271,7 +271,7 @@ protected:
         if (mySelectedGames!=NULL && myGameModelProxy != NULL){
             if ( !mySelectedGames->hasSelection() ) return true;
 
-            qDebug() << " filterAcceptsRow hasselection";
+//            qDebug() << " filterAcceptsRow hasselection";
 
             int i = myGameModelProxy->indexOf(myGameModelProxy->getByUid(gameid));
             return mySelectedGames->isSelected(myGameModelProxy->index(i));
