@@ -87,7 +87,7 @@ Item {
 
             TableViewColumn {
                 role: "lastname"
-                title: "PRT " + who + " Player Name"
+                title: "Player Name"
                 horizontalAlignment : Text.AlignLeft
                 movable: false
                 delegate: Material.Card {

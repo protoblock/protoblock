@@ -513,7 +513,7 @@ Bootstrap Node::getLastLocalBoot() {
         }
 
         string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
-        if ( globalhead > localhead ) {
+        if ( globalhead > localhead || globalhead == "201608" && !Commissioner::BootStrapFileExists(globalhead) ) {
             head = Commissioner::makeGenesisBoot(ldb,globalhead);
             if ( head.blocknum() <= 0 ) {
                 qCritical() << globalhead.data() <<  " !current_boot.blocknum() <= 0 ";

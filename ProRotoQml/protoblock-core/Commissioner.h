@@ -305,6 +305,7 @@ public:
     static Block makeGenesisBlockRaw();
     static Block makeGenesisBlock();
     static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = "201601");
+    static bool BootStrapFileExists(string);
 
     static const int BLOCK_VERSION = 1;
     static const int TRANS_VERSION = 1;

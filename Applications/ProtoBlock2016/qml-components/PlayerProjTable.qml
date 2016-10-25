@@ -78,7 +78,7 @@ Item {
 
             TableViewColumn {
                 role: "lastname"
-                title: who + "Player Name"
+                title: "Player Name"
                 horizontalAlignment : Text.AlignLeft
                 movable: false
 
