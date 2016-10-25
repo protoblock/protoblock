@@ -578,7 +578,9 @@ private:
         rest.getData(route);
         auto resp = rest.lastReply();
 
+#ifdef TRACE2
         qDebug() << resp;
+#endif
         QJsonDocument ret = QJsonDocument::fromJson(resp);
         qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
 

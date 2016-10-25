@@ -18,8 +18,6 @@ TEMPLATE = lib
 
 DEFINES += TRACE
 
-DEFINES += TRADE_FEATURE
-
 
 win32 {
     include($$PWD/../../pri/core.pri)

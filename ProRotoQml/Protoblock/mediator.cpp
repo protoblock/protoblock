@@ -490,8 +490,8 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
              this, SLOT(BlockNum(int)));
 
 
-    connect( that, SIGNAL(FinishedResults),
-             this, SLOT(OnFinishedResults));
+    connect( that, SIGNAL(FinishedResults()),
+             this, SLOT(OnFinishedResults()));
 //    return that;
 }
 

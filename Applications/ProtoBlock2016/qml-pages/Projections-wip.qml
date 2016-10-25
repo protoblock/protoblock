@@ -36,72 +36,71 @@ Item {
 //            height: ProtoScreen.guToPx(6)
 //            width: parent.width
 //            Layout.alignment: Qt.AlignHCenter
-        IconButton {
-            anchors.right: cBan.left
-            Layout.fillHeight: true
-            Layout.fillWidth: false
+            IconButton {
+                anchors.right: cBan.left
+                Layout.fillHeight: true
+                Layout.fillWidth: false
 //                Layout.preferredWidth: ProtoScreen.guToPx(12)
 
-            id: left
+                id: left
 //                width: ProtoScreen.guToPx(6)
 //                height: parent.height
 
 
-            size: ProtoScreen.guToPx(5)
+                size: ProtoScreen.guToPx(5)
 
-            action: Action {
-                iconName: "awesome/caret_left"
+                action: Action {
+                    iconName: "awesome/caret_left"
 //                    hoverAnimation: true
-                tooltip: "Previous"
+                    tooltip: "Previous"
+                }
+                onClicked : {
+                    console.log( "left" + stack.currentItem)
+                    if ( stack.currentItem === pptS )
+                        stack.pop();
+                    else if ( stack.currentItem === nextWeekS )
+                        stack.pop();
+                }
             }
-            onClicked : {
-                console.log( "left" + stack.currentItem)
-                if ( stack.currentItem === pptS )
-                    stack.pop();
-                else if ( stack.currentItem === nextWeekS )
-                    stack.pop();
-                else
-                    stack.pop();
-            }
-        }
-        Label {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: MiddleMan.seasonString + " 2016 - Week " + MiddleMan.theWeek + " - " + MiddleMan.liveSync;
-            font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-            color: themeroot.theme.primaryColor
-            Layout.fillHeight: true
-            Layout.fillWidth: false
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            id: cBan
+
+            Label {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: MiddleMan.seasonString + " 2016 - Week " + MiddleMan.theWeek + " - " + MiddleMan.liveSync;
+                font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
+                color: themeroot.theme.primaryColor
+                Layout.fillHeight: true
+                Layout.fillWidth: false
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                id: cBan
 //                width: parent.width
-        }
-        IconButton {
-            anchors.left: cBan.right
-            Layout.fillHeight: true
-            Layout.fillWidth: false
+            }
+            IconButton {
+                anchors.left: cBan.right
+                Layout.fillHeight: true
+                Layout.fillWidth: false
 //                Layout.preferredWidth: ProtoScreen.guToPx(12)
 
-            id: right
+                id: right
 //                width: ProtoScreen.guToPx(6)
 //                height: parent.height
 
 
-            size: ProtoScreen.guToPx(5)
+                size: ProtoScreen.guToPx(5)
 
-            action: Action {
-                iconName: "awesome/caret_right"
+                action: Action {
+                    iconName: "awesome/caret_right"
 //                    hoverAnimation: true
-                tooltip: "Previous"
+                    tooltip: "Previous"
+                }
+                onClicked : {
+                    console.log( "right" + stack.currentItem)
+                    if ( stack.currentItem === prevWeekS)
+                        stack.push({item: pptS});
+                    else if ( stack.currentItem === pptS )
+                        stack.push({item: nextWeekS});
+                }
             }
-            onClicked : {
-                console.log( "right" + stack.currentItem)
-                if ( stack.currentItem === prevWeekS)
-                    stack.push({item: pptS});
-                else if ( stack.currentItem === pptS )
-                    stack.push({item: nextWeekS});
-            }
-        }
 
 
         SystemPalette { id: pal }
@@ -214,71 +213,64 @@ Item {
                         width: parent.width
                         height: parent.height
                         SplitView {
-                            orientation: Qt.Horizontal
-                            handleDelegate: handeldel
-                            width: parent.width
-                            height: parent.height
-                            Card {
-                                anchors.leftMargin: 10
-                                Layout.minimumWidth: parent.width * .20
-                                Layout.maximumWidth: parent.width * .40
+//                        id: prevWeekS
+                        orientation: Qt.Horizontal
+                        handleDelegate: handeldel
+                        width: parent.width
+                        height: parent.height
 
-                                ScheduleView {
-                                    id: scheduleView2
-                                }
+                        Card {
+                            anchors.leftMargin: 10
+                            Layout.minimumWidth: parent.width * .10
+                            Layout.maximumWidth: parent.width * .30
+
+                            ScheduleView {
+                                id: scheduleView2
                             }
-                            Card {
-                                Layout.minimumWidth: parent.width * .50
-                                Layout.maximumWidth: parent.width * .90
-                                Layout.fillWidth: true
-
-                                PlayerProjTable {
-                                    id: prevPPT
-                                    who: "prev"
-                                }
-                           }
                         }
+                        Card {
+                            Layout.minimumWidth: parent.width * .30
+                            Layout.maximumWidth: parent.width * .80
+                            Layout.fillWidth: true
+
+                            PlayerProjTable {
+                                id: prevWeek
+                                who: "prevWeek"
+                            }
+                        }
+                    }
                     }
                     Item {
                         id: nextWeekS
                         SplitView {
-                            orientation: Qt.Horizontal
-                            handleDelegate: handeldel
-                            width: parent.width
-                            height: parent.height
-                            Card {
-                                anchors.leftMargin: 10
-                                Layout.minimumWidth: parent.width * .10
-                                Layout.maximumWidth: parent.width * .30
+//                        id: nextWeekS
+                        orientation: Qt.Horizontal
+                        handleDelegate: handeldel
+                        width: parent.width
+                        height: parent.height
+                        Card {
+                            anchors.leftMargin: 10
+                            Layout.minimumWidth: parent.width * .10
+                            Layout.maximumWidth: parent.width * .30
 
-                                ScheduleView {
-                                    id: scheduleView3
-                                }
+                            ScheduleView {
+                                id: scheduleView3
                             }
-                            Card {
-                                Layout.minimumWidth: parent.width * .30
-                                Layout.maximumWidth: parent.width * .80
-                                Layout.fillWidth: true
-                                ScheduleView {
-                                    id: scheduleView4
-                                }
+                        }
+                        Card {
+                            Layout.minimumWidth: parent.width * .30
+                            Layout.maximumWidth: parent.width * .80
+                            Layout.fillWidth: true
+                            ScheduleView {
+                                id: scheduleView4
+                            }
+                            PlayerProjTable {
+                                id: ppt3
+                                who: "ppt3"
                             }
                         }
                     }
-                }
-            }
-            Card {
-                anchors.leftMargin: 10
-                id: rightr
-                Layout.minimumWidth: parent.width * .20
-                Layout.maximumWidth: parent.width * .60
-                LeaderProjView {
-                    id: lpv
-                }
-            }
-        }
-    }
-
+                    }
 //                StackView {
 //                    id: stack
 ////                    initialItem: ppt
@@ -304,8 +296,24 @@ Item {
 //                       stack.push({item: ppt})
 //                    }
 //                }
-//                }
-//            }
+
+
+
+                }
+            }
+            Card {
+              anchors.leftMargin: 10
+              id: rightr
+              Layout.minimumWidth: parent.width * .20
+              Layout.maximumWidth: parent.width * .60
+              LeaderProjView {
+                  id: lpv
+              }
+
+            }
+        }
+
+    }
 
     Component {
         id: handeldel

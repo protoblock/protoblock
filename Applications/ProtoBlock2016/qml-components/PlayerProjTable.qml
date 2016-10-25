@@ -18,7 +18,7 @@ Item {
 
     property alias ccount: tv.columnCount
     property int focuscount: 0
-
+    property string who: "default"
     Item {
         id: i2
         anchors.top: parent.top
@@ -76,7 +76,7 @@ Item {
             }
             TableViewColumn {
                 role: "lastname"
-                title: "Player Name"
+                title: who + "Player Name"
                 horizontalAlignment : Text.AlignLeft
                 movable: false
 
