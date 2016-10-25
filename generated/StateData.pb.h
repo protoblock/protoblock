@@ -6948,6 +6948,18 @@ class Bootstrap : public ::google::protobuf::Message {
   inline ::std::string* release_previd();
   inline void set_allocated_previd(::std::string* previd);
 
+  // optional bytes gameresultroot = 50;
+  inline bool has_gameresultroot() const;
+  inline void clear_gameresultroot();
+  static const int kGameresultrootFieldNumber = 50;
+  inline const ::std::string& gameresultroot() const;
+  inline void set_gameresultroot(const ::std::string& value);
+  inline void set_gameresultroot(const char* value);
+  inline void set_gameresultroot(const void* value, size_t size);
+  inline ::std::string* mutable_gameresultroot();
+  inline ::std::string* release_gameresultroot();
+  inline void set_allocated_gameresultroot(::std::string* gameresultroot);
+
   // @@protoc_insertion_point(class_scope:fantasybit.Bootstrap)
  private:
   inline void set_has_key();
@@ -6966,6 +6978,8 @@ class Bootstrap : public ::google::protobuf::Message {
   inline void clear_has_fnamemetaroot();
   inline void set_has_previd();
   inline void clear_has_previd();
+  inline void set_has_gameresultroot();
+  inline void clear_has_gameresultroot();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -6976,10 +6990,11 @@ class Bootstrap : public ::google::protobuf::Message {
   ::std::string* playermetaroot_;
   ::std::string* fnamemetaroot_;
   ::std::string* previd_;
+  ::std::string* gameresultroot_;
   ::google::protobuf::int32 season_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -19463,6 +19478,76 @@ inline void Bootstrap::set_allocated_previd(::std::string* previd) {
   } else {
     clear_has_previd();
     previd_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes gameresultroot = 50;
+inline bool Bootstrap::has_gameresultroot() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Bootstrap::set_has_gameresultroot() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Bootstrap::clear_has_gameresultroot() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Bootstrap::clear_gameresultroot() {
+  if (gameresultroot_ != &::google::protobuf::internal::kEmptyString) {
+    gameresultroot_->clear();
+  }
+  clear_has_gameresultroot();
+}
+inline const ::std::string& Bootstrap::gameresultroot() const {
+  return *gameresultroot_;
+}
+inline void Bootstrap::set_gameresultroot(const ::std::string& value) {
+  set_has_gameresultroot();
+  if (gameresultroot_ == &::google::protobuf::internal::kEmptyString) {
+    gameresultroot_ = new ::std::string;
+  }
+  gameresultroot_->assign(value);
+}
+inline void Bootstrap::set_gameresultroot(const char* value) {
+  set_has_gameresultroot();
+  if (gameresultroot_ == &::google::protobuf::internal::kEmptyString) {
+    gameresultroot_ = new ::std::string;
+  }
+  gameresultroot_->assign(value);
+}
+inline void Bootstrap::set_gameresultroot(const void* value, size_t size) {
+  set_has_gameresultroot();
+  if (gameresultroot_ == &::google::protobuf::internal::kEmptyString) {
+    gameresultroot_ = new ::std::string;
+  }
+  gameresultroot_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bootstrap::mutable_gameresultroot() {
+  set_has_gameresultroot();
+  if (gameresultroot_ == &::google::protobuf::internal::kEmptyString) {
+    gameresultroot_ = new ::std::string;
+  }
+  return gameresultroot_;
+}
+inline ::std::string* Bootstrap::release_gameresultroot() {
+  clear_has_gameresultroot();
+  if (gameresultroot_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gameresultroot_;
+    gameresultroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bootstrap::set_allocated_gameresultroot(::std::string* gameresultroot) {
+  if (gameresultroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete gameresultroot_;
+  }
+  if (gameresultroot) {
+    set_has_gameresultroot();
+    gameresultroot_ = gameresultroot;
+  } else {
+    clear_has_gameresultroot();
+    gameresultroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

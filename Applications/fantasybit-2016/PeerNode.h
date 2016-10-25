@@ -35,6 +35,7 @@ class Node
     int32_t current_hight = 0;
     int32_t global_height = 0;
     Bootstrap current_boot{};
+
 public:
     Node();
     void init();
@@ -63,6 +64,7 @@ public:
     static int32_t myLastGlobalBlockNum();
     static void setLastGlobalBlockNum(int32_t num);
     static std::mutex blockchain_mutex;
+    static bool doSpecialResults;
 
 //    static void ClearTx(const Block &);
 	static std::shared_ptr<leveldb::DB> blockchain;
