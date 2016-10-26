@@ -10,6 +10,9 @@ include ($$PWD/../../pri/qml-utils.pri)
 include ($$PWD/../../pri/qml-realChat.pri)
 
 
+CONFIG(debug, debug|release) {
+    QMAKE_LFLAGS_DEBUG += /INCREMENTAL:NO
+}
 #qtHaveModule(webengine) {
 #    QT += webengine
 #    DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
