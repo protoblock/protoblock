@@ -491,7 +491,7 @@ Bootstrap Node::getLastLocalBoot() {
         week = stoi(weekstr);
 
     if ( week == 0 )
-        week = 3;
+        week = 8;
 
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
@@ -534,10 +534,15 @@ Bootstrap Node::getLastLocalBoot() {
                 done = true;           
             }
         }
-        else done = true;
+        else {
+            done = true;
+            if ( doSpecialResults ) {
+                auto holdhead = ldb.read("head");
+                Bootstrap temphead = Commissioner::makeGenesisBoot(ldb,globalhead);
+                ldb.write("head",holdhead);
+            }
+        }
     }
-
-
 
     ldb.read(ldb.read(ldb.read("head")),head);
     return head;
