@@ -25,6 +25,7 @@
 #include <vector>
 #include "pbgateways.h"
 #include "RestFullCall.h"
+#include "playerresultmodel.h"
 
 using namespace std;
 
@@ -54,13 +55,13 @@ class Mediator : public QObject {
 
 
     //Trading
-    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
-    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
-    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
-    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
-    //QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
-    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
-    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
+//    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
+//    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
+//    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+//    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
+//    //QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
+//    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
+//    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
 
     //fantasyname
@@ -85,7 +86,12 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
 
+    QML_WRITABLE_CSTREF_PROPERTY(bool,useSelected)
 
+    QML_READONLY_CSTREF_PROPERTY (qint32, height)
+    QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
+
+    QML_WRITABLE_CSTREF_PROPERTY(bool,busySend)
 
     //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
     //    QML_LIST_PROPERTY(Mediator,goodFname,QString)
@@ -99,6 +105,20 @@ class Mediator : public QObject {
     pb::IPBGateway *mGateway = nullptr;
     QObject *mOGateway;
     void setupConnection(pb::IPBGateway *ingateway);
+
+    //previous week stuff
+    QML_READONLY_CSTREF_PROPERTY (qint32, thePrevWeek)
+
+    PlayerResultModel mPlayerResultModel;
+    QItemSelectionModel myPrevGamesSelectionModel;
+
+        //schedule
+    QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pPreviousWeekScheduleModel)
+    QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pPrevQItemSelectionModel)
+
+        //results
+    QML_READONLY_PTR_PROPERTY(ResultsViewFilterProxyModel, pResultsViewFilterProxyModel)
+    QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
 
     static Mediator *myInstance;
 public:
@@ -128,64 +148,64 @@ public:
     QStringList m_allNamesList;
     QStringList m_allROWList;
 
-    Q_INVOKABLE void doDepth() {
-        depthCount = 0;
-        if ( polldepth.interval() >= 3000 )
-            getDepthRep();
-    }
+//    Q_INVOKABLE void doDepth() {
+//        depthCount = 0;
+//        if ( polldepth.interval() >= 3000 )
+//            getDepthRep();
+//    }
 
-    Q_INVOKABLE void startDepth(const QString& symbol) {
-        depthBackup--;
-        if ( depthBackup <= 0 ) {
-            depthBackup = 0;
-//            depthInterval = 1000;
-        }
-//        else
-//            depthInterval = 1000 * (depthBackup / 5);
+//    Q_INVOKABLE void startDepth(const QString& symbol) {
+//        depthBackup--;
+//        if ( depthBackup <= 0 ) {
+//            depthBackup = 0;
+////            depthInterval = 1000;
+//        }
+////        else
+////            depthInterval = 1000 * (depthBackup / 5);
 
-        depthCount = 0;
-//        depthInterval = 1000 * (depthBackup / 5);
-//        if ( depthInterval < 1000 )
-//           depthInterval = 1000;
+//        depthCount = 0;
+////        depthInterval = 1000 * (depthBackup / 5);
+////        if ( depthInterval < 1000 )
+////           depthInterval = 1000;
 
-        changeDepthContext(symbol);
-        getDepthRep();
-//        qDebug() << "startDepth depthInterval " << depthInterval << " bu " << depthBackup;
+//        changeDepthContext(symbol);
+//        getDepthRep();
+////        qDebug() << "startDepth depthInterval " << depthInterval << " bu " << depthBackup;
 
-        if ( !polldepth.isActive() )
-            polldepth.start(depthInterval);
-//        11
-//        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
-//        getOrderPos();
-    }
+//        if ( !polldepth.isActive() )
+//            polldepth.start(depthInterval);
+////        11
+////        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+////        getOrderPos();
+//    }
 
-    Q_INVOKABLE void stopDepth(const QString& symbol) {
-        polldepth.stop();
-        depthBackup -= 5;
-        if ( depthBackup < 0 ) depthBackup = 0;
-        depthCount = 0;
-    }
-    Q_INVOKABLE void changeDepthContext(const QString& context) {
-        if ( mGetDepthReq.GetExtension(GetDepthReq::req).pid().data() != context )
-            mGetDepthReq.MutableExtension(GetDepthReq::req)->set_pid(context.toStdString());
+//    Q_INVOKABLE void stopDepth(const QString& symbol) {
+//        polldepth.stop();
+//        depthBackup -= 5;
+//        if ( depthBackup < 0 ) depthBackup = 0;
+//        depthCount = 0;
+//    }
+//    Q_INVOKABLE void changeDepthContext(const QString& context) {
+//        if ( mGetDepthReq.GetExtension(GetDepthReq::req).pid().data() != context )
+//            mGetDepthReq.MutableExtension(GetDepthReq::req)->set_pid(context.toStdString());
 
-//            m_currentPidContext = context;
-    }
-    Q_INVOKABLE void doCancel(qint32 id);
-    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
+////            m_currentPidContext = context;
+//    }
+//    Q_INVOKABLE void doCancel(qint32 id);
+//    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
 
-    QString playersStatus()const;
-    void setPlayersStatus(const QString &playersStatus);
+//    QString playersStatus()const;
+//    void setPlayersStatus(const QString &playersStatus);
 
-    QString playersName();
-    void setPlayersName(const QString &playersName);
+//    QString playersName();
+//    void setPlayersName(const QString &playersName);
 
     // Q_INVOKABLE void newOrder(const QString &id, int qty, int price);
 
 
-    Q_INVOKABLE void allNamesGet();
+//    Q_INVOKABLE void allNamesGet();
 
-    //trading
+    /*trading
     Q_INVOKABLE void rowMarketGet();
     Q_INVOKABLE void getOrderPos(const QString&);
     Q_INVOKABLE void getOrderPos();
@@ -209,11 +229,21 @@ public:
     Q_INVOKABLE QString getOrderModelSymbol() {
         return m_pGlobalOpenOrdersModel->get_pidsymbol();
     }
-
+    */
     //projections
     Q_INVOKABLE void select(int row, int command) {
         qDebug() << " meiator selected" << row << " commsnd " << command;
+        m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Select);
+    }
+
+    Q_INVOKABLE void toggle(int row, int command) {
+        qDebug() << " meiator selected" << row << " commsnd " << command;
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
+    }
+
+    Q_INVOKABLE void deselect(int row, int command) {
+        qDebug() << " meiator deselected" << row << " commsnd " << command;
+        m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Deselect);
     }
 
     Q_INVOKABLE void undoProj() {
@@ -226,6 +256,7 @@ public:
             it->set_projection(it->get_knownProjection());
         }
         m_pProjectionsViewFilterProxyModel->invalidate();
+        set_busySend(false);
     }
 
     Q_INVOKABLE void sendProjections() {
@@ -253,6 +284,9 @@ public:
 
         }
 
+        if ( projbygame.size() > 0 )
+            set_busySend(true);
+
         for ( auto &vg : projbygame)
             emit NewProjection(vg.second);
     }
@@ -276,11 +310,10 @@ public:
         return ret;
     }
 
-//    std::unordered_map<std::string,> fnametorole;
+    Q_INVOKABLE bool isMyName(QString fname) {
+        return m_pGoodNameBalModel->getByUid(fname) != nullptr;
+    }
 
-//    Q_INVOKABLE QString removeFnameColumn(QString fname) {
-//        fnames[fname] = "";
-//    }
 
     void toggleFantasyNameColumn(const QString & fantasyName, QString &column){
         //refresheing is done when leaderboard model refresh
@@ -309,7 +342,6 @@ public:
 
     }
 
-
     Q_INVOKABLE void copyProj(int column, QString value, bool clone, bool random = false) {
         qDebug() << "CopyProj " << column << value << clone;
 
@@ -317,6 +349,12 @@ public:
             for ( auto *it : mPlayerProjModel) {
                 if ( !it->get_isopen() )
                     continue;
+                if ( m_useSelected && m_pQItemSelectionModel->hasSelection()) {
+                    auto gameid = it->get_gameid();
+                    int i = m_pWeeklyScheduleModel->indexOf(m_pWeeklyScheduleModel->getByUid(gameid));
+                    if ( !m_pQItemSelectionModel->isSelected(m_pWeeklyScheduleModel->index(i)) )
+                        continue;
+                }
                 if ( it->get_avg() > 0 )
                     if ( clone || it->get_projection () == 0)
                         if  ( it->get_projection() != it->get_avg())
@@ -340,6 +378,13 @@ public:
 
             if ( it->second == 0 ) continue;
             if ( clone || item->get_projection() == 0 ) {
+
+                 if ( m_useSelected && m_pQItemSelectionModel->hasSelection()) {
+                    auto gameid = item->get_gameid();
+                    int i = m_pWeeklyScheduleModel->indexOf(m_pWeeklyScheduleModel->getByUid(gameid));
+                    if ( !m_pQItemSelectionModel->isSelected(m_pWeeklyScheduleModel->index(i)) )
+                        continue;
+                }
 
                 int projection = it->second;
                 if ( random ) {
@@ -367,18 +412,60 @@ public:
 //        }
 //    }
 
+    //results
+    Q_INVOKABLE void selectP(int row, int command) {
+        qDebug() << " meiator selectedP" << row << " commsnd " << command;
+        m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Select);
+    }
+
+    Q_INVOKABLE void toggleP(int row, int command) {
+        qDebug() << " meiator toggleP" << row << " commsnd " << command;
+        m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Toggle);
+    }
+
+    Q_INVOKABLE void deselectP(int row, int command) {
+        qDebug() << " meiator deselectedP" << row << " commsnd " << command;
+        m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Deselect);
+    }
+
+    Q_INVOKABLE void setPrevWeekData(int week) {
+        if ( !amLive ) return;
+
+        if ( week <= 0 || week >= 17 )
+            return;
+
+        if ( week >= m_theWeek)
+            return;
+
+        if ( week == m_thePrevWeek )
+            return;
+
+        qDebug() << " 1 ";
+        setthePrevWeek(week);
+        m_pPreviousWeekScheduleModel->updateWeeklySchedule(m_thePrevWeek,
+                                  mGateway->dataService->GetWeeklySchedule(m_thePrevWeek));
+        qDebug() << " 2 ";
+
+        const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevWeek);
+        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel);
+        myPrevGamesSelectionModel.reset();
+        m_pResultsViewFilterProxyModel->invalidate();
+        qDebug() << " 3 ";
+
+    }
+
     bool usingRandomNames = false;
 
     std::vector<std::string> fnames;
     int fnameindex;
 
     //fantasy name - manage
-    Q_INVOKABLE void pk2fname(const QString&);
+    /*Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(QString s) {
         qDebug() << " inside checkname" << s;
         emit doNameCheck(s);
     }
-
+    */
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
     Q_INVOKABLE void signPlayer(const QString &name);
     Q_INVOKABLE void useName(const QString &name);
@@ -388,27 +475,27 @@ public:
     Q_INVOKABLE QStringList allNamesList() { return m_allNamesList; }
 
     //portfolio
-    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
-        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
-        if ( model == nullptr ) {
-            qDebug() << " bad data for getPlayerNamePos " << uid;
-            return "";
-        }
-        else
-            return model->get_fullname() + " (" + model->get_position() +")" ;
-    }
+//    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
+//        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
+//        if ( model == nullptr ) {
+//            qDebug() << " bad data for getPlayerNamePos " << uid;
+//            return "";
+//        }
+//        else
+//            return model->get_fullname() + " (" + model->get_position() +")" ;
+//    }
 
 
     //data
-    Q_INVOKABLE QString getTeamid(const QString &uid) {
-        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
-        if ( model == nullptr ) {
-            qDebug() << " bad data for getTeamid " << uid;
-            return "";
-        }
-        else
-            return model->get_teamid();
-    }
+//    Q_INVOKABLE QString getTeamid(const QString &uid) {
+//        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
+//        if ( model == nullptr ) {
+//            qDebug() << " bad data for getTeamid " << uid;
+//            return "";
+//        }
+//        else
+//            return model->get_teamid();
+//    }
 
     //schedule
     Q_INVOKABLE void setScheduleFilter(const QString& filter) {
@@ -459,7 +546,7 @@ protected slots:
     }
 
     //quotes
-    void getDepthRep();
+//    void getDepthRep();
 
     //name
     void getSignedPlayerStatus();
@@ -476,9 +563,13 @@ protected slots:
         m_pProjectionsViewFilterProxyModel->invalidate();
     }
 
-private slots:
-    void OnpPlayerQuoteSliceModelItemChanged (PlayerQuoteSliceModelItem * name); \
+    void selectionPrevChanged(const QItemSelection &selected, const QItemSelection &deselected) {
+        qDebug() << " mediator selectionPrevChanged " << selected << deselected;
+        m_pResultsViewFilterProxyModel->invalidate();
+    }
 
+private slots:
+//    void OnpPlayerQuoteSliceModelItemChanged (PlayerQuoteSliceModelItem * name);
 
 private:
     std::string lastPk2name;
@@ -515,7 +606,7 @@ private:
 
     //depth todo
     QString testid;
-    WsReq mGetDepthReq;
+//    WsReq mGetDepthReq;
     bool isbid;
     //    void getOrderReq(uint64_t cname);
     int depthCount;
@@ -543,7 +634,9 @@ private:
         rest.getData(route);
         auto resp = rest.lastReply();
 
+#ifdef TRACE2
         qDebug() << resp;
+#endif
         QJsonDocument ret = QJsonDocument::fromJson(resp);
         qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
 
@@ -567,9 +660,9 @@ private:
         }
     }
 
-    void updateLiveLeaders() {
+    void updateLiveLeaders(bool getLastWeek = true) {
         mFantasyNameBalModel.updateleaders(mGateway->dataService->GetLeaderBoard());
-        if ( m_theWeek-1 > 0 )
+        if ( m_theWeek-1 > 0 && getLastWeek)
             getLeaders(m_theWeek-1,true,false);
         getLeaders(m_theWeek,false,false);
         getLeaders(0,false,true);
@@ -588,6 +681,38 @@ public slots:
     void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);
+    void NewFantasyName(fantasybit::FantasyNameBal fnb) {
+        qDebug() << "NewFantasyName " << fnb.DebugString().data();
+        auto it = mFantasyNameBalModel.getByUid(fnb.name().data());
+        if ( it == nullptr) {
+            auto *item = new FantasyNameBalModelItem(fnb);
+            item->set_lastupdate(get_blocknum());
+            mFantasyNameBalModel.append(item);
+            m_pLeaderBoardSortModel->invalidate();
+        }
+    }
+
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal fnb) {
+        auto *item = mFantasyNameBalModel.getByUid(fnb.name().data());
+        if ( item == nullptr ) return;
+        item->update(fnb);
+        mFantasyNameBalModel.update(item);
+    }
+
+    void Height(int h) {
+        qDebug() << " height " << h;
+        setheight(h);
+    }
+
+    void BlockNum(int n) {
+        qDebug() << " BlockNum " << n;
+        setblocknum(n);
+    }
+
+    void OnFinishedResults() {
+        if ( amLive )
+            updateLiveLeaders(false);
+    }
 
 private:
     vector<MyFantasyName> myGoodNames;

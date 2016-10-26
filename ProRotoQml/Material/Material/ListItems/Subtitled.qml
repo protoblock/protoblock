@@ -28,7 +28,9 @@ BaseListItem {
     property alias text: label.text
     property alias subText: subLabel.text
     property alias valueText: valueLabel.text
-
+    property alias textColor: label.color
+    property alias subColor: subLabel.color
+    property alias valueColor: valueLabel.color
     property alias iconName: icon.name
     property alias iconSource: icon.source
 

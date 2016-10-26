@@ -86,7 +86,7 @@ public:
 #endif
 
 #ifndef NOUSE_GENESIS_BOOT
-    static void InitCheckpoint();
+    static void InitCheckpoint(bool = false);
 #endif
 
     void init();
@@ -105,7 +105,7 @@ public:
     void UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &);
     //void UpdatePlayerStatus(std::string playerid, const PlayerGameStatus &);
 
-    void UpdateGameStatus(const std::string &gameid, const GameStatus &gs);
+    void UpdateGameStatus(const std::string &gameid, const GameStatus &gs, bool force = false);
 
     void OnGameStart(const std::string &gameid, const GameStatus &gs);
     bool GetGameResult(const std::string &gameid, GameResult &result);
@@ -144,6 +144,7 @@ public:
         bs.set_season(season);
         bs.set_gamemetaroot(BootStrapSchedule(ldb));
         bs.set_playermetaroot(BootStrapPlayer(ldb));
+        bs.set_gameresultroot(BootStrapResult(ldb));
 
         return bs;
     }
@@ -240,6 +241,34 @@ public:
         return ldb.write(tree.root(),tree.SerializeAsString());
     }
 
+    std::string BootStrapResult(LdbWriter &ldb) {
+        WeeklySchedule ws;
+        MerkleTree tree;
+        string temp;
+        for (int i=1; i<=17;i++) {
+            string key = "scheduleweek:" + to_string(i);
+
+            if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+                qWarning() << "cant find schedule " << key.c_str();
+                break;
+            }
+
+            if ( !ws.ParseFromString(temp) ) {
+                qCritical() << "bad read WeeklySchedule ";
+                continue;
+            }
+
+            for ( auto game : ws.games()) {
+                GameResult gr;
+                if ( GetGameResult(game.id(),gr) ) {
+                   tree.add_leaves(ldb.write(gr));
+                }
+            }
+        }
+        tree.set_root(pb::makeMerkleRoot(tree.leaves()));
+        return ldb.write(tree.root(),tree.SerializeAsString());
+    }
+
     void seasonFreeze(int season) {
         return;
         closeAll();
@@ -252,6 +281,13 @@ public:
 //        dir.rename(filedir("playerstore").data(), (moveto + "/playerstore").data());
         init();
     }
+
+    void OnGameClosed(const std::string &gameid) {
+        GameStatus gs = GetUpdatedGameStatus(gameid);
+        gs.set_status(GameStatus::CLOSED);
+        UpdateGameStatus(gameid,gs, true);
+    }
+
 private:
     void OnNewPlayer(const std::string &pid);
     void OnPlayerTrade(const std::string &pid, const std::string &tid, const std::string &ntid);

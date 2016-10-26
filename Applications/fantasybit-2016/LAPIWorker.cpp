@@ -95,6 +95,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&namedata,SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)),
                      this,SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)));
 
+    connect(&processor,&BlockProcessor::FinishedResults,this, &MainLAPIWorker::FinishedResults);
+
 }
 
 void MainLAPIWorker::GoLive() {
@@ -210,6 +212,7 @@ void MainLAPIWorker::ProcessBlock() {
         if ( !doProcessBlock() ) return;
         emit BlockNum(last_block);
         count = pcount = 0;
+        emit BlockNum(last_block);
         {
             std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
             catchingup = !amlive && last_block < numto;
@@ -229,6 +232,7 @@ void MainLAPIWorker::ProcessBlock() {
                 std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
                 amlive = true;
             }
+
             GoLive();
         }
 //        else if ( docount < numto) {
@@ -252,6 +256,7 @@ void MainLAPIWorker::OnSeenBlock(int32_t num) {
     }
     timer->start(intervalstart);
     count = bcount = 0;
+    emit Height(num);
 }
 
 void MainLAPIWorker::OnBlockError(int32_t last) {
@@ -290,13 +295,15 @@ void MainLAPIWorker::Timer() {
         count++;
         emit GetNext();
         //emit ProcessNext();
-        int interval = count*intervalstart*2;
-//        qInfo() << " timerr " << interval;
-        if ( interval < intervalmax && interval > 10) {
-            timer->start(interval);
-//            qInfo() << " timeout ";
-//            if ( true )
-//                emit GameStart("201600110");
+        if ( count%10 == 0 ) {
+            int interval = count/10*intervalstart*2;
+    //        qInfo() << " timerr " << interval;
+            if ( interval < intervalmax && interval > 500) {
+                timer->start(interval);
+    //            qInfo() << " timeout ";
+    //            if ( true )
+    //                emit GameStart("201600110");
+            }
         }
     }
 #endif
@@ -339,14 +346,15 @@ void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal bal) {
 
 void MainLAPIWorker::OnGetMyNames() {
     vector<MyFantasyName> my;
-    myfantasynames = agent.getMyNamesStatus();
-    for(auto p : myfantasynames) {
+
+    my = agent.getMyNamesStatus();
+    for(auto p : my) {
         /*
         if ( amlive )
         if ( p.second.status() < MyNameStatus::confirmed )
             namedata.Subscribe(p.first);
         */
-        my.push_back(p.second);
+        myfantasynames[p.name()] = p;
     }
 
 
@@ -368,7 +376,7 @@ void MainLAPIWorker::OnUseName(QString name) {
     myCurrentName.set_name(name.toStdString());
     myCurrentName.set_status(MyNameStatus::requested);
 
-    myfantasynames = agent.getMyNamesStatus();
+    //myfantasynames = agent.getMyNamesStatus();
 
     auto it = myfantasynames.find(name.toStdString());
     if ( it != end(myfantasynames)) {
@@ -422,8 +430,11 @@ void MainLAPIWorker::OnClaimName(QString name) {
         agent.onSignedTransaction(sn);
         DoSubscribe(myCurrentName.name(),true);
         DoPostTx(sn);
+        count = bcount = 0;
+        timer->start(intervalstart);
     }
 
+    myfantasynames[myCurrentName.name()] = myCurrentName;
     qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
     emit NameStatus(myCurrentName);
 }
@@ -473,6 +484,10 @@ void MainLAPIWorker::OnProjTX(vector<fantasybit::FantasyBitProj> vinp) {
     agent.onSignedTransaction(sn);
     DoPostTx(sn);
     DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+//    timer->stop();
+//    Timer();
+    timer->start(intervalstart);
 }
 
 //tx status

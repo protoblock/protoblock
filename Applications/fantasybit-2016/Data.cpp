@@ -108,7 +108,7 @@ void NFLStateData::InitCheckpoint() {
 
 #ifndef NOUSE_GENESIS_BOOT
 #include "PeerNode.h"
-void NFLStateData::InitCheckpoint() {
+void NFLStateData::InitCheckpoint(bool onlyresult) {
 
     leveldb::WriteOptions write_sync;
     write_sync.sync = true;
@@ -132,6 +132,7 @@ void NFLStateData::InitCheckpoint() {
     ldb.init(Node::bootstrap.get());
     ldb.read(ldb.read(ldb.read("head")),head);
 
+    if ( !onlyresult ) {
     GlobalState gs;
     gs.set_season(head.season());
     gs.set_week(head.week());
@@ -209,6 +210,22 @@ void NFLStateData::InitCheckpoint() {
 
         }
     }
+    }
+
+    {
+        MerkleTree mtree;
+        std::vector< std::pair<std::string,  GameResult> > mapt;
+        pb::loadMerkleMap(ldb,head.gameresultroot(),mtree,mapt);
+
+        for ( auto p : mapt) {
+            GameResult &gr = p.second;
+            string key = "gameresult:" + gr.gameid();
+            db4->Put(write_sync, key,
+                           gr.SerializeAsString() );
+            gr.Clear();
+        }
+    }
+
 
     delete db2;
     delete db3;
@@ -474,6 +491,8 @@ void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs)
     qDebug() << key << QString::fromStdString(gs.DebugString());
     if ( amlive )
         emit NewGameResult(gameid);
+
+    OnGameClosed(gameid);
 }
 
 bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) {
@@ -563,9 +582,9 @@ void NFLStateData::OnPlayerStatus(const std::string &pid,PlayerStatus ps) {
     }
 }
 
-void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs) {
+void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus &gs, bool force) {
     GameStatus use;
-    if ( gs.status() == GameStatus_Status_SCHEDULED ) {
+    if ( gs.status() == GameStatus_Status_SCHEDULED || force) {
         use.CopyFrom(gs);
     }
     else {

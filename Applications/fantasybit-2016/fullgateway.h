@@ -102,8 +102,13 @@ public:
         connect( mlapi, &MainLAPIWorker::Height,
                 this,   &FullGateway::Height);
 
+
         connect( mlapi, &MainLAPIWorker::BlockNum,
                 this,   &FullGateway::BlockNum);
+
+        connect( mlapi, &MainLAPIWorker::FinishedResults,
+                this,   &FullGateway::FinishedResults);
+
 
 //        connect( mlapi, SIGNAL(  GlobalStateChange(fantasybit::GlobalState)  ),
 //                this,      SLOT(    GlobalStateChange(fantasybit::GlobalState)        ));
@@ -165,6 +170,7 @@ signals:
     void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
     void Height(int);
     void BlockNum(int);
+    void FinishedResults();
 
 public slots:
     void OnLiveGui(fantasybit::GlobalState gs) {
@@ -209,10 +215,16 @@ public slots:
         for( auto &v : holdfresh)
              emit NameBal(v);
         holdfresh.clear();
-
         heslive = true;
     }
 
+//    void Height(int h) {
+//        qDebug() << "fg height " << h;
+//    }
+
+//    void BlockNum(int n) {
+//        qDebug() << "fg BlockNum " << n;
+//    }
 private:
     bool amLive = false, heslive = false;
     fantasybit::GlobalState m_gs;

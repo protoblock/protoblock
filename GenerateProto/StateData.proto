@@ -659,4 +659,5 @@ message Bootstrap {
     optional bytes playermetaroot = 20;
     optional bytes fnamemetaroot = 30;
     optional bytes previd = 40;
+    optional bytes gameresultroot = 50;
 }

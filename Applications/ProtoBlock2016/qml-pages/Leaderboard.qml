@@ -188,8 +188,7 @@ Item {
                     currentLevel = currentLevel -1
                     if(currentLevel === 0 ){
                         mainTitle.text = "2016 Leaderboard"
-                        mainSubText.text = (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText ) + " Balance: " +  model.score
-
+                        mainSubText.text = (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText )
                         jsonGetter.source =  baseUrl + "fantasy/leaders?week=" + replaceSpace(week.currentText)
                     }else{
                         mainTitle.text = lastTitle
@@ -312,12 +311,26 @@ Item {
     Component{
         id: levelZeroDel
         ListItem.Subtitled {
+            backgroundColor: MiddleMan.isMyName(model.name) ?
+                                 (model.name !== uname ? Theme.light.textColor : themeroot.theme.accentColor )
+                               : (elevation > 0 ? "white" : "transparent")
+
+            textColor: MiddleMan.isMyName(model.name) ?
+                       (model.name !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             text: "Fantasy Name: " + model.name
+
             subText: (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText ) + " Balance: " +  model.score
+
+            subColor: MiddleMan.isMyName(model.name) ?
+                       (model.name !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             elevation: 2
             action: Image {
                 source : "qrc:/icons/action_account_circle.png"
-                width: 32
+                width: ProtoScreen.guToPx(4)
                 height:  width
             }
             onClicked:{
@@ -347,7 +360,7 @@ Item {
             // FIXME set this as a platform.os android
             action: Image {
              source: "qrc:/" + model.team+".PNG"
-                width: 32
+                width: ProtoScreen.guToPx(4)
                 height:  width
             }
 
@@ -369,13 +382,30 @@ Item {
     Component{
         id: levelTwoDel
         ListItem.Subtitled {
+            backgroundColor: MiddleMan.isMyName(model.fantasyName) ?
+                                 (model.fantasyName !== uname ? Theme.light.textColor : themeroot.theme.accentColor )
+                               : (elevation > 0 ? "white" : "transparent")
+
+            textColor: MiddleMan.isMyName(model.fantasyName) ?
+                       (model.fantasyName !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             text: model.fantasyName
             subText: "Projection: " + model.projection + " Result: " + model.result
+
+            subColor: MiddleMan.isMyName(model.fantasyName) ?
+                       (model.fantasyName !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             valueText: "Award: " + model.award
+            valueColor: MiddleMan.isMyName(model.fantasyName) ?
+                       (model.fantasyName !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
+                     : Theme.light.textColor
+
             elevation: 2
             action: Image {
                 source: "qrc:/icons/action_account_circle.png"
-                width: 32
+                width: ProtoScreen.guToPx(4)
                 height:  width
             }
             onClicked:{

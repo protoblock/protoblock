@@ -35,6 +35,7 @@ namespace fantasybit
 
 Node::Node() { }
 void Node::init() {
+    doSpecialResults = false;
     write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
@@ -74,7 +75,7 @@ void Node::init() {
     current_hight = getLastLocalBlockNum();
     qInfo() <<  "current_hight" << current_hight;
 
-#ifndef NOCHECK_LOCAL_BOOTSTRAP
+    #ifndef NOCHECK_LOCAL_BOOTSTRAP
     current_boot = getLastLocalBoot();
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
 
@@ -100,6 +101,9 @@ void Node::init() {
 
                 BlockRecorder::InitCheckpoint(current_hight);
             }
+        }
+        else if ( doSpecialResults ) {
+            NFLStateData::InitCheckpoint(true);
         }
     }
 #endif
@@ -442,8 +446,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 4063 )
-        num = 4063;
+    if (num > 5391 )
+        num = 5391;
 #endif
 
     return num;
@@ -460,6 +464,7 @@ int32_t Node::myLastGlobalBlockNum() {
 }
 
 Bootstrap Node::getLastLocalBoot() {
+
     QString links("https://158.222.102.83:4545");
     QString route("week");
 
@@ -486,8 +491,15 @@ Bootstrap Node::getLastLocalBoot() {
         week = stoi(weekstr);
 
     if ( week == 0 )
-        week = 3;
+        week = 8;
 
+#ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
+    week = 1;
+#endif
+
+#ifdef NOCHECK_LOCAL_BOOTSTRAP_MINUS1
+    week--;
+#endif
     Bootstrap head;
     LdbWriter ldb;
     ldb.init(Node::bootstrap.get());
@@ -501,7 +513,11 @@ Bootstrap Node::getLastLocalBoot() {
         }
 
         string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
-        if ( globalhead > localhead ) {
+
+        if ( globalhead == "201608" && !Commissioner::BootStrapFileExists(globalhead) )
+            doSpecialResults = true;
+
+        if ( globalhead > localhead  ) {
             head = Commissioner::makeGenesisBoot(ldb,globalhead);
             if ( head.blocknum() <= 0 ) {
                 qCritical() << globalhead.data() <<  " !current_boot.blocknum() <= 0 ";
@@ -515,10 +531,17 @@ Bootstrap Node::getLastLocalBoot() {
             else {
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
-                done = true;
+                done = true;           
             }
         }
-        else done = true;
+        else {
+            done = true;
+            if ( doSpecialResults ) {
+                auto holdhead = ldb.read("head");
+                Bootstrap temphead = Commissioner::makeGenesisBoot(ldb,globalhead);
+                ldb.write("head",holdhead);
+            }
+        }
     }
 
     ldb.read(ldb.read(ldb.read("head")),head);
@@ -535,7 +558,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 //    qDebug() << " after rest height" << height;
 
 #ifdef STOP_HEIGHT_TEST
-    height = 4063;
+    height = 5391;
 #endif
 
     if ( myLastGlobalBlockNum() < height )
@@ -711,5 +734,5 @@ decltype(Node::bootstrap) Node::bootstrap;
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};
 bool Node::forking = false;
-
+bool Node::doSpecialResults = false;
 }	

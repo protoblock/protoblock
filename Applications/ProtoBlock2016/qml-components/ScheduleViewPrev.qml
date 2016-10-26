@@ -23,9 +23,9 @@ Material.Card {
     flat: true
     border.width: 0
     signal changed
-    property var isl: MiddleMan.pQItemSelectionModel
+    property var isl: MiddleMan.pPrevQItemSelectionModel
     property var secsel: [["section"]]
-    property string statusfilter: "Scheduled"
+//    property string statusfilter: "Scheduled"
 //    ItemSelectionModel {
 //        id: isl
 //        model: MiddleMan.pWeeklyScheduleModel
@@ -56,9 +56,7 @@ Material.Card {
         width: parent.width
         height: parent.height - ProtoScreen.guToPx(8)
         id: lv
-        model: MiddleMan.pWeeklyScheduleModel
-//        MiddleMan.pWeeklyScheduleModel
-//        selectionModel: MiddleMan.pQItemSelectionModel
+        model: MiddleMan.pPreviousWeekScheduleModel
         headerPositioning: ListView.OverlayHeader
         header : header
         delegate : gamedel
@@ -178,17 +176,17 @@ Material.Card {
                                 height: parent.height * .50
                                 anchors.top: parent.top
                                 width: parent.width
-                                ComboBox {
-                                    id: combo
-                                    model: ["All"]//, "Scored" , "Locked", "All" ]
-                                    enabled: modelData === " Status "
-                                    currentIndex: 0 //3
-                                    visible: false//modelData === " Status "
-                                    anchors.fill: parent
-                                    onCurrentTextChanged: {
-                                        MiddleMan.setScheduleFilter(currentText)
-                                    }
-                                }
+//                                ComboBox {
+//                                    id: combo
+//                                    model: ["All"]//, "Scored" , "Locked", "All" ]
+//                                    enabled: modelData === " Status "
+//                                    currentIndex: 0 //3
+//                                    visible: false//modelData === " Status "
+//                                    anchors.fill: parent
+//                                    onCurrentTextChanged: {
+//                                        MiddleMan.setScheduleFilter(currentText)
+//                                    }
+//                                }
 
 //                                Label {
 //                                    text: "Games to"
@@ -329,9 +327,9 @@ Material.Card {
             function myMethod() {
                 console.log("Button was clicked!" + secsel[time])
                 if ( secsel[time] === "on" && !isl.isSelected(lv.model.index(index,0)))
-                    MiddleMan.toggle(index,ItemSelectionModel.Toggle)
+                    MiddleMan.toggleP(index,ItemSelectionModel.Toggle)
                 else if ( secsel[time] === "off" && isl.isSelected(lv.model.index(index,0)) )
-                    MiddleMan.toggle(index,ItemSelectionModel.Toggle)
+                    MiddleMan.toggleP(index,ItemSelectionModel.Toggle)
 
                 dcard.elevation = Qt.binding(
                     function() {
@@ -355,9 +353,9 @@ Material.Card {
 
             Component.onCompleted: {
 //                if ( status === "Scheduled" )
-//                    MiddleMan.select(index, ItemSelectionModel.Select)
+//                    MiddleMan.selectP(index, ItemSelectionModel.Select)
 //                else
-//                    MiddleMan.deselect(index, ItemSelectionModel.Deselect)
+//                    MiddleMan.deselectP(index, ItemSelectionModel.Deselect)
 
                 topc.changed.connect(myMethod)
 //                topc.changed()
@@ -456,7 +454,7 @@ Material.Card {
             }
             Material.Label{
 //                anchors.centerIn: parent
-                text: status
+                text: "Closed"
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -469,7 +467,7 @@ Material.Card {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    MiddleMan.toggle(index,ItemSelectionModel.Toggle)
+                    MiddleMan.toggleP(index,ItemSelectionModel.Toggle)
                     dcard.elevation = Qt.binding(
                         function() {
                             if ( isl.isSelected(lv.model.index(index,0)) )

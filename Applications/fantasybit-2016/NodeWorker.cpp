@@ -60,7 +60,7 @@
     void NodeWorker::TryNext() {
         if ( syncing ) return;
         syncing = true;
-        qDebug() << this->thread();
+//        qDebug() << this->thread();
         auto gnum = node.getLastGlobalBlockNum();
         if ( !gnum )
             qDebug("Error getLastGlobalBlockNum");

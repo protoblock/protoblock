@@ -17,12 +17,21 @@ import QtQuick.Layouts 1.0
 
 Material.ApplicationWindow{
 
-//    statusBar: StatusBar {
-//        RowLayout {
-//            anchors.fill: parent
-//            Material.Label { text: "Read Only" }
-//        }
-//    }
+    statusBar: StatusBar {
+
+        RowLayout {
+            spacing: 2
+            anchors.fill: parent
+            Material.Label {
+//                height: parent.height
+//                anchors.left: parent.left
+                text: " Block Number: " + MiddleMan.blocknum
+                      + " - " + MiddleMan.liveSync
+                      + " - 2016 Week " + MiddleMan.theWeek
+                font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
+            }
+        }
+    }
 
     id: themeroot
     visible: true
@@ -317,6 +326,14 @@ Material.ApplicationWindow{
         visible: MiddleMan.isTestNet()
     }
 
+    Material.Label {
+        text: "Syncing... Block " + MiddleMan.blocknum
+             + " of " + MiddleMan.height
+        anchors.centerIn: parent
+        font.pixelSize: ProtoScreen.font( ProtoScreen.XXLARGE)
+        font.bold:  true
+        visible: MiddleMan.liveSync === "Sync"
+    }
 
     /////////////
     // End OF GUI Easy Look up
@@ -540,6 +557,11 @@ Material.ApplicationWindow{
         }
     }
 
+    BusyIndicator {
+        id: newnameInd
+        running: MiddleMan.busySend
+        anchors.centerIn: parent
+    }
 
     Connections {
         target: MiddleMan
@@ -580,7 +602,9 @@ Material.ApplicationWindow{
                 uname = name
                 msgString = "You are now playing as: " + name
                 if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
-                    usingNameDialog.toggle()
+                    rootLoader.source = "qrc:/Projections.qml"
+                    pageHelper.selectedTabIndex = 0;
+                    usingNameDialog.open()
                 }
                 else
                     console.log(" no popup")

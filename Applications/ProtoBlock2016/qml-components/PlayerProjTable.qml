@@ -18,7 +18,7 @@ Item {
 
     property alias ccount: tv.columnCount
     property int focuscount: 0
-
+    property string who: "default"
     Item {
         id: i2
         anchors.top: parent.top
@@ -70,6 +70,11 @@ Item {
             headerDelegate: headerdel
             frameVisible: false
             selectionMode: SelectionMode.NoSelection
+
+            rowDelegate: Rectangle {
+               height: ProtoScreen.guToPx(3)
+               color: styleData.alternate?"#f5f5f5":"transparent"
+            }
 
             TableViewColumn {
                 role: "lastname"
@@ -389,7 +394,7 @@ Item {
             id: idd
             implicitWidth: textItem2.implicitWidth
 //            width: parent.width
-            height: ProtoScreen.guToPx(6)
+            height: ProtoScreen.guToPx(8)
 //            anchors.fill: parent
             color: "white"
             Rectangle {
@@ -484,16 +489,21 @@ Item {
                     visible: styleData.column === 4
                     enabled: styleData.column === 4
                     text: "Send"
+
                     onClicked : {
                         console.log("clicked send")
                         topw.focuscount = 0
-                        MiddleMan.sendProjections()
-//                        MiddleMan.randomUseNames()
-
-
+                        if ( realRoot.uname === "" ) {
+                            rootLoader.source = "qrc:/Account.qml"
+                            pageHelper.selectedTabIndex = 3;
+                        }
+                        else
+                            MiddleMan.sendProjections()
                     }
+
                     backgroundColor: themeroot.theme.accentColor
-                    textColor: "white"
+                    textColor: themeroot.theme.secondaryColor
+                    elevation: 2
                 }
 
                 Material.IconButton {
@@ -590,6 +600,7 @@ Item {
                     styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor
                                                                  : "black"
                 Material.Label {
+                    anchors.margins: ProtoScreen.guToPx(.25)
                     id: textItem2
                     text: styleData.value
                     anchors.fill: parent
@@ -598,8 +609,8 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column < 6 ? "white" : Material.Theme.light.textColor
-                    font.bold: styleData.column === 4
+                    color: styleData.column === 4 ? themeroot.theme.secondaryColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
+//                    font.bold: styleData.column === 4
                 }
             }
 

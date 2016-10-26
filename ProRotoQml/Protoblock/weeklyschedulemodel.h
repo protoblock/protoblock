@@ -58,7 +58,11 @@ public:
     }
 
     void UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs) {
-        this->getByUid(gameid.data())->set_status(toStatus(gs));
+        if ( gs == GameStatus_Status_CLOSED) {
+            remove(this->getByUid(gameid.data()));
+        }
+        else
+            this->getByUid(gameid.data())->set_status(toStatus(gs));
     }
 
     static QString toStatus(fantasybit::GameStatus_Status gs) {

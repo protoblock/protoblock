@@ -59,7 +59,8 @@ void FantasyNameData::init() {
                 fnp->initBalance(fn.bits());
                 fnp->initStakePNL(fn.stake());
                 fnp->setBlockNump (0,0);
-//                qDebug() << fnp->ToString().data();
+#ifdef TRACE2
+#endif
 #ifdef DATAAGENTWRITENAMES_SPECIAL
                 auto name = fnp->alias();
                 if ( name != Commissioner::FantasyAgentName())
@@ -138,7 +139,7 @@ void FantasyNameData::closeAll() {
     //reset num for week todo:
 }
 
-void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
+void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t blocknum) {
     FantasyNameBal fn{};
     fn.set_name(name);
     fn.set_public_key(pubkey);
@@ -152,11 +153,19 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey) {
     qDebug() << fn.DebugString().data();
 
     auto fnp = Commissioner::AddName(name,pubkey);
-    fnp->setBlockNump (0,0);
+    fnp->setBlockNump (blocknum,0);
     if ( fnp  != nullptr) {
         OnFantasyName(fnp);
-        if ( amlive )
+        if ( amlive ) {
             emit NewFantasyName(fn);
+//            fantasybit::FantasyBitProj fpj{};
+//            fpj.set_name(name);
+//            fpj.set_playerid(0);
+//            fpj.set_proj(0);
+//            fpj.set_count(0);
+//            fpj.set_block(blocknum);
+//            emit ProjectionLive(fpj);
+        }
     }
 
 }

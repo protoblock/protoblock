@@ -14,7 +14,7 @@ import QtQuick.Controls 1.3 as Controls
 import Material.Styles 1.0 as MaterialStyle
 import ProRotoQml.Utils 1.0
 import Material 1.0
-
+import ProRotoQml.Theme 1.0
 /*!
    \qmltype RadioButton
    \inqmlmodule Material
@@ -47,11 +47,11 @@ Controls.RadioButton {
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
-            leftMargin: 4 * Units.dp
+            leftMargin: ProtoScreen.guToPx(2)
         }
 
-        width: 40 * Units.dp
-        height: 40 * Units.dp
+        width: ProtoScreen.guToPx(40/8)// * Units.dp
+        height: ProtoScreen.guToPx(40/8)//40 * Units.dp
         color: radioButton.checked ? Theme.alpha(radioButton.color, 0.20) : Qt.rgba(0,0,0,0.1)
 
         onClicked: {
