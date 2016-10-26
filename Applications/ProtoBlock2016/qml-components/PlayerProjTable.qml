@@ -18,7 +18,7 @@ Item {
 
     property alias ccount: tv.columnCount
     property int focuscount: 0
-
+    property string who: "default"
     Item {
         id: i2
         anchors.top: parent.top
@@ -71,9 +71,11 @@ Item {
             frameVisible: false
             selectionMode: SelectionMode.NoSelection
 
-            rowDelegate: Item {
+            rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
+               color: styleData.alternate?"#f5f5f5":"transparent"
             }
+
             TableViewColumn {
                 role: "lastname"
                 title: "Player Name"
@@ -491,11 +493,14 @@ Item {
                     onClicked : {
                         console.log("clicked send")
                         topw.focuscount = 0
-                        MiddleMan.sendProjections()
-//                        MiddleMan.randomUseNames()
-
-
+                        if ( realRoot.uname === "" ) {
+                            rootLoader.source = "qrc:/Account.qml"
+                            pageHelper.selectedTabIndex = 3;
+                        }
+                        else
+                            MiddleMan.sendProjections()
                     }
+
                     backgroundColor: themeroot.theme.accentColor
                     textColor: themeroot.theme.secondaryColor
                     elevation: 2

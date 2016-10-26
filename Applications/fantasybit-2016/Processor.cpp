@@ -230,6 +230,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
     //outDelta.mutable_datas()->CopyFrom(in);
 
+    bool haveresults = false;
     for (const auto d : in) {
         Data *nd;
         PlayerData tpd{};
@@ -294,10 +295,13 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 auto allprojs = mNameData.GetGameProj(rd.game_result().gameid());
                 bool nopnl = false;
+#ifdef TRADE_FEATURE
                 GameSettlePos gsp;
                 if ( !mExchangeData.GetGameSettlePos(rd.game_result().gameid(),gsp) )
                    nopnl = true;
-
+#else
+                nopnl = true;
+#endif
                 qDebug() << allprojs.DebugString().data();
 
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
@@ -309,11 +313,13 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                     if ( nopnl ) continue;
 
+#ifdef TRADE_FEATURE
                     auto rgsp =  (ha == QString("home")) ? gsp.mutable_home() : gsp.mutable_away();
                     for ( int i=0; i<rgsp->size();i++) {
                         BookPos *bp = rgsp->Mutable(i);
                         posmap[bp->playerid()] = bp;
                     }
+#endif
                 }
 
 
@@ -346,12 +352,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     for ( int i =0; i < size; i++) {
                         qDebug() << haresult.Get(i).playerid()
                                  << haresult.Get(i).result();
-                        if ( haresult.Get(i).playerid() == "1122")
-                            qDebug() << "1122";
 
                         auto proj = projmaps[haresult.Get(i).playerid()];
-                        //if ( proj.size() == 0 )
-                        //    continue;
 
                         BookPos  *bpos = nullptr;
                         if ( !nopnl ) {
@@ -359,7 +361,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         }
 
                         processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
-                        }
+                    }
                 }
 
                 /*
@@ -386,6 +388,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 */
                 mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+                haveresults = true;
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT
                 {
 #ifndef DATAAGENTWRITENAMES_FORCE
@@ -518,6 +521,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 break;
         }
     }
+
+    if ( haveresults && amlive )
+        emit FinishedResults();
 }
 
 
@@ -645,7 +651,7 @@ void BlockProcessor::process(const DataTransition &indt) {
 
         if ( indt.week() != mGlobalState.week())
             qWarning() << indt.type() << " wrong week" << mGlobalState.week() << indt.week();
-
+#ifdef TRADE_FEATURE
         auto pos = mExchangeData.GetRemainingSettlePos();
         for ( auto sbp : pos ) {
             SettlePositionsRawStake set(sbp.second);
@@ -658,6 +664,7 @@ void BlockProcessor::process(const DataTransition &indt) {
                 mNameData.AddPnL(r.first,r.second.second);
             }
         }
+#endif
 
 
         OnWeekOver(indt.week());
@@ -891,7 +898,9 @@ void BlockProcessor::OnWeekOver(int week) {
 void BlockProcessor::OnWeekStart(int week) {
     mNameData.OnWeekStart(week);
     mData.OnWeekStart(week);
+#ifdef TRADE_FEATURe
     mExchangeData.OnWeekStart(week);
+#endif
     mLastWeekStart = true;
 
     emit WeekStart(week);

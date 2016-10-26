@@ -1,5 +1,5 @@
-#ifndef PLAYERPROJMODEL_H
-#define PLAYERPROJMODEL_H
+#ifndef PlayerResultMODEL_H
+#define PlayerResultMODEL_H
 
 #include <QObject>
 #include <QString>
@@ -17,12 +17,13 @@
 #include "sortfilterproxymodel.h"
 #include "fbutils.h"
 #include "pbgateways.h"
+#include "weeklyschedulemodel.h"
+#include <QItemSelectionModel>
 
 namespace pb {
 using namespace fantasybit;
 
-
-class PlayerProjModelItem : public QObject {
+class PlayerResultModelItem : public QObject {
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY (QString, fullname)
     QML_READONLY_CSTREF_PROPERTY (QString, lastname)
@@ -31,108 +32,129 @@ class PlayerProjModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, teamid)
     QML_READONLY_CSTREF_PROPERTY (int, status)
     QML_READONLY_CSTREF_PROPERTY (QString, playerid)
-    QML_WRITABLE_VAR_PROPERTY(int, projection)
-    QML_WRITABLE_VAR_PROPERTY (int, knownProjection)
-    QML_WRITABLE_VAR_PROPERTY (int, projectionStatus)
+    QML_READONLY_CSTREF_PROPERTY (double, result)
+    QML_READONLY_CSTREF_PROPERTY (int, fb)
     QML_READONLY_CSTREF_PROPERTY (QString, gameid)
-    QML_READONLY_CSTREF_PROPERTY ( bool, isopen)
-    QML_WRITABLE_VAR_PROPERTY (int, avg)
-    QML_WRITABLE_VAR_PROPERTY (int, fname1)
-    QML_WRITABLE_VAR_PROPERTY (int, fname2)
-    QML_WRITABLE_VAR_PROPERTY (int, fname3)
-    QML_WRITABLE_VAR_PROPERTY (int, fname4)
-    QML_WRITABLE_VAR_PROPERTY (int, fname5)
+    QML_READONLY_CSTREF_PROPERTY (int, PassTD)
+    QML_READONLY_CSTREF_PROPERTY (int, PassYd)
+    QML_READONLY_CSTREF_PROPERTY (int, RushTD)
+    QML_READONLY_CSTREF_PROPERTY (int, RushYd)
+    QML_READONLY_CSTREF_PROPERTY (int, RecTD)
+    QML_READONLY_CSTREF_PROPERTY (int, RecYd)
+    QML_READONLY_CSTREF_PROPERTY (int, Rec)
+    QML_READONLY_CSTREF_PROPERTY (int, Int)
+    QML_READONLY_CSTREF_PROPERTY (int, Fum)
+    QML_READONLY_CSTREF_PROPERTY (int, PAT)
+    QML_READONLY_CSTREF_PROPERTY (int, _2Pt)
+    QML_READONLY_CSTREF_PROPERTY (QString, FG)
+    QML_READONLY_CSTREF_PROPERTY (int, D_TD)
+    QML_READONLY_CSTREF_PROPERTY (int, Sack)
+    QML_READONLY_CSTREF_PROPERTY (int, TA)
+    QML_READONLY_CSTREF_PROPERTY (int, SFTY)
+    QML_READONLY_CSTREF_PROPERTY (int, D2pt)
+    QML_READONLY_CSTREF_PROPERTY (int, PtsA)
+
+
 
 public:
 
-    explicit PlayerProjModelItem(const fantasybit::PlayerDetail &pd, const std::string &teamid,
-                                 const std::string &playerid, const QString &gameid,
-                                 int avg,
-                                 bool gameopen,
-                                 QObject *parent = nullptr) :  QObject(parent) {
+    explicit PlayerResultModelItem(const fantasybit::PlayerBase &pd,
+                                   const QString &teamid,
+                                   const QString &gameid,
+                                   const fantasybit::PlayerResult &pr,
+                                   QObject *parent = nullptr)
+                                            :  QObject(parent) {
         m_fullname =  QString("%1 %2")
-                .arg ( pd.base.first ().data () )
-                .arg ( pd.base.last ().data () );
-        m_firstname = pd.base.first().data();
-        m_lastname = pd.base.last().data();
-        m_pos = pd.base.position().data();
-        m_teamid = teamid.data();
-        m_status = pd.team_status;
-        m_playerid = playerid.data();
+                .arg ( pd.first ().data () )
+                .arg ( pd.last ().data () );
+        m_firstname = pd.first().data();
+        m_lastname = pd.last().data();
+        m_pos = pd.position().data();
+        m_teamid = teamid;
+        m_playerid = pr.playerid().data();
         m_gameid = gameid;
-        m_projection = 0;
-        m_knownProjection = 0;
-        m_fname1 = 0;
-        m_fname2 = 0;
-        m_fname3 = 0;
-        m_fname4 = 0;
-        m_fname5 = 0;
-        m_isopen = gameopen;
-        set_avg(avg);
-//        qDebug() << " PlayerProjModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
+        m_result = pr.result();
+        m_fb = pr.result() * 100.0;
+
+
+        const Ostats &os = pr.stats().ostats();
+        m_PassTD = os.passtd();
+        m_PassYd = os.passyds();
+        m_RushTD = os.rushtd();
+        m_RushYd = os.rushyds();
+        m_RecTD = os.rectd();
+        m_RecYd = os.recyds();
+        m_Rec   = os.rec();
+        m_Int   = os.pint();
+        m_Fum   = os.fumble();
+        m__2Pt  = os.twopt();
+
+        const Dstats &ds = pr.stats().dstats();
+        m_D2pt  = ds.twopt();
+        m_D_TD  = ds.deftd();
+        m_SFTY  = ds.sfty();
+        m_TA    = ds.turnovers();
+        m_Sack  = ds.sacks();
+        m_PtsA  = ds.ptsa();
+
+        const Kstats &ks = pr.stats().kstats();
+        m_PAT   = ks.pa();
+        QString fgs;
+        auto sz = ks.fg_size();
+        if ( sz >0 ) {
+            fgs = QString::number(ks.fg(0));
+            for (int i=1; i<sz ;i++)
+                fgs.append(QString(",%1").arg(ks.fg(i)));
+        }
+        m_FG = fgs;
+
+
+        //qDebug() << " PlayerResultModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
     }
 };
 
-class PlayerProjModel : public QQmlObjectListModel<PlayerProjModelItem>{
+class PlayerResultModel : public QQmlObjectListModel<PlayerResultModelItem>{
     Q_OBJECT
 //    QML_READONLY_CSTREF_PROPERTY(int, week)
 
 public:
-    explicit PlayerProjModel (QObject *          parent      = Q_NULLPTR,
+    explicit PlayerResultModel (QObject *          parent      = Q_NULLPTR,
                                   const QByteArray & displayRole = QByteArray (),
                                   const QByteArray & uidRole     = {"playerid"})
         : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
 
-    void updateRosters(const std::vector<pb::GameRoster> &inrosters, pb::IDataService *ds) {
-
-//        qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
+    void updateRosters(const std::vector<pb::GameResult> &inrosters,
+                       pb::IDataService *ds,
+                       WeeklyScheduleModel &sched) {
 
         clear();
 
-//        setweek(week);
-
-        for(const pb::GameRoster & game  : inrosters) {
-            if ( game.status > GameStatus_Status_INGAME)
-                continue;
-
+        for(const pb::GameResult & game  : inrosters) {
             // add game
-            QString gameId = game.info.id().data();
+            QString gameId = game.gameid().data();
+            auto item = sched.getByUid(gameId);
+            if ( !item ) continue;
+
+            auto home = item->get_home();
+            auto away = item->get_away();
+
             //add home players
-            for(const auto& player : game.homeroster) {
-                append(new PlayerProjModelItem(player.second,game.info.home(),
-                                               player.first.data(),gameId,
-                                               ds->GetAvgProjection(player.first),
-                                               game.status < GameStatus_Status_INGAME,
-                                               this));
+            for(const auto& playerresult : game.home_result()) {
+                PlayerBase &pd = ds->GetPlayerBase(playerresult.playerid());
+                append(new PlayerResultModelItem(pd,home,gameId,playerresult,this));
             }
 
             //add away players
-            for(const auto& player : game.awayroster) {
-                append(new PlayerProjModelItem(player.second,game.info.away(),
-                                               player.first.data(),gameId,
-                                               ds->GetAvgProjection(player.first),
-                                               game.status < GameStatus_Status_INGAME,
-                                               this));
-            }
-        }
-    }
-
-    void ongameStatusChange(std::string gameid,fantasybit::GameStatus_Status gs) {
-        if ( gs == GameStatus_Status_CLOSED ) {
-            for ( auto it : toList()) {
-                if ( it->get_gameid() == gameid.data())
-                    remove(it);
+            for(const auto& playerresult : game.away_result()) {
+                PlayerBase &pd = ds->GetPlayerBase(playerresult.playerid());
+                append(new PlayerResultModelItem(pd,away,gameId,playerresult,this));
             }
         }
     }
 };
 
-Q_DECLARE_METATYPE(PlayerProjModelItem*)
-Q_DECLARE_METATYPE(PlayerProjModel*)
-#include "weeklyschedulemodel.h"
-#include <QItemSelectionModel>
-class ProjectionsViewFilterProxyModel : public SortFilterProxyModel
+class ResultsViewFilterProxyModel : public SortFilterProxyModel
 {
     Q_OBJECT
 
@@ -145,7 +167,7 @@ class ProjectionsViewFilterProxyModel : public SortFilterProxyModel
 public:
     Q_PROPERTY(QStringList userRoleNames READ userRoleNames CONSTANT)
 
-    ProjectionsViewFilterProxyModel(//QStringListModel * positionCombobox = NULL,
+    ResultsViewFilterProxyModel(//QStringListModel * positionCombobox = NULL,
                                     WeeklyScheduleModel  * gameModelProxy= NULL,
                                     QItemSelectionModel * gameSelectionModel=NULL,
                                     QObject *parent = 0)
@@ -205,7 +227,7 @@ public:
     }
 
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
-        qDebug() << " sort called" << column;
+//        qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
 
 //                qDebug() << " << cc " << columnCount();
@@ -217,20 +239,21 @@ protected:
     //filtering
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         if (!myIsEnabled) {
-//            qDebug() << " ! enabled";
+            qDebug() << " ! enabled";
             return true;
         }
 
-//                qDebug() << " << cc " << columnCount();
+//        qDebug() << " << cc " << " ResultsViewFilterProxyModel " << sourceRow;
 //        if ( !QSortFilterProxyModel::filterAcceptsRow(sourceRow,sourceParent)) {
 //            qDebug() << " filterAcceptsRow  no parent" << sourceRow;
 //            return false;
 //        }
 //        qDebug() << " filterAcceptsRow" << sourceRow;
 
-        PlayerProjModel * model = dynamic_cast<PlayerProjModel *>(sourceModel());
+        PlayerResultModel * model = dynamic_cast<PlayerResultModel *>(sourceModel());
         if (model==NULL) return true;
 
+//        qDebug() << " !null " << myPos;
 
         if ( myPos != "All")
             if ( model->at(sourceRow)->get_pos() != myPos )
@@ -257,27 +280,24 @@ protected:
         return true;
     }
 
-    bool setData (const QModelIndex & index, const QVariant & value, int role) {
-        if ( index.row() < 0 )
-            return true;
+//    bool setData (const QModelIndex & index, const QVariant & value, int role) {
+//        if ( index.row() < 0 )
+//            return true;
 
-        qDebug() << "setDatasetDatasetDatasetData setting data" << index.row() << index.column();
+//        qDebug() << "setDatasetDatasetDatasetData setting data" << index.row() << index.column();
 
-        auto myindex = mapToSource(index);
+//        auto myindex = mapToSource(index);
 
-        qDebug() << "setDatasetDatasetDatasetData after map" << myindex.row() << myindex.column();
+//        qDebug() << "setDatasetDatasetDatasetData after map" << myindex.row() << myindex.column();
 
-        PlayerProjModel * model = dynamic_cast<PlayerProjModel *>(sourceModel());
-        if (model==NULL) return true;
+//        PlayerResultModel * model = dynamic_cast<PlayerResultModel *>(sourceModel());
+//        if (model==NULL) return true;
 
-        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
+//        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
 
-        model->at(myindex.row())->set_projection(value.toInt());
-//        if ( model->at(index.row())->get_firstname() )
-//            return false;
-
-        return true;
-    }
+//        model->at(myindex.row())->set_projection(value.toInt());
+//        return true;
+//    }
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE {
         return SortFilterProxyModel::data(index, role);
@@ -330,70 +350,10 @@ protected:
 
 
 
-
-class LeaderBaordFantasyNameModelItem : public QObject {
-    Q_OBJECT
-    QML_CONSTANT_CSTREF_PROPERTY (QString, name)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, skill)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, lastseason)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, thisseason)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, thisweek)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, lastweek)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, lastupdate)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, numcomplete)
-    QML_CONSTANT_CSTREF_PROPERTY (quint64, hash)
-    QML_CONSTANT_CSTREF_PROPERTY (QString, pk)
-
-public:
-
-    explicit LeaderBaordFantasyNameModelItem(const fantasybit::FantasyNameBal &in) :  QObject(nullptr) {
-        m_name = in.name().data();
-        m_pk = in.public_key().data();
-        m_skill = in.stake();
-        m_hash = in.chash();
-    }
-};
-
-
-class LeaderBaordFantasyNameModel : public QQmlObjectListModel<LeaderBaordFantasyNameModelItem> {};
-
-Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//struct PlayerDetail {
-//    PlayerBase base;
-//    PlayerStatus::Status team_status;
-//    PlayerGameStatus game_status;
-//};
-
-//struct GameRoster {
-//    GameInfo info;
-//    GameStatus::Status  status;
-//    std::unordered_map<std::string,PlayerDetail> homeroster;
-//    std::unordered_map<std::string,PlayerDetail> awayroster;
-
-//};
-
-//unordered_map<std::string,int> DataService::GetProjByName(const std::string &fname) {
-
-//unordered_map<std::string,int> DataService::GetProjById(const std::string &pid) {
-
-//std::vector<fantasybit::GameRoster> DataService::GetCurrentWeekGameRosters()
+Q_DECLARE_METATYPE(PlayerResultModelItem*)
+Q_DECLARE_METATYPE(PlayerResultModel*)
 
 }
 
-#endif // PLAYERPROJMODEL_H
+#endif // PlayerResultMODEL_H
 

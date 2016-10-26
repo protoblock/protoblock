@@ -106,6 +106,9 @@ public:
         connect( mlapi, &MainLAPIWorker::BlockNum,
                 this,   &FullGateway::BlockNum);
 
+        connect( mlapi, &MainLAPIWorker::FinishedResults,
+                this,   &FullGateway::FinishedResults);
+
 
 //        connect( mlapi, SIGNAL(  GlobalStateChange(fantasybit::GlobalState)  ),
 //                this,      SLOT(    GlobalStateChange(fantasybit::GlobalState)        ));
@@ -167,7 +170,7 @@ signals:
     void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
     void Height(int);
     void BlockNum(int);
-
+    void FinishedResults();
 
 public slots:
     void OnLiveGui(fantasybit::GlobalState gs) {

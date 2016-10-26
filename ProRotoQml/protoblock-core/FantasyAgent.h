@@ -46,7 +46,7 @@ public:
     FantasyAgent(string = "");
 
     std::multimap<std::string,std::string> getMyNames();
-    std::map<std::string,MyFantasyName> getMyNamesStatus(bool selectlast = false);
+    std::vector<MyFantasyName> getMyNamesStatus(bool selectlast = false);
 
     bool makeGenesis();
     void onSignedTransaction(SignedTransaction &sn);

@@ -557,6 +557,11 @@ Material.ApplicationWindow{
         }
     }
 
+    BusyIndicator {
+        id: newnameInd
+        running: MiddleMan.busySend
+        anchors.centerIn: parent
+    }
 
     Connections {
         target: MiddleMan
@@ -597,7 +602,9 @@ Material.ApplicationWindow{
                 uname = name
                 msgString = "You are now playing as: " + name
                 if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
-                    usingNameDialog.toggle()
+                    rootLoader.source = "qrc:/Projections.qml"
+                    pageHelper.selectedTabIndex = 0;
+                    usingNameDialog.open()
                 }
                 else
                     console.log(" no popup")

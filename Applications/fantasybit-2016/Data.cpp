@@ -108,7 +108,7 @@ void NFLStateData::InitCheckpoint() {
 
 #ifndef NOUSE_GENESIS_BOOT
 #include "PeerNode.h"
-void NFLStateData::InitCheckpoint() {
+void NFLStateData::InitCheckpoint(bool onlyresult) {
 
     leveldb::WriteOptions write_sync;
     write_sync.sync = true;
@@ -132,6 +132,7 @@ void NFLStateData::InitCheckpoint() {
     ldb.init(Node::bootstrap.get());
     ldb.read(ldb.read(ldb.read("head")),head);
 
+    if ( !onlyresult ) {
     GlobalState gs;
     gs.set_season(head.season());
     gs.set_week(head.week());
@@ -209,6 +210,22 @@ void NFLStateData::InitCheckpoint() {
 
         }
     }
+    }
+
+    {
+        MerkleTree mtree;
+        std::vector< std::pair<std::string,  GameResult> > mapt;
+        pb::loadMerkleMap(ldb,head.gameresultroot(),mtree,mapt);
+
+        for ( auto p : mapt) {
+            GameResult &gr = p.second;
+            string key = "gameresult:" + gr.gameid();
+            db4->Put(write_sync, key,
+                           gr.SerializeAsString() );
+            gr.Clear();
+        }
+    }
+
 
     delete db2;
     delete db3;

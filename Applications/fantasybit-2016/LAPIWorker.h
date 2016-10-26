@@ -116,6 +116,8 @@ signals:
 
     void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
 
+    void FinishedResults();
+
 
 public slots:
 

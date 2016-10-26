@@ -17,7 +17,7 @@
         <file>ScheduleView.qml</file>
         <file>PlayerProjTable.qml</file>
         <file>LeaderProjView.qml</file>
-
-
+        <file>PlayerResultTable.qml</file>
+        <file>ScheduleViewPrev.qml</file>
     </qresource>
 </RCC>
