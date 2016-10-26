@@ -75,7 +75,7 @@ void Node::init() {
     current_hight = getLastLocalBlockNum();
     qInfo() <<  "current_hight" << current_hight;
 
-#ifndef NOCHECK_LOCAL_BOOTSTRAP
+    #ifndef NOCHECK_LOCAL_BOOTSTRAP
     current_boot = getLastLocalBoot();
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
 
@@ -513,7 +513,11 @@ Bootstrap Node::getLastLocalBoot() {
         }
 
         string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
-        if ( globalhead > localhead || globalhead == "201608" && !Commissioner::BootStrapFileExists(globalhead) ) {
+
+        if ( globalhead == "201608" && !Commissioner::BootStrapFileExists(globalhead) )
+            doSpecialResults = true;
+
+        if ( globalhead > localhead  ) {
             head = Commissioner::makeGenesisBoot(ldb,globalhead);
             if ( head.blocknum() <= 0 ) {
                 qCritical() << globalhead.data() <<  " !current_boot.blocknum() <= 0 ";
@@ -527,13 +531,13 @@ Bootstrap Node::getLastLocalBoot() {
             else {
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
-                done = true;
-                if ( week == 8 )
-                    doSpecialResults = true;
+                done = true;           
             }
         }
         else done = true;
     }
+
+
 
     ldb.read(ldb.read(ldb.read("head")),head);
     return head;
