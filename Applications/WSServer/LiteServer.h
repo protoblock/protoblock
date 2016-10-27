@@ -39,10 +39,11 @@ public:
 
 public slots:
     void onNewProj(const std::string &name ) {
-        auto it= mFnameSubscribed.find(name);
+        auto it = mFnameSubscribed.find(name);
         if ( it == end(mFnameSubscribed))
             return;
 
+        qDebug()  << " socket yes " << name.data();
         doSendProjections(it->second,name);
     }
 

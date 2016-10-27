@@ -57,7 +57,11 @@ namespace fantasybit {
     static int PB_WS_TX_PORT = 6110;
     static int PB_WS_CHAT_PORT = 6112;
 
-#ifdef USE_LOCALHOST_SERVER
+#ifdef USE_LOCALNETWORKHOST_SERVER
+    static std::string PB_WS_LITE_AGENT = "192.168.42.80";
+    static std::string PB_WS_CHAT = "192.168.42.80";
+    static std::string PB_WS_TX = "192.168.42.80";
+#elif USE_LOCALHOST_SERVER
     static std::string PB_WS_LITE_AGENT = "localhost";
     static std::string PB_WS_CHAT = "localhost";
     static std::string PB_WS_TX = "localhost";

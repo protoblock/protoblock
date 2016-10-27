@@ -106,7 +106,7 @@ include ($$PWD/../../pri/genproto.pri)
 #message(win32 $$INCLUDEPATH)
 
 #win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/release/ -lProRotoQml.Protoblockd
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/debug/ -lProRotoQml.Protoblockd
+#else:win32:CONFIG(debug, debug|rFelease): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/debug/ -lProRotoQml.Protoblockd
 #else:unix: LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/ -lProRotoQml.Protoblockd
 
 INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock

@@ -220,8 +220,10 @@ int i =0;
         case GETPROJECTIONS: {
 
             auto &name = req.GetExtension(GetProjectionReq::req).fname();
-            if ( name != "")
+            if ( name != "") {
                 mFnameSubscribed[name] = pClient;
+                mSocketSubscribed[pClient] = name;
+            }
             doSendProjections(pClient,name);
             return;
             break;
@@ -313,7 +315,7 @@ void LiteServer::socketDisconnected()
 
     mFnameSubscribed.erase(mSocketSubscribed[pClient]);
     mSocketSubscribed.erase(pClient);
-    auto it = mSocketSubscribed.find(pClient);
+//    auto it = mSocketSubscribed.find(pClient);
 
     pClient->deleteLater();
 }
