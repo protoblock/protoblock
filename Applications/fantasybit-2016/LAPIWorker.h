@@ -119,11 +119,6 @@ signals:
     void FinishedResults();
 
 
-    void NewFantasyName(fantasybit::FantasyNameBal);
-
-    void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
-
-
 public slots:
 
     //void getLivePlayers(int );

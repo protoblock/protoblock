@@ -37,6 +37,7 @@ public:
 
 //    QStringList createCommandArgument(const QString &cmd);
 
+    void doSendLeaders(QWebSocket *pClient);
 public slots:
     void onNewProj(const std::string &name ) {
         auto it = mFnameSubscribed.find(name);
@@ -45,6 +46,7 @@ public slots:
 
         qDebug()  << " socket yes " << name.data();
         doSendProjections(it->second,name);
+        doSendLeaders(it->second);
     }
 
     void GameStart(string gameid);

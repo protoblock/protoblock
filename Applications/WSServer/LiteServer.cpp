@@ -308,6 +308,16 @@ void LiteServer::doSendProjections(QWebSocket *pClient,const std::string & fname
     pClient->sendBinaryMessage(mWSReplybyteArray);
 }
 
+void LiteServer::doSendLeaders(QWebSocket *pClient) {
+    fantasybit::WSReply rep;
+    GetAllNamesRep &ganp = Server::instance()->mAllNamesRep;
+    rep.SetAllocatedExtension(GetAllNamesRep::rep,&(Server::instance()->mAllNamesRep));
+    rep.SerializeToString(&mRepstr);
+    rep.ReleaseExtension(GetAllNamesRep::rep);
+    QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
+    pClient->sendBinaryMessage(qb);
+}
+
 void LiteServer::socketDisconnected()
 {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());

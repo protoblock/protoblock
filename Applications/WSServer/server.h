@@ -24,9 +24,10 @@ class Server : public QObject {
 
 #ifdef TESTING_ONLY
     QTimer testGameStart;
-    vector<GameData> holdGameData;
+    std::unordered_map<string,GameData> holdGameData;
 #endif
 
+    void resetRosterProjScheduleData();
 public:
 
     static Server *instance();
@@ -136,12 +137,23 @@ protected slots:
     void MyNames(vector<fantasybit::MyFantasyName>);
     void NameBal(fantasybit::FantasyNameBal);
     void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
-    void GlobalStateChange(fantasybit::GlobalState);
+
     void NewWeek(int);
     void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);
     */
+
+    void GlobalStateChange(fantasybit::GlobalState gs) {
+        GlobalStateRep.mutable_globalstate()->CopyFrom(gs);
+    }
+
+    void NewWeek(int) {
+        if ( amLive )
+            initData();
+    }
+
+    void ResetData() { resetRosterProjScheduleData(); }
 
     void Height(int h) {
         qDebug() << " height " << h;
@@ -157,7 +169,9 @@ protected slots:
             auto fnptr = Commissioner::getName(name);
             if ( !fnptr ) continue;
 
-            AddNames(FantasyName::toFantasyNameBal(*fnptr));
+            FantasyNameBal &fff = FantasyName::toFantasyNameBal(*fnptr);
+            qDebug() << fff.DebugString().data();
+            AddNames(fff);
             emit onNewProj(name);
         }
         blocknames.clear();
@@ -167,10 +181,14 @@ protected slots:
 
 #ifdef TESTING_ONLY
     void setTestGameStart() {
+
         for ( auto &it : holdGameData) {
-            if ( it.status().status() == GameStatus_Status_SCHEDULED) {
-                it.mutable_status()->set_status(GameStatus_Status_INGAME);
-                emit GameStart(it.gameid());
+            if ( it.second.status().status() == GameStatus_Status_SCHEDULED) {
+                it.second.mutable_status()->set_status(GameStatus_Status_INGAME);
+                qDebug() << " in game start " << it.second.DebugString().data();
+                emit GameStart(it.second.gameid());
+                testGameStart.setInterval(20000);
+                ResetData();
                 return;
             }
         }
