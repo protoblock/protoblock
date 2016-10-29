@@ -35,6 +35,8 @@ void protobuf_ShutdownFile_ApiData_2eproto();
 
 class FantasyNameHash;
 class Distribution;
+class Profits;
+class Fills;
 class ProjKstats;
 class ProjDstats;
 class ProjOstats;
@@ -313,6 +315,375 @@ class Distribution : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Distribution* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Profits : public ::google::protobuf::Message {
+ public:
+  Profits();
+  virtual ~Profits();
+
+  Profits(const Profits& from);
+
+  inline Profits& operator=(const Profits& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Profits& default_instance();
+
+  void Swap(Profits* other);
+
+  // implements Message ----------------------------------------------
+
+  Profits* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Profits& from);
+  void MergeFrom(const Profits& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string gameid = 2;
+  inline bool has_gameid() const;
+  inline void clear_gameid();
+  static const int kGameidFieldNumber = 2;
+  inline const ::std::string& gameid() const;
+  inline void set_gameid(const ::std::string& value);
+  inline void set_gameid(const char* value);
+  inline void set_gameid(const char* value, size_t size);
+  inline ::std::string* mutable_gameid();
+  inline ::std::string* release_gameid();
+  inline void set_allocated_gameid(::std::string* gameid);
+
+  // optional string teamid = 4;
+  inline bool has_teamid() const;
+  inline void clear_teamid();
+  static const int kTeamidFieldNumber = 4;
+  inline const ::std::string& teamid() const;
+  inline void set_teamid(const ::std::string& value);
+  inline void set_teamid(const char* value);
+  inline void set_teamid(const char* value, size_t size);
+  inline ::std::string* mutable_teamid();
+  inline ::std::string* release_teamid();
+  inline void set_allocated_teamid(::std::string* teamid);
+
+  // optional int32 season = 5;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 5;
+  inline ::google::protobuf::int32 season() const;
+  inline void set_season(::google::protobuf::int32 value);
+
+  // optional int32 week = 6;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 6;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
+  // optional uint64 fantasy_nameid = 1;
+  inline bool has_fantasy_nameid() const;
+  inline void clear_fantasy_nameid();
+  static const int kFantasyNameidFieldNumber = 1;
+  inline ::google::protobuf::uint64 fantasy_nameid() const;
+  inline void set_fantasy_nameid(::google::protobuf::uint64 value);
+
+  // optional string playerid = 3;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 3;
+  inline const ::std::string& playerid() const;
+  inline void set_playerid(const ::std::string& value);
+  inline void set_playerid(const char* value);
+  inline void set_playerid(const char* value, size_t size);
+  inline ::std::string* mutable_playerid();
+  inline ::std::string* release_playerid();
+  inline void set_allocated_playerid(::std::string* playerid);
+
+  // optional int32 qty = 7;
+  inline bool has_qty() const;
+  inline void clear_qty();
+  static const int kQtyFieldNumber = 7;
+  inline ::google::protobuf::int32 qty() const;
+  inline void set_qty(::google::protobuf::int32 value);
+
+  // optional float price = 8;
+  inline bool has_price() const;
+  inline void clear_price();
+  static const int kPriceFieldNumber = 8;
+  inline float price() const;
+  inline void set_price(float value);
+
+  // optional float result = 9;
+  inline bool has_result() const;
+  inline void clear_result();
+  static const int kResultFieldNumber = 9;
+  inline float result() const;
+  inline void set_result(float value);
+
+  // optional float pnl = 10;
+  inline bool has_pnl() const;
+  inline void clear_pnl();
+  static const int kPnlFieldNumber = 10;
+  inline float pnl() const;
+  inline void set_pnl(float value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Profits)
+ private:
+  inline void set_has_gameid();
+  inline void clear_has_gameid();
+  inline void set_has_teamid();
+  inline void clear_has_teamid();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_fantasy_nameid();
+  inline void clear_has_fantasy_nameid();
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+  inline void set_has_qty();
+  inline void clear_has_qty();
+  inline void set_has_price();
+  inline void clear_has_price();
+  inline void set_has_result();
+  inline void clear_has_result();
+  inline void set_has_pnl();
+  inline void clear_has_pnl();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* gameid_;
+  ::std::string* teamid_;
+  ::google::protobuf::int32 season_;
+  ::google::protobuf::int32 week_;
+  ::google::protobuf::uint64 fantasy_nameid_;
+  ::std::string* playerid_;
+  ::google::protobuf::int32 qty_;
+  float price_;
+  float result_;
+  float pnl_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ApiData_2eproto();
+  friend void protobuf_AssignDesc_ApiData_2eproto();
+  friend void protobuf_ShutdownFile_ApiData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Profits* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Fills : public ::google::protobuf::Message {
+ public:
+  Fills();
+  virtual ~Fills();
+
+  Fills(const Fills& from);
+
+  inline Fills& operator=(const Fills& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Fills& default_instance();
+
+  void Swap(Fills* other);
+
+  // implements Message ----------------------------------------------
+
+  Fills* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Fills& from);
+  void MergeFrom(const Fills& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool passivebuy = 1;
+  inline bool has_passivebuy() const;
+  inline void clear_passivebuy();
+  static const int kPassivebuyFieldNumber = 1;
+  inline bool passivebuy() const;
+  inline void set_passivebuy(bool value);
+
+  // optional string buyer = 10;
+  inline bool has_buyer() const;
+  inline void clear_buyer();
+  static const int kBuyerFieldNumber = 10;
+  inline const ::std::string& buyer() const;
+  inline void set_buyer(const ::std::string& value);
+  inline void set_buyer(const char* value);
+  inline void set_buyer(const char* value, size_t size);
+  inline ::std::string* mutable_buyer();
+  inline ::std::string* release_buyer();
+  inline void set_allocated_buyer(::std::string* buyer);
+
+  // optional string seller = 20;
+  inline bool has_seller() const;
+  inline void clear_seller();
+  static const int kSellerFieldNumber = 20;
+  inline const ::std::string& seller() const;
+  inline void set_seller(const ::std::string& value);
+  inline void set_seller(const char* value);
+  inline void set_seller(const char* value, size_t size);
+  inline ::std::string* mutable_seller();
+  inline ::std::string* release_seller();
+  inline void set_allocated_seller(::std::string* seller);
+
+  // optional string teamid = 40;
+  inline bool has_teamid() const;
+  inline void clear_teamid();
+  static const int kTeamidFieldNumber = 40;
+  inline const ::std::string& teamid() const;
+  inline void set_teamid(const ::std::string& value);
+  inline void set_teamid(const char* value);
+  inline void set_teamid(const char* value, size_t size);
+  inline ::std::string* mutable_teamid();
+  inline ::std::string* release_teamid();
+  inline void set_allocated_teamid(::std::string* teamid);
+
+  // optional string playerid = 45;
+  inline bool has_playerid() const;
+  inline void clear_playerid();
+  static const int kPlayeridFieldNumber = 45;
+  inline const ::std::string& playerid() const;
+  inline void set_playerid(const ::std::string& value);
+  inline void set_playerid(const char* value);
+  inline void set_playerid(const char* value, size_t size);
+  inline ::std::string* mutable_playerid();
+  inline ::std::string* release_playerid();
+  inline void set_allocated_playerid(::std::string* playerid);
+
+  // optional int32 season = 50;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 50;
+  inline ::google::protobuf::int32 season() const;
+  inline void set_season(::google::protobuf::int32 value);
+
+  // optional int32 week = 60;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 60;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
+  // optional int32 qty = 70;
+  inline bool has_qty() const;
+  inline void clear_qty();
+  static const int kQtyFieldNumber = 70;
+  inline ::google::protobuf::int32 qty() const;
+  inline void set_qty(::google::protobuf::int32 value);
+
+  // optional float price = 80;
+  inline bool has_price() const;
+  inline void clear_price();
+  static const int kPriceFieldNumber = 80;
+  inline float price() const;
+  inline void set_price(float value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Fills)
+ private:
+  inline void set_has_passivebuy();
+  inline void clear_has_passivebuy();
+  inline void set_has_buyer();
+  inline void clear_has_buyer();
+  inline void set_has_seller();
+  inline void clear_has_seller();
+  inline void set_has_teamid();
+  inline void clear_has_teamid();
+  inline void set_has_playerid();
+  inline void clear_has_playerid();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_qty();
+  inline void clear_has_qty();
+  inline void set_has_price();
+  inline void clear_has_price();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* buyer_;
+  ::std::string* seller_;
+  bool passivebuy_;
+  ::google::protobuf::int32 season_;
+  ::std::string* teamid_;
+  ::std::string* playerid_;
+  ::google::protobuf::int32 week_;
+  ::google::protobuf::int32 qty_;
+  float price_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ApiData_2eproto();
+  friend void protobuf_AssignDesc_ApiData_2eproto();
+  friend void protobuf_ShutdownFile_ApiData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Fills* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1311,6 +1682,768 @@ inline float Distribution::result() const {
 inline void Distribution::set_result(float value) {
   set_has_result();
   result_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Profits
+
+// optional string gameid = 2;
+inline bool Profits::has_gameid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Profits::set_has_gameid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Profits::clear_has_gameid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Profits::clear_gameid() {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    gameid_->clear();
+  }
+  clear_has_gameid();
+}
+inline const ::std::string& Profits::gameid() const {
+  return *gameid_;
+}
+inline void Profits::set_gameid(const ::std::string& value) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(value);
+}
+inline void Profits::set_gameid(const char* value) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(value);
+}
+inline void Profits::set_gameid(const char* value, size_t size) {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  gameid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Profits::mutable_gameid() {
+  set_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    gameid_ = new ::std::string;
+  }
+  return gameid_;
+}
+inline ::std::string* Profits::release_gameid() {
+  clear_has_gameid();
+  if (gameid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gameid_;
+    gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Profits::set_allocated_gameid(::std::string* gameid) {
+  if (gameid_ != &::google::protobuf::internal::kEmptyString) {
+    delete gameid_;
+  }
+  if (gameid) {
+    set_has_gameid();
+    gameid_ = gameid;
+  } else {
+    clear_has_gameid();
+    gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string teamid = 4;
+inline bool Profits::has_teamid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Profits::set_has_teamid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Profits::clear_has_teamid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Profits::clear_teamid() {
+  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
+    teamid_->clear();
+  }
+  clear_has_teamid();
+}
+inline const ::std::string& Profits::teamid() const {
+  return *teamid_;
+}
+inline void Profits::set_teamid(const ::std::string& value) {
+  set_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    teamid_ = new ::std::string;
+  }
+  teamid_->assign(value);
+}
+inline void Profits::set_teamid(const char* value) {
+  set_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    teamid_ = new ::std::string;
+  }
+  teamid_->assign(value);
+}
+inline void Profits::set_teamid(const char* value, size_t size) {
+  set_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    teamid_ = new ::std::string;
+  }
+  teamid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Profits::mutable_teamid() {
+  set_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    teamid_ = new ::std::string;
+  }
+  return teamid_;
+}
+inline ::std::string* Profits::release_teamid() {
+  clear_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = teamid_;
+    teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Profits::set_allocated_teamid(::std::string* teamid) {
+  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
+    delete teamid_;
+  }
+  if (teamid) {
+    set_has_teamid();
+    teamid_ = teamid;
+  } else {
+    clear_has_teamid();
+    teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 season = 5;
+inline bool Profits::has_season() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Profits::set_has_season() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Profits::clear_has_season() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Profits::clear_season() {
+  season_ = 0;
+  clear_has_season();
+}
+inline ::google::protobuf::int32 Profits::season() const {
+  return season_;
+}
+inline void Profits::set_season(::google::protobuf::int32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional int32 week = 6;
+inline bool Profits::has_week() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Profits::set_has_week() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Profits::clear_has_week() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Profits::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 Profits::week() const {
+  return week_;
+}
+inline void Profits::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional uint64 fantasy_nameid = 1;
+inline bool Profits::has_fantasy_nameid() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Profits::set_has_fantasy_nameid() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Profits::clear_has_fantasy_nameid() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Profits::clear_fantasy_nameid() {
+  fantasy_nameid_ = GOOGLE_ULONGLONG(0);
+  clear_has_fantasy_nameid();
+}
+inline ::google::protobuf::uint64 Profits::fantasy_nameid() const {
+  return fantasy_nameid_;
+}
+inline void Profits::set_fantasy_nameid(::google::protobuf::uint64 value) {
+  set_has_fantasy_nameid();
+  fantasy_nameid_ = value;
+}
+
+// optional string playerid = 3;
+inline bool Profits::has_playerid() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Profits::set_has_playerid() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Profits::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Profits::clear_playerid() {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    playerid_->clear();
+  }
+  clear_has_playerid();
+}
+inline const ::std::string& Profits::playerid() const {
+  return *playerid_;
+}
+inline void Profits::set_playerid(const ::std::string& value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void Profits::set_playerid(const char* value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void Profits::set_playerid(const char* value, size_t size) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Profits::mutable_playerid() {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  return playerid_;
+}
+inline ::std::string* Profits::release_playerid() {
+  clear_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = playerid_;
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Profits::set_allocated_playerid(::std::string* playerid) {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (playerid) {
+    set_has_playerid();
+    playerid_ = playerid;
+  } else {
+    clear_has_playerid();
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 qty = 7;
+inline bool Profits::has_qty() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Profits::set_has_qty() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Profits::clear_has_qty() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Profits::clear_qty() {
+  qty_ = 0;
+  clear_has_qty();
+}
+inline ::google::protobuf::int32 Profits::qty() const {
+  return qty_;
+}
+inline void Profits::set_qty(::google::protobuf::int32 value) {
+  set_has_qty();
+  qty_ = value;
+}
+
+// optional float price = 8;
+inline bool Profits::has_price() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Profits::set_has_price() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Profits::clear_has_price() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Profits::clear_price() {
+  price_ = 0;
+  clear_has_price();
+}
+inline float Profits::price() const {
+  return price_;
+}
+inline void Profits::set_price(float value) {
+  set_has_price();
+  price_ = value;
+}
+
+// optional float result = 9;
+inline bool Profits::has_result() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Profits::set_has_result() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Profits::clear_has_result() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Profits::clear_result() {
+  result_ = 0;
+  clear_has_result();
+}
+inline float Profits::result() const {
+  return result_;
+}
+inline void Profits::set_result(float value) {
+  set_has_result();
+  result_ = value;
+}
+
+// optional float pnl = 10;
+inline bool Profits::has_pnl() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Profits::set_has_pnl() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Profits::clear_has_pnl() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Profits::clear_pnl() {
+  pnl_ = 0;
+  clear_has_pnl();
+}
+inline float Profits::pnl() const {
+  return pnl_;
+}
+inline void Profits::set_pnl(float value) {
+  set_has_pnl();
+  pnl_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Fills
+
+// optional bool passivebuy = 1;
+inline bool Fills::has_passivebuy() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Fills::set_has_passivebuy() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Fills::clear_has_passivebuy() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Fills::clear_passivebuy() {
+  passivebuy_ = false;
+  clear_has_passivebuy();
+}
+inline bool Fills::passivebuy() const {
+  return passivebuy_;
+}
+inline void Fills::set_passivebuy(bool value) {
+  set_has_passivebuy();
+  passivebuy_ = value;
+}
+
+// optional string buyer = 10;
+inline bool Fills::has_buyer() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Fills::set_has_buyer() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Fills::clear_has_buyer() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Fills::clear_buyer() {
+  if (buyer_ != &::google::protobuf::internal::kEmptyString) {
+    buyer_->clear();
+  }
+  clear_has_buyer();
+}
+inline const ::std::string& Fills::buyer() const {
+  return *buyer_;
+}
+inline void Fills::set_buyer(const ::std::string& value) {
+  set_has_buyer();
+  if (buyer_ == &::google::protobuf::internal::kEmptyString) {
+    buyer_ = new ::std::string;
+  }
+  buyer_->assign(value);
+}
+inline void Fills::set_buyer(const char* value) {
+  set_has_buyer();
+  if (buyer_ == &::google::protobuf::internal::kEmptyString) {
+    buyer_ = new ::std::string;
+  }
+  buyer_->assign(value);
+}
+inline void Fills::set_buyer(const char* value, size_t size) {
+  set_has_buyer();
+  if (buyer_ == &::google::protobuf::internal::kEmptyString) {
+    buyer_ = new ::std::string;
+  }
+  buyer_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Fills::mutable_buyer() {
+  set_has_buyer();
+  if (buyer_ == &::google::protobuf::internal::kEmptyString) {
+    buyer_ = new ::std::string;
+  }
+  return buyer_;
+}
+inline ::std::string* Fills::release_buyer() {
+  clear_has_buyer();
+  if (buyer_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = buyer_;
+    buyer_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Fills::set_allocated_buyer(::std::string* buyer) {
+  if (buyer_ != &::google::protobuf::internal::kEmptyString) {
+    delete buyer_;
+  }
+  if (buyer) {
+    set_has_buyer();
+    buyer_ = buyer;
+  } else {
+    clear_has_buyer();
+    buyer_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string seller = 20;
+inline bool Fills::has_seller() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Fills::set_has_seller() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Fills::clear_has_seller() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Fills::clear_seller() {
+  if (seller_ != &::google::protobuf::internal::kEmptyString) {
+    seller_->clear();
+  }
+  clear_has_seller();
+}
+inline const ::std::string& Fills::seller() const {
+  return *seller_;
+}
+inline void Fills::set_seller(const ::std::string& value) {
+  set_has_seller();
+  if (seller_ == &::google::protobuf::internal::kEmptyString) {
+    seller_ = new ::std::string;
+  }
+  seller_->assign(value);
+}
+inline void Fills::set_seller(const char* value) {
+  set_has_seller();
+  if (seller_ == &::google::protobuf::internal::kEmptyString) {
+    seller_ = new ::std::string;
+  }
+  seller_->assign(value);
+}
+inline void Fills::set_seller(const char* value, size_t size) {
+  set_has_seller();
+  if (seller_ == &::google::protobuf::internal::kEmptyString) {
+    seller_ = new ::std::string;
+  }
+  seller_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Fills::mutable_seller() {
+  set_has_seller();
+  if (seller_ == &::google::protobuf::internal::kEmptyString) {
+    seller_ = new ::std::string;
+  }
+  return seller_;
+}
+inline ::std::string* Fills::release_seller() {
+  clear_has_seller();
+  if (seller_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = seller_;
+    seller_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Fills::set_allocated_seller(::std::string* seller) {
+  if (seller_ != &::google::protobuf::internal::kEmptyString) {
+    delete seller_;
+  }
+  if (seller) {
+    set_has_seller();
+    seller_ = seller;
+  } else {
+    clear_has_seller();
+    seller_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string teamid = 40;
+inline bool Fills::has_teamid() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Fills::set_has_teamid() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Fills::clear_has_teamid() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Fills::clear_teamid() {
+  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
+    teamid_->clear();
+  }
+  clear_has_teamid();
+}
+inline const ::std::string& Fills::teamid() const {
+  return *teamid_;
+}
+inline void Fills::set_teamid(const ::std::string& value) {
+  set_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    teamid_ = new ::std::string;
+  }
+  teamid_->assign(value);
+}
+inline void Fills::set_teamid(const char* value) {
+  set_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    teamid_ = new ::std::string;
+  }
+  teamid_->assign(value);
+}
+inline void Fills::set_teamid(const char* value, size_t size) {
+  set_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    teamid_ = new ::std::string;
+  }
+  teamid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Fills::mutable_teamid() {
+  set_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    teamid_ = new ::std::string;
+  }
+  return teamid_;
+}
+inline ::std::string* Fills::release_teamid() {
+  clear_has_teamid();
+  if (teamid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = teamid_;
+    teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Fills::set_allocated_teamid(::std::string* teamid) {
+  if (teamid_ != &::google::protobuf::internal::kEmptyString) {
+    delete teamid_;
+  }
+  if (teamid) {
+    set_has_teamid();
+    teamid_ = teamid;
+  } else {
+    clear_has_teamid();
+    teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string playerid = 45;
+inline bool Fills::has_playerid() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Fills::set_has_playerid() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Fills::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Fills::clear_playerid() {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    playerid_->clear();
+  }
+  clear_has_playerid();
+}
+inline const ::std::string& Fills::playerid() const {
+  return *playerid_;
+}
+inline void Fills::set_playerid(const ::std::string& value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void Fills::set_playerid(const char* value) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(value);
+}
+inline void Fills::set_playerid(const char* value, size_t size) {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  playerid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Fills::mutable_playerid() {
+  set_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    playerid_ = new ::std::string;
+  }
+  return playerid_;
+}
+inline ::std::string* Fills::release_playerid() {
+  clear_has_playerid();
+  if (playerid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = playerid_;
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Fills::set_allocated_playerid(::std::string* playerid) {
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (playerid) {
+    set_has_playerid();
+    playerid_ = playerid;
+  } else {
+    clear_has_playerid();
+    playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 season = 50;
+inline bool Fills::has_season() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Fills::set_has_season() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Fills::clear_has_season() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Fills::clear_season() {
+  season_ = 0;
+  clear_has_season();
+}
+inline ::google::protobuf::int32 Fills::season() const {
+  return season_;
+}
+inline void Fills::set_season(::google::protobuf::int32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional int32 week = 60;
+inline bool Fills::has_week() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Fills::set_has_week() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Fills::clear_has_week() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Fills::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 Fills::week() const {
+  return week_;
+}
+inline void Fills::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional int32 qty = 70;
+inline bool Fills::has_qty() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Fills::set_has_qty() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Fills::clear_has_qty() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Fills::clear_qty() {
+  qty_ = 0;
+  clear_has_qty();
+}
+inline ::google::protobuf::int32 Fills::qty() const {
+  return qty_;
+}
+inline void Fills::set_qty(::google::protobuf::int32 value) {
+  set_has_qty();
+  qty_ = value;
+}
+
+// optional float price = 80;
+inline bool Fills::has_price() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Fills::set_has_price() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Fills::clear_has_price() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Fills::clear_price() {
+  price_ = 0;
+  clear_has_price();
+}
+inline float Fills::price() const {
+  return price_;
+}
+inline void Fills::set_price(float value) {
+  set_has_price();
+  price_ = value;
 }
 
 // -------------------------------------------------------------------

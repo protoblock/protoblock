@@ -1,57 +1,42 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.4
 import Communi 3.0
+import Material 1.0
 
 Item {
-    anchors.centerIn: parent
-    SystemPalette { id: palette }
-    Irc { id: irc }
-    IrcCommand { id: cmd }
     ChatPage {
         id: chatPage
-        anchors.fill: parent
+        width: rootLoader.width
+        height: rootLoader.height
         visible:true
-        bufferModel: IrcBufferModel {
-            id: bufferModel
-            sortMethod: Irc.SortByTitle
-            connection: IrcConnection {
-                id: connection
-                host: "162.254.24.67"
-                port: 6667
-                secure: false
-                saslMechanism: ""
-                nickName: realRoot.uname
-                realName:realRoot.uname
-                userName:realRoot.uname
-                password:""
-            }
-            onMessageIgnored: serverBuffer.receiveMessage(message)
-            function quit() {
-                bufferModel.clear()
-                connection.quit("Fantasy Just Got Real")
-                connection.close()
-            }
-        }
-        serverBuffer: IrcBuffer {
-            id: serverBuffer
-            sticky: true
-            persistent: true
-            name: connection.displayName
-            Component.onCompleted: bufferModel.add(serverBuffer)
-        }
+        bufferModel: ircBufferModel
+        serverBuffer: ircServerBuffer
     }
-
-
-
     function init(){
-        chatPage.currentBuffer = serverBuffer
-        connection.sendCommand(cmd.createJoin("#protoblock"))
-        connection.open()
+        chatPage.currentBuffer = ircServerBuffer
+        ircConnectionPoint.sendCommand(cmd.createJoin("#protoblock"))
+        ircConnectionPoint.open()
         pageHelper.title = "Protoblock Chat"
     }
-    Component.onCompleted:{
-        connection.active === false ? init(): console.log("no need to reconnect ?");
+    Component.onCompleted: {
+        if(ircConnectionPoint.status !== IrcConnection.Connected){
+               init()
+        }else {
 
+            console.log( "USER NAME  = " + ircConnectionPoint.displayName )
+            chatPage.currentBuffer = ircServerBuffer
+            ircBufferModel.connection = ircConnectionPoint
+            ircBufferModel.add(ircServerBuffer)
+            ircConnectionPoint.sendCommand(cmd.createJoin("#protoblock"))
+            pageHelper.title = "Protoblock Chat"
+
+        }
     }
-//    Component.onDestruction: bufferModel.quit()
+    Irc { id: irc }
+    IrcCommand { id: cmd }
+    ProgressCircle {
+       id: chatActInd
+       anchors.centerIn: parent
+       visible: false
+   }
 }

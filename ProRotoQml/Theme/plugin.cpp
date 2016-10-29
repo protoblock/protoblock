@@ -65,10 +65,11 @@ QObject *teamColors(QQmlEngine *engine, QJSEngine *scriptEngine)
     return teamColors;
 }
 
-static QObject *protoScreen(QQmlEngine *engine, QJSEngine *scriptEngine)
+QObject *protoScreen(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
+    qDebug() << " only once ";
     ProtoScreen *protoScreens = new ProtoScreen();
     return protoScreens;
 }

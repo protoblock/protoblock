@@ -42,3 +42,1404 @@ CMakeLists.txt.user
 Applications/tradingfootball-qml/meta/**
 ProRotoQml/Backend/meta-new/**
 ProRotoQml/Backend/meta/**
+generated/**
+generated-public/**
+Applications/Applications.pro.orig
+Applications/fantasybit-2016/Data.cpp.orig
+Applications/ProtoBlock2016 - Copy/android/AndroidManifest.xml
+Applications/ProtoBlock2016 - Copy/android/AndroidManifest.xml.orig
+Applications/ProtoBlock2016 - Copy/android/build.gradle
+Applications/ProtoBlock2016 - Copy/android/gradle.properties
+Applications/ProtoBlock2016 - Copy/android/gradle.properties~
+Applications/ProtoBlock2016 - Copy/android/gradle/wrapper/gradle-wrapper.jar
+Applications/ProtoBlock2016 - Copy/android/gradle/wrapper/gradle-wrapper.properties
+Applications/ProtoBlock2016 - Copy/android/gradle/wrapper/gradle-wrapper.properties~
+Applications/ProtoBlock2016 - Copy/android/gradlew
+Applications/ProtoBlock2016 - Copy/android/gradlew.bat
+Applications/ProtoBlock2016 - Copy/android/local.properties
+Applications/ProtoBlock2016 - Copy/android/local.properties~
+Applications/ProtoBlock2016 - Copy/android/res/drawable-hdpi/icon.png
+Applications/ProtoBlock2016 - Copy/android/res/drawable-ldpi/icon.png
+Applications/ProtoBlock2016 - Copy/android/res/drawable-mdpi/icon.png
+Applications/ProtoBlock2016 - Copy/android/res/values/libs.xml
+Applications/ProtoBlock2016 - Copy/android-libProtoBlock2016.so-deployment-settings.json
+Applications/ProtoBlock2016 - Copy/android-libProtoBlock2016.so-deployment-settings.json.orig
+Applications/ProtoBlock2016 - Copy/deployment.pri
+Applications/ProtoBlock2016 - Copy/icon.icns
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_1024x1024.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_128x128.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_128x128@2x.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_16x16.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_16x16@2x.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_256x256.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_256x256@2x.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_32x32.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_32x32@2x.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_512x512.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_512x512@2x.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_64x64.png
+Applications/ProtoBlock2016 - Copy/icon.iconset/icon_64x64@2x.png
+Applications/ProtoBlock2016 - Copy/icon_512x512_b6B_icon.ico
+Applications/ProtoBlock2016 - Copy/icon_64x64_2x_Nar_icon.ico
+Applications/ProtoBlock2016 - Copy/Info.plist
+Applications/ProtoBlock2016 - Copy/iphone/iphone/120.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/152.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/1536x2008.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/167.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/180.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/2048x1496.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/58.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/768x1004.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon1024x1024.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon128x128.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon16x16.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon180.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon256x256.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon29x29.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon29x29@2x.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon29x29@2x~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon29x29~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon32x32.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon40x40@2x.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon40x40@2x~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon40x40~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon50x50@2x~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon50x50~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon512x512.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon57x57.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon57x57@2x.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon60x60@2x.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon64x64.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon72x72@2x~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon72x72~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon76x76@2x~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIcon76x76~ipad.png
+Applications/ProtoBlock2016 - Copy/iphone/iphone/AppIconLandscapeNoStatus568.png
+Applications/ProtoBlock2016 - Copy/iphone/iTunesArtwork.png
+Applications/ProtoBlock2016 - Copy/iphone/iTunesArtwork@2x.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-1024x768.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-1242x2208.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-1536x2048.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-2048x1536.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-320x480.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-640x1136.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-640x960.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-750x1334.png
+Applications/ProtoBlock2016 - Copy/iphone/LauncherImage-768x1024.png
+Applications/ProtoBlock2016 - Copy/iphone/LaunchImage-iOS7@2x.png
+Applications/ProtoBlock2016 - Copy/iphone/LaunchImage-iOS7-568h@2x.png
+Applications/ProtoBlock2016 - Copy/iphone/LaunchImage-iOS7-Landscape.png
+Applications/ProtoBlock2016 - Copy/iphone/LaunchImage-iOS7-Landscape@2x.png
+Applications/ProtoBlock2016 - Copy/iphone/LaunchImage-iOS7-Portrait.png
+Applications/ProtoBlock2016 - Copy/iphone/LaunchImage-iOS7-Portrait@2x.png
+Applications/ProtoBlock2016 - Copy/laterFool/AllPlayers.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Awards.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Chart.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Cold.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/AbstractButton.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/AbstractCategoryHeader.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/AbstractExpandingDropDown.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/AbstractScrollbar.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/awesome.js
+Applications/ProtoBlock2016 - Copy/laterFool/Common/AwesomeIcon.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/Banner.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/BoxText.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/Card.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/common.qrc
+Applications/ProtoBlock2016 - Copy/laterFool/Common/DropDownContainer.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/FoldingArrow.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/fontawesome/FontAwesome.otf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-Black.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-BlackItalic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-Bold.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-BoldItalic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/RobotoCondensed-Bold.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/RobotoCondensed-BoldItalic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/RobotoCondensed-Italic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/RobotoCondensed-Light.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/RobotoCondensed-LightItalic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/RobotoCondensed-Regular.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-Italic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-Light.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-LightItalic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-Medium.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-MediumItalic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-Regular.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-Thin.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/fonts/roboto/Roboto-ThinItalic.ttf
+Applications/ProtoBlock2016 - Copy/laterFool/Common/Header.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/ImageButton.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/Ink.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/PageHelper.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/PageTabs.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/PlayerPostions.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/RoundImage.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/SettingsMenu.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/SimpleButton.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/SimpleHeader.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/StanderedDelegate.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/StanderedDropDown.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/StanderedTextField.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/StatsBoxText.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/View.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/ViewWithBanner.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/ViewWithScrollbar.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Common/wordList
+Applications/ProtoBlock2016 - Copy/laterFool/GameDelegate.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Hot.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Leaderboard.qml
+Applications/ProtoBlock2016 - Copy/laterFool/LevelOn.qml
+Applications/ProtoBlock2016 - Copy/laterFool/main.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/AndroidManifest.xml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/build.gradle
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/gradle/wrapper/gradle-wrapper.jar
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/gradle/wrapper/gradle-wrapper.properties
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/gradlew
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/gradlew.bat
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/res/drawable-hdpi/icon.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/res/drawable-ldpi/icon.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/res/drawable-mdpi/icon.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/android/res/values/libs.xml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/PhoneApplication.pro
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/About.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/BaserModel.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Chat.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/FantasyDataApiCaller.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Feeds/CBSSearch.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Feeds/EspnSearch.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Feeds/GetFeedLinkText.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Feeds/NflSearch.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Feeds/RotoSearch.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/GetName.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/LocalJsonCaller.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/MaterialComboBox.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/News.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/PageHelper.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/pages.qrc
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/phone-main.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/PickUserName.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Players.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/PlayersCard.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/PnL.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/ProjectionsLevelOne.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/qml.qrc
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/qwebchannel.js
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/RoundImage.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Sc2016.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/SeasonLongLandingPage.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/SeasonLongLevelTwo.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Splash.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/SportsRadarApiCaller.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Themes/VersionOne.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/TradingCard.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/TradingLanding.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/FlipBar.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/LineInput.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/ListFooter.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/ListHeader.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/resources/anonymous.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/resources/bird-anim-sprites.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/resources/icon-clear.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/resources/icon-loading.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/resources/icon-refresh.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/resources/icon-search.png
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/SearchDelegate.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/TweetDelegate.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/tweetsearch.js
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/tweetsearch.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Twitter/TweetsModel.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/UpdateView.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/UserSettings.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Utils.js
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/WeeklyLandingPage.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/WeeklyTradingLanding.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/Welcome.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/qml/WelcomeBack.qml
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/src/main.cpp
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/src/qqmlwebsockets.cpp
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/src/qqmlwebsockets.h
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/src/socketclient.cpp
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/src/socketclient.h
+Applications/ProtoBlock2016 - Copy/laterFool/PhoneApplication/tfprod.db
+Applications/ProtoBlock2016 - Copy/laterFool/Playercard.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Premium.qml
+Applications/ProtoBlock2016 - Copy/laterFool/ProfitandLoss.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Projections.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Schedule.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Sleepers.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Stats.qml
+Applications/ProtoBlock2016 - Copy/laterFool/TeamNews.qml
+Applications/ProtoBlock2016 - Copy/laterFool/Utils.js
+Applications/ProtoBlock2016 - Copy/laterFool/Welcome.qml
+Applications/ProtoBlock2016 - Copy/myap.rc
+Applications/ProtoBlock2016 - Copy/myappico.ico
+Applications/ProtoBlock2016 - Copy/ProtoBlock2016.pro
+Applications/ProtoBlock2016 - Copy/ProtoBlock2016.pro.orig
+Applications/ProtoBlock2016 - Copy/qml/FirstApp.qml
+Applications/ProtoBlock2016 - Copy/qml/main.qml
+Applications/ProtoBlock2016 - Copy/qml/main.qml.orig
+Applications/ProtoBlock2016 - Copy/qml/MaterialMain.qml
+Applications/ProtoBlock2016 - Copy/qml/MaterialMain.qml.orig
+Applications/ProtoBlock2016 - Copy/qml/NewMain.qml
+Applications/ProtoBlock2016 - Copy/qml/NewMain.qml.orig
+Applications/ProtoBlock2016 - Copy/qml/phone-main.qml
+Applications/ProtoBlock2016 - Copy/qml/Pinky.qml
+Applications/ProtoBlock2016 - Copy/qml/qml.qrc
+Applications/ProtoBlock2016 - Copy/qml-components/Banner.qml
+Applications/ProtoBlock2016 - Copy/qml-components/BaserModel.qml
+Applications/ProtoBlock2016 - Copy/qml-components/BoxText.qml
+Applications/ProtoBlock2016 - Copy/qml-components/BuyTrading.qml
+Applications/ProtoBlock2016 - Copy/qml-components/CardWithBanner.qml
+Applications/ProtoBlock2016 - Copy/qml-components/CardWithContent.qml
+Applications/ProtoBlock2016 - Copy/qml-components/Coverflow.qml
+Applications/ProtoBlock2016 - Copy/qml-components/IntHelper.qml
+Applications/ProtoBlock2016 - Copy/qml-components/LeftMenu.qml
+Applications/ProtoBlock2016 - Copy/qml-components/LocalJsonCaller.qml
+Applications/ProtoBlock2016 - Copy/qml-components/LoginBox - Copy.qml
+Applications/ProtoBlock2016 - Copy/qml-components/LoginBox.qml
+Applications/ProtoBlock2016 - Copy/qml-components/MarketDepthCard.qml
+Applications/ProtoBlock2016 - Copy/qml-components/MaterialComboBox.qml
+Applications/ProtoBlock2016 - Copy/qml-components/MaterialListPlayer.qml
+Applications/ProtoBlock2016 - Copy/qml-components/MaterialTable.qml
+Applications/ProtoBlock2016 - Copy/qml-components/MaterialTextField.qml
+Applications/ProtoBlock2016 - Copy/qml-components/MaterialTopBar.qml
+Applications/ProtoBlock2016 - Copy/qml-components/OMSCard.qml
+Applications/ProtoBlock2016 - Copy/qml-components/PageHelper.qml
+Applications/ProtoBlock2016 - Copy/qml-components/PDialog.qml
+Applications/ProtoBlock2016 - Copy/qml-components/PlayerCard.qml
+Applications/ProtoBlock2016 - Copy/qml-components/PlayersCard.qml
+Applications/ProtoBlock2016 - Copy/qml-components/qml-components - Copy.qrc
+Applications/ProtoBlock2016 - Copy/qml-components/qml-components.qrc
+Applications/ProtoBlock2016 - Copy/qml-components/RoundImage.qml
+Applications/ProtoBlock2016 - Copy/qml-components/Splash.qml
+Applications/ProtoBlock2016 - Copy/qml-components/TradingCard.qml
+Applications/ProtoBlock2016 - Copy/qml-components/UserPicker.qml
+Applications/ProtoBlock2016 - Copy/qml-material/.builder.yml
+Applications/ProtoBlock2016 - Copy/qml-material/.gitignore
+Applications/ProtoBlock2016 - Copy/qml-material/.travis.yml
+Applications/ProtoBlock2016 - Copy/qml-material/CHANGELOG.md
+Applications/ProtoBlock2016 - Copy/qml-material/CONTRIBUTING.md
+Applications/ProtoBlock2016 - Copy/qml-material/demo/BottomSheetDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/ButtonDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/CheckBoxDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/ColorPaletteDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/CustomIconsDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/DatePickerDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/demo.pro
+Applications/ProtoBlock2016 - Copy/qml-material/demo/demo.qmlproject
+Applications/ProtoBlock2016 - Copy/qml-material/demo/demo.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/demo/DialogDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/FormsDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons.yml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/action_account_circle.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/action_autorenew.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/action_delete.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/action_language.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/action_settings.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/alert_warning.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/communication_email.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/content_add.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/content_create.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/content_forward.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/device_access_alarm.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/file_file_download.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/icons.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/image_color_lens.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/image_edit.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/maps_place.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/navigation_arrow_drop_down.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/icons/social_share.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/images/balloon.jpg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/images/go-last.color.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/images/list-add.color.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/images/weather-pouring.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/images/weather-sunset.svg
+Applications/ProtoBlock2016 - Copy/qml-material/demo/ListItemsDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/main.cpp
+Applications/ProtoBlock2016 - Copy/qml-material/demo/main.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/PageStackDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/ProgressBarDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/RadioButtonDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/SidebarPage.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/SliderDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/SubPage.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/SwitchDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/TextFieldDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/TimePickerDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/demo/TypographyDemo.qml
+Applications/ProtoBlock2016 - Copy/qml-material/deploy_key.enc
+Applications/ProtoBlock2016 - Copy/qml-material/documentation/.gitignore
+Applications/ProtoBlock2016 - Copy/qml-material/documentation/images/buttons.png
+Applications/ProtoBlock2016 - Copy/qml-material/documentation/material.qdoc
+Applications/ProtoBlock2016 - Copy/qml-material/documentation/material.qdocconf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/fonts.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/MaterialFontLoader.qml
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/qmldir
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-Black.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-BlackItalic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-Bold.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-BoldItalic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/RobotoCondensed-Bold.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/RobotoCondensed-BoldItalic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/RobotoCondensed-Italic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/RobotoCondensed-Light.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/RobotoCondensed-LightItalic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/RobotoCondensed-Regular.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-Italic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-Light.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-LightItalic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-Medium.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-MediumItalic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-Regular.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-Thin.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/fonts/roboto/Roboto-ThinItalic.ttf
+Applications/ProtoBlock2016 - Copy/qml-material/icons.yml
+Applications/ProtoBlock2016 - Copy/qml-material/icons/core_icons.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/icons/navigation_arrow_back.svg
+Applications/ProtoBlock2016 - Copy/qml-material/icons/navigation_chevron_left.svg
+Applications/ProtoBlock2016 - Copy/qml-material/icons/navigation_chevron_right.svg
+Applications/ProtoBlock2016 - Copy/qml-material/icons/navigation_close.svg
+Applications/ProtoBlock2016 - Copy/qml-material/icons/navigation_menu.svg
+Applications/ProtoBlock2016 - Copy/qml-material/icons/navigation_more_vert.svg
+Applications/ProtoBlock2016 - Copy/qml-material/LICENSE
+Applications/ProtoBlock2016 - Copy/qml-material/LICENSE.CC-BY
+Applications/ProtoBlock2016 - Copy/qml-material/LICENSE.MPL
+Applications/ProtoBlock2016 - Copy/qml-material/material.pri
+Applications/ProtoBlock2016 - Copy/qml-material/qml-material.pro
+Applications/ProtoBlock2016 - Copy/qml-material/qpm.json
+Applications/ProtoBlock2016 - Copy/qml-material/README.md
+Applications/ProtoBlock2016 - Copy/qml-material/scripts/build_docs.sh
+Applications/ProtoBlock2016 - Copy/qml-material/scripts/deploy.sh
+Applications/ProtoBlock2016 - Copy/qml-material/scripts/icons.py
+Applications/ProtoBlock2016 - Copy/qml-material/scripts/lint.sh
+Applications/ProtoBlock2016 - Copy/qml-material/scripts/make_awesome.py
+Applications/ProtoBlock2016 - Copy/qml-material/scripts/normalize_imports.sh
+Applications/ProtoBlock2016 - Copy/qml-material/scripts/qrc.py
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/ActionButton.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/Card.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/components.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/DatePicker.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/IconButton.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/OverlayLayer.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/OverlayView.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/ProgressCircle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/Scrollbar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/Snackbar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/ThinDivider.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/TimePicker.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/Tooltip.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/components/Wave.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/Action.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/Button.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/CheckBox.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/controls.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/Label.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/ProgressBar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/RadioButton.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/Slider.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/Switch.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/Tab.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/controls/TextField.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/awesome.js
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/AwesomeIcon.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/core.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/device.cpp
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/device.h
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/FontAwesome.otf
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/Icon.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/Ink.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/MaterialAnimation.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/Object.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/Palette.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/PlatformExtensions.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/Theme.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/ThemePalette.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/units.cpp
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/units.h
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/UnitsHelper.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/utils.js
+Applications/ProtoBlock2016 - Copy/qml-material/src/core/View.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/extras/AutomaticGrid.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/extras/circle.png
+Applications/ProtoBlock2016 - Copy/qml-material/src/extras/CircleImage.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/extras/CircleMask.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/extras/ColumnFlow.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/extras/extras.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/src/extras/Image.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/extras/qmldir
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/BaseListItem.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/CMakeLists.txt
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/Divider.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/listitems.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/qmldir
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/SectionHeader.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/SimpleMenu.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/Standard.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/Subheader.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/listitems/Subtitled.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/material.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/src/plugin.cpp
+Applications/ProtoBlock2016 - Copy/qml-material/src/plugin.h
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/BottomActionSheet.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/BottomSheet.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/Dialog.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/Dropdown.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/InputDialog.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/MenuField.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/Popover.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/PopupBase.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/popups.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/src/popups/TimePickerDialog.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/qmldir
+Applications/ProtoBlock2016 - Copy/qml-material/src/src.pro
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/ApplicationWindowStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/ButtonStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/CheckBoxStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/CMakeLists.txt
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/ProgressBarStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/qmldir
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/RadioButtonStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/SliderStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/styles.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/SwitchStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/TextFieldStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/ToolBarStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/styles/ToolButtonStyle.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/ActionBar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/ApplicationWindow.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/AppTheme.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/MainView.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/NavigationDrawer.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/NavigationDrawerPage.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/Page.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/PageSidebar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/PageStack.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/Sidebar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/TabBar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/TabbedPage.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/Toolbar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/Window.qml
+Applications/ProtoBlock2016 - Copy/qml-material/src/window/window.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/styles_demo/main.qml
+Applications/ProtoBlock2016 - Copy/qml-material/tests/icons.yml
+Applications/ProtoBlock2016 - Copy/qml-material/tests/icons/action_alarm.svg
+Applications/ProtoBlock2016 - Copy/qml-material/tests/icons/action_search.svg
+Applications/ProtoBlock2016 - Copy/qml-material/tests/icons/action_settings.svg
+Applications/ProtoBlock2016 - Copy/qml-material/tests/icons/content_add.svg
+Applications/ProtoBlock2016 - Copy/qml-material/tests/icons/icons.qrc
+Applications/ProtoBlock2016 - Copy/qml-material/tests/tests.cpp
+Applications/ProtoBlock2016 - Copy/qml-material/tests/tests.pro
+Applications/ProtoBlock2016 - Copy/qml-material/tests/tst_actionbar.qml
+Applications/ProtoBlock2016 - Copy/qml-material/tests/tst_card.qml
+Applications/ProtoBlock2016 - Copy/qml-material/tests/tst_pagestack.qml
+Applications/ProtoBlock2016 - Copy/qml-models/LevelFiveMenuModel.qml
+Applications/ProtoBlock2016 - Copy/qml-models/LevelFourMenuModel.qml
+Applications/ProtoBlock2016 - Copy/qml-models/LevelOneMenuModel.qml
+Applications/ProtoBlock2016 - Copy/qml-models/LevelSixMenuModel.qml
+Applications/ProtoBlock2016 - Copy/qml-models/LevelThreeMenuModel.qml
+Applications/ProtoBlock2016 - Copy/qml-models/LevelTwoMenuModel.qml
+Applications/ProtoBlock2016 - Copy/qml-models/PostionModel.qml
+Applications/ProtoBlock2016 - Copy/qml-models/qml-models.qrc
+Applications/ProtoBlock2016 - Copy/qml-models/SectionTitleMenuModel.qml
+Applications/ProtoBlock2016 - Copy/qml-models/WeekModel.qml
+Applications/ProtoBlock2016 - Copy/qml-news/CBS.qml
+Applications/ProtoBlock2016 - Copy/qml-news/ESPN.qml
+Applications/ProtoBlock2016 - Copy/qml-news/FlipBar.qml
+Applications/ProtoBlock2016 - Copy/qml-news/GetFeedLinkText.qml
+Applications/ProtoBlock2016 - Copy/qml-news/LineInput.qml
+Applications/ProtoBlock2016 - Copy/qml-news/ListFooter.qml
+Applications/ProtoBlock2016 - Copy/qml-news/ListHeader.qml
+Applications/ProtoBlock2016 - Copy/qml-news/NFL.qml
+Applications/ProtoBlock2016 - Copy/qml-news/NFL.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-news/NFLNews.qml
+Applications/ProtoBlock2016 - Copy/qml-news/qml-news.qrc
+Applications/ProtoBlock2016 - Copy/qml-news/resources/anonymous.png
+Applications/ProtoBlock2016 - Copy/qml-news/resources/bird-anim-sprites.png
+Applications/ProtoBlock2016 - Copy/qml-news/resources/icon-clear.png
+Applications/ProtoBlock2016 - Copy/qml-news/resources/icon-loading.png
+Applications/ProtoBlock2016 - Copy/qml-news/resources/icon-refresh.png
+Applications/ProtoBlock2016 - Copy/qml-news/resources/icon-search.png
+Applications/ProtoBlock2016 - Copy/qml-news/RotoWorld.qml
+Applications/ProtoBlock2016 - Copy/qml-news/RotoWorld.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-news/SearchDelegate.qml
+Applications/ProtoBlock2016 - Copy/qml-news/TweetDelegate.qml
+Applications/ProtoBlock2016 - Copy/qml-news/tweetsearch.js
+Applications/ProtoBlock2016 - Copy/qml-news/TweetsModel.qml
+Applications/ProtoBlock2016 - Copy/qml-news/Twitter.qml
+Applications/ProtoBlock2016 - Copy/qml-news/WebView.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/2015Final.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/2015Leaderboard.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/2016Season.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/2016Weekly.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/2017Season.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/About.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Account.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Account.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/Banner.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/Chat.qml_back.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Chat.qml_back.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/ContactUs.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/DepthTrader.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/EncryptLogin.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/FantasyDataApiCaller.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/GetName - Copy.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/GetName.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/GetName.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/Home.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/Import-Export.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Import-Export.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/Indicators.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/LeftMenu.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/Newshold.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/OrderPositions.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Orders.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/OrdersManagement.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/PickUserName.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Players.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Portfolio.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/PositionsOrder.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Projections - Copy.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Projections.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Projections.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/Protoblock.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/ProtoblockNews.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/ProtoblockNews.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/qml-pages.qrc
+Applications/ProtoBlock2016 - Copy/qml-pages/qml-pages.qrc.orig
+Applications/ProtoBlock2016 - Copy/qml-pages/Quotes.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Sc2016.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/SeasonLongLandingPage.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/SeasonLongLevelTwo.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Settings.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/SportsRadarApiCaller.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/ThemeButton.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Trading - Copy.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Trading.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/TradingFloor.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/TradingLanding.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/TradingOld.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/UpdateView.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/WeeklyLandingPage.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/WeeklyTradingLanding.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/Welcome.qml
+Applications/ProtoBlock2016 - Copy/qml-pages/WelcomeBack.qml
+Applications/ProtoBlock2016 - Copy/qml-pinky/MainPinky.qml
+Applications/ProtoBlock2016 - Copy/qml-pinky/qml-pinky.qrc
+Applications/ProtoBlock2016 - Copy/qml-realChat/BufferListView.qml
+Applications/ProtoBlock2016 - Copy/qml-realChat/ChatPage.qml
+Applications/ProtoBlock2016 - Copy/qml-realChat/ChatPage.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-realChat/ConnectPage.qml
+Applications/ProtoBlock2016 - Copy/qml-realChat/MessageFormatter.qml
+Applications/ProtoBlock2016 - Copy/qml-realChat/ProtoChat.qml
+Applications/ProtoBlock2016 - Copy/qml-realChat/ProtoChat.qml.orig
+Applications/ProtoBlock2016 - Copy/qml-realChat/qml-realChat.qrc
+Applications/ProtoBlock2016 - Copy/qml-realChat/TextBrowser.qml
+Applications/ProtoBlock2016 - Copy/qml-realChat/TextEntry.qml
+Applications/ProtoBlock2016 - Copy/qml-realChat/TopicLabel.qml
+Applications/ProtoBlock2016 - Copy/qml-realChat/UserListView.qml
+Applications/ProtoBlock2016 - Copy/qml-torrent/AddTorrentDialog.qml
+Applications/ProtoBlock2016 - Copy/qml-torrent/main.qml
+Applications/ProtoBlock2016 - Copy/qml-torrent/qml-torrent.qrc
+Applications/ProtoBlock2016 - Copy/qml-torrent/SpeedLimit.qml
+Applications/ProtoBlock2016 - Copy/qml-torrent/TorrentDelegate.qml
+Applications/ProtoBlock2016 - Copy/qml-torrent/TorrentListView.qml
+Applications/ProtoBlock2016 - Copy/qml-utils/QChart.js
+Applications/ProtoBlock2016 - Copy/qml-utils/qml-utils.qrc
+Applications/ProtoBlock2016 - Copy/qml-utils/qwebchannel.js
+Applications/ProtoBlock2016 - Copy/qml-utils/Utils.js
+Applications/ProtoBlock2016 - Copy/src/main.cpp
+Applications/ProtoBlock2016 - Copy/src/main.cpp-back.cpp
+Applications/ProtoBlock2016/android/AndroidManifest.xml.orig
+Applications/ProtoBlock2016/android/gradle.properties
+Applications/ProtoBlock2016/android/gradle/wrapper/gradle-wrapper.properties~
+Applications/ProtoBlock2016/android/local.properties
+Applications/ProtoBlock2016/myap.aps
+Applications/ProtoBlock2016/ProtoBlock2016.pro.orig
+Applications/ProtoBlock2016/qml/main.qml.orig
+Applications/ProtoBlock2016/qml/MaterialMain.qml.orig
+Applications/ProtoBlock2016/qml/NewMain.qml.orig
+Applications/ProtoBlock2016/qml-components/LoginBox - Copy.qml
+Applications/ProtoBlock2016/qml-news/NFL.qml.orig
+Applications/ProtoBlock2016/qml-news/RotoWorld.qml.orig
+Applications/ProtoBlock2016/qml-pages/Account.qml.orig
+Applications/ProtoBlock2016/qml-pages/Banner.qml.orig
+Applications/ProtoBlock2016/qml-pages/Chat.qml_back.qml.orig
+Applications/ProtoBlock2016/qml-pages/DepthTrader.qml.orig
+Applications/ProtoBlock2016/qml-pages/GetName - Copy.qml
+Applications/ProtoBlock2016/qml-pages/GetName.qml.orig
+Applications/ProtoBlock2016/qml-pages/Home.qml.orig
+Applications/ProtoBlock2016/qml-pages/Import-Export.qml.orig
+Applications/ProtoBlock2016/qml-pages/LeftMenu.qml.orig
+Applications/ProtoBlock2016/qml-pages/Projections - Copy.qml
+Applications/ProtoBlock2016/qml-pages/Projections.qml.orig
+Applications/ProtoBlock2016/qml-pages/ProtoblockNews.qml.orig
+Applications/ProtoBlock2016/qml-pages/qml-pages.qrc.orig
+Applications/ProtoBlock2016/qml-pages/Trading - Copy.qml
+Applications/ProtoBlock2016/qml-realChat/ChatPage.qml.orig
+Applications/ProtoBlock2016/qml-realChat/ProtoChat.qml.orig
+Applications/ProtoBlock2016-new/android/AndroidManifest.xml.orig
+Applications/ProtoBlock2016-new/android/build.gradle
+Applications/ProtoBlock2016-new/android/gradle.properties
+Applications/ProtoBlock2016-new/android/gradle.properties~
+Applications/ProtoBlock2016-new/android/gradle/wrapper/gradle-wrapper.jar
+Applications/ProtoBlock2016-new/android/gradle/wrapper/gradle-wrapper.properties
+Applications/ProtoBlock2016-new/android/gradle/wrapper/gradle-wrapper.properties~
+Applications/ProtoBlock2016-new/android/gradlew
+Applications/ProtoBlock2016-new/android/gradlew.bat
+Applications/ProtoBlock2016-new/android/local.properties
+Applications/ProtoBlock2016-new/android/local.properties~
+Applications/ProtoBlock2016-new/android/res/drawable-hdpi/icon.png
+Applications/ProtoBlock2016-new/android/res/drawable-ldpi/icon.png
+Applications/ProtoBlock2016-new/android/res/drawable-mdpi/icon.png
+Applications/ProtoBlock2016-new/android/res/values/libs.xml
+Applications/ProtoBlock2016-new/android-libProtoBlock2016.so-deployment-settings.json
+Applications/ProtoBlock2016-new/deployment.pri
+Applications/ProtoBlock2016-new/icon.icns
+Applications/ProtoBlock2016-new/icon.iconset/icon_1024x1024.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_128x128.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_128x128@2x.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_16x16.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_16x16@2x.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_256x256.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_256x256@2x.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_32x32.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_32x32@2x.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_512x512.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_512x512@2x.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_64x64.png
+Applications/ProtoBlock2016-new/icon.iconset/icon_64x64@2x.png
+Applications/ProtoBlock2016-new/icon_512x512_b6B_icon.ico
+Applications/ProtoBlock2016-new/icon_64x64_2x_Nar_icon.ico
+Applications/ProtoBlock2016-new/Info.plist
+Applications/ProtoBlock2016-new/iphone/iphone/120.png
+Applications/ProtoBlock2016-new/iphone/iphone/152.png
+Applications/ProtoBlock2016-new/iphone/iphone/1536x2008.png
+Applications/ProtoBlock2016-new/iphone/iphone/167.png
+Applications/ProtoBlock2016-new/iphone/iphone/180.png
+Applications/ProtoBlock2016-new/iphone/iphone/2048x1496.png
+Applications/ProtoBlock2016-new/iphone/iphone/58.png
+Applications/ProtoBlock2016-new/iphone/iphone/768x1004.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon1024x1024.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon128x128.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon16x16.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon180.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon256x256.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon29x29.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon29x29@2x.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon29x29@2x~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon29x29~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon32x32.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon40x40@2x.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon40x40@2x~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon40x40~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon50x50@2x~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon50x50~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon512x512.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon57x57.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon57x57@2x.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon60x60@2x.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon64x64.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon72x72@2x~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon72x72~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon76x76@2x~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIcon76x76~ipad.png
+Applications/ProtoBlock2016-new/iphone/iphone/AppIconLandscapeNoStatus568.png
+Applications/ProtoBlock2016-new/iphone/iTunesArtwork.png
+Applications/ProtoBlock2016-new/iphone/iTunesArtwork@2x.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-1024x768.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-1242x2208.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-1536x2048.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-2048x1536.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-320x480.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-640x1136.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-640x960.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-750x1334.png
+Applications/ProtoBlock2016-new/iphone/LauncherImage-768x1024.png
+Applications/ProtoBlock2016-new/iphone/LaunchImage-iOS7@2x.png
+Applications/ProtoBlock2016-new/iphone/LaunchImage-iOS7-568h@2x.png
+Applications/ProtoBlock2016-new/iphone/LaunchImage-iOS7-Landscape.png
+Applications/ProtoBlock2016-new/iphone/LaunchImage-iOS7-Landscape@2x.png
+Applications/ProtoBlock2016-new/iphone/LaunchImage-iOS7-Portrait.png
+Applications/ProtoBlock2016-new/iphone/LaunchImage-iOS7-Portrait@2x.png
+Applications/ProtoBlock2016-new/laterFool/AllPlayers.qml
+Applications/ProtoBlock2016-new/laterFool/Awards.qml
+Applications/ProtoBlock2016-new/laterFool/Chart.qml
+Applications/ProtoBlock2016-new/laterFool/Cold.qml
+Applications/ProtoBlock2016-new/laterFool/Common/AbstractButton.qml
+Applications/ProtoBlock2016-new/laterFool/Common/AbstractCategoryHeader.qml
+Applications/ProtoBlock2016-new/laterFool/Common/AbstractExpandingDropDown.qml
+Applications/ProtoBlock2016-new/laterFool/Common/AbstractScrollbar.qml
+Applications/ProtoBlock2016-new/laterFool/Common/awesome.js
+Applications/ProtoBlock2016-new/laterFool/Common/AwesomeIcon.qml
+Applications/ProtoBlock2016-new/laterFool/Common/Banner.qml
+Applications/ProtoBlock2016-new/laterFool/Common/BoxText.qml
+Applications/ProtoBlock2016-new/laterFool/Common/Card.qml
+Applications/ProtoBlock2016-new/laterFool/Common/common.qrc
+Applications/ProtoBlock2016-new/laterFool/Common/DropDownContainer.qml
+Applications/ProtoBlock2016-new/laterFool/Common/FoldingArrow.qml
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/fontawesome/FontAwesome.otf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-Black.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-BlackItalic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-Bold.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-BoldItalic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/RobotoCondensed-Bold.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/RobotoCondensed-BoldItalic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/RobotoCondensed-Italic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/RobotoCondensed-Light.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/RobotoCondensed-LightItalic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/RobotoCondensed-Regular.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-Italic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-Light.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-LightItalic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-Medium.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-MediumItalic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-Regular.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-Thin.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/fonts/roboto/Roboto-ThinItalic.ttf
+Applications/ProtoBlock2016-new/laterFool/Common/Header.qml
+Applications/ProtoBlock2016-new/laterFool/Common/ImageButton.qml
+Applications/ProtoBlock2016-new/laterFool/Common/Ink.qml
+Applications/ProtoBlock2016-new/laterFool/Common/PageHelper.qml
+Applications/ProtoBlock2016-new/laterFool/Common/PageTabs.qml
+Applications/ProtoBlock2016-new/laterFool/Common/PlayerPostions.qml
+Applications/ProtoBlock2016-new/laterFool/Common/RoundImage.qml
+Applications/ProtoBlock2016-new/laterFool/Common/SettingsMenu.qml
+Applications/ProtoBlock2016-new/laterFool/Common/SimpleButton.qml
+Applications/ProtoBlock2016-new/laterFool/Common/SimpleHeader.qml
+Applications/ProtoBlock2016-new/laterFool/Common/StanderedDelegate.qml
+Applications/ProtoBlock2016-new/laterFool/Common/StanderedDropDown.qml
+Applications/ProtoBlock2016-new/laterFool/Common/StanderedTextField.qml
+Applications/ProtoBlock2016-new/laterFool/Common/StatsBoxText.qml
+Applications/ProtoBlock2016-new/laterFool/Common/View.qml
+Applications/ProtoBlock2016-new/laterFool/Common/ViewWithBanner.qml
+Applications/ProtoBlock2016-new/laterFool/Common/ViewWithScrollbar.qml
+Applications/ProtoBlock2016-new/laterFool/Common/wordList
+Applications/ProtoBlock2016-new/laterFool/GameDelegate.qml
+Applications/ProtoBlock2016-new/laterFool/Hot.qml
+Applications/ProtoBlock2016-new/laterFool/laterFool.qrc
+Applications/ProtoBlock2016-new/laterFool/Leaderboard.qml
+Applications/ProtoBlock2016-new/laterFool/LevelOn.qml
+Applications/ProtoBlock2016-new/laterFool/main.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/AndroidManifest.xml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/build.gradle
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/gradle/wrapper/gradle-wrapper.jar
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/gradle/wrapper/gradle-wrapper.properties
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/gradlew
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/gradlew.bat
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/res/drawable-hdpi/icon.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/res/drawable-ldpi/icon.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/res/drawable-mdpi/icon.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/android/res/values/libs.xml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/PhoneApplication.pro
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/About.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/BaserModel.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Chat.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/FantasyDataApiCaller.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Feeds/CBSSearch.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Feeds/EspnSearch.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Feeds/GetFeedLinkText.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Feeds/NflSearch.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Feeds/RotoSearch.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/GetName.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/LocalJsonCaller.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/MaterialComboBox.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/News.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/PageHelper.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/pages.qrc
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/phone-main.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/PickUserName.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Players.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/PlayersCard.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/PnL.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/ProjectionsLevelOne.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/qml.qrc
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/qwebchannel.js
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/RoundImage.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Sc2016.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/SeasonLongLandingPage.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/SeasonLongLevelTwo.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Splash.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/SportsRadarApiCaller.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Themes/VersionOne.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/TradingCard.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/TradingLanding.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/FlipBar.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/LineInput.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/ListFooter.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/ListHeader.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/resources/anonymous.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/resources/bird-anim-sprites.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/resources/icon-clear.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/resources/icon-loading.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/resources/icon-refresh.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/resources/icon-search.png
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/SearchDelegate.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/TweetDelegate.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/tweetsearch.js
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/tweetsearch.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Twitter/TweetsModel.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/UpdateView.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/UserSettings.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Utils.js
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/WeeklyLandingPage.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/WeeklyTradingLanding.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/Welcome.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/qml/WelcomeBack.qml
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/src/main.cpp
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/src/qqmlwebsockets.cpp
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/src/qqmlwebsockets.h
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/src/socketclient.cpp
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/src/socketclient.h
+Applications/ProtoBlock2016-new/laterFool/PhoneApplication/tfprod.db
+Applications/ProtoBlock2016-new/laterFool/Playercard.qml
+Applications/ProtoBlock2016-new/laterFool/Premium.qml
+Applications/ProtoBlock2016-new/laterFool/ProfitandLoss.qml
+Applications/ProtoBlock2016-new/laterFool/Projections.qml
+Applications/ProtoBlock2016-new/laterFool/Schedule.qml
+Applications/ProtoBlock2016-new/laterFool/Sleepers.qml
+Applications/ProtoBlock2016-new/laterFool/Stats.qml
+Applications/ProtoBlock2016-new/laterFool/TeamNews.qml
+Applications/ProtoBlock2016-new/laterFool/Utils.js
+Applications/ProtoBlock2016-new/laterFool/Welcome.qml
+Applications/ProtoBlock2016-new/myap.rc
+Applications/ProtoBlock2016-new/myappico.ico
+Applications/ProtoBlock2016-new/ProtoBlock2016.pro
+Applications/ProtoBlock2016-new/ProtoBlock2016.pro.orig
+Applications/ProtoBlock2016-new/qml/FirstApp.qml
+Applications/ProtoBlock2016-new/qml/main.qml
+Applications/ProtoBlock2016-new/qml/main.qml.orig
+Applications/ProtoBlock2016-new/qml/MaterialMain.qml
+Applications/ProtoBlock2016-new/qml/MaterialMain.qml.orig
+Applications/ProtoBlock2016-new/qml/NewMain.qml
+Applications/ProtoBlock2016-new/qml/NewMain.qml.orig
+Applications/ProtoBlock2016-new/qml/phone-main.qml
+Applications/ProtoBlock2016-new/qml/Pinky.qml
+Applications/ProtoBlock2016-new/qml/qml.qrc
+Applications/ProtoBlock2016-new/qml/test.qml
+Applications/ProtoBlock2016-new/qml-components/Banner.qml
+Applications/ProtoBlock2016-new/qml-components/BaserModel.qml
+Applications/ProtoBlock2016-new/qml-components/BoxText.qml
+Applications/ProtoBlock2016-new/qml-components/BuyTrading.qml
+Applications/ProtoBlock2016-new/qml-components/CardWithBanner.qml
+Applications/ProtoBlock2016-new/qml-components/CardWithContent.qml
+Applications/ProtoBlock2016-new/qml-components/Coverflow.qml
+Applications/ProtoBlock2016-new/qml-components/LeftMenu.qml
+Applications/ProtoBlock2016-new/qml-components/LocalJsonCaller.qml
+Applications/ProtoBlock2016-new/qml-components/LoginBox - Copy.qml
+Applications/ProtoBlock2016-new/qml-components/LoginBox.qml
+Applications/ProtoBlock2016-new/qml-components/MarketDepthCard.qml
+Applications/ProtoBlock2016-new/qml-components/MaterialComboBox.qml
+Applications/ProtoBlock2016-new/qml-components/MaterialListPlayer.qml
+Applications/ProtoBlock2016-new/qml-components/MaterialTable.qml
+Applications/ProtoBlock2016-new/qml-components/MaterialTextField.qml
+Applications/ProtoBlock2016-new/qml-components/MaterialTopBar.qml
+Applications/ProtoBlock2016-new/qml-components/PageHelper.qml
+Applications/ProtoBlock2016-new/qml-components/PDialog.qml
+Applications/ProtoBlock2016-new/qml-components/PlayerCard.qml
+Applications/ProtoBlock2016-new/qml-components/PlayersCard.qml
+Applications/ProtoBlock2016-new/qml-components/qml-components.qrc
+Applications/ProtoBlock2016-new/qml-components/RoundImage.qml
+Applications/ProtoBlock2016-new/qml-components/Splash.qml
+Applications/ProtoBlock2016-new/qml-components/TradingCard.qml
+Applications/ProtoBlock2016-new/qml-components/UserPicker.qml
+Applications/ProtoBlock2016-new/qml-material/.builder.yml
+Applications/ProtoBlock2016-new/qml-material/.gitignore
+Applications/ProtoBlock2016-new/qml-material/.travis.yml
+Applications/ProtoBlock2016-new/qml-material/CHANGELOG.md
+Applications/ProtoBlock2016-new/qml-material/CONTRIBUTING.md
+Applications/ProtoBlock2016-new/qml-material/demo/BottomSheetDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/ButtonDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/CheckBoxDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/ColorPaletteDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/CustomIconsDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/DatePickerDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/demo.pro
+Applications/ProtoBlock2016-new/qml-material/demo/demo.qmlproject
+Applications/ProtoBlock2016-new/qml-material/demo/demo.qrc
+Applications/ProtoBlock2016-new/qml-material/demo/DialogDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/FormsDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/icons.yml
+Applications/ProtoBlock2016-new/qml-material/demo/icons/action_account_circle.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/action_autorenew.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/action_delete.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/action_language.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/action_settings.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/alert_warning.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/communication_email.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/content_add.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/content_create.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/content_forward.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/device_access_alarm.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/file_file_download.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/icons.qrc
+Applications/ProtoBlock2016-new/qml-material/demo/icons/image_color_lens.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/image_edit.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/maps_place.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/navigation_arrow_drop_down.svg
+Applications/ProtoBlock2016-new/qml-material/demo/icons/social_share.svg
+Applications/ProtoBlock2016-new/qml-material/demo/images/balloon.jpg
+Applications/ProtoBlock2016-new/qml-material/demo/images/go-last.color.svg
+Applications/ProtoBlock2016-new/qml-material/demo/images/list-add.color.svg
+Applications/ProtoBlock2016-new/qml-material/demo/images/weather-pouring.svg
+Applications/ProtoBlock2016-new/qml-material/demo/images/weather-sunset.svg
+Applications/ProtoBlock2016-new/qml-material/demo/ListItemsDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/main.cpp
+Applications/ProtoBlock2016-new/qml-material/demo/main.qml
+Applications/ProtoBlock2016-new/qml-material/demo/PageStackDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/ProgressBarDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/RadioButtonDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/SidebarPage.qml
+Applications/ProtoBlock2016-new/qml-material/demo/SliderDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/SubPage.qml
+Applications/ProtoBlock2016-new/qml-material/demo/SwitchDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/TextFieldDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/TimePickerDemo.qml
+Applications/ProtoBlock2016-new/qml-material/demo/TypographyDemo.qml
+Applications/ProtoBlock2016-new/qml-material/deploy_key.enc
+Applications/ProtoBlock2016-new/qml-material/documentation/.gitignore
+Applications/ProtoBlock2016-new/qml-material/documentation/images/buttons.png
+Applications/ProtoBlock2016-new/qml-material/documentation/material.qdoc
+Applications/ProtoBlock2016-new/qml-material/documentation/material.qdocconf
+Applications/ProtoBlock2016-new/qml-material/fonts/fonts.qrc
+Applications/ProtoBlock2016-new/qml-material/fonts/MaterialFontLoader.qml
+Applications/ProtoBlock2016-new/qml-material/fonts/qmldir
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-Black.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-BlackItalic.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-Bold.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-BoldItalic.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/RobotoCondensed-Bold.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/RobotoCondensed-BoldItalic.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/RobotoCondensed-Italic.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/RobotoCondensed-Light.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/RobotoCondensed-LightItalic.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/RobotoCondensed-Regular.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-Italic.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-Light.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-LightItalic.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-Medium.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-MediumItalic.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-Regular.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-Thin.ttf
+Applications/ProtoBlock2016-new/qml-material/fonts/roboto/Roboto-ThinItalic.ttf
+Applications/ProtoBlock2016-new/qml-material/icons.yml
+Applications/ProtoBlock2016-new/qml-material/icons/core_icons.qrc
+Applications/ProtoBlock2016-new/qml-material/icons/navigation_arrow_back.svg
+Applications/ProtoBlock2016-new/qml-material/icons/navigation_chevron_left.svg
+Applications/ProtoBlock2016-new/qml-material/icons/navigation_chevron_right.svg
+Applications/ProtoBlock2016-new/qml-material/icons/navigation_close.svg
+Applications/ProtoBlock2016-new/qml-material/icons/navigation_menu.svg
+Applications/ProtoBlock2016-new/qml-material/icons/navigation_more_vert.svg
+Applications/ProtoBlock2016-new/qml-material/LICENSE
+Applications/ProtoBlock2016-new/qml-material/LICENSE.CC-BY
+Applications/ProtoBlock2016-new/qml-material/LICENSE.MPL
+Applications/ProtoBlock2016-new/qml-material/material.pri
+Applications/ProtoBlock2016-new/qml-material/qml-material.pro
+Applications/ProtoBlock2016-new/qml-material/qpm.json
+Applications/ProtoBlock2016-new/qml-material/README.md
+Applications/ProtoBlock2016-new/qml-material/scripts/build_docs.sh
+Applications/ProtoBlock2016-new/qml-material/scripts/deploy.sh
+Applications/ProtoBlock2016-new/qml-material/scripts/icons.py
+Applications/ProtoBlock2016-new/qml-material/scripts/lint.sh
+Applications/ProtoBlock2016-new/qml-material/scripts/make_awesome.py
+Applications/ProtoBlock2016-new/qml-material/scripts/normalize_imports.sh
+Applications/ProtoBlock2016-new/qml-material/scripts/qrc.py
+Applications/ProtoBlock2016-new/qml-material/src/components/ActionButton.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/Card.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/components.qrc
+Applications/ProtoBlock2016-new/qml-material/src/components/DatePicker.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/IconButton.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/OverlayLayer.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/OverlayView.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/ProgressCircle.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/Scrollbar.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/Snackbar.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/ThinDivider.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/TimePicker.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/Tooltip.qml
+Applications/ProtoBlock2016-new/qml-material/src/components/Wave.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/Action.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/Button.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/CheckBox.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/controls.qrc
+Applications/ProtoBlock2016-new/qml-material/src/controls/Label.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/ProgressBar.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/RadioButton.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/Slider.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/Switch.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/Tab.qml
+Applications/ProtoBlock2016-new/qml-material/src/controls/TextField.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/awesome.js
+Applications/ProtoBlock2016-new/qml-material/src/core/AwesomeIcon.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/core.qrc
+Applications/ProtoBlock2016-new/qml-material/src/core/device.cpp
+Applications/ProtoBlock2016-new/qml-material/src/core/device.h
+Applications/ProtoBlock2016-new/qml-material/src/core/FontAwesome.otf
+Applications/ProtoBlock2016-new/qml-material/src/core/Icon.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/Ink.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/MaterialAnimation.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/Object.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/Palette.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/PlatformExtensions.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/Theme.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/ThemePalette.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/units.cpp
+Applications/ProtoBlock2016-new/qml-material/src/core/units.h
+Applications/ProtoBlock2016-new/qml-material/src/core/UnitsHelper.qml
+Applications/ProtoBlock2016-new/qml-material/src/core/utils.js
+Applications/ProtoBlock2016-new/qml-material/src/core/View.qml
+Applications/ProtoBlock2016-new/qml-material/src/extras/AutomaticGrid.qml
+Applications/ProtoBlock2016-new/qml-material/src/extras/circle.png
+Applications/ProtoBlock2016-new/qml-material/src/extras/CircleImage.qml
+Applications/ProtoBlock2016-new/qml-material/src/extras/CircleMask.qml
+Applications/ProtoBlock2016-new/qml-material/src/extras/ColumnFlow.qml
+Applications/ProtoBlock2016-new/qml-material/src/extras/extras.qrc
+Applications/ProtoBlock2016-new/qml-material/src/extras/Image.qml
+Applications/ProtoBlock2016-new/qml-material/src/extras/qmldir
+Applications/ProtoBlock2016-new/qml-material/src/listitems/BaseListItem.qml
+Applications/ProtoBlock2016-new/qml-material/src/listitems/CMakeLists.txt
+Applications/ProtoBlock2016-new/qml-material/src/listitems/Divider.qml
+Applications/ProtoBlock2016-new/qml-material/src/listitems/listitems.qrc
+Applications/ProtoBlock2016-new/qml-material/src/listitems/qmldir
+Applications/ProtoBlock2016-new/qml-material/src/listitems/SectionHeader.qml
+Applications/ProtoBlock2016-new/qml-material/src/listitems/SimpleMenu.qml
+Applications/ProtoBlock2016-new/qml-material/src/listitems/Standard.qml
+Applications/ProtoBlock2016-new/qml-material/src/listitems/Subheader.qml
+Applications/ProtoBlock2016-new/qml-material/src/listitems/Subtitled.qml
+Applications/ProtoBlock2016-new/qml-material/src/material.qrc
+Applications/ProtoBlock2016-new/qml-material/src/plugin.cpp
+Applications/ProtoBlock2016-new/qml-material/src/plugin.h
+Applications/ProtoBlock2016-new/qml-material/src/popups/BottomActionSheet.qml
+Applications/ProtoBlock2016-new/qml-material/src/popups/BottomSheet.qml
+Applications/ProtoBlock2016-new/qml-material/src/popups/Dialog.qml
+Applications/ProtoBlock2016-new/qml-material/src/popups/Dropdown.qml
+Applications/ProtoBlock2016-new/qml-material/src/popups/InputDialog.qml
+Applications/ProtoBlock2016-new/qml-material/src/popups/MenuField.qml
+Applications/ProtoBlock2016-new/qml-material/src/popups/Popover.qml
+Applications/ProtoBlock2016-new/qml-material/src/popups/PopupBase.qml
+Applications/ProtoBlock2016-new/qml-material/src/popups/popups.qrc
+Applications/ProtoBlock2016-new/qml-material/src/popups/TimePickerDialog.qml
+Applications/ProtoBlock2016-new/qml-material/src/qmldir
+Applications/ProtoBlock2016-new/qml-material/src/src.pro
+Applications/ProtoBlock2016-new/qml-material/src/styles/ApplicationWindowStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/ButtonStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/CheckBoxStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/CMakeLists.txt
+Applications/ProtoBlock2016-new/qml-material/src/styles/ProgressBarStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/qmldir
+Applications/ProtoBlock2016-new/qml-material/src/styles/RadioButtonStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/SliderStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/styles.qrc
+Applications/ProtoBlock2016-new/qml-material/src/styles/SwitchStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/TextFieldStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/ToolBarStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/styles/ToolButtonStyle.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/ActionBar.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/ApplicationWindow.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/AppTheme.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/MainView.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/NavigationDrawer.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/NavigationDrawerPage.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/Page.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/PageSidebar.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/PageStack.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/Sidebar.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/TabBar.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/TabbedPage.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/Toolbar.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/Window.qml
+Applications/ProtoBlock2016-new/qml-material/src/window/window.qrc
+Applications/ProtoBlock2016-new/qml-material/styles_demo/main.qml
+Applications/ProtoBlock2016-new/qml-material/tests/icons.yml
+Applications/ProtoBlock2016-new/qml-material/tests/icons/action_alarm.svg
+Applications/ProtoBlock2016-new/qml-material/tests/icons/action_search.svg
+Applications/ProtoBlock2016-new/qml-material/tests/icons/action_settings.svg
+Applications/ProtoBlock2016-new/qml-material/tests/icons/content_add.svg
+Applications/ProtoBlock2016-new/qml-material/tests/icons/icons.qrc
+Applications/ProtoBlock2016-new/qml-material/tests/tests.cpp
+Applications/ProtoBlock2016-new/qml-material/tests/tests.pro
+Applications/ProtoBlock2016-new/qml-material/tests/tst_actionbar.qml
+Applications/ProtoBlock2016-new/qml-material/tests/tst_card.qml
+Applications/ProtoBlock2016-new/qml-material/tests/tst_pagestack.qml
+Applications/ProtoBlock2016-new/qml-models/LevelFiveMenuModel.qml
+Applications/ProtoBlock2016-new/qml-models/LevelFourMenuModel.qml
+Applications/ProtoBlock2016-new/qml-models/LevelOneMenuModel.qml
+Applications/ProtoBlock2016-new/qml-models/LevelSixMenuModel.qml
+Applications/ProtoBlock2016-new/qml-models/LevelThreeMenuModel.qml
+Applications/ProtoBlock2016-new/qml-models/LevelTwoMenuModel.qml
+Applications/ProtoBlock2016-new/qml-models/PostionModel.qml
+Applications/ProtoBlock2016-new/qml-models/qml-models.qrc
+Applications/ProtoBlock2016-new/qml-models/SectionTitleMenuModel.qml
+Applications/ProtoBlock2016-new/qml-models/WeekModel.qml
+Applications/ProtoBlock2016-new/qml-news/CBS.qml
+Applications/ProtoBlock2016-new/qml-news/ESPN.qml
+Applications/ProtoBlock2016-new/qml-news/FlipBar.qml
+Applications/ProtoBlock2016-new/qml-news/GetFeedLinkText.qml
+Applications/ProtoBlock2016-new/qml-news/LineInput.qml
+Applications/ProtoBlock2016-new/qml-news/ListFooter.qml
+Applications/ProtoBlock2016-new/qml-news/ListHeader.qml
+Applications/ProtoBlock2016-new/qml-news/NFL.qml
+Applications/ProtoBlock2016-new/qml-news/NFL.qml.orig
+Applications/ProtoBlock2016-new/qml-news/NFLNews.qml
+Applications/ProtoBlock2016-new/qml-news/qml-news.qrc
+Applications/ProtoBlock2016-new/qml-news/resources/anonymous.png
+Applications/ProtoBlock2016-new/qml-news/resources/bird-anim-sprites.png
+Applications/ProtoBlock2016-new/qml-news/resources/icon-clear.png
+Applications/ProtoBlock2016-new/qml-news/resources/icon-loading.png
+Applications/ProtoBlock2016-new/qml-news/resources/icon-refresh.png
+Applications/ProtoBlock2016-new/qml-news/resources/icon-search.png
+Applications/ProtoBlock2016-new/qml-news/RotoWorld.qml
+Applications/ProtoBlock2016-new/qml-news/RotoWorld.qml.orig
+Applications/ProtoBlock2016-new/qml-news/SearchDelegate.qml
+Applications/ProtoBlock2016-new/qml-news/TweetDelegate.qml
+Applications/ProtoBlock2016-new/qml-news/tweetsearch.js
+Applications/ProtoBlock2016-new/qml-news/TweetsModel.qml
+Applications/ProtoBlock2016-new/qml-news/Twitter.qml
+Applications/ProtoBlock2016-new/qml-news/WebView.qml
+Applications/ProtoBlock2016-new/qml-pages/2015Leaderboard.qml
+Applications/ProtoBlock2016-new/qml-pages/2015Trading.qml
+Applications/ProtoBlock2016-new/qml-pages/About.qml
+Applications/ProtoBlock2016-new/qml-pages/Account.qml
+Applications/ProtoBlock2016-new/qml-pages/Account.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/Banner.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/Chat.qml_back.qml
+Applications/ProtoBlock2016-new/qml-pages/Chat.qml_back.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/ContactUs.qml
+Applications/ProtoBlock2016-new/qml-pages/EncryptLogin.qml
+Applications/ProtoBlock2016-new/qml-pages/FantasyDataApiCaller.qml
+Applications/ProtoBlock2016-new/qml-pages/GetName - Copy.qml
+Applications/ProtoBlock2016-new/qml-pages/GetName.qml
+Applications/ProtoBlock2016-new/qml-pages/GetName.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/Home.qml
+Applications/ProtoBlock2016-new/qml-pages/Home.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/Import-Export.qml
+Applications/ProtoBlock2016-new/qml-pages/Import-Export.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/Indicators.qml
+Applications/ProtoBlock2016-new/qml-pages/LeftMenu.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/MarketDepth.qml
+Applications/ProtoBlock2016-new/qml-pages/News.qml
+Applications/ProtoBlock2016-new/qml-pages/PickUserName.qml
+Applications/ProtoBlock2016-new/qml-pages/Players.qml
+Applications/ProtoBlock2016-new/qml-pages/Projections - Copy.qml
+Applications/ProtoBlock2016-new/qml-pages/Projections.qml
+Applications/ProtoBlock2016-new/qml-pages/Projections.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/ProtoblockNews.qml
+Applications/ProtoBlock2016-new/qml-pages/ProtoblockNews.qml.orig
+Applications/ProtoBlock2016-new/qml-pages/qml-pages.qrc
+Applications/ProtoBlock2016-new/qml-pages/qml-pages.qrc.orig
+Applications/ProtoBlock2016-new/qml-pages/Sc2016.qml
+Applications/ProtoBlock2016-new/qml-pages/SeasonLongLandingPage.qml
+Applications/ProtoBlock2016-new/qml-pages/SeasonLongLevelTwo.qml
+Applications/ProtoBlock2016-new/qml-pages/Settings.qml
+Applications/ProtoBlock2016-new/qml-pages/SportsRadarApiCaller.qml
+Applications/ProtoBlock2016-new/qml-pages/ThemeButton.qml
+Applications/ProtoBlock2016-new/qml-pages/Trading.qml
+Applications/ProtoBlock2016-new/qml-pages/Trading-hold.qml
+Applications/ProtoBlock2016-new/qml-pages/Trading-hold2.qml
+Applications/ProtoBlock2016-new/qml-pages/TradingLanding.qml
+Applications/ProtoBlock2016-new/qml-pages/UpdateView.qml
+Applications/ProtoBlock2016-new/qml-pages/WeeklyLandingPage.qml
+Applications/ProtoBlock2016-new/qml-pages/WeeklyTradingLanding.qml
+Applications/ProtoBlock2016-new/qml-pages/Welcome.qml
+Applications/ProtoBlock2016-new/qml-pages/WelcomeBack.qml
+Applications/ProtoBlock2016-new/qml-pinky/MainPinky.qml
+Applications/ProtoBlock2016-new/qml-pinky/qml-pinky.qrc
+Applications/ProtoBlock2016-new/qml-realChat/BufferListView.qml
+Applications/ProtoBlock2016-new/qml-realChat/ChatPage.qml
+Applications/ProtoBlock2016-new/qml-realChat/ChatPage.qml.orig
+Applications/ProtoBlock2016-new/qml-realChat/ConnectPage.qml
+Applications/ProtoBlock2016-new/qml-realChat/MessageFormatter.qml
+Applications/ProtoBlock2016-new/qml-realChat/ProtoChat.qml
+Applications/ProtoBlock2016-new/qml-realChat/ProtoChat.qml.orig
+Applications/ProtoBlock2016-new/qml-realChat/qml-realChat.qrc
+Applications/ProtoBlock2016-new/qml-realChat/TextBrowser.qml
+Applications/ProtoBlock2016-new/qml-realChat/TextEntry.qml
+Applications/ProtoBlock2016-new/qml-realChat/TopicLabel.qml
+Applications/ProtoBlock2016-new/qml-realChat/UserListView.qml
+Applications/ProtoBlock2016-new/qml-torrent/AddTorrentDialog.qml
+Applications/ProtoBlock2016-new/qml-torrent/main.qml
+Applications/ProtoBlock2016-new/qml-torrent/qml-torrent.qrc
+Applications/ProtoBlock2016-new/qml-torrent/SpeedLimit.qml
+Applications/ProtoBlock2016-new/qml-torrent/TorrentDelegate.qml
+Applications/ProtoBlock2016-new/qml-torrent/TorrentListView.qml
+Applications/ProtoBlock2016-new/qml-utils/QChart.js
+Applications/ProtoBlock2016-new/qml-utils/qml-utils.qrc
+Applications/ProtoBlock2016-new/qml-utils/qwebchannel.js
+Applications/ProtoBlock2016-new/qml-utils/Utils.js
+Applications/ProtoBlock2016-new/src/main.cpp
+Applications/ProtoBlock2016-new/src/main.cpp-back.cpp
+Applications/WSServer/hold/Data.h
+Applications/WSServer/hold/ExchangeData.h
+Applications/WSServer/hold/NameData.h
+Applications/WSServer-hold/.gitignore
+Applications/WSServer-hold/android-libWSServer.so-deployment-settings.json
+Applications/WSServer-hold/combinations.cpp
+Applications/WSServer-hold/Data.cpp
+Applications/WSServer-hold/Data.h
+Applications/WSServer-hold/ExchangeData.cpp
+Applications/WSServer-hold/ExchangeData.h
+Applications/WSServer-hold/LiteServer.cpp
+Applications/WSServer-hold/LiteServer.h
+Applications/WSServer-hold/main.cpp
+Applications/WSServer-hold/NameData.cpp
+Applications/WSServer-hold/NameData.h
+Applications/WSServer-hold/securesocketclient.qrc
+Applications/WSServer-hold/server.cpp
+Applications/WSServer-hold/server.h
+Applications/WSServer-hold/src/blockmeta.cpp
+Applications/WSServer-hold/src/blockmeta.h
+Applications/WSServer-hold/src/getuserinfo.cpp
+Applications/WSServer-hold/src/getuserinfo.h
+Applications/WSServer-hold/src/ldbhashreadertool.cpp
+Applications/WSServer-hold/src/ldbhashreadertool.h
+Applications/WSServer-hold/src/ldbwriter.cpp
+Applications/WSServer-hold/src/ldbwriter.h
+Applications/WSServer-hold/src/leveldbhelper.cpp
+Applications/WSServer-hold/src/leveldbhelper.h
+Applications/WSServer-hold/src/maps/ldbhashreadermap.cpp
+Applications/WSServer-hold/src/maps/ldbhashreadermap.h
+Applications/WSServer-hold/src/maps/playermap.cpp
+Applications/WSServer-hold/src/maps/playermap.h
+Applications/WSServer-hold/src/maps/teammap.cpp
+Applications/WSServer-hold/src/maps/teammap.h
+Applications/WSServer-hold/src/models/awardsmodels.cpp
+Applications/WSServer-hold/src/models/awardsmodels.h
+Applications/WSServer-hold/src/models/closedgamesmodel.cpp
+Applications/WSServer-hold/src/models/closedgamesmodel.h
+Applications/WSServer-hold/src/models/leaderboardmodel.cpp
+Applications/WSServer-hold/src/models/leaderboardmodel.h
+Applications/WSServer-hold/src/models/playermodel.cpp
+Applications/WSServer-hold/src/models/playermodel.h
+Applications/WSServer-hold/src/models/playernewmodel.h
+Applications/WSServer-hold/src/models/pnlmodel.cpp
+Applications/WSServer-hold/src/models/pnlmodel.h
+Applications/WSServer-hold/src/models/pnltestmodel.h
+Applications/WSServer-hold/src/models/projectionsmodel.cpp
+Applications/WSServer-hold/src/models/projectionsmodel.h
+Applications/WSServer-hold/src/models/scheduledgamesmodel.cpp
+Applications/WSServer-hold/src/models/scheduledgamesmodel.h
+Applications/WSServer-hold/src/models/statsmodel.cpp
+Applications/WSServer-hold/src/models/statsmodel.h
+Applications/WSServer-hold/src/models/testmodel.cpp
+Applications/WSServer-hold/src/models/testmodel.h
+Applications/WSServer-hold/src/protoblockapi.cpp
+Applications/WSServer-hold/src/protoblockapi.h
+Applications/WSServer-hold/src/tempapi.cpp
+Applications/WSServer-hold/src/tempapi.h
+Applications/WSServer-hold/src/utils.cpp
+Applications/WSServer-hold/src/utils.h
+Applications/WSServer-hold/src/utils/utils.cpp
+Applications/WSServer-hold/src/utils/utils.h
+Applications/WSServer-hold/sslechoclient.html
+Applications/WSServer-hold/txpool.cpp
+Applications/WSServer-hold/txpool.h
+Applications/WSServer-hold/TxServer.cpp
+Applications/WSServer-hold/TxServer.h
+Applications/WSServer-hold/WSServer.pro
+Applications/WSServer-prod-feat/.gitignore
+Applications/WSServer-prod-feat/android-libWSServer.so-deployment-settings.json
+Applications/WSServer-prod-feat/combinations.cpp
+Applications/WSServer-prod-feat/Data.cpp
+Applications/WSServer-prod-feat/Data.h
+Applications/WSServer-prod-feat/ExchangeData.cpp
+Applications/WSServer-prod-feat/ExchangeData.h
+Applications/WSServer-prod-feat/LiteServer.cpp
+Applications/WSServer-prod-feat/LiteServer.h
+Applications/WSServer-prod-feat/main.cpp
+Applications/WSServer-prod-feat/NameData.cpp
+Applications/WSServer-prod-feat/NameData.h
+Applications/WSServer-prod-feat/securesocketclient.qrc
+Applications/WSServer-prod-feat/server.cpp
+Applications/WSServer-prod-feat/server.h
+Applications/WSServer-prod-feat/src/blockmeta.cpp
+Applications/WSServer-prod-feat/src/blockmeta.h
+Applications/WSServer-prod-feat/src/getuserinfo.cpp
+Applications/WSServer-prod-feat/src/getuserinfo.h
+Applications/WSServer-prod-feat/src/ldbhashreadertool.cpp
+Applications/WSServer-prod-feat/src/ldbhashreadertool.h
+Applications/WSServer-prod-feat/src/ldbwriter.cpp
+Applications/WSServer-prod-feat/src/ldbwriter.h
+Applications/WSServer-prod-feat/src/leveldbhelper.cpp
+Applications/WSServer-prod-feat/src/leveldbhelper.h
+Applications/WSServer-prod-feat/src/maps/ldbhashreadermap.cpp
+Applications/WSServer-prod-feat/src/maps/ldbhashreadermap.h
+Applications/WSServer-prod-feat/src/maps/playermap.cpp
+Applications/WSServer-prod-feat/src/maps/playermap.h
+Applications/WSServer-prod-feat/src/maps/teammap.cpp
+Applications/WSServer-prod-feat/src/maps/teammap.h
+Applications/WSServer-prod-feat/src/models/awardsmodels.cpp
+Applications/WSServer-prod-feat/src/models/awardsmodels.h
+Applications/WSServer-prod-feat/src/models/closedgamesmodel.cpp
+Applications/WSServer-prod-feat/src/models/closedgamesmodel.h
+Applications/WSServer-prod-feat/src/models/leaderboardmodel.cpp
+Applications/WSServer-prod-feat/src/models/leaderboardmodel.h
+Applications/WSServer-prod-feat/src/models/playermodel.cpp
+Applications/WSServer-prod-feat/src/models/playermodel.h
+Applications/WSServer-prod-feat/src/models/playernewmodel.h
+Applications/WSServer-prod-feat/src/models/pnlmodel.cpp
+Applications/WSServer-prod-feat/src/models/pnlmodel.h
+Applications/WSServer-prod-feat/src/models/pnltestmodel.h
+Applications/WSServer-prod-feat/src/models/projectionsmodel.cpp
+Applications/WSServer-prod-feat/src/models/projectionsmodel.h
+Applications/WSServer-prod-feat/src/models/scheduledgamesmodel.cpp
+Applications/WSServer-prod-feat/src/models/scheduledgamesmodel.h
+Applications/WSServer-prod-feat/src/models/statsmodel.cpp
+Applications/WSServer-prod-feat/src/models/statsmodel.h
+Applications/WSServer-prod-feat/src/models/testmodel.cpp
+Applications/WSServer-prod-feat/src/models/testmodel.h
+Applications/WSServer-prod-feat/src/protoblockapi.cpp
+Applications/WSServer-prod-feat/src/protoblockapi.h
+Applications/WSServer-prod-feat/src/tempapi.cpp
+Applications/WSServer-prod-feat/src/tempapi.h
+Applications/WSServer-prod-feat/src/utils.cpp
+Applications/WSServer-prod-feat/src/utils.h
+Applications/WSServer-prod-feat/src/utils/utils.cpp
+Applications/WSServer-prod-feat/src/utils/utils.h
+Applications/WSServer-prod-feat/sslechoclient.html
+Applications/WSServer-prod-feat/txpool.cpp
+Applications/WSServer-prod-feat/txpool.h
+Applications/WSServer-prod-feat/TxServer.cpp
+Applications/WSServer-prod-feat/TxServer.h
+Applications/WSServer-prod-feat/WSServer.pro
+assets/teams/teams.qrc.orig
+chiefzookeeper/
+generated - Copy (2)/ApiData.pb.cc
+generated - Copy (2)/ApiData.pb.h
+generated - Copy (2)/ExData.pb.cc
+generated - Copy (2)/ExData.pb.h
+generated - Copy (2)/NameData.pb.cc
+generated - Copy (2)/NameData.pb.h
+generated - Copy (2)/ProtoData.pb.cc
+generated - Copy (2)/ProtoData.pb.h
+generated - Copy (2)/README.md
+generated - Copy (2)/StateData.pb.cc
+generated - Copy (2)/StateData.pb.cc.orig
+generated - Copy (2)/StateData.pb.h
+generated - Copy (2)/StateData.pb.h.orig
+generated - Copy (2)/StaticData.pb.cc
+generated - Copy (2)/StaticData.pb.h
+generated - Copy (2)/StatusData.pb.cc
+generated - Copy (2)/StatusData.pb.h
+generated - Copy/ApiData.pb.cc
+generated - Copy/ApiData.pb.h
+generated - Copy/ExData.pb.cc
+generated - Copy/ExData.pb.h
+generated - Copy/NameData.pb.cc
+generated - Copy/NameData.pb.h
+generated - Copy/ProtoData.pb.cc
+generated - Copy/ProtoData.pb.h
+generated - Copy/README.md
+generated - Copy/StateData.pb.cc
+generated - Copy/StateData.pb.cc.orig
+generated - Copy/StateData.pb.h
+generated - Copy/StateData.pb.h.orig
+generated - Copy/StaticData.pb.cc
+generated - Copy/StaticData.pb.h
+generated - Copy/StatusData.pb.cc
+generated - Copy/StatusData.pb.h
+libwin64/libprotobuf261.lib
+pri/deps.pri.orig
+ProRotoQml/libcommuni
+ProRotoQml/Theme/plugin.cpp.orig
+ProRotoQml/Theme/plugin.h.orig
+ProRotoQml/Theme/protoscreen.cpp.orig
+ProRotoQml/Theme/Theme.pro.orig

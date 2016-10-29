@@ -25,9 +25,10 @@ import QtGraphicalEffects 1.0
 */
 Item {
     id: icon
-
+    property bool hasColor: true
     property color color: Theme.light.iconColor
     property real size:  ProtoScreen.guToPx(3)
+
 
     /*!
        The name of the icon to display.
@@ -70,17 +71,18 @@ Item {
                     return   name //+ '.svg'
             }
             else if (icon.source.indexOf("qrc:/") === 0 ){
-                console.log("QRC icon " +  icon.source)
+//                console.log("QRC icon " +  icon.source)
                 return icon.source
             }else {
                 return ""
             }
         }
 
-        sourceSize {
-            width: size * Screen.devicePixelRatio
-            height: size * Screen.devicePixelRatio
-        }
+        sourceSize: undefined
+//        sourceSize {
+//            width: size * Screen.devicePixelRatio
+//            height: size * Screen.devicePixelRatio
+//        }
     }
 
     ColorOverlay {
@@ -88,10 +90,10 @@ Item {
 
         anchors.fill: parent
         source: image
-        color: Theme.alpha(icon.color, 1)
+        color: hasColor  ?  Theme.alpha(icon.color, 1) : "transparent"
         cached: true
         visible: image.source != "" && colorize
-        opacity: icon.color.a
+        opacity: hasColor ? icon.color.a : 1
     }
 
     AwesomeIcon {

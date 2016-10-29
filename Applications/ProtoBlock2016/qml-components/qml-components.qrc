@@ -5,14 +5,19 @@
         <file>BaserModel.qml</file>
         <file>BoxText.qml</file>
         <file>LeftMenu.qml</file>
-        <file>LocalJsonCaller.qml</file>
         <file>MaterialComboBox.qml</file>
         <file>PageHelper.qml</file>
-        <file>PDialog.qml</file>
-        <file>PlayersCard.qml</file>
-        <file>RoundImage.qml</file>
         <file>Splash.qml</file>
-        <file>TradingCard.qml</file>
-        <file>MaterialTopBar.qml</file>
+        <file>LoginBox.qml</file>
+        <file>CardWithContent.qml</file>
+        <file>MarketDepthCard.qml</file>
+        <file>MarketDepthCardAsk.qml</file>
+        <file>OMSCard.qml</file>
+        <file>BuyTrading.qml</file>
+        <file>ScheduleView.qml</file>
+        <file>PlayerProjTable.qml</file>
+        <file>LeaderProjView.qml</file>
+        <file>PlayerResultTable.qml</file>
+        <file>ScheduleViewPrev.qml</file>
     </qresource>
 </RCC>

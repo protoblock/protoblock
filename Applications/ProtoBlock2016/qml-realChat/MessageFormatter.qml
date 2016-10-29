@@ -3,7 +3,7 @@ import Communi 3.0
 
 import ProRotoQml.Theme 1.0
 QtObject {
-    id: root
+    id: msgroot
 
 
     // FIXME lets use our settings :)

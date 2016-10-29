@@ -1,6 +1,6 @@
 import QtQuick 2.4
 
-import ProRotoQml.Protoblock 1.0
+//import ProRotoQml.Protoblock 1.0
 
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
@@ -8,12 +8,12 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 
 Item {
-    Component.onCompleted: pageHelper.title = "Accounts Settings"
+    Component.onCompleted: { pageHelper.title = "Account Settings"; }
     Flickable{
         interactive: true
         width: parent.width
         height: parent.height
-        contentHeight: accountInfoTxt.height + ( ProtoScreen.guToPx(4) * 3.2) +(namePicker.height + newNameCard.height) + ProtoScreen.guToPx(4)
+        contentHeight: accountInfoTxt.height + ( ProtoScreen.guToPx(4) * 3.2) +(namePicker.height + newNameCard.height) * (repeater.count <= 1 ? 2 : repeater.count )
         contentWidth: parent.width
         boundsBehavior:  Flickable.StopAtBounds
 
@@ -31,7 +31,6 @@ Item {
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 font.family: "Roboto"
                 horizontalAlignment: Text.AlignHCenter
-//                color: "#c7c7c7"
                 text: "A Protoblock Player name is your fantasy identity, and will be displayed on the projections leaderboard. " +
                       "Claim your name! Chose your Twitter handle or fantasy team name.";
                 wrapMode: Text.WordWrap
@@ -43,7 +42,7 @@ Item {
         Card{
             id: namePicker
             width: parent.width / 1.07
-            height: (ProtoScreen.guToPx(8) * repeater.count) + (namePickerBannner.height + 10)
+            height: (ProtoScreen.guToPx(8) * repeater.count) + (namePickerBannner.height + 10) * repeater.opacity
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: accountInfoTxt.bottom
             anchors.topMargin: ProtoScreen.guToPx(4)
@@ -54,7 +53,10 @@ Item {
                 height: ProtoScreen.guToPx(6)
                 text: "Choose Name"
                 opacity: repeater.opacity
-                backgroundColor: root.theme.primaryColor
+                backgroundColor: themeroot.theme.primaryColor
+                helpShown: true
+                helperHeader: "Username help"
+                helperTxt: "Choose the active Protoblock account.   Select a name from the list to change users."
             }
             ListView {
                 id: repeater
@@ -63,27 +65,29 @@ Item {
                 clip: true
                 interactive: true
                 onCountChanged: {
-                    console.log(count + " Of the names ")
                     count < 1 ? opacity = 0 : opacity = 1
                 }
                 anchors.top: namePickerBannner.bottom
-                model: MiddleMan.goodList().length
+                model: MiddleMan.pGoodNameBalModel//MiddleMan.goodList().length
                 delegate:
                     ListItems.Subtitled{
+                    itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                     elevation: 2
                     width: parent.width
 //                    height: ProtoScreen.guToPx(11)
-                    text: "FantasyName: " +  MiddleMan.goodList()[index]
+                    text: model.name //+ " pk(" + model.pk + ")" // MiddleMan.goodList()[index]
+                    subText: model.pk
+
                     action: Image{
                         height: parent.height
                         width : height
                         fillMode: Image.PreserveAspectFit
-                        opacity: MiddleMan.goodList()[index] === uname ? 1 : 0
+                        opacity: model.name === uname ? 1 : 0
                         source:  "qrc:/icons/action_account_circle.png"
                         Behavior on opacity {NumberAnimation{duration: 80}}
                     }
-                    valueText: "Balance : " + " 0"
-                    onClicked: MiddleMan.useName(MiddleMan.goodList()[index])
+                    valueText: "Skill(" + model.bits + " ƑɃ) Stake(" + model.stake +" ƑɃ)"
+                    onClicked: MiddleMan.useName(model.name)
                 }
             }
         }
@@ -93,31 +97,39 @@ Item {
             id: newNameCard
             width: parent.width / 1.07
             height: nameText.height + (clamNameButton.height + ProtoScreen.guToPx(6))  + ProtoScreen.guToPx(8)
-            elevation: 1
-            anchors.top: namePicker.bottom
-            anchors.topMargin: ProtoScreen.guToPx(8)
-            anchors.horizontalCenter: parent.horizontalCenter
-            Column{
-                // add a banner
-                anchors.fill: parent
-                spacing: ProtoScreen.guToPx(3)
-                Banner{
-                    width: parent.width
-                    height: ProtoScreen.guToPx(5)
-                    text: "Claim New Name"
-                    backgroundColor: root.theme.primaryColor
-
-                }
-
+            elevation: 5
+            anchors{
+                top: namePicker.bottom
+                topMargin: ProtoScreen.guToPx(8)
+                horizontalCenter: parent.horizontalCenter
+            }
+            Banner{
+                id: claimBanner
+                width: parent.width
+                height: ProtoScreen.guToPx(5)
+                text: "Claim New Name"
+                backgroundColor: themeroot.theme.primaryColor
+                helpShown: true
+                helperHeader: "Claiming a new username"
+                helperTxt: "This is your fantasy identity. Choose a name, enter it in, then click \"Cliam New Name\". You will then be playing with your new name."
+            }
+           Column{
+                height:  parent.height - claimBanner.height
+                width: parent.width
+                anchors.top: claimBanner.bottom
+                anchors.topMargin: ProtoScreen.guToPx(1)
+                spacing: ProtoScreen.guToPx(4)
                 TextField {
                     id: nameText
                     width: parent.width / 1.07
                     font.pixelSize: ProtoScreen.font(ProtoScreen.MEDIUM)
                     font.family: "Default"
-                    placeholderText: "please enter in a new fantasy name"
+                    helperText: "please enter in a new fantasy name"
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onAccepted: nameCheckBlank(nameText.text)
+//                    onAccepted: nameCheckBlank(nameText.text)
+                    inputMethodHints: Qt.ImhNoPredictiveText;
                 }
+
                 Button{
                     id: clamNameButton
                     text: "Claim New Name"
@@ -125,6 +137,7 @@ Item {
                     elevation: 2
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: nameCheckBlank(nameText.text)
+                    backgroundColor: themeroot.theme.primaryColor
                 }
             }
         }

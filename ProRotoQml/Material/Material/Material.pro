@@ -25,6 +25,7 @@ DISTFILES = qmldir \
     Button.qml \
     Card.qml \
     CheckBox.qml \
+    ComboBox.qml \
     DatePicker.qml \
     Dialog.qml \
     Dropdown.qml \
@@ -45,7 +46,6 @@ DISTFILES = qmldir \
     PageSidebar.qml \
     PageStack.qml \
     Palette.qml \
-#    PlatformExtensions.qml \
     Popover.qml \
     PopupBase.qml \
     ProgressBar.qml \

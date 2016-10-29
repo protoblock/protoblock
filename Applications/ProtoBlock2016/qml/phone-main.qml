@@ -8,7 +8,7 @@ import ProRotoQml.Sql 1.0
 
 import Material 1.0
 ApplicationWindow {
-    id: root
+    id: themeroot
     width: Screen.width
     height: Screen.height
     visible: false
@@ -25,12 +25,12 @@ ApplicationWindow {
     property int loginCardScale: 1
     property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
     property var splashWindow: Splash {
-        onTimeout: root.visible = true
+        onTimeout: themeroot.visible = true
     }
 
     property variant pagesList  : [
         "Welcome", "WelcomeBack", "About", "Chat", "GetName", "PickUserName",
-        "Players", "ProjectionsLevelOne", "UserSettings","News","Twitter/Tweetsearch"
+        "Players", "ProjectionsLevelOne", "Settings","News","Twitter/Tweetsearch"
         , "Feeds/CBSSearch" , "Feeds/EspnSearch", "Feeds/NflSearch" ,"Feeds/RotoSearch"
         , "TradingLanding","PickUserName" , "WeeklyLandingPage" , "SeasonLongLandingPage"
         ,"WeeklyTradingLanding","SeasonLongLevelTwo"
@@ -157,9 +157,9 @@ ApplicationWindow {
             else
             {
                 err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-                root.loginCardScale = 0
+                themeroot.loginCardScale = 0
                 loginErrorDialog.open()
-                root.errorString =  err
+                themeroot.errorString =  err
             }
         }
 

@@ -8,9 +8,8 @@ Item {
     property int radius: 5
     property bool highlighted
     property alias elevation: bkg.elevation
-    property string backgroundColor: "blue"
+    property string backgroundColor: Colors.blue
     signal clicked()
-
 
     // Background Rectangle
     Card{
@@ -45,7 +44,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
             height: ProtoScreen.guToPx(8)
-            color:  realRoot.theme !== "Pinky" ? "#c7c7c7": "black"
+            color: "#87000000"
             font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
             style: Text.Raised
             font.bold: true

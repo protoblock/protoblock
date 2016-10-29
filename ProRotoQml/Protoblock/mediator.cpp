@@ -2,116 +2,339 @@
 #include "StateData.pb.h"
 #include <QSettings>
 #include "Commissioner.h"
+#include "DataPersist.h"
+#include <unordered_set>
 
-
+//using namespace pb;
 using namespace fantasybit;
-Mediator::Mediator(QObject *parent) : QObject(parent) {
+namespace pb {
 
-    auto mynames = m_fantasy_agent.getMyNames();
-//    if ( mynames.size() == 0 ) {
-//        auto filepath = lastYearPath();
-//        if ( filepath != "" ) {
-//            qDebug() <<" found last year!! " << filepath;
-//            m_fantasy_agent.readFromSecret(filepath,true);
-//            mynames = m_fantasy_agent.getMyNames();
-//        }
-//    }
+Mediator::Mediator(QObject *parent) :  QObject(parent),
+//    mPlayerQuoteSliceModel{this,"","symbol"},
+//    m_pPlayerQuoteSliceModel(&mPlayerQuoteSliceModel),
+//    mDepthMarketModel{},
+//    m_pDepthMarketModel(&mDepthMarketModel),
+    mFantasyNameBalModel(this,QByteArray(),{"name"}),
+    m_pFantasyNameBalModel(&mFantasyNameBalModel),
+    mGoodNameBalModel{this,QByteArray(),{"name"}},
+    m_pGoodNameBalModel(&mGoodNameBalModel),
+//    m_pTradingPositionsModel{new TradingPositionsModel(this,QByteArray (),{"symbol"})},
+    myGamesSelectionModel{},
+    myPrevGamesSelectionModel{},
+    m_pQItemSelectionModel(&myGamesSelectionModel),
+    m_pPrevQItemSelectionModel(&myPrevGamesSelectionModel),
+    m_pLeaderBoardSortModel(new SortFilterProxyModel),
+    m_blocknum(0),
+    m_height(0) {
 
-    for ( auto &np : m_fantasy_agent.getMyNames()) {
-        m_myPubkeyFname[np.second] = "";
-        qDebug() << " Mediator::Mediator name:" << np.first.data() << " pk: " << np.second.data();
+    fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
+
+    fnameindex = 0;
+    //leader models
+    m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
+    m_pLeaderBoardSortModel->setSortRole("updatetime");//mPlayerProjModel.roleForName("pos"));
+    m_pLeaderBoardSortModel->setDynamicSortFilter(true);
+
+    //schedule models
+    m_pWeeklyScheduleModel = new WeeklyScheduleModel;
+    myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
+    m_gameFilter = "Scheduled";
+
+    m_pPreviousWeekScheduleModel = new WeeklyScheduleModel;
+    myPrevGamesSelectionModel.setModel(m_pPreviousWeekScheduleModel);
+
+
+    m_theWeek = 0;
+    m_thePrevWeek = 0;
+    m_liveSync ="Sync";
+    m_seasonString = "";
+
+    //player selection
+    m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
+    m_pProjectionsViewFilterProxyModel->setSourceModel(&mPlayerProjModel);
+
+    m_pProjectionsViewFilterProxyModel->setSortRole("pos");//mPlayerProjModel.roleForName("pos"));
+    m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(false);
+
+    //results
+    m_pResultsViewFilterProxyModel =  new ResultsViewFilterProxyModel(m_pPreviousWeekScheduleModel,&myPrevGamesSelectionModel);
+    m_pResultsViewFilterProxyModel->setSourceModel(&mPlayerResultModel);
+
+    m_pResultsViewFilterProxyModel->setSortRole("result");//mPlayerProjModel.roleForName("pos"));
+    m_pResultsViewFilterProxyModel->setDynamicSortFilter(true);
+
+
+
+    m_useSelected = true;
+    m_busySend = false;
+}
+
+void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
+    qDebug() << myFantasyName.data() << " mediator namestatus " << myname.DebugString().data();
+
+    if ( myname.name() == myFantasyName )
+        return;
+
+    if ( nullptr != mGoodNameBalModel.getByUid(myname.name().data()) ) {
+//        if ( myFantasyName != "" ) return;
+    }
+    else {
+        auto it = mFantasyNameBalModel.getByUid(myname.name().data());
+        if ( it != nullptr)
+            mGoodNameBalModel.append(new FantasyNameBalModelItem(*it));
+        else {
+            qDebug() <<  " mediator namestatus not in  mFantasyNameBalModel";
+            if ( myname.status() < MyNameStatus::requested) {
+                qDebug() << " not comfirmed ";
+                return;
+            }
+            else {
+                QString nn = myname.name().data();
+                mGoodNameBalModel.append(new FantasyNameBalModelItem(nn));
+            }
+        }
     }
 
-
-    QString wss("ws://%1:%2");
-
-    m_chatServerAddr = wss.arg(PB_WS_CHAT.data()).arg(PB_WS_CHAT_PORT);
-    QString lserver = wss.arg(PB_WS_LITE_AGENT.data()).arg(PB_WS_LITE_AGENT_PORT);
-    QString txserver = wss.arg(PB_WS_TX.data()).arg(PB_WS_TX_PORT);
-
-#ifndef NODEBUG
-    qDebug() << " connecting to lserver" << lserver;
-    qDebug() << " connecting to txserver" << txserver;
-#endif
-    m_webSocket.open(QUrl(lserver));
-    m_txsocket.open(QUrl(txserver));
-
-//    init ();
-    connect (this,SIGNAL (error(QString)),this,SLOT (handleError(QString)));
-    connect(&m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
-    connect (&m_webSocket,SIGNAL(aboutToClose()),this,SLOT(handleAboutToClose()));
-    connect (&m_webSocket, SIGNAL(disconnected()), this, SLOT(handleClosed()));
-
-    connect (&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleSocketError(QAbstractSocket::SocketError)));
-
-//    connect(this,SIGNAL (nameStatusChanged(QString,QString))
-//            ,this, SLOT (handdleNameStatus(QString,QString)));
-
-//    connect(this,SIGNAL(usingFantasyName(QString)),
-//            this,SLOT(handdleUsingName(QString)));
-
-
-
-    connect (this ,SIGNAL (engineUpdate(bool)),this,SLOT(handleEngineUpdate(bool)));
-    setencyptPath (QString::fromStdString (GET_ROOT_DIR ()));
-
-
-    signPlayerStatus.setInterval(2000);
-    connect(&signPlayerStatus, SIGNAL(timeout()),
-            this, SLOT(getSignedPlayerStatus()));
+    myFantasyName = myname.name();
+    qDebug() << "Mediator  emitting using fanetay name " << myname.name().data();
+    myGamesSelectionModel.reset();
+    emit usingFantasyName(myname.name().data());
+    updateCurrentFantasyPlayerProjections();
+    set_busySend(false);
 }
 
+void Mediator::LiveProj(FantasyBitProj proj) {
+    auto *item = mPlayerProjModel.getByUid(proj.playerid().data());
+    if ( item ) {
 
-//QString Mediator::nameS                           tatusGet(const QString &name) {
-//    QVariantMap::const_iterator iter = m_nameStatuses.find(name);
-//    if ( !iter->isValid() )
-//        return "none";
-//    else
-//        qDebug() << "Suggested Name:  "  << iter.value ().toString ();
-//        return iter.value().toString();
-//}
+        item->set_avg(mGateway->dataService->GetAvgProjection(proj.playerid()));
 
-void Mediator::pk2fname(const QString &pk) {
-    lastPk2name = pk.toStdString();
-    doPk2fname(lastPk2name);
+        if ( proj.name() == myFantasyName ) {
+            set_busySend(false);
+            if ( proj.proj() > 0 ) {
+                item->set_knownProjection(proj.proj());
+                item->set_projection(proj.proj());
+            }
+        }
+    }
+
+    auto *item2 = mFantasyNameBalModel.getByUid(proj.name().data());
+    if ( !item2 ) return;
+    item2->set_lastupdate(proj.block());
+    item2->set_numberproj(proj.count());
 }
 
-void Mediator::doPk2fname(const std::string &pkstr) {
-    WsReq req;
-    Pk2FnameReq pkreq;
-    pkreq.set_pk(pkstr);
-    req.set_ctype(PK2FNAME);
-    req.MutableExtension(Pk2FnameReq::req)->CopyFrom(pkreq);
-    auto txstr = req.SerializeAsString();
-    QByteArray qb(txstr.data(),(size_t)txstr.size());
+void Mediator::MyNames(vector<MyFantasyName> mfn) {
 
-    m_webSocket.sendBinaryMessage(qb);
+    qDebug() << " mediator myname " << mfn.size();
+    int heighest = 0;
+    string hname  = "";
+    for ( auto m : mfn ) {
+        qDebug() << " mediator myname2 " << m.DebugString().data();
+        if ( m.status() >= heighest) {
+            heighest = m.status();
+            hname = m.name();
+        }
+        if ( m.name() == myFantasyName )
+            continue;
+
+        if ( nullptr != mGoodNameBalModel.getByUid(m.name().data()) ) continue;
+
+        auto it = mFantasyNameBalModel.getByUid(m.name().data());
+        if ( it != nullptr)
+            mGoodNameBalModel.insert(mGoodNameBalModel.size(),it);
+    }
+
+    qDebug() << " namename wins " << heighest << hname.data();
+    if ( myFantasyName == "" && hname != "" )
+        useName(hname.data());
 
 }
 
-void Mediator::checkname(const QString &name) {
-    qDebug() << " in checkname " << name;
-    WsReq req;
-    req.set_ctype(CHECKNAME);
-    CheckNameReq cnr;
-    cnr.set_fantasy_name(name.toStdString());
-    req.MutableExtension(CheckNameReq::req)->CopyFrom(cnr);
-    auto txstr = req.SerializeAsString();
-    QByteArray qb(txstr.data(),(size_t)txstr.size());
-    m_webSocket.sendBinaryMessage(qb);
-
-    qDebug() << " sent in checkname " << name;
+void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
+    FantasyNameBalModelItem *item = (FantasyNameBalModelItem *)mGoodNameBalModel.get(fnb.name().data());
+    if ( !item || item->get_name() != fnb.name().data()) {
+        //mGoodNameBalModel.insert(mGoodNameBalModel.size(),FantasyNameBalModelItem(fnb));
+    }
+    else {
+        item->update(fnb);
+        mFantasyNameBalModel.update(item);
+    }
 
 }
 
+void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {}
+
+void Mediator::GlobalStateChange(GlobalState gs) {
+    if ( gs.week() > 0 && gs.week() < 18) {
+        if ( amLive && gs.week() > m_theWeek) {
+            updateWeek();
+        }
+        if ( m_thePrevWeek == m_theWeek)
+            setthePrevWeek(gs.week());
+
+        settheWeek(gs.week());
+        set_busySend(false);
+    }
+}
+
+void Mediator::LiveGui(GlobalState gs) {
+
+    qDebug() << "Mediator received Livegui ";
+    if ( !amLive ) {
+        amLive = true;
+        m_season = gs.season();
+        settheWeek(gs.week());
+        setthePrevWeek(gs.week());
+        setliveSync("Live");
+        setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
+        updateWeek();
+    }
+
+//    FantasyNameBal fnb;
+//    fnb.set_name("testname");
+//    NewFantasyName(fnb);
+}
+
+void Mediator::updateWeek() {
+    if ( mGateway == nullptr ) {
+        qDebug() << " mGateway null ";
+    }
+    else if ( mGateway->dataService == nullptr)
+        qDebug() << " mGateway->dataService null ";
+    else {
+        set_busySend(false);
+        updateLiveLeaders();
+
+        if ( m_theWeek > 0  && m_theWeek < 17) {
+            //setCurrentWeekData();
+
+            m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
+                          mGateway->dataService->GetWeeklySchedule(m_theWeek));
+            const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
+            mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
+
+            for ( auto gr : vgr ) {
+                m_pWeeklyScheduleModel->UpdateStatus(gr.info.id(),gr.status);
+                mPlayerProjModel.ongameStatusChange(gr.info.id(),gr.status);
+            }
+
+//            m_pQItemSelectionModel->reset();
+
+            if (myFantasyName != "" )
+                updateCurrentFantasyPlayerProjections();
+//            m_pProjectionsViewFilterProxyModel->invalidate();
+        }
+    }
+}
+
+void Mediator::updateCurrentFantasyPlayerProjections(){
+    //update to recent projection projection and mark them a sent
+    auto  recentProjections = mGateway->dataService->GetProjByName(myFantasyName);
+    qDebug() << "updateCurrentFantasyPlayerProjections " << recentProjections.size();
+
+    for ( auto it : mPlayerProjModel)  {
+        if ( !it ) continue;
+        it->set_knownProjection (0);
+        it->set_projection(0);
+    }
+
+    for ( auto it = recentProjections.begin(); it != recentProjections.end(); ++it ){
+        auto *item = mPlayerProjModel.getByUid(it->first.data());
+        if ( !item ) continue;
+        item->set_knownProjection(it->second);
+        item->set_projection(it->second);
+    }
+}
+
+void Mediator::NewWeek(int week) {
+    set_busySend(false);
+    if ( m_thePrevWeek == m_theWeek)
+        setthePrevWeek(week);
+    settheWeek(week);
+    if ( amLive ) {
+        updateLiveLeaders();
+    }
+}
+
+void Mediator::GameStart(string gameid) {
+    m_pWeeklyScheduleModel->UpdateStatus(gameid,GameStatus_Status_INGAME);
+
+    for ( auto it : mPlayerProjModel) {
+        if ( it->get_gameid() != gameid.data() )
+            continue;
+
+        int projection = it->get_projection();
+        int knownprojection = it->get_knownProjection();
+        if ( knownprojection == projection)
+            it->set_projection(knownprojection);
+        it->setisopen(false);
+    }
+    m_pProjectionsViewFilterProxyModel->invalidate();
+}
+
+void Mediator::GameOver(string) {}
+
+void Mediator::onControlMessage(QString) {}
+
+void Mediator::setupConnection(pb::IPBGateway *ingateway) {
+
+    QObject* that = dynamic_cast<QObject*>(ingateway);
+    mOGateway = that;
+    connect(that, SIGNAL(NameStatus(fantasybit::MyFantasyName)),
+            this, SLOT(NameStatus(fantasybit::MyFantasyName)));
+
+    connect( that, SIGNAL(LiveProj(fantasybit::FantasyBitProj)),
+            this, SLOT(LiveProj(fantasybit::FantasyBitProj )));
+
+    connect( that, SIGNAL(MyNames(vector<fantasybit::MyFantasyName>)),
+            this, SLOT(MyNames(vector<fantasybit::MyFantasyName> )));
+    connect( that, SIGNAL(NameBal(fantasybit::FantasyNameBal)),
+            this, SLOT(NameBal(fantasybit::FantasyNameBal )));
+    connect( that, SIGNAL( PlayerStatusChange(pair<string,fantasybit::PlayerStatus>) ),
+            this, SLOT(PlayerStatusChange(pair<string,fantasybit::PlayerStatus> )));
 
 
-void Mediator::handleError(const QString err) {
-    if ( m_errorString == err)
-        return;
-    m_errorString = err;
-    emit errorStringChanged();
+    connect( that, SIGNAL(  GlobalStateChange(fantasybit::GlobalState)  ),
+            this,      SLOT(    GlobalStateChange(fantasybit::GlobalState)        ));
 
+
+    connect( that, SIGNAL   (  NewWeek(int)    ),
+            this,      SLOT     (  NewWeek(int)     ));
+    connect( that, SIGNAL   (  GameStart(string)    ),
+            this,      SLOT     (  GameStart(string)     ));
+    connect( that, SIGNAL   (  GameOver(string)    ),
+            this,      SLOT     (  GameOver(string)     ));
+    connect( that, SIGNAL   (  onControlMessage(QString)    ),
+            this,      SLOT     (  onControlMessage(QString)     ));
+
+    QObject::connect(this,SIGNAL(OnClaimName(QString)),that,SLOT(OnClaimName(QString)));
+
+    connect( this, SIGNAL(OnUseName(QString)),
+             that, SLOT(UseName(QString)));
+
+    connect( this, SIGNAL(doNameCheck(QString)),
+             that, SLOT(nameCheck(QString)));
+
+    connect( that, SIGNAL(nameAvail(QString &,bool)),
+             this, SLOT(nameAvail(QString &,bool)));
+
+    connect( that, SIGNAL(NewFantasyName(fantasybit::FantasyNameBal)),
+             this, SLOT(NewFantasyName(fantasybit::FantasyNameBal)));
+
+    connect( that, SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)),
+             this, SLOT(AnyFantasyNameBalance(fantasybit::FantasyNameBal)));
+
+    connect( that, SIGNAL(Height(int)),
+             this, SLOT(Height(int)));
+
+    connect( that, SIGNAL(BlockNum(int)),
+             this, SLOT(BlockNum(int)));
+
+
+    connect( that, SIGNAL(FinishedResults()),
+             this, SLOT(OnFinishedResults()));
+//    return that;
 }
 
 Mediator *Mediator::instance() {
@@ -121,396 +344,117 @@ Mediator *Mediator::instance() {
     return myInstance;
 }
 
-///*!
-// * \brief Mediator::playersStatus
-// * \return
-//    returns the current fantasy players status that is in focus
-//*/
-//QString Mediator::playersStatus() const
-//{
-//    return m_playersStatus;
-//}
-
-///*!
-// * \brief Mediator::setPlayersStatus
-// * \param playersStatus
-//    set the curreent fantasy players status
-//*/
-//void Mediator::setPlayersStatus(const QString &playersStatus)
-//{
-//    if(m_playersStatus == playersStatus)
-//        return;
-//    m_playersStatus = playersStatus;
-//    emit playersStatusChanged();
-//}
-
-///*!
-// * \brief Mediator::playersName
-// * \return
-//    return the current fantasys players name that is in focus
-//*/
-//QString Mediator::playersName()
-//{
-//    return m_fantasy_agent.currentClient().data();
-//}
-
-///*!
-// * \brief Mediator::setPlayersName
-// * \param playersName
-//    Set the Current players name that is in focus
-//*/
-//void Mediator::setPlayersName(const QString &playersName)
-//{
-//    if( m_playersName == playersName)
-//        return;
-//    m_playersName = playersName;
-//    emit playersNameChanged();
-//}
-
-//Mediator::MyNameStatus Mediator::myNameStatus() const
-//{
-//    return m_myNameStatus;
-//}
-
-//FIXME when the status of a current name is changed update this
-//void Mediator::setMyNameStatus(const Mediator::MyNameStatus &myNameStatus)
-//{
-//    if (m_myNameStatus == myNameStatus){
-//        return;
-//    }else {
-//        switch (myNameStatus) {
-//        case None :
-//            m_myNameStatus = None;
-//            break;
-//        case NotAvil:
-//            m_myNameStatus = NotAvil;
-//            break;
-//        case Requested:
-//            m_myNameStatus = Requested;
-//            break;
-//        case TransactionSent:
-//            m_myNameStatus = TransactionSent;
-//            break;
-//        case Confirmed:
-//            m_myNameStatus = Confirmed;
-//            break;
-//        }
-//        emit myNameStatusChanged();
-//    }
-//}
-
-qint64 Mediator::sendBinaryMessage(const QByteArray &data) {
-    return m_webSocket.sendBinaryMessage(data);
-}
-
-qint64 Mediator::sendBinaryMessage(const GOOGLE_NAMESPACE::protobuf::Message &data) {
-    auto txstr = data.SerializeAsString();
-
-    QByteArray qb(txstr.data(),(size_t)txstr.size());
-
-    return sendBinaryMessage(qb);
-}
-
-
-void Mediator::handleClosed() {
-    qDebug() << "Close Reason " << m_webSocket.closeReason ();
-    return;
-}
-
-void Mediator::onConnected() {
-    QHostAddress hInfo = m_webSocket.peerAddress ();
-    qDebug() << "connected to " <<  hInfo.toString () << " on Port " << m_webSocket.peerPort ();
-    connect(&m_webSocket, SIGNAL(binaryMessageReceived(QByteArray)),
-            this, SLOT ( onBinaryMessageRecived(QByteArray) ));
-
-//    WsReq reqstat;
-//    reqstat.set_ctype(GETSTATUS);
-//    auto mynamepk = m_fantasy_agent.getMyNames();
-//    for ( auto &np : mynamepk) {
-//        NameStatusReq nsq;
-//        nsq.set_name(np.first);
-//        nsq.set_pk(np.second);
-//        reqstat.MutableExtension(NameStatusReq::req)->CopyFrom(nsq);
-//        sendBinaryMessage(reqstat);
-//    }
-
-    std::string sent = "";
-    if ( m_fantasy_agent.HaveClient() ) {
-        sent = m_fantasy_agent.pubKeyStr();
-        if ( m_myPubkeyFname[sent] == "" ) {
-            doPk2fname(sent);
-        }
-    }
-    for ( auto &np : m_myPubkeyFname) {
-        if ( np.first == sent )
-            continue;
-
-        if ( np.second != "")
-            continue;
-
-        doPk2fname(np.first);
-    }
-
-    allNamesGet();
-}
-
-void Mediator::handleAboutToClose()
-{
-    // Read the error forr the connection and then //
-    // start timmer to reconnect to server//
-}
-
-
-void Mediator::onTextMessageReceived(QString message) {
-        qDebug() << "Message received:" << message;
-}
-
-
-void Mediator::onBinaryMessageRecived(const QByteArray &message) {
-    fantasybit::WSReply rep;
-    rep.ParseFromString(message.toStdString());
-
-    if ( rep.ctype() != GETALLNAMES)
-    qDebug() << "Mediator::onBinaryMessageRecived " << rep.DebugString().data();
-    else
-        qDebug() << "Mediator::onBinaryMessageRecived GETALLNAMES";
-
-    switch ( rep.ctype()) {
-        case PK2FNAME:
-        {
-            const Pk2FnameRep &pk2 = rep.GetExtension(Pk2FnameRep::rep);
-            auto name= pk2.fname();
-            if ( name == "" ) {
-                if ( pk2.req().pk() == lastPk2name) {
-                    error(QString("import failed. please input valid secret"));
-                    qDebug() << "Mediator::onBinaryMessageRecived import failed. please input valid secret";
-                    QString err = "import failed. no name for: ";
-                    err.append(lastPk2name.data());
-                    emit importSuccess(err,false);
-                    lastPk2name = "";
-                }
-                return;
-            }
-
-
-            bool was_pending = m_fantasy_agent.finishImportMnemonic(pk2.req().pk(), name);
-
-            //FIXME lets make this as a real map to pass to a string
-//            m_nameStatuses[name.data()] = QString("confirmed");
-            std::string currname = m_myPubkeyFname[pk2.req().pk()] ;
-            if ( currname == "") {
-                if ( m_lastSignedplayer == pk2.req().pk()) {
-                    signPlayerStatus.stop();
-                    m_lastSignedplayer = "";
-                    allNamesGet();
-                }
-
-                m_myPubkeyFname[pk2.req().pk()] = name;
-                QString goodname = name.data();
-//                m_goodFnames.append(&goodname);
-                m_goodList.append(goodname);
-                qDebug() << " new good name! " << goodname;
-            }
-                //            nameStatusChanged( name.data() , "confirmed" );
-
-            if ( !m_fantasy_agent.HaveClient() ||
-                 lastPk2name == pk2.req().pk()) {
-                if ( !m_fantasy_agent.UseName(name) )
-                    qDebug() << "error using name " << name.data () ;
-//                    error(QString("error using name").append(name.data()));
-                usingFantasyName(m_fantasy_agent.currentClient().data());
-            }
-
-            if ( was_pending ) {
-                importSuccess(m_fantasy_agent.currentClient().data(), true);
-                usingFantasyName(m_fantasy_agent.currentClient().data());
-            }
-
-            break;
-        }
-        case CHECKNAME: {
-            const CheckNameRep &cn = rep.GetExtension(CheckNameRep::rep);
-            qDebug() << " emit " << cn.req().fantasy_name().data() << cn.isavail();
-            nameCheckGet(cn.req().fantasy_name().data(),cn.isavail().data());
-//            update_checkname(rep.data().data());
-            break;
-        }
-        case GETSTATUS:
-        {
-//            const NameStatusRep &np = rep.GetExtension(NameStatusRep::rep);
-//            QString statusstr = fantasybit::MyNameStatus_Name(np.status()).data();
-//            auto name = np.req().name();
-//            m_nameStatuses[name.data()] = statusstr;
-//            qDebug() << " emit " << name.data() << statusstr;
-//            nameStatusChanged( name.data() , statusstr );
-            break;
-        }
-        case GETALLNAMES: {
-            m_allNamesList.clear();
-//            m_allNames2.clear();
-            const GetAllNamesRep &np = rep.GetExtension(GetAllNamesRep::rep);
-            for (int i = np.names_size()-1; i >= 0; i--) {
-               m_allNamesList.append(np.names(i).data());
-//               m_allNames2.append(np.names(i).data());
-            }
-            leaderBoardchanged();
-#ifdef TRACE
-            //qDebug() << "GETALLNAMES" <<  np.DebugString().data();
-#endif
-
-//            setallNames2(m_allNamesList)
-            break;
-        }
-        default:
-            break;
-    }
-    //    emit gotPk2fname(name);
-}
-
-
-/*!
- * \brief Mediator::handleEngineUpdate
-    THIS SLOT IS QML ONLY !
-    This means that somewhere in this code someone has updateed the engine status
-    engineUpdate(bool )  fires this slot.
-    This slot is used to set A QML property (read only)
-    the QML property is called engineStatus
-    It returns a bool that means the engine is in good shape.
-*/
-void Mediator::handleEngineUpdate(const bool &sta)
-{
-    setengineStatus (sta);
-}
-
-
-
-/*!
- * \brief GetUserInfo::importMnemonic
- * \param importStr
- * \return
- * This will return the mn for import
- */
-// FIXME error checking
 QString Mediator::importMnemonic(const QString &importStr) {
-    auto pk = m_fantasy_agent.startImportMnemonic(importStr.toStdString());
-    if ( pk == "" )
-        return "";
+    qDebug() << " try import";
+    auto ret = mGateway->dataService->importMnemonic(importStr.toStdString());
 
-    auto iter = m_myPubkeyFname.find(pk);
-    if ( iter != end(m_myPubkeyFname)) {
-        if ( iter->second == "" )
-            pk2fname(pk.data());
-        else
-            usingFantasyName(iter->second.data());
-
-        return pk.data();
+    qDebug() << " try import";
+    if ( ret.status() == MyNameStatus::confirmed) {
+        emit importSuccess(ret.name().data(),true);
+//        useName(ret.name().data());
+        useName(ret.name().data());
+        return ret.name().data();
     }
+    else {
+        emit importSuccess(ret.name().data(),false);
+        return "";
+    }
+//    auto pk = m_fantasy_agent.startImportMnemonic(importStr.toStdString());
+//    if ( pk == "" )
+//        return "";
 
-    m_myPubkeyFname[pk] = "";
-    pk2fname(pk.data());
-    return pk.data();
+//    auto iter = m_myPubkeyFname.find(pk);
+//    if ( iter != end(m_myPubkeyFname)) {
+//        if ( iter->second == "" )
+//            pk2fname(pk.data());
+//        else
+//            usingFantasyName(iter->second.data());
+
+//        return pk.data();
+//    }
+
+//    m_myPubkeyFname[pk] = "";
+//    pk2fname(pk.data());
+//    return pk.data();
+    return ret.name().data();
 }
 
-// FIXME ? set this to be a bool and not a void so that
-// we know if it was good or not ?
 void Mediator::signPlayer(const QString &name)  {
-    m_fantasy_agent.signPlayer(name.toStdString());
-    NameTrans nt{};
-    nt.set_public_key(m_fantasy_agent.pubKeyStr());
-    nt.set_fantasy_name(name.toStdString());
+    qDebug() << " emit claim name " << name;
+    emit OnClaimName(name);
+//    emit OnClaimName(name);
+
+//    m_fantasy_agent.signPlayer(name.toStdString());
+//    NameTrans nt{};
+//    nt.set_public_key(m_fantasy_agent.pubKeyStr());
+//    nt.set_fantasy_name(name.toStdString());
 
 
-    Transaction trans{};
-    trans.set_version(Commissioner::TRANS_VERSION);
-    trans.set_type(TransType::NAME);
-    trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nt);
-    SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
-    auto txstr = sn.SerializeAsString();
+//    Transaction trans{};
+//    trans.set_version(Commissioner::TRANS_VERSION);
+//    trans.set_type(TransType::NAME);
+//    trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nt);
+//    SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
+//    auto txstr = sn.SerializeAsString();
 
-    QByteArray qb(txstr.data(),(size_t)txstr.size());
+//    auto pk = Commissioner::str2pk(nt.public_key());
+//    pb::sha256 digest(sn.id());
+//    if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
+//        qDebug() << " bad signature ";
+//    else
+//        qDebug() << " good signature ";
 
-    m_txsocket.sendBinaryMessage(qb);
+//    QByteArray qb(txstr.data(),(size_t)txstr.size());
 
-//    m_nameStatuses[name] = QString("requested");
-//    nameStatusChanged(name,"requested");
-    usingFantasyName(m_fantasy_agent.currentClient().data());
-    m_myPubkeyFname[m_fantasy_agent.pubKeyStr()] = "";
-    m_lastSignedplayer = m_fantasy_agent.pubKeyStr();
-    signPlayerStatus.start();
+//    qDebug() << " mediator signPlayer" << name << sn.DebugString().data();
+//    m_txsocket.sendBinaryMessage(qb);
+
+//    usingFantasyName(m_fantasy_agent.currentClient().data());
+//    m_myPubkeyFname[m_fantasy_agent.pubKeyStr()] = "";
+//    m_lastSignedplayer = m_fantasy_agent.pubKeyStr();
+//    signPlayerStatus.start();
 }
-
 
 void Mediator::getSignedPlayerStatus() {
-    doPk2fname(m_lastSignedplayer);
+    //doPk2fname(m_lastSignedplayer);
 }
-
 
 void Mediator::useName(const QString &name) {
     qDebug() << " Mediator::useName " << name;
-    if ( m_fantasy_agent.UseName(name.toStdString()) ) {
-//        qDebug() << " Mediator::useName  usingFantasyName" << name;
-        usingFantasyName(name);
-    }
 
+    emit OnUseName(name);
 }
 
-/*!
- * \brief Mediator::init
-    Try to find the best fantasy name that there is to use
-    ? There might be a reace on on this ?
- */
-QString Mediator::init() {
-    engineUpdate(true);
+QString Mediator::init() {  
+    connect( mOGateway, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
+            this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
 
-    std::string dname = m_fantasy_agent.defaultName();
-    if ( dname == "") {
-        return "";
-        // FIXME this should be a error signal
-        // Also we should update the engine status to false
-        // as we could not mke it the end of fantasyadgent ?
-    }
+    ready();
 
-//    qDebug() << " Mediator::init() " << dname.data();
-    QString defaultName = QString::fromStdString (m_fantasy_agent.currentClient().data());
-    usingFantasyName( defaultName, true ) ;
+    connect(&myGamesSelectionModel,SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+            this,SLOT(selectionChanged(QItemSelection, QItemSelection)));
 
+    connect(&myPrevGamesSelectionModel,SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+            this,SLOT(selectionPrevChanged(QItemSelection, QItemSelection)));
 
-    return defaultName;
-//    m_nameStatuses[defaultName] = QString("requested");
-//    nameStatusChanged( defaultName , "requested" );
-
-//    // HERE I am setting the engine as true because it is up and we made ith through all the stuff that was needed
-//    engineUpdate(true);
-//    usingFantasyName( defaultName, true ) ;
-//    return defaultName;
+    return myFantasyName.data(); //todo check if missed live event
 }
 
-//void Mediator::handdleUsingName(const QString &name)
-//{
-//#ifdef TRACE
-//    qDebug() << " handdleUsingName " << name;
-//#endif
-//    setPlayersName (name);
-//}
+QString Mediator::getSecret() {
+    auto sec = mGateway->dataService->exportMnemonic(myFantasyName);
+    qDebug() << " returned secert" << sec.data();
+    return sec.data();
+}
 
-//void Mediator::handdleNameStatus(const QString &name, const QString &status)
-//{
-//    setPlayersName (name);
-//    setPlayersStatus (status);
-//}
+Mediator *Mediator::myInstance;
 
-
-// THIS SHOULD be a error signal that alerts others that something is going on.
-void Mediator::handleSocketError(QAbstractSocket::SocketError error)
-{
-    qDebug() << error;
 }
 
 //#include <QStandardPaths>
 //std::string Mediator::lastYearPath() {
 //    std::string ret = "";
 //#ifdef Q_OS_WIN32
-////    QSettings settings(QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1"), QSettings::NativeFormat);
+//   QSettings settings(QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1"), QSettings::NativeFormat);
 //    QSettings settings(QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"), QSettings::NativeFormat);
 
 //    qDebug() << "settings " << settings.status();
@@ -524,22 +468,9 @@ void Mediator::handleSocketError(QAbstractSocket::SocketError error)
 //    ret = path.toStdString();
 //#endif
 
-////    "HKCU\\SOFTWARE\\Classes\\VirtualStore\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1"
+//    "HKCU\\SOFTWARE\\Classes\\VirtualStore\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{79913283-A35B-4274-927C-1B52D286D939}_is1"
 
 //    return ret;
 //}
 
-////HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{79913283-A35B-4274-927C-1B52D286D939}_is1
-
-
-void Mediator::allNamesGet() {
-    WsReq req;
-    req.set_ctype(GETALLNAMES);
-    auto txstr = req.SerializeAsString();
-    QByteArray qb(txstr.data(),(size_t)txstr.size());
-    qDebug() << " allNamesGet sending " << req.DebugString().data();
-    m_webSocket.sendBinaryMessage(qb);
-}
-
-
-Mediator *Mediator::myInstance;
+//HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{79913283-A35B-4274-927C-1B52D286D939}_is1

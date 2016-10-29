@@ -12,6 +12,7 @@ import QtQuick 2.4
 import QtQuick.Controls.Styles 1.3
 import Material 1.0
 import ProRotoQml.Utils 1.0
+import ProRotoQml.Theme 1.0
 
 RadioButtonStyle {
     id: style
@@ -25,6 +26,7 @@ RadioButtonStyle {
             ? control.darkBackground : false
 
     label: Label {
+        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
         text: control.text
         style: "button"
         color: control.enabled ? style.darkBackground ? Theme.dark.textColor
@@ -38,16 +40,16 @@ RadioButtonStyle {
     }
 
     indicator: Rectangle {
-        implicitWidth: 48 * Units.dp
-        implicitHeight: 48 * Units.dp
+        implicitWidth: ProtoScreen.guToPx(4)
+        implicitHeight: ProtoScreen.guToPx(4)
         radius: implicitHeight / 2
         color: control.activeFocus ? Theme.alpha(control.color, 0.20) : "transparent"
 
         Rectangle {
             anchors.centerIn: parent
 
-            implicitWidth: 20 * Units.dp
-            implicitHeight: 20 * Units.dp
+            implicitWidth: ProtoScreen.guToPx(1.5)
+            implicitHeight: ProtoScreen.guToPx(1.5)
             radius: implicitHeight / 2
             color: "transparent"
 
@@ -58,7 +60,7 @@ RadioButtonStyle {
                 : style.darkBackground ? Theme.alpha("#fff", 0.30)
                                        : Theme.alpha("#000", 0.26)
 
-            border.width: 2 * Units.dp
+            border.width: ProtoScreen.guToPx(.25)
             antialiasing: true
 
             Behavior on border.color {
@@ -70,8 +72,8 @@ RadioButtonStyle {
                     centerIn: parent
                     alignWhenCentered: false
                 }
-                implicitWidth: control.checked ? 10 * Units.dp : 0
-                implicitHeight: control.checked ? 10 * Units.dp : 0
+                implicitWidth: control.checked ? ProtoScreen.guToPx(1.25) : 0
+                implicitHeight: control.checked ? ProtoScreen.guToPx(1.25) : 0
                 color: control.enabled ? style.color
                                        : style.darkBackground ? Theme.alpha("#fff", 0.30)
                                                               : Theme.alpha("#000", 0.26)

@@ -53,7 +53,7 @@ FlipBar {
         width: parent.width
         TextField{
             id: lineInput
-            placeholderText:  flipBar.placeHolder
+            helperText:   flipBar.placeHolder
             focus: flipBar.opened
             anchors { fill: parent; margins: ProtoScreen.guToPx(.75) }
             onAccepted: {

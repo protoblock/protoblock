@@ -1,29 +1,65 @@
 ##############
+## Globals
+##############
+#DEFINES += DATAAGENTWRITENAMES
+#DEFINES += DATAAGENTWRITENAMES_FORCE
+#DEFINES += DATAAGENTWRITENAMES_FORCE_NONAMES
+#DEFINES += DATAAGENTWRITENAMES_SPECIAL
+DEFINES += NOTHING
+#DEFINES += NOCHECK_LOCAL_BOOTSTRAP_MINUS1
+#DEFINES += NOCHECK_LOCAL_BOOTSTRAP
+
+DEFINES += PRODFOOTBALL
+#DEFINES += LIGHT_CLIENT_ONLY
+#DEFINES += USE_LOCALHOST_SERVER
+DEFINES += USE_LOCALNETWORKHOST_SERVER
+#DEFINES += STOP_HEIGHT_TEST
+#DEFINES += FULL_NODE_CLIENT
+#DEFINES += USE_PB_GATEWAYS
+#DEFINES += STOP_HEIGHT_TEST
+#DEFINES += USE_LOCAL_GENESIS
+DEFINES += BUILD_STABLE
+#DEFINES += NOCHECK_LOCAL_BOOTSTRAP
+DEFINES += USE_NUM_NONE
+DEFINES += USE_FIELD_10X26
+DEFINES += USE_FIELD_INV_BUILTIN
+DEFINES += USE_SCALAR_8X32
+DEFINES += USE_SCALAR_INV_BUILTIN
+
+contains (QMAKE_HOST.os, Darwin){
+    message("Host is OSX")
+    DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
+}else{
+    message("Host is Windows")
+    DIRPREFIX = D:\work\prebuiltLibs
+}
+
+
+##############
 ##  WINDOWS
 ##############
 
-DEFINES += PRODFOOTBALL
 win32 {
-    INCLUDEPATH +=   $$PWD/../3rdParty
-    INCLUDEPATH += $$PWD/../3rdParty/secp256k1
+    message(win32 Build)
+    INCLUDEPATH +=   $$DIRPREFIX/windows/3rdParty
+    INCLUDEPATH += $$DIRPREFIX/windows/3rdParty/secp256k1
 
    ## FIXME
-   LIBS+= -LD:\work\prebuiltLibs\windows\libwin64
-#LIBS+= -L$$PWD/../libwin64
+    LIBS+= -L$$DIRPREFIX/windows/libwin64
+    #LIBS+= -L$$PWD/../libwin64
     CONFIG(debug, debug|release) {
-#       LIBS += -L$$PWD/../ProRotoQml/jsonpb/debug/ -ljsonpb
        LIBS+= -llibprotobufd  \
               -lleveldbd \
               -llibeay32 \
-              -lssleay32 \
+              -lssleay32
+#              -lsecp256k1
     }
     CONFIG(release, debug|release) {
-#       LIBS += -L$$PWD/../ProRotoQml/jsonpb/release/ -ljsonpb
        LIBS+= -llibprotobuf \
               -lleveldb \
               -llibeay32 \
-              -lssleay32 \
-              -lsecp256k1
+              -lssleay32
+#              -lsecp256k1
     }
 
 #    BOOST_DIR = C:\local\boost_1_55_0
@@ -37,14 +73,10 @@ win32 {
 ##     OSX
 ##############
 
-osx{
-message(OSX BUILD)
+macx{
+    message(OSX BUILD)
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
-
-    ##FIXME compile levelDB
-#    INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-#    DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
 
     LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
@@ -58,17 +90,14 @@ message(OSX BUILD)
     LIBS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
     PRE_TARGETDEPS+=/Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libcrypto.a
 
-    ##FIXME compile levelDB
-#    LIBS += -L/usr/local/lib  -lleveldb
-
-
-
 }
 
-
+##############
+##     IOS
+##############
 
 ios {
-message (IOS BUILD)
+    message (IOS BUILD)
     ##PATHS
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/ios/extrenal/include
@@ -87,46 +116,48 @@ message (IOS BUILD)
     LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
     PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libprotobuf.a
 
-    ## BOTAN
-    LIBS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
-    PRE_TARGETDEPS +=/Users/$$(USER)/Desktop/fc/ios/extrenal/lib/libbotan.a
 }
 
 
 
-
-
-
+##############
+##  ANDROID
+##############
 android {
-        message("deps !x86 build")
-    ​
-        DIRPREFIX = D:\work\prebuiltLibs
+        message(Android Build)
         ##PATHS
-#        INCLUDEPATH += $$DIRPREFIX/android/extrenal-android-2.5.0/include
         INCLUDEPATH += $$DIRPREFIX/android/extrenal-android/include
         DEPENDPATH += $$DIRPREFIX/android/extrenal-android/include
 
         ##OPENSSL
-        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
-        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
-        LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libssl.a
-        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libssl.a
+        LIBS += $$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
+        PRE_TARGETDEPS += $$DIRPREFIX/android/extrenal-android/lib/libcrypto.a
+        LIBS += $$DIRPREFIX/android/extrenal-android/lib/libssl.a
+        PRE_TARGETDEPS += $$DIRPREFIX/android/extrenal-android/lib/libssl.a
 
         ##  SECP251K1
         LIBS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
-        PRE_TARGETDEPS +=$$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
+        PRE_TARGETDEPS += $$DIRPREFIX/android/extrenal-android/lib/libsecp256k1.a
 
         # PROTOBUFF
         LIBS += $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so
-
         ## BOTAN
 #          LIBS += -$$DIRPREFIX/android/extrenal-android/lib -lBotan
 }
 
-#LATERFOOL
-#unix:!macx:{
-#     Debian UbuntuMint ect
-#    LIBS += /usr/lib/x86_64-linux-gnu/libmysqlclient_r.so
-#    INCLUDEPATH += /usr/include
-#}
+
+
+##############
+##   LINUX
+##############
+linux!android{
+        message(Linux Build)
+        CONFIG += link_pkgconfig
+        PKGCONFIG += openssl \
+                                     protobuf \
+
+        ##  SECP251K1
+        LIBS +=$$DIRPREFIX/linux/lib/libsecp256k1.a
+        PRE_TARGETDEPS += $$DIRPREFIX/linux/lib/libsecp256k1.a
+}
 

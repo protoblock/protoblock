@@ -12,6 +12,8 @@ import QtQuick 2.4
 import ProRotoQml.Utils 1.0
 import Material 1.0
 import "ListItems" as ListItem
+import ProRotoQml.Theme 1.0
+
 
 /*!
    \qmltype Sidebar
@@ -41,7 +43,7 @@ import "ListItems" as ListItem
    \endqml
  */
 View {
-    id: root
+    id: rootsidebar
 
     backgroundColor: style === "default" ? "white" : "#333"
 
@@ -54,7 +56,8 @@ View {
         rightMargin: expanded ? 0 : -width
     }
 
-    width: 250 * Units.dp
+//    width: 250 * Units.dp
+    width: ProtoScreen.guToPx(31.25)
 
     property bool expanded: true
 
@@ -101,7 +104,7 @@ View {
             id: headerItem
 
             visible: text !== ""
-            backgroundColor: root.backgroundColor
+            backgroundColor: rootsidebar.backgroundColor
             elevation: flickable.atYBeginning ? 0 : 1
             fullWidth: true
             z: 2

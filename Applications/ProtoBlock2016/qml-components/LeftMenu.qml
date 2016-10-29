@@ -6,7 +6,8 @@ Item {
     property string strCheck: section[0]
     Sidebar {
         id: sidebar
-        expanded: !navDrawer.enabled
+//        width: ProtoScreen.guToPx(31.25)
+        expanded: !navDrawer.enabled && pageHelper.expanded
         Column {
             width: parent.width
             Repeater {

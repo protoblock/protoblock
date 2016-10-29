@@ -84,7 +84,7 @@ Item {
                 height: pageHelper.object.height / 8
                 elevation: 5
                 opacity: settingsMenu.opacity
-                text: name === "Home" ? newRoot.uname : name
+                text: name === "Home" ? themeroot.uname : name
                 // FIXME set this as a platform.os android
                 itemLabel.font.pixelSize: 48
                 action: Image {
@@ -114,7 +114,7 @@ Item {
     }
     Rectangle{
         id: pageHeader
-        height: root.height / 10
+        height: themeroot.height / 10
         width: parent.width
         color:   "#2196f3"
         Image {
@@ -149,33 +149,33 @@ Item {
                 leftMargin: 15
             }
         }
-        Image {
-            id: cog
-            source: "qrc:/icons/action_settings.png"
-            anchors.right: parent.right
-            anchors.rightMargin: 15
-            anchors.verticalCenter: parent.verticalCenter
-            width: height
-            height: parent.height / 2
-            rotation: 0
-            Behavior on rotation{RotationAnimation{duration: 600; from : 0 ; to : 360 ; }}
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    if(buttonsEnabled === true){
-                        cog.rotation = 1
-                        settingsMenu.shown ?  settingsMenu.shown = false : settingsMenu.shown = true
-                    }
-                }
-            }
-        }
+//        Image {
+//            id: cog
+//            source: "qrc:/icons/action_settings.png"
+//            anchors.right: parent.right
+//            anchors.rightMargin: 15
+//            anchors.verticalCenter: parent.verticalCenter
+//            width: height
+//            height: parent.height / 2
+//            rotation: 0
+//            Behavior on rotation{RotationAnimation{duration: 600; from : 0 ; to : 360 ; }}
+//            MouseArea{
+//                anchors.fill: parent
+//                onClicked: {
+//                    if(buttonsEnabled === true){
+//                        cog.rotation = 1
+//                        settingsMenu.shown ?  settingsMenu.shown = false : settingsMenu.shown = true
+//                    }
+//                }
+//            }
+//        }
     }
 
     ListModel{
         id: settingsModel
         ListElement{
             name: "Home"
-            path: "UserSettings"
+            path: "Settings"
             image: "qrc:/logoOnly.png"
         }
         ListElement{

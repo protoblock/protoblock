@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import Material 1.0
 
-import ProRotoQml.Theme 1.0
 Item {
     width: systemSettingsButton.width  * 2.2 + (name.paintedWidth + (mainROw.spacing *2 ))
     height: systemSettingsButton.height
@@ -17,21 +16,21 @@ Item {
             iconName: "qrc:/icons/action_settings.png"
             hoverAnimation: true
             onClicked: {
-                rootLoader.source  = "qrc:/UserSettings.qml"
+                rootLoader.source  = "qrc:/Settings.qml"
+                pageHelper.selectedTabIndex = 3
                 pageHelper.title = "System Settings"
             }
         }
             Label{
             id: name
             text: realRoot.uname
-//            text: ProtoScreen.formFactor !== "desktop" ? realRoot.uname : ""
 
             }
         IconButton {
             iconName: "qrc:/icons/action_account_circle.png"
             onClicked: {
                 rootLoader.source = "qrc:/Account.qml"
-                pageHelper.selectedTabIndex = 5
+                pageHelper.selectedTabIndex = 3
                 pageHelper.title = "Account Settings"
             }
         }

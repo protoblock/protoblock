@@ -28,7 +28,9 @@ BaseListItem {
     property alias text: label.text
     property alias subText: subLabel.text
     property alias valueText: valueLabel.text
-
+    property alias textColor: label.color
+    property alias subColor: subLabel.color
+    property alias valueColor: valueLabel.color
     property alias iconName: icon.name
     property alias iconSource: icon.source
 
@@ -52,7 +54,7 @@ BaseListItem {
         anchors.leftMargin: listItem.margins
         anchors.rightMargin: listItem.margins
 
-        columns: 4
+        columns: 3
         rows: 1
         columnSpacing: ProtoScreen.guToPx(2)
 
@@ -146,7 +148,7 @@ BaseListItem {
             Layout.alignment: Qt.AlignCenter
             Layout.preferredWidth: childrenRect.width
             Layout.preferredHeight: parent.height
-            Layout.column: 4
+            Layout.column: 3
 
             visible: children.length > 0
         }
