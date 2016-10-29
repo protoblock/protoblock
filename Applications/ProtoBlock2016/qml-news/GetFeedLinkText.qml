@@ -9,7 +9,6 @@ Item {
     signal updated()
     property bool running: false
     onSourceChanged: {
-        console.log("source")
         if (source  === "1" || source  === ""){
             running = false
         }

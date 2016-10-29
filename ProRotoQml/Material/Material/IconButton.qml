@@ -27,8 +27,6 @@ Item {
     property bool hoverAnimation: action ? action.hoverAnimation : false
     property alias color: icon.color
     property alias size: icon.size
-    property alias hasColor: icon.hasColor
-
 
     signal clicked
 

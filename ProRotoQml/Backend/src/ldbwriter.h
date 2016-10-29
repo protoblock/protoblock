@@ -5,7 +5,7 @@
 #include <QDebug>
 //#include "../utils/utils.h"
 #include <string>
-#include <StateData.pb.h>
+#include <generated/StateData.pb.h>
 
 namespace fantasybit {
 
@@ -17,7 +17,7 @@ public:
     void init();
     std::string write(const std::string &key, const std::string &val);
     std::string write(const std::string &val);
-    std::string write(const GOOGLE_NAMESPACE::protobuf::Message &msg);
+    std::string write(const google::protobuf::Message &msg);
     std::string read(const std::string &id) ;
     //std::string read( const  QString &qid) ;
 
@@ -28,7 +28,7 @@ public:
      * @return
      */
     std::string read(const std::string &id,
-                     GOOGLE_NAMESPACE::protobuf::Message &msg);
+                     google::protobuf::Message &msg);
 
     ~LdbWriter();
 };

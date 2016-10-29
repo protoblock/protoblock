@@ -1,10 +1,9 @@
 import QtQuick 2.4
-import QtQuick.Controls.Styles 1.3 as CStyles
+import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 import Material 1.0
-import ProRotoQml.Theme 1.0 as ProtoTheme
-
-CStyles.TextFieldStyle {
+import ProRotoQml.Theme 1.0
+TextFieldStyle {
     id: style
 
     padding {
@@ -16,7 +15,7 @@ CStyles.TextFieldStyle {
 
     font {
         family: echoMode == TextInput.Password ? "Default" : "Roboto"
-        pixelSize: ProtoTheme.ProtoScreen.guToPx(2)
+        pixelSize: ProtoScreen.guToPx(2)
     }
 
     renderType: Text.QtRendering
@@ -37,13 +36,13 @@ CStyles.TextFieldStyle {
                 ? control.hasError : characterLimit && control.length > characterLimit
         property int characterLimit: control.hasOwnProperty("characterLimit") ? control.characterLimit : 0
         property bool showBorder: control.hasOwnProperty("showBorder") ? control.showBorder : true
-        property color bcolor: control.hasOwnProperty("bcolor") ? control.bcolor : Theme.light.hintColor
 
         Rectangle {
             id: underline
             color: background.hasError ? background.errorColor
                                     : control.activeFocus ? background.color
-                                                          : background.bcolor
+                                                          : Theme.light.hintColor
+
             height: control.activeFocus ? 2  : 1
             visible: background.showBorder
 
@@ -65,7 +64,7 @@ CStyles.TextFieldStyle {
             id: fieldplaceholder
             anchors.verticalCenter: parent.verticalCenter
             text: control.placeholderText
-            font.pixelSize: ProtoTheme.ProtoScreen.guToPx(2)
+            font.pixelSize: ProtoScreen.guToPx(2)
             anchors.margins: -12
             color: background.hasError ? background.errorColor
                                   : control.activeFocus && control.text !== ""
@@ -82,7 +81,7 @@ CStyles.TextFieldStyle {
                     }
                     PropertyChanges {
                         target: fieldplaceholder
-                        font.pixelSize: ProtoTheme.ProtoScreen.guToPx(1.5)
+                        font.pixelSize: ProtoScreen.guToPx(1.5)
                     }
                 },
                 State {
@@ -110,14 +109,14 @@ CStyles.TextFieldStyle {
                 left: parent.left
                 right: parent.right
                 top: underline.top
-                topMargin: ProtoTheme.ProtoScreen.guToPx(.5)
+                topMargin: ProtoScreen.guToPx(.5)
             }
 
             Label {
                 id: helperTextLabel
                 visible: background.helperText && background.showBorder
                 text: background.helperText
-                font.pixelSize: ProtoTheme.ProtoScreen.font(ProtoTheme.ProtoScreen.SMALL)
+                font.pixelSize: ProtoScreen.guToPx(1.5)
                 color: background.hasError ? background.errorColor
                                            : Qt.darker(Theme.light.hintColor)
                 Behavior on color { ColorAnimation { duration: 200 } }
@@ -131,7 +130,7 @@ CStyles.TextFieldStyle {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                 visible: background.characterLimit && background.showBorder
                 text: control.length + " / " + background.characterLimit
-                font.pixelSize: ProtoTheme.ProtoScreen.guToPx(1.5)
+                font.pixelSize: ProtoScreen.guToPx(1.5)
                 color: background.hasError ? background.errorColor : Theme.light.hintColor
                 horizontalAlignment: Text.AlignLeft
 

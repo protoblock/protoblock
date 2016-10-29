@@ -31,4 +31,18 @@ Object {
             platformExtensions.window = window
         }
     }
+
+//    Component.onCompleted: {
+//        try {
+//            var code = 'import Material 1.0; PlatformExtensions {}'
+//            platformExtensions = Qt.createQmlObject(code, platform, "PapyrosExtensions");
+
+//            platformExtensions.window = window
+//            if (decorationColor != "#000000")
+//                platformExtensions.decorationColor = decorationColor
+//        } catch (error) {
+//            // Ignore the error; it only means that the Papyros
+//            // platform extensions are not available
+//        }
+//    }
 }

@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
-import ProRotoQml.Theme 1.0
+//import ProRotoQml.Models 1.0
 import Material 1.0
 import Material.ListItems 1.0  as ListItem
 
@@ -20,7 +20,7 @@ Item {
     property string currentFPlayer
 
     signal modelFull()
-    Component.onCompleted: pageHelper.title = "Leaderboard"
+    Component.onCompleted: pageHelper.title = "2015 Final Projections"
     onModelFull: {
 
         switch(currentLevel){
@@ -56,7 +56,7 @@ Item {
             Label{
                 id: mainTitle
                 font.family: "Roboto"
-                font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
+                font.pixelSize: Qt.platform.os === "android" ? 64 :  34
                 width: parent.width
                 wrapMode: Text.WordWrap
             }
@@ -64,7 +64,7 @@ Item {
                 id: mainSubText
                 font.family: "Roboto"
                 font.weight: Font.Light
-                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                font.pixelSize: Qt.platform.os === "android" ? 48 :24
                 width: parent.width
                 wrapMode: Text.WordWrap
             }

@@ -9,7 +9,7 @@ import ProRotoQml.Sql 1.0
 import Material 1.0 as Material
 
 Material.ApplicationWindow {
-    id: themeroot
+    id: root
     width: Screen.width
     height: Screen.height
     visible: true
@@ -73,9 +73,9 @@ Material.ApplicationWindow {
             else
             {
                 err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-                themeroot.loginCardScale = 0
+                root.loginCardScale = 0
                 loginErrorDialog.open()
-                themeroot.errorString =  err
+                root.errorString =  err
             }
         }
 
@@ -134,7 +134,7 @@ Material.ApplicationWindow {
             width: parent.width
             height: parent.height
             wrapMode: Text.WordWrap
-            text:  themeroot.errorString
+            text:  root.errorString
         }
     }
 
@@ -150,9 +150,9 @@ Material.ApplicationWindow {
         //            else
         //            {
         //                err = "This name is taken if you feel that you are this person. You can go back and claim you last years name.  Of if you need help feel free to send a email to support@protoblock.com"
-        //                themeroot.loginCardScale = 0
+        //                root.loginCardScale = 0
         //                loginErrorDialog.open()
-        //                themeroot.errorString =  err
+        //                root.errorString =  err
         //            }
         //        }
 
@@ -160,7 +160,7 @@ Material.ApplicationWindow {
         onNameCheckGet: {
             if(status === "true" ) {
                 MiddleMan.signPlayer(name)
-                themeroot.reloadhome = false
+                root.reloadhome = false
                 rootLoader.source = "qrc:/ProtoblockNews.qml"
                 pageHelper.selectedTabIndex = 0;
             }

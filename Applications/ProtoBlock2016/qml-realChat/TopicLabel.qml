@@ -3,9 +3,7 @@ import Communi 3.0
 import Material 1.0
 Card {
     id: background
-    elevation: 0
-    width: page.width - bufferListView.width  -  (usersList.width* 1.07)
-
+    elevation: 2
     property IrcChannel channel
     height: Math.max(20, label.implicitHeight + 4)
     IrcTextFormat {

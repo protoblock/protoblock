@@ -89,7 +89,7 @@ Item {
                 height: pageHelper.object.height / 8
                 elevation: 5
                 opacity: settingsMenu.opacity
-                text: name === "Trading" ? themeroot.uname : name
+                text: name === "Home" ? root.uname : name
                 // FIXME set this as a platform.os android
                 itemLabel.font.pixelSize: 48
                 action: Image {
@@ -125,9 +125,9 @@ Item {
     }
     Rectangle{
         id: pageHeader
-        height: themeroot.height / 10
+        height: root.height / 10
         width: parent.width
-//        color:   "#2196f3"
+        color:   "#2196f3"
         Image {
             id: logoOnly
             source: "qrc:/logoOnly.png"

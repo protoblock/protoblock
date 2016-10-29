@@ -11,7 +11,7 @@
 import QtQuick 2.4
 import QtGraphicalEffects 1.0
 import ProRotoQml.Utils 1.0
-import ProRotoQml.Theme 1.0
+
 /*!
    \qmltype View
    \inqmlmodule Material
@@ -21,8 +21,8 @@ import ProRotoQml.Theme 1.0
  */
 Item {
     id: item
-    width: ProtoScreen.guToPx(100/8)
-    height: ProtoScreen.guToPx(62/8)
+    width: 100
+    height: 62
 
     property int elevation: 0
     property real radius: 0
@@ -52,32 +52,32 @@ Item {
 
         {
             "opacity": 0.12,
-            "offset": ProtoScreen.guToPx(1.0/8.0),
-            "blur": ProtoScreen.guToPx(1.5/8.0)
+            "offset": 1 * Units.dp,
+            "blur": 1.5 * Units.dp
         },
 
         {
             "opacity": 0.16,
-            "offset": ProtoScreen.guToPx(3.0/8.0),
-            "blur": ProtoScreen.guToPx(3.0/8.0)
+            "offset": 3 * Units.dp,
+            "blur": 3 * Units.dp
         },
 
         {
             "opacity": 0.19,
-            "offset": ProtoScreen.guToPx(10.0/8.0),
-            "blur": ProtoScreen.guToPx(10.0/8.0)
+            "offset": 10 * Units.dp,
+            "blur": 10 * Units.dp
         },
 
         {
             "opacity": 0.25,
-            "offset": ProtoScreen.guToPx(14.0/8.0),
-            "blur": ProtoScreen.guToPx(14.0/8.0)
+            "offset": 14 * Units.dp,
+            "blur": 14 * Units.dp
         },
 
         {
             "opacity": 0.30,
-            "offset": ProtoScreen.guToPx(19.0/8.0),
-            "blur": ProtoScreen.guToPx(19.0/8.0)
+            "offset": 19 * Units.dp,
+            "blur": 19 * Units.dp
         }
     ]
 
@@ -90,32 +90,32 @@ Item {
 
         {
             "opacity": 0.24,
-            "offset": ProtoScreen.guToPx(1/8),
-            "blur": ProtoScreen.guToPx(1/8)
+            "offset": 1 * Units.dp,
+            "blur": 1 * Units.dp
         },
 
         {
             "opacity": 0.23,
-            "offset": ProtoScreen.guToPx(3/8),
-            "blur": ProtoScreen.guToPx(3/8)
+            "offset": 3 * Units.dp,
+            "blur": 3 * Units.dp
         },
 
         {
             "opacity": 0.23,
-            "offset": ProtoScreen.guToPx(6/8),
-            "blur": ProtoScreen.guToPx(3/8)
+            "offset": 6 * Units.dp,
+            "blur": 3 * Units.dp
         },
 
         {
             "opacity": 0.22,
-            "offset": ProtoScreen.guToPx(10/8),
-            "blur": ProtoScreen.guToPx(5/8)
+            "offset": 10 * Units.dp,
+            "blur": 5 * Units.dp
         },
 
         {
             "opacity": 0.22,
-            "offset": ProtoScreen.guToPx(15/8),
-            "blur": ProtoScreen.guToPx(6/8)
+            "offset": 15 * Units.dp,
+            "blur": 6 * Units.dp
         }
     ]
 
@@ -125,8 +125,8 @@ Item {
         property real verticalShadowOffset: elevationInfo.offset * Math.cos((2 * Math.PI) * (parent.rotation / 360.0))
 
         anchors.centerIn: parent
-        width: parent.width + (fullWidth ? ProtoScreen.guToPx(10/8) : 0)
-        height: parent.height + (fullHeight ? ProtoScreen.guToPx(20/8) : 0)
+        width: parent.width + (fullWidth ? 10 * Units.dp : 0)
+        height: parent.height + (fullHeight ? 20 * Units.dp : 0)
         anchors.horizontalCenterOffset: horizontalShadowOffset * (elevationInverted ? -1 : 1)
         anchors.verticalCenterOffset: verticalShadowOffset * (elevationInverted ? -1 : 1)
         glowRadius: elevationInfo.blur
@@ -143,8 +143,8 @@ Item {
         property real verticalShadowOffset: elevationInfo.offset * Math.cos((2 * Math.PI) * (parent.rotation / 360.0))
 
         anchors.centerIn: parent
-        width: parent.width + (fullWidth ? ProtoScreen.guToPx(10/8) : 0)
-        height: parent.height + (fullHeight ? ProtoScreen.guToPx(20/8) : 0)
+        width: parent.width + (fullWidth ? 10 * Units.dp : 0)
+        height: parent.height + (fullHeight ? 20 * Units.dp : 0)
         anchors.horizontalCenterOffset: horizontalShadowOffset * (elevationInverted ? -1 : 1)
         anchors.verticalCenterOffset: verticalShadowOffset * (elevationInverted ? -1 : 1)
         glowRadius: elevationInfo.blur

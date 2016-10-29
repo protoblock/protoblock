@@ -28,8 +28,8 @@ Item {
     ListModel{
         id: feedsModels
         ListElement{
-            name: "RotoWorld"
-            source: "RotoWorld"
+            name: "Twitter"
+            source : "Twitter"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{
@@ -42,17 +42,15 @@ Item {
             source: "ESPN"
             subT:  "All the latest news from rotoworld"
         }
-
+        ListElement{
+            name: "RotoWorld"
+            source: "RotoWorld"
+            subT:  "All the latest news from rotoworld"
+        }
         ListElement{
             name: "CBS Sports"
             source: "Feeds/CBS"
             subT:  "All the latest news from rotoworld"
         }
-        ListElement{
-            name: "Twitter"
-            source : "Twitter"
-            subT:  "All the latest news from rotoworld"
-        }
-
     }
 }

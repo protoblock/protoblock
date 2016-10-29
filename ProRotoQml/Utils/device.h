@@ -25,11 +25,15 @@
 class Device : public QObject {
     Q_OBJECT
 
+    Q_PROPERTY(FormFactor formFactor READ formFactor NOTIFY geometryChanged)
+    Q_PROPERTY(QString name READ name NOTIFY geometryChanged)
+    Q_PROPERTY(QString iconName READ iconName NOTIFY geometryChanged)
 
     Q_PROPERTY(bool isPortrait READ isPortrait NOTIFY geometryChanged)
     Q_PROPERTY(bool isMobile READ isMobile CONSTANT)
     Q_PROPERTY(bool hasTouchScreen READ hasTouchScreen CONSTANT)
     Q_PROPERTY(bool hoverEnabled READ hoverEnabled CONSTANT)
+    Q_PROPERTY(int gridUnit READ gridUnit NOTIFY geometryChanged)
 
 
     // Standered Paths
@@ -60,17 +64,30 @@ class Device : public QObject {
 //    QML_READONLY_CSTREF_PROPERTY ()
 
 public:
-
+    enum FormFactor {
+        Phone,
+        Phablet,
+        Tablet,
+        Computer,
+        TV,
+        Unknown
+    };
+    Q_ENUM(FormFactor)
 
     Device(QObject *parent = nullptr);
+
+
+    FormFactor formFactor() const;
+    QString name() const;
+    QString iconName() const;
 
     bool isPortrait() const;
     bool hasTouchScreen() const;
     bool isMobile() const;
     bool hoverEnabled() const;
+
+    int gridUnit() const;
     int dpMultiplier() const;
-
-
 
 signals:
     void geometryChanged();

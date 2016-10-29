@@ -108,12 +108,12 @@ enum TransType {
     PROJECTION = 1;
     RESULT = 2;
     DATA = 3;
-    PROJECTION_BLOCK = 4;
-    MASTER_NAME = 5;
-    TIME = 6;
-    STAMPED = 7;
-    EXCHANGE = 8;
-    EXCHANGE_BLOCK = 9;
+        PROJECTION_BLOCK = 4;
+        MASTER_NAME = 5;
+        TIME = 6;
+        STAMPED = 7;
+        EXCHANGE = 8;
+        EXCHANGE_BLOCK = 9;
 }
 
 message Transaction {

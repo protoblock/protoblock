@@ -45,10 +45,6 @@ Item {
                 fillMode: Image.PreserveAspectFit
             }
 
-//            onClicked: {
-//                Qt.openUrlExternally(model.text)
-//            }
-
 //            Image {
 //                id: avatar
 //                source: model.userImage

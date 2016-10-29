@@ -52,7 +52,7 @@ string LdbWriter::write(const string &val) {
 //    return ret;
 }
 
-string LdbWriter::write(const GOOGLE_NAMESPACE::protobuf::Message &msg) {
+string LdbWriter::write(const google::protobuf::Message &msg) {
     return write(msg.SerializeAsString());
 }
 
@@ -62,7 +62,7 @@ std::string LdbWriter::read(const std::string &id) {
     return value;
 }
 
-string LdbWriter::read(const string &id, GOOGLE_NAMESPACE::protobuf::Message &msg) {
+string LdbWriter::read(const string &id, google::protobuf::Message &msg) {
     auto str = read(id);
     msg.ParseFromString(str);
     return str;

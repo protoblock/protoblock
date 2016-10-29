@@ -19,6 +19,7 @@ Item {
     id: tabBar
 
     property bool centered: false
+
     property var tabs: []
     property int leftKeyline
 
@@ -47,17 +48,23 @@ Item {
     }
 
     property int tabPadding: isLargeDevice ? ProtoScreen.guToPx(3) : ProtoScreen.guToPx(1.5)
+
     property int tabMinWidth: isLargeDevice ? ProtoScreen.guToPx(20) : ProtoScreen.guToPx(9)
+
     property int selectedIndex: 0
+
     property bool darkBackground
+
     property color highlightColor: Theme.tabHighlightColor
     property color textColor: darkBackground ? Theme.dark.textColor : Theme.light.accentColor
+
     property bool isTabView: String(tabs).indexOf("TabView") != -1
+
     readonly property int tabCount: isTabView ? tabs.count : tabs.length
 
     visible: tabCount > 0
     implicitHeight: ProtoScreen.guToPx(6)
-//    anchors.bottom: parent.bottom
+
     onTabCountChanged: {
         selectedIndex = Math.min(selectedIndex, tabCount)
     }

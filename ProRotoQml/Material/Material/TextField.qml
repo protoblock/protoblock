@@ -30,8 +30,6 @@ Controls.TextField {
     property bool hasError: characterLimit && length > characterLimit
     property int characterLimit
     property bool showBorder: true
-    property color bcolor: Theme.light.hintColor
-
 
     style: MaterialStyle.TextFieldStyle {}
 }

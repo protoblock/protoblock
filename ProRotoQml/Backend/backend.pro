@@ -22,7 +22,7 @@ SOURCES += \
     ## Utils
     $$PWD/src/utils.cpp \
     $$PWD/src/tempapi.cpp \
-    $$PWD/src/ldbwriter.cpp \
+    #$$PWD/src/ldbwriter.cpp \
     $$PWD/src/ldbhashreadertool.cpp \
     $$PWD/src/blockmeta.cpp \
     $$PWD/src/models/playermodel.cpp \
@@ -45,7 +45,7 @@ HEADERS += \
     $$PWD/src/backend_plugin.h \
     $$PWD/src/utils.h \
     $$PWD/src/tempapi.h \
-    $$PWD/src/ldbwriter.h \
+    #$$PWD/src/ldbwriter.h \
     $$PWD/src/ldbhashreadertool.h \
     $$PWD/src/blockmeta.h \
     $$PWD/src/models/playermodel.h \
@@ -83,11 +83,4 @@ target.path = $$installPath
 
 INSTALLS += target qmldir
 
-macx {
-        ## FIXME compile levelDB
-        LIBS += -L/usr/local/lib  -lleveldb
 
-        ##FIXME compile levelDB
-        INCLUDEPATH += /usr/local/Cellar/leveldb/1.18/include
-        DEPENDPATH += /usr/local/Cellar/leveldb/1.18/include
-}

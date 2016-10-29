@@ -1,30 +1,10 @@
 include($$PWD/../../pri/protos.pri)
 include($$PWD/../../pri/deps.pri)
 include($$PWD/../../pri/macrosAndModels.pri)
-
-win32 {
-    include($$PWD/../../pri/core.pri)
-}
-
-android {
-    include($$PWD/../../pri/core.pri)
-}
-
 ios{
     CXX_MODULE=qml
     QMAKE_MOC_OPTIONS += -Muri=ProRotoQml.Protoblock
 }
-
-
-macx {
-    include($$PWD/../../pri/core.pri)
-
-//LIBS += -L$$OUT_PWD/../protoblock-core -lprotoblock-core
-}
-#INCLUDEPATH += $$PWD/../protoblock-core
-#DEPENDPATH += $$PWD/../protoblock-core
-#INCLUDEPATH += $$PWD/../protoblock-core/bitcoin-core-base58
-
 
 TEMPLATE = lib
 TARGETPATH=ProRotoQml/Protoblock
@@ -33,7 +13,7 @@ TARGET = ProRotoQml.Protoblock
 uri = ProRotoQml.Protoblock
 
 QT += qml quick network websockets core
-CONFIG += qt c++11 warn_off
+CONFIG += qt plugin c++11 warn_off
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = ProRotoQml.Protoblock
 
@@ -46,30 +26,46 @@ DEFINES += USE_SCALAR_INV_BUILTIN
 DEFINES += TRACE
 
 SOURCES += \
-#    $$PWD/getuserinfo.cpp \
+    $$PWD/utils/utils.cpp \
+    $$PWD/appsettings.cpp \
+    $$PWD/FantasyName.cpp \
+    $$PWD/FantasyAgent.cpp \
+    $$PWD/mnemonic.cpp \
+    $$PWD/Commissioner.cpp \
+    $$PWD/platform.cpp \
+    $$PWD/getuserinfo.cpp \
+    $$PWD/bitcoin-core-base58/base58.cpp \
+    $$PWD/city.cpp \
+    $$PWD/crc.cpp \
     $$PWD/plugin.cpp \
     $$PWD/socketclient.cpp \
-    $$PWD/mediator.cpp \
-    $$PWD/playerquoteslicemodel.cpp \
-    depthmarketmodel.cpp \
-    sortfilterproxymodel.cpp
+    mediator.cpp
+
 
 
 HEADERS += \
-#    $$PWD/getuserinfo.h \
+    $$PWD/FantasyAgent.h \
+    $$PWD/Commissioner.h \
+    $$PWD/getuserinfo.h \
+    $$PWD/appsettings.h \
+    $$PWD/DataPersist.h \
+    $$PWD/FantasyName.h \
+    $$PWD/fbutils.h \
+    $$PWD/genericsingleton.h \
+    $$PWD/globals.h \
+    $$PWD/mnemonic.h \
+    $$PWD/platform.h \
+    $$PWD/bitcoin-core-base58/allocators.h \
+    $$PWD/bitcoin-core-base58/base58.h \
+    $$PWD/bitcoin-core-base58/hash.h \
+    $$PWD/utils/utils.h \
+    $$PWD/city.hpp \
+    $$PWD/optional.hpp \
+    $$PWD/uint128.hpp \
+    $$PWD/utility.hpp \
     $$PWD/plugin.h \
     $$PWD/socketclient.h \
-    $$PWD/mediator.h \
-    playerquoteslicemodel.h \
-    depthmarketmodel.h \
-    fantasynamemodel.h \
-    openordersmodel.h \
-    weeklyschedulemodel.h \
-    playerprojmodel.h \
-    sortfilterproxymodel.h \
-    pbgateways.h
-
-
+    mediator.h
 
 DISTFILES = qmldir
 
@@ -88,31 +84,7 @@ qmldir.path = $$installPath
 target.path = $$installPath
 INSTALLS += target qmldir
 
-#QOIL = $$[QT_INSTALL_LIBS]
-#win32:{
-#message(forlder  $$QOIL protoblock-core)
-#    LIBS += -L$$[QT_INSTALL_LIBS]/ -lprotoblock-core
-#        LIBS += -L./../../protoblock-core/release \
-#              -lprotoblock-core
-#         INCLUDEPATH += ./../../protoblock-core
-#LIBS += -LD:\Qt\5.6\msvc2013_64\lib\protoblock-core.dll
-#}
-
-#INCLUDEPATH += $$PWD/bitcoin-core-base58
-
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../protoblock-core/debug/ -lprotoblock-core
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Extra Includes
+INCLUDEPATH += $$PWD/bitcoin-core-base58
+#                                  $$PWD/../../../PhoneApp/TradingFootball2015
 

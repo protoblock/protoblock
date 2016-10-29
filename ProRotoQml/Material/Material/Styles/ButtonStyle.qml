@@ -9,7 +9,7 @@
  */
 
 import QtQuick 2.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls.Styles 1.3
 import Material 1.0
 import ProRotoQml.Theme 1.0
 
@@ -37,7 +37,7 @@ ButtonStyle {
     background: View {
         id: background
 
-        height: ProtoScreen.guToPx(4)
+        implicitHeight: ProtoScreen.guToPx(4)
         radius: 2;
         backgroundColor: control.enabled || controlElevation === 0
                 ? controlBackground

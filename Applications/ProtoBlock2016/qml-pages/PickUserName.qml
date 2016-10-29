@@ -19,7 +19,7 @@ Item {
         height:  parent.height / 1.07
         anchors.centerIn: parent
         elevation: 5
-        scale:  themeroot.loginCardScale
+        scale:  root.loginCardScale
         opacity: scale
         Behavior on scale{NumberAnimation{duration:600 ; easing.type: Easing.OutQuint}}
         Rectangle{

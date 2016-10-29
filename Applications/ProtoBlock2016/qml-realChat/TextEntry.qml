@@ -1,15 +1,19 @@
 import QtQuick 2.4
+import QtQuick.Controls 1.4
 import Communi 3.1
-import Material 1.0
+// this looks real bad on android and should be tummy tucked
+import Material 1.0 as Material
 import ProRotoQml.Theme 1.0
+
 
 TextField {
     id: textField
-    width: parent.width
+    focus: true
+    height: ProtoScreen.guToPx(11)
+    placeholderText: qsTr("Type To Chat")
+
     property alias buffer: completer.buffer
     signal messageSent(IrcMessage message)
-    helperText:   qsTr("Type To Chat")
-
     Keys.onTabPressed: completer.complete(text, cursorPosition)
     IrcCompleter {
         id: completer

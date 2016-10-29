@@ -89,7 +89,7 @@ Text {
         },
 
         "button": {
-            "size": ProtoScreen.guToPx(1.75),
+            "size": 14,
             "font": "medium"
         },
 
@@ -101,20 +101,23 @@ Text {
     }
 
     property var fontInfo: fontStyles[style]
+
     font.pixelSize: (ProtoScreen.font(ProtoScreen.NORMAL))
+
     font.family: "Roboto"
+//    font.weight: {
+//        var weight = fontInfo.font
+//        if (weight === "medium") {
+//            return Font.DemiBold
+//        } else if (weight === "regular") {
+//            return Font.Normal
+//        } else if (weight === "light") {
+//            return Font.Light
+//        }
+//    }
 
-    // This was kinda stupid
-    font.capitalization:  Font.MixedCase
-
-
-    // FIXME Docs say that material should be as follows
-    //    Dark text (#000000)
-    //    Primary text   87%
-    //    Secondary text    54%
-    //    Disabled text, hint text, and icons   38%
-    //    Dividers  12%
-    // https://material.google.com/style/color.html#color-text-background-colors
+    // This is kinda stupid
+    font.capitalization: style == "button" ? Font.AllUppercase : Font.MixedCase
     color: Theme.light.textColor
 
 

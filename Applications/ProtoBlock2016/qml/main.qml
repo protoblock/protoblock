@@ -1,44 +1,36 @@
 import QtQuick 2.0
-import QtQuick.Window 2.2 as Quick
+import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 
-//import ProRotoQml.Utils 1.0
-//import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Theme 1.0
-
-
+import ProRotoQml.Utils 1.0
+import ProRotoQml.Protoblock 1.0
+//import ProRotoQml.Torrent 1.0
 import Material 1.0 as Material
+//import Material.Componets 0.3
+//import Material.Dialog 0.1
+import Communi 3.0
 
-
-Quick.Window {
+Window {
     id: realRoot
-    title: "Protoblock 2016"
-//    x: ( ProtoScreen.desktopWidth - ProtoScreen.availableWidth)
-//    y: ( ProtoScreen.desktopHeight - ProtoScreen.availableHeight)
-//    width: ProtoScreen.availableWidth
-//           (Device.productType === "windows") ? 0 : ( ProtoScreen.desktopWidth - ProtoScreen.availableWidth)
-//    height: ProtoScreen.availableHeight
-//            (Device.productType === "windows") ? 0 : ( ProtoScreen.desktopHeight - ProtoScreen.availableHeight)
-
-//    visibility: "FullScreen"
-    maximumHeight: ProtoScreen.availableHeight
-    maximumWidth: ProtoScreen.availableWidth
+    title: "Protoblock 2016 "
+//    width: Device.productType === "osx"||Device.productType === "windows" ? 1200  :  Screen.desktopAvailableWidthwidth
+//    height: Device.productType === "osx"||Device.productType === "windows" ? 1220  :  Screen.desktopAvailableHeight
+    width:  Screen.width
+    height: Screen.height
 
     property string theme: "Material"
     property string  uname
+    onUnameChanged: console.log("USING NEW UNAME " + uname)
     property string  err
     property string currentTeamInFocus
     property string currentHomeTeam
     property string currentAwayTeam
-    property string helperTxt
-    property string helperHeader: "Help"
-    property bool reloadrowquote: true
+    //    property string uname: "NULL"
+//    property variant leaders: ListModel{}
     property string msgString
-    property bool reloadorderpos: true
 
-    property string version: "1.1.2" //version
+    property string version: "0.1"
 
-    property string playerInView
 
     // make this into c++
     property var speed2Name: function( bytesPerSecond ){
@@ -121,5 +113,17 @@ Quick.Window {
 //        id: torModel
 //        onCountChanged: console.log(count)
 //    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

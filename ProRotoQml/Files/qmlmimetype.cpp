@@ -33,7 +33,6 @@ void QmlMimeType::setDatabaseTypes(const QmlMimeType::DatabaseTypes &databaseTyp
     else
     {
         // fixme make if
-        // map  QmlMimeType::DatabaseTypes to  other DB types
         switch (databaseTypes) {
         case DataDevice:
             m_databaseType = DataDevice;

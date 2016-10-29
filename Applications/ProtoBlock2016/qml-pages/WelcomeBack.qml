@@ -5,7 +5,7 @@ Rectangle {
     color: "#F1F1F1"
     width: rootLoader.width
     height: rootLoader.height
-    Component.onCompleted:  pageHelper.title = qsTr("Protoblock Home ") + themeroot.uname
+    Component.onCompleted:  pageHelper.title = qsTr("Protoblock Home ") + root.uname
     Image {
         id: logo
         source: "qrc:/logoFinal.png"
@@ -24,7 +24,7 @@ Rectangle {
         font.pixelSize: ProtoScreen.guToPx(2.75)
         font.family: "Roboto"
         horizontalAlignment: Text.AlignHCenter
-        text: "Welcome back " + themeroot.uname
+        text: "Welcome back " + root.uname
         wrapMode: Text.WordWrap
     }
     Column{

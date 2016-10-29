@@ -82,12 +82,7 @@ void TeamColors::setPrimaryMap()
     map2.insert("WAS", "#FFB612" );
     m_secondMap = map2;
 
-    m_pos.insert("RB", "#BCFAAD");
-        m_pos.insert("WR", "#FEFBB6");
-        m_pos.insert("TE", "#CCB4F0");
-        m_pos.insert("DEF","#AFE1FF");
-        m_pos.insert("QB", "#F8ADAA");
-        m_pos.insert("K", "#FBD580");
+
 
 }
 
@@ -101,8 +96,4 @@ QString TeamColors::getPrimaryAt(const QString &team)
 QString TeamColors::getSecondaryAt(const QString &team)
 {
     return m_secondMap.value(team);
-}
-
-QString TeamColors::getPosColor(const QString &team){
-    return m_pos.value(team);
 }

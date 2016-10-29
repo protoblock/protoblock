@@ -18,7 +18,6 @@ Wave 1.0 Wave.qml
 Action 1.0 Action.qml
 Button 1.0 Button.qml
 CheckBox 1.0 CheckBox.qml
-ComboBox 1.0 ComboBox.qml
 Label 1.0 Label.qml
 ProgressBar 1.0 ProgressBar.qml
 RadioButton 1.0 RadioButton.qml

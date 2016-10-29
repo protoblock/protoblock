@@ -14,7 +14,6 @@ import QtQuick.Controls 1.3 as Controls
 import ProRotoQml.Utils 1.0
 import Material 1.0
 import Material.Styles 1.0 as MaterialStyle
-import ProRotoQml.Theme 1.0
 
 /*!
    \qmltype Slider
@@ -49,15 +48,15 @@ Controls.Slider {
     /*!
        The diameter of the value label knob
      */
-    property int knobDiameter: ProtoScreen.guToPx(4)
+    property int knobDiameter: 32 * Units.dp
 
     property color color: darkBackground ? Theme.dark.accentColor
                                          : Theme.light.accentColor
 
     tickmarksEnabled: false
 
-    implicitHeight: numericValueLabel ? ProtoScreen.guToPx(6.75) : ProtoScreen.guToPx(4)
-    implicitWidth: ProtoScreen.guToPx(25)
+    implicitHeight: numericValueLabel ? 54 * Units.dp : 32 * Units.dp
+    implicitWidth: 200 * Units.dp
 
     style: MaterialStyle.SliderStyle {}
 }

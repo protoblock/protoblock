@@ -1,5 +1,5 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.0
 import Communi 3.0
 
 import Material 1.0
@@ -9,9 +9,7 @@ Card {
     id: background
     property IrcChannel channel
     signal queried(IrcUser user)
-    elevation: 0
-    width: parent.width
-    height: parent.height
+    elevation: 1
     ScrollView {
         id: scrollView
         anchors.fill: parent
@@ -26,7 +24,8 @@ Card {
             delegate: ListItems.Subtitled{
                 elevation: 1
                 width: parent.width
-                text:  model.title
+                height: ProtoScreen.guToPx(11)
+                text: "FantasyName: " +  model.title
                 subText: "Balance: 0"
                 action: Image{
                     height: parent.height

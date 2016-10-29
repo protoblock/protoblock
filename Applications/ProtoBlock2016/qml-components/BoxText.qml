@@ -16,6 +16,7 @@ Item {
             width: parent.width
             height: parent.height
             text: defaultText
+//            cursorVisible: false
             maximumLength: 1
             font.pixelSize: parent.height / 1.07
             horizontalAlignment: Text.AlignHCenter

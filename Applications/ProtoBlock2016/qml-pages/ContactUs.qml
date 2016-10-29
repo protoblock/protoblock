@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
-//import ProRotoQml.Protoblock 1.0
+import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import ProRotoQml.Utils 1.0
 
@@ -20,64 +20,59 @@ Item {
         source: "qrc:/logoFinal.png"
         fillMode: Image.PreserveAspectFit
         width: parent.width / 1.07
-        height: Screen.height / 8
+        height: Screen.height / 6
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.topMargin:ProtoScreen.guToPx(.50)
+        anchors.topMargin: parent.height / ProtoScreen.guToPx(2.75)
     }
 
-    CardWithContent{
-        id: buySell
-        anchors.top: logo.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
+
+    Column{
         width: parent.width
-        height: parent.height - logo.height
-        anchrosType: "center"
-        bannerText: "Contact protoblock"
-        object:
-            ListView{
-                width: parent.width
-                height: parent.height
-                clip: true
-                spacing: ProtoScreen.guToPx(1)
-                model: contactmod
-                delegate: ListItem.Subtitled {
-                    elevation:  5
-                    text: model.source
-                    subText: model.subT
-                    maximumLineCount: 2
-                    onClicked:{
-                        model.name == "Chat" ?
-                                    rootLoader.source ="qrc:/ProtoChat.qml"
-                                  :
-                            Qt.openUrlExternally(model.link)
-                    }
-                }
+        height : parent.height - logo.height
+        anchors.top: logo.bottom
+        spacing: ProtoScreen.guToPx(2.5)
+        Rectangle{
+            height: ProtoScreen.guToPx(2.5)
+            width: 1
+            color: "transparent"
+        }
+        Label{
+            width: parent.width
+            font.pixelSize: ProtoScreen.guToPx(3)
+            text: "Subject"
+            anchors.left: subInput.left
+        }
+        ThinDivider{
+            width: parent.width / 1.07
+        }
+        TextField{
+            id: subInput
+            width: parent.width / 1.07
+            placeholderText: "Please enter in the subject"
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Button{
+            width:  parent.width  / 1.07
+            elevation: 3
+            backgroundColor: Colors.primaryColor
+            text: "Send Email"
+            anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: {
+                Qt.openUrlExternally("mailto:" + protoblockemail + "?Subject="+subInput.text)
             }
-
-
         }
 
-    ListModel{
-        id: contactmod
-        ListElement{
-            name: "Twitter"
-            source : "Twitter @protoblock "
-            subT:  "Follow @protoblock on twitter"
-            link: "https://twitter.com/protoblock/"
+        Label {
+            id: welcomeTxt
+            width: parent.width / 1.07
+            font.pixelSize: Qt.platform.os === "android" ? 32 : 22
+            font.family: "Roboto"
+            horizontalAlignment: Text.AlignHCenter
+            text: "contact@protoblock.com"
+            wrapMode: Text.WordWrap
         }
-        ListElement{
-            name: "Email"
-            source : "contact@protoblock.com"
-            subT:  "Please email us!"
-            link: "mailto:contact@protoblock.com+?Subject=contact page in app"
-        }
-        ListElement{
-            name: "Chat"
-            source : "Chat Rooms"
-            subT:  "See who chatting"
-        }
+
+
     }
-
 }
-

@@ -23,14 +23,13 @@ Item {
     onFrontChanged: resync();
     onBackChanged: resync();
 
-    property bool frontShown: true
-
     function resync() {//TODO: Are the items ever actually visible?
         back.parent = container;
         front.parent = container;
-        if (frontShown) back.visible = false; else front.visible = false;
+        frontShown ? back.visible = false : front.visible = false;
     }
 
+    property bool frontShown: true
 
     onFrontShownChanged: {
         back.visible = !frontShown

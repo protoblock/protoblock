@@ -134,27 +134,6 @@ class FantasyNameBal : public ::google::protobuf::Message {
   inline ::google::protobuf::int64 stake() const;
   inline void set_stake(::google::protobuf::int64 value);
 
-  // optional uint64 chash = 50;
-  inline bool has_chash() const;
-  inline void clear_chash();
-  static const int kChashFieldNumber = 50;
-  inline ::google::protobuf::uint64 chash() const;
-  inline void set_chash(::google::protobuf::uint64 value);
-
-  // optional int32 block = 60;
-  inline bool has_block() const;
-  inline void clear_block();
-  static const int kBlockFieldNumber = 60;
-  inline ::google::protobuf::int32 block() const;
-  inline void set_block(::google::protobuf::int32 value);
-
-  // optional int32 count = 70;
-  inline bool has_count() const;
-  inline void clear_count();
-  static const int kCountFieldNumber = 70;
-  inline ::google::protobuf::int32 count() const;
-  inline void set_count(::google::protobuf::int32 value);
-
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyNameBal)
  private:
   inline void set_has_name();
@@ -165,12 +144,6 @@ class FantasyNameBal : public ::google::protobuf::Message {
   inline void clear_has_bits();
   inline void set_has_stake();
   inline void clear_has_stake();
-  inline void set_has_chash();
-  inline void clear_has_chash();
-  inline void set_has_block();
-  inline void clear_has_block();
-  inline void set_has_count();
-  inline void clear_has_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -178,12 +151,9 @@ class FantasyNameBal : public ::google::protobuf::Message {
   ::std::string* public_key_;
   ::google::protobuf::uint64 bits_;
   ::google::protobuf::int64 stake_;
-  ::google::protobuf::uint64 chash_;
-  ::google::protobuf::int32 block_;
-  ::google::protobuf::int32 count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_NameData_2eproto();
   friend void protobuf_AssignDesc_NameData_2eproto();
@@ -355,18 +325,6 @@ class FantasyBitPnl : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string name = 10;
-  inline bool has_name() const;
-  inline void clear_name();
-  static const int kNameFieldNumber = 10;
-  inline const ::std::string& name() const;
-  inline void set_name(const ::std::string& value);
-  inline void set_name(const char* value);
-  inline void set_name(const char* value, size_t size);
-  inline ::std::string* mutable_name();
-  inline ::std::string* release_name();
-  inline void set_allocated_name(::std::string* name);
-
   // optional .fantasybit.SettlePos spos = 20;
   inline bool has_spos() const;
   inline void clear_spos();
@@ -385,8 +343,6 @@ class FantasyBitPnl : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyBitPnl)
  private:
-  inline void set_has_name();
-  inline void clear_has_name();
   inline void set_has_spos();
   inline void clear_has_spos();
   inline void set_has_pnl();
@@ -394,12 +350,11 @@ class FantasyBitPnl : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* name_;
   ::fantasybit::SettlePos* spos_;
   ::google::protobuf::int64 pnl_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_NameData_2eproto();
   friend void protobuf_AssignDesc_NameData_2eproto();
@@ -495,20 +450,6 @@ class FantasyBitProj : public ::google::protobuf::Message {
   inline ::std::string* release_playerid();
   inline void set_allocated_playerid(::std::string* playerid);
 
-  // optional int32 count = 40;
-  inline bool has_count() const;
-  inline void clear_count();
-  static const int kCountFieldNumber = 40;
-  inline ::google::protobuf::int32 count() const;
-  inline void set_count(::google::protobuf::int32 value);
-
-  // optional int32 block = 50;
-  inline bool has_block() const;
-  inline void clear_block();
-  static const int kBlockFieldNumber = 50;
-  inline ::google::protobuf::int32 block() const;
-  inline void set_block(::google::protobuf::int32 value);
-
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyBitProj)
  private:
   inline void set_has_name();
@@ -517,21 +458,15 @@ class FantasyBitProj : public ::google::protobuf::Message {
   inline void clear_has_proj();
   inline void set_has_playerid();
   inline void clear_has_playerid();
-  inline void set_has_count();
-  inline void clear_has_count();
-  inline void set_has_block();
-  inline void clear_has_block();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* name_;
   ::std::string* playerid_;
   ::google::protobuf::int32 proj_;
-  ::google::protobuf::int32 count_;
-  ::google::protobuf::int32 block_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_NameData_2eproto();
   friend void protobuf_AssignDesc_NameData_2eproto();
@@ -844,72 +779,6 @@ inline void FantasyNameBal::set_stake(::google::protobuf::int64 value) {
   stake_ = value;
 }
 
-// optional uint64 chash = 50;
-inline bool FantasyNameBal::has_chash() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void FantasyNameBal::set_has_chash() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void FantasyNameBal::clear_has_chash() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void FantasyNameBal::clear_chash() {
-  chash_ = GOOGLE_ULONGLONG(0);
-  clear_has_chash();
-}
-inline ::google::protobuf::uint64 FantasyNameBal::chash() const {
-  return chash_;
-}
-inline void FantasyNameBal::set_chash(::google::protobuf::uint64 value) {
-  set_has_chash();
-  chash_ = value;
-}
-
-// optional int32 block = 60;
-inline bool FantasyNameBal::has_block() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void FantasyNameBal::set_has_block() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void FantasyNameBal::clear_has_block() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void FantasyNameBal::clear_block() {
-  block_ = 0;
-  clear_has_block();
-}
-inline ::google::protobuf::int32 FantasyNameBal::block() const {
-  return block_;
-}
-inline void FantasyNameBal::set_block(::google::protobuf::int32 value) {
-  set_has_block();
-  block_ = value;
-}
-
-// optional int32 count = 70;
-inline bool FantasyNameBal::has_count() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
-}
-inline void FantasyNameBal::set_has_count() {
-  _has_bits_[0] |= 0x00000040u;
-}
-inline void FantasyNameBal::clear_has_count() {
-  _has_bits_[0] &= ~0x00000040u;
-}
-inline void FantasyNameBal::clear_count() {
-  count_ = 0;
-  clear_has_count();
-}
-inline ::google::protobuf::int32 FantasyNameBal::count() const {
-  return count_;
-}
-inline void FantasyNameBal::set_count(::google::protobuf::int32 value) {
-  set_has_count();
-  count_ = value;
-}
-
 // -------------------------------------------------------------------
 
 // FantasyBitAward
@@ -1032,85 +901,15 @@ inline void FantasyBitAward::set_award(::google::protobuf::uint64 value) {
 
 // FantasyBitPnl
 
-// optional string name = 10;
-inline bool FantasyBitPnl::has_name() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void FantasyBitPnl::set_has_name() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void FantasyBitPnl::clear_has_name() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void FantasyBitPnl::clear_name() {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
-    name_->clear();
-  }
-  clear_has_name();
-}
-inline const ::std::string& FantasyBitPnl::name() const {
-  return *name_;
-}
-inline void FantasyBitPnl::set_name(const ::std::string& value) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    name_ = new ::std::string;
-  }
-  name_->assign(value);
-}
-inline void FantasyBitPnl::set_name(const char* value) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    name_ = new ::std::string;
-  }
-  name_->assign(value);
-}
-inline void FantasyBitPnl::set_name(const char* value, size_t size) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    name_ = new ::std::string;
-  }
-  name_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* FantasyBitPnl::mutable_name() {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    name_ = new ::std::string;
-  }
-  return name_;
-}
-inline ::std::string* FantasyBitPnl::release_name() {
-  clear_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = name_;
-    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void FantasyBitPnl::set_allocated_name(::std::string* name) {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
-    delete name_;
-  }
-  if (name) {
-    set_has_name();
-    name_ = name;
-  } else {
-    clear_has_name();
-    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
 // optional .fantasybit.SettlePos spos = 20;
 inline bool FantasyBitPnl::has_spos() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void FantasyBitPnl::set_has_spos() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void FantasyBitPnl::clear_has_spos() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void FantasyBitPnl::clear_spos() {
   if (spos_ != NULL) spos_->::fantasybit::SettlePos::Clear();
@@ -1142,13 +941,13 @@ inline void FantasyBitPnl::set_allocated_spos(::fantasybit::SettlePos* spos) {
 
 // optional int64 pnl = 30;
 inline bool FantasyBitPnl::has_pnl() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void FantasyBitPnl::set_has_pnl() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void FantasyBitPnl::clear_has_pnl() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void FantasyBitPnl::clear_pnl() {
   pnl_ = GOOGLE_LONGLONG(0);
@@ -1326,50 +1125,6 @@ inline void FantasyBitProj::set_allocated_playerid(::std::string* playerid) {
     clear_has_playerid();
     playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
-}
-
-// optional int32 count = 40;
-inline bool FantasyBitProj::has_count() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void FantasyBitProj::set_has_count() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void FantasyBitProj::clear_has_count() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void FantasyBitProj::clear_count() {
-  count_ = 0;
-  clear_has_count();
-}
-inline ::google::protobuf::int32 FantasyBitProj::count() const {
-  return count_;
-}
-inline void FantasyBitProj::set_count(::google::protobuf::int32 value) {
-  set_has_count();
-  count_ = value;
-}
-
-// optional int32 block = 50;
-inline bool FantasyBitProj::has_block() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void FantasyBitProj::set_has_block() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void FantasyBitProj::clear_has_block() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void FantasyBitProj::clear_block() {
-  block_ = 0;
-  clear_has_block();
-}
-inline ::google::protobuf::int32 FantasyBitProj::block() const {
-  return block_;
-}
-inline void FantasyBitProj::set_block(::google::protobuf::int32 value) {
-  set_has_block();
-  block_ = value;
 }
 
 // -------------------------------------------------------------------
