@@ -141,6 +141,20 @@ class FantasyNameBal : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 chash() const;
   inline void set_chash(::google::protobuf::uint64 value);
 
+  // optional int32 block = 60;
+  inline bool has_block() const;
+  inline void clear_block();
+  static const int kBlockFieldNumber = 60;
+  inline ::google::protobuf::int32 block() const;
+  inline void set_block(::google::protobuf::int32 value);
+
+  // optional int32 count = 70;
+  inline bool has_count() const;
+  inline void clear_count();
+  static const int kCountFieldNumber = 70;
+  inline ::google::protobuf::int32 count() const;
+  inline void set_count(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.FantasyNameBal)
  private:
   inline void set_has_name();
@@ -153,6 +167,10 @@ class FantasyNameBal : public ::google::protobuf::Message {
   inline void clear_has_stake();
   inline void set_has_chash();
   inline void clear_has_chash();
+  inline void set_has_block();
+  inline void clear_has_block();
+  inline void set_has_count();
+  inline void clear_has_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -161,9 +179,11 @@ class FantasyNameBal : public ::google::protobuf::Message {
   ::google::protobuf::uint64 bits_;
   ::google::protobuf::int64 stake_;
   ::google::protobuf::uint64 chash_;
+  ::google::protobuf::int32 block_;
+  ::google::protobuf::int32 count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_NameData_2eproto();
   friend void protobuf_AssignDesc_NameData_2eproto();
@@ -844,6 +864,50 @@ inline ::google::protobuf::uint64 FantasyNameBal::chash() const {
 inline void FantasyNameBal::set_chash(::google::protobuf::uint64 value) {
   set_has_chash();
   chash_ = value;
+}
+
+// optional int32 block = 60;
+inline bool FantasyNameBal::has_block() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void FantasyNameBal::set_has_block() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void FantasyNameBal::clear_has_block() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void FantasyNameBal::clear_block() {
+  block_ = 0;
+  clear_has_block();
+}
+inline ::google::protobuf::int32 FantasyNameBal::block() const {
+  return block_;
+}
+inline void FantasyNameBal::set_block(::google::protobuf::int32 value) {
+  set_has_block();
+  block_ = value;
+}
+
+// optional int32 count = 70;
+inline bool FantasyNameBal::has_count() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void FantasyNameBal::set_has_count() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void FantasyNameBal::clear_has_count() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void FantasyNameBal::clear_count() {
+  count_ = 0;
+  clear_has_count();
+}
+inline ::google::protobuf::int32 FantasyNameBal::count() const {
+  return count_;
+}
+inline void FantasyNameBal::set_count(::google::protobuf::int32 value) {
+  set_has_count();
+  count_ = value;
 }
 
 // -------------------------------------------------------------------

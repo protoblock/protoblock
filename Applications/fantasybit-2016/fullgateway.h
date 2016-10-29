@@ -215,7 +215,6 @@ public slots:
         for( auto &v : holdfresh)
              emit NameBal(v);
         holdfresh.clear();
-
         heslive = true;
     }
 

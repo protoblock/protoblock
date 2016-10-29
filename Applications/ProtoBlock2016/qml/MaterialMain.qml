@@ -13,7 +13,7 @@ import Material.Extras 1.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
-import Communi 3.0
+//import Communi 3.0
 
 Material.ApplicationWindow{
 
@@ -139,7 +139,7 @@ Material.ApplicationWindow{
     ]
 
     // Level Four
-    property var levelFour: [ "Account" , "Import-Export", "Proto Chat", ]
+    property var levelFour: [ "Account" , "Import-Export"]//, "Proto Chat", ]
     property var levelFourIcons: [
         "qrc:/icons/account_action_circle.png" ,
         "qrc:/icons/ic_sync.png",

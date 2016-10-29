@@ -446,6 +446,7 @@ message NewPlayerModel {
 
 
 enum CType {
+    NONE = 0;
     CHECKNAME = 1;
     NEWTX = 2;
     PK2FNAME = 3;
@@ -456,6 +457,13 @@ enum CType {
     GETORDERS = 8;
     GETPOSITIONS = 9;
     SUBSCRIBEFNAME = 10;
+    GETGLOBALSTATE = 11;
+    GETSCHEDULE = 12;
+    GETGAMEROSTER = 13;
+//    GETAVGPROJECTION = 14;
+    GETPROJECTIONS = 15;
+    GETGAMESTART = 16;
+
 //    GETORDERS = 11;
 }
 
@@ -481,9 +489,27 @@ message WSReply {
     optional int32 version = 1;
     optional CType ctype = 2;
     optional WsReq req = 20;
+    optional string data = 30;
 
     extensions 100 to max;
 }
+
+message GetGlobalStateRep {
+    extend WSReply {
+        optional GetGlobalStateRep rep = 900;
+    }
+
+    optional GlobalState globalstate = 10;
+}
+
+message GetScheduleRep {
+    extend WSReply {
+        optional GetScheduleRep rep = 910;
+    }
+
+    optional ScheduleData scheduledata = 10;
+}
+
 
 message CheckNameReq {
     extend WsReq {
@@ -557,6 +583,26 @@ message GetAllNamesRep {
 }
 
 
+message TeamRoster {
+    optional string teamid = 10;
+    repeated PlayerData players = 20;
+}
+
+message GameDataRoster {
+    optional GameData game_data = 10;
+    optional TeamRoster homeroster = 20;
+    optional TeamRoster awayroster = 30;
+}
+
+message GetCurrRostersRep {
+    extend WSReply {
+        optional GetCurrRostersRep rep = 920;
+    }
+
+    optional int32 week = 10;
+    repeated GameDataRoster gamerosters = 20;
+}
+
 message ROWMarket {
     optional string pid = 10;
     optional MarketQuote quote = 30;
@@ -621,6 +667,36 @@ message GetOrdersReq {
     optional string symbol = 10;
     optional string fname = 20;
     optional uint64 fchash = 30;
+}
+
+
+message GetProjectionReq {
+    extend WsReq {
+        optional GetProjectionReq req = 900;
+    }
+
+    optional string fname = 20;
+    optional bool getavg = 30;
+}
+
+message PlayerProj {
+    optional string playerid = 10;
+    optional int32 proj = 20;
+}
+message ProjByName {
+    optional string name = 10;
+    repeated PlayerProj playerproj = 20;
+    optional int32 count = 40;
+    optional int32 block = 50;
+}
+
+message GetProjectionRep {
+    extend WSReply {
+        optional GetProjectionRep rep = 940;
+    }
+
+    optional ProjByName projs = 20;
+    optional ProjByName avg = 30;
 }
 
 

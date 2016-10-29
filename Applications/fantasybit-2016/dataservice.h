@@ -25,6 +25,8 @@ public:
 
     fantasybit::PlayerBase GetPlayerBase(std::string playerId);
 
+    fantasybit::PlayerStatus GetPlayerStatus(std::string playerId);
+
     std::vector<std::shared_ptr<fantasybit::FantasyName>> GetLeaderBoard();
 
     std::unordered_map<std::string,int> GetProjByName(const std::string &nm);

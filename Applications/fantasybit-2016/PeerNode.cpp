@@ -553,9 +553,9 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 
 
     //return 20;
-//      qDebug() << " calling rest height";
+//      qDebug() << " calling rest height" << PAPIURL.data();
     int32_t height = RestfullService::getHeight(PAPIURL.data());
-    //qDebug() << " after rest height" << height;
+//    qDebug() << " after rest height" << height;
 
 #ifdef STOP_HEIGHT_TEST
     height = 5391;
