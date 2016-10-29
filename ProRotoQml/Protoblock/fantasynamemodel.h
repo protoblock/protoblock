@@ -79,7 +79,8 @@ public:
     void    update(const fantasybit::FantasyNameBal &in) {
         set_name(in.name().data());
         set_pk (in.public_key().data());
-        set_stake ( in.stake() + in.bits());
+        if ( in.has_stake() )
+            set_stake ( in.stake() );
         set_bits ( in.bits());
 
 //        set_chash(in.chash());
@@ -114,7 +115,7 @@ public:
 
     void update (FantasyNameBalModelItem *in) {
         FantasyNameBalModelItem *my = (FantasyNameBalModelItem *)get(in->get_name());
-        if ( my )
+        if ( my && my != in)
             my->update(*in);
         else {
             FantasyNameBalModelItem *n = new FantasyNameBalModelItem(*in);
