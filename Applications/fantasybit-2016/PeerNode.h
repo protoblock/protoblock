@@ -59,7 +59,10 @@ public:
 
     static std::vector<Block> getGlobalBlock(int32_t num, int32_t bend) ;
 
+#ifndef NOCHECK_LOCAL_BOOTSTRAP
     static Bootstrap getLastLocalBoot();
+#endif
+
     static int32_t getLastLocalBlockNum();
     static int32_t myLastGlobalBlockNum();
     static void setLastGlobalBlockNum(int32_t num);
