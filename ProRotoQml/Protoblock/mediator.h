@@ -447,7 +447,7 @@ public:
         qDebug() << " 2 ";
 
         const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevWeek);
-        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel);
+        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel,myFantasyName);
         myPrevGamesSelectionModel.reset();
         m_pResultsViewFilterProxyModel->invalidate();
         qDebug() << " 3 ";
@@ -662,6 +662,10 @@ private:
 
     void updateLiveLeaders(bool getLastWeek = true) {
         mFantasyNameBalModel.updateleaders(mGateway->dataService->GetLeaderBoard());
+
+        auto it = mFantasyNameBalModel.getByUid("Priest Holmes");
+        qDebug() << "JayBNY123 more" << it->get_stake();
+
         if ( m_theWeek-1 > 0 && getLastWeek)
             getLeaders(m_theWeek-1,true,false);
         getLeaders(m_theWeek,false,false);

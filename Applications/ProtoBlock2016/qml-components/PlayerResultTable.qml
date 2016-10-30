@@ -233,6 +233,25 @@ Item {
                 delegate: fbdel
             }
 
+            TableViewColumn{
+                role: "myproj"
+                title: "My Projection"
+                horizontalAlignment : Text.AlignHCenter
+                delegate: fbdel
+                movable: false
+                width: ProtoScreen.guToPx(10)
+            }
+
+            TableViewColumn {
+                role: "myaward"
+                title: "My Award"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: fbdel
+            }
+
+
             TableViewColumn {
                 role: "PassTD"
                 title: "PassTD"
@@ -435,7 +454,7 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: styleData.column === 4 ? themeroot.theme.accentColor :
+                backgroundColor: styleData.column === 5 || styleData.column === 6 ? themeroot.theme.accentColor :
                                  themeroot.theme.primaryColor
                 anchors.bottom: parent.bottom
                 radius: 1
@@ -452,7 +471,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === 4 ? themeroot.theme.secondaryColor : "white"
+                    color: styleData.column === 5 ||  styleData.column === 6 ? themeroot.theme.secondaryColor : "white"
                     //                    font.bold: styleData.column === 4
                 }
             }

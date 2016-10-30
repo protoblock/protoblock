@@ -80,8 +80,13 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     }
     else {
         auto it = mFantasyNameBalModel.getByUid(myname.name().data());
-        if ( it != nullptr)
-            mGoodNameBalModel.append(new FantasyNameBalModelItem(*it));
+        if ( it != nullptr) {
+            qDebug() << " append new " << it->get_stake();
+            auto it2 = new FantasyNameBalModelItem(*it);
+            mGoodNameBalModel.append(it2);
+            qDebug() << " appended new " << it2->get_stake();
+
+        }
         else {
             qDebug() <<  " mediator namestatus not in  mFantasyNameBalModel";
             if ( myname.status() < MyNameStatus::requested) {
@@ -141,8 +146,12 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
         if ( nullptr != mGoodNameBalModel.getByUid(m.name().data()) ) continue;
 
         auto it = mFantasyNameBalModel.getByUid(m.name().data());
-        if ( it != nullptr)
+        if ( it != nullptr) {
+            qDebug() << " insert new " << it->get_stake();
             mGoodNameBalModel.insert(mGoodNameBalModel.size(),it);
+            auto it2 = mGoodNameBalModel.getByUid(m.name().data());
+            qDebug() << " insert new2 " << it2->get_stake();
+        }
     }
 
     qDebug() << " namename wins " << heighest << hname.data();
