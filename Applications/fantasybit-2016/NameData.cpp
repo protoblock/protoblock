@@ -60,7 +60,6 @@ void FantasyNameData::init() {
                 fnp->initStakePNL(fn.stake());
                 fnp->setBlockNump (0,0);
 #ifdef TRACE2
-                qDebug() << fnp->ToString().data();
 #endif
 #ifdef DATAAGENTWRITENAMES_SPECIAL
                 auto name = fnp->alias();

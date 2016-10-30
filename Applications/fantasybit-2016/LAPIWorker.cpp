@@ -103,6 +103,9 @@ void MainLAPIWorker::GoLive() {
     amlive = true;
     numto = 0;
     intervalstart = 1000;
+#ifdef LIGHT_CLIENT_ONLY
+    intervalstart = 500;
+#endif
     timer->start(intervalstart);
 
     qDebug() << "emit LiveData(true)";
@@ -207,6 +210,7 @@ void MainLAPIWorker::ProcessBlock() {
     bool catchingup;
     do {
         if ( !doProcessBlock() ) return;
+        emit BlockNum(last_block);
         count = pcount = 0;
         emit BlockNum(last_block);
         {
@@ -216,7 +220,7 @@ void MainLAPIWorker::ProcessBlock() {
 
         if ( catchingup )
         {
-//            emit BlockNum(last_block);
+
             if ( docount++ == 50 ) {
                 QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
                 docount = 0;
@@ -284,6 +288,9 @@ void MainLAPIWorker::Timer() {
         if ( bcount < 3)
             emit GetNext();
     }
+#ifdef LIGHT_CLIENT_ONLY
+    emit GetNext();
+#else
     else {
         count++;
         emit GetNext();
@@ -299,7 +306,7 @@ void MainLAPIWorker::Timer() {
             }
         }
     }
-
+#endif
 }
 
 bool MainLAPIWorker::Process(fantasybit::Block &b) {
