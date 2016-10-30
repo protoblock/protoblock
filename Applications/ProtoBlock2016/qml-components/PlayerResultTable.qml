@@ -19,6 +19,13 @@ Item {
     property int focuscount: 0
     property string who: "default"
     property int rw: 8
+
+    property bool kicker: true
+    property bool def: true
+    property bool qb: true
+    property bool wr: true
+    property bool rb: true
+
     Item {
         id: i2
         anchors.top: parent.top
@@ -233,6 +240,8 @@ Item {
                 delegate: fbdel
             }
 
+
+
             TableViewColumn{
                 role: "myproj"
                 title: "My Projection"
@@ -253,30 +262,24 @@ Item {
 
 
             TableViewColumn {
-                role: "PassTD"
-                title: "PassTD"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-
-            TableViewColumn {
                 role: "PassYd"
                 title: "PassYd"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb
             }
             TableViewColumn {
-                role: "RushTD"
-                title: "RushTD"
+                role: "PassTD"
+                title: "PassTD"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb
             }
+
             TableViewColumn {
                 role: "RushYd"
                 title: "RushYd"
@@ -284,6 +287,37 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb || rb
+            }
+
+            TableViewColumn {
+                role: "RushTD"
+                title: "RushTD"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: qb || rb
+            }
+
+            TableViewColumn {
+                role: "Rec"
+                title: "Rec"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: wr || rb
+            }
+
+            TableViewColumn {
+                role: "RecYd"
+                title: "RecYd"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: wr || rb
             }
             TableViewColumn {
                 role: "RecTD"
@@ -292,23 +326,9 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: wr || rb
             }
-            TableViewColumn {
-                role: "RecYd"
-                title: "RecYd"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "Rec"
-                title: "Rec"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
+
             TableViewColumn {
                 role: "Int"
                 title: "Int"
@@ -316,6 +336,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb
             }
             TableViewColumn {
                 role: "Fum"
@@ -324,6 +345,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb || wr || rb
             }
             TableViewColumn {
                 role: "_2Pt"
@@ -332,6 +354,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb || wr || rb
             }
             TableViewColumn {
                 role: "PAT"
@@ -340,54 +363,16 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: topw.kicker
             }
             TableViewColumn {
                 role: "FG"
                 title: "FG"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(rw)
+                width: ProtoScreen.guToPx(rw) * 2
                 delegate: fbdel
-            }
-            TableViewColumn {
-                role: "D_TD"
-                title: "D_TD"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "Sack"
-                title: "Sack"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "TO"
-                title: "TO"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "SFTY"
-                title: "SFTY"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "D2pt"
-                title: "Def2pt"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
+                visible: topw.kicker
             }
             TableViewColumn {
                 role: "PtsA"
@@ -396,7 +381,55 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: def
             }
+            TableViewColumn {
+                role: "Sack"
+                title: "Sack"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+            }
+            TableViewColumn {
+                role: "TA"
+                title: "TO"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+            }
+            TableViewColumn {
+                role: "D_TD"
+                title: "DefTD"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+            }
+            TableViewColumn {
+                role: "SFTY"
+                title: "SFTY"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+            }
+            TableViewColumn {
+                role: "D2pt"
+                title: "Def2pt"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+
+            }
+
         }
     }
 
@@ -422,6 +455,25 @@ Item {
                     anchors.fill: parent
                     onCurrentTextChanged: {
                        MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
+                        kicker = def = qb = (currentIndex === 0)
+
+                        if ( currentIndex === 0 )
+                            kicker = def = qb = rb = wr = true
+                        else {
+                            kicker = def = qb = rb = wr = false
+
+                        if ( currentIndex === 5) {
+                            kicker = true;
+                        }
+                        else if ( currentIndex === 6) {
+                            def = true
+                        }
+                        else if (currentIndex === 1 )
+                            qb = true
+                        else if ( currentIndex === 2)
+                            rb = true
+                        else wr = true
+                        }
                     }
                 }
 
@@ -471,7 +523,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === 5 ||  styleData.column === 6 ? themeroot.theme.secondaryColor : "white"
+                    color: styleData.column === 5 ||  styleData.column === 6 ? Material.Theme.light.textColor : "white"
                     //                    font.bold: styleData.column === 4
                 }
             }

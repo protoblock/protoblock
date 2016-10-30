@@ -57,12 +57,16 @@ public:
            append(new WeeklyScheduleModelItem(gi,this));
     }
 
-    void UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs) {
-        if ( gs == GameStatus_Status_CLOSED) {
+    void UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs, bool reverse = false) {
+        if ( gs == GameStatus_Status_CLOSED && !reverse) {
             remove(this->getByUid(gameid.data()));
         }
-        else
+        else if (gs == GameStatus_Status_CLOSED && reverse )
             this->getByUid(gameid.data())->set_status(toStatus(gs));
+        else if ( !reverse )
+            this->getByUid(gameid.data())->set_status(toStatus(gs));
+        else if ( reverse )
+            remove(this->getByUid(gameid.data()));
     }
 
     static QString toStatus(fantasybit::GameStatus_Status gs) {

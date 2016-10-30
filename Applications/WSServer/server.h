@@ -112,8 +112,11 @@ public:
 
     pb::IPBGateway *mGateway = nullptr;
     void setContext(pb::IPBGateway *ingateway) {
+        qDebug() << " setContext " << bool(ingateway == nullptr);
         mGateway = ingateway;
         setupConnection(mGateway);
+        qDebug() << " setContext2 " << bool(mGateway == nullptr);
+
     }
 
     bool amLive = false;

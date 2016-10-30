@@ -37,6 +37,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     //schedule models
     m_pWeeklyScheduleModel = new WeeklyScheduleModel;
+    m_pWeekClosedScheduleModel = new WeeklyScheduleModel;
+
     myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
     m_gameFilter = "Scheduled";
 
@@ -67,6 +69,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     m_useSelected = true;
     m_busySend = false;
+    m_thisWeekPrev = false;
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -81,11 +84,8 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     else {
         auto it = mFantasyNameBalModel.getByUid(myname.name().data());
         if ( it != nullptr) {
-            qDebug() << " append new " << it->get_stake();
             auto it2 = new FantasyNameBalModelItem(*it);
             mGoodNameBalModel.append(it2);
-            qDebug() << " appended new " << it2->get_stake();
-
         }
         else {
             qDebug() <<  " mediator namestatus not in  mFantasyNameBalModel";
@@ -135,7 +135,6 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
     int heighest = 0;
     string hname  = "";
     for ( auto m : mfn ) {
-        qDebug() << " mediator myname2 " << m.DebugString().data();
         if ( m.status() >= heighest) {
             heighest = m.status();
             hname = m.name();
@@ -147,10 +146,8 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
 
         auto it = mFantasyNameBalModel.getByUid(m.name().data());
         if ( it != nullptr) {
-            qDebug() << " insert new " << it->get_stake();
             mGoodNameBalModel.insert(mGoodNameBalModel.size(),it);
             auto it2 = mGoodNameBalModel.getByUid(m.name().data());
-            qDebug() << " insert new2 " << it2->get_stake();
         }
     }
 
@@ -220,13 +217,23 @@ void Mediator::updateWeek() {
 
             m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
                           mGateway->dataService->GetWeeklySchedule(m_theWeek));
+
+            m_pWeekClosedScheduleModel->updateWeeklySchedule(m_theWeek,
+                          mGateway->dataService->GetWeeklySchedule(m_theWeek));
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
 
             for ( auto gr : vgr ) {
                 m_pWeeklyScheduleModel->UpdateStatus(gr.info.id(),gr.status);
-                mPlayerProjModel.ongameStatusChange(gr.info.id(),gr.status);
+                m_pWeekClosedScheduleModel->UpdateStatus(gr.info.id(),gr.status, true);
+//                mPlayerProjModel.ongameStatusChange(gr.info.id(),gr.status);
             }
+
+            set_thisWeekPrev(m_pWeekClosedScheduleModel->count() > 0);
+
+//            m_pPWeekClosedScheduleModel
+
+//            for ( auto it : m_pWeeklyScheduleModel)
 
 //            m_pQItemSelectionModel->reset();
 
@@ -258,8 +265,11 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 
 void Mediator::NewWeek(int week) {
     set_busySend(false);
+//    set_thisWeekPrev = false;
+
     if ( m_thePrevWeek == m_theWeek)
         setthePrevWeek(week);
+
     settheWeek(week);
     if ( amLive ) {
         updateLiveLeaders();
