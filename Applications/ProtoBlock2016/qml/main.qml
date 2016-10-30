@@ -25,7 +25,6 @@ Quick.Window {
     maximumWidth: ProtoScreen.availableWidth
 
     property string theme: "Material"
-    property string  uname
     property string  err
     property string currentTeamInFocus
     property string currentHomeTeam

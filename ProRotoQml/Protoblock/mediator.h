@@ -442,7 +442,7 @@ public:
         if ( week == m_theWeek && !m_thisWeekPrev )
             return;
 
-        if ( week == m_thePrevWeek )
+        if ( week == m_thePrevWeek && !(week == m_theWeek && m_thisWeekPrev ))
             return;
 
         setthePrevWeek(week);

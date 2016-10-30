@@ -17,6 +17,22 @@ import Communi 3.0
 
 Material.ApplicationWindow{
 
+    property string version: "1.1.2" //version
+    property alias realRoot: themeroot
+
+    property string  uname
+
+    property string  err
+    property string currentTeamInFocus
+    property string currentHomeTeam
+    property string currentAwayTeam
+    property string helperTxt
+    property string helperHeader: "Help"
+    property bool reloadrowquote: true
+    property string msgString
+    property bool reloadorderpos: true
+
+
     statusBar: StatusBar {
 
         RowLayout {
@@ -35,9 +51,8 @@ Material.ApplicationWindow{
 
     id: themeroot
     visible: true
-    width: ProtoScreen.availableWidth //(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
-    height: ProtoScreen.availableHeight//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
-
+    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
+    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
 
     color: "transparent"
     Component.onCompleted: {

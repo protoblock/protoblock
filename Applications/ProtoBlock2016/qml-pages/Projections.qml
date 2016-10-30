@@ -66,7 +66,7 @@
                     anchors.centerIn: parent
                     size: ProtoScreen.guToPx(5)
 
-                    enabled:  MiddleMan.liveSync !== "Sync" && (stack || stack.currentItem.objectName === "pptS" || MiddleMan.thePrevWeek > 1)
+                    enabled:  MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && MiddleMan.thePrevWeek > 1
 
                     action: Action {
                         iconName: "awesome/caret_left"
@@ -76,11 +76,11 @@
                     onClicked : {
                         console.log( "left" + stack.currentItem.objectName)
                         if ( stack.currentItem.objectName === "pptS" ) {
-                            stack.pop();
                             if ( MiddleMan.thisWeekPrev)
                                 MiddleMan.setPrevWeekData(MiddleMan.theWeek)
                             else
                                 MiddleMan.setPrevWeekData(MiddleMan.theWeek-1)
+                            stack.pop();
                         }
                         else if ( stack.currentItem.objectName === "nextWeekS" )
                             stack.pop();
@@ -163,17 +163,23 @@
                         Component.onCompleted: {
                            stack.push({item: prevWeekS, properties:{objectName:"prevWeekS"}})
                            stack.push({item: pptS, properties:{objectName:"pptS"}})
+
+                           console.log( " stack " + width)
                         }
 
                         Item {
                             id: pptS
+                            width: parent.width
+                            height: parent.height
                             SplitView {
+
                                 orientation: Qt.Horizontal
                                 handleDelegate: handeldel
                                 width: parent.width
                                 height: parent.height
                                 Component.onCompleted: {
                                     lpv.releasedit.connect(releaseditMethod)
+                                    console.log( " split " + width)
                                 }
                                 function releaseditMethod(fname) {
                                     ppt.addcolumn(fname)

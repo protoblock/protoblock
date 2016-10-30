@@ -499,7 +499,7 @@ bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) 
     string key = "gameresult:" + gameid;
     string temp;
     if (!staticstore->Get(leveldb::ReadOptions(), key, &temp).ok())
-        qWarning() << gameid << " not found";
+        qWarning() << gameid.data() << " not found";
     else {
         if (!result.ParseFromString(temp) )
             qWarning() << " cant parse game result";
