@@ -20,5 +20,6 @@
         <file>LeaderAwardView.qml</file>
         <file>PlayerResultTable.qml</file>
         <file>ScheduleViewPrev.qml</file>
+        <file>ScheduleViewNext.qml</file>
     </qresource>
 </RCC>

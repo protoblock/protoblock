@@ -269,10 +269,10 @@ public:
         PlayerResultModel * model = dynamic_cast<PlayerResultModel *>(sourceModel());
         if (model==NULL) return nullptr;
 
-        qDebug() << " jay fullname " << model->at(sindex.row())->get_fullname();
+//        qDebug() << " jay fullname " << model->at(sindex.row())->get_fullname();
 
         QQmlObjectListModel<FantasyBitAwardModelItem> *mymodel = model->at(sindex.row())->get_awardsModel();
-        qDebug() << " mymodel " << mymodel->count();
+//        qDebug() << " mymodel " << mymodel->count();
         return model->at(sindex.row())->get_playerid();
     }
 

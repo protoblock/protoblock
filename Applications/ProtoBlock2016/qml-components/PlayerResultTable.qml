@@ -34,17 +34,25 @@ Item {
             id: tvr
             Component.onCompleted: {
                 MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
-                //                selection.select(0);
+                selection.select(0);
+                console.log("tvr comleted")
             }
 
             onSelectionChanged: {
                 console.log("changed" + currentRow);
 //                console.log("selected" + currentRow + model.data(currentRow,"lastname"));
 //                            prevlpv.modelPick = model.data(currentRow,"awardsModel");
+                selectedRow = currentRow
             }
 
             onClicked: {
                 console.log("clicked" + currentRow);
+                tvr.selectedRow = currentRow
+            }
+
+            onCurrentRowChanged: {
+                console.log("onCurrentRowChanged" + currentRow);
+                tvr.selectedRow = currentRow
             }
 
             highlightOnFocus: true
@@ -67,13 +75,14 @@ Item {
             frameVisible: false
             selectionMode: SelectionMode.SingleSelection
 
+            property int selectedRow: -1
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
 //               SystemPalette {
 //                  id: myPalette;
 //                  colorGroup: SystemPalette.Inactive
 //               }
-               color: styleData.alternate?"#f5f5f5":"transparent"
+               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#f5f5f5":"transparent"
 //               {
 //                  var baseColor = styleData.alternate?"#f5f5f5":"transparent"
 //                  return styleData.selected?myPalette.highlight:baseColor
@@ -119,6 +128,8 @@ Item {
                     backgroundColor = Qt.binding(function() {
                         if ( !model )
                             return "transparent"
+                        else if (styleData.row===tvr.selectedRow )
+                            return "Light Grey"
                         else {
                             switch(model.pos) {
                             case "WR":
@@ -168,6 +179,9 @@ Item {
                     }
                     Component.onCompleted: {
                         backgroundColor = Qt.binding(function() {
+                            if (styleData.row===tvr.selectedRow )
+                                return "Light Grey"
+                            else
                             switch(styleData.value) {
                                 case "WR":
                                     return "#FEFBB6";
@@ -596,6 +610,11 @@ Item {
     Connections {
         target: tvr.selection
         onSelectionChanged: topwr.update()
+    }
+
+    Connections {
+        target: MiddleMan
+        onThePrevWeekChanged: tvr.selectedRow = -1
     }
 
     function update() {

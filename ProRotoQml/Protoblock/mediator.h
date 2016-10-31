@@ -75,6 +75,8 @@ class Mediator : public QObject {
     //schedule
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeeklyScheduleModel)
     QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pQItemSelectionModel)
+    QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pNextWeekScheduleModel)
+    QML_READONLY_CSTREF_PROPERTY (qint32, theNextWeek)
 
     //projections
     QML_READONLY_PTR_PROPERTY(ProjectionsViewFilterProxyModel, pProjectionsViewFilterProxyModel)
@@ -85,6 +87,7 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (qint32, season)
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
+    QML_READONLY_CSTREF_PROPERTY (QString, prevSelectedPlayerDisplay)
 
     QML_WRITABLE_CSTREF_PROPERTY(bool,useSelected)
     QML_WRITABLE_CSTREF_PROPERTY(bool,thisWeekPrev)
@@ -436,7 +439,26 @@ public:
         m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Deselect);
     }
 
+    Q_INVOKABLE void setNextWeekData(int week) {
+        if ( !amLive ) return;
+
+        if ( week <= 0 || week >= 17 )
+            return;
+
+        if ( week < m_theWeek)
+            return;
+
+        if ( week == m_theNextWeek)
+            return;
+
+        m_pNextWeekScheduleModel->clear();
+        settheNextWeek(week);
+        m_pNextWeekScheduleModel->updateWeeklySchedule(week,
+                                  mGateway->dataService->GetWeeklySchedule(week));
+    }
+
     Q_INVOKABLE void setPrevWeekData(int week) {
+        setprevSelectedPlayerDisplay("");
         if ( !amLive ) return;
 
         if ( week <= 0 || week >= 17 )
@@ -451,7 +473,11 @@ public:
         if ( week == m_thePrevWeek && !(week == m_theWeek && m_thisWeekPrev ))
             return;
 
-        setthePrevWeek(week);
+        if ( week == m_thePrevWeek )
+            emit thePrevWeekChanged(m_thePrevWeek);
+        else
+            setthePrevWeek(week);
+
         if ( week == m_theWeek) {
            m_pPreviousWeekScheduleModel->clear();
 //           for ( auto *it : m_pWeekClosedScheduleModel->)
@@ -465,11 +491,13 @@ public:
         const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevWeek);
         mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel,myFantasyName);
         myPrevGamesSelectionModel.reset();
-        m_pResultsViewFilterProxyModel->invalidate();
+        m_pResultSelectedModel->setSourceModel(&dummyResultSelectedModel);
         m_pResultSelectedModel->clear();
+        m_pResultsViewFilterProxyModel->invalidate();
     }
 
     Q_INVOKABLE void setPrevWeekResultLeaderSelection(QString in) {
+        qDebug() << " setPrevWeekResultLeaderSelection " << in;
         if ( !amLive ) return;
 
         auto it = mPlayerResultModel.getByUid(in);
@@ -480,6 +508,11 @@ public:
 //            m_pResultSelectedModel->setSortRole("award");//mPlayerProjModel.roleForName("pos"));
 //            m_pResultSelectedModel->setDynamicSortFilter(true);
 //            m_pResultSelectedModel->setSource();
+
+            QString fordisply("%1 (%2) %3 - %4 ƑɃ");
+            QString fd2 = fordisply.arg(it->get_fullname()).arg(it->get_pos()).arg(it->get_teamid())
+                    .arg(it->get_fb());
+            setprevSelectedPlayerDisplay(fordisply);
         }
     }
 

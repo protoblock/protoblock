@@ -46,9 +46,11 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pPreviousWeekScheduleModel = new WeeklyScheduleModel;
     myPrevGamesSelectionModel.setModel(m_pPreviousWeekScheduleModel);
 
+    m_pNextWeekScheduleModel = new WeeklyScheduleModel;
 
     m_theWeek = 0;
     m_thePrevWeek = 0;
+    m_theNextWeek = 0;
     m_liveSync ="Sync";
     m_seasonString = "";
 
@@ -216,7 +218,7 @@ void Mediator::updateWeek() {
         qDebug() << " mGateway->dataService null ";
     else {
         set_busySend(false);
-        updateLiveLeaders();
+
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
             fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theWeek);
@@ -238,6 +240,7 @@ void Mediator::updateWeek() {
 
             m_pProjectionsViewFilterProxyModel->invalidate();
         }
+        updateLiveLeaders();
     }
 }
 
