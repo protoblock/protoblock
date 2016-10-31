@@ -185,7 +185,7 @@ Material.ApplicationWindow{
             rootLoader.source = Qt.resolvedUrl("qrc:/"+ cp.replace(/\s/g, "") + ".qml" )
             console.log(" onSelectedTabChanged " + selectedTabIndex)
 //            navDrawer.enabled = sectionTitles[selectedTabIndex] === "Projections"
-            expanded = false//sectionLeftEnable[selectedTabIndex];
+            expanded = sectionLeftEnable[selectedTabIndex];
         }
 
         actionBar.customContent:

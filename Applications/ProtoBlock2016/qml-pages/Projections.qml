@@ -160,132 +160,140 @@
                 id: stack
 //                anchors.fill: parent
 
+                Component.onCompleted: {
+                   stack.push({item: prevWeekS, properties:{objectName:"prevWeekS"}})
+                   stack.push({item: pptS, properties:{objectName:"pptS"}})
+
+                   console.log( " stack " + width)
+                }
+
+                Item {
+                    id: pptS
+                    width: parent.width
+                    height: parent.height
+                    SplitView {
+                        orientation: Qt.Horizontal
+                        handleDelegate: handeldel
+                        width: parent.width
+                        height: parent.height
                         Component.onCompleted: {
-                           stack.push({item: prevWeekS, properties:{objectName:"prevWeekS"}})
-                           stack.push({item: pptS, properties:{objectName:"pptS"}})
-
-                           console.log( " stack " + width)
+                            lpv.releasedit.connect(releaseditMethod)
+                            console.log( " split " + width)
                         }
+                        function releaseditMethod(fname) {
+                            ppt.addcolumn(fname)
+                            console.log(" releaseditMethod " )
+                        }
+                        Card {
+                            anchors.leftMargin: 10
+                            Layout.minimumWidth: parent.width * .10
+                            Layout.maximumWidth: parent.width * .30
 
-                        Item {
-                            id: pptS
-                            width: parent.width
-                            height: parent.height
-                            SplitView {
+                            ScheduleView {
+                                id: scheduleView1
+                            }
+                        }
+                        Card {
+                            Layout.minimumWidth: parent.width * .30
+                            Layout.maximumWidth: parent.width * .80
+                            Layout.fillWidth: true
 
-                                orientation: Qt.Horizontal
-                                handleDelegate: handeldel
+                            PlayerProjTable {
+                                id: ppt
+                                who: "ppt"
+                            }
+
+                            Rectangle {
+                                id: myrec
+                                anchors {
+                                    top: parent.top
+                                    right:  parent.right
+                                    bottom:  parent.bottom
+                                }
                                 width: parent.width
-                                height: parent.height
-                                Component.onCompleted: {
-                                    lpv.releasedit.connect(releaseditMethod)
-                                    console.log( " split " + width)
-                                }
-                                function releaseditMethod(fname) {
-                                    ppt.addcolumn(fname)
-                                    console.log(" releaseditMethod " )
-                                }
-                                Card {
-                                    anchors.leftMargin: 10
-                                    Layout.minimumWidth: parent.width * 0
-                                    Layout.maximumWidth: parent.width * .40
+                                color: "transparent"
 
-                                    ScheduleView {
-                                        id: scheduleView1
+                                DropArea {
+                                    anchors.fill: parent
+                                    onEntered: {
+                                        console.log(" entered ")
+                                        drag.source.caught = (ppt.ccount > 10) ? false : true
+                                        myrec.color = Qt.binding( function() {
+                                           if( ppt.ccount > 10) return "red";
+                                           else
+                                            return "green";
+                                        })
+
+                                        myrec.opacity = Qt.binding(function() {
+                                            return .20})
+
+                                        ppt.indrop(drag.source.fname)
                                     }
-                                }
-                                Card {
-                                    Layout.minimumWidth: parent.width * .40
-                                    Layout.maximumWidth: parent.width * .90
-                                    Layout.fillWidth: true
+                                    onExited: {
+                                        console.log(" exit ")
+                                        drag.source.caught = false;
+                                        myrec.color = Qt.binding( function() {
+                                           return "transparent"})
 
-                                    PlayerProjTable {
-                                        id: ppt
-                                        who: "ppt"
-                                    }
+                                        myrec.opacity = Qt.binding(function() {
+                                            return 0})
 
-                                    Rectangle {
-                                        id: myrec
-                                        anchors {
-                                            top: parent.top
-                                            right:  parent.right
-                                            bottom:  parent.bottom
-                                        }
-                                        width: parent.width
-                                        color: "transparent"
-
-                                        DropArea {
-                                            anchors.fill: parent
-                                            onEntered: {
-                                                console.log(" entered ")
-                                                drag.source.caught = (ppt.ccount > 10) ? false : true
-                                                myrec.color = Qt.binding( function() {
-                                                   if( ppt.ccount > 10) return "red";
-                                                   else
-                                                    return "green";
-                                                })
-
-                                                myrec.opacity = Qt.binding(function() {
-                                                    return .20})
-
-                                                ppt.indrop(drag.source.fname)
-                                            }
-                                            onExited: {
-                                                console.log(" exit ")
-                                                drag.source.caught = false;
-                                                myrec.color = Qt.binding( function() {
-                                                   return "transparent"})
-
-                                                myrec.opacity = Qt.binding(function() {
-                                                    return 0})
-
-                                                ppt.donedrop()
-                                            }
-                                        }
-                                    }
-                                }
-                                Card {
-                                    anchors.leftMargin: 10
-                                    id: rightr
-                                    Layout.minimumWidth: parent.width * .1
-                                    Layout.maximumWidth: parent.width * .60
-                                    LeaderProjView {
-                                        id: lpv
+                                        ppt.donedrop()
                                     }
                                 }
                             }
                         }
-                        Item {
-                            id: prevWeekS
-                            width: parent.width
-                            height: parent.height
-                            SplitView {
-                                orientation: Qt.Horizontal
-                                handleDelegate: handeldel
-                                width: parent.width
-                                height: parent.height
-                                Card {
-                                    anchors.leftMargin: 10
-                                    Layout.minimumWidth: parent.width * 0
-                                    Layout.maximumWidth: parent.width * .30
-
-                                    ScheduleViewPrev {
-                                        id: scheduleView2
-                                    }
-                                }
-                                Card {
-                                    Layout.minimumWidth: parent.width * .70
-                                    Layout.maximumWidth: parent.width
-                                    Layout.fillWidth: true
-
-                                    PlayerResultTable {
-                                        id: prevPPT
-                                        who: "prev"
-                                    }
-                               }
+                        Card {
+                            anchors.leftMargin: 10
+                            id: rightr
+                            Layout.minimumWidth: parent.width * .20
+                            Layout.maximumWidth: parent.width * .60
+                            LeaderProjView {
+                                id: lpv
                             }
                         }
-                        Item {
+                    }
+                }
+
+                Item {
+                    id: prevWeekS
+                    width: parent.width
+                    height: parent.height
+                    SplitView {
+                        orientation: Qt.Horizontal
+                        handleDelegate: handeldel
+                        width: parent.width
+                        height: parent.height
+                        Card {
+                            anchors.leftMargin: 10
+                            Layout.minimumWidth: parent.width * .10
+                            Layout.maximumWidth: parent.width * .30
+
+                            ScheduleViewPrev {
+                                id: scheduleView2
+                            }
+                        }
+                        Card {
+                            Layout.minimumWidth: parent.width * .40
+                            Layout.maximumWidth: parent.width * .90
+                            Layout.fillWidth: true
+
+                            PlayerResultTable {
+                                id: prevPPT
+                                who: "prev"
+                            }
+                       }
+                        Card {
+                            anchors.leftMargin: 10
+                            Layout.minimumWidth: parent.width * .15
+                            Layout.maximumWidth: parent.width * .40
+                            LeaderAwardView {
+                                id: prevlpv
+                            }
+                        }
+                    }
+                }
+                Item {
                             id: nextWeekS
                             SplitView {
                                 orientation: Qt.Horizontal

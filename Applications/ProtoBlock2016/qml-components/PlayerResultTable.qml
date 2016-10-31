@@ -9,13 +9,11 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
 
 Item {
-    id: topw
+    id: topwr
     anchors.fill: parent
-    signal indrop(string fname)
-    signal donedrop
-    signal addcolumn(string fname)
 
-    property alias ccount: tv.columnCount
+    property variant selectedModel
+//    property alias ccount: tvr.columnCount
     property int focuscount: 0
     property string who: "default"
     property int rw: 8
@@ -33,32 +31,23 @@ Item {
         height: parent.height - ProtoScreen.guToPx(8)
 
         TableView {
-            id: tv
+            id: tvr
             Component.onCompleted: {
-                ppt.addcolumn.connect(addcolumnMethod)
                 MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
+                //                selection.select(0);
             }
 
-//            onClicked: {
-//                expand(index)
-//            }
-
-            function addcolumnMethod(fname) {
-//                customRoleNames[0] = fname
-                console.log(" addColumn " )
-                var role = MiddleMan.addFnameColumn(fname,tv.columnCount)
-                tv.addColumn(columnComponent.createObject(tv, {
-                                                              "role": role,
-                                                              "title": fname,
-                                                              "horizontalAlignment": Text.AlignHCenter,
-                                                              "delegate": copydel
-                                                          })
-                             )
-
-
-//                tv.resizeColumnsToContents()
+            onSelectionChanged: {
+                console.log("changed" + currentRow);
+//                console.log("selected" + currentRow + model.data(currentRow,"lastname"));
+//                            prevlpv.modelPick = model.data(currentRow,"awardsModel");
             }
-            highlightOnFocus: false
+
+            onClicked: {
+                console.log("clicked" + currentRow);
+            }
+
+            highlightOnFocus: true
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
             implicitWidth: parent.width
@@ -76,7 +65,7 @@ Item {
 
             headerDelegate: headerdel
             frameVisible: false
-            selectionMode: SelectionMode.NoSelection
+            selectionMode: SelectionMode.SingleSelection
 
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
@@ -240,8 +229,6 @@ Item {
                 delegate: fbdel
             }
 
-
-
             TableViewColumn{
                 role: "myproj"
                 title: "My Projection"
@@ -259,7 +246,6 @@ Item {
                 width: ProtoScreen.guToPx(10)
                 delegate: fbdel
             }
-
 
             TableViewColumn {
                 role: "PassYd"
@@ -363,7 +349,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
-                visible: topw.kicker
+                visible: topwr.kicker
             }
             TableViewColumn {
                 role: "FG"
@@ -372,7 +358,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw) * 2
                 delegate: fbdel
-                visible: topw.kicker
+                visible: topwr.kicker
             }
             TableViewColumn {
                 role: "PtsA"
@@ -511,7 +497,7 @@ Item {
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor
+                    styleData.column  === tvr.sortIndicatorColumn ? themeroot.theme.accentColor
                                                                  : "black"
                 Material.Label {
                     anchors.margins: ProtoScreen.guToPx(.25)
@@ -606,5 +592,19 @@ Item {
         }
 
     }
+
+    Connections {
+        target: tvr.selection
+        onSelectionChanged: topwr.update()
+    }
+
+    function update() {
+        tvr.selection.forEach(function(rowIndex) {
+            MiddleMan.setPrevWeekResultLeaderSelection(tvr.model.getAwardsModelUid(rowIndex));
+            //,tvr.model.roleForName("awardsModel"))
+//            if (row && row.awardsModel) topwr.selectedModel = row.awardsModel
+        })
+    }
+
 }
 

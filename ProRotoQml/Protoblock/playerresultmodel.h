@@ -41,6 +41,8 @@ public:
     }
 };
 
+//class FantasyBitAwardModel : QQmlObjectListModel<FantasyBitAwardModelItem> {};
+
 
 class PlayerResultModelItem : public QObject {
     Q_OBJECT
@@ -97,6 +99,7 @@ public:
         m_gameid = gameid;
         m_result = pr.result();
         m_fb = pr.result() * 100.0;
+
 
 
         const Ostats &os = pr.stats().ostats();
@@ -260,9 +263,23 @@ public:
         }
     }
 
+    Q_INVOKABLE QString getAwardsModelUid(int rowIndex) {
+        auto sindex = mapToSource(index(rowIndex,0));
+
+        PlayerResultModel * model = dynamic_cast<PlayerResultModel *>(sourceModel());
+        if (model==NULL) return nullptr;
+
+        qDebug() << " jay fullname " << model->at(sindex.row())->get_fullname();
+
+        QQmlObjectListModel<FantasyBitAwardModelItem> *mymodel = model->at(sindex.row())->get_awardsModel();
+        qDebug() << " mymodel " << mymodel->count();
+        return model->at(sindex.row())->get_playerid();
+    }
+
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
 //        qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
+
 
 //                qDebug() << " << cc " << columnCount();
 //        QSortFilterProxyModel::setSortRole(column);
@@ -329,7 +346,7 @@ protected:
 
 //        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
 
-//        model->at(myindex.row())->set_projection(value.toInt());
+//        model->at(myindex.row())- set_projection(value.toInt());
 //        return true;
 //    }
 
@@ -387,6 +404,8 @@ protected:
 Q_DECLARE_METATYPE(PlayerResultModelItem*)
 Q_DECLARE_METATYPE(PlayerResultModel*)
 Q_DECLARE_METATYPE(FantasyBitAwardModelItem *)
+Q_DECLARE_METATYPE(QQmlObjectListModel<FantasyBitAwardModelItem> *)
+
 
 }
 

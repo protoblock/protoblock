@@ -24,6 +24,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pQItemSelectionModel(&myGamesSelectionModel),
     m_pPrevQItemSelectionModel(&myPrevGamesSelectionModel),
     m_pLeaderBoardSortModel(new SortFilterProxyModel),
+    m_pResultSelectedModel(new SortFilterProxyModel),
     m_blocknum(0),
     m_height(0) {
 
@@ -70,6 +71,11 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_useSelected = true;
     m_busySend = false;
     m_thisWeekPrev = false;
+
+
+    m_pResultSelectedModel->setSourceModel(&dummyResultSelectedModel);
+    m_pResultSelectedModel->setSortRole("award");
+    m_pResultSelectedModel->setDynamicSortFilter(true);
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -213,33 +219,24 @@ void Mediator::updateWeek() {
         updateLiveLeaders();
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
-            //setCurrentWeekData();
+            fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theWeek);
+            for ( auto &gi : weekly.games()) {
+                auto status = mGateway->dataService->GetGameStatus(gi.id());
+                if ( status.status() == GameStatus_Status_CLOSED )
+                    m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
+                else
+                    m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
+            }
 
-            m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
-                          mGateway->dataService->GetWeeklySchedule(m_theWeek));
-
-            m_pWeekClosedScheduleModel->updateWeeklySchedule(m_theWeek,
-                          mGateway->dataService->GetWeeklySchedule(m_theWeek));
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
 
-            for ( auto gr : vgr ) {
-                m_pWeeklyScheduleModel->UpdateStatus(gr.info.id(),gr.status);
-                m_pWeekClosedScheduleModel->UpdateStatus(gr.info.id(),gr.status, true);
-//                mPlayerProjModel.ongameStatusChange(gr.info.id(),gr.status);
-            }
-
             set_thisWeekPrev(m_pWeekClosedScheduleModel->count() > 0);
-
-//            m_pPWeekClosedScheduleModel
-
-//            for ( auto it : m_pWeeklyScheduleModel)
-
-//            m_pQItemSelectionModel->reset();
 
             if (myFantasyName != "" )
                 updateCurrentFantasyPlayerProjections();
-//            m_pProjectionsViewFilterProxyModel->invalidate();
+
+            m_pProjectionsViewFilterProxyModel->invalidate();
         }
     }
 }
