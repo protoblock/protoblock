@@ -115,7 +115,7 @@ public:
 
     void update (FantasyNameBalModelItem *in) {
         FantasyNameBalModelItem *my = (FantasyNameBalModelItem *)get(in->get_name());
-        if ( my && my != in)
+        if ( my )
             my->update(*in);
         else {
             FantasyNameBalModelItem *n = new FantasyNameBalModelItem(*in);
