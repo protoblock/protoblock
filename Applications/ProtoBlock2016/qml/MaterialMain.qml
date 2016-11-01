@@ -162,7 +162,7 @@ Material.ApplicationWindow{
     ]
 
     // Level Five
-    property var levelFive: [ "Protoblock" , "About" , "Contact Us"]
+    property var levelFive: [ "Protoblock" , "Scoring System", "Contact Us"]
     property var levelFiveIcons: [
         "qrc:/icons/newspaper.png" ,
         "qrc:/icons/ic_help.png",
