@@ -75,6 +75,8 @@ class Mediator : public QObject {
     //schedule
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeeklyScheduleModel)
     QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pQItemSelectionModel)
+    QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pNextWeekScheduleModel)
+    QML_READONLY_CSTREF_PROPERTY (qint32, theNextWeek)
 
     //projections
     QML_READONLY_PTR_PROPERTY(ProjectionsViewFilterProxyModel, pProjectionsViewFilterProxyModel)
@@ -85,11 +87,14 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (qint32, season)
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
+    QML_READONLY_CSTREF_PROPERTY (QString, prevSelectedPlayerDisplay)
 
     QML_WRITABLE_CSTREF_PROPERTY(bool,useSelected)
+    QML_WRITABLE_CSTREF_PROPERTY(bool,thisWeekPrev)
 
     QML_READONLY_CSTREF_PROPERTY (qint32, height)
     QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
+
 
     QML_WRITABLE_CSTREF_PROPERTY(bool,busySend)
 
@@ -113,12 +118,18 @@ class Mediator : public QObject {
     QItemSelectionModel myPrevGamesSelectionModel;
 
         //schedule
+    QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeekClosedScheduleModel)
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pPreviousWeekScheduleModel)
     QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pPrevQItemSelectionModel)
 
         //results
     QML_READONLY_PTR_PROPERTY(ResultsViewFilterProxyModel, pResultsViewFilterProxyModel)
     QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
+
+    //awards
+    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pResultSelectedModel)
+//    QML_READONLY_PTR_PROPERTY (QQmlObjectListModel<FantasyBitAwardModelItem>, pResultSelectedModel)
+    QQmlObjectListModel<FantasyBitAwardModelItem> dummyResultSelectedModel;
 
     static Mediator *myInstance;
 public:
@@ -428,30 +439,81 @@ public:
         m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Deselect);
     }
 
-    Q_INVOKABLE void setPrevWeekData(int week) {
+    Q_INVOKABLE void setNextWeekData(int week) {
         if ( !amLive ) return;
 
         if ( week <= 0 || week >= 17 )
             return;
 
-        if ( week >= m_theWeek)
+        if ( week < m_theWeek)
+            return;
+
+        if ( week == m_theNextWeek)
+            return;
+
+        m_pNextWeekScheduleModel->clear();
+        settheNextWeek(week);
+        m_pNextWeekScheduleModel->updateWeeklySchedule(week,
+                                  mGateway->dataService->GetWeeklySchedule(week));
+    }
+
+    Q_INVOKABLE void setPrevWeekData(int week) {
+        setprevSelectedPlayerDisplay("");
+        if ( !amLive ) return;
+
+        if ( week <= 0 || week >= 17 )
+            return;
+
+        if ( week > m_theWeek)
+            return;
+
+        if ( week == m_theWeek && !m_thisWeekPrev )
+            return;
+
+        if ( week == m_thePrevWeek && !(week == m_theWeek && m_thisWeekPrev ))
             return;
 
         if ( week == m_thePrevWeek )
-            return;
+            emit thePrevWeekChanged(m_thePrevWeek);
+        else
+            setthePrevWeek(week);
 
-        qDebug() << " 1 ";
-        setthePrevWeek(week);
-        m_pPreviousWeekScheduleModel->updateWeeklySchedule(m_thePrevWeek,
-                                  mGateway->dataService->GetWeeklySchedule(m_thePrevWeek));
-        qDebug() << " 2 ";
+        if ( week == m_theWeek) {
+           m_pPreviousWeekScheduleModel->clear();
+//           for ( auto *it : m_pWeekClosedScheduleModel->)
+           m_pPreviousWeekScheduleModel->append(m_pWeekClosedScheduleModel->toList());
+        }
+        else
+            m_pPreviousWeekScheduleModel->updateWeeklySchedule(m_thePrevWeek,
+                                      mGateway->dataService->GetWeeklySchedule(m_thePrevWeek));
+
 
         const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevWeek);
-        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel);
+        mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel,myFantasyName);
         myPrevGamesSelectionModel.reset();
+        m_pResultSelectedModel->setSourceModel(&dummyResultSelectedModel);
+        m_pResultSelectedModel->clear();
         m_pResultsViewFilterProxyModel->invalidate();
-        qDebug() << " 3 ";
+    }
 
+    Q_INVOKABLE void setPrevWeekResultLeaderSelection(QString in) {
+        qDebug() << " setPrevWeekResultLeaderSelection " << in;
+        if ( !amLive ) return;
+
+        auto it = mPlayerResultModel.getByUid(in);
+        if ( it ) {
+            //update_pResultSelectedModel(it->get_awardsModel());
+
+            m_pResultSelectedModel->setSourceModel(it->get_awardsModel());
+//            m_pResultSelectedModel->setSortRole("award");//mPlayerProjModel.roleForName("pos"));
+//            m_pResultSelectedModel->setDynamicSortFilter(true);
+//            m_pResultSelectedModel->setSource();
+
+            QString fordisply("%1 (%2) %3 - %4 ƑɃ");
+            QString fd2 = fordisply.arg(it->get_fullname()).arg(it->get_pos()).arg(it->get_teamid())
+                    .arg(it->get_fb());
+            setprevSelectedPlayerDisplay(fordisply);
+        }
     }
 
     bool usingRandomNames = false;
@@ -460,12 +522,12 @@ public:
     int fnameindex;
 
     //fantasy name - manage
-    /*Q_INVOKABLE void pk2fname(const QString&);
+//    Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(QString s) {
         qDebug() << " inside checkname" << s;
         emit doNameCheck(s);
     }
-    */
+
     Q_INVOKABLE QString importMnemonic(const QString &importStr);
     Q_INVOKABLE void signPlayer(const QString &name);
     Q_INVOKABLE void useName(const QString &name);
@@ -542,9 +604,12 @@ protected slots:
 
     void nameAvail(QString &s, bool tf) {
         qDebug() << " in side name availa" << s << tf;
-       nameCheckGet(s, tf ?  "true" : "false");
+       emit nameCheckGet(s, tf ?  "true" : "false");
     }
 
+
+
+//    void nameAvaila()
     //quotes
 //    void getDepthRep();
 
@@ -662,6 +727,7 @@ private:
 
     void updateLiveLeaders(bool getLastWeek = true) {
         mFantasyNameBalModel.updateleaders(mGateway->dataService->GetLeaderBoard());
+
         if ( m_theWeek-1 > 0 && getLastWeek)
             getLeaders(m_theWeek-1,true,false);
         getLeaders(m_theWeek,false,false);
@@ -710,8 +776,32 @@ public slots:
     }
 
     void OnFinishedResults() {
-        if ( amLive )
+        if ( amLive ) {
             updateLiveLeaders(false);
+
+            vector<pair<std::string,WeeklyScheduleModelItem *>> todo;
+            for ( const auto item : *m_pWeeklyScheduleModel) {
+                std::string id = item->get_gameid().toStdString();
+                auto status = mGateway->dataService->GetGameStatus(id);
+                if ( status.status() != GameStatus_Status_CLOSED )
+                    continue;
+
+                todo.push_back({id,item});
+            }
+
+            for ( auto ip : todo ) {
+                mPlayerProjModel.ongameStatusChange(ip.first,GameStatus_Status_CLOSED);
+                m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(ip.second,GameStatus_Status_CLOSED));
+                m_pWeeklyScheduleModel->remove(ip.second);
+            }
+
+            if ( todo.size() > 0 ) {
+                if ( !m_thisWeekPrev)
+                    set_thisWeekPrev(true);
+
+                m_pProjectionsViewFilterProxyModel->invalidate();
+            }
+        }
     }
 
 private:
