@@ -125,6 +125,8 @@ int i =0;
 //        }
         case GETALLNAMES: { //get all names
                             // todo: replace with leaderboard
+//            doSendLeaders(pClient);
+//            return;
             qDebug() << " GETALLNAMESGETALLNAMES ";
             rep.set_ctype(GETALLNAMES);
 //            rep.SerializeToString(&mRepstr);
@@ -310,6 +312,7 @@ void LiteServer::doSendProjections(QWebSocket *pClient,const std::string & fname
 
 void LiteServer::doSendLeaders(QWebSocket *pClient) {
     fantasybit::WSReply rep;
+    rep.set_ctype(GETALLNAMES);
     GetAllNamesRep &ganp = Server::instance()->mAllNamesRep;
     rep.SetAllocatedExtension(GetAllNamesRep::rep,&(Server::instance()->mAllNamesRep));
     rep.SerializeToString(&mRepstr);

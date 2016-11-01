@@ -19,9 +19,30 @@
 #include "pbgateways.h"
 #include "weeklyschedulemodel.h"
 #include <QItemSelectionModel>
+#include "fantasynamemodel.h"
 
 namespace pb {
 using namespace fantasybit;
+
+class FantasyBitAwardModelItem : public QObject {
+    Q_OBJECT
+    QML_READONLY_CSTREF_PROPERTY (QString, name)
+    QML_READONLY_CSTREF_PROPERTY (int, proj)
+    QML_READONLY_CSTREF_PROPERTY (int, award)
+
+public:
+
+    explicit FantasyBitAwardModelItem(const fantasybit::FantasyBitAward &fba,
+                                   QObject *parent = nullptr)
+                            :  QObject(parent) {
+        m_name = fba.name().data();
+        m_proj = fba.proj();
+        m_award = fba.award();
+    }
+};
+
+//class FantasyBitAwardModel : QQmlObjectListModel<FantasyBitAwardModelItem> {};
+
 
 class PlayerResultModelItem : public QObject {
     Q_OBJECT
@@ -53,8 +74,10 @@ class PlayerResultModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (int, SFTY)
     QML_READONLY_CSTREF_PROPERTY (int, D2pt)
     QML_READONLY_CSTREF_PROPERTY (int, PtsA)
+    QML_OBJMODEL_PROPERTY (FantasyBitAwardModelItem, awardsModel)
 
-
+    QML_READONLY_CSTREF_PROPERTY (int, myproj)
+    QML_READONLY_CSTREF_PROPERTY (int, myaward)
 
 public:
 
@@ -62,6 +85,7 @@ public:
                                    const QString &teamid,
                                    const QString &gameid,
                                    const fantasybit::PlayerResult &pr,
+                                   const std::string fname = "",
                                    QObject *parent = nullptr)
                                             :  QObject(parent) {
         m_fullname =  QString("%1 %2")
@@ -75,6 +99,7 @@ public:
         m_gameid = gameid;
         m_result = pr.result();
         m_fb = pr.result() * 100.0;
+
 
 
         const Ostats &os = pr.stats().ostats();
@@ -109,6 +134,17 @@ public:
         m_FG = fgs;
 
 
+        m_myproj = 0;
+        m_myaward = 0;
+        m_awardsModel = new QQmlObjectListModel<FantasyBitAwardModelItem>(this,QByteArray(),{"name"});
+        for ( auto it : pr.fantaybitaward()) {
+            m_awardsModel->append(new FantasyBitAwardModelItem(it));
+            if ( fname == it.name() ) {
+                m_myproj = it.proj();
+                m_myaward = it.award();
+            }
+        }
+
         //qDebug() << " PlayerResultModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
     }
 };
@@ -126,7 +162,7 @@ public:
 
     void updateRosters(const std::vector<pb::GameResult> &inrosters,
                        pb::IDataService *ds,
-                       WeeklyScheduleModel &sched) {
+                       WeeklyScheduleModel &sched,const std::string &usename) {
 
         clear();
 
@@ -142,13 +178,14 @@ public:
             //add home players
             for(const auto& playerresult : game.home_result()) {
                 PlayerBase &pd = ds->GetPlayerBase(playerresult.playerid());
-                append(new PlayerResultModelItem(pd,home,gameId,playerresult,this));
+                append(new PlayerResultModelItem(pd,home,gameId,playerresult,usename,this));
+
             }
 
             //add away players
             for(const auto& playerresult : game.away_result()) {
                 PlayerBase &pd = ds->GetPlayerBase(playerresult.playerid());
-                append(new PlayerResultModelItem(pd,away,gameId,playerresult,this));
+                append(new PlayerResultModelItem(pd,away,gameId,playerresult,usename,this));
             }
         }
     }
@@ -226,9 +263,23 @@ public:
         }
     }
 
+    Q_INVOKABLE QString getAwardsModelUid(int rowIndex) {
+        auto sindex = mapToSource(index(rowIndex,0));
+
+        PlayerResultModel * model = dynamic_cast<PlayerResultModel *>(sourceModel());
+        if (model==NULL) return nullptr;
+
+//        qDebug() << " jay fullname " << model->at(sindex.row())->get_fullname();
+
+        QQmlObjectListModel<FantasyBitAwardModelItem> *mymodel = model->at(sindex.row())->get_awardsModel();
+//        qDebug() << " mymodel " << mymodel->count();
+        return model->at(sindex.row())->get_playerid();
+    }
+
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
 //        qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
+
 
 //                qDebug() << " << cc " << columnCount();
 //        QSortFilterProxyModel::setSortRole(column);
@@ -295,7 +346,7 @@ protected:
 
 //        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
 
-//        model->at(myindex.row())->set_projection(value.toInt());
+//        model->at(myindex.row())- set_projection(value.toInt());
 //        return true;
 //    }
 
@@ -352,6 +403,9 @@ protected:
 
 Q_DECLARE_METATYPE(PlayerResultModelItem*)
 Q_DECLARE_METATYPE(PlayerResultModel*)
+Q_DECLARE_METATYPE(FantasyBitAwardModelItem *)
+Q_DECLARE_METATYPE(QQmlObjectListModel<FantasyBitAwardModelItem> *)
+
 
 }
 

@@ -499,7 +499,7 @@ bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) 
     string key = "gameresult:" + gameid;
     string temp;
     if (!staticstore->Get(leveldb::ReadOptions(), key, &temp).ok())
-        qWarning() << gameid << " not found";
+        qWarning() << gameid.data() << " not found";
     else {
         if (!result.ParseFromString(temp) )
             qWarning() << " cant parse game result";
@@ -735,7 +735,7 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
 std::vector<fantasybit::GameResult> NFLStateData::GetPrevWeekGameResults(int week) {
     std::vector<fantasybit::GameResult> ret{};
     auto s = GetGlobalState();
-    if  (s.week() <= week && s.week() != 0)
+    if  (s.week() < week && s.week() != 0)
         return ret;
 
     auto ws = GetWeeklySchedule(week);

@@ -13,9 +13,25 @@ import Material.Extras 1.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
-//import Communi 3.0
+import Communi 3.0
 
 Material.ApplicationWindow{
+
+    property string version: "1.1.3" //version
+    property alias realRoot: themeroot
+
+    property string  uname
+
+    property string  err
+    property string currentTeamInFocus
+    property string currentHomeTeam
+    property string currentAwayTeam
+    property string helperTxt
+    property string helperHeader: "Help"
+    property bool reloadrowquote: true
+    property string msgString
+    property bool reloadorderpos: true
+
 
     statusBar: StatusBar {
 
@@ -35,11 +51,8 @@ Material.ApplicationWindow{
 
     id: themeroot
     visible: true
-    width: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableWidth * .95)
-                                                                              : ProtoScreen.availableWidth
-    height: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(ProtoScreen.guToPx(150), ProtoScreen.availableHeight * .95)
-                                                                               : ProtoScreen.availableHeight
-
+    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
+    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
 
     color: "transparent"
     Component.onCompleted: {
@@ -48,6 +61,10 @@ Material.ApplicationWindow{
 
         console.log( "actual " + height + " ProtoScreen.guToPx(150) "  + ProtoScreen.guToPx(150) + " real " + realRoot.height
                     + " avail " + ProtoScreen.availableHeight + " all " + ProtoScreen.desktopHeight + " design " + ProtoScreen.designHeight)
+
+        console.log( "actual width" + width + " ProtoScreen.guToPx(150) "  + ProtoScreen.guToPx(150) + " real " + realRoot.width
+                    + " avail " + ProtoScreen.availableWidth + " all " + ProtoScreen.desktopWidth + " design " + ProtoScreen.designWidth)
+
         console.log("Primary Color " +  Colors.primaryColor  +  " themeroot Active ?  " + themeroot.active)
 
         uname = MiddleMan.init()
@@ -58,8 +75,8 @@ Material.ApplicationWindow{
 
         }
 
-        themeroot.showMaximized()
-        rootLoader.source = "qrc:/Projections.qml";
+//        themeroot.showMaximized()
+//        rootLoader.source = "qrc:/Projections.qml";
 
     }
 
@@ -120,9 +137,8 @@ Material.ApplicationWindow{
 
 
     // Level Two
-    property var levelOne: [ "2016 Projections" , "2015 Leaderboard" ]
+    property var levelOne: [ "Projections"]
     property var levelOneIcons: [
-        "qrc:/icons/newspaper.png",
         "qrc:/icons/newspaper.png"
     ]
 
@@ -135,17 +151,14 @@ Material.ApplicationWindow{
         "qrc:/icons/ic_help.png",
         "qrc:/icons/ic_help.png",
         "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_help.png"
     ]
 
     // Level Four
-    property var levelFour: [ "Account" , "Import-Export"]//, "Proto Chat", ]
+    property var levelFour: [ "Account" , "Import-Export", "Proto Chat", ]
     property var levelFourIcons: [
         "qrc:/icons/account_action_circle.png" ,
         "qrc:/icons/ic_sync.png",
         "qrc:/icons/ic_lightbulb.png",
-        "qrc:/icons/ic_help.png",
-        "qrc:/icons/ic_help.png"
     ]
 
     // Level Five
@@ -292,6 +305,10 @@ Material.ApplicationWindow{
             height: navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
+
+            Component.onCompleted: {
+                console.log(" mainmat " + rootLoader.width)
+            }
         }
 
         Material.ProgressCircle {

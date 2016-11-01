@@ -9,16 +9,21 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
 
 Item {
-    id: topw
+    id: topwr
     anchors.fill: parent
-    signal indrop(string fname)
-    signal donedrop
-    signal addcolumn(string fname)
 
-    property alias ccount: tv.columnCount
+    property variant selectedModel
+//    property alias ccount: tvr.columnCount
     property int focuscount: 0
     property string who: "default"
     property int rw: 8
+
+    property bool kicker: true
+    property bool def: true
+    property bool qb: true
+    property bool wr: true
+    property bool rb: true
+
     Item {
         id: i2
         anchors.top: parent.top
@@ -26,32 +31,31 @@ Item {
         height: parent.height - ProtoScreen.guToPx(8)
 
         TableView {
-            id: tv
+            id: tvr
             Component.onCompleted: {
-                ppt.addcolumn.connect(addcolumnMethod)
                 MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
+                selection.select(0);
+                console.log("tvr comleted")
             }
 
-//            onClicked: {
-//                expand(index)
-//            }
-
-            function addcolumnMethod(fname) {
-//                customRoleNames[0] = fname
-                console.log(" addColumn " )
-                var role = MiddleMan.addFnameColumn(fname,tv.columnCount)
-                tv.addColumn(columnComponent.createObject(tv, {
-                                                              "role": role,
-                                                              "title": fname,
-                                                              "horizontalAlignment": Text.AlignHCenter,
-                                                              "delegate": copydel
-                                                          })
-                             )
-
-
-//                tv.resizeColumnsToContents()
+            onSelectionChanged: {
+                console.log("changed" + currentRow);
+//                console.log("selected" + currentRow + model.data(currentRow,"lastname"));
+//                            prevlpv.modelPick = model.data(currentRow,"awardsModel");
+                selectedRow = currentRow
             }
-            highlightOnFocus: false
+
+            onClicked: {
+                console.log("clicked" + currentRow);
+                tvr.selectedRow = currentRow
+            }
+
+            onCurrentRowChanged: {
+                console.log("onCurrentRowChanged" + currentRow);
+                tvr.selectedRow = currentRow
+            }
+
+            highlightOnFocus: true
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
             implicitWidth: parent.width
@@ -69,15 +73,16 @@ Item {
 
             headerDelegate: headerdel
             frameVisible: false
-            selectionMode: SelectionMode.NoSelection
+            selectionMode: SelectionMode.SingleSelection
 
+            property int selectedRow: -1
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
 //               SystemPalette {
 //                  id: myPalette;
 //                  colorGroup: SystemPalette.Inactive
 //               }
-               color: styleData.alternate?"#f5f5f5":"transparent"
+               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#f5f5f5":"transparent"
 //               {
 //                  var baseColor = styleData.alternate?"#f5f5f5":"transparent"
 //                  return styleData.selected?myPalette.highlight:baseColor
@@ -123,6 +128,8 @@ Item {
                     backgroundColor = Qt.binding(function() {
                         if ( !model )
                             return "transparent"
+                        else if (styleData.row===tvr.selectedRow )
+                            return "Light Grey"
                         else {
                             switch(model.pos) {
                             case "WR":
@@ -172,6 +179,9 @@ Item {
                     }
                     Component.onCompleted: {
                         backgroundColor = Qt.binding(function() {
+                            if (styleData.row===tvr.selectedRow )
+                                return "Light Grey"
+                            else
                             switch(styleData.value) {
                                 case "WR":
                                     return "#FEFBB6";
@@ -233,12 +243,21 @@ Item {
                 delegate: fbdel
             }
 
+            TableViewColumn{
+                role: "myproj"
+                title: "My Projection"
+                horizontalAlignment : Text.AlignHCenter
+                delegate: fbdel
+                movable: false
+                width: ProtoScreen.guToPx(10)
+            }
+
             TableViewColumn {
-                role: "PassTD"
-                title: "PassTD"
+                role: "myaward"
+                title: "My Award"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(rw)
+                width: ProtoScreen.guToPx(10)
                 delegate: fbdel
             }
 
@@ -249,15 +268,18 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb
             }
             TableViewColumn {
-                role: "RushTD"
-                title: "RushTD"
+                role: "PassTD"
+                title: "PassTD"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb
             }
+
             TableViewColumn {
                 role: "RushYd"
                 title: "RushYd"
@@ -265,6 +287,37 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb || rb
+            }
+
+            TableViewColumn {
+                role: "RushTD"
+                title: "RushTD"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: qb || rb
+            }
+
+            TableViewColumn {
+                role: "Rec"
+                title: "Rec"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: wr || rb
+            }
+
+            TableViewColumn {
+                role: "RecYd"
+                title: "RecYd"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: wr || rb
             }
             TableViewColumn {
                 role: "RecTD"
@@ -273,23 +326,9 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: wr || rb
             }
-            TableViewColumn {
-                role: "RecYd"
-                title: "RecYd"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "Rec"
-                title: "Rec"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
+
             TableViewColumn {
                 role: "Int"
                 title: "Int"
@@ -297,6 +336,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb
             }
             TableViewColumn {
                 role: "Fum"
@@ -305,6 +345,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb || wr || rb
             }
             TableViewColumn {
                 role: "_2Pt"
@@ -313,6 +354,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: qb || wr || rb
             }
             TableViewColumn {
                 role: "PAT"
@@ -321,54 +363,16 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: topwr.kicker
             }
             TableViewColumn {
                 role: "FG"
                 title: "FG"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(rw)
+                width: ProtoScreen.guToPx(rw) * 2
                 delegate: fbdel
-            }
-            TableViewColumn {
-                role: "D_TD"
-                title: "D_TD"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "Sack"
-                title: "Sack"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "TO"
-                title: "TO"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "SFTY"
-                title: "SFTY"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
-            }
-            TableViewColumn {
-                role: "D2pt"
-                title: "Def2pt"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-                delegate: fbdel
+                visible: topwr.kicker
             }
             TableViewColumn {
                 role: "PtsA"
@@ -377,7 +381,55 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
+                visible: def
             }
+            TableViewColumn {
+                role: "Sack"
+                title: "Sack"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+            }
+            TableViewColumn {
+                role: "TA"
+                title: "TO"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+            }
+            TableViewColumn {
+                role: "D_TD"
+                title: "DefTD"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+            }
+            TableViewColumn {
+                role: "SFTY"
+                title: "SFTY"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+            }
+            TableViewColumn {
+                role: "D2pt"
+                title: "Def2pt"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+                delegate: fbdel
+                visible: def
+
+            }
+
         }
     }
 
@@ -403,6 +455,25 @@ Item {
                     anchors.fill: parent
                     onCurrentTextChanged: {
                        MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
+                        kicker = def = qb = (currentIndex === 0)
+
+                        if ( currentIndex === 0 )
+                            kicker = def = qb = rb = wr = true
+                        else {
+                            kicker = def = qb = rb = wr = false
+
+                        if ( currentIndex === 5) {
+                            kicker = true;
+                        }
+                        else if ( currentIndex === 6) {
+                            def = true
+                        }
+                        else if (currentIndex === 1 )
+                            qb = true
+                        else if ( currentIndex === 2)
+                            rb = true
+                        else wr = true
+                        }
                     }
                 }
 
@@ -435,12 +506,12 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: styleData.column === 4 ? themeroot.theme.accentColor :
+                backgroundColor: styleData.column === 5 || styleData.column === 6 ? themeroot.theme.accentColor :
                                  themeroot.theme.primaryColor
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor
+                    styleData.column  === tvr.sortIndicatorColumn ? themeroot.theme.accentColor
                                                                  : "black"
                 Material.Label {
                     anchors.margins: ProtoScreen.guToPx(.25)
@@ -452,7 +523,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === 4 ? themeroot.theme.secondaryColor : "white"
+                    color: styleData.column === 5 ||  styleData.column === 6 ? Material.Theme.light.textColor : "white"
                     //                    font.bold: styleData.column === 4
                 }
             }
@@ -535,5 +606,24 @@ Item {
         }
 
     }
+
+    Connections {
+        target: tvr.selection
+        onSelectionChanged: topwr.update()
+    }
+
+    Connections {
+        target: MiddleMan
+        onThePrevWeekChanged: tvr.selectedRow = -1
+    }
+
+    function update() {
+        tvr.selection.forEach(function(rowIndex) {
+            MiddleMan.setPrevWeekResultLeaderSelection(tvr.model.getAwardsModelUid(rowIndex));
+            //,tvr.model.roleForName("awardsModel"))
+//            if (row && row.awardsModel) topwr.selectedModel = row.awardsModel
+        })
+    }
+
 }
 

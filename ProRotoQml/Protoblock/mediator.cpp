@@ -24,6 +24,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pQItemSelectionModel(&myGamesSelectionModel),
     m_pPrevQItemSelectionModel(&myPrevGamesSelectionModel),
     m_pLeaderBoardSortModel(new SortFilterProxyModel),
+    m_pResultSelectedModel(new SortFilterProxyModel),
     m_blocknum(0),
     m_height(0) {
 
@@ -37,15 +38,19 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     //schedule models
     m_pWeeklyScheduleModel = new WeeklyScheduleModel;
+    m_pWeekClosedScheduleModel = new WeeklyScheduleModel;
+
     myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
     m_gameFilter = "Scheduled";
 
     m_pPreviousWeekScheduleModel = new WeeklyScheduleModel;
     myPrevGamesSelectionModel.setModel(m_pPreviousWeekScheduleModel);
 
+    m_pNextWeekScheduleModel = new WeeklyScheduleModel;
 
     m_theWeek = 0;
     m_thePrevWeek = 0;
+    m_theNextWeek = 0;
     m_liveSync ="Sync";
     m_seasonString = "";
 
@@ -67,6 +72,12 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     m_useSelected = true;
     m_busySend = false;
+    m_thisWeekPrev = false;
+
+
+    m_pResultSelectedModel->setSourceModel(&dummyResultSelectedModel);
+    m_pResultSelectedModel->setSortRole("award");
+    m_pResultSelectedModel->setDynamicSortFilter(true);
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -80,8 +91,10 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     }
     else {
         auto it = mFantasyNameBalModel.getByUid(myname.name().data());
-        if ( it != nullptr)
-            mGoodNameBalModel.append(new FantasyNameBalModelItem(*it));
+        if ( it != nullptr) {
+            auto it2 = new FantasyNameBalModelItem(*it);
+            mGoodNameBalModel.append(it2);
+        }
         else {
             qDebug() <<  " mediator namestatus not in  mFantasyNameBalModel";
             if ( myname.status() < MyNameStatus::requested) {
@@ -130,7 +143,6 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
     int heighest = 0;
     string hname  = "";
     for ( auto m : mfn ) {
-        qDebug() << " mediator myname2 " << m.DebugString().data();
         if ( m.status() >= heighest) {
             heighest = m.status();
             hname = m.name();
@@ -141,8 +153,10 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
         if ( nullptr != mGoodNameBalModel.getByUid(m.name().data()) ) continue;
 
         auto it = mFantasyNameBalModel.getByUid(m.name().data());
-        if ( it != nullptr)
+        if ( it != nullptr) {
             mGoodNameBalModel.insert(mGoodNameBalModel.size(),it);
+            auto it2 = mGoodNameBalModel.getByUid(m.name().data());
+        }
     }
 
     qDebug() << " namename wins " << heighest << hname.data();
@@ -204,27 +218,29 @@ void Mediator::updateWeek() {
         qDebug() << " mGateway->dataService null ";
     else {
         set_busySend(false);
-        updateLiveLeaders();
+
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
-            //setCurrentWeekData();
+            fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theWeek);
+            for ( auto &gi : weekly.games()) {
+                auto status = mGateway->dataService->GetGameStatus(gi.id());
+                if ( status.status() == GameStatus_Status_CLOSED )
+                    m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
+                else
+                    m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
+            }
 
-            m_pWeeklyScheduleModel->updateWeeklySchedule(m_theWeek,
-                          mGateway->dataService->GetWeeklySchedule(m_theWeek));
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
 
-            for ( auto gr : vgr ) {
-                m_pWeeklyScheduleModel->UpdateStatus(gr.info.id(),gr.status);
-                mPlayerProjModel.ongameStatusChange(gr.info.id(),gr.status);
-            }
-
-//            m_pQItemSelectionModel->reset();
+            set_thisWeekPrev(m_pWeekClosedScheduleModel->count() > 0);
 
             if (myFantasyName != "" )
                 updateCurrentFantasyPlayerProjections();
-//            m_pProjectionsViewFilterProxyModel->invalidate();
+
+            m_pProjectionsViewFilterProxyModel->invalidate();
         }
+        updateLiveLeaders();
     }
 }
 
@@ -249,8 +265,11 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 
 void Mediator::NewWeek(int week) {
     set_busySend(false);
+//    set_thisWeekPrev = false;
+
     if ( m_thePrevWeek == m_theWeek)
         setthePrevWeek(week);
+
     settheWeek(week);
     if ( amLive ) {
         updateLiveLeaders();

@@ -48,10 +48,7 @@ Item{
                     fillMode: Image.PreserveAspectFit
                     source: "qrc:/icons/action_account_circle.png"
                 }
-                valueText: "Balance : " + " 0"
             }
-
-
 
             Card{
                 id: bcard

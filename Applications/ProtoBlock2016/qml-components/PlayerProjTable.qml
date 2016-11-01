@@ -502,7 +502,7 @@ Item {
                     }
 
                     backgroundColor: themeroot.theme.accentColor
-                    textColor: themeroot.theme.secondaryColor
+                    textColor:  Material.Theme.light.textColor //themeroot.theme.secondaryColor
                     elevation: 2
                 }
 
@@ -609,7 +609,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === 4 ? themeroot.theme.secondaryColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
+                    color: styleData.column === 4 ? Material.Theme.light.textColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
 //                    font.bold: styleData.column === 4
                 }
             }

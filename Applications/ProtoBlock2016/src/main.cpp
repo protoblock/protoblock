@@ -100,6 +100,6 @@ int main(int argc, char *argv[])
 //    return 0;
 
     engine.dumpObjectInfo();
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/MaterialMain.qml")));
     return app.exec();
 }

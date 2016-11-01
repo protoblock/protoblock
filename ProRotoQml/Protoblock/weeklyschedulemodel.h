@@ -13,6 +13,29 @@
 
 using namespace  fantasybit;
 
+static QString GameStatusToString(fantasybit::GameStatus_Status gs) {
+    switch (gs) {
+    case GameStatus_Status_SCHEDULED:
+        return "Scheduled";
+        break;
+    case GameStatus_Status_PREGAME:
+        return "Pregame";
+        break;
+    case GameStatus_Status_INGAME:
+        return "Ingame";
+        break;
+    case GameStatus_Status_POSTGAME:
+        return "Postgame";
+        break;
+    case GameStatus_Status_CLOSED:
+        return "Closed";
+        break;
+
+    default:
+        break;
+    }
+}
+
 class WeeklyScheduleModelItem : public QObject {
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY (QString, time)
@@ -30,7 +53,28 @@ public:
         set_status("Scheduled");
         m_gameid = in.id().data();
 
+
         qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
+    }
+
+    explicit WeeklyScheduleModelItem(const fantasybit::GameInfo &in,fantasybit::GameStatus_Status gs, QObject *parent = nullptr) :  QObject(parent) {
+        m_time = fromTime_t_toFantasyString(in.time());
+        m_away = in.away().data();
+        m_home = in.home().data();
+        set_status(GameStatusToString(gs));
+        m_gameid = in.id().data();
+
+
+        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
+    }
+
+    explicit WeeklyScheduleModelItem(WeeklyScheduleModelItem *in,fantasybit::GameStatus_Status gs, QObject *parent = nullptr)
+                                                :  QObject(parent) {
+        m_time = in->get_time();
+        m_away = in->get_away();
+        m_home = in->get_home();
+        set_status(GameStatusToString(gs));
+        m_gameid = in->get_gameid();
     }
 };
 
@@ -57,36 +101,33 @@ public:
            append(new WeeklyScheduleModelItem(gi,this));
     }
 
-    void UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs) {
-        if ( gs == GameStatus_Status_CLOSED) {
+    bool UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs, bool reverse = false) {
+        auto *it = this->getByUid(gameid.data());
+        if ( !it ) return false;
+
+        if (GameStatusToString(gs) == it->get_status())
+            return false;
+
+        bool ret = false;
+        if ( gs == GameStatus_Status_CLOSED && !reverse) {
+            remove(it);
+            ret = true;
+        }
+        else if (gs == GameStatus_Status_CLOSED && reverse ) {
+            this->getByUid(gameid.data())->set_status(GameStatusToString(gs));
+            ret = true;
+        }
+        else if ( !reverse ) {
+            this->getByUid(gameid.data())->set_status(GameStatusToString(gs));
+            ret = false;
+        }
+        else if ( reverse ) {
+            ret = false;
             remove(this->getByUid(gameid.data()));
         }
-        else
-            this->getByUid(gameid.data())->set_status(toStatus(gs));
     }
 
-    static QString toStatus(fantasybit::GameStatus_Status gs) {
-        switch (gs) {
-        case GameStatus_Status_SCHEDULED:
-            return "Scheduled";
-            break;
-        case GameStatus_Status_PREGAME:
-            return "Pregame";
-            break;
-        case GameStatus_Status_INGAME:
-            return "Ingame";
-            break;
-        case GameStatus_Status_POSTGAME:
-            return "Postgame";
-            break;
-        case GameStatus_Status_CLOSED:
-            return "Closed";
-            break;
 
-        default:
-            break;
-        }
-    }
 };
 
 Q_DECLARE_METATYPE(WeeklyScheduleModelItem*)
