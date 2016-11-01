@@ -23,7 +23,7 @@ Item {
         id: i2
         anchors.top: parent.top
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(8)
+        height: parent.height - ProtoScreen.guToPx(5)
 
         TableView {
             id: tv

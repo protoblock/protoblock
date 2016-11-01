@@ -277,7 +277,7 @@ Item {
                     height: parent.height
                     Card {
                         anchors.leftMargin: 10
-                        Layout.minimumWidth: parent.width * .10
+                        Layout.minimumWidth: parent.width * 0
                         Layout.maximumWidth: parent.width * .30
 
                         ScheduleViewPrev {
@@ -286,8 +286,8 @@ Item {
                         }
                     }
                     Card {
-                        Layout.minimumWidth: parent.width * .40
-                        Layout.maximumWidth: parent.width * .90
+                        Layout.minimumWidth: parent.width * .30
+                        Layout.maximumWidth: parent.width * 1
                         Layout.fillWidth: true
                         PlayerResultTable {}
                     }
@@ -295,8 +295,8 @@ Item {
                     Card {
                         anchors.leftMargin: 10
                         id: rightr2
-                        Layout.minimumWidth: parent.width * .20
-                        Layout.maximumWidth: parent.width * .60
+                        Layout.minimumWidth: parent.width * 0
+                        Layout.maximumWidth: parent.width * .70
                         LeaderAwardView {
                             id: lav
                         }

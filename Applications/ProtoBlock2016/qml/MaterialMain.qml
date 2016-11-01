@@ -75,7 +75,7 @@ Material.ApplicationWindow{
 
         }
 
-//        themeroot.showMaximized()
+        themeroot.showMaximized()
 //        rootLoader.source = "qrc:/Projections.qml";
 
     }

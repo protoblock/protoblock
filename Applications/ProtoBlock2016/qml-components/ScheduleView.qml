@@ -54,7 +54,7 @@ Material.Card {
         property bool first: true
 //        anchors.fill: parent
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(8)
+        height: parent.height - ProtoScreen.guToPx(5)
         id: lv
         model: MiddleMan.pWeeklyScheduleModel
 //        MiddleMan.pWeeklyScheduleModel
