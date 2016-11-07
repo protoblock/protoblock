@@ -28,6 +28,7 @@ CONFIG += c++11
 
 contains(DEFINES, DATAAGENTWRITENAMES){
     QT += sql
+    CONFIG += Console
 }
 
 osx{
