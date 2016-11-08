@@ -45,6 +45,13 @@ Material.ApplicationWindow{
                       + " - " + MiddleMan.liveSync
                       + " - 2016 Week " + MiddleMan.theWeek
                 font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
+
+            }
+
+            Material.Label {
+                text: MiddleMan.controlMessage
+                font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
+                onLinkActivated: Qt.openUrlExternally(link)
             }
         }
     }

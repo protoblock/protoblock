@@ -96,6 +96,7 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
 
 
+    QML_READONLY_CSTREF_PROPERTY (QString, controlMessage)
     QML_WRITABLE_CSTREF_PROPERTY(bool,busySend)
 
     //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
