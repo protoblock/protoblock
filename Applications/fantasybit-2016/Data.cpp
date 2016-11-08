@@ -185,7 +185,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
         std::vector< std::pair<std::string,  FantasyNameBalMeta> > mapt;
         pb::loadMerkleMap(ldb,head.fnamemetaroot(),mtree,mapt);
 
-#ifdef DATAAGENTWRITENAMES_FORCE
+#if defined(DATAAGENTWRITENAMES_FORCE) && !defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
             SqlStuff sql("satoshifantasy","OnFantasyName");
 #endif
         for ( auto p : mapt) {
@@ -199,7 +199,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
             leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
             db5->Put(write_sync, hkey, fnb.SerializeAsString());
 //            qDebug() << "zxcvbn" << fnb.DebugString();
-#ifdef DATAAGENTWRITENAMES_FORCE
+#if defined(DATAAGENTWRITENAMES_FORCE) && !defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
             FantasyNameHash fnh{};
             fnh.set_name(fnb.name());
             fnh.set_hash(hash);

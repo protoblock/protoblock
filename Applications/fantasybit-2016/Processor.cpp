@@ -395,6 +395,11 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( !amlive ) break;
 #endif
 
+#ifdef DATAAGENTWRITENAMES_FORCE_GAMEID
+                if ( rd.game_result().gameid() != "201600927" ) break;
+                qDebug() << " DATAAGENTWRITENAMES_FORCE !!!!!!!!!!!!!!!!!!!!!!!!";
+#endif
+
                 Distribution dist{};
                 Profits prof{};
                 dist.set_gameid(rd.game_result().gameid());
