@@ -79,10 +79,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultSelectedModel->setSortRole("award");
     m_pResultSelectedModel->setDynamicSortFilter(true);
 
-//    setcontrolMessage("Companion Protoblock APP now available on iTunes and Google Play!");
-    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on" \
+    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
                       "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
-                      "and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
+                      " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
