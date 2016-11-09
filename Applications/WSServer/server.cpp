@@ -102,6 +102,8 @@ void Server::LiveGui(GlobalState gs) {
 
     qDebug() << "Server GlobalStateRep " << GlobalStateRep.DebugString().data();
 
+    emit GoLive();
+
 }
 
 void Server::initData() {

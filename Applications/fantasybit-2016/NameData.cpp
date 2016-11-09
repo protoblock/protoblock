@@ -150,6 +150,8 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t bl
     fn.set_name(name);
     fn.set_public_key(pubkey);
     fn.set_bits(0);
+    fn.set_block(blocknum);
+    fn.set_count(0);
 
     auto hash = FantasyName::name_hash(name);
 
@@ -159,8 +161,9 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t bl
     qDebug() << fn.DebugString().data();
 
     auto fnp = Commissioner::AddName(name,pubkey);
-    fnp->setBlockNump (blocknum,0);
     if ( fnp  != nullptr) {
+        fnp->setBlockNump (blocknum,0);
+
         OnFantasyName(fnp);
         if ( amlive ) {
             emit NewFantasyName(fn);

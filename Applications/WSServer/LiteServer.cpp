@@ -20,30 +20,34 @@ LiteServer::LiteServer(quint16 port, bool debug, QObject *parent) :
     m_pWebSocketServer(new QWebSocketServer(QStringLiteral("WS LiteServer"),
                                             QWebSocketServer::NonSecureMode, this)),
 //    m_clients(),
-    m_debug(debug)
+    m_debug(debug),
+    mPort(port)
 {
 
     gameStart.set_ctype(GETGAMESTART);
     mWSReplyGetProjectionRep.set_ctype(GETPROJECTIONS);
     mGetProjectionRep = mWSReplyGetProjectionRep.MutableExtension(GetProjectionRep::rep);
 
-    if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
+    Server *server = Server::instance();
+
+    connect(server,&Server::onNewProj, this, &LiteServer::onNewProj);
+    connect(server,&Server::GameStart, this, &LiteServer::GameStart);
+    connect(server,&Server::GameStart, this, &LiteServer::GameStart);
+
+    connect(server,&Server::GoLive,this, &LiteServer::OnLive);
+}
+
+void LiteServer::OnLive() {
+    if (m_pWebSocketServer->listen(QHostAddress::Any, mPort)) {
 
         QHostAddress hInf = m_pWebSocketServer->serverAddress();
 
-        qDebug() << "WS LiteServer " << hInf.toString() << " listening on port" << port << m_pWebSocketServer->serverName() << " ";
+        qDebug() << "WS LiteServer " << hInf.toString() << " listening on port" << mPort << m_pWebSocketServer->serverName() << " ";
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &LiteServer::onNewConnection);
 
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &LiteServer::closed);
     }
-
-    Server *server = Server::instance();
-
-    connect(server,&Server::onNewProj, this, &LiteServer::onNewProj);
-    connect(server,&Server::GameStart, this, &LiteServer::GameStart);
-
-    connect (this,SIGNAL(error(QString)),this,SLOT(handleError(QString)));
 }
 
 void LiteServer::GameStart(string gameid) {
