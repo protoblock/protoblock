@@ -211,7 +211,7 @@ Item {
 
                         PlayerProjTable {
                             id: ppt
-                            who: "ppt"
+//                            who: "ppt"
                         }
 
                         Rectangle {
