@@ -21,5 +21,7 @@
         <file>PlayerResultTable.qml</file>
         <file>ScheduleViewPrev.qml</file>
         <file>ScheduleViewNext.qml</file>
+        <file>ROWTradingTable.qml</file>
+
     </qresource>
 </RCC>

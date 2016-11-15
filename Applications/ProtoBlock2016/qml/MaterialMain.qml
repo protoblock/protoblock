@@ -108,8 +108,8 @@ Material.ApplicationWindow{
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Projections","Leaderboard",  "NFL News", "Account", "Protoblock"  ]
-    property var sectionTitlesAlias: [ "Projections", "Leaderboard", "NFL News", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Projections","Trading",  "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
         "qrc:/icons/ic_poll.png",
         "qrc:/icons/ic_timeline.png",
@@ -179,7 +179,7 @@ Material.ApplicationWindow{
 
     property string selectedComponent: sections[0][0]
 
-    property var sectionLeftEnable: [ false, true, true, true, true]
+    property var sectionLeftEnable: [ false, false, true, true, true]
 
     initialPage:  Material.TabbedPage {
         property bool expanded: true
