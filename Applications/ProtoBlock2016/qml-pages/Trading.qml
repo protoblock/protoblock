@@ -10,7 +10,8 @@ import QtQuick.Layouts 1.1
 
 Item {
     id: topi
-    property int week: MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
+    property int week:
+        MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
                           (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
     property string seasontext: MiddleMan.seasonString + " 2016 - Week "
     property string liveorresult: MiddleMan.liveSync === "Sync" || !stack || !stack.currentItem ? "Sync" :
@@ -92,7 +93,7 @@ Item {
         }
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: seasontext + week + " " + liveorresult
+            text: seasontext + "Rest-Of-Way" + " " + liveorresult
 //                                            (stack && stack.currentItem.objectName === "prevWeekS") ?
 //                                                (MiddleMan.thePrevWeek + " - Results") :
 //                                                (MiddleMan.theWeek + " - " + MiddleMan.liveSync);
@@ -116,6 +117,7 @@ Item {
 
 
             IconButton {
+                visible: false
 //                anchors.right: cBan.left
 //                Layout.fillHeight: true
 //                Layout.fillWidth: false
@@ -196,15 +198,6 @@ Item {
                         console.log(" releaseditMethod " )
                     }
                     Card {
-                        anchors.leftMargin: 10
-                        Layout.minimumWidth: parent.width * .10
-                        Layout.maximumWidth: parent.width * .30
-
-                        ScheduleView {
-                            id: scheduleView1
-                        }
-                    }
-                    Card {
                         Layout.minimumWidth: parent.width * .30
                         Layout.maximumWidth: parent.width * .80
                         Layout.fillWidth: true
@@ -257,7 +250,7 @@ Item {
                         anchors.leftMargin: 10
                         id: rightr
                         Layout.minimumWidth: parent.width * .20
-                        Layout.maximumWidth: parent.width * .60
+                        Layout.maximumWidth: parent.width * .70
                         LeaderProjView {
                             id: lpv
                         }
