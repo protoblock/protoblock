@@ -154,7 +154,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: resdel
+                delegate: fbdel
             }
 
 

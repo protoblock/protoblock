@@ -19,7 +19,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pFantasyNameBalModel(&mFantasyNameBalModel),
     mGoodNameBalModel{this,QByteArray(),{"name"}},
     m_pGoodNameBalModel(&mGoodNameBalModel),
-//    m_pTradingPositionsModel{new TradingPositionsModel(this,QByteArray (),{"symbol"})},
+    m_pTradingPositionsModel{new TradingPositionsModel(this,QByteArray (),{"symbol"})},
     myGamesSelectionModel{},
     myPrevGamesSelectionModel{},
     m_pQItemSelectionModel(&myGamesSelectionModel),
@@ -278,6 +278,8 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
         item->set_knownProjection(it->second);
         item->set_projection(it->second);
     }
+
+    m_pTradingPositionsModel->setfantasyname(myFantasyName.data());
 }
 
 void Mediator::NewWeek(int week) {

@@ -61,9 +61,9 @@ class Mediator : public QObject {
 //    QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
 
 //    QML_READONLY_PTR_PROPERTY(DepthMarketModel, )
-//    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
+    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
 //    //QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
-//    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
+    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
 //    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
 
@@ -245,10 +245,11 @@ public:
         else
             m_pGlobalOpenOrdersModel = model->get_pOpenOrdersModel();
     }
-    Q_INVOKABLE QString getOrderModelSymbol() {
-        return m_pGlobalOpenOrdersModel->get_pidsymbol();
-    }
     */
+    Q_INVOKABLE QString getOrderModelSymbol() {
+        return "1401";//m_pGlobalOpenOrdersModel->get_pidsymbol();
+    }
+
     //projections
     Q_INVOKABLE void select(int row, int command) {
         qDebug() << " meiator selected" << row << " commsnd " << command;
@@ -546,27 +547,27 @@ public:
     Q_INVOKABLE QStringList allNamesList() { return m_allNamesList; }
 
     //portfolio
-//    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
-//        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
-//        if ( model == nullptr ) {
-//            qDebug() << " bad data for getPlayerNamePos " << uid;
-//            return "";
-//        }
-//        else
-//            return model->get_fullname() + " (" + model->get_position() +")" ;
-//    }
+    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
+        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
+        if ( model == nullptr ) {
+            qDebug() << " bad data for getPlayerNamePos " << uid;
+            return "";
+        }
+        else
+            return model->get_fullname() + " (" + model->get_pos() +")" ;
+    }
 
 
     //data
-//    Q_INVOKABLE QString getTeamid(const QString &uid) {
-//        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
-//        if ( model == nullptr ) {
-//            qDebug() << " bad data for getTeamid " << uid;
-//            return "";
-//        }
-//        else
-//            return model->get_teamid();
-//    }
+    Q_INVOKABLE QString getTeamid(const QString &uid) {
+        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
+        if ( model == nullptr ) {
+            qDebug() << " bad data for getTeamid " << uid;
+            return "";
+        }
+        else
+            return model->get_teamid();
+    }
 
     //schedule
     Q_INVOKABLE void setScheduleFilter(const QString& filter) {

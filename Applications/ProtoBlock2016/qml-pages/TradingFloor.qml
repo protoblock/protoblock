@@ -10,7 +10,7 @@ import ProRotoQml.Theme 1.0
 //import ProRotoQml.Models 1.0
 
 Item {
-
+    anchors.fill: parent
     id: pit
     property string contract
     property string symbol
@@ -35,9 +35,9 @@ Item {
 //        }
     }
 
-    Component.onDestruction: {
-        MiddleMan.stopDepth(symbol)
-    }
+//    Component.onDestruction: {
+//        MiddleMan.stopDepth(symbol)
+//    }
 
     Flickable{
         height: parent.height

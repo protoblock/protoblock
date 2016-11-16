@@ -67,12 +67,29 @@ Item {
 
                     ROWTradingTable {}
                 }
-                Card {
-                    anchors.leftMargin: 10
+                SplitView {
                     id: rightr
+                    orientation: Qt.Vertical
+//                    handleDelegate: handeldel
+//                    width: parent.width
+                    height: parent.height
+                    anchors.leftMargin: 10
                     Layout.minimumWidth: parent.width * .20
                     Layout.maximumWidth: parent.width * .70
-                    TradingFloor {}
+
+                    Card {
+                        TradingFloor {}
+                        Layout.maximumHeight: parent.height * .90
+                        Layout.minimumHeight: parent.height * .10
+                        Layout.fillHeight: true
+                    }
+                    Card {
+                        Layout.maximumHeight: parent.height * .90
+                        Layout.minimumHeight: parent.height * .10
+                        Orders {
+                           anchors.fill: parent
+                        }
+                    }
                 }
             }
         }
