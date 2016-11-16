@@ -11,7 +11,8 @@ namespace pb {
 
 Mediator::Mediator(QObject *parent) :  QObject(parent),
 //    mPlayerQuoteSliceModel{this,"","symbol"},
-//    m_pPlayerQuoteSliceModel(&mPlayerQuoteSliceModel),
+    dummyPlayerQuoteSliceModelItem(fantasybit::ROWMarket::default_instance()),
+    m_pPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
 //    mDepthMarketModel{},
 //    m_pDepthMarketModel(&mDepthMarketModel),
     mFantasyNameBalModel(this,QByteArray(),{"name"}),
@@ -68,6 +69,13 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultsViewFilterProxyModel->setSortRole("result");//mPlayerProjModel.roleForName("pos"));
     m_pResultsViewFilterProxyModel->setDynamicSortFilter(true);
 
+
+    //trading
+    m_pPlayerQuoteSliceModel = new PlayerQuoteSliceModel(this,QByteArray(),{"symbol"});
+    m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(m_pPlayerQuoteSliceModel);
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("lastprice");
+    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
 
 
     m_useSelected = true;
@@ -237,6 +245,11 @@ void Mediator::updateWeek() {
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
 
+            int i = 0;
+            for( auto it : mPlayerProjModel ) {
+                if ( i++ > 20 )  break;
+                m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(*it));
+            }
             set_thisWeekPrev(m_pWeekClosedScheduleModel->count() > 0);
 
             if (myFantasyName != "" )

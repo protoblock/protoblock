@@ -14,7 +14,7 @@ Item {
     id: pit
     property string contract
     property string symbol
-    property variant inplay: MiddleMan.pDepthMarketModel.pPlayerQuoteSliceModelItem
+    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
 
 
     property int depthsize: 5

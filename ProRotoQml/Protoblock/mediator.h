@@ -55,9 +55,12 @@ class Mediator : public QObject {
 
 
     //Trading
-//    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
-//    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
-//    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceViewFilterProxyModel, pPlayerQuoteSliceViewFilterProxyModel)
+//    QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
+
+//    QML_READONLY_PTR_PROPERTY(DepthMarketModel, )
 //    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
 //    //QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
 //    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
@@ -132,6 +135,9 @@ class Mediator : public QObject {
 //    QML_READONLY_PTR_PROPERTY (QQmlObjectListModel<FantasyBitAwardModelItem>, pResultSelectedModel)
     QQmlObjectListModel<FantasyBitAwardModelItem> dummyResultSelectedModel;
 
+    //trading
+    PlayerQuoteSliceModelItem dummyPlayerQuoteSliceModelItem;
+
     static Mediator *myInstance;
 public:
     static Mediator *instance();
@@ -166,7 +172,8 @@ public:
 //            getDepthRep();
 //    }
 
-//    Q_INVOKABLE void startDepth(const QString& symbol) {
+    Q_INVOKABLE void startDepth(const QString& symbol) {
+        m_pPlayerQuoteSliceModelItem = m_pPlayerQuoteSliceModel->getByUid(symbol);
 //        depthBackup--;
 //        if ( depthBackup <= 0 ) {
 //            depthBackup = 0;
@@ -186,10 +193,10 @@ public:
 
 //        if ( !polldepth.isActive() )
 //            polldepth.start(depthInterval);
-////        11
-////        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
-////        getOrderPos();
-//    }
+//        11
+//        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+//        getOrderPos();
+    }
 
 //    Q_INVOKABLE void stopDepth(const QString& symbol) {
 //        polldepth.stop();
@@ -517,6 +524,7 @@ public:
         }
     }
 
+    
     bool usingRandomNames = false;
 
     std::vector<std::string> fnames;

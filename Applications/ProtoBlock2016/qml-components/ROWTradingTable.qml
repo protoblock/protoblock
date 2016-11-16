@@ -28,7 +28,7 @@ Item {
 
     property int ocount: 3
     property int bcount: 2
-    property int pcount: 4
+    property int pcount: 3
     property int mcount: 4
 
     property int ocol: 0
@@ -98,7 +98,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
             implicitWidth: parent.width
-            model: MiddleMan.pResultsViewFilterProxyModel
+            model: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
 
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
@@ -131,7 +131,7 @@ Item {
 
             //**** my orders data
             TableViewColumn {
-                role: "myaward"
+                role: "myposition"
                 title: "My Position"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
@@ -140,7 +140,7 @@ Item {
             }
 
             TableViewColumn {
-                role: "myaward"
+                role: "mypnl"
                 title: "My PnL"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
@@ -149,27 +149,27 @@ Item {
             }
 
             TableViewColumn {
-                role: "myaward"
+                role: "myavg"
                 title: "My Avg"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: resdel
             }
 
 
             //**** basic data
             TableViewColumn {
-                role: "myaward"
+                role: "ytd"
                 title: "YTD Points"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: resdel
             }
 
             TableViewColumn {
-                role: "myaward"
+                role: "lastprice"
                 title: "ROW Price"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
@@ -313,34 +313,34 @@ Item {
                 }
             }
 
-            TableViewColumn {
-                role: "status"
-                title: "Roster"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(6)
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
+//            TableViewColumn {
+//                role: "status"
+//                title: "Roster"
+//                horizontalAlignment : Text.AlignHCenter
+//                movable: false
+//                width: ProtoScreen.guToPx(6)
+//                delegate: Material.Label {
+//                    anchors.centerIn: parent
+//                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignHCenter
 
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: styleData.value === 0 ? "on" : "off"
-                }
-            }
+//                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                    text: styleData.value === 0 ? "on" : "off"
+//                }
+//            }
 
             //**** market
             TableViewColumn{
-                role: "result"
+                role: "bidsize"
                 title: "bid Qty"
                 horizontalAlignment : Text.AlignHCenter
-                delegate: resdel
+                delegate: fbdel
                 movable: false
                 width: ProtoScreen.guToPx(10)
             }
 
             TableViewColumn {
-                role: "fb"
+                role: "bid"
                 title: "Bid"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
@@ -349,7 +349,7 @@ Item {
             }
 
             TableViewColumn{
-                role: "myproj"
+                role: "ask"
                 title: "Ask"
                 horizontalAlignment : Text.AlignHCenter
                 delegate: fbdel
@@ -358,7 +358,7 @@ Item {
             }
 
             TableViewColumn {
-                role: "myaward"
+                role: "asksize"
                 title: "Ask Qty"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
@@ -376,6 +376,7 @@ Item {
                 delegate: fbdel
                 visible: qb
             }
+
             TableViewColumn {
                 role: "PassTD"
                 title: "PassTD"
@@ -676,7 +677,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: !model ? "" : model.result.toFixed(2)
+            text: styleData.value.toFixed(2)
             font.bold: true;
         }
     }
@@ -729,7 +730,7 @@ Item {
 
     function update() {
         tvr.selection.forEach(function(rowIndex) {
-            MiddleMan.setPrevWeekResultLeaderSelection(tvr.model.getAwardsModelUid(rowIndex));
+            MiddleMan.startDepth(tvr.model.getPlayerSliceModelUid(rowIndex));
             //,tvr.model.roleForName("awardsModel"))
 //            if (row && row.awardsModel) topwr.selectedModel = row.awardsModel
         })

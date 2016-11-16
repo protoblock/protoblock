@@ -11,6 +11,7 @@
 #include "QQmlPtrPropertyHelpers.h"
 #include "playerquoteslicemodel.h"
 
+namespace pb {
 using namespace fantasybit;
 
 class DepthMarketModelItem : public QObject {
@@ -102,5 +103,5 @@ Q_DECLARE_METATYPE(DepthMarketModel*)
 //if( column == i++)
 //    return data->propertyValue<PropertyNames::CHANGE>();
 
-
+}
 #endif // DEPTHMARKETMODEL_H
