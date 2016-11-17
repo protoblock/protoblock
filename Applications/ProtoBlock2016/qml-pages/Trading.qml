@@ -60,20 +60,13 @@ Item {
                 handleDelegate: handeldel
                 width: parent.width
                 height: parent.height
-                Card {
-                    Layout.minimumWidth: parent.width * .30
-                    Layout.maximumWidth: parent.width * .80
-                    Layout.fillWidth: true
-
-                    ROWTradingTable {}
-                }
                 SplitView {
                     id: rightr
                     orientation: Qt.Vertical
 //                    handleDelegate: handeldel
 //                    width: parent.width
                     height: parent.height
-                    anchors.leftMargin: 10
+//                    anchors.leftMargin: 10
                     Layout.minimumWidth: parent.width * .20
                     Layout.maximumWidth: parent.width * .70
 
@@ -90,6 +83,14 @@ Item {
                            anchors.fill: parent
                         }
                     }
+                }
+
+                Card {
+                    Layout.minimumWidth: parent.width * .30
+                    Layout.maximumWidth: parent.width * .80
+                    Layout.fillWidth: true
+
+                    ROWTradingTable {}
                 }
             }
         }
