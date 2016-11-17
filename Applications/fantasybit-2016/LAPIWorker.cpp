@@ -45,7 +45,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
 
     //data processing
-    //QObject::connect(this,SIGNAL(LiveData(bool)),&exchangedata,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(LiveData(bool)),&exchangedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
@@ -106,6 +106,12 @@ void MainLAPIWorker::GoLive() {
 #ifdef LIGHT_CLIENT_ONLY
     intervalstart = 500;
 #endif
+
+
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    justwentlive = true;
+#endif
+
     timer->start(intervalstart);
 
     qDebug() << "emit LiveData(true)";
@@ -113,7 +119,6 @@ void MainLAPIWorker::GoLive() {
     emit LiveGui(data.GetGlobalState());
     qDebug() << "emit LiveGui(data.GetGlobalState())" << data.GetGlobalState().DebugString();
     OnGetMyNames();
-
 
 }
 
@@ -268,6 +273,12 @@ void MainLAPIWorker::OnBlockError(int32_t last) {
 }
 
 void MainLAPIWorker::Timer() {
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    if ( justwentlive ) {
+        justwentlive = false;
+    }
+#endif
+
     //qDebug() << " Timer ";
     bool numtogtlast;
     {

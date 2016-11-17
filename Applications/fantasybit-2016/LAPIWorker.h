@@ -57,6 +57,9 @@ class MainLAPIWorker : public QObject , public IResolvable
 
     std::recursive_mutex last_mutex{};
 
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    bool justwentlive = false;
+#endif
 public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}

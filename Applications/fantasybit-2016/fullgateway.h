@@ -132,8 +132,8 @@ public:
         connect( this, &FullGateway::OnUseName,
                  mlapi, &MainLAPIWorker::OnUseName);
 
-        connect(Mediator::instance(),&Mediator::ready,this, &FullGateway::ClientReady);
-//                [this](){
+        connect(mlapi,&Mediator::ready,this, &FullGateway::ClientReady);
+//                [this](){101
 //                       if ( this->amLive ) {
 //                           emit LiveGui(m_gs);
 //                       }
@@ -146,6 +146,30 @@ public:
 
 //                       heslive = true;
 //                 });
+
+        ExchangeData *exchangedata = &(mlapi->ExData());
+
+        //trading
+        QObject::connect(exchangedata,SIGNAL(NewMarketSnapShot(fantasybit::MarketSnapshot*)),
+                          this,SLOT(OnMarketSnapShot(fantasybit::MarketSnapshot*)));
+
+        QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *)),
+                          this,SLOT(OnMarketTicker(fantasybit::MarketTicker *)));
+
+        QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+                          this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
+
+        QObject::connect(exchangedata,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
+                          this,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
+
+        QObject::connect(exchangedata,
+                         SIGNAL(NewOO(fantasybit::FullOrderDelta)),
+                          this,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
+
+        QObject::connect(exchangedata,
+                         SIGNAL(NewPos(fantasybit::FullPosition)),
+                          this,SLOT(OnNewPos(fantasybit::FullPosition)));
+
 
     }
 

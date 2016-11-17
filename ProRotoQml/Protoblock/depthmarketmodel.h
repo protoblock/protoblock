@@ -9,7 +9,7 @@
 #include "StateData.pb.h"
 #include <QQmlHelpersCommon.h>
 #include "QQmlPtrPropertyHelpers.h"
-#include "playerquoteslicemodel.h"
+//#include "playerquoteslicemodel.h"
 
 namespace pb {
 using namespace fantasybit;
@@ -34,27 +34,27 @@ public:
 
 class DepthMarketModel : public QQmlObjectListModel<DepthMarketModelItem> {
     Q_OBJECT
-    QML_READONLY_CSTREF_PROPERTY(QString, playerid)
-    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
+//    QML_READONLY_CSTREF_PROPERTY(QString, playerid)
+//    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 
 public:
-    explicit DepthMarketModel() :  m_pPlayerQuoteSliceModelItem(nullptr) {}
-    void updateFullDepth(const GetDepthRep &depthrep) {
-        setplayerid(depthrep.pid().data());
-        if ( depthrep.has_rowmarket() ) {
-            if ( m_pPlayerQuoteSliceModelItem == nullptr)
-                update_pPlayerQuoteSliceModelItem(new PlayerQuoteSliceModelItem(depthrep.rowmarket()) );
-            else {
-                m_pPlayerQuoteSliceModelItem->setProperties(depthrep.rowmarket());
-//                emit pPlayerQuoteSliceModelItemChanged(m_pPlayerQuoteSliceModelItem);
-            }
-//            setplayerQuoteSliceModelItem(PlayerQuoteSliceModelItem(depthrep.rowmarket()));
-        }
-        clear();
+//    explicit DepthMarketModel() :  m_pPlayerQuoteSliceModelItem(nullptr) {}
+//    void updateFullDepth(const GetDepthRep &depthrep) {
+//        setplayerid(depthrep.pid().data());
+//        if ( depthrep.has_rowmarket() ) {
+//            if ( m_pPlayerQuoteSliceModelItem == nullptr)
+//                update_pPlayerQuoteSliceModelItem(new PlayerQuoteSliceModelItem(depthrep.rowmarket()) );
+//            else {
+//                m_pPlayerQuoteSliceModelItem->setProperties(depthrep.rowmarket());
+////                emit pPlayerQuoteSliceModelItemChanged(m_pPlayerQuoteSliceModelItem);
+//            }
+////            setplayerQuoteSliceModelItem(PlayerQuoteSliceModelItem(depthrep.rowmarket()));
+//        }
+//        clear();
 
-        for ( auto &di : depthrep.depthitems())
-            append(new DepthMarketModelItem(di));
-    }
+//        for ( auto &di : depthrep.depthitems())
+//            append(new DepthMarketModelItem(di));
+//    }
 };
 
 Q_DECLARE_METATYPE(DepthMarketModel*)

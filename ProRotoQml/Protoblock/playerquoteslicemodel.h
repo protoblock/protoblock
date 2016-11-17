@@ -10,7 +10,8 @@
 #include "fbutils.h"
 #include "playerprojmodel.h"
 #include <QtCore/qsortfilterproxymodel.h>
-
+#include "openordersmodel.h"
+#include "depthmarketmodel.h"
 
 namespace pb {
 using namespace fantasybit;
@@ -61,6 +62,11 @@ class PlayerQuoteSliceModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, SFTY)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, D2pt)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, PtsA)
+
+    QML_OBJMODEL_PROPERTY (OpenOrdersModel, ordersModel)
+    QML_OBJMODEL_PROPERTY (DepthMarketModel, depthModel)
+
+
 public:
 
     explicit PlayerQuoteSliceModelItem(const fantasybit::ROWMarket &in) :  QObject(nullptr) {
