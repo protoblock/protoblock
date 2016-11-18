@@ -12,6 +12,7 @@
 #include <QtCore/qsortfilterproxymodel.h>
 #include "openordersmodel.h"
 #include "depthmarketmodel.h"
+#include <QTimer>
 
 namespace pb {
 using namespace fantasybit;
@@ -20,6 +21,10 @@ using namespace fantasybit;
 
 class PlayerQuoteSliceModelItem : public QObject {
     Q_OBJECT
+
+    DepthMarketModel mDepthMarketModel;
+//    OpenOrdersModel mOpenOrdersModel;
+
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, lastprice)
     QML_READONLY_CSTREF_PROPERTY (QString, pos)
     QML_READONLY_CSTREF_PROPERTY (QString, lastname)
@@ -61,11 +66,16 @@ class PlayerQuoteSliceModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, TA)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, SFTY)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, D2pt)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, PtsA)
+    QML_READONLY_CSTREF_PROPERTY (QString, BackgroundColor)
 
-    QML_OBJMODEL_PROPERTY (OpenOrdersModel, ordersModel)
-    QML_OBJMODEL_PROPERTY (DepthMarketModel, depthModel)
 
+
+//    QML_OBJMODEL_PROPERTY (OpenOrdersModel, ordersModel)
+//    QML_OBJMODEL_PROPERTY (DepthMarketModel, depthModel)
+    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+
+    const char* LIGHTGREEN = "#c8ffc8";
+    const char* LIGHTRED = "#ffc8c8";
 
 public:
 
@@ -113,9 +123,15 @@ public:
        sethi(in.ohlc().high());
        setlo(in.ohlc().low());
 
+//       m_depthModel = new DepthMarketModel()
     }
 
-    explicit PlayerQuoteSliceModelItem(const pb::PlayerProjModelItem &in) :  QObject(nullptr) {
+    explicit PlayerQuoteSliceModelItem(const pb::PlayerProjModelItem &in) :
+        mDepthMarketModel{},
+        m_pDepthMarketModel{&mDepthMarketModel},
+//        m_depthModel{&mDepthMarketModel},
+//        m_cDepthMarketModel,
+        QObject(nullptr) {
 //        m_lastprice = in.quote().l();
         m_pos = in.get_pos();
         m_firstname = in.get_firstname();
@@ -133,7 +149,30 @@ public:
 //        m_lo = in.ohlc().low();
         m_playerid = in.get_playerid();
         m_symbol = m_playerid;
+        mDepthMarketModel.append(new DepthMarketModelItem(100,2,30,50));
+        mDepthMarketModel.append(new DepthMarketModelItem(200,1,31,1));
+        m_lastprice = 0;
+        m_BackgroundColor = "transparent";
+
     }
+
+    void LastNew(int i) {
+        if ( i > get_lastprice() )
+            setBackgroundColor(LIGHTGREEN);
+        else if ( i < get_lastprice() )
+            setBackgroundColor(LIGHTRED);
+        else
+            return;
+
+        setlastprice(i);
+
+        QTimer::singleShot(3000, this, SLOT(resetColor()));
+    }
+public slots:
+    void resetColor() {
+        setBackgroundColor("transparent");
+    }
+
 };
 
 

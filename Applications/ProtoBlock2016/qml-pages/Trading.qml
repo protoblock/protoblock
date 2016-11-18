@@ -6,6 +6,7 @@ import Material 1.0
 //import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
+import Material.Styles 1.0
 
 
 Item {
@@ -79,9 +80,43 @@ Item {
                     Card {
                         Layout.maximumHeight: parent.height * .90
                         Layout.minimumHeight: parent.height * .10
-                        Orders {
-                           anchors.fill: parent
-                        }
+//                        Orders {
+//                           anchors.fill: parent
+//                        }
+//                        Column{
+//                            anchors.fill: parent
+
+//                            TextField{
+//                                id: txt
+//                                text: "hello"
+//                                property string color: "white"
+//                                style: TextFieldStyle{
+//                                    background: Rectangle {
+//                                        id: rect
+//                                        radius: 2
+//                                        implicitWidth: 100
+//                                        implicitHeight: 24
+//                                        border.color: "#333"
+//                                        border.width: 1
+//                                        color: txt.color
+//                                        Behavior on color {
+//                                            SequentialAnimation {
+//                                                loops: 1
+//                                                ColorAnimation { from: "white"; to: "red"; duration: 1 }
+//                                                ColorAnimation { from: "red"; to: "white";  duration: 3000 }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            Button{
+//                                text: "blink"
+//                                onClicked: {
+//                                    txt.color = "red";
+//                                    txt.color = "white";
+//                                }
+//                            }
+//                        }
                     }
                 }
 

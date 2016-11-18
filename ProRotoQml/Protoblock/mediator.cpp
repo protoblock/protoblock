@@ -13,8 +13,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 //    mPlayerQuoteSliceModel{this,"","symbol"},
     dummyPlayerQuoteSliceModelItem(fantasybit::ROWMarket::default_instance()),
     m_pPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
-//    mDepthMarketModel{},
-//    m_pDepthMarketModel(&mDepthMarketModel),
+    mDepthMarketModel{},
+    m_pDepthMarketModel(&mDepthMarketModel),
     mFantasyNameBalModel(this,QByteArray(),{"name"}),
     m_pFantasyNameBalModel(&mFantasyNameBalModel),
     mGoodNameBalModel{this,QByteArray(),{"name"}},
@@ -75,7 +75,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(m_pPlayerQuoteSliceModel);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("lastprice");
-    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
+    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(false);
 
 
     m_useSelected = true;
@@ -90,6 +90,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
                       "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
                       " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
+
+    connect(&tradeTesting, &QTimer::timeout, this, &Mediator::tradeTestingTimeout );
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -215,6 +217,7 @@ void Mediator::LiveGui(GlobalState gs) {
         setliveSync("Live");
         setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
         updateWeek();
+        tradeTesting.start(5000);
     }
 
 //    FantasyNameBal fnb;

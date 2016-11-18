@@ -16,10 +16,10 @@ using namespace fantasybit;
 
 class DepthMarketModelItem : public QObject {
     Q_OBJECT
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, bidsize)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, bid)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, ask)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, asksize)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, bidsize)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, bid)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, ask)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, asksize)
 
 public:
 
@@ -28,6 +28,13 @@ public:
         m_bid = in.b();
         m_ask = in.a();
         m_asksize = in.as();
+    }
+
+    explicit DepthMarketModelItem(int bs, int b, int a, int as) :  QObject(nullptr) {
+        m_bidsize = bs;
+        m_bid = b;
+        m_ask = a;
+        m_asksize = as;
     }
 };
 
@@ -38,6 +45,10 @@ class DepthMarketModel : public QQmlObjectListModel<DepthMarketModelItem> {
 //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 
 public:
+    explicit DepthMarketModel (QObject *          parent      = Q_NULLPTR,
+                                  const QByteArray & displayRole = QByteArray (),
+                                  const QByteArray & uidRole     = QByteArray ())
+        : QQmlObjectListModel (parent,displayRole,uidRole) {}
 //    explicit DepthMarketModel() :  m_pPlayerQuoteSliceModelItem(nullptr) {}
 //    void updateFullDepth(const GetDepthRep &depthrep) {
 //        setplayerid(depthrep.pid().data());

@@ -25,7 +25,7 @@ Item {
     Component.onCompleted: {
          symbol = inplay.symbol
          pageHelper.title = "Trading " + symbol
-
+         console.log(symbol + " TradingFloor oncomplete")
 //         pid.txtN = inplay.playerid
 //        if ( !realRoot.reloadrowquote )
 //            realRoot.reloadrowquote = true
@@ -954,7 +954,9 @@ Item {
     Connections {
         target: MiddleMan
         onPPlayerQuoteSliceModelItemChanged: {
-            depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.depthModel
+            console.log(" onPPlayerQuoteSliceModelItemChanged ");
+            depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.pDepthMarketModel
+            console.log("after floor  onPPlayerQuoteSliceModelItemChanged ");
         }
     }
 }

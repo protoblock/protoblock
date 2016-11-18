@@ -55,12 +55,12 @@ class Mediator : public QObject {
 
 
     //Trading
-    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceViewFilterProxyModel, pPlayerQuoteSliceViewFilterProxyModel)
 //    QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
 
-//    QML_READONLY_PTR_PROPERTY(DepthMarketModel, )
+    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
 //    //QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
@@ -175,12 +175,14 @@ public:
 
     Q_INVOKABLE void startDepth(const QString& symbol) {
         qDebug() << " startDepth " << symbol;
-        auto * it = m_pPlayerQuoteSliceModel->getByUid(symbol);
+        auto *it = m_pPlayerQuoteSliceModel->getByUid(symbol);
         if ( it == nullptr ) return;
 
 
+        qDebug() << " startDepth good" << symbol;
+
 //        m_pPlayerQuoteSliceModelItem = it;
-        set_pPlayerQuoteSliceModelItem(it);
+        update_pPlayerQuoteSliceModelItem(it);
 //        depthBackup--;
 //        if ( depthBackup <= 0 ) {
 //            depthBackup = 0;
@@ -821,9 +823,19 @@ public slots:
         }
     }
 
+    void tradeTestingTimeout() {
+        if ( testCount++ >= 5) // m_pPlayerQuoteSliceModel->count())
+            testCount = 0;
+        auto it = m_pPlayerQuoteSliceModel->at(testCount);
+//        if (it->get_lastprice() > 5) testCount++;
+//        it->setlastprice();
+        it->LastNew(it->get_lastprice() > 1 ? it->get_lastprice()-1 : it->get_lastprice()+1);
+    }
+
 private:
     vector<MyFantasyName> myGoodNames;
     void updateWeek();
+    int testCount = 0;
 };
 }
 #endif // MEDIATOR_H

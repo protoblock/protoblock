@@ -72,8 +72,8 @@ Item {
         TableView {
             id: tvr
             Component.onCompleted: {
-                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
-                selection.select(0);
+//                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
+//                selection.select(0);
                 console.log("tvr comleted")
             }
 
@@ -699,14 +699,30 @@ Item {
     Component {
         id: fbdel
 
-        Material.Label {
+        Material.Card {
             anchors.centerIn: parent
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
+            flat: true
+            radius: 12
+            border.width: 0
+//            anchors.fill: parent
+            anchors.rightMargin: ProtoScreen.guToPx(5)
+            anchors.leftMargin: ProtoScreen.guToPx(5)
 
-            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: (styleData.value < 1) ? "" : styleData.value;
-            font.bold: false;
+            backgroundColor: (model.BackgroundColor === "transparent" || styleData.column !== 4) ? "transparent" : model.BackgroundColor
+//            height: ml.height
+            width: ProtoScreen.guToPx(9) // ml.width * 3
+            Material.Label {
+                id: ml
+                anchors.centerIn: parent
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                text: (styleData.value < 1) ? "" : styleData.value;
+                font.bold: false;
+//                color: (model.BackgroundColor === "transparent" || styleData.column !== 4) ? Material.Theme.light.textColor : "white"
+            }
+
         }
     }
 
