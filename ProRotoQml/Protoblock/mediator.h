@@ -67,6 +67,7 @@ class Mediator : public QObject {
 //    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
 
 
+
     //fantasyname
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
 
@@ -173,7 +174,13 @@ public:
 //    }
 
     Q_INVOKABLE void startDepth(const QString& symbol) {
-        m_pPlayerQuoteSliceModelItem = m_pPlayerQuoteSliceModel->getByUid(symbol);
+        qDebug() << " startDepth " << symbol;
+        auto * it = m_pPlayerQuoteSliceModel->getByUid(symbol);
+        if ( it == nullptr ) return;
+
+
+//        m_pPlayerQuoteSliceModelItem = it;
+        set_pPlayerQuoteSliceModelItem(it);
 //        depthBackup--;
 //        if ( depthBackup <= 0 ) {
 //            depthBackup = 0;

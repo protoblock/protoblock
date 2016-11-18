@@ -153,7 +153,7 @@ Item {
                 id: boundingRect
                 anchors.top: bandepth.bottom
 //                height:    (topcard.height - bandepth.height - boundquote.height - buySell.height )
-                height: dihight * ( 1 + Math.min(depthsize,depthvm.count))
+                height: dihight * ( 1 + Math.min(depthsize,ordersl.count))
                 anchors.margins: 1
                 anchors.horizontalCenter: bandepth.horizontalCenter
                 width: bandepth.width
@@ -173,7 +173,7 @@ Item {
     //                    boundsBehavior: Flickable.StopAtBounds
 
 
-                    id: depthvm
+                    id: ordersl
     //                    anchors.top: bandepth.bottom
                     anchors.margins: 1
                     anchors.horizontalCenter: boundingRect.horizontalCenter
@@ -182,7 +182,7 @@ Item {
     //                height: parent.height - bandepth.height - cwc.height - listquote.height
     //                    height: parent.height
                     clip: true
-                    model: MiddleMan.pGlobalOpenOrdersModel
+//                    model: MiddleMan.pGlobalOpenOrdersModel
 //                    symbol: MiddleMan.pGlobalOpenOrdersModel.pidsymbol
                     headerPositioning: ListView.OverlayHeader
                     header: RowLayout {
@@ -222,6 +222,15 @@ Item {
             }
             }
         }
+
+
+
+         Connections {
+             target: MiddleMan
+             onPPlayerQuoteSliceModelItemChanged: {
+                 ordersl.model = MiddleMan.pPlayerQuoteSliceModelItem.ordersModel
+             }
+         }
 }
 
 

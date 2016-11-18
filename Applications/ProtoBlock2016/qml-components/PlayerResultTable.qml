@@ -34,7 +34,7 @@ Item {
             id: tvr
             Component.onCompleted: {
                 MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
-                selection.select(0);
+//                selection.select(0);
                 console.log("tvr comleted")
             }
 
@@ -618,6 +618,7 @@ Item {
     }
 
     function update() {
+        console.log(" PlayerResultSelected update")
         tvr.selection.forEach(function(rowIndex) {
             MiddleMan.setPrevWeekResultLeaderSelection(tvr.model.getAwardsModelUid(rowIndex));
             //,tvr.model.roleForName("awardsModel"))

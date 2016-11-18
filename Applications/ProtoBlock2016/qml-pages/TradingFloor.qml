@@ -396,7 +396,7 @@ Item {
     //                height: parent.height - bandepth.height - cwc.height - listquote.height
     //                    height: parent.height
                     clip: true
-                    model: MiddleMan.pDepthMarketModel
+//                    model: MiddleMan.pDepthMarketModel
                     headerPositioning: ListView.OverlayHeader
                     header: Item {
                         height: leftrow.height
@@ -951,5 +951,10 @@ Item {
 
     }
 
-
+    Connections {
+        target: MiddleMan
+        onPPlayerQuoteSliceModelItemChanged: {
+            depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.depthModel
+        }
+    }
 }

@@ -132,7 +132,7 @@ public:
         connect( this, &FullGateway::OnUseName,
                  mlapi, &MainLAPIWorker::OnUseName);
 
-        connect(mlapi,&Mediator::ready,this, &FullGateway::ClientReady);
+        connect(Mediator::instance(),&Mediator::ready,this, &FullGateway::ClientReady);
 //                [this](){101
 //                       if ( this->amLive ) {
 //                           emit LiveGui(m_gs);

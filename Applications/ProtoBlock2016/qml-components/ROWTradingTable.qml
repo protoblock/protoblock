@@ -9,7 +9,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
 
 Item {
-    id: topwr
+    id: rowtt
     anchors.fill: parent
 
     property variant selectedModel
@@ -72,7 +72,7 @@ Item {
         TableView {
             id: tvr
             Component.onCompleted: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
+                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
                 selection.select(0);
                 console.log("tvr comleted")
             }
@@ -103,11 +103,11 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             onSortIndicatorOrderChanged: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             headerDelegate: headerdel
@@ -470,7 +470,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
-                visible: topwr.kicker
+                visible: rowtt.kicker
             }
             TableViewColumn {
                 role: "FG"
@@ -479,7 +479,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw) * 2
                 delegate: fbdel
-                visible: topwr.kicker
+                visible: rowtt.kicker
             }
             TableViewColumn {
                 role: "PtsA"
@@ -710,17 +710,14 @@ Item {
         }
     }
 
-    Component {
-        id: columnComponent
-        TableViewColumn {
-            width: 100
-        }
-
-    }
 
     Connections {
         target: tvr.selection
-        onSelectionChanged: topwr.update()
+        onSelectionChanged: {
+
+            rowtt.update();
+            console.log("row onSelectionChanged");
+        }
     }
 
     Connections {
@@ -729,10 +726,11 @@ Item {
     }
 
     function update() {
+        console.log(" ROWtradng update")
         tvr.selection.forEach(function(rowIndex) {
             MiddleMan.startDepth(tvr.model.getPlayerSliceModelUid(rowIndex));
             //,tvr.model.roleForName("awardsModel"))
-//            if (row && row.awardsModel) topwr.selectedModel = row.awardsModel
+//            if (row && row.awardsModel) rowtt.selectedModel = row.awardsModel
         })
     }
 
