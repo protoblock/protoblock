@@ -590,7 +590,7 @@ Item {
 
             TableViewColumn {
                 role: "lo"
-                title: "Low"
+                title: ""
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
@@ -602,7 +602,7 @@ Item {
                     anchors.rightMargin: ProtoScreen.guToPx(5)
                     anchors.leftMargin: ProtoScreen.guToPx(5)
 
-                    backgroundColor: !model ? "transparent" : model.cdiff === 0 ? "transparent" : "lightred"
+                    backgroundColor: !model ? "transparent" : model.lodiff === 0 ? "transparent" : "lightred"
                     width: ProtoScreen.guToPx(9) // ml.width * 3
                     Material.Label {
                         anchors.centerIn: parent

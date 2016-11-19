@@ -206,7 +206,7 @@ struct Level1 {
 
 };
 
-#define BOOK_SIZE 400
+#define BOOK_SIZE 40
 class LimitBook {
     InsideBook mBids[BOOK_SIZE], mAsks[BOOK_SIZE];
     int mBb, mBa;
