@@ -66,7 +66,7 @@ public:
 //        for ( auto &di : depthrep.depthitems())
 //            append(new DepthMarketModelItem(di));
 //    }
-    void snapDepth(fantasybit::MarketSnapshot* mt) {
+    void snapDepth(const fantasybit::MarketSnapshot* mt) {
         clear();
         for ( auto &di : mt->depth() ) {
             append(new DepthMarketModelItem(di));

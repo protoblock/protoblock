@@ -192,6 +192,7 @@ public:
             setchange(ohlc.change());
         }
 
+        m_pDepthMarketModel->snapDepth(ms);
 
     }
 
@@ -295,6 +296,7 @@ public:
         setlastname(it->get_lastname());
         setteamid(it->get_teamid());
         setpos(it->get_pos());
+        setfullname(it->get_fullname());
     }
 
 public slots:
