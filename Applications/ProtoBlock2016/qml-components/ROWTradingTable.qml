@@ -18,6 +18,8 @@ Item {
     property string who: "default"
     property int rw: 8
 
+    property string lightgreen: "#c8ffc8"
+    property string lightred: "#ffc8c8"
     property bool kicker: false
     property bool def: false
     property bool qb: false
@@ -165,16 +167,38 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: resdel
+                delegate: fbdel
             }
 
             TableViewColumn {
                 role: "lastprice"
-                title: "ROW Price"
+                title: "Last"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.ldiff === 1 ? lightgreen : model.ldiff === -1 ? lightred :
+                                         model.lsdiff === 1 ? "lightgray" : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        id: ml
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
             //**** Player
@@ -332,11 +356,32 @@ Item {
             //**** market
             TableViewColumn{
                 role: "bidsize"
-                title: "bid Qty"
+                title: "Bid Qty"
                 horizontalAlignment : Text.AlignHCenter
-                delegate: fbdel
                 movable: false
                 width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.bsdiff === 1 ? lightgreen : model.bsdiff === -1 ? lightred : "transparent"
+
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
             TableViewColumn {
@@ -345,16 +390,56 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.bdiff === 1 ? lightgreen : model.bdiff === -1 ? lightred : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
             TableViewColumn{
                 role: "ask"
                 title: "Ask"
                 horizontalAlignment : Text.AlignHCenter
-                delegate: fbdel
                 movable: false
                 width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.adiff === 1 ? lightgreen : model.adiff === -1 ? lightred : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
             TableViewColumn {
@@ -363,8 +448,175 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.asdiff === 1 ? lightgreen : model.asdiff === -1 ? lightred : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
+
+            TableViewColumn {
+                role: "lastsize"
+                title: "Last Qty"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.lsdiff === 2 ? "lightgray" : model.lsdiff === 1 ? lightgreen : model.lsdiff === -1 ? lightred : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
+            }
+
+            TableViewColumn {
+                role: "volume"
+                title: "Volume"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.vdiff === 1 ? "lightgray" : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
+            }
+
+            TableViewColumn {
+                role: "change"
+                title: "Change"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.cdiff === 0 ? "transparent" : "lightgray"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value === 0) ? model.lastprice === 0 ? "" : "unch" : styleData.value;
+                        font.bold: false;
+                        color: styleData.value < 0 ? "red" : styleData.value > 0 ? "green" : "black"
+                    }
+
+                }
+            }
+
+            TableViewColumn {
+                role: "hi"
+                title: "High"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.cdiff === 0 ? "transparent" : "lightgreen"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value === 0) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
+            }
+
+            TableViewColumn {
+                role: "lo"
+                title: "Low"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.cdiff === 0 ? "transparent" : "lightred"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value === 0) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
+            }
+
 
             //**** stats
             TableViewColumn {
@@ -708,7 +960,7 @@ Item {
             anchors.rightMargin: ProtoScreen.guToPx(5)
             anchors.leftMargin: ProtoScreen.guToPx(5)
 
-            backgroundColor: (model.BackgroundColor === "transparent" || styleData.column !== 4) ? "transparent" : model.BackgroundColor
+            backgroundColor: "transparent"
 //            height: ml.height
             width: ProtoScreen.guToPx(9) // ml.width * 3
             Material.Label {

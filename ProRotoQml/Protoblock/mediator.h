@@ -585,6 +585,11 @@ public:
     }
 
 
+    Q_INVOKABLE void settheHeight(int h) {
+        qDebug() << " new height " << h;
+        if ( h > m_height )
+            emit NewHeightStop(h);
+    }
     //oms
     void subscribeOrderPos(const QString &name);
     void getOrderReq(const QString &name,const QString symbol="");
@@ -615,6 +620,8 @@ signals:
     void doNameCheck(QString);
     void NewProjection(vector<fantasybit::FantasyBitProj>);
 
+
+    void NewHeightStop(int);
 
 protected slots:
 //    void handdleUsingName(const QString &name);
@@ -701,6 +708,9 @@ private:
     bool amLive = false;
 
     void getLeaders(int week,bool lastweek, bool all2016 = false) {
+#ifdef NO_SQL_LEADERS
+        return;
+#endif
         QString links("https://158.222.102.83:4545");
         QString route("fantasy/leaders");
         if ( !all2016 )
@@ -823,6 +833,31 @@ public slots:
         }
     }
 
+    void OnMarketTicker(fantasybit::MarketTicker *mt) {
+        if ( mt->symbol() == "" )
+            return;
+    #ifdef TRACE
+        qDebug() << "Mediator OnMarketTicker " << mt->DebugString().data();
+    #endif
+
+        if ( !m_pPlayerQuoteSliceModel->Update(mt) ) {
+            qDebug() << "mediato OnMarketTicker  bad";
+            auto *item = mPlayerProjModel.getByUid(mt->symbol().data());
+            if ( item == nullptr )
+                qDebug() << "nullptr mediato OnMarketTicker  bad again" << mt->symbol().data();
+            else {
+                m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(item));
+                if ( !m_pPlayerQuoteSliceModel->Update(mt) )
+                    qDebug() << "mediato OnMarketTicker  bad again";
+                else
+                    qDebug() << "mediato OnMarketTicker  good again";
+            }
+        }
+        else
+            qDebug() << " mediato OnMarketTicker good";
+
+    }
+
     void tradeTestingTimeout() {
         if ( testCount++ >= 5) // m_pPlayerQuoteSliceModel->count())
             testCount = 0;
@@ -835,7 +870,10 @@ public slots:
     void OnGotMarketSnaps() {
         for ( auto *it : *m_pPlayerQuoteSliceModel ) {
             auto *item = mPlayerProjModel.getByUid(it->get_symbol());
-            it->Update(item);
+            if ( item == nullptr )
+                qDebug() << " failed to get symbol " << it->get_symbol();
+            else
+                it->Update(item);
         }
     }
 

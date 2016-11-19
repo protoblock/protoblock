@@ -198,7 +198,8 @@ public:
 
     void Update(const TradeTic *tt) {
         UpdateLast(tt->price(),tt->size());
-        setvolume(m_volume + tt->size());
+        if ( tt->size() > 0 )
+            setvolume(m_volume + tt->size());
         setvdiff(1);
         if ( tt->ishigh() ) {
             sethi(tt->price());
@@ -282,7 +283,7 @@ public:
         }
         else if ( size != get_lastsize()) {
             dotime = true;
-            setldiff(1);
+            setldiff(2);
             setlastsize(size);
         }
 
@@ -340,12 +341,16 @@ public:
             it->Update(ms);
     }
 
-    void Update(MarketTicker *ms) {
+    bool Update(MarketTicker *ms) {
         auto *it = getByUid(ms->symbol().data());
-        if ( it == nullptr )
+        if ( it == nullptr ) {
             qDebug() << " dont have this symbol" << ms->symbol().data();
+            return false;
+        }
         else
             it->Update(ms);
+
+        return true;
     }
 
     void Update(TradeTic *ms) {
