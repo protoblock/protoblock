@@ -66,6 +66,12 @@ public:
 //        for ( auto &di : depthrep.depthitems())
 //            append(new DepthMarketModelItem(di));
 //    }
+    void snapDepth(fantasybit::MarketSnapshot* mt) {
+        clear();
+        for ( auto &di : mt->depth() ) {
+            append(new DepthMarketModelItem(di));
+        }
+    }
 };
 
 Q_DECLARE_METATYPE(DepthMarketModel*)

@@ -70,12 +70,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultsViewFilterProxyModel->setDynamicSortFilter(true);
 
 
-    //trading
-    m_pPlayerQuoteSliceModel = new PlayerQuoteSliceModel(this,QByteArray(),{"symbol"});
-    m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
-    m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(m_pPlayerQuoteSliceModel);
-    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("lastprice");
-    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(false);
+
 
 
     m_useSelected = true;
@@ -248,11 +243,13 @@ void Mediator::updateWeek() {
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
 
+#ifdef NOTDEF
             int i = 0;
             for( auto it : mPlayerProjModel ) {
                 if ( i++ > 20 )  break;
                 m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(*it));
             }
+#endif
             set_thisWeekPrev(m_pWeekClosedScheduleModel->count() > 0);
 
             if (myFantasyName != "" )
@@ -324,6 +321,15 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
 
     QObject* that = dynamic_cast<QObject*>(ingateway);
     mOGateway = that;
+
+    //trading
+    update_pPlayerQuoteSliceModel(&ingateway->tradingProxy->GetPlayerQuoteSliceModel());
+    m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(m_pPlayerQuoteSliceModel);
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("lastprice");
+    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(false);
+
+
     connect(that, SIGNAL(NameStatus(fantasybit::MyFantasyName)),
             this, SLOT(NameStatus(fantasybit::MyFantasyName)));
 
@@ -377,6 +383,9 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
 
     connect( that, SIGNAL(FinishedResults()),
              this, SLOT(OnFinishedResults()));
+
+    connect( that, SIGNAL(GotMarketSnaps()),
+             this, SLOT(OnGotMarketSnaps()));
 //    return that;
 }
 

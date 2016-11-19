@@ -25,11 +25,16 @@ class PlayerQuoteSliceModelItem : public QObject {
     DepthMarketModel mDepthMarketModel;
 //    OpenOrdersModel mOpenOrdersModel;
 
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, lastprice)
+    QML_READONLY_CSTREF_PROPERTY (QString, playerid)
+    QML_READONLY_CSTREF_PROPERTY (QString, symbol)
+
     QML_READONLY_CSTREF_PROPERTY (QString, pos)
     QML_READONLY_CSTREF_PROPERTY (QString, lastname)
     QML_READONLY_CSTREF_PROPERTY (QString, firstname)
     QML_READONLY_CSTREF_PROPERTY (QString, teamid)
+
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, lastprice)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, lastsize)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, bidsize)
     QML_READONLY_CSTREF_PROPERTY (QString , fullname)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, bid)
@@ -40,39 +45,30 @@ class PlayerQuoteSliceModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, updown)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, hi)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, lo)
-    QML_READONLY_CSTREF_PROPERTY (QString, playerid)
-    QML_READONLY_CSTREF_PROPERTY (QString, symbol)
+
 
 
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, myposition)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, mypnl)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (double, myavg)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (double, ytd)
-
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, PassTD)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, PassYd)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, RushTD)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, RushYd)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, RecTD)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, RecYd)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, Rec)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, Int)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, Fum)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, PAT)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, _2Pt)
-    QML_READONLY_CSTREF_PROPERTY (QString, FG)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, D_TD)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, Sack)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, TA)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, SFTY)
-    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, D2pt)
-    QML_READONLY_CSTREF_PROPERTY (QString, BackgroundColor)
 
 
+
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, bsdiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, bdiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, adiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, asdiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, ldiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, lsdiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, vdiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, hdiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, lodiff)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, cdiff)
 
 //    QML_OBJMODEL_PROPERTY (OpenOrdersModel, ordersModel)
 //    QML_OBJMODEL_PROPERTY (DepthMarketModel, depthModel)
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+    QML_READONLY_PTR_PROPERTY(PlayerProjModelItem, pPlayerProjItem)
 
     const char* LIGHTGREEN = "#c8ffc8";
     const char* LIGHTRED = "#ffc8c8";
@@ -152,25 +148,176 @@ public:
         mDepthMarketModel.append(new DepthMarketModelItem(100,2,30,50));
         mDepthMarketModel.append(new DepthMarketModelItem(200,1,31,1));
         m_lastprice = 0;
-        m_BackgroundColor = "transparent";
+//        m_BackgroundColor = "transparent";
+    }
+
+    explicit PlayerQuoteSliceModelItem(fantasybit::MarketSnapshot* ms) :
+                        mDepthMarketModel{},
+                        m_pDepthMarketModel{&mDepthMarketModel},
+                        QObject(nullptr) {
+
+        setplayerid(ms->symbol().data());
+        setsymbol(ms->symbol().data());
+
+        Update(ms);
+    }
+
+    explicit PlayerQuoteSliceModelItem(PlayerProjModelItem* it) :
+                        mDepthMarketModel{},
+                        m_pDepthMarketModel{&mDepthMarketModel},
+                        QObject(nullptr) {
+
+        setplayerid(it->get_playerid());
+        setsymbol(it->get_playerid());
+
+        Update(it);
+    }
+
+    void Update(const MarketSnapshot *ms) {
+        if ( ms->has_quote()) {
+            const MarketQuote &mq = ms->quote();
+            setbidsize(mq.bs());
+            setbid(mq.b());
+            setask(mq.a());
+            setasksize(mq.as());
+            setlastprice(mq.l());
+            setlastsize(mq.ls());
+        }
+
+        if ( ms->has_ohlc()) {
+            const ContractOHLC &ohlc = ms->ohlc();
+            sethi(ohlc.high());
+            setlo(ohlc.low());
+            setvolume(ohlc.volume());
+            setchange(ohlc.change());
+        }
+
 
     }
 
-    void LastNew(int i) {
-        if ( i > get_lastprice() )
-            setBackgroundColor(LIGHTGREEN);
-        else if ( i < get_lastprice() )
-            setBackgroundColor(LIGHTRED);
-        else
-            return;
+    void Update(const TradeTic *tt) {
+        UpdateLast(tt->price(),tt->size());
+        setvolume(m_volume + tt->size());
+        setvdiff(1);
+        if ( tt->ishigh() ) {
+            sethi(tt->price());
+            if ( !tt->islow())
+                sethdiff(1);
+        }
+        if ( tt->islow() ) {
+            setlo(tt->price());
+            if ( !tt->ishigh())
+                setlodiff(1);
+        }
 
-        setlastprice(i);
+        if ( tt->change() != m_change ) {
+            setcdiff( tt->change() > m_change ? 1 : -1);
+            setchange(tt->change());
+        }
 
-        QTimer::singleShot(3000, this, SLOT(resetColor()));
+        QTimer::singleShot(3000, this, SLOT(resetTic()));
     }
+
+    void Update(const MarketTicker *mt) {
+        switch ( mt->type() ) {
+        case MarketTicker_Type_BID:
+            UpdateBid(mt->price(),mt->size());
+            break;
+        case MarketTicker_Type_ASK:
+            UpdateAsk(mt->price(),mt->size());
+            break;
+        default:
+            qWarning() << " base case price slice " << mt->DebugString().data();
+            break;
+        }
+    }
+
+    void UpdateBid(qint32 bid, qint32 size) {
+        bool dotime = false;
+        if ( bid != get_bid()) {
+            dotime = true;
+            setbdiff(bid > get_bid() ? 1 : -1);
+            setbsdiff(m_bdiff);
+            setbid(bid);
+            setbidsize(size);
+        }
+        else if ( size != get_bidsize()) {
+            dotime = true;
+            setbsdiff(size > get_bidsize() ? 1 : -1 );
+            setbidsize(size);
+        }
+
+        if ( dotime )
+            QTimer::singleShot(3000, this, SLOT(resetBid()));
+    }
+
+    void UpdateAsk(qint32 ask, qint32 size) {
+        bool dotime = false;
+        if ( ask != get_ask()) {
+            dotime = true;
+            setadiff(ask > get_ask() ? 1 : -1);
+            setasdiff(m_adiff);
+            setask(ask);
+            setasksize(size);
+        }
+        else if ( size != get_asksize()) {
+            dotime = true;
+            setasdiff(size > get_asksize() ? -1 : 1 );
+            setasksize(size);
+        }
+
+        if ( dotime )
+            QTimer::singleShot(3000, this, SLOT(resetAsk()));
+    }
+
+    void UpdateLast(qint32 last, qint32 size) {
+        bool dotime = false;
+        if ( last != get_lastprice() ) {
+            dotime = true;
+            setldiff(last > get_lastprice() ? 1 : -1);
+            setlsdiff(m_ldiff);
+            setlastprice(last);
+            setlastsize(size);
+        }
+        else if ( size != get_lastsize()) {
+            dotime = true;
+            setldiff(1);
+            setlastsize(size);
+        }
+
+        if ( dotime )
+            QTimer::singleShot(3000, this, SLOT(resetLast()));
+    }
+
+    void Update(PlayerProjModelItem *it) {
+        m_pPlayerProjItem = it;
+        setfirstname(it->get_firstname());
+        setlastname(it->get_lastname());
+        setteamid(it->get_teamid());
+        setpos(it->get_pos());
+    }
+
 public slots:
-    void resetColor() {
-        setBackgroundColor("transparent");
+    void resetBid() {
+        setbdiff(0);
+        setbsdiff(0);
+    }
+
+    void resetAsk() {
+        setadiff(0);
+        setasdiff(0);
+    }
+
+    void resetLast() {
+        setldiff(0);
+        setlsdiff(0);
+    }
+
+    void resetTic() {
+        setvdiff(0);
+        setcdiff(0);
+        sethdiff(0);
+        setlodiff(0);
     }
 
 };
@@ -180,12 +327,35 @@ class PlayerQuoteSliceModel : public QQmlObjectListModel<PlayerQuoteSliceModelIt
 public:
     explicit PlayerQuoteSliceModel (QObject *          parent      = Q_NULLPTR,
                                   const QByteArray & displayRole = QByteArray (),
-                                  const QByteArray & uidRole     = QByteArray ())
+                                  const QByteArray & uidRole     = {"symbol"})
         : QQmlObjectListModel (parent,displayRole,uidRole) {}
+
+    void Update(MarketSnapshot *ms) {
+        auto *it = getByUid(ms->symbol().data());
+        if ( it == nullptr )
+            append(new PlayerQuoteSliceModelItem(ms));
+        else
+            it->Update(ms);
+    }
+
+    void Update(MarketTicker *ms) {
+        auto *it = getByUid(ms->symbol().data());
+        if ( it == nullptr )
+            qDebug() << " dont have this symbol" << ms->symbol().data();
+        else
+            it->Update(ms);
+    }
+
+    void Update(TradeTic *ms) {
+        auto *it = getByUid(ms->symbol().data());
+        if ( it == nullptr )
+            qDebug() << " dont have this symbol" << ms->symbol().data();
+        else
+            it->Update(ms);
+    }
 };
 
-class PlayerQuoteSliceViewFilterProxyModel : public SortFilterProxyModel
-{
+class PlayerQuoteSliceViewFilterProxyModel : public SortFilterProxyModel {
     Q_OBJECT
 
 //    WeeklyScheduleModel  * myGameModelProxy;
@@ -212,8 +382,6 @@ public:
     QStringList ret;
     QStringList userRoleNames() // Return ordered List of user-defined roles
     {
-
-
         return ret;
     }
 
@@ -422,28 +590,25 @@ Q_DECLARE_METATYPE(PlayerQuoteSliceModelItem*)
 //    optional int32 udn = 70;
 //}
 
-
-
-//if( column ==i++)
-//    return data->propertyValue<PropertyNames::LAST>();
-//if( column ==  i++)
-//    return data->propertyValue<PropertyNames::Position>();
-//if( column == i++)
-//    return data->propertyValue<PropertyNames::Player_Name>();
-//if( column == i++)
-//    return data->propertyValue<PropertyNames::Team_ID>();
-//if( column ==i++)
-//    return data->propertyValue<PropertyNames::BIDSIZE>();
-//if( column ==i++)
-//    return data->propertyValue<PropertyNames::BID>();
-//if( column ==i++)
-//    return data->propertyValue<PropertyNames::ASK>();
-//if( column ==i++)
-//    return data->propertyValue<PropertyNames::ASKSIZE>();
-//if( column ==i++)
-//    return data->propertyValue<PropertyNames::VOLUME>();
-//if( column == i++)
-//    return data->propertyValue<PropertyNames::CHANGE>();
-
-
 #endif // PLAYERQUOTESLICEMODEL_H
+
+
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (double, ytd)
+
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, PassTD)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, PassYd)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, RushTD)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, RushYd)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, RecTD)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, RecYd)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, Rec)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, Int)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, Fum)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, PAT)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, _2Pt)
+//QML_READONLY_CSTREF_PROPERTY (QString, FG)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, D_TD)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, Sack)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, TA)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, SFTY)
+//QML_READONLY_CSTREF_PROPERTY_INIT0 (int, D2pt)

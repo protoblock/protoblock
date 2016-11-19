@@ -1437,19 +1437,8 @@ for (  auto n : fnames ) {
     auto &st = mGlobalState;//DataService::instance()->GetGlobalState();
     mWeek = st.week();
 
-    for (auto &it : mLimitBooks) {
-#ifdef TRACE
-qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
-#endif
-        auto *ms = MarketSnapshot::default_instance().New();
-        ms->set_week(st.week());
-        mWeek = st.week();
-        //auto it2 = mMarketQuote.find(it.first);
-        ms->mutable_quote()->CopyFrom(mMarketQuote[it.first]);
-        ms->mutable_ohlc()->CopyFrom(mContractOHLC[it.first]);
-        ms->set_symbol(it.first);
-        emit NewMarketSnapShot(it.second->makeSnapshot(ms));
-    }
+    doEmitSnap();
+
 }
 
 /*

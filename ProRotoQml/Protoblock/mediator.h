@@ -829,7 +829,14 @@ public slots:
         auto it = m_pPlayerQuoteSliceModel->at(testCount);
 //        if (it->get_lastprice() > 5) testCount++;
 //        it->setlastprice();
-        it->LastNew(it->get_lastprice() > 1 ? it->get_lastprice()-1 : it->get_lastprice()+1);
+//        it->LastNew(it->get_lastprice() > 1 ? it->get_lastprice()-1 : it->get_lastprice()+1);
+    }
+
+    void OnGotMarketSnaps() {
+        for ( auto *it : *m_pPlayerQuoteSliceModel ) {
+            auto *item = mPlayerProjModel.getByUid(it->get_symbol());
+            it->Update(item);
+        }
     }
 
 private:

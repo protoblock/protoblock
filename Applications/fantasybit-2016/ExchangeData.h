@@ -389,6 +389,8 @@ public:
     void OnWeekOver(int week);
     void OnWeekStart(int week) {
         mWeek = week;
+        if (amlive)
+            doEmitSnap();
     }
 
     std::string filedir(const std::string &in) {
@@ -407,6 +409,24 @@ public:
             df->set_symbol(playerid);
             emit NewDepthDelta(df);
         }
+    }
+
+    void doEmitSnap() {
+        emit StartMarketSnapShot();
+        for (auto &it : mLimitBooks) {
+            #ifdef TRACE
+                qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
+            #endif
+            auto *ms = MarketSnapshot::default_instance().New();
+            ms->set_week(mWeek);
+            //auto it2 = mMarketQuote.find(it.first);
+            ms->mutable_quote()->CopyFrom(mMarketQuote[it.first]);
+            ms->mutable_ohlc()->CopyFrom(mContractOHLC[it.first]);
+            ms->set_symbol(it.first);
+            emit NewMarketSnapShot(it.second->makeSnapshot(ms));
+        }
+
+        emit FinishMarketSnapShot();
     }
 
     /*
@@ -438,6 +458,8 @@ public:
 signals:
     void NewMarketTicker(fantasybit::MarketTicker*);
     void NewMarketSnapShot(fantasybit::MarketSnapshot*);
+    void FinishMarketSnapShot();
+    void StartMarketSnapShot();
     void NewDepthDelta(fantasybit::DepthFeedDelta*);
     void NewTradeTic(fantasybit::TradeTic *);
     void NewFantasyNameOrder(fantasybit::Order&);
