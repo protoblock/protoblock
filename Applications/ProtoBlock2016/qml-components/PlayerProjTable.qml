@@ -282,6 +282,24 @@ Item {
 //                }
 
             }
+
+            TableViewColumn{
+                role: "playerid"
+                title: "playerid"
+                horizontalAlignment : Text.AlignHCenter
+
+                movable: false
+                width: ProtoScreen.guToPx(16)
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    text: " " + styleData.value + " "
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+               }
+            }
         }
     }
 

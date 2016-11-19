@@ -21,6 +21,7 @@ void FullGateway::OnMarketTicker(fantasybit::MarketTicker *mt) {
 #endif
 
     m_PlayerQuoteSliceModel.Update(mt);
+
 }
 
 void FullGateway::OnTradeTick(fantasybit::TradeTic* tt) {

@@ -158,7 +158,7 @@ public:
                           this,SLOT(OnMarketSnapShot(fantasybit::MarketSnapshot*)));
 
         QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *)),
-                          this,SLOT(OnMarketTicker(fantasybit::MarketTicker *)));
+                          Mediator::instance(),SLOT(OnMarketTicker(fantasybit::MarketTicker *)));
 
         QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
                           this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
@@ -179,6 +179,9 @@ public:
 
         connect(exchangedata,&ExchangeData::StartMarketSnapShot,
                 this, &FullGateway::OnStartMarketSnapShot);
+
+        QObject::connect(Mediator::instance(),SIGNAL(NewHeightStop(int)),mlapi,SLOT(OnSeenBlock(int32_t)));
+
     }
 
 signals:

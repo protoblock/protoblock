@@ -73,7 +73,7 @@ void Node::init() {
 //    Node::txpool.reset(db4);
 
     current_hight = getLastLocalBlockNum();
-    qInfo() <<  "current_hight" << current_hight;
+    qInfo() <<  "76 current_hight" << current_hight;
 
     #ifndef NOCHECK_LOCAL_BOOTSTRAP
     current_boot = getLastLocalBoot();
@@ -97,14 +97,17 @@ void Node::init() {
                 current_hight = getLastLocalBlockNum();
 
                 pb::remove_all(Platform::instance()->getRootDir() + "index/");
+#ifdef CHECKPOINTS
                 NFLStateData::InitCheckpoint();
-
                 BlockRecorder::InitCheckpoint(current_hight);
+#endif
             }
         }
+#ifdef CHECKPOINTS
         else if ( doSpecialResults ) {
             NFLStateData::InitCheckpoint(true);
         }
+#endif
     }
 #endif
 
@@ -186,7 +189,7 @@ void Node::init() {
 
         qInfo() <<  "done";
 
-        qDebug() << sb.DebugString().data();
+        qDebug() << " current sb " << sb.DebugString().data();
         if (!BlockProcessor::verifySignedBlock(sb)) {
             qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
             //return;
@@ -223,7 +226,7 @@ void Node::init() {
 
     //assert(getLastBlockNum() > 0);
 
-    qInfo() <<  " current_hight " << current_hight;
+    qInfo() <<  "229 current_hight " << current_hight;
 }
 
 
@@ -446,8 +449,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 6810 )
-        num = 6810;
+    if (num > 2187 )
+        num = 2187;
 #endif
 
     return num;
@@ -460,6 +463,7 @@ int32_t Node::myLastGlobalBlockNum() {
         myglobalheight = GlobalHeight;
     }
 
+    qDebug() << " myglobalheight " << myglobalheight;
     return myglobalheight;
 }
 
@@ -555,10 +559,10 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     //return 20;
 //      qDebug() << " calling rest height" << PAPIURL.data();
     int32_t height = RestfullService::getHeight(PAPIURL.data());
-//    qDebug() << " after rest height" << height;
+    qDebug() << " after rest height" << height;
 
 #ifdef STOP_HEIGHT_TEST
-    height = 6810;
+    height = 2187;
 #endif
 
     if ( myLastGlobalBlockNum() < height )

@@ -53,6 +53,17 @@ Material.ApplicationWindow{
                 font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
                 onLinkActivated: Qt.openUrlExternally(link)
             }
+
+            SpinBox {
+                decimals: 0
+                stepSize: 1.0
+                maximumValue: 8000
+                minimumValue:  MiddleMan.blocknum
+                value: MiddleMan.height
+                onValueChanged: {
+                    MiddleMan.settheHeight(value)
+                }
+            }
         }
     }
 

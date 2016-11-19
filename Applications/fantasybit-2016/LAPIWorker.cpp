@@ -142,7 +142,7 @@ void MainLAPIWorker::startPoint(){
         node.init();
         numto = Node::getLastLocalBlockNum();
 #ifdef BLOCK_STEP
-        int gonum = 3500 ;
+        int gonum = 2187 ;
         numto = (gonum >= last_block) ? gonum : last_block;
 #endif
         emit Height(numto);
