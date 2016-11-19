@@ -590,7 +590,7 @@ Item {
 
             TableViewColumn {
                 role: "lo"
-                title: ""
+                title: "Low"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
