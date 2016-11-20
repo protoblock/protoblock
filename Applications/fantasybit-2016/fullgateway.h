@@ -219,6 +219,9 @@ public slots:
             connect(Mediator::instance(),&Mediator::NewProjection,
                     mlapi,&MainLAPIWorker::OnProjTX);
 
+            connect(Mediator::instance(),&Mediator::NewOrder,
+                    mlapi,&MainLAPIWorker::OnNewOrder);
+
             if ( !m_mynames.empty())
                  emit MyNames(m_mynames);
             for( auto &v : holdfresh)
@@ -247,6 +250,12 @@ public slots:
 
     void ClientReady() {
         if ( amLive ) {
+            connect(Mediator::instance(),&Mediator::NewProjection,
+                    mlapi,&MainLAPIWorker::OnProjTX);
+
+            connect(Mediator::instance(),&Mediator::NewOrder,
+                    mlapi,&MainLAPIWorker::OnNewOrder);
+
             emit LiveGui(m_gs);
             if ( gotAllSnaps )
                 emit GotMarketSnaps();
@@ -273,14 +282,15 @@ public slots:
     void OnNewPos(fantasybit::FullPosition);
     void OnNewOO(fantasybit::FullOrderDelta);
 
-    void OnFinishMarketSnapShot() {
+    void OnFinishMarketSnapShot(int week) {
         gotAllSnaps = true;
         if ( heslive && amLive )
             emit GotMarketSnaps();
     }
 
-    void OnStartMarketSnapShot() {
+    void OnStartMarketSnapShot(int week) {
         gotAllSnaps = false;
+        m_PlayerQuoteSliceModel.initWeek(week);
         m_PlayerQuoteSliceModel.clear();
     }
 

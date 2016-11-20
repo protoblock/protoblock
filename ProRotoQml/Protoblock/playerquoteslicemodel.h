@@ -198,9 +198,10 @@ public:
 
     void Update(const TradeTic *tt) {
         UpdateLast(tt->price(),tt->size());
-        if ( tt->size() > 0 )
+        if ( tt->size() > 0 ) {
             setvolume(m_volume + tt->size());
-        setvdiff(1);
+            setvdiff(1);
+        }
         if ( tt->ishigh() ) {
             sethi(tt->price());
             if ( !tt->islow())
@@ -257,7 +258,10 @@ public:
         bool dotime = false;
         if ( ask != get_ask()) {
             dotime = true;
-            setadiff(ask > get_ask() ? 1 : -1);
+            if ( (ask > get_ask() && get_ask() != 0) || ask == 0 )
+                setadiff(1);
+            else
+                setadiff(-1);
             setasdiff(m_adiff);
             setask(ask);
             setasksize(size);
@@ -281,9 +285,9 @@ public:
             setlastprice(last);
             setlastsize(size);
         }
-        else if ( size != get_lastsize()) {
+        else {
             dotime = true;
-            setldiff(2);
+            setlsdiff(2);
             setlastsize(size);
         }
 
@@ -333,6 +337,24 @@ public:
                                   const QByteArray & uidRole     = {"symbol"})
         : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
+    int initedweek = 0;
+    int filledweek = 0;
+    void initWeek(int week) {
+        if ( week > initedweek ) {
+            initedweek = week;
+            clear();
+        }
+    }
+
+    bool filledWeekRoster(int week) {
+        if ( week <= filledweek )
+            return true;
+
+        initWeek(week);
+        filledweek = week;
+        return false;
+    }
+
     void Update(MarketSnapshot *ms) {
         auto *it = getByUid(ms->symbol().data());
         if ( it == nullptr )
@@ -359,6 +381,14 @@ public:
             qDebug() << " dont have this symbol" << ms->symbol().data();
         else
             it->Update(ms);
+    }
+
+    void Update(PlayerProjModelItem *item) {
+        auto *it = getByUid(item->get_playerid());
+        if ( it == nullptr )
+            append(new PlayerQuoteSliceModelItem(item));
+        else
+            it->Update(item);
     }
 };
 

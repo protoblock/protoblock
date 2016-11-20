@@ -148,7 +148,7 @@ public slots:
     void OnClaimName(QString);
     void OnProjTX(vector<fantasybit::FantasyBitProj>);
 
-    //void OnNewOrder(fantasybit::ExchangeOrder);
+    void OnNewOrder(fantasybit::ExchangeOrder);
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
     //void OnNameBal(fantasybit::FantasyNameBal);
@@ -163,7 +163,7 @@ private:
 
     bool Process(fantasybit::Block &b);
     bool doProcessBlock();
-
+    string m_txstr;
     //void doNewDelta();
 
 };

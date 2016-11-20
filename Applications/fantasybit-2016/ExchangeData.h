@@ -412,7 +412,7 @@ public:
     }
 
     void doEmitSnap() {
-        emit StartMarketSnapShot();
+        emit StartMarketSnapShot(mWeek);
         for (auto &it : mLimitBooks) {
             #ifdef TRACE
                 qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
@@ -425,8 +425,7 @@ public:
             ms->set_symbol(it.first);
             emit NewMarketSnapShot(it.second->makeSnapshot(ms));
         }
-
-        emit FinishMarketSnapShot();
+        emit FinishMarketSnapShot(mWeek);
     }
 
     /*
@@ -458,8 +457,8 @@ public:
 signals:
     void NewMarketTicker(fantasybit::MarketTicker*);
     void NewMarketSnapShot(fantasybit::MarketSnapshot*);
-    void FinishMarketSnapShot();
-    void StartMarketSnapShot();
+    void FinishMarketSnapShot(int);
+    void StartMarketSnapShot(int);
     void NewDepthDelta(fantasybit::DepthFeedDelta*);
     void NewTradeTic(fantasybit::TradeTic *);
     void NewFantasyNameOrder(fantasybit::Order&);

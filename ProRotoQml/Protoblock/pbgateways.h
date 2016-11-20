@@ -21,7 +21,7 @@ protected:
     virtual void GotMarketSnaps() = 0;
 
 public: //slots:
-    virtual void OnFinishMarketSnapShot() = 0;
+    virtual void OnFinishMarketSnapShot(int) = 0;
 
     virtual PlayerQuoteSliceModel & GetPlayerQuoteSliceModel() = 0;
 };

@@ -28,7 +28,7 @@ void FullGateway::OnTradeTick(fantasybit::TradeTic* tt) {
     if ( tt->symbol() == "" )
         return;
 #ifdef TRACE
-    qDebug() << "FullGateway OnMarketTicker " << tt->DebugString().data();
+    qDebug() << "FullGateway TradeTic " << tt->DebugString().data();
 #endif
 
     m_PlayerQuoteSliceModel.Update(tt);

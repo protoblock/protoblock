@@ -125,7 +125,7 @@ Item {
                     Layout.maximumWidth: parent.width * .80
                     Layout.fillWidth: true
 
-                    ROWTradingTable {}
+                    WkTradingTable {}
                 }
             }
         }

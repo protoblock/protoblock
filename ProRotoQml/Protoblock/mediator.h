@@ -219,8 +219,8 @@ public:
 
 ////            m_currentPidContext = context;
 //    }
-//    Q_INVOKABLE void doCancel(qint32 id);
-//    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
+    Q_INVOKABLE void doCancel(qint32 id);
+    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
 
 //    QString playersStatus()const;
 //    void setPlayersStatus(const QString &playersStatus);
@@ -619,7 +619,7 @@ signals:
 
     void doNameCheck(QString);
     void NewProjection(vector<fantasybit::FantasyBitProj>);
-
+    void NewOrder(fantasybit::ExchangeOrder);
 
     void NewHeightStop(int);
 
@@ -868,13 +868,29 @@ public slots:
     }
 
     void OnGotMarketSnaps() {
-        for ( auto *it : *m_pPlayerQuoteSliceModel ) {
-            auto *item = mPlayerProjModel.getByUid(it->get_symbol());
-            if ( item == nullptr )
-                qDebug() << " failed to get symbol " << it->get_symbol();
-            else
-                it->Update(item);
+#ifdef TRACE
+        qDebug() << " OnGotMarketSnaps " << m_theWeek;
+#endif
+        if ( m_pPlayerQuoteSliceModel->filledWeekRoster(m_theWeek) )
+            return;
+
+
+#ifdef TRACE
+        qDebug() << " OnGotMarketSnaps loop " << mPlayerProjModel.size();
+#endif
+        for ( auto it : mPlayerProjModel ) {
+           m_pPlayerQuoteSliceModel->Update(it);
         }
+
+        m_pPlayerQuoteSliceViewFilterProxyModel->invalidate();
+
+//        for ( auto *it : *m_pPlayerQuoteSliceModel ) {
+//            auto *item = mPlayerProjModel.getByUid(it->get_symbol());
+//            if ( item == nullptr )
+//                qDebug() << " failed to get symbol " << it->get_symbol();
+//            else
+//                it->Update(item);
+//        }
     }
 
 private:

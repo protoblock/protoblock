@@ -212,7 +212,7 @@ void Mediator::LiveGui(GlobalState gs) {
         setliveSync("Live");
         setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
         updateWeek();
-        tradeTesting.start(5000);
+//        tradeTesting.start(5000);
     }
 
 //    FantasyNameBal fnb;
@@ -242,6 +242,7 @@ void Mediator::updateWeek() {
 
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
+            OnGotMarketSnaps();
 
 #ifdef NOTDEF
             int i = 0;
@@ -268,7 +269,7 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 
     for ( auto it : mPlayerProjModel)  {
         if ( !it ) continue;
-        it->set_knownProjection (0);
+        it->set_knownProjection(0);
         it->set_projection(0);
     }
 
@@ -323,7 +324,7 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     mOGateway = that;
 
     //trading
-    update_pPlayerQuoteSliceModel(&ingateway->tradingProxy->GetPlayerQuoteSliceModel());
+    m_pPlayerQuoteSliceModel = &ingateway->tradingProxy->GetPlayerQuoteSliceModel();
     m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(m_pPlayerQuoteSliceModel);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("lastprice");
@@ -497,6 +498,81 @@ QString Mediator::getSecret() {
     qDebug() << " returned secert" << sec.data();
     return sec.data();
 }
+
+void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size) {
+
+    ExchangeOrder eo;
+    eo.set_playerid(symbol.toStdString());
+    eo.set_type(ExchangeOrder::NEW);
+
+    OrderCore core;
+    core.set_buyside(isbuy);
+    core.set_size(size);
+    core.set_price(price);
+
+#ifdef TRACE
+    qDebug() << symbol << "doTrade NewOrder " << core.DebugString().data();
+#endif
+    eo.mutable_core()->CopyFrom(core);
+    emit NewOrder(eo);
+}
+
+void Mediator::doCancel(qint32 id) {
+
+//    if ( !m_fantasy_agent.HaveClient() ) {
+//        qDebug() << "error no CLient";
+
+//        return;
+//    }
+//    ExchangeOrder eo;
+//    eo.set_type(ExchangeOrder::CANCEL);
+//    eo.set_cancel_oref(id);
+
+//#ifdef TRACE
+//    qDebug() << "cancelTrade id " << id;
+//#endif
+
+//    Transaction trans{};
+//    trans.set_version(Commissioner::TRANS_VERSION);
+//    trans.set_type(TransType::EXCHANGE);
+//    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
+
+//    SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
+
+//    auto pk = m_fantasy_agent.pubKey();
+//    pb::sha256 digest(sn.id());
+//    if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
+//        qDebug() << " bad signature ";
+//    else
+//        qDebug() << " good signature ";
+
+//    auto txstr = sn.SerializeAsString();
+
+//    QByteArray qb(txstr.data(),(size_t)txstr.size());
+
+//    qDebug() << " mediator doTestTrade";
+//    m_txsocket.sendBinaryMessage(qb);
+
+//    depthCount = 0;
+//    depthBackup-=10;
+//    if ( depthBackup < 0 ) {
+//        depthBackup = 0;
+//        depthInterval = 1000;
+//    }
+//    else
+//        depthInterval = 1000 * (depthBackup / 5);
+
+//    if ( depthInterval < 1600 ) {
+//       getDepthRep();
+//       depthInterval = 1000;
+//    }
+//    polldepth.start(depthInterval);
+////    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
+////    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+////    getOrderPos();
+}
+
+
 
 Mediator *Mediator::myInstance;
 

@@ -575,9 +575,7 @@ void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
     }
 }
 
-/*
 void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
-
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::EXCHANGE);
@@ -585,9 +583,11 @@ void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
     DoPostTr(sn);
-    //namedata.Subscribe(myCurrentName.name());
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
 }
-*/
+
 /*ys
 //ToDo: convert names with a status OnLive()
 myfantasynames = agent.getMyNamesStatus();

@@ -12,10 +12,11 @@
 #include "PeerNode.h"
 #include "leveldb/slice.h"
 #include <QGlobalStatic>
-//#include "dataservice.h"
+#include "dataservice.h"
 #ifdef TIMEAGENTWRITEFILLS
 #include "playerloader.h"
 #endif
+
 
 using namespace std;
 using namespace fantasybit;
@@ -742,7 +743,7 @@ std::unordered_map<string,BookPos> ExchangeData::GetRemainingSettlePos() {
     }
 
 #ifdef TRACE
-qDebug() << "level2 ExchangeData OnGameStart GetRemainingSettlePos ";
+    qDebug() << "level2 ExchangeData OnGameStart GetRemainingSettlePos ";
 #endif
 
 
@@ -1426,15 +1427,14 @@ void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
 
 void ExchangeData::OnLive(bool subscribe) {
     amlive = true;
-#ifdef TRACE
+#ifdef TRACE4
 qDebug() << "level2 ExchangeData OnLive qqqqqq" << fnames.size();
-for (  auto n : fnames ) {
-    qDebug() << "qqqqqq" << n;
-}
-
+    for (  auto n : fnames ) {
+        qDebug() << "qqqqqq" << n;
+    }
 #endif
 
-    auto &st = mGlobalState;//DataService::instance()->GetGlobalState();
+    auto &st = DataService::instance()->GetGlobalState();
     mWeek = st.week();
 
     doEmitSnap();
