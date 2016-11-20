@@ -35,7 +35,10 @@ namespace fantasybit
 
 Node::Node() { }
 void Node::init() {
+#ifndef NO_DOSPECIALRESULTS
     doSpecialResults = false;
+#endif
+
     write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
@@ -75,7 +78,7 @@ void Node::init() {
     current_hight = getLastLocalBlockNum();
     qInfo() <<  "76 current_hight" << current_hight;
 
-    #ifndef NOCHECK_LOCAL_BOOTSTRAP
+#ifndef NOCHECK_LOCAL_BOOTSTRAP
     current_boot = getLastLocalBoot();
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
 
@@ -97,13 +100,12 @@ void Node::init() {
                 current_hight = getLastLocalBlockNum();
 
                 pb::remove_all(Platform::instance()->getRootDir() + "index/");
-#ifdef CHECKPOINTS
+
                 NFLStateData::InitCheckpoint();
                 BlockRecorder::InitCheckpoint(current_hight);
-#endif
             }
         }
-#ifdef CHECKPOINTS
+#ifndef NO_DOSPECIALRESULTS
         else if ( doSpecialResults ) {
             NFLStateData::InitCheckpoint(true);
         }
@@ -111,7 +113,7 @@ void Node::init() {
     }
 #endif
 
-#ifdef CHECKPOINTS
+#ifdef CHECKPOINTS_2015
     if ( current_hight < Commissioner::DeveloperCheckpointHigh() ) {
         auto dc = Commissioner::getCheckPoint();
 
@@ -122,7 +124,6 @@ void Node::init() {
         current_hight = getLastLocalBlockNum();
 
         NFLStateData::InitCheckpoint();
-
         BlockRecorder::InitCheckpoint(current_hight);
     }
 #endif
@@ -272,7 +273,7 @@ bool Node::SyncTo(int32_t gh) {
         previd = current_boot.previd();
         if ( previd == "" )
             previd = "5d36c22996521c97c0bb69406a3df9c15d2ca6be79224eced13b2522824dd951";
-#ifdef CHECKPOINTS
+#ifdef CHECKPOINTS_2015
 //    if ( current_hight == Commissioner::DeveloperCheckpointHigh())
 //        previd = Commissioner::DeveloperCheckPointId();
 //    else
@@ -518,9 +519,10 @@ Bootstrap Node::getLastLocalBoot() {
 
         string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
 
+#ifndef NO_DOSPECIALRESULTS
         if ( globalhead == "201608" && !Commissioner::BootStrapFileExists(globalhead) )
             doSpecialResults = true;
-
+#endif
         if ( globalhead > localhead  ) {
             head = Commissioner::makeGenesisBoot(ldb,globalhead);
             if ( head.blocknum() <= 0 ) {
@@ -738,5 +740,7 @@ decltype(Node::bootstrap) Node::bootstrap;
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};
 bool Node::forking = false;
+#ifndef NO_DOSPECIALRESULTS
 bool Node::doSpecialResults = false;
+#endif
 }	

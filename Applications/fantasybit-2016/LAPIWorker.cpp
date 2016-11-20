@@ -201,7 +201,7 @@ bool MainLAPIWorker::doProcessBlock() {
         return false;
     }
     if ( !Process(*b) ) {
-        qWarning() << " !Process";
+        qWarning() << "MainLAPIWorker::doProcessBlock nope !Process";
         return false;
     }
 

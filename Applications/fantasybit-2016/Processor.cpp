@@ -51,15 +51,15 @@ void BlockProcessor::hardReset() {
     mNameData.closeAll();
 #ifdef TRADE_FEATURE
     mExchangeData.closeAll();
-
     mExchangeData.removeAll();
 #endif
 
     pb::remove_all(Platform::instance()->getRootDir() + "index/");
-#ifdef CHECKPOINTS
+#ifndef NOUSE_GENESIS_BOOT
     NFLStateData::InitCheckpoint();
-    BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
 #endif
+    BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
+
 }
 
 int32_t BlockProcessor::init() {
@@ -72,11 +72,12 @@ int32_t BlockProcessor::init() {
         pb::remove_all(Platform::instance()->getRootDir() + "index/");
         qInfo() <<  "delete all leveldb, should have nothing";
 
-#ifdef CHECKPOINTS
+#ifndef NOUSE_GENESIS_BOOT
         NFLStateData::InitCheckpoint();
+#endif
         BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
         qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
-#endif
+
         mRecorder.init();
         if (!mRecorder.isValid() ) {
             qInfo() <<  "mRecorder not valid! ";
@@ -107,7 +108,7 @@ int32_t BlockProcessor::init() {
 
 int32_t BlockProcessor::process(Block &sblock) {
 
-    qDebug() << "process: " << sblock.signedhead().head().num();
+    qDebug() << "BlockProcessor process head().num(): " << sblock.signedhead().head().num();
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
         qCritical() << "verifySignedBlock failed! ";
