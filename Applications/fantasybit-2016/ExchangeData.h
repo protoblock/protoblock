@@ -412,6 +412,7 @@ public:
     }
 
     void doEmitSnap() {
+        /*
         emit StartMarketSnapShot(mWeek);
         for (auto &it : mLimitBooks) {
             #ifdef TRACE
@@ -423,9 +424,35 @@ public:
             ms->mutable_quote()->CopyFrom(mMarketQuote[it.first]);
             ms->mutable_ohlc()->CopyFrom(mContractOHLC[it.first]);
             ms->set_symbol(it.first);
-            emit NewMarketSnapShot(it.second->makeSnapshot(ms));
+
+            if ( ms->depth_size() > 0 || ms->ohlc().volume() > 0 ||
+                 (ms->quote().l() + ms->quote().b() + ms->quote().a()) > 0)
+                emit NewMarketSnapShot(it.second->makeSnapshot(ms));
         }
         emit FinishMarketSnapShot(mWeek);
+        */
+    }
+
+    std::vector<MarketSnapshot> GetCurrentMarketSnaps() {
+        std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+
+        qDebug() << "get GetCurrentMarketSnaps" ;
+        std::vector<MarketSnapshot> vms{};
+
+        for (auto &it : mLimitBooks) {
+            #ifdef TRACE
+                qDebug() << "level2 ExchangeData GetCurrentMarketSnaps" << it.first;
+            #endif
+            MarketSnapshot ms;
+            ms.set_week(mWeek);
+            ms.mutable_quote()->CopyFrom(mMarketQuote[it.first]);
+            ms.mutable_ohlc()->CopyFrom(mContractOHLC[it.first]);
+            ms.set_symbol(it.first);
+            it.second->makeSnapshot(&ms);
+            vms.emplace_back(ms);
+        }
+
+        return vms;
     }
 
     /*

@@ -151,13 +151,13 @@ public:
 //        m_BackgroundColor = "transparent";
     }
 
-    explicit PlayerQuoteSliceModelItem(fantasybit::MarketSnapshot* ms) :
+    explicit PlayerQuoteSliceModelItem(const fantasybit::MarketSnapshot  &ms) :
                         mDepthMarketModel{},
                         m_pDepthMarketModel{&mDepthMarketModel},
                         QObject(nullptr) {
 
-        setplayerid(ms->symbol().data());
-        setsymbol(ms->symbol().data());
+        setplayerid(ms.symbol().data());
+        setsymbol(ms.symbol().data());
 
         Update(ms);
     }
@@ -169,11 +169,12 @@ public:
 
         setplayerid(it->get_playerid());
         setsymbol(it->get_playerid());
-
+        qDebug() << " PlayerQuoteSliceModelItem new " << it->get_playerid();
         Update(it);
     }
 
-    void Update(const MarketSnapshot *ms) {
+    void Update(const MarketSnapshot &rms) {
+        const MarketSnapshot *ms = &rms;
         if ( ms->has_quote()) {
             const MarketQuote &mq = ms->quote();
             setbidsize(mq.bs());
@@ -296,6 +297,8 @@ public:
     }
 
     void Update(PlayerProjModelItem *it) {
+        qDebug() << " PlayerQuoteSliceModelItem update " << it->get_playerid();
+
         m_pPlayerProjItem = it;
         setfirstname(it->get_firstname());
         setlastname(it->get_lastname());
@@ -355,12 +358,23 @@ public:
         return false;
     }
 
-    void Update(MarketSnapshot *ms) {
-        auto *it = getByUid(ms->symbol().data());
-        if ( it == nullptr )
-            append(new PlayerQuoteSliceModelItem(ms));
-        else
+    void Update(const std::vector<MarketSnapshot> &vms,
+                const PlayerProjModel &ppm) {
+       for ( auto ppmit : ppm ) {
+           Update(ppmit);
+       }
+       for ( const auto &it : vms) {
+           Update(it);
+       }
+    }
+
+    void Update(const MarketSnapshot &ms) {
+        auto *it = getByUid(ms.symbol().data());
+        if ( it != nullptr )
             it->Update(ms);
+
+//            append(new PlayerQuoteSliceModelItem(ms));
+//        else
     }
 
     bool Update(MarketTicker *ms) {

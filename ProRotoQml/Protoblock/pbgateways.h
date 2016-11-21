@@ -8,6 +8,7 @@
 #include "FantasyName.h"
 //#include "playerprojmodel.h"
 //#include "playerquoteslicemodel.h"
+#include "ExchangeData.h"
 
 namespace pb {
 
@@ -53,8 +54,12 @@ public:
     virtual int GetAvgProjection(const std::string &playerid) = 0;
 
 
-//    virtual ordsnap_t
-//        GetOrdersPositionsByName(const std::string &fname)= 0;
+    virtual ordsnap_t
+        GetOrdersPositionsByName(const std::string &fname)= 0;
+
+    virtual std::vector<MarketSnapshot>
+                    GetCurrentMarketSnaps() = 0;
+
 
 };
 

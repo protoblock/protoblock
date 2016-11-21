@@ -10,7 +10,7 @@ using namespace fantasybit;
 namespace pb {
 
 Mediator::Mediator(QObject *parent) :  QObject(parent),
-//    mPlayerQuoteSliceModel{this,"","symbol"},
+    mPlayerQuoteSliceModel{this,"","symbol"},
     dummyPlayerQuoteSliceModelItem(fantasybit::ROWMarket::default_instance()),
     m_pPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
     mDepthMarketModel{},
@@ -71,6 +71,12 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
 
 
+    //trading
+//    m_pPlayerQuoteSliceModel = &m_pPlayerQuoteSliceModel;
+    m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(&mPlayerQuoteSliceModel);
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("lastprice");
+    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(false);
 
 
     m_useSelected = true;
@@ -86,7 +92,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                       "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
                       " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
 
-    connect(&tradeTesting, &QTimer::timeout, this, &Mediator::tradeTestingTimeout );
+//    connect(&tradeTesting, &QTimer::timeout, this, &Mediator::tradeTestingTimeout );
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -242,7 +248,11 @@ void Mediator::updateWeek() {
 
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
-            OnGotMarketSnaps();
+
+            const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
+            qDebug() << "  vms " << vms.size();
+            mPlayerQuoteSliceModel.Update(vms,mPlayerProjModel);
+//            OnGotMarketSnaps();
 
 #ifdef NOTDEF
             int i = 0;
@@ -323,12 +333,6 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     QObject* that = dynamic_cast<QObject*>(ingateway);
     mOGateway = that;
 
-    //trading
-    m_pPlayerQuoteSliceModel = &ingateway->tradingProxy->GetPlayerQuoteSliceModel();
-    m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
-    m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(m_pPlayerQuoteSliceModel);
-    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("lastprice");
-    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(false);
 
 
     connect(that, SIGNAL(NameStatus(fantasybit::MyFantasyName)),
