@@ -609,6 +609,35 @@ Item {
                 }
             }
 
+            TableViewColumn {
+                role: "symbol"
+                title: "Symbol"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: styleData.value;
+                        font.bold: false;
+                    }
+
+                }
+            }
+
         }
     }
 

@@ -430,6 +430,14 @@ Item {
 
             }
 
+            TableViewColumn {
+                role: "playerid"
+                title: "playerid"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+            }
+
         }
     }
 
