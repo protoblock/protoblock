@@ -832,7 +832,7 @@ public slots:
             }
         }
     }
-
+/*
     void OnMarketTicker(fantasybit::MarketTicker *mt) {
         if ( mt->symbol() == "" )
             return;
@@ -866,7 +866,7 @@ public slots:
 //        it->setlastprice();
 //        it->LastNew(it->get_lastprice() > 1 ? it->get_lastprice()-1 : it->get_lastprice()+1);
     }
-
+*/
     void OnGotMarketSnaps() {
 #ifdef TRACE
         qDebug() << " OnGotMarketSnaps " << m_theWeek;
@@ -878,19 +878,22 @@ public slots:
 #ifdef TRACE
         qDebug() << " OnGotMarketSnaps loop " << mPlayerProjModel.size();
 #endif
-        for ( auto it : mPlayerProjModel ) {
-           m_pPlayerQuoteSliceModel->Update(it);
+//        for ( auto it : mPlayerProjModel ) {
+//           m_pPlayerQuoteSliceModel->Update(it);
+//        }
+
+        for ( auto it : *m_pPlayerQuoteSliceModel ) {
+            auto *item = mPlayerProjModel.getByUid(it->get_symbol());
+            if ( item == nullptr ) {
+                qDebug() << "mediator OnGotMarketSnaps failed to get symbol " << it->get_symbol();
+                m_pPlayerQuoteSliceModel->remove(it);
+            }
+            else
+                it->Update(item);
         }
 
         m_pPlayerQuoteSliceViewFilterProxyModel->invalidate();
 
-//        for ( auto *it : *m_pPlayerQuoteSliceModel ) {
-//            auto *item = mPlayerProjModel.getByUid(it->get_symbol());
-//            if ( item == nullptr )
-//                qDebug() << " failed to get symbol " << it->get_symbol();
-//            else
-//                it->Update(item);
-//        }
     }
 
 private:

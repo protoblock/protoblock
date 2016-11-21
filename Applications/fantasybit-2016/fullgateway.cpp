@@ -9,7 +9,7 @@ void FullGateway::OnMarketSnapShot(MarketSnapshot *mt) {
     qDebug() << "FullGateway OnMarketSnapShot " << mt->DebugString().data();
 #endif
 
-    m_PlayerQuoteSliceModel.Update(mt);
+//    m_PlayerQuoteSliceModel.Update(mt);
 }
 
 
