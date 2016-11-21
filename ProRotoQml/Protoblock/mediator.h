@@ -56,7 +56,7 @@ class Mediator : public QObject {
 
     //Trading
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
-    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
+//    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceViewFilterProxyModel, pPlayerQuoteSliceViewFilterProxyModel)
 //    QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
 
@@ -175,7 +175,7 @@ public:
 
     Q_INVOKABLE void startDepth(const QString& symbol) {
         qDebug() << " startDepth " << symbol;
-        auto *it = m_pPlayerQuoteSliceModel->getByUid(symbol);
+        auto *it = mPlayerQuoteSliceModel.getByUid(symbol);
         if ( it == nullptr ) return;
 
 
@@ -557,7 +557,7 @@ public:
 
     //portfolio
     Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
-        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
+        auto model = mPlayerQuoteSliceModel.getByUid(uid);
         if ( model == nullptr ) {
             qDebug() << " bad data for getPlayerNamePos " << uid;
             return "";
@@ -569,7 +569,7 @@ public:
 
     //data
     Q_INVOKABLE QString getTeamid(const QString &uid) {
-        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
+        auto model = mPlayerQuoteSliceModel.getByUid(uid);
         if ( model == nullptr ) {
             qDebug() << " bad data for getTeamid " << uid;
             return "";
@@ -867,6 +867,8 @@ public slots:
 //        it->LastNew(it->get_lastprice() > 1 ? it->get_lastprice()-1 : it->get_lastprice()+1);
     }
 */
+
+/*
     void OnGotMarketSnaps() {
 #ifdef TRACE
         qDebug() << " OnGotMarketSnaps " << m_theWeek;
@@ -895,7 +897,7 @@ public slots:
         m_pPlayerQuoteSliceViewFilterProxyModel->invalidate();
 
     }
-
+*/
 private:
     vector<MyFantasyName> myGoodNames;
     void updateWeek();

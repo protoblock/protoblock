@@ -145,8 +145,8 @@ public:
 //        m_lo = in.ohlc().low();
         m_playerid = in.get_playerid();
         m_symbol = m_playerid;
-        mDepthMarketModel.append(new DepthMarketModelItem(100,2,30,50));
-        mDepthMarketModel.append(new DepthMarketModelItem(200,1,31,1));
+//        mDepthMarketModel.append(new DepthMarketModelItem(100,2,30,50));
+//        mDepthMarketModel.append(new DepthMarketModelItem(200,1,31,1));
         m_lastprice = 0;
 //        m_BackgroundColor = "transparent";
     }

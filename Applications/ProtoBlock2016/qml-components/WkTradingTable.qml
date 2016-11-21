@@ -363,7 +363,7 @@ Item {
                         font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                         text: (styleData.value === 0) ? model.lastprice === 0 ? "" : "unch" : styleData.value;
                         font.bold: false;
-                        color: model.cdiff === 0 ? (styleData.value < 0 ? "red" : styleData.value > 0 ? "green" : "black") :
+                        color: !model ? Material.Theme.light.textColor : model.cdiff === 0 ? (styleData.value < 0 ? "red" : styleData.value > 0 ? "green" : "black") :
                                 Material.Theme.light.textColor
                     }
 
