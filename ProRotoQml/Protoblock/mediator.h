@@ -26,6 +26,7 @@
 #include "pbgateways.h"
 #include "RestFullCall.h"
 #include "playerresultmodel.h"
+#include "ExchangeData.h"
 
 using namespace std;
 
@@ -138,6 +139,7 @@ class Mediator : public QObject {
 
     //trading
     PlayerQuoteSliceModelItem dummyPlayerQuoteSliceModelItem;
+    OpenOrdersModel dummyOpenOrdersModel;
 
     static Mediator *myInstance;
 public:
@@ -176,13 +178,18 @@ public:
     Q_INVOKABLE void startDepth(const QString& symbol) {
         qDebug() << " startDepth " << symbol;
         auto *it = mPlayerQuoteSliceModel.getByUid(symbol);
-        if ( it == nullptr ) return;
+        if ( it != nullptr ) {
 
+            qDebug() << " startDepth good" << symbol;
 
-        qDebug() << " startDepth good" << symbol;
+    //        m_pPlayerQuoteSliceModelItem = it;
+            update_pPlayerQuoteSliceModelItem(it);
+        }
 
-//        m_pPlayerQuoteSliceModelItem = it;
-        update_pPlayerQuoteSliceModelItem(it);
+        auto *tit = mTradingPositionsModel.getByUid(symbol);
+        if ( tit != nullptr ) {
+            update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
+        }
 //        depthBackup--;
 //        if ( depthBackup <= 0 ) {
 //            depthBackup = 0;
@@ -671,6 +678,7 @@ private:
     QString m_playersStatus;
     std::string m_lastSignedplayer;
 
+    ordsnap_t mMyPosOrders;
     std::unordered_map<std::string, std::string> m_myPubkeyFname;
     std::unordered_map<std::string, uint64_t> m_myPubkeyHash;
     std::unordered_map<uint64_t, std::string> m_myHashFname;
@@ -703,7 +711,7 @@ private:
     int depthCount;
     int depthBackup;
     int depthInterval;
-    //    TradingPositionsModel mTradingPositionsModel;
+    TradingPositionsModel mTradingPositionsModel;
 
     bool amLive = false;
 
@@ -912,6 +920,8 @@ private:
     vector<MyFantasyName> myGoodNames;
     void updateWeek();
     int testCount = 0;
+    void updateOnChangeFantasyName();
+    void updateCurrentFantasyPlayerOrderPositions();
 };
 }
 #endif // MEDIATOR_H

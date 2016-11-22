@@ -15,11 +15,13 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
     mDepthMarketModel{},
     m_pDepthMarketModel(&mDepthMarketModel),
+    m_pGlobalOpenOrdersModel(&dummyOpenOrdersModel),
     mFantasyNameBalModel(this,QByteArray(),{"name"}),
     m_pFantasyNameBalModel(&mFantasyNameBalModel),
     mGoodNameBalModel{this,QByteArray(),{"name"}},
     m_pGoodNameBalModel(&mGoodNameBalModel),
-    m_pTradingPositionsModel{new TradingPositionsModel(this,QByteArray (),{"symbol"})},
+    mTradingPositionsModel{this,QByteArray(),{"symbol"}},
+    m_pTradingPositionsModel(&mTradingPositionsModel),
     myGamesSelectionModel{},
     myPrevGamesSelectionModel{},
     m_pQItemSelectionModel(&myGamesSelectionModel),
@@ -127,7 +129,7 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     qDebug() << "Mediator  emitting using fanetay name " << myname.name().data();
     myGamesSelectionModel.reset();
     emit usingFantasyName(myname.name().data());
-    updateCurrentFantasyPlayerProjections();
+    updateOnChangeFantasyName();
     set_busySend(false);
 }
 
@@ -264,12 +266,17 @@ void Mediator::updateWeek() {
             set_thisWeekPrev(m_pWeekClosedScheduleModel->count() > 0);
 
             if (myFantasyName != "" )
-                updateCurrentFantasyPlayerProjections();
+                updateOnChangeFantasyName();
 
             m_pProjectionsViewFilterProxyModel->invalidate();
         }
         updateLiveLeaders();
     }
+}
+
+void Mediator::updateOnChangeFantasyName() {
+    updateCurrentFantasyPlayerProjections();
+    updateCurrentFantasyPlayerOrderPositions();
 }
 
 void Mediator::updateCurrentFantasyPlayerProjections(){
@@ -289,8 +296,55 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
         item->set_knownProjection(it->second);
         item->set_projection(it->second);
     }
+}
 
-    m_pTradingPositionsModel->setfantasyname(myFantasyName.data());
+void Mediator::updateCurrentFantasyPlayerOrderPositions() {
+    for ( auto tit : mTradingPositionsModel ) {
+        auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
+        if ( it == nullptr) continue;
+        it->setmyavg(0);
+        it->setmyposition(0);
+        it->setmypnl(0);
+    }
+
+
+//    ui->posQty->setValue(0);
+//    ui->posAvgPrice->setValue(0);
+//    ui->posOpenPnl->setValue(0);
+//    myPositionsName = myFantasyName;
+
+    auto myorderpositions = mGateway->dataService->GetOrdersPositionsByName(myFantasyName);
+    mTradingPositionsModel.updateAllOrders(myFantasyName,myorderpositions);
+//    mTradingPositionsModel.setfantasyname(myFantasyName.data());
+
+
+#ifdef TRACE
+    qDebug() << "level2 Trading SetMyPositions" << myFantasyName.data() << myorderpositions.size();
+#endif
+
+    double totpnl = 0.0;
+    for ( auto tit : mTradingPositionsModel ) {
+        auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
+        if ( it == nullptr) continue;
+        int netqty = tit->get_netqty();
+        double avg = 0;
+        double pnl = 0;
+        if ( netqty ==0 ) {
+            pnl = tit->get_netprice() * 100.0;
+        }
+        else {
+            int price = (netqty > 0) ? it->get_bid() : it->get_ask();
+            pnl = 100.0 * ((price * netqty) + netqty);
+            avg = tit->get_netprice()  / (netqty * -1.0);
+        }
+
+        //mTradingPositionsModel.UpdatePnl(tit,it->get_bid(),it->get_ask());
+        it->setmyavg(avg);
+        it->setmyposition(netqty);
+        it->setmypnl(pnl);
+        totpnl += pnl;
+    }
+    mTradingPositionsModel.settotalopenpnl(totpnl);
 }
 
 void Mediator::NewWeek(int week) {

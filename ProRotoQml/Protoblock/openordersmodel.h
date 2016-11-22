@@ -9,6 +9,7 @@
 #include "StateData.pb.h"
 #include <QQmlHelpersCommon.h>
 #include "QQmlPtrPropertyHelpers.h"
+#include "ExchangeData.h"
 
 using namespace fantasybit;
 
@@ -40,7 +41,7 @@ class OpenOrdersModel : public QQmlObjectListModel<OpenOrdersModelItem> {
 public:
     explicit OpenOrdersModel (QObject *  parent  = Q_NULLPTR,
                               const QByteArray & displayRole = QByteArray (),
-                              const QByteArray & uidRole     = QByteArray ()) :
+                              const QByteArray & uidRole     = {"refnum"}) :
                               QQmlObjectListModel<OpenOrdersModelItem>(parent,displayRole,uidRole)
     {}
 
@@ -53,6 +54,11 @@ public:
 //            for ( auto &ord : pio.orders() )
 //                append(new OpenOrdersModelItem(pio.symbol(),ord));
 //    }
+
+    void Update(const std::vector<Order> &vo) {
+        for ( auto &ord : vo)
+            append(new OpenOrdersModelItem(ord,this));
+    }
 };
 
 
@@ -62,6 +68,8 @@ Q_DECLARE_METATYPE(OpenOrdersModel*)
 
 class TradingPositionsModelItem : public QObject {
     Q_OBJECT
+
+    OpenOrdersModel mOpenOrdersModel;
     QML_READONLY_CSTREF_PROPERTY (QString, symbol)
     QML_READONLY_CSTREF_PROPERTY (qint32, netprice)
     QML_READONLY_CSTREF_PROPERTY (qint32, netqty)
@@ -98,7 +106,35 @@ public:
 
     }
 
+    explicit TradingPositionsModelItem(const ordsnap_t::value_type &pidppvc,
+                                 QObject *parent = Q_NULLPTR) :
+                                mOpenOrdersModel{},
+                                m_pOpenOrdersModel{&mOpenOrdersModel},
+                                QObject{parent} {
+
+        m_symbol = pidppvc.first.data();
+        auto &mypair = pidppvc.second;
+        auto &myorders = mypair.second;
+        Update(mypair.first);
+        mOpenOrdersModel.setpidsymbol(m_symbol);
+        mOpenOrdersModel.Update(myorders);
+    }
+
+
 //    OpenOrdersModel mOpenOrdersModel;
+
+    void Update(const Position &pos) {
+        setnetqty(pos.netqty);
+        setnetprice(pos.netprice);
+        if ( pos.netqty == 0 ) {
+            setopenpnl(pos.netqty * 100.0);
+            setavgprice(0);
+        }
+        else {
+            setopenpnl(0);
+            setavgprice(pos.netprice / (pos.netqty * -1));
+        }
+    }
 };
 
 
@@ -106,6 +142,7 @@ class TradingPositionsModel : public QQmlObjectListModel<TradingPositionsModelIt
     Q_OBJECT
 //    QML_READONLY_CSTREF_PROPERTY(QString, symbol)
     QML_READONLY_CSTREF_PROPERTY(QString, fantasyname)
+    QML_READONLY_CSTREF_PROPERTY (double, totalopenpnl)
 
 public:
     explicit TradingPositionsModel (QObject *          parent      = Q_NULLPTR,
@@ -123,6 +160,25 @@ public:
         for ( auto &aos : allordersfn.pidorders() )
            append(new TradingPositionsModelItem(aos,this));
     }
+
+    void updateAllOrders(const std::string &fname, const ordsnap_t &myorderpositions) {
+        clear();
+        m_totalopenpnl = 0.0;
+        setfantasyname(fname.data());
+
+        for ( auto p : myorderpositions ) {
+          //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;
+            auto &mypair = p.second;
+            auto &myorders = mypair.second;
+
+            auto it = new TradingPositionsModelItem(p,this);
+            append(it);
+            m_totalopenpnl += it->get_openpnl();
+        }
+    }
+
+//    void UpdatePnl(TradingPositionsModelItem *tit,PlayerQuoteSliceModelItem)
+
 };
 
 Q_DECLARE_METATYPE(TradingPositionsModel*)

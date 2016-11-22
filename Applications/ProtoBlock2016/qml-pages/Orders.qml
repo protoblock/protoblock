@@ -182,7 +182,7 @@ Item {
     //                height: parent.height - bandepth.height - cwc.height - listquote.height
     //                    height: parent.height
                     clip: true
-//                    model: MiddleMan.pGlobalOpenOrdersModel
+                    model: MiddleMan.pGlobalOpenOrdersModel
 //                    symbol: MiddleMan.pGlobalOpenOrdersModel.pidsymbol
                     headerPositioning: ListView.OverlayHeader
                     header: RowLayout {
@@ -219,18 +219,18 @@ Item {
                         symbol: isymbol
 
                 }
-            }
+                }
             }
         }
 
 
 
-         Connections {
-             target: MiddleMan
-             onPPlayerQuoteSliceModelItemChanged: {
-                 ordersl.model = MiddleMan.pPlayerQuoteSliceModelItem.ordersModel
-             }
-         }
+//         Connections {
+//             target: MiddleMan
+//             onPPlayerQuoteSliceModelItemChanged: {
+//                 ordersl.model = MiddleMan.pPlayerQuoteSliceModelItem.ordersModel
+//             }
+//         }
 }
 
 

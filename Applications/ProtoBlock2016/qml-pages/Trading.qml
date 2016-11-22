@@ -80,9 +80,9 @@ Item {
                     Card {
                         Layout.maximumHeight: parent.height * .90
                         Layout.minimumHeight: parent.height * .10
-//                        Orders {
-//                           anchors.fill: parent
-//                        }
+                        Orders {
+                           anchors.fill: parent
+                        }
 //                        Column{
 //                            anchors.fill: parent
 
