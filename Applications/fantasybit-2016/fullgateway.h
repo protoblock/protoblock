@@ -151,34 +151,34 @@ public:
 //                       heslive = true;
 //                 });
 
-        ExchangeData *exchangedata = &(mlapi->ExData());
+//        ExchangeData *exchangedata = &(mlapi->ExData());
 
-        //trading
-        QObject::connect(exchangedata,SIGNAL(NewMarketSnapShot(fantasybit::MarketSnapshot*)),
-                          this,SLOT(OnMarketSnapShot(fantasybit::MarketSnapshot*)));
+//        //trading
+//        QObject::connect(exchangedata,SIGNAL(NewMarketSnapShot(fantasybit::MarketSnapshot*)),
+//                          this,SLOT(OnMarketSnapShot(fantasybit::MarketSnapshot*)));
 
-        QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *)),
-                          Mediator::instance(),SLOT(OnMarketTicker(fantasybit::MarketTicker *)));
+//        QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *)),
+//                          Mediator::instance(),SLOT(OnMarketTicker(fantasybit::MarketTicker *)));
 
-        QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
-                          this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
+//        QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+//                          this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
 
-        QObject::connect(exchangedata,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
-                          this,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
+//        QObject::connect(exchangedata,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
+//                          this,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
 
-        QObject::connect(exchangedata,
-                         SIGNAL(NewOO(fantasybit::FullOrderDelta)),
-                          this,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
+//        QObject::connect(exchangedata,
+//                         SIGNAL(NewOO(fantasybit::FullOrderDelta)),
+//                          this,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
 
-        QObject::connect(exchangedata,
-                         SIGNAL(NewPos(fantasybit::FullPosition)),
-                          this,SLOT(OnNewPos(fantasybit::FullPosition)));
+//        QObject::connect(exchangedata,
+//                         SIGNAL(NewPos(fantasybit::FullPosition)),
+//                          this,SLOT(OnNewPos(fantasybit::FullPosition)));
 
-        connect(exchangedata,&ExchangeData::FinishMarketSnapShot,
-                this, &FullGateway::OnFinishMarketSnapShot);
+//        connect(exchangedata,&ExchangeData::FinishMarketSnapShot,
+//                this, &FullGateway::OnFinishMarketSnapShot);
 
-        connect(exchangedata,&ExchangeData::StartMarketSnapShot,
-                this, &FullGateway::OnStartMarketSnapShot);
+//        connect(exchangedata,&ExchangeData::StartMarketSnapShot,
+//                this, &FullGateway::OnStartMarketSnapShot);
 
         QObject::connect(Mediator::instance(),SIGNAL(NewHeightStop(int)),mlapi,SLOT(OnSeenBlock(int32_t)));
 
@@ -216,12 +216,7 @@ public slots:
         m_gs = gs;
         emit LiveGui(gs);
         if ( heslive ) {
-            connect(Mediator::instance(),&Mediator::NewProjection,
-                    mlapi,&MainLAPIWorker::OnProjTX);
-
-            connect(Mediator::instance(),&Mediator::NewOrder,
-                    mlapi,&MainLAPIWorker::OnNewOrder);
-
+            initBothLive();
             if ( !m_mynames.empty())
                  emit MyNames(m_mynames);
             for( auto &v : holdfresh)
@@ -248,19 +243,43 @@ public slots:
         emit OnUseName(s);
     }
 
+    void initBothLive() {
+        connect(Mediator::instance(),&Mediator::NewProjection,
+                mlapi,&MainLAPIWorker::OnProjTX);
+
+        connect(Mediator::instance(),&Mediator::NewOrder,
+                mlapi,&MainLAPIWorker::OnNewOrder);
+
+        Mediator *med = Mediator::instance();
+        ExchangeData *exchangedata = &(mlapi->ExData());
+
+        //trading
+        QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *,int32_t)),
+                          med,SLOT(OnMarketTicker(fantasybit::MarketTicker *,int32_t)));
+
+        QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+                          med,SLOT(OnTradeTick(fantasybit::TradeTic*)));
+
+        QObject::connect(exchangedata,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
+                          med,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
+
+        QObject::connect(exchangedata,
+                         SIGNAL(NewOO(fantasybit::FullOrderDelta)),
+                          med,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
+
+        QObject::connect(exchangedata,
+                         SIGNAL(NewPos(fantasybit::FullPosition)),
+                          med,SLOT(OnNewPos(fantasybit::FullPosition)));
+    }
+
     void ClientReady() {
         if ( amLive ) {
-            connect(Mediator::instance(),&Mediator::NewProjection,
-                    mlapi,&MainLAPIWorker::OnProjTX);
-
-            connect(Mediator::instance(),&Mediator::NewOrder,
-                    mlapi,&MainLAPIWorker::OnNewOrder);
+            initBothLive();
 
             emit LiveGui(m_gs);
             if ( gotAllSnaps )
                 emit GotMarketSnaps();
         }
-
         if ( !m_mynames.empty())
              emit MyNames(m_mynames);
         for( auto &v : holdfresh)
@@ -274,13 +293,13 @@ public slots:
  *
  * /
  */
-    void OnMarketTicker(fantasybit::MarketTicker *);
-    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
-    void OnDepthDelta(fantasybit::DepthFeedDelta*);
-    void OnTradeTick(fantasybit::TradeTic*);
-    void OnMyNewOrder(fantasybit::Order& ord);
-    void OnNewPos(fantasybit::FullPosition);
-    void OnNewOO(fantasybit::FullOrderDelta);
+//    void OnMarketTicker(fantasybit::MarketTicker *);
+//    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
+//    void OnDepthDelta(fantasybit::DepthFeedDelta*);
+//    void OnTradeTick(fantasybit::TradeTic*);
+//    void OnMyNewOrder(fantasybit::Order& ord);
+//    void OnNewPos(fantasybit::FullPosition);
+//    void OnNewOO(fantasybit::FullOrderDelta);
 
     void OnFinishMarketSnapShot(int week) {
         gotAllSnaps = true;

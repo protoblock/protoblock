@@ -521,7 +521,42 @@ void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 si
     emit NewOrder(eo);
 }
 
-void Mediator::doCancel(qint32 id) {
+void Mediator::doCancel(qint32 id) {}
+
+void Mediator::OnMarketTicker(fantasybit::MarketTicker *mt, int32_t blocknum) {
+    if ( mt->symbol() == "" )
+        return;
+#ifdef TRACE
+    qDebug() << "Mediator OnMarketTicker " << mt->DebugString().data();
+#endif
+
+    mPlayerQuoteSliceModel.Update(mt,blocknum);
+
+}
+
+void Mediator::OnTradeTick(fantasybit::TradeTic* tt) {
+    if ( tt->symbol() == "" )
+        return;
+#ifdef TRACE
+    qDebug() << "Mediator TradeTic " << tt->DebugString().data();
+#endif
+
+    mPlayerQuoteSliceModel.Update(tt);
+}
+
+void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
+    if ( dfd->symbol() == "" )
+        return;
+#ifdef TRACE
+    qDebug() << "level2 OnDepthDelta " << dfd->DebugString().data();
+#endif
+
+    mPlayerQuoteSliceModel.Update(dfd);
+}
+
+void Mediator::OnMyNewOrder(fantasybit::Order& ord) {}
+void Mediator::OnNewPos(fantasybit::FullPosition) {}
+void Mediator::OnNewOO(fantasybit::FullOrderDelta) {}
 
 //    if ( !m_fantasy_agent.HaveClient() ) {
 //        qDebug() << "error no CLient";
@@ -574,7 +609,7 @@ void Mediator::doCancel(qint32 id) {
 ////    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
 ////    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 ////    getOrderPos();
-}
+
 
 
 

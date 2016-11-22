@@ -856,7 +856,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             auto stamped = t.GetExtension(StampedTrans::stamped_trans);
             qDebug() << "new StampedTrans " << stamped.timestamp() << stamped.seqnum();
 
-            ProcessInsideStamped(stamped.signed_orig(),stamped.seqnum());
+            ProcessInsideStamped(stamped.signed_orig(),stamped.seqnum(),b.signedhead().head().num());
 
             break;
         }
@@ -867,7 +867,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
     }
 }
 
-void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum) {
+void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum,int32_t blocknum) {
     auto fn = BlockProcessor::getFNverifySt(inst);
     if ( !fn ) {
         qWarning() << "invalid tx inside stamped" << inst.trans().type();
@@ -885,7 +885,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
             //qDebug() << "new ExchangeOrder " << emdg.DebugString();
 
             //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
-            mExchangeData.OnNewOrderMsg(emdg,seqnum,fn);
+            mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum);
             break;
         }
         default:

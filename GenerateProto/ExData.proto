@@ -95,6 +95,7 @@ message BookDelta {
     repeated Order removes = 50;
     repeated MarketTicker level2tic = 60;
     repeated MarketTicker level1tic = 70;
+    optional int32 blocknum = 80;
 }
 
 message MarketQuote {
@@ -113,4 +114,5 @@ message MarketSnapshot {
     repeated DepthItem depth = 70;
     optional ContractOHLC ohlc = 20;
     optional MarketQuote quote = 30;
+    optional int32 blocknum = 40;
 }

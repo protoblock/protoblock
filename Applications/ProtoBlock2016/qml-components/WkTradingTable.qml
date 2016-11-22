@@ -289,21 +289,7 @@ Item {
                 }
             }
 
-//            TableViewColumn {
-//                role: "status"
-//                title: "Roster"
-//                horizontalAlignment : Text.AlignHCenter
-//                movable: false
-//                width: ProtoScreen.guToPx(6)
-//                delegate: Material.Label {
-//                    anchors.centerIn: parent
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignHCenter
 
-//                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-//                    text: styleData.value === 0 ? "on" : "off"
-//                }
-//            }
 
             //** green last change
             TableViewColumn {
@@ -337,6 +323,7 @@ Item {
                 }
             }
 
+
             TableViewColumn {
                 role: "change"
                 title: "Change"
@@ -367,6 +354,22 @@ Item {
                                 Material.Theme.light.textColor
                     }
 
+                }
+            }
+
+            TableViewColumn {
+                role: "blocknum"
+                title: "Block"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(6)
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: styleData.value === 0 ? "" : styleData.value
                 }
             }
 

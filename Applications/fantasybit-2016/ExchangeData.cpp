@@ -226,8 +226,12 @@ void ExchangeData::init() {
 
             if ( bd.level1tic_size() > 0) {
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData bba " << mq.DebugString();
+            qDebug() << "level2 ExchangeData bba bd.blocknum()" << bd.blocknum() <<
+                        it3->second->blocknum;//mq.DebugString().data();
 #endif
+                if ( bd.blocknum() > it3->second->blocknum )
+                    it3->second->blocknum = bd.blocknum();
+
                 //MergeMarketQuote(bd.playerid(),mq);
                 lb->updateTopfromCache(mq.b(),mq.a());
             }
@@ -327,12 +331,14 @@ void ExchangeData::clearNewWeek() {
 
 void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
                                  int32_t seqnum,
-                                 shared_ptr<FantasyName> fn) {
+                                 shared_ptr<FantasyName> fn,
+                                 int32_t blocknum) {
 
-    if ( amlive && mSubscribed.find(fn->alias()) != end(mSubscribed))
-        ;//mSubscribed.insert(seqnum);
+//    if ( amlive && mSubscribed.find(fn->alias()) != end(mSubscribed))
+        //mSubscribed.insert(seqnum);
 
     //fnames.insert(fn->alias());
+    mBookDelta->set_blocknum(blocknum);
     switch(eo.type()) {
     case ExchangeOrder::NEW:
         OnOrderNew(eo,seqnum,fn);
@@ -438,7 +444,11 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 
     //mBookDelta->set_playerid(eo.playerid());
     mBookDelta->set_fantasy_name(fn->alias());
+    if ( mBookDelta->level1tic_size() > 0 )
+        ma.blocknum = mBookDelta->blocknum();
+
     SaveBookDelta();
+
 #ifdef TIMEAGENTWRITEFILLS
     if ( !amlive ) return;
     if ( mBookDelta->level1tic_size() > 0 ) {
@@ -614,6 +624,7 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
         else
             qCritical() << " should already have this REMOVE order" << can.DebugString();
     }
+
 }
 
 
@@ -660,6 +671,8 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
     ma.mLimitBook->CancelOrder(ord);
     mBookDelta->set_playerid(playerid);
     mBookDelta->set_fantasy_name(fn->alias());
+    if ( mBookDelta->level1tic_size() > 0 )
+        ma.blocknum = mBookDelta->blocknum();
     SaveBookDelta();
 
 }
@@ -786,7 +799,6 @@ void ExchangeData::OnGameStart(std::string gid,
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnGameStart settlepos oooooo" << sp.DebugString();
 #endif
-
             }
 
         }
@@ -843,8 +855,9 @@ void ExchangeData::OnMarketTicker(const string &playerid, fantasybit::MarketTick
         mquote.set_as(mt->size());
     }
 
-    if ( amlive )
-        emit NewMarketTicker(mt);
+    if ( amlive ) {
+        emit NewMarketTicker(mt,mBookDelta->blocknum());
+    }
 }
 
 void ExchangeData::OnTrade(const string &playerid, fantasybit::TradeTic *tt) {
@@ -956,7 +969,7 @@ void LimitBook::NewDepth(bool isbuy,int price) {
 #endif
 
     DepthFeedDelta *df = DepthFeedDelta::default_instance().New();
-
+//    DepthFeedDelta *df = &dfd;
     df->set_isbid(isbuy);
     df->set_price(price+1);
     df->set_size(isbuy ? mBids[price].totSize : mAsks[price].totSize);
@@ -1040,6 +1053,7 @@ MarketSnapshot* MatchingEngine::makeSnapshot(MarketSnapshot *ms) {
     qDebug() << "level2 makeSnapshot";// << symbol;
 #endif
     if ( islocked ) return ms;
+    ms->set_blocknum(blocknum);
     int a = 1;
     int b = BOOK_SIZE;
     int nexta = 0;

@@ -832,7 +832,15 @@ public slots:
             }
         }
     }
-/*
+    void OnMarketTicker(fantasybit::MarketTicker *,int32_t);
+//    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
+    void OnDepthDelta(fantasybit::DepthFeedDelta*);
+    void OnTradeTick(fantasybit::TradeTic*);
+    void OnMyNewOrder(fantasybit::Order& ord);
+    void OnNewPos(fantasybit::FullPosition);
+    void OnNewOO(fantasybit::FullOrderDelta);
+
+    /*
     void OnMarketTicker(fantasybit::MarketTicker *mt) {
         if ( mt->symbol() == "" )
             return;
@@ -898,6 +906,8 @@ public slots:
 
     }
 */
+
+
 private:
     vector<MyFantasyName> myGoodNames;
     void updateWeek();

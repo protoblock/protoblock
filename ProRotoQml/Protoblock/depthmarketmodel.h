@@ -22,6 +22,7 @@ class DepthMarketModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, asksize)
 
 public:
+    DepthMarketModelItem() :  QObject(nullptr) {}
 
     explicit DepthMarketModelItem(const fantasybit::DepthItem &in) :  QObject(nullptr) {
         m_bidsize = in.bs();
@@ -72,6 +73,196 @@ public:
             append(new DepthMarketModelItem(di));
         }
     }
+
+    void Update(fantasybit::DepthFeedDelta* dfd) {
+        const QList<DepthMarketModelItem *> &book = toList();
+        auto bsize = count();
+    //    depths->depthitems().iterator
+//        this->count()
+        if ( dfd->isbid() ) {
+            bool nopush = false;
+            if ( bsize > 0 ) {
+                if ( book[bsize-1]->get_bid() == 0)
+                    nopush = true;;
+            }
+
+            for ( int i =0; i<bsize; i++) {
+                if ( book[i]->get_bid() == 0 ) {
+                    if ( dfd->size() > 0 ) {
+                        book[i]->setbid(dfd->price());
+                        book[i]->setbidsize(dfd->size());
+                    }
+                    break;
+                }
+                else if ( dfd->price() < book[i]->get_bid())  {
+                    if ( i < bsize-1)
+                        continue;
+
+                    if ( dfd->size() > 0) {
+                        DepthMarketModelItem *bi = new DepthMarketModelItem();
+                        append(bi);
+                        //book = toList();
+                        bsize = count();
+                        bi->setask(0);
+                        bi->setasksize(0);
+                        bi->setbid(dfd->price());
+                        bi->setbidsize(dfd->size());
+                    }
+                    break;
+                }
+                else if ( dfd->price() > book[i]->get_bid() ) {
+                    if ( dfd->size() > 0) {
+                        int end = bsize-1;
+                        if ( nopush )
+                            ;//end = bsize-1;
+                        else {
+                            //end = bsize-2;
+                            DepthMarketModelItem *bi = new DepthMarketModelItem();
+                            append(bi);
+                            //book = toList();
+                            bsize = count();
+                            bi->setask(0);
+                            bi->setasksize(0);
+                            bi->setbid(book[bsize-2]->get_bid());
+                            bi->setbidsize(book[bsize-2]->get_bidsize());
+                        }
+                        for (int j=end;j > i;--j) {
+                            if ( nopush && book[j-1]->get_bid() != 0 )
+                                nopush = false;
+
+                            if ( !nopush ) {
+                                book[j]->setbid(book[j-1]->get_bid());
+                                book[j]->setbidsize(book[j-1]->get_bidsize());
+                            }
+                        }
+
+                        book[i]->setbid(dfd->price());
+                        book[i]->setbidsize(dfd->size());
+                    }
+
+                    break;
+                }
+                else {
+                    if ( dfd->size() > 0 )
+                        book[i]->setbidsize(dfd->size());
+                    else {
+                        int j=i;
+                        for (;
+                              j<bsize-1 && book[j]->get_bid() > 0;
+                              ++j) {
+                            book[j]->setbid(book[j+1]->get_bid());
+                            book[j]->setbidsize(book[j+1]->get_bidsize());
+                        }
+                        book[j]->setbid(0);
+                        book[j]->setbidsize(0);
+                    }
+
+                    break;
+                }
+            }
+        }
+        else //!isbid
+        {
+            bool nopush = false;
+            if ( bsize > 0 ) {
+                if ( book[bsize-1]->get_ask() == 0)
+                    nopush = true;
+            }
+
+            for ( int i =0; i<bsize; i++) {
+                if ( book[i]->get_ask()== 0 ) {
+                    if ( dfd->size() > 0 ) {
+                        book[i]->setask(dfd->price());
+                        book[i]->setasksize(dfd->size());
+                    }
+                    break;
+                }
+                else if ( dfd->price() > book[i]->get_ask())  {
+                    if ( i < bsize-1)
+                        continue;
+
+                    if ( dfd->size() > 0) {
+                        DepthMarketModelItem *bi = new DepthMarketModelItem();
+                        append(bi);
+                        //book = toList();
+                        bsize = count();
+                        bi->setbid(0);
+                        bi->setbidsize(0);
+                        bi->setask(dfd->price());
+                        bi->setasksize(dfd->size());
+                    }
+                    break;
+                }
+                else if ( dfd->price() < book[i]->get_ask()) {
+                    if ( dfd->size() > 0) {
+                        int end = bsize-1;
+                        if ( nopush )
+                            ;//end = dfd->size()-1;
+                        else {
+                            //end = dfd->size()-2;
+                            DepthMarketModelItem *bi = new DepthMarketModelItem();
+                            append(bi);
+                            //book = toList();
+                            bsize = count();
+                            bi->setbid(0);
+                            bi->setbidsize(0);
+                            bi->setask(book[bsize-2]->get_ask());
+                            bi->setasksize(book[bsize-2]->get_asksize());
+                        }
+                        for (int j=end;j > i;--j) {
+                            if ( nopush && book[j-1]->get_ask()!= 0 )
+                                nopush = false;
+
+                            if ( !nopush ) {
+                                book[j]->setask(book[j-1]->get_ask());
+                                book[j]->setasksize(book[j-1]->get_asksize());
+                            }
+                        }
+
+                        book[i]->setask(dfd->price());
+                        book[i]->setasksize(dfd->size());
+                    }
+                    break;
+                }
+                else {
+                    if ( dfd->size() > 0 )
+                        book[i]->setasksize(dfd->size());
+                    else {
+                        int j=i;
+                        for (;
+                              j<bsize-1 && book[j]->get_ask()> 0;
+                              ++j) {
+                           book[j]->setask(book[j+1]->get_ask());
+                           book[j]->setasksize(book[j+1]->get_asksize());
+                        }
+                        book[j]->setask(0);
+                        book[j]->setasksize(0);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (bsize == 0 && dfd->size() >0 && dfd->price() > 0) {
+            DepthMarketModelItem *bi = new DepthMarketModelItem();
+            append(bi);
+            //book = toList();
+            bsize = count();
+            if ( dfd->isbid() ) {
+                bi->setask(0);
+                bi->setasksize(0);
+                bi->setbid(dfd->price());
+                bi->setbidsize(dfd->size());
+            }
+            else {
+                bi->setbid(0);
+                bi->setbidsize(0);
+                bi->setask(dfd->price());
+                bi->setasksize(dfd->size());
+            }
+        }
+    }
+
 };
 
 Q_DECLARE_METATYPE(DepthMarketModel*)

@@ -264,13 +264,16 @@ public:
 };
 
 struct MatchingEngine {
-    MatchingEngine(const string &playerid,bool il = false) : mPlayerid(playerid), islocked(il) {
+    MatchingEngine(const string &playerid,bool il = false)
+        : mPlayerid(playerid), islocked(il), blocknum(0)
+    {
 
     }
     unique_ptr<LimitBook> mLimitBook;
     bool islocked;
     std::unordered_map<std::string,Position> mPkPos;
     string mPlayerid;
+    int32_t blocknum;
     MarketSnapshot *makeSnapshot(MarketSnapshot *) ;
     void ResetLimitBook() {
         mLimitBook.reset(new LimitBook(mPlayerid));
@@ -360,7 +363,8 @@ public:
     std::unordered_map<string,BookPos> GetRemainingSettlePos();
 
     void OnNewOrderMsg(const ExchangeOrder&, int32_t seqnum,
-                       shared_ptr<fantasybit::FantasyName> fn);
+                       shared_ptr<fantasybit::FantasyName> fn,
+                       int32_t blocknum);
 
     void OnOrderNew(const ExchangeOrder&, int32_t seqnum,
                     shared_ptr<fantasybit::FantasyName> fn);
@@ -482,7 +486,7 @@ public:
 
 
 signals:
-    void NewMarketTicker(fantasybit::MarketTicker*);
+    void NewMarketTicker(fantasybit::MarketTicker*,int32_t);
     void NewMarketSnapShot(fantasybit::MarketSnapshot*);
     void FinishMarketSnapShot(int);
     void StartMarketSnapShot(int);
@@ -525,7 +529,9 @@ public:
     }
 
     void Reset(const string &ticker) {
+        auto holdit = blocknum();
         Clear();
+        set_blocknum(holdit);
         set_playerid(ticker);
         mutable_ohlc()->set_symbol(ticker);
     }

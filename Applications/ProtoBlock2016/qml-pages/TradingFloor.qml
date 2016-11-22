@@ -941,7 +941,11 @@ Item {
         }
 
         onAccepted: {
-            MiddleMan.doTrade(
+            if ( realRoot.uname === "" ) {
+                rootLoader.source = "qrc:/Account.qml"
+                pageHelper.selectedTabIndex = 3;
+            }
+            else MiddleMan.doTrade(
                     inplay.symbol
                     ,(side == "Buy") ? true : false
                  ,myTradeDialog.price

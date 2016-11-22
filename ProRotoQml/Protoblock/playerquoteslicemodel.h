@@ -53,6 +53,7 @@ class PlayerQuoteSliceModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY_INIT0 (double, myavg)
 
 
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, blocknum)
 
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, bsdiff)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, bdiff)
@@ -174,6 +175,7 @@ public:
     }
 
     void Update(const MarketSnapshot &rms) {
+        setblocknum(rms.blocknum());
         const MarketSnapshot *ms = &rms;
         if ( ms->has_quote()) {
             const MarketQuote &mq = ms->quote();
@@ -222,7 +224,8 @@ public:
         QTimer::singleShot(3000, this, SLOT(resetTic()));
     }
 
-    void Update(const MarketTicker *mt) {
+    void Update(const MarketTicker *mt,int32_t blocknum) {
+        setblocknum(blocknum);
         switch ( mt->type() ) {
         case MarketTicker_Type_BID:
             UpdateBid(mt->price(),mt->size());
@@ -234,6 +237,7 @@ public:
             qWarning() << " base case price slice " << mt->DebugString().data();
             break;
         }
+
     }
 
     void UpdateBid(qint32 bid, qint32 size) {
@@ -377,14 +381,15 @@ public:
 //        else
     }
 
-    bool Update(MarketTicker *ms) {
+    bool Update(MarketTicker *ms,int32_t blocknum) {
         auto *it = getByUid(ms->symbol().data());
         if ( it == nullptr ) {
             qDebug() << " dont have this symbol" << ms->symbol().data();
             return false;
         }
-        else
-            it->Update(ms);
+        else {
+            it->Update(ms,blocknum);
+        }
 
         return true;
     }
@@ -404,6 +409,16 @@ public:
         else
             it->Update(item);
     }
+
+    void Update(fantasybit::DepthFeedDelta* dfd) {
+        auto *it = getByUid(dfd->symbol().data());
+        if ( it == nullptr )
+            qDebug() << " playquote update Depth delys symbol not found" << dfd->symbol();
+        else
+            it->get_pDepthMarketModel()->Update(dfd);
+    }
+
+
 };
 
 class PlayerQuoteSliceViewFilterProxyModel : public SortFilterProxyModel {
