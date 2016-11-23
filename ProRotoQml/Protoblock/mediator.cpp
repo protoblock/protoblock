@@ -575,7 +575,17 @@ void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 si
     emit NewOrder(eo);
 }
 
-void Mediator::doCancel(qint32 id) {}
+void Mediator::doCancel(qint32 id) {
+    ExchangeOrder eo;
+    eo.set_type(ExchangeOrder::CANCEL);
+
+    eo.set_cancel_oref(id);
+
+#ifdef TRACE
+    qDebug() << id << "doCancel";
+#endif
+    emit NewOrder(eo);
+}
 
 void Mediator::OnMarketTicker(fantasybit::MarketTicker *mt, int32_t blocknum) {
     if ( mt->symbol() == "" )

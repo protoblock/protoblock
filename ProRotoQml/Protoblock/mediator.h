@@ -263,7 +263,7 @@ public:
     }
     */
     Q_INVOKABLE QString getOrderModelSymbol() {
-        return "1401";//m_pGlobalOpenOrdersModel->get_pidsymbol();
+        return m_pGlobalOpenOrdersModel->get_pidsymbol();
     }
 
     //projections

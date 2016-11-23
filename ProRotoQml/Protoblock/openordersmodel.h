@@ -15,7 +15,7 @@ using namespace fantasybit;
 
 class OpenOrdersModelItem : public QObject {
     Q_OBJECT
-    QML_CONSTANT_CSTREF_PROPERTY (QString, symbol)
+    QML_READONLY_CSTREF_PROPERTY (QString, symbol)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, refnum)
     QML_CONSTANT_CSTREF_PROPERTY (bool,  isbuy)
     QML_CONSTANT_CSTREF_PROPERTY (qint32, size)
@@ -25,7 +25,7 @@ public:
 
     explicit OpenOrdersModelItem(const fantasybit::Order &in,  QObject *parent = Q_NULLPTR)
                     :  QObject(parent) {
-//        m_symbol = pid.data();
+//        m_symbol = in.
         m_refnum = in.refnum();
         m_isbuy = in.core().buyside();
         m_size = in.core().size();
@@ -56,8 +56,11 @@ public:
 //    }
 
     void Update(const std::vector<Order> &vo) {
-        for ( auto &ord : vo)
-            append(new OpenOrdersModelItem(ord,this));
+        for ( auto &ord : vo) {
+            auto *it = new OpenOrdersModelItem(ord,this);
+            it->setsymbol(m_pidsymbol);
+            append(it);
+        }
     }
 };
 
