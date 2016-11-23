@@ -185,11 +185,12 @@ public:
             update_pPlayerQuoteSliceModelItem(it);
         }
 
-        auto *tit = mTradingPositionsModel.getByUid(symbol);
+        auto tit = mTradingPositionsModel.getOrCreate(symbol);
         if ( tit != nullptr ) {
             update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
         }
         else {
+            qDebug() << " startDepth !good getOrCreate" << symbol;
             update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
         }
 //        depthBackup--;
@@ -848,6 +849,7 @@ public slots:
     void OnTradeTick(fantasybit::TradeTic*);
     void OnNewPos(fantasybit::FullPosition);
     void OnNewOO(fantasybit::FullOrderDelta);
+    void MyPosPriceChange(PlayerQuoteSliceModelItem*);
 
     /*
     void OnMarketTicker(fantasybit::MarketTicker *mt) {

@@ -77,12 +77,17 @@ public:
             auto *it = new OpenOrdersModelItem(fo.openorder,this);
             it->setsymbol(fo.playerid.data());
             append(it);
+            qDebug() << m_pidsymbol << "OpenOrdersModel::Update appended";
         }
         else if (fo.openorder.core().size() <= 0) {
             this->remove(it);
+            qDebug() << m_pidsymbol << "OpenOrdersModel::Update removed";
+
         }
         else {
             it->Update(fo);
+            qDebug() << m_pidsymbol << "OpenOrdersModel::Update updated";
+
         }
     }
 };
@@ -104,6 +109,19 @@ class TradingPositionsModelItem : public QObject {
 
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pOpenOrdersModel)
 public:
+    explicit TradingPositionsModelItem(const QString &symbol,
+                                       QObject *parent = Q_NULLPTR) :
+                                mOpenOrdersModel{},
+                                m_pOpenOrdersModel{&mOpenOrdersModel},
+                                m_symbol{symbol},
+                                QObject{parent} {
+        m_avgprice = 0.0;
+        m_openpnl = 0.0;
+        m_netprice = 0;
+        m_netqty   = 0;
+        mOpenOrdersModel.setpidsymbol(m_symbol);
+    }
+
     explicit TradingPositionsModelItem(const AllOdersSymbol &allordersymbol,
                                        QObject *parent = Q_NULLPTR)
                 : m_symbol{allordersymbol.symbol().data()},
@@ -208,12 +226,29 @@ public:
     }
 
     void Update(fantasybit::FullOrderDelta &fo) {
-        auto it = this->getByUid(fo.playerid.data());
-        if ( it == nullptr )
-            qWarning() << "TradingPositionsModel cant find playerid" <<  fo.playerid.data();
-        else {
+        auto it = getOrCreate(fo.playerid.data());
+        if ( it != nullptr )
             it->Update(fo);
+        else
+            qCritical() << " bad Update(fantasybit::FullOrderDelta";
+//            it = new TradingPositionsModelItem(fo.playerid.data(),this);
+//            qWarning() << "TradingPositionsModel cant find playerid" <<  fo.playerid.data();
+//        else
+
+    }
+
+    TradingPositionsModelItem *getOrCreate(const QString &symbol) {
+        if ( symbol == "" ) {
+            qCritical() << " getOrCreate " << symbol;
+            return nullptr;
         }
+        TradingPositionsModelItem *it;
+        it = getByUid(symbol);
+        if ( it == nullptr ) {
+            it = new TradingPositionsModelItem(symbol,this);
+            append(it);
+        }
+        return it;
     }
 
 //    void UpdatePnl(TradingPositionsModelItem *tit,PlayerQuoteSliceModelItem)

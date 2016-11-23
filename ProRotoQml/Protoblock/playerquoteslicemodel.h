@@ -389,6 +389,8 @@ public:
         }
         else {
             it->Update(ms,blocknum);
+            if ( it->get_myposition() != 0 || it->get_myavg() != 0.0)
+                emit MyPosPriceChange(it);
         }
 
         return true;
@@ -398,8 +400,11 @@ public:
         auto *it = getByUid(ms->symbol().data());
         if ( it == nullptr )
             qDebug() << " dont have this symbol" << ms->symbol().data();
-        else
+        else {
             it->Update(ms);
+            if ( it->get_myposition() != 0 || it->get_myavg() != 0.0)
+                emit MyPosPriceChange(it);
+        }
     }
 
     void Update(PlayerProjModelItem *item) {
@@ -418,7 +423,8 @@ public:
             it->get_pDepthMarketModel()->Update(dfd);
     }
 
-
+signals:
+    void MyPosPriceChange(PlayerQuoteSliceModelItem*);
 };
 
 class PlayerQuoteSliceViewFilterProxyModel : public SortFilterProxyModel {

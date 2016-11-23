@@ -94,6 +94,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                       "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
                       " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
 
+
+    connect(&mPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
+            this, &Mediator::OnMyPosPriceChanged);
 //    connect(&tradeTesting, &QTimer::timeout, this, &Mediator::tradeTestingTimeout );
 }
 
@@ -334,7 +337,30 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         }
         else {
             int price = (netqty > 0) ? it->get_bid() : it->get_ask();
-            pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+            if ( price == 0 )
+                price = it->get_lastprice();
+
+//            if ( netqty > 0 ) {
+//                if ( (price = it->get_bid()) == 0 ) {
+//                    if ( it->get_ask() != 0 && it->get_ask() < it->get_lastprice() )
+//                        price = it->get_ask();
+//                    else
+//                        price = it->get_lastprice();
+//                }
+//            }
+//            else {
+//                if ( (price = it->get_ask()) == 0 ) {
+//                    if ( it->get_bid() != 0 && it->get_bid() < it->get_lastprice() )
+//                        price = it->get_ask();
+//                    else
+//                        price = it->get_lastprice();
+//                }
+//            }
+
+            if ( price == 0 )
+                pnl = 0.0;
+            else
+                pnl = 100.0 * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
         }
 
@@ -344,6 +370,7 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         it->setmyposition(netqty);
         qDebug() << tit->get_symbol() << " setmyposition " << netqty;
         it->setmypnl(pnl);
+        tit->setopenpnl(pnl);
         totpnl += pnl;
     }
     mTradingPositionsModel.settotalopenpnl(totpnl);
@@ -621,14 +648,14 @@ void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
 }
 
 void Mediator::OnNewPos(fantasybit::FullPosition fp) {
-    qDebug() << "level2 Trading::OnNewPos " << fp.pos.ToString().data() <<
+    qDebug() << "level2 Mediator::OnNewPos " << fp.pos.ToString().data() <<
                 fp.playerid.data() << fp.fname.data();
 
     if ( fp.fname != myFantasyName )
         return;
 
     auto it = mPlayerQuoteSliceModel.getByUid(fp.playerid.data());
-    auto tit = mTradingPositionsModel.getByUid(fp.playerid.data());
+    auto tit = mTradingPositionsModel.getOrCreate(fp.playerid.data());
     if ( tit == nullptr )
         return;
 
@@ -643,13 +670,19 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     }
     else if ( it != nullptr ) {
         int price = (netqty > 0) ? it->get_bid() : it->get_ask();
-        pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+        if ( price == 0 )
+            price = it->get_lastprice();
+        if ( price == 0 )
+            pnl = 0;
+        else
+            pnl = 100.0 * ((price * netqty) + tit->get_netprice());
         avg = tit->get_netprice()  / (netqty * -1.0);
     }
 
     it->setmyavg(avg);
     it->setmyposition(netqty);
     it->setmypnl(pnl);
+    tit->setopenpnl(pnl);
 
     qDebug() << tit->get_symbol() << " setmyposition " << netqty;
 
@@ -658,8 +691,46 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     mTradingPositionsModel.settotalopenpnl(newtotal);
 }
 
+void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
+    auto tit = mTradingPositionsModel.getByUid(fp.playerid.data());
+    if ( tit == nullptr ) {
+        qDebug() << " error tit == nullptr  Mediator::MyPosPriceChange";
+        return;
+    }
+
+    double holdpnl = tit->get_openpnl();
+    int netqty = tit->get_netqty();
+    double avg = 0;
+    double pnl = 0;
+    if ( netqty == 0 ) {
+        pnl = tit->get_netprice() * 100.0;
+    }
+    else if ( it != nullptr ) {
+        int price = (netqty > 0) ? it->get_bid() : it->get_ask();
+        if ( price == 0 )
+            price = it->get_lastprice();
+        if ( price == 0 )
+            pnl = 0;
+        else
+            pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+        avg = tit->get_netprice()  / (netqty * -1.0);
+    }
+
+    it->setmyavg(avg);
+    it->setmyposition(netqty);
+    it->setmypnl(pnl);
+    tit->setopenpnl(pnl);
+
+    qDebug() << tit->get_symbol() << " setmyposition " << netqty;
+
+    double newtotal = mTradingPositionsModel.get_totalopenpnl()
+                + (pnl - holdpnl);
+    mTradingPositionsModel.settotalopenpnl(newtotal);
+
+}
+
 void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
-    qDebug() << "level2 Trading::OnNewOO " << fo.fname << fo.openorder.DebugString().data();
+    qDebug() << "level2 Trading::Mediator " << fo.fname << fo.openorder.DebugString().data();
 
     if ( fo.fname != myFantasyName )
         return;
