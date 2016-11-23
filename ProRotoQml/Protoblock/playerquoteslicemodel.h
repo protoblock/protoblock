@@ -338,11 +338,14 @@ public slots:
 
 
 class PlayerQuoteSliceModel : public QQmlObjectListModel<PlayerQuoteSliceModelItem>{
+    Q_OBJECT
+
 public:
     explicit PlayerQuoteSliceModel (QObject *          parent      = Q_NULLPTR,
                                   const QByteArray & displayRole = QByteArray (),
                                   const QByteArray & uidRole     = {"symbol"})
         : QQmlObjectListModel (parent,displayRole,uidRole) {}
+
 
     int initedweek = 0;
     int filledweek = 0;

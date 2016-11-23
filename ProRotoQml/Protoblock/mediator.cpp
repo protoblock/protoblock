@@ -96,7 +96,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
 
     connect(&mPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
-            this, &Mediator::OnMyPosPriceChanged);
+            this, &Mediator::MyPosPriceChange);
 //    connect(&tradeTesting, &QTimer::timeout, this, &Mediator::tradeTestingTimeout );
 }
 
@@ -692,9 +692,10 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
 }
 
 void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
-    auto tit = mTradingPositionsModel.getByUid(fp.playerid.data());
+    qDebug() << " MyPosPriceChange " << it->get_symbol();
+    auto tit = mTradingPositionsModel.getByUid(it->get_symbol());
     if ( tit == nullptr ) {
-        qDebug() << " error tit == nullptr  Mediator::MyPosPriceChange";
+        qDebug() << " MyPosPriceChange error tit == nullptr  Mediator::MyPosPriceChange";
         return;
     }
 
@@ -716,8 +717,6 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
         avg = tit->get_netprice()  / (netqty * -1.0);
     }
 
-    it->setmyavg(avg);
-    it->setmyposition(netqty);
     it->setmypnl(pnl);
     tit->setopenpnl(pnl);
 
