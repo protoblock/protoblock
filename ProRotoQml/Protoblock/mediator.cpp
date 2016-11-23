@@ -329,18 +329,20 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         int netqty = tit->get_netqty();
         double avg = 0;
         double pnl = 0;
-        if ( netqty ==0 ) {
+        if ( netqty == 0 ) {
             pnl = tit->get_netprice() * 100.0;
         }
         else {
             int price = (netqty > 0) ? it->get_bid() : it->get_ask();
-            pnl = 100.0 * ((price * netqty) + netqty);
+            pnl = 100.0 * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
         }
+
 
         //mTradingPositionsModel.UpdatePnl(tit,it->get_bid(),it->get_ask());
         it->setmyavg(avg);
         it->setmyposition(netqty);
+        qDebug() << tit->get_symbol() << " setmyposition " << netqty;
         it->setmypnl(pnl);
         totpnl += pnl;
     }
@@ -618,9 +620,53 @@ void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
     mPlayerQuoteSliceModel.Update(dfd);
 }
 
-void Mediator::OnMyNewOrder(fantasybit::Order& ord) {}
-void Mediator::OnNewPos(fantasybit::FullPosition) {}
-void Mediator::OnNewOO(fantasybit::FullOrderDelta) {}
+void Mediator::OnNewPos(fantasybit::FullPosition fp) {
+    qDebug() << "level2 Trading::OnNewPos " << fp.pos.ToString().data() <<
+                fp.playerid.data() << fp.fname.data();
+
+    if ( fp.fname != myFantasyName )
+        return;
+
+    auto it = mPlayerQuoteSliceModel.getByUid(fp.playerid.data());
+    auto tit = mTradingPositionsModel.getByUid(fp.playerid.data());
+    if ( tit == nullptr )
+        return;
+
+    double holdpnl = tit->get_openpnl();
+    tit->Update(fp.pos);
+
+    int netqty = tit->get_netqty();
+    double avg = 0;
+    double pnl = 0;
+    if ( netqty ==0 ) {
+        pnl = tit->get_netprice() * 100.0;
+    }
+    else if ( it != nullptr ) {
+        int price = (netqty > 0) ? it->get_bid() : it->get_ask();
+        pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+        avg = tit->get_netprice()  / (netqty * -1.0);
+    }
+
+    it->setmyavg(avg);
+    it->setmyposition(netqty);
+    it->setmypnl(pnl);
+
+    qDebug() << tit->get_symbol() << " setmyposition " << netqty;
+
+    double newtotal = mTradingPositionsModel.get_totalopenpnl()
+                + (pnl - holdpnl);
+    mTradingPositionsModel.settotalopenpnl(newtotal);
+}
+
+void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
+    qDebug() << "level2 Trading::OnNewOO " << fo.fname << fo.openorder.DebugString().data();
+
+    if ( fo.fname != myFantasyName )
+        return;
+
+    mTradingPositionsModel.Update(fo);
+}
+
 
 //    if ( !m_fantasy_agent.HaveClient() ) {
 //        qDebug() << "error no CLient";

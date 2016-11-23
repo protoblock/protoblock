@@ -148,10 +148,10 @@ Item {
                             height: width
                             smooth: true
                         }
-                        onClicked: {
-                            MiddleMan.setOrderModel(symbol)
-                            rootLoader.source = "qrc:/Orders.qml"
-                        }
+//                        onClicked: {
+//                            MiddleMan.setOrderModel(symbol)
+//                            rootLoader.source = "qrc:/Orders.qml"
+//                        }
 
                     }
             }

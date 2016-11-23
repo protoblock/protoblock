@@ -10,7 +10,7 @@ Item {
     property int side
     property int qty
     property int price
-    property string symbol
+    property string symbolp
     property string refnum
     property int elevation : 0
     property int maximumLineCount: 2
@@ -30,7 +30,7 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: false
                 Layout.preferredWidth: (parent.width / 6) - 2
-//                hasColor: true
+//              hasColor: true
                 color: "red"
                 iconSource: "qrc:/icons/navigation_close.png"
                 onClicked: {
@@ -45,6 +45,7 @@ Item {
 //                Layout.preferredWidth:   2
 //                color: infoColor
 //            }
+
             Label {
                 id: label1
                 text: symbol

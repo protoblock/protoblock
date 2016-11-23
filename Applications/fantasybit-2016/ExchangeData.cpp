@@ -566,7 +566,7 @@ void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int
 
 #ifdef TRACE
     }
-    qDebug() << "level2 OnDeltaOpenOrder !subscribed emit NewOO" << fname ;
+    qDebug() << "level2 OnDeltaOpenOrder subscribed emit NewOO" << fname ;
 #endif
 
     Order ord;

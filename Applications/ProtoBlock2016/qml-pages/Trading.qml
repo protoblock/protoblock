@@ -127,6 +127,14 @@ Item {
 
                     WkTradingTable {}
                 }
+
+                Card {
+                    Layout.minimumWidth: parent.width * .10
+                    Layout.maximumWidth: parent.width * .30
+//                    Layout.fillWidth: true
+
+                    Portfolio {}
+                }
             }
         }
     }

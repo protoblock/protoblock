@@ -16,20 +16,25 @@ using namespace fantasybit;
 class OpenOrdersModelItem : public QObject {
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY (QString, symbol)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, refnum)
-    QML_CONSTANT_CSTREF_PROPERTY (bool,  isbuy)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, size)
-    QML_CONSTANT_CSTREF_PROPERTY (qint32, price)
+    QML_READONLY_CSTREF_PROPERTY (QString, refnum)
+    QML_READONLY_CSTREF_PROPERTY (bool,  isbuy)
+    QML_READONLY_CSTREF_PROPERTY (qint32, size)
+    QML_READONLY_CSTREF_PROPERTY (qint32, price)
 
 public:
 
     explicit OpenOrdersModelItem(const fantasybit::Order &in,  QObject *parent = Q_NULLPTR)
                     :  QObject(parent) {
 //        m_symbol = in.
-        m_refnum = in.refnum();
+        m_refnum = QString::number(in.refnum());
         m_isbuy = in.core().buyside();
         m_size = in.core().size();
         m_price = in.core().price();
+    }
+
+    void Update(fantasybit::FullOrderDelta &fo) {
+        setprice(fo.openorder.core().price());
+        setsize(fo.openorder.core().size());
     }
 };
 
@@ -60,6 +65,24 @@ public:
             auto *it = new OpenOrdersModelItem(ord,this);
             it->setsymbol(m_pidsymbol);
             append(it);
+        }
+    }
+
+    void Update(fantasybit::FullOrderDelta &fo) {
+        if ( fo.playerid.data() != m_pidsymbol)
+            qCritical() << " OpenOrdersModel bad " << fo.playerid.data() << m_pidsymbol;
+
+        auto it = this->getByUid(QString::number(fo.openorder.refnum()));
+        if ( it == nullptr ) {
+            auto *it = new OpenOrdersModelItem(fo.openorder,this);
+            it->setsymbol(fo.playerid.data());
+            append(it);
+        }
+        else if (fo.openorder.core().size() <= 0) {
+            this->remove(it);
+        }
+        else {
+            it->Update(fo);
         }
     }
 };
@@ -138,6 +161,10 @@ public:
             setavgprice(pos.netprice / (pos.netqty * -1));
         }
     }
+
+    void Update(fantasybit::FullOrderDelta &fo) {
+        mOpenOrdersModel.Update(fo);
+    }
 };
 
 
@@ -177,6 +204,15 @@ public:
             auto it = new TradingPositionsModelItem(p,this);
             append(it);
             m_totalopenpnl += it->get_openpnl();
+        }
+    }
+
+    void Update(fantasybit::FullOrderDelta &fo) {
+        auto it = this->getByUid(fo.playerid.data());
+        if ( it == nullptr )
+            qWarning() << "TradingPositionsModel cant find playerid" <<  fo.playerid.data();
+        else {
+            it->Update(fo);
         }
     }
 

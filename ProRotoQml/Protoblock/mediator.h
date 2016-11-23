@@ -179,16 +179,18 @@ public:
         qDebug() << " startDepth " << symbol;
         auto *it = mPlayerQuoteSliceModel.getByUid(symbol);
         if ( it != nullptr ) {
-
             qDebug() << " startDepth good" << symbol;
 
-    //        m_pPlayerQuoteSliceModelItem = it;
+//          m_pPlayerQuoteSliceModelItem = it;
             update_pPlayerQuoteSliceModelItem(it);
         }
 
         auto *tit = mTradingPositionsModel.getByUid(symbol);
         if ( tit != nullptr ) {
             update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
+        }
+        else {
+            update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
         }
 //        depthBackup--;
 //        if ( depthBackup <= 0 ) {
@@ -844,7 +846,6 @@ public slots:
 //    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
     void OnDepthDelta(fantasybit::DepthFeedDelta*);
     void OnTradeTick(fantasybit::TradeTic*);
-    void OnMyNewOrder(fantasybit::Order& ord);
     void OnNewPos(fantasybit::FullPosition);
     void OnNewOO(fantasybit::FullOrderDelta);
 

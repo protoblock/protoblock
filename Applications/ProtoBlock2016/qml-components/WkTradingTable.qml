@@ -131,7 +131,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: posdel
             }
 
             TableViewColumn {
@@ -140,7 +140,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: posdel
             }
 
             TableViewColumn {
@@ -353,7 +353,6 @@ Item {
                         color: !model ? Material.Theme.light.textColor : model.cdiff === 0 ? (styleData.value < 0 ? "red" : styleData.value > 0 ? "green" : "black") :
                                 Material.Theme.light.textColor
                     }
-
                 }
             }
 
@@ -805,11 +804,38 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
 
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                text: (styleData.value < 1) ? "" : styleData.value;
+                text: (styleData.value === 0) ? "" : styleData.value;
                 font.bold: false;
 //                color: (model.BackgroundColor === "transparent" || styleData.column !== 4) ? Material.Theme.light.textColor : "white"
             }
 
+        }
+    }
+
+    Component {
+        id: posdel
+        Material.Card {
+            anchors.centerIn: parent
+            flat: true
+    //        radius: 12
+            border.width: 0
+    //        anchors.rightMargin: ProtoScreen.guToPx(5)
+    //        anchors.leftMargin: ProtoScreen.guToPx(5)
+
+    //        backgroundColor: !model ? "transparent" : model.cdiff === 1 ? lightgreen : model.cdiff === -1 ? lightred :
+    //                                model.vdiff === 1 ? "lightgray" : "transparent"
+
+            width: ProtoScreen.guToPx(9) // ml.width * 3
+            Material.Label {
+                anchors.centerIn: parent
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                text: (styleData.value === 0) ?  "" : styleData.value;
+                font.bold: false;
+                color: (styleData.value < 0) ? "red" : (styleData.value > 0) ? "green" : Material.Theme.light.textColor
+            }
         }
     }
 

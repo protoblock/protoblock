@@ -11,8 +11,8 @@ import ProRotoQml.Theme 1.0
 
 Item {
     property string isymbol: MiddleMan.getOrderModelSymbol()
-    property string pnamep: MiddleMan.getPlayerNamePos(isymbol)
-    property string tid: MiddleMan.getTeamid(isymbol)
+    property string pnamep: MiddleMan.pPlayerQuoteSliceModelItem.fullname
+    property string tid: MiddleMan.pPlayerQuoteSliceModelItem.teamid
 
 //    property variant inplay: MiddleMan.getOrderModel(symbol)
 
@@ -216,7 +216,7 @@ Item {
                         qty: model.size
                         price: model.price
                         side: model.isbuy ? 1 : -1
-                        symbol: isymbol
+                        symbolp: isymbol
 
                 }
                 }
