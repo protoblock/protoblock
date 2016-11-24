@@ -61,71 +61,102 @@ Item {
                 handleDelegate: handeldel
                 width: parent.width
                 height: parent.height
+//                SplitView {
+//                    id: rightr
+//                    orientation: Qt.Vertical
+////                    handleDelegate: handeldel
+////                    width: parent.width
+//                    height: parent.height
+////                    anchors.leftMargin: 10
+//                    Layout.minimumWidth: parent.width * .20
+//                    Layout.maximumWidth: parent.width * .70
+
+//                    Card {
+//                        MarketDepthTable {}
+//                        Layout.maximumHeight: parent.height * .90
+//                        Layout.minimumHeight: parent.height * .10
+//                        Layout.fillHeight: true
+//                    }
+//                    Card {
+//                        Layout.maximumHeight: parent.height * .90
+//                        Layout.minimumHeight: parent.height * .10
+//                        Orders {
+//                           anchors.fill: parent
+//                        }
+////                        Column{
+////                            anchors.fill: parent
+
+////                            TextField{
+////                                id: txt
+////                                text: "hello"
+////                                property string color: "white"
+////                                style: TextFieldStyle{
+////                                    background: Rectangle {
+////                                        id: rect
+////                                        radius: 2
+////                                        implicitWidth: 100
+////                                        implicitHeight: 24
+////                                        border.color: "#333"
+////                                        border.width: 1
+////                                        color: txt.color
+////                                        Behavior on color {
+////                                            SequentialAnimation {
+////                                                loops: 1
+////                                                ColorAnimation { from: "white"; to: "red"; duration: 1 }
+////                                                ColorAnimation { from: "red"; to: "white";  duration: 3000 }
+////                                            }
+////                                        }
+////                                    }
+////                                }
+////                            }
+////                            Button{
+////                                text: "blink"
+////                                onClicked: {
+////                                    txt.color = "red";
+////                                    txt.color = "white";
+////                                }
+////                            }
+////                        }
+//                    }
+//                }
+
+
                 SplitView {
-                    id: rightr
+                    Layout.minimumWidth: parent.width * 0
+                    Layout.maximumWidth: parent.width * .40
                     orientation: Qt.Vertical
-//                    handleDelegate: handeldel
-//                    width: parent.width
                     height: parent.height
-//                    anchors.leftMargin: 10
-                    Layout.minimumWidth: parent.width * .20
-                    Layout.maximumWidth: parent.width * .70
 
                     Card {
-                        TradingFloor {}
+                        MarketDepthTable {}
                         Layout.maximumHeight: parent.height * .90
                         Layout.minimumHeight: parent.height * .10
-                        Layout.fillHeight: true
                     }
+
                     Card {
                         Layout.maximumHeight: parent.height * .90
                         Layout.minimumHeight: parent.height * .10
                         Orders {
                            anchors.fill: parent
                         }
-//                        Column{
-//                            anchors.fill: parent
-
-//                            TextField{
-//                                id: txt
-//                                text: "hello"
-//                                property string color: "white"
-//                                style: TextFieldStyle{
-//                                    background: Rectangle {
-//                                        id: rect
-//                                        radius: 2
-//                                        implicitWidth: 100
-//                                        implicitHeight: 24
-//                                        border.color: "#333"
-//                                        border.width: 1
-//                                        color: txt.color
-//                                        Behavior on color {
-//                                            SequentialAnimation {
-//                                                loops: 1
-//                                                ColorAnimation { from: "white"; to: "red"; duration: 1 }
-//                                                ColorAnimation { from: "red"; to: "white";  duration: 3000 }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            Button{
-//                                text: "blink"
-//                                onClicked: {
-//                                    txt.color = "red";
-//                                    txt.color = "white";
-//                                }
-//                            }
-//                        }
+                        Layout.fillHeight: true
                     }
-                }
 
+                }
                 Card {
                     Layout.minimumWidth: parent.width * .30
                     Layout.maximumWidth: parent.width * .80
                     Layout.fillWidth: true
 
                     WkTradingTable {}
+                }
+
+                Card {
+                    Layout.minimumWidth: parent.width * .10
+                    Layout.maximumWidth: parent.width * .30
+//                    Layout.fillWidth: true
+
+                    TradingFloor {}
                 }
 
                 Card {

@@ -23,6 +23,6 @@
         <file>ScheduleViewNext.qml</file>
         <file>ROWTradingTable.qml</file>
         <file>WkTradingTable.qml</file>
-
+        <file>MarketDepthTable.qml</file>
     </qresource>
 </RCC>

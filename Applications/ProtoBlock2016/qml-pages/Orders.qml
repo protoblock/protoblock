@@ -28,7 +28,7 @@ Item {
 
          Card{
             id: topcard
-            width: parent.width * .90
+            width: parent.width
             height: parent.height
             elevation: 0
             anchors{
@@ -57,7 +57,7 @@ Item {
 //                           "with all the know risks, how much are you willing to \"pay\" for the contract, and for how much would you be willing to " +
 //                           " write, or sell, the contract, knowing that you keep all the points in cae of injury, but have to pay up in case of a breakout"
 
-                width: parent.width / 1.10
+                width: parent.width
 //                width: parent.width
 //                height: ProtoScreen.guToPx(6)
                 anchors.bottomMargin:ProtoScreen.guToPx(1)
@@ -74,7 +74,7 @@ Item {
 
             Rectangle {
                 id: boundquote
-                width: parent.width / 1.10
+                width: parent.width
                 height: ProtoScreen.guToPx(8)
                 anchors{
                     top: cwc.bottom
@@ -141,7 +141,7 @@ Item {
                 backgroundColor: themeroot.theme.primaryColor
                 anchors.bottomMargin:ProtoScreen.guToPx(.5)
                 anchors.topMargin:ProtoScreen.guToPx(.5)
-                width: parent.width * .75
+                width: parent.width
                 fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 bold: true
 //                anchors.right: parent.right
