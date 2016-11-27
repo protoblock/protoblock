@@ -22,6 +22,10 @@ Card {
     property bool haveposition: inplay && inplay.myposition !== 0
     property color dcolor: Material.Theme.light.textColor
 
+    property variant inplayf: MiddleMan.pTradingPositionsModel
+    property bool havefname: inplayf && inplayf.fantasyname !== ""
+    property variant mybalance: MiddleMan.pMyFantasyNameBalance
+//    Layout.fillWidth: true
 
 //    Layout.fillWidth: true
 //    anchors.horizontalCenter: parent.horizontalCenter
@@ -31,27 +35,28 @@ Card {
     height: !haveplayer ? 0 : rl.height
 //    flat: true
     elevation: !haveposition ? 0 : 3
+//    width: parent.width
 
     RowLayout {
 //        enabled: inplay.playerid !== 0
         id: rl
-//        width: parent.width
+        width: parent.width
         height: ProtoScreen.guToPx(8)
-        anchors.left: parent.left
+//        anchors.left: parent.left
         Layout.fillWidth: true
         Layout.fillHeight: true
-        spacing: 4
+        spacing: 10
 
         //name symbol
         Rectangle {
             Layout.preferredWidth: Math.max(recwidth * 2.0,pname.width)
             Layout.minimumWidth: Math.max(recwidth * 2.0,pname.width)
             Layout.preferredHeight: parent.height
-            Layout.fillWidth: true
+            Layout.fillWidth: false
             border.width: 0
 //            anchors.centerIn: parent
             Banner {
-                Layout.fillWidth: true
+                Layout.fillWidth: false
                 id: cwc
                 fontSize: ProtoScreen.font(ProtoScreen.SMALL)
                 bold: true
@@ -60,7 +65,7 @@ Card {
                 color: "white"
                 backgroundColor: haveplayer ? themeroot.theme.primaryColor : "transparent"
 
-                width: pname.width
+                width: parent.width
                 height: ProtoScreen.guToPx(3)
                 anchors.top: parent.top
                 anchrosHType: "left"
@@ -68,7 +73,7 @@ Card {
             }
 
             Material.Card {
-                Layout.fillWidth: true
+                Layout.fillWidth: false
                 id: pname
                 anchors.top: cwc.bottom
                 backgroundColor:  "white"
@@ -98,6 +103,7 @@ Card {
 
                     Material.Label {
                         Layout.fillWidth: true
+                        elide: Text.ElideRight
                         id: pname2
                         text: !haveplayer ? "" : inplay.fullname + " (" + inplay.pos +") "
         //                anchors.fill: parent
@@ -114,8 +120,9 @@ Card {
 
                     Material.Label {
                         Layout.fillWidth: true
+                        elide: Text.ElideRight
                         id: symb1
-                        text: !haveplayer ? "" : " Symbol: " + inplay.playerid
+                        text: !haveplayer ? "" : " - " + inplay.playerid
         //                anchors.fill: parent
                         font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                         verticalAlignment: Text.AlignVCenter
@@ -131,67 +138,148 @@ Card {
             }
         }
 
-        //last
-        Rectangle {
-            Layout.fillWidth: true
-//            anchors.margins: 0
-            Layout.fillHeight: true
-            border.color: "red" //"lightgrey"
-            border.width: ProtoScreen.guToPx(.125)
-            Layout.preferredWidth: lr.implicitWidth
-            Layout.maximumWidth: recwidth
-            anchors.verticalCenter: parent.verticalCenter
-//            width: lr.width
-//            anchors.centerIn: parent
 
+        //last my pos - pnl
+        Card {
+            Layout.fillWidth: true
+            id: lspo
+//            border.color: themeroot.theme.accentColor
+//            border.width: ProtoScreen.guToPx(.125)
+//            Layout.preferredWidth: recwidth * 2
+            height: parent.height
+            Layout.preferredWidth: lposgrid.implicitWidth
+            anchors.margins: ProtoScreen.guToPx(.125)
+//            anchors.centerIn: parent
 
 //            width: parent.width *.50
 //            anchors.top: pname.bottom
-//            anchors.left: parent.horizontalCenter
-            height: parent.height
-            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
+//            anchors.right: parent.horizontalCenter
+//            height: ProtoScreen.guToPx(15)
+            backgroundColor: (inplay.ldiff !== 0 ) ?  "lightgrey" : "white"
+//            elevation: 3
+            GridLayout {
+                id: lposgrid
+    //            width: parent.width
 
-            Row {
-                anchors.left: parent.left
-//                anchors.verticalCenter: parent.verticalCenter
                 anchors.centerIn: parent
-                id: lr
-//                anchors.centerIn: parent
-                width: l1.implicitWidth + l2.implicitWidth // + ProtoScreen.guToPx(.25)
+                columns: 2
+                rows: 2
+    //            columnSpacing: ProtoScreen.guToPx(2)
 
                 Material.Label {
-                    id: l1
-        //                width: parent.width * .50
-        //                height: parent.height * .50
-                    text: inplay.playerid === 0 ?  "" : "Last: "
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.verticalCenter: parent.verticalCenter
-        //                    horizontalAlignment: Text.AlignRight
-//                    anchors.leftMargin: ProtoScreen.guToPx(.125)
+                    text: "Last:"
 
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 1
+                    Layout.row: 1
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                    color: !haveposition ? dcolor : themeroot.theme.accentColor
                 }
 
-                Material.Label{
-                    id: l2
-//                    id: lastval
+                Material.Label {
+                    text: "Pos:"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 1
+                    Layout.row: 2
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                }
+
+                Material.Label {
                     text: !haveplayer ?  "" : inplay.lastprice
-        //                Layout.fillHeight: true
-        //                Layout.fillWidth:  false
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-        //                    color: icon.color
-    //                Layout.column: 3
-    //                Layout.row: 1
-    //    //                    Layout.columnSpan: 2
-    //                Layout.rowSpan: 2
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-//                    anchors.rightMargin: ProtoScreen.guToPx(.125)
-                    color: (!haveplayer || inplay.lastprice === 0) ? "transparent" : dcolor
+                    horizontalAlignment: Text.AlignLeft
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 2
+                    Layout.row: 1
                 }
+
+                Material.Label {
+                    text: !haveposition ? "" : (inplay.myposition < 0) ? "Short(" + Math.abs(inplay.myposition) + ")" :
+                                                                                 "Long(" + inplay.myposition + ")"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 2
+                    Layout.row: 2
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    color: !haveposition ? dcolor : (inplay.myposition < 0) ? "red" : (inplay.myposition > 0) ? "green" : dcolor
+
+                }
+
+
             }
         }
+
+        //last
+//        Rectangle {
+//            Layout.fillWidth: true
+////            anchors.margins: 0
+//            Layout.fillHeight: true
+////            border.color: "red" //"lightgrey"
+//            border.width: ProtoScreen.guToPx(.125)
+//            Layout.preferredWidth: l2.implicitWidth
+////            Layout.maximumWidth: recwidth
+//            anchors.verticalCenter: parent.verticalCenter
+////            width: lr.width
+////            anchors.centerIn: parent
+
+
+////            width: parent.width *.50
+////            anchors.top: pname.bottom
+////            anchors.left: parent.horizontalCenter
+//            height: parent.height
+//            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
+
+////            Row {
+////                anchors.left: parent.left
+//////                anchors.verticalCenter: parent.verticalCenter
+////                anchors.centerIn: parent
+////                id: lr
+//////                anchors.centerIn: parent
+////                width: l1.implicitWidth + l2.implicitWidth // + ProtoScreen.guToPx(.25)
+
+////                Material.Label {
+////                    id: l1
+////        //                width: parent.width * .50
+////        //                height: parent.height * .50
+////                    text: inplay.playerid === 0 ?  "" : "Last: "
+////                    verticalAlignment: Text.AlignVCenter
+////                    horizontalAlignment: Text.AlignHCenter
+////                    anchors.verticalCenter: parent.verticalCenter
+////        //                    horizontalAlignment: Text.AlignRight
+//////                    anchors.leftMargin: ProtoScreen.guToPx(.125)
+////                    elide: Text.ElideRight
+
+////                }
+
+//                Material.Label{
+//                    id: l2
+////                    id: lastval
+//                    text: !haveplayer ?  "" : inplay.lastprice
+//        //                Layout.fillHeight: true
+//        //                Layout.fillWidth:  false
+//                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignHCenter
+//        //                    color: icon.color
+//    //                Layout.column: 3
+//    //                Layout.row: 1
+//    //    //                    Layout.columnSpan: 2
+//    //                Layout.rowSpan: 2
+//                    anchors.centerIn: parent
+//                    font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
+////                    anchors.rightMargin: ProtoScreen.guToPx(.125)
+//                    color: (!haveplayer || inplay.lastprice === 0) ? "transparent" : dcolor
+//                }
+////            }
+//        }
 /*
         Rectangle {
             border.color: "lightgrey"
@@ -269,11 +357,11 @@ Card {
         }
 */
         //bid-ask-hi-lo
-        Rectangle {
+        Card {
             Layout.fillWidth: true
             id: lrec
-            border.color: "green"//"lightgrey"
-            border.width: ProtoScreen.guToPx(.125)
+//            border.color: "green"//"lightgrey"
+//            border.width: ProtoScreen.guToPx(.125)
 //            Layout.preferredWidth: recwidth * 2
             height: parent.height
             Layout.minimumWidth: tgrid.implicitWidth
@@ -284,7 +372,7 @@ Card {
 //            anchors.top: pname.bottom
 //            anchors.right: parent.horizontalCenter
 //            height: ProtoScreen.guToPx(15)
-            color: (inplay.hdiff !== 0 || inplay.ldiff !== 0 || inplay.bsdiff !== 0 || inplay.asdiff !== 0) ?  "lightgrey" : "transparent"
+            backgroundColor: (inplay.hdiff !== 0 || inplay.ldiff !== 0 || inplay.bsdiff !== 0 || inplay.asdiff !== 0) ?  "lightgrey" : "white"
             GridLayout {
                 id: tgrid
     //            width: parent.width
@@ -345,7 +433,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: "Volume:"
+                    text: "Vol:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
@@ -371,7 +459,7 @@ Card {
                 Material.Label {
     //                width: parent.width * .50
     //                height: parent.height * .50
-                    text: "Change:"
+                    text: "Chng:"
 //                    verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignRight
                     Layout.column: 5
@@ -400,7 +488,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: "High:"
+                    text: "Hi:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
@@ -411,7 +499,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: "Low:"
+                    text: "Lo:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
@@ -445,61 +533,65 @@ Card {
             }
         }
 
-        //my positions
-        Rectangle {
-            Layout.fillWidth: true
-//            anchors.margins: 0
-            border.color: "orange" //"lightgrey"
-            border.width: ProtoScreen.guToPx(.125)
-//            Layout.preferredWidth: recwidth
-            Layout.preferredWidth: pr.implicitWidth
-//            anchors.centerIn: parent
+//        //my positions
+//        Rectangle {
+//            Layout.fillWidth: true
+////            anchors.margins: 0
+//            border.color: "orange" //"lightgrey"
+//            border.width: 0//ProtoScreen.guToPx(.125)
+////            Layout.preferredWidth: recwidth
+//            Layout.preferredWidth: pr.width
+////            anchors.centerIn: parent
 
 
-//            width: parent.width *.50
-//            anchors.top: pname.bottom
-//            anchors.left: parent.horizontalCenter
-            height: parent.height
-//            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
+////            width: parent.width *.50
+////            anchors.top: pname.bottom
+////            anchors.left: parent.horizontalCenter
+//            height: parent.height
+////            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
 
-            Row {
-//                anchors.verticalCenter: parent.verticalCenter
-                id: pr
-                anchors.centerIn: parent
-                width: p1.implicitWidth + p2.implicitWidth
-//                anchors.leftMargin: ProtoScreen.guToPx(.125)
-//                anchors.rightMargin: ProtoScreen.guToPx(.125)
+//            Column {
+////                anchors.verticalCenter: parent.verticalCenter
+//                id: pr
+//                anchors.centerIn: parent
+//                height: parent.height
 
-                Material.Label {
-                    id: p1
-                    text: !haveplayer ? "" : "My Position: "
-                    verticalAlignment: Text.AlignVCenter
-                    Layout.alignment: Qt.AlignCenter
-                    anchors.verticalCenter: parent.verticalCenter
-        //                    horizontalAlignment: Text.AlignRight
+////                width: p1.implicitWidth + p2.implicitWidth
+////                anchors.leftMargin: ProtoScreen.guToPx(.125)
+////                anchors.rightMargin: ProtoScreen.guToPx(.125)
 
-                }
+//                Material.Label {
+//                    id: p1
+//                    text: !haveplayer ? "" : "My Position"
+//                    verticalAlignment: Text.AlignVCenter
+//                    Layout.alignment: Qt.AlignCenter
+////                    anchors.top: parent.top
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//        //                    horizontalAlignment: Text.AlignRight
 
-                Material.Label{
-                    id: p2
-//                    id: lastval
-                    text: !haveposition ? "" : (inplay.myposition < 0) ? "Short(" + Math.abs(inplay.myposition) + ")" :
-                                                                                 "Long(" + inplay.myposition + ")"
-                    verticalAlignment: Text.AlignVCenter
-                    anchors.verticalCenter: parent.verticalCenter
-//                    font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-                    color: !haveposition ? dcolor : (inplay.myposition < 0) ? "red" : (inplay.myposition > 0) ? "green" : dcolor
+//                }
 
-                }
-            }
-        }
+//                Material.Label{
+//                    id: p2
+////                    id: lastval
+//                    text: !haveposition ? "" : (inplay.myposition < 0) ? "Short(" + Math.abs(inplay.myposition) + ")" :
+//                                                                                 "Long(" + inplay.myposition + ")"
+////                    verticalAlignment: Text.AlignVCenter
+////                    anchors.top: p.verticalCenter
+////                    font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
+//                     anchors.horizontalCenter: parent.horizontalCenter
+//                    color: !haveposition ? dcolor : (inplay.myposition < 0) ? "red" : (inplay.myposition > 0) ? "green" : dcolor
+
+//                }
+//            }
+//        }
 
         //avg - pnl
-        Rectangle {
+        Card {
             Layout.fillWidth: true
             id: posrec
-            border.color: themeroot.theme.accentColor
-            border.width: ProtoScreen.guToPx(.125)
+//            border.color: themeroot.theme.accentColor
+//            border.width: ProtoScreen.guToPx(.125)
 //            Layout.preferredWidth: recwidth * 2
             height: parent.height
             Layout.preferredWidth: posgrid.implicitWidth
@@ -509,7 +601,7 @@ Card {
 //            anchors.top: pname.bottom
 //            anchors.right: parent.horizontalCenter
 //            height: ProtoScreen.guToPx(15)
-            color: (inplay.hdiff !== 0 || inplay.ldiff !== 0 || inplay.bsdiff !== 0 || inplay.asdiff !== 0) ?  "lightgrey" : "transparent"
+            backgroundColor: (inplay.hdiff !== 0 || inplay.ldiff !== 0 || inplay.bsdiff !== 0 || inplay.asdiff !== 0) ?  "lightgrey" : "white"
             GridLayout {
                 id: posgrid
     //            width: parent.width
@@ -520,7 +612,7 @@ Card {
     //            columnSpacing: ProtoScreen.guToPx(2)
 
                 Material.Label {
-                    text: "Average Price:"
+                    text: "Avg Price:"
 
 
                     verticalAlignment: Text.AlignVCenter
@@ -534,7 +626,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: "Profit / Loss:"
+                    text: "Open PnL:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
@@ -569,6 +661,222 @@ Card {
 
                 }
 
+
+            }
+        }
+
+        //fname
+//        Rectangle {
+//            enabled: false
+//            Layout.preferredWidth: cwc2.width//Math.max(fname.width,cwc2.width)
+//            Layout.minimumWidth: cwc2.width//Math.max(fname.width,cwc2.width)
+//            Layout.preferredHeight: parent.height
+//            Layout.fillWidth: true
+//            border.width: 0
+//            Layout.alignment: Qt.AlignRight
+////            anchors.centerIn: parent
+//            Card {
+//                Layout.fillWidth: true
+//                id: cwc2
+//                anchors.left: parent.left
+////                width: ProtoScreen.guToPx(28)
+//                backgroundColor: havefname ? themeroot.theme.accentColor : "white"
+
+//                width: Math.max(fname.width,cwc2b.width)
+//                height: ProtoScreen.guToPx(3)
+//                anchors.top: parent.top
+//                elevation: 0
+//                Material.Label {
+//                    id: cwc2b
+//                    text: "Protoblock Trader Account"
+//    //                anchors.fill: parent
+//    //                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignHCenter
+
+//                    anchors {
+//                        verticalCenter: parent.verticalCenter
+////                        centerIn: parent
+//    //                        left: teamicon.right
+//    //                        leftMargin: ProtoScreen.guToPx(.125)
+//                    }
+//                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                }
+
+//            }
+
+//            Material.Card {
+//                anchors.top: cwc2.bottom
+//                height: parent.height - cwc2.height
+//                Layout.fillWidth: true
+//                id: fname
+//                width: fbl1.implicitWidth
+////                flat: true
+//                elevation: 0
+//                Material.Label {
+//                    id: fbl1
+//                    text: !havefname ? "" : inplayf.fantasyname
+//    //                anchors.fill: parent
+//    //                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignHCenter
+
+//                    anchors {
+////                        verticalCenter: parent.verticalCenter
+//                        centerIn: parent
+//    //                        left: teamicon.right
+//    //                        leftMargin: ProtoScreen.guToPx(.125)
+//                    }
+//                }
+//            }
+//        }
+
+        Material.Card {
+            height: parent.height
+            Layout.fillWidth: false
+            id: fnameCARD
+            Layout.preferredWidth: fbl12.width
+            anchors.rightMargin: ProtoScreen.guToPx(.25)
+            anchors.leftMargin: ProtoScreen.guToPx(.25)
+//            width: fbl1.implicitWidth
+//           elevation: 0
+            Material.Label {
+                id: fbl12
+                text: !havefname ? "" : inplayf.fantasyname
+            //                anchors.fill: parent
+                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignRight
+
+                anchors {
+//                    verticalCenter: parent.verticalCenter
+//                    right: parent.right
+//                    rightMargin: ProtoScreen.guToPx(.25)
+                    centerIn: parent
+            //                        left: teamicon.right
+            //                        leftMargin: ProtoScreen.guToPx(.125)
+                }
+            }
+        }
+
+        //balances
+        Card {
+            Layout.fillWidth: true
+            id: lrec2
+            border.width: 0
+//            Layout.preferredWidth: recwidth * 2
+            height: parent.height
+            Layout.minimumWidth: tgrid2.implicitWidth
+            Layout.preferredWidth: tgrid2.implicitWidth
+            Layout.alignment: Qt.AlignLeft
+//            anchors.centerIn: parent
+
+//            width: parent.width *.50
+//            anchors.top: pname.bottom
+//            anchors.right: parent.horizontalCenter
+//            height: ProtoScreen.guToPx(15)
+//            color: (inplay.hdiff !== 0 || inplay.ldiff !== 0 || inplay.bsdiff !== 0 || inplay.asdiff !== 0) ?  "lightgrey" : "transparent"
+            GridLayout {
+                id: tgrid2
+    //            width: parent.width
+
+                anchors.centerIn: parent
+                columns: 4
+                rows: 2
+    //            columnSpacing: ProtoScreen.guToPx(2)
+
+                Material.Label {
+                    text: "Net Bal:"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 1
+                    Layout.row: 1
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                }
+
+                Material.Label {
+                    text: "Open PnL:"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 1
+                    Layout.row: 2
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                }
+
+                Material.Label {
+                    text: "Settled Bal:"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 3
+                    Layout.row: 1
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                }
+
+                Material.Label {
+                    text: "Leaderboard:"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 3
+                    Layout.row: 2
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                }
+
+                Material.Label {
+                    text: !mybalance ? "" : (mybalance.stake + (!inplayf ? 0 : inplayf.totalopenpnl)).toLocaleString() + " ƑɃ"
+                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 2
+                    Layout.row: 1
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                    color: !inplay ? Material.Theme.light.textColor : inplay.bsdiff === 1 ? lightgreen :
+//                                             inplay.bsdiff === -1 ? lightred :  Material.Theme.light.textColor
+
+                }
+
+                Material.Label {
+                    text: !inplayf ? 0 : ((inplayf.totalopenpnl > 0 ? "+" : "") + inplayf.totalopenpnl).toLocaleString() + " ƑɃ"
+                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 2
+                    Layout.row: 2
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    color: (!inplayf || inplayf.totalopenpnl === 0) ? Material.Theme.light.textColor : inplayf.totalopenpnl > 0 ? "green" : "red"
+                }
+
+                Material.Label {
+                    text: !mybalance ? "" : (mybalance.stake).toLocaleString()  + " ƑɃ"
+                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 4
+                    Layout.row: 1
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                }
+
+                Material.Label {
+                    textFormat: Text.RichText
+                    text: !mybalance ? "" : (mybalance.bits).toLocaleString()  + " ƑɃ<sup>Skill</<sup>"
+                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignRight
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.column: 4
+                    Layout.row: 2
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                }
 
             }
         }

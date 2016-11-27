@@ -23,6 +23,7 @@ Card {
 
     property variant mybalance: MiddleMan.pMyFantasyNameBalance
 
+    Layout.fillWidth: true
 //    Layout.fillWidth: true
 //    anchors.horizontalCenter: parent.horizontalCenter
 //    anchors.top: parent.top
@@ -31,16 +32,19 @@ Card {
     height: !haveplayer ? 0 : rl.height
 //    flat: true
     elevation: 0
+//    width: parent.width
 
     RowLayout {
 //        enabled: inplay.playerid !== 0
         id: rl
-//        width: parent.width
+        width: parent.width
         height: ProtoScreen.guToPx(8)
-        anchors.right: parent.right
-        Layout.fillWidth: false
+//        anchors.right: parent.right
+        Layout.fillWidth: true
         Layout.fillHeight: true
         spacing: 4
+
+        layoutDirection: Qt.RightToLeft
 
         //fantasyname
         Rectangle {
@@ -73,7 +77,7 @@ Card {
                 height: parent.height - cwc.height
                 Layout.fillWidth: true
                 id: pname2
-                width: parent.width
+                width: fbl1.implicitWidth
 //                flat: true
                 elevation: 0
                 Material.Label {
@@ -95,7 +99,7 @@ Card {
         }
 
         //balances
-        Rectangle {
+        Card {
             Layout.fillWidth: true
             id: lrec
             border.width: 0
@@ -121,7 +125,7 @@ Card {
     //            columnSpacing: ProtoScreen.guToPx(2)
 
                 Material.Label {
-                    text: "Net Balance:"
+                    text: "Net Bal:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
@@ -132,7 +136,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: "Total PnL:"
+                    text: "Open PnL:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
@@ -143,7 +147,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: "Settled Balance:"
+                    text: "Settled Bal:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
@@ -154,7 +158,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: "Leaderboard Bal:"
+                    text: "Leaderboard:"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
