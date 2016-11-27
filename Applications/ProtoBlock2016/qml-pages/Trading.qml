@@ -50,9 +50,38 @@ Item {
 
         SystemPalette { id: pal }
 
+        RowLayout {
+            id: tcb
+            width: parent.width
+            anchors.top: cBan.bottom
+            height: ProtoScreen.guToPx(8)
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 1
+
+            TradingContextBanner {
+                id: tcbx
+                anchors.top: parent.top
+    //            anchors.horizontalCenter: parent.horizontalCenter
+//                anchors.left: parent.left
+//                width: parent.width
+//                anchors.leftMargin: ProtoScreen.guToPx(.25)
+            }
+
+            FantasyNameContextBanner {
+                id: fcbx
+                anchors.top: parent.top
+
+    //            anchors.horizontalCenter: parent.horizontalCenter
+    //            width: parent.width * .50
+//                anchors.right: parent.right
+//                anchors.rightMargin: ProtoScreen.guToPx(.25)
+            }
+        }
 
         Item {
-            anchors.top: cBan.bottom
+            anchors.top: tcb.bottom
             anchors.topMargin: ProtoScreen.guToPx(.25)
             width: parent.width
             height: parent.height

@@ -29,7 +29,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pLeaderBoardSortModel(new SortFilterProxyModel),
     m_pResultSelectedModel(new SortFilterProxyModel),
     m_blocknum(0),
-    m_height(0) {
+    m_height(0),
+    dummyFantasyNameBalModelItem(),
+    m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem} {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
@@ -128,8 +130,9 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
         }
     }
 
+    update_pMyFantasyNameBalance(mGoodNameBalModel.getByUid(myname.name().data()));
     myFantasyName = myname.name();
-    qDebug() << "Mediator  emitting using fanetay name " << myname.name().data();
+    qDebug() << "Mediator  emitting using fantasy name " << myname.name().data();
     myGamesSelectionModel.reset();
     emit usingFantasyName(myname.name().data());
     updateOnChangeFantasyName();

@@ -71,6 +71,7 @@ class Mediator : public QObject {
 
     //fantasyname
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
+    QML_READONLY_PTR_PROPERTY(FantasyNameBalModelItem, pMyFantasyNameBalance)
 
 
     //leaderboard
@@ -140,6 +141,7 @@ class Mediator : public QObject {
     //trading
     PlayerQuoteSliceModelItem dummyPlayerQuoteSliceModelItem;
     OpenOrdersModel dummyOpenOrdersModel;
+    FantasyNameBalModelItem dummyFantasyNameBalModelItem;
 
     static Mediator *myInstance;
 public:

@@ -24,5 +24,7 @@
         <file>ROWTradingTable.qml</file>
         <file>WkTradingTable.qml</file>
         <file>MarketDepthTable.qml</file>
+        <file>TradingContextBanner.qml</file>
+        <file>FantasyNameContextBanner.qml</file>
     </qresource>
 </RCC>
