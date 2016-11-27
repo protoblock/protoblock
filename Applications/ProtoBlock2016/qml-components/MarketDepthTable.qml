@@ -29,6 +29,7 @@ Card {
 //        Layout.fillHeight: true
 //        Layout.fillWidth: true
 //    }
+/*
     Item {
         Layout.fillWidth: false
         anchors.horizontalCenter: parent.horizontalCenter
@@ -316,7 +317,7 @@ Card {
             }
         }
      }
-
+*/
         //        Item {
 //            anchors.top: pname.bottom
 //            id: qban
@@ -443,7 +444,7 @@ Card {
 
 
     TableView {
-        anchors.top: topi.bottom
+        anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         id: depthvm
         highlightOnFocus:   false
@@ -472,11 +473,11 @@ Card {
 //                    border: false
                 Material.Label {
                     id: textItem2
-                    text: " " + styleData.value + " "
+                    text: styleData.value
                     anchors.fill: parent
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    elide: Text.ElideRight
-                    wrapMode: Text.WordWrap
+//                    elide: Text.ElideRight
+//                    wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                     color: "white"
@@ -551,8 +552,8 @@ Card {
         bold: true
         anchors.horizontalCenter: parent.horizontalCenter
         text: " Market Depth"
-        color: "white"
-        backgroundColor: themeroot.theme.primaryColor
+        color: themeroot.theme.primaryColor
+        backgroundColor: "white"
 
         width: depthvm.width
         height: ProtoScreen.guToPx(4)

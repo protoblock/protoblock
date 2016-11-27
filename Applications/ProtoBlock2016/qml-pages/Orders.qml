@@ -41,14 +41,15 @@ Item {
             // spacer
             Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
 
+/*
             Banner {
                 id: cwc
                 fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 bold: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: pnamep + " Open Orders"
-                color: "white"
-                backgroundColor: themeroot.theme.primaryColor
+                color: themeroot.theme.primaryColor
+                backgroundColor: "white"
 //                helpShown: true
 //                helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
 //                helperTxt: "Contract expires after week 15 at the total fantasy points scored by " + inplay.fullname +
@@ -126,7 +127,7 @@ Item {
 
                 }
              }
-
+*/
             Banner {
                 id: bandepth
                 anchors.top: boundquote.bottom
@@ -134,15 +135,15 @@ Item {
     //                height: parent.height - cwc.height - buySell.heigth
                 text: "Open Order"
                 anchrosType: "center"
-                helperHeader: "Open Orders Help"
-                helperTxt: " "
-                helpShown: true
-                height: ProtoScreen.guToPx(6)
+//                helperHeader: "Open Orders Help"
+//                helperTxt: " "
+//                helpShown: true
+                height: ProtoScreen.guToPx(4)
                 backgroundColor: themeroot.theme.primaryColor
-                anchors.bottomMargin:ProtoScreen.guToPx(.5)
-                anchors.topMargin:ProtoScreen.guToPx(.5)
+//                anchors.bottomMargin:ProtoScreen.guToPx(.5)
+//                anchors.topMargin:ProtoScreen.guToPx(.5)
                 width: parent.width
-                fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                fontSize: ProtoScreen.font(ProtoScreen.SMALL)
                 bold: true
 //                anchors.right: parent.right
 
