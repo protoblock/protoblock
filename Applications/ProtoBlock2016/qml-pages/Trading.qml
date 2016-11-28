@@ -191,7 +191,22 @@ Item {
                     Layout.maximumWidth: parent.width
                     Layout.fillWidth: true
 
-                    WkTradingTable {}
+                    Card {
+                        height: parent.height * .70
+                        width: parent.width
+                        id: wkt
+
+                        WkTradingTable {}
+                    }
+
+                    Card {
+                        height: parent.height - wkt.height
+                        width: parent.width
+                        anchors.top: wkt.bottom
+                        BuySellTrading {
+                        }
+                    }
+
                 }
 
 //                Card {

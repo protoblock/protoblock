@@ -130,8 +130,8 @@ Item {
 */
             Banner {
                 id: bandepth
-                anchors.top: boundquote.bottom
-                anchors.horizontalCenter: boundquote.horizontalCenter
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
     //                height: parent.height - cwc.height - buySell.heigth
                 text: "Open Order"
                 anchrosType: "center"

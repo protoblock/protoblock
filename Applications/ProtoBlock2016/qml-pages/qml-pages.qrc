@@ -21,5 +21,6 @@
         <file>Portfolio.qml</file>
         <file>Leaderboard.qml</file>
         <file>ScoringSystem.qml</file>
+                <file>BuySellTrading.qml</file>
     </qresource>
 </RCC>
