@@ -17,6 +17,7 @@ Item {
     property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
 
 
+    Layout.fillWidth: false
     property int depthsize: 5
     property double dihight: ProtoScreen.guToPx(4)
     property int price
@@ -39,12 +40,13 @@ Item {
 //        MiddleMan.stopDepth(symbol)
 //    }
 
-    Flickable{
+    Item{
         height: parent.height
         width: parent.width
-        contentHeight: parent.height * 3
-        interactive: true
-        boundsBehavior: Flickable.StopAtBounds
+//        contentHeight: parent.height * 3
+//        interactive: true
+//        boundsBehavior: Flickable.StopAtBounds
+//        contentWidth: parent.width * 3
 //    Scrollbar{flickableItem: f1}
 //    Flickable{
 //        id: fl
@@ -57,7 +59,7 @@ Item {
 
         Card{
             id: topcard
-            width: parent.width * .90
+            width: parent.width
             height: parent.height
             elevation: 0
 //            anchors.centerIn: parent
@@ -361,7 +363,8 @@ Item {
                 height: dihight * ( .75 + Math.min(depthsize,depthvm.count))
 //                anchors.margins: ProtoScreen.guToPx(.125)
                 anchors.horizontalCenter: bandepth.horizontalCenter
-                width: bandepth.width
+//                width: 500//bandepth.width
+                width: depthvm.width
                 color: "transparent"
                 Rectangle {
                     id: middlebar
@@ -374,7 +377,7 @@ Item {
                     Layout.fillWidth: true
                 }
                 ListView {
-                    anchors.fill: parent
+//                    anchors.fill: parent
 
     //                    id: f2
     //                    width: depthvm.width
@@ -392,7 +395,7 @@ Item {
 //                    anchors.margins: ProtoScreen.guToPx(.125)
                     anchors.horizontalCenter: boundingRect.horizontalCenter
     //                    anchors.fill: parent
-                    width: boundingRect.width
+//                    width: boundin gRect.width
     //                height: parent.height - bandepth.height - cwc.height - listquote.height
     //                    height: parent.height
                     clip: true

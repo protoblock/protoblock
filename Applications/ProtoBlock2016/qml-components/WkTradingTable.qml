@@ -130,7 +130,7 @@ Item {
                 title: "My Position"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: posdel
             }
 
@@ -139,7 +139,7 @@ Item {
                 title: "My PnL"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: posdel
             }
 
@@ -148,7 +148,7 @@ Item {
                 title: "My Avg"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: fbdel
             }
 
@@ -297,7 +297,7 @@ Item {
                 title: "Last"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -329,7 +329,7 @@ Item {
                 title: "Change"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -378,7 +378,7 @@ Item {
                 title: "Bid Qty"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -409,7 +409,7 @@ Item {
                 title: "Bid"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -439,7 +439,7 @@ Item {
                 title: "Ask"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -469,7 +469,7 @@ Item {
                 title: "Ask Qty"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -499,7 +499,7 @@ Item {
                 title: "Last Qty"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -529,7 +529,7 @@ Item {
                 title: "High"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -558,7 +558,7 @@ Item {
                 title: "Low"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -587,7 +587,7 @@ Item {
                 title: "Volume"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true
@@ -616,7 +616,7 @@ Item {
                 title: "Symbol"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
                     anchors.centerIn: parent
                     flat: true

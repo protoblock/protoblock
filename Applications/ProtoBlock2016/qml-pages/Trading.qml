@@ -164,49 +164,51 @@ Item {
 
                 SplitView {
                     Layout.minimumWidth: parent.width * 0
-                    Layout.maximumWidth: parent.width * .40
+                    Layout.maximumWidth: parent.width * .50
                     orientation: Qt.Vertical
                     height: parent.height
+                    width: ProtoScreen.guToPx(40)
 
                     Card {
                         MarketDepthTable {}
-                        Layout.maximumHeight: parent.height * .90
-                        Layout.minimumHeight: parent.height * .10
+                        Layout.maximumHeight: parent.height
+                        Layout.minimumHeight: parent.height * 0
+                        Layout.fillHeight: true
+
                     }
 
                     Card {
-                        Layout.maximumHeight: parent.height * .90
-                        Layout.minimumHeight: parent.height * .10
+                        Layout.maximumHeight: parent.height
+                        Layout.minimumHeight: parent.height * 0
                         Orders {
                            anchors.fill: parent
                         }
-                        Layout.fillHeight: true
                     }
 
                 }
                 Card {
-                    Layout.minimumWidth: parent.width * .30
-                    Layout.maximumWidth: parent.width * .80
+                    Layout.minimumWidth: parent.width * .50
+                    Layout.maximumWidth: parent.width
                     Layout.fillWidth: true
 
                     WkTradingTable {}
                 }
 
-                Card {
-                    Layout.minimumWidth: parent.width * .10
-                    Layout.maximumWidth: parent.width * .30
-//                    Layout.fillWidth: true
+//                Card {
+//                    Layout.minimumWidth: parent.width * .10
+//                    Layout.maximumWidth: parent.width * .30
+////                    Layout.fillWidth: true
 
-                    TradingFloor {}
-                }
+//                    TradingFloor {}
+//                }
 
-                Card {
-                    Layout.minimumWidth: parent.width * .10
-                    Layout.maximumWidth: parent.width * .30
-//                    Layout.fillWidth: true
+//                Card {
+//                    Layout.minimumWidth: parent.width * .10
+//                    Layout.maximumWidth: parent.width * .30
+////                    Layout.fillWidth: true
 
-                    Portfolio {}
-                }
+//                    Portfolio {}
+//                }
             }
         }
     }
