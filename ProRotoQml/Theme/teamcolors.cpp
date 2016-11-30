@@ -9,7 +9,7 @@ void TeamColors::setPrimaryMap()
 {
     // just in case
     m_map.clear();
-    QMap<QString,QString> map;
+    QMap<QString,QString> &map = m_map;
     map.insert("ARI" , "#97233F");
     map.insert("ATL" , "#C60C30");
     map.insert("BAL" , "#241773");
@@ -43,11 +43,11 @@ void TeamColors::setPrimaryMap()
     map.insert("TB" , "#A71930");
     map.insert("TEN" , "#002147");
     map.insert("WAS", "#822433" );
-    m_map = map;
+//    m_map = map;
 
 
     //2nd colors
-    QMap<QString,QString> map2;
+    QMap<QString,QString> &map2 = m_secondMap;
     map2.insert("ARI" , "#FFFFFF");
     map2.insert("ATL" , "#111C24");
     map2.insert("BAL" , "#111C24");
@@ -77,11 +77,12 @@ void TeamColors::setPrimaryMap()
     map2.insert("SEA" , "#008542");
     map2.insert("SF" , "#8E6E4D");
     //
+    map2.insert("STL", "#95774D");
     map2.insert("LA", "#95774D");
     map2.insert("TB" , "#665C4F");
     map2.insert("TEN" , "#4B92DB");
     map2.insert("WAS", "#FFB612" );
-    m_secondMap = map2;
+//    m_secondMap = map2;
 
     m_pos.insert("RB", "#BCFAAD");
         m_pos.insert("WR", "#FEFBB6");

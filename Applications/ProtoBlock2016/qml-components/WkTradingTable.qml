@@ -255,7 +255,7 @@ Item {
             TableViewColumn {
                 id: tvm
                 role: "pos"
-                title: ""
+                title: "Pos"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(7)

@@ -170,7 +170,7 @@ public:
 
         setplayerid(it->get_playerid());
         setsymbol(it->get_playerid());
-        qDebug() << " PlayerQuoteSliceModelItem new " << it->get_playerid();
+//        qDebug() << " PlayerQuoteSliceModelItem new " << it->get_playerid();
         Update(it);
     }
 
@@ -301,7 +301,7 @@ public:
     }
 
     void Update(PlayerProjModelItem *it) {
-        qDebug() << " PlayerQuoteSliceModelItem update " << it->get_playerid();
+//        qDebug() << " PlayerQuoteSliceModelItem update " << it->get_playerid();
 
         m_pPlayerProjItem = it;
         setfirstname(it->get_firstname());
