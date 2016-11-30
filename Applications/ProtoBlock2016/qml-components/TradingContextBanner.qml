@@ -32,7 +32,7 @@ Card {
 //    anchors.top: parent.top
 //    width: !haveplayer ? 0 : parent.width
 //    anchors.left: parent.left
-    height: !haveplayer ? 0 : rl.height
+    height: rl.height //!haveplayer ? 0 : rl.height
 //    flat: true
     elevation: !haveposition ? 0 : 3
 //    width: parent.width
@@ -614,7 +614,6 @@ Card {
                 Material.Label {
                     text: "Avg Price:"
 
-
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
@@ -637,7 +636,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: (!inplay || !haveposition) ? "" : inplay.myavg
+                    text: (!inplay || !haveposition) ? "" : inplay.myavg.toFixed(2);
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
 
