@@ -404,7 +404,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 #endif
 
 #ifdef DATAAGENTWRITENAMES_FORCE_GAMEID
-                if ( rd.game_result().gameid() != "201600927" ) break;
+                if ( rd.game_result().gameid() != "201601224" ) break;
                 qDebug() << " DATAAGENTWRITENAMES_FORCE !!!!!!!!!!!!!!!!!!!!!!!!";
 #endif
 
@@ -665,7 +665,8 @@ void BlockProcessor::process(const DataTransition &indt) {
         if ( indt.week() != mGlobalState.week())
             qWarning() << indt.type() << " wrong week" << mGlobalState.week() << indt.week();
 #ifdef TRADE_FEATURE
-        auto pos = mExchangeData.GetRemainingSettlePos();
+        std::unordered_map<string,BookPos> pos;
+        mExchangeData.GetRemainingSettlePos(pos);
         for ( auto sbp : pos ) {
             SettlePositionsRawStake set(sbp.second);
             auto pnls = set.settle(0.0, Commissioner::FantasyAgentName());
@@ -966,7 +967,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
 }
 
 bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
-    qDebug() << st.DebugString();
+    qDebug() << st.DebugString().data();
 
     if (st.trans().version() != Commissioner::TRANS_VERSION)
     {

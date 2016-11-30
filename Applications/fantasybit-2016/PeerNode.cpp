@@ -76,7 +76,7 @@ void Node::init() {
 //    Node::txpool.reset(db4);
 
     current_hight = getLastLocalBlockNum();
-    qInfo() <<  "76 current_hight" << current_hight;
+//    qInfo() <<  "76 current_hight" << current_hight;
 
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
     current_boot = getLastLocalBoot();
@@ -461,9 +461,9 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 2187 )
-        num = 2187;
-    qWarning() << " STOP_HEIGHT_TEST " << num
+    if (num > 7828 )
+        num = 7828;
+    qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
     return num;
@@ -534,7 +534,7 @@ Bootstrap Node::getLastLocalBoot() {
         string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
 
 #ifndef NO_DOSPECIALRESULTS
-        if ( globalhead == "201608" && !Commissioner::BootStrapFileExists(globalhead) ) {
+        if ( globalhead == "201613" && !Commissioner::BootStrapFileExists(globalhead) ) {
             doSpecialResults = true;
             qWarning() << "getLastLocalBoot  doSpecialResults " << doSpecialResults;
         }
@@ -583,7 +583,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 2187;
+    height = 7828;
     qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 

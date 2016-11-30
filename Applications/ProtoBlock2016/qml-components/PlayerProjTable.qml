@@ -282,7 +282,7 @@ Item {
 //                }
 
             }
-
+/*
             TableViewColumn{
                 role: "playerid"
                 title: "playerid"
@@ -300,6 +300,7 @@ Item {
                     Layout.fillWidth: false
                }
             }
+*/
         }
     }
 

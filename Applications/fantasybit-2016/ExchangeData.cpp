@@ -736,9 +736,8 @@ bool ExchangeData::GetGameSettlePos(const string &gid,GameSettlePos &gsp) {
     return true;
 }
 
-std::unordered_map<string,BookPos> ExchangeData::GetRemainingSettlePos() {
+void ExchangeData::GetRemainingSettlePos(std::unordered_map<string,BookPos>  &mbp) {
 
-    std::unordered_map<string,BookPos> mbp{};
     for ( auto &it : mLimitBooks) {
         if ( it.second->islocked == true) continue;
 
@@ -756,11 +755,8 @@ std::unordered_map<string,BookPos> ExchangeData::GetRemainingSettlePos() {
     }
 
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData GetRemainingSettlePos ";
+    qDebug() << "level2 ExchangeData GetRemainingSettlePos " << mbp.size();
 #endif
-
-
-    return mbp;
 }
 
 void ExchangeData::OnGameStart(std::string gid,

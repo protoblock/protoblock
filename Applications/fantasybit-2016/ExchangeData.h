@@ -360,7 +360,7 @@ public:
     }
 
     bool GetGameSettlePos(const string &gid,GameSettlePos &gsp);
-    std::unordered_map<string,BookPos> GetRemainingSettlePos();
+    void GetRemainingSettlePos(std::unordered_map<string,BookPos>&);
 
     void OnNewOrderMsg(const ExchangeOrder&, int32_t seqnum,
                        shared_ptr<fantasybit::FantasyName> fn,
