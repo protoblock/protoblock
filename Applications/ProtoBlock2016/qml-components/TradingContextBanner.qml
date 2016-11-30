@@ -638,7 +638,7 @@ Card {
                 Material.Label {
                     text: (!inplay || !haveposition) ? "" : inplay.myavg.toFixed(2);
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 2
@@ -650,7 +650,7 @@ Card {
                 Material.Label {
                     text: !inplay ? "" : (inplay.mypnl > 0 ? "+" : "") + inplay.mypnl + " ƑɃ"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 2

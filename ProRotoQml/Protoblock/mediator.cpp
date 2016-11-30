@@ -305,6 +305,7 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 }
 
 void Mediator::updateCurrentFantasyPlayerOrderPositions() {
+    update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
     for ( auto tit : mTradingPositionsModel ) {
         auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
@@ -328,11 +329,17 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
     qDebug() << "level2 Trading SetMyPositions" << myFantasyName.data() << myorderpositions.size();
 #endif
 
+    int i = 0;
     double totpnl = 0.0;
+    qDebug() << ++i << " here ";
     for ( auto tit : mTradingPositionsModel ) {
+        qDebug() << i << "loop here ";
+
         auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
         int netqty = tit->get_netqty();
+        qDebug() << ++i << " here ";
+
         double avg = 0;
         double pnl = 0;
         if ( netqty == 0 ) {
@@ -365,7 +372,10 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
             else
                 pnl = 100.0 * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
+            qDebug() << ++i << " here ";
+
         }
+        qDebug() << ++i << " here ";
 
 
         //mTradingPositionsModel.UpdatePnl(tit,it->get_bid(),it->get_ask());
@@ -375,8 +385,12 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         it->setmypnl(pnl);
         tit->setopenpnl(pnl);
         totpnl += pnl;
+        qDebug() << ++i << " here ";
+
     }
     mTradingPositionsModel.settotalopenpnl(totpnl);
+    qDebug() << ++i << " here ";
+
 }
 
 void Mediator::NewWeek(int week) {

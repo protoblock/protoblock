@@ -262,6 +262,34 @@ Item {
             }
 
             TableViewColumn {
+                role: "mypos"
+                title: "My Pos"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdel
+            }
+            TableViewColumn {
+                role: "myprice"
+                title: "My Price"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdelfix
+            }
+
+
+            TableViewColumn {
+                role: "mypnl"
+                title: "My Pnl"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdel
+            }
+
+
+            TableViewColumn {
                 role: "PassYd"
                 title: "PassYd"
                 horizontalAlignment : Text.AlignHCenter
@@ -514,7 +542,7 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: styleData.column === 5 || styleData.column === 6 ? themeroot.theme.accentColor :
+                backgroundColor: (styleData.column >= 5 && styleData.column <= 9) ? themeroot.theme.accentColor :
                                  themeroot.theme.primaryColor
                 anchors.bottom: parent.bottom
                 radius: 1
@@ -531,7 +559,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === 5 ||  styleData.column === 6 ? Material.Theme.light.textColor : "white"
+                    color: (styleData.column >= 5 && styleData.column <= 9) ? Material.Theme.light.textColor : "white"
                     //                    font.bold: styleData.column === 4
                 }
             }
@@ -603,6 +631,34 @@ Item {
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
             text: (styleData.value < 1) ? "" : styleData.value;
+            font.bold: false;
+        }
+    }
+
+    Component {
+        id: negdel
+
+        Material.Label {
+            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            text: (styleData.value === 0) ? "" : styleData.value;
+            font.bold: false;
+        }
+    }
+
+    Component {
+        id: negdelfix
+
+        Material.Label {
+            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            text: (styleData.value === 0.0) ? "" : styleData.value.toFixed(2);
             font.bold: false;
         }
     }

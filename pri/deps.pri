@@ -27,7 +27,7 @@ DEFINES += USE_SCALAR_INV_BUILTIN
 
 #DEFINES += NO_SQL_LEADERS
 
-
+DEFINES += CUSTOM_TESTING_PATH
 #DEFINES += NOSYNC
 #DEFINES += NOUSE_GENESIS_BOOT
 #DEFINES += USE_LOCAL_GENESIS
@@ -39,7 +39,7 @@ contains (QMAKE_HOST.os, Darwin){
     DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
 }else{
     message("Host is Windows")
-    DIRPREFIX = D:\work\prebuiltLibs
+    DIRPREFIX = C:\work\prebuiltLibs
 }
 
 
