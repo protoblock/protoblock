@@ -438,6 +438,7 @@ class PlayerQuoteSliceViewFilterProxyModel : public SortFilterProxyModel {
 //    QStringListModel * myPositionCombobox;
     bool myIsEnabled = true;
     QString myPos = "All";
+        QString myTeam = "All";
 
 public:
     Q_PROPERTY(QStringList userRoleNames READ userRoleNames CONSTANT)
@@ -499,6 +500,13 @@ public:
         }
     }
 
+    Q_INVOKABLE void setTeam(const QString &team) {
+        if ( team != myTeam ) {
+            myTeam = team;
+            invalidate();
+        }
+    }
+
     Q_INVOKABLE QString getPlayerSliceModelUid(int rowIndex) {
         auto sindex = mapToSource(index(rowIndex,0));
 
@@ -542,9 +550,14 @@ protected:
 
 //        qDebug() << " !null " << myPos;
 
-        if ( myPos != "All")
+        if ( myPos != "ALL")
             if ( model->at(sourceRow)->get_pos() != myPos )
                 return false;
+
+        if ( myTeam != "ALL")
+            if ( model->at(sourceRow)->get_teamid() != myTeam )
+                return false;
+
 
 
 //        QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);

@@ -32,10 +32,44 @@ Item {
     property int qcol: lcol + lcount
     property int vcol: qcol + qcount
 
+    property var teammodel: ["ALL",
+        "ARI" ,
+        "ATL" ,
+        "BAL" ,
+        "BUF" ,
+        "CAR" ,
+        "CHI" ,
+        "CIN" ,
+        "CLE" ,
+        "DAL" ,
+        "DEN" ,
+        "DET" ,
+        "GB" ,
+        "HOU" ,
+        "IND" ,
+        "JAC" ,
+        "KC" ,
+        "MIA" ,
+        "MIN" ,
+        "NE" ,
+        "NO" ,
+        "NYG" ,
+        "NYJ" ,
+        "OAK" ,
+        "PHI" ,
+        "PIT" ,
+        "SD" ,
+        "SEA" ,
+        "SF" ,
+        "LA" ,
+        "TB" ,
+        "TEN" ,
+        "WAS"]
+
 
 //    property int rowcol: bcol + 1
     property int poscol: pcol + 1
-
+    property int teamcol: pcol + 2
 //    property int scount:
 
 
@@ -69,6 +103,7 @@ Item {
             Component.onCompleted: {
 //                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
 //                selection.select(0);
+                model.sortAgain("blocknum",Qt.DescendingOrder)
                 console.log("tvr comleted")
             }
 
@@ -127,7 +162,7 @@ Item {
             //**** my orders data
             TableViewColumn {
                 role: "myposition"
-                title: "My Position"
+                title: "My Pos"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(8)
@@ -220,7 +255,7 @@ Item {
             TableViewColumn {
                 id: tvm
                 role: "pos"
-                title: "Position"
+                title: ""
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(7)
@@ -268,7 +303,7 @@ Item {
             }
 
             TableViewColumn{
-                id: teamcol
+//                id: teamcol
                 role: "teamid"
                 title: "Team"
                 horizontalAlignment : Text.AlignHCenter
@@ -658,15 +693,23 @@ Item {
                 anchors.top: parent.top
                 ComboBox {
                     id: cbc
-                    model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
-                    enabled: styleData.column === poscol
+                    model: styleData.column === poscol ? postionModel :
+//                               ["All", "QB" , "RB" , "WR" , "TE" , "K" , "DEF"] :
+                            styleData.column === teamcol ?
+                               teamModel : [""]
+                    enabled: styleData.column === poscol || styleData.column === teamcol
                     currentIndex: 0
-                    visible: styleData.column === poscol
+                    visible: enabled
                     anchors.fill: parent
                     onCurrentTextChanged: {
-                       MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
+                        if ( styleData.column === poscol )
+                            MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.setPos(currentText)
+                        else if ( styleData.column === teamcol)
+                            MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.setTeam(currentText)
+
                     }
                 }
+
 
 //                Material.IconButton {
 //                    id: exportit
@@ -763,7 +806,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: styleData.value.toFixed(2)
+            text: styleData.value === 0.0 ? "" : parseFloat(styleData.value).toFixed(2)
             font.bold: true;
         }
     }
@@ -791,7 +834,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: styleData.value.toFixed(2);
+            text: styleData.value === 0.0 ? "" : parseFloat(styleData.value).toFixed(2);
             font.bold: true;
         }
     }

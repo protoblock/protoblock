@@ -602,7 +602,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: !model ? "" : model.result.toFixed(2)
+            text: !model ? "" : parseFloat(model.result).toFixed(2)
             font.bold: true;
         }
     }

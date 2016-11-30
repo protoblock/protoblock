@@ -636,7 +636,7 @@ Card {
                 }
 
                 Material.Label {
-                    text: (!inplay || !haveposition) ? "" : inplay.myavg.toFixed(2);
+                    text: (!inplay || !haveposition) ? "" : parseFloat(inplay.myavg).toFixed(2);
                     verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignRight
 

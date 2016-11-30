@@ -79,8 +79,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 //    m_pPlayerQuoteSliceModel = &m_pPlayerQuoteSliceModel;
     m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(&mPlayerQuoteSliceModel);
-    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("lastprice");
-    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(false);
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("blocknum");
+    m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
 
 
     m_useSelected = true;
@@ -599,7 +599,6 @@ QString Mediator::init() {
 
 QString Mediator::getSecret() {
     auto sec = mGateway->dataService->exportMnemonic(myFantasyName);
-    qDebug() << " returned secert" << sec.data();
     return sec.data();
 }
 

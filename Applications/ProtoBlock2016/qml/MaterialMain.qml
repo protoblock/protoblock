@@ -55,6 +55,7 @@ Material.ApplicationWindow{
             }
 
             SpinBox {
+                enabled: false
                 decimals: 0
                 stepSize: 1.0
                 maximumValue: 8000
@@ -387,11 +388,14 @@ Material.ApplicationWindow{
         }
     }
 
+    ListModel { id: teamModel}
+
     function fillDefaultModels(theweek){
 
         weekModel.clear()
         postionModel.clear()
-        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
+        teamModel.clear();
+        var positionArray = ["ALL","QB","RB","WR","TE","K","DEF"];
         for (var i in positionArray){
             postionModel.append({'text': positionArray[i] })
         }
@@ -404,6 +408,46 @@ Material.ApplicationWindow{
                 weekModel.append({"text" : ii.toString() })
             }
         }
+
+        var teamsArray =  ["ALL",
+                           "ARI" ,
+                           "ATL" ,
+                           "BAL" ,
+                           "BUF" ,
+                           "CAR" ,
+                           "CHI" ,
+                           "CIN" ,
+                           "CLE" ,
+                           "DAL" ,
+                           "DEN" ,
+                           "DET" ,
+                           "GB" ,
+                           "HOU" ,
+                           "IND" ,
+                           "JAC" ,
+                           "KC" ,
+                           "MIA" ,
+                           "MIN" ,
+                           "NE" ,
+                           "NO" ,
+                           "NYG" ,
+                           "NYJ" ,
+                           "OAK" ,
+                           "PHI" ,
+                           "PIT" ,
+                           "SD" ,
+                           "SEA" ,
+                           "SF" ,
+                           "LA" ,
+                           "TB" ,
+                           "TEN" ,
+                           "WAS"];
+
+        for (var iii in teamsArray){
+            teamModel.append({'text': teamsArray[iii] })
+        }
+
+
     }
 
 
