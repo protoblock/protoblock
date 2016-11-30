@@ -787,7 +787,7 @@ void ExchangeData::OnGameStart(std::string gid,
         else {
             it->second->islocked = true;
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData OnGameStart locking " << it->first;
+    qDebug() << "level2 ExchangeData OnGameStart locking " << it->first.data();
 #endif
 
             for ( auto p : it->second->mPkPos ) {
@@ -797,7 +797,7 @@ void ExchangeData::OnGameStart(std::string gid,
                 sp.set_pk(p.first);
                 bp.add_positions()->CopyFrom(sp);
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData OnGameStart settlepos oooooo" << sp.DebugString();
+    qDebug() << "level2 ExchangeData OnGameStart settlepos oooooo" << sp.DebugString().data();
 #endif
             }
 
@@ -809,9 +809,9 @@ void ExchangeData::OnGameStart(std::string gid,
     }
 
     if (!settlestore->Put(write_sync, gid, gsp.SerializeAsString()).ok())
-        qWarning() << "error writing settlestore" << gid;
+        qWarning() << "error writing settlestore" << gid.data();
     else
-        qInfo() << "OnGameStart " << gid;
+        qInfo() << "OnGameStart " << gid.data();
 }
 
 void ExchangeData::OnWeekOver(int week) {

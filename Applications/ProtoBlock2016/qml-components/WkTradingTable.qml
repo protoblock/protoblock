@@ -62,7 +62,7 @@ Item {
         id: i2
         anchors.top: parent.top
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(5)
+        height: parent.height// - ProtoScreen.guToPx(5)
 
         TableView {
             id: tvr
@@ -149,7 +149,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(8)
-                delegate: fbdel
+                delegate: avgdel
             }
 
 
@@ -781,6 +781,21 @@ Item {
             font.bold: true;
         }
     }
+
+    Component {
+        id: avgdel
+
+        Material.Label {
+            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            text: styleData.value.toFixed(2);
+            font.bold: true;
+        }
+    }
+
 
     Component {
         id: fbdel

@@ -12,7 +12,9 @@ import Material 1.0
 import ProRotoQml.Theme 1.0
 
 Item {
-    anchors.fill: parent
+    height: ProtoScreen.guToPx(8)
+    width: parent.width
+//    anchors.fill: parent
     id: pit
     property string contract
     property string symbol
@@ -133,13 +135,22 @@ Item {
                     id: buybut
                     text: "Buy"
                     backgroundColor: "green"
-                    onClicked: {
-                    }
                     Layout.column: 1
                     Layout.row: 3
                     Layout.columnSpan: 3
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true
+                    onClicked : {
+                        focus = true;
+                        console.log(" price " + buyspin.value )
+                        myTradeDialog.price = buyspin.value
+                        myTradeDialog.qty = buyqty.value
+                        myTradeDialog.side = "Buy"
+                        myTradeDialog.player = inplay.fullname + " (" + inplay.pos +") "
+                                + "Symbol(" + inplay.symbol +")"
+                        myTradeDialog.show()
+                    }
+
                 }
             }
         }
@@ -263,7 +274,7 @@ Item {
                         myTradeDialog.price = sellspin.value
                         myTradeDialog.qty = sellqty.value
                         myTradeDialog.side = "Sell"
-                        myTradeDialog.player = inplay.fullname + " (" + inplay.position +") "
+                        myTradeDialog.player = inplay.fullname + " (" + inplay.pos +") "
                                 + "Symbol(" + inplay.symbol +")"
                         myTradeDialog.show()
                     }
@@ -662,7 +673,7 @@ Item {
         property string player
         id: myTradeDialog
         positiveButtonText: side + " Now"
-        title: "Confirm Trade - 2016 Season Rest-of-The-way"
+        title: "Confirm Trade - Week " + MiddleMan.theWeek  + " Contract"
         text: "Protoblock Player: " + realRoot.uname
         dialogContent: Column {
             anchors.fill: parent

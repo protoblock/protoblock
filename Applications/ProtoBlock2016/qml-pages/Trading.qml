@@ -14,7 +14,8 @@ Item {
 //    property int week:
 //        MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
 //                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
-    property string seasontext: MiddleMan.seasonString + " 2016 "
+//    property string seasontext: MiddleMan.seasonString + " 2016 "
+    property string seasontext: MiddleMan.seasonString + " 2016 - Week "
     property string liveorresult: MiddleMan.liveSync
 
     Component.onCompleted: {
@@ -37,7 +38,7 @@ Item {
 
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: seasontext + "Rest-Of-Way" + " " + liveorresult
+            text: seasontext + " " + liveorresult
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
             color: themeroot.theme.primaryColor
@@ -93,10 +94,11 @@ Item {
 //        }
 
         Item {
+            id: itema
             anchors.top: tcbx.bottom
             anchors.topMargin: ProtoScreen.guToPx(.25)
             width: parent.width
-            height: parent.height
+            height: parent.height - tcbx.height - cBan.height
             SplitView {
                 orientation: Qt.Horizontal
                 handleDelegate: handeldel
@@ -107,7 +109,7 @@ Item {
 //                    orientation: Qt.Vertical
 ////                    handleDelegate: handeldel
 ////                    width: parent.width
-//                    height: parent.height
+//                    height: parent.h`eight
 ////                    anchors.leftMargin: 10
 //                    Layout.minimumWidth: parent.width * .20
 //                    Layout.maximumWidth: parent.width * .70
@@ -190,20 +192,31 @@ Item {
                     Layout.minimumWidth: parent.width * .50
                     Layout.maximumWidth: parent.width
                     Layout.fillWidth: true
+                    height: parent.height
+//                    backgroundColor: "grey"
 
                     Card {
-                        height: parent.height * .70
+                        height: parent.height - bcard.height
                         width: parent.width
                         id: wkt
+//                        backgroundColor: "orange"
 
                         WkTradingTable {}
                     }
 
                     Card {
-                        height: parent.height - wkt.height
-                        width: parent.width
                         anchors.top: wkt.bottom
+//                        backgroundColor: "yellow"
+                        id: bcard
+                        height: ProtoScreen.guToPx(16)
+                        width: parent.width
+//                        height: parent.height * .40
+//                        width: parent.width
+//                        anchors.bottom: parent.bottom
+
                         BuySellTrading {
+                            id: bt
+                            anchors.fill: parent
                         }
                     }
 
@@ -232,7 +245,7 @@ Item {
         id: handeldel
 
         Item {
-            height: parent.height-cBan.height
+            height: itema.height
             anchors.margins: 0
             Rectangle {
                 border.width: 0
