@@ -109,6 +109,10 @@ int32_t BlockProcessor::init() {
 int32_t BlockProcessor::process(Block &sblock) {
 
     qDebug() << "BlockProcessor process head().num(): " << sblock.signedhead().head().num();
+#ifdef TRACE
+    if ( sblock.signed_transactions_size() > 0)
+    qDebug() << "BlockProcessor processsb0 sblock.signed_transactions(0).DebugString().data() " << sblock.signed_transactions(0).DebugString().data();
+#endif
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
         qCritical() << "verifySignedBlock failed! ";
@@ -279,12 +283,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 rd = d.GetExtension(ResultData::result_data);
 
                 if ( !rd.has_game_result()) {
-                    qCritical() << "no data" + QTD(ttd.DebugString());
+                    qCritical() << "no data" << ttd.DebugString().data();
                     break;
                 }
 
-                if ( rd.game_result().gameid() == "201500122")
-                    qDebug() << " 201500122 ";
+                if ( rd.game_result().gameid() == "201601111")
+                    qDebug() << " 201601111";
                 /*
                 if ( !sanity(rd.fpp()) ) {
                     qCritical() << " invalid result skipping" << rd.DebugString();

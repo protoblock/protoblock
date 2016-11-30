@@ -15,7 +15,7 @@ Item {
 //        MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
 //                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
 //    property string seasontext: MiddleMan.seasonString + " 2016 "
-    property string seasontext: MiddleMan.seasonString + " 2016 - Week "
+    property string seasontext: MiddleMan.seasonString + " 2016 - Week " + MiddleMan.theWeek
     property string liveorresult: MiddleMan.liveSync
 
     Component.onCompleted: {

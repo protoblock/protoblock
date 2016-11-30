@@ -658,7 +658,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: (styleData.value === 0.0) ? "" : styleData.value.toFixed(2);
+            text: (styleData.value === 0.0) ? "" : parseFloat(styleData.value).toFixed(2);
             font.bold: false;
         }
     }

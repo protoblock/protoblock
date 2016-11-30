@@ -756,7 +756,7 @@ std::unordered_map<string,BookPos> ExchangeData::GetRemainingSettlePos() {
     }
 
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData OnGameStart GetRemainingSettlePos ";
+    qDebug() << "level2 ExchangeData GetRemainingSettlePos ";
 #endif
 
 
@@ -769,7 +769,7 @@ void ExchangeData::OnGameStart(std::string gid,
               ) {
 
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData OnGameStart " << gid;
+    qDebug() << "level2 ExchangeData OnGameStart " << gid.data();
 #endif
 
     GameSettlePos gsp{};

@@ -134,7 +134,8 @@ private:
     static QString storagePath(const QString & dirName){
         #ifdef Q_OS_WIN
 #ifdef CUSTOM_TESTING_PATH
-        return "C:\\work\\build-ProRoto2016-Release-57\\Applications\\ProtoBlock2016\\release/storage/";
+        return "D:/data/stageprotoblock/storage/";
+//        return "C:\\work\\build-ProRoto2016-Release-57\\Applications\\ProtoBlock2016\\release/storage/";
 #else
             return QCoreApplication::applicationDirPath()+"/storage/";
 #endif
