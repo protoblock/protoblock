@@ -12,8 +12,8 @@ import Material 1.0
 import ProRotoQml.Theme 1.0
 
 Item {
-    height: ProtoScreen.guToPx(8)
-    width: parent.width
+//    height: ProtoScreen.guToPx(8)
+//    width: parent.width
 //    anchors.fill: parent
     id: pit
     property string contract
@@ -21,32 +21,56 @@ Item {
     property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
 
 
-    Layout.fillWidth: false
+    Layout.fillWidth: true
     property int depthsize: 5
     property double dihight: ProtoScreen.guToPx(4)
     property int price
     property bool isppgslider: false
+
+    anchors.centerIn: parent
+    anchors.fill: parent
+    anchors.leftMargin: ProtoScreen.guToPx(.5)
+    anchors.rightMargin: ProtoScreen.guToPx(.5)
+
 
 //    RowLayout {
 //        id: rl
 //        anchors.fill: parent
 //        spacing: 10
         //buy
-        Material.Card {
-            anchors.top: parent.top
+        RowLayout {
+//            anchors.centerIn: parent
+//            Layout.fillWidth: true
+//            Layout.fillHeight: true
+            spacing: ProtoScreen.guToPx(2)
             anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: ProtoScreen.guToPx(2)
+
+
+        Material.Card {
+//            anchors.top: parent.top
+//            anchors.left: parent.left
+//            Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
+//            Layout.fillHeight: true
+
             id: bcard
-            height: parent.height
+//            height: parent.height
+            height: ProtoScreen.guToPx(14)
+
+
     //            width: parent.width * .50
             anchors.margins: ProtoScreen.guToPx(.125)
     //        backgroundColor: (inplay.ldiff !== 0 ) ?  "lightgrey" : "white"
-            Layout.preferredWidth: bcardgrid.implicitWidth
+            Layout.preferredWidth: bcardgrid.width + ProtoScreen.guToPx(3)
             GridLayout {
                 id: bcardgrid
                 anchors.centerIn: parent
                 columns: 3
                 rows: 3
+//                anchors.margins: ProtoScreen.guToPx(3)
 
                 Material.Label {
                     text: "Buy Price:"
@@ -130,8 +154,9 @@ Item {
                     font.pixelSize: ProtoScreen.font(ProtoScreen.Tiny)
                 }
 
-                Button {
-                    focus: true
+                Material.Button {
+//                    focus: true
+                    elevation: 4
                     id: buybut
                     text: "Buy"
                     backgroundColor: "green"
@@ -141,7 +166,7 @@ Item {
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true
                     onClicked : {
-                        focus = true;
+//                        focus = true;
                         console.log(" price " + buyspin.value )
                         myTradeDialog.price = buyspin.value
                         myTradeDialog.qty = buyqty.value
@@ -158,14 +183,17 @@ Item {
         //sell
         Material.Card {
             Layout.fillWidth: true
-            anchors.left: bcard.right
-            anchors.top: parent.top
+//            anchors.left: bcard.right
+//            anchors.top: parent.top
             id: scard
-            height: parent.height
+//            height: parent.height
+            height: ProtoScreen.guToPx(14)
+
     //            width: parent.width * .50
             anchors.margins: ProtoScreen.guToPx(.125)
     //        backgroundColor: (inplay.ldiff !== 0 ) ?  "lightgrey" : "white"
-            Layout.preferredWidth: scardgrid.implicitWidth
+            Layout.preferredWidth: scardgrid.width + ProtoScreen.guToPx(3)
+
             GridLayout {
                 id: scardgrid
                 anchors.centerIn: parent
@@ -257,11 +285,11 @@ Item {
                 }
 
                 Button {
-                    focus: true
+//                    focus: true
                     id: sellbut
                     text: "Sell"
                     backgroundColor: "red"
-
+                    elevation: 4
                     Layout.column: 1
                     Layout.row: 3
                     Layout.columnSpan: 3
@@ -269,7 +297,7 @@ Item {
                     Layout.fillWidth: true
 
                     onClicked : {
-                        focus = true;
+//                        focus = true;
                         console.log(" price " + sellspin.value )
                         myTradeDialog.price = sellspin.value
                         myTradeDialog.qty = sellqty.value
@@ -281,7 +309,7 @@ Item {
                 }
             }
         }
-
+        }
 //    }
 
     /*
