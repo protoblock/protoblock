@@ -14,7 +14,7 @@
 #include <QGlobalStatic>
 #include "dataservice.h"
 #ifdef TIMEAGENTWRITEFILLS
-#include "playerloader.h"
+#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
 
 
@@ -906,7 +906,7 @@ void ExchangeData::OnTrade(const string &playerid, fantasybit::TradeTic *tt) {
     }
 
 #ifdef TIMEAGENTWRITEFILLS
-    {
+    if ( amlive ) {
     SqlStuff sql("satoshifantasy","playerquotes");
     sql.quote(playerid,myphlc);
     }

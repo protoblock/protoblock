@@ -31,6 +31,12 @@ contains(DEFINES, DATAAGENTWRITENAMES){
     CONFIG += Console
 }
 
+contains(DEFINES, TIMEAGENTWRITEFILLS){
+    QT += sql
+#    CONFIG += Console
+}
+
+
 osx{
     CONFIG+=app_bundle
 }
