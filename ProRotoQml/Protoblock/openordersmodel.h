@@ -69,6 +69,7 @@ public:
     }
 
     void Update(fantasybit::FullOrderDelta &fo) {
+        qDebug() << " openorders update " << fo.openorder.DebugString().data() << fo.playerid.data() << fo.fname.data();
         if ( fo.playerid.data() != m_pidsymbol)
             qCritical() << " OpenOrdersModel bad " << fo.playerid.data() << m_pidsymbol;
 

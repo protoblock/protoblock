@@ -61,7 +61,7 @@ void ExchangeData::init() {
                 for (auto p : bp.positions()) {
                     it2.first->second->mPkPos.insert(make_pair(p.pk(),Position{p.qty(),p.price()}));
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData init selltlepos" << p.DebugString();
+            qDebug() << "level2 ExchangeData init selltlepos" << p.DebugString().data();
 #endif
 
                 }
@@ -149,7 +149,7 @@ void ExchangeData::init() {
             if ( bd.seqnum() > MAXSEQ)
                 MAXSEQ = bd.seqnum();
 #ifdef TRACE
-            qDebug() << "level2 ExchangeData init BookDelta " << bd.playerid() << bd.seqnum();
+            qDebug() << "level2 ExchangeData init BookDelta " << bd.playerid().data() << bd.seqnum();
 #endif
 /*
             auto &myset = mNameSeqMap[bd.fantasy_name()];
@@ -168,7 +168,7 @@ void ExchangeData::init() {
                 }
 
 #ifdef TRACE
-                qDebug() << "level2 ExchangeData new init BookDelta for" << bd.playerid();
+                qDebug() << "level2 ExchangeData new init BookDelta for" << bd.playerid().data();
 #endif
 
                 it2.first->second->ResetLimitBook();//mLimitBook.reset(new LimitBook());
@@ -191,7 +191,7 @@ void ExchangeData::init() {
 
             for ( auto can : bd.removes() ) {
 #ifdef TRACE
-                qDebug() << "level2 ExchangeData remove " << can.DebugString();
+                qDebug() << "level2 ExchangeData remove " << can.DebugString().data();
 #endif
                 ib = lb->getInside(can.core().buyside(),can.core().price());
                 ib->Remove(can);
@@ -205,7 +205,7 @@ void ExchangeData::init() {
 //                i = 0;
             for ( auto l1 : bd.level1tic()) {
 #ifdef TRACE
-                qDebug() << "level2 ExchangeData Level1 " << l1.DebugString();
+                qDebug() << "level2 ExchangeData Level1 " << l1.DebugString().data();
 #endif
                 switch (l1.type()) {
                 case MarketTicker::BID:
@@ -363,7 +363,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 
     bool exitonly = fn->getStakeBalance() <= 0;
 
-#ifndef PRODFOOTBALL
+#ifdef NO_EXITONLY
     exitonly = false;
 #endif
 
@@ -397,7 +397,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
     if ( it == end(mLimitBooks)) {
         //todo: confirm player_id even exists
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData OnOrderNew create new book " << eo.playerid();
+    qDebug() << "level2 ExchangeData OnOrderNew create new book " << eo.playerid().data();
 #endif
 //todo        if ( !Server::goodPid(eo.playerid())) {
 //            qWarning() << "invalid order, bad playerid for" << eo.playerid();
@@ -407,14 +407,14 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
         auto it2 = mLimitBooks.insert(make_pair(eo.playerid(),
                unique_ptr<MatchingEngine>(new MatchingEngine(eo.playerid()))));
         if ( !it2.second ) {
-            qWarning() << "unbale to insert for" << eo.DebugString();
+            qWarning() << "unbale to insert for" << eo.DebugString().data();
             return;
         }
         it = it2.first;
         it->second->ResetLimitBook();//mLimitBook.reset(new LimitBook());
     }
     if ( it->second->islocked) {
-         qWarning() << "invalid order, locked limitbook for" << eo.playerid();
+         qWarning() << "invalid order, locked limitbook for" << eo.playerid().data();
          return;
     }
     MatchingEngine &ma = *(it->second);
@@ -500,7 +500,7 @@ void ExchangeData::OnDeltaPos(const string &pid, int32_t seqnum,
     std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
 
 #ifdef TRACE
-        qDebug() << "level2 OnDeltaPos subscribed" << pid << seqnum << deltaqty << deltapos;
+        qDebug() << "level2 OnDeltaPos subscribed" << pid.data() << seqnum << deltaqty << deltapos;
 #endif
 
     auto it = mSeqNameMap.find(seqnum);
@@ -559,14 +559,14 @@ void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int
     if ( mSubscribed.find(fname) == end(mSubscribed))
 #ifdef TRACE
     {
-        qDebug() << "level2 OnDeltaOpenOrder !subscribed" << fname;
+        qDebug() << "level2 OnDeltaOpenOrder !subscribed" << fname.data();
 #endif
 
          return;
 
 #ifdef TRACE
     }
-    qDebug() << "level2 OnDeltaOpenOrder subscribed emit NewOO" << fname ;
+    qDebug() << "level2 OnDeltaOpenOrder subscribed emit NewOO" << fname.data() ;
 #endif
 
     Order ord;
@@ -613,7 +613,7 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
 
             auto sz = core.size();
 
-            auto newsz = can.core().size() - sz;
+            auto newsz = sz - can.core().size();
             core.set_size(newsz);
 
             OnCancelOpenOrder(iter->second,can.refnum());
@@ -622,7 +622,7 @@ void ExchangeData::ProcessBookDelta(const BookDelta &bd) {
 
         }
         else
-            qCritical() << " should already have this REMOVE order" << can.DebugString();
+            qCritical() << " should already have this REMOVE order" << can.DebugString().data();
     }
 
 }
@@ -634,7 +634,7 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
                                  shared_ptr<FantasyName> fn) {
 
 #ifdef TRACE
-        qDebug() << "level2 ProcessBookDelta OnOrderCancel" << fn->ToString() << eo.DebugString();
+        qDebug() << "level2 ProcessBookDelta OnOrderCancel" << fn->ToString().data() << eo.DebugString().data();
 #endif
 
     string playerid;
@@ -653,12 +653,12 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
 
     auto it = mLimitBooks.find(playerid);
     if ( it == end(mLimitBooks)) {
-        qWarning() << "invalid cancel LimitBook not found for" << eo.DebugString();
+        qWarning() << "invalid cancel LimitBook not found for" << eo.DebugString().data();
         return;
     }
 
     if ( it->second->islocked) {
-         qWarning() << "invalid order, locked limitbook for" << eo.DebugString();
+         qWarning() << "invalid order, locked limitbook for" << eo.DebugString().data();
          return;
     }
 
@@ -724,12 +724,12 @@ bool ExchangeData::GetGameSettlePos(const string &gid,GameSettlePos &gsp) {
     string temp;
     leveldb::Slice sgid(gid);
     if ( !settlestore->Get(leveldb::ReadOptions(), sgid, &temp).ok() ) {
-        qWarning() << "cant read GetGameSettlePos " << gid;
+        qWarning() << "cant read GetGameSettlePos " << gid.data();
         return false;
     }
     gsp.Clear();
     if ( !gsp.ParseFromString(temp) ) {
-        qWarning() << "error parsing  GameSettlePos " << gid;
+        qWarning() << "error parsing  GameSettlePos " << gid.data();
         return false;
     }
 
@@ -838,17 +838,17 @@ void ExchangeData::ProcessResultOver(const string &key, int32_t result) {
 }
 */
 
-void ExchangeData::OnMarketTicker(const string &playerid, fantasybit::MarketTicker *mt) {
+void ExchangeData::OnMarketTicker(const string &playerid, fantasybit::MarketTicker &mt) {
     //MarketQuote & mq = ;
-    mt->set_symbol(playerid);
+    mt.set_symbol(playerid);
     MarketQuote &mquote = mMarketQuote[playerid];
-    if ( mt->type() == MarketTicker::BID ) {
-        mquote.set_b(mt->price());
-        mquote.set_bs(mt->size());
+    if ( mt.type() == MarketTicker::BID ) {
+        mquote.set_b(mt.price());
+        mquote.set_bs(mt.size());
     }
-    else if ( mt->type() == MarketTicker::ASK){
-        mquote.set_a(mt->price());
-        mquote.set_as(mt->size());
+    else if ( mt.type() == MarketTicker::ASK){
+        mquote.set_a(mt.price());
+        mquote.set_as(mt.size());
     }
 
     if ( amlive ) {
@@ -918,7 +918,7 @@ void ExchangeData::OnTrade(const string &playerid, fantasybit::TradeTic *tt) {
 void LimitBook::SaveRemove(Order &o,int32_t fillqty) {
 
 #ifdef TRACE
-        qDebug() << "level2 SaveRemove " << o.DebugString() << "fillqty" << fillqty;
+        qDebug() << "level2 SaveRemove " << o.DebugString().data() << "fillqty" << fillqty;
 #endif
 
     auto no = mBookDelta->add_removes();
@@ -926,7 +926,7 @@ void LimitBook::SaveRemove(Order &o,int32_t fillqty) {
     no->mutable_core()->set_size(fillqty);
 
 #ifdef TRACE
-        qDebug() << "level2 SaveRemove muted" << no->DebugString() << "fillqty" << fillqty;
+        qDebug() << "level2 SaveRemove muted" << no->DebugString().data() << "fillqty" << fillqty;
 #endif
 
 }
@@ -934,21 +934,21 @@ void LimitBook::SaveRemove(Order &o,int32_t fillqty) {
 void LimitBook::SaveNew(const OrderCore &oc) {
 #ifdef TRACE
     string s = oc.buyside() ? "Bid" : "Ask";
-    qDebug() << "level2 New SaveNew " << s  << oc.price() << oc.size();
+    qDebug() << "level2 New SaveNew " << s.data()  << oc.price() << oc.size();
 #endif
 
     mBookDelta->mutable_newnew()->CopyFrom(oc);
 }
 
 void LimitBook::NewTop(int price, int32_t qty, bool isbuy) {
-    MarketTicker *pmt = MarketTicker::default_instance().New();
-    MarketTicker &mt = *pmt;
+//    MarketTicker *pmt = MarketTicker::default_instance().New();
+    MarketTicker mt;// = *pmt;
     mt.set_type(isbuy ? MarketTicker::BID : MarketTicker::ASK);
     mt.set_price(price);
     mt.set_size(qty);
     mBookDelta->add_level1tic()->CopyFrom(mt);
     //emit pExchangeData->get()->NewMarketTicker(pmt);
-    pExchangeData->get()->OnMarketTicker(mPlayerid,pmt);
+    pExchangeData->get()->OnMarketTicker(mPlayerid,mt);
 
 
 #ifdef TRACE
@@ -1106,7 +1106,7 @@ MarketSnapshot* MatchingEngine::makeSnapshot(MarketSnapshot *ms) {
     } while(b >= 1 && a <= BOOK_SIZE);
 
 #ifdef TRACE
-    qDebug() << "level2 makeSnapshot" << mPlayerid << "depthsize " << ms->depth_size();
+    qDebug() << "level2 makeSnapshot" << mPlayerid.data() << "depthsize " << ms->depth_size();
 #endif
 
     //if ( ms->depth_size() > 0 )
@@ -1259,7 +1259,7 @@ int32_t LimitBook::SweepAsks( Order &order) {
     for (; mBa <= price; ++mBa) {
         InsideBook &curr = mAsks[mBa];
 #ifdef TRACE
-qDebug() << order.refnum() << "level2 SweepAsks  curr " << mBb << curr.totSize << " ord core " << order.core().size();
+qDebug() << order.refnum() << "level2 SweepAsks  curr " << mBa << curr.totSize << " ord core " << order.core().size();
 #endif
         int fillqty = min(curr.totSize, left);
         if (fillqty <= 0)
@@ -1277,7 +1277,7 @@ qDebug() << order.refnum() << "level2 SweepAsks  fillqty continue " << fillqty;
              iiter != curr.bot() && left > 0;) {
             Order &ord = *iiter;
 #ifdef TRACE
-qDebug() << order.refnum() << "level2 SweepAsks  curr ord iityer" << mBb << ord.DebugString().data() << " left " << left;
+qDebug() << order.refnum() << "level2 SweepAsks  curr ord iityer" << mBa << ord.DebugString().data() << " left " << left;
 #endif
             fillqty = min(ord.core().size(), left);
             if (fillqty <= 0)
@@ -1292,7 +1292,7 @@ qDebug() << order.refnum() << "level2 SweepAsks  curr ord iityer" << mBb << ord.
                 ;//Send(new BookFeedData(ExecType.Done, ord));
         }
 #ifdef TRACE
-qDebug() << order.refnum() << "level2 SweepAsks  curr bottom" << mBb << curr.totSize;
+qDebug() << order.refnum() << "level2 SweepAsks  curr bottom" << mBa << curr.totSize;
 #endif
         NewDepth(false, mBa);
 
@@ -1334,7 +1334,7 @@ qDebug() << order.refnum() << "level2 sweepbids  fillqty continue " << fillqty;
              iiter != curr.bot() && left > 0;) {
             Order &ord = *iiter;
 #ifdef TRACE
-qDebug() << order.refnum() << "level2 sweepbids  curr ord iityer" << mBb << ord.DebugString() << " left " << left;
+qDebug() << order.refnum() << "level2 sweepbids  curr ord iityer" << mBb << ord.DebugString().data() << " left " << left;
 #endif
 
             fillqty = min(ord.core().size(), left);
@@ -1471,7 +1471,7 @@ void LimitBook::NewNew(Order &order) {
     NewDepth(order.core().buyside(), order.core().price()-1);
 
 #ifdef TRACE
-        qDebug() << order.refnum() << "level2 NewNew " << order.DebugString();
+        qDebug() << order.refnum() << "level2 NewNew " << order.DebugString().data();
 #endif
 
 }
@@ -1505,7 +1505,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
             }
             OpenOrder &ord = mOpenOrders.at(oid);
 #ifdef TRACE
-            qDebug() << "level2 GetOrdersPositionsByName ord.playerid" << ord.playerid << ord.livecore.DebugString();
+            qDebug() << "level2 GetOrdersPositionsByName ord.playerid" << ord.playerid.data() << ord.livecore.DebugString().data();
 #endif
             //continue;
             auto &mypair = ret[ord.playerid];

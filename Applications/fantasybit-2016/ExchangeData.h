@@ -254,8 +254,12 @@ public:
     void updateTopfromCache(int b, int a) {
         if ( b > 0 && b <= BOOK_SIZE)
             mBb = b-1;
+        else
+            mBb = -1;
         if ( a > 0 && a <= BOOK_SIZE)
             mBa = a-1;
+        else
+            mBa = BOOK_SIZE;
     }
 
     bool NewOrder(Order &eo, Position &);
@@ -407,7 +411,7 @@ public:
 
     //void MergeMarketQuote(const string &playerid,const MarketQuote & );
     void OnTrade(const string &playerid, fantasybit::TradeTic *tt);
-    void OnMarketTicker(const string &playerid, fantasybit::MarketTicker *mt);
+    void OnMarketTicker(const string &playerid, fantasybit::MarketTicker &mt);
     void OnNewDepth(const string &playerid, fantasybit::DepthFeedDelta *df) {
         if ( amlive ) {
             df->set_symbol(playerid);
@@ -445,7 +449,7 @@ public:
 
         for (auto &it : mLimitBooks) {
             #ifdef TRACE
-                qDebug() << "level2 ExchangeData GetCurrentMarketSnaps" << it.first;
+                qDebug() << "level2 ExchangeData GetCurrentMarketSnaps" << it.first.data();
             #endif
             MarketSnapshot ms;
             ms.set_week(mWeek);
@@ -486,7 +490,7 @@ public:
 
 
 signals:
-    void NewMarketTicker(fantasybit::MarketTicker*,int32_t);
+    void NewMarketTicker(fantasybit::MarketTicker,int32_t);
     void NewMarketSnapShot(fantasybit::MarketSnapshot*);
     void FinishMarketSnapShot(int);
     void StartMarketSnapShot(int);

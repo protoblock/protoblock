@@ -632,14 +632,14 @@ void Mediator::doCancel(qint32 id) {
     emit NewOrder(eo);
 }
 
-void Mediator::OnMarketTicker(fantasybit::MarketTicker *mt, int32_t blocknum) {
-    if ( mt->symbol() == "" )
+void Mediator::OnMarketTicker(fantasybit::MarketTicker mt, int32_t blocknum) {
+    if ( mt.symbol() == "" )
         return;
 #ifdef TRACE
-    qDebug() << "Mediator OnMarketTicker " << mt->DebugString().data();
+    qDebug() << "Mediator OnMarketTicker " << mt.DebugString().data();
 #endif
 
-    mPlayerQuoteSliceModel.Update(mt,blocknum);
+    mPlayerQuoteSliceModel.Update(&mt,blocknum);
 
 }
 

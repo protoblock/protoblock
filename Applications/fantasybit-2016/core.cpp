@@ -24,7 +24,7 @@ void Core::bootstrap(){
     qRegisterMetaType<int32_t>("int32_t");
     qRegisterMetaType<fantasybit::ExchangeOrder>("fantasybit::ExchangeOrder");
 
-    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::MarketTicker*");
+    qRegisterMetaType<fantasybit::MarketTicker>("fantasybit::MarketTicker");
 
     qRegisterMetaType<fantasybit::MarketSnapshot*>("fantasybit::MarketSnapshot*");
 

@@ -254,8 +254,8 @@ public slots:
         ExchangeData *exchangedata = &(mlapi->ExData());
 
         //trading
-        QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *,int32_t)),
-                          med,SLOT(OnMarketTicker(fantasybit::MarketTicker *,int32_t)));
+        QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker,int32_t)),
+                          med,SLOT(OnMarketTicker(fantasybit::MarketTicker,int32_t)));
 
         QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
                           med,SLOT(OnTradeTick(fantasybit::TradeTic*)));

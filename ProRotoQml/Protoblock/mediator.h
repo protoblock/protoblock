@@ -845,7 +845,7 @@ public slots:
             }
         }
     }
-    void OnMarketTicker(fantasybit::MarketTicker *,int32_t);
+    void OnMarketTicker(fantasybit::MarketTicker,int32_t);
 //    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
     void OnDepthDelta(fantasybit::DepthFeedDelta*);
     void OnTradeTick(fantasybit::TradeTic*);
