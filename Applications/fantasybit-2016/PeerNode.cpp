@@ -39,6 +39,14 @@ void Node::init() {
     doSpecialResults = false;
 #endif
 
+#ifndef NO_REMOVEALL_TRADING
+    QDir dir((GET_ROOT_DIR() + "trade/").data());
+    if ( !dir.exists() ) {
+        pb::remove_all(GET_ROOT_DIR() + "index/");
+        pb::remove_all(GET_ROOT_DIR() + "block/");
+    }
+#endif
+
     write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
