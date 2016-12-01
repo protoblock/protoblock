@@ -19,7 +19,7 @@ Item {
     property string liveorresult: MiddleMan.liveSync
 
     Component.onCompleted: {
-         pageHelper.title = "Trading ROW"
+         pageHelper.title = "Trading"
         console.log(" proj wisth" + parent.width + " 2 " + rootLoader.width + " 3 " + themeroot.width + " 4 " + realRoot.width + " 5 " + pageHelper.width)
     }
 
