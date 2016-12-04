@@ -17,6 +17,10 @@
 #include "../../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
 
+#if defined(SQL) || defined(TIMEAGENTWRITEFILLS)
+    SqlStuff sql("satoshifantasy","timeagentwrite");
+#endif
+
 
 using namespace std;
 using namespace fantasybit;
@@ -452,7 +456,7 @@ void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
 #ifdef TIMEAGENTWRITEFILLS
     if ( !amlive ) return;
     if ( mBookDelta->level1tic_size() > 0 ) {
-        SqlStuff sql("satoshifantasy","md_level1");
+//        SqlStuff sql("satoshifantasy","md_level1");
         sql.mdlevel1(mBookDelta->playerid(),mMarketQuote[mBookDelta->playerid()]);
     }
 
@@ -1429,7 +1433,7 @@ void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
 
     qDebug() << " sql epoch " << timestamp;
 
-    SqlStuff sql("satoshifantasy","ticker");
+//    SqlStuff sql("satoshifantasy","ticker");
     sql.fill(mPlayerid,tt,pExchangeData->get()->mWeek,timestamp,o.refnum());
 
 #endif
@@ -1530,7 +1534,7 @@ void ExchangeData::OnTradeSessionStart(int week) {
 
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
         //SessionOpen Tics sots;
-        SqlStuff sql("satoshifantasy","openprice");
+//        SqlStuff sql("satoshifantasy","openprice");
         for ( auto mdl1 : mMarketQuote)  {
             if ( mdl1.second.has_l() ) continue;
 
