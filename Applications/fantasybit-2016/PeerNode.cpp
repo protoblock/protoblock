@@ -26,7 +26,7 @@
 
 #include "DataPersist.h"
 #include "leveldb/write_batch.h"
-
+#include <QFileInfo>
 #include "globals.h"
 using namespace std;
 	
@@ -40,11 +40,19 @@ void Node::init() {
 #endif
 
 #ifndef NO_REMOVEALL_TRADING
-    QDir dir((GET_ROOT_DIR() + "trade/").data());
-    if ( !dir.exists() ) {
+    QFileInfo check_file( (GET_ROOT_DIR() + "firsttrade").data ());
+    if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
+        QFile file( (GET_ROOT_DIR() + "firsttrade").data () );
+        file.open(QIODevice::WriteOnly);
     }
+
+//    QDir dir((GET_ROOT_DIR() + "trade/").data());
+//    if ( !dir.exists() ) {
+//        pb::remove_all(GET_ROOT_DIR() + "index/");
+//        pb::remove_all(GET_ROOT_DIR() + "block/");
+//    }
 #endif
 
     write_sync.sync = true;
@@ -561,7 +569,7 @@ Bootstrap Node::getLastLocalBoot() {
             else {
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
-                done = true;           
+                done = true;
             }
         }
         else {
@@ -774,4 +782,4 @@ bool Node::forking = false;
 #ifndef NO_DOSPECIALRESULTS
 bool Node::doSpecialResults = false;
 #endif
-}	
+}
