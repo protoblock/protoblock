@@ -12,7 +12,7 @@ import Material 1.0
 import ProRotoQml.Theme 1.0
 
 
-Card {
+Material.Card {
     id: thisroot
     property string lightgreen: "green"//"#c8ffc8"
     property string lightred: "red"//"#ffc8c8"
@@ -34,9 +34,10 @@ Card {
 //    anchors.left: parent.left
     height: rl.height //!haveplayer ? 0 : rl.height
 //    flat: true
-    elevation: !haveposition ? 0 : 3
+    elevation: !haveposition ? 2 : 6
 //    width: parent.width
-
+//    border.color: !haveposition ? "transparent" : themeroot.theme.accentColor
+//    border.width: !haveposition ? 0 : ProtoScreen.guToPx(.25)
     RowLayout {
 //        enabled: inplay.playerid !== 0
         id: rl
@@ -358,6 +359,7 @@ Card {
 */
         //bid-ask-hi-lo
         Card {
+            elevation: 0
             Layout.fillWidth: true
             id: lrec
 //            border.color: "green"//"lightgrey"
@@ -731,10 +733,11 @@ Card {
 //        }
 
         Material.Card {
+            elevation: 0
             height: parent.height
             Layout.fillWidth: false
             id: fnameCARD
-            Layout.preferredWidth: fbl12.width
+            Layout.preferredWidth: fbl12.width + ProtoScreen.guToPx(.5)
             anchors.rightMargin: ProtoScreen.guToPx(.25)
             anchors.leftMargin: ProtoScreen.guToPx(.25)
 //            width: fbl1.implicitWidth
@@ -859,7 +862,7 @@ Card {
                     verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignRight
 
-                    Layout.alignment: Qt.AlignCenter
+                    Layout.alignment: Qt.AlignLeft
                     Layout.column: 4
                     Layout.row: 1
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
@@ -871,7 +874,7 @@ Card {
                     verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignRight
 
-                    Layout.alignment: Qt.AlignCenter
+                    Layout.alignment: Qt.AlignLeft
                     Layout.column: 4
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
