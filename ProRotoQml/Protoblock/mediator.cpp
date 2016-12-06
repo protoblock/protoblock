@@ -31,6 +31,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_blocknum(0),
     m_height(0),
     dummyFantasyNameBalModelItem(),
+    #ifdef TIMEAGENTWRITETWEETS
+        sock{AF_SP, NN_PAIR},
+    #endif
     m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem} {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
@@ -100,6 +103,11 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     connect(&mPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
             this, &Mediator::MyPosPriceChange);
 //    connect(&tradeTesting, &QTimer::timeout, this, &Mediator::tradeTestingTimeout );
+
+    #ifdef TIMEAGENTWRITETWEETS
+        sock.bind("tcp://127.0.0.1:5088");
+    #endif
+
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -250,8 +258,12 @@ void Mediator::updateWeek() {
                 auto status = mGateway->dataService->GetGameStatus(gi.id());
                 if ( status.status() == GameStatus_Status_CLOSED )
                     m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
-                else
+                else {
                     m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
+                    std::string twittergame = "#" + gi.home() + "vs" + gi.away();
+                    m_pWeeklyScheduleModel->team2Game[gi.home()]  = twittergame;
+                    m_pWeeklyScheduleModel->team2Game[gi.away()] = twittergame;
+                }
             }
 
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
@@ -651,6 +663,11 @@ void Mediator::OnTradeTick(fantasybit::TradeTic* tt) {
 #endif
 
     mPlayerQuoteSliceModel.Update(tt);
+
+#ifdef TIMEAGENTWRITETWEETS
+    TweetIt(tt);
+#endif
+
 }
 
 void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
@@ -806,6 +823,77 @@ void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
 ////    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 ////    getOrderPos();
 
+#ifdef TIMEAGENTWRITETWEETS
+void Mediator::TweetIt(fantasybit::TradeTic *tt) {
+    qDebug() << " TweetIt " << tt->DebugString().data();
+
+    if ( !amLive )
+        return;
+
+    auto *it = mPlayerQuoteSliceModel.getByUid(tt->symbol().data());
+    if ( !it ) {
+        qDebug() << " TweetIt cant find ";
+
+        return;
+    }
+
+    auto pname = it->get_fullname();
+    auto pos = it->get_pos();
+    auto t = it->get_teamid();
+
+
+    QString tweet = "%1 (%3, %2) trading at %4";
+    tweet = tweet.arg(pname,pos,t,to_string(tt->price()).data());
+    /*
+    bool doit = false;
+    QString type(" ");
+    if ( tt->ishigh() || tt->islow()) {
+        int price = 0;
+        auto &lasttime = mLastTweet[tt->symbol()];
+        auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
+                            (std::chrono::system_clock::now()-lasttime.second).count());
+
+        if ( tt->islow() && (sincelast > 30 || lasttime.first)) {
+            if ( !tt->ishigh() )
+                type = " at new Low! ";
+            lasttime.first = false;
+            lasttime.second = std::chrono::system_clock::now();
+            doit = true;;
+        }
+        else if ( tt->ishigh() && (sincelast > 30 || !lasttime.first)) {
+            type = " at new High! ";
+            lasttime.first = true;
+            lasttime.second = std::chrono::system_clock::now();
+            doit = true;
+        }
+    }
+
+    if ( !doit ) {
+         auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
+                             (std::chrono::system_clock::now()-last_tweet).count());
+         if ( sincelast > 30)
+            doit = true;
+
+         type = " ";
+    }
+
+    if ( !doit ) return;
+
+    last_tweet = std::chrono::system_clock::now();
+
+    */
+    QString end = "\n%1\nWeek %2 %3\n@protoblock #fantasyfootball %4";
+    end = end.arg(getLink(tt->symbol()), to_string(m_theWeek).data(),
+                  TimetoTweetString(),m_pWeeklyScheduleModel->getTwitterGame(t) );
+    string tosend = tweet.toStdString() + end.toStdString() ;
+    qDebug() << " sending tweet " << tosend.data();
+    sock.send(tosend.data(), tosend.size(),0);
+    qDebug() << " sent tweet " << tosend.data();
+
+
+}
+
+#endif
 
 
 

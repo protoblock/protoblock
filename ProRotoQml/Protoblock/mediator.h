@@ -27,6 +27,11 @@
 #include "RestFullCall.h"
 #include "playerresultmodel.h"
 #include "ExchangeData.h"
+#ifdef TIMEAGENTWRITETWEETS
+#include <nanomsg/nn.hpp>
+#include <nanomsg/nn.h>
+#include <nanomsg/pair.h>
+#endif
 
 using namespace std;
 
@@ -146,6 +151,13 @@ class Mediator : public QObject {
     static Mediator *myInstance;
 public:
     static Mediator *instance();
+    Mediator::~Mediator() {
+    #ifdef TIMEAGENTWRITETWEETS
+        nn_term();
+    #endif
+
+    }
+
 
     void CopyTheseProjections(std::vector<fantasybit::PlayerPoints> &these) {
         for ( auto t : these) {
@@ -853,6 +865,10 @@ public slots:
     void OnNewOO(fantasybit::FullOrderDelta);
     void MyPosPriceChange(PlayerQuoteSliceModelItem*);
 
+#ifdef TIMEAGENTWRITETWEETS
+    void TweetIt(fantasybit::TradeTic *tt);
+#endif
+
     /*
     void OnMarketTicker(fantasybit::MarketTicker *mt) {
         if ( mt->symbol() == "" )
@@ -927,7 +943,23 @@ private:
     int testCount = 0;
     void updateOnChangeFantasyName();
     void updateCurrentFantasyPlayerOrderPositions();
+
+#ifdef TIMEAGENTWRITETWEETS
+    nn::socket sock;
+    std::unordered_map<string,std::pair<bool,std::chrono::steady_clock::time_point>> mLastTweet;
+
+    static QString getLink(const string &is) {
+        return QString("protoblock.com/ticks.html?playerid=%1").arg(is.data());
+    }
+#endif
+
+#ifdef TIMEAGENTWRITETWEETS
+//    void TweetIt(fantasybit::TradeTic *tt);
+    std::chrono::steady_clock::time_point last_tweet;
+#endif
 };
+
+
 }
 #endif // MEDIATOR_H
 

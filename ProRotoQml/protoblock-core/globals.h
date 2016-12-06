@@ -78,7 +78,9 @@ static QString TimetoTweetString() {
     QByteArray zone = "America/New_York";
     QTimeZone tz(zone);//str.c_str();
 
-    return QDateTime::currentDateTime().toTimeZone(tz).toString("M/d/yy hh:mm:ss.z");
+//    return QDateTime::currentDateTime().toTimeZone(tz).toString("M/d/yy hh:mm:ss");
+    return QDateTime::currentDateTime().toTimeZone(tz).toString("dddd h:mm:ss a");
+
 }
 
 static QDateTime currentNewYorkTime() {

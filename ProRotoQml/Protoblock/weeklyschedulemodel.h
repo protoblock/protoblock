@@ -10,6 +10,7 @@
 #include "globals.h"
 #include "sortfilterproxymodel.h"
 #include "StatusData.pb.h"
+#include <unordered_map>
 
 namespace pb {
 
@@ -84,7 +85,9 @@ class WeeklyScheduleModel : public QQmlObjectListModel<WeeklyScheduleModelItem>{
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY(int, week)
 
+
 public:
+    std::unordered_map<std::string,std::string> team2Game;
     explicit WeeklyScheduleModel (QObject *          parent      = Q_NULLPTR,
                                   const QByteArray & displayRole = QByteArray (),
                                   const QByteArray & uidRole     = "gameid")
@@ -96,11 +99,21 @@ public:
         qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
 
         clear();
-
+        team2Game.clear();
         setweek(week);
 
-        for ( auto &gi : weekly.games())
+        for ( auto &gi : weekly.games()) {
            append(new WeeklyScheduleModelItem(gi,this));
+           std::string twittergame = "#" + gi.home() + "vs" + gi.away();
+           team2Game[gi.home()]  = twittergame;
+           team2Game[gi.away()] = twittergame;
+        }
+    }
+
+    QString getTwitterGame(QString &team) {
+        std::string got = team2Game[team.toStdString()];
+        qDebug() << " getting for team" << team << " got " << got.data();
+        return got.data();
     }
 
     bool UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs, bool reverse = false) {

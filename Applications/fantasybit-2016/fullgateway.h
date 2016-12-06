@@ -260,6 +260,10 @@ public slots:
         QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
                           med,SLOT(OnTradeTick(fantasybit::TradeTic*)));
 
+#ifdef TIMEAGENTWRITETWEETS
+        QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+                          med,SLOT(TweetIt(fantasybit::TradeTic*)));
+#endif
         QObject::connect(exchangedata,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
                           med,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
 
