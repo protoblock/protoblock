@@ -44,6 +44,7 @@ void Node::init() {
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
+        pb::remove_all(GET_ROOT_DIR() + "trade/");
         QFile file( (GET_ROOT_DIR() + "firsttrade").data () );
         file.open(QIODevice::WriteOnly);
     }

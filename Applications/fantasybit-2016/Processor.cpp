@@ -41,7 +41,7 @@
 namespace fantasybit
 {
 
-#if defined(SQL) || defined(DATAAGENTWRITENAMES)
+#if defined(SQL) || defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT)
     SqlStuff sql("satoshifantasy","distribution");
 #endif
 

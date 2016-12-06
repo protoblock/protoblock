@@ -33,7 +33,12 @@ contains(DEFINES, DATAAGENTWRITENAMES){
 
 contains(DEFINES, TIMEAGENTWRITEFILLS){
     QT += sql
-#    CONFIG += Console
+    CONFIG += Console
+}
+
+contains(DEFINES, DATAAGENTWRITEPROFIT){
+    QT += sql
+    CONFIG += Console
 }
 
 
