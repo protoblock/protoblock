@@ -18,12 +18,14 @@ Item {
 
     property alias ccount: tv.columnCount
     property int focuscount: 0
-    property string who: "default"
+
+    property int pcol: 4
+
     Item {
         id: i2
         anchors.top: parent.top
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(8)
+        height: parent.height - ProtoScreen.guToPx(5)
 
         TableView {
             id: tv
@@ -280,6 +282,25 @@ Item {
 //                }
 
             }
+/*
+            TableViewColumn{
+                role: "playerid"
+                title: "playerid"
+                horizontalAlignment : Text.AlignHCenter
+
+                movable: false
+                width: ProtoScreen.guToPx(16)
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    text: " " + styleData.value + " "
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+               }
+            }
+*/
         }
     }
 
@@ -470,8 +491,8 @@ Item {
                     size: ProtoScreen.guToPx(2.5)
 
 
-                    visible: styleData.column === 4
-                    enabled: styleData.column === 4
+                    visible: styleData.column === pcol
+                    enabled: styleData.column === pcol
                     action: Material.Action {
                         name: "undo"
                         iconName: "awesome/undo"
@@ -486,8 +507,8 @@ Item {
 //                    anchors.left: lbl.right
                     anchors.right: parent.right
                     height: parent.height
-                    visible: styleData.column === 4
-                    enabled: styleData.column === 4
+                    visible: styleData.column === pcol
+                    enabled: styleData.column === pcol
                     text: "Send"
 
                     onClicked : {
@@ -515,8 +536,8 @@ Item {
                     anchors.bottom: parent.bottom
                     Layout.fillHeight: true
                     Layout.fillWidth: false
-                    visible: styleData.column > 4
-                    enabled: styleData.column > 4
+                    visible: styleData.column > pcol
+                    enabled: styleData.column > pcol
                     onClicked : {
                         console.log("clicked send")
 
@@ -546,8 +567,8 @@ Item {
                     anchors.bottom: parent.bottom
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    visible: styleData.column > 4
-                    enabled: styleData.column > 4
+                    visible: styleData.column > pcol
+                    enabled: styleData.column > pcol
                     size: ProtoScreen.guToPx(3)
                     onClicked : {
                         console.log("clicked send")
@@ -592,7 +613,7 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: styleData.column === 4 ? themeroot.theme.accentColor :
+                backgroundColor: styleData.column === pcol ? themeroot.theme.accentColor :
                                  styleData.column < 6 ? themeroot.theme.primaryColor : "#AFE1FF"
                 anchors.bottom: parent.bottom
                 radius: 1
@@ -609,7 +630,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === 4 ? Material.Theme.light.textColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
+                    color: styleData.column === pcol ? Material.Theme.light.textColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
 //                    font.bold: styleData.column === 4
                 }
             }

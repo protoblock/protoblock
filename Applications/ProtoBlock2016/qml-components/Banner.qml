@@ -72,15 +72,15 @@ Item {
                 when: anchrosHType === "center"
                 value: Text.AlignHCenter
             }
-            Binding on verticalAlignment {
+            Binding on horizontalAlignment {
                 when: anchrosHType === "right"
                 value: Text.AlignRight
             }
-            Binding on verticalAlignment {
+            Binding on horizontalAlignment {
                 when: anchrosHType === "left"
                 value: Text.AlignLeft
             }
-            Binding on verticalAlignment {
+            Binding on horizontalAlignment {
                 when: anchrosHType === "justify"
                 value: Text.AlignJustify
             }

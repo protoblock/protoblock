@@ -93,14 +93,14 @@ message TweetProof
 }
 
 message MasterProof {
-        extend NameProof {
-                optional MasterProof  master_proof = 401;
-        }
+    extend NameProof {
+            optional MasterProof  master_proof = 401;
+    }
 
-        optional string season = 10;
-        optional int32 week = 20;
-        optional int32 timestamp = 21;
-        optional SignedTransaction new_oracle_name =66;
+    optional string season = 10;
+    optional int32 week = 20;
+    optional int32 timestamp = 21;
+    optional SignedTransaction new_oracle_name =66;
 }
 
 enum TransType {

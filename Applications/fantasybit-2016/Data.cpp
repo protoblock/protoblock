@@ -22,7 +22,7 @@ using namespace fantasybit;
 #endif
 
 
-#ifdef CHECKPOINTS
+#ifdef CHECKPOINTS_2015
 void NFLStateData::InitCheckpoint() {
 
     leveldb::WriteOptions write_sync;
@@ -133,85 +133,86 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     ldb.read(ldb.read(ldb.read("head")),head);
 
     if ( !onlyresult ) {
-    GlobalState gs;
-    gs.set_season(head.season());
-    gs.set_week(head.week());
-    gs.set_state(GlobalState_State_INSEASON);
-    db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
-    qDebug() << "InitCheckpoint wrote GlobalState" << gs.DebugString().data();
-    {
-        MerkleTree mtree;
-        std::vector< std::pair<std::string,  GameStatusMeta> > mapt;
-        pb::loadMerkleMap(ldb,head.gamemetaroot(),mtree,mapt);
+        GlobalState gs;
+        gs.set_season(head.season());
+        gs.set_week(head.week());
+        gs.set_state(GlobalState_State_INSEASON);
+        db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
+        qDebug() << "InitCheckpoint wrote GlobalState" << gs.DebugString().data();
+        {
+            MerkleTree mtree;
+            std::vector< std::pair<std::string,  GameStatusMeta> > mapt;
+            pb::loadMerkleMap(ldb,head.gamemetaroot(),mtree,mapt);
 
-        std::unordered_map<int,WeeklySchedule> wsm;
-        for ( auto p : mapt) {
-            GameStatusMeta &gsm = p.second;
-            auto it = wsm.find(gsm.week());
-            if ( it == end(wsm) ) {
-                wsm.insert({gsm.week(),WeeklySchedule::default_instance()});
+            std::unordered_map<int,WeeklySchedule> wsm;
+            for ( auto p : mapt) {
+                GameStatusMeta &gsm = p.second;
+                auto it = wsm.find(gsm.week());
+                if ( it == end(wsm) ) {
+                    wsm.insert({gsm.week(),WeeklySchedule::default_instance()});
+                }
+                WeeklySchedule &ws = wsm[gsm.week()];
+                ws.add_games()->CopyFrom(gsm.gameinfo());
+                string key = "gamestatus:" + gsm.id();
+                db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
             }
-            WeeklySchedule &ws = wsm[gsm.week()];
-            ws.add_games()->CopyFrom(gsm.gameinfo());
-            string key = "gamestatus:" + gsm.id();
-            db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
+            for ( auto wg : wsm ) {
+                string key = "scheduleweek:" + to_string(wg.first);
+                db4->Put(write_sync, key,
+                               wg.second.SerializeAsString() );
+            }
         }
-        for ( auto wg : wsm ) {
-            string key = "scheduleweek:" + to_string(wg.first);
-            db4->Put(write_sync, key,
-                           wg.second.SerializeAsString() );
+
+
+        {
+            MerkleTree mtree;
+            std::vector< std::pair<std::string,  PlayerMeta> > mapt;
+            pb::loadMerkleMap(ldb,head.playermetaroot(),mtree,mapt);
+
+            for ( auto p : mapt) {
+                PlayerMeta &pm = p.second;
+                if ( pm.has_player_status() )
+                    db2->Put(write_sync, pm.playerid(),
+                                   pm.player_status().SerializeAsString() );
+                db3->Put(write_sync, pm.playerid(),
+                               pm.player_base().SerializeAsString() );
+            }
         }
-    }
 
 
-    {
-        MerkleTree mtree;
-        std::vector< std::pair<std::string,  PlayerMeta> > mapt;
-        pb::loadMerkleMap(ldb,head.playermetaroot(),mtree,mapt);
+        {
+            MerkleTree mtree;
+            std::vector< std::pair<std::string,  FantasyNameBalMeta> > mapt;
+            pb::loadMerkleMap(ldb,head.fnamemetaroot(),mtree,mapt);
 
-        for ( auto p : mapt) {
-            PlayerMeta &pm = p.second;
-            if ( pm.has_player_status() )
-                db2->Put(write_sync, pm.playerid(),
-                               pm.player_status().SerializeAsString() );
-            db3->Put(write_sync, pm.playerid(),
-                           pm.player_base().SerializeAsString() );
-        }
-    }
+    #if defined(DATAAGENTWRITENAMES_FORCE) && !defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
+                SqlStuff sql("satoshifantasy","OnFantasyName");
+    #endif
+            for ( auto p : mapt) {
+                FantasyNameBalMeta &pm = p.second;
+                FantasyNameBal fnb;
+                fnb.set_name(pm.name());
+                fnb.set_public_key(pm.public_key());
+                fnb.set_bits(pm.bits());
+                fnb.set_stake(pm.stake());
+                auto hash = FantasyName::name_hash(fnb.name());
+                leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+                db5->Put(write_sync, hkey, fnb.SerializeAsString());
+    //            qDebug() << "zxcvbn" << fnb.DebugString();
+    #if defined(DATAAGENTWRITENAMES_FORCE) && !defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
+                FantasyNameHash fnh{};
+                fnh.set_name(fnb.name());
+                fnh.set_hash(hash);
+                qDebug() << " data write fnh " << fnh.DebugString();
+                sql.fantasyname(fnh);
+    #endif
+                fnb.Clear();
 
-
-    {
-        MerkleTree mtree;
-        std::vector< std::pair<std::string,  FantasyNameBalMeta> > mapt;
-        pb::loadMerkleMap(ldb,head.fnamemetaroot(),mtree,mapt);
-
-#ifdef DATAAGENTWRITENAMES_FORCE
-            SqlStuff sql("satoshifantasy","OnFantasyName");
-#endif
-        for ( auto p : mapt) {
-            FantasyNameBalMeta &pm = p.second;
-            FantasyNameBal fnb;
-            fnb.set_name(pm.name());
-            fnb.set_public_key(pm.public_key());
-            fnb.set_bits(pm.bits());
-            fnb.set_stake(pm.stake());
-            auto hash = FantasyName::name_hash(fnb.name());
-            leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
-            db5->Put(write_sync, hkey, fnb.SerializeAsString());
-//            qDebug() << "zxcvbn" << fnb.DebugString();
-#ifdef DATAAGENTWRITENAMES_FORCE
-            FantasyNameHash fnh{};
-            fnh.set_name(fnb.name());
-            fnh.set_hash(hash);
-            qDebug() << " data write fnh " << fnh.DebugString();
-            sql.fantasyname(fnh);
-#endif
-            fnb.Clear();
-
+            }
         }
     }
-    }
 
+    //if onlyresult
     {
         MerkleTree mtree;
         std::vector< std::pair<std::string,  GameResult> > mapt;

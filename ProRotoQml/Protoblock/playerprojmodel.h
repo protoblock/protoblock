@@ -17,6 +17,8 @@
 #include "sortfilterproxymodel.h"
 #include "fbutils.h"
 #include "pbgateways.h"
+#include "weeklyschedulemodel.h"
+#include <QItemSelectionModel>
 
 namespace pb {
 using namespace fantasybit;
@@ -130,8 +132,7 @@ public:
 
 Q_DECLARE_METATYPE(PlayerProjModelItem*)
 Q_DECLARE_METATYPE(PlayerProjModel*)
-#include "weeklyschedulemodel.h"
-#include <QItemSelectionModel>
+
 class ProjectionsViewFilterProxyModel : public SortFilterProxyModel
 {
     Q_OBJECT

@@ -21,5 +21,10 @@
         <file>PlayerResultTable.qml</file>
         <file>ScheduleViewPrev.qml</file>
         <file>ScheduleViewNext.qml</file>
+        <file>ROWTradingTable.qml</file>
+        <file>WkTradingTable.qml</file>
+        <file>MarketDepthTable.qml</file>
+        <file>TradingContextBanner.qml</file>
+        <file>FantasyNameContextBanner.qml</file>
     </qresource>
 </RCC>

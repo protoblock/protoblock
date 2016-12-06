@@ -22,16 +22,16 @@ void Core::bootstrap(){
     qRegisterMetaType<fantasybit::Distribution>("fantasybit::Distribution");
     qRegisterMetaType<fantasybit::FantasyNameHash>("fantasybit::FantasyNameHash");
     qRegisterMetaType<int32_t>("int32_t");
-    qRegisterMetaType<int32_t>("fantasybit::ExchangeOrder");
+    qRegisterMetaType<fantasybit::ExchangeOrder>("fantasybit::ExchangeOrder");
 
-    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::MarketTicker*");
+    qRegisterMetaType<fantasybit::MarketTicker>("fantasybit::MarketTicker");
 
-    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::MarketSnapshot*");
+    qRegisterMetaType<fantasybit::MarketSnapshot*>("fantasybit::MarketSnapshot*");
 
-    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::DepthFeedDelta*");
+    qRegisterMetaType<fantasybit::DepthFeedDelta*>("fantasybit::DepthFeedDelta*");
 
-    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::TradeTic*");
-    qRegisterMetaType<fantasybit::MarketTicker*>("fantasybit::Order&");
+    qRegisterMetaType<fantasybit::TradeTic*>("fantasybit::TradeTic*");
+    qRegisterMetaType<fantasybit::Order*>("fantasybit::Order&");
     qRegisterMetaType<fantasybit::FullPosition>("fantasybit::FullPosition");
     qRegisterMetaType<fantasybit::FullOrderDelta>("fantasybit::FullOrderDelta");
 

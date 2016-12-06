@@ -26,6 +26,15 @@ class FantasyNameBalModelItem : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (int, lastupdate)
 
 public:
+    FantasyNameBalModelItem() :  QObject(nullptr) {
+        m_name = "";
+        m_stake = 0;
+        m_bits = 0;
+        m_thisweek = 0;
+        m_lastweek = 0;
+        m_leaders2016 = 0;
+        m_numberproj = m_lastupdate = 0;
+    }
 
     explicit FantasyNameBalModelItem(QString &name) :  QObject(nullptr) {
         m_name = name;
@@ -115,7 +124,7 @@ public:
 
     void update (FantasyNameBalModelItem *in) {
         FantasyNameBalModelItem *my = (FantasyNameBalModelItem *)get(in->get_name());
-        if ( my && my != in)
+        if ( my )
             my->update(*in);
         else {
             FantasyNameBalModelItem *n = new FantasyNameBalModelItem(*in);

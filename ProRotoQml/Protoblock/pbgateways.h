@@ -7,8 +7,25 @@
 #include <memory>
 #include "FantasyName.h"
 //#include "playerprojmodel.h"
+//#include "playerquoteslicemodel.h"
+#include "ExchangeData.h"
 
 namespace pb {
+
+class PlayerQuoteSliceModel;
+
+class ITradingProxy {
+public:
+    virtual ~ITradingProxy(){}
+
+protected:
+    virtual void GotMarketSnaps() = 0;
+
+public: //slots:
+    virtual void OnFinishMarketSnapShot(int) = 0;
+
+    virtual PlayerQuoteSliceModel & GetPlayerQuoteSliceModel() = 0;
+};
 
 class IDataService {
 public:
@@ -37,11 +54,14 @@ public:
     virtual int GetAvgProjection(const std::string &playerid) = 0;
 
 
-//    virtual ordsnap_t
-//        GetOrdersPositionsByName(const std::string &fname)= 0;
+    virtual ordsnap_t
+        GetOrdersPositionsByName(const std::string &fname)= 0;
+
+    virtual std::vector<MarketSnapshot>
+                    GetCurrentMarketSnaps() = 0;
+
 
 };
-
 
 class IPBGateway {
 
@@ -76,6 +96,7 @@ public: //slots:
 
 public:
     IDataService *dataService;
+    ITradingProxy *tradingProxy;
 };
 
 }
@@ -83,6 +104,7 @@ public:
 
 Q_DECLARE_INTERFACE(pb::IPBGateway, "Protoblock.PBGateways/1.0")
 Q_DECLARE_INTERFACE(pb::IDataService, "Protoblock.DataService/1.0")
+Q_DECLARE_INTERFACE(pb::ITradingProxy, "Protoblock.TradingProxy/1.0")
 
 
 

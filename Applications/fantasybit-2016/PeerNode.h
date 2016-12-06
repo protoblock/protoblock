@@ -64,7 +64,10 @@ public:
     static int32_t myLastGlobalBlockNum();
     static void setLastGlobalBlockNum(int32_t num);
     static std::mutex blockchain_mutex;
+
+#ifndef NO_DOSPECIALRESULTS
     static bool doSpecialResults;
+#endif
 
 //    static void ClearTx(const Block &);
 	static std::shared_ptr<leveldb::DB> blockchain;

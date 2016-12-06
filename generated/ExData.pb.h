@@ -1608,6 +1608,13 @@ class BookDelta : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker >*
       mutable_level1tic();
 
+  // optional int32 blocknum = 80;
+  inline bool has_blocknum() const;
+  inline void clear_blocknum();
+  static const int kBlocknumFieldNumber = 80;
+  inline ::google::protobuf::int32 blocknum() const;
+  inline void set_blocknum(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.BookDelta)
  private:
   inline void set_has_fantasy_name();
@@ -1620,6 +1627,8 @@ class BookDelta : public ::google::protobuf::Message {
   inline void clear_has_newnew();
   inline void set_has_ohlc();
   inline void clear_has_ohlc();
+  inline void set_has_blocknum();
+  inline void clear_has_blocknum();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1627,13 +1636,14 @@ class BookDelta : public ::google::protobuf::Message {
   ::std::string* playerid_;
   ::fantasybit::OrderCore* newnew_;
   ::fantasybit::ContractOHLC* ohlc_;
+  ::google::protobuf::int32 seqnum_;
+  ::google::protobuf::int32 blocknum_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::Order > removes_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker > level2tic_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker > level1tic_;
-  ::google::protobuf::int32 seqnum_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_ExData_2eproto();
   friend void protobuf_AssignDesc_ExData_2eproto();
@@ -1889,6 +1899,13 @@ class MarketSnapshot : public ::google::protobuf::Message {
   inline ::fantasybit::MarketQuote* release_quote();
   inline void set_allocated_quote(::fantasybit::MarketQuote* quote);
 
+  // optional int32 blocknum = 40;
+  inline bool has_blocknum() const;
+  inline void clear_blocknum();
+  static const int kBlocknumFieldNumber = 40;
+  inline ::google::protobuf::int32 blocknum() const;
+  inline void set_blocknum(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.MarketSnapshot)
  private:
   inline void set_has_symbol();
@@ -1899,17 +1916,20 @@ class MarketSnapshot : public ::google::protobuf::Message {
   inline void clear_has_ohlc();
   inline void set_has_quote();
   inline void clear_has_quote();
+  inline void set_has_blocknum();
+  inline void clear_has_blocknum();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* symbol_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::DepthItem > depth_;
   ::fantasybit::ContractOHLC* ohlc_;
-  ::fantasybit::MarketQuote* quote_;
   ::google::protobuf::int32 week_;
+  ::google::protobuf::int32 blocknum_;
+  ::fantasybit::MarketQuote* quote_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_ExData_2eproto();
   friend void protobuf_AssignDesc_ExData_2eproto();
@@ -3676,6 +3696,28 @@ BookDelta::mutable_level1tic() {
   return &level1tic_;
 }
 
+// optional int32 blocknum = 80;
+inline bool BookDelta::has_blocknum() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void BookDelta::set_has_blocknum() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void BookDelta::clear_has_blocknum() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void BookDelta::clear_blocknum() {
+  blocknum_ = 0;
+  clear_has_blocknum();
+}
+inline ::google::protobuf::int32 BookDelta::blocknum() const {
+  return blocknum_;
+}
+inline void BookDelta::set_blocknum(::google::protobuf::int32 value) {
+  set_has_blocknum();
+  blocknum_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // MarketQuote
@@ -4029,6 +4071,28 @@ inline void MarketSnapshot::set_allocated_quote(::fantasybit::MarketQuote* quote
   } else {
     clear_has_quote();
   }
+}
+
+// optional int32 blocknum = 40;
+inline bool MarketSnapshot::has_blocknum() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void MarketSnapshot::set_has_blocknum() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void MarketSnapshot::clear_has_blocknum() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void MarketSnapshot::clear_blocknum() {
+  blocknum_ = 0;
+  clear_has_blocknum();
+}
+inline ::google::protobuf::int32 MarketSnapshot::blocknum() const {
+  return blocknum_;
+}
+inline void MarketSnapshot::set_blocknum(::google::protobuf::int32 value) {
+  set_has_blocknum();
+  blocknum_ = value;
 }
 
 

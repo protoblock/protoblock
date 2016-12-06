@@ -17,7 +17,7 @@ import Communi 3.0
 
 Material.ApplicationWindow{
 
-    property string version: "1.1.3" //version
+    property string version: "2.0.1" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -45,6 +45,25 @@ Material.ApplicationWindow{
                       + " - " + MiddleMan.liveSync
                       + " - 2016 Week " + MiddleMan.theWeek
                 font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
+
+            }
+
+            Material.Label {
+                text: MiddleMan.controlMessage
+                font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+
+            SpinBox {
+                enabled: false
+                decimals: 0
+                stepSize: 1.0
+                maximumValue: 8000
+                minimumValue:  MiddleMan.blocknum
+                value: MiddleMan.height
+                onValueChanged: {
+                    MiddleMan.settheHeight(value)
+                }
             }
         }
     }
@@ -75,7 +94,7 @@ Material.ApplicationWindow{
 
         }
 
-//        themeroot.showMaximized()
+        themeroot.showMaximized()
 //        rootLoader.source = "qrc:/Projections.qml";
 
     }
@@ -101,8 +120,8 @@ Material.ApplicationWindow{
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Projections","Leaderboard",  "NFL News", "Account", "Protoblock"  ]
-    property var sectionTitlesAlias: [ "Projections", "Leaderboard", "NFL News", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Projections","Trading",  "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
         "qrc:/icons/ic_poll.png",
         "qrc:/icons/ic_timeline.png",
@@ -162,9 +181,10 @@ Material.ApplicationWindow{
     ]
 
     // Level Five
-    property var levelFive: [ "Protoblock" , "About" , "Contact Us"]
+    property var levelFive: [ "Protoblock" , "Leaderboard", "Scoring System", "Contact Us"]
     property var levelFiveIcons: [
         "qrc:/icons/newspaper.png" ,
+        "qrc:/icons/account_action_circle.png" ,
         "qrc:/icons/ic_help.png",
         "qrc:/icons/ic_contact_mail.png" ,
     ]
@@ -172,7 +192,7 @@ Material.ApplicationWindow{
 
     property string selectedComponent: sections[0][0]
 
-    property var sectionLeftEnable: [ false, true, true, true, true]
+    property var sectionLeftEnable: [ false, false, true, true, true]
 
     initialPage:  Material.TabbedPage {
         property bool expanded: true
@@ -369,11 +389,14 @@ Material.ApplicationWindow{
         }
     }
 
+    ListModel { id: teamModel}
+
     function fillDefaultModels(theweek){
 
         weekModel.clear()
         postionModel.clear()
-        var positionArray = ["all positions","QB","RB","WR","TE","K","DEF"];
+        teamModel.clear();
+        var positionArray = ["ALL","QB","RB","WR","TE","K","DEF"];
         for (var i in positionArray){
             postionModel.append({'text': positionArray[i] })
         }
@@ -386,6 +409,46 @@ Material.ApplicationWindow{
                 weekModel.append({"text" : ii.toString() })
             }
         }
+
+        var teamsArray =  ["ALL",
+                           "ARI" ,
+                           "ATL" ,
+                           "BAL" ,
+                           "BUF" ,
+                           "CAR" ,
+                           "CHI" ,
+                           "CIN" ,
+                           "CLE" ,
+                           "DAL" ,
+                           "DEN" ,
+                           "DET" ,
+                           "GB" ,
+                           "HOU" ,
+                           "IND" ,
+                           "JAC" ,
+                           "KC" ,
+                           "MIA" ,
+                           "MIN" ,
+                           "NE" ,
+                           "NO" ,
+                           "NYG" ,
+                           "NYJ" ,
+                           "OAK" ,
+                           "PHI" ,
+                           "PIT" ,
+                           "SD" ,
+                           "SEA" ,
+                           "SF" ,
+                           "LA" ,
+                           "TB" ,
+                           "TEN" ,
+                           "WAS"];
+
+        for (var iii in teamsArray){
+            teamModel.append({'text': teamsArray[iii] })
+        }
+
+
     }
 
 

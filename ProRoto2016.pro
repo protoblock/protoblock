@@ -18,7 +18,9 @@ OTHER_FILES += \
             $$PWD/pri/artwork.pri \
 #            $$PWD/pri/staticJson.pri \
             $$PWD/pri/qml-pages.pri \
-            $$PWD/pri/qml-utils.pri
+            $$PWD/pri/qml-utils.pri \
+            $$PWD/pri/qml-components.pri
+
 #            $$PWD/pri/qml-realChat.pri
 
 OTHER_FILES += $$PWD/GenerateProto/*.proto

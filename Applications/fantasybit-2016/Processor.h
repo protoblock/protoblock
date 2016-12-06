@@ -86,7 +86,7 @@ public:
     void OnWeekStart(int week);
 
     void hardReset();
-    void ProcessInsideStamped(const SignedTransaction &inst, int32_t);
+    void ProcessInsideStamped(const SignedTransaction &inst, int32_t, int32_t);
 
 #ifdef BLOCK_EXPLORER
     fantasybit_bx::BlockExplorer bx;
