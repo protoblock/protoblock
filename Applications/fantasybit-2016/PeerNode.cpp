@@ -26,7 +26,7 @@
 
 #include "DataPersist.h"
 #include "leveldb/write_batch.h"
-
+#include <QFileInfo>
 #include "globals.h"
 using namespace std;
 	
@@ -35,7 +35,26 @@ namespace fantasybit
 
 Node::Node() { }
 void Node::init() {
+#ifndef NO_DOSPECIALRESULTS
     doSpecialResults = false;
+#endif
+
+#ifndef NO_REMOVEALL_TRADING
+    QFileInfo check_file( (GET_ROOT_DIR() + "firsttrade").data ());
+    if (!check_file.exists() ) {
+        pb::remove_all(GET_ROOT_DIR() + "index/");
+        pb::remove_all(GET_ROOT_DIR() + "block/");
+        QFile file( (GET_ROOT_DIR() + "firsttrade").data () );
+        file.open(QIODevice::WriteOnly);
+    }
+
+//    QDir dir((GET_ROOT_DIR() + "trade/").data());
+//    if ( !dir.exists() ) {
+//        pb::remove_all(GET_ROOT_DIR() + "index/");
+//        pb::remove_all(GET_ROOT_DIR() + "block/");
+//    }
+#endif
+
     write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
@@ -73,9 +92,9 @@ void Node::init() {
 //    Node::txpool.reset(db4);
 
     current_hight = getLastLocalBlockNum();
-    qInfo() <<  "current_hight" << current_hight;
+//    qInfo() <<  "76 current_hight" << current_hight;
 
-    #ifndef NOCHECK_LOCAL_BOOTSTRAP
+#ifndef NOCHECK_LOCAL_BOOTSTRAP
     current_boot = getLastLocalBoot();
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
 
@@ -97,18 +116,20 @@ void Node::init() {
                 current_hight = getLastLocalBlockNum();
 
                 pb::remove_all(Platform::instance()->getRootDir() + "index/");
-                NFLStateData::InitCheckpoint();
 
+                NFLStateData::InitCheckpoint();
                 BlockRecorder::InitCheckpoint(current_hight);
             }
         }
+#ifndef NO_DOSPECIALRESULTS
         else if ( doSpecialResults ) {
             NFLStateData::InitCheckpoint(true);
         }
+#endif
     }
 #endif
 
-#ifdef CHECKPOINTS
+#ifdef CHECKPOINTS_2015
     if ( current_hight < Commissioner::DeveloperCheckpointHigh() ) {
         auto dc = Commissioner::getCheckPoint();
 
@@ -119,7 +140,6 @@ void Node::init() {
         current_hight = getLastLocalBlockNum();
 
         NFLStateData::InitCheckpoint();
-
         BlockRecorder::InitCheckpoint(current_hight);
     }
 #endif
@@ -186,7 +206,7 @@ void Node::init() {
 
         qInfo() <<  "done";
 
-        qDebug() << sb.DebugString().data();
+        qDebug() << " current sb " << sb.DebugString().data();
         if (!BlockProcessor::verifySignedBlock(sb)) {
             qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
             //return;
@@ -223,7 +243,7 @@ void Node::init() {
 
     //assert(getLastBlockNum() > 0);
 
-    qInfo() <<  " current_hight " << current_hight;
+    qInfo() <<  "229 current_hight " << current_hight;
 }
 
 
@@ -241,7 +261,7 @@ void Node::BackSync(int32_t to) {
 }
 
 bool Node::Sync() {
-    qDebug() << "cureent thread" << QThread::currentThread();
+    qDebug() << "Node::Sync() cureent thread" << QThread::currentThread();
     fc::optional<int32_t> gh = getLastGlobalBlockNum();
     if ( !gh || gh == 0 ) {
         qCritical() << " no getLastGlobalBlockNum";
@@ -249,7 +269,7 @@ bool Node::Sync() {
     }
     else setLastGlobalBlockNum(*gh);
 
-    qInfo() << " global height " << *gh;
+    qInfo() << "Node::Sync() global height " << *gh;
     if ( current_hight < (*gh) )
         return SyncTo(*gh);
     else if ( current_hight > (*gh) && current_hight > 1 ) {
@@ -269,14 +289,13 @@ bool Node::SyncTo(int32_t gh) {
         previd = current_boot.previd();
         if ( previd == "" )
             previd = "5d36c22996521c97c0bb69406a3df9c15d2ca6be79224eced13b2522824dd951";
-#ifdef CHECKPOINTS
+#ifdef CHECKPOINTS_2015
 //    if ( current_hight == Commissioner::DeveloperCheckpointHigh())
 //        previd = Commissioner::DeveloperCheckPointId();
 //    else
 #endif
     }
-    else
-    {
+    else {
         auto ob = getLocalBlock(current_hight, true);
         if ( ob )
             previd = FantasyAgent::BlockHash(*ob);
@@ -284,13 +303,15 @@ bool Node::SyncTo(int32_t gh) {
     while ( current_hight < global_height ) {
 
         if (count > 50) return false;
-
+#ifdef TRACE4
         qDebug() << current_hight << global_height;
+#endif
+
 #ifdef Q_OS_MAC
-        auto bend = current_hight+200;
+        auto bend = current_hight+100;
 #endif
 #ifdef Q_OS_WIN
-        auto bend = current_hight+150;
+        auto bend = current_hight+100;
 #endif
         auto vsb = getGlobalBlock(current_hight+1, bend < global_height ? bend : global_height);
 
@@ -299,69 +320,69 @@ bool Node::SyncTo(int32_t gh) {
             QThread::currentThread()->msleep(100 * count++);
             continue;
         }
-
+#ifdef TRACE4
         qInfo() <<  "received " << vsb.size(); //(*sb).signedhead().head().num();
-
+#endif
         for ( auto ssb : vsb) {
-        Block *sb = &ssb;
-        if (!BlockProcessor::verifySignedBlock(*sb)) {
-            qCritical() << " !SyncTo::verifySignedBlock(sb) ";
-            QThread::currentThread()->msleep(100 * count++);
-            break;
-        }
+            Block *sb = &ssb;
+            if (!BlockProcessor::verifySignedBlock(*sb)) {
+                qCritical() << " !SyncTo::verifySignedBlock(sb) ";
+                QThread::currentThread()->msleep(100 * count++);
+                break;
+            }
 
-        if ((*sb).signedhead().head().num() > current_hight + 1) {
-            qCritical() << "sb.signedhead().head().num() > current_hight + 1";
-            break;
-        }
+            if ((*sb).signedhead().head().num() > current_hight + 1) {
+                qCritical() << "sb.signedhead().head().num() > current_hight + 1";
+                break;
+            }
 
-        //fork
-        if ( (*sb).signedhead().head().prev_id() != previd ) {
-            qWarning() << (*sb).signedhead().head().prev_id() << " != prev " << previd.data();
-            forking = true;
-            if ( !BackFork((*sb).signedhead().head().prev_id(),current_hight) )
-                return forking = false;
-            else {
-                auto ob = getLocalBlock(current_hight, true);
-                if ( !ob ) return false;
-                previd = FantasyAgent::BlockHash(*ob);
-                if ( (*sb).signedhead().head().prev_id() != previd ) {
-                    qCritical() << " bad prev after BackFork";
-                }
+            //fork
+            if ( (*sb).signedhead().head().prev_id() != previd ) {
+                qWarning() << (*sb).signedhead().head().prev_id() << " != prev " << previd.data();
+                forking = true;
+                if ( !BackFork((*sb).signedhead().head().prev_id(),current_hight) )
+                    return forking = false;
+                else {
+                    auto ob = getLocalBlock(current_hight, true);
+                    if ( !ob ) return false;
+                    previd = FantasyAgent::BlockHash(*ob);
+                    if ( (*sb).signedhead().head().prev_id() != previd ) {
+                        qCritical() << " bad prev after BackFork";
+                    }
 
-                forked = true;
-           }
-           forking = false;
-        }
+                    forked = true;
+               }
+               forking = false;
+            }
 
-        if ((*sb).signedhead().head().num() == current_hight + 1) {
-            qInfo() << "Received next " << current_hight+1;
-            int32_t myhight = current_hight+1;
-            leveldb::Slice snum((char*)&myhight, sizeof(int32_t));
-            blockchain->Put(write_sync, snum, (*sb).SerializeAsString());
-            current_hight = current_hight+1;
+            if ((*sb).signedhead().head().num() == current_hight + 1) {
+#ifdef TRACE4
+                qInfo() << "Received next " << current_hight+1;
+#endif
+                int32_t myhight = current_hight+1;
+                leveldb::Slice snum((char*)&myhight, sizeof(int32_t));
+                blockchain->Put(write_sync, snum, (*sb).SerializeAsString());
+                current_hight = current_hight+1;
+#ifdef TRACE4
+                qInfo() << "Put next " << current_hight;
+                //int32_t num = *(reinterpret_cast<const int32_t *>(snum.data()));
 
-            qInfo() << "Put next " << current_hight;
+                //int32_t num2;
+                //memcpy(&num2,snum.data(),snum.size());
+                //qWarning() << myhight << num2 << num << snum.size() << snum.data() << sizeof(int32_t) << sizeof(char) << "yoyo getLastLocalBlockNum()" << getLastLocalBlockNum() << "current_hight" << current_hight;
+                qInfo() << myhight  << snum.size() << snum.data() << sizeof(int32_t) << sizeof(char);
+                qInfo() << "yoyo getLastLocalBlockNum()" << getLastLocalBlockNum() << "current_hight" << current_hight;
+#endif
 
-            //int32_t num = *(reinterpret_cast<const int32_t *>(snum.data()));
-
-            //int32_t num2;
-            //memcpy(&num2,snum.data(),snum.size());
-            //qWarning() << myhight << num2 << num << snum.size() << snum.data() << sizeof(int32_t) << sizeof(char) << "yoyo getLastLocalBlockNum()" << getLastLocalBlockNum() << "current_hight" << current_hight;
-            qInfo() << myhight  << snum.size() << snum.data() << sizeof(int32_t) << sizeof(char);
-            qInfo() << "yoyo getLastLocalBlockNum()" << getLastLocalBlockNum() << "current_hight" << current_hight;
-
-            count = 0;
-            //Node::ClearTx(*sb);
-
-            previd = FantasyAgent::BlockHash(*sb);
-
-            //CheckOrphanBlocks();
-        }
-        else if ( (*sb).signedhead().head().num() > current_hight+1){
-            qWarning() << "Received gap in block " << (*sb).signedhead().head().num();
-            break;
-        }
+                count = 0;
+                //Node::ClearTx(*sb);
+                previd = FantasyAgent::BlockHash(*sb);
+                //CheckOrphanBlocks();
+            }
+            else if ( (*sb).signedhead().head().num() > current_hight+1){
+                qWarning() << "Received gap in block " << (*sb).signedhead().head().num();
+                break;
+            }
         }
     }
 
@@ -376,10 +397,12 @@ bool Node::BackFork(const string &goodid, int32_t num) {
     do {
         if ( num == 1) {
             qCritical() << " bad genesis? ";
-
             return false;
         }
-        if ( count > 15 ) return false;
+        if ( count > 15 ) {
+            qCritical() << " BackFork count > 15";
+            return false;
+        }
         fc::optional<Block> gb = getGlobalBlock(num);
         if ( !gb ) {
             qCritical() << " no prev global block " << num;
@@ -387,8 +410,10 @@ bool Node::BackFork(const string &goodid, int32_t num) {
             continue;
         }
 
-        if (!BlockProcessor::verifySignedBlock(*gb))
+        if (!BlockProcessor::verifySignedBlock(*gb)) {
+            qCritical() << "Node::BackFork !verifySignedBlock";
             return false;
+        }
 
         id = FantasyAgent::BlockHash(*gb);
         if ( id != prevprev ) {
@@ -399,13 +424,19 @@ bool Node::BackFork(const string &goodid, int32_t num) {
         leveldb::Slice snum((char*)&num, sizeof(int32_t));
         auto status =
                 blockchain->Put(write_sync, snum, (*gb).SerializeAsString());
-        if ( !status.ok() ) return false;
+        if ( !status.ok() ) {
+            qCritical() << "Node::BackFork !status.ok()";
+            return false;
+        }
 
         prevprev = (*gb).signedhead().head().prev_id();
 
         num--;
         fc::optional<Block> lb = getLocalBlock(num, true);
-        if ( !lb ) return false;
+        if ( !lb ) {
+            qCritical() << "Node::BackFork !lb";
+            return false;
+        }
 
         id = FantasyAgent::BlockHash(*lb);
 
@@ -446,8 +477,9 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 6810 )
-        num = 6810;
+    if (num > 7828 )
+        num = 7828;
+    qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
     return num;
@@ -460,6 +492,9 @@ int32_t Node::myLastGlobalBlockNum() {
         myglobalheight = GlobalHeight;
     }
 
+#ifdef TRACE4
+    qDebug() << " myglobalheight " << myglobalheight;
+#endif
     return myglobalheight;
 }
 
@@ -514,9 +549,12 @@ Bootstrap Node::getLastLocalBoot() {
 
         string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
 
-        if ( globalhead == "201608" && !Commissioner::BootStrapFileExists(globalhead) )
+#ifndef NO_DOSPECIALRESULTS
+        if ( globalhead == "201613" && !Commissioner::BootStrapFileExists(globalhead) ) {
             doSpecialResults = true;
-
+            qWarning() << "getLastLocalBoot  doSpecialResults " << doSpecialResults;
+        }
+#endif
         if ( globalhead > localhead  ) {
             head = Commissioner::makeGenesisBoot(ldb,globalhead);
             if ( head.blocknum() <= 0 ) {
@@ -531,7 +569,7 @@ Bootstrap Node::getLastLocalBoot() {
             else {
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
-                done = true;           
+                done = true;
             }
         }
         else {
@@ -540,6 +578,7 @@ Bootstrap Node::getLastLocalBoot() {
                 auto holdhead = ldb.read("head");
                 Bootstrap temphead = Commissioner::makeGenesisBoot(ldb,globalhead);
                 ldb.write("head",holdhead);
+                qWarning() << "getLastLocalBoot  if doSpecialResults " << holdhead.data();
             }
         }
     }
@@ -555,10 +594,13 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     //return 20;
 //      qDebug() << " calling rest height" << PAPIURL.data();
     int32_t height = RestfullService::getHeight(PAPIURL.data());
-//    qDebug() << " after rest height" << height;
+#ifdef TRACE
+    qDebug() << "Node::getLastGlobalBlockNum()" << height;
+#endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 6810;
+    height = 7828;
+    qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 
     if ( myLastGlobalBlockNum() < height )
@@ -592,12 +634,12 @@ Block Node::getlastLocalBlock() {
 
     if (!it->Valid()) {
         //ToDo fc optional
+        qCritical() << " getlastLocalBlock !it->Valid()";
         delete it;
         return b;
     }
 
     auto str = it->value().ToString();
-
     b.ParseFromString(str);
     delete it;
     return b;
@@ -634,14 +676,17 @@ fc::optional<Block> Node::getGlobalBlock(int32_t num) {
 
     //if ( height < num  ) return;
     string bs = RestfullService::getBlk(PAPIURL.data(),num);
+#ifdef WTFISTHIS
     Block bb{};
     bb.ParseFromString(bs);
-    qInfo() << bb.SerializeAsString().size() << bb.DebugString();
-
+    qInfo() << "getGlobalBlock("<< num <<") " << bb.SerializeAsString().size() << bb.DebugString();
+#endif
 
     block = Block{};
     (*block).ParseFromString(bs);
-    qInfo() << bs.size() << (*block).DebugString();
+#ifdef TRACE
+    qInfo() << "getGlobalBlock (" << num <<") size:" <<  bs.size() << (*block).DebugString().data();
+#endif
 
     return block;
 }
@@ -734,5 +779,7 @@ decltype(Node::bootstrap) Node::bootstrap;
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};
 bool Node::forking = false;
+#ifndef NO_DOSPECIALRESULTS
 bool Node::doSpecialResults = false;
-}	
+#endif
+}

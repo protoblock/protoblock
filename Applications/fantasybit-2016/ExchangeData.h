@@ -206,7 +206,7 @@ struct Level1 {
 
 };
 
-#define BOOK_SIZE 400
+#define BOOK_SIZE 40
 class LimitBook {
     InsideBook mBids[BOOK_SIZE], mAsks[BOOK_SIZE];
     int mBb, mBa;
@@ -254,8 +254,12 @@ public:
     void updateTopfromCache(int b, int a) {
         if ( b > 0 && b <= BOOK_SIZE)
             mBb = b-1;
+        else
+            mBb = -1;
         if ( a > 0 && a <= BOOK_SIZE)
             mBa = a-1;
+        else
+            mBa = BOOK_SIZE;
     }
 
     bool NewOrder(Order &eo, Position &);
@@ -264,13 +268,16 @@ public:
 };
 
 struct MatchingEngine {
-    MatchingEngine(const string &playerid,bool il = false) : mPlayerid(playerid), islocked(il) {
+    MatchingEngine(const string &playerid,bool il = false)
+        : mPlayerid(playerid), islocked(il), blocknum(0)
+    {
 
     }
     unique_ptr<LimitBook> mLimitBook;
     bool islocked;
     std::unordered_map<std::string,Position> mPkPos;
     string mPlayerid;
+    int32_t blocknum;
     MarketSnapshot *makeSnapshot(MarketSnapshot *) ;
     void ResetLimitBook() {
         mLimitBook.reset(new LimitBook(mPlayerid));
@@ -357,10 +364,11 @@ public:
     }
 
     bool GetGameSettlePos(const string &gid,GameSettlePos &gsp);
-    std::unordered_map<string,BookPos> GetRemainingSettlePos();
+    void GetRemainingSettlePos(std::unordered_map<string,BookPos>&);
 
     void OnNewOrderMsg(const ExchangeOrder&, int32_t seqnum,
-                       shared_ptr<fantasybit::FantasyName> fn);
+                       shared_ptr<fantasybit::FantasyName> fn,
+                       int32_t blocknum);
 
     void OnOrderNew(const ExchangeOrder&, int32_t seqnum,
                     shared_ptr<fantasybit::FantasyName> fn);
@@ -389,6 +397,8 @@ public:
     void OnWeekOver(int week);
     void OnWeekStart(int week) {
         mWeek = week;
+        if (amlive)
+            doEmitSnap();
     }
 
     std::string filedir(const std::string &in) {
@@ -401,12 +411,56 @@ public:
 
     //void MergeMarketQuote(const string &playerid,const MarketQuote & );
     void OnTrade(const string &playerid, fantasybit::TradeTic *tt);
-    void OnMarketTicker(const string &playerid, fantasybit::MarketTicker *mt);
+    void OnMarketTicker(const string &playerid, fantasybit::MarketTicker &mt);
     void OnNewDepth(const string &playerid, fantasybit::DepthFeedDelta *df) {
         if ( amlive ) {
             df->set_symbol(playerid);
             emit NewDepthDelta(df);
         }
+    }
+
+    void doEmitSnap() {
+        /*
+        emit StartMarketSnapShot(mWeek);
+        for (auto &it : mLimitBooks) {
+            #ifdef TRACE
+                qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
+            #endif
+            auto *ms = MarketSnapshot::default_instance().New();
+            ms->set_week(mWeek);
+            //auto it2 = mMarketQuote.find(it.first);
+            ms->mutable_quote()->CopyFrom(mMarketQuote[it.first]);
+            ms->mutable_ohlc()->CopyFrom(mContractOHLC[it.first]);
+            ms->set_symbol(it.first);
+
+            if ( ms->depth_size() > 0 || ms->ohlc().volume() > 0 ||
+                 (ms->quote().l() + ms->quote().b() + ms->quote().a()) > 0)
+                emit NewMarketSnapShot(it.second->makeSnapshot(ms));
+        }
+        emit FinishMarketSnapShot(mWeek);
+        */
+    }
+
+    std::vector<MarketSnapshot> GetCurrentMarketSnaps() {
+        std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+
+        qDebug() << "get GetCurrentMarketSnaps" ;
+        std::vector<MarketSnapshot> vms{};
+
+        for (auto &it : mLimitBooks) {
+            #ifdef TRACE
+                qDebug() << "level2 ExchangeData GetCurrentMarketSnaps" << it.first.data();
+            #endif
+            MarketSnapshot ms;
+            ms.set_week(mWeek);
+            ms.mutable_quote()->CopyFrom(mMarketQuote[it.first]);
+            ms.mutable_ohlc()->CopyFrom(mContractOHLC[it.first]);
+            ms.set_symbol(it.first);
+            it.second->makeSnapshot(&ms);
+            vms.emplace_back(ms);
+        }
+
+        return vms;
     }
 
     /*
@@ -436,8 +490,10 @@ public:
 
 
 signals:
-    void NewMarketTicker(fantasybit::MarketTicker*);
+    void NewMarketTicker(fantasybit::MarketTicker,int32_t);
     void NewMarketSnapShot(fantasybit::MarketSnapshot*);
+    void FinishMarketSnapShot(int);
+    void StartMarketSnapShot(int);
     void NewDepthDelta(fantasybit::DepthFeedDelta*);
     void NewTradeTic(fantasybit::TradeTic *);
     void NewFantasyNameOrder(fantasybit::Order&);
@@ -477,7 +533,9 @@ public:
     }
 
     void Reset(const string &ticker) {
+        auto holdit = blocknum();
         Clear();
+        set_blocknum(holdit);
         set_playerid(ticker);
         mutable_ohlc()->set_symbol(ticker);
     }

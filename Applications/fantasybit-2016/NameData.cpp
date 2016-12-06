@@ -54,8 +54,8 @@ void FantasyNameData::init() {
 #ifdef WRITE_BOOTSTRAP
             writer(fn);
 #endif
-            if ( fn.name() == "JayBNY")
-                qDebug() << "JayBNY stakedelta " << fn.stake();
+//            if ( fn.name() == "JayBNY")
+//                qDebug() << "JayBNY stakedelta " << fn.stake();
 
             auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
             if ( fnp != nullptr ) {
@@ -63,8 +63,8 @@ void FantasyNameData::init() {
                 fnp->initStakePNL(fn.stake());
                 fnp->setBlockNump (0,0);
 
-                if ( fn.name() == "JayBNY")
-                    qDebug() << "JayBNY123 stakedelta " << fnp->getStakeBalance();
+//                if ( fn.name() == "JayBNY")
+//                    qDebug() << "JayBNY123 stakedelta " << fnp->getStakeBalance();
 #ifdef TRACE2
 #endif
 #ifdef DATAAGENTWRITENAMES_SPECIAL

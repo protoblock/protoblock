@@ -11,8 +11,8 @@ import ProRotoQml.Theme 1.0
 
 Item {
     property string isymbol: MiddleMan.getOrderModelSymbol()
-    property string pnamep: MiddleMan.getPlayerNamePos(isymbol)
-    property string tid: MiddleMan.getTeamid(isymbol)
+    property string pnamep: MiddleMan.pPlayerQuoteSliceModelItem.fullname
+    property string tid: MiddleMan.pPlayerQuoteSliceModelItem.teamid
 
 //    property variant inplay: MiddleMan.getOrderModel(symbol)
 
@@ -20,7 +20,7 @@ Item {
     property double dihight: ProtoScreen.guToPx(4)
 
     Component.onCompleted: {
-         pageHelper.title = "Open Orders: " + pnamep
+//         pageHelper.title = "Open Orders: " + pnamep
 
 //         pid.txtN = inplay.playerid
     }
@@ -28,7 +28,7 @@ Item {
 
          Card{
             id: topcard
-            width: parent.width * .90
+            width: parent.width
             height: parent.height
             elevation: 0
             anchors{
@@ -41,14 +41,15 @@ Item {
             // spacer
             Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
 
+/*
             Banner {
                 id: cwc
                 fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 bold: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: pnamep + " Open Orders"
-                color: "white"
-                backgroundColor: themeroot.theme.primaryColor
+                color: themeroot.theme.primaryColor
+                backgroundColor: "white"
 //                helpShown: true
 //                helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
 //                helperTxt: "Contract expires after week 15 at the total fantasy points scored by " + inplay.fullname +
@@ -57,7 +58,7 @@ Item {
 //                           "with all the know risks, how much are you willing to \"pay\" for the contract, and for how much would you be willing to " +
 //                           " write, or sell, the contract, knowing that you keep all the points in cae of injury, but have to pay up in case of a breakout"
 
-                width: parent.width / 1.10
+                width: parent.width
 //                width: parent.width
 //                height: ProtoScreen.guToPx(6)
                 anchors.bottomMargin:ProtoScreen.guToPx(1)
@@ -74,7 +75,7 @@ Item {
 
             Rectangle {
                 id: boundquote
-                width: parent.width / 1.10
+                width: parent.width
                 height: ProtoScreen.guToPx(8)
                 anchors{
                     top: cwc.bottom
@@ -126,23 +127,23 @@ Item {
 
                 }
              }
-
+*/
             Banner {
                 id: bandepth
-                anchors.top: boundquote.bottom
-                anchors.horizontalCenter: boundquote.horizontalCenter
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
     //                height: parent.height - cwc.height - buySell.heigth
                 text: "Open Order"
                 anchrosType: "center"
-                helperHeader: "Open Orders Help"
-                helperTxt: " "
-                helpShown: true
-                height: ProtoScreen.guToPx(6)
+//                helperHeader: "Open Orders Help"
+//                helperTxt: " "
+//                helpShown: true
+                height: ProtoScreen.guToPx(4)
                 backgroundColor: themeroot.theme.primaryColor
-                anchors.bottomMargin:ProtoScreen.guToPx(.5)
-                anchors.topMargin:ProtoScreen.guToPx(.5)
-                width: parent.width * .75
-                fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                anchors.bottomMargin:ProtoScreen.guToPx(.5)
+//                anchors.topMargin:ProtoScreen.guToPx(.5)
+                width: parent.width
+                fontSize: ProtoScreen.font(ProtoScreen.SMALL)
                 bold: true
 //                anchors.right: parent.right
 
@@ -153,7 +154,7 @@ Item {
                 id: boundingRect
                 anchors.top: bandepth.bottom
 //                height:    (topcard.height - bandepth.height - boundquote.height - buySell.height )
-                height: dihight * ( 1 + Math.min(depthsize,depthvm.count))
+                height: dihight * ( 1 + Math.min(depthsize,ordersl.count))
                 anchors.margins: 1
                 anchors.horizontalCenter: bandepth.horizontalCenter
                 width: bandepth.width
@@ -173,7 +174,7 @@ Item {
     //                    boundsBehavior: Flickable.StopAtBounds
 
 
-                    id: depthvm
+                    id: ordersl
     //                    anchors.top: bandepth.bottom
                     anchors.margins: 1
                     anchors.horizontalCenter: boundingRect.horizontalCenter
@@ -216,12 +217,21 @@ Item {
                         qty: model.size
                         price: model.price
                         side: model.isbuy ? 1 : -1
-                        symbol: isymbol
+                        symbolp: isymbol
 
                 }
-            }
+                }
             }
         }
+
+
+
+//         Connections {
+//             target: MiddleMan
+//             onPPlayerQuoteSliceModelItemChanged: {
+//                 ordersl.model = MiddleMan.pPlayerQuoteSliceModelItem.ordersModel
+//             }
+//         }
 }
 
 

@@ -10,13 +10,14 @@ import ProRotoQml.Theme 1.0
 //import ProRotoQml.Models 1.0
 
 Item {
+    anchors.fill: parent
     Component.onCompleted: {
          pageHelper.title = "Portfolio: " + realRoot.uname
 
         if ( !realRoot.reloadorderpos )
             realRoot.reloadorderpos = true
         else {
-            MiddleMan.getOrderPos()
+//            MiddleMan.getOrderPos()
         }
 
 //        if ( realRoot.reloadrowquote ) {
@@ -30,8 +31,8 @@ Item {
         id: fl
         width: parent.width
         height:    parent.height
-        contentHeight: parent.height * 5
-        contentWidth: parent.width
+//        contentHeight: parent.height * 5
+//        contentWidth: parent.width
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
 
@@ -61,7 +62,7 @@ Item {
                 backgroundColor: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: "Orders and Positions"
-                helperTxt: "jay@protoblock.com for help"
+                helperTxt: "help@protoblock.com for help"
                 width: fl.width / 1.07
                 height: ProtoScreen.guToPx(6)
                 anchors.bottomMargin:ProtoScreen.guToPx(.5)
@@ -147,10 +148,10 @@ Item {
                             height: width
                             smooth: true
                         }
-                        onClicked: {
-                            MiddleMan.setOrderModel(symbol)
-                            rootLoader.source = "qrc:/Orders.qml"
-                        }
+//                        onClicked: {
+//                            MiddleMan.setOrderModel(symbol)
+//                            rootLoader.source = "qrc:/Orders.qml"
+//                        }
 
                     }
             }

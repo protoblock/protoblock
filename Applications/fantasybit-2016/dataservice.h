@@ -8,6 +8,7 @@
 #include "Data.h"
 //#include <QMutexLocker>
 #include "pbgateways.h"
+#include "ExchangeData.h"
 
 class DataService : public GenericSingleton<DataService>
         , public pb::IDataService
@@ -49,6 +50,7 @@ public:
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);
     int GetAvgProjection(const string &playerid);
+    std::vector<MarketSnapshot> GetCurrentMarketSnaps();
 };
 
 

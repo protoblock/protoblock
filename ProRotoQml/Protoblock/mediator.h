@@ -26,6 +26,7 @@
 #include "pbgateways.h"
 #include "RestFullCall.h"
 #include "playerresultmodel.h"
+#include "ExchangeData.h"
 
 using namespace std;
 
@@ -55,17 +56,22 @@ class Mediator : public QObject {
 
 
     //Trading
-//    QML_WRITABLE_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
 //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
-//    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
-//    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceViewFilterProxyModel, pPlayerQuoteSliceViewFilterProxyModel)
+//    QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
+
+    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
 //    //QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
-//    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
+    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
 //    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
+
 
 
     //fantasyname
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pGoodNameBalModel)
+    QML_READONLY_PTR_PROPERTY(FantasyNameBalModelItem, pMyFantasyNameBalance)
 
 
     //leaderboard
@@ -132,6 +138,11 @@ class Mediator : public QObject {
 //    QML_READONLY_PTR_PROPERTY (QQmlObjectListModel<FantasyBitAwardModelItem>, pResultSelectedModel)
     QQmlObjectListModel<FantasyBitAwardModelItem> dummyResultSelectedModel;
 
+    //trading
+    PlayerQuoteSliceModelItem dummyPlayerQuoteSliceModelItem;
+    OpenOrdersModel dummyOpenOrdersModel;
+    FantasyNameBalModelItem dummyFantasyNameBalModelItem;
+
     static Mediator *myInstance;
 public:
     static Mediator *instance();
@@ -166,7 +177,24 @@ public:
 //            getDepthRep();
 //    }
 
-//    Q_INVOKABLE void startDepth(const QString& symbol) {
+    Q_INVOKABLE void startDepth(const QString& symbol) {
+        qDebug() << " startDepth " << symbol;
+        auto *it = mPlayerQuoteSliceModel.getByUid(symbol);
+        if ( it != nullptr ) {
+            qDebug() << " startDepth good" << symbol;
+
+//          m_pPlayerQuoteSliceModelItem = it;
+            update_pPlayerQuoteSliceModelItem(it);
+        }
+
+        auto tit = mTradingPositionsModel.getOrCreate(symbol);
+        if ( tit != nullptr ) {
+            update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
+        }
+        else {
+            qDebug() << " startDepth !good getOrCreate" << symbol;
+            update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
+        }
 //        depthBackup--;
 //        if ( depthBackup <= 0 ) {
 //            depthBackup = 0;
@@ -186,10 +214,10 @@ public:
 
 //        if ( !polldepth.isActive() )
 //            polldepth.start(depthInterval);
-////        11
-////        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
-////        getOrderPos();
-//    }
+//        11
+//        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+//        getOrderPos();
+    }
 
 //    Q_INVOKABLE void stopDepth(const QString& symbol) {
 //        polldepth.stop();
@@ -203,8 +231,8 @@ public:
 
 ////            m_currentPidContext = context;
 //    }
-//    Q_INVOKABLE void doCancel(qint32 id);
-//    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
+    Q_INVOKABLE void doCancel(qint32 id);
+    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
 
 //    QString playersStatus()const;
 //    void setPlayersStatus(const QString &playersStatus);
@@ -238,10 +266,11 @@ public:
         else
             m_pGlobalOpenOrdersModel = model->get_pOpenOrdersModel();
     }
+    */
     Q_INVOKABLE QString getOrderModelSymbol() {
         return m_pGlobalOpenOrdersModel->get_pidsymbol();
     }
-    */
+
     //projections
     Q_INVOKABLE void select(int row, int command) {
         qDebug() << " meiator selected" << row << " commsnd " << command;
@@ -517,6 +546,7 @@ public:
         }
     }
 
+    
     bool usingRandomNames = false;
 
     std::vector<std::string> fnames;
@@ -538,27 +568,27 @@ public:
     Q_INVOKABLE QStringList allNamesList() { return m_allNamesList; }
 
     //portfolio
-//    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
-//        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
-//        if ( model == nullptr ) {
-//            qDebug() << " bad data for getPlayerNamePos " << uid;
-//            return "";
-//        }
-//        else
-//            return model->get_fullname() + " (" + model->get_position() +")" ;
-//    }
+    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
+        auto model = mPlayerQuoteSliceModel.getByUid(uid);
+        if ( model == nullptr ) {
+            qDebug() << " bad data for getPlayerNamePos " << uid;
+            return "";
+        }
+        else
+            return model->get_fullname() + " (" + model->get_pos() +")" ;
+    }
 
 
     //data
-//    Q_INVOKABLE QString getTeamid(const QString &uid) {
-//        auto model = m_pPlayerQuoteSliceModel->getByUid(uid);
-//        if ( model == nullptr ) {
-//            qDebug() << " bad data for getTeamid " << uid;
-//            return "";
-//        }
-//        else
-//            return model->get_teamid();
-//    }
+    Q_INVOKABLE QString getTeamid(const QString &uid) {
+        auto model = mPlayerQuoteSliceModel.getByUid(uid);
+        if ( model == nullptr ) {
+            qDebug() << " bad data for getTeamid " << uid;
+            return "";
+        }
+        else
+            return model->get_teamid();
+    }
 
     //schedule
     Q_INVOKABLE void setScheduleFilter(const QString& filter) {
@@ -567,6 +597,11 @@ public:
     }
 
 
+    Q_INVOKABLE void settheHeight(int h) {
+        qDebug() << " new height " << h;
+        if ( h > m_height )
+            emit NewHeightStop(h);
+    }
     //oms
     void subscribeOrderPos(const QString &name);
     void getOrderReq(const QString &name,const QString symbol="");
@@ -596,7 +631,9 @@ signals:
 
     void doNameCheck(QString);
     void NewProjection(vector<fantasybit::FantasyBitProj>);
+    void NewOrder(fantasybit::ExchangeOrder);
 
+    void NewHeightStop(int);
 
 protected slots:
 //    void handdleUsingName(const QString &name);
@@ -646,6 +683,7 @@ private:
     QString m_playersStatus;
     std::string m_lastSignedplayer;
 
+    ordsnap_t mMyPosOrders;
     std::unordered_map<std::string, std::string> m_myPubkeyFname;
     std::unordered_map<std::string, uint64_t> m_myPubkeyHash;
     std::unordered_map<uint64_t, std::string> m_myHashFname;
@@ -678,11 +716,14 @@ private:
     int depthCount;
     int depthBackup;
     int depthInterval;
-    //    TradingPositionsModel mTradingPositionsModel;
+    TradingPositionsModel mTradingPositionsModel;
 
     bool amLive = false;
 
     void getLeaders(int week,bool lastweek, bool all2016 = false) {
+#ifdef NO_SQL_LEADERS
+        return;
+#endif
         QString links("https://158.222.102.83:4545");
         QString route("fantasy/leaders");
         if ( !all2016 )
@@ -804,10 +845,88 @@ public slots:
             }
         }
     }
+    void OnMarketTicker(fantasybit::MarketTicker,int32_t);
+//    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
+    void OnDepthDelta(fantasybit::DepthFeedDelta*);
+    void OnTradeTick(fantasybit::TradeTic*);
+    void OnNewPos(fantasybit::FullPosition);
+    void OnNewOO(fantasybit::FullOrderDelta);
+    void MyPosPriceChange(PlayerQuoteSliceModelItem*);
+
+    /*
+    void OnMarketTicker(fantasybit::MarketTicker *mt) {
+        if ( mt->symbol() == "" )
+            return;
+    #ifdef TRACE
+        qDebug() << "Mediator OnMarketTicker " << mt->DebugString().data();
+    #endif
+
+        if ( !m_pPlayerQuoteSliceModel->Update(mt) ) {
+            qDebug() << "mediato OnMarketTicker  bad";
+            auto *item = mPlayerProjModel.getByUid(mt->symbol().data());
+            if ( item == nullptr )
+                qDebug() << "nullptr mediato OnMarketTicker  bad again" << mt->symbol().data();
+            else {
+                m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(item));
+                if ( !m_pPlayerQuoteSliceModel->Update(mt) )
+                    qDebug() << "mediato OnMarketTicker  bad again";
+                else
+                    qDebug() << "mediato OnMarketTicker  good again";
+            }
+        }
+        else
+            qDebug() << " mediato OnMarketTicker good";
+
+    }
+
+    void tradeTestingTimeout() {
+        if ( testCount++ >= 5) // m_pPlayerQuoteSliceModel->count())
+            testCount = 0;
+        auto it = m_pPlayerQuoteSliceModel->at(testCount);
+//        if (it->get_lastprice() > 5) testCount++;
+//        it->setlastprice();
+//        it->LastNew(it->get_lastprice() > 1 ? it->get_lastprice()-1 : it->get_lastprice()+1);
+    }
+*/
+
+/*
+    void OnGotMarketSnaps() {
+#ifdef TRACE
+        qDebug() << " OnGotMarketSnaps " << m_theWeek;
+#endif
+        if ( m_pPlayerQuoteSliceModel->filledWeekRoster(m_theWeek) )
+            return;
+
+
+#ifdef TRACE
+        qDebug() << " OnGotMarketSnaps loop " << mPlayerProjModel.size();
+#endif
+//        for ( auto it : mPlayerProjModel ) {
+//           m_pPlayerQuoteSliceModel->Update(it);
+//        }
+
+        for ( auto it : *m_pPlayerQuoteSliceModel ) {
+            auto *item = mPlayerProjModel.getByUid(it->get_symbol());
+            if ( item == nullptr ) {
+                qDebug() << "mediator OnGotMarketSnaps failed to get symbol " << it->get_symbol();
+                m_pPlayerQuoteSliceModel->remove(it);
+            }
+            else
+                it->Update(item);
+        }
+
+        m_pPlayerQuoteSliceViewFilterProxyModel->invalidate();
+
+    }
+*/
+
 
 private:
     vector<MyFantasyName> myGoodNames;
     void updateWeek();
+    int testCount = 0;
+    void updateOnChangeFantasyName();
+    void updateCurrentFantasyPlayerOrderPositions();
 };
 }
 #endif // MEDIATOR_H

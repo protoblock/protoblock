@@ -10,6 +10,11 @@ std::unordered_map<std::string,PlayerDetail>
     return worker->NFLState().GetTeamRoster(teamid);
 }
 
+std::vector<MarketSnapshot> DataService::GetCurrentMarketSnaps() {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->ExData().GetCurrentMarketSnaps();
+}
+
 std::vector<fantasybit::GameRoster> DataService::GetCurrentWeekGameRosters(){
     //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");

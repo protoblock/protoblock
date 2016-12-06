@@ -238,7 +238,7 @@ public:
     }
 
     QByteArray lastReply() {
-#ifdef TRACE
+#ifdef TRACE3
         if ( myLastRepliedData.size() > 100 )
             qDebug() << myLastRepliedData.size();
         else
@@ -456,12 +456,12 @@ public:
 
     static std::string getBlk(const QString & baseUrl,int32_t blockNum,
                               QThread * ownerThread = QThread::currentThread()){
-#ifdef TRACE
+#ifdef TRACE3
         qDebug() << " get blk " << blockNum;
 #endif
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
-#ifdef TRACE
+#ifdef TRACE3
         qDebug() << " get blk 2 " << baseUrl;
 #endif
 
@@ -472,7 +472,7 @@ public:
         QString customRoute = "block/" + QString::number(blockNum);
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
-#ifdef TRACE
+#ifdef TRACE3
         qDebug() << " get blk 3 " << baseUrl;
 #endif
 
@@ -492,14 +492,14 @@ public:
         std::vector<std::string> ret{};
         for ( int i = blockNum; i <= blockEnd; i++) {
 #ifdef TRACE
-            qDebug() << " get blk " << i;
+            qDebug() << "getBlk get blk: " << i;
 #endif
             //hard coded url
             //TODO move to settings
             QString customRoute = "block/" + QString::number(i);
             //customRoute = customRoute.arg(route).arg(blockNum);
             client.getData(customRoute,params,headers);
-#ifdef TRACE
+#ifdef TRACE4
             qDebug() << " get blk 3 " << baseUrl;
 #endif
 

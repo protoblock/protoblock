@@ -81,7 +81,7 @@ public:
 public:
     NFLStateData() {}
 
-#ifdef CHECKPOINTS
+#ifdef CHECKPOINTS_2015
     static void InitCheckpoint();
 #endif
 

@@ -51,13 +51,15 @@ void BlockProcessor::hardReset() {
     mNameData.closeAll();
 #ifdef TRADE_FEATURE
     mExchangeData.closeAll();
-
     mExchangeData.removeAll();
 #endif
 
     pb::remove_all(Platform::instance()->getRootDir() + "index/");
+#ifndef NOUSE_GENESIS_BOOT
     NFLStateData::InitCheckpoint();
+#endif
     BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
+
 }
 
 int32_t BlockProcessor::init() {
@@ -70,7 +72,9 @@ int32_t BlockProcessor::init() {
         pb::remove_all(Platform::instance()->getRootDir() + "index/");
         qInfo() <<  "delete all leveldb, should have nothing";
 
+#ifndef NOUSE_GENESIS_BOOT
         NFLStateData::InitCheckpoint();
+#endif
         BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
         qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
 
@@ -104,7 +108,11 @@ int32_t BlockProcessor::init() {
 
 int32_t BlockProcessor::process(Block &sblock) {
 
-    qDebug() << "process: " << sblock.signedhead().head().num();
+    qDebug() << "BlockProcessor process head().num(): " << sblock.signedhead().head().num();
+#ifdef TRACE
+    if ( sblock.signed_transactions_size() > 0)
+    qDebug() << "BlockProcessor processsb0 sblock.signed_transactions(0).DebugString().data() " << sblock.signed_transactions(0).DebugString().data();
+#endif
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
         qCritical() << "verifySignedBlock failed! ";
@@ -275,12 +283,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 rd = d.GetExtension(ResultData::result_data);
 
                 if ( !rd.has_game_result()) {
-                    qCritical() << "no data" + QTD(ttd.DebugString());
+                    qCritical() << "no data" << ttd.DebugString().data();
                     break;
                 }
 
-                if ( rd.game_result().gameid() == "201500122")
-                    qDebug() << " 201500122 ";
+                if ( rd.game_result().gameid() == "201601111")
+                    qDebug() << " 201601111";
                 /*
                 if ( !sanity(rd.fpp()) ) {
                     qCritical() << " invalid result skipping" << rd.DebugString();
@@ -396,7 +404,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 #endif
 
 #ifdef DATAAGENTWRITENAMES_FORCE_GAMEID
-                if ( rd.game_result().gameid() != "201600927" ) break;
+                if ( rd.game_result().gameid() != "201601224" ) break;
                 qDebug() << " DATAAGENTWRITENAMES_FORCE !!!!!!!!!!!!!!!!!!!!!!!!";
 #endif
 
@@ -657,7 +665,8 @@ void BlockProcessor::process(const DataTransition &indt) {
         if ( indt.week() != mGlobalState.week())
             qWarning() << indt.type() << " wrong week" << mGlobalState.week() << indt.week();
 #ifdef TRADE_FEATURE
-        auto pos = mExchangeData.GetRemainingSettlePos();
+        std::unordered_map<string,BookPos> pos;
+        mExchangeData.GetRemainingSettlePos(pos);
         for ( auto sbp : pos ) {
             SettlePositionsRawStake set(sbp.second);
             auto pnls = set.settle(0.0, Commissioner::FantasyAgentName());
@@ -852,7 +861,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             auto stamped = t.GetExtension(StampedTrans::stamped_trans);
             qDebug() << "new StampedTrans " << stamped.timestamp() << stamped.seqnum();
 
-            ProcessInsideStamped(stamped.signed_orig(),stamped.seqnum());
+            ProcessInsideStamped(stamped.signed_orig(),stamped.seqnum(),b.signedhead().head().num());
 
             break;
         }
@@ -863,7 +872,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
     }
 }
 
-void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum) {
+void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum,int32_t blocknum) {
     auto fn = BlockProcessor::getFNverifySt(inst);
     if ( !fn ) {
         qWarning() << "invalid tx inside stamped" << inst.trans().type();
@@ -881,7 +890,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
             //qDebug() << "new ExchangeOrder " << emdg.DebugString();
 
             //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
-            mExchangeData.OnNewOrderMsg(emdg,seqnum,fn);
+            mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum);
             break;
         }
         default:
@@ -958,7 +967,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
 }
 
 bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
-    qDebug() << st.DebugString();
+    qDebug() << st.DebugString().data();
 
     if (st.trans().version() != Commissioner::TRANS_VERSION)
     {

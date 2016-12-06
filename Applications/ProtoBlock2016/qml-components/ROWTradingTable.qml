@@ -9,7 +9,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
 
 Item {
-    id: topwr
+    id: rowtt
     anchors.fill: parent
 
     property variant selectedModel
@@ -18,11 +18,52 @@ Item {
     property string who: "default"
     property int rw: 8
 
-    property bool kicker: true
-    property bool def: true
-    property bool qb: true
-    property bool wr: true
-    property bool rb: true
+    property string lightgreen: "#c8ffc8"
+    property string lightred: "#ffc8c8"
+    property bool kicker: false
+    property bool def: false
+    property bool qb: false
+    property bool wr: false
+    property bool rb: false
+
+
+
+    property int ocount: 3
+    property int bcount: 2
+    property int pcount: 3
+    property int mcount: 4
+
+    property int ocol: 0
+    property int bcol: ocol + ocount
+    property int pcol: bcol + bcount
+    property int mcol: pcol + pcount
+    property int scol: mcol + mcount
+
+
+    property int rowcol: bcol + 1
+    property int poscol: pcol + 1
+
+//    property int scount:
+
+
+    //My Orders
+        // My Positions
+        // My PnL
+        // My Average Price
+
+    //Basic Stats
+        //YTD Total
+        //ROW Stats
+
+    // name , pos, team, ros  ( 4-7)
+
+    //Market Prices - ROW stats (x weeks)
+        //bid size, bid, ask, ask size
+
+    //YTD Stats
+
+
+
 
     Item {
         id: i2
@@ -33,7 +74,7 @@ Item {
         TableView {
             id: tvr
             Component.onCompleted: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
+//                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
 //                selection.select(0);
                 console.log("tvr comleted")
             }
@@ -59,16 +100,16 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
             implicitWidth: parent.width
-            model: MiddleMan.pResultsViewFilterProxyModel
+            model: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
 
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             onSortIndicatorOrderChanged: {
-                MiddleMan.pResultsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             headerDelegate: headerdel
@@ -90,6 +131,77 @@ Item {
             }
 
 
+            //**** my orders data
+            TableViewColumn {
+                role: "myposition"
+                title: "My Position"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: fbdel
+            }
+
+            TableViewColumn {
+                role: "mypnl"
+                title: "My PnL"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: fbdel
+            }
+
+            TableViewColumn {
+                role: "myavg"
+                title: "My Avg"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: fbdel
+            }
+
+
+            //**** basic data
+            TableViewColumn {
+                role: "ytd"
+                title: "YTD Points"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: fbdel
+            }
+
+            TableViewColumn {
+                role: "lastprice"
+                title: "Last"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.ldiff === 1 ? lightgreen : model.ldiff === -1 ? lightred :
+                                         model.lsdiff === 1 ? "lightgray" : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        id: ml
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
+            }
+
+            //**** Player
             TableViewColumn {
                 role: "lastname"
                 title: "Player Name"
@@ -225,70 +337,288 @@ Item {
                 }
             }
 
+//            TableViewColumn {
+//                role: "status"
+//                title: "Roster"
+//                horizontalAlignment : Text.AlignHCenter
+//                movable: false
+//                width: ProtoScreen.guToPx(6)
+//                delegate: Material.Label {
+//                    anchors.centerIn: parent
+//                    verticalAlignment: Text.AlignVCenter
+//                    horizontalAlignment: Text.AlignHCenter
+
+//                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                    text: styleData.value === 0 ? "on" : "off"
+//                }
+//            }
+
+            //**** market
             TableViewColumn{
-                role: "result"
-                title: "Result"
+                role: "bidsize"
+                title: "Bid Qty"
                 horizontalAlignment : Text.AlignHCenter
-                delegate: resdel
                 movable: false
                 width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.bsdiff === 1 ? lightgreen : model.bsdiff === -1 ? lightred : "transparent"
+
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
             TableViewColumn {
-                role: "fb"
-                title: "ƑɃ"
+                role: "bid"
+                title: "Bid"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.bdiff === 1 ? lightgreen : model.bdiff === -1 ? lightred : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
             TableViewColumn{
-                role: "myproj"
-                title: "My Projection"
+                role: "ask"
+                title: "Ask"
                 horizontalAlignment : Text.AlignHCenter
-                delegate: fbdel
                 movable: false
                 width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.adiff === 1 ? lightgreen : model.adiff === -1 ? lightred : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
             TableViewColumn {
-                role: "myaward"
-                title: "My Award"
+                role: "asksize"
+                title: "Ask Qty"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.asdiff === 1 ? lightgreen : model.asdiff === -1 ? lightred : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
             TableViewColumn {
-                role: "mypos"
-                title: "My Pos"
+                role: "lastsize"
+                title: "Last Qty"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: negdel
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.lsdiff === 2 ? "lightgray" : model.lsdiff === 1 ? lightgreen : model.lsdiff === -1 ? lightred : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
+
             TableViewColumn {
-                role: "myprice"
-                title: "My Price"
+                role: "volume"
+                title: "Volume"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: negdelfix
-            }
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
 
+                    backgroundColor: !model ? "transparent" : model.vdiff === 1 ? "lightgray" : "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value < 1) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
+            }
 
             TableViewColumn {
-                role: "mypnl"
-                title: "My Pnl"
+                role: "change"
+                title: "Change"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: negdel
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.cdiff === 0 ? "transparent" : "lightgray"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value === 0) ? model.lastprice === 0 ? "" : "unch" : styleData.value;
+                        font.bold: false;
+                        color: styleData.value < 0 ? "red" : styleData.value > 0 ? "green" : "black"
+                    }
+
+                }
+            }
+
+            TableViewColumn {
+                role: "hi"
+                title: "High"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.cdiff === 0 ? "transparent" : "lightgreen"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value === 0) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
+            }
+
+            TableViewColumn {
+                role: "lo"
+                title: "Low"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: !model ? "transparent" : model.lodiff === 0 ? "transparent" : "lightred"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: (styleData.value === 0) ? "" : styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
 
+            //**** stats
             TableViewColumn {
                 role: "PassYd"
                 title: "PassYd"
@@ -298,6 +628,7 @@ Item {
                 delegate: fbdel
                 visible: qb
             }
+
             TableViewColumn {
                 role: "PassTD"
                 title: "PassTD"
@@ -391,7 +722,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw)
                 delegate: fbdel
-                visible: topwr.kicker
+                visible: rowtt.kicker
             }
             TableViewColumn {
                 role: "FG"
@@ -400,7 +731,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(rw) * 2
                 delegate: fbdel
-                visible: topwr.kicker
+                visible: rowtt.kicker
             }
             TableViewColumn {
                 role: "PtsA"
@@ -458,14 +789,6 @@ Item {
 
             }
 
-            TableViewColumn {
-                role: "playerid"
-                title: "playerid"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(rw)
-            }
-
         }
     }
 
@@ -485,30 +808,28 @@ Item {
                 ComboBox {
                     id: cbc
                     model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
-                    enabled: styleData.column === 1
+                    enabled: styleData.column === poscol
                     currentIndex: 0
-                    visible: styleData.column === 1
+                    visible: styleData.column === poscol
                     anchors.fill: parent
                     onCurrentTextChanged: {
                        MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
-                        kicker = def = qb = (currentIndex === 0)
+//                        kicker = def = qb = (currentIndex === 0)
 
-                        if ( currentIndex === 0 )
-                            kicker = def = qb = rb = wr = true
-                        else {
-                            kicker = def = qb = rb = wr = false
+                        kicker = def = qb = rb = wr = false
 
-                        if ( currentIndex === 5) {
-                            kicker = true;
-                        }
-                        else if ( currentIndex === 6) {
-                            def = true
-                        }
-                        else if (currentIndex === 1 )
-                            qb = true
-                        else if ( currentIndex === 2)
-                            rb = true
-                        else wr = true
+                        if ( currentIndex !== 0 ) {
+                            if ( currentIndex === 5) {
+                                kicker = true;
+                            }
+                            else if ( currentIndex === 6) {
+                                def = true
+                            }
+                            else if (currentIndex === 1 )
+                                qb = true
+                            else if ( currentIndex === 2)
+                                rb = true
+                            else wr = true
                         }
                     }
                 }
@@ -542,8 +863,12 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: (styleData.column >= 5 && styleData.column <= 9) ? themeroot.theme.accentColor :
-                                 themeroot.theme.primaryColor
+
+                backgroundColor: (styleData.column >= ocol && styleData.column < bcol) ?
+                        themeroot.theme.accentColor :
+                        ( (styleData.column >= mcol && styleData.column < scol) ||
+                           styleData.column === rowcol ) ? "green" : themeroot.theme.primaryColor
+
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
@@ -559,8 +884,10 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: (styleData.column >= 5 && styleData.column <= 9) ? Material.Theme.light.textColor : "white"
-                    //                    font.bold: styleData.column === 4
+                    color: (styleData.column >= ocol && styleData.column < bcol) ?
+                            Material.Theme.light.textColor :
+                            ( (styleData.column >= mcol && styleData.column <= scol) ||
+                               styleData.column === rowcol ) ? "white" : "white"
                 }
             }
 
@@ -602,7 +929,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: !model ? "" : parseFloat(model.result).toFixed(2)
+            text: parseFloat(styleData.value).toFixed(2)
             font.bold: true;
         }
     }
@@ -624,56 +951,41 @@ Item {
     Component {
         id: fbdel
 
-        Material.Label {
+        Material.Card {
             anchors.centerIn: parent
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
+            flat: true
+            radius: 12
+            border.width: 0
+//            anchors.fill: parent
+            anchors.rightMargin: ProtoScreen.guToPx(5)
+            anchors.leftMargin: ProtoScreen.guToPx(5)
 
-            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: (styleData.value < 1) ? "" : styleData.value;
-            font.bold: false;
+            backgroundColor: "transparent"
+//            height: ml.height
+            width: ProtoScreen.guToPx(9) // ml.width * 3
+            Material.Label {
+                id: ml
+                anchors.centerIn: parent
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                text: (styleData.value < 1) ? "" : styleData.value;
+                font.bold: false;
+//                color: (model.BackgroundColor === "transparent" || styleData.column !== 4) ? Material.Theme.light.textColor : "white"
+            }
+
         }
     }
 
-    Component {
-        id: negdel
-
-        Material.Label {
-            anchors.centerIn: parent
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-
-            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: (styleData.value === 0) ? "" : styleData.value;
-            font.bold: false;
-        }
-    }
-
-    Component {
-        id: negdelfix
-
-        Material.Label {
-            anchors.centerIn: parent
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-
-            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: (styleData.value === 0.0) ? "" : parseFloat(styleData.value).toFixed(2);
-            font.bold: false;
-        }
-    }
-
-    Component {
-        id: columnComponent
-        TableViewColumn {
-            width: 100
-        }
-
-    }
 
     Connections {
         target: tvr.selection
-        onSelectionChanged: topwr.update()
+        onSelectionChanged: {
+
+            rowtt.update();
+            console.log("row onSelectionChanged");
+        }
     }
 
     Connections {
@@ -682,11 +994,11 @@ Item {
     }
 
     function update() {
-        console.log(" PlayerResultSelected update")
+        console.log(" ROWtradng update")
         tvr.selection.forEach(function(rowIndex) {
-            MiddleMan.setPrevWeekResultLeaderSelection(tvr.model.getAwardsModelUid(rowIndex));
+            MiddleMan.startDepth(tvr.model.getPlayerSliceModelUid(rowIndex));
             //,tvr.model.roleForName("awardsModel"))
-//            if (row && row.awardsModel) topwr.selectedModel = row.awardsModel
+//            if (row && row.awardsModel) rowtt.selectedModel = row.awardsModel
         })
     }
 

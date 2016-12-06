@@ -11,6 +11,8 @@
 #include "sortfilterproxymodel.h"
 #include "StatusData.pb.h"
 
+namespace pb {
+
 using namespace  fantasybit;
 
 static QString GameStatusToString(fantasybit::GameStatus_Status gs) {
@@ -194,5 +196,6 @@ protected:
         return true;
     }
 };
+}
 
 #endif // WEEKLYSCHEDULEMODEL_H

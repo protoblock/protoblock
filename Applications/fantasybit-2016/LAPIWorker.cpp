@@ -45,7 +45,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
 
     //data processing
-    //QObject::connect(this,SIGNAL(LiveData(bool)),&exchangedata,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(LiveData(bool)),&exchangedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
@@ -106,6 +106,12 @@ void MainLAPIWorker::GoLive() {
 #ifdef LIGHT_CLIENT_ONLY
     intervalstart = 500;
 #endif
+
+
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    justwentlive = true;
+#endif
+
     timer->start(intervalstart);
 
     qDebug() << "emit LiveData(true)";
@@ -113,7 +119,6 @@ void MainLAPIWorker::GoLive() {
     emit LiveGui(data.GetGlobalState());
     qDebug() << "emit LiveGui(data.GetGlobalState())" << data.GetGlobalState().DebugString();
     OnGetMyNames();
-
 
 }
 
@@ -137,7 +142,7 @@ void MainLAPIWorker::startPoint(){
         node.init();
         numto = Node::getLastLocalBlockNum();
 #ifdef BLOCK_STEP
-        int gonum = 3500 ;
+        int gonum = numto ;
         numto = (gonum >= last_block) ? gonum : last_block;
 #endif
         emit Height(numto);
@@ -196,7 +201,7 @@ bool MainLAPIWorker::doProcessBlock() {
         return false;
     }
     if ( !Process(*b) ) {
-        qWarning() << " !Process";
+        qWarning() << "MainLAPIWorker::doProcessBlock nope !Process";
         return false;
     }
 
@@ -268,6 +273,12 @@ void MainLAPIWorker::OnBlockError(int32_t last) {
 }
 
 void MainLAPIWorker::Timer() {
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    if ( justwentlive ) {
+        justwentlive = false;
+    }
+#endif
+
     //qDebug() << " Timer ";
     bool numtogtlast;
     {
@@ -564,9 +575,7 @@ void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
     }
 }
 
-/*
 void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
-
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::EXCHANGE);
@@ -574,9 +583,11 @@ void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
     DoPostTr(sn);
-    //namedata.Subscribe(myCurrentName.name());
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
 }
-*/
+
 /*ys
 //ToDo: convert names with a status OnLive()
 myfantasynames = agent.getMyNamesStatus();
