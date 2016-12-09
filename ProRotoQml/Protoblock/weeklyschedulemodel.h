@@ -104,9 +104,12 @@ public:
 
         for ( auto &gi : weekly.games()) {
            append(new WeeklyScheduleModelItem(gi,this));
-           std::string twittergame = "#" + gi.home() + "vs" + gi.away();
+           std::string twittergame = "#" + gi.away() + "vs" + gi.home();
            team2Game[gi.home()]  = twittergame;
            team2Game[gi.away()] = twittergame;
+           qDebug() << " setting for team" << gi.home().data() << " got " << twittergame.data();
+           qDebug() << " setting for team" << gi.away().data() << " got " << twittergame.data();
+
         }
     }
 

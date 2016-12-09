@@ -260,7 +260,7 @@ void Mediator::updateWeek() {
                     m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
                 else {
                     m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
-                    std::string twittergame = "#" + gi.home() + "vs" + gi.away();
+                    std::string twittergame = "#" + gi.away() + "vs" + gi.home();
                     m_pWeeklyScheduleModel->team2Game[gi.home()]  = twittergame;
                     m_pWeeklyScheduleModel->team2Game[gi.away()] = twittergame;
                 }
