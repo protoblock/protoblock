@@ -92,10 +92,13 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultSelectedModel->setSortRole("award");
     m_pResultSelectedModel->setDynamicSortFilter(true);
 
-    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
-                      "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
-                      " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
+//    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
+//                      "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
+//                      " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
 
+
+    setcontrolMessage("<html><style type=\"text/css\"></style>Fantasy Ticker Feed now live on Twitter " \
+                      "<a href=\"https://twitter.com/prototicker\">@prototicker</a></html>");
 
     connect(&mPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
             this, &Mediator::MyPosPriceChange);

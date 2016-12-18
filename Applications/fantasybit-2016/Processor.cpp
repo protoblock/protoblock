@@ -498,7 +498,11 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
             case Data_Type_MESSAGE: {
                 auto msg = d.GetExtension(MessageData::message_data);
                 if ( msg.has_msg() ) {
-                    qWarning() << "Control messgae" << msg.DebugString();
+                    onControlMessage(QString::fromStdString(msg.msg()));
+
+                    qWarning() << "Control messgae" << msg.DebugString().data();
+                }
+                /*
 #ifdef Q_OS_MAC
                     if ( msg.msg().find("win64") != string::npos )
 #endif
@@ -527,6 +531,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         onControlMessage(QString::fromStdString(msg.msg()));
 
                 }
+                */
                 break;
             }
             default:
