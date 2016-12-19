@@ -58,7 +58,7 @@ Material.ApplicationWindow{
                 enabled: false
                 decimals: 0
                 stepSize: 1.0
-                maximumValue: 8000
+                maximumValue: 50000
                 minimumValue:  MiddleMan.blocknum
                 value: MiddleMan.height
                 onValueChanged: {

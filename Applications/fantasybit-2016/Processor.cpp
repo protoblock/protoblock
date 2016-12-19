@@ -287,8 +287,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     break;
                 }
 
-                if ( rd.game_result().gameid() == "201601111")
-                    qDebug() << " 201601111";
+//                if ( rd.game_result().gameid() == "201601111")
+//                    qDebug() << " 201601111";
                 /*
                 if ( !sanity(rd.fpp()) ) {
                     qCritical() << " invalid result skipping" << rd.DebugString();
@@ -310,7 +310,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 #else
                 nopnl = true;
 #endif
-                qDebug() << allprojs.DebugString().data();
+//                qDebug() << allprojs.DebugString().data();
 
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
                 unordered_map<string,BookPos *> posmap;

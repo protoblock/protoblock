@@ -42,7 +42,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pLeaderBoardSortModel->setDynamicSortFilter(true);
 
     //schedule models
-    m_pWeeklyScheduleModel = new WeeklyScheduleModel;
+    m_pWeeklyScheduleModel = new WeeklyScheduleModel(this);
     m_pWeekClosedScheduleModel = new WeeklyScheduleModel;
 
     myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
@@ -262,9 +262,9 @@ void Mediator::updateWeek() {
                 for ( auto p : tvec.second ) {
                     qDebug() << " p tvec " << p.second << p.first.DebugString().data();
                     if ( p.second == GameStatus_Status_CLOSED )
-                        m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,m_pWeekClosedScheduleModel));
+                        m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
                     else
-                        m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,m_pWeeklyScheduleModel));
+                        m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
                 }
             }
             qDebug() << " done sorted ";
@@ -353,14 +353,14 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 
     int i = 0;
     double totpnl = 0.0;
-    qDebug() << ++i << " here ";
+//    qDebug() << ++i << " here ";
     for ( auto tit : mTradingPositionsModel ) {
-        qDebug() << i << "loop here ";
+//        qDebug() << i << "loop here ";
 
         auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
         int netqty = tit->get_netqty();
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
         double avg = 0;
         double pnl = 0;
@@ -394,10 +394,10 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
             else
                 pnl = 100.0 * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
-            qDebug() << ++i << " here ";
+//            qDebug() << ++i << " here ";
 
         }
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
 
         //mTradingPositionsModel.UpdatePnl(tit,it->get_bid(),it->get_ask());
@@ -407,11 +407,11 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         it->setmypnl(pnl);
         tit->setopenpnl(pnl);
         totpnl += pnl;
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
     }
     mTradingPositionsModel.settotalopenpnl(totpnl);
-    qDebug() << ++i << " here ";
+//    qDebug() << ++i << " here ";
 
 }
 
