@@ -253,16 +253,28 @@ void Mediator::updateWeek() {
 
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
+            std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>>> sorted;
             fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theWeek);
             for ( auto &gi : weekly.games()) {
                 auto status = mGateway->dataService->GetGameStatus(gi.id());
-                if ( status.status() == GameStatus_Status_CLOSED )
-                    m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
-                else {
-                    m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
-                    std::string twittergame = "#" + gi.away() + "vs" + gi.home();
-                    m_pWeeklyScheduleModel->team2Game[gi.home()]  = twittergame;
-                    m_pWeeklyScheduleModel->team2Game[gi.away()] = twittergame;
+                std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>> &vec =
+                        sorted[gi.time()];
+                vec.emplace_back(std::make_pair(gi,status.status()));
+            }
+
+            for ( auto tvec : sorted ) {
+                qDebug() << " tvec sorted " << tvec.first;
+                for ( auto p : tvec.second ) {
+                    qDebug() << " p tvec " << p.second << p.first.DebugString().data();
+                    if ( p.second == GameStatus_Status_CLOSED )
+                        m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
+                    else {
+                        auto gi = p.first;
+                        m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
+                        std::string twittergame = "#" + gi.away() + "vs" + gi.home();
+                        m_pWeeklyScheduleModel->team2Game[gi.home()]  = twittergame;
+                        m_pWeeklyScheduleModel->team2Game[gi.away()] = twittergame;
+                    }
                 }
             }
 

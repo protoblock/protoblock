@@ -831,7 +831,7 @@ public slots:
 
     void OnFinishedResults() {
         if ( amLive ) {
-            updateLiveLeaders(false);
+//            updateLiveLeaders(false);
 
             vector<pair<std::string,WeeklyScheduleModelItem *>> todo;
             for ( const auto item : *m_pWeeklyScheduleModel) {
@@ -845,7 +845,7 @@ public slots:
 
             for ( auto ip : todo ) {
                 mPlayerProjModel.ongameStatusChange(ip.first,GameStatus_Status_CLOSED);
-                m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(ip.second,GameStatus_Status_CLOSED));
+                m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(ip.second,GameStatus_Status_CLOSED,this));
                 m_pWeeklyScheduleModel->remove(ip.second);
             }
 
