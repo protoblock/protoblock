@@ -17,7 +17,7 @@
 using namespace std;
 using namespace fantasybit;
 
-#ifdef DATAAGENTWRITENAMES
+#if defined(DATAAGENTWRITENAMES) || defined(SQL)
 #include "../../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
 
