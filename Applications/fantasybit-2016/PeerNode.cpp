@@ -299,7 +299,7 @@ bool Node::SyncTo(int32_t gh) {
     else {
         auto ob = getLocalBlock(current_hight, true);
         if ( ob )
-            previd = FantasyAgent::BlockHash(*ob);
+            previd =     FantasyAgent::BlockHash(*ob);
     }
     while ( current_hight < global_height ) {
 
@@ -478,8 +478,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 7828 )
-        num = 7828;
+    if (num > 9926 )
+        num = 9926;
     qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
@@ -600,7 +600,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 7828;
+    height = 9926;
     qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 

@@ -141,6 +141,7 @@ void MainLAPIWorker::startPoint(){
         Node node;
         node.init();
         numto = Node::getLastLocalBlockNum();
+        numto = 9926;
 #ifdef BLOCK_STEP
         int gonum = numto ;
         numto = (gonum >= last_block) ? gonum : last_block;
@@ -227,7 +228,7 @@ void MainLAPIWorker::ProcessBlock() {
         {
 
             if ( docount++ == 50 ) {
-                QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+//                QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
                 docount = 0;
             }
         }

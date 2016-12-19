@@ -13,11 +13,11 @@
 #include "leveldb/slice.h"
 #include <QGlobalStatic>
 #include "dataservice.h"
-#ifdef TIMEAGENTWRITEFILLS
+#if defined(TIMEAGENTWRITEFILLS)
 #include "../../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
 
-#if defined(SQL) || defined(TIMEAGENTWRITEFILLS)
+#if defined(TIMEAGENTWRITEFILLS)
     SqlStuff sql("satoshifantasy","timeagentwrite");
 #endif
 
