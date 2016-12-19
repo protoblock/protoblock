@@ -478,8 +478,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 7828 )
-        num = 7828;
+    if (num > 9700 )
+        num = 9700;
     qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
@@ -600,7 +600,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 7828;
+    height = 9700;
     qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 
