@@ -17,7 +17,7 @@ import Communi 3.0
 
 Material.ApplicationWindow{
 
-    property string version: "2.0.1" //version
+    property string version: "2.0.2" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -58,7 +58,7 @@ Material.ApplicationWindow{
                 enabled: false
                 decimals: 0
                 stepSize: 1.0
-                maximumValue: 8000
+                maximumValue: 50000
                 minimumValue:  MiddleMan.blocknum
                 value: MiddleMan.height
                 onValueChanged: {

@@ -217,11 +217,13 @@ public slots:
         emit LiveGui(gs);
         if ( heslive ) {
             initBothLive();
-            if ( !m_mynames.empty())
-                 emit MyNames(m_mynames);
-            for( auto &v : holdfresh)
-                 emit NameBal(v);
-            holdfresh.clear();
+            if ( !holdfresh.empty() ) {
+                if ( !m_mynames.empty())
+                     emit MyNames(m_mynames);
+                for( auto &v : holdfresh)
+                     emit NameBal(v);
+                holdfresh.clear();
+            }
 
             if ( gotAllSnaps )
                 emit GotMarketSnaps();
@@ -284,11 +286,14 @@ public slots:
             if ( gotAllSnaps )
                 emit GotMarketSnaps();
         }
-        if ( !m_mynames.empty())
-             emit MyNames(m_mynames);
-        for( auto &v : holdfresh)
-             emit NameBal(v);
-        holdfresh.clear();
+
+        if ( !holdfresh.empty() ) {
+            if ( !m_mynames.empty())
+                 emit MyNames(m_mynames);
+            for( auto &v : holdfresh)
+                 emit NameBal(v);
+            holdfresh.clear();
+        }
         heslive = true;
     }
 

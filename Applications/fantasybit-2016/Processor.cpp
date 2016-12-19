@@ -287,8 +287,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     break;
                 }
 
-                if ( rd.game_result().gameid() == "201601111")
-                    qDebug() << " 201601111";
+//                if ( rd.game_result().gameid() == "201601111")
+//                    qDebug() << " 201601111";
                 /*
                 if ( !sanity(rd.fpp()) ) {
                     qCritical() << " invalid result skipping" << rd.DebugString();
@@ -310,7 +310,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 #else
                 nopnl = true;
 #endif
-                qDebug() << allprojs.DebugString().data();
+//                qDebug() << allprojs.DebugString().data();
 
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
                 unordered_map<string,BookPos *> posmap;
@@ -498,7 +498,11 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
             case Data_Type_MESSAGE: {
                 auto msg = d.GetExtension(MessageData::message_data);
                 if ( msg.has_msg() ) {
-                    qWarning() << "Control messgae" << msg.DebugString();
+                    onControlMessage(QString::fromStdString(msg.msg()));
+
+                    qWarning() << "Control messgae" << msg.DebugString().data();
+                }
+                /*
 #ifdef Q_OS_MAC
                     if ( msg.msg().find("win64") != string::npos )
 #endif
@@ -527,6 +531,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         onControlMessage(QString::fromStdString(msg.msg()));
 
                 }
+                */
                 break;
             }
             default:

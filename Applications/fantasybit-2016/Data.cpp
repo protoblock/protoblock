@@ -598,7 +598,7 @@ void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus 
     string key = "gamestatus:" + gameid;
     if (!statusstore->Put(write_sync, key, use.SerializeAsString()).ok())
         qWarning() << "!ok" << "cant update status";
-    qDebug() << key << QString::fromStdString(use.DebugString());
+    qDebug() << key << use.DebugString().data();
 }
 
 void NFLStateData::OnWeekOver(int in) {
