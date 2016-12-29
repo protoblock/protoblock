@@ -25,7 +25,7 @@
 #include "pbutils.h"
 #include "ldbwriter.h"
 
-#if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT || defined SQL
+#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQL)
 //#include "playerloader.h"
 #include "../../../fantasybit-2015/tradingfootball/playerloader.h"
 
