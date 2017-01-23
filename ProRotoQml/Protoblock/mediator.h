@@ -819,8 +819,6 @@ public slots:
 
     void OnFinishedResults() {
         if ( amLive ) {
-            updateLiveLeaders(false);
-
             vector<pair<std::string,WeeklyScheduleModelItem *>> todo;
             for ( const auto item : *m_pWeeklyScheduleModel) {
                 std::string id = item->get_gameid().toStdString();
@@ -833,7 +831,7 @@ public slots:
 
             for ( auto ip : todo ) {
                 mPlayerProjModel.ongameStatusChange(ip.first,GameStatus_Status_CLOSED);
-                m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(ip.second,GameStatus_Status_CLOSED));
+                m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(ip.second,GameStatus_Status_CLOSED,this));
                 m_pWeeklyScheduleModel->remove(ip.second);
             }
 
@@ -843,6 +841,8 @@ public slots:
 
                 m_pProjectionsViewFilterProxyModel->invalidate();
             }
+
+//            updateLiveLeaders(false);
         }
     }
     void OnMarketTicker(fantasybit::MarketTicker,int32_t);

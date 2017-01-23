@@ -196,7 +196,7 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     if ( fnp != nullptr) {
         fnp->addBalance(amount);
 
-        OnFantasyNameBalance(fn);
+//        OnFantasyNameBalance(fn);
 //        if ( amlive )
 //            emit AnyFantasyNameBalance(fn);
     }
@@ -224,7 +224,7 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     //if ( name == "Windo")
     //    qDebug() << "abcdefg" << fn.DebugString();
     qDebug() << "adding pnl" << pnl << " :: " << name.data ()<< fn.public_key().data ()<< fn.stake() << fn.bits();
-    OnFantasyNamePnl(fn);
+//    OnFantasyNamePnl(fn);
 }
 
 void FantasyNameData::AddProjection(const string &name, const string &player,

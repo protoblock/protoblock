@@ -44,6 +44,7 @@ void Node::init() {
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
+        pb::remove_all(GET_ROOT_DIR() + "trade/");
         QFile file( (GET_ROOT_DIR() + "firsttrade").data () );
         file.open(QIODevice::WriteOnly);
     }
@@ -477,8 +478,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 7828 )
-        num = 7828;
+    if (num > 9987 )
+        num = 9987;
     qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
@@ -599,7 +600,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 7828;
+    height = 9987;
     qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 

@@ -42,7 +42,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pLeaderBoardSortModel->setDynamicSortFilter(true);
 
     //schedule models
-    m_pWeeklyScheduleModel = new WeeklyScheduleModel;
+    m_pWeeklyScheduleModel = new WeeklyScheduleModel(this);
     m_pWeekClosedScheduleModel = new WeeklyScheduleModel;
 
     myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
@@ -92,10 +92,13 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultSelectedModel->setSortRole("award");
     m_pResultSelectedModel->setDynamicSortFilter(true);
 
-    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
-                      "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
-                      " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
+//    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
+//                      "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
+//                      " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
 
+
+    setcontrolMessage("<html><style type=\"text/css\"></style>Fantasy Ticker Feed now live on Twitter " \
+                      "<a href=\"https://twitter.com/prototicker\">@prototicker</a></html>");
 
     connect(&mPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
             this, &Mediator::MyPosPriceChange);
@@ -245,14 +248,33 @@ void Mediator::updateWeek() {
 
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
+            std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>>> sorted;
             fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theWeek);
             for ( auto &gi : weekly.games()) {
                 auto status = mGateway->dataService->GetGameStatus(gi.id());
-                if ( status.status() == GameStatus_Status_CLOSED )
-                    m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
-                else
-                    m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
+                std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>> &vec =
+                        sorted[gi.time()];
+                vec.emplace_back(std::make_pair(gi,status.status()));
             }
+
+            for ( auto tvec : sorted ) {
+                qDebug() << " tvec sorted " << tvec.first;
+                for ( auto p : tvec.second ) {
+                    qDebug() << " p tvec " << p.second << p.first.DebugString().data();
+                    if ( p.second == GameStatus_Status_CLOSED )
+                        m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
+                    else
+                        m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
+                }
+            }
+            qDebug() << " done sorted ";
+
+
+//            if ( status.status() == GameStatus_Status_CLOSED )
+//                m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
+//            else
+//                m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
+
 
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
@@ -331,14 +353,14 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 
     int i = 0;
     double totpnl = 0.0;
-    qDebug() << ++i << " here ";
+//    qDebug() << ++i << " here ";
     for ( auto tit : mTradingPositionsModel ) {
-        qDebug() << i << "loop here ";
+//        qDebug() << i << "loop here ";
 
         auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
         int netqty = tit->get_netqty();
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
         double avg = 0;
         double pnl = 0;
@@ -372,10 +394,10 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
             else
                 pnl = 100.0 * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
-            qDebug() << ++i << " here ";
+//            qDebug() << ++i << " here ";
 
         }
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
 
         //mTradingPositionsModel.UpdatePnl(tit,it->get_bid(),it->get_ask());
@@ -385,11 +407,11 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         it->setmypnl(pnl);
         tit->setopenpnl(pnl);
         totpnl += pnl;
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
     }
     mTradingPositionsModel.settotalopenpnl(totpnl);
-    qDebug() << ++i << " here ";
+//    qDebug() << ++i << " here ";
 
 }
 

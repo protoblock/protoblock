@@ -99,8 +99,17 @@ public:
 
         setweek(week);
 
-        for ( auto &gi : weekly.games())
-           append(new WeeklyScheduleModelItem(gi,this));
+        std::map<int,std::vector<fantasybit::GameInfo>> sorted;
+        for ( auto &gi : weekly.games()) {
+            auto &vec = sorted[gi.time()];
+            vec.push_back(gi);
+        }
+
+        for ( auto tvec : sorted ) {
+            for ( auto p : tvec.second ) {
+                append(new WeeklyScheduleModelItem(p,this));
+            }
+        }
     }
 
     bool UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs, bool reverse = false) {
