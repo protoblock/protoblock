@@ -82,6 +82,11 @@ int main(int argc, char *argv[])
 
     Core::instance()->bootstrap();
 
+
+    AllStatsLoader2014 asl;
+    auto res = asl.loadAllDataWeek1to16for2014();
+    return 0;
+
     //MainLAPIWorker *mw = ;
     //mw->dataService = DataService::instance();
     pb::FullGateway *fg = new pb::FullGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
