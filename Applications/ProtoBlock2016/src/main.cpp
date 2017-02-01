@@ -20,7 +20,7 @@
 #ifdef DATAAGENTWRITENAMES
 #include "../../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
-
+#include "DataPersist.h"
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
@@ -83,9 +83,27 @@ int main(int argc, char *argv[])
     Core::instance()->bootstrap();
 
 
+    /*
     AllStatsLoader2014 asl;
-    auto res = asl.loadAllDataWeek1to16for2014();
+    std::vector<Transaction> txs = asl.loadAllDataWeek1to16for2014();
+    {
+        Writer<void> writetx("D:\\data\\Transition2014.out",ios::app);
+        if ( !writetx.good() )
+            qDebug() << " bad Writer";
+        else for ( auto &tx : txs)
+            writetx(tx);
+    }
+
+    {
+    Reader<Transaction> readertx("D:\\data\\Transition2014.out");
+    Transaction tx;
+    while ( readertx.ReadNext(tx) ) {
+        qDebug() << tx.DebugString().data();
+    }
+    }
     return 0;
+
+    */
 
     //MainLAPIWorker *mw = ;
     //mw->dataService = DataService::instance();
@@ -93,6 +111,8 @@ int main(int argc, char *argv[])
                                      DataService::instance());
 
     pb::Mediator::instance()->setContext(fg);
+
+
 
     engine.rootContext()->setContextProperty("MiddleMan", pb::Mediator::instance());
     pb::ImportLoader il;
@@ -106,5 +126,8 @@ int main(int argc, char *argv[])
 
     engine.dumpObjectInfo();
     engine.load(QUrl(QStringLiteral("qrc:/MaterialMain.qml")));
+
+
+
     return app.exec();
 }

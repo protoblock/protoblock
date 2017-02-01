@@ -192,6 +192,22 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
         return false;
     }
 
+#ifdef JAYHACK
+    if ( sblock.signedhead().head().num() == 1 ) {
+        processTxfrom(sblock,1,true);
+        for ( int i = 1; i < sblock.signed_transactions_size(); i++) {
+            if ( sblock.signed_transactions(i).trans().type() != TransType::DATA)
+                continue;
+
+            auto dt = sblock.signed_transactions(i).trans().GetExtension(DataTransition::data_trans);
+            if (dt.data_size() > 0)
+                process(dt.data(), "FantasyAgent", dt.type());
+
+            process(dt);
+        }
+    }
+#endif
+
     auto st = sblock.signed_transactions(0);
     if (st.trans().type() != TransType::DATA)  {
         qCritical() << "expect first Transaction for Data block to be Data";
@@ -762,7 +778,7 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
     return true;
 }
 
-void BlockProcessor::processTxfrom(const Block &b,int start) {
+void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
     //first do name transactions
     for (int i = start; i < b.signed_transactions_size(); i++) {
@@ -793,6 +809,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
         qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
 
     }
+
+    if ( nameonly ) return;
 
    // for (const SignedTransaction &st : b.signed_transactions()) //
     for ( int i = start; i < b.signed_transactions_size(); i++)

@@ -229,6 +229,8 @@ Block Commissioner::makeGenesisBlock() {
     st.set_fantasy_name("FantasyAgent");
 
 
+
+
     Transaction gt{};
     QString genesisDataFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisTranactionLocation).toString();
     Reader<Transaction> treader{genesisDataFile.toStdString()};
@@ -282,6 +284,18 @@ Block Commissioner::makeGenesisBlock() {
     b.mutable_signedhead()->CopyFrom(sbh);
     b.add_signed_transactions()->CopyFrom(sst);
     b.add_signed_transactions()->CopyFrom(st);
+
+#ifdef JAYHACK
+    Reader<Transaction> readertx("D:\\data\\Transition2014.out");
+    Transaction tx;
+    while ( readertx.ReadNext(tx) ) {
+        qDebug() << tx.DebugString().data();
+        SignedTransaction st;
+        st.mutable_trans()->CopyFrom(tx);
+        b.add_signed_transactions()->CopyFrom(st);
+    }
+#endif
+
    // b.add_signed_transactions()->CopyFrom(dasn);
 
    // Writer<Block> writer{ GET_ROOT_DIR() + "FantasyBit-Genesis-1-block.data", ios::app };
