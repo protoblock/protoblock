@@ -753,7 +753,7 @@ std::unordered_map<std::string,PlayerDetail>
         NFLStateData::GetTeamRoster(const std::string &teamid) {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
-    qDebug() << "get team roster" << teamid;
+    qDebug() << "get team roster" << teamid.data();
     std::unordered_map<std::string,PlayerDetail> vpb{};
 
 //    auto it = MyTeamRoster.find(teamid);
