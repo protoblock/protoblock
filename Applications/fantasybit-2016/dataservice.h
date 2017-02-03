@@ -20,9 +20,9 @@ public:
     ~DataService(){}
     std::vector<fantasybit::GameRoster> GetCurrentWeekGameRosters();
 
-    std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int week);
+    std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int season,int week);
 
-    fantasybit::WeeklySchedule GetWeeklySchedule(int week);
+    fantasybit::WeeklySchedule GetWeeklySchedule(int season,int week);
 
     fantasybit::PlayerBase GetPlayerBase(std::string playerId);
 

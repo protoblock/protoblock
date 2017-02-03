@@ -337,8 +337,9 @@ void NFLStateData::init() {
         Writer<GameData> writer2{ GET_ROOT_DIR() + "bootstrap/GameData.txt" };
         Writer<GameResult> writer3{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
 #endif
+        auto gs = GetGlobalState();
         for (int i=1; i<=17;i++) {
-            string key = "scheduleweek:" + to_string(i);
+            string key = to_string(gs.season()) + "scheduleweek:" + to_string(i);
             string temp;
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
                 qWarning() << "cant find schedule " << key.c_str();
@@ -463,8 +464,8 @@ void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase 
     MyTeamRoster.erase(mps.teamid());
 }
 
-void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
-    string key = "scheduleweek:" + to_string(week);
+void NFLStateData::AddNewWeeklySchedule(int season,int week, const WeeklySchedule &ws) {
+    string key = to_string(season) + "scheduleweek:" + to_string(week);
     if ( !staticstore->Put(write_sync, key, ws.SerializeAsString()).ok()) {
         qWarning() << " error writing schecule";
         return;
@@ -604,15 +605,15 @@ void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus 
 void NFLStateData::OnWeekOver(int in) {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
-    auto ws = GetWeeklySchedule(in);
+    auto ws = GetWeeklySchedule(theSeason(),in);
     for (auto game : ws.games() ) {
         GameResult gs{};
         if ( !GetGameResult(game.id(),gs) ) {
-            qWarning() << " no result " << game.id();
+            qWarning() << " no result " << game.id().data();
             continue;
         }
         else
-            qDebug() << "week over" << in << " commit result " << game.id();
+            qDebug() << "week over" << in << " commit result " << game.id().data();
 
         auto tr = GetTeamRoster(game.home());
         for ( auto pr : gs.home_result() ) {
@@ -652,9 +653,12 @@ void NFLStateData::OnWeekStart(int in) {
     //week = in;
 }
 
-WeeklySchedule NFLStateData::GetWeeklySchedule(int week) {
+WeeklySchedule NFLStateData::GetWeeklySchedule(int season,int week) {
 
-    auto ws = getWeeklyStaticSchedule(week);
+    auto ws = getWeeklyStaticSchedule(season,week);
+    if ( season != theSeason() )
+        return ws;
+
     auto sz = ws.games().size();
     for ( int i = 0; i<sz; i++) {
         GameInfo *g = ws.mutable_games(i);
@@ -669,10 +673,10 @@ WeeklySchedule NFLStateData::GetWeeklySchedule(int week) {
     return ws;
 }
 
-WeeklySchedule NFLStateData::getWeeklyStaticSchedule(int week) {
+WeeklySchedule NFLStateData::getWeeklyStaticSchedule(int season,int week) {
     WeeklySchedule ws{};
     string temp;
-    string key = "scheduleweek:" + to_string(week);
+    string key = to_string(season) + "scheduleweek:" + to_string(week);
     if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
         qWarning() << "cant find schedule " << key.c_str();
         return ws;
@@ -709,7 +713,7 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
 
     qDebug() << week();
 
-    WeeklySchedule ws = getWeeklyStaticSchedule(week());
+    WeeklySchedule ws = getWeeklyStaticSchedule(theSeason(),week());
 
     for (const auto g : ws.games()) {
         GameRoster gr{};
@@ -733,13 +737,13 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
     return retgr;
 }
 
-std::vector<fantasybit::GameResult> NFLStateData::GetPrevWeekGameResults(int week) {
+std::vector<fantasybit::GameResult> NFLStateData::GetPrevWeekGameResults(int season,int week) {
     std::vector<fantasybit::GameResult> ret{};
     auto s = GetGlobalState();
-    if  (s.week() < week && s.week() != 0)
+    if  (s.season() == season && s.week() < week && s.week() != 0)
         return ret;
 
-    auto ws = GetWeeklySchedule(week);
+    auto ws = GetWeeklySchedule(season,week);
     for (const auto g : ws.games()) {
         GameResult gr{};
         if (GetGameResult(g.id(),gr) )
@@ -797,9 +801,15 @@ int NFLStateData::week() {
     return gs.week();
 }
 
+int NFLStateData::theSeason() {
+    auto gs = GetGlobalState();
+    return gs.season();
+}
+
+
 void NFLStateData:: OnGlobalState(fantasybit::GlobalState &gs) {
     statusstore->Put(write_sync, "globalstate", gs.SerializeAsString());
-    qDebug() << gs.DebugString();
+    qDebug() << "OnGlobalState" << gs.DebugString().data();
     if ( amlive )
         emit GlobalStateChange(gs);
 }

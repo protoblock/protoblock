@@ -68,7 +68,7 @@ public:
     //bool sanity(const FantasyPlayerPoints &fpp);
 	void process(decltype(DataTransition::default_instance().data()) in, 
                 const std::string &blocksigner,
-                 const TrType);
+                 const TrType, int season);
     void process(const DataTransition &indt);
     bool isValidTx(const SignedTransaction &st);
     void processTxfrom(const Block &b,int start = 0,bool nameonly = false);

@@ -201,10 +201,12 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
 
             auto dt = sblock.signed_transactions(i).trans().GetExtension(DataTransition::data_trans);
             if (dt.data_size() > 0)
-                process(dt.data(), "FantasyAgent", dt.type());
+                process(dt.data(), "FantasyAgent", dt.type(),dt.season());
 
             process(dt);
         }
+
+//        return true;
     }
 #endif
 
@@ -216,11 +218,13 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
 
     auto dt = st.trans().GetExtension(DataTransition::data_trans);
     if (dt.data_size() > 0)
-        process(dt.data(), st.fantasy_name(), dt.type());
+        process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
 
     if (sblock.signed_transactions_size() > 1)
         processTxfrom(sblock, 1);
 
+    qDebug() << "processing ccccc" << dt.type() << dt.season() << dt.week();
+    qDebug() << dt.DebugString().data();
     process(dt);
 
     return true;
@@ -250,7 +254,7 @@ bool BlockProcessor::sanity(const FantasyPlayerPoints &fpp) {
 }
 */
 void BlockProcessor::process(decltype(DataTransition::default_instance().data()) in,
-            const std::string &blocksigner,TrType transtype )  {
+            const std::string &blocksigner,TrType transtype, int season )  {
 
     //outDelta.mutable_datas()->CopyFrom(in);
 
@@ -504,7 +508,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
             case Data_Type_SCHEDULE: {
                 auto sd = d.GetExtension(ScheduleData::schedule_data);
                 if ( sd.has_week() && sd.has_weekly() )
-                    mData.AddNewWeeklySchedule(sd.week(),sd.weekly());
+                    mData.AddNewWeeklySchedule(season,sd.week(),sd.weekly());
                 else {
                     qCritical() << "no data" + QTD(sd.DebugString());
                 }
@@ -625,6 +629,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
         break;
     case TrType::SEASONEND:
+        break;
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
 
@@ -701,11 +706,15 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
 #endif
 
-
+#ifdef JAYHACK
+//        if (indt.week() == 16)
+//            break;
+#endif
         OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
         if (indt.week() == 16) {
+            OnSeasonEnd(indt.season());
             newweek = 0;
             qInfo() <<  "season " << indt.season() << " Over ";
             mGlobalState.set_state(GlobalState_State_OFFSEASON);
@@ -952,7 +961,7 @@ void BlockProcessor::OnSeasonStart(int season) {
 
 void BlockProcessor::OnSeasonEnd(int season) {
 //    mNameData.OnSeasonEnd(season);
-//    mData.OnSeasonEnd(season);
+    mData.OnSeasonEnd(season);
 //    mExchangeData.OnSeasonStart(season);
 //    emit WeekStart(week);
 }
@@ -1083,12 +1092,12 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
 
     ret = Commissioner::getName(st.fantasy_name());
     if ( !ret )
-        qCritical() << " cant find FantasyName" << st.fantasy_name();
+        qCritical() << " cant find FantasyName" << st.fantasy_name().data();
     else {
         pb::signature sig = Commissioner::str2sig(st.sig());
         if ( !Commissioner::verify(sig,digest,ret->pubkey()) ) {
             ret.reset();
-            qCritical() << "verify error" << st.fantasy_name() << "getFNverifySt";
+            qCritical() << "verify error" << st.fantasy_name().data() << "getFNverifySt";
         }
     }
     return ret;
@@ -1099,8 +1108,7 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 
     if ( !Commissioner::isAliasAvailable(nt.fantasy_name()) )
     {
-        qCritical() << std::string("Processor::process failure: FantasyName(").
-                        append(nt.fantasy_name() + ")  hash already used ");
+        qCritical() << "Processor::process failure: FantasyName(" << nt.fantasy_name().data() << ")  hash already used ";
         return false;
     }
 
@@ -1108,9 +1116,9 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
     auto pk = Commissioner::str2pk(nt.public_key());
     auto name = Commissioner::getName(pk);
     if ( name != nullptr ) {
-        qCritical() << std::string("verfiy_name failure: FantasyName(").
-                        append(nt.fantasy_name() + ")  pubkey already n use") +
-                         name->ToString();
+        qCritical() << "verfiy_name failure: FantasyName(" <<
+                        nt.fantasy_name().data() << ")  pubkey already n use" <<
+                         name->ToString().data();
                         //.append(st.DebugString());
 
         return false;
@@ -1144,8 +1152,8 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 			if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
 #endif
             {
-                qCritical() << std::string("Processor::process name proof oracle failed")
-                                 .append(st.DebugString());
+                qCritical() << "Processor::process name proof oracle failed";
+                qDebug() << st.DebugString().data();
 
                 return false;
             }
