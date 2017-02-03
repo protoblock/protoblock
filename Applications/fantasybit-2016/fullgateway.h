@@ -88,6 +88,9 @@ public:
         connect( mlapi, &MainLAPIWorker::NewWeek,
                 this,   &FullGateway::NewWeek);
 
+        connect( mlapi, &MainLAPIWorker::NewSeason,
+                Mediator::instance(),   &Mediator::NewSeason);
+
         connect( mlapi, &MainLAPIWorker::GameStart,
                 this,   &FullGateway::GameStart);
 

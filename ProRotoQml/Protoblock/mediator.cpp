@@ -449,6 +449,9 @@ void Mediator::NewWeek(int week) {
     }
 }
 
+void Mediator::NewSeason(int season) {
+    settheSeason(season);
+}
 void Mediator::GameStart(string gameid) {
     m_pWeeklyScheduleModel->UpdateStatus(gameid,GameStatus_Status_INGAME);
 

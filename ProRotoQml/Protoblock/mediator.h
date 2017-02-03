@@ -829,6 +829,7 @@ public slots:
     void GlobalStateChange(fantasybit::GlobalState);
     void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
+    void NewSeason(int);
     void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);

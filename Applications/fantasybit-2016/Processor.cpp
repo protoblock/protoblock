@@ -93,6 +93,7 @@ int32_t BlockProcessor::init() {
     mExchangeData.init();
 #endif
 
+    OnSeasonStart(mData.GetGlobalState().season());
 
     qInfo() <<  "YES mRecorder is valid";
 
@@ -721,6 +722,8 @@ void BlockProcessor::process(const DataTransition &indt) {
             mGlobalState.set_season(mGlobalState.season() + 1);
             mGlobalState.set_week(0);
             mData.OnGlobalState(mGlobalState);
+            OnSeasonStart(mGlobalState.season());
+            OnWeekStart(0);
         }
         else {
             mGlobalState.set_week(newweek);
@@ -956,7 +959,7 @@ void BlockProcessor::OnSeasonStart(int season) {
     mNameData.OnSeasonStart(season);
     mData.OnSeasonStart(season);
 //    mExchangeData.OnSeasonStart(season);
-//    emit WeekStart(week);
+    emit SeasonStart(season);
 }
 
 void BlockProcessor::OnSeasonEnd(int season) {

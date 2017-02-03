@@ -57,6 +57,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
     //data to data signals
     QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
+    QObject::connect(&processor,SIGNAL(SeasonStart(int)),this,SIGNAL(NewSeason(int)));
+
 
     //QObject::connect(&data,SIGNAL(NewGameResult(string)),this,SIGNAL(GameOver(string)));
 

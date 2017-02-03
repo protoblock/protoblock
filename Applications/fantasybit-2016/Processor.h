@@ -49,6 +49,7 @@ public slots:
     }
 
 signals:
+    void SeasonStart(int);
     void WeekStart(int);
     void WeekOver(int);
     void InvalidState(int);   

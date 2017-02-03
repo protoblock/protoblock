@@ -43,7 +43,7 @@ Material.ApplicationWindow{
 //                anchors.left: parent.left
                 text: " Block Number: " + MiddleMan.blocknum
                       + " - " + MiddleMan.liveSync
-                      + " - 2016 Week " + MiddleMan.theWeek
+                      + " - " + MiddleMan.theSeason + " Week " + MiddleMan.theWeek
                 font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
 
             }
