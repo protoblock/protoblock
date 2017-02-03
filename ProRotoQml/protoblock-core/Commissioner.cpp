@@ -236,7 +236,7 @@ Block Commissioner::makeGenesisBlock() {
     Reader<Transaction> treader{genesisDataFile.toStdString()};
     treader.ReadNext(gt);
 
-    qDebug() << " good " << treader.good() << genesisDataFile << gt.DebugString().data();
+//    qDebug() << " good " << treader.good() << genesisDataFile << gt.DebugString().data();
 
 
     //qDebug() << sn.sig() << sn.id();
