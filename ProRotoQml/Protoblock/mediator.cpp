@@ -248,6 +248,9 @@ void Mediator::LiveGui(GlobalState gs) {
 
         updateWeek();
 //        tradeTesting.start(5000);
+
+        setcontrolMessage("<html><style type=\"text/css\"></style>Follow us on Twitter. " \
+                          "<a href=\"https://twitter.com/protoblock\">@protoblock</a></html>");
     }
 
 //    FantasyNameBal fnb;
@@ -446,6 +449,10 @@ void Mediator::NewWeek(int week) {
     settheWeek(week);
     if ( amLive ) {
         updateLiveLeaders();
+    }
+    else if ( m_theSeason > 2014 ) {
+        m_pWeeklyScheduleModel->clear();
+        updateWeek();
     }
 }
 

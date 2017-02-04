@@ -52,6 +52,7 @@ Material.ApplicationWindow{
                 text: MiddleMan.controlMessage
                 font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
                 onLinkActivated: Qt.openUrlExternally(link)
+                enabled: MiddleMan.liveSync === "Live"
             }
 
             SpinBox {

@@ -27,9 +27,22 @@
     }
 
     void NodeWorker::init(){
-        syncing = true;
+
         qDebug("NodeWorker Thread started");
 
+
+#ifdef XXXJAYHACK
+        int32_t last = node.getLastLocalBlockNum();
+        emit InSync(last);
+        return;
+        bool ret = node.Sync();
+        last = node.getLastLocalBlockNum();
+
+        if ( last > hi ) hi = last;
+
+        if ( !ret ) {
+#else
+        syncing = true;
         bool ret = node.Sync();
         int32_t last = node.getLastLocalBlockNum();
 
@@ -38,6 +51,7 @@
         if ( ret )
             emit InSync(last);
         else {
+#endif
             auto gnum = node.getLastGlobalBlockNum();
 
             if ( last > *gnum  && last > 1 && *gnum > 1) {
