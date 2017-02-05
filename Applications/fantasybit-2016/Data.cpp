@@ -342,7 +342,8 @@ void NFLStateData::init() {
             string key = to_string(gs.season()) + "scheduleweek:" + to_string(i);
             string temp;
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                qWarning() << "cant find schedule " << key.c_str();
+                qWarning() << "NFLStateData::init cant find schedule " << key.data();
+                qDebug() << gs.DebugString().data();
                 break;
             }
             WeeklySchedule ws;
@@ -470,7 +471,10 @@ void NFLStateData::AddNewWeeklySchedule(int season,int week, const WeeklySchedul
         qWarning() << " error writing schecule";
         return;
     }
-    qDebug() << QString::fromStdString(ws.DebugString());
+    else {
+        qDebug() << "AddNewWeeklySchedule! cant find " << key.data();
+    }
+    qDebug() << ws.DebugString().data();
     GameStatus gs{};
     gs.set_status(GameStatus::SCHEDULED);
 
@@ -678,7 +682,7 @@ WeeklySchedule NFLStateData::getWeeklyStaticSchedule(int season,int week) {
     string temp;
     string key = to_string(season) + "scheduleweek:" + to_string(week);
     if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-        qWarning() << "cant find schedule " << key.c_str();
+        qWarning() << "getWeeklyStaticSchedule cant find schedule " << key.data();
         return ws;
     }
     ws.ParseFromString(temp);
@@ -789,8 +793,8 @@ GlobalState NFLStateData::GetGlobalState() {
         gs.ParseFromString(temp);
     }
     else {
-        return Commissioner::InitialGlobalState();
         qWarning() << "No GlobalState";
+        return Commissioner::InitialGlobalState();
     }
 
     return gs;

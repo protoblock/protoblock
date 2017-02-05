@@ -134,6 +134,9 @@ void MainLAPIWorker::startPoint(){
     auto h = myNodeWorker->preinit();
     emit Height(h);
     node.thread()->start();
+
+
+
 #endif
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
@@ -179,8 +182,8 @@ void MainLAPIWorker::OnInSync(int32_t num) {
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         myamlive = (!amlive && num == last_block);
+        qDebug() << "myamlive" << myamlive << last_block;
     }
-    qDebug() << "myamlive" << myamlive;
 
     if ( myamlive )
         GoLive();
@@ -199,7 +202,7 @@ bool MainLAPIWorker::doProcessBlock() {
     }
     auto b = fantasybit::Node::getLocalBlock(next);
     if (!b) {
-        qWarning() << " !b";
+        qWarning() << " !b" << next;
         return false;
     }
     if ( !Process(*b) ) {

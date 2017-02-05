@@ -857,7 +857,7 @@ public slots:
     }
 
     void BlockNum(int n) {
-        qDebug() << " BlockNum " << n;
+        //qDebug() << " BlockNum " << n;
         setblocknum(n);
     }
 

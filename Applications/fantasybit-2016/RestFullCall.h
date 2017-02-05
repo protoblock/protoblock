@@ -492,7 +492,7 @@ public:
         std::vector<std::string> ret{};
         for ( int i = blockNum; i <= blockEnd; i++) {
 #ifdef TRACE
-            qDebug() << "getBlk get blk: " << i;
+//            qDebug() << "getBlk get blk: " << i;
 #endif
             //hard coded url
             //TODO move to settings

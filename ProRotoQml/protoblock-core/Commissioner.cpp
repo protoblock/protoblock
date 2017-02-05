@@ -289,7 +289,7 @@ Block Commissioner::makeGenesisBlock() {
     Reader<Transaction> readertx("D:\\data\\Transition2014.out");
     Transaction tx;
     while ( readertx.ReadNext(tx) ) {
-        qDebug() << tx.DebugString().data();
+//        qDebug() << tx.DebugString().data();
         SignedTransaction st;
         st.mutable_trans()->CopyFrom(tx);
         b.add_signed_transactions()->CopyFrom(st);

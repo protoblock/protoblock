@@ -320,6 +320,9 @@ void Mediator::updateWeek() {
             m_pProjectionsViewFilterProxyModel->invalidate();
         }
         else {
+            m_pWeeklyScheduleModel->clear();
+            mPlayerQuoteSliceModel.clear();
+            mPlayerProjModel.clear();
             set_thisWeekPrev(false);
         }
         updateLiveLeaders();
@@ -440,6 +443,12 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 }
 
 void Mediator::NewWeek(int week) {
+
+    if ( m_theSeason == 2014 ) {
+        if ( mGateway->dataService->GetGlobalState().season() > 2014 )
+            settheSeason(mGateway->dataService->GetGlobalState().season());
+    }
+
     set_busySend(false);
 //    set_thisWeekPrev = false;
 

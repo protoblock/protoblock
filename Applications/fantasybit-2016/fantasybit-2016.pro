@@ -16,7 +16,7 @@ TEMPLATE = lib
 
 
 
-DEFINES += TRACE
+#DEFINES += TRACE
 
 
 win32 {

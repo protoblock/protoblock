@@ -238,9 +238,9 @@ public:
 
     static GlobalState InitialGlobalState () {
         GlobalState gs{};
-        gs.set_season(2015);
-        gs.set_state(GlobalState::INSEASON);
-        gs.set_week(1);
+        gs.set_season(2014);
+        gs.set_state(GlobalState::OFFSEASON);
+        gs.set_week(0);
 
         return gs;
     }
@@ -313,6 +313,8 @@ public:
 
 
     static bool verify(const pb::signature &sig, const pb::sha256 &digest, pb::public_key_data& pk) {
+//          return true;
+//          auto holdp = ;
           return pb::public_key(pk).verify(digest, sig);// pb::public_key(sig, digest) == pub;
     }
 
@@ -326,7 +328,7 @@ public:
         std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
         auto iter = Hash2Pk.find(FantasyName::name_hash(fn));
         if (iter == Hash2Pk.end()) {
-            qCritical() << "cant find fantasyname: " << fn;
+            qCritical() << "cant find fantasyname: " << fn.data();
             return false;
         }
         else {

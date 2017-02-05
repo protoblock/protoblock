@@ -235,7 +235,7 @@ public:
             string key = to_string(theSeason()) + "scheduleweek:" + to_string(i);
 
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                qWarning() << "cant find schedule " << key.c_str();
+                qWarning() << "BootStrapSchedule cant find schedule " << key.data();
                 break;
             }
 
@@ -271,7 +271,7 @@ public:
             string key = to_string(theSeason()) + "scheduleweek:" + to_string(i);
 
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                qWarning() << "cant find schedule " << key.c_str();
+                qWarning() << "BootStrapResult cant find schedule " << key.data();
                 break;
             }
 
