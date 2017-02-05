@@ -77,7 +77,7 @@ namespace pb {
         public_key(const secp256k1_pubkey &in ) : key(in) {
         }
 
-        public_key(const public_key_data &in ) {
+        public_key(const public_key_data &in ) : key{} {
 //            qDebug() << "public_key(const public_key_data &in ) before ";
             auto ret = secp256k1_ec_pubkey_parse(pb::CTX,&key,in.key_data,33);
 //            qDebug() << ret << "public_key(const public_key_data &in ) after ";
