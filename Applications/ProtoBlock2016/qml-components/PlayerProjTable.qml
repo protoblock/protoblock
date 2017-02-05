@@ -364,7 +364,7 @@ Item {
 
             SpinBox {
                 id: sb
-                enabled: !model ? false : model.isopen
+                enabled: (!model || MiddleMan.liveSync !== "Live") ? false : model.isopen
 //                anchors.left: lbl.right
                 anchors.right: parent.right
                 anchors.margins: ProtoScreen.guToPx(.125)
@@ -462,7 +462,7 @@ Item {
 
 
                     visible: styleData.column === 0
-                    enabled: styleData.column === 0
+                    enabled: styleData.column === 0 && MiddleMan.liveSync === "Live"
                     action: Material.Action {
 //                        name: "cod"
                         iconName: "awesome/code"
@@ -508,7 +508,7 @@ Item {
                     anchors.right: parent.right
                     height: parent.height
                     visible: styleData.column === pcol
-                    enabled: styleData.column === pcol
+                    enabled: styleData.column === pcol && MiddleMan.liveSync === "Live"
                     text: "Send"
 
                     onClicked : {

@@ -35,7 +35,7 @@ Quick.Window {
     property string msgString
     property bool reloadorderpos: true
 
-    property string version: "1.1.2" //version
+//    property string version: "1.1.2" //version
 
     property string playerInView
 

@@ -11,14 +11,27 @@
 
 #include "../city.hpp"
 #include "base58.h"
+#include "genericsingleton.h"
 
 namespace pb {
     uint8_t from_hex( char c );
 
-     std::string to_hex( const char* d, uint32_t s );
+    std::string to_hex( const char* d, uint32_t s );
+
+    class TheCTX : public GenericSingleton<TheCTX> {
+        friend class GenericSingleton<TheCTX>;
+        TheCTX(){
+            mCTX = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+        }
+
+        secp256k1_context *mCTX;
+    public:
+        secp256k1_context *CTX() {
+            return mCTX;
+        }
+    };
 
     size_t from_hex( const std::string& hex_str, char* out_data, size_t out_data_len );
-    static secp256k1_context *CTX = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
 
     typedef secp256k1_ecdsa_signature signature;
 
@@ -77,16 +90,16 @@ namespace pb {
         public_key(const secp256k1_pubkey &in ) : key(in) {
         }
 
-        public_key(const public_key_data &in ) {
+        public_key(const public_key_data &in ) : key{} {
 //            qDebug() << "public_key(const public_key_data &in ) before ";
-            auto ret = secp256k1_ec_pubkey_parse(pb::CTX,&key,in.key_data,33);
+            auto ret = secp256k1_ec_pubkey_parse(pb::TheCTX::instance()->CTX(),&key,in.key_data,33);
 //            qDebug() << ret << "public_key(const public_key_data &in ) after ";
         }
 
         public_key_data serialize() const {
             pb::public_key_data retpk;
             size_t pubkeyclen = 33;
-            secp256k1_ec_pubkey_serialize(pb::CTX, retpk.key_data, &pubkeyclen, &key, SECP256K1_EC_COMPRESSED);
+            secp256k1_ec_pubkey_serialize(pb::TheCTX::instance()->CTX(), retpk.key_data, &pubkeyclen, &key, SECP256K1_EC_COMPRESSED);
             return retpk;
         }
 
@@ -101,7 +114,7 @@ namespace pb {
         static bool verify(const secp256k1_ecdsa_signature *sig,
                            const unsigned char *msg32,
                            const secp256k1_pubkey *pubkey) {
-            return secp256k1_ecdsa_verify(CTX, sig, msg32, pubkey) == 1;
+            return secp256k1_ecdsa_verify(pb::TheCTX::instance()->CTX(), sig, msg32, pubkey) == 1;
         }
 
 
@@ -123,7 +136,7 @@ namespace pb {
 
         secp256k1_ecdsa_signature sign(const std::string &in) {
             secp256k1_ecdsa_signature sig;
-            if ( 1 != secp256k1_ecdsa_sign(pb::CTX, &sig, (const unsigned char*)in.data(), key_data, NULL, NULL) ) {
+            if ( 1 != secp256k1_ecdsa_sign(pb::TheCTX::instance()->CTX(), &sig, (const unsigned char*)in.data(), key_data, NULL, NULL) ) {
                 qDebug() << " error sig";
             }
             return sig;
@@ -131,7 +144,7 @@ namespace pb {
 
         secp256k1_ecdsa_signature sign(const pb::sha256 &in) {
             secp256k1_ecdsa_signature sig;
-            if ( 1 != secp256k1_ecdsa_sign(pb::CTX, &sig, in.data, key_data, NULL, NULL) ) {
+            if ( 1 != secp256k1_ecdsa_sign(pb::TheCTX::instance()->CTX(), &sig, in.data, key_data, NULL, NULL) ) {
                 qDebug() << " error sig";
             }
             return sig;
@@ -148,7 +161,7 @@ namespace pb {
 
          public_key get_public_key() const {
              secp256k1_pubkey pubkey;
-             int ret = secp256k1_ec_pubkey_create(pb::CTX, &pubkey, key_data);
+             int ret = secp256k1_ec_pubkey_create(pb::TheCTX::instance()->CTX(), &pubkey, key_data);
              return public_key(pubkey);
          }
 
@@ -175,14 +188,14 @@ namespace pb {
 
     inline secp256k1_ecdsa_signature  parse_der(const unsigned char *input, size_t inputlen) {
         secp256k1_ecdsa_signature sig;
-        auto ret = secp256k1_ecdsa_signature_parse_der(CTX,&sig,input,inputlen);
+        auto ret = secp256k1_ecdsa_signature_parse_der(pb::TheCTX::instance()->CTX(),&sig,input,inputlen);
         return sig;
     }
 
     inline secp256k1_ecdsa_signature signature_normalize(const secp256k1_ecdsa_signature &insig) {
         secp256k1_ecdsa_signature sig;
 
-        if ( secp256k1_ecdsa_signature_normalize(CTX, &sig, &insig ) == 1 )
+        if ( secp256k1_ecdsa_signature_normalize(pb::TheCTX::instance()->CTX(), &sig, &insig ) == 1 )
              return sig;
         else
             return insig;

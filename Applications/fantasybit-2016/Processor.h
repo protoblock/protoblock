@@ -49,6 +49,7 @@ public slots:
     }
 
 signals:
+    void SeasonStart(int);
     void WeekStart(int);
     void WeekOver(int);
     void InvalidState(int);   
@@ -68,10 +69,10 @@ public:
     //bool sanity(const FantasyPlayerPoints &fpp);
 	void process(decltype(DataTransition::default_instance().data()) in, 
                 const std::string &blocksigner,
-                 const TrType);
+                 const TrType, int season);
     void process(const DataTransition &indt);
     bool isValidTx(const SignedTransaction &st);
-    void processTxfrom(const Block &b,int start = 0);
+    void processTxfrom(const Block &b,int start = 0,bool nameonly = false);
     static bool verifySignedBlock(const Block &sblock);
     static bool verifySignedTransaction(const SignedTransaction &st);
     static bool verifyBootstrap(LdbWriter &ldb, const Bootstrap &bs);

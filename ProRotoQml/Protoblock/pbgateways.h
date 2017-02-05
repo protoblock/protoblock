@@ -31,9 +31,9 @@ class IDataService {
 public:
     virtual std::vector<fantasybit::GameRoster> GetCurrentWeekGameRosters() = 0;
 
-    virtual std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int week)= 0;
+    virtual std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int season,int week)= 0;
 
-    virtual fantasybit::WeeklySchedule GetWeeklySchedule(int week)= 0;
+    virtual fantasybit::WeeklySchedule GetWeeklySchedule(int season, int week)= 0;
 
     virtual fantasybit::PlayerBase GetPlayerBase(std::string playerId)= 0;
 

@@ -83,6 +83,7 @@ public:
 class WeeklyScheduleModel : public QQmlObjectListModel<WeeklyScheduleModelItem>{
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY(int, week)
+    QML_READONLY_CSTREF_PROPERTY(int, season)
 
 public:
     explicit WeeklyScheduleModel (QObject *          parent      = Q_NULLPTR,
@@ -91,13 +92,14 @@ public:
 
             : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
-    void updateWeeklySchedule(int week, const fantasybit::WeeklySchedule &weekly) {
+    void updateWeeklySchedule(int season,int week, const fantasybit::WeeklySchedule &weekly) {
 
         qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
 
         clear();
 
         setweek(week);
+        setseason(season);
 
         std::map<int,std::vector<fantasybit::GameInfo>> sorted;
         for ( auto &gi : weekly.games()) {

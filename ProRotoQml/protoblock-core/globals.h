@@ -98,5 +98,15 @@ static uint fromISO_toTime_t(const QString &iso) {
     return dt.toTime_t();
 }
 
+static uint toTime_t_old(const QString &iso) {
+    QByteArray zone = "America/New_York";
+    QTimeZone tz(zone);//str.c_str();
+
+    auto dt = QDateTime::fromString(iso,"M/d/yyyy h:mm:ss AP");
+
+    dt.setTimeZone(tz);
+    return dt.toTime_t();
+}
+
 
 #endif

@@ -58,6 +58,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_theNextWeek = 0;
     m_liveSync ="Sync";
     m_seasonString = "";
+    m_theNextSeason = 0;
+    m_thePrevSeason = 0;
+    m_theSeason = 2014;
 
     //player selection
     m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
@@ -206,6 +209,8 @@ void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
 void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {}
 
 void Mediator::GlobalStateChange(GlobalState gs) {
+    qDebug() << "Mediator GlobalStateChange " << gs.DebugString().data();
+
     if ( gs.week() > 0 && gs.week() < 18) {
         if ( amLive && gs.week() > m_theWeek) {
             updateWeek();
@@ -220,16 +225,32 @@ void Mediator::GlobalStateChange(GlobalState gs) {
 
 void Mediator::LiveGui(GlobalState gs) {
 
-    qDebug() << "Mediator received Livegui ";
+    qDebug() << "Mediator received Livegui " << gs.DebugString().data();
     if ( !amLive ) {
         amLive = true;
-        m_season = gs.season();
         settheWeek(gs.week());
-        setthePrevWeek(gs.week());
+        settheSeason(gs.season());
+
         setliveSync("Live");
-        setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
+        if ( gs.state() == GlobalState_State_OFFSEASON ) {
+            setseasonString("Off Season");
+//            setthePrevWeek(16);
+            setthePrevSeason(m_theSeason);
+            setthePrevWeek(gs.week());
+            settheNextSeason(m_theSeason);
+        }
+        else {
+            setseasonString("NFL Season");
+            setthePrevWeek(gs.week());
+            setthePrevSeason(m_theSeason);
+            settheNextSeason(m_theSeason);
+        }
+
         updateWeek();
 //        tradeTesting.start(5000);
+
+        setcontrolMessage("<html><style type=\"text/css\"></style>Follow us on Twitter. " \
+                          "<a href=\"https://twitter.com/protoblock\">@protoblock</a></html>");
     }
 
 //    FantasyNameBal fnb;
@@ -249,7 +270,7 @@ void Mediator::updateWeek() {
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
             std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>>> sorted;
-            fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theWeek);
+            fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theSeason,m_theWeek);
             for ( auto &gi : weekly.games()) {
                 auto status = mGateway->dataService->GetGameStatus(gi.id());
                 std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>> &vec =
@@ -297,6 +318,12 @@ void Mediator::updateWeek() {
                 updateOnChangeFantasyName();
 
             m_pProjectionsViewFilterProxyModel->invalidate();
+        }
+        else {
+            m_pWeeklyScheduleModel->clear();
+            mPlayerQuoteSliceModel.clear();
+            mPlayerProjModel.clear();
+            set_thisWeekPrev(false);
         }
         updateLiveLeaders();
     }
@@ -416,6 +443,12 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 }
 
 void Mediator::NewWeek(int week) {
+
+    if ( m_theSeason == 2014 ) {
+        if ( mGateway->dataService->GetGlobalState().season() > 2014 )
+            settheSeason(mGateway->dataService->GetGlobalState().season());
+    }
+
     set_busySend(false);
 //    set_thisWeekPrev = false;
 
@@ -426,8 +459,15 @@ void Mediator::NewWeek(int week) {
     if ( amLive ) {
         updateLiveLeaders();
     }
+    else if ( m_theSeason > 2014 ) {
+        m_pWeeklyScheduleModel->clear();
+        updateWeek();
+    }
 }
 
+void Mediator::NewSeason(int season) {
+    settheSeason(season);
+}
 void Mediator::GameStart(string gameid) {
     m_pWeeklyScheduleModel->UpdateStatus(gameid,GameStatus_Status_INGAME);
 

@@ -61,18 +61,25 @@ void BlockRecorder::init() {
 
 
 void BlockRecorder::startBlock(int32_t num) {
+#ifdef TRACEDEBUG
+        qDebug() << " startBlock " << num;
+#endif
+
     leveldb::Slice value((char*)&num, sizeof(int32_t));
     blockstatus->Put(write_sync, "processing", value);
     blockstatus->Put(write_sync, "lastblock", value);
-    qInfo() << "starting block: " << num;
+    //qInfo() << "starting block: " << num;
 }
 
 
 int32_t BlockRecorder::endBlock(int32_t num) {
+#ifdef TRACEDEBUG
+        qDebug() << " endBlock " << num;
+#endif
     int32_t none = -1;
     leveldb::Slice value((char*)&none, sizeof(int32_t));
     blockstatus->Put(write_sync, "processing", value);
-    qInfo() << "end block: " << num;
+    //qInfo() << "end block: " << num;
     return num;
 }
 

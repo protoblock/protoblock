@@ -315,21 +315,48 @@ void ExchangeData::closeAll() {
     std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     mPositions.clear();
     mLimitBooks.clear();
-    settlestore.reset();
-    bookdeltastore.reset();
-    posstore.reset();
+//    settlestore.reset();
+//    bookdeltastore.reset();
+//    posstore.reset();
     mContractOHLC.clear();
     mMarketQuote.clear();
     mOpenOrders.clear();
     mNameSeqMap.clear();
     mSeqNameMap.clear();
     ///snapstore.reset();
+    ///
+    ///
+    {
+        auto *it = settlestore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            settlestore->Delete(write_sync,it->key());
+        }
+        delete it;
+    }
+
+    {
+        auto *it = bookdeltastore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            bookdeltastore->Delete(write_sync,it->key());
+        }
+        delete it;
+    }
+
+    {
+        auto *it = posstore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            posstore->Delete(write_sync,it->key());
+        }
+        delete it;
+    }
+
+
 }
 
 void ExchangeData::clearNewWeek() {
     closeAll();
-    removeAll();
-    init();
+//    removeAll();
+//    init();
 }
 
 
@@ -763,9 +790,9 @@ void ExchangeData::GetRemainingSettlePos(std::unordered_map<string,BookPos>  &mb
 #endif
 }
 
-void ExchangeData::OnGameStart(std::string gid,
-              std::vector<std::string> &home,
-              std::vector<std::string> &away
+void ExchangeData::OnGameStart(const std::string &gid,
+              const std::vector<std::string> &home,
+              const std::vector<std::string> &away
               ) {
 
 #ifdef TRACE
@@ -811,7 +838,7 @@ void ExchangeData::OnGameStart(std::string gid,
     if (!settlestore->Put(write_sync, gid, gsp.SerializeAsString()).ok())
         qWarning() << "error writing settlestore" << gid.data();
     else
-        qInfo() << "OnGameStart " << gid.data();
+        qDebug() << "ExchangeData OnGameStart " << gid.data();
 }
 
 void ExchangeData::OnWeekOver(int week) {
