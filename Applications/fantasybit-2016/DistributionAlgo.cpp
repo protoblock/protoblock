@@ -25,9 +25,11 @@ NameValuePairs<int>
 {
     NameValuePairs<int> award{};
     if (projections.size() == 0 || result <= 0.0001 ) {
-        qInfo() << "no projections agent " << agent << " gets balance " << result;
-        if ( result > 0.0001 )
+        if ( result > 0.0001 ) {
             award[agent] = result * 100.0;
+            qInfo() << "no projections agent " << agent << " gets balance " << result;
+
+        }
 		return award;
 	}
 	

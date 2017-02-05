@@ -631,7 +631,7 @@ void BlockProcessor::process(const DataTransition &indt) {
                 qWarning() << "wrong season! " << indt.DebugString().data();
                 mGlobalState.set_season(indt.season());
             }
-            mGlobalState.set_week(indt.week());
+            mGlobalState.set_week(0);//indt.week());
             mGlobalState.set_state(GlobalState_State_INSEASON);
             mData.OnGlobalState(mGlobalState);
             OnSeasonStart(indt.season());
@@ -678,7 +678,13 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
 
         if (mGlobalState.week() != indt.week()) {
-            qWarning() << "wrong week! " << indt.DebugString().data() << mGlobalState.DebugString().data();
+            if ( mGlobalState.week() == 0 && indt.week() == 1) {
+                mGlobalState.set_week(1);
+                mData.OnGlobalState(mGlobalState);
+                OnWeekStart(1);
+            }
+            else
+                qWarning() << "wrong week! " << indt.DebugString().data() << mGlobalState.DebugString().data();
             //mGlobalState.set_week(indt.week());
         }
 

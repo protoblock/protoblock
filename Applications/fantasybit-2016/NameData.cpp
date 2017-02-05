@@ -326,7 +326,7 @@ void FantasyNameData::OnGameStart(std::string gid,
     if (!projstore->Put(write_sync, gid, gfp.SerializeAsString()).ok())
         qWarning() << "error writing proj" << gid;
     else
-        qInfo() << "OnGameStart " << gid;
+        qDebug() << "OnGameStart " << gid.data();
 
 }
 

@@ -763,9 +763,9 @@ void ExchangeData::GetRemainingSettlePos(std::unordered_map<string,BookPos>  &mb
 #endif
 }
 
-void ExchangeData::OnGameStart(std::string gid,
-              std::vector<std::string> &home,
-              std::vector<std::string> &away
+void ExchangeData::OnGameStart(const std::string &gid,
+              const std::vector<std::string> &home,
+              const std::vector<std::string> &away
               ) {
 
 #ifdef TRACE
@@ -811,7 +811,7 @@ void ExchangeData::OnGameStart(std::string gid,
     if (!settlestore->Put(write_sync, gid, gsp.SerializeAsString()).ok())
         qWarning() << "error writing settlestore" << gid.data();
     else
-        qInfo() << "OnGameStart " << gid.data();
+        qDebug() << "ExchangeData OnGameStart " << gid.data();
 }
 
 void ExchangeData::OnWeekOver(int week) {

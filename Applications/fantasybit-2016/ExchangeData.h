@@ -384,9 +384,9 @@ public:
     void SaveBookDelta();
     void OnGameResult(const GameResult&gs);
 
-    void OnGameStart(std::string gid,
-                     std::vector<std::string> &home,
-                     std::vector<std::string> &away
+    void OnGameStart(const std::string &gid,
+                     const std::vector<std::string> &home,
+                     const std::vector<std::string> &away
                      );
     void clearNewWeek();
 

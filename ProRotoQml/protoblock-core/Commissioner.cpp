@@ -286,7 +286,8 @@ Block Commissioner::makeGenesisBlock() {
     b.add_signed_transactions()->CopyFrom(st);
 
 #ifdef JAYHACK
-    Reader<Transaction> readertx("D:\\data\\Transition2014.out");
+    QString genesis2014DataFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisTransition2014Location).toString();
+    Reader<Transaction> readertx(genesis2014DataFile.toStdString());
     Transaction tx;
     while ( readertx.ReadNext(tx) ) {
 //        qDebug() << tx.DebugString().data();
