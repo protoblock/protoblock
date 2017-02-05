@@ -96,18 +96,16 @@ NameValuePairs<int>
 //            qInfo() << pair.first << " projection " << pair.second << "no award ";
     }
 
-    if (result < total) {
-        qCritical() << "gave out to much" << result << total;
-    }
-    else {
-        double leftover = result - total;
-        if (leftover > 0.00001) {
-            int hold = award[agent];
-            award[agent] = hold + leftover;
-            qDebug() << "agent " << agent << " leftovers " << leftover;
+    double leftover = result - total;
+    if (leftover > 0.00001) {
+        int hold = award[agent];
+        award[agent] = hold + leftover;
+        qDebug() << "agent " << agent << " leftovers " << leftover;
 
-        }
     }
+    else if ( leftover < -0.00001 )
+        qCritical() << "gave out to much" << result << total;
+
     return award;
 }
 

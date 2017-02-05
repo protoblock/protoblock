@@ -17,7 +17,7 @@ import Communi 3.0
 
 Material.ApplicationWindow{
 
-    property string version: "2.0.2" //version
+    property string version: "2.1" //version
     property alias realRoot: themeroot
 
     property string  uname

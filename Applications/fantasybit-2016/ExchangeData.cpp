@@ -315,21 +315,48 @@ void ExchangeData::closeAll() {
     std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     mPositions.clear();
     mLimitBooks.clear();
-    settlestore.reset();
-    bookdeltastore.reset();
-    posstore.reset();
+//    settlestore.reset();
+//    bookdeltastore.reset();
+//    posstore.reset();
     mContractOHLC.clear();
     mMarketQuote.clear();
     mOpenOrders.clear();
     mNameSeqMap.clear();
     mSeqNameMap.clear();
     ///snapstore.reset();
+    ///
+    ///
+    {
+        auto *it = settlestore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            settlestore->Delete(write_sync,it->key());
+        }
+        delete it;
+    }
+
+    {
+        auto *it = bookdeltastore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            bookdeltastore->Delete(write_sync,it->key());
+        }
+        delete it;
+    }
+
+    {
+        auto *it = posstore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            posstore->Delete(write_sync,it->key());
+        }
+        delete it;
+    }
+
+
 }
 
 void ExchangeData::clearNewWeek() {
     closeAll();
     removeAll();
-    init();
+//    init();
 }
 
 
