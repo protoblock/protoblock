@@ -355,7 +355,7 @@ void ExchangeData::closeAll() {
 
 void ExchangeData::clearNewWeek() {
     closeAll();
-    removeAll();
+//    removeAll();
 //    init();
 }
 

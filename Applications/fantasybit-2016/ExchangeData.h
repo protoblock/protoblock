@@ -319,7 +319,10 @@ public:
     void closeAll();
 
     void removeAll() {
-       pb::remove_all(GET_ROOT_DIR() + "trade/");
+        settlestore.reset();
+        bookdeltastore.reset();
+        posstore.reset();
+        pb::remove_all(GET_ROOT_DIR() + "trade/");
     }
 
     bool amlive = false;
@@ -405,9 +408,6 @@ public:
         return GET_ROOT_DIR() + "trade/" + in;
     }
 
-//    void removeAll() {
-//       fc::remove_all(GET_ROOT_DIR() + "trade/");
-//    }
 
     //void MergeMarketQuote(const string &playerid,const MarketQuote & );
     void OnTrade(const string &playerid, fantasybit::TradeTic *tt);
