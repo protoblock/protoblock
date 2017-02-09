@@ -369,15 +369,17 @@ public:
 
     static pb::signature str2sig(const std::string &str)
     {
+        unsigned char data[72];
         pb::signature sig;
-        if ( pb::from_base58(str, (char *)sig.data, 64) > 64 ) {
+        if ( pb::from_base58(str, (char *)data, 64) > 64 ) {
             //ToDo: test
             //in case using 2015 bad sigs
-            unsigned char data[72];
             auto sz = pb::from_base58(str, (char *)data, 72);
             sig = pb::parse_der(data,sz < 72 ? sz : 72);
             sig = pb::signature_normalize(sig);
         }
+        else memcpy(sig.data,data,64);
+
         return sig;
     }
 
