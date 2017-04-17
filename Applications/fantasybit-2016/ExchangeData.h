@@ -319,7 +319,10 @@ public:
     void closeAll();
 
     void removeAll() {
-       pb::remove_all(GET_ROOT_DIR() + "trade/");
+        settlestore.reset();
+        bookdeltastore.reset();
+        posstore.reset();
+        pb::remove_all(GET_ROOT_DIR() + "trade/");
     }
 
     bool amlive = false;
@@ -384,9 +387,9 @@ public:
     void SaveBookDelta();
     void OnGameResult(const GameResult&gs);
 
-    void OnGameStart(std::string gid,
-                     std::vector<std::string> &home,
-                     std::vector<std::string> &away
+    void OnGameStart(const std::string &gid,
+                     const std::vector<std::string> &home,
+                     const std::vector<std::string> &away
                      );
     void clearNewWeek();
 
@@ -405,9 +408,6 @@ public:
         return GET_ROOT_DIR() + "trade/" + in;
     }
 
-//    void removeAll() {
-//       fc::remove_all(GET_ROOT_DIR() + "trade/");
-//    }
 
     //void MergeMarketQuote(const string &playerid,const MarketQuote & );
     void OnTrade(const string &playerid, fantasybit::TradeTic *tt);

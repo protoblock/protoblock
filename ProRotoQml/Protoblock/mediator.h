@@ -27,11 +27,6 @@
 #include "RestFullCall.h"
 #include "playerresultmodel.h"
 #include "ExchangeData.h"
-#ifdef TIMEAGENTWRITETWEETS
-#include <nanomsg/nn.hpp>
-#include <nanomsg/nn.h>
-#include <nanomsg/pair.h>
-#endif
 
 using namespace std;
 
@@ -88,6 +83,7 @@ class Mediator : public QObject {
     QML_READONLY_PTR_PROPERTY(QItemSelectionModel, pQItemSelectionModel)
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pNextWeekScheduleModel)
     QML_READONLY_CSTREF_PROPERTY (qint32, theNextWeek)
+    QML_READONLY_CSTREF_PROPERTY (qint32, theNextSeason)
 
     //projections
     QML_READONLY_PTR_PROPERTY(ProjectionsViewFilterProxyModel, pProjectionsViewFilterProxyModel)
@@ -95,7 +91,7 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, gameFilter)
 
     QML_READONLY_CSTREF_PROPERTY (qint32, theWeek)
-    QML_READONLY_CSTREF_PROPERTY (qint32, season)
+    QML_READONLY_CSTREF_PROPERTY (qint32, theSeason)
     QML_READONLY_CSTREF_PROPERTY (QString, liveSync)
     QML_READONLY_CSTREF_PROPERTY (QString, seasonString)
     QML_READONLY_CSTREF_PROPERTY (QString, prevSelectedPlayerDisplay)
@@ -125,6 +121,7 @@ class Mediator : public QObject {
 
     //previous week stuff
     QML_READONLY_CSTREF_PROPERTY (qint32, thePrevWeek)
+    QML_READONLY_CSTREF_PROPERTY (qint32, thePrevSeason)
 
     PlayerResultModel mPlayerResultModel;
     QItemSelectionModel myPrevGamesSelectionModel;
@@ -151,13 +148,6 @@ class Mediator : public QObject {
     static Mediator *myInstance;
 public:
     static Mediator *instance();
-    Mediator::~Mediator() {
-    #ifdef TIMEAGENTWRITETWEETS
-        nn_term();
-    #endif
-
-    }
-
 
     void CopyTheseProjections(std::vector<fantasybit::PlayerPoints> &these) {
         for ( auto t : these) {
@@ -484,7 +474,27 @@ public:
     Q_INVOKABLE void setNextWeekData(int week) {
         if ( !amLive ) return;
 
-        if ( week <= 0 || week >= 17 )
+
+        int season = m_theNextSeason;
+
+        if ( week <= 0 ) {
+            season = m_theNextSeason-1;
+
+            if ( season < m_theSeason )
+                return;
+
+            week = 16;
+        }
+        else if (week >= 17) {
+            season = m_theNextSeason + 1;
+
+            if ( season > m_theSeason )
+                return;
+
+            week = 1;
+        }
+
+        if ( season != m_theSeason)
             return;
 
         if ( week < m_theWeek)
@@ -495,30 +505,51 @@ public:
 
         m_pNextWeekScheduleModel->clear();
         settheNextWeek(week);
-        m_pNextWeekScheduleModel->updateWeeklySchedule(week,
-                                  mGateway->dataService->GetWeeklySchedule(week));
+        settheNextSeason(season);
+        m_pNextWeekScheduleModel->updateWeeklySchedule(season,week,
+                                  mGateway->dataService->GetWeeklySchedule(season,week));
     }
 
     Q_INVOKABLE void setPrevWeekData(int week) {
+        qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
         setprevSelectedPlayerDisplay("");
         if ( !amLive ) return;
 
-        if ( week <= 0 || week >= 17 )
+        int season = m_thePrevSeason;
+
+        if ( week <= 0 ) {
+            season = m_thePrevSeason-1;
+
+            if ( season < 2014 )
+                return;
+
+            week = 16;
+        }
+        else if (week >= 17) {
+            season = m_thePrevSeason + 1;
+
+            if ( season > 2016)
+                return;
+
+            week = 1;
+        }
+
+        if ( week > m_theWeek && season == m_theSeason )
             return;
 
-        if ( week > m_theWeek)
+        if ( week == m_theWeek && season == m_theSeason && !m_thisWeekPrev )
             return;
 
-        if ( week == m_theWeek && !m_thisWeekPrev )
-            return;
-
-        if ( week == m_thePrevWeek && !(week == m_theWeek && m_thisWeekPrev ))
+        if ( week == m_thePrevWeek && season == m_theSeason && !(week == m_theWeek && m_thisWeekPrev ))
             return;
 
         if ( week == m_thePrevWeek )
             emit thePrevWeekChanged(m_thePrevWeek);
-        else
+        else {
             setthePrevWeek(week);
+            if ( season != m_thePrevSeason )
+                setthePrevSeason(season);
+        }
 
         if ( week == m_theWeek) {
            m_pPreviousWeekScheduleModel->clear();
@@ -526,11 +557,11 @@ public:
            m_pPreviousWeekScheduleModel->append(m_pWeekClosedScheduleModel->toList());
         }
         else
-            m_pPreviousWeekScheduleModel->updateWeeklySchedule(m_thePrevWeek,
-                                      mGateway->dataService->GetWeeklySchedule(m_thePrevWeek));
+            m_pPreviousWeekScheduleModel->updateWeeklySchedule(m_thePrevSeason,m_thePrevWeek,
+                                      mGateway->dataService->GetWeeklySchedule(m_thePrevSeason,m_thePrevWeek));
 
 
-        const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevWeek);
+        const auto &vgr = mGateway->dataService->GetPrevWeekGameResults(m_thePrevSeason,m_thePrevWeek);
         mPlayerResultModel.updateRosters(vgr,mGateway->dataService,*m_pPreviousWeekScheduleModel,myFantasyName);
         myPrevGamesSelectionModel.reset();
         m_pResultSelectedModel->setSourceModel(&dummyResultSelectedModel);
@@ -798,6 +829,7 @@ public slots:
     void GlobalStateChange(fantasybit::GlobalState);
     void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
+    void NewSeason(int);
     void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);
@@ -825,14 +857,12 @@ public slots:
     }
 
     void BlockNum(int n) {
-        qDebug() << " BlockNum " << n;
+        //qDebug() << " BlockNum " << n;
         setblocknum(n);
     }
 
     void OnFinishedResults() {
         if ( amLive ) {
-//            updateLiveLeaders(false);
-
             vector<pair<std::string,WeeklyScheduleModelItem *>> todo;
             for ( const auto item : *m_pWeeklyScheduleModel) {
                 std::string id = item->get_gameid().toStdString();
@@ -855,6 +885,8 @@ public slots:
 
                 m_pProjectionsViewFilterProxyModel->invalidate();
             }
+
+//            updateLiveLeaders(false);
         }
     }
     void OnMarketTicker(fantasybit::MarketTicker,int32_t);
@@ -864,10 +896,6 @@ public slots:
     void OnNewPos(fantasybit::FullPosition);
     void OnNewOO(fantasybit::FullOrderDelta);
     void MyPosPriceChange(PlayerQuoteSliceModelItem*);
-
-#ifdef TIMEAGENTWRITETWEETS
-    void TweetIt(fantasybit::TradeTic *tt);
-#endif
 
     /*
     void OnMarketTicker(fantasybit::MarketTicker *mt) {
@@ -943,23 +971,7 @@ private:
     int testCount = 0;
     void updateOnChangeFantasyName();
     void updateCurrentFantasyPlayerOrderPositions();
-
-#ifdef TIMEAGENTWRITETWEETS
-    nn::socket sock;
-    std::unordered_map<string,std::pair<bool,std::chrono::steady_clock::time_point>> mLastTweet;
-
-    static QString getLink(const string &is) {
-        return QString("protoblock.com/ticks.html?playerid=%1").arg(is.data());
-    }
-#endif
-
-#ifdef TIMEAGENTWRITETWEETS
-//    void TweetIt(fantasybit::TradeTic *tt);
-    std::chrono::steady_clock::time_point last_tweet;
-#endif
 };
-
-
 }
 #endif // MEDIATOR_H
 

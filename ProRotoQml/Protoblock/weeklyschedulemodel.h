@@ -10,7 +10,6 @@
 #include "globals.h"
 #include "sortfilterproxymodel.h"
 #include "StatusData.pb.h"
-#include <unordered_map>
 
 namespace pb {
 
@@ -84,39 +83,35 @@ public:
 class WeeklyScheduleModel : public QQmlObjectListModel<WeeklyScheduleModelItem>{
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY(int, week)
-
+    QML_READONLY_CSTREF_PROPERTY(int, season)
 
 public:
-    std::unordered_map<std::string,std::string> team2Game;
     explicit WeeklyScheduleModel (QObject *          parent      = Q_NULLPTR,
                                   const QByteArray & displayRole = QByteArray (),
                                   const QByteArray & uidRole     = "gameid")
 
             : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
-    void updateWeeklySchedule(int week, const fantasybit::WeeklySchedule &weekly) {
+    void updateWeeklySchedule(int season,int week, const fantasybit::WeeklySchedule &weekly) {
 
         qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
 
         clear();
-        team2Game.clear();
+
         setweek(week);
+        setseason(season);
 
+        std::map<int,std::vector<fantasybit::GameInfo>> sorted;
         for ( auto &gi : weekly.games()) {
-           append(new WeeklyScheduleModelItem(gi,this));
-           std::string twittergame = "#" + gi.away() + "vs" + gi.home();
-           team2Game[gi.home()]  = twittergame;
-           team2Game[gi.away()] = twittergame;
-           qDebug() << " setting for team" << gi.home().data() << " got " << twittergame.data();
-           qDebug() << " setting for team" << gi.away().data() << " got " << twittergame.data();
-
+            auto &vec = sorted[gi.time()];
+            vec.push_back(gi);
         }
-    }
 
-    QString getTwitterGame(QString &team) {
-        std::string got = team2Game[team.toStdString()];
-        qDebug() << " getting for team" << team << " got " << got.data();
-        return got.data();
+        for ( auto tvec : sorted ) {
+            for ( auto p : tvec.second ) {
+                append(new WeeklyScheduleModelItem(p,this));
+            }
+        }
     }
 
     bool UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs, bool reverse = false) {

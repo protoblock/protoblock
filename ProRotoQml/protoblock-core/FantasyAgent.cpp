@@ -114,7 +114,7 @@ bool FantasyAgent::testIt(Secret3 secret) {
     //qDebug() << OPENSSL_VERSION_NUMBER;
     auto mnpriv = fromMnemonic(secret.mnemonic_key());
 
-    auto ret = secp256k1_ec_seckey_verify(pb::CTX, mnpriv.data());
+    auto ret = secp256k1_ec_seckey_verify(pb::TheCTX::instance()->CTX(), mnpriv.data());
 
     string in = "sdfsfsdfs80999nbb b^&%#^  *(*& 65  \\00xx  *(&(54cV f" + secret.SerializeAsString();
     auto idsig1 = getRawIdSig(in,mnpriv);
@@ -547,7 +547,7 @@ pb::secp256k1_privkey FantasyAgent::fromMnemonic(const string &in) {
     pb::sha256 secret;
     // 32 bytes is 256bits
     memcpy(secret.begin(), hseed.data(), 32);
-    int ret = secp256k1_ec_seckey_verify(pb::CTX, hseed.data());
+    int ret = secp256k1_ec_seckey_verify(pb::TheCTX::instance()->CTX(), hseed.data());
 
     return  pb::secp256k1_privkey::regenerate(secret);
 }

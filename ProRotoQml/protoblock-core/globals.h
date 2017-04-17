@@ -78,9 +78,7 @@ static QString TimetoTweetString() {
     QByteArray zone = "America/New_York";
     QTimeZone tz(zone);//str.c_str();
 
-//    return QDateTime::currentDateTime().toTimeZone(tz).toString("M/d/yy hh:mm:ss");
-    return QDateTime::currentDateTime().toTimeZone(tz).toString("dddd h:mm:ss a");
-
+    return QDateTime::currentDateTime().toTimeZone(tz).toString("M/d/yy hh:mm:ss.z");
 }
 
 static QDateTime currentNewYorkTime() {
@@ -95,6 +93,16 @@ static uint fromISO_toTime_t(const QString &iso) {
     QTimeZone tz(zone);//str.c_str();
 
     auto dt = QDateTime::fromString(iso,Qt::ISODate);
+
+    dt.setTimeZone(tz);
+    return dt.toTime_t();
+}
+
+static uint toTime_t_old(const QString &iso) {
+    QByteArray zone = "America/New_York";
+    QTimeZone tz(zone);//str.c_str();
+
+    auto dt = QDateTime::fromString(iso,"M/d/yyyy h:mm:ss AP");
 
     dt.setTimeZone(tz);
     return dt.toTime_t();

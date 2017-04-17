@@ -31,9 +31,6 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_blocknum(0),
     m_height(0),
     dummyFantasyNameBalModelItem(),
-    #ifdef TIMEAGENTWRITETWEETS
-        sock{AF_SP, NN_PAIR},
-    #endif
     m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem} {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
@@ -45,7 +42,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pLeaderBoardSortModel->setDynamicSortFilter(true);
 
     //schedule models
-    m_pWeeklyScheduleModel = new WeeklyScheduleModel;
+    m_pWeeklyScheduleModel = new WeeklyScheduleModel(this);
     m_pWeekClosedScheduleModel = new WeeklyScheduleModel;
 
     myGamesSelectionModel.setModel(m_pWeeklyScheduleModel);
@@ -61,6 +58,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_theNextWeek = 0;
     m_liveSync ="Sync";
     m_seasonString = "";
+    m_theNextSeason = 0;
+    m_thePrevSeason = 0;
+    m_theSeason = 2014;
 
     //player selection
     m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
@@ -95,19 +95,17 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultSelectedModel->setSortRole("award");
     m_pResultSelectedModel->setDynamicSortFilter(true);
 
-    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
-                      "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
-                      " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
+//    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
+//                      "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
+//                      " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
 
+
+    setcontrolMessage("<html><style type=\"text/css\"></style>Fantasy Ticker Feed now live on Twitter " \
+                      "<a href=\"https://twitter.com/prototicker\">@prototicker</a></html>");
 
     connect(&mPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
             this, &Mediator::MyPosPriceChange);
 //    connect(&tradeTesting, &QTimer::timeout, this, &Mediator::tradeTestingTimeout );
-
-    #ifdef TIMEAGENTWRITETWEETS
-        sock.bind("tcp://127.0.0.1:5088");
-    #endif
-
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -211,6 +209,8 @@ void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
 void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {}
 
 void Mediator::GlobalStateChange(GlobalState gs) {
+    qDebug() << "Mediator GlobalStateChange " << gs.DebugString().data();
+
     if ( gs.week() > 0 && gs.week() < 18) {
         if ( amLive && gs.week() > m_theWeek) {
             updateWeek();
@@ -225,16 +225,32 @@ void Mediator::GlobalStateChange(GlobalState gs) {
 
 void Mediator::LiveGui(GlobalState gs) {
 
-    qDebug() << "Mediator received Livegui ";
+    qDebug() << "Mediator received Livegui " << gs.DebugString().data();
     if ( !amLive ) {
         amLive = true;
-        m_season = gs.season();
         settheWeek(gs.week());
-        setthePrevWeek(gs.week());
+        settheSeason(gs.season());
+
         setliveSync("Live");
-        setseasonString(gs.state() == GlobalState_State_OFFSEASON ? "Off Season" : "NFL Season");
+        if ( gs.state() == GlobalState_State_OFFSEASON ) {
+            setseasonString("Off Season");
+//            setthePrevWeek(16);
+            setthePrevSeason(m_theSeason);
+            setthePrevWeek(gs.week());
+            settheNextSeason(m_theSeason);
+        }
+        else {
+            setseasonString("NFL Season");
+            setthePrevWeek(gs.week());
+            setthePrevSeason(m_theSeason);
+            settheNextSeason(m_theSeason);
+        }
+
         updateWeek();
 //        tradeTesting.start(5000);
+
+        setcontrolMessage("<html><style type=\"text/css\"></style>Follow us on Twitter. " \
+                          "<a href=\"https://twitter.com/protoblock\">@protoblock</a></html>");
     }
 
 //    FantasyNameBal fnb;
@@ -254,7 +270,7 @@ void Mediator::updateWeek() {
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
             std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>>> sorted;
-            fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theWeek);
+            fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theSeason,m_theWeek);
             for ( auto &gi : weekly.games()) {
                 auto status = mGateway->dataService->GetGameStatus(gi.id());
                 std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>> &vec =
@@ -268,15 +284,18 @@ void Mediator::updateWeek() {
                     qDebug() << " p tvec " << p.second << p.first.DebugString().data();
                     if ( p.second == GameStatus_Status_CLOSED )
                         m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
-                    else {
-                        auto gi = p.first;
+                    else
                         m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
-                        std::string twittergame = "#" + gi.away() + "vs" + gi.home();
-                        m_pWeeklyScheduleModel->team2Game[gi.home()]  = twittergame;
-                        m_pWeeklyScheduleModel->team2Game[gi.away()] = twittergame;
-                    }
                 }
             }
+            qDebug() << " done sorted ";
+
+
+//            if ( status.status() == GameStatus_Status_CLOSED )
+//                m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
+//            else
+//                m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
+
 
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
@@ -299,6 +318,12 @@ void Mediator::updateWeek() {
                 updateOnChangeFantasyName();
 
             m_pProjectionsViewFilterProxyModel->invalidate();
+        }
+        else {
+            m_pWeeklyScheduleModel->clear();
+            mPlayerQuoteSliceModel.clear();
+            mPlayerProjModel.clear();
+            set_thisWeekPrev(false);
         }
         updateLiveLeaders();
     }
@@ -355,14 +380,14 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 
     int i = 0;
     double totpnl = 0.0;
-    qDebug() << ++i << " here ";
+//    qDebug() << ++i << " here ";
     for ( auto tit : mTradingPositionsModel ) {
-        qDebug() << i << "loop here ";
+//        qDebug() << i << "loop here ";
 
         auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
         int netqty = tit->get_netqty();
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
         double avg = 0;
         double pnl = 0;
@@ -396,10 +421,10 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
             else
                 pnl = 100.0 * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
-            qDebug() << ++i << " here ";
+//            qDebug() << ++i << " here ";
 
         }
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
 
         //mTradingPositionsModel.UpdatePnl(tit,it->get_bid(),it->get_ask());
@@ -409,15 +434,21 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         it->setmypnl(pnl);
         tit->setopenpnl(pnl);
         totpnl += pnl;
-        qDebug() << ++i << " here ";
+//        qDebug() << ++i << " here ";
 
     }
     mTradingPositionsModel.settotalopenpnl(totpnl);
-    qDebug() << ++i << " here ";
+//    qDebug() << ++i << " here ";
 
 }
 
 void Mediator::NewWeek(int week) {
+
+    if ( m_theSeason == 2014 ) {
+        if ( mGateway->dataService->GetGlobalState().season() > 2014 )
+            settheSeason(mGateway->dataService->GetGlobalState().season());
+    }
+
     set_busySend(false);
 //    set_thisWeekPrev = false;
 
@@ -428,8 +459,15 @@ void Mediator::NewWeek(int week) {
     if ( amLive ) {
         updateLiveLeaders();
     }
+    else if ( m_theSeason > 2014 ) {
+        m_pWeeklyScheduleModel->clear();
+        updateWeek();
+    }
 }
 
+void Mediator::NewSeason(int season) {
+    settheSeason(season);
+}
 void Mediator::GameStart(string gameid) {
     m_pWeeklyScheduleModel->UpdateStatus(gameid,GameStatus_Status_INGAME);
 
@@ -675,11 +713,6 @@ void Mediator::OnTradeTick(fantasybit::TradeTic* tt) {
 #endif
 
     mPlayerQuoteSliceModel.Update(tt);
-
-#ifdef TIMEAGENTWRITETWEETS
-    TweetIt(tt);
-#endif
-
 }
 
 void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
@@ -835,77 +868,6 @@ void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
 ////    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 ////    getOrderPos();
 
-#ifdef TIMEAGENTWRITETWEETS
-void Mediator::TweetIt(fantasybit::TradeTic *tt) {
-    qDebug() << " TweetIt " << tt->DebugString().data();
-
-    if ( !amLive )
-        return;
-
-    auto *it = mPlayerQuoteSliceModel.getByUid(tt->symbol().data());
-    if ( !it ) {
-        qDebug() << " TweetIt cant find ";
-
-        return;
-    }
-
-    auto pname = it->get_fullname();
-    auto pos = it->get_pos();
-    auto t = it->get_teamid();
-
-
-    QString tweet = "%1 (%3, %2) trading at %4";
-    tweet = tweet.arg(pname,pos,t,to_string(tt->price()).data());
-    /*
-    bool doit = false;
-    QString type(" ");
-    if ( tt->ishigh() || tt->islow()) {
-        int price = 0;
-        auto &lasttime = mLastTweet[tt->symbol()];
-        auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
-                            (std::chrono::system_clock::now()-lasttime.second).count());
-
-        if ( tt->islow() && (sincelast > 30 || lasttime.first)) {
-            if ( !tt->ishigh() )
-                type = " at new Low! ";
-            lasttime.first = false;
-            lasttime.second = std::chrono::system_clock::now();
-            doit = true;;
-        }
-        else if ( tt->ishigh() && (sincelast > 30 || !lasttime.first)) {
-            type = " at new High! ";
-            lasttime.first = true;
-            lasttime.second = std::chrono::system_clock::now();
-            doit = true;
-        }
-    }
-
-    if ( !doit ) {
-         auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
-                             (std::chrono::system_clock::now()-last_tweet).count());
-         if ( sincelast > 30)
-            doit = true;
-
-         type = " ";
-    }
-
-    if ( !doit ) return;
-
-    last_tweet = std::chrono::system_clock::now();
-
-    */
-    QString end = "\n%1\nWeek %2 %3\n@protoblock #fantasyfootball %4";
-    end = end.arg(getLink(tt->symbol()), to_string(m_theWeek).data(),
-                  TimetoTweetString(),m_pWeeklyScheduleModel->getTwitterGame(t) );
-    string tosend = tweet.toStdString() + end.toStdString() ;
-    qDebug() << " sending tweet " << tosend.data();
-    sock.send(tosend.data(), tosend.size(),0);
-    qDebug() << " sent tweet " << tosend.data();
-
-
-}
-
-#endif
 
 
 

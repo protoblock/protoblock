@@ -56,6 +56,17 @@ void Node::init() {
 //    }
 #endif
 
+#ifdef END2016ADD2014
+    QFileInfo check_file( (GET_ROOT_DIR() + "end2016").data ());
+    if (!check_file.exists() ) {
+        pb::remove_all(GET_ROOT_DIR() + "index/");
+        pb::remove_all(GET_ROOT_DIR() + "block/");
+        pb::remove_all(GET_ROOT_DIR() + "trade/");
+        QFile file( (GET_ROOT_DIR() + "end2016").data () );
+        file.open(QIODevice::WriteOnly);
+    }
+#endif
+
     write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
@@ -207,11 +218,14 @@ void Node::init() {
 
         qInfo() <<  "done";
 
-        qDebug() << " current sb " << sb.DebugString().data();
-        if (!BlockProcessor::verifySignedBlock(sb)) {
+//        QThread::currentThread()->msleep(10000);
+#ifdef TRACEDEBUG
+        qDebug() << " current sb ";
+        qDebug() << sb.DebugString().data();
+        qDebug() << " 1.5 current sb ";
+#endif
+        if (!BlockProcessor::verifySignedBlock(sb))
             qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
-            //return;
-        }
         else {
             current_hight = 1;
 
@@ -219,6 +233,11 @@ void Node::init() {
             blockchain->Put(write_sync, value, sb.SerializeAsString());
             current_hight = getLastLocalBlockNum();
         }
+
+#ifdef TRACEDEBUG
+        qDebug() << " 2 current sb ";
+#endif
+
 /*
         if ( !b1r.good() )
             qCritical() << " No num 1 genesis ";
@@ -299,7 +318,7 @@ bool Node::SyncTo(int32_t gh) {
     else {
         auto ob = getLocalBlock(current_hight, true);
         if ( ob )
-            previd =     FantasyAgent::BlockHash(*ob);
+            previd = FantasyAgent::BlockHash(*ob);
     }
     while ( current_hight < global_height ) {
 
@@ -478,8 +497,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 9926 )
-        num = 9926;
+    if (num > 4077 )
+        num = 4077;
     qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
@@ -600,7 +619,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 9926;
+    height = 4077;
     qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 
@@ -654,8 +673,10 @@ fc::optional<Block> Node::getLocalBlock(int32_t num, bool force) {
 
     std::lock_guard<std::mutex> lockg{ blockchain_mutex };
 
-    if ( getLastLocalBlockNum() < num )
+    if ( getLastLocalBlockNum() < num ) {
+        qDebug() << "getLastLocalBlockNum() < num " << num;
         return block;
+    }
 
     std::string value;
     leveldb::Slice snum((char*)&num, sizeof(int32_t));
@@ -686,7 +707,8 @@ fc::optional<Block> Node::getGlobalBlock(int32_t num) {
     block = Block{};
     (*block).ParseFromString(bs);
 #ifdef TRACE
-    qInfo() << "getGlobalBlock (" << num <<") size:" <<  bs.size() << (*block).DebugString().data();
+    qDebug() << "getGlobalBlock (" << num <<") size:" <<  bs.size();
+    qDebug() << (*block).DebugString().data();
 #endif
 
     return block;

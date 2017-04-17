@@ -26,16 +26,16 @@ int DataService::GetAvgProjection(const string &playerid) {
     return worker->NameData().GetAvgProj(playerid);
 }
 
-std::vector<fantasybit::GameResult> DataService::GetPrevWeekGameResults(int week){
+std::vector<fantasybit::GameResult> DataService::GetPrevWeekGameResults(int season,int week){
     //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
-    return worker->NFLState().GetPrevWeekGameResults(week);
+    return worker->NFLState().GetPrevWeekGameResults(season,week);
 }
 
-fantasybit::WeeklySchedule DataService::GetWeeklySchedule(int week) {
+fantasybit::WeeklySchedule DataService::GetWeeklySchedule(int season,int week) {
 //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
-    return worker->NFLState().GetWeeklySchedule(week);
+    return worker->NFLState().GetWeeklySchedule(season,week);
 }
 
 fantasybit::PlayerBase DataService::GetPlayerBase(std::string playerId) {

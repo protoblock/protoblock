@@ -17,7 +17,7 @@ import Communi 3.0
 
 Material.ApplicationWindow{
 
-    property string version: "2.0.2" //version
+    property string version: "2.1.1" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -43,7 +43,7 @@ Material.ApplicationWindow{
 //                anchors.left: parent.left
                 text: " Block Number: " + MiddleMan.blocknum
                       + " - " + MiddleMan.liveSync
-                      + " - 2016 Week " + MiddleMan.theWeek
+                      + " - " + MiddleMan.theSeason + " Week " + MiddleMan.theWeek
                 font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
 
             }
@@ -52,6 +52,7 @@ Material.ApplicationWindow{
                 text: MiddleMan.controlMessage
                 font.pixelSize: ProtoScreen.font( ProtoScreen.SMALL)
                 onLinkActivated: Qt.openUrlExternally(link)
+                enabled: MiddleMan.liveSync === "Live"
             }
 
             SpinBox {
