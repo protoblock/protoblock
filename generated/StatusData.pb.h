@@ -25,6 +25,7 @@
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "StaticData.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace fantasybit {
@@ -222,20 +223,32 @@ class PlayerStatus : public ::google::protobuf::Message {
   inline ::fantasybit::PlayerStatus_Status status() const;
   inline void set_status(::fantasybit::PlayerStatus_Status value);
 
+  // optional .fantasybit.PlayerResult totals = 40;
+  inline bool has_totals() const;
+  inline void clear_totals();
+  static const int kTotalsFieldNumber = 40;
+  inline const ::fantasybit::PlayerResult& totals() const;
+  inline ::fantasybit::PlayerResult* mutable_totals();
+  inline ::fantasybit::PlayerResult* release_totals();
+  inline void set_allocated_totals(::fantasybit::PlayerResult* totals);
+
   // @@protoc_insertion_point(class_scope:fantasybit.PlayerStatus)
  private:
   inline void set_has_teamid();
   inline void clear_has_teamid();
   inline void set_has_status();
   inline void clear_has_status();
+  inline void set_has_totals();
+  inline void clear_has_totals();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* teamid_;
+  ::fantasybit::PlayerResult* totals_;
   int status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_StatusData_2eproto();
   friend void protobuf_AssignDesc_StatusData_2eproto();
@@ -744,6 +757,44 @@ inline void PlayerStatus::set_status(::fantasybit::PlayerStatus_Status value) {
   assert(::fantasybit::PlayerStatus_Status_IsValid(value));
   set_has_status();
   status_ = value;
+}
+
+// optional .fantasybit.PlayerResult totals = 40;
+inline bool PlayerStatus::has_totals() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void PlayerStatus::set_has_totals() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void PlayerStatus::clear_has_totals() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void PlayerStatus::clear_totals() {
+  if (totals_ != NULL) totals_->::fantasybit::PlayerResult::Clear();
+  clear_has_totals();
+}
+inline const ::fantasybit::PlayerResult& PlayerStatus::totals() const {
+  return totals_ != NULL ? *totals_ : *default_instance_->totals_;
+}
+inline ::fantasybit::PlayerResult* PlayerStatus::mutable_totals() {
+  set_has_totals();
+  if (totals_ == NULL) totals_ = new ::fantasybit::PlayerResult;
+  return totals_;
+}
+inline ::fantasybit::PlayerResult* PlayerStatus::release_totals() {
+  clear_has_totals();
+  ::fantasybit::PlayerResult* temp = totals_;
+  totals_ = NULL;
+  return temp;
+}
+inline void PlayerStatus::set_allocated_totals(::fantasybit::PlayerResult* totals) {
+  delete totals_;
+  totals_ = totals;
+  if (totals) {
+    set_has_totals();
+  } else {
+    clear_has_totals();
+  }
 }
 
 // -------------------------------------------------------------------

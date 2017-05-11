@@ -43,6 +43,7 @@ class Ostats;
 class Stats;
 class PlayerResult;
 class GameResult;
+class SeasonResult;
 class PlayerContractSymbol;
 
 // ===================================================================
@@ -1152,12 +1153,30 @@ class GameResult : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 kickofftime() const;
   inline void set_kickofftime(::google::protobuf::uint32 value);
 
+  // optional float homeTotal = 40;
+  inline bool has_hometotal() const;
+  inline void clear_hometotal();
+  static const int kHomeTotalFieldNumber = 40;
+  inline float hometotal() const;
+  inline void set_hometotal(float value);
+
+  // optional float awayTotal = 50;
+  inline bool has_awaytotal() const;
+  inline void clear_awaytotal();
+  static const int kAwayTotalFieldNumber = 50;
+  inline float awaytotal() const;
+  inline void set_awaytotal(float value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.GameResult)
  private:
   inline void set_has_gameid();
   inline void clear_has_gameid();
   inline void set_has_kickofftime();
   inline void clear_has_kickofftime();
+  inline void set_has_hometotal();
+  inline void clear_has_hometotal();
+  inline void set_has_awaytotal();
+  inline void clear_has_awaytotal();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1165,9 +1184,11 @@ class GameResult : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult > home_result_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult > away_result_;
   ::google::protobuf::uint32 kickofftime_;
+  float hometotal_;
+  float awaytotal_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_StaticData_2eproto();
   friend void protobuf_AssignDesc_StaticData_2eproto();
@@ -1175,6 +1196,111 @@ class GameResult : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static GameResult* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SeasonResult : public ::google::protobuf::Message {
+ public:
+  SeasonResult();
+  virtual ~SeasonResult();
+
+  SeasonResult(const SeasonResult& from);
+
+  inline SeasonResult& operator=(const SeasonResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SeasonResult& default_instance();
+
+  void Swap(SeasonResult* other);
+
+  // implements Message ----------------------------------------------
+
+  SeasonResult* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SeasonResult& from);
+  void MergeFrom(const SeasonResult& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 season = 1;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 1;
+  inline ::google::protobuf::uint64 season() const;
+  inline void set_season(::google::protobuf::uint64 value);
+
+  // repeated .fantasybit.PlayerResult player_results = 10;
+  inline int player_results_size() const;
+  inline void clear_player_results();
+  static const int kPlayerResultsFieldNumber = 10;
+  inline const ::fantasybit::PlayerResult& player_results(int index) const;
+  inline ::fantasybit::PlayerResult* mutable_player_results(int index);
+  inline ::fantasybit::PlayerResult* add_player_results();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult >&
+      player_results() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult >*
+      mutable_player_results();
+
+  // optional float total = 20;
+  inline bool has_total() const;
+  inline void clear_total();
+  static const int kTotalFieldNumber = 20;
+  inline float total() const;
+  inline void set_total(float value);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.SeasonResult)
+ private:
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_total();
+  inline void clear_has_total();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint64 season_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult > player_results_;
+  float total_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_StaticData_2eproto();
+  friend void protobuf_AssignDesc_StaticData_2eproto();
+  friend void protobuf_ShutdownFile_StaticData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SeasonResult* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2790,6 +2916,123 @@ inline ::google::protobuf::uint32 GameResult::kickofftime() const {
 inline void GameResult::set_kickofftime(::google::protobuf::uint32 value) {
   set_has_kickofftime();
   kickofftime_ = value;
+}
+
+// optional float homeTotal = 40;
+inline bool GameResult::has_hometotal() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void GameResult::set_has_hometotal() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void GameResult::clear_has_hometotal() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void GameResult::clear_hometotal() {
+  hometotal_ = 0;
+  clear_has_hometotal();
+}
+inline float GameResult::hometotal() const {
+  return hometotal_;
+}
+inline void GameResult::set_hometotal(float value) {
+  set_has_hometotal();
+  hometotal_ = value;
+}
+
+// optional float awayTotal = 50;
+inline bool GameResult::has_awaytotal() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void GameResult::set_has_awaytotal() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void GameResult::clear_has_awaytotal() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void GameResult::clear_awaytotal() {
+  awaytotal_ = 0;
+  clear_has_awaytotal();
+}
+inline float GameResult::awaytotal() const {
+  return awaytotal_;
+}
+inline void GameResult::set_awaytotal(float value) {
+  set_has_awaytotal();
+  awaytotal_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SeasonResult
+
+// optional uint64 season = 1;
+inline bool SeasonResult::has_season() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SeasonResult::set_has_season() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SeasonResult::clear_has_season() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SeasonResult::clear_season() {
+  season_ = GOOGLE_ULONGLONG(0);
+  clear_has_season();
+}
+inline ::google::protobuf::uint64 SeasonResult::season() const {
+  return season_;
+}
+inline void SeasonResult::set_season(::google::protobuf::uint64 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// repeated .fantasybit.PlayerResult player_results = 10;
+inline int SeasonResult::player_results_size() const {
+  return player_results_.size();
+}
+inline void SeasonResult::clear_player_results() {
+  player_results_.Clear();
+}
+inline const ::fantasybit::PlayerResult& SeasonResult::player_results(int index) const {
+  return player_results_.Get(index);
+}
+inline ::fantasybit::PlayerResult* SeasonResult::mutable_player_results(int index) {
+  return player_results_.Mutable(index);
+}
+inline ::fantasybit::PlayerResult* SeasonResult::add_player_results() {
+  return player_results_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult >&
+SeasonResult::player_results() const {
+  return player_results_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::PlayerResult >*
+SeasonResult::mutable_player_results() {
+  return &player_results_;
+}
+
+// optional float total = 20;
+inline bool SeasonResult::has_total() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SeasonResult::set_has_total() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SeasonResult::clear_has_total() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SeasonResult::clear_total() {
+  total_ = 0;
+  clear_has_total();
+}
+inline float SeasonResult::total() const {
+  return total_;
+}
+inline void SeasonResult::set_total(float value) {
+  set_has_total();
+  total_ = value;
 }
 
 // -------------------------------------------------------------------

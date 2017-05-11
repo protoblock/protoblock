@@ -388,6 +388,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                                 rd.mutable_game_result()->mutable_home_result()
                                 :  rd.mutable_game_result()->mutable_away_result();
 
+                    double total = 0.0;
                     for ( int i =0; i < size; i++) {
                         //qDebug() << haresult.Get(i).playerid()
                           //       << haresult.Get(i).result();
@@ -399,8 +400,16 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                             bpos = posmap[haresult.Get(i).playerid()];
                         }
 
+                        total += haresult.Get(i).result();
                         processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
+                        mData.UpdatePlayerStats(haresult.Get(i));
                     }
+
+                    if ( ha == QString("home") )
+                        rd.mutable_game_result()->set_hometotal(total);
+                    else
+                        rd.mutable_game_result()->set_awaytotal(total);
+
                 }
 
                 /*
@@ -426,7 +435,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
                 */
-                mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+                mData.ProcessAddGameResult(rd.game_result().gameid(),rd.game_result());
                 haveresults = true;
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT
                 {
@@ -581,7 +590,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
                                        BookPos *pbpos,
                                        const std::string &blocksigner) {
     auto &playerresult = *playerresultP;
-    PlayerResult awards;
+//    PlayerResult awards;
     DistribuePointsAvg dist(proj);
     auto rewards = dist.distribute(playerresult.result(), blocksigner);
 
@@ -836,7 +845,6 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         qDebug() << "processing name tx " << i;//b.signed_transactions(i).trans().DebugString().data();// TransType_Name(t.type());
         auto &st = b.signed_transactions(i);
         if ( !isValidTx(st)) {
-
             qDebug() << " imvalid tx 1" << st.DebugString().data() ;
             continue;
         }
@@ -854,13 +862,13 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
     if ( nameonly ) return;
 
    // for (const SignedTransaction &st : b.signed_transactions()) //
-    for ( int i = start; i < b.signed_transactions_size(); i++)
+    for (int j = start; j < b.signed_transactions_size(); j++)
     {
-        if ( b.signed_transactions(i).trans().type() == TransType::NAME)
+        if ( b.signed_transactions(j).trans().type() == TransType::NAME)
             continue;
 
-        const SignedTransaction &st = b.signed_transactions(i);
-        const Transaction &t = b.signed_transactions(i).trans();
+        const SignedTransaction &st = b.signed_transactions(j);
+        const Transaction &t = b.signed_transactions(j).trans();
         //pb::sha256 digest = pb::sha256::hash(t.SerializeAsString());
 
         //qDebug() << "processing tx " << st.DebugString().data();

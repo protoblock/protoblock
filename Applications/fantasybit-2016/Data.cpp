@@ -268,6 +268,15 @@ void NFLStateData::init() {
         return;
     }
 
+    leveldb::DB *db4;
+    status = leveldb::DB::Open(options, filedir("statsstore"), &db4);
+    statsstore.reset(db4);
+    if ( !status.ok() ) {
+        qCritical() << " cant open " + filedir("statsstore");
+        //todo emit fatal
+        return;
+    }
+
 #ifdef WRITE_BOOTSTRAP
     {
     Writer<GlobalState> writer{ GET_ROOT_DIR() + "bootstrap/GlobalState.txt"};
@@ -423,6 +432,15 @@ PlayerStatus NFLStateData::GetPlayerStatus(const std::string &playerid) {
         return PlayerStatus::default_instance();
 }
 
+PlayerResult NFLStateData::GetPlayerStats(const std::string &playerid) {
+    PlayerResult pr{};
+    string temp;
+    if ( statsstore->Get(leveldb::ReadOptions(), playerid, &temp).ok() )
+        pr.ParseFromString(temp);
+
+    return pr;
+}
+
 void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase &pb,
                                   const PlayerStatus &ps) {
     AddNewPlayer(playerid,pb);
@@ -465,6 +483,61 @@ void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase 
     MyTeamRoster.erase(mps.teamid());
 }
 
+void NFLStateData::OnSeasonEnd(int season) {
+    for ( int i=0;i<16;i++) {
+        auto ws = GetWeeklySchedule(season,i+1);
+
+        string key = to_string(season) + "scheduleweek:" + to_string(i+1);
+        if ( !staticstore->Put(write_sync, key, ws.SerializeAsString()).ok()) {
+            qWarning() << " error writing schecule";
+        }
+
+        {
+            std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+
+            for ( auto game : ws.games()) {
+                string key = "gamestatus:" + game.id();
+                if (!statusstore->Delete(write_sync, key).ok())
+                    qWarning() << " error deleting gamestatus";
+            }
+        }
+    }
+
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        MyGameInfo.clear();
+    }
+    //        makeBootStrap(season,18,0);
+
+
+    {
+
+    SeasonResult sr;
+    sr.set_season(season);
+    PlayerResult pr;
+    auto *it = statsstore->NewIterator(leveldb::ReadOptions());
+    for (it->SeekToFirst(); it->Valid(); it->Next()) {
+        if ( !pr.ParseFromArray(it->value().data(),it->value().size()) ) {
+            qWarning() << " error parsing PlayerResult "  << season;
+            continue;
+        }
+        sr.add_player_results()->CopyFrom(pr);
+        sr.set_total(sr.total() + pr.result());
+        statsstore->Delete(write_sync,it->key());
+    }
+    delete it;
+
+    qCritical() << season << "Season total" << sr.total();//pr.DebugString().data();
+
+    if ( !statsstore->Put(write_sync, to_string(season), sr.SerializeAsString()).ok())
+        qWarning() << " error writing season "  << season;
+    else
+        ;//qDebug() << sr.DebugString().data();
+
+    }
+
+}
+
 void NFLStateData::AddNewWeeklySchedule(int season,int week, const WeeklySchedule &ws) {
     string key = to_string(season) + "scheduleweek:" + to_string(week);
     if ( !staticstore->Put(write_sync, key, ws.SerializeAsString()).ok()) {
@@ -487,6 +560,10 @@ void NFLStateData::AddNewWeeklySchedule(int season,int week, const WeeklySchedul
         }
     }
 
+}
+
+void NFLStateData::ProcessAddGameResult(const std::string &gameid, const GameResult&gs) {
+    AddGameResult(gameid,gs);
 }
 
 void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs) {
@@ -553,6 +630,77 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
             OnPlayerSign(playerid,ps.teamid());
     }
 }
+
+void NFLStateData::UpdatePlayerStats(const PlayerResult &pr) {
+    PlayerResult &curr = GetPlayerStats(pr.playerid());
+    PlayerResult next;
+    next.set_playerid(pr.playerid());
+
+    if ( curr.result() > 0 ) {
+        next.set_result(curr.result() + pr.result());
+
+        Stats *ns = next.mutable_stats();
+
+        //Ostats
+        if ( curr.stats().has_ostats() && pr.stats().has_ostats()) {
+            Ostats *n = ns->mutable_ostats();
+            const Ostats &c = curr.stats().ostats();
+            const Ostats &p = pr.stats().ostats();
+
+            n->set_passtd(c.passtd() + p.passtd());
+            n->set_passyds(c.passyds() + p.passyds());
+            n->set_rushyds(c.rushyds() + p.rushyds());
+            n->set_rushtd(c.rushtd() + p.rushtd());
+            n->set_recyds(c.recyds() + p.recyds());
+            n->set_rectd(c.rectd() + p.rectd());
+            n->set_rec(c.rec() + p.rec());
+            n->set_pint(c.pint() + p.pint());
+            n->set_fumble(c.fumble() + p.fumble());
+            n->set_twopt(c.twopt() + p.twopt());
+        }
+        else if ( curr.stats().has_ostats() ) {
+            if ( pr.stats().has_ostats() )
+                ns->mutable_ostats()->CopyFrom(pr.stats().ostats());
+        }
+        else if ( pr.stats().has_ostats() ) {
+            if ( curr.stats().has_ostats() )
+                ns->mutable_ostats()->CopyFrom(curr.stats().ostats());
+        }
+
+        //Dstats
+        if ( curr.stats().has_dstats() && pr.stats().has_dstats()) {
+
+        }
+        else if ( curr.stats().has_dstats() ) {
+            if ( pr.stats().has_dstats() )
+                ns->mutable_dstats()->CopyFrom(pr.stats().dstats());
+        }
+        else if ( pr.stats().has_dstats() ) {
+            if ( curr.stats().has_dstats() )
+                ns->mutable_ostats()->CopyFrom(curr.stats().dstats());
+        }
+
+        //kstats
+        if ( curr.stats().has_kstats() && pr.stats().has_kstats()) {
+
+        }
+        else if ( curr.stats().has_kstats() ) {
+            if ( pr.stats().has_kstats() )
+                ns->mutable_kstats()->CopyFrom(pr.stats().kstats());
+        }
+        else if ( pr.stats().has_kstats() ) {
+            if ( curr.stats().has_kstats() )
+                ns->mutable_ostats()->CopyFrom(curr.stats().kstats());
+        }
+
+    }
+    else
+        next.CopyFrom(pr);
+
+    statsstore->Put(write_sync, next.playerid(), next.SerializeAsString());
+    //qDebug() << QString::fromStdString(ps.DebugString());
+}
+
 
 void NFLStateData::OnNewPlayer(const std::string &pid) {
     if ( amlive )

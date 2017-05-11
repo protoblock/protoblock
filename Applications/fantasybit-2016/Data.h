@@ -38,6 +38,7 @@ class NFLStateData : public QObject {
     std::shared_ptr<leveldb::DB> playerstore;
     std::shared_ptr<leveldb::DB> staticstore;
     std::shared_ptr<leveldb::DB> statusstore;
+    std::shared_ptr<leveldb::DB> statsstore;
 
     leveldb::WriteOptions write_sync{};
     //int week = 0;
@@ -95,15 +96,20 @@ public:
     void AddNewPlayer(const std::string playerid, const PlayerBase &);
     void AddNewWeeklySchedule(int season, int week, const WeeklySchedule &);
     void AddGameResult(const string &gameid, const GameResult&);
+    void ProcessAddGameResult(const string &gameid, const GameResult&);
+
     GameResult GetGameResult(const std::string &gameid);
 
     PlayerStatus GetPlayerStatus(const std::string &playerid);
+    PlayerResult GetPlayerStats(const std::string &);
 
     PlayerBase GetPlayerBase(std::string playerid);
 
     //void AddTeamDepth(const TeamDepth &);
     void UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &);
     //void UpdatePlayerStatus(std::string playerid, const PlayerGameStatus &);
+    void UpdatePlayerStats( const PlayerResult &);
+
 
     void UpdateGameStatus(const std::string &gameid, const GameStatus &gs, bool force = false);
 
@@ -130,32 +136,7 @@ public:
 //        makeBootStrap(season,1,0);
     }
 
-    void OnSeasonEnd(int season) {
-        for ( int i=0;i<16;i++) {
-            auto ws = GetWeeklySchedule(season,i+1);
-
-            string key = to_string(season) + "scheduleweek:" + to_string(i+1);
-            if ( !staticstore->Put(write_sync, key, ws.SerializeAsString()).ok()) {
-                qWarning() << " error writing schecule";
-            }
-
-            {
-                std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
-
-                for ( auto game : ws.games()) {
-                    string key = "gamestatus:" + game.id();
-                    if (!statusstore->Delete(write_sync, key).ok())
-                        qWarning() << " error deleting gamestatus";
-                }
-            }
-        }
-
-        {
-            std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
-            MyGameInfo.clear();
-        }
-//        makeBootStrap(season,18,0);
-    }
+    void OnSeasonEnd(int season);
 
     Bootstrap makeBootStrap(int season, int week, int blocknum) {
         LdbWriter ldb;

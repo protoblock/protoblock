@@ -47,9 +47,10 @@ void protobuf_AssignDesc_StatusData_2eproto() {
       "StatusData.proto");
   GOOGLE_CHECK(file != NULL);
   PlayerStatus_descriptor_ = file->message_type(0);
-  static const int PlayerStatus_offsets_[2] = {
+  static const int PlayerStatus_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, teamid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, status_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, totals_),
   };
   PlayerStatus_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -159,22 +160,24 @@ void protobuf_AddDesc_StatusData_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  ::fantasybit::protobuf_AddDesc_StaticData_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\020StatusData.proto\022\nfantasybit\"\206\001\n\014Playe"
-    "rStatus\022\016\n\006teamid\030\024 \001(\t\022/\n\006status\030\036 \001(\0162"
-    "\037.fantasybit.PlayerStatus.Status\"5\n\006Stat"
-    "us\022\n\n\006ACTIVE\020\000\022\014\n\010INACTIVE\020\001\022\t\n\005OTHER\020\003\022"
-    "\006\n\002FA\020\004\"\231\001\n\nGameStatus\022-\n\006status\030\n \001(\0162\035"
-    ".fantasybit.GameStatus.Status\022\020\n\010datetim"
-    "e\030\024 \001(\r\"J\n\006Status\022\r\n\tSCHEDULED\020\000\022\013\n\007PREG"
-    "AME\020\002\022\n\n\006INGAME\020\003\022\014\n\010POSTGAME\020\005\022\n\n\006CLOSE"
-    "D\020\004\"F\n\tTeamDepth\022\n\n\002qb\030\n \003(\t\022\n\n\002rb\030\024 \003(\t"
-    "\022\n\n\002wr\030\036 \003(\t\022\n\n\002te\030( \003(\t\022\t\n\001k\0302 \003(\t\"\177\n\013G"
-    "lobalState\022,\n\005state\030\001 \001(\0162\035.fantasybit.G"
-    "lobalState.State\022\016\n\006season\030\n \001(\r\022\014\n\004week"
-    "\030\024 \001(\r\"$\n\005State\022\r\n\tOFFSEASON\020\n\022\014\n\010INSEAS"
-    "ON\020\036*+\n\020PlayerGameStatus\022\007\n\003OUT\020\000\022\006\n\002IN\020"
-    "\001\022\006\n\002NA\020\002", 569);
+    "\n\020StatusData.proto\022\nfantasybit\032\020StaticDa"
+    "ta.proto\"\260\001\n\014PlayerStatus\022\016\n\006teamid\030\024 \001("
+    "\t\022/\n\006status\030\036 \001(\0162\037.fantasybit.PlayerSta"
+    "tus.Status\022(\n\006totals\030( \001(\0132\030.fantasybit."
+    "PlayerResult\"5\n\006Status\022\n\n\006ACTIVE\020\000\022\014\n\010IN"
+    "ACTIVE\020\001\022\t\n\005OTHER\020\003\022\006\n\002FA\020\004\"\231\001\n\nGameStat"
+    "us\022-\n\006status\030\n \001(\0162\035.fantasybit.GameStat"
+    "us.Status\022\020\n\010datetime\030\024 \001(\r\"J\n\006Status\022\r\n"
+    "\tSCHEDULED\020\000\022\013\n\007PREGAME\020\002\022\n\n\006INGAME\020\003\022\014\n"
+    "\010POSTGAME\020\005\022\n\n\006CLOSED\020\004\"F\n\tTeamDepth\022\n\n\002"
+    "qb\030\n \003(\t\022\n\n\002rb\030\024 \003(\t\022\n\n\002wr\030\036 \003(\t\022\n\n\002te\030("
+    " \003(\t\022\t\n\001k\0302 \003(\t\"\177\n\013GlobalState\022,\n\005state\030"
+    "\001 \001(\0162\035.fantasybit.GlobalState.State\022\016\n\006"
+    "season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"$\n\005State\022\r\n\tO"
+    "FFSEASON\020\n\022\014\n\010INSEASON\020\036*+\n\020PlayerGameSt"
+    "atus\022\007\n\003OUT\020\000\022\006\n\002IN\020\001\022\006\n\002NA\020\002", 629);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StatusData.proto", &protobuf_RegisterTypes);
   PlayerStatus::default_instance_ = new PlayerStatus();
@@ -240,6 +243,7 @@ const int PlayerStatus::Status_ARRAYSIZE;
 #ifndef _MSC_VER
 const int PlayerStatus::kTeamidFieldNumber;
 const int PlayerStatus::kStatusFieldNumber;
+const int PlayerStatus::kTotalsFieldNumber;
 #endif  // !_MSC_VER
 
 PlayerStatus::PlayerStatus()
@@ -248,6 +252,7 @@ PlayerStatus::PlayerStatus()
 }
 
 void PlayerStatus::InitAsDefaultInstance() {
+  totals_ = const_cast< ::fantasybit::PlayerResult*>(&::fantasybit::PlayerResult::default_instance());
 }
 
 PlayerStatus::PlayerStatus(const PlayerStatus& from)
@@ -260,6 +265,7 @@ void PlayerStatus::SharedCtor() {
   _cached_size_ = 0;
   teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   status_ = 0;
+  totals_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -272,6 +278,7 @@ void PlayerStatus::SharedDtor() {
     delete teamid_;
   }
   if (this != default_instance_) {
+    delete totals_;
   }
 }
 
@@ -304,6 +311,9 @@ void PlayerStatus::Clear() {
       }
     }
     status_ = 0;
+    if (has_totals()) {
+      if (totals_ != NULL) totals_->::fantasybit::PlayerResult::Clear();
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -348,6 +358,20 @@ bool PlayerStatus::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(322)) goto parse_totals;
+        break;
+      }
+
+      // optional .fantasybit.PlayerResult totals = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_totals:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_totals()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -385,6 +409,12 @@ void PlayerStatus::SerializeWithCachedSizes(
       30, this->status(), output);
   }
 
+  // optional .fantasybit.PlayerResult totals = 40;
+  if (has_totals()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      40, this->totals(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -409,6 +439,13 @@ void PlayerStatus::SerializeWithCachedSizes(
       30, this->status(), target);
   }
 
+  // optional .fantasybit.PlayerResult totals = 40;
+  if (has_totals()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        40, this->totals(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -431,6 +468,13 @@ int PlayerStatus::ByteSize() const {
     if (has_status()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->status());
+    }
+
+    // optional .fantasybit.PlayerResult totals = 40;
+    if (has_totals()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->totals());
     }
 
   }
@@ -466,6 +510,9 @@ void PlayerStatus::MergeFrom(const PlayerStatus& from) {
     if (from.has_status()) {
       set_status(from.status());
     }
+    if (from.has_totals()) {
+      mutable_totals()->::fantasybit::PlayerResult::MergeFrom(from.totals());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -491,6 +538,7 @@ void PlayerStatus::Swap(PlayerStatus* other) {
   if (other != this) {
     std::swap(teamid_, other->teamid_);
     std::swap(status_, other->status_);
+    std::swap(totals_, other->totals_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
