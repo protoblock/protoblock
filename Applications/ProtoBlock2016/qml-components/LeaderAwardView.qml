@@ -30,7 +30,7 @@ Item {
 
             sortIndicatorColumn: 1
             highlightOnFocus:   false
-            height: parent.height - ProtoScreen.guToPx(8)
+            height: parent.height - ProtoScreen.guToPx(5)
             implicitWidth: parent.width
 
             selectionMode: SelectionMode.NoSelection
@@ -84,7 +84,7 @@ Item {
                 role: "name"
                 title: "Fantasy Name"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(20)
+                width: ProtoScreen.guToPx(15)
                 delegate: Material.Card {
                         anchors.margins: 0
                         id: mcard
@@ -117,7 +117,7 @@ Item {
                 role: "proj"
                 title: "Projection"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(12)
+                width: ProtoScreen.guToPx(10)
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -132,7 +132,7 @@ Item {
                 role: "award"
                 title: "Award ƑɃ"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(12)
+                width: ProtoScreen.guToPx(10)
 
 
                 delegate: Material.Label {

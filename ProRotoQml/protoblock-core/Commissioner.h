@@ -238,9 +238,9 @@ public:
 
     static GlobalState InitialGlobalState () {
         GlobalState gs{};
-        gs.set_season(2015);
-        gs.set_state(GlobalState::INSEASON);
-        gs.set_week(1);
+        gs.set_season(2014);
+        gs.set_state(GlobalState::OFFSEASON);
+        gs.set_week(0);
 
         return gs;
     }
@@ -313,6 +313,8 @@ public:
 
 
     static bool verify(const pb::signature &sig, const pb::sha256 &digest, pb::public_key_data& pk) {
+//          return true;
+//          auto holdp = ;
           return pb::public_key(pk).verify(digest, sig);// pb::public_key(sig, digest) == pub;
     }
 
@@ -326,7 +328,7 @@ public:
         std::lock_guard<std::recursive_mutex> lockg{ name_mutex };
         auto iter = Hash2Pk.find(FantasyName::name_hash(fn));
         if (iter == Hash2Pk.end()) {
-            qCritical() << "cant find fantasyname: " << fn;
+            qCritical() << "cant find fantasyname: " << fn.data();
             return false;
         }
         else {
@@ -367,15 +369,17 @@ public:
 
     static pb::signature str2sig(const std::string &str)
     {
+        unsigned char data[72];
         pb::signature sig;
-        if ( pb::from_base58(str, (char *)sig.data, 64) > 64 ) {
+        if ( pb::from_base58(str, (char *)data, 64) > 64 ) {
             //ToDo: test
             //in case using 2015 bad sigs
-            unsigned char data[72];
             auto sz = pb::from_base58(str, (char *)data, 72);
             sig = pb::parse_der(data,sz < 72 ? sz : 72);
             sig = pb::signature_normalize(sig);
         }
+        else memcpy(sig.data,data,64);
+
         return sig;
     }
 

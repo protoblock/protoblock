@@ -46,10 +46,11 @@ public slots:
 
         qDebug()  << " socket yes " << name.data();
         doSendProjections(it->second,name);
-        doSendLeaders(it->second);
+//        doSendLeaders(it->second);
     }
 
     void GameStart(string gameid);
+    void OnLive();
 
 Q_SIGNALS:
     void closed();
@@ -102,6 +103,7 @@ private:
     GetProjectionRep *mGetProjectionRep;
     WSReply mWSReplyGetProjectionRep;
     QByteArray mWSReplybyteArray;
+    quint16 mPort;
     void doSendProjections(QWebSocket *pClient, const std::string &fname);
 };
 

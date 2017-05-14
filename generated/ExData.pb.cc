@@ -292,7 +292,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DepthItem));
   BookDelta_descriptor_ = file->message_type(12);
-  static const int BookDelta_offsets_[8] = {
+  static const int BookDelta_offsets_[9] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, fantasy_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, seqnum_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, playerid_),
@@ -301,6 +301,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, removes_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, level2tic_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, level1tic_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, blocknum_),
   };
   BookDelta_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -335,12 +336,13 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketQuote));
   MarketSnapshot_descriptor_ = file->message_type(14);
-  static const int MarketSnapshot_offsets_[5] = {
+  static const int MarketSnapshot_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, symbol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, week_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, depth_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, ohlc_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, quote_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MarketSnapshot, blocknum_),
   };
   MarketSnapshot_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -465,20 +467,21 @@ void protobuf_AddDesc_ExData_2eproto() {
     "w\030( \001(\005\022\r\n\005close\0302 \001(\005\022\016\n\006volume\030< \001(\005\022\016"
     "\n\006change\030F \001(\005\"H\n\tDepthItem\022\r\n\005level\030\n \001"
     "(\005\022\t\n\001b\030\036 \001(\005\022\t\n\001a\030( \001(\005\022\n\n\002bs\0302 \001(\005\022\n\n\002"
-    "as\030< \001(\005\"\220\002\n\tBookDelta\022\024\n\014fantasy_name\030\n"
+    "as\030< \001(\005\"\242\002\n\tBookDelta\022\024\n\014fantasy_name\030\n"
     " \001(\t\022\016\n\006seqnum\030\024 \001(\005\022\020\n\010playerid\030\036 \001(\t\022%"
     "\n\006newnew\030( \001(\0132\025.fantasybit.OrderCore\022&\n"
     "\004ohlc\030) \001(\0132\030.fantasybit.ContractOHLC\022\"\n"
     "\007removes\0302 \003(\0132\021.fantasybit.Order\022+\n\tlev"
     "el2tic\030< \003(\0132\030.fantasybit.MarketTicker\022+"
     "\n\tlevel1tic\030F \003(\0132\030.fantasybit.MarketTic"
-    "ker\"_\n\013MarketQuote\022\n\n\002bs\030\n \001(\005\022\t\n\001b\030\024 \001("
-    "\005\022\t\n\001a\030\036 \001(\005\022\n\n\002as\030( \001(\005\022\t\n\001l\0302 \001(\005\022\n\n\002l"
-    "s\030< \001(\005\022\013\n\003udn\030F \001(\005\"\244\001\n\016MarketSnapshot\022"
-    "\016\n\006symbol\030\n \001(\t\022\014\n\004week\030\013 \001(\005\022$\n\005depth\030F"
-    " \003(\0132\025.fantasybit.DepthItem\022&\n\004ohlc\030\024 \001("
-    "\0132\030.fantasybit.ContractOHLC\022&\n\005quote\030\036 \001"
-    "(\0132\027.fantasybit.MarketQuote", 1587);
+    "ker\022\020\n\010blocknum\030P \001(\005\"_\n\013MarketQuote\022\n\n\002"
+    "bs\030\n \001(\005\022\t\n\001b\030\024 \001(\005\022\t\n\001a\030\036 \001(\005\022\n\n\002as\030( \001"
+    "(\005\022\t\n\001l\0302 \001(\005\022\n\n\002ls\030< \001(\005\022\013\n\003udn\030F \001(\005\"\266"
+    "\001\n\016MarketSnapshot\022\016\n\006symbol\030\n \001(\t\022\014\n\004wee"
+    "k\030\013 \001(\005\022$\n\005depth\030F \003(\0132\025.fantasybit.Dept"
+    "hItem\022&\n\004ohlc\030\024 \001(\0132\030.fantasybit.Contrac"
+    "tOHLC\022&\n\005quote\030\036 \001(\0132\027.fantasybit.Market"
+    "Quote\022\020\n\010blocknum\030( \001(\005", 1623);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ExData.proto", &protobuf_RegisterTypes);
   SettlePos::default_instance_ = new SettlePos();
@@ -4542,6 +4545,7 @@ const int BookDelta::kOhlcFieldNumber;
 const int BookDelta::kRemovesFieldNumber;
 const int BookDelta::kLevel2TicFieldNumber;
 const int BookDelta::kLevel1TicFieldNumber;
+const int BookDelta::kBlocknumFieldNumber;
 #endif  // !_MSC_VER
 
 BookDelta::BookDelta()
@@ -4567,6 +4571,7 @@ void BookDelta::SharedCtor() {
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   newnew_ = NULL;
   ohlc_ = NULL;
+  blocknum_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4627,6 +4632,9 @@ void BookDelta::Clear() {
     if (has_ohlc()) {
       if (ohlc_ != NULL) ohlc_->::fantasybit::ContractOHLC::Clear();
     }
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    blocknum_ = 0;
   }
   removes_.Clear();
   level2tic_.Clear();
@@ -4759,6 +4767,22 @@ bool BookDelta::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(562)) goto parse_level1tic;
+        if (input->ExpectTag(640)) goto parse_blocknum;
+        break;
+      }
+
+      // optional int32 blocknum = 80;
+      case 80: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_blocknum:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &blocknum_)));
+          set_has_blocknum();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4834,6 +4858,11 @@ void BookDelta::SerializeWithCachedSizes(
       70, this->level1tic(i), output);
   }
 
+  // optional int32 blocknum = 80;
+  if (has_blocknum()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(80, this->blocknum(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -4902,6 +4931,11 @@ void BookDelta::SerializeWithCachedSizes(
         70, this->level1tic(i), target);
   }
 
+  // optional int32 blocknum = 80;
+  if (has_blocknum()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(80, this->blocknum(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -4946,6 +4980,15 @@ int BookDelta::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->ohlc());
+    }
+
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional int32 blocknum = 80;
+    if (has_blocknum()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->blocknum());
     }
 
   }
@@ -5018,6 +5061,11 @@ void BookDelta::MergeFrom(const BookDelta& from) {
       mutable_ohlc()->::fantasybit::ContractOHLC::MergeFrom(from.ohlc());
     }
   }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_blocknum()) {
+      set_blocknum(from.blocknum());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -5048,6 +5096,7 @@ void BookDelta::Swap(BookDelta* other) {
     removes_.Swap(&other->removes_);
     level2tic_.Swap(&other->level2tic_);
     level1tic_.Swap(&other->level1tic_);
+    std::swap(blocknum_, other->blocknum_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -5519,6 +5568,7 @@ const int MarketSnapshot::kWeekFieldNumber;
 const int MarketSnapshot::kDepthFieldNumber;
 const int MarketSnapshot::kOhlcFieldNumber;
 const int MarketSnapshot::kQuoteFieldNumber;
+const int MarketSnapshot::kBlocknumFieldNumber;
 #endif  // !_MSC_VER
 
 MarketSnapshot::MarketSnapshot()
@@ -5543,6 +5593,7 @@ void MarketSnapshot::SharedCtor() {
   week_ = 0;
   ohlc_ = NULL;
   quote_ = NULL;
+  blocknum_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5595,6 +5646,7 @@ void MarketSnapshot::Clear() {
     if (has_quote()) {
       if (quote_ != NULL) quote_->::fantasybit::MarketQuote::Clear();
     }
+    blocknum_ = 0;
   }
   depth_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -5663,6 +5715,22 @@ bool MarketSnapshot::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(320)) goto parse_blocknum;
+        break;
+      }
+
+      // optional int32 blocknum = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_blocknum:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &blocknum_)));
+          set_has_blocknum();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectTag(562)) goto parse_depth;
         break;
       }
@@ -5726,6 +5794,11 @@ void MarketSnapshot::SerializeWithCachedSizes(
       30, this->quote(), output);
   }
 
+  // optional int32 blocknum = 40;
+  if (has_blocknum()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(40, this->blocknum(), output);
+  }
+
   // repeated .fantasybit.DepthItem depth = 70;
   for (int i = 0; i < this->depth_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -5767,6 +5840,11 @@ void MarketSnapshot::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         30, this->quote(), target);
+  }
+
+  // optional int32 blocknum = 40;
+  if (has_blocknum()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(40, this->blocknum(), target);
   }
 
   // repeated .fantasybit.DepthItem depth = 70;
@@ -5813,6 +5891,13 @@ int MarketSnapshot::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->quote());
+    }
+
+    // optional int32 blocknum = 40;
+    if (has_blocknum()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->blocknum());
     }
 
   }
@@ -5863,6 +5948,9 @@ void MarketSnapshot::MergeFrom(const MarketSnapshot& from) {
     if (from.has_quote()) {
       mutable_quote()->::fantasybit::MarketQuote::MergeFrom(from.quote());
     }
+    if (from.has_blocknum()) {
+      set_blocknum(from.blocknum());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -5891,6 +5979,7 @@ void MarketSnapshot::Swap(MarketSnapshot* other) {
     depth_.Swap(&other->depth_);
     std::swap(ohlc_, other->ohlc_);
     std::swap(quote_, other->quote_);
+    std::swap(blocknum_, other->blocknum_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

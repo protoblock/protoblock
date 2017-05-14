@@ -28,7 +28,19 @@ CONFIG += c++11
 
 contains(DEFINES, DATAAGENTWRITENAMES){
     QT += sql
+    CONFIG += Console
 }
+
+contains(DEFINES, TIMEAGENTWRITEFILLS){
+    QT += sql
+    CONFIG += Console
+}
+
+contains(DEFINES, DATAAGENTWRITEPROFIT){
+    QT += sql
+    CONFIG += Console
+}
+
 
 osx{
     CONFIG+=app_bundle

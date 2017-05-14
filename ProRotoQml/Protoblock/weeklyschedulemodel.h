@@ -11,6 +11,8 @@
 #include "sortfilterproxymodel.h"
 #include "StatusData.pb.h"
 
+namespace pb {
+
 using namespace  fantasybit;
 
 static QString GameStatusToString(fantasybit::GameStatus_Status gs) {
@@ -81,6 +83,7 @@ public:
 class WeeklyScheduleModel : public QQmlObjectListModel<WeeklyScheduleModelItem>{
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY(int, week)
+    QML_READONLY_CSTREF_PROPERTY(int, season)
 
 public:
     explicit WeeklyScheduleModel (QObject *          parent      = Q_NULLPTR,
@@ -89,16 +92,26 @@ public:
 
             : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
-    void updateWeeklySchedule(int week, const fantasybit::WeeklySchedule &weekly) {
+    void updateWeeklySchedule(int season,int week, const fantasybit::WeeklySchedule &weekly) {
 
         qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
 
         clear();
 
         setweek(week);
+        setseason(season);
 
-        for ( auto &gi : weekly.games())
-           append(new WeeklyScheduleModelItem(gi,this));
+        std::map<int,std::vector<fantasybit::GameInfo>> sorted;
+        for ( auto &gi : weekly.games()) {
+            auto &vec = sorted[gi.time()];
+            vec.push_back(gi);
+        }
+
+        for ( auto tvec : sorted ) {
+            for ( auto p : tvec.second ) {
+                append(new WeeklyScheduleModelItem(p,this));
+            }
+        }
     }
 
     bool UpdateStatus(std::string gameid,fantasybit::GameStatus_Status gs, bool reverse = false) {
@@ -194,5 +207,6 @@ protected:
         return true;
     }
 };
+}
 
 #endif // WEEKLYSCHEDULEMODEL_H

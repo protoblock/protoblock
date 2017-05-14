@@ -34,7 +34,7 @@ Item {
             sortIndicatorColumn: 1
             highlightOnFocus:   false
 //            anchors.fill: parent
-            height: parent.height - ProtoScreen.guToPx(8)
+            height: parent.height - ProtoScreen.guToPx(5)
             implicitWidth: parent.width
 
             selectionMode: SelectionMode.NoSelection

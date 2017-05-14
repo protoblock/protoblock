@@ -82,7 +82,7 @@ public:
         if  (count > 0 && sum > 0) {
             int ret = sum / count;
             if ( ret > count * 40)
-                return PlayerIDProjections[playerid][0];
+                return 20;//PlayerIDProjections[playerid][0];
             else
                 return ret;
         }

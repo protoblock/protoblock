@@ -29,6 +29,10 @@ class FantasyBitAwardModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, name)
     QML_READONLY_CSTREF_PROPERTY (int, proj)
     QML_READONLY_CSTREF_PROPERTY (int, award)
+//    QML_READONLY_CSTREF_PROPERTY (int, position)
+//    QML_READONLY_CSTREF_PROPERTY (int, price)
+//    QML_READONLY_CSTREF_PROPERTY (int, pnl)
+
 
 public:
 
@@ -76,8 +80,11 @@ class PlayerResultModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (int, PtsA)
     QML_OBJMODEL_PROPERTY (FantasyBitAwardModelItem, awardsModel)
 
-    QML_READONLY_CSTREF_PROPERTY (int, myproj)
-    QML_READONLY_CSTREF_PROPERTY (int, myaward)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, myproj)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, myaward)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, mypos)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (double, myprice)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, mypnl)
 
 public:
 
@@ -144,6 +151,19 @@ public:
                 m_myaward = it.award();
             }
         }
+
+        for ( auto it : pr.fantasybitpnl()) {
+            if ( fname == it.name() ) {
+                m_mypnl = it.pnl();
+                m_mypos = it.spos().qty();
+//                m_myprice = abs(it.spos().price());
+                if ( m_mypos != 0 ) {
+                    m_myprice = double(it.spos().price()) / (m_mypos * -1.0);
+                }
+
+            }
+        }
+
 
         //qDebug() << " PlayerResultModelItem"  << pd.base.DebugString().data() << teamid.data() << m_playerid.data();
     }

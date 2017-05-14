@@ -22,7 +22,7 @@ using namespace fantasybit;
 #endif
 
 
-#ifdef CHECKPOINTS
+#ifdef CHECKPOINTS_2015
 void NFLStateData::InitCheckpoint() {
 
     leveldb::WriteOptions write_sync;
@@ -133,85 +133,86 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     ldb.read(ldb.read(ldb.read("head")),head);
 
     if ( !onlyresult ) {
-    GlobalState gs;
-    gs.set_season(head.season());
-    gs.set_week(head.week());
-    gs.set_state(GlobalState_State_INSEASON);
-    db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
-    qDebug() << "InitCheckpoint wrote GlobalState" << gs.DebugString().data();
-    {
-        MerkleTree mtree;
-        std::vector< std::pair<std::string,  GameStatusMeta> > mapt;
-        pb::loadMerkleMap(ldb,head.gamemetaroot(),mtree,mapt);
+        GlobalState gs;
+        gs.set_season(head.season());
+        gs.set_week(head.week());
+        gs.set_state(GlobalState_State_INSEASON);
+        db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
+        qDebug() << "InitCheckpoint wrote GlobalState" << gs.DebugString().data();
+        {
+            MerkleTree mtree;
+            std::vector< std::pair<std::string,  GameStatusMeta> > mapt;
+            pb::loadMerkleMap(ldb,head.gamemetaroot(),mtree,mapt);
 
-        std::unordered_map<int,WeeklySchedule> wsm;
-        for ( auto p : mapt) {
-            GameStatusMeta &gsm = p.second;
-            auto it = wsm.find(gsm.week());
-            if ( it == end(wsm) ) {
-                wsm.insert({gsm.week(),WeeklySchedule::default_instance()});
+            std::unordered_map<int,WeeklySchedule> wsm;
+            for ( auto p : mapt) {
+                GameStatusMeta &gsm = p.second;
+                auto it = wsm.find(gsm.week());
+                if ( it == end(wsm) ) {
+                    wsm.insert({gsm.week(),WeeklySchedule::default_instance()});
+                }
+                WeeklySchedule &ws = wsm[gsm.week()];
+                ws.add_games()->CopyFrom(gsm.gameinfo());
+                string key = "gamestatus:" + gsm.id();
+                db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
             }
-            WeeklySchedule &ws = wsm[gsm.week()];
-            ws.add_games()->CopyFrom(gsm.gameinfo());
-            string key = "gamestatus:" + gsm.id();
-            db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
+            for ( auto wg : wsm ) {
+                string key = "scheduleweek:" + to_string(wg.first);
+                db4->Put(write_sync, key,
+                               wg.second.SerializeAsString() );
+            }
         }
-        for ( auto wg : wsm ) {
-            string key = "scheduleweek:" + to_string(wg.first);
-            db4->Put(write_sync, key,
-                           wg.second.SerializeAsString() );
+
+
+        {
+            MerkleTree mtree;
+            std::vector< std::pair<std::string,  PlayerMeta> > mapt;
+            pb::loadMerkleMap(ldb,head.playermetaroot(),mtree,mapt);
+
+            for ( auto p : mapt) {
+                PlayerMeta &pm = p.second;
+                if ( pm.has_player_status() )
+                    db2->Put(write_sync, pm.playerid(),
+                                   pm.player_status().SerializeAsString() );
+                db3->Put(write_sync, pm.playerid(),
+                               pm.player_base().SerializeAsString() );
+            }
         }
-    }
 
 
-    {
-        MerkleTree mtree;
-        std::vector< std::pair<std::string,  PlayerMeta> > mapt;
-        pb::loadMerkleMap(ldb,head.playermetaroot(),mtree,mapt);
+        {
+            MerkleTree mtree;
+            std::vector< std::pair<std::string,  FantasyNameBalMeta> > mapt;
+            pb::loadMerkleMap(ldb,head.fnamemetaroot(),mtree,mapt);
 
-        for ( auto p : mapt) {
-            PlayerMeta &pm = p.second;
-            if ( pm.has_player_status() )
-                db2->Put(write_sync, pm.playerid(),
-                               pm.player_status().SerializeAsString() );
-            db3->Put(write_sync, pm.playerid(),
-                           pm.player_base().SerializeAsString() );
-        }
-    }
+    #if defined(DATAAGENTWRITENAMES_FORCE) && !defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
+                SqlStuff sql("satoshifantasy","OnFantasyName");
+    #endif
+            for ( auto p : mapt) {
+                FantasyNameBalMeta &pm = p.second;
+                FantasyNameBal fnb;
+                fnb.set_name(pm.name());
+                fnb.set_public_key(pm.public_key());
+                fnb.set_bits(pm.bits());
+                fnb.set_stake(pm.stake());
+                auto hash = FantasyName::name_hash(fnb.name());
+                leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+                db5->Put(write_sync, hkey, fnb.SerializeAsString());
+    //            qDebug() << "zxcvbn" << fnb.DebugString();
+    #if defined(DATAAGENTWRITENAMES_FORCE) && !defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
+                FantasyNameHash fnh{};
+                fnh.set_name(fnb.name());
+                fnh.set_hash(hash);
+                qDebug() << " data write fnh " << fnh.DebugString();
+                sql.fantasyname(fnh);
+    #endif
+                fnb.Clear();
 
-
-    {
-        MerkleTree mtree;
-        std::vector< std::pair<std::string,  FantasyNameBalMeta> > mapt;
-        pb::loadMerkleMap(ldb,head.fnamemetaroot(),mtree,mapt);
-
-#ifdef DATAAGENTWRITENAMES_FORCE
-            SqlStuff sql("satoshifantasy","OnFantasyName");
-#endif
-        for ( auto p : mapt) {
-            FantasyNameBalMeta &pm = p.second;
-            FantasyNameBal fnb;
-            fnb.set_name(pm.name());
-            fnb.set_public_key(pm.public_key());
-            fnb.set_bits(pm.bits());
-            fnb.set_stake(pm.stake());
-            auto hash = FantasyName::name_hash(fnb.name());
-            leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
-            db5->Put(write_sync, hkey, fnb.SerializeAsString());
-//            qDebug() << "zxcvbn" << fnb.DebugString();
-#ifdef DATAAGENTWRITENAMES_FORCE
-            FantasyNameHash fnh{};
-            fnh.set_name(fnb.name());
-            fnh.set_hash(hash);
-            qDebug() << " data write fnh " << fnh.DebugString();
-            sql.fantasyname(fnh);
-#endif
-            fnb.Clear();
-
+            }
         }
     }
-    }
 
+    //if onlyresult
     {
         MerkleTree mtree;
         std::vector< std::pair<std::string,  GameResult> > mapt;
@@ -336,11 +337,13 @@ void NFLStateData::init() {
         Writer<GameData> writer2{ GET_ROOT_DIR() + "bootstrap/GameData.txt" };
         Writer<GameResult> writer3{ GET_ROOT_DIR() + "bootstrap/GameResult.txt" };
 #endif
+        auto gs = GetGlobalState();
         for (int i=1; i<=17;i++) {
-            string key = "scheduleweek:" + to_string(i);
+            string key = to_string(gs.season()) + "scheduleweek:" + to_string(i);
             string temp;
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                qWarning() << "cant find schedule " << key.c_str();
+                qWarning() << "NFLStateData::init cant find schedule " << key.data();
+                qDebug() << gs.DebugString().data();
                 break;
             }
             WeeklySchedule ws;
@@ -462,13 +465,16 @@ void NFLStateData::TeamNameChange(const std::string &playerid, const PlayerBase 
     MyTeamRoster.erase(mps.teamid());
 }
 
-void NFLStateData::AddNewWeeklySchedule(int week, const WeeklySchedule &ws) {
-    string key = "scheduleweek:" + to_string(week);
+void NFLStateData::AddNewWeeklySchedule(int season,int week, const WeeklySchedule &ws) {
+    string key = to_string(season) + "scheduleweek:" + to_string(week);
     if ( !staticstore->Put(write_sync, key, ws.SerializeAsString()).ok()) {
         qWarning() << " error writing schecule";
         return;
     }
-    qDebug() << QString::fromStdString(ws.DebugString());
+    else {
+        qDebug() << "AddNewWeeklySchedule! cant find " << key.data();
+    }
+    qDebug() << ws.DebugString().data();
     GameStatus gs{};
     gs.set_status(GameStatus::SCHEDULED);
 
@@ -597,21 +603,21 @@ void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus 
     string key = "gamestatus:" + gameid;
     if (!statusstore->Put(write_sync, key, use.SerializeAsString()).ok())
         qWarning() << "!ok" << "cant update status";
-    qDebug() << key << QString::fromStdString(use.DebugString());
+    qDebug() << key << use.DebugString().data();
 }
 
 void NFLStateData::OnWeekOver(int in) {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
-    auto ws = GetWeeklySchedule(in);
+    auto ws = GetWeeklySchedule(theSeason(),in);
     for (auto game : ws.games() ) {
         GameResult gs{};
         if ( !GetGameResult(game.id(),gs) ) {
-            qWarning() << " no result " << game.id();
+            qWarning() << " no result " << game.id().data();
             continue;
         }
         else
-            qDebug() << "week over" << in << " commit result " << game.id();
+            qDebug() << "week over" << in << " commit result " << game.id().data();
 
         auto tr = GetTeamRoster(game.home());
         for ( auto pr : gs.home_result() ) {
@@ -651,9 +657,12 @@ void NFLStateData::OnWeekStart(int in) {
     //week = in;
 }
 
-WeeklySchedule NFLStateData::GetWeeklySchedule(int week) {
+WeeklySchedule NFLStateData::GetWeeklySchedule(int season,int week) {
 
-    auto ws = getWeeklyStaticSchedule(week);
+    auto ws = getWeeklyStaticSchedule(season,week);
+    if ( season != theSeason() )
+        return ws;
+
     auto sz = ws.games().size();
     for ( int i = 0; i<sz; i++) {
         GameInfo *g = ws.mutable_games(i);
@@ -668,12 +677,12 @@ WeeklySchedule NFLStateData::GetWeeklySchedule(int week) {
     return ws;
 }
 
-WeeklySchedule NFLStateData::getWeeklyStaticSchedule(int week) {
+WeeklySchedule NFLStateData::getWeeklyStaticSchedule(int season,int week) {
     WeeklySchedule ws{};
     string temp;
-    string key = "scheduleweek:" + to_string(week);
+    string key = to_string(season) + "scheduleweek:" + to_string(week);
     if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-        qWarning() << "cant find schedule " << key.c_str();
+        qWarning() << "getWeeklyStaticSchedule cant find schedule " << key.data();
         return ws;
     }
     ws.ParseFromString(temp);
@@ -708,7 +717,7 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
 
     qDebug() << week();
 
-    WeeklySchedule ws = getWeeklyStaticSchedule(week());
+    WeeklySchedule ws = getWeeklyStaticSchedule(theSeason(),week());
 
     for (const auto g : ws.games()) {
         GameRoster gr{};
@@ -732,13 +741,13 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
     return retgr;
 }
 
-std::vector<fantasybit::GameResult> NFLStateData::GetPrevWeekGameResults(int week) {
+std::vector<fantasybit::GameResult> NFLStateData::GetPrevWeekGameResults(int season,int week) {
     std::vector<fantasybit::GameResult> ret{};
     auto s = GetGlobalState();
-    if  (s.week() < week && s.week() != 0)
+    if  (s.season() == season && s.week() < week && s.week() != 0)
         return ret;
 
-    auto ws = GetWeeklySchedule(week);
+    auto ws = GetWeeklySchedule(season,week);
     for (const auto g : ws.games()) {
         GameResult gr{};
         if (GetGameResult(g.id(),gr) )
@@ -752,7 +761,7 @@ std::unordered_map<std::string,PlayerDetail>
         NFLStateData::GetTeamRoster(const std::string &teamid) {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
-    qDebug() << "get team roster" << teamid;
+    qDebug() << "get team roster" << teamid.data();
     std::unordered_map<std::string,PlayerDetail> vpb{};
 
 //    auto it = MyTeamRoster.find(teamid);
@@ -784,8 +793,8 @@ GlobalState NFLStateData::GetGlobalState() {
         gs.ParseFromString(temp);
     }
     else {
-        return Commissioner::InitialGlobalState();
         qWarning() << "No GlobalState";
+        return Commissioner::InitialGlobalState();
     }
 
     return gs;
@@ -796,9 +805,15 @@ int NFLStateData::week() {
     return gs.week();
 }
 
+int NFLStateData::theSeason() {
+    auto gs = GetGlobalState();
+    return gs.season();
+}
+
+
 void NFLStateData:: OnGlobalState(fantasybit::GlobalState &gs) {
     statusstore->Put(write_sync, "globalstate", gs.SerializeAsString());
-    qDebug() << gs.DebugString();
+    qDebug() << "OnGlobalState" << gs.DebugString().data();
     if ( amlive )
         emit GlobalStateChange(gs);
 }

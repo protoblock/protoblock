@@ -20,7 +20,7 @@
 #ifdef DATAAGENTWRITENAMES
 #include "../../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
-
+#include "DataPersist.h"
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
@@ -82,12 +82,44 @@ int main(int argc, char *argv[])
 
     Core::instance()->bootstrap();
 
+
+//    GameStatsLoaderFD gamestatsloader;
+//    auto out = gamestatsloader.loadPastYearGameStatsFromFantasyData(1);
+//    auto &gamer = out["201410101"];
+//    qDebug() << " gr fgr" << gamer.DebugString().data();
+//    return 0;
+
+    /*
+    AllStatsLoader2014 asl;
+    std::vector<Transaction> txs = asl.loadAllDataWeek1to16for2014();
+    return 0;
+    /*
+    {
+        Writer<void> writetx("D:\\data\\Transition2014.out",ios::app);
+        if ( !writetx.good() )
+            qDebug() << " bad Writer";
+        else for ( auto &tx : txs)
+            writetx(tx);
+    }
+
+    {
+    Reader<Transaction> readertx("D:\\data\\Transition2014.out");
+    Transaction tx;
+    while ( readertx.ReadNext(tx) ) {
+        qDebug() << tx.DebugString().data();
+    }
+    }
+    return 0;
+
+    /**/
+
     //MainLAPIWorker *mw = ;
     //mw->dataService = DataService::instance();
     pb::FullGateway *fg = new pb::FullGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
                                      DataService::instance());
-
     pb::Mediator::instance()->setContext(fg);
+
+
 
     engine.rootContext()->setContextProperty("MiddleMan", pb::Mediator::instance());
     pb::ImportLoader il;
@@ -101,5 +133,27 @@ int main(int argc, char *argv[])
 
     engine.dumpObjectInfo();
     engine.load(QUrl(QStringLiteral("qrc:/MaterialMain.qml")));
+
+    /*
+    AllStatsLoader2014 asl;
+    std::vector<Transaction> txs = asl.loadAllDataWeek1to16for2014();
+
+    {
+        Writer<void> writetx("D:\\data\\Transition2014.out",ios::app);
+        if ( !writetx.good() )
+            qDebug() << " bad Writer";
+        else for ( auto &tx : txs)
+            writetx(tx);
+    }
+
+    {
+    Reader<Transaction> readertx("D:\\data\\Transition2014.out");
+    Transaction tx;
+    while ( readertx.ReadNext(tx) ) {
+        qDebug() << " read one";
+        qDebug() << tx.DebugString().data();
+    }
+    }
+    /**/
     return app.exec();
 }

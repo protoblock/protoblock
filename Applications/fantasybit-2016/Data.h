@@ -81,7 +81,7 @@ public:
 public:
     NFLStateData() {}
 
-#ifdef CHECKPOINTS
+#ifdef CHECKPOINTS_2015
     static void InitCheckpoint();
 #endif
 
@@ -93,7 +93,7 @@ public:
     void closeAll();
 
     void AddNewPlayer(const std::string playerid, const PlayerBase &);
-    void AddNewWeeklySchedule(int week, const WeeklySchedule &);
+    void AddNewWeeklySchedule(int season, int week, const WeeklySchedule &);
     void AddGameResult(const string &gameid, const GameResult&);
     GameResult GetGameResult(const std::string &gameid);
 
@@ -111,13 +111,13 @@ public:
     bool GetGameResult(const std::string &gameid, GameResult &result);
 
     std::vector<GameRoster> GetCurrentWeekGameRosters();
-    std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int week);
+    std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int season,int week);
 
     std::unordered_map<std::string,PlayerDetail>
             GetTeamRoster(const std::string &teamid);
 
     GameStatus GetUpdatedGameStatus(std::string id);
-    WeeklySchedule GetWeeklySchedule(int week);
+    WeeklySchedule GetWeeklySchedule(int season,int week);
 
     GlobalState GetGlobalState();
     void OnGlobalState(GlobalState &gs);
@@ -131,7 +131,29 @@ public:
     }
 
     void OnSeasonEnd(int season) {
-        seasonFreeze(season);
+        for ( int i=0;i<16;i++) {
+            auto ws = GetWeeklySchedule(season,i+1);
+
+            string key = to_string(season) + "scheduleweek:" + to_string(i+1);
+            if ( !staticstore->Put(write_sync, key, ws.SerializeAsString()).ok()) {
+                qWarning() << " error writing schecule";
+            }
+
+            {
+                std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+
+                for ( auto game : ws.games()) {
+                    string key = "gamestatus:" + game.id();
+                    if (!statusstore->Delete(write_sync, key).ok())
+                        qWarning() << " error deleting gamestatus";
+                }
+            }
+        }
+
+        {
+            std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+            MyGameInfo.clear();
+        }
 //        makeBootStrap(season,18,0);
     }
 
@@ -210,10 +232,10 @@ public:
         MerkleTree tree;
         string temp;
         for (int i=1; i<=17;i++) {
-            string key = "scheduleweek:" + to_string(i);
+            string key = to_string(theSeason()) + "scheduleweek:" + to_string(i);
 
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                qWarning() << "cant find schedule " << key.c_str();
+                qWarning() << "BootStrapSchedule cant find schedule " << key.data();
                 break;
             }
 
@@ -246,10 +268,10 @@ public:
         MerkleTree tree;
         string temp;
         for (int i=1; i<=17;i++) {
-            string key = "scheduleweek:" + to_string(i);
+            string key = to_string(theSeason()) + "scheduleweek:" + to_string(i);
 
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
-                qWarning() << "cant find schedule " << key.c_str();
+                qWarning() << "BootStrapResult cant find schedule " << key.data();
                 break;
             }
 
@@ -295,8 +317,9 @@ private:
     void OnPlayerSign(const std::string &pid, const std::string &tid);
     void OnPlayerStatus(const std::string &pid,PlayerStatus ps);
 
-    WeeklySchedule getWeeklyStaticSchedule(int week);
+    WeeklySchedule getWeeklyStaticSchedule(int season,int week);
     int week();
+    int theSeason();
 
     static std::string filedir(const std::string &in);
 

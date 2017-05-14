@@ -54,7 +54,7 @@ Material.Card {
         property bool first: true
 //        anchors.fill: parent
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(8)
+        height: parent.height - ProtoScreen.guToPx(5)
         id: lv
         model: MiddleMan.pWeeklyScheduleModel
 //        MiddleMan.pWeeklyScheduleModel
@@ -109,57 +109,6 @@ Material.Card {
             width: parent.width
             property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
 
-//            GroupBox {
-//                id: group2
-//                height: parent.height * .50
-//                anchors.left: parent.left
-//                anchors.horizontalCenter: scheduleView1.horizontalCenter
-//                anchors.verticalCenter: parent.parent.verticalCenter
-//                title: qsTr("Which Games onCopy?")
-//                Layout.fillWidth: true
-//                RowLayout {
-//                    ExclusiveGroup { id: tabPositionGroup }
-//    //                Material.
-//                    RadioButton {
-//                        id: topButton
-//                        text: qsTr("Selection Only")
-//                        checked: true
-//                        exclusiveGroup: tabPositionGroup
-//    //                    Layout.minimumWidth: 100
-//                    }
-//                    RadioButton {
-//                        id: bottomButton
-//                        text: qsTr("All - Ignore Selection")
-//                        exclusiveGroup: tabPositionGroup
-//    //                    Layout.minimumWidth: 100
-//                    }
-//                }
-//            }
-
-//            ColumnLayout {
-//                spacing: 0
-//                anchors.fill: parent
-//                ComboBox {
-//                    id: combo
-//                    Layout.preferredHeight: ProtoScreen.guToPx(4)
-//                    width: parent.width * (4.0/11.0)
-////                    anchors.bottom: rrr.top
-//                    anchors.right: parent.right
-//                    model: ["Scheduled", "Scored" , "Locked", "All" ]
-//    //                enabled: modelData === "  Status  "
-//                    currentIndex: 0
-//    //                visible: modelData === "  Status  "
-//                    //                            anchors.fill: parent
-//                    onCurrentTextChanged: {
-//    //                               MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
-//                    }
-//                }
-//            Rectangle {
-//                id: rec
-//                height: ProtoScreen.guToPx(8)
-//                width: parent.width
-//                color: "transparent"
-//                anchors.bottom: parent.bottom
                 RowLayout {
                     spacing: 0
                     anchors.fill: parent
@@ -190,43 +139,6 @@ Material.Card {
                                     }
                                 }
 
-//                                Label {
-//                                    text: "Games to"
-//                                    visible: modelData === " Time "
-//                                    horizontalAlignment: Text.Right
-//                                    id: pt
-//                                    anchors.right: parent.right
-//                                    anchors.verticalCenter: parent.verticalCenter
-//                                }
-
-//                                Label {
-//                                    id: pc
-//                                    text: " Copy:"
-//                                    visible: modelData === " Away "
-//                                    anchors.left: parent.left
-//                                    anchors.verticalCenter: parent.verticalCenter
-//                                }
-//                                RadioButton {
-//                                    id: topButton
-//                                    anchors.fill: parent
-//                                    visible: modelData === " Status "
-//                                    text: qsTr("Selected Only")
-
-//                                    exclusiveGroup: tabPositionGroup
-
-//                                }
-//                                RadioButton {
-//                                    id: bottomButton
-//                                    visible: modelData === " Home "
-//                                    anchors.fill: parent
-//                                    checked: modelData === " Home "
-//                                    text: qsTr("All")
-//                                    exclusiveGroup: tabPositionGroup
-//                                    onCheckedChanged: {
-//                                        MiddleMan.set_useSelected(!checked)
-//                                    }
-
-//                                }
                             }
 
                             Material.Card{

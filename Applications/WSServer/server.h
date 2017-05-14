@@ -205,6 +205,7 @@ protected slots:
 signals:
     void onNewProj(const std::string &name );
     void GameStart(string);
+    void GoLive();
 
 };
 

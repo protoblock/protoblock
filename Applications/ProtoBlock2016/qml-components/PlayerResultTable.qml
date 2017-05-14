@@ -28,13 +28,13 @@ Item {
         id: i2
         anchors.top: parent.top
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(8)
+        height: parent.height - ProtoScreen.guToPx(5)
 
         TableView {
             id: tvr
             Component.onCompleted: {
                 MiddleMan.pResultsViewFilterProxyModel.sortAgain("result", sortIndicatorOrder)
-                selection.select(0);
+//                selection.select(0);
                 console.log("tvr comleted")
             }
 
@@ -262,6 +262,34 @@ Item {
             }
 
             TableViewColumn {
+                role: "mypos"
+                title: "My Pos"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdel
+            }
+            TableViewColumn {
+                role: "myprice"
+                title: "My Price"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdelfix
+            }
+
+
+            TableViewColumn {
+                role: "mypnl"
+                title: "My Pnl"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdel
+            }
+
+
+            TableViewColumn {
                 role: "PassYd"
                 title: "PassYd"
                 horizontalAlignment : Text.AlignHCenter
@@ -430,6 +458,14 @@ Item {
 
             }
 
+            TableViewColumn {
+                role: "playerid"
+                title: "playerid"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(rw)
+            }
+
         }
     }
 
@@ -506,7 +542,7 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: styleData.column === 5 || styleData.column === 6 ? themeroot.theme.accentColor :
+                backgroundColor: (styleData.column >= 5 && styleData.column <= 9) ? themeroot.theme.accentColor :
                                  themeroot.theme.primaryColor
                 anchors.bottom: parent.bottom
                 radius: 1
@@ -523,7 +559,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: styleData.column === 5 ||  styleData.column === 6 ? Material.Theme.light.textColor : "white"
+                    color: (styleData.column >= 5 && styleData.column <= 9) ? Material.Theme.light.textColor : "white"
                     //                    font.bold: styleData.column === 4
                 }
             }
@@ -566,7 +602,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-            text: !model ? "" : model.result.toFixed(2)
+            text: !model ? "" : parseFloat(model.result).toFixed(2)
             font.bold: true;
         }
     }
@@ -600,6 +636,34 @@ Item {
     }
 
     Component {
+        id: negdel
+
+        Material.Label {
+            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            text: (styleData.value === 0) ? "" : styleData.value;
+            font.bold: false;
+        }
+    }
+
+    Component {
+        id: negdelfix
+
+        Material.Label {
+            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            text: (styleData.value === 0.0) ? "" : parseFloat(styleData.value).toFixed(2);
+            font.bold: false;
+        }
+    }
+
+    Component {
         id: columnComponent
         TableViewColumn {
             width: 100
@@ -618,6 +682,7 @@ Item {
     }
 
     function update() {
+        console.log(" PlayerResultSelected update")
         tvr.selection.forEach(function(rowIndex) {
             MiddleMan.setPrevWeekResultLeaderSelection(tvr.model.getAwardsModelUid(rowIndex));
             //,tvr.model.roleForName("awardsModel"))

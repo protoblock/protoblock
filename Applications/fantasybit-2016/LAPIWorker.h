@@ -57,6 +57,9 @@ class MainLAPIWorker : public QObject , public IResolvable
 
     std::recursive_mutex last_mutex{};
 
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    bool justwentlive = false;
+#endif
 public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}
@@ -103,6 +106,7 @@ signals:
     void GlobalStateChange(fantasybit::GlobalState);
     void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
+    void NewSeason(int);
     void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);
@@ -145,7 +149,7 @@ public slots:
     void OnClaimName(QString);
     void OnProjTX(vector<fantasybit::FantasyBitProj>);
 
-    //void OnNewOrder(fantasybit::ExchangeOrder);
+    void OnNewOrder(fantasybit::ExchangeOrder);
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
     //void OnNameBal(fantasybit::FantasyNameBal);
@@ -160,7 +164,7 @@ private:
 
     bool Process(fantasybit::Block &b);
     bool doProcessBlock();
-
+    string m_txstr;
     //void doNewDelta();
 
 };

@@ -8,6 +8,7 @@
 #include "Data.h"
 //#include <QMutexLocker>
 #include "pbgateways.h"
+#include "ExchangeData.h"
 
 class DataService : public GenericSingleton<DataService>
         , public pb::IDataService
@@ -19,9 +20,9 @@ public:
     ~DataService(){}
     std::vector<fantasybit::GameRoster> GetCurrentWeekGameRosters();
 
-    std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int week);
+    std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int season,int week);
 
-    fantasybit::WeeklySchedule GetWeeklySchedule(int week);
+    fantasybit::WeeklySchedule GetWeeklySchedule(int season,int week);
 
     fantasybit::PlayerBase GetPlayerBase(std::string playerId);
 
@@ -49,6 +50,7 @@ public:
     //void getLeaderBoard(int week){}
     //void getTeamPlayers(std::string teamId);
     int GetAvgProjection(const string &playerid);
+    std::vector<MarketSnapshot> GetCurrentMarketSnaps();
 };
 
 

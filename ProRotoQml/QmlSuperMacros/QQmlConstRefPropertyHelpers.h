@@ -48,6 +48,27 @@
         void name##Changed (const type & name); \
     private:
 
+#define QML_READONLY_CSTREF_PROPERTY_INIT0(type, name) \
+    protected: \
+        Q_PROPERTY (type name READ MAKE_GETTER_NAME (name) NOTIFY name##Changed) \
+    private: \
+        type m_##name = 0; \
+    public: \
+        const type & MAKE_GETTER_NAME (name) (void) const { \
+            return m_##name ; \
+        } \
+        bool set##name (const type & name) { \
+            bool ret = false; \
+            if ((ret = m_##name != name)) { \
+                m_##name = name; \
+                emit name##Changed (m_##name); \
+            } \
+            return ret; \
+        } \
+    Q_SIGNALS: \
+        void name##Changed (const type & name); \
+    private:
+
 #define QML_CONSTANT_CSTREF_PROPERTY(type, name) \
     protected: \
         Q_PROPERTY (type name READ MAKE_GETTER_NAME (name) CONSTANT) \

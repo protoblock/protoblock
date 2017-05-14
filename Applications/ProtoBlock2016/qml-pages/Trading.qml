@@ -1,406 +1,283 @@
-import QtQuick 2.4
+import QtQuick 2.0
 import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.1
+//import ProRotoQml.Sql 1.0
 import Material.ListItems 1.0 as ListItems
-
 import Material 1.0
-
 //import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
-//import ProRotoQml.Models 1.0
+import QtQuick.Layouts 1.1
+import Material.Styles 1.0
+
 
 Item {
+    id: topi
+//    property int week:
+//        MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
+//                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
+//    property string seasontext: MiddleMan.seasonString + " 2016 "
+    property string seasontext: MiddleMan.seasonString + " 2016 - Week " + MiddleMan.theWeek
+    property string liveorresult: MiddleMan.liveSync
+
     Component.onCompleted: {
-         pageHelper.title = "Quote Page"
-
-        if ( !realRoot.reloadrowquote )
-            realRoot.reloadrowquote = true
-        else {
-            MiddleMan.rowMarketGet()
-            realRoot.reloadrowquote = false
-        }
-
-//        if ( realRoot.reloadorderpos ) {
-//            MiddleMan.getOrderPos()
-//            realRoot.reloadorderpos = false
-//        }
-    }
-    Component.onDestruction: {
-        realRoot.reloadrowquote = true
+         pageHelper.title = "Trading"
+        console.log(" proj wisth" + parent.width + " 2 " + rootLoader.width + " 3 " + themeroot.width + " 4 " + realRoot.width + " 5 " + pageHelper.width)
     }
 
-    Scrollbar{flickableItem: fl}
-    Flickable{
-        id: fl
-        width: parent.width / 1.20
-        height:    parent.height
-        contentHeight: parent.height * 2
-        contentWidth: parent.width / 1.20
-        interactive: true
-        boundsBehavior: Flickable.StopAtBounds
-        anchors.horizontalCenter: parent.horizontalCenter
-    Card{
-        id: cccc
-        width: parent.width / 1.07
+        // spacer
+    Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
+
+
+    Card {
+        id: topcard
+        width: parent.width
         height: parent.height
-        elevation: 0
-//            anchors.centerIn: parent
         anchors{
             top: parent.top
-            topMargin:ProtoScreen.guToPx(.5)
             horizontalCenter: parent.horizontalCenter
         }
 
-        // spacer
-        Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
-
-        Banner {
-            id: mybanner
-//                height: parent.height
-//                anchrosType: "center"
+        Label {
             anchors.horizontalCenter: parent.horizontalCenter
-            fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
-            bold: true
-            text: "Prices - 2016 Rest of the Way (0/16)"
-            color: "white"
-            backgroundColor: themeroot.theme.primaryColor
-            helpShown: true
-            helperHeader: "2016 Rest of the Way"
-            helperTxt: "List of active markets for Season long trading. This is the 3rd level of the Protoblock Fantasy Football skill test. Click a player to see in-depth market and to trade."
-            width: fl.width / 1.07
-            height: ProtoScreen.guToPx(6)
-            anchors.bottomMargin:ProtoScreen.guToPx(.5)
-            anchors.topMargin:ProtoScreen.guToPx(.5)
-            anchors.top: parent.top
+            text: seasontext + " " + liveorresult
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
+            color: themeroot.theme.primaryColor
+            Layout.fillHeight: true
+            Layout.fillWidth: false
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            id: cBan
         }
 
-        ListView{
-            anchors.margins: 1
-            width: cccc.width
-            height: cccc.height - ProtoScreen.guToPx(6)
-            id: playersListView
-            anchors.top: mybanner.bottom
-            model: MiddleMan.pPlayerQuoteSliceModel
-            footer: Column {
-                property string mysymbol: ""
-                width: parent.width
-                anchors.topMargin: ProtoScreen.guToPx(1)
-                spacing: ProtoScreen.guToPx(4)
-                TextField {
-                    id: symbol
-                    width: parent.width / 1.07
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.MEDIUM)
-                    font.family: "Default"
-                    helperText: "Enter in new symbol"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    inputMethodHints: Qt.ImhNoPredictiveText;
-                }
-
-                        Button{
-                            id: quotebutton
-                            text: "Get Quote"
-                            width: parent.width / 1.07
-                            elevation: 2
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            onClicked: {
-                                if ( mysymbol !== symbol.text) {
-                                    mysymbol = symbol.text;
-                                    MiddleMan.startDepth(mysymbol)
-                                }
-
-//                                rootLoader.source = "qrc:/Orders.qml"
-                            }
-                            backgroundColor: themeroot.theme.primaryColor
-                        }
-                    }
-
-            delegate:
-                ListItems.Subtitled{
-
-                elevation: 1 // ListView.isCurrentItem ? 2 : 1
-                backgroundColor: "white"//  ListView.isCurrentItem ? themeroot.theme.accentColor : "white"
-                width: parent.width
-                text:   model.fullname + " (" + model.position +")"
-                itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
-//                secondaryItem.anchors.left: itemSubLabel.anchors.right
-                subText:{
-                    if ( model.volume > 0 )
-                    "Symbol: " + model.symbol
-                            + " | Volume: "+model.volume
-                    else  "Symbol: " + model.symbol
-                }
-                secondaryItem: RowLayout{
-                    width: ProtoScreen.guToPx(32)
-                    height: ProtoScreen.guToPx(8)
-                    Label{
-                        id: las
-                        text: model.lastprice === 0 ?  "" : ("Price: " + model.lastprice.toString() + arrow.text)
-
-                        color: model.updown < 0 ? Colors.red :
-                                 model.updown > 0 ? Colors.green : "black"
+        SystemPalette { id: pal }
 
 
-                        Layout.fillHeight: true
-                        Layout.fillWidth:  true
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    Text {
-                        id: arrow
-                        text: (model.updown < 0) ? " ↓" : (model.updown > 0) ? " ↑" : " ";
-                        color: "transparent"
-                    }
-
-                    Label{
-                        text: model.change === 0 ? "" : model.change.toString()
-                        Layout.fillHeight: true
-                        Layout.fillWidth:  false
-                        verticalAlignment: Text.AlignVCenter
-                    }
-
-                    Icon{
-                        enabled: model.change !== 0
-                        Layout.fillWidth:  false
-                        Layout.fillHeight: true
-                        hasColor:true
-                        color: { model.change < 0 ? Colors.red :
-                                 model.change > 0 ? Colors.green : "transparent"
-                        }
-                        source: {
-                            if (model.change < 0 ){
-                                "qrc:/icons/ic_trending_down.png"
-                            }
-                            else if (model.change > 0 )
-                                    "qrc:/icons/ic_trending_up.png"
-                            else ""
-
-                        }
-                    }
-                }
-                action: Icon{
-                    hasColor:false
-                    source: "qrc:/"+ model.teamid+".PNG"
-                    width: ProtoScreen.guToPx(6)
-                    height: width
-                    smooth: true
-                }
-                onClicked: {
-//                            rootLoader.binder = mybinder
-
-//                            MiddleMan.set_pPlayerQuoteSliceModelItem(playersListView.model[playersListView.currentIndex]);
-                    MiddleMan.startDepth(model.playerid)
-//                                                        realRoot.holdvar = model
-//                            depthload.source = "qrc:/DepthTrader.qml"
-//                            depthload1.source = "qrc:/DepthTrader.qml"
-//                            depthload1.source = "qrc:/Projections.qml"
-
-                     rootLoader.source = "qrc:/TradingFloor.qml"
-//                            var dataViewer = Qt.createComponent("qrc:/DepthTrader.qml").
-//                                createObject(realRoot, {inplay: playersListView.model[playersListView.currentIndex]});
-//                              dataViewer.show()
-
-                }
-
-
-            }
-            }
-
-            Scrollbar{flickableItem: playersListView }
-
+        TradingContextBanner {
+            id: tcbx
+            anchors.top: cBan.bottom
+            Layout.preferredWidth: parent.width * .50
+//            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.left: parent.left
+            width: parent.width
+            anchors.leftMargin: ProtoScreen.guToPx(.25)
         }
+//        RowLayout {
+//            id: tcb
+//            width: parent.width
+//            anchors.top: cBan.bottom
+//            height: ProtoScreen.guToPx(8)
 
+//            Layout.fillWidth: true
+//            Layout.fillHeight: true
+//            spacing: 1
+
+//            TradingContextBanner {
+//                id: tcbx
+//                anchors.top: tcb.top
+//                Layout.preferredWidth: parent.width * .50
+//    //            anchors.horizontalCenter: parent.horizontalCenter
+//                anchors.left: parent.left
+////                width: parent.width
+//                anchors.leftMargin: ProtoScreen.guToPx(.25)
+//            }
+
+//            FantasyNameContextBanner {
+//                id: fcbx
+//                anchors.top: tcb.top
+//                Layout.preferredWidth: parent.width * .50
+
+//    //            anchors.horizontalCenter: parent.horizontalCenter
+//    //            width: parent.width * .50
+//                anchors.right: parent.right
+//                anchors.rightMargin: ProtoScreen.guToPx(.25)
+//            }
+//        }
+
+        Item {
+            id: itema
+            anchors.top: tcbx.bottom
+            anchors.topMargin: ProtoScreen.guToPx(.25)
+            width: parent.width
+            height: parent.height - tcbx.height - cBan.height
+            SplitView {
+                orientation: Qt.Horizontal
+                handleDelegate: handeldel
+                width: parent.width
+                height: parent.height
+//                SplitView {
+//                    id: rightr
+//                    orientation: Qt.Vertical
+////                    handleDelegate: handeldel
+////                    width: parent.width
+//                    height: parent.h`eight
+////                    anchors.leftMargin: 10
+//                    Layout.minimumWidth: parent.width * .20
+//                    Layout.maximumWidth: parent.width * .70
+
+//                    Card {
+//                        MarketDepthTable {}
+//                        Layout.maximumHeight: parent.height * .90
+//                        Layout.minimumHeight: parent.height * .10
+//                        Layout.fillHeight: true
+//                    }
+//                    Card {
+//                        Layout.maximumHeight: parent.height * .90
+//                        Layout.minimumHeight: parent.height * .10
+//                        Orders {
+//                           anchors.fill: parent
+//                        }
+////                        Column{
+////                            anchors.fill: parent
+
+////                            TextField{
+////                                id: txt
+////                                text: "hello"
+////                                property string color: "white"
+////                                style: TextFieldStyle{
+////                                    background: Rectangle {
+////                                        id: rect
+////                                        radius: 2
+////                                        implicitWidth: 100
+////                                        implicitHeight: 24
+////                                        border.color: "#333"
+////                                        border.width: 1
+////                                        color: txt.color
+////                                        Behavior on color {
+////                                            SequentialAnimation {
+////                                                loops: 1
+////                                                ColorAnimation { from: "white"; to: "red"; duration: 1 }
+////                                                ColorAnimation { from: "red"; to: "white";  duration: 3000 }
+////                                            }
+////                                        }
+////                                    }
+////                                }
+////                            }
+////                            Button{
+////                                text: "blink"
+////                                onClicked: {
+////                                    txt.color = "red";
+////                                    txt.color = "white";
+////                                }
+////                            }
+////                        }
+//                    }
+//                }
+
+
+                SplitView {
+                    Layout.minimumWidth: parent.width * 0
+                    Layout.maximumWidth: parent.width * .50
+                    orientation: Qt.Vertical
+                    height: parent.height
+                    width: ProtoScreen.guToPx(40)
+
+                    Card {
+                        MarketDepthTable {}
+                        Layout.maximumHeight: parent.height
+                        Layout.minimumHeight: parent.height * 0
+                        Layout.fillHeight: true
+
+                    }
+
+                    Card {
+                        Layout.maximumHeight: parent.height
+                        Layout.minimumHeight: parent.height * 0
+                        Orders {
+                           anchors.fill: parent
+                        }
+                    }
+
+                }
+                Card {
+                    Layout.minimumWidth: parent.width * .50
+                    Layout.maximumWidth: parent.width
+                    Layout.fillWidth: true
+                    height: parent.height
+//                    backgroundColor: "grey"
+
+                    Card {
+                        height: parent.height - bcard.height
+                        width: parent.width
+                        id: wkt
+//                        backgroundColor: "orange"
+
+                        WkTradingTable {}
+                    }
+
+                    Card {
+                        anchors.top: wkt.bottom
+//                        backgroundColor: "yellow"
+                        id: bcard
+                        height: ProtoScreen.guToPx(16)
+                        width: parent.width
+//                        height: parent.height * .40
+//                        width: parent.width
+//                        anchors.bottom: parent.bottom
+
+                        BuySellTrading {
+                            id: bt
+                            anchors.fill: parent
+                        }
+                    }
+
+                }
+
+//                Card {
+//                    Layout.minimumWidth: parent.width * .10
+//                    Layout.maximumWidth: parent.width * .30
+////                    Layout.fillWidth: true
+
+//                    TradingFloor {}
+//                }
+
+//                Card {
+//                    Layout.minimumWidth: parent.width * .10
+//                    Layout.maximumWidth: parent.width * .30
+////                    Layout.fillWidth: true
+
+//                    Portfolio {}
+//                }
+            }
+        }
+    }
+
+    Component {
+        id: handeldel
+
+        Item {
+            height: itema.height
+            anchors.margins: 0
+            Rectangle {
+                border.width: 0
+                id: rec
+                width: styleData.hovered ? ProtoScreen.guToPx(.25) : ProtoScreen.guToPx(.1)
+                color: styleData.hovered ? "black" : Qt.darker(pal.window, 1.5)
+                height: parent.height
+                anchors.right: rec3.left
+            }
+            Rectangle {
+                border.width: 0
+                id: rec3
+                width: styleData.hovered ? ProtoScreen.guToPx(.35) : ProtoScreen.guToPx(.1)
+
+                height: parent.height
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: styleData.hovered ? "white" : Qt.darker(pal.window, 1.5)
+            }
+            Rectangle {
+               border.width: 0
+               id: rec2
+               width: styleData.hovered ? ProtoScreen.guToPx(.25) : ProtoScreen.guToPx(.1)
+
+               height: parent.height
+               anchors.left: rec3.right
+               color: styleData.hovered ? "black" : Qt.darker(pal.window, 1.5)
+            }
+        }
     }
 }
 
 
 
-    /*
-                        //                        onClicked: {
-//                            realRoot.playerInView = model.playerid
-
-//                            buySell.bannerText = model.firstname  + " " +model.lastname
-
-//                            //   fixme these should be arrays
-
-//                            sellCard.setprice = model.ask
-//                            console.log(" ask " + model.ask)
-
-//                            buycard.setprice = model.bid
-//                            console.log(" bid " + model.bid)
 
 
-//                            console.log(" buy " + buycard.price)
-////                                    console.log(" buy " +  buycardpriceCombo.currentIndex)
-//                            console.log(" sell " + sellCard.price)
-////                                    console.log(" sell " + sellCard.priceCombo.currentIndex)
-
-//                            playersListView.currentIndex = index
-//                            MiddleMan.startDepth(model.playerid)
-
-//                        }
-*/
-
-//    Connections {
-//        target: MiddleMan
-//        onLeaderBoardchanged: {
-////            leaderboard.model = MiddleMan.allNamesList()
-//        }
-//    }
-
-
-/*
-    Dialog{
-        id: filterOption
-        contentMargins: 0
-        ExclusiveGroup { id: optionGroup }
-        ExclusiveGroup { id: viewGroup }
-        Column{
-            anchors.fill: parent
-            spacing: ProtoScreen.guToPx(1)
-            Banner{
-                text: qsTr("Filters")
-                width:parent.width
-                backgroundColor: themeroot.theme.primaryColor
-            }
-
-            Label{
-                text: qsTr("View Type")
-                width: parent.width / 1.07
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.pixelSize: ProtoScreen.font( ProtoScreen.NORMAL)
-                font.bold:  true
-            }
-            Rectangle{
-                color: "grey"
-                height:    1
-                width: parent.width / 1.07;
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            RowLayout{
-                width: parent.width / 1.07
-                height:    checkOne.height
-                anchors.horizontalCenter: parent.horizontalCenter
-//                RadioButton {
-//                    Layout.fillWidth: true
-//                    checked: true
-//                    text: qsTr("CoverFlow")
-//                    onClicked:  viewInFocus = two
-//                    exclusiveGroup: viewGroup
-//                }
-                RadioButton {
-                    Layout.fillWidth: true
-                    text: qsTr("Classic")
-                    onClicked:  {viewInFocus = one; filterOption.close()}
-                    exclusiveGroup: viewGroup
-                }
-                RadioButton {
-                    Layout.fillWidth: true
-                    text: qsTr("Grid")
-                    onClicked:{ viewInFocus = three; filterOption.close()}
-                    exclusiveGroup: viewGroup
-                }
-                RadioButton {
-                    Layout.fillWidth: true
-                    text: qsTr("List")
-                    onClicked: {viewInFocus = four;; filterOption.close()}
-                    exclusiveGroup: viewGroup
-                }
-            }
-
-
-
-            Label{
-                text: qsTr("Open Or Locked")
-                width: parent.width / 1.07
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.pixelSize: ProtoScreen.font( ProtoScreen.NORMAL)
-                font.bold:  true
-            }
-          Rectangle{height: 1; color:"#88c3c3c3";width: parent.width / 1.07;anchors.horizontalCenter: parent.horizontalCenter}
-
-            RowLayout{
-                width: parent.width / 1.07
-                height:    checkOne.height
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                RadioButton {
-                    id: checkOne
-                    Layout.fillWidth: true
-                    checked: true
-                    text: "open"
-                    canToggle: true
-                    exclusiveGroup: optionGroup
-                }
-                RadioButton {
-                    Layout.fillWidth: true
-                    text: "locked"
-                    exclusiveGroup: optionGroup
-                }
-            }
-
-            Label{
-                text: qsTr("Teams and Postions")
-                width: parent.width / 1.07
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.pixelSize: ProtoScreen.font( ProtoScreen.NORMAL)
-                font.bold:  true
-            }
-            Rectangle{height: 1; color:"#88c3c3c3";width: parent.width / 1.07;anchors.horizontalCenter: parent.horizontalCenter}
-
-            RowLayout{
-                width: parent.width / 1.07
-                height:    checkOne.height
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: ProtoScreen.guToPx(1)
-                MenuField {
-                    Layout.fillWidth: true
-                    width: parent.width / 3
-                    // fixme model is team mode or somthing in material root
-                    model: ["ARI", "BUF", "NE"]
-                }
-                MenuField {
-                    Layout.fillWidth: true
-                    width: parent.width / 5
-                    // fixme model is team mode or somthing in material root
-                    model: ["ALL", "QB", "RB"]
-                }
-            }
-
-
-            Label{
-                text: qsTr("Market")
-                width: parent.width / 1.07
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.pixelSize: ProtoScreen.font( ProtoScreen.NORMAL)
-                font.bold:  true
-            }
-            Rectangle{
-                height:    1
-                width: parent.width / 1.07;
-                color: "#88c3c3c3"
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            RowLayout{
-                width: parent.width / 1.07
-                height:    checkOne.height
-                anchors.horizontalCenter: parent.horizontalCenter
-                RadioButton {
-                    Layout.fillWidth: true
-                    text: "Active"
-                    canToggle: true
-                    exclusiveGroup: optionGroup
-                }
-
-                RadioButton {
-                    Layout.fillWidth: true
-                    enabled: false
-                    text: "Liquid"
-                }
-                RadioButton {
-                    Layout.fillWidth: true
-                    enabled: false
-                    text: "Movers"
-                }
-            }
-        }
-    }
-*/

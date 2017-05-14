@@ -10,13 +10,14 @@ import ProRotoQml.Theme 1.0
 //import ProRotoQml.Models 1.0
 
 Item {
-
+    anchors.fill: parent
     id: pit
     property string contract
     property string symbol
-    property variant inplay: MiddleMan.pDepthMarketModel.pPlayerQuoteSliceModelItem
+    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
 
 
+    Layout.fillWidth: false
     property int depthsize: 5
     property double dihight: ProtoScreen.guToPx(4)
     property int price
@@ -25,7 +26,7 @@ Item {
     Component.onCompleted: {
          symbol = inplay.symbol
          pageHelper.title = "Trading " + symbol
-
+         console.log(symbol + " TradingFloor oncomplete")
 //         pid.txtN = inplay.playerid
 //        if ( !realRoot.reloadrowquote )
 //            realRoot.reloadrowquote = true
@@ -35,16 +36,17 @@ Item {
 //        }
     }
 
-    Component.onDestruction: {
-        MiddleMan.stopDepth(symbol)
-    }
+//    Component.onDestruction: {
+//        MiddleMan.stopDepth(symbol)
+//    }
 
-    Flickable{
+    Item{
         height: parent.height
         width: parent.width
-        contentHeight: parent.height * 3
-        interactive: true
-        boundsBehavior: Flickable.StopAtBounds
+//        contentHeight: parent.height * 3
+//        interactive: true
+//        boundsBehavior: Flickable.StopAtBounds
+//        contentWidth: parent.width * 3
 //    Scrollbar{flickableItem: f1}
 //    Flickable{
 //        id: fl
@@ -57,7 +59,7 @@ Item {
 
         Card{
             id: topcard
-            width: parent.width * .90
+            width: parent.width
             height: parent.height
             elevation: 0
 //            anchors.centerIn: parent
@@ -361,7 +363,8 @@ Item {
                 height: dihight * ( .75 + Math.min(depthsize,depthvm.count))
 //                anchors.margins: ProtoScreen.guToPx(.125)
                 anchors.horizontalCenter: bandepth.horizontalCenter
-                width: bandepth.width
+//                width: 500//bandepth.width
+                width: depthvm.width
                 color: "transparent"
                 Rectangle {
                     id: middlebar
@@ -374,7 +377,7 @@ Item {
                     Layout.fillWidth: true
                 }
                 ListView {
-                    anchors.fill: parent
+//                    anchors.fill: parent
 
     //                    id: f2
     //                    width: depthvm.width
@@ -392,11 +395,11 @@ Item {
 //                    anchors.margins: ProtoScreen.guToPx(.125)
                     anchors.horizontalCenter: boundingRect.horizontalCenter
     //                    anchors.fill: parent
-                    width: boundingRect.width
+//                    width: boundin gRect.width
     //                height: parent.height - bandepth.height - cwc.height - listquote.height
     //                    height: parent.height
                     clip: true
-                    model: MiddleMan.pDepthMarketModel
+//                    model: MiddleMan.pDepthMarketModel
                     headerPositioning: ListView.OverlayHeader
                     header: Item {
                         height: leftrow.height
@@ -941,7 +944,11 @@ Item {
         }
 
         onAccepted: {
-            MiddleMan.doTrade(
+            if ( realRoot.uname === "" ) {
+                rootLoader.source = "qrc:/Account.qml"
+                pageHelper.selectedTabIndex = 3;
+            }
+            else MiddleMan.doTrade(
                     inplay.symbol
                     ,(side == "Buy") ? true : false
                  ,myTradeDialog.price
@@ -951,5 +958,12 @@ Item {
 
     }
 
-
+    Connections {
+        target: MiddleMan
+        onPPlayerQuoteSliceModelItemChanged: {
+            console.log(" onPPlayerQuoteSliceModelItemChanged ");
+            depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.pDepthMarketModel
+            console.log("after floor  onPPlayerQuoteSliceModelItemChanged ");
+        }
+    }
 }

@@ -10,9 +10,14 @@ import QtQuick.Layouts 1.1
 
 Item {
     id: topi
-    property int week: MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
+    property int week: (MiddleMan.theWeek === 0 && MiddleMan.theSeason === 0) || !stack || !stack.currentItem ? 0 :
                           (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
-    property string seasontext: MiddleMan.seasonString + " 2016 - Week "
+    property string seasontext:
+                (stack.currentItem.objectName === "prevWeekS" ? "NFL Season " + MiddleMan.thePrevSeason
+                                                              : (stack.currentItem.objectName === "nextWeekS" ? "NFL Season " + MiddleMan.theNextSeason
+                                                              : MiddleMan.seasonString + " " + MiddleMan.theSeason))
+                                                                    + " - Week "
+
     property string liveorresult: MiddleMan.liveSync === "Sync" || !stack || !stack.currentItem ? "Sync" :
                                        (stack.currentItem.objectName === "prevWeekS" ? "Result" :
                                          (stack.currentItem.objectName === "nextWeekS" ? "Schedule" : MiddleMan.liveSync))
@@ -62,7 +67,7 @@ Item {
                 anchors.centerIn: parent
                 size: ProtoScreen.guToPx(5)
 
-                enabled:  MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && MiddleMan.thePrevWeek > 1
+                enabled:  MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && (MiddleMan.thePrevWeek > 1 || MiddleMan.thePrevSeason > 2014)
 
                 action: Action {
                     iconName: "awesome/caret_left"
@@ -137,7 +142,7 @@ Item {
                 enabled: MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && (
                              (stack.currentItem.objectName === "prevWeekS") ||
                              (stack.currentItem.objectName === "pptS") ||
-                             (stack.currentItem.objectName === "nextWeekS" && MiddleMan.theNextWeek < 16))
+                             (stack.currentItem.objectName === "nextWeekS" && (MiddleMan.theNextWeek < 16 || MiddleMan.theSeason > MiddleMan.theNextSeason)))
 
 //                enabled:  MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && MiddleMan.thePrevWeek > 1
                 onClicked : {
@@ -145,7 +150,10 @@ Item {
                     if ( stack.currentItem.objectName === "prevWeekS") {
                         if ( (!MiddleMan.thisWeekPrev && MiddleMan.thePrevWeek === MiddleMan.theWeek-1)
                                 ||
-                             (MiddleMan.thisWeekPrev && MiddleMan.thePrevWeek === MiddleMan.theWeek))
+                             (MiddleMan.thisWeekPrev && MiddleMan.thePrevWeek === MiddleMan.theWeek)
+                                ||
+                             (MiddleMan.thePrevWeek === 16 && MiddleMan.thePrevSeason === MiddleMan.theSeason-1 && (MiddleMan.theWeek < 1 || (MiddleMan.theWeek === 1 && !MiddleMan.thisWeekPrev )))
+                                )
                             stack.push({item: pptS, properties:{objectName:"pptS"}});
                         else {
                             MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek+1)
@@ -211,7 +219,7 @@ Item {
 
                         PlayerProjTable {
                             id: ppt
-                            who: "ppt"
+//                            who: "ppt"
                         }
 
                         Rectangle {
@@ -277,7 +285,7 @@ Item {
                     height: parent.height
                     Card {
                         anchors.leftMargin: 10
-                        Layout.minimumWidth: parent.width * .10
+                        Layout.minimumWidth: parent.width * 0
                         Layout.maximumWidth: parent.width * .30
 
                         ScheduleViewPrev {
@@ -286,8 +294,8 @@ Item {
                         }
                     }
                     Card {
-                        Layout.minimumWidth: parent.width * .40
-                        Layout.maximumWidth: parent.width * .90
+                        Layout.minimumWidth: parent.width * .30
+                        Layout.maximumWidth: parent.width * 1
                         Layout.fillWidth: true
                         PlayerResultTable {}
                     }
@@ -295,8 +303,8 @@ Item {
                     Card {
                         anchors.leftMargin: 10
                         id: rightr2
-                        Layout.minimumWidth: parent.width * .20
-                        Layout.maximumWidth: parent.width * .60
+                        Layout.minimumWidth: parent.width * 0
+                        Layout.maximumWidth: parent.width * .70
                         LeaderAwardView {
                             id: lav
                         }

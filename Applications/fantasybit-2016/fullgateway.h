@@ -6,15 +6,17 @@
 #include "dataservice.h"
 #include "mediator.h"
 #include "Commissioner.h"
+#include "playerquoteslicemodel.h"
 
 namespace pb {
 using namespace std;
 
 using namespace fantasybit;
 
-class FullGateway : public QObject, public IPBGateway {
+class FullGateway : public QObject, public IPBGateway, public ITradingProxy {
     Q_OBJECT
     Q_INTERFACES(pb::IPBGateway)
+    Q_INTERFACES(pb::ITradingProxy)
 
     IPBGateway *gatepass;
     IDataService *datapass;
@@ -27,10 +29,12 @@ public:
                                     mlapi(immlapi),
                                     dataservice(datain),
                                     gatepass{qobject_cast<pb::IPBGateway *>(immlapi)},
-                                    datapass{datain} {
+                                    datapass{datain} ,
+                                    m_PlayerQuoteSliceModel{} {
 
 //        mlapi->dataService = dataservice;
         this->dataService = datain;
+        this->tradingProxy = this;
         connect(mlapi, &MainLAPIWorker::NameStatus,
                 this, [this](fantasybit::MyFantasyName inname) {
             qDebug() << " FullGateway namestatus" << inname.DebugString().data();
@@ -84,6 +88,9 @@ public:
         connect( mlapi, &MainLAPIWorker::NewWeek,
                 this,   &FullGateway::NewWeek);
 
+        connect( mlapi, &MainLAPIWorker::NewSeason,
+                Mediator::instance(),   &Mediator::NewSeason);
+
         connect( mlapi, &MainLAPIWorker::GameStart,
                 this,   &FullGateway::GameStart);
 
@@ -133,7 +140,7 @@ public:
                  mlapi, &MainLAPIWorker::OnUseName);
 
         connect(Mediator::instance(),&Mediator::ready,this, &FullGateway::ClientReady);
-//                [this](){
+//                [this](){101
 //                       if ( this->amLive ) {
 //                           emit LiveGui(m_gs);
 //                       }
@@ -146,6 +153,37 @@ public:
 
 //                       heslive = true;
 //                 });
+
+//        ExchangeData *exchangedata = &(mlapi->ExData());
+
+//        //trading
+//        QObject::connect(exchangedata,SIGNAL(NewMarketSnapShot(fantasybit::MarketSnapshot*)),
+//                          this,SLOT(OnMarketSnapShot(fantasybit::MarketSnapshot*)));
+
+//        QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *)),
+//                          Mediator::instance(),SLOT(OnMarketTicker(fantasybit::MarketTicker *)));
+
+//        QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+//                          this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
+
+//        QObject::connect(exchangedata,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
+//                          this,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
+
+//        QObject::connect(exchangedata,
+//                         SIGNAL(NewOO(fantasybit::FullOrderDelta)),
+//                          this,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
+
+//        QObject::connect(exchangedata,
+//                         SIGNAL(NewPos(fantasybit::FullPosition)),
+//                          this,SLOT(OnNewPos(fantasybit::FullPosition)));
+
+//        connect(exchangedata,&ExchangeData::FinishMarketSnapShot,
+//                this, &FullGateway::OnFinishMarketSnapShot);
+
+//        connect(exchangedata,&ExchangeData::StartMarketSnapShot,
+//                this, &FullGateway::OnStartMarketSnapShot);
+
+        QObject::connect(Mediator::instance(),SIGNAL(NewHeightStop(int)),mlapi,SLOT(OnSeenBlock(int32_t)));
 
     }
 
@@ -171,6 +209,8 @@ signals:
     void Height(int);
     void BlockNum(int);
     void FinishedResults();
+    //trading
+    void GotMarketSnaps();
 
 public slots:
     void OnLiveGui(fantasybit::GlobalState gs) {
@@ -179,14 +219,17 @@ public slots:
         m_gs = gs;
         emit LiveGui(gs);
         if ( heslive ) {
-            connect(Mediator::instance(),&Mediator::NewProjection,
-                    mlapi,&MainLAPIWorker::OnProjTX);
+            initBothLive();
+            if ( !holdfresh.empty() ) {
+                if ( !m_mynames.empty())
+                     emit MyNames(m_mynames);
+                for( auto &v : holdfresh)
+                     emit NameBal(v);
+                holdfresh.clear();
+            }
 
-            if ( !m_mynames.empty())
-                 emit MyNames(m_mynames);
-            for( auto &v : holdfresh)
-                 emit NameBal(v);
-            holdfresh.clear();
+            if ( gotAllSnaps )
+                emit GotMarketSnaps();
         }
     }
 
@@ -205,26 +248,79 @@ public slots:
         emit OnUseName(s);
     }
 
+    void initBothLive() {
+        connect(Mediator::instance(),&Mediator::NewProjection,
+                mlapi,&MainLAPIWorker::OnProjTX);
+
+        connect(Mediator::instance(),&Mediator::NewOrder,
+                mlapi,&MainLAPIWorker::OnNewOrder);
+
+        Mediator *med = Mediator::instance();
+        ExchangeData *exchangedata = &(mlapi->ExData());
+
+        //trading
+        QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker,int32_t)),
+                          med,SLOT(OnMarketTicker(fantasybit::MarketTicker,int32_t)));
+
+        QObject::connect(exchangedata,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+                          med,SLOT(OnTradeTick(fantasybit::TradeTic*)));
+
+        QObject::connect(exchangedata,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
+                          med,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
+
+        QObject::connect(exchangedata,
+                         SIGNAL(NewOO(fantasybit::FullOrderDelta)),
+                          med,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
+
+        QObject::connect(exchangedata,
+                         SIGNAL(NewPos(fantasybit::FullPosition)),
+                          med,SLOT(OnNewPos(fantasybit::FullPosition)));
+    }
+
     void ClientReady() {
         if ( amLive ) {
+            initBothLive();
+
             emit LiveGui(m_gs);
+            if ( gotAllSnaps )
+                emit GotMarketSnaps();
         }
 
-        if ( !m_mynames.empty())
-             emit MyNames(m_mynames);
-        for( auto &v : holdfresh)
-             emit NameBal(v);
-        holdfresh.clear();
+        if ( !holdfresh.empty() ) {
+            if ( !m_mynames.empty())
+                 emit MyNames(m_mynames);
+            for( auto &v : holdfresh)
+                 emit NameBal(v);
+            holdfresh.clear();
+        }
         heslive = true;
     }
 
-//    void Height(int h) {
-//        qDebug() << "fg height " << h;
-//    }
+/**** trading
+ *
+ *
+ * /
+ */
+//    void OnMarketTicker(fantasybit::MarketTicker *);
+//    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
+//    void OnDepthDelta(fantasybit::DepthFeedDelta*);
+//    void OnTradeTick(fantasybit::TradeTic*);
+//    void OnMyNewOrder(fantasybit::Order& ord);
+//    void OnNewPos(fantasybit::FullPosition);
+//    void OnNewOO(fantasybit::FullOrderDelta);
 
-//    void BlockNum(int n) {
-//        qDebug() << "fg BlockNum " << n;
-//    }
+    void OnFinishMarketSnapShot(int week) {
+        gotAllSnaps = true;
+        if ( heslive && amLive )
+            emit GotMarketSnaps();
+    }
+
+    void OnStartMarketSnapShot(int week) {
+        gotAllSnaps = false;
+        m_PlayerQuoteSliceModel.initWeek(week);
+        m_PlayerQuoteSliceModel.clear();
+    }
+
 private:
     bool amLive = false, heslive = false;
     fantasybit::GlobalState m_gs;
@@ -233,7 +329,14 @@ private:
     vector<FantasyNameBal> holdfresh;
     MyFantasyName myName;
 
+    bool gotAllSnaps = false;
 public:
+    PlayerQuoteSliceModel & GetPlayerQuoteSliceModel() {
+        return  m_PlayerQuoteSliceModel;
+   }
+
+    PlayerQuoteSliceModel m_PlayerQuoteSliceModel;
+
     /*
     std::unordered_map<std::string,PlayerDetail>
         DataService::GetTeamRoster(const std::string &teamid){

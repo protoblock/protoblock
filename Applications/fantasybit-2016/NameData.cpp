@@ -54,8 +54,8 @@ void FantasyNameData::init() {
 #ifdef WRITE_BOOTSTRAP
             writer(fn);
 #endif
-            if ( fn.name() == "JayBNY")
-                qDebug() << "JayBNY stakedelta " << fn.stake();
+//            if ( fn.name() == "JayBNY")
+//                qDebug() << "JayBNY stakedelta " << fn.stake();
 
             auto fnp = Commissioner::AddName(fn.name(),fn.public_key());
             if ( fnp != nullptr ) {
@@ -63,8 +63,8 @@ void FantasyNameData::init() {
                 fnp->initStakePNL(fn.stake());
                 fnp->setBlockNump (0,0);
 
-                if ( fn.name() == "JayBNY")
-                    qDebug() << "JayBNY123 stakedelta " << fnp->getStakeBalance();
+//                if ( fn.name() == "JayBNY")
+//                    qDebug() << "JayBNY123 stakedelta " << fnp->getStakeBalance();
 #ifdef TRACE2
 #endif
 #ifdef DATAAGENTWRITENAMES_SPECIAL
@@ -150,6 +150,8 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t bl
     fn.set_name(name);
     fn.set_public_key(pubkey);
     fn.set_bits(0);
+    fn.set_block(blocknum);
+    fn.set_count(0);
 
     auto hash = FantasyName::name_hash(name);
 
@@ -159,8 +161,9 @@ void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t bl
     qDebug() << fn.DebugString().data();
 
     auto fnp = Commissioner::AddName(name,pubkey);
-    fnp->setBlockNump (blocknum,0);
     if ( fnp  != nullptr) {
+        fnp->setBlockNump (blocknum,0);
+
         OnFantasyName(fnp);
         if ( amlive ) {
             emit NewFantasyName(fn);
@@ -193,7 +196,7 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     if ( fnp != nullptr) {
         fnp->addBalance(amount);
 
-        OnFantasyNameBalance(fn);
+//        OnFantasyNameBalance(fn);
 //        if ( amlive )
 //            emit AnyFantasyNameBalance(fn);
     }
@@ -221,7 +224,7 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     //if ( name == "Windo")
     //    qDebug() << "abcdefg" << fn.DebugString();
     qDebug() << "adding pnl" << pnl << " :: " << name.data ()<< fn.public_key().data ()<< fn.stake() << fn.bits();
-    OnFantasyNamePnl(fn);
+//    OnFantasyNamePnl(fn);
 }
 
 void FantasyNameData::AddProjection(const string &name, const string &player,
@@ -323,7 +326,7 @@ void FantasyNameData::OnGameStart(std::string gid,
     if (!projstore->Put(write_sync, gid, gfp.SerializeAsString()).ok())
         qWarning() << "error writing proj" << gid;
     else
-        qInfo() << "OnGameStart " << gid;
+        qDebug() << "OnGameStart " << gid.data();
 
 }
 

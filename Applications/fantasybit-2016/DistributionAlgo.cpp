@@ -25,9 +25,11 @@ NameValuePairs<int>
 {
     NameValuePairs<int> award{};
     if (projections.size() == 0 || result <= 0.0001 ) {
-        qInfo() << "no projections agent " << agent << " gets balance " << result;
-        if ( result > 0.0001 )
+        if ( result > 0.0001 ) {
             award[agent] = result * 100.0;
+            qInfo() << "no projections agent " << agent << " gets balance " << result;
+
+        }
 		return award;
 	}
 	
@@ -94,18 +96,16 @@ NameValuePairs<int>
 //            qInfo() << pair.first << " projection " << pair.second << "no award ";
     }
 
-    if (result < total) {
-        qCritical() << "gave out to much" << result << total;
-    }
-    else {
-        double leftover = result - total;
-        if (leftover > 0.00001) {
-            int hold = award[agent];
-            award[agent] = hold + leftover;
-            qDebug() << "agent " << agent << " leftovers " << leftover;
+    double leftover = result - total;
+    if (leftover > 0.00001) {
+        int hold = award[agent];
+        award[agent] = hold + leftover;
+        qDebug() << "agent " << agent << " leftovers " << leftover;
 
-        }
     }
+    else if ( leftover < -0.00001 )
+        qCritical() << "gave out to much" << result << total;
+
     return award;
 }
 
@@ -129,7 +129,7 @@ PnlResults SettlePositionsRawStake::
     for(const auto& settlepos : positions.positions()) {
         int hispnl = (settlepos.qty() * intresult) + settlepos.price() * 100;
         pnl[settlepos.pk()] = make_pair(settlepos,hispnl);
-        qDebug() << settlepos.DebugString();
+        qDebug() << settlepos.DebugString().data();
 //        " pnl " <<  hispnl << " result " << result <<
 //                    " pos " << settlepos.second.first << " " << settlepos.second.second;
 

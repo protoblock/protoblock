@@ -33,6 +33,7 @@ public:
         LeaderBoardRefreshInterval,
         ConfirmSendAndCopyProjections,
         GenesisTranactionLocation,
+        GenesisTransition2014Location,
         GenesisBootLocation2016
     };
 
@@ -59,6 +60,7 @@ private:
         case ConfirmSendAndCopyProjections : return "confirmsendandcopyprojections";
         case GenesisTranactionLocation : return "genesistranactionlocation";
         case GenesisBootLocation2016 : return "GenesisBootLocation2016";
+        case GenesisTransition2014Location : return "GenesisTransition2014Location";
         default:
             return "";
         }
@@ -107,6 +109,17 @@ private:
                 dir.cd("Resources");
                 return dir.absolutePath()+QString("/GenesisTransition-Tr-Transaction.txt");
             #endif
+            case GenesisTransition2014Location :
+            #ifdef Q_OS_WIN
+                return storagePath(storageDirName)+"/"+"Transition2014.out";
+            #endif
+            #ifdef Q_OS_MAC
+                QDir dir(QApplication::applicationDirPath());
+                dir.cdUp();
+                dir.cd("Resources");
+                return dir.absolutePath()+QString("/Transition2014.out");
+            #endif
+
             case GenesisBootLocation2016 :
             #ifdef Q_OS_WIN
                 return storagePath(storageDirName);//+"bootstraptest201601.out";
@@ -133,7 +146,12 @@ public:
 private:
     static QString storagePath(const QString & dirName){
         #ifdef Q_OS_WIN
+#ifdef CUSTOM_TESTING_PATH
+        return "D:/data/stageprotoblock/storage/";
+//        return "C:\\work\\build-ProRoto2016-Release-57\\Applications\\ProtoBlock2016\\release/storage/";
+#else
             return QCoreApplication::applicationDirPath()+"/storage/";
+#endif
         #endif
         #ifdef Q_OS_MAC
             return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/tradingfootball/"+dirName);
