@@ -41,93 +41,6 @@ Item {
             // spacer
             Rectangle{width: 1; height: ProtoScreen.guToPx(1);color: "transparent"}
 
-/*
-            Banner {
-                id: cwc
-                fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
-                bold: true
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: pnamep + " Open Orders"
-                color: themeroot.theme.primaryColor
-                backgroundColor: "white"
-//                helpShown: true
-//                helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
-//                helperTxt: "Contract expires after week 15 at the total fantasy points scored by " + inplay.fullname +
-//                           "the \"Writer\" (seller) must give the \"buyer\" the equivanlat amount of fantsy points scored in fantasy bits." +
-//                           "the game is to try to buy well below the actual settlement number, or alternativly to sell at a price well above the actual final number" +
-//                           "with all the know risks, how much are you willing to \"pay\" for the contract, and for how much would you be willing to " +
-//                           " write, or sell, the contract, knowing that you keep all the points in cae of injury, but have to pay up in case of a breakout"
-
-                width: parent.width
-//                width: parent.width
-//                height: ProtoScreen.guToPx(6)
-                anchors.bottomMargin:ProtoScreen.guToPx(1)
-                anchors.topMargin:ProtoScreen.guToPx(.5)
-                anchors{
-                    top: parent.top
-
-//                    horizontalCenter: parent.horizontalCenter
-                }
-            }
-
-    //                object:
-
-
-            Rectangle {
-                id: boundquote
-                width: parent.width
-                height: ProtoScreen.guToPx(8)
-                anchors{
-                    top: cwc.bottom
-
-                    horizontalCenter: cwc.horizontalCenter
-                }
-
-
-                ListItems.Subtitled {
-                    id: position
-                    elevation: 1
-                    backgroundColor: themeroot.theme.accentColor
-
-                    width: parent.width
-                    text: { pnamep }
-//                    subText:{
-//                            //"Net Price: " + netprice + " | Net Qty: " + netqty
-//                            //  + " | Ask: "+ model.ask
-//                            //  + " | Ask Size: " + model.asksize
-//                    }
-
-//                    secondaryItem: RowLayout{
-//                        width: ProtoScreen.guToPx(32)
-//                        height: ProtoScreen.guToPx(8)
-//                        Label{
-//                            id: pnl
-//                            text: "Open Pnl: " + openpnl.toString()
-
-//                            color: "white"
-
-//                            Layout.fillHeight: true
-//                            Layout.fillWidth:  true
-//                            verticalAlignment: Text.AlignVCenter
-//                        }
-//                    }
-
-//                    Label{
-//                        text: model.avgprice
-//                        Layout.fillHeight: true
-//                        Layout.fillWidth:  false
-//                        verticalAlignment: Text.AlignVCenter
-//                    }
-
-//                       valueText: {
-//                           ( netqty > 0 ) ? "Long (" + netqty.toString() +")" :
-//                           ( netqty < 0 ) ? "Short (" + netqty.toString() +")" :
-//                                            "Flat"
-//                        }
-
-                }
-             }
-*/
             Banner {
                 id: bandepth
                 anchors.top: parent.top
@@ -155,7 +68,7 @@ Item {
                 anchors.top: bandepth.bottom
 //                height:    (topcard.height - bandepth.height - boundquote.height - buySell.height )
                 height: dihight * ( 1 + Math.min(depthsize,ordersl.count))
-                anchors.margins: 1
+//                anchors.margins: 1
                 anchors.horizontalCenter: bandepth.horizontalCenter
                 width: bandepth.width
 
@@ -176,7 +89,7 @@ Item {
 
                     id: ordersl
     //                    anchors.top: bandepth.bottom
-                    anchors.margins: 1
+                    anchors.margins: 0
                     anchors.horizontalCenter: boundingRect.horizontalCenter
     //                    anchors.fill: parent
                     width: parent.width
@@ -189,16 +102,19 @@ Item {
                     header: RowLayout {
                         width: parent.width
                         height: dihight * .75
-                        spacing: 1
+                        spacing: 0
 //                        Rectangle{width: 2; height: 1;color: "transparent"}
                         Repeater{
-                            model: ["Cancel","Symbol","Refnum","Side","Price", "Size"]
+                            model: ["Can","Symb","Ref","Side","Price","Size"]
                             Card{
+                                flat: true
                                 Layout.fillHeight: true
-                                Layout.fillWidth: false
-                                Layout.preferredWidth: (parent.width / 6) - 2;
+                                Layout.fillWidth: true
+                                Layout.preferredWidth: (parent.width / 6.0);
                                 border.color:"black"
                                 backgroundColor: Colors.blue
+                                border.width: 1
+                                radius: 0
                                 Label{
                                     anchors.centerIn: parent
                                     text: modelData

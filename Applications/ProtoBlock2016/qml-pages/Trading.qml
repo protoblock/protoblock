@@ -182,8 +182,29 @@ Item {
                     Card {
                         Layout.maximumHeight: parent.height
                         Layout.minimumHeight: parent.height * 0
-                        Orders {
-                           anchors.fill: parent
+                        TabView {
+                            anchors.fill: parent
+                            Tab {
+                                title: "Orders"
+                                Orders {
+                                   anchors.centerIn: parent
+                                   anchors.fill: parent
+                                }
+                            }
+                            Tab {
+                                title: "Buy"
+                                BuyTab {
+                                   anchors.fill: parent
+                                   anchors.centerIn: parent
+                                }
+                            }
+                            Tab {
+                                title: "Sell"
+                                BuyTab {
+                                   anchors.fill: parent
+                                   anchors.centerIn: parent
+                                }
+                            }
                         }
                     }
 

@@ -38,7 +38,7 @@ Item {
 //        anchors.fill: parent
 //        spacing: 10
         //buy
-        RowLayout {
+    RowLayout {
 //            anchors.centerIn: parent
 //            Layout.fillWidth: true
 //            Layout.fillHeight: true
@@ -311,7 +311,7 @@ Item {
                 }
             }
         }
-        }
+    }
 //    }
 
     /*
