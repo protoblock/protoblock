@@ -7,6 +7,7 @@ import Material 1.0
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
 import Material.Styles 1.0
+import QtQuick.Controls.Styles 1.4
 
 
 Item {
@@ -182,6 +183,7 @@ Item {
                     Card {
                         Layout.maximumHeight: parent.height
                         Layout.minimumHeight: parent.height * 0
+                        backgroundColor: "#f5f5f5"
                         TabView {
                             anchors.fill: parent
                             Tab {
@@ -204,6 +206,37 @@ Item {
                                    anchors.fill: parent
                                    anchors.centerIn: parent
                                 }
+                            }
+
+                            style: TabViewStyle {
+//                                frameOverlap: ProtoScreen.guToPx(.25)
+                                tabsAlignment: Qt.AlignHCenter
+//                                tabOverlap: ProtoScreen.guToPx(-1)
+                                tab: Rectangle  {
+                                    color: {
+                                        if ( styleData.selected ) return "#f5f5f5"
+                                        else if (styleData.title === "Buy")
+                                            return "green"
+                                        else if ( styleData.title === "Sell")
+                                            return "red"
+                                        else return themeroot.theme.primaryColor
+                                    }
+                                    implicitWidth: ProtoScreen.guToPx(10)
+                                    implicitHeight: ProtoScreen.guToPx(3)
+                                    radius: 2
+                                    Label {
+                                        id: text
+                                        anchors.centerIn: parent
+                                        anchors.fill: parent
+                                        verticalAlignment: Text.AlignVCenter
+                                        horizontalAlignment: Text.AlignHCenter
+                                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+
+                                        text: styleData.title
+                                        color: styleData.selected ? "black" : "#f5f5f5"
+                                    }
+                                }
+                                frame: Rectangle { color: "#f5f5f5" }
                             }
                         }
                     }
