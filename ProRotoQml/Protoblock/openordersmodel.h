@@ -191,7 +191,7 @@ class TradingPositionsModel : public QQmlObjectListModel<TradingPositionsModelIt
     Q_OBJECT
 //    QML_READONLY_CSTREF_PROPERTY(QString, symbol)
     QML_READONLY_CSTREF_PROPERTY(QString, fantasyname)
-    QML_READONLY_CSTREF_PROPERTY (double, totalopenpnl)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (double, totalopenpnl)
 
 public:
     explicit TradingPositionsModel (QObject *          parent      = Q_NULLPTR,
