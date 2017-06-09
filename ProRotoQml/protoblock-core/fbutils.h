@@ -47,7 +47,7 @@ namespace fantasybit {
 
     static std::string PAPIURL = "https://stagingapi.trading.football:4545";
     static std::string LAPIURL = "https://stagingapi.trading.football:9854";
-    static std::string DBIP = "158.222.102.21";
+    static std::string DBIP = "208.94.37.244";
     static std::string DBNAME = "tfprod";
 
     static bool IS_TEST_NET = true;
