@@ -652,25 +652,24 @@ void BlockProcessor::process(const DataTransition &indt) {
         break;
         if (mGlobalState.state() != GlobalState_State_INSEASON) {
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-            break;
-        }
-
-
-        qInfo() <<  indt.season() << " Season End :( ";
-
-        if (mGlobalState.season() == indt.season() - 1) {
-            qInfo() <<  indt.season() << "bad Season End :( " << mGlobalState.season();
-        }
-        else if (mGlobalState.season() == indt.season()) {
-            OnSeasonEnd(mGlobalState.season());
-            mGlobalState.set_season(indt.season()+1);
-            mGlobalState.set_week(0);
-
+//            break;
         }
         else {
-            qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
-        }
+            qInfo() <<  indt.season() << " Season End :( ";
 
+            if (mGlobalState.season() == indt.season() - 1) {
+                qInfo() <<  indt.season() << "bad Season End :( " << mGlobalState.season();
+            }
+            else if (mGlobalState.season() == indt.season()) {
+                OnSeasonEnd(mGlobalState.season());
+                mGlobalState.set_season(indt.season()+1);
+                mGlobalState.set_week(0);
+
+            }
+            else {
+                qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
+            }
+        }
 
         mGlobalState.set_state(GlobalState_State_OFFSEASON);
         mData.OnGlobalState(mGlobalState);

@@ -40,7 +40,7 @@ INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlModels
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlSuperMacros
 
 SOURCES += \
-    $$PWD/../../../fantasybit-2015/tradingfootball/playerloader.cpp \
+#    $$PWD/../../../fantasybit-2015/tradingfootball/playerloader.cpp \
     main.cpp \
     $$PWD/Data.cpp \
     $$PWD/DistributionAlgo.cpp \
