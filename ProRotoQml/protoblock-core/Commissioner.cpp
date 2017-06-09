@@ -595,10 +595,10 @@ decltype(Commissioner::GENESIS_NFL_TEAMS) Commissioner::GENESIS_NFL_TEAMS {
     "OAK" ,
     "PHI" ,
     "PIT" ,
-    "SD" ,
+    "LAC" ,
     "SEA" ,
     "SF" ,
-    "LA" ,
+    "LAR" ,
     "TB" ,
     "TEN" ,
     "WAS"
