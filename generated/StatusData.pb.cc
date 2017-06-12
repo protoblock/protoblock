@@ -47,10 +47,11 @@ void protobuf_AssignDesc_StatusData_2eproto() {
       "StatusData.proto");
   GOOGLE_CHECK(file != NULL);
   PlayerStatus_descriptor_ = file->message_type(0);
-  static const int PlayerStatus_offsets_[3] = {
+  static const int PlayerStatus_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, teamid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, status_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, totals_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerStatus, symbol_),
   };
   PlayerStatus_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -163,21 +164,22 @@ void protobuf_AddDesc_StatusData_2eproto() {
   ::fantasybit::protobuf_AddDesc_StaticData_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\020StatusData.proto\022\nfantasybit\032\020StaticDa"
-    "ta.proto\"\260\001\n\014PlayerStatus\022\016\n\006teamid\030\024 \001("
+    "ta.proto\"\300\001\n\014PlayerStatus\022\016\n\006teamid\030\024 \001("
     "\t\022/\n\006status\030\036 \001(\0162\037.fantasybit.PlayerSta"
     "tus.Status\022(\n\006totals\030( \001(\0132\030.fantasybit."
-    "PlayerResult\"5\n\006Status\022\n\n\006ACTIVE\020\000\022\014\n\010IN"
-    "ACTIVE\020\001\022\t\n\005OTHER\020\003\022\006\n\002FA\020\004\"\231\001\n\nGameStat"
-    "us\022-\n\006status\030\n \001(\0162\035.fantasybit.GameStat"
-    "us.Status\022\020\n\010datetime\030\024 \001(\r\"J\n\006Status\022\r\n"
-    "\tSCHEDULED\020\000\022\013\n\007PREGAME\020\002\022\n\n\006INGAME\020\003\022\014\n"
-    "\010POSTGAME\020\005\022\n\n\006CLOSED\020\004\"F\n\tTeamDepth\022\n\n\002"
-    "qb\030\n \003(\t\022\n\n\002rb\030\024 \003(\t\022\n\n\002wr\030\036 \003(\t\022\n\n\002te\030("
-    " \003(\t\022\t\n\001k\0302 \003(\t\"\177\n\013GlobalState\022,\n\005state\030"
-    "\001 \001(\0162\035.fantasybit.GlobalState.State\022\016\n\006"
-    "season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"$\n\005State\022\r\n\tO"
-    "FFSEASON\020\n\022\014\n\010INSEASON\020\036*+\n\020PlayerGameSt"
-    "atus\022\007\n\003OUT\020\000\022\006\n\002IN\020\001\022\006\n\002NA\020\002", 629);
+    "PlayerResult\022\016\n\006symbol\0302 \001(\t\"5\n\006Status\022\n"
+    "\n\006ACTIVE\020\000\022\014\n\010INACTIVE\020\001\022\t\n\005OTHER\020\003\022\006\n\002F"
+    "A\020\004\"\231\001\n\nGameStatus\022-\n\006status\030\n \001(\0162\035.fan"
+    "tasybit.GameStatus.Status\022\020\n\010datetime\030\024 "
+    "\001(\r\"J\n\006Status\022\r\n\tSCHEDULED\020\000\022\013\n\007PREGAME\020"
+    "\002\022\n\n\006INGAME\020\003\022\014\n\010POSTGAME\020\005\022\n\n\006CLOSED\020\004\""
+    "F\n\tTeamDepth\022\n\n\002qb\030\n \003(\t\022\n\n\002rb\030\024 \003(\t\022\n\n\002"
+    "wr\030\036 \003(\t\022\n\n\002te\030( \003(\t\022\t\n\001k\0302 \003(\t\"\177\n\013Globa"
+    "lState\022,\n\005state\030\001 \001(\0162\035.fantasybit.Globa"
+    "lState.State\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001"
+    "(\r\"$\n\005State\022\r\n\tOFFSEASON\020\n\022\014\n\010INSEASON\020\036"
+    "*+\n\020PlayerGameStatus\022\007\n\003OUT\020\000\022\006\n\002IN\020\001\022\006\n"
+    "\002NA\020\002", 645);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StatusData.proto", &protobuf_RegisterTypes);
   PlayerStatus::default_instance_ = new PlayerStatus();
@@ -244,6 +246,7 @@ const int PlayerStatus::Status_ARRAYSIZE;
 const int PlayerStatus::kTeamidFieldNumber;
 const int PlayerStatus::kStatusFieldNumber;
 const int PlayerStatus::kTotalsFieldNumber;
+const int PlayerStatus::kSymbolFieldNumber;
 #endif  // !_MSC_VER
 
 PlayerStatus::PlayerStatus()
@@ -266,6 +269,7 @@ void PlayerStatus::SharedCtor() {
   teamid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   status_ = 0;
   totals_ = NULL;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -276,6 +280,9 @@ PlayerStatus::~PlayerStatus() {
 void PlayerStatus::SharedDtor() {
   if (teamid_ != &::google::protobuf::internal::kEmptyString) {
     delete teamid_;
+  }
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
   }
   if (this != default_instance_) {
     delete totals_;
@@ -313,6 +320,11 @@ void PlayerStatus::Clear() {
     status_ = 0;
     if (has_totals()) {
       if (totals_ != NULL) totals_->::fantasybit::PlayerResult::Clear();
+    }
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -372,6 +384,23 @@ bool PlayerStatus::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(402)) goto parse_symbol;
+        break;
+      }
+
+      // optional string symbol = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_symbol:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -415,6 +444,15 @@ void PlayerStatus::SerializeWithCachedSizes(
       40, this->totals(), output);
   }
 
+  // optional string symbol = 50;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      50, this->symbol(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -446,6 +484,16 @@ void PlayerStatus::SerializeWithCachedSizes(
         40, this->totals(), target);
   }
 
+  // optional string symbol = 50;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        50, this->symbol(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -475,6 +523,13 @@ int PlayerStatus::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->totals());
+    }
+
+    // optional string symbol = 50;
+    if (has_symbol()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
     }
 
   }
@@ -513,6 +568,9 @@ void PlayerStatus::MergeFrom(const PlayerStatus& from) {
     if (from.has_totals()) {
       mutable_totals()->::fantasybit::PlayerResult::MergeFrom(from.totals());
     }
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -539,6 +597,7 @@ void PlayerStatus::Swap(PlayerStatus* other) {
     std::swap(teamid_, other->teamid_);
     std::swap(status_, other->status_);
     std::swap(totals_, other->totals_);
+    std::swap(symbol_, other->symbol_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

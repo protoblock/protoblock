@@ -13,6 +13,7 @@ message PlayerStatus {
     optional string teamid = 20;
     optional Status status = 30;
     optional PlayerResult totals = 40;
+    optional string symbol = 50;
 }
 
 enum PlayerGameStatus {

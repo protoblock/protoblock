@@ -326,7 +326,8 @@ void NFLStateData::init() {
             pd.mutable_player_status()->CopyFrom(ps);
             writer3(pd);
 #endif
-            MyPlayerStatus[it->key().ToString()] = ps;
+            auto pid = it->key().ToString();
+            MyPlayerStatus[pid] = ps;
             if (ps.has_teamid()) {
                 //qDebug() << ps.teamid();
                 auto itr = MyTeamRoster.find(ps.teamid());
@@ -335,6 +336,13 @@ void NFLStateData::init() {
 
                 MyTeamRoster[ps.teamid()].insert(it->key().ToString());
             }
+            if ( ps.symbol() != "" ) {
+                FromTicker(ps.symbol());
+                mPidTicker[pid] = ps.symbol();
+                qDebug() << pid.data() << ps.DebugString().data();
+            }
+            else
+                qWarning() << " no ticker!! " << ps.DebugString().data();
         }
         delete it;
     }
@@ -595,39 +603,55 @@ bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) 
 }
 
 void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerStatus &ps) {
-    statusstore->Put(write_sync, playerid, ps.SerializeAsString());
-    qDebug() << QString::fromStdString(ps.DebugString());
-
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+
     auto it = MyPlayerStatus.find(playerid);
     if ( it == end(MyPlayerStatus)) {
-        MyPlayerStatus[playerid] = ps;
+        PlayerStatus ps2(ps);
+        ps2.set_symbol(GenerateTicker(playerid,ps));
+
+        if ( !statusstore->Put(write_sync, playerid, ps2.SerializeAsString()).ok())
+            qWarning() << "bad write statusstore";
+        qDebug() << ps.DebugString().data();
+
+        mPidTicker[playerid] = ps2.symbol();
+        MyPlayerStatus[playerid] = ps2;
         OnNewPlayer(playerid);
         if ( ps.has_teamid())
-            OnPlayerSign(playerid,ps.teamid());
+            OnPlayerSign(playerid,ps2.teamid());
     }
     else {
-        auto old = it->second;
-        MyPlayerStatus[playerid] = ps;
+        PlayerStatus &old = it->second;
+        PlayerStatus ps2(ps);
+
+        if ( ps2.has_symbol() && ps2.symbol() != "");
+        else
+            ps2.set_symbol(old.symbol());
+
+        if ( !statusstore->Put(write_sync, playerid, ps2.SerializeAsString()).ok())
+            qWarning() << "bad write statusstore";
+        qDebug() << ps2.DebugString().data();
+
+        MyPlayerStatus[playerid] = ps2;
 
         if ( old.has_teamid() ) {
-            if ( ps.has_teamid() ) {
-                if ( old.teamid() != ps.teamid()) {
-                    OnPlayerTrade(playerid,old.teamid(),ps.teamid());
+            if ( ps2.has_teamid() ) {
+                if ( old.teamid() != ps2.teamid()) {
+                    OnPlayerTrade(playerid,old.teamid(),ps2.teamid());
                 }
-                if ( ps.has_status() ) {
+                if ( ps2.has_status() ) {
                     if ( !old.has_status() )
-                        OnPlayerStatus(playerid,ps);
+                        OnPlayerStatus(playerid,ps2);
                     else if ( old.status() != ps.status())
-                        OnPlayerStatus(playerid,ps);
+                        OnPlayerStatus(playerid,ps2);
                 }
             }
             else {
                 OnPlayerRelease(playerid,old.teamid());
             }
         }
-        else if ( ps.has_teamid() )
-            OnPlayerSign(playerid,ps.teamid());
+        else if ( ps2.has_teamid() )
+            OnPlayerSign(playerid,ps2.teamid());
     }
 }
 
@@ -979,3 +1003,11 @@ void NFLStateData::OnGameStart(const std::string &gameid, const GameStatus &gs) 
 std::string NFLStateData::filedir(const std::string &in) {
     return GET_ROOT_DIR() + "index/" + in;
 }
+
+std::map<std::string,int> NFLStateData::PosIndexMap = {
+    {"QB",0} ,
+    {"RB",1} ,
+    {"WR",2} ,
+    {"TE",3} ,
+    {"K",4}
+};

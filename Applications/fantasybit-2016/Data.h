@@ -122,6 +122,19 @@ public:
     std::unordered_map<std::string,PlayerDetail>
             GetTeamRoster(const std::string &teamid);
 
+    /*
+    mUniqueSymbol["AB"]
+            [0] - QB
+            [1] - RB
+            [2] - WR
+            [3] - TE
+            [4] - KI
+    */
+    std::map<std::string, vector<char>> mUniqueSymbol;
+    static map<std::string,int> PosIndexMap;
+
+    std::unordered_map<std::string,std::string> mPidTicker;
+
     GameStatus GetUpdatedGameStatus(std::string id);
     WeeklySchedule GetWeeklySchedule(int season,int week);
 
@@ -129,6 +142,81 @@ public:
     void OnGlobalState(GlobalState &gs);
 
     GameInfo GetGameInfo(string gameid);
+
+    std::string GenerateTicker(const std::string &pid,const PlayerStatus &ps) {
+        std::string result;
+        PlayerBase pba = GetPlayerBase(pid);
+        if ( pba.position() == "DEF") {
+            result = ps.teamid();
+            if ( result.size() == 2 )
+                result += (pba.last().at(0));
+            result += 'D';
+        }
+        else {
+            result += (pba.first().at(0));
+            result += (pba.last().at(0));
+
+            if ( result == "JB")
+                qDebug() << "jbjbjbj" << pba.DebugString().data();
+
+            auto it = mUniqueSymbol.find(result);
+            if ( it == mUniqueSymbol.end()) {
+                vector<char> ar(5,0);
+//                char nc = ++(ar[PosIndexMap[pba.position()]]);
+                ar[PosIndexMap[pba.position()]] = 'a';
+                mUniqueSymbol.insert({result,ar});
+//                result += nc;
+                result += pba.position();
+                if ( pba.position() == "K") result += 'I';
+            }
+            else {
+                result += pba.position();
+                if ( pba.position() == "K") result += 'I';
+                char nxt = it->second[PosIndexMap[pba.position()]];
+                if ( nxt == 0 )
+                    it->second[PosIndexMap[pba.position()]] = 'a';
+                else {
+                    result += nxt;
+                    ++(it->second[PosIndexMap[pba.position()]]);
+                }
+            }
+        }
+
+        qDebug() << result.data() << "GenerateTicker" << pid.data() << pba.DebugString().data() << ps.DebugString().data();
+        return result;
+    }
+
+    void FromTicker(const std::string &ticker) {
+        if ( ticker.size() < 4 ) {
+            qWarning() << " bad ticker" << ticker.data();
+            return;
+        }
+
+        if ( ticker[3] == 'D' ) return;
+        int index;
+        std::string pos = ticker.substr(2,2);
+        if ( pos == "KI") index = 4;
+        else
+            index = PosIndexMap[pos];
+
+        std::string initials = ticker.substr(0,2);
+        if ( initials == "JB")
+            qDebug() << "jbjbjbj" << ticker.data();
+        auto it = mUniqueSymbol.find(initials);
+        if ( it == mUniqueSymbol.end()) {
+            vector<char> ar(5,0);
+
+            ar[index] = (ticker.size() < 5) ? 'a' : ticker[4]+1;
+            mUniqueSymbol.insert({initials,ar});
+        }
+        else {
+            if (ticker.size() < 5)
+                it->second[index] = 'a';
+            else if ( it->second[index] <= ticker[4] )
+                it->second[index] = ticker[4]+1;
+
+        }
+    }
 
     void TeamNameChange(const std::string &playerid, const PlayerBase &pb, const PlayerStatus &ps);
 
