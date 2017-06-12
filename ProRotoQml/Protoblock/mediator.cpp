@@ -339,6 +339,10 @@ void Mediator::updateWeek() {
             mPlayerQuoteSliceModel.append(p);
             }
 
+            const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
+            qDebug() << "  vms " << vms.size();
+            mPlayerQuoteSliceModel.Update(vms,mPlayerProjModel);
+
         }
         updateLiveLeaders();
     }
