@@ -321,9 +321,24 @@ void Mediator::updateWeek() {
         }
         else {
             m_pWeeklyScheduleModel->clear();
-            mPlayerQuoteSliceModel.clear();
+//            mPlayerQuoteSliceModel.clear();
             mPlayerProjModel.clear();
             set_thisWeekPrev(false);
+            {
+            PlayerDetail pd;
+            pd.base = mGateway->dataService->GetPlayerBase("1255");
+            PlayerProjModelItem *pp = new PlayerProjModelItem(pd,"GB","1255",QString(""),0,true,nullptr);
+            PlayerQuoteSliceModelItem *p = new PlayerQuoteSliceModelItem(*pp);
+            mPlayerQuoteSliceModel.append(p);
+            }
+            {
+            PlayerDetail pd;
+            pd.base = mGateway->dataService->GetPlayerBase("1387");
+            PlayerProjModelItem *pp = new PlayerProjModelItem(pd,"CHI","1387",QString(""),0,true,nullptr);
+            PlayerQuoteSliceModelItem *p = new PlayerQuoteSliceModelItem(*pp);
+            mPlayerQuoteSliceModel.append(p);
+            }
+
         }
         updateLiveLeaders();
     }

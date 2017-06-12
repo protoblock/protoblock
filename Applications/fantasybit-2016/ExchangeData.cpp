@@ -1556,6 +1556,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
 }
 
 void ExchangeData::OnTradeSessionStart(int week) {
+//    if ( week == 0 )
     #ifdef TIMEAGENTWRITEFILLS
         if ( !amlive ) return;
 
