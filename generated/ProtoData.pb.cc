@@ -712,11 +712,13 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(StampedTrans));
   ExchangeOrder_descriptor_ = file->message_type(32);
-  static const int ExchangeOrder_offsets_[4] = {
+  static const int ExchangeOrder_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExchangeOrder, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExchangeOrder, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExchangeOrder, core_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExchangeOrder, cancel_oref_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExchangeOrder, futcontract_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExchangeOrder, symbol_),
   };
   ExchangeOrder_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1101,37 +1103,39 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "evseq\030\025 \001(\005\0222\n\013signed_orig\030\036 \001(\0132\035.fanta"
     "sybit.SignedTransaction2I\n\rstamped_trans"
     "\022\027.fantasybit.Transaction\030\254\002 \001(\0132\030.fanta"
-    "sybit.StampedTrans\"\213\002\n\rExchangeOrder\022,\n\004"
+    "sybit.StampedTrans\"\311\002\n\rExchangeOrder\022,\n\004"
     "type\030\n \001(\0162\036.fantasybit.ExchangeOrder.Ty"
     "pe\022\020\n\010playerid\030( \001(\t\022#\n\004core\0302 \001(\0132\025.fan"
-    "tasybit.OrderCore\022\023\n\013cancel_oref\030d \001(\005\"("
-    "\n\004Type\022\007\n\003NEW\020\001\022\n\n\006CANCEL\020\002\022\013\n\007REPLACE\020\003"
-    "*\t\010\364\003\020\200\200\200\200\0022K\n\016exchange_order\022\027.fantasyb"
-    "it.Transaction\030\266\002 \001(\0132\031.fantasybit.Excha"
-    "ngeOrder\"q\n\013OrderUnique\022\022\n\npublic_key\030\n "
-    "\001(\t\022\016\n\006season\030\024 \001(\r\022\014\n\004week\030\036 \001(\r\022\017\n\007buy"
-    "side\030( \001(\010\022\020\n\010playerid\0302 \001(\t\022\r\n\005price\030F "
-    "\001(\005\"O\n\nOrderDeets\022\013\n\003oid\030\n \001(\014\022&\n\005order\030"
-    "\024 \001(\0132\027.fantasybit.OrderUnique\022\014\n\004size\030\036"
-    " \001(\005\"\227\001\n\014InsideUnique\022\020\n\010playerid\0302 \001(\t\022"
-    "\022\n\npublic_key\030\n \001(\t\022\017\n\007buyside\030( \001(\010\022\r\n\005"
-    "price\030F \001(\005\022\013\n\003oid\030\013 \001(\014\022&\n\005order\030\024 \001(\0132"
-    "\027.fantasybit.OrderUnique\022\014\n\004size\030\036 \001(\005\"\316"
-    "\001\n\016TimeTransition\022-\n\004type\030\001 \001(\0162\037.fantas"
-    "ybit.TimeTransition.Type\022\016\n\006season\030\n \001(\r"
-    "\022\014\n\004week\030\024 \001(\r\"%\n\004Type\022\r\n\tTRADEOPEN\020\002\022\016\n"
-    "\nTRADECLOSE\020\0032H\n\ntime_trans\022\027.fantasybit"
-    ".Transaction\030\257\002 \001(\0132\032.fantasybit.TimeTra"
-    "nsition*Y\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007not"
-    "avil\020\002\022\r\n\trequested\020\005\022\024\n\020transaction_sen"
-    "t\020\017\022\r\n\tconfirmed\020\024*\233\001\n\tTransType\022\010\n\004NAME"
-    "\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003"
-    "\022\024\n\020PROJECTION_BLOCK\020\004\022\017\n\013MASTER_NAME\020\005\022"
-    "\010\n\004TIME\020\006\022\013\n\007STAMPED\020\007\022\014\n\010EXCHANGE\020\010\022\022\n\016"
-    "EXCHANGE_BLOCK\020\t*\214\001\n\006TrType\022\017\n\013SEASONSTA"
-    "RT\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGA"
-    "MESTART\020\006\022\014\n\010WEEKOVER\020\007\022\025\n\021TRADESESSIONS"
-    "TART\020\010\022\037\n\033TRADESESSIONCLOSEANDPREOPEN\020\t", 5839);
+    "tasybit.OrderCore\022\023\n\013cancel_oref\030d \001(\005\022,"
+    "\n\013futcontract\030n \001(\0132\027.fantasybit.FutCont"
+    "ract\022\016\n\006symbol\030x \001(\t\"(\n\004Type\022\007\n\003NEW\020\001\022\n\n"
+    "\006CANCEL\020\002\022\013\n\007REPLACE\020\003*\t\010\364\003\020\200\200\200\200\0022K\n\016exc"
+    "hange_order\022\027.fantasybit.Transaction\030\266\002 "
+    "\001(\0132\031.fantasybit.ExchangeOrder\"q\n\013OrderU"
+    "nique\022\022\n\npublic_key\030\n \001(\t\022\016\n\006season\030\024 \001("
+    "\r\022\014\n\004week\030\036 \001(\r\022\017\n\007buyside\030( \001(\010\022\020\n\010play"
+    "erid\0302 \001(\t\022\r\n\005price\030F \001(\005\"O\n\nOrderDeets\022"
+    "\013\n\003oid\030\n \001(\014\022&\n\005order\030\024 \001(\0132\027.fantasybit"
+    ".OrderUnique\022\014\n\004size\030\036 \001(\005\"\227\001\n\014InsideUni"
+    "que\022\020\n\010playerid\0302 \001(\t\022\022\n\npublic_key\030\n \001("
+    "\t\022\017\n\007buyside\030( \001(\010\022\r\n\005price\030F \001(\005\022\013\n\003oid"
+    "\030\013 \001(\014\022&\n\005order\030\024 \001(\0132\027.fantasybit.Order"
+    "Unique\022\014\n\004size\030\036 \001(\005\"\316\001\n\016TimeTransition\022"
+    "-\n\004type\030\001 \001(\0162\037.fantasybit.TimeTransitio"
+    "n.Type\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"%\n\004"
+    "Type\022\r\n\tTRADEOPEN\020\002\022\016\n\nTRADECLOSE\020\0032H\n\nt"
+    "ime_trans\022\027.fantasybit.Transaction\030\257\002 \001("
+    "\0132\032.fantasybit.TimeTransition*Y\n\014MyNameS"
+    "tatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequeste"
+    "d\020\005\022\024\n\020transaction_sent\020\017\022\r\n\tconfirmed\020\024"
+    "*\233\001\n\tTransType\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001"
+    "\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003\022\024\n\020PROJECTION_BLO"
+    "CK\020\004\022\017\n\013MASTER_NAME\020\005\022\010\n\004TIME\020\006\022\013\n\007STAMP"
+    "ED\020\007\022\014\n\010EXCHANGE\020\010\022\022\n\016EXCHANGE_BLOCK\020\t*\214"
+    "\001\n\006TrType\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEND\020"
+    "\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKO"
+    "VER\020\007\022\025\n\021TRADESESSIONSTART\020\010\022\037\n\033TRADESES"
+    "SIONCLOSEANDPREOPEN\020\t", 5901);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -11871,6 +11875,8 @@ const int ExchangeOrder::kTypeFieldNumber;
 const int ExchangeOrder::kPlayeridFieldNumber;
 const int ExchangeOrder::kCoreFieldNumber;
 const int ExchangeOrder::kCancelOrefFieldNumber;
+const int ExchangeOrder::kFutcontractFieldNumber;
+const int ExchangeOrder::kSymbolFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -11886,6 +11892,7 @@ ExchangeOrder::ExchangeOrder()
 
 void ExchangeOrder::InitAsDefaultInstance() {
   core_ = const_cast< ::fantasybit::OrderCore*>(&::fantasybit::OrderCore::default_instance());
+  futcontract_ = const_cast< ::fantasybit::FutContract*>(&::fantasybit::FutContract::default_instance());
 }
 
 ExchangeOrder::ExchangeOrder(const ExchangeOrder& from)
@@ -11900,6 +11907,8 @@ void ExchangeOrder::SharedCtor() {
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   core_ = NULL;
   cancel_oref_ = 0;
+  futcontract_ = NULL;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -11911,8 +11920,12 @@ void ExchangeOrder::SharedDtor() {
   if (playerid_ != &::google::protobuf::internal::kEmptyString) {
     delete playerid_;
   }
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
   if (this != default_instance_) {
     delete core_;
+    delete futcontract_;
   }
 }
 
@@ -11950,6 +11963,14 @@ void ExchangeOrder::Clear() {
       if (core_ != NULL) core_->::fantasybit::OrderCore::Clear();
     }
     cancel_oref_ = 0;
+    if (has_futcontract()) {
+      if (futcontract_ != NULL) futcontract_->::fantasybit::FutContract::Clear();
+    }
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -12024,6 +12045,37 @@ bool ExchangeOrder::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(882)) goto parse_futcontract;
+        break;
+      }
+
+      // optional .fantasybit.FutContract futcontract = 110;
+      case 110: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_futcontract:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_futcontract()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(962)) goto parse_symbol;
+        break;
+      }
+
+      // optional string symbol = 120;
+      case 120: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_symbol:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -12077,6 +12129,21 @@ void ExchangeOrder::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(100, this->cancel_oref(), output);
   }
 
+  // optional .fantasybit.FutContract futcontract = 110;
+  if (has_futcontract()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      110, this->futcontract(), output);
+  }
+
+  // optional string symbol = 120;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      120, this->symbol(), output);
+  }
+
   // Extension range [500, 536870912)
   _extensions_.SerializeWithCachedSizes(
       500, 536870912, output);
@@ -12115,6 +12182,23 @@ void ExchangeOrder::SerializeWithCachedSizes(
   // optional int32 cancel_oref = 100;
   if (has_cancel_oref()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(100, this->cancel_oref(), target);
+  }
+
+  // optional .fantasybit.FutContract futcontract = 110;
+  if (has_futcontract()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        110, this->futcontract(), target);
+  }
+
+  // optional string symbol = 120;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        120, this->symbol(), target);
   }
 
   // Extension range [500, 536870912)
@@ -12159,6 +12243,20 @@ int ExchangeOrder::ByteSize() const {
           this->cancel_oref());
     }
 
+    // optional .fantasybit.FutContract futcontract = 110;
+    if (has_futcontract()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->futcontract());
+    }
+
+    // optional string symbol = 120;
+    if (has_symbol()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
+    }
+
   }
   total_size += _extensions_.ByteSize();
 
@@ -12200,6 +12298,12 @@ void ExchangeOrder::MergeFrom(const ExchangeOrder& from) {
     if (from.has_cancel_oref()) {
       set_cancel_oref(from.cancel_oref());
     }
+    if (from.has_futcontract()) {
+      mutable_futcontract()->::fantasybit::FutContract::MergeFrom(from.futcontract());
+    }
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
   }
   _extensions_.MergeFrom(from._extensions_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -12229,6 +12333,8 @@ void ExchangeOrder::Swap(ExchangeOrder* other) {
     std::swap(playerid_, other->playerid_);
     std::swap(core_, other->core_);
     std::swap(cancel_oref_, other->cancel_oref_);
+    std::swap(futcontract_, other->futcontract_);
+    std::swap(symbol_, other->symbol_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

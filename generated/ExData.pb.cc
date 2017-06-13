@@ -66,6 +66,10 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* MarketSnapshot_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   MarketSnapshot_reflection_ = NULL;
+const ::google::protobuf::Descriptor* FutContract_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  FutContract_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* FutContract_Type_descriptor_ = NULL;
 
 }  // namespace
 
@@ -355,6 +359,25 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MarketSnapshot));
+  FutContract_descriptor_ = file->message_type(15);
+  static const int FutContract_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FutContract, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FutContract, season_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FutContract, week_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FutContract, symbol_),
+  };
+  FutContract_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      FutContract_descriptor_,
+      FutContract::default_instance_,
+      FutContract_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FutContract, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FutContract, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(FutContract));
+  FutContract_Type_descriptor_ = FutContract_descriptor_->enum_type(0);
 }
 
 namespace {
@@ -397,6 +420,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     MarketQuote_descriptor_, &MarketQuote::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     MarketSnapshot_descriptor_, &MarketSnapshot::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    FutContract_descriptor_, &FutContract::default_instance());
 }
 
 }  // namespace
@@ -432,6 +457,8 @@ void protobuf_ShutdownFile_ExData_2eproto() {
   delete MarketQuote_reflection_;
   delete MarketSnapshot::default_instance_;
   delete MarketSnapshot_reflection_;
+  delete FutContract::default_instance_;
+  delete FutContract_reflection_;
 }
 
 void protobuf_AddDesc_ExData_2eproto() {
@@ -481,7 +508,11 @@ void protobuf_AddDesc_ExData_2eproto() {
     "k\030\013 \001(\005\022$\n\005depth\030F \003(\0132\025.fantasybit.Dept"
     "hItem\022&\n\004ohlc\030\024 \001(\0132\030.fantasybit.Contrac"
     "tOHLC\022&\n\005quote\030\036 \001(\0132\027.fantasybit.Market"
-    "Quote\022\020\n\010blocknum\030( \001(\005", 1623);
+    "Quote\022\020\n\010blocknum\030( \001(\005\"\233\001\n\013FutContract\022"
+    "*\n\004type\030\n \001(\0162\034.fantasybit.FutContract.T"
+    "ype\022\016\n\006season\030\024 \001(\005\022\014\n\004week\030\036 \001(\005\022\016\n\006sym"
+    "bol\030( \001(\t\"2\n\004Type\022\n\n\006WEEKLY\020\001\022\n\n\006SEASON\020"
+    "\002\022\007\n\003ROW\020\003\022\t\n\005OTHER\020\004", 1781);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ExData.proto", &protobuf_RegisterTypes);
   SettlePos::default_instance_ = new SettlePos();
@@ -499,6 +530,7 @@ void protobuf_AddDesc_ExData_2eproto() {
   BookDelta::default_instance_ = new BookDelta();
   MarketQuote::default_instance_ = new MarketQuote();
   MarketSnapshot::default_instance_ = new MarketSnapshot();
+  FutContract::default_instance_ = new FutContract();
   SettlePos::default_instance_->InitAsDefaultInstance();
   StorePos::default_instance_->InitAsDefaultInstance();
   BookPos::default_instance_->InitAsDefaultInstance();
@@ -514,6 +546,7 @@ void protobuf_AddDesc_ExData_2eproto() {
   BookDelta::default_instance_->InitAsDefaultInstance();
   MarketQuote::default_instance_->InitAsDefaultInstance();
   MarketSnapshot::default_instance_->InitAsDefaultInstance();
+  FutContract::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_ExData_2eproto);
 }
 
@@ -5991,6 +6024,382 @@ void MarketSnapshot::Swap(MarketSnapshot* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = MarketSnapshot_descriptor_;
   metadata.reflection = MarketSnapshot_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+const ::google::protobuf::EnumDescriptor* FutContract_Type_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return FutContract_Type_descriptor_;
+}
+bool FutContract_Type_IsValid(int value) {
+  switch(value) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const FutContract_Type FutContract::WEEKLY;
+const FutContract_Type FutContract::SEASON;
+const FutContract_Type FutContract::ROW;
+const FutContract_Type FutContract::OTHER;
+const FutContract_Type FutContract::Type_MIN;
+const FutContract_Type FutContract::Type_MAX;
+const int FutContract::Type_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int FutContract::kTypeFieldNumber;
+const int FutContract::kSeasonFieldNumber;
+const int FutContract::kWeekFieldNumber;
+const int FutContract::kSymbolFieldNumber;
+#endif  // !_MSC_VER
+
+FutContract::FutContract()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void FutContract::InitAsDefaultInstance() {
+}
+
+FutContract::FutContract(const FutContract& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void FutContract::SharedCtor() {
+  _cached_size_ = 0;
+  type_ = 1;
+  season_ = 0;
+  week_ = 0;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+FutContract::~FutContract() {
+  SharedDtor();
+}
+
+void FutContract::SharedDtor() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void FutContract::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* FutContract::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return FutContract_descriptor_;
+}
+
+const FutContract& FutContract::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ExData_2eproto();
+  return *default_instance_;
+}
+
+FutContract* FutContract::default_instance_ = NULL;
+
+FutContract* FutContract::New() const {
+  return new FutContract;
+}
+
+void FutContract::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    type_ = 1;
+    season_ = 0;
+    week_ = 0;
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool FutContract::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .fantasybit.FutContract.Type type = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::fantasybit::FutContract_Type_IsValid(value)) {
+            set_type(static_cast< ::fantasybit::FutContract_Type >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(10, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(160)) goto parse_season;
+        break;
+      }
+
+      // optional int32 season = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_season:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &season_)));
+          set_has_season();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_week;
+        break;
+      }
+
+      // optional int32 week = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_week:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &week_)));
+          set_has_week();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(322)) goto parse_symbol;
+        break;
+      }
+
+      // optional string symbol = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_symbol:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void FutContract::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .fantasybit.FutContract.Type type = 10;
+  if (has_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      10, this->type(), output);
+  }
+
+  // optional int32 season = 20;
+  if (has_season()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(20, this->season(), output);
+  }
+
+  // optional int32 week = 30;
+  if (has_week()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(30, this->week(), output);
+  }
+
+  // optional string symbol = 40;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      40, this->symbol(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* FutContract::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .fantasybit.FutContract.Type type = 10;
+  if (has_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      10, this->type(), target);
+  }
+
+  // optional int32 season = 20;
+  if (has_season()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(20, this->season(), target);
+  }
+
+  // optional int32 week = 30;
+  if (has_week()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(30, this->week(), target);
+  }
+
+  // optional string symbol = 40;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        40, this->symbol(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int FutContract::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .fantasybit.FutContract.Type type = 10;
+    if (has_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional int32 season = 20;
+    if (has_season()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->season());
+    }
+
+    // optional int32 week = 30;
+    if (has_week()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->week());
+    }
+
+    // optional string symbol = 40;
+    if (has_symbol()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void FutContract::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const FutContract* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const FutContract*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void FutContract::MergeFrom(const FutContract& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_type()) {
+      set_type(from.type());
+    }
+    if (from.has_season()) {
+      set_season(from.season());
+    }
+    if (from.has_week()) {
+      set_week(from.week());
+    }
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void FutContract::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void FutContract::CopyFrom(const FutContract& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool FutContract::IsInitialized() const {
+
+  return true;
+}
+
+void FutContract::Swap(FutContract* other) {
+  if (other != this) {
+    std::swap(type_, other->type_);
+    std::swap(season_, other->season_);
+    std::swap(week_, other->week_);
+    std::swap(symbol_, other->symbol_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata FutContract::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = FutContract_descriptor_;
+  metadata.reflection = FutContract_reflection_;
   return metadata;
 }
 

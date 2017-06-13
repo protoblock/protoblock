@@ -69,8 +69,8 @@ public:
     }
 
     void Update(fantasybit::FullOrderDelta &fo) {
-        qDebug() << " openorders update " << fo.openorder.DebugString().data() << fo.playerid.data() << fo.fname.data();
-        if ( fo.playerid.data() != m_pidsymbol)
+        qDebug() << " openorders update " << fo.openorder.DebugString().data() << fo.symbol.data() << fo.fname.data();
+        if ( fo.symbol.data() != m_pidsymbol)
             qCritical() << " OpenOrdersModel bad " << fo.playerid.data() << m_pidsymbol;
 
         auto it = this->getByUid(QString::number(fo.openorder.refnum()));

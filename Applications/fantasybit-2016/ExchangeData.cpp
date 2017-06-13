@@ -359,38 +359,36 @@ void ExchangeData::clearNewWeek() {
 //    init();
 }
 
-
-void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
+void ExchangeData::OnCancelOrderMsg(const ExchangeOrder& eo,
                                  int32_t seqnum,
                                  shared_ptr<FantasyName> fn,
                                  int32_t blocknum) {
 
-//    if ( amlive && mSubscribed.find(fn->alias()) != end(mSubscribed))
-        //mSubscribed.insert(seqnum);
-
-    //fnames.insert(fn->alias());
-    mBookDelta->set_blocknum(blocknum);
-    switch(eo.type()) {
-    case ExchangeOrder::NEW:
-        OnOrderNew(eo,seqnum,fn);
-        break;
-    case ExchangeOrder::CANCEL:
-        OnOrderCancel(eo,seqnum,fn);
-        break;
-    case ExchangeOrder::REPLACE:
-        //OnOrderReplace(eo,uid);
-        break;
-    default:
-        break;
+    if ( eo.type() != ExchangeOrder::CANCEL) {
+        qWarning() << "ExchangeData::OnCancelOrderMs not cancel ";
+        return;
     }
+
+    mBookDelta->set_blocknum(blocknum);
+    OnOrderCancel(eo,seqnum,fn);
 }
 
-void ExchangeData::OnOrderNew(const ExchangeOrder& eo,
-                              int32_t seqnum,
-                              shared_ptr<FantasyName> fn) {
+void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
+                                 int32_t seqnum,
+                                 shared_ptr<FantasyName> fn,
+                                 int32_t blocknum,
+                                 const FutContract *fc,
+                                 const string &symbol) {
 
+    if ( eo.type() != ExchangeOrder::NEW) {
+        qWarning() << "ExchangeData::OnNewOrderMsg not new ";
+        return;
+    }
 
-    qDebug() << eo.playerid().data() << ":newOrder:" << seqnum << " : " << fn->alias().data();
+    mBookDelta->set_blocknum(blocknum);
+    OnOrderNew(eo,seqnum,fn);
+
+    qDebug() << symbol.data() << ":newOrder:" << seqnum << " : " << fn->alias().data();
 
     bool exitonly = fn->getStakeBalance() <= 0;
 
@@ -854,7 +852,7 @@ void ExchangeData::OnWeekOver(int week) {
     }
     */
     clearNewWeek();
-    mWeek = week;
+    mWeek = 0;
 }
 
 
@@ -1556,8 +1554,12 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
     return ret;
 }
 
-void ExchangeData::OnTradeSessionStart(int week) {
-//    if ( week == 0 )
+void ExchangeData::OnTradeSessionStart(int season,int week) {
+    if ( week == 0 ) {
+        if ( season >= mMaxSeason )
+            mMaxSeason = season;
+    }
+        //    if ( week == 0 )
     #ifdef TIMEAGENTWRITEFILLS
         if ( !amlive ) return;
 

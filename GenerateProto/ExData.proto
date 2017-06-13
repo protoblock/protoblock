@@ -116,3 +116,17 @@ message MarketSnapshot {
     optional MarketQuote quote = 30;
     optional int32 blocknum = 40;
 }
+
+message FutContract {
+    enum Type {
+        WEEKLY = 1;
+        SEASON = 2;
+        ROW = 3;
+        OTHER = 4;
+    }
+
+    optional Type type = 10;
+    optional int32 season = 20;
+    optional int32 week = 30;
+    optional string symbol = 40;
+}

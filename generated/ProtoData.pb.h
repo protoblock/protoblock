@@ -4286,6 +4286,27 @@ class ExchangeOrder : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 cancel_oref() const;
   inline void set_cancel_oref(::google::protobuf::int32 value);
 
+  // optional .fantasybit.FutContract futcontract = 110;
+  inline bool has_futcontract() const;
+  inline void clear_futcontract();
+  static const int kFutcontractFieldNumber = 110;
+  inline const ::fantasybit::FutContract& futcontract() const;
+  inline ::fantasybit::FutContract* mutable_futcontract();
+  inline ::fantasybit::FutContract* release_futcontract();
+  inline void set_allocated_futcontract(::fantasybit::FutContract* futcontract);
+
+  // optional string symbol = 120;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 120;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
   GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(ExchangeOrder)
   static const int kExchangeOrderFieldNumber = 310;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
@@ -4301,6 +4322,10 @@ class ExchangeOrder : public ::google::protobuf::Message {
   inline void clear_has_core();
   inline void set_has_cancel_oref();
   inline void clear_has_cancel_oref();
+  inline void set_has_futcontract();
+  inline void clear_has_futcontract();
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
@@ -4310,9 +4335,11 @@ class ExchangeOrder : public ::google::protobuf::Message {
   int type_;
   ::google::protobuf::int32 cancel_oref_;
   ::fantasybit::OrderCore* core_;
+  ::fantasybit::FutContract* futcontract_;
+  ::std::string* symbol_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -9267,6 +9294,114 @@ inline ::google::protobuf::int32 ExchangeOrder::cancel_oref() const {
 inline void ExchangeOrder::set_cancel_oref(::google::protobuf::int32 value) {
   set_has_cancel_oref();
   cancel_oref_ = value;
+}
+
+// optional .fantasybit.FutContract futcontract = 110;
+inline bool ExchangeOrder::has_futcontract() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ExchangeOrder::set_has_futcontract() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ExchangeOrder::clear_has_futcontract() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ExchangeOrder::clear_futcontract() {
+  if (futcontract_ != NULL) futcontract_->::fantasybit::FutContract::Clear();
+  clear_has_futcontract();
+}
+inline const ::fantasybit::FutContract& ExchangeOrder::futcontract() const {
+  return futcontract_ != NULL ? *futcontract_ : *default_instance_->futcontract_;
+}
+inline ::fantasybit::FutContract* ExchangeOrder::mutable_futcontract() {
+  set_has_futcontract();
+  if (futcontract_ == NULL) futcontract_ = new ::fantasybit::FutContract;
+  return futcontract_;
+}
+inline ::fantasybit::FutContract* ExchangeOrder::release_futcontract() {
+  clear_has_futcontract();
+  ::fantasybit::FutContract* temp = futcontract_;
+  futcontract_ = NULL;
+  return temp;
+}
+inline void ExchangeOrder::set_allocated_futcontract(::fantasybit::FutContract* futcontract) {
+  delete futcontract_;
+  futcontract_ = futcontract;
+  if (futcontract) {
+    set_has_futcontract();
+  } else {
+    clear_has_futcontract();
+  }
+}
+
+// optional string symbol = 120;
+inline bool ExchangeOrder::has_symbol() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ExchangeOrder::set_has_symbol() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ExchangeOrder::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ExchangeOrder::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& ExchangeOrder::symbol() const {
+  return *symbol_;
+}
+inline void ExchangeOrder::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void ExchangeOrder::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void ExchangeOrder::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ExchangeOrder::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* ExchangeOrder::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ExchangeOrder::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

@@ -32,7 +32,7 @@ using namespace std;
 namespace fantasybit
 {
 struct OpenOrder {
-    string playerid;
+    string symbol;
     OrderCore livecore;
 };
 
@@ -45,7 +45,7 @@ struct Position {
 };
 
 struct FullPosition {
-    string playerid;
+    string symbol;
     string fname;
     Position pos;
 };
@@ -53,35 +53,18 @@ struct FullPosition {
 struct FullOrderDelta {
     string fname;
     Order openorder;
-    string playerid;
+    string symbol;
 };
 
 
 typedef std::unordered_map<std::string,std::pair<Position,std::vector<Order> > > ordsnap_t;
 
-/*
-struct Order {
-    OrderCore   mOrderCore;
-    int32_t     orderId;
-    //private key
-};
-*/
 
 struct InsideBook {
     InsideBook() : totSize(0) {}
     list<Order> mOList;
     std::unordered_map<int32_t,list<Order>::iterator> mOMap;
-    //static int32_t orderIdCount;
     int32_t totSize;
-
-    /*
-    int32_t New(const ExchangeOrder& order) {
-        totSize += order.size();
-        Order ord {order,++orderIdCount};
-        mOMap.insert(make_pair(orderIdCount,mOList.insert(mOList.end(),ord)));
-        return orderIdCount;
-    }
-    */
 
     list<Order>::iterator top() {
         return begin(mOList);
@@ -112,20 +95,12 @@ struct InsideBook {
         mOList.erase(it->second);
         mOMap.erase(it);
 
-        //orderIdCount++;
-        //return ret;
         return;
     }
 
     bool Fill(int32_t qty,list<Order>::iterator &iter) {
         totSize -= qty;
 
-        /*
-        auto newsize = iter->core().size() - qty;
-        if ( newsize > 0 ) {
-            iter->mutable_core()->set_size(newsize);
-        }
-        */
         if ( iter->core().size() == 0)
         {
             mOMap.erase(iter->refnum());
@@ -140,12 +115,6 @@ struct InsideBook {
         qDebug() << "level2 qty " << qty << iter->core().size() << totSize;
 #endif
         totSize -= qty;
-        /*
-        auto newsize = iter->core().size() - qty;
-        if ( newsize > 0 ) {
-            iter->mutable_core()->set_size(newsize);
-        }
-        */
         if (iter->core().size() == 0) {
             mOMap.erase(iter->refnum());
 
@@ -174,12 +143,10 @@ struct InsideBook {
             mOList.erase(it->second);
             mOMap.erase(it);
         }
-        //orderIdCount++;
-        //return ret;
-        //return orderIdCount;
     }
 };
 
+/*
 struct Level1 {
    Level1() {
        bidsize = bid = ask = asksize = last = lastsize = 0;
@@ -205,7 +172,7 @@ struct Level1 {
    }
 
 };
-
+*/
 //#define BOOK_SIZE 40
 class LimitBook {
     vector<InsideBook> mBids, mAsks;//[BOOK_SIZE], mAsks[BOOK_SIZE];
@@ -240,9 +207,9 @@ class LimitBook {
     void SendFill(Order &o, int32_t q, int price, bool );
 
 public:
-    LimitBook(const string &playerid, int book_size = 40) :
+    LimitBook(const string &symbol, int book_size = 40) :
             BOOK_SIZE(book_size),
-            mPlayerid(playerid),
+            mSymbol(symbol),
             mBids(book_size),
             mAsks(book_size) {
         mBb = -1;
@@ -250,7 +217,7 @@ public:
     }
 
     int BOOK_SIZE;
-    string mPlayerid;
+    string mSymbol;
 
     InsideBook *getInside(bool bid, int32_t price) {
         return bid ? &mBids[price-1] : &mAsks[price-1];
@@ -273,19 +240,19 @@ public:
 };
 
 struct MatchingEngine {
-    MatchingEngine(const string &playerid,bool il = false)
-        : mPlayerid(playerid), islocked(il), blocknum(0)
+    MatchingEngine(const string &symbol,bool il = false)
+        : mSymbol(symbol), islocked(il), blocknum(0)
     {
 
     }
     unique_ptr<LimitBook> mLimitBook;
     bool islocked;
     std::unordered_map<std::string,Position> mPkPos;
-    string mPlayerid;
+    string mSymbol;
     int32_t blocknum;
     MarketSnapshot *makeSnapshot(MarketSnapshot *) ;
     void ResetLimitBook() {
-        mLimitBook.reset(new LimitBook(mPlayerid));
+        mLimitBook.reset(new LimitBook(mSymbol));
     }
 };
 
@@ -313,11 +280,11 @@ class ExchangeData : public QObject {
     //void ProcessResultOver(const string &,int32_t);
     //void ProcessResult(const SettlePos &spos,std::unordered_map<string,int32_t>::const_iterator result);
 
-    void StoreOhlc(string playerid);
+    void StoreOhlc(string mSymbol);
     void ProcessBookDelta(const BookDelta &bd);
 
 public:
-    ExchangeData() {}
+    ExchangeData() : mMaxSeason(0), mMinSeason(2015) {}
 
     int64_t MAXSEQ;
     void init();
@@ -334,7 +301,7 @@ public:
     std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
     std::unordered_map<int32_t,std::string> mSeqNameMap;
     std::unordered_set<string> fnames;
-    void OnTradeSessionStart(int week);
+    void OnTradeSessionStart(int season, int week);
 
     void OnNewPosition(const string &,const Position &, const string &);
 
@@ -376,6 +343,12 @@ public:
 
     void OnNewOrderMsg(const ExchangeOrder&, int32_t seqnum,
                        shared_ptr<fantasybit::FantasyName> fn,
+                       int32_t blocknum,
+                       const FutContract *,
+                       const string &symbol);
+
+    void OnCancelOrderMsg(const ExchangeOrder&, int32_t seqnum,
+                       shared_ptr<fantasybit::FantasyName> fn,
                        int32_t blocknum);
 
     void OnOrderNew(const ExchangeOrder&, int32_t seqnum,
@@ -386,8 +359,8 @@ public:
 
     //void OnOrderReplace(const ExchangeOrder&, const string &uid) {}
 
-    Position getPosition(const string &pk,const string &playerid);
-    void OnDeltaPos(const string &pid, int32_t seqnum, int32_t pqty, int price);
+    Position getPosition(const string &pk,const string &mSymbol);
+    void OnDeltaPos(const string &sym, int32_t seqnum, int32_t pqty, int price);
 
     void SaveBookDelta();
     void OnGameResult(const GameResult&gs);
@@ -398,15 +371,26 @@ public:
                      );
     void clearNewWeek();
 
+    void OnSeasonStart(int season) {
+        mSeason = season;
+        mMinSeason = season;
+    }
+
+    void OnSeasonEnd(int season) {
+        mMinSeason = season+1;
+    }
+
     int mWeek;
+    int mMinSeason, mMaxSeason;
+    int mSeason;
 
     GlobalState mGlobalState;
 
     void OnWeekOver(int week);
     void OnWeekStart(int week) {
         mWeek = week;
-        if (amlive)
-            doEmitSnap();
+//        if (amlive)
+//            doEmitSnap();
     }
 
     std::string filedir(const std::string &in) {
@@ -415,36 +399,15 @@ public:
 
 
     //void MergeMarketQuote(const string &playerid,const MarketQuote & );
-    void OnTrade(const string &playerid, fantasybit::TradeTic *tt);
-    void OnMarketTicker(const string &playerid, fantasybit::MarketTicker &mt);
-    void OnNewDepth(const string &playerid, fantasybit::DepthFeedDelta *df) {
+    void OnTrade(const string &symbol, fantasybit::TradeTic *tt);
+    void OnMarketTicker(const string &symbol, fantasybit::MarketTicker &mt);
+    void OnNewDepth(const string &symbol, fantasybit::DepthFeedDelta *df) {
         if ( amlive ) {
-            df->set_symbol(playerid);
+            df->set_symbol(symbol);
             emit NewDepthDelta(df);
         }
     }
 
-    void doEmitSnap() {
-        /*
-        emit StartMarketSnapShot(mWeek);
-        for (auto &it : mLimitBooks) {
-            #ifdef TRACE
-                qDebug() << "level2 ExchangeData onlive snapshot emit" << it.first;
-            #endif
-            auto *ms = MarketSnapshot::default_instance().New();
-            ms->set_week(mWeek);
-            //auto it2 = mMarketQuote.find(it.first);
-            ms->mutable_quote()->CopyFrom(mMarketQuote[it.first]);
-            ms->mutable_ohlc()->CopyFrom(mContractOHLC[it.first]);
-            ms->set_symbol(it.first);
-
-            if ( ms->depth_size() > 0 || ms->ohlc().volume() > 0 ||
-                 (ms->quote().l() + ms->quote().b() + ms->quote().a()) > 0)
-                emit NewMarketSnapShot(it.second->makeSnapshot(ms));
-        }
-        emit FinishMarketSnapShot(mWeek);
-        */
-    }
 
     std::vector<MarketSnapshot> GetCurrentMarketSnaps() {
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
@@ -537,12 +500,12 @@ public:
         myphlc.set_change(myphlc.close() - myphlc.open());
     }
 
-    void Reset(const string &ticker) {
+    void Reset(const string &symbol) {
         auto holdit = blocknum();
         Clear();
         set_blocknum(holdit);
-        set_playerid(ticker);
-        mutable_ohlc()->set_symbol(ticker);
+        set_playerid(symbol);
+        mutable_ohlc()->set_symbol(symbol);
     }
 
 };

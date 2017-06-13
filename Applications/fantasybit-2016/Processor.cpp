@@ -103,6 +103,17 @@ int32_t BlockProcessor::init() {
     bx.init();//lastidprocessed);
 #endif
 
+    mGlobalState = mData.GetGlobalState();
+#ifdef TRADE_FEATURE
+    mFutContract.set_type(FutContract_Type_WEEKLY);
+    GlobalState &gs = mGlobalState;
+    mFutContract.set_season(gs.season());
+    if ( gs.state() == GlobalState_State_INSEASON )
+        mFutContract.set_week(gs.week());
+    else
+        mFutContract.set_week(0);
+#endif
+
     return lastidprocessed;
 }
 
@@ -112,7 +123,7 @@ int32_t BlockProcessor::process(Block &sblock) {
     //qDebug() << "BlockProcessor process head().num(): " << sblock.signedhead().head().num();
 #ifdef TRACE
     if ( sblock.signed_transactions_size() > 0) {
-        qDebug() << "BlockProcessor processsb0 sblock.signed_transactions(0).DebugString().data() ";
+//        qDebug() << "BlockProcessor processsb0 sblock.signed_transactions(0).DebugString().data() ";
 //        qDebug() << sblock.signed_transactions(0).DebugString().data();
     }
 #endif
@@ -227,6 +238,7 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
         return false;
     }
 
+
     auto dt = st.trans().GetExtension(DataTransition::data_trans);
     if (dt.data_size() > 0)
         process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
@@ -234,7 +246,9 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
     if (sblock.signed_transactions_size() > 1)
         processTxfrom(sblock, 1);
 
+#ifdef TRACE
     qDebug() << "processing ccccc" << dt.type() << dt.season() << dt.week();
+#endif
 //    qDebug() << dt.DebugString().data();
     process(dt);
 
@@ -627,7 +641,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
 }
 
 void BlockProcessor::process(const DataTransition &indt) {
-    auto mGlobalState = mData.GetGlobalState();
+
     switch (indt.type())
     {
     case TrType::SEASONSTART:
@@ -777,7 +791,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     }
     case TrType::TRADESESSIONSTART:
     {
-        mExchangeData.OnTradeSessionStart(indt.week());
+        mExchangeData.OnTradeSessionStart(indt.season(),indt.week());
         break;
     }
     default:
@@ -794,7 +808,7 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
         return false;
     }
 
-    if (t.version() != Commissioner::TRANS_VERSION) {
+    if (t.version() > Commissioner::TRANS_VERSION || t.version() < 1) {
         qCritical() << "t.version() != Commissioner::TRANS_VERSION";
         //fbutils::LogFalse(std::string("Processor::process wrong transaction version ").append(st.DebugString()));
         return false;
@@ -928,23 +942,91 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     }
 
     const Transaction &t = inst.trans();
-    switch (t.type()) {
-        case TransType::EXCHANGE:
-        {
-#ifndef TRADE_FEATURE
-            break;
-#endif
-            auto emdg = t.GetExtension(ExchangeOrder::exchange_order);
-            //qDebug() << "new ExchangeOrder " << emdg.DebugString();
+    if (t.type() != TransType::EXCHANGE) return;
 
-            //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
-            mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum);
-            break;
-        }
-        default:
-            break;
+#ifndef TRADE_FEATURE
+    qWarning() << "ProcessInsideStamped bad FutContract ndef feature";
+    return;
+#endif
+
+    ExchangeOrder emdg = t.GetExtension(ExchangeOrder::exchange_order);
+
+#ifdef TRACE
+    qDebug() << "new ExchangeOrder " << emdg.DebugString().data();
+#endif
+
+    //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
+
+    if (emdg.type() == ExchangeOrder_Type_CANCEL ) {
+        mExchangeData.OnCancelOrderMsg(emdg,seqnum,fn,blocknum);
+        return;
     }
 
+    const FutContract *fc;
+    std::string symbol;
+    if ( !emdg.has_futcontract() &&
+         inst.trans().version() == 1 &&
+         ( !emdg.has_symbol() || emdg.symbol() == "") ) {
+        fc = &mFutContract;
+    }
+    else {
+        fc = &emdg.futcontract();
+    }
+
+    if ( !emdg.has_symbol() || emdg.symbol() == "") {
+        if ( !emdg.has_playerid() || emdg.playerid() == "") {
+            qWarning() << "invalid tx inside stamped" << inst.trans().type();
+            return;
+        }
+        symbol = mData.GetPlayerStatus(emdg.playerid()).symbol();
+    }
+    else
+        symbol = emdg.symbol();
+
+    switch ( fc->type() ) {
+    case FutContract_Type_WEEKLY:
+        if ( fc->week() != mGlobalState.week() ||
+            mGlobalState.state() != GlobalState_State_INSEASON ||
+            fc->season() != mGlobalState.season()) {
+                qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                return;
+        }
+        break;
+    case FutContract_Type_ROW:
+        if ( fc->season() != mGlobalState.season() ||
+            mGlobalState.state() != GlobalState_State_INSEASON ) {
+                qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                return;
+        }
+
+    case FutContract_Type_SEASON:
+        if ( fc->season() < mExchangeData.mMinSeason || fc->season() > mExchangeData.mMaxSeason) {
+            qWarning() << "ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
+            return;
+        }
+    default:
+        return;
+        break;
+    }
+
+    auto it = mData.mSym2Pid.find(symbol);
+    if ( it == end(mData.mSym2Pid) ) {
+        qWarning() << "ProcessInsideStamped bad symbol" << fc->DebugString().data(), emdg.DebugString().data(), symbol.data();
+        return;
+    }
+
+    if ( it->second != emdg.playerid() && emdg.playerid() != "" ) {
+        qWarning() << "ProcessInsideStamped bad player ! match symbol" << fc->DebugString().data(), emdg.DebugString().data(), symbol.data();
+        return;
+    }
+
+    symbol += to_string(fc->season()-2000);
+    if ( fc->type() == FutContract_Type_WEEKLY )
+        symbol += "w" + to_string(fc->week());
+    else
+        symbol += "s";
+
+    mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum,fc,symbol);
 }
 
 void BlockProcessor::OnWeekOver(int week) {
@@ -960,19 +1042,27 @@ void BlockProcessor::OnWeekOver(int week) {
 void BlockProcessor::OnWeekStart(int week) {
     mNameData.OnWeekStart(week);
     mData.OnWeekStart(week);
-#ifdef TRADE_FEATURe
+#ifdef TRADE_FEATURE
     mExchangeData.OnWeekStart(week);
 #endif
     mLastWeekStart = true;
 
     emit WeekStart(week);
+
+#ifdef TRADE_FEATURE
+    mFutContract.set_week(week);
+#endif
 }
 
 void BlockProcessor::OnSeasonStart(int season) {
     mNameData.OnSeasonStart(season);
     mData.OnSeasonStart(season);
-//    mExchangeData.OnSeasonStart(season);
+    mExchangeData.OnSeasonStart(season);
     emit SeasonStart(season);
+#ifdef TRADE_FEATURE
+    mFutContract.set_season(season);
+#endif
+
 }
 
 void BlockProcessor::OnSeasonEnd(int season) {
@@ -1028,7 +1118,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
 bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
     qDebug() << st.DebugString().data();
 
-    if (st.trans().version() != Commissioner::TRANS_VERSION)
+    if (st.trans().version() > Commissioner::TRANS_VERSION || st.trans().version() < 1)
     {
         qCritical() << " !verifySignedTransaction wrong trans version! ";
         return false;
@@ -1099,7 +1189,7 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
     return ret;
     }
     std::shared_ptr<FantasyName> ret;
-    if (st.trans().version() != Commissioner::TRANS_VERSION) {
+    if (st.trans().version() > Commissioner::TRANS_VERSION || st.trans().version() < 1 ) {
         qCritical() << " !verifySignedTransaction wrong trans version! ";
         return ret;
     }

@@ -39,10 +39,11 @@ class BlockProcessor : public QObject {
     int32_t realHeight = 0;
     int32_t lastidprocessed = 0;
     bool mLastWeekStart = false;
-    //GlobalState mGlobalState{};
+    GlobalState mGlobalState;
     bool verify_name(const SignedTransaction &, const NameTrans &,
                      const pb::signature&, const pb::sha256 &);
     bool amlive = false;
+    FutContract mFutContract;
 public slots:
     void OnLive(bool) {
         amlive = true;
