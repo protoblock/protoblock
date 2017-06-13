@@ -585,6 +585,7 @@ void ExchangeData::OnCancelOpenOrder(const OpenOrder &oo,int32_t seqnum) {
     OnDeltaOpenOrder(it->second,oo,seqnum);
 
 }
+
 void ExchangeData::OnDeltaOpenOrder(const string &fname, const OpenOrder &oo,int32_t seqnum) {
     if ( !amlive ) return;
     if ( mSubscribed.find(fname) == end(mSubscribed))
@@ -1082,7 +1083,7 @@ MarketSnapshot* MatchingEngine::makeSnapshot(MarketSnapshot *ms) {
     if ( islocked ) return ms;
     ms->set_blocknum(blocknum);
     int a = 1;
-    int b = BOOK_SIZE;
+    int b = mLimitBook->BOOK_SIZE;
     int nexta = 0;
     int nextb = 0;
     InsideBook *next;
@@ -1112,7 +1113,7 @@ MarketSnapshot* MatchingEngine::makeSnapshot(MarketSnapshot *ms) {
             b--;
         }
 
-        if ( a <= BOOK_SIZE) {
+        if ( a <= mLimitBook->BOOK_SIZE) {
             if ( nullptr != (next = mLimitBook->getInside(false,a)))
                 if ( next->totSize > 0) {
 #ifdef TRACE
@@ -1134,7 +1135,7 @@ MarketSnapshot* MatchingEngine::makeSnapshot(MarketSnapshot *ms) {
                 }
             a++;
         }
-    } while(b >= 1 && a <= BOOK_SIZE);
+    } while(b >= 1 && a <= mLimitBook->BOOK_SIZE);
 
 #ifdef TRACE
     qDebug() << "level2 makeSnapshot" << mPlayerid.data() << "depthsize " << ms->depth_size();

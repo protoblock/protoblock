@@ -206,9 +206,9 @@ struct Level1 {
 
 };
 
-#define BOOK_SIZE 40
+//#define BOOK_SIZE 40
 class LimitBook {
-    InsideBook mBids[BOOK_SIZE], mAsks[BOOK_SIZE];
+    vector<InsideBook> mBids, mAsks;//[BOOK_SIZE], mAsks[BOOK_SIZE];
     int mBb, mBa;
     bool NewBid(Order &order, Position &);
     bool NewAsk(Order &order, Position &);
@@ -240,11 +240,16 @@ class LimitBook {
     void SendFill(Order &o, int32_t q, int price, bool );
 
 public:
-    LimitBook(const string &playerid) : mPlayerid(playerid) {
+    LimitBook(const string &playerid, int book_size = 40) :
+            BOOK_SIZE(book_size),
+            mPlayerid(playerid),
+            mBids(book_size),
+            mAsks(book_size) {
         mBb = -1;
         mBa = BOOK_SIZE;
     }
 
+    int BOOK_SIZE;
     string mPlayerid;
 
     InsideBook *getInside(bool bid, int32_t price) {
