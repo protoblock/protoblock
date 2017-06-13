@@ -133,7 +133,7 @@ public:
     std::map<std::string, vector<char>> mUniqueSymbol;
     static map<std::string,int> PosIndexMap;
 
-    std::unordered_map<std::string,std::string> mPidTicker;
+    std::unordered_map<std::string,std::string> mSym2Pid;
 
     GameStatus GetUpdatedGameStatus(std::string id);
     WeeklySchedule GetWeeklySchedule(int season,int week);
@@ -156,8 +156,8 @@ public:
             result += (pba.first().at(0));
             result += (pba.last().at(0));
 
-            if ( result == "JB")
-                qDebug() << "jbjbjbj" << pba.DebugString().data();
+//            if ( result == "JB")
+//                qDebug() << "jbjbjbj" << pba.DebugString().data();
 
             auto it = mUniqueSymbol.find(result);
             if ( it == mUniqueSymbol.end()) {
@@ -200,8 +200,8 @@ public:
             index = PosIndexMap[pos];
 
         std::string initials = ticker.substr(0,2);
-        if ( initials == "JB")
-            qDebug() << "jbjbjbj" << ticker.data();
+//        if ( initials == "JB")
+//            qDebug() << "jbjbjbj" << ticker.data();
         auto it = mUniqueSymbol.find(initials);
         if ( it == mUniqueSymbol.end()) {
             vector<char> ar(5,0);
@@ -214,7 +214,6 @@ public:
                 it->second[index] = 'a';
             else if ( it->second[index] <= ticker[4] )
                 it->second[index] = ticker[4]+1;
-
         }
     }
 

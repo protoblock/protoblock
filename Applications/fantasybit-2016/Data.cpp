@@ -338,8 +338,8 @@ void NFLStateData::init() {
             }
             if ( ps.symbol() != "" ) {
                 FromTicker(ps.symbol());
-                mPidTicker[pid] = ps.symbol();
-                qDebug() << pid.data() << ps.DebugString().data();
+                mSym2Pid[ps.symbol()] = pid;
+//                qDebug() << pid.data() << ps.DebugString().data();
             }
             else
                 qWarning() << " no ticker!! " << ps.DebugString().data();
@@ -614,7 +614,7 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
             qWarning() << "bad write statusstore";
         qDebug() << ps.DebugString().data();
 
-        mPidTicker[playerid] = ps2.symbol();
+        mSym2Pid[ps2.symbol()] = playerid;
         MyPlayerStatus[playerid] = ps2;
         OnNewPlayer(playerid);
         if ( ps.has_teamid())
