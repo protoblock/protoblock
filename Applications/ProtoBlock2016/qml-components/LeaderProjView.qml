@@ -8,7 +8,6 @@ import ProRotoQml.Theme 1.0
 //import ProRotoQml.Protoblock 1.0
 import QtQuick.Layouts 1.1
 
-import ProRotoQml.Theme 1.0
 
 
 Item {
@@ -19,6 +18,7 @@ Item {
     property int myTheWeek: MiddleMan.theWeek
     anchors.fill: parent
 //    anchors.margins: ProtoScreen.guToPx(1)
+
     Item {
 //        anchors.top: cb.bottom
         width: parent.width
@@ -63,6 +63,35 @@ Item {
                 implicitWidth: textItem2.implicitWidth
                 color: "white"
 //                anchors.fill: parent
+                Rectangle {
+                    id: rec
+                    height: parent.height * .50
+                    width: parent.width
+                    color: "transparent"
+                    anchors.top: parent.top
+                    anchors.margins: ProtoScreen.guToPx(.25)
+                    Material.TextField {
+                        anchors.leftMargin: ProtoScreen.guToPx(.5)
+                        anchors.centerIn: parent
+                        id: fnamesearch
+                        width: parent.width / 1.07
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        placeholderText: "search..."
+//                        helperText: "search..."
+
+//                        anchors.horizontalCenter: parent.horizontalCenter
+           //                    onAccepted: nameCheckBlank(nameText.text)
+                        inputMethodHints: Qt.ImhNoPredictiveText;
+                        onTextChanged: {
+                           MiddleMan.pLeaderBoardSortModel.filterString = text
+                        }
+                        enabled: styleData.column === 0
+                        visible: styleData.column === 0
+                        showBorder: false
+                        color: Material.Theme.light.textColor
+                        activeFocusOnPress: true
+                    }
+                }
                 Material.Card {
                     width: parent.width
                     height: parent.height * .50
@@ -332,6 +361,7 @@ Item {
 
         }
     }
+
 
     function timeSince(date) {
 
