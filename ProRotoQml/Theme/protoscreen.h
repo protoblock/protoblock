@@ -49,6 +49,7 @@ public:
         MEDIUM ,
         NORMAL ,
         SMALL ,
+        VERYSMALL,
         TINY
     };
 
