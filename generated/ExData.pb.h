@@ -371,18 +371,33 @@ class BookPos : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SettlePos >*
       mutable_positions();
 
+  // optional string symbol = 50;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 50;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
   // @@protoc_insertion_point(class_scope:fantasybit.BookPos)
  private:
   inline void set_has_playerid();
   inline void clear_has_playerid();
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* playerid_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::SettlePos > positions_;
+  ::std::string* symbol_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_ExData_2eproto();
   friend void protobuf_AssignDesc_ExData_2eproto();
@@ -1637,6 +1652,18 @@ class BookDelta : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 blocknum() const;
   inline void set_blocknum(::google::protobuf::int32 value);
 
+  // optional string symbol = 90;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 90;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
   // @@protoc_insertion_point(class_scope:fantasybit.BookDelta)
  private:
   inline void set_has_fantasy_name();
@@ -1651,6 +1678,8 @@ class BookDelta : public ::google::protobuf::Message {
   inline void clear_has_ohlc();
   inline void set_has_blocknum();
   inline void clear_has_blocknum();
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1663,9 +1692,10 @@ class BookDelta : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::fantasybit::Order > removes_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker > level2tic_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker > level1tic_;
+  ::std::string* symbol_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_ExData_2eproto();
   friend void protobuf_AssignDesc_ExData_2eproto();
@@ -2369,6 +2399,76 @@ BookPos::positions() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SettlePos >*
 BookPos::mutable_positions() {
   return &positions_;
+}
+
+// optional string symbol = 50;
+inline bool BookPos::has_symbol() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void BookPos::set_has_symbol() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void BookPos::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void BookPos::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& BookPos::symbol() const {
+  return *symbol_;
+}
+inline void BookPos::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void BookPos::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void BookPos::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* BookPos::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* BookPos::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void BookPos::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------
@@ -3881,6 +3981,76 @@ inline ::google::protobuf::int32 BookDelta::blocknum() const {
 inline void BookDelta::set_blocknum(::google::protobuf::int32 value) {
   set_has_blocknum();
   blocknum_ = value;
+}
+
+// optional string symbol = 90;
+inline bool BookDelta::has_symbol() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void BookDelta::set_has_symbol() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void BookDelta::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void BookDelta::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& BookDelta::symbol() const {
+  return *symbol_;
+}
+inline void BookDelta::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void BookDelta::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void BookDelta::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* BookDelta::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* BookDelta::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void BookDelta::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

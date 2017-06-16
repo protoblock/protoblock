@@ -114,9 +114,10 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(StorePos));
   BookPos_descriptor_ = file->message_type(2);
-  static const int BookPos_offsets_[2] = {
+  static const int BookPos_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookPos, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookPos, positions_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookPos, symbol_),
   };
   BookPos_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -296,7 +297,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DepthItem));
   BookDelta_descriptor_ = file->message_type(12);
-  static const int BookDelta_offsets_[9] = {
+  static const int BookDelta_offsets_[10] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, fantasy_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, seqnum_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, playerid_),
@@ -306,6 +307,7 @@ void protobuf_AssignDesc_ExData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, level2tic_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, level1tic_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, blocknum_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BookDelta, symbol_),
   };
   BookDelta_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -471,48 +473,49 @@ void protobuf_AddDesc_ExData_2eproto() {
     "\n\014ExData.proto\022\nfantasybit\"3\n\tSettlePos\022"
     "\n\n\002pk\030\n \001(\t\022\013\n\003qty\030\024 \001(\005\022\r\n\005price\030\031 \001(\005\""
     "&\n\010StorePos\022\013\n\003qty\030\024 \001(\005\022\r\n\005price\030\031 \001(\005\""
-    "E\n\007BookPos\022\020\n\010playerid\030\036 \001(\t\022(\n\tposition"
-    "s\030( \003(\0132\025.fantasybit.SettlePos\"e\n\rGameSe"
-    "ttlePos\022\016\n\006gameid\030\n \001(\t\022!\n\004home\030\024 \003(\0132\023."
-    "fantasybit.BookPos\022!\n\004away\030\036 \003(\0132\023.fanta"
-    "sybit.BookPos\"9\n\tOrderCore\022\017\n\007buyside\030\n "
-    "\001(\010\022\014\n\004size\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\"<\n\005Orde"
-    "r\022\016\n\006refnum\030\n \001(\005\022#\n\004core\030\024 \001(\0132\025.fantas"
-    "ybit.OrderCore\"d\n\tOrderFill\022\037\n\004left\030\n \001("
-    "\0132\021.fantasybit.Order\022\021\n\tfillprice\030\024 \001(\005\022"
-    "\020\n\010fillsize\030\036 \001(\005\022\021\n\ttimestamp\030( \001(\005\"\214\001\n"
-    "\014MarketTicker\022+\n\004type\030\001 \001(\0162\035.fantasybit"
-    ".MarketTicker.Type\022\016\n\006symbol\030\002 \001(\t\022\014\n\004si"
-    "ze\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\"\"\n\004Type\022\007\n\003BID\020\001"
-    "\022\007\n\003ASK\020\002\022\010\n\004LAST\020\003\"s\n\010TradeTic\022\016\n\006symbo"
-    "l\030\002 \001(\t\022\014\n\004size\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\022\016\n\006"
-    "ishigh\030( \001(\005\022\r\n\005islow\030- \001(\005\022\016\n\006change\0302 "
-    "\001(\005\022\013\n\003tic\030< \001(\005\"L\n\016DepthFeedDelta\022\016\n\006sy"
-    "mbol\030\001 \001(\t\022\r\n\005isbid\030\n \001(\010\022\014\n\004size\030\024 \001(\005\022"
-    "\r\n\005price\030\036 \001(\005\"v\n\014ContractOHLC\022\016\n\006symbol"
-    "\030\n \001(\t\022\014\n\004open\030\024 \001(\005\022\014\n\004high\030\036 \001(\005\022\013\n\003lo"
-    "w\030( \001(\005\022\r\n\005close\0302 \001(\005\022\016\n\006volume\030< \001(\005\022\016"
-    "\n\006change\030F \001(\005\"H\n\tDepthItem\022\r\n\005level\030\n \001"
-    "(\005\022\t\n\001b\030\036 \001(\005\022\t\n\001a\030( \001(\005\022\n\n\002bs\0302 \001(\005\022\n\n\002"
-    "as\030< \001(\005\"\242\002\n\tBookDelta\022\024\n\014fantasy_name\030\n"
-    " \001(\t\022\016\n\006seqnum\030\024 \001(\005\022\020\n\010playerid\030\036 \001(\t\022%"
-    "\n\006newnew\030( \001(\0132\025.fantasybit.OrderCore\022&\n"
-    "\004ohlc\030) \001(\0132\030.fantasybit.ContractOHLC\022\"\n"
-    "\007removes\0302 \003(\0132\021.fantasybit.Order\022+\n\tlev"
-    "el2tic\030< \003(\0132\030.fantasybit.MarketTicker\022+"
-    "\n\tlevel1tic\030F \003(\0132\030.fantasybit.MarketTic"
-    "ker\022\020\n\010blocknum\030P \001(\005\"_\n\013MarketQuote\022\n\n\002"
-    "bs\030\n \001(\005\022\t\n\001b\030\024 \001(\005\022\t\n\001a\030\036 \001(\005\022\n\n\002as\030( \001"
-    "(\005\022\t\n\001l\0302 \001(\005\022\n\n\002ls\030< \001(\005\022\013\n\003udn\030F \001(\005\"\266"
-    "\001\n\016MarketSnapshot\022\016\n\006symbol\030\n \001(\t\022\014\n\004wee"
-    "k\030\013 \001(\005\022$\n\005depth\030F \003(\0132\025.fantasybit.Dept"
-    "hItem\022&\n\004ohlc\030\024 \001(\0132\030.fantasybit.Contrac"
-    "tOHLC\022&\n\005quote\030\036 \001(\0132\027.fantasybit.Market"
-    "Quote\022\020\n\010blocknum\030( \001(\005\"\233\001\n\013FutContract\022"
-    "*\n\004type\030\n \001(\0162\034.fantasybit.FutContract.T"
-    "ype\022\016\n\006season\030\024 \001(\005\022\014\n\004week\030\036 \001(\005\022\016\n\006sym"
-    "bol\030( \001(\t\"2\n\004Type\022\n\n\006WEEKLY\020\001\022\n\n\006SEASON\020"
-    "\002\022\007\n\003ROW\020\003\022\t\n\005OTHER\020\004", 1781);
+    "U\n\007BookPos\022\020\n\010playerid\030\036 \001(\t\022(\n\tposition"
+    "s\030( \003(\0132\025.fantasybit.SettlePos\022\016\n\006symbol"
+    "\0302 \001(\t\"e\n\rGameSettlePos\022\016\n\006gameid\030\n \001(\t\022"
+    "!\n\004home\030\024 \003(\0132\023.fantasybit.BookPos\022!\n\004aw"
+    "ay\030\036 \003(\0132\023.fantasybit.BookPos\"9\n\tOrderCo"
+    "re\022\017\n\007buyside\030\n \001(\010\022\014\n\004size\030\024 \001(\005\022\r\n\005pri"
+    "ce\030\036 \001(\005\"<\n\005Order\022\016\n\006refnum\030\n \001(\005\022#\n\004cor"
+    "e\030\024 \001(\0132\025.fantasybit.OrderCore\"d\n\tOrderF"
+    "ill\022\037\n\004left\030\n \001(\0132\021.fantasybit.Order\022\021\n\t"
+    "fillprice\030\024 \001(\005\022\020\n\010fillsize\030\036 \001(\005\022\021\n\ttim"
+    "estamp\030( \001(\005\"\214\001\n\014MarketTicker\022+\n\004type\030\001 "
+    "\001(\0162\035.fantasybit.MarketTicker.Type\022\016\n\006sy"
+    "mbol\030\002 \001(\t\022\014\n\004size\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\""
+    "\"\n\004Type\022\007\n\003BID\020\001\022\007\n\003ASK\020\002\022\010\n\004LAST\020\003\"s\n\010T"
+    "radeTic\022\016\n\006symbol\030\002 \001(\t\022\014\n\004size\030\024 \001(\005\022\r\n"
+    "\005price\030\036 \001(\005\022\016\n\006ishigh\030( \001(\005\022\r\n\005islow\030- "
+    "\001(\005\022\016\n\006change\0302 \001(\005\022\013\n\003tic\030< \001(\005\"L\n\016Dept"
+    "hFeedDelta\022\016\n\006symbol\030\001 \001(\t\022\r\n\005isbid\030\n \001("
+    "\010\022\014\n\004size\030\024 \001(\005\022\r\n\005price\030\036 \001(\005\"v\n\014Contra"
+    "ctOHLC\022\016\n\006symbol\030\n \001(\t\022\014\n\004open\030\024 \001(\005\022\014\n\004"
+    "high\030\036 \001(\005\022\013\n\003low\030( \001(\005\022\r\n\005close\0302 \001(\005\022\016"
+    "\n\006volume\030< \001(\005\022\016\n\006change\030F \001(\005\"H\n\tDepthI"
+    "tem\022\r\n\005level\030\n \001(\005\022\t\n\001b\030\036 \001(\005\022\t\n\001a\030( \001(\005"
+    "\022\n\n\002bs\0302 \001(\005\022\n\n\002as\030< \001(\005\"\262\002\n\tBookDelta\022\024"
+    "\n\014fantasy_name\030\n \001(\t\022\016\n\006seqnum\030\024 \001(\005\022\020\n\010"
+    "playerid\030\036 \001(\t\022%\n\006newnew\030( \001(\0132\025.fantasy"
+    "bit.OrderCore\022&\n\004ohlc\030) \001(\0132\030.fantasybit"
+    ".ContractOHLC\022\"\n\007removes\0302 \003(\0132\021.fantasy"
+    "bit.Order\022+\n\tlevel2tic\030< \003(\0132\030.fantasybi"
+    "t.MarketTicker\022+\n\tlevel1tic\030F \003(\0132\030.fant"
+    "asybit.MarketTicker\022\020\n\010blocknum\030P \001(\005\022\016\n"
+    "\006symbol\030Z \001(\t\"_\n\013MarketQuote\022\n\n\002bs\030\n \001(\005"
+    "\022\t\n\001b\030\024 \001(\005\022\t\n\001a\030\036 \001(\005\022\n\n\002as\030( \001(\005\022\t\n\001l\030"
+    "2 \001(\005\022\n\n\002ls\030< \001(\005\022\013\n\003udn\030F \001(\005\"\266\001\n\016Marke"
+    "tSnapshot\022\016\n\006symbol\030\n \001(\t\022\014\n\004week\030\013 \001(\005\022"
+    "$\n\005depth\030F \003(\0132\025.fantasybit.DepthItem\022&\n"
+    "\004ohlc\030\024 \001(\0132\030.fantasybit.ContractOHLC\022&\n"
+    "\005quote\030\036 \001(\0132\027.fantasybit.MarketQuote\022\020\n"
+    "\010blocknum\030( \001(\005\"\233\001\n\013FutContract\022*\n\004type\030"
+    "\n \001(\0162\034.fantasybit.FutContract.Type\022\016\n\006s"
+    "eason\030\024 \001(\005\022\014\n\004week\030\036 \001(\005\022\016\n\006symbol\030( \001("
+    "\t\"2\n\004Type\022\n\n\006WEEKLY\020\001\022\n\n\006SEASON\020\002\022\007\n\003ROW"
+    "\020\003\022\t\n\005OTHER\020\004", 1813);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ExData.proto", &protobuf_RegisterTypes);
   SettlePos::default_instance_ = new SettlePos();
@@ -1115,6 +1118,7 @@ void StorePos::Swap(StorePos* other) {
 #ifndef _MSC_VER
 const int BookPos::kPlayeridFieldNumber;
 const int BookPos::kPositionsFieldNumber;
+const int BookPos::kSymbolFieldNumber;
 #endif  // !_MSC_VER
 
 BookPos::BookPos()
@@ -1134,6 +1138,7 @@ BookPos::BookPos(const BookPos& from)
 void BookPos::SharedCtor() {
   _cached_size_ = 0;
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1144,6 +1149,9 @@ BookPos::~BookPos() {
 void BookPos::SharedDtor() {
   if (playerid_ != &::google::protobuf::internal::kEmptyString) {
     delete playerid_;
+  }
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
   }
   if (this != default_instance_) {
   }
@@ -1175,6 +1183,11 @@ void BookPos::Clear() {
     if (has_playerid()) {
       if (playerid_ != &::google::protobuf::internal::kEmptyString) {
         playerid_->clear();
+      }
+    }
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
       }
     }
   }
@@ -1216,6 +1229,23 @@ bool BookPos::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(322)) goto parse_positions;
+        if (input->ExpectTag(402)) goto parse_symbol;
+        break;
+      }
+
+      // optional string symbol = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_symbol:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1253,6 +1283,15 @@ void BookPos::SerializeWithCachedSizes(
       40, this->positions(i), output);
   }
 
+  // optional string symbol = 50;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      50, this->symbol(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1278,6 +1317,16 @@ void BookPos::SerializeWithCachedSizes(
         40, this->positions(i), target);
   }
 
+  // optional string symbol = 50;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        50, this->symbol(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1294,6 +1343,13 @@ int BookPos::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->playerid());
+    }
+
+    // optional string symbol = 50;
+    if (has_symbol()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
     }
 
   }
@@ -1335,6 +1391,9 @@ void BookPos::MergeFrom(const BookPos& from) {
     if (from.has_playerid()) {
       set_playerid(from.playerid());
     }
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1360,6 +1419,7 @@ void BookPos::Swap(BookPos* other) {
   if (other != this) {
     std::swap(playerid_, other->playerid_);
     positions_.Swap(&other->positions_);
+    std::swap(symbol_, other->symbol_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -4579,6 +4639,7 @@ const int BookDelta::kRemovesFieldNumber;
 const int BookDelta::kLevel2TicFieldNumber;
 const int BookDelta::kLevel1TicFieldNumber;
 const int BookDelta::kBlocknumFieldNumber;
+const int BookDelta::kSymbolFieldNumber;
 #endif  // !_MSC_VER
 
 BookDelta::BookDelta()
@@ -4605,6 +4666,7 @@ void BookDelta::SharedCtor() {
   newnew_ = NULL;
   ohlc_ = NULL;
   blocknum_ = 0;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4618,6 +4680,9 @@ void BookDelta::SharedDtor() {
   }
   if (playerid_ != &::google::protobuf::internal::kEmptyString) {
     delete playerid_;
+  }
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
   }
   if (this != default_instance_) {
     delete newnew_;
@@ -4668,6 +4733,11 @@ void BookDelta::Clear() {
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     blocknum_ = 0;
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
   }
   removes_.Clear();
   level2tic_.Clear();
@@ -4816,6 +4886,23 @@ bool BookDelta::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(722)) goto parse_symbol;
+        break;
+      }
+
+      // optional string symbol = 90;
+      case 90: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_symbol:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4896,6 +4983,15 @@ void BookDelta::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(80, this->blocknum(), output);
   }
 
+  // optional string symbol = 90;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      90, this->symbol(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -4969,6 +5065,16 @@ void BookDelta::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(80, this->blocknum(), target);
   }
 
+  // optional string symbol = 90;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        90, this->symbol(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -5022,6 +5128,13 @@ int BookDelta::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->blocknum());
+    }
+
+    // optional string symbol = 90;
+    if (has_symbol()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
     }
 
   }
@@ -5098,6 +5211,9 @@ void BookDelta::MergeFrom(const BookDelta& from) {
     if (from.has_blocknum()) {
       set_blocknum(from.blocknum());
     }
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -5130,6 +5246,7 @@ void BookDelta::Swap(BookDelta* other) {
     level2tic_.Swap(&other->level2tic_);
     level1tic_.Swap(&other->level1tic_);
     std::swap(blocknum_, other->blocknum_);
+    std::swap(symbol_, other->symbol_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

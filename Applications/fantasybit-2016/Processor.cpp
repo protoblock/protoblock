@@ -370,7 +370,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     auto rgsp =  (ha == QString("home")) ? gsp.mutable_home() : gsp.mutable_away();
                     for ( int i=0; i<rgsp->size();i++) {
                         BookPos *bp = rgsp->Mutable(i);
-                        posmap[bp->playerid()] = bp;
+                        posmap[mData.mSym2Pid[bp->playerid()]] = bp;
                     }
 #endif
                 }
@@ -695,7 +695,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     case TrType::HEARTBEAT:
         //todo: deal w data in this msg
         if (mGlobalState.season() != indt.season()) {
-            qWarning() << "wrong season! " << indt.DebugString();
+            qWarning() << "wrong season! " << indt.DebugString().data();
             //mGlobalState.set_season(indt.season());
         }
 
@@ -719,14 +719,15 @@ void BlockProcessor::process(const DataTransition &indt) {
             auto homeroster = mData.GetTeamRoster(gi.home());
             auto awayroster = mData.GetTeamRoster(gi.away());
             vector<string> homep, awayp;
-            for ( auto hr : homeroster)
+            for ( auto hr : homeroster) {
                 homep.push_back(hr.first);
+            }
             for ( auto hr : awayroster)
                 awayp.push_back(hr.first);
 
             mNameData.OnGameStart(t.gameid(),homep,awayp);
 #ifdef TRADE_FEATURE
-            mExchangeData.OnGameStart(t.gameid(),homep,awayp);
+            mExchangeData.OnGameStart(t.gameid(),homeroster,awayroster);
 #endif
 
         }

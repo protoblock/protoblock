@@ -570,8 +570,8 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     connect( that, SIGNAL(FinishedResults()),
              this, SLOT(OnFinishedResults()));
 
-    connect( that, SIGNAL(GotMarketSnaps()),
-             this, SLOT(OnGotMarketSnaps()));
+//    connect( that, SIGNAL(GotMarketSnaps()),
+//             this, SLOT(OnGotMarketSnaps()));
 //    return that;
 }
 
@@ -746,13 +746,13 @@ void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
 
 void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     qDebug() << "level2 Mediator::OnNewPos " << fp.pos.ToString().data() <<
-                fp.playerid.data() << fp.fname.data();
+                fp.symbol.data() << fp.fname.data();
 
     if ( fp.fname != myFantasyName )
         return;
 
-    auto it = mPlayerQuoteSliceModel.getByUid(fp.playerid.data());
-    auto tit = mTradingPositionsModel.getOrCreate(fp.playerid.data());
+    auto it = mPlayerQuoteSliceModel.getByUid(fp.symbol.data());
+    auto tit = mTradingPositionsModel.getOrCreate(fp.symbol.data());
     if ( tit == nullptr )
         return;
 

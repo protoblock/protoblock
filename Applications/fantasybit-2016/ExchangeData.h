@@ -251,8 +251,8 @@ struct MatchingEngine {
     string mSymbol;
     int32_t blocknum;
     MarketSnapshot *makeSnapshot(MarketSnapshot *) ;
-    void ResetLimitBook() {
-        mLimitBook.reset(new LimitBook(mSymbol));
+    void ResetLimitBook(int booksize = 40) {
+        mLimitBook.reset(new LimitBook(mSymbol,booksize));
     }
 };
 
@@ -266,14 +266,31 @@ class ExchangeData : public QObject {
     std::shared_ptr<leveldb::DB> orderseqstore;
     std::shared_ptr<leveldb::DB> posstore;
 
+    /*
+    struct cmaps {
+        std::unordered_map<string,std::unordered_map<std::string,Position>> mPositions;
+        std::unordered_map<string,unique_ptr<MatchingEngine>> mLimitBooks;
+        std::unordered_map<string,ContractOHLC> mContractOHLC;
+        std::unordered_map<string,MarketQuote> mMarketQuote;
+        std::unordered_map<int32_t,OpenOrder> mOpenOrders;
+        std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
+        std::unordered_map<int32_t,std::string> mSeqNameMap;
+    };
+
+    cmaps mWk;
+    cmaps mRow;
+    cmaps mS;
+    */
+
     std::unordered_map<string,std::unordered_map<std::string,Position>> mPositions;
-    std::unordered_map<string,unique_ptr<MatchingEngine>> mLimitBooks;
+    std::map<string,unique_ptr<MatchingEngine>> mLimitBooks;
     std::unordered_map<string,ContractOHLC> mContractOHLC;
     std::unordered_map<string,MarketQuote> mMarketQuote;
-
     std::unordered_map<int32_t,OpenOrder> mOpenOrders;
+    std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
+    std::unordered_map<int32_t,std::string> mSeqNameMap;
 
-
+    std::set<std::string> mLockedSymb;
     std::set<std::string> mSubscribed;
 
     leveldb::WriteOptions write_sync{};
@@ -298,8 +315,7 @@ public:
     }
 
     bool amlive = false;
-    std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
-    std::unordered_map<int32_t,std::string> mSeqNameMap;
+
     std::unordered_set<string> fnames;
     void OnTradeSessionStart(int season, int week);
 
@@ -366,8 +382,8 @@ public:
     void OnGameResult(const GameResult&gs);
 
     void OnGameStart(const std::string &gid,
-                     const std::vector<std::string> &home,
-                     const std::vector<std::string> &away
+                  const std::unordered_map<std::string,PlayerDetail> &home,
+                  const std::unordered_map<std::string,PlayerDetail> &away
                      );
     void clearNewWeek();
 
@@ -504,9 +520,12 @@ public:
         auto holdit = blocknum();
         Clear();
         set_blocknum(holdit);
-        set_playerid(symbol);
+        set_symbol(symbol);
         mutable_ohlc()->set_symbol(symbol);
     }
+
+    std::string mSerialized;
+    leveldb::WriteOptions write_sync{};
 
 };
 
