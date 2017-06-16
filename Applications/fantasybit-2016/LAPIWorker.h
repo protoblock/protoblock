@@ -40,6 +40,7 @@ class MainLAPIWorker : public QObject , public IResolvable
 #endif
     int32_t numto = std::numeric_limits<int32_t>::max();
     bool amlive = false;
+    bool quitting = false;
     QTimer * timer;
     fantasybit::FantasyAgent agent{};
     fantasybit::NFLStateData data;
@@ -150,6 +151,8 @@ public slots:
     void OnProjTX(vector<fantasybit::FantasyBitProj>);
 
     void OnNewOrder(fantasybit::ExchangeOrder);
+
+    void Quit();
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
     //void OnNameBal(fantasybit::FantasyNameBal);

@@ -5,7 +5,7 @@
 
 using namespace fantasybit ;
 
-int BlockRecorder::zeroblock(1);
+int BlockRecorder::zeroblock(0);
 
 void BlockRecorder::InitCheckpoint(int32_t lastblock) {
     leveldb::DB *db1;
@@ -90,7 +90,7 @@ bool BlockRecorder::isValid() {
         return true;
 
     int32_t num = *(reinterpret_cast<const int32_t *>(value.data()));
-    return num < 0 || lastBlock > BlockRecorder::zeroblock;
+    return num < 0 && lastBlock > BlockRecorder::zeroblock;
 }
 
 

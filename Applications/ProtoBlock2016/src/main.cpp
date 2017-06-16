@@ -127,6 +127,13 @@ int main(int argc, char *argv[])
     pb::ImportLoader il;
     engine.rootContext()->setContextProperty("ImportLoader", &il);
 
+    MainLAPIWorker *ml = Core::resolveByName<MainLAPIWorker>("coreapi");
+//    QObject::connect(&engine, SIGNAL(quit()),
+    //QObject::connect(&app, SIGNAL(aboutToQuit()),
+    app.setQuitOnLastWindowClosed(false);
+    QObject::connect(&app, SIGNAL(lastWindowClosed()),
+                     ml, SLOT(Quit()));
+
     //qmlRegisterSingletonType<pb::Mediator>(uri,1,0,"MiddleMan",middleMan);
 
 //    SqlStuff sql(true,"testingmain");
