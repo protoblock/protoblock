@@ -205,7 +205,7 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
 void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     auto hash = FantasyName::name_hash(name);
 
-    qDebug() << "adding pnl " << name << pnl;
+    qDebug() << "adding pnl " << name.data() << pnl;
     string temp;
     leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
     if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {

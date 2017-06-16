@@ -173,7 +173,7 @@ public:
         nametrans.mutable_proof()->CopyFrom(np);
 
         Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_version(Commissioner::GENESIS_NUM);
         trans.set_type(TransType::NAME);
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
@@ -192,7 +192,7 @@ public:
         nametrans.mutable_proof()->CopyFrom(nameproof);
 
         Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_version(Commissioner::GENESIS_NUM);
         trans.set_type(TransType::NAME);
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
@@ -211,7 +211,7 @@ public:
         nametrans.mutable_proof()->CopyFrom(nameproof);
 
         Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_version(Commissioner::GENESIS_NUM);
         trans.set_type(TransType::NAME);
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
@@ -227,7 +227,7 @@ public:
         dt.set_week(1);
 
         Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_version(Commissioner::GENESIS_NUM);
         trans.set_type(TransType::DATA);
         trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
 

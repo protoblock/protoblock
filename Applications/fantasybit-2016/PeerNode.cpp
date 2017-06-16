@@ -594,12 +594,14 @@ Bootstrap Node::getLastLocalBoot() {
         }
         else {
             done = true;
+#ifndef NO_DOSPECIALRESULTS
             if ( doSpecialResults ) {
                 auto holdhead = ldb.read("head");
                 Bootstrap temphead = Commissioner::makeGenesisBoot(ldb,globalhead);
                 ldb.write("head",holdhead);
                 qWarning() << "getLastLocalBoot  if doSpecialResults " << holdhead.data();
             }
+#endif
         }
     }
 
