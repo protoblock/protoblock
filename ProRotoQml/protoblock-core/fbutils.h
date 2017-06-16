@@ -227,6 +227,7 @@ namespace fantasybit {
         PlayerBase base;
         PlayerStatus::Status team_status;
         PlayerGameStatus game_status;
+        std::string symbol;
     };
 
     struct GameRoster {

@@ -612,7 +612,7 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
 
         if ( !statusstore->Put(write_sync, playerid, ps2.SerializeAsString()).ok())
             qWarning() << "bad write statusstore";
-        qDebug() << ps.DebugString().data();
+        qDebug() << ps2.DebugString().data();
 
         mSym2Pid[ps2.symbol()] = playerid;
         MyPlayerStatus[playerid] = ps2;
@@ -953,6 +953,7 @@ std::unordered_map<std::string,PlayerDetail>
         pd.base = GetPlayerBase(p);
         pd.team_status = ps.status();
         pd.game_status = PlayerGameStatus::NA;
+        pd.symbol = ps.symbol();
         vpb[p] = pd;
     }
     return vpb;
