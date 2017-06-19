@@ -37,6 +37,8 @@ public:
 
     virtual fantasybit::PlayerBase GetPlayerBase(std::string playerId)= 0;
 
+    virtual fantasybit::PlayerStatus GetPlayerStatus(std::string playerId) = 0;
+
     virtual std::vector<std::shared_ptr<fantasybit::FantasyName>> GetLeaderBoard()= 0;
 
     virtual std::unordered_map<std::string,int> GetProjByName(const std::string &nm)= 0;
