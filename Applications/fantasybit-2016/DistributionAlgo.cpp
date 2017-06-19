@@ -50,7 +50,9 @@ NameValuePairs<int>
 //        qDebug() << pair.first << " projection " << pair.second << " diff " << diff;
     }
   
-    mean /= diffs.size();
+    if ( diffs.size() > 1  )
+        mean /= diffs.size();
+
     //qInfo() << "mean " << mean;
 
     
