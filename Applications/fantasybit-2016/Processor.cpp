@@ -296,6 +296,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     qCritical() << "no playerid" + QTD(tpd.DebugString());
                     break;
                 }
+//                if ( tpd.playerid() == "1179")
+//                    qDebug() << "";
 //                int pid = std::stoi(tpd.playerid());
 //                if (pid > 0 && pid <= 32 ) { //Team DEF
 //                    if ( transtype !=  SEASONSTART) {
@@ -658,8 +660,11 @@ void BlockProcessor::process(const DataTransition &indt) {
             mGlobalState.set_state(GlobalState_State_INSEASON);
             mData.OnGlobalState(mGlobalState);
             OnSeasonStart(indt.season());
-            if ( indt.week() != 0)
+            if ( indt.week() == 0) {
+                mGlobalState.set_week(indt.week());
+                mData.OnGlobalState(mGlobalState);
                 OnWeekStart(indt.week());
+            }
         }
         break;
     case TrType::SEASONEND:
@@ -718,6 +723,8 @@ void BlockProcessor::process(const DataTransition &indt) {
             auto gi =  mData.GetGameInfo(t.gameid());
             auto homeroster = mData.GetTeamRoster(gi.home());
             auto awayroster = mData.GetTeamRoster(gi.away());
+//            if ( gi.away() == "CLE" )
+//                qDebug() << "" ;
             vector<string> homep, awayp;
             for ( auto hr : homeroster) {
                 homep.push_back(hr.first);
@@ -902,6 +909,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
             //qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
             for (const PlayerPoints & pt : ptb.player_points() ) {
                 mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
+//                if ( st.fantasy_name() == "@SpreadSheetFF" && pt.playerid() == "1179")
+//                    qDebug() << pt.DebugString().data();
             }
 
             break;
@@ -971,7 +980,23 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
         fc = &mFutContract;
     }
     else {
-        fc = &emdg.futcontract();
+        if ( !emdg.has_futcontract() && emdg.has_symbol() && emdg.symbol().size() > 6 ) {
+            if ( emdg.symbol().back() == 's' )
+               mFutContract.set_type(FutContract_Type_SEASON);
+            else {
+                mFutContract.set_type(FutContract_Type_WEEKLY);
+                if ( emdg.symbol().back() == '0') {
+//                    ffc.set_week(std::stoi(emdg.symbol().substr(emdg.symbol().size()-2,2)));
+                    mFutContract.set_week( emdg.symbol().at(emdg.symbol().size()-2) - '0');
+                    mFutContract.set_week(mFutContract.week()+10);
+                }
+                else
+                   mFutContract.set_week( emdg.symbol().back() - '0');
+            }
+            fc = &mFutContract;
+        }
+        else
+            fc = &emdg.futcontract();
     }
 
     if ( !emdg.has_symbol() || emdg.symbol() == "") {
@@ -980,6 +1005,11 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
             return;
         }
         symbol = mData.GetPlayerStatus(emdg.playerid()).symbol();
+        symbol += to_string(fc->season()-2000);
+        if ( fc->type() == FutContract_Type_WEEKLY )
+            symbol += "w" + to_string(fc->week());
+        else
+            symbol += "s";
     }
     else
         symbol = emdg.symbol();
@@ -999,17 +1029,20 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
                 qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
                 return;
         }
+        break;
 
     case FutContract_Type_SEASON:
         if ( fc->season() < mExchangeData.mMinSeason || fc->season() > mExchangeData.mMaxSeason) {
             qWarning() << "ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
             return;
         }
+        break;
     default:
         return;
         break;
     }
 
+    /*
     auto it = mData.mSym2Pid.find(symbol);
     if ( it == end(mData.mSym2Pid) ) {
         qWarning() << "ProcessInsideStamped bad symbol" << fc->DebugString().data(), emdg.DebugString().data(), symbol.data();
@@ -1020,12 +1053,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
         qWarning() << "ProcessInsideStamped bad player ! match symbol" << fc->DebugString().data(), emdg.DebugString().data(), symbol.data();
         return;
     }
-
-    symbol += to_string(fc->season()-2000);
-    if ( fc->type() == FutContract_Type_WEEKLY )
-        symbol += "w" + to_string(fc->week());
-    else
-        symbol += "s";
+    */
 
     mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum,fc,symbol);
 }
