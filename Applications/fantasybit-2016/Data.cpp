@@ -326,6 +326,7 @@ void NFLStateData::init() {
             pd.mutable_player_status()->CopyFrom(ps);
             writer3(pd);
 #endif
+
             auto pid = it->key().ToString();
             MyPlayerStatus[pid] = ps;
             if (ps.has_teamid()) {
@@ -339,7 +340,6 @@ void NFLStateData::init() {
             if ( ps.symbol() != "" ) {
                 FromTicker(ps.symbol());
                 mSym2Pid[ps.symbol()] = pid;
-//                qDebug() << pid.data() << ps.DebugString().data();
             }
             else
                 qWarning() << " no ticker!! " << ps.DebugString().data();
@@ -595,7 +595,7 @@ bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) 
         if (!result.ParseFromString(temp) )
             qWarning() << " cant parse game result";
         else {
-            qDebug() << result.DebugString();
+            qDebug() << result.DebugString().data();
             return true;
         }
     }
@@ -621,7 +621,7 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
             OnPlayerSign(playerid,ps2.teamid());
     }
     else {
-        PlayerStatus &old = it->second;
+        PlayerStatus old = it->second;
         PlayerStatus ps2(ps);
 
         if ( ps2.has_symbol() && ps2.symbol() != "");
