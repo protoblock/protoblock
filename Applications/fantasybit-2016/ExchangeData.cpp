@@ -430,11 +430,13 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
     if ( it == end(mLimitBooks)) {
         if ( mLockedSymb.size() > 0 ) {
             auto iit = mLockedSymb.lower_bound(symbol);
-            auto syb = --iit;
-            if ( syb->compare(0,syb->size(),symbol) == 0 &&
-                 (syb->size() != 4 || symbol.at(4) == '1') ) {
-                 qWarning() << "invalid order, locked limitbook for" << symbol.data();
-                 return;
+            if ( iit != begin(mLockedSymb)) {
+                auto syb = --iit;
+                if ( syb->compare(0,syb->size(),symbol) == 0 &&
+                     (syb->size() != 4 || symbol.at(4) == '1') ) {
+                     qWarning() << "invalid order, locked limitbook for" << symbol.data();
+                     return;
+                }
             }
         }
 
