@@ -738,6 +738,7 @@ Item {
                 pageHelper.selectedTabIndex = 3;
             }
             else MiddleMan.doTrade(
+                     inplay.playerid,
                     inplay.symbol
                     ,(side == "Buy") ? true : false
                  ,myTradeDialog.price
