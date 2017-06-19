@@ -324,21 +324,26 @@ void Mediator::updateWeek() {
 //            mPlayerQuoteSliceModel.clear();
             mPlayerProjModel.clear();
             set_thisWeekPrev(false);
+            /*
             {
             PlayerDetail pd;
             pd.base = mGateway->dataService->GetPlayerBase("1255");
+            PlayerStatus ps = mGateway->dataService->GetPlayerStatus("1255");
             PlayerProjModelItem *pp = new PlayerProjModelItem(pd,"GB","1255",QString(""),0,true,nullptr);
             PlayerQuoteSliceModelItem *p = new PlayerQuoteSliceModelItem(*pp);
+            p->setsymbol((ps.symbol() + "17s").data());
             mPlayerQuoteSliceModel.append(p);
             }
             {
             PlayerDetail pd;
             pd.base = mGateway->dataService->GetPlayerBase("1387");
+            PlayerStatus ps = mGateway->dataService->GetPlayerStatus("1387");
             PlayerProjModelItem *pp = new PlayerProjModelItem(pd,"CHI","1387",QString(""),0,true,nullptr);
             PlayerQuoteSliceModelItem *p = new PlayerQuoteSliceModelItem(*pp);
+            p->setsymbol((ps.symbol() + "17s").data());
             mPlayerQuoteSliceModel.append(p);
             }
-
+            */
             const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
             qDebug() << "  vms " << vms.size();
             mPlayerQuoteSliceModel.Update(vms,mPlayerProjModel);
@@ -683,10 +688,11 @@ QString Mediator::getSecret() {
     return sec.data();
 }
 
-void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size) {
+void Mediator::doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size) {
 
     ExchangeOrder eo;
-    eo.set_playerid(symbol.toStdString());
+    eo.set_playerid(playerid.toStdString());
+    eo.set_symbol(symbol.toStdString());
     eo.set_type(ExchangeOrder::NEW);
 
     OrderCore core;

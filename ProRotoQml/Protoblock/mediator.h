@@ -234,7 +234,7 @@ public:
 ////            m_currentPidContext = context;
 //    }
     Q_INVOKABLE void doCancel(qint32 id);
-    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
+    Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
 
 //    QString playersStatus()const;
 //    void setPlayersStatus(const QString &playersStatus);
