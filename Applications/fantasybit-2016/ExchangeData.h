@@ -301,7 +301,9 @@ class ExchangeData : public QObject {
     void ProcessBookDelta(const BookDelta &bd);
 
 public:
-    ExchangeData() : mMaxSeason(0), mMinSeason(2015) {}
+    ExchangeData() : mMaxSeason(2017), mMinSeason(2017) {
+
+    }
 
     int64_t MAXSEQ;
     void init();
