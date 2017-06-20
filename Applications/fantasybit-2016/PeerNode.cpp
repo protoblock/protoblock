@@ -56,13 +56,13 @@ void Node::init() {
 //    }
 #endif
 
-#ifdef END2016ADD2014
-    QFileInfo check_file( (GET_ROOT_DIR() + "end2016").data ());
+#ifdef START2017WITH2014
+    QFileInfo check_file( (GET_ROOT_DIR() + "start2017").data ());
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "end2016").data () );
+        QFile file( (GET_ROOT_DIR() + "start2017").data () );
         file.open(QIODevice::WriteOnly);
     }
 #endif
@@ -520,7 +520,7 @@ int32_t Node::myLastGlobalBlockNum() {
 
 Bootstrap Node::getLastLocalBoot() {
 
-    QString links("https://158.222.102.83:4545");
+    QString links(PAPIURL.data());
     QString route("week");
 
     QMap<QString,QString>  headers;
@@ -545,8 +545,8 @@ Bootstrap Node::getLastLocalBoot() {
     else
         week = stoi(weekstr);
 
-    if ( week == 0 )
-        week = 8;
+//    if ( week == 0 )
+//        week = 8;
 
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
@@ -562,12 +562,12 @@ Bootstrap Node::getLastLocalBoot() {
 
     bool done = false;
     while ( !done ) {
-        if ( week <= 1 ) {
+        if ( week < 0 ) {
             done = true;
             break;
         }
 
-        string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
+        string globalhead = (week < 10 ? "20170" : "2017") + to_string(week);
 
 #ifndef NO_DOSPECIALRESULTS
         if ( globalhead == "201613" && !Commissioner::BootStrapFileExists(globalhead) ) {

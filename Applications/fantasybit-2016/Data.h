@@ -299,8 +299,9 @@ public:
         WeeklySchedule ws;
         MerkleTree tree;
         string temp;
+        for ( int s = 2014; s<=theSeason();s++)
         for (int i=1; i<=17;i++) {
-            string key = to_string(theSeason()) + "scheduleweek:" + to_string(i);
+            string key = to_string(s) + "scheduleweek:" + to_string(i);
 
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
                 qWarning() << "BootStrapSchedule cant find schedule " << key.data();
@@ -317,10 +318,15 @@ public:
                 gsm.set_allocated_gameinfo(&game);
                 gsm.set_week(i);
                 gsm.set_id(game.id());
+                gsm.set_season(s);
 
                 string key = "gamestatus:" + game.id();
-                if ( statusstore->Get(leveldb::ReadOptions(), key, &temp).ok() )
+                if ( statusstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
                     gsm.mutable_gamesatus()->ParseFromString(temp);
+                }
+                else {
+                    qDebug() << " no game status " << key.data() << gsm.has_gamesatus();
+                }
 
                 tree.add_leaves(ldb.write(gsm));
                 gsm.release_gameinfo();
@@ -335,8 +341,10 @@ public:
         WeeklySchedule ws;
         MerkleTree tree;
         string temp;
-        for (int i=1; i<=17;i++) {
-            string key = to_string(theSeason()) + "scheduleweek:" + to_string(i);
+        for ( int s = 2014; s<=theSeason();s++)
+
+        for (int i=1; i<=16;i++) {
+            string key = to_string(s) + "scheduleweek:" + to_string(i);
 
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
                 qWarning() << "BootStrapResult cant find schedule " << key.data();

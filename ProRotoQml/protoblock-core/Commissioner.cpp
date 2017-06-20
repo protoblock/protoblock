@@ -308,9 +308,9 @@ Block Commissioner::makeGenesisBlock() {
 }
 
 bool Commissioner::BootStrapFileExists(string genesiskey) {
-    string prefix = "bootstrap";
-    if ( stoi(genesiskey) < 201607 )
-        prefix += "test";
+    string prefix = "boot2strap";
+//    if ( stoi(genesiskey) < 201607 )
+//        prefix += "test";
     QString filename = string(prefix + genesiskey + ".out").data();
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
     genesisBootFile = genesisBootFile +  filename;
@@ -322,9 +322,10 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
     string headhash;
 
-    string prefix = "bootstrap";
-    if ( stoi(genesiskey) < 201607 )
-        prefix += "test";
+    string prefix = "boot2strap";
+//    if ( stoi(genesiskey) < 201607 )
+//        prefix += "test";
+
     QString filename = string(prefix + genesiskey + ".out").data();
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
     genesisBootFile = genesisBootFile +  filename;

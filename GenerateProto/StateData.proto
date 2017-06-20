@@ -159,6 +159,7 @@ message GameStatusMeta {
     optional bytes datametaid = 40;
     optional bytes prev = 50;
     optional bytes next = 60;
+    optional int32 season = 70;
 }
 
 //playerprojmetaroot -> MerkleTree<GamePlayerProjMeta>

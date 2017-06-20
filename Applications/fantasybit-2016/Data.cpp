@@ -136,7 +136,11 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
         GlobalState gs;
         gs.set_season(head.season());
         gs.set_week(head.week());
-        gs.set_state(GlobalState_State_INSEASON);
+        if ( gs.week() >= 1)
+            gs.set_state(GlobalState_State_INSEASON);
+        else
+            gs.set_state(GlobalState_State_OFFSEASON);
+
         db2->Put(leveldb::WriteOptions(), "globalstate", gs.SerializeAsString());
         qDebug() << "InitCheckpoint wrote GlobalState" << gs.DebugString().data();
         {
@@ -144,22 +148,32 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
             std::vector< std::pair<std::string,  GameStatusMeta> > mapt;
             pb::loadMerkleMap(ldb,head.gamemetaroot(),mtree,mapt);
 
-            std::unordered_map<int,WeeklySchedule> wsm;
+            std::unordered_map<int, unordered_map<int,WeeklySchedule>> wsm;
             for ( auto p : mapt) {
                 GameStatusMeta &gsm = p.second;
-                auto it = wsm.find(gsm.week());
-                if ( it == end(wsm) ) {
-                    wsm.insert({gsm.week(),WeeklySchedule::default_instance()});
+                auto its = wsm.find(gsm.season());
+                if ( its == end(wsm) )
+                    wsm.insert({gsm.season(),unordered_map<int,WeeklySchedule>()});
+
+                auto &mwsm = wsm[gsm.season()];
+                auto it = mwsm.find(gsm.week());
+                if ( it == end(mwsm) ) {
+                    mwsm.insert({gsm.week(),WeeklySchedule::default_instance()});
                 }
-                WeeklySchedule &ws = wsm[gsm.week()];
+                WeeklySchedule &ws = mwsm[gsm.week()];
                 ws.add_games()->CopyFrom(gsm.gameinfo());
-                string key = "gamestatus:" + gsm.id();
-                db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
+                if ( gsm.has_gamesatus() ) {
+                    string key = "gamestatus:" + gsm.id();
+                    db2->Put(leveldb::WriteOptions(), key, gsm.gamesatus().SerializeAsString());
+                }
             }
-            for ( auto wg : wsm ) {
-                string key = "scheduleweek:" + to_string(wg.first);
-                db4->Put(write_sync, key,
-                               wg.second.SerializeAsString() );
+            for ( auto wgs : wsm ) {
+                int se = wgs.first;
+                for ( auto wg : wgs.second ) {
+                    string key = to_string(se)  + "scheduleweek:" + to_string(wg.first);
+                    db4->Put(write_sync, key,
+                                   wg.second.SerializeAsString() );
+                }
             }
         }
 
