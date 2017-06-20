@@ -54,6 +54,7 @@ class Mediator : public QObject {
 
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
 
+    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerSymbolsModel)
 
     //Trading
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
@@ -125,6 +126,7 @@ class Mediator : public QObject {
 
     PlayerResultModel mPlayerResultModel;
     QItemSelectionModel myPrevGamesSelectionModel;
+    PlayerSymbolsModel mPlayerSymbolsModel;
 
         //schedule
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeekClosedScheduleModel)
@@ -220,6 +222,12 @@ public:
 //        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
 //        getOrderPos();
     }
+
+//    Q_INVOKABLE  QStringList getAllSymbols() {
+//        auto &hold =  mGateway->dataService->GetAllSymbols();
+//        qDebug() << " GetAllSymbols " << hold.count();
+//        return hold;
+//    }
 
 //    Q_INVOKABLE void stopDepth(const QString& symbol) {
 //        polldepth.stop();
@@ -611,7 +619,12 @@ public:
     Q_INVOKABLE QStringList allNamesList() { return m_allNamesList; }
 
     //portfolio
+    Q_INVOKABLE QString fillPlayerBase(const QString &syb, const QString &pid) {
+        return mPlayerSymbolsModel.Update(syb, mGateway->dataService->GetPlayerBase(pid.toStdString()));
+    }
+
     Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
+
         auto model = mPlayerQuoteSliceModel.getByUid(uid);
         if ( model == nullptr ) {
             qDebug() << " bad data for getPlayerNamePos " << uid;
@@ -621,6 +634,10 @@ public:
             return model->get_fullname() + " (" + model->get_pos() +")" ;
     }
 
+    Q_INVOKABLE void addTradingSymbol(const QString &symbol) {
+        auto ppd = mGateway->dataService->GetPlayerDetail(symbol.toStdString());
+        mPlayerQuoteSliceModel.UpdateSymbols(ppd,mPlayerSymbolsModel.getByUid(symbol),m_blocknum,"17s");
+    }
 
     //data
     Q_INVOKABLE QString getTeamid(const QString &uid) {

@@ -17,6 +17,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pDepthMarketModel(&mDepthMarketModel),
     m_pGlobalOpenOrdersModel(&dummyOpenOrdersModel),
     mFantasyNameBalModel(this,QByteArray(),{"name"}),
+    mPlayerSymbolsModel{this,{"symbol"},{"symbol"}},
+    m_pPlayerSymbolsModel(new SortFilterProxyModel),
     m_pFantasyNameBalModel(&mFantasyNameBalModel),
     mGoodNameBalModel{this,QByteArray(),{"name"}},
     m_pGoodNameBalModel(&mGoodNameBalModel),
@@ -35,11 +37,18 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
+
+
     fnameindex = 0;
     //leader models
     m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
     m_pLeaderBoardSortModel->setSortRole("lastupdate");//mPlayerProjModel.roleForName("pos"));
     m_pLeaderBoardSortModel->setDynamicSortFilter(true);
+
+    m_pPlayerSymbolsModel->setSourceModel(&mPlayerSymbolsModel);
+    m_pPlayerSymbolsModel->setSortRole({"fullname"});
+    m_pPlayerSymbolsModel->setDynamicSortFilter(true);
+    m_pPlayerSymbolsModel->setFilterRole({"symbol"});
 
     //schedule models
     m_pWeeklyScheduleModel = new WeeklyScheduleModel(this);
@@ -82,7 +91,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 //    m_pPlayerQuoteSliceModel = &m_pPlayerQuoteSliceModel;
     m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(&mPlayerQuoteSliceModel);
-    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("blocknum");
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("symbol");
     m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
 
 
@@ -324,7 +333,7 @@ void Mediator::updateWeek() {
 //            mPlayerQuoteSliceModel.clear();
             mPlayerProjModel.clear();
             set_thisWeekPrev(false);
-            /*
+            /**/
             {
             PlayerDetail pd;
             pd.base = mGateway->dataService->GetPlayerBase("1255");
@@ -343,11 +352,19 @@ void Mediator::updateWeek() {
             p->setsymbol((ps.symbol() + "17s").data());
             mPlayerQuoteSliceModel.append(p);
             }
-            */
+            /**/
             const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
             qDebug() << "  vms " << vms.size();
             mPlayerQuoteSliceModel.Update(vms,mPlayerProjModel);
 
+        }
+
+        auto gss = mGateway->dataService->GetAllSymbols();
+        int count = 0;
+        for ( auto gs : gss ) {
+            //if (count++ > 10 ) break;
+            //qDebug() << "gs " << gs.first.data();
+            mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
         }
         updateLiveLeaders();
     }
