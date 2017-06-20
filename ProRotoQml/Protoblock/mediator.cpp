@@ -333,7 +333,7 @@ void Mediator::updateWeek() {
 //            mPlayerQuoteSliceModel.clear();
             mPlayerProjModel.clear();
             set_thisWeekPrev(false);
-            /**/
+            /*
             {
             PlayerDetail pd;
             pd.base = mGateway->dataService->GetPlayerBase("1255");
@@ -353,19 +353,64 @@ void Mediator::updateWeek() {
             mPlayerQuoteSliceModel.append(p);
             }
             /**/
+            auto gss = mGateway->dataService->GetAllSymbols();
+            int count = 0;
+            for ( auto gs : gss ) {
+                //if (count++ > 10 ) break;
+                //qDebug() << "gs " << gs.first.data();
+                mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
+            }
+
+
             const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
             qDebug() << "  vms " << vms.size();
-            mPlayerQuoteSliceModel.Update(vms,mPlayerProjModel);
+            for ( auto ms : vms ) {
+                string syb;
+                string symbol = ms.symbol();
+                auto *it = mPlayerQuoteSliceModel.getByUid(symbol.data());
+                if ( it == nullptr || it->get_pPlayerSymbolsModelItem() == nullptr) {
+                    auto iit = gss.lower_bound(symbol);
+                    if ( iit != begin(gss)) {
+                        syb = (--iit)->first;
+                        int ret = syb.compare(0,syb.size(),symbol.data(),syb.size());
+//                        qDebug() << " rettt " << ret;
+                        if ( ret == 0 &&
+                             (syb.size() != 4 || symbol.at(4) == '1') ) {
+                             qDebug() << "stripped raw symbol" << symbol.data() << syb.data() << iit->second.data();
+                             if ( it == nullptr ) {
+                                it = new PlayerQuoteSliceModelItem(symbol.data());
+                                mPlayerQuoteSliceModel.append(it);
+                             }
+                        }
+//                        else if ( syb.compare(0,syb.size(),symbol) == 0 ) {
+//                                if (syb.size() != 4 || symbol.at(4) == '1')
+//                                    qDebug() << "goood";
+//                                else
+//                                    qWarning() << " syb.size() " << syb.size() << symbol.at(4);
+//                        }
+                        else
+                            qWarning() << " cant find " << syb.data() << " | " << symbol.data();
+                    }
+                }
+                else {
+                    syb = it->get_pPlayerSymbolsModelItem()->get_symbol().toStdString();
+                }
+
+                if ( it == nullptr || syb == "")
+                    qWarning() << " nulls cant find " << symbol.data();
+                else {
+                    auto ppd = mGateway->dataService->GetPlayerDetail(syb);
+                    it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
+                    it->Update(ms);
+                }
+            }
+
+            if (myFantasyName != "" )
+                updateOnChangeFantasyName();
+
 
         }
 
-        auto gss = mGateway->dataService->GetAllSymbols();
-        int count = 0;
-        for ( auto gs : gss ) {
-            //if (count++ > 10 ) break;
-            //qDebug() << "gs " << gs.first.data();
-            mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
-        }
         updateLiveLeaders();
     }
 }
