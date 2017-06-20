@@ -61,6 +61,10 @@ public:
 
     virtual std::vector<MarketSnapshot>
                     GetCurrentMarketSnaps() = 0;
+    virtual std::map<std::string,std::string> GetAllSymbols() = 0;
+
+    virtual PlayerDetail GetPlayerDetail(const std::string &symbol) = 0;
+
 
 
 };

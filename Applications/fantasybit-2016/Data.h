@@ -64,6 +64,7 @@ class NFLStateData : public QObject {
     }
 
 
+
 signals:
     void PlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
     void PlayerAdd(PlayerBase);
@@ -122,6 +123,8 @@ public:
     std::unordered_map<std::string,PlayerDetail>
             GetTeamRoster(const std::string &teamid);
 
+    PlayerDetail GetPlayerDetail(const std::string &symbol);
+
     /*
     mUniqueSymbol["AB"]
             [0] - QB
@@ -132,8 +135,15 @@ public:
     */
     std::map<std::string, vector<char>> mUniqueSymbol;
     static map<std::string,int> PosIndexMap;
+    std::map<std::string,std::string> mSym2Pid;
 
-    std::unordered_map<std::string,std::string> mSym2Pid;
+    std::map<std::string,std::string> GetAllSymbols() {
+//        QStringList symb;
+//        for ( auto &p : mSym2Pid)
+//            symb.append(p.first.data());
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        return mSym2Pid;
+    }
 
     GameStatus GetUpdatedGameStatus(std::string id);
     WeeklySchedule GetWeeklySchedule(int season,int week);

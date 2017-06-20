@@ -973,6 +973,19 @@ std::unordered_map<std::string,PlayerDetail>
     return vpb;
 }
 
+PlayerDetail NFLStateData::GetPlayerDetail(const std::string &symbol) {
+    auto p = mSym2Pid[symbol];
+    auto ps = MyPlayerStatus[p];
+
+    PlayerDetail pdt;
+    pdt.base = GetPlayerBase(p);
+    pdt.team_status = ps.status();
+    pdt.game_status = PlayerGameStatus::NA;
+    pdt.symbol = ps.symbol();
+    pdt.team = ps.teamid();
+    return pdt;
+}
+
 GlobalState NFLStateData::GetGlobalState() {
     GlobalState gs{};
     std::string temp;
