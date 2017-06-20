@@ -96,7 +96,7 @@ Material.ApplicationWindow{
         }
 
         themeroot.showMaximized()
-//        rootLoader.source = "qrc:/Projections.qml";
+//        rootLoader.source = "qrc:/Trading.qml";
 
     }
 
@@ -132,12 +132,11 @@ Material.ApplicationWindow{
     ]
 
 
-    property int  currentTabInFocus: 0
+    property int  currentTabInFocus: 1
 
     property string pageSwitcher
     property string currentPage: sections[0][0]
     property int loginCardScale: 1
-    property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
 
     theme {
         primaryColor: Colors.primaryColor
@@ -146,7 +145,7 @@ Material.ApplicationWindow{
     }
 
     // Level One Trading
-    property var levelTwo: [ "Leaderboard"]
+    property var levelTwo: [ "Trading"]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
@@ -198,8 +197,9 @@ Material.ApplicationWindow{
     initialPage:  Material.TabbedPage {
         property bool expanded: true
         id: pageHelper
-        title: "ProtoBlock 2016"
+        title: "Protoblock 2017"
 
+        selectedTabIndex: 1
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
@@ -243,7 +243,7 @@ Material.ApplicationWindow{
                     pageHelper.title = "Account Settings"
                 }
             }
-//            Material.Action {
+//            ,Material.Action {
 //                iconName: "qrc:/icons/action_settings.png"
 //                name: "Settings"
 //                hoverAnimation: true
@@ -437,10 +437,10 @@ Material.ApplicationWindow{
                            "OAK" ,
                            "PHI" ,
                            "PIT" ,
-                           "SD" ,
+                           "LAC" ,
                            "SEA" ,
                            "SF" ,
-                           "LA" ,
+                           "LAR" ,
                            "TB" ,
                            "TEN" ,
                            "WAS"];
@@ -661,8 +661,8 @@ Material.ApplicationWindow{
                     loginDialog.close()
 
                 themeroot.reloadleaders = false
-                rootLoader.source = "qrc:/Projections.qml"
-                pageHelper.selectedTabIndex = 0;
+                rootLoader.source = "qrc:/Trading.qml"
+                pageHelper.selectedTabIndex = 1;
                 rootLoader.showMaximized
             }
             else {
@@ -683,8 +683,8 @@ Material.ApplicationWindow{
                 uname = name
                 msgString = "You are now playing as: " + name
                 if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
-                    rootLoader.source = "qrc:/Projections.qml"
-                    pageHelper.selectedTabIndex = 0;
+                    rootLoader.source = "qrc:/Trading.qml"
+                    pageHelper.selectedTabIndex = 1;
                     usingNameDialog.open()
                 }
                 else
@@ -738,25 +738,6 @@ Material.ApplicationWindow{
         }
     }
 
-//    // check for updates
-//    XmlListModel {
-//        id: updateMachine
-//        source:"http://protoblock.com/version.xml"
-//        query: "/updatemachine"
-//        XmlRole{name: "version";query: "version/string()"}
-//        XmlRole{name: "libs";query: "libs/string()"}
-//        XmlRole{name: "changelog";query: "changelog/string()"}
-//        onStatusChanged: {
-//            switch(status){
-//            case XmlListModel.Error :
-//                                console.log("ERROR IN UPDATE MACHINE ")
-//                break;
-//            case XmlListModel.Ready:
-//                compairVersions(updateMachine.get(0).version)
-//                break;
-//            }
-//        }
-//    }
 
     IrcConnection {
         property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname

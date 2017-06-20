@@ -9,9 +9,10 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
 
 Item {
-    id: rowtt
+    id: wktt
     anchors.fill: parent
 
+    property bool ss: false
     property variant selectedModel
 //    property alias ccount: tvr.columnCount
     property int focuscount: 0
@@ -26,45 +27,11 @@ Item {
     property int lcount: 2 //last - change
     property int qcount: 5
 
-    property int ocol: 0
+    property int ocol: 1
     property int pcol: ocol + ocount
     property int lcol: pcol + pcount
     property int qcol: lcol + lcount
     property int vcol: qcol + qcount
-
-    property var teammodel: ["ALL",
-        "ARI" ,
-        "ATL" ,
-        "BAL" ,
-        "BUF" ,
-        "CAR" ,
-        "CHI" ,
-        "CIN" ,
-        "CLE" ,
-        "DAL" ,
-        "DEN" ,
-        "DET" ,
-        "GB" ,
-        "HOU" ,
-        "IND" ,
-        "JAC" ,
-        "KC" ,
-        "MIA" ,
-        "MIN" ,
-        "NE" ,
-        "NO" ,
-        "NYG" ,
-        "NYJ" ,
-        "OAK" ,
-        "PHI" ,
-        "PIT" ,
-        "SD" ,
-        "SEA" ,
-        "SF" ,
-        "LA" ,
-        "TB" ,
-        "TEN" ,
-        "WAS"]
 
 
 //    property int rowcol: bcol + 1
@@ -156,6 +123,35 @@ Item {
 //                  var baseColor = styleData.alternate?"#f5f5f5":"transparent"
 //                  return styleData.selected?myPalette.highlight:baseColor
 //               }
+            }
+
+            TableViewColumn {
+                role: "symbol"
+                title: "Symbol"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(8)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
 
@@ -646,34 +642,6 @@ Item {
                 }
             }
 
-            TableViewColumn {
-                role: "symbol"
-                title: "Symbol"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(8)
-                delegate: Material.Card {
-                    anchors.centerIn: parent
-                    flat: true
-                    radius: 12
-                    border.width: 0
-                    anchors.rightMargin: ProtoScreen.guToPx(5)
-                    anchors.leftMargin: ProtoScreen.guToPx(5)
-
-                    backgroundColor: "transparent"
-                    width: ProtoScreen.guToPx(9) // ml.width * 3
-                    Material.Label {
-                        anchors.centerIn: parent
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                        text: styleData.value;
-                        font.bold: false;
-                    }
-
-                }
-            }
 
         }
     }
@@ -710,31 +678,67 @@ Item {
                     }
                 }
 
+                Material.IconButton {
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    onClicked: {
+                          wktt.ss = true
+//                        symbolsearch.show
+                    }
 
-//                Material.IconButton {
-//                    id: exportit
-//                    anchors.left: parent.left
-//                    anchors.top: parent.top
-//                    Layout.fillHeight: true
-//                    Layout.fillWidth: false
-//                    width: ProtoScreen.guToPx(6)
-//                    height: parent.height
-//                    onClicked: {
-//                        importexportDialog.show();
-//                    }
-
-//                    size: ProtoScreen.guToPx(2.5)
+                    size: ProtoScreen.guToPx(2.5)
 
 
-//                    visible: false//styleData.column === 0
-//                    enabled: false//styleData.column === 0
-//                    action: Material.Action {
-//                        iconName: "awesome/code"
-//                        hoverAnimation: true
-//                    }
-//                }
+                    visible: styleData.column === 0 && !wktt.ss
+                    enabled: styleData.column === 0 && MiddleMan.liveSync === "Live" && !wktt.ss
+                    action: Material.Action {
+                        iconName: "awesome/plus"
+                        hoverAnimation: true
+                    }
+                }
+
+
+                Material.IconButton {
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    onClicked: {
+                          wktt.ss = false
+                    }
+
+                    size: ProtoScreen.guToPx(2.5)
+
+
+                    visible: styleData.column === 0 && wktt.ss
+                    enabled: styleData.column === 0 && MiddleMan.liveSync === "Live" && wktt.ss
+                    action: Material.Action {
+                        iconName: "awesome/minus"
+                        hoverAnimation: true
+                    }
+                }
 
             }
+            Material.TextField {
+                anchors.leftMargin: ProtoScreen.guToPx(.5)
+                width: parent.width
+                height: parent.height * .50
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                placeholderText: "search..."
+                inputMethodHints: Qt.ImhNoPredictiveText;
+                onTextChanged: {
+                }
+                enabled: false//styleData.column === 1
+                visible: false//styleData.column === 1
+                activeFocusOnPress: true
+            }
+
 
             Material.Card {
                 id: mcbot
@@ -902,7 +906,7 @@ Item {
         target: tvr.selection
         onSelectionChanged: {
 
-            rowtt.update();
+            wktt.update();
             console.log("row onSelectionChanged");
         }
     }
@@ -913,7 +917,7 @@ Item {
     }
 
     function update() {
-        console.log(" ROWtradng update")
+        console.log(" MkTrading update")
         tvr.selection.forEach(function(rowIndex) {
             MiddleMan.startDepth(tvr.model.getPlayerSliceModelUid(rowIndex));
             //,tvr.model.roleForName("awardsModel"))

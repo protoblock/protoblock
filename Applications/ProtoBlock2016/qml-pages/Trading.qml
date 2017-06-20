@@ -6,17 +6,18 @@ import Material 1.0
 //import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
-import Material.Styles 1.0
-import QtQuick.Controls.Styles 1.4
+//import Material.Styles 1.0
+//import QtQuick.Controls.Styles 1.4
+//import "../qml-components/TradingContextBanner.qml"
+//import "../qml-components/*.qml"
 
 
 Item {
-    id: topi
 //    property int week:
 //        MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
 //                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
 //    property string seasontext: MiddleMan.seasonString + " 2016 "
-    property string seasontext: MiddleMan.seasonString + " 2016 - Week " + MiddleMan.theWeek
+    property string seasontext: " 2017 Season Trading - " // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
 
     Component.onCompleted: {
@@ -42,7 +43,7 @@ Item {
             text: seasontext + " " + liveorresult
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-            color: themeroot.theme.primaryColor
+            color: liveorresult === "Live" ? "green" : "red"//themeroot.theme.primaryColor
             Layout.fillHeight: true
             Layout.fillWidth: false
             verticalAlignment: Text.AlignVCenter
@@ -62,37 +63,6 @@ Item {
             width: parent.width
             anchors.leftMargin: ProtoScreen.guToPx(.25)
         }
-//        RowLayout {
-//            id: tcb
-//            width: parent.width
-//            anchors.top: cBan.bottom
-//            height: ProtoScreen.guToPx(8)
-
-//            Layout.fillWidth: true
-//            Layout.fillHeight: true
-//            spacing: 1
-
-//            TradingContextBanner {
-//                id: tcbx
-//                anchors.top: tcb.top
-//                Layout.preferredWidth: parent.width * .50
-//    //            anchors.horizontalCenter: parent.horizontalCenter
-//                anchors.left: parent.left
-////                width: parent.width
-//                anchors.leftMargin: ProtoScreen.guToPx(.25)
-//            }
-
-//            FantasyNameContextBanner {
-//                id: fcbx
-//                anchors.top: tcb.top
-//                Layout.preferredWidth: parent.width * .50
-
-//    //            anchors.horizontalCenter: parent.horizontalCenter
-//    //            width: parent.width * .50
-//                anchors.right: parent.right
-//                anchors.rightMargin: ProtoScreen.guToPx(.25)
-//            }
-//        }
 
         Item {
             id: itema
@@ -100,70 +70,12 @@ Item {
             anchors.topMargin: ProtoScreen.guToPx(.25)
             width: parent.width
             height: parent.height - tcbx.height - cBan.height
+
             SplitView {
                 orientation: Qt.Horizontal
                 handleDelegate: handeldel
                 width: parent.width
                 height: parent.height
-//                SplitView {
-//                    id: rightr
-//                    orientation: Qt.Vertical
-////                    handleDelegate: handeldel
-////                    width: parent.width
-//                    height: parent.h`eight
-////                    anchors.leftMargin: 10
-//                    Layout.minimumWidth: parent.width * .20
-//                    Layout.maximumWidth: parent.width * .70
-
-//                    Card {
-//                        MarketDepthTable {}
-//                        Layout.maximumHeight: parent.height * .90
-//                        Layout.minimumHeight: parent.height * .10
-//                        Layout.fillHeight: true
-//                    }
-//                    Card {
-//                        Layout.maximumHeight: parent.height * .90
-//                        Layout.minimumHeight: parent.height * .10
-//                        Orders {
-//                           anchors.fill: parent
-//                        }
-////                        Column{
-////                            anchors.fill: parent
-
-////                            TextField{
-////                                id: txt
-////                                text: "hello"
-////                                property string color: "white"
-////                                style: TextFieldStyle{
-////                                    background: Rectangle {
-////                                        id: rect
-////                                        radius: 2
-////                                        implicitWidth: 100
-////                                        implicitHeight: 24
-////                                        border.color: "#333"
-////                                        border.width: 1
-////                                        color: txt.color
-////                                        Behavior on color {
-////                                            SequentialAnimation {
-////                                                loops: 1
-////                                                ColorAnimation { from: "white"; to: "red"; duration: 1 }
-////                                                ColorAnimation { from: "red"; to: "white";  duration: 3000 }
-////                                            }
-////                                        }
-////                                    }
-////                                }
-////                            }
-////                            Button{
-////                                text: "blink"
-////                                onClicked: {
-////                                    txt.color = "red";
-////                                    txt.color = "white";
-////                                }
-////                            }
-////                        }
-//                    }
-//                }
-
 
                 SplitView {
                     Layout.minimumWidth: parent.width * 0
@@ -184,64 +96,35 @@ Item {
                         Layout.maximumHeight: parent.height
                         Layout.minimumHeight: parent.height * 0
                         backgroundColor: "#f5f5f5"
-                        TabView {
-                            anchors.fill: parent
-                            Tab {
-                                title: "Orders"
-                                Orders {
-                                   anchors.centerIn: parent
-                                   anchors.fill: parent
-                                }
-                            }
-                            Tab {
-                                title: "Buy"
-                                BuyTab {
-                                   anchors.fill: parent
-                                   anchors.centerIn: parent
-                                }
-                            }
-                            Tab {
-                                title: "Sell"
-                                BuyTab {
-                                   anchors.fill: parent
-                                   anchors.centerIn: parent
-                                }
-                            }
-
-                            style: TabViewStyle {
-//                                frameOverlap: ProtoScreen.guToPx(.25)
-                                tabsAlignment: Qt.AlignHCenter
-//                                tabOverlap: ProtoScreen.guToPx(-1)
-                                tab: Rectangle  {
-                                    color: {
-                                        if ( styleData.selected ) return "#f5f5f5"
-                                        else if (styleData.title === "Buy")
-                                            return "green"
-                                        else if ( styleData.title === "Sell")
-                                            return "red"
-                                        else return themeroot.theme.primaryColor
-                                    }
-                                    implicitWidth: ProtoScreen.guToPx(10)
-                                    implicitHeight: ProtoScreen.guToPx(3)
-                                    radius: 2
-                                    Label {
-                                        id: text
-                                        anchors.centerIn: parent
-                                        anchors.fill: parent
-                                        verticalAlignment: Text.AlignVCenter
-                                        horizontalAlignment: Text.AlignHCenter
-                                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-
-                                        text: styleData.title
-                                        color: styleData.selected ? "black" : "#f5f5f5"
-                                    }
-                                }
-                                frame: Rectangle { color: "#f5f5f5" }
-                            }
+                        Orders {
+                           anchors.centerIn: parent
+                           anchors.fill: parent
                         }
                     }
-
                 }
+
+                Card {
+                    id: popcard
+                    Layout.minimumWidth: parent.width * 0
+                    Layout.maximumWidth: parent.width * .25
+                    Layout.fillWidth: false
+                    height: parent.height * .80
+                    enabled: wwww.ss
+                    visible: wwww.ss
+
+                    Card {
+                        anchors.top: parent.top
+                        height: parent.height
+                        ListSymbolSearch {
+                            id: lss
+                            property alias ss: wwww.ss
+                        }
+                        //ROWTradingTable {}
+                    }
+                    onEnabledChanged: {
+                    }
+                }
+
                 Card {
                     Layout.minimumWidth: parent.width * .50
                     Layout.maximumWidth: parent.width
@@ -250,12 +133,15 @@ Item {
 //                    backgroundColor: "grey"
 
                     Card {
+                        id: wkt
                         height: parent.height - bcard.height
                         width: parent.width
-                        id: wkt
-//                        backgroundColor: "orange"
+//                        backgroundColor: wwww.ss ? "grey" : "transparent"
 
-                        WkTradingTable {}
+                        WkTradingTable {
+                            id: wwww
+                        }
+
                     }
 
                     Card {
@@ -275,6 +161,126 @@ Item {
                     }
 
                 }
+            }
+        }
+    }
+
+
+//                    backgroundColor: "transparent"
+/*
+                    ColumnLayout {
+                        height: parent.height
+                        anchors.top: parent.top
+
+                        RowLayout {
+    //                            width: parent.width
+                            Layout.preferredHeight: ProtoScreen.guToPx(6)
+                            spacing: 0
+                            IconButton {
+    //                                anchors.left: parent.left
+    //                                anchors.top: parent.top
+                                Layout.fillHeight: true
+                                Layout.fillWidth: false
+                                Layout.preferredWidth: ProtoScreen.guToPx(6)
+                                height: parent.height
+                                onClicked: {
+                                    wwww.ss = false
+                                }
+
+                                size: ProtoScreen.guToPx(2.5)
+
+                                action: Action {
+                                    iconName: "awesome/minus"
+                                    hoverAnimation: true
+                                }
+                            }
+
+                            Rectangle {
+                                id: rec
+                                color: "green"
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                anchors.margins: ProtoScreen.guToPx(.25)
+                                height: ProtoScreen.guToPx(6)
+                               // width: parent.width - ProtoScreen.guToPx(6)
+                                TextField {
+                                    focus: true
+                                    anchors.leftMargin: ProtoScreen.guToPx(.5)
+                                    anchors.fill: parent
+
+    //                                    id: symbsearch
+                                    width: parent.width / 1.07
+                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                    placeholderText: "search symbol..."
+                                    inputMethodHints: Qt.ImhNoPredictiveText;
+                                    onTextChanged: {
+                                        console.log("text " + displayText)
+                                    }
+                                    activeFocusOnPress: true
+                                    onHoveredChanged: {
+                                        console.log(" text hover" + activeFocus)
+                                    }
+
+                                    color: "black"
+                                    enabled: true
+
+                                }
+
+                                //MouseArea { anchors.fill: parent; onClicked: { scope.focus = true } }
+                            }
+
+                        }
+*//*
+                        ListView {
+                            focus: true
+                            anchors.top: parent.top
+                           // height: parent.height
+    //                        model: MiddleMan.pPlayerSymbolsModel
+                            delegate: Card {
+                                anchors.fill: parent
+                                Label {
+                                    text: modelData
+                                    Layout.fillHeight: true
+                                    verticalAlignment: Text.AlignVCenter
+                                    Layout.fillWidth: false
+    //                                Layout.preferredWidth: (parent.width / 4) - 2
+                                    horizontalAlignment: Text.AlignHCenter
+                                }
+                                Label {
+                                    text: "pid"
+                                    Layout.fillHeight: true
+                                    verticalAlignment: Text.AlignVCenter
+                                    Layout.fillWidth: false
+    //                                Layout.preferredWidth: (parent.width / 4) - 2
+                                    horizontalAlignment: Text.AlignHCenter
+                                }
+                            }
+                            header: TextField {
+                                anchors.leftMargin: ProtoScreen.guToPx(.5)
+                                width: parent.width
+                                //height: parent.height
+                                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                placeholderText: "search..."
+                                inputMethodHints: Qt.ImhNoPredictiveText;
+                                onTextChanged: {
+                                }
+                                enabled: true//false//styleData.column === 1
+                                visible: true//false//styleData.column === 1
+                                activeFocusOnPress: true
+                            }
+                            model: 10//MiddleMan.pPlayerSymbolsModel
+                        }
+//                    }
+                        */
+
+                //}
+
+
+//                    LeaderProjView {
+//                        visible: parent.visible
+//                    }
+//                }
+
 
 //                Card {
 //                    Layout.minimumWidth: parent.width * .10
@@ -291,9 +297,6 @@ Item {
 
 //                    Portfolio {}
 //                }
-            }
-        }
-    }
 
     Component {
         id: handeldel
