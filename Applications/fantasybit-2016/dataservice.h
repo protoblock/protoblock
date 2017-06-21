@@ -43,7 +43,7 @@ public:
 
     PlayerDetail GetPlayerDetail(const std::string &symbol);
 
-    fantasybit::MyFantasyName importMnemonic(std::string &in);
+    fantasybit::MyFantasyName importMnemonic(const std::string &in);
     std::string exportMnemonic(std::string &in);
 
     ordsnap_t

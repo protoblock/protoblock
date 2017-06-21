@@ -39,7 +39,7 @@ public:
         return m_filename;
     }
 
-    std::vector<fantasybit::PlayerPoints> loadProjFromFile() { //string infile = "ProtoblockImportLoader.csv") {
+    const std::vector<fantasybit::PlayerPoints> loadProjFromFile() { //string infile = "ProtoblockImportLoader.csv") {
 
         std::vector<fantasybit::PlayerPoints> result;
 //        string filename = GET_ROOT_DIR() + infile;

@@ -11,8 +11,8 @@ PROTOS += \
     $$PWD/ApiData.proto \
     $$PWD/ExData.proto \
     $$PWD/NameData.proto \
-    $$PWD/StatusData.proto \
     $$PWD/StaticData.proto \
+    $$PWD/StatusData.proto \
     $$PWD/ProtoData.proto \
     $$PWD/StateData.proto
 

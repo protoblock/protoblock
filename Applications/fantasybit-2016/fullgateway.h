@@ -46,7 +46,7 @@ public:
                 this, &FullGateway::LiveProj);
 
         connect( mlapi, &MainLAPIWorker::MyNames,
-                this,  [this](vector<fantasybit::MyFantasyName> &mynames) {
+                this,  [this](vector<fantasybit::MyFantasyName> mynames) {
             m_mynames = mynames;
             if ( heslive )
                 emit MyNames(mynames);

@@ -41,7 +41,7 @@ std::string LdbWriter::read(const std::string &id) {
     return value;
 }
 
-std::string LdbWriter::read(const std::string &id, google::protobuf::Message &msg) {
+std::string LdbWriter::read(const std::string &id, GOOGLE_NAMESPACE::protobuf::Message &msg) {
     auto str = read(id);
     msg.ParseFromString(str);
     return str;

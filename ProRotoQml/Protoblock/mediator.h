@@ -151,7 +151,7 @@ class Mediator : public QObject {
 public:
     static Mediator *instance();
 
-    void CopyTheseProjections(std::vector<fantasybit::PlayerPoints> &these) {
+    void CopyTheseProjections(const std::vector<fantasybit::PlayerPoints> &these) {
         for ( auto t : these) {
             auto *item = mPlayerProjModel.getByUid(t.playerid().data());
             if ( !item ) continue;
@@ -597,7 +597,7 @@ public:
         }
     }
 
-    
+
     bool usingRandomNames = false;
 
     std::vector<std::string> fnames;

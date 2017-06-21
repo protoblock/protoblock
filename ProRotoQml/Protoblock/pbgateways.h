@@ -51,7 +51,7 @@ public:
     virtual fantasybit::GameStatus GetGameStatus(std::string gid)= 0;
 
 
-    virtual fantasybit::MyFantasyName importMnemonic(std::string &in)= 0;
+    virtual fantasybit::MyFantasyName importMnemonic(const std::string &in)= 0;
     virtual std::string exportMnemonic(std::string &in)= 0;
     virtual int GetAvgProjection(const std::string &playerid) = 0;
 

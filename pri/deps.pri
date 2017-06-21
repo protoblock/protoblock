@@ -98,8 +98,23 @@ win32 {
  #   INCLUDEPATH += $${BOOST_DIR}
 
 }
+osx {
+    QMAKE_MAC_SDK = macosx10.12
+}
+macx {
+#    include(/Users/satoshi/work/trading.football/externals/leveldb.pri)
+#    LIBS+=/Users/satoshi/work/fantasybit-2015/libosx64/libleveldb.a
+}
 
-##############
+unix:macx {
+#    LIBS+=/usr/local/lib/libleveldb.a
+#    LIBS+=/Users/satoshi/work/leveldb/libleveldb.a
+#    INCLUDEPATH += /Users/satoshi/Desktop/fc/osx/protoblock/3rdParty
+    LIBS += /Users/satoshi/work/fantasybit-2015/externals/leveldb/libleveldb.a
+    INCLUDEPATH += /Users/satoshi/work/fantasybit-2015/externals/leveldb/include/
+}
+
+##############Ï
 ##     OSX
 ##############
 
@@ -108,11 +123,13 @@ macx{
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+#    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+    LIBS += /Users/satoshi/Desktop/fc/osx/protobuf/protobuf-2.5.0/src/.libs/libprotobuf.a
+    PRE_TARGETDEPS += /Users/satoshi/Desktop/fc/osx/protobuf/protobuf-2.5.0/src/.libs/libprotobuf.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
+#    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
+#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
 
     LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
