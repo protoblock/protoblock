@@ -18,8 +18,10 @@ Item {
     property string symbolp
     property string refnum
     property int elevation : 0
-    property int maximumLineCount: 2
-    height: maximumLineCount == 2 ? ProtoScreen.guToPx(8)  : ProtoScreen.guToPx(10)
+//    property int maximumLineCount: 2
+ //   height: maximumLineCount == 2 ? ProtoScreen.guToPx(8)  : ProtoScreen.guToPx(10)
+    height: parent.height
+    width: parent.width
 
     Material.Card{
         elevation: omscard.elevation
@@ -28,36 +30,22 @@ Item {
 
         RowLayout {
             id: rowLayout1
-            anchors.fill: parent
-
+            height: parent.height
+            width: parent.width
 
             Material.IconButton{
                 Layout.fillHeight: true
                 Layout.fillWidth: false
                 Layout.preferredWidth: (parent.width / 6) - 2
-//              hasColor: true
                 color: "red"
-//                iconSource: "qrc:/icons/navigation_close.png"
                 onClicked: {
                     MiddleMan.doCancel(refnum)
                 }
                 action: Material.Action {
-//                        name: "Copy-Clone Projection"
                     iconName: "awesome/times"
-//                    text: "Copy-Clone Projection"
-//                    tooltip: "Copy and Replace your projection"
-//                        hoverAnimation: true
                 }
 
             }
-
-//            Rectangle{
-//                id: info
-//                Layout.fillHeight: true
-//                Layout.fillWidth: false
-//                Layout.preferredWidth:   2
-//                color: infoColor
-//            }
 
             Material.Label {
                 id: label1
