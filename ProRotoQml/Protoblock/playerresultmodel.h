@@ -197,14 +197,14 @@ public:
 
             //add home players
             for(const auto& playerresult : game.home_result()) {
-                PlayerBase &pd = ds->GetPlayerBase(playerresult.playerid());
+                const PlayerBase &pd = ds->GetPlayerBase(playerresult.playerid());
                 append(new PlayerResultModelItem(pd,home,gameId,playerresult,usename,this));
 
             }
 
             //add away players
             for(const auto& playerresult : game.away_result()) {
-                PlayerBase &pd = ds->GetPlayerBase(playerresult.playerid());
+                const PlayerBase &pd = ds->GetPlayerBase(playerresult.playerid());
                 append(new PlayerResultModelItem(pd,away,gameId,playerresult,usename,this));
             }
         }
@@ -420,14 +420,14 @@ protected:
 };
 
 
-
+}
+using namespace pb;
 Q_DECLARE_METATYPE(PlayerResultModelItem*)
 Q_DECLARE_METATYPE(PlayerResultModel*)
 Q_DECLARE_METATYPE(FantasyBitAwardModelItem *)
 Q_DECLARE_METATYPE(QQmlObjectListModel<FantasyBitAwardModelItem> *)
 
 
-}
 
 #endif // PlayerResultMODEL_H
 

@@ -259,7 +259,7 @@ void NFLStateData::init() {
     status = leveldb::DB::Open(options, filedir("staticstore"), &db1);
     staticstore.reset(db1);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("staticstore");
+        qCritical() << " cant open " << filedir("staticstore").data ();
         //todo emit fatal
         return;
     }
@@ -268,7 +268,7 @@ void NFLStateData::init() {
     status = leveldb::DB::Open(options, filedir("statusstore"), &db2);
     statusstore.reset(db2);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("statusstore");
+        qCritical() << " cant open " << filedir("statusstore").data ();
         //todo emit fatal
         return;
     }
@@ -277,7 +277,7 @@ void NFLStateData::init() {
     status = leveldb::DB::Open(options, filedir("playerstore"), &db3);
     playerstore.reset(db3);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("playerstore");
+        qCritical() << " cant open " << filedir("playerstore").data ();
         //todo emit fatal
         return;
     }
@@ -286,7 +286,7 @@ void NFLStateData::init() {
     status = leveldb::DB::Open(options, filedir("statsstore"), &db4);
     statsstore.reset(db4);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("statsstore");
+        qCritical() << " cant open " << filedir("statsstore").data ();
         //todo emit fatal
         return;
     }
@@ -593,7 +593,7 @@ void NFLStateData::AddGameResult(const std::string &gameid, const GameResult&gs)
     if (!staticstore->Put(write_sync, key, gs.SerializeAsString()).ok()) {
         qWarning() << "cant add gameresult" << gameid;
     }
-    qDebug() << key << QString::fromStdString(gs.DebugString());
+    qDebug() << key.data ()<< gs.DebugString().data ();
     if ( amlive )
         emit NewGameResult(gameid);
 
@@ -670,7 +670,7 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
 }
 
 void NFLStateData::UpdatePlayerStats(const PlayerResult &pr) {
-    PlayerResult &curr = GetPlayerStats(pr.playerid());
+    const PlayerResult &curr = GetPlayerStats(pr.playerid());
     PlayerResult next;
     next.set_playerid(pr.playerid());
 
@@ -789,7 +789,7 @@ void NFLStateData::UpdateGameStatus(const std::string &gameid, const GameStatus 
     string key = "gamestatus:" + gameid;
     if (!statusstore->Put(write_sync, key, use.SerializeAsString()).ok())
         qWarning() << "!ok" << "cant update status";
-    qDebug() << key << use.DebugString().data();
+    qDebug() << key.data ()<< use.DebugString().data();
 }
 
 void NFLStateData::OnWeekOver(int in) {

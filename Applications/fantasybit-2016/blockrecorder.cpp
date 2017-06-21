@@ -31,13 +31,13 @@ void BlockRecorder::init() {
     qDebug() << filedir("blockstatus").data();
     if (!status.ok()) {
         std::string err = status.ToString();
-        qWarning() << err;
+        qWarning() << err.data();
     }
     blockstatus.reset(db1);
     std::string value;
     status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);
     if (!status.ok()) {
-        lastBlock =  BlockRecorder::zeroblock -1;
+        lastBlock =  BlockRecorder::zeroblock;
         qWarning() << "!ok no blocks start from " << lastBlock;
     }
     else {

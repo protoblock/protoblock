@@ -1,6 +1,6 @@
 osx{
-    DEFINES += GOOGLE_NAMESPACE=google_public
-    GENERATEDDIR = $$PWD/../generated-public
+    DEFINES += GOOGLE_NAMESPACE=google
+    GENERATEDDIR = $$PWD/../generated
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
     DEPENDPATH+= /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 }

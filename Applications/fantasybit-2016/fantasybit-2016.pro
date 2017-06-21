@@ -27,9 +27,9 @@ TEMPLATE = lib
 
 #DEFINES += TRACE
 
+    include($$PWD/../../pri/core.pri)
 
 win32 {
-    include($$PWD/../../pri/core.pri)
 }
 
 
@@ -68,7 +68,7 @@ SOURCES += \
     $$PWD/NodeWorker.cpp \
     $$PWD/iresolvable.cpp \
     $$PWD/dataservice.cpp \
-    fullgateway.cpp \
+    $$PWD/fullgateway.cpp \
     $$PWD/importLoader.cpp
 
 

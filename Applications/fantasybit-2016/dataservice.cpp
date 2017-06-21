@@ -95,7 +95,7 @@ fantasybit::GlobalState DataService::GetGlobalState() {
 }
 
 
-MyFantasyName DataService::importMnemonic(std::string &in) {
+MyFantasyName DataService::importMnemonic(const std::string &in) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->Agent().UseMnemonic(in);
 }

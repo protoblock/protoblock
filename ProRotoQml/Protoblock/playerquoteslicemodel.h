@@ -733,14 +733,14 @@ protected:
 };
 
 
+
+}
+
+using namespace pb;
 Q_DECLARE_METATYPE(PlayerQuoteSliceModel*)
 Q_DECLARE_METATYPE(PlayerQuoteSliceModelItem*)
 Q_DECLARE_METATYPE(PlayerSymbolsModel*)
 Q_DECLARE_METATYPE(PlayerSymbolsModelItem*)
-
-
-
-}
 
 //https://github.com/mkawserm/ModelsTest/blob/master/main.cpp
 

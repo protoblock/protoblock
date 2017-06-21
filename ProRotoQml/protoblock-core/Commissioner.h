@@ -312,7 +312,7 @@ public:
     static const int GENESIS_NUM = 1;
 
 
-    static bool verify(const pb::signature &sig, const pb::sha256 &digest, pb::public_key_data& pk) {
+    static bool verify(const pb::signature &sig, const pb::sha256 &digest, const pb::public_key_data& pk) {
           return pb::public_key(pk).verify(digest, sig);// pb::public_key(sig, digest) == pub;
     }
 

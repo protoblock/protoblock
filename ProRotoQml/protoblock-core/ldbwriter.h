@@ -30,7 +30,7 @@ public:
         return ret;
     }
 
-    std::string write(const google::protobuf::Message &msg) {
+    std::string write(const GOOGLE_NAMESPACE::protobuf::Message &msg) {
         return write(msg.SerializeAsString());
     }
 
@@ -52,7 +52,7 @@ public:
      * @return
      */
     std::string read(const std::string &id,
-                     google::protobuf::Message &msg);
+                     GOOGLE_NAMESPACE::protobuf::Message &msg);
 
     ~LdbWriter() {
 //        if ( db ) delete db;

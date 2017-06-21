@@ -44,7 +44,7 @@ void ExchangeData::init() {
     status = leveldb::DB::Open(options, filedir("settlestore"), &db1);
     settlestore.reset(db1);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("settlestore");
+        qCritical() << " cant open " <<  filedir("settlestore").data();
         //todo emit fatal
         return;
     }
@@ -130,7 +130,7 @@ void ExchangeData::init() {
     leveldb::DB *db2;
     status = leveldb::DB::Open(optionsInt, filedir("bookdeltastore"), &db2);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("bookdeltastore");
+        qCritical() << " cant open " << filedir("bookdeltastore").data();
         //todo emit fatal
         return;
     }
@@ -261,7 +261,7 @@ void ExchangeData::init() {
     status = leveldb::DB::Open(options, filedir("posstore"), &db4);
     posstore.reset(db4);
     if ( !status.ok() ) {
-        qCritical() << " cant open " + filedir("posstore");
+        qCritical() << " cant open " << filedir("posstore").data();
         //todo emit fatal
         return;
     }
@@ -523,7 +523,7 @@ void ExchangeData::OnNewPosition(const string &fname,
 
     string key(fname + ":" + symbol);
     if (!posstore->Put(write_sync, key, spos.SerializeAsString()).ok())
-        qWarning() << " error writing posstore" << fname << symbol;
+        qWarning() << " error writing posstore" << fname.data() << symbol.data();
 
     mLimitBooks[symbol]->mPkPos[fname] = pos;
 
@@ -1246,7 +1246,7 @@ qDebug() << "level2 New Bid " << order.core().price() << order.core().size();
              //mFeed.Executi    on(order, BookFeed.OrdStatus.New, 0);
              //Send(new BookFeedData(ExecType.New,order));
              //}
-         }         
+         }
      }
 
     return havepos;
@@ -1507,7 +1507,7 @@ qDebug() << "level2 ExchangeData OnLive qqqqqq" << fnames.size();
     }
 #endif
 
-    auto &st = DataService::instance()->GetGlobalState();
+    const auto &st = DataService::instance()->GetGlobalState();
     mWeek = st.week();
 
 //    doEmitSnap();

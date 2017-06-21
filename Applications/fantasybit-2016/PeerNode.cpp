@@ -29,7 +29,7 @@
 #include <QFileInfo>
 #include "globals.h"
 using namespace std;
-	
+
 namespace fantasybit
 {
 
@@ -358,7 +358,7 @@ bool Node::SyncTo(int32_t gh) {
 
             //fork
             if ( (*sb).signedhead().head().prev_id() != previd ) {
-                qWarning() << (*sb).signedhead().head().prev_id() << " != prev " << previd.data();
+                qWarning() << (*sb).signedhead().head().prev_id().data() << " != prev " << previd.data();
                 forking = true;
                 if ( !BackFork((*sb).signedhead().head().prev_id(),current_hight) )
                     return forking = false;
@@ -437,7 +437,7 @@ bool Node::BackFork(const string &goodid, int32_t num) {
 
         id = FantasyAgent::BlockHash(*gb);
         if ( id != prevprev ) {
-            qCritical() << " expect pre_id t equal id(prev)" << prevprev << id;
+            qCritical() << " expect pre_id t equal id(prev)" << prevprev.data() << id.data();
             return false;
         }
 
