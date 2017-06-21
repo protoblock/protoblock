@@ -478,7 +478,7 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         double avg = 0;
         double pnl = 0;
         if ( netqty == 0 ) {
-            pnl = tit->get_netprice() * 100.0;
+            pnl = tit->get_netprice() * tit->get_multiplier();
         }
         else {
             int price = (netqty > 0) ? it->get_bid() : it->get_ask();
@@ -505,7 +505,7 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
             if ( price == 0 )
                 pnl = 0.0;
             else
-                pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+                pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
 //            qDebug() << ++i << " here ";
 
@@ -831,7 +831,7 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     double avg = 0;
     double pnl = 0;
     if ( netqty ==0 ) {
-        pnl = tit->get_netprice() * 100.0;
+        pnl = tit->get_netprice() * tit->get_multiplier();
     }
     else if ( it != nullptr ) {
         int price = (netqty > 0) ? it->get_bid() : it->get_ask();
@@ -840,7 +840,7 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
         if ( price == 0 )
             pnl = 0;
         else
-            pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+            pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
         avg = tit->get_netprice()  / (netqty * -1.0);
     }
 
@@ -869,7 +869,7 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
     double avg = 0;
     double pnl = 0;
     if ( netqty == 0 ) {
-        pnl = tit->get_netprice() * 100.0;
+        pnl = tit->get_netprice() * tit->get_multiplier();
     }
     else if ( it != nullptr ) {
         int price = (netqty > 0) ? it->get_bid() : it->get_ask();
@@ -878,7 +878,7 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
         if ( price == 0 )
             pnl = 0;
         else
-            pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+            pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
         avg = tit->get_netprice()  / (netqty * -1.0);
     }
 

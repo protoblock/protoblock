@@ -67,6 +67,7 @@ class PlayerQuoteSliceModelItem : public QObject {
 
     QML_READONLY_CSTREF_PROPERTY (QString, playerid)
     QML_READONLY_CSTREF_PROPERTY (QString, symbol)
+    QML_READONLY_CSTREF_PROPERTY (qint32, multiplier)
 
     QML_READONLY_CSTREF_PROPERTY (QString, pos)
     QML_READONLY_CSTREF_PROPERTY (QString, lastname)
@@ -187,7 +188,7 @@ public:
 //        m_hi = in.ohlc().high();
 //        m_lo = in.ohlc().low();
         m_playerid = in.get_playerid();
-        m_symbol = m_playerid;
+        m_symbol = m_playerid; //TODO
 //        mDepthMarketModel.append(new DepthMarketModelItem(100,2,30,50));
 //        mDepthMarketModel.append(new DepthMarketModelItem(200,1,31,1));
         m_lastprice = 0;
@@ -198,7 +199,9 @@ public:
         m_symbol(symb.data()),
         mDepthMarketModel{},
         m_pDepthMarketModel{&mDepthMarketModel},
-        QObject(nullptr) {}
+        QObject(nullptr) {
+        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
+    }
 
     void setProperties(const fantasybit::PlayerDetail &in,
                        PlayerSymbolsModelItem *p ,
@@ -229,6 +232,7 @@ public:
 
         setplayerid(ms.symbol().data());
         setsymbol(ms.symbol().data());
+        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
 
         Update(ms);
     }
@@ -239,7 +243,7 @@ public:
                         QObject(nullptr) {
 
         setplayerid(it->get_playerid());
-        setsymbol(it->get_playerid());
+        setsymbol(it->get_playerid());//TODO
 //        qDebug() << " PlayerQuoteSliceModelItem new " << it->get_playerid();
         Update(it);
     }

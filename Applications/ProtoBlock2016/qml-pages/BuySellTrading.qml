@@ -88,7 +88,7 @@ Item {
                     id: buyspin
                     decimals: 0
                     stepSize: 1.0
-                    maximumValue: 40
+                    maximumValue: (inplay.multiplier && inplay.multiplier > 0) ? (400 / inplay.multiplier) : 400;
                     minimumValue:  1
                     value: 1
                     Layout.column: 2
@@ -217,14 +217,14 @@ Item {
                     id: sellspin
                     decimals: 0
                     stepSize: 1.0
-                    maximumValue: 40
+                    maximumValue: (inplay.multiplier && inplay.multiplier > 0) ? (400 / inplay.multiplier) : 400;
                     minimumValue:  1
-                    value: 40
+                    value: maximumValue
                     Layout.column: 2
                     Layout.row: 1
     //                anchors.centerIn: parent
                     onValueChanged: {
-
+                        console.log(inplay.multiplier + "multiplier " + maximumValue)
                     }
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true
