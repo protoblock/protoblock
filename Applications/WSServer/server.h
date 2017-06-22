@@ -211,3 +211,41 @@ signals:
 
 
 #endif //SERVER_H
+/*
+ *
+ *
+ *
+class Server {
+public:
+    fantasybit::GetAllNamesRep mAllNamesRep;
+    static fantasybit::ExchangeData TheExchange;
+//    static fantasybit::GetROWMarketRep ROWMarketRep;
+    static NFLStateData  NFLData;
+    std::unordered_map<std::string,FantasyNameBal *> mPk2Bal;
+
+    void AddNames(const FantasyNameBal &fnb) {
+        mAllNamesRep.add_names(fnb.name());
+        FantasyNameBal *p = Server::AllNamesRep.add_fnb();
+        p->CopyFrom(fnb);
+        Pk2Bal.insert({fnb.public_key(),p});
+    }
+
+    void AddNames(FantasyNameBal *pFn) {
+        Server::AllNamesRep.add_names(pFn->name());
+        Server::AllNamesRep.mutable_fnb()->AddAllocated(pFn);
+        Pk2Bal.insert({pFn->public_key(),pFn});
+
+    }
+
+    static bool goodPid(const std::string &pid) {
+        auto pb = NFLData.GetPlayerBase(pid);
+        return pb.has_last() && pb.last() != "";
+    }
+
+    static std::unordered_map<std::string,FantasyNameBal> myNewNames;
+
+};
+
+
+
+ */

@@ -8,6 +8,7 @@
 #include "StateData.pb.h"
 #include <iostream>
 #include <stdexcept>
+#include "ExData.pb.h"
 #include <stack>
 #include <utility>
 #include <functional>
@@ -30,12 +31,30 @@ class LiteServer : public QObject
     Q_OBJECT
 public:
     explicit LiteServer(quint16 port, bool debug = false, QObject *parent = Q_NULLPTR);
-//    ~LiteServer();
+    ~LiteServer();
+    enum Incoming{
+        GetBlockHeader,
+        GetLeaderBoardTree,
+        GetLeaderBoardItem,
+        GetTicker,
+        GetStats,
+        GetPlayerInfo,
+        GetAwardsItem,
+        GetMerkleTree,
+        GetDrillMerkle,
+        UnKnown
+    };
 
+    struct fnameptrs {
+        fnameptrs(AllOdersFname *ao = nullptr) : fnameAllOdersFname(ao) {}
+        AllOdersFname *fnameAllOdersFname;
+        std::unordered_map<int32_t,Order *> mSeqOrderMap;
+        std::unordered_map<string, AllOdersSymbol *>    fnamesymbolAllOrders;
+        std::unordered_map< AllOdersSymbol *, std::stack<Order *>>  openOrderSlots;
+        std::stack<AllOdersSymbol *> openOrderSymbolSlot;
+    };
 
-//    Incoming setEnum(const QString &string);
-
-//    QStringList createCommandArgument(const QString &cmd);
+    Incoming setEnum(const QString &string);
 
     void doSendLeaders(QWebSocket *pClient);
 public slots:
@@ -46,9 +65,16 @@ public slots:
 
         qDebug()  << " socket yes " << name.data();
         doSendProjections(it->second,name);
-//        doSendLeaders(it->second);
     }
 
+    Order *addOrder(fnameptrs &fptr, AllOdersSymbol *allords, const Order &orderin);
+    void cleanIt(fnameptrs &fptr);
+    fnameptrs &getfnameptrs(const std::string &fname, bool clean = false);
+    void cleanIt(const std::string &fname);
+public slots:
+    void OnDepthDelta(fantasybit::DepthFeedDelta *df);
+    void OnNewOO(const fantasybit::FullOrderDelta &);
+    void OnNewPos(const fantasybit::FullPosition &);
     void GameStart(string gameid);
     void OnLive();
 
@@ -61,31 +87,31 @@ private Q_SLOTS:
     void processBinaryMessage(const QByteArray &message);
     void socketDisconnected();
     void handleError(const QString err);
-
+    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
+    void OnMarketTicker(fantasybit::MarketTicker *);
+    void OnTradeTick(fantasybit::TradeTic*);
 private:
+    void processBinaryTxMessage(const QByteArray &message);
     QString m_errorString;
     QWebSocketServer *m_pWebSocketServer;
+    QList<QWebSocket *> m_clients;
     bool m_debug;
     quint16 mport;
     std::string mRepstr;
+    fantasybit::GetROWMarketRep mROWMarketRep;
+    std::unordered_map<std::string, ROWMarket *> mPidROWMarket;
+    std::unordered_map<std::string, GetDepthRep *> mPidGetDepthRep;
     WSReply gameStart;
 
-
-//    fantasybit::GetROWMarketRep mROWMarketRep;
-//    std::unordered_map<std::string, ROWMarket *> mPidROWMarket;
-//    std::unordered_map<std::string, GetDepthRep *> mPidGetDepthRep;
 
 //    std::unordered_map<std::string,std::unordered_map<std::string, AllOdersSymbol *>> mAllOdersFname;
 //    std::unordered_map<int32_t,std::unordered_map<std::string, AllOdersSymbol *>> mAllOdersFname;
 
-//    ROWMarket *getRowmarket(const std::string &pid);
-//    GetDepthRep * getDepthRep(const std::string &playerid);
+    ROWMarket *getRowmarket(const std::string &pid);
+    GetDepthRep * getDepthRep(const std::string &playerid);
 
-//    std::unordered_map<QWebSocket *, std::vector<std::string>> mSocketSubscribed;
-//    std::unordered_map<std::string, std::set<QWebSocket *>> mFnameSubscribed;
-
-    std::unordered_map<std::string, QWebSocket *> mFnameSubscribed;
-    std::unordered_map<QWebSocket *, std::string> mSocketSubscribed;
+    std::unordered_map<QWebSocket *, std::vector<std::string>> mSocketSubscribed;
+    std::unordered_map<std::string, std::set<QWebSocket *>> mFnameSubscribed;
 
 //    std::unordered_map< std::pair<std::string, std::string> , std::vector<Order *>>  reservedOrder;
 //    std::unordered_map< std::pair<std::string, std::string> , std::vector<AllOdersSymbol *>>  reserveAllOdersSymbol;
@@ -94,11 +120,13 @@ private:
 
 
 
-//    std::unordered_map< std::string, fnameptrs>  fnameptrsmap;
+    std::unordered_map< std::string, fnameptrs>  fnameptrsmap;
 
-//    void getFnameSnap(const std::string &fname);
-//    AllOdersSymbol * getAllOdersSymbol(fnameptrs &fptr,const std::string &symbol);
-//    AllOdersFname *getAllOdersFname(const std::string &fname);
+    void getFnameSnap(const std::string &fname);
+    AllOdersSymbol * getAllOdersSymbol(fnameptrs &fptr,const std::string &symbol);
+    AllOdersFname *getAllOdersFname(const std::string &fname);
+
+
 
     GetProjectionRep *mGetProjectionRep;
     WSReply mWSReplyGetProjectionRep;
