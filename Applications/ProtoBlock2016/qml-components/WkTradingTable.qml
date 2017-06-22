@@ -13,6 +13,7 @@ Item {
     anchors.fill: parent
 
     property bool ss: false
+    property bool posvisible: false
     property variant selectedModel
 //    property alias ccount: tvr.columnCount
     property int focuscount: 0
@@ -172,6 +173,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(8)
                 delegate: posdel
+                visible: posvisible
             }
 
             TableViewColumn {
@@ -181,6 +183,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(8)
                 delegate: avgdel
+                visible: posvisible
             }
 
 
@@ -698,9 +701,9 @@ Item {
                     action: Material.Action {
                         iconName: "awesome/plus"
                         hoverAnimation: true
+                        name: "add symbols"
                     }
                 }
-
 
                 Material.IconButton {
                     anchors.left: parent.left
@@ -721,6 +724,78 @@ Item {
                     action: Material.Action {
                         iconName: "awesome/minus"
                         hoverAnimation: true
+                    }
+                }
+
+                Material.IconButton {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+//                    color: themeroot.theme.accentColor
+                    onClicked: {
+                        console.log("clicked send")
+                        rootLoader.source = "qrc:/Account.qml"
+                        pageHelper.selectedTabIndex = 3;
+                    }
+                    size: ProtoScreen.guToPx(2.5)
+
+
+                    visible: realRoot.uname === "" && styleData.column === ocol
+                    enabled: visible && MiddleMan.liveSync === "Live"
+                    action: Material.Action {
+//                        iconName: "awesome/user-o"
+                        iconName: "qrc:/icons/action_account_circle.png"
+                        hoverAnimation: true
+                        name: "Claim Fantasyname"
+                    }
+                }
+
+                Material.IconButton {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    color: Material.Theme.light.textColor
+                    onClicked: {
+                        posvisible = true;
+                    }
+                    size: ProtoScreen.guToPx(1.5)
+
+
+                    visible: realRoot.uname !== "" && styleData.column === ocol && !posvisible
+                    enabled: visible && MiddleMan.liveSync === "Live"
+                    action: Material.Action {
+                        iconName: "awesome/expand"
+                        hoverAnimation: true
+                        name: "details"
+                    }
+                }
+
+                Material.IconButton {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    Layout.fillHeight: false
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    onClicked: {
+                        posvisible = false;
+                    }
+                    size: ProtoScreen.guToPx(1.5)
+                    color: Material.Theme.light.textColor
+
+
+                    visible: styleData.column === ocol + 1 && posvisible
+                    enabled: visible && MiddleMan.liveSync === "Live"
+                    action: Material.Action {
+                        iconName: "awesome/compress"
+//                        hoverAnimation: true
+                        name: "less"
                     }
                 }
 

@@ -17,7 +17,7 @@ Item {
 
     ListView {
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(5)
+        height: parent.height
         implicitWidth: parent.width
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
@@ -28,7 +28,6 @@ Item {
 
         delegate: RowLayout {
             width: parent.width
-            Layout.margins: 0
             height: ProtoScreen.guToPx(4)
                 Material.IconButton{
                     Layout.fillHeight: false
@@ -68,61 +67,101 @@ Item {
                 }
         }
 
+        header: headerdel
 
-        header: Material.Card {
+    }
+
+    Component {
+        id: headerdel
+//    Rectangle {
+//    z: 2
+//    width: parent.width
+//    Layout.margins: 0
+//    height: ProtoScreen.guToPx(5)
+//    color: "transparent"
+//    anchors.fill: parent
+////            anchors.margins: ProtoScreen.guToPx(.25)
+
+        Rectangle {
             z: 2
             width: parent.width
-            Layout.margins: 0
-            height: ProtoScreen.guToPx(5)
+            height: ProtoScreen.guToPx(8)
+//            anchors.margins: ProtoScreen.guToPx(.5)
+            color: "white"
+            Rectangle {
+                color: "transparent"
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.leftMargin: ProtoScreen.guToPx(.25)
+                width: parent.width * .75
+                height: parent.height
+                RowLayout {
+                    anchors.centerIn: parent
+                    spacing: ProtoScreen.guToPx(1)
+                    Material.Label {
+                        text: "Symbol:"
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    }
 
-            RowLayout {
-            width: parent.width
-            Layout.margins: 0
-            height: ProtoScreen.guToPx(5)
-            Material.IconButton{
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width * .20)
-                color: "black"
+                    Material.TextField {
+                    id: sf
+    //                anchors.left: parent.left
+    //                anchors.top: parent.top
+    //                height: parent.height
+    //                Layout.fillWidth: true
+    //                Layout.fillHeight: false
+    ////                anchors.verticalCenter: parent.verticalCenter
+    //                anchors.leftMargin: ProtoScreen.guToPx(.5)
+    //    //                    anchors.centerIn: parent
+    ////                Layout.preferredWidth: (parent.width * .80)
+    //                width: ProtoScreen.guToPx(12)
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.capitalization: Font.AllUppercase
+                    placeholderText: "Search..."
+                    inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhUppercaseOnly;
+    //                onTextChanged: {
+    //    //                        if ( length > 1 )
+    //    //                           MiddleMan.pPlayerSymbolsModel.filterString = text
+    //                }
+
+                    onAccepted: {
+                        MiddleMan.pPlayerSymbolsModel.filterString = text.toUpperCase()
+    //                    focus= true
+                    }
+
+                    helperText: "Initials + Position"
+                    enabled: true//false//styleData.column === 1
+                    visible: true//false//styleData.column === 1
+                    activeFocusOnPress: true
+                    focus: true
+                }
+
+                    Material.IconButton {
+                        onClicked: {
+                            MiddleMan.pPlayerSymbolsModel.filterString = sf.text.toUpperCase()
+                        }
+                        action: Material.Action {
+                            iconName: "awesome/search"
+                        }
+                        size: ProtoScreen.guToPx(2)
+                        hoverAnimation: true
+                    }
+                }
+            }
+            Material.IconButton {
+                anchors.right: parent.right
+                anchors.top: parent.top
+//                Layout.fillHeight: true
+//                Layout.fillWidth: false
+//                Layout.preferredWidth: (parent.width * .20)
+//                color: "black"
                 onClicked: {
                     listsearch.ss = false
                 }
                 action: Material.Action {
-                    iconName: "awesome/minus"
+                    iconName: "awesome/times"
                 }
                 size: ProtoScreen.guToPx(2.5)
-            }
-
-            Material.Card {
-                height: parent.height
-                implicitWidth:parent.width
-                TextField {
-                    height: parent.height
-                    anchors.leftMargin: ProtoScreen.guToPx(.5)
-                    width: parent.width * 60
-                    //height: parent.height
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
-                    font.capitalization: Font.AllUppercase
-                    placeholderText: "search..."
-                    inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhUppercaseOnly;
-                    onTextChanged: {
-//                        if ( length > 1 )
-//                           MiddleMan.pPlayerSymbolsModel.filterString = text
-                    }
-
-                    onEditingFinished: {
-                        MiddleMan.pPlayerSymbolsModel.filterString = text.toUpperCase()
-
-                    }
-
-
-                    //helperText: "player name search"
-                    enabled: true//false//styleData.column === 1
-                    visible: true//false//styleData.column === 1
-                    activeFocusOnPress: true
-
-                }
-            }
             }
         }
     }
