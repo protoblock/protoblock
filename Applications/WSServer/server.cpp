@@ -1,12 +1,12 @@
 #include "server.h"
 
 //fantasybit::GetAllNamesRep mAllNamesRep{};
-fantasybit::ExchangeData Server::TheExchange{};
+//fantasybit::ExchangeData Server::TheExchange{};
 //fantasybit::GetROWMarketRep Server::ROWMarketRep{};
 //fantasybit::NFLStateData Server::NFLData;
 
 //decltype(Server::Pk2Bal) Server::Pk2Bal{};
-decltype(Server::myNewNames) Server::myNewNames{};
+//decltype(Server::myNewNames) Server::myNewNames{};
 
 Server *Server::instance() {
     if (myInstance == NULL) {
@@ -18,6 +18,7 @@ Server *Server::instance() {
 void Server::setupConnection(pb::IPBGateway *ingateway) {
 
     QObject* that = dynamic_cast<QObject*>(ingateway);
+    mGateway = that;
     connect( that, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
             this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
 
@@ -78,6 +79,13 @@ void Server::setupConnection(pb::IPBGateway *ingateway) {
 
 
 //    return that;
+}
+
+void Server::init() {
+    connect( mOGateway, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
+            this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
+
+    ready();
 }
 
 void Server::LiveGui(GlobalState gs) {

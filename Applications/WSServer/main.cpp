@@ -70,7 +70,8 @@ int main(int argc, char *argv[])
                                      DataService::instance());
 
     Server::instance()->setContext(fg);
-    fg->ClientReady();
+    Server::instance()->init();
+//    fg->ClientReady();
 
 //    TxServer *txserver = new TxServer(PB_WS_TX_PORT, debug);
 //    QObject::connect(txserver, &TxServer::closed, &a, &QCoreApplication::quit);

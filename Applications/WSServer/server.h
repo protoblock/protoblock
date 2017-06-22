@@ -11,7 +11,7 @@
 #include "Commissioner.h"
 #include <unordered_set>
 
-using namespace fantasybit;
+namespace fantasybit {
 
 class Server : public QObject {
     Q_OBJECT
@@ -31,13 +31,24 @@ class Server : public QObject {
 public:
 
     static Server *instance();
+    pb::IPBGateway *mGateway = nullptr;
+    QObject *mOGateway;
+    void setupConnection(pb::IPBGateway *ingateway);
+    void init();
+
+signals:
+    void ready();
+
+
+
+
     WSReply mGetCurrRostersReply;
     fantasybit::GetAllNamesRep mAllNamesRep;
     fantasybit::GetCurrRostersRep *mGetCurrRostersRep;
     QByteArray mGetCurrRostersRepStrBytesWSReply;
     std::string mGetCurrRostersRepStrWSreply;
 
-    static fantasybit::ExchangeData TheExchange;
+//    static fantasybit::ExchangeData TheExchange;
 
     GetGlobalStateRep GlobalStateRep;
     GetScheduleRep ScheduleRep;
@@ -210,6 +221,7 @@ signals:
 };
 
 
+}
 #endif //SERVER_H
 /*
  *
