@@ -5,8 +5,8 @@
 #include "server.h"
 
 #include "core.h"
-#include "fullgateway.h"
-
+#include "wsgateway.h"
+#include "LiteServer.h"
 
 #include "Commissioner.h"
 void sortedPermutations ( char str[] );
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     Core::instance()->bootstrap();
 
-    pb::FullGateway *fg = new pb::FullGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
+    pb::WsGateway *fg = new pb::WsGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
                                      DataService::instance());
 
     Server::instance()->setContext(fg);

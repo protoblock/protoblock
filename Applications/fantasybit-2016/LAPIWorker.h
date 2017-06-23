@@ -158,12 +158,13 @@ public slots:
     //void OnNameBal(fantasybit::FantasyNameBal);
     //void OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
 
+    void DoSubscribe(const string &name, bool suborun);
+
     //dataagent
 #ifdef DATAAGENT
     void BeOracle();
 #endif
 private:
-    void DoSubscribe(const string &name, bool suborun);
 
     bool Process(fantasybit::Block &b);
     bool doProcessBlock();

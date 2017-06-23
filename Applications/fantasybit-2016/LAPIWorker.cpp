@@ -310,7 +310,6 @@ void MainLAPIWorker::Timer() {
     }
 #endif
 
-    qDebug() << "? Timer ";
     bool numtogtlast;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
@@ -349,7 +348,7 @@ void MainLAPIWorker::Timer() {
     //        qInfo() << " timerr " << interval;
             if ( interval < intervalmax && interval > 500) {
                 timer->start(interval);
-    //            qInfo() << " timeout ";
+                qDebug() << " timeout " << interval;
     //            if ( true )
     //                emit GameStart("201600110");
             }
@@ -607,7 +606,7 @@ void MainLAPIWorker::DoPostTr(SignedTransaction &st) {
     rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 }
 
-void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
+void MainLAPIWorker::DoSubscribe(const std::string &name, bool suborun) {
 
     if ( suborun ) {
         namedata.Subscribe(name);

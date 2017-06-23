@@ -54,6 +54,8 @@ public:
     //void getTeamPlayers(std::string teamId);
     int GetAvgProjection(const string &playerid);
     std::vector<MarketSnapshot> GetCurrentMarketSnaps();
+
+    std::string GetPidfromSymb(const std::string &symb);
 };
 
 

@@ -55,7 +55,8 @@ HEADERS += \
 #    $$PWD/Data.h \
 #    $$PWD/txpool.h \
 #    $$PWD/ExchangeData.h \
-    LiteServer.h
+    LiteServer.h \
+    $$PWD/wsgateway.h
 #    TxServer.h
 
 ## FIXME add in libs here for levelDB as it is the only thing ATM that is using it.

@@ -9,54 +9,24 @@
 #include <iostream>
 #include <stdexcept>
 #include "ExData.pb.h"
-#include <stack>
+#include <set>
 #include <utility>
 #include <functional>
 #include <unordered_map>
+#include "server.h"
 
-using namespace fantasybit;
-using namespace std;
+
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
 
-template <typename T> struct hash<pair<T,T> > {
-    size_t operator()(pair<T,T> const &p) {
-        return hash<T>()(p.first) ^ hash<T>()(p.second);
-    }
+namespace fantasybit {
 
-};
-
-class LiteServer : public QObject
-{
+class LiteServer : public QObject {
     Q_OBJECT
 public:
     explicit LiteServer(quint16 port, bool debug = false, QObject *parent = Q_NULLPTR);
     ~LiteServer();
-    enum Incoming{
-        GetBlockHeader,
-        GetLeaderBoardTree,
-        GetLeaderBoardItem,
-        GetTicker,
-        GetStats,
-        GetPlayerInfo,
-        GetAwardsItem,
-        GetMerkleTree,
-        GetDrillMerkle,
-        UnKnown
-    };
 
-    struct fnameptrs {
-        fnameptrs(AllOdersFname *ao = nullptr) : fnameAllOdersFname(ao) {}
-        AllOdersFname *fnameAllOdersFname;
-        std::unordered_map<int32_t,Order *> mSeqOrderMap;
-        std::unordered_map<string, AllOdersSymbol *>    fnamesymbolAllOrders;
-        std::unordered_map< AllOdersSymbol *, std::stack<Order *>>  openOrderSlots;
-        std::stack<AllOdersSymbol *> openOrderSymbolSlot;
-    };
-
-    Incoming setEnum(const QString &string);
-
-    void doSendLeaders(QWebSocket *pClient);
 public slots:
     void onNewProj(const std::string &name ) {
         auto it = mFnameSubscribed.find(name);
@@ -64,18 +34,10 @@ public slots:
             return;
 
         qDebug()  << " socket yes " << name.data();
-        doSendProjections(it->second,name);
+        for ( const auto &s : it->second)
+            doSendProjections(s,name);
     }
-
-    Order *addOrder(fnameptrs &fptr, AllOdersSymbol *allords, const Order &orderin);
-    void cleanIt(fnameptrs &fptr);
-    fnameptrs &getfnameptrs(const std::string &fname, bool clean = false);
-    void cleanIt(const std::string &fname);
-public slots:
-    void OnDepthDelta(fantasybit::DepthFeedDelta *df);
-    void OnNewOO(const fantasybit::FullOrderDelta &);
-    void OnNewPos(const fantasybit::FullPosition &);
-    void GameStart(string gameid);
+    void GameStart(std::string gameid);
     void OnLive();
 
 Q_SIGNALS:
@@ -87,31 +49,79 @@ private Q_SLOTS:
     void processBinaryMessage(const QByteArray &message);
     void socketDisconnected();
     void handleError(const QString err);
+
+private:
+    QWebSocketServer *m_pWebSocketServer;
+    QList<QWebSocket *> m_clients;
+    quint16 mport;
+    std::string mRepstr;
+    WSReply gameStart;
+
+    std::unordered_map<QWebSocket *, std::vector<std::string>> mSocketSubscribed;
+    std::unordered_map<std::string, std::set<QWebSocket *>> mFnameSubscribed;
+
+    GetProjectionRep *mGetProjectionRep;
+    WSReply mWSReplyGetProjectionRep;
+    QByteArray mWSReplybyteArray;
+    quint16 mPort;
+    void doSendProjections(QWebSocket *pClient, const std::string &fname);
+
+    Server *mServer;
+};
+
+}
+
+
+#endif //LITE_SERVER_H
+
+
+
+/*
+
+template <typename T> struct hash<pair<T,T> > {
+    size_t operator()(pair<T,T> const &p) {
+        return hash<T>()(p.first) ^ hash<T>()(p.second);
+    }
+};
+
+
+
+
+    void doSendLeaders(QWebSocket *pClient);
+public slots:
+    Order *addOrder(fnameptrs &fptr, AllOdersSymbol *allords, const Order &orderin);
+    void cleanIt(fnameptrs &fptr);
+
+    void cleanIt(const std::string &fname);
+public slots:
+    void OnDepthDelta(fantasybit::DepthFeedDelta *df);
+    void OnNewOO(const fantasybit::FullOrderDelta &);
+    void OnNewPos(const fantasybit::FullPosition &);
+
+
+
+
+
     void OnMarketSnapShot(fantasybit::MarketSnapshot*);
     void OnMarketTicker(fantasybit::MarketTicker *);
     void OnTradeTick(fantasybit::TradeTic*);
+
 private:
     void processBinaryTxMessage(const QByteArray &message);
+
     QString m_errorString;
-    QWebSocketServer *m_pWebSocketServer;
-    QList<QWebSocket *> m_clients;
-    bool m_debug;
-    quint16 mport;
-    std::string mRepstr;
-    fantasybit::GetROWMarketRep mROWMarketRep;
-    std::unordered_map<std::string, ROWMarket *> mPidROWMarket;
-    std::unordered_map<std::string, GetDepthRep *> mPidGetDepthRep;
-    WSReply gameStart;
+
+
+
+
 
 
 //    std::unordered_map<std::string,std::unordered_map<std::string, AllOdersSymbol *>> mAllOdersFname;
 //    std::unordered_map<int32_t,std::unordered_map<std::string, AllOdersSymbol *>> mAllOdersFname;
 
-    ROWMarket *getRowmarket(const std::string &pid);
-    GetDepthRep * getDepthRep(const std::string &playerid);
 
-    std::unordered_map<QWebSocket *, std::vector<std::string>> mSocketSubscribed;
-    std::unordered_map<std::string, std::set<QWebSocket *>> mFnameSubscribed;
+
+
 
 //    std::unordered_map< std::pair<std::string, std::string> , std::vector<Order *>>  reservedOrder;
 //    std::unordered_map< std::pair<std::string, std::string> , std::vector<AllOdersSymbol *>>  reserveAllOdersSymbol;
@@ -120,19 +130,11 @@ private:
 
 
 
-    std::unordered_map< std::string, fnameptrs>  fnameptrsmap;
+
 
     void getFnameSnap(const std::string &fname);
     AllOdersSymbol * getAllOdersSymbol(fnameptrs &fptr,const std::string &symbol);
     AllOdersFname *getAllOdersFname(const std::string &fname);
 
+*/
 
-
-    GetProjectionRep *mGetProjectionRep;
-    WSReply mWSReplyGetProjectionRep;
-    QByteArray mWSReplybyteArray;
-    quint16 mPort;
-    void doSendProjections(QWebSocket *pClient, const std::string &fname);
-};
-
-#endif //LITE_SERVER_H

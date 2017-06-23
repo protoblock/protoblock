@@ -115,3 +115,9 @@ std::unordered_map<int, pair<bool, std::string> > DataService::getAllKnownPlayer
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->NFLState().myKnownPlayerStatus();
 }
+
+std::string DataService::GetPidfromSymb(const std::string &symb) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().mSym2Pid[symb];
+}
+
