@@ -20,7 +20,22 @@ class Server : public QObject {
 
     static Server *myInstance;
     void setupConnection(pb::IPBGateway *ingateway);
+public:
+    void setContext(pb::IPBGateway *ingateway) {
+        mGateway = ingateway;
+        setupConnection(mGateway);
+    }
+
+    static Server *instance();
+    pb::IPBGateway *mGateway = nullptr;
+    QObject *mOGateway;
+    void setupConnection(pb::IPBGateway *ingateway);
+    void init();
+
+
     void initData();
+
+
 
 #ifdef TESTING_ONLY
     QTimer testGameStart;
@@ -30,11 +45,6 @@ class Server : public QObject {
     void resetRosterProjScheduleData();
 public:
 
-    static Server *instance();
-    pb::IPBGateway *mGateway = nullptr;
-    QObject *mOGateway;
-    void setupConnection(pb::IPBGateway *ingateway);
-    void init();
 
 signals:
     void ready();

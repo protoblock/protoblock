@@ -18,7 +18,7 @@ Server *Server::instance() {
 void Server::setupConnection(pb::IPBGateway *ingateway) {
 
     QObject* that = dynamic_cast<QObject*>(ingateway);
-    mGateway = that;
+    mOGateway = that;
     connect( that, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
             this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
 
@@ -65,20 +65,6 @@ void Server::setupConnection(pb::IPBGateway *ingateway) {
 
     connect( that, SIGNAL(BlockNum(int)),
              this, SLOT(BlockNum(int)));
-
-//    QObject::connect(this,SIGNAL(OnClaimName(QString)),that,SLOT(OnClaimName(QString)));
-
-//    connect( this, SIGNAL(OnUseName(QString)),
-//             that, SLOT(UseName(QString)));
-
-//    connect( this, SIGNAL(doNameCheck(QString)),
-//             that, SLOT(nameCheck(QString)));
-
-//    connect( that, SIGNAL(nameAvail(QString &,bool)),
-//             this, SLOT(nameAvail(QString &,bool)));
-
-
-//    return that;
 }
 
 void Server::init() {

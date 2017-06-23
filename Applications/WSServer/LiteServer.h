@@ -32,18 +32,6 @@ class LiteServer : public QObject
 public:
     explicit LiteServer(quint16 port, bool debug = false, QObject *parent = Q_NULLPTR);
     ~LiteServer();
-    enum Incoming{
-        GetBlockHeader,
-        GetLeaderBoardTree,
-        GetLeaderBoardItem,
-        GetTicker,
-        GetStats,
-        GetPlayerInfo,
-        GetAwardsItem,
-        GetMerkleTree,
-        GetDrillMerkle,
-        UnKnown
-    };
 
     struct fnameptrs {
         fnameptrs(AllOdersFname *ao = nullptr) : fnameAllOdersFname(ao) {}
@@ -53,8 +41,6 @@ public:
         std::unordered_map< AllOdersSymbol *, std::stack<Order *>>  openOrderSlots;
         std::stack<AllOdersSymbol *> openOrderSymbolSlot;
     };
-
-    Incoming setEnum(const QString &string);
 
     void doSendLeaders(QWebSocket *pClient);
 public slots:
