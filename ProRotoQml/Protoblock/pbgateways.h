@@ -65,6 +65,7 @@ public:
 
     virtual PlayerDetail GetPlayerDetail(const std::string &symbol) = 0;
 
+    virtual std::string GetPidfromSymb(const std::string &symb) = 0;
 
 
 };
@@ -96,7 +97,6 @@ protected: //signals: // <- ignored by moc and only serves as documentation aid
     virtual void BlockNum(int) = 0;
 
 public: //slots:
-    virtual void OnGetMyNames() = 0;
     virtual void OnUseName(QString) = 0;
 
 
