@@ -1005,11 +1005,20 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
             return;
         }
         symbol = mData.GetPlayerStatus(emdg.playerid()).symbol();
-        symbol += to_string(fc->season()-2000);
-        if ( fc->type() == FutContract_Type_WEEKLY )
-            symbol += "w" + to_string(fc->week());
-        else
-            symbol += "s";
+        if ( symbol == "" )  {
+            symbol = emdg.playerid();
+            if ( symbol.back() == 's' ) {
+                mFutContract.set_type(FutContract_Type_SEASON);
+                fc = &mFutContract;
+            }
+        }
+        else {
+            symbol += to_string(fc->season()-2000);
+            if ( fc->type() == FutContract_Type_WEEKLY )
+                symbol += "w" + to_string(fc->week());
+            else
+                symbol += "s";
+        }
     }
     else
         symbol = emdg.symbol();
