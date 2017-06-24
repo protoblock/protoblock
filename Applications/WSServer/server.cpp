@@ -350,8 +350,6 @@ void Server::LiveProj(FantasyBitProj proj) {
     qDebug() << " LiveProj ProjByName playerproj_size" << ppn->playerproj_size();
     qDebug() << " LiveProj avgProjByName playerproj_size" << avgProjByName->playerproj_size();
     SaveProj(proj);
-
-
 }
 
 ROWMarket * Server::getRowmarket(const std::string &symbol) {
@@ -406,6 +404,7 @@ void Server::OnMarketTicker(fantasybit::MarketTicker mtv,int32_t blocknum) {
 #endif
 
     if ( mt->symbol() == "" ) return;
+    saveMarket(mt->symbol());
 
     ROWMarket *pROWMarket = getRowmarket(mt->symbol());
 
@@ -431,6 +430,7 @@ void Server::OnTradeTick(fantasybit::TradeTic* tt) {
 #endif
 
     if ( tt->symbol() == "" ) return;
+    saveMarket(tt->symbol());
     ROWMarket *pROWMarket = getRowmarket(tt->symbol());
 
     pROWMarket->mutable_quote()->set_l(tt->price());
@@ -451,14 +451,14 @@ void Server::OnTradeTick(fantasybit::TradeTic* tt) {
 
 }
 
-
-
 void Server::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
     if ( dfd->symbol() == "" )
         return;
 #ifdef TRACE
-    qDebug() << "level2 OnDepthDelta " << dfd->DebugString().data();
+    qDebug() << "Server OnDepthDelta " << dfd->DebugString().data();
 #endif
+    saveDepth(dfd->symbol());
+
     GetDepthRep *depths = getDepthRep(dfd->symbol());
 
     qDebug() << " before " << depths->DebugString().data();
@@ -649,6 +649,7 @@ void Server::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
 void Server::OnNewPos(fantasybit::FullPosition fp) {
     qDebug() << "level2 Trading::OnNewPos " << fp.pos.ToString().data() << fp.symbol.data() << fp.fname.data();
 
+    savePos(fp.fname);
     fnameptrs &fptr = getfnameptrs(fp.fname);
     AllOdersSymbol *allords = getAllOdersSymbol(fptr,fp.symbol);
     if ( allords == nullptr ) return;
@@ -669,6 +670,7 @@ void Server::OnNewPos(fantasybit::FullPosition fp) {
 void Server::OnNewOO(fantasybit::FullOrderDelta fo) {
     qDebug() << "level2 Trading::OnNewOO " << fo.fname.data() << fo.openorder.DebugString().data();
 
+    savePos(fo.fname);
     auto &o = fo.openorder;
 
     auto &fptr = getfnameptrs(fo.fname);
@@ -726,7 +728,6 @@ void Server::OnNewOO(fantasybit::FullOrderDelta fo) {
 
 }
 
-
 Order * Server::addOrder(fnameptrs &fptr,AllOdersSymbol *allords,const Order &orderin) {
     auto &s = fptr.openOrderSlots[allords];
     if ( !s.empty() ) {
@@ -765,11 +766,6 @@ AllOdersSymbol * Server::getAllOdersSymbol(fnameptrs &fptr,const std::string &sy
         return it->second;
 }
 
-
-
-
-
-
 fnameptrs & Server::getfnameptrs(const std::string &fname, bool clean) {
     auto it = fnameptrsmap.find(fname);
     if ( it == end(fnameptrsmap)) {
@@ -787,4 +783,87 @@ fnameptrs & Server::getfnameptrs(const std::string &fname, bool clean) {
         return it->second;
     }
 }
+
+void Server::getFnameSnap(const std::string &fname) {
+    auto myorderpositions = mGateway->dataService->GetOrdersPositionsByName(fname);
+
+#ifdef TRACE
+    qDebug() << "lite getFnameSnap 1" << fname.data() << myorderpositions.size();
+#endif
+//    double totpnl = 0.0;
+
+    fnameptrs &fptr = getfnameptrs(fname,true);
+    for ( auto &p : myorderpositions ) {
+
+        qDebug() << "lite getFnameSnap 2" << p.first << p.second.first.ToString();
+        auto &mypair = p.second;
+        auto &myorders = mypair.second;
+//        {
+//            auto &stake = openOrderSymbolSlot[allof];
+//            stack.push(allords);
+//        }
+//        else {
+        if ( !myorders.empty() || p.second.first.netprice != 0 || p.second.first.netqty != 0) {
+            AllOdersSymbol *allords = getAllOdersSymbol(fptr,p.first);
+            if ( allords == nullptr ) return;
+
+            for ( auto o : myorders) {
+                Order *po = addOrder(fptr,allords,o);
+                fptr.mSeqOrderMap[o.refnum()] = po;
+            }
+
+            allords->set_netprice(p.second.first.netprice);
+            allords->set_avg(0);
+            if ( p.second.first.netqty != 0 ) {
+                allords->set_netqty(p.second.first.netqty);
+                if (  p.second.first.netprice != 0 ) {
+                    double avg = (double)p.second.first.netprice / (double)p.second.first.netqty ;
+                    avg  = avg * -1.0;
+                    allords->set_avg(avg);
+                }
+            }
+            else {
+                allords->set_pnl(p.second.first.netprice);
+                allords->set_netqty(0);
+            }
+        }
+
+//        int netqty = p.second.first.netqty;
+//        double avg = 0;
+//        double pnl = 0;
+//        if ( netqty ==0 ) {
+//            pnl = p.second.first.netprice * 100;
+//        }
+//        else  {
+//            ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
+//            int bid = item->propertyValue<PropertyNames::BID>().toInt();
+//            int ask = item->propertyValue<PropertyNames::ASK>().toInt();
+//            int price = (netqty > 0) ? bid :  ask;
+
+//            if ( bid == 0 && ask == 0 )
+//                pnl = 0;
+//            else
+//                pnl = 100 * ((price * netqty) + p.second.first.netprice);
+
+//        }
+
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),netqty);
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(p.first.data(),avg);
+//        mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(p.first.data(),pnl);
+
+//        if ( p.first == myPlayerid) {
+//            ui->posQty->setValue(netqty);
+//            ui->posAvgPrice->setValue(avg);
+//            ui->posOpenPnl->setValue(pnl);
+//        }
+
+//        totpnl += pnl;
+
+//    }
+
+//    ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+totpnl);
+
+    }
+}
+
 Server *Server::myInstance;

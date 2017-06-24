@@ -39,6 +39,9 @@ class Server : public QObject {
 
     std::unordered_map<std::string,int> mPlayerId2Index;
     std::unordered_set<std::string> blocknames;
+    std::unordered_set<std::string> posnames;
+    std::unordered_set<std::string> depthsymbols;
+
     int currblock = 0;
 
 public:
@@ -97,7 +100,15 @@ public:
     }
 
     void UnSubscribe(const std::string &fname) {
+        qDebug() << " unsubscribe " << fname.data();
         emit DoSubscribe(fname,false);
+        cleanIt(fname);
+    }
+
+    void Subscribe(const std::string &fname) {
+        qDebug() << " subscribe " << fname.data();
+        emit DoSubscribe(fname,true);
+        getFnameSnap(fname);
     }
 
 
@@ -108,6 +119,7 @@ private:
 
 //    static fantasybit::GetROWMarketRep ROWMarketRep;
 //    static NFLStateData  NFLData;
+    void getFnameSnap(const std::string &fname);
 
     std::unordered_map<std::string, ROWMarket *> mPidROWMarket;
     std::unordered_map<std::string, GetDepthRep *> mPidGetDepthRep;
@@ -154,6 +166,18 @@ private:
         qDebug() << "SaveProj blocknames.insert" << fbp.name().data();
         blocknames.insert(fbp.name());
 //        = {fbp.count(),fbp.block()};
+    }
+
+    void saveMarket(const std::string &symbol) {
+
+    }
+
+    void saveDepth(const std::string &symbol) {
+        depthsymbols.insert(symbol);
+    }
+
+    void savePos(const std::string &fname) {
+        posnames.insert(fname);
     }
 
     std::unordered_map<std::string,std::string> mSymb2Pid;
@@ -229,8 +253,22 @@ protected slots:
             emit onNewProj(name);
         }
         blocknames.clear();
-        currblock = n;
 
+        if ( depthsymbols.size() > 0) {
+            emit newRow();
+            for ( const auto &symb : depthsymbols) {
+                emit newDepth(symb);
+            }
+        }
+        depthsymbols.clear();
+
+        for ( const auto &name : posnames) {
+            emit newPos(name);
+        }
+        posnames.clear();
+
+
+        currblock = n;
     }
 
 #ifdef TESTING_ONLY
@@ -265,8 +303,10 @@ signals:
     void GameStart(string);
     void GoLive();    
     void ready();
-    void DoSubscribe(const std::string &name, bool suborun);
-
+    void DoSubscribe(const string &name, bool suborun);
+    void newDepth(const string &name );
+    void newPos(const string &name );
+    void newRow();
 };
 
 

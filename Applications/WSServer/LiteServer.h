@@ -37,6 +37,28 @@ public slots:
         for ( const auto &s : it->second)
             doSendProjections(s,name);
     }
+
+    void newDepth(const string &name) {
+        const auto it = mSymbolSubscribed.find(name);
+        if ( it == end(mSymbolSubscribed))
+            return;
+
+//        qDebug()  << "newDepth socket yes " << name.data();
+//        for ( const auto &s : it->second)
+        doSendDepth(name,nullptr,&it->second);
+    }
+
+    void newRow();
+
+    void newPos(const string &name) {
+        auto it = mFnameSubscribed.find(name);
+        if ( it == end(mFnameSubscribed))
+            return;
+
+        for ( const auto &s : it->second)
+            doSendOrders(s,name);
+    }
+
     void GameStart(std::string gameid);
     void OnLive();
 
@@ -59,12 +81,29 @@ private:
 
     std::unordered_map<QWebSocket *, std::vector<std::string>> mSocketSubscribed;
     std::unordered_map<std::string, std::set<QWebSocket *>> mFnameSubscribed;
+    std::unordered_map<std::string, std::set<QWebSocket *>> mSymbolSubscribed;
+    std::unordered_map<QWebSocket *, std::string> mSocketSymbol;
 
     GetProjectionRep *mGetProjectionRep;
     WSReply mWSReplyGetProjectionRep;
     QByteArray mWSReplybyteArray;
     quint16 mPort;
     void doSendProjections(QWebSocket *pClient, const std::string &fname);
+
+
+    WSReply mRepDepth;
+    GetDepthRep *mGetDepthRep;
+    QByteArray mRepDepthArray;
+    void doSendDepth(const std::string &symbol,QWebSocket *pClient =nullptr,
+                     const std::set<QWebSocket *> * = nullptr);
+
+    WSReply rowRep;
+    QByteArray mGetROWMarketRepArray;
+
+    GetOrdersRep *mGetOrdersRep;
+    WSReply mWSReplyGetOrdersRep;
+    QByteArray mGetOrdersRepArray;
+    void doSendOrders(QWebSocket *pClient, const std::string &fname);
 
     Server *mServer;
 };
@@ -132,8 +171,7 @@ private:
 
 
 
-    void getFnameSnap(const std::string &fname);
-    AllOdersSymbol * getAllOdersSymbol(fnameptrs &fptr,const std::string &symbol);
+
     AllOdersFname *getAllOdersFname(const std::string &fname);
 
 */
