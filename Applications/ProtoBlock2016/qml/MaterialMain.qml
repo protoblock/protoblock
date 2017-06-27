@@ -69,6 +69,8 @@ Material.ApplicationWindow{
         }
     }
 
+    title: "Protoblock " + MiddleMan.theSeason + " Devel"
+//    flags: Qt.Window
     id: themeroot
     visible: true
     width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
@@ -198,7 +200,7 @@ Material.ApplicationWindow{
     initialPage:  Material.TabbedPage {
         property bool expanded: true
         id: pageHelper
-        title: "ProtoBlock 2016"
+        title: "Protoblock devel"
 
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]

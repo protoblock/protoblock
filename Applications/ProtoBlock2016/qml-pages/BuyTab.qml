@@ -12,19 +12,21 @@ import Material 1.0
 import ProRotoQml.Theme 1.0
 
 Item {
+    anchors.fill: parent
+    anchors.centerIn: parent
 
     Material.Card {
+
     //            anchors.top: parent.top
     //            anchors.left: parent.left
     //            Layout.alignment: Qt.AlignCenter
         Layout.fillWidth: true
-        anchors.centerIn: parent
     //            Layout.fillHeight: true
 
-//        id: bcard
+        id: bcard
     //            height: parent.height
         height: ProtoScreen.guToPx(14)
-
+        anchors.centerIn: parent
 
     //            width: parent.width * .50
         anchors.margins: ProtoScreen.guToPx(.125)

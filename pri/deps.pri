@@ -55,7 +55,7 @@ contains (QMAKE_HOST.os, Darwin){
     DIRPREFIX = /Users/$$(USER)/Desktop/fc/prebuilt
 }else{
     message("Host is Windows")
-    DIRPREFIX = D:\work\prebuiltLibs
+    DIRPREFIX = C:\work\prebuiltLibs
 }
 
 

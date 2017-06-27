@@ -12,7 +12,9 @@ import Material 1.0 as Material
 
 Quick.Window {
     id: realRoot
-    title: "Protoblock 2016"
+    title: "Protoblock"
+//    flags: Qt.FramelessWindowHint | Qt.Window
+
 //    x: ( ProtoScreen.desktopWidth - ProtoScreen.availableWidth)
 //    y: ( ProtoScreen.desktopHeight - ProtoScreen.availableHeight)
 //    width: ProtoScreen.availableWidth

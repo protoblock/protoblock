@@ -32,7 +32,6 @@ LiteServer::LiteServer(quint16 port, bool debug, QObject *parent) :
 
     connect(server,&Server::onNewProj, this, &LiteServer::onNewProj);
     connect(server,&Server::GameStart, this, &LiteServer::GameStart);
-    connect(server,&Server::GameStart, this, &LiteServer::GameStart);
 
     connect(server,&Server::GoLive,this, &LiteServer::OnLive);
 }
