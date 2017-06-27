@@ -189,7 +189,10 @@ public:
 
 //          m_pPlayerQuoteSliceModelItem = it;
             update_pPlayerQuoteSliceModelItem(it);
+            update_pDepthMarketModel(it->get_pDepthMarketModel());
         }
+        else
+            update_pDepthMarketModel(&mDepthMarketModel);
 
         auto tit = mTradingPositionsModel.getOrCreate(symbol);
         if ( tit != nullptr ) {

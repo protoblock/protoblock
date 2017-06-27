@@ -22,7 +22,8 @@ Item {
     property string liveorresult: MiddleMan.liveSync
 
     Component.onCompleted: {
-         pageHelper.title = "Trading"
+        pageHelper.title = "Trading"
+        console.log("trading completed")
      }
 
         // spacer

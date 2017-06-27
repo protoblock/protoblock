@@ -11,10 +11,20 @@ import Material 1.0
 
 
 Card {
+    Component.onCompleted: {
+        console.log("on completed MarketDepthModel")
+//        if ( MiddleMan.pPlayerQuoteSliceModelItem )
+//            if ( MiddleMan.pPlayerQuoteSliceModelItem.pDepthMarketModel )
+//                depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.pDepthMarketModel
+    }
+
+//    property alias depthmodel: value
+
     id: mdview
     anchors.fill: parent
 
     TableView {
+        model: MiddleMan.pDepthMarketModel
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         id: depthvm
@@ -140,12 +150,12 @@ Card {
         }
     }
 
-    Connections {
-        target: MiddleMan
-        onPPlayerQuoteSliceModelItemChanged: {
-            console.log(" onPPlayerQuoteSliceModelItemChanged ");
-            depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.pDepthMarketModel
-            console.log("after floor  onPPlayerQuoteSliceModelItemChanged ");
-        }
-    }
+//    Connections {
+//        target: MiddleMan
+//        onPPlayerQuoteSliceModelItemChanged: {
+//            console.log(" onPPlayerQuoteSliceModelItemChanged ");
+//            depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.pDepthMarketModel
+//            console.log("after floor  onPPlayerQuoteSliceModelItemChanged ");
+//        }
+//    }
 }

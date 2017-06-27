@@ -440,7 +440,7 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 }
 
 void Mediator::updateCurrentFantasyPlayerOrderPositions() {
-    update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
+
     for ( auto tit : mTradingPositionsModel ) {
         auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
@@ -524,7 +524,16 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 
     }
     mTradingPositionsModel.settotalopenpnl(totpnl);
-//    qDebug() << ++i << " here ";
+
+    if ( m_pPlayerQuoteSliceModelItem ) {
+        auto tit = mTradingPositionsModel.getByUid(m_pPlayerQuoteSliceModelItem->get_symbol());
+        if ( tit != nullptr ){
+            update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
+            return;
+        }
+    }
+
+    update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
 
 }
 
