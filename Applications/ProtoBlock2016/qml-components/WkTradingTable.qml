@@ -55,10 +55,6 @@ Item {
     //Market Prices - ROW stats (x weeks)
         //bid size, bid, ask, ask size
 
-    //YTD Stats
-
-
-
 
     Item {
         id: i2
@@ -112,24 +108,20 @@ Item {
             frameVisible: false
             selectionMode: SelectionMode.SingleSelection
 
+//            currentRow: 0
             property int selectedRow: -1
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
-//               SystemPalette {
-//                  id: myPalette;
-//                  colorGroup: SystemPalette.Inactive
-//               }
-               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#f5f5f5":"transparent"
-//               {
-//                  var baseColor = styleData.alternate?"#f5f5f5":"transparent"
-//                  return styleData.selected?myPalette.highlight:baseColor
-//               }
+               color: (styleData.row===tvr.selectedRow)
+//                      || (MiddleMan.pPlayerQuoteSliceModelItem && MiddleMan.pPlayerQuoteSliceModelItem.symbol === model.data(styleData.row,"symbol")))
+                       ? "Light Grey" : (styleData.alternate ? "#f5f5f5" : "transparent")
+
             }
 
             TableViewColumn {
                 role: "symbol"
                 title: "Symbol"
-                horizontalAlignment : Text.AlignHCenter
+                horizontalAlignment: Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
@@ -652,6 +644,7 @@ Item {
     Component {
         id: headerdel
         Rectangle {
+            z: 2
             id: idd
             implicitWidth: textItem2.implicitWidth
             height: ProtoScreen.guToPx(8)

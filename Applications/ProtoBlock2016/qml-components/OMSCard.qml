@@ -15,13 +15,12 @@ Item {
     property int side
     property int qty
     property int price
+    property double wid: parent.width / 7.0
     property string symbolp
     property string refnum
     property int elevation : 0
-//    property int maximumLineCount: 2
- //   height: maximumLineCount == 2 ? ProtoScreen.guToPx(8)  : ProtoScreen.guToPx(10)
-    height: parent.height
-    width: parent.width
+    property int maximumLineCount: 2
+    height: maximumLineCount == 2 ? ProtoScreen.guToPx(8)  : ProtoScreen.guToPx(10)
 
     Material.Card{
         elevation: omscard.elevation
@@ -30,13 +29,13 @@ Item {
 
         RowLayout {
             id: rowLayout1
-            height: parent.height
-            width: parent.width
+            anchors.fill: parent
+            spacing: 0
 
             Material.IconButton{
                 Layout.fillHeight: true
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
+                Layout.preferredWidth: wid
                 color: "red"
                 onClicked: {
                     MiddleMan.doCancel(refnum)
@@ -44,7 +43,6 @@ Item {
                 action: Material.Action {
                     iconName: "awesome/times"
                 }
-
             }
 
             Material.Label {
@@ -52,20 +50,12 @@ Item {
                 text: symbol
                 Layout.fillHeight: true
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
+                Layout.preferredWidth: wid * 2.0
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
             }
 
-            Material.Label {
-                id: label2
-                text: refnum
-                Layout.fillHeight: true
-                verticalAlignment: Text.AlignVCenter
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
-                horizontalAlignment: Text.AlignHCenter
-            }
 
             Material.Label {
                 id: label3
@@ -73,18 +63,10 @@ Item {
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
+                Layout.preferredWidth: wid
                 horizontalAlignment: Text.AlignHCenter
-            }
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
 
-            Material.Label {
-                id: label4
-                text: price.toString()
-                Layout.fillHeight: true
-                verticalAlignment: Text.AlignVCenter
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
-                horizontalAlignment: Text.AlignHCenter
             }
 
             Material.Label {
@@ -93,9 +75,36 @@ Item {
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
+                Layout.preferredWidth: wid
                 horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+
             }
+
+            Material.Label {
+                id: label4
+                text: price.toString()
+                Layout.fillHeight: true
+                verticalAlignment: Text.AlignVCenter
+                Layout.fillWidth: false
+                Layout.preferredWidth: wid
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+
+            }
+
+
+            Material.Label {
+                id: label2
+                text: refnum
+                Layout.fillHeight: true
+                verticalAlignment: Text.AlignVCenter
+                Layout.fillWidth: false
+                Layout.preferredWidth: wid
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            }
+
 
         }
     }

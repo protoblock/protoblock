@@ -18,10 +18,11 @@ Card {
 //                depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.pDepthMarketModel
     }
 
-//    property alias depthmodel: value
-
     id: mdview
     anchors.fill: parent
+
+    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
+    property var iwidth: parent.width / 4.2
 
     TableView {
         model: MiddleMan.pDepthMarketModel
@@ -30,11 +31,11 @@ Card {
         id: depthvm
         highlightOnFocus:   false
         height: parent.height
-        width: ProtoScreen.guToPx(10) * 4
+        width: parent.width
         selectionMode: SelectionMode.NoSelection
 
         rowDelegate: Rectangle {
-           height: ProtoScreen.guToPx(4)
+           height: ProtoScreen.guToPx(5)
            color: styleData.alternate?"#f5f5f5":"transparent"
         }
 
@@ -68,7 +69,7 @@ Card {
             role: "bidsize"
             title: "Bid Size"
             horizontalAlignment : Text.AlignHCenter
-            width: ProtoScreen.guToPx(10)
+            width: iwidth
             delegate: nzdel
             resizable: true
             movable: false
@@ -78,7 +79,7 @@ Card {
             role: "bid"
             title: "Bid Price"
             horizontalAlignment : Text.AlignHCenter
-            width: ProtoScreen.guToPx(10)
+            width: iwidth
             delegate: nzdel
             resizable: true
             movable: false
@@ -104,7 +105,7 @@ Card {
             role: "ask"
             title: "Ask Price"
             horizontalAlignment : Text.AlignHCenter
-            width: ProtoScreen.guToPx(10)
+            width: iwidth
             delegate: nzdel
             resizable: true
             movable: false
@@ -114,7 +115,7 @@ Card {
             role: "asksize"
             title: "Ask Size"
             horizontalAlignment : Text.AlignHCenter
-            width: ProtoScreen.guToPx(10)
+            width: iwidth
             delegate: nzdel
             resizable: true
             movable: false
@@ -136,6 +137,7 @@ Card {
         height: ProtoScreen.guToPx(4)
         anchors.top: depthvm.top
         anchrosHType: "center"
+        anchors.margins: 0
     }
 
     Component {
@@ -147,6 +149,7 @@ Card {
             horizontalAlignment: Text.AlignHCenter
             text: (styleData.value < 1) ? "" : styleData.value;
             font.bold: false;
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
         }
     }
 

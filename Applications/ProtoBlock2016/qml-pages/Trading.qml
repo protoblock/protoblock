@@ -20,6 +20,7 @@ Item {
 //    property string seasontext: MiddleMan.seasonString + " 2016 "
     property string seasontext: " 2017 Season Trading - " // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
+    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
 
     Component.onCompleted: {
         pageHelper.title = "Trading"
@@ -84,7 +85,7 @@ Item {
 //                    Layout.preferredWidth: ProtoScreen.guToPx(40)
 
                     Card {
-                        Layout.maximumHeight: parent.height * 70
+                        Layout.maximumHeight: parent.height * .70
                         Layout.minimumHeight: parent.height * .30
                         backgroundColor: "#f5f5f5"
                         Layout.fillHeight: true
@@ -98,11 +99,11 @@ Item {
                     }
 
                     Card {
-                        Layout.maximumHeight: parent.height * 50
-                        Layout.minimumHeight: parent.height * 10
+                        Layout.maximumHeight: parent.height * .70
+                        Layout.minimumHeight: parent.height * .30
                         //MarketDepthTable {}
                         Orders {
-                            id: oid
+                            mysymbol: !inplay ? "" : inplay.symbol
                         }
 
                     }

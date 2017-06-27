@@ -18,7 +18,7 @@ Material.Card {
     property string lightred: "red"//"#ffc8c8"
     property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
     property double recwidth: ProtoScreen.guToPx(20)
-    property bool haveplayer: inplay && inplay.playerid !== ""
+    property bool haveplayer: inplay && inplay.symbol !== ""
     property bool haveposition: inplay && inplay.myposition !== 0
     property color dcolor: Material.Theme.light.textColor
 
@@ -62,43 +62,46 @@ Material.Card {
                 fontSize: ProtoScreen.font(ProtoScreen.SMALL)
                 bold: true
                 anchors.left: parent.left
-                text: " 2016 Week " + MiddleMan.theWeek + " Contract"
-                color: "white"
-                backgroundColor: haveplayer ? themeroot.theme.primaryColor : "transparent"
+                text: " 2017 Season Contract (" + inplay.symbol + ")"
+                backgroundColor: "white"
+                color: themeroot.theme.primaryColor
 
                 width: parent.width
                 height: ProtoScreen.guToPx(3)
                 anchors.top: parent.top
-                anchrosHType: "left"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchrosHType: "center"
                 elevation: 0
             }
 
             Material.Card {
-                Layout.fillWidth: false
+                Layout.fillWidth: true
                 id: pname
                 anchors.top: cwc.bottom
                 backgroundColor:  "white"
                 height: parent.height - cwc.height
-                width: teamicon.size + pname2.implicitWidth + symb1.implicitWidth
+                width: parent.width // teamicon.width + pname2.implicitWidth
+                anchors.horizontalCenter: parent.horizontalCenter
                 elevation: 0
-                Row {
+                RowLayout {
                     id: trow
-                    anchors.verticalCenter: parent.verticalCenter
-//                    anchors.centerIn: parent
+//                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.centerIn: parent
 //                    anchors.centerIn: parent
 //                    width: teamicon.size + pname2.implicitWidth + symb1.implicitWidth //+ ProtoScreen.guToPx(.38)
 
                     Icon {
+                        Layout.fillWidth: false
                         id: teamicon
                         hasColor:false
                         source: "qrc:/"+ inplay.teamid+".PNG"
-                        width: ProtoScreen.guToPx(6)
+//                        width: ProtoScreen.guToPx(6)
 //                        height: ProtoScreen.guToPx(6)
-                        size: ProtoScreen.guToPx(6)
+//                        size: ProtoScreen.guToPx(3)
                         anchors {
                             verticalCenter: parent.verticalCenter
     //                        left: parent.left
-    //                        leftMargin: ProtoScreen.guToPx(.125)
+                            leftMargin: ProtoScreen.guToPx(.125)
                         }
                     }
 
@@ -108,33 +111,33 @@ Material.Card {
                         id: pname2
                         text: !haveplayer ? "" : inplay.fullname + " (" + inplay.pos +") "
         //                anchors.fill: parent
-        //                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
 
                         anchors {
                             verticalCenter: parent.verticalCenter
     //                        left: teamicon.right
-    //                        leftMargin: ProtoScreen.guToPx(.125)
+                            leftMargin: ProtoScreen.guToPx(.125)
                         }
                     }
 
-                    Material.Label {
-                        Layout.fillWidth: true
-                        elide: Text.ElideRight
-                        id: symb1
-                        text: !haveplayer ? "" : " - " + inplay.playerid
-        //                anchors.fill: parent
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
+//                    Material.Label {
+//                        Layout.fillWidth: true
+//                        elide: Text.ElideRight
+//                        id: symb1
+//                        text: !haveplayer ? "" : " - " + inplay.symbol
+//        //                anchors.fill: parent
+//                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                        verticalAlignment: Text.AlignVCenter
+//                        horizontalAlignment: Text.AlignHCenter
 
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-    //                        left: pname2.right
-    //                        leftMargin: ProtoScreen.guToPx(.125)
-                        }
-                    }
+//                        anchors {
+//                            verticalCenter: parent.verticalCenter
+//    //                        left: pname2.right
+//    //                        leftMargin: ProtoScreen.guToPx(.125)
+//                        }
+//                    }
                 }
             }
         }
@@ -199,6 +202,8 @@ Material.Card {
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 2
                     Layout.row: 1
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.bold: true
                 }
 
                 Material.Label {

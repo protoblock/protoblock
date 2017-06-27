@@ -266,7 +266,7 @@ Item {
                         anchors.leftMargin: 10
                         id: rightr
                         Layout.minimumWidth: parent.width * .20
-                        Layout.maximumWidth: parent.width * .60
+                        Layout.maximumWidth: parent.width * .80
                         LeaderProjView {
                             id: lpv
                         }

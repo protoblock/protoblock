@@ -17,7 +17,7 @@ import Communi 3.0
 
 Material.ApplicationWindow{
 
-    property string version: "2.1.1" //version
+    property string version: "2.3" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -71,8 +71,11 @@ Material.ApplicationWindow{
 
     id: themeroot
     visible: true
-    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
-    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
+//    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
+//    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
+
+    width: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
+    height: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(1080, ProtoScreen.availableHeight) : ProtoScreen.availableHeight
 
     color: "transparent"
     Component.onCompleted: {
@@ -95,13 +98,15 @@ Material.ApplicationWindow{
 
         }
 
-        themeroot.showMaximized()
-//        rootLoader.source = "qrc:/Trading.qml";
+//        themeroot.showMaximized()
+        rootLoader.source = start
 
     }
 
     property string defaultname
 
+    property string start: "qrc:/Trading.qml"
+    property int startindex: 1
     property string  errorString
     property bool  reloadleaders: false
 
@@ -132,7 +137,7 @@ Material.ApplicationWindow{
     ]
 
 
-    property int  currentTabInFocus: 1
+    property int  currentTabInFocus: 0
 
     property string pageSwitcher
     property string currentPage: sections[0][0]
@@ -198,8 +203,7 @@ Material.ApplicationWindow{
         property bool expanded: true
         id: pageHelper
         title: "Protoblock 2017"
-
-        selectedTabIndex: 1
+        selectedTabIndex: startindex
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
@@ -323,12 +327,12 @@ Material.ApplicationWindow{
             // sidebar is ProtoScreen.guToPx(31.25)
             width: (navDrawer.enabled === true) ? themeroot.width  :
                   pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
-            height: navDrawer.enabled === true ? themeroot.height : navDrawer.height
+            height: parent.height//navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
 
             Component.onCompleted: {
-                console.log(" mainmat " + rootLoader.width)
+                console.log(" matmain " + rootLoader.width)
             }
         }
 
@@ -661,8 +665,8 @@ Material.ApplicationWindow{
                     loginDialog.close()
 
                 themeroot.reloadleaders = false
-                rootLoader.source = "qrc:/Trading.qml"
-                pageHelper.selectedTabIndex = 1;
+                rootLoader.source = start
+                pageHelper.selectedTabIndex = startindex;
                 rootLoader.showMaximized
             }
             else {
@@ -683,8 +687,8 @@ Material.ApplicationWindow{
                 uname = name
                 msgString = "You are now playing as: " + name
                 if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
-                    rootLoader.source = "qrc:/Trading.qml"
-                    pageHelper.selectedTabIndex = 1;
+                    rootLoader.source = start
+                    pageHelper.selectedTabIndex = startindex;
                     usingNameDialog.open()
                 }
                 else

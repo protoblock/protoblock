@@ -87,8 +87,8 @@ Item {
                         }
                         enabled: styleData.column === 0
                         visible: styleData.column === 0
-                        showBorder: false
-                        color: Material.Theme.light.textColor
+//                        showBorder: false
+//                        color: Material.Theme.light.textColor
                         activeFocusOnPress: true
                     }
                 }
@@ -252,6 +252,24 @@ Item {
 //                }
             }
 
+            TableViewColumn {
+                role: "bits"
+                title: "Overall"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(10)
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+
 
 
             TableViewColumn{
@@ -337,23 +355,6 @@ Item {
                     text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
                 }
             }
-            TableViewColumn {
-                role: "bits"
-                title: "Overall"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(9)
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
 
 
 
