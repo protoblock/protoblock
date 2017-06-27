@@ -8,7 +8,16 @@ CONFIG += qt c++11 static
 
 #CONFIG += c++11
 
-TARGET = fantasybit-2016D
+
+    !contains(DEFINES, PRODFOOTBALL){
+        TARGET = STAGING-fantasybit-2016D
+    }
+
+    contains(DEFINES, PRODFOOTBALL){
+        TARGET = fantasybit-2016D
+    }
+
+
 #CONFIG += qt console
 CONFIG -= app_bundle
 

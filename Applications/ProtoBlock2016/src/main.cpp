@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
 //    qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
 
-    Core::instance()->bootstrap();
+
 
 
 //    GameStatsLoaderFD gamestatsloader;
@@ -115,6 +115,8 @@ int main(int argc, char *argv[])
 
     //MainLAPIWorker *mw = ;
     //mw->dataService = DataService::instance();
+
+    Core::instance()->bootstrap();
     pb::FullGateway *fg = new pb::FullGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
                                      DataService::instance());
     pb::Mediator::instance()->setContext(fg);

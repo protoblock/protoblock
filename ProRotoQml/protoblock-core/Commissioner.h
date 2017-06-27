@@ -313,8 +313,6 @@ public:
 
 
     static bool verify(const pb::signature &sig, const pb::sha256 &digest, pb::public_key_data& pk) {
-//          return true;
-//          auto holdp = ;
           return pb::public_key(pk).verify(digest, sig);// pb::public_key(sig, digest) == pub;
     }
 
@@ -341,17 +339,10 @@ public:
 
     static std::string pk2str(const pb::public_key_data &pk)
     {
-//        for ( int i =0; i < 33; i++)
-//            qDebug() << pk.key_data[i];
-
-//        qDebug() << "pk2str|" << pk.begin() << "|";
         return pb::to_base58(pk);
     }
 
     static pb::public_key_data privStr2Pub(const std::string &priv_key) {
-//        secp256k1_pubkey pubkey;
-//        auto ret = secp256k1_ec_pubkey_create(pb::CTX, &pubkey, pb::secp256k1_privkey(priv_key).data() );
-        //pb::sha256 pk(priv_key);
         return pb::secp256k1_privkey::regenerate(priv_key).get_public_key().serialize();
     }
 
@@ -372,8 +363,7 @@ public:
         unsigned char data[72];
         pb::signature sig;
         if ( pb::from_base58(str, (char *)data, 64) > 64 ) {
-            //ToDo: test
-            //in case using 2015 bad sigs
+            //Warning: still dealing with "bad" sigs from 2015
             auto sz = pb::from_base58(str, (char *)data, 72);
             sig = pb::parse_der(data,sz < 72 ? sz : 72);
             sig = pb::signature_normalize(sig);
@@ -383,20 +373,11 @@ public:
         return sig;
     }
 
-    static std::vector<std::string> STATS_ID;
-
     static std::vector<std::string> GENESIS_NFL_TEAMS;
-    static std::set<std::pair<std::string,std::string>> GENESIS_NFL_PLAYERS;
     static std::vector<std::string> GET_GENESIS_NFL_TEAMS() {
         return GENESIS_NFL_TEAMS;
     }
 
-    static std::set<std::pair<std::string,std::string>> GET_GENESIS_NFL_PLAYERS(){
-        return GENESIS_NFL_PLAYERS;
-    }
-
-    //static std::string DATA_DIR("data");
-    //static std::string DB_DIR("db");
 };
 
 }
