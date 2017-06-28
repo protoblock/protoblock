@@ -65,6 +65,19 @@ Material.Card {
                 text: " 2017 Season Contract (" + inplay.symbol + ")"
                 backgroundColor: "white"
                 color: themeroot.theme.primaryColor
+                helpShown: true
+                helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
+                helperTxt: "16 games 16 weeks. Season long contracts settle at the total points from a 16 game season. " +
+                            "the season is from week1-week16. (week 16 is counted twice instead of using week 17)." +
+                            "These expire at the total fantasy points scored by " + inplay.fullname +
+                            ". The \"Writer\" (seller) must give the \"Buyer\", fantasy bits equal to the amount of fantsy points scored " +
+                            "It is 1 Fantasy Bit per Fantasy Point in these season long contracts." +
+                            "The game is to try to buy below the actual settlement number," +
+                            "or alternativly to write (sell) at a price above the actual final number. " +
+                            "With all the known risks, how much are you willing to \"pay\" for the contract? " +
+                            "For how much would you be willing to " +
+                            " write, or sell, the contract, knowing that you keep all the points in cae of injury," +
+                            " but have to pay up in case of a breakout?"
 
                 width: parent.width
                 height: ProtoScreen.guToPx(3)
