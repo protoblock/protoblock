@@ -5,7 +5,7 @@
 
 using namespace fantasybit ;
 
-int BlockRecorder::zeroblock(1);
+int BlockRecorder::zeroblock(0);
 
 void BlockRecorder::InitCheckpoint(int32_t lastblock) {
     leveldb::DB *db1;

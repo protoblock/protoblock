@@ -157,7 +157,7 @@ void MainLAPIWorker::startPoint(){
         if ( last_block < 0 ) {
             //emit OnError();
             qDebug() << " lapi last_block < 0 ";
-            last_block = BlockRecorder::zeroblock -1;
+            last_block = BlockRecorder::zeroblock;
         }
         emit BlockNum(last_block);
     }
