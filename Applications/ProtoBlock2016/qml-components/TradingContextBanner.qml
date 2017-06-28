@@ -81,7 +81,7 @@ Material.Card {
                 backgroundColor:  "white"
                 height: parent.height - cwc.height
                 width: parent.width // teamicon.width + pname2.implicitWidth
-                anchors.horizontalCenter: parent.horizontalCenter
+//                anchors.horizontalCenter: parent.horizontalCenter
                 elevation: 0
                 RowLayout {
                     id: trow
@@ -428,7 +428,7 @@ Material.Card {
                 Material.Label {
                     text: inplay.ask === 0 ? "" : inplay.ask
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 2
@@ -442,7 +442,7 @@ Material.Card {
                 Material.Label {
                     text: "Vol:"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 5
@@ -467,7 +467,7 @@ Material.Card {
     //                width: parent.width * .50
     //                height: parent.height * .50
                     text: "Chng:"
-//                    verticalAlignment: Text.AlignVCenter
+                    verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignRight
                     Layout.column: 5
                     Layout.row: 2
@@ -481,7 +481,7 @@ Material.Card {
                     text: ((inplay.change > 0) ? "+" : "" ) + inplay.change.toString() + " "
     //                Layout.fillHeight: true
     //                Layout.fillWidth:  false
-//                    verticalAlignment: Text.AlignVCenter
+                    verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignLeft
     //                color: icon.color
                     Layout.column: 6
@@ -497,7 +497,7 @@ Material.Card {
                 Material.Label {
                     text: "Hi:"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignHCenter
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 3
@@ -508,7 +508,7 @@ Material.Card {
                 Material.Label {
                     text: "Lo:"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 3
@@ -519,7 +519,7 @@ Material.Card {
                 Material.Label {
                     text: inplay.hi
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignHCenter
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 4
@@ -530,7 +530,7 @@ Material.Card {
                 Material.Label {
                     text: inplay.lo
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 4

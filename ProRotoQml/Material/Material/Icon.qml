@@ -62,7 +62,9 @@ Item {
         fillMode: Image.PreserveAspectFit
 
         source: {
-            if (icon.source.indexOf("icon://awesome/") == 0) {
+            if ( icon.source === "" )
+                return ""
+            else if (icon.source.indexOf("icon://awesome/") == 0) {
                 return ''
             }
             else if (icon.source.indexOf('icon://') === 0) {

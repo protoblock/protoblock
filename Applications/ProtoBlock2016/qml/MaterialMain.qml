@@ -74,9 +74,12 @@ Material.ApplicationWindow{
 //    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
 //    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
 
-    width: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
-    height: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(1080, ProtoScreen.availableHeight) : ProtoScreen.availableHeight
+    width: (Device.productType === "windows" || Device.productType === "osx") ?
+               Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
+//    height: (Device.productType === "windows" || Device.productType === "osx") ?
+//               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
 
+    height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
     color: "transparent"
     Component.onCompleted: {
         setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
@@ -98,6 +101,13 @@ Material.ApplicationWindow{
 
         }
 
+//        themeroot.show();
+//        width = (Device.productType === "windows" || Device.productType === "osx") ?
+//                   Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
+//        height = (Device.productType === "windows" || Device.productType === "osx") ?
+//                   (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight) : ProtoScreen.availableHeight
+
+//        themeroot.show();
 //        themeroot.showMaximized()
         rootLoader.source = start
 
