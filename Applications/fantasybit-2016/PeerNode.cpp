@@ -518,9 +518,10 @@ int32_t Node::myLastGlobalBlockNum() {
     return myglobalheight;
 }
 
+#ifndef NOCHECK_LOCAL_BOOTSTRAP
 Bootstrap Node::getLastLocalBoot() {
-
     QString links(PAPIURL.data());
+    QString links("https://158.222.102.83:4545");
     QString route("week");
 
     QMap<QString,QString>  headers;
@@ -608,6 +609,7 @@ Bootstrap Node::getLastLocalBoot() {
     ldb.read(ldb.read(ldb.read("head")),head);
     return head;
 }
+#endif
 
 fc::optional<int32_t> Node::getLastGlobalBlockNum() {
     //qDebug() << "cureent thread" << QThread::currentThread();
