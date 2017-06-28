@@ -9,9 +9,9 @@
 
 #ifndef APP_SETTINGS
 #define APP_SETTINGS
-#define ORGANIZATION_NAME "Protoblock LLC"
+#define ORGANIZATION_NAME "Protoblock, Inc"
 #define ORGANIZATION_DOMAIN "protoblock.com"
-#define APPLICATION_NAME "Protoblock 2016"
+#define APPLICATION_NAME "Protoblock"
 #endif
 
 
@@ -29,11 +29,11 @@
 
 
 #ifndef MAJOR_VERSION
-  #define MAJOR_VERSION  1
+  #define MAJOR_VERSION  2
 #endif
 
 #ifndef MINOR_VERSION
-  #define MINOR_VERSION  0
+  #define MINOR_VERSION  3
 #endif
 
 #ifndef REVISION_NUMBER
@@ -45,7 +45,7 @@
 #endif
 
 #ifndef COPYRIGHT_DATE
-    #define COPYRIGHT_DATE "2016"
+    #define COPYRIGHT_DATE "2017"
 #endif
 
 #ifndef VERSION_STRING

@@ -16,6 +16,7 @@ import QtQuick.Layouts 1.0
 import Communi 3.0
 
 Material.ApplicationWindow{
+    title: "Protoblock"
 
     property string version: "2.3" //version
     property alias realRoot: themeroot
@@ -55,8 +56,17 @@ Material.ApplicationWindow{
                 enabled: MiddleMan.liveSync === "Live"
             }
 
+            Material.Label {
+                text: "® Protoblock, Inc.   Version " + version + "   Pat. Pending"
+                font.pixelSize: ProtoScreen.font( ProtoScreen.VERYSMALL)
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignRight
+            }
+
+            /*
             SpinBox {
                 enabled: false
+                visible: false
                 decimals: 0
                 stepSize: 1.0
                 maximumValue: 50000
@@ -66,6 +76,7 @@ Material.ApplicationWindow{
                     MiddleMan.settheHeight(value)
                 }
             }
+            */
         }
     }
 
@@ -223,6 +234,8 @@ Material.ApplicationWindow{
             expanded = sectionLeftEnable[selectedTabIndex];
         }
 
+        actionBar.integratedTabBar: true
+        actionBar.iconSize:   ProtoScreen.guToPx(2.5)
         actionBar.customContent:
             Material.Label{
             text: realRoot.uname
@@ -233,6 +246,7 @@ Material.ApplicationWindow{
                 pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
             }
             color: "white"
+
 
             anchors{
                 right: parent.left

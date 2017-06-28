@@ -46,12 +46,12 @@ Material.Card {
 //        anchors.left: parent.left
         Layout.fillWidth: true
         Layout.fillHeight: true
-        spacing: 10
+        spacing: 0
 
         //name symbol
         Rectangle {
-            Layout.preferredWidth: Math.max(recwidth * 2.0,pname.width)
-            Layout.minimumWidth: Math.max(recwidth * 2.0,pname.width)
+            Layout.preferredWidth: recwidth
+            //Layout.minimumWidth: pname.width)
             Layout.preferredHeight: parent.height
             Layout.fillWidth: false
             border.width: 0
@@ -62,7 +62,7 @@ Material.Card {
                 fontSize: ProtoScreen.font(ProtoScreen.SMALL)
                 bold: true
                 anchors.left: parent.left
-                text: " 2017 Season Contract (" + inplay.symbol + ")"
+                text: " 2017 Season Contract (" + inplay.symbol + ")    "
                 backgroundColor: "white"
                 color: themeroot.theme.primaryColor
                 helpShown: true
@@ -82,7 +82,7 @@ Material.Card {
                 width: parent.width
                 height: ProtoScreen.guToPx(3)
                 anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
+                //anchors.horizontalCenter: parent.horizontalCenter
                 anchrosHType: "center"
                 elevation: 0
             }
@@ -99,7 +99,7 @@ Material.Card {
                 RowLayout {
                     id: trow
 //                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.centerIn: parent
+                    anchors.fill: parent
 //                    anchors.centerIn: parent
 //                    width: teamicon.size + pname2.implicitWidth + symb1.implicitWidth //+ ProtoScreen.guToPx(.38)
 
@@ -108,9 +108,9 @@ Material.Card {
                         id: teamicon
                         hasColor:false
                         source: "qrc:/"+ inplay.teamid+".PNG"
-//                        width: ProtoScreen.guToPx(6)
-//                        height: ProtoScreen.guToPx(6)
-//                        size: ProtoScreen.guToPx(3)
+                        width: ProtoScreen.guToPx(5)
+                        height: ProtoScreen.guToPx(5)
+                        size: ProtoScreen.guToPx(3)
                         anchors {
                             verticalCenter: parent.verticalCenter
     //                        left: parent.left
@@ -120,7 +120,7 @@ Material.Card {
 
                     Material.Label {
                         Layout.fillWidth: true
-                        elide: Text.ElideRight
+                        //elide: Text.ElideRight
                         id: pname2
                         text: !haveplayer ? "" : inplay.fullname + " (" + inplay.pos +") "
         //                anchors.fill: parent
@@ -130,8 +130,8 @@ Material.Card {
 
                         anchors {
                             verticalCenter: parent.verticalCenter
-    //                        left: teamicon.right
-                            leftMargin: ProtoScreen.guToPx(.125)
+                            left: teamicon.right
+                            //leftMargin: ProtoScreen.guToPx(.125)
                         }
                     }
 
@@ -753,7 +753,7 @@ Material.Card {
         Material.Card {
             elevation: 0
             height: parent.height
-            Layout.fillWidth: false
+            Layout.fillWidth: true
             id: fnameCARD
             Layout.preferredWidth: fbl12.width + ProtoScreen.guToPx(.5)
             anchors.rightMargin: ProtoScreen.guToPx(.25)

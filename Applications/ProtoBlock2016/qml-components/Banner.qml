@@ -10,6 +10,7 @@ Item {
     property string text
     property string color: "white"
     property string backgroundColor: "black"
+    property string hekperColor: "white"
     property int fontSize: ProtoScreen.font(ProtoScreen.LARGE)
     property bool bold: false
     property int elevation: 2
@@ -24,7 +25,7 @@ Item {
     width: parent.width
     Card{
         height: parent.height
-        width: parent.width
+        width: parent.width - (!bannerRoot.helpShown ? 0.0 : ProtoScreen.guToPx(6))
         backgroundColor: bannerRoot.backgroundColor
         elevation: bannerRoot.elevation
         radius: 0
@@ -94,16 +95,26 @@ Item {
     }
 
 
-    Icon {
+    IconButton {
         id: helperArea
         visible: helpShown
         width: ProtoScreen.guToPx(4)
         height: width
         anchors.right: parent.right
         anchors.rightMargin: ProtoScreen.guToPx(1)
+        anchors.leftMargin: ProtoScreen.guToPx(1)
         anchors.verticalCenter: parent.verticalCenter
-        source: "qrc:/icons/ic_help.png"
-        color: "white"
+        iconSource: "qrc:/icons/ic_help.png"
+        color: bannerRoot.color
+        size: ProtoScreen.guToPx(2.5)
+
+        onClicked: {
+            realRoot.helperHeader = bannerRoot.helperHeader
+            realRoot.helperTxt = bannerRoot.helperTxt
+            helperDialog.toggle()
+        }
+
+        /*
         MouseArea{
             anchors.fill: helperArea
             onClicked: {
@@ -112,6 +123,7 @@ Item {
                 helperDialog.toggle()
             }
         }
+        */
     }
 
 

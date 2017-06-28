@@ -61,6 +61,7 @@ Item {
             anchors.left: parent.left
             width: parent.width
             anchors.leftMargin: ProtoScreen.guToPx(.25)
+            recwidth: dsplit.width
         }
 
         Item {
@@ -78,6 +79,7 @@ Item {
 //                height: parent.height
 
                 SplitView {
+                    id: dsplit
                     Layout.minimumWidth: parent.width * .10
                     Layout.maximumWidth: parent.width * .50
                     orientation: Qt.Vertical

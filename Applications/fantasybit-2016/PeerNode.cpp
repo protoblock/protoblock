@@ -521,7 +521,7 @@ int32_t Node::myLastGlobalBlockNum() {
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
 Bootstrap Node::getLastLocalBoot() {
     QString links(PAPIURL.data());
-    QString links("https://158.222.102.83:4545");
+    //QString links("https://158.222.102.83:4545");
     QString route("week");
 
     QMap<QString,QString>  headers;
