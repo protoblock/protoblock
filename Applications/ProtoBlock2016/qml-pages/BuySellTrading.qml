@@ -167,14 +167,19 @@ Item {
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true
                     onClicked : {
-//                        focus = true;
-                        console.log(" price " + buyspin.value )
-                        myTradeDialog.price = buyspin.value
-                        myTradeDialog.qty = buyqty.value
-                        myTradeDialog.side = "Buy"
-                        myTradeDialog.player = inplay.fullname + " (" + inplay.pos +") "
-                                + "Symbol(" + inplay.symbol +")"
-                        myTradeDialog.show()
+                        if ( realRoot.uname === "" ) {
+                            rootLoader.source = "qrc:/Account.qml"
+                            pageHelper.selectedTabIndex = 3;
+                        }
+                        else if ( inplay.symbol !== "") {
+                            console.log(" price " + buyspin.value )
+                            myTradeDialog.price = buyspin.value
+                            myTradeDialog.qty = buyqty.value
+                            myTradeDialog.side = "Buy"
+                            myTradeDialog.player = inplay.fullname + " (" + inplay.pos +") "
+                                    + "Symbol(" + inplay.symbol +")"
+                            myTradeDialog.show()
+                        }
                     }
 
                 }
@@ -299,14 +304,19 @@ Item {
                     Layout.fillWidth: true
 
                     onClicked : {
-//                        focus = true;
-                        console.log(" price " + sellspin.value )
-                        myTradeDialog.price = sellspin.value
-                        myTradeDialog.qty = sellqty.value
-                        myTradeDialog.side = "Sell"
-                        myTradeDialog.player = inplay.fullname + " (" + inplay.pos +") "
-                                + "Symbol(" + inplay.symbol +")"
-                        myTradeDialog.show()
+                        if ( realRoot.uname === "" ) {
+                            rootLoader.source = "qrc:/Account.qml"
+                            pageHelper.selectedTabIndex = 3;
+                        }
+                        else if ( inplay.symbol !== "") {
+                            console.log(" price " + sellspin.value )
+                            myTradeDialog.price = sellspin.value
+                            myTradeDialog.qty = sellqty.value
+                            myTradeDialog.side = "Sell"
+                            myTradeDialog.player = inplay.fullname + " (" + inplay.pos +") "
+                                    + "Symbol(" + inplay.symbol +")"
+                            myTradeDialog.show()
+                        }
                     }
                 }
             }
@@ -737,7 +747,7 @@ Item {
                 rootLoader.source = "qrc:/Account.qml"
                 pageHelper.selectedTabIndex = 3;
             }
-            else if ( inplay.symbol != "" )
+            else if ( inplay.symbol !== "" )
                 MiddleMan.doTrade(
                      inplay.playerid,
                     inplay.symbol
