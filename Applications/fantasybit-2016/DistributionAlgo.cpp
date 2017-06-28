@@ -37,20 +37,26 @@ NameValuePairs<int>
     vector<double> diffs;
     diffs.reserve(projections.size());
     
+    double maxdiff = result;
+
     for(const auto& pair : projections) {
         double diff = result - pair.second;
         diff = fabs(diff);
+        if ( diff > maxdiff )
+            continue;
         mean+=diff;
         diffs.emplace_back(diff);
 
 //        qDebug() << pair.first << " projection " << pair.second << " diff " << diff;
     }
   
-    mean /= projections.size();
+    if ( diffs.size() > 1  )
+        mean /= diffs.size();
+
     //qInfo() << "mean " << mean;
 
     
-    double maxdiff = min(mean, result);
+    maxdiff = mean;
     //qInfo() << " maxdiff " << maxdiff;
 
 

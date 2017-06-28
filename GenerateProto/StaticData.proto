@@ -68,6 +68,14 @@ message GameResult {
     repeated PlayerResult home_result = 10;
     repeated PlayerResult away_result = 20;
     optional uint32 kickofftime = 30;
+    optional float homeTotal = 40;
+    optional float awayTotal = 50;
+}
+
+message SeasonResult {
+    optional uint64  season = 1;
+    repeated PlayerResult player_results = 10;
+    optional float total = 20;
 }
 
 message PlayerContractSymbol {

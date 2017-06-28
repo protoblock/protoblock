@@ -9,9 +9,11 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls.Private 1.0
 
 Item {
-    id: rowtt
+    id: wktt
     anchors.fill: parent
 
+    property bool ss: false
+    property bool posvisible: false
     property variant selectedModel
 //    property alias ccount: tvr.columnCount
     property int focuscount: 0
@@ -26,45 +28,11 @@ Item {
     property int lcount: 2 //last - change
     property int qcount: 5
 
-    property int ocol: 0
+    property int ocol: 1
     property int pcol: ocol + ocount
     property int lcol: pcol + pcount
     property int qcol: lcol + lcount
     property int vcol: qcol + qcount
-
-    property var teammodel: ["ALL",
-        "ARI" ,
-        "ATL" ,
-        "BAL" ,
-        "BUF" ,
-        "CAR" ,
-        "CHI" ,
-        "CIN" ,
-        "CLE" ,
-        "DAL" ,
-        "DEN" ,
-        "DET" ,
-        "GB" ,
-        "HOU" ,
-        "IND" ,
-        "JAC" ,
-        "KC" ,
-        "MIA" ,
-        "MIN" ,
-        "NE" ,
-        "NO" ,
-        "NYG" ,
-        "NYJ" ,
-        "OAK" ,
-        "PHI" ,
-        "PIT" ,
-        "SD" ,
-        "SEA" ,
-        "SF" ,
-        "LA" ,
-        "TB" ,
-        "TEN" ,
-        "WAS"]
 
 
 //    property int rowcol: bcol + 1
@@ -86,10 +54,6 @@ Item {
 
     //Market Prices - ROW stats (x weeks)
         //bid size, bid, ask, ask size
-
-    //YTD Stats
-
-
 
 
     Item {
@@ -144,18 +108,43 @@ Item {
             frameVisible: false
             selectionMode: SelectionMode.SingleSelection
 
+//            currentRow: 0
             property int selectedRow: -1
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
-//               SystemPalette {
-//                  id: myPalette;
-//                  colorGroup: SystemPalette.Inactive
-//               }
-               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#f5f5f5":"transparent"
-//               {
-//                  var baseColor = styleData.alternate?"#f5f5f5":"transparent"
-//                  return styleData.selected?myPalette.highlight:baseColor
-//               }
+               color: (styleData.row===tvr.selectedRow)
+//                      || (MiddleMan.pPlayerQuoteSliceModelItem && MiddleMan.pPlayerQuoteSliceModelItem.symbol === model.data(styleData.row,"symbol")))
+                       ? "Light Grey" : (styleData.alternate ? "#f5f5f5" : "transparent")
+
+            }
+
+            TableViewColumn {
+                role: "symbol"
+                title: "Symbol"
+                horizontalAlignment: Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(8)
+                delegate: Material.Card {
+                    anchors.centerIn: parent
+                    flat: true
+                    radius: 12
+                    border.width: 0
+                    anchors.rightMargin: ProtoScreen.guToPx(5)
+                    anchors.leftMargin: ProtoScreen.guToPx(5)
+
+                    backgroundColor: "transparent"
+                    width: ProtoScreen.guToPx(9) // ml.width * 3
+                    Material.Label {
+                        anchors.centerIn: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                        text: styleData.value;
+                        font.bold: false;
+                    }
+
+                }
             }
 
 
@@ -176,6 +165,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(8)
                 delegate: posdel
+                visible: posvisible
             }
 
             TableViewColumn {
@@ -185,6 +175,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(8)
                 delegate: avgdel
+                visible: posvisible
             }
 
 
@@ -646,34 +637,6 @@ Item {
                 }
             }
 
-            TableViewColumn {
-                role: "symbol"
-                title: "Symbol"
-                horizontalAlignment : Text.AlignHCenter
-                movable: false
-                width: ProtoScreen.guToPx(8)
-                delegate: Material.Card {
-                    anchors.centerIn: parent
-                    flat: true
-                    radius: 12
-                    border.width: 0
-                    anchors.rightMargin: ProtoScreen.guToPx(5)
-                    anchors.leftMargin: ProtoScreen.guToPx(5)
-
-                    backgroundColor: "transparent"
-                    width: ProtoScreen.guToPx(9) // ml.width * 3
-                    Material.Label {
-                        anchors.centerIn: parent
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                        text: styleData.value;
-                        font.bold: false;
-                    }
-
-                }
-            }
 
         }
     }
@@ -681,6 +644,7 @@ Item {
     Component {
         id: headerdel
         Rectangle {
+            z: 2
             id: idd
             implicitWidth: textItem2.implicitWidth
             height: ProtoScreen.guToPx(8)
@@ -710,31 +674,139 @@ Item {
                     }
                 }
 
+                Material.IconButton {
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    onClicked: {
+                          wktt.ss = true
+//                        symbolsearch.show
+                    }
 
-//                Material.IconButton {
-//                    id: exportit
-//                    anchors.left: parent.left
-//                    anchors.top: parent.top
-//                    Layout.fillHeight: true
-//                    Layout.fillWidth: false
-//                    width: ProtoScreen.guToPx(6)
-//                    height: parent.height
-//                    onClicked: {
-//                        importexportDialog.show();
-//                    }
-
-//                    size: ProtoScreen.guToPx(2.5)
+                    size: ProtoScreen.guToPx(2.5)
 
 
-//                    visible: false//styleData.column === 0
-//                    enabled: false//styleData.column === 0
-//                    action: Material.Action {
-//                        iconName: "awesome/code"
+                    visible: styleData.column === 0 && !wktt.ss
+                    enabled: styleData.column === 0 && MiddleMan.liveSync === "Live" && !wktt.ss
+                    action: Material.Action {
+                        iconName: "awesome/plus"
+                        hoverAnimation: true
+                        name: "add symbols"
+                    }
+                }
+
+                Material.IconButton {
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    onClicked: {
+                          wktt.ss = false
+                    }
+
+                    size: ProtoScreen.guToPx(2.5)
+
+
+                    visible: styleData.column === 0 && wktt.ss
+                    enabled: styleData.column === 0 && MiddleMan.liveSync === "Live" && wktt.ss
+                    action: Material.Action {
+                        iconName: "awesome/minus"
+                        hoverAnimation: true
+                    }
+                }
+
+                Material.IconButton {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+//                    color: themeroot.theme.accentColor
+                    onClicked: {
+                        console.log("clicked send")
+                        rootLoader.source = "qrc:/Account.qml"
+                        pageHelper.selectedTabIndex = 3;
+                    }
+                    size: ProtoScreen.guToPx(2.5)
+
+
+                    visible: realRoot.uname === "" && styleData.column === ocol
+                    enabled: visible && MiddleMan.liveSync === "Live"
+                    action: Material.Action {
+//                        iconName: "awesome/user-o"
+                        iconName: "qrc:/icons/action_account_circle.png"
+                        hoverAnimation: true
+                        name: "Claim Fantasyname"
+                    }
+                }
+
+                Material.IconButton {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    color: Material.Theme.light.textColor
+                    onClicked: {
+                        posvisible = true;
+                    }
+                    size: ProtoScreen.guToPx(1.5)
+
+
+                    visible: realRoot.uname !== "" && styleData.column === ocol && !posvisible
+                    enabled: visible && MiddleMan.liveSync === "Live"
+                    action: Material.Action {
+                        iconName: "awesome/expand"
+                        hoverAnimation: true
+                        name: "details"
+                    }
+                }
+
+                Material.IconButton {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    Layout.fillHeight: false
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    onClicked: {
+                        posvisible = false;
+                    }
+                    size: ProtoScreen.guToPx(1.5)
+                    color: Material.Theme.light.textColor
+
+
+                    visible: styleData.column === ocol + 1 && posvisible
+                    enabled: visible && MiddleMan.liveSync === "Live"
+                    action: Material.Action {
+                        iconName: "awesome/compress"
 //                        hoverAnimation: true
-//                    }
-//                }
+                        name: "less"
+                    }
+                }
 
             }
+            Material.TextField {
+                anchors.leftMargin: ProtoScreen.guToPx(.5)
+                width: parent.width
+                height: parent.height * .50
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                placeholderText: "search..."
+                inputMethodHints: Qt.ImhNoPredictiveText;
+                onTextChanged: {
+                }
+                enabled: false//styleData.column === 1
+                visible: false//styleData.column === 1
+                activeFocusOnPress: true
+            }
+
 
             Material.Card {
                 id: mcbot
@@ -902,7 +974,7 @@ Item {
         target: tvr.selection
         onSelectionChanged: {
 
-            rowtt.update();
+            wktt.update();
             console.log("row onSelectionChanged");
         }
     }
@@ -913,7 +985,7 @@ Item {
     }
 
     function update() {
-        console.log(" ROWtradng update")
+        console.log(" MkTrading update")
         tvr.selection.forEach(function(rowIndex) {
             MiddleMan.startDepth(tvr.model.getPlayerSliceModelUid(rowIndex));
             //,tvr.model.roleForName("awardsModel"))

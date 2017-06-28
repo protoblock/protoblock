@@ -17,7 +17,7 @@ import Communi 3.0
 
 Material.ApplicationWindow{
 
-    property string version: "2.1.1" //version
+    property string version: "2.3" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -71,8 +71,11 @@ Material.ApplicationWindow{
 
     id: themeroot
     visible: true
-    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
-    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
+//    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
+//    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
+
+    width: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
+    height: (Device.productType === "windows" || Device.productType === "osx") ? Math.min(1080, ProtoScreen.availableHeight) : ProtoScreen.availableHeight
 
     color: "transparent"
     Component.onCompleted: {
@@ -95,13 +98,15 @@ Material.ApplicationWindow{
 
         }
 
-        themeroot.showMaximized()
-//        rootLoader.source = "qrc:/Projections.qml";
+//        themeroot.showMaximized()
+        rootLoader.source = start
 
     }
 
     property string defaultname
 
+    property string start: "qrc:/Trading.qml"
+    property int startindex: 1
     property string  errorString
     property bool  reloadleaders: false
 
@@ -137,7 +142,6 @@ Material.ApplicationWindow{
     property string pageSwitcher
     property string currentPage: sections[0][0]
     property int loginCardScale: 1
-    property string  baseUrl: "http://protoblock.com/php/simple.php?url=https://158.222.102.83:4545/"
 
     theme {
         primaryColor: Colors.primaryColor
@@ -146,7 +150,7 @@ Material.ApplicationWindow{
     }
 
     // Level One Trading
-    property var levelTwo: [ "Leaderboard"]
+    property var levelTwo: [ "Trading"]
 
     //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
 
@@ -198,8 +202,8 @@ Material.ApplicationWindow{
     initialPage:  Material.TabbedPage {
         property bool expanded: true
         id: pageHelper
-        title: "ProtoBlock 2016"
-
+        title: "Protoblock 2017"
+        selectedTabIndex: startindex
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
@@ -243,7 +247,7 @@ Material.ApplicationWindow{
                     pageHelper.title = "Account Settings"
                 }
             }
-//            Material.Action {
+//            ,Material.Action {
 //                iconName: "qrc:/icons/action_settings.png"
 //                name: "Settings"
 //                hoverAnimation: true
@@ -323,12 +327,12 @@ Material.ApplicationWindow{
             // sidebar is ProtoScreen.guToPx(31.25)
             width: (navDrawer.enabled === true) ? themeroot.width  :
                   pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
-            height: navDrawer.enabled === true ? themeroot.height : navDrawer.height
+            height: parent.height//navDrawer.enabled === true ? themeroot.height : navDrawer.height
             visible: status == Loader.Ready
             anchors.right: parent.right
 
             Component.onCompleted: {
-                console.log(" mainmat " + rootLoader.width)
+                console.log(" matmain " + rootLoader.width)
             }
         }
 
@@ -437,10 +441,10 @@ Material.ApplicationWindow{
                            "OAK" ,
                            "PHI" ,
                            "PIT" ,
-                           "SD" ,
+                           "LAC" ,
                            "SEA" ,
                            "SF" ,
-                           "LA" ,
+                           "LAR" ,
                            "TB" ,
                            "TEN" ,
                            "WAS"];
@@ -661,8 +665,8 @@ Material.ApplicationWindow{
                     loginDialog.close()
 
                 themeroot.reloadleaders = false
-                rootLoader.source = "qrc:/Projections.qml"
-                pageHelper.selectedTabIndex = 0;
+                rootLoader.source = start
+                pageHelper.selectedTabIndex = startindex;
                 rootLoader.showMaximized
             }
             else {
@@ -683,8 +687,8 @@ Material.ApplicationWindow{
                 uname = name
                 msgString = "You are now playing as: " + name
                 if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
-                    rootLoader.source = "qrc:/Projections.qml"
-                    pageHelper.selectedTabIndex = 0;
+                    rootLoader.source = start
+                    pageHelper.selectedTabIndex = startindex;
                     usingNameDialog.open()
                 }
                 else
@@ -738,25 +742,6 @@ Material.ApplicationWindow{
         }
     }
 
-//    // check for updates
-//    XmlListModel {
-//        id: updateMachine
-//        source:"http://protoblock.com/version.xml"
-//        query: "/updatemachine"
-//        XmlRole{name: "version";query: "version/string()"}
-//        XmlRole{name: "libs";query: "libs/string()"}
-//        XmlRole{name: "changelog";query: "changelog/string()"}
-//        onStatusChanged: {
-//            switch(status){
-//            case XmlListModel.Error :
-//                                console.log("ERROR IN UPDATE MACHINE ")
-//                break;
-//            case XmlListModel.Ready:
-//                compairVersions(updateMachine.get(0).version)
-//                break;
-//            }
-//        }
-//    }
 
     IrcConnection {
         property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname

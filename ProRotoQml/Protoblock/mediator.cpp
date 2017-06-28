@@ -17,6 +17,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pDepthMarketModel(&mDepthMarketModel),
     m_pGlobalOpenOrdersModel(&dummyOpenOrdersModel),
     mFantasyNameBalModel(this,QByteArray(),{"name"}),
+    mPlayerSymbolsModel{this,{"symbol"},{"symbol"}},
+    m_pPlayerSymbolsModel(new SortFilterProxyModel),
     m_pFantasyNameBalModel(&mFantasyNameBalModel),
     mGoodNameBalModel{this,QByteArray(),{"name"}},
     m_pGoodNameBalModel(&mGoodNameBalModel),
@@ -35,11 +37,18 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
+
+
     fnameindex = 0;
     //leader models
     m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
     m_pLeaderBoardSortModel->setSortRole("lastupdate");//mPlayerProjModel.roleForName("pos"));
     m_pLeaderBoardSortModel->setDynamicSortFilter(true);
+
+    m_pPlayerSymbolsModel->setSourceModel(&mPlayerSymbolsModel);
+    m_pPlayerSymbolsModel->setSortRole({"fullname"});
+    m_pPlayerSymbolsModel->setDynamicSortFilter(true);
+    m_pPlayerSymbolsModel->setFilterRole({"symbol"});
 
     //schedule models
     m_pWeeklyScheduleModel = new WeeklyScheduleModel(this);
@@ -82,7 +91,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 //    m_pPlayerQuoteSliceModel = &m_pPlayerQuoteSliceModel;
     m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(&mPlayerQuoteSliceModel);
-    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("blocknum");
+    m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("symbol");
     m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
 
 
@@ -321,10 +330,87 @@ void Mediator::updateWeek() {
         }
         else {
             m_pWeeklyScheduleModel->clear();
-            mPlayerQuoteSliceModel.clear();
+//            mPlayerQuoteSliceModel.clear();
             mPlayerProjModel.clear();
             set_thisWeekPrev(false);
+            /*
+            {
+            PlayerDetail pd;
+            pd.base = mGateway->dataService->GetPlayerBase("1255");
+            PlayerStatus ps = mGateway->dataService->GetPlayerStatus("1255");
+            PlayerProjModelItem *pp = new PlayerProjModelItem(pd,"GB","1255",QString(""),0,true,nullptr);
+            PlayerQuoteSliceModelItem *p = new PlayerQuoteSliceModelItem(*pp);
+            p->setsymbol((ps.symbol() + "17s").data());
+            mPlayerQuoteSliceModel.append(p);
+            }
+            {
+            PlayerDetail pd;
+            pd.base = mGateway->dataService->GetPlayerBase("1387");
+            PlayerStatus ps = mGateway->dataService->GetPlayerStatus("1387");
+            PlayerProjModelItem *pp = new PlayerProjModelItem(pd,"CHI","1387",QString(""),0,true,nullptr);
+            PlayerQuoteSliceModelItem *p = new PlayerQuoteSliceModelItem(*pp);
+            p->setsymbol((ps.symbol() + "17s").data());
+            mPlayerQuoteSliceModel.append(p);
+            }
+            /**/
+            auto gss = mGateway->dataService->GetAllSymbols();
+            int count = 0;
+            for ( auto gs : gss ) {
+                //if (count++ > 10 ) break;
+                //qDebug() << "gs " << gs.first.data();
+                mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
+            }
+
+
+            const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
+            qDebug() << "  vms " << vms.size();
+            for ( auto ms : vms ) {
+                string syb;
+                string symbol = ms.symbol();
+                auto *it = mPlayerQuoteSliceModel.getByUid(symbol.data());
+                if ( it == nullptr || it->get_pPlayerSymbolsModelItem() == nullptr) {
+                    auto iit = gss.lower_bound(symbol);
+                    if ( iit != begin(gss)) {
+                        syb = (--iit)->first;
+                        int ret = syb.compare(0,syb.size(),symbol.data(),syb.size());
+//                        qDebug() << " rettt " << ret;
+                        if ( ret == 0 &&
+                             (syb.size() != 4 || symbol.at(4) == '1') ) {
+                             qDebug() << "stripped raw symbol" << symbol.data() << syb.data() << iit->second.data();
+                             if ( it == nullptr ) {
+                                it = new PlayerQuoteSliceModelItem(symbol.data());
+                                mPlayerQuoteSliceModel.append(it);
+                             }
+                        }
+//                        else if ( syb.compare(0,syb.size(),symbol) == 0 ) {
+//                                if (syb.size() != 4 || symbol.at(4) == '1')
+//                                    qDebug() << "goood";
+//                                else
+//                                    qWarning() << " syb.size() " << syb.size() << symbol.at(4);
+//                        }
+                        else
+                            qWarning() << " cant find " << syb.data() << " | " << symbol.data();
+                    }
+                }
+                else {
+                    syb = it->get_pPlayerSymbolsModelItem()->get_symbol().toStdString();
+                }
+
+                if ( it == nullptr || syb == "")
+                    qWarning() << " nulls cant find " << symbol.data();
+                else {
+                    auto ppd = mGateway->dataService->GetPlayerDetail(syb);
+                    it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
+                    it->Update(ms);
+                }
+            }
+
+            if (myFantasyName != "" )
+                updateOnChangeFantasyName();
+
+
         }
+
         updateLiveLeaders();
     }
 }
@@ -354,7 +440,7 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 }
 
 void Mediator::updateCurrentFantasyPlayerOrderPositions() {
-    update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
+
     for ( auto tit : mTradingPositionsModel ) {
         auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
@@ -392,7 +478,7 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         double avg = 0;
         double pnl = 0;
         if ( netqty == 0 ) {
-            pnl = tit->get_netprice() * 100.0;
+            pnl = tit->get_netprice() * tit->get_multiplier();
         }
         else {
             int price = (netqty > 0) ? it->get_bid() : it->get_ask();
@@ -419,7 +505,7 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
             if ( price == 0 )
                 pnl = 0.0;
             else
-                pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+                pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
 //            qDebug() << ++i << " here ";
 
@@ -438,7 +524,16 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 
     }
     mTradingPositionsModel.settotalopenpnl(totpnl);
-//    qDebug() << ++i << " here ";
+
+    if ( m_pPlayerQuoteSliceModelItem ) {
+        auto tit = mTradingPositionsModel.getByUid(m_pPlayerQuoteSliceModelItem->get_symbol());
+        if ( tit != nullptr ){
+            update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
+            return;
+        }
+    }
+
+    update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
 
 }
 
@@ -551,8 +646,8 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     connect( that, SIGNAL(FinishedResults()),
              this, SLOT(OnFinishedResults()));
 
-    connect( that, SIGNAL(GotMarketSnaps()),
-             this, SLOT(OnGotMarketSnaps()));
+//    connect( that, SIGNAL(GotMarketSnaps()),
+//             this, SLOT(OnGotMarketSnaps()));
 //    return that;
 }
 
@@ -664,10 +759,11 @@ QString Mediator::getSecret() {
     return sec.data();
 }
 
-void Mediator::doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size) {
+void Mediator::doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size) {
 
     ExchangeOrder eo;
-    eo.set_playerid(symbol.toStdString());
+    eo.set_playerid(playerid.toStdString());
+    eo.set_symbol(symbol.toStdString());
     eo.set_type(ExchangeOrder::NEW);
 
     OrderCore core;
@@ -727,13 +823,13 @@ void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
 
 void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     qDebug() << "level2 Mediator::OnNewPos " << fp.pos.ToString().data() <<
-                fp.playerid.data() << fp.fname.data();
+                fp.symbol.data() << fp.fname.data();
 
     if ( fp.fname != myFantasyName )
         return;
 
-    auto it = mPlayerQuoteSliceModel.getByUid(fp.playerid.data());
-    auto tit = mTradingPositionsModel.getOrCreate(fp.playerid.data());
+    auto it = mPlayerQuoteSliceModel.getByUid(fp.symbol.data());
+    auto tit = mTradingPositionsModel.getOrCreate(fp.symbol.data());
     if ( tit == nullptr )
         return;
 
@@ -744,7 +840,7 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     double avg = 0;
     double pnl = 0;
     if ( netqty ==0 ) {
-        pnl = tit->get_netprice() * 100.0;
+        pnl = tit->get_netprice() * tit->get_multiplier();
     }
     else if ( it != nullptr ) {
         int price = (netqty > 0) ? it->get_bid() : it->get_ask();
@@ -753,7 +849,7 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
         if ( price == 0 )
             pnl = 0;
         else
-            pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+            pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
         avg = tit->get_netprice()  / (netqty * -1.0);
     }
 
@@ -782,7 +878,7 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
     double avg = 0;
     double pnl = 0;
     if ( netqty == 0 ) {
-        pnl = tit->get_netprice() * 100.0;
+        pnl = tit->get_netprice() * tit->get_multiplier();
     }
     else if ( it != nullptr ) {
         int price = (netqty > 0) ? it->get_bid() : it->get_ask();
@@ -791,7 +887,7 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
         if ( price == 0 )
             pnl = 0;
         else
-            pnl = 100.0 * ((price * netqty) + tit->get_netprice());
+            pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
         avg = tit->get_netprice()  / (netqty * -1.0);
     }
 

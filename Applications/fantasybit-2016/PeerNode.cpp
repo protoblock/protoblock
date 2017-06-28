@@ -29,7 +29,7 @@
 #include <QFileInfo>
 #include "globals.h"
 using namespace std;
-	
+
 namespace fantasybit
 {
 
@@ -56,13 +56,13 @@ void Node::init() {
 //    }
 #endif
 
-#ifdef END2016ADD2014
-    QFileInfo check_file( (GET_ROOT_DIR() + "end2016").data ());
+#ifdef START2017WITH2014
+    QFileInfo check_file( (GET_ROOT_DIR() + "start2017").data ());
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "end2016").data () );
+        QFile file( (GET_ROOT_DIR() + "start2017").data () );
         file.open(QIODevice::WriteOnly);
     }
 #endif
@@ -358,7 +358,7 @@ bool Node::SyncTo(int32_t gh) {
 
             //fork
             if ( (*sb).signedhead().head().prev_id() != previd ) {
-                qWarning() << (*sb).signedhead().head().prev_id() << " != prev " << previd.data();
+                qWarning() << (*sb).signedhead().head().prev_id().data() << " != prev " << previd.data();
                 forking = true;
                 if ( !BackFork((*sb).signedhead().head().prev_id(),current_hight) )
                     return forking = false;
@@ -437,7 +437,7 @@ bool Node::BackFork(const string &goodid, int32_t num) {
 
         id = FantasyAgent::BlockHash(*gb);
         if ( id != prevprev ) {
-            qCritical() << " expect pre_id t equal id(prev)" << prevprev << id;
+            qCritical() << " expect pre_id t equal id(prev)" << prevprev.data() << id.data();
             return false;
         }
 
@@ -520,6 +520,7 @@ int32_t Node::myLastGlobalBlockNum() {
 
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
 Bootstrap Node::getLastLocalBoot() {
+    QString links(PAPIURL.data());
     QString links("https://158.222.102.83:4545");
     QString route("week");
 
@@ -545,8 +546,8 @@ Bootstrap Node::getLastLocalBoot() {
     else
         week = stoi(weekstr);
 
-    if ( week == 0 )
-        week = 8;
+//    if ( week == 0 )
+//        week = 8;
 
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
@@ -562,12 +563,12 @@ Bootstrap Node::getLastLocalBoot() {
 
     bool done = false;
     while ( !done ) {
-        if ( week <= 1 ) {
+        if ( week < 0 ) {
             done = true;
             break;
         }
 
-        string globalhead = (week < 10 ? "20160" : "2016") + to_string(week);
+        string globalhead = (week < 10 ? "20170" : "2017") + to_string(week);
 
 #ifndef NO_DOSPECIALRESULTS
         if ( globalhead == "201613" && !Commissioner::BootStrapFileExists(globalhead) ) {
@@ -594,12 +595,14 @@ Bootstrap Node::getLastLocalBoot() {
         }
         else {
             done = true;
+#ifndef NO_DOSPECIALRESULTS
             if ( doSpecialResults ) {
                 auto holdhead = ldb.read("head");
                 Bootstrap temphead = Commissioner::makeGenesisBoot(ldb,globalhead);
                 ldb.write("head",holdhead);
                 qWarning() << "getLastLocalBoot  if doSpecialResults " << holdhead.data();
             }
+#endif
         }
     }
 

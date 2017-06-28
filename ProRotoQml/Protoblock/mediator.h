@@ -54,6 +54,7 @@ class Mediator : public QObject {
 
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
 
+    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerSymbolsModel)
 
     //Trading
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
@@ -125,6 +126,7 @@ class Mediator : public QObject {
 
     PlayerResultModel mPlayerResultModel;
     QItemSelectionModel myPrevGamesSelectionModel;
+    PlayerSymbolsModel mPlayerSymbolsModel;
 
         //schedule
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeekClosedScheduleModel)
@@ -149,7 +151,7 @@ class Mediator : public QObject {
 public:
     static Mediator *instance();
 
-    void CopyTheseProjections(std::vector<fantasybit::PlayerPoints> &these) {
+    void CopyTheseProjections(const std::vector<fantasybit::PlayerPoints> &these) {
         for ( auto t : these) {
             auto *item = mPlayerProjModel.getByUid(t.playerid().data());
             if ( !item ) continue;
@@ -187,7 +189,10 @@ public:
 
 //          m_pPlayerQuoteSliceModelItem = it;
             update_pPlayerQuoteSliceModelItem(it);
+            update_pDepthMarketModel(it->get_pDepthMarketModel());
         }
+        else
+            update_pDepthMarketModel(&mDepthMarketModel);
 
         auto tit = mTradingPositionsModel.getOrCreate(symbol);
         if ( tit != nullptr ) {
@@ -221,6 +226,12 @@ public:
 //        getOrderPos();
     }
 
+//    Q_INVOKABLE  QStringList getAllSymbols() {
+//        auto &hold =  mGateway->dataService->GetAllSymbols();
+//        qDebug() << " GetAllSymbols " << hold.count();
+//        return hold;
+//    }
+
 //    Q_INVOKABLE void stopDepth(const QString& symbol) {
 //        polldepth.stop();
 //        depthBackup -= 5;
@@ -234,7 +245,7 @@ public:
 ////            m_currentPidContext = context;
 //    }
     Q_INVOKABLE void doCancel(qint32 id);
-    Q_INVOKABLE void doTrade(QString symbol, bool isbuy, const qint32 price, qint32 size);
+    Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
 
 //    QString playersStatus()const;
 //    void setPlayersStatus(const QString &playersStatus);
@@ -589,7 +600,7 @@ public:
         }
     }
 
-    
+
     bool usingRandomNames = false;
 
     std::vector<std::string> fnames;
@@ -611,7 +622,12 @@ public:
     Q_INVOKABLE QStringList allNamesList() { return m_allNamesList; }
 
     //portfolio
+    Q_INVOKABLE QString fillPlayerBase(const QString &syb, const QString &pid) {
+        return mPlayerSymbolsModel.Update(syb, mGateway->dataService->GetPlayerBase(pid.toStdString()));
+    }
+
     Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
+
         auto model = mPlayerQuoteSliceModel.getByUid(uid);
         if ( model == nullptr ) {
             qDebug() << " bad data for getPlayerNamePos " << uid;
@@ -621,6 +637,10 @@ public:
             return model->get_fullname() + " (" + model->get_pos() +")" ;
     }
 
+    Q_INVOKABLE void addTradingSymbol(const QString &symbol) {
+        auto ppd = mGateway->dataService->GetPlayerDetail(symbol.toStdString());
+        mPlayerQuoteSliceModel.UpdateSymbols(ppd,mPlayerSymbolsModel.getByUid(symbol),m_blocknum,"17s");
+    }
 
     //data
     Q_INVOKABLE QString getTeamid(const QString &uid) {

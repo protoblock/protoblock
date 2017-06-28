@@ -15,6 +15,7 @@ message StorePos {
 message BookPos {
     optional string playerid = 30;
     repeated SettlePos positions = 40;
+    optional string symbol = 50;
 }
 
 message GameSettlePos {
@@ -96,6 +97,7 @@ message BookDelta {
     repeated MarketTicker level2tic = 60;
     repeated MarketTicker level1tic = 70;
     optional int32 blocknum = 80;
+    optional string symbol = 90;
 }
 
 message MarketQuote {
@@ -115,4 +117,18 @@ message MarketSnapshot {
     optional ContractOHLC ohlc = 20;
     optional MarketQuote quote = 30;
     optional int32 blocknum = 40;
+}
+
+message FutContract {
+    enum Type {
+        WEEKLY = 1;
+        SEASON = 2;
+        ROW = 3;
+        OTHER = 4;
+    }
+
+    optional Type type = 10;
+    optional int32 season = 20;
+    optional int32 week = 30;
+    optional string symbol = 40;
 }

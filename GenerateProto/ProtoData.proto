@@ -364,7 +364,8 @@ message ExchangeOrder {
     optional string playerid = 40;
     optional OrderCore core = 50;
     optional int32 cancel_oref = 100;
-
+    optional FutContract futcontract = 110;
+    optional string symbol = 120;
     extensions 500 to max;
 }
 

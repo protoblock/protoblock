@@ -24,6 +24,7 @@ namespace pb {
 using namespace fantasybit;
 
 
+
 class PlayerProjModelItem : public QObject {
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY (QString, fullname)
@@ -130,8 +131,6 @@ public:
     }
 };
 
-Q_DECLARE_METATYPE(PlayerProjModelItem*)
-Q_DECLARE_METATYPE(PlayerProjModel*)
 
 class ProjectionsViewFilterProxyModel : public SortFilterProxyModel
 {
@@ -358,8 +357,16 @@ public:
 
 class LeaderBaordFantasyNameModel : public QQmlObjectListModel<LeaderBaordFantasyNameModelItem> {};
 
-Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
+}
+using namespace pb;
 
+Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
+Q_DECLARE_METATYPE(PlayerProjModelItem*)
+Q_DECLARE_METATYPE(PlayerProjModel*)
+
+
+
+#endif // PLAYERPROJMODEL_H
 
 
 
@@ -394,7 +401,4 @@ Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
 
 //std::vector<fantasybit::GameRoster> DataService::GetCurrentWeekGameRosters()
 
-}
-
-#endif // PLAYERPROJMODEL_H
 

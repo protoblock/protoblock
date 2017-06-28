@@ -49,6 +49,7 @@ class DepthItem;
 class BookDelta;
 class MarketQuote;
 class MarketSnapshot;
+class FutContract;
 
 enum MarketTicker_Type {
   MarketTicker_Type_BID = 1,
@@ -69,6 +70,27 @@ inline bool MarketTicker_Type_Parse(
     const ::std::string& name, MarketTicker_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<MarketTicker_Type>(
     MarketTicker_Type_descriptor(), name, value);
+}
+enum FutContract_Type {
+  FutContract_Type_WEEKLY = 1,
+  FutContract_Type_SEASON = 2,
+  FutContract_Type_ROW = 3,
+  FutContract_Type_OTHER = 4
+};
+bool FutContract_Type_IsValid(int value);
+const FutContract_Type FutContract_Type_Type_MIN = FutContract_Type_WEEKLY;
+const FutContract_Type FutContract_Type_Type_MAX = FutContract_Type_OTHER;
+const int FutContract_Type_Type_ARRAYSIZE = FutContract_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* FutContract_Type_descriptor();
+inline const ::std::string& FutContract_Type_Name(FutContract_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    FutContract_Type_descriptor(), value);
+}
+inline bool FutContract_Type_Parse(
+    const ::std::string& name, FutContract_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<FutContract_Type>(
+    FutContract_Type_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -349,18 +371,33 @@ class BookPos : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SettlePos >*
       mutable_positions();
 
+  // optional string symbol = 50;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 50;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
   // @@protoc_insertion_point(class_scope:fantasybit.BookPos)
  private:
   inline void set_has_playerid();
   inline void clear_has_playerid();
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* playerid_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::SettlePos > positions_;
+  ::std::string* symbol_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_ExData_2eproto();
   friend void protobuf_AssignDesc_ExData_2eproto();
@@ -1615,6 +1652,18 @@ class BookDelta : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 blocknum() const;
   inline void set_blocknum(::google::protobuf::int32 value);
 
+  // optional string symbol = 90;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 90;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
   // @@protoc_insertion_point(class_scope:fantasybit.BookDelta)
  private:
   inline void set_has_fantasy_name();
@@ -1629,6 +1678,8 @@ class BookDelta : public ::google::protobuf::Message {
   inline void clear_has_ohlc();
   inline void set_has_blocknum();
   inline void clear_has_blocknum();
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1641,9 +1692,10 @@ class BookDelta : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::fantasybit::Order > removes_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker > level2tic_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::MarketTicker > level1tic_;
+  ::std::string* symbol_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_ExData_2eproto();
   friend void protobuf_AssignDesc_ExData_2eproto();
@@ -1938,6 +1990,149 @@ class MarketSnapshot : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static MarketSnapshot* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class FutContract : public ::google::protobuf::Message {
+ public:
+  FutContract();
+  virtual ~FutContract();
+
+  FutContract(const FutContract& from);
+
+  inline FutContract& operator=(const FutContract& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FutContract& default_instance();
+
+  void Swap(FutContract* other);
+
+  // implements Message ----------------------------------------------
+
+  FutContract* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const FutContract& from);
+  void MergeFrom(const FutContract& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef FutContract_Type Type;
+  static const Type WEEKLY = FutContract_Type_WEEKLY;
+  static const Type SEASON = FutContract_Type_SEASON;
+  static const Type ROW = FutContract_Type_ROW;
+  static const Type OTHER = FutContract_Type_OTHER;
+  static inline bool Type_IsValid(int value) {
+    return FutContract_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    FutContract_Type_Type_MIN;
+  static const Type Type_MAX =
+    FutContract_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    FutContract_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return FutContract_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return FutContract_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return FutContract_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.FutContract.Type type = 10;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 10;
+  inline ::fantasybit::FutContract_Type type() const;
+  inline void set_type(::fantasybit::FutContract_Type value);
+
+  // optional int32 season = 20;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 20;
+  inline ::google::protobuf::int32 season() const;
+  inline void set_season(::google::protobuf::int32 value);
+
+  // optional int32 week = 30;
+  inline bool has_week() const;
+  inline void clear_week();
+  static const int kWeekFieldNumber = 30;
+  inline ::google::protobuf::int32 week() const;
+  inline void set_week(::google::protobuf::int32 value);
+
+  // optional string symbol = 40;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 40;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.FutContract)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_season();
+  inline void clear_has_season();
+  inline void set_has_week();
+  inline void clear_has_week();
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int type_;
+  ::google::protobuf::int32 season_;
+  ::std::string* symbol_;
+  ::google::protobuf::int32 week_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ExData_2eproto();
+  friend void protobuf_AssignDesc_ExData_2eproto();
+  friend void protobuf_ShutdownFile_ExData_2eproto();
+
+  void InitAsDefaultInstance();
+  static FutContract* default_instance_;
+};
 // ===================================================================
 
 
@@ -2204,6 +2399,76 @@ BookPos::positions() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::SettlePos >*
 BookPos::mutable_positions() {
   return &positions_;
+}
+
+// optional string symbol = 50;
+inline bool BookPos::has_symbol() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void BookPos::set_has_symbol() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void BookPos::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void BookPos::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& BookPos::symbol() const {
+  return *symbol_;
+}
+inline void BookPos::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void BookPos::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void BookPos::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* BookPos::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* BookPos::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void BookPos::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------
@@ -3718,6 +3983,76 @@ inline void BookDelta::set_blocknum(::google::protobuf::int32 value) {
   blocknum_ = value;
 }
 
+// optional string symbol = 90;
+inline bool BookDelta::has_symbol() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void BookDelta::set_has_symbol() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void BookDelta::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void BookDelta::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& BookDelta::symbol() const {
+  return *symbol_;
+}
+inline void BookDelta::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void BookDelta::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void BookDelta::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* BookDelta::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* BookDelta::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void BookDelta::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // MarketQuote
@@ -4095,6 +4430,147 @@ inline void MarketSnapshot::set_blocknum(::google::protobuf::int32 value) {
   blocknum_ = value;
 }
 
+// -------------------------------------------------------------------
+
+// FutContract
+
+// optional .fantasybit.FutContract.Type type = 10;
+inline bool FutContract::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void FutContract::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void FutContract::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void FutContract::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::fantasybit::FutContract_Type FutContract::type() const {
+  return static_cast< ::fantasybit::FutContract_Type >(type_);
+}
+inline void FutContract::set_type(::fantasybit::FutContract_Type value) {
+  assert(::fantasybit::FutContract_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional int32 season = 20;
+inline bool FutContract::has_season() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void FutContract::set_has_season() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void FutContract::clear_has_season() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void FutContract::clear_season() {
+  season_ = 0;
+  clear_has_season();
+}
+inline ::google::protobuf::int32 FutContract::season() const {
+  return season_;
+}
+inline void FutContract::set_season(::google::protobuf::int32 value) {
+  set_has_season();
+  season_ = value;
+}
+
+// optional int32 week = 30;
+inline bool FutContract::has_week() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void FutContract::set_has_week() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void FutContract::clear_has_week() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void FutContract::clear_week() {
+  week_ = 0;
+  clear_has_week();
+}
+inline ::google::protobuf::int32 FutContract::week() const {
+  return week_;
+}
+inline void FutContract::set_week(::google::protobuf::int32 value) {
+  set_has_week();
+  week_ = value;
+}
+
+// optional string symbol = 40;
+inline bool FutContract::has_symbol() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void FutContract::set_has_symbol() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void FutContract::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void FutContract::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& FutContract::symbol() const {
+  return *symbol_;
+}
+inline void FutContract::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void FutContract::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void FutContract::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* FutContract::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* FutContract::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void FutContract::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -4107,6 +4583,10 @@ namespace protobuf {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::MarketTicker_Type>() {
   return ::fantasybit::MarketTicker_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::fantasybit::FutContract_Type>() {
+  return ::fantasybit::FutContract_Type_descriptor();
 }
 
 }  // namespace google

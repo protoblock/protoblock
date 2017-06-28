@@ -103,6 +103,17 @@ int32_t BlockProcessor::init() {
     bx.init();//lastidprocessed);
 #endif
 
+    mGlobalState = mData.GetGlobalState();
+#ifdef TRADE_FEATURE
+    mFutContract.set_type(FutContract_Type_WEEKLY);
+    GlobalState &gs = mGlobalState;
+    mFutContract.set_season(gs.season());
+    if ( gs.state() == GlobalState_State_INSEASON )
+        mFutContract.set_week(gs.week());
+    else
+        mFutContract.set_week(0);
+#endif
+
     return lastidprocessed;
 }
 
@@ -112,7 +123,7 @@ int32_t BlockProcessor::process(Block &sblock) {
     //qDebug() << "BlockProcessor process head().num(): " << sblock.signedhead().head().num();
 #ifdef TRACE
     if ( sblock.signed_transactions_size() > 0) {
-        qDebug() << "BlockProcessor processsb0 sblock.signed_transactions(0).DebugString().data() ";
+//        qDebug() << "BlockProcessor processsb0 sblock.signed_transactions(0).DebugString().data() ";
 //        qDebug() << sblock.signed_transactions(0).DebugString().data();
     }
 #endif
@@ -227,6 +238,7 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
         return false;
     }
 
+
     auto dt = st.trans().GetExtension(DataTransition::data_trans);
     if (dt.data_size() > 0)
         process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
@@ -234,7 +246,9 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
     if (sblock.signed_transactions_size() > 1)
         processTxfrom(sblock, 1);
 
+#ifdef TRACE
     qDebug() << "processing ccccc" << dt.type() << dt.season() << dt.week();
+#endif
 //    qDebug() << dt.DebugString().data();
     process(dt);
 
@@ -282,6 +296,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     qCritical() << "no playerid" + QTD(tpd.DebugString());
                     break;
                 }
+//                if ( tpd.playerid() == "1179")
+//                    qDebug() << "";
 //                int pid = std::stoi(tpd.playerid());
 //                if (pid > 0 && pid <= 32 ) { //Team DEF
 //                    if ( transtype !=  SEASONSTART) {
@@ -356,7 +372,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     auto rgsp =  (ha == QString("home")) ? gsp.mutable_home() : gsp.mutable_away();
                     for ( int i=0; i<rgsp->size();i++) {
                         BookPos *bp = rgsp->Mutable(i);
-                        posmap[bp->playerid()] = bp;
+                        posmap[mData.mSym2Pid[bp->playerid()]] = bp;
                     }
 #endif
                 }
@@ -388,6 +404,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                                 rd.mutable_game_result()->mutable_home_result()
                                 :  rd.mutable_game_result()->mutable_away_result();
 
+                    double total = 0.0;
                     for ( int i =0; i < size; i++) {
                         //qDebug() << haresult.Get(i).playerid()
                           //       << haresult.Get(i).result();
@@ -399,8 +416,16 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                             bpos = posmap[haresult.Get(i).playerid()];
                         }
 
+                        total += haresult.Get(i).result();
                         processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
+                        mData.UpdatePlayerStats(haresult.Get(i));
                     }
+
+                    if ( ha == QString("home") )
+                        rd.mutable_game_result()->set_hometotal(total);
+                    else
+                        rd.mutable_game_result()->set_awaytotal(total);
+
                 }
 
                 /*
@@ -426,7 +451,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 //    qDebug() << result.playerid() << result.fantaybitaward_size();
 
                 */
-                mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+                mData.ProcessAddGameResult(rd.game_result().gameid(),rd.game_result());
                 haveresults = true;
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT
                 {
@@ -581,7 +606,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
                                        BookPos *pbpos,
                                        const std::string &blocksigner) {
     auto &playerresult = *playerresultP;
-    PlayerResult awards;
+//    PlayerResult awards;
     DistribuePointsAvg dist(proj);
     auto rewards = dist.distribute(playerresult.result(), blocksigner);
 
@@ -618,7 +643,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
 }
 
 void BlockProcessor::process(const DataTransition &indt) {
-    auto mGlobalState = mData.GetGlobalState();
+
     switch (indt.type())
     {
     case TrType::SEASONSTART:
@@ -635,33 +660,35 @@ void BlockProcessor::process(const DataTransition &indt) {
             mGlobalState.set_state(GlobalState_State_INSEASON);
             mData.OnGlobalState(mGlobalState);
             OnSeasonStart(indt.season());
-            if ( indt.week() != 0)
+            if ( indt.week() == 0) {
+                mGlobalState.set_week(indt.week());
+                mData.OnGlobalState(mGlobalState);
                 OnWeekStart(indt.week());
+            }
         }
         break;
     case TrType::SEASONEND:
         break;
         if (mGlobalState.state() != GlobalState_State_INSEASON) {
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-            break;
-        }
-
-
-        qInfo() <<  indt.season() << " Season End :( ";
-
-        if (mGlobalState.season() == indt.season() - 1) {
-            qInfo() <<  indt.season() << "bad Season End :( " << mGlobalState.season();
-        }
-        else if (mGlobalState.season() == indt.season()) {
-            OnSeasonEnd(mGlobalState.season());
-            mGlobalState.set_season(indt.season()+1);
-            mGlobalState.set_week(0);
-
+//            break;
         }
         else {
-            qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
-        }
+            qInfo() <<  indt.season() << " Season End :( ";
 
+            if (mGlobalState.season() == indt.season() - 1) {
+                qInfo() <<  indt.season() << "bad Season End :( " << mGlobalState.season();
+            }
+            else if (mGlobalState.season() == indt.season()) {
+                OnSeasonEnd(mGlobalState.season());
+                mGlobalState.set_season(indt.season()+1);
+                mGlobalState.set_week(0);
+
+            }
+            else {
+                qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
+            }
+        }
 
         mGlobalState.set_state(GlobalState_State_OFFSEASON);
         mData.OnGlobalState(mGlobalState);
@@ -673,7 +700,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     case TrType::HEARTBEAT:
         //todo: deal w data in this msg
         if (mGlobalState.season() != indt.season()) {
-            qWarning() << "wrong season! " << indt.DebugString();
+            qWarning() << "wrong season! " << indt.DebugString().data();
             //mGlobalState.set_season(indt.season());
         }
 
@@ -696,15 +723,18 @@ void BlockProcessor::process(const DataTransition &indt) {
             auto gi =  mData.GetGameInfo(t.gameid());
             auto homeroster = mData.GetTeamRoster(gi.home());
             auto awayroster = mData.GetTeamRoster(gi.away());
+//            if ( gi.away() == "CLE" )
+//                qDebug() << "" ;
             vector<string> homep, awayp;
-            for ( auto hr : homeroster)
+            for ( auto hr : homeroster) {
                 homep.push_back(hr.first);
+            }
             for ( auto hr : awayroster)
                 awayp.push_back(hr.first);
 
             mNameData.OnGameStart(t.gameid(),homep,awayp);
 #ifdef TRADE_FEATURE
-            mExchangeData.OnGameStart(t.gameid(),homep,awayp);
+            mExchangeData.OnGameStart(t.gameid(),homeroster,awayroster);
 #endif
 
         }
@@ -769,7 +799,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     }
     case TrType::TRADESESSIONSTART:
     {
-        mExchangeData.OnTradeSessionStart(indt.week());
+        mExchangeData.OnTradeSessionStart(indt.season(),indt.week());
         break;
     }
     default:
@@ -786,7 +816,7 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
         return false;
     }
 
-    if (t.version() != Commissioner::TRANS_VERSION) {
+    if (t.version() > Commissioner::TRANS_VERSION || t.version() < 1) {
         qCritical() << "t.version() != Commissioner::TRANS_VERSION";
         //fbutils::LogFalse(std::string("Processor::process wrong transaction version ").append(st.DebugString()));
         return false;
@@ -836,7 +866,6 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         qDebug() << "processing name tx " << i;//b.signed_transactions(i).trans().DebugString().data();// TransType_Name(t.type());
         auto &st = b.signed_transactions(i);
         if ( !isValidTx(st)) {
-
             qDebug() << " imvalid tx 1" << st.DebugString().data() ;
             continue;
         }
@@ -854,13 +883,13 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
     if ( nameonly ) return;
 
    // for (const SignedTransaction &st : b.signed_transactions()) //
-    for ( int i = start; i < b.signed_transactions_size(); i++)
+    for (int j = start; j < b.signed_transactions_size(); j++)
     {
-        if ( b.signed_transactions(i).trans().type() == TransType::NAME)
+        if ( b.signed_transactions(j).trans().type() == TransType::NAME)
             continue;
 
-        const SignedTransaction &st = b.signed_transactions(i);
-        const Transaction &t = b.signed_transactions(i).trans();
+        const SignedTransaction &st = b.signed_transactions(j);
+        const Transaction &t = b.signed_transactions(j).trans();
         //pb::sha256 digest = pb::sha256::hash(t.SerializeAsString());
 
         //qDebug() << "processing tx " << st.DebugString().data();
@@ -880,6 +909,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
             //qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
             for (const PlayerPoints & pt : ptb.player_points() ) {
                 mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
+//                if ( st.fantasy_name() == "@SpreadSheetFF" && pt.playerid() == "1179")
+//                    qDebug() << pt.DebugString().data();
             }
 
             break;
@@ -921,23 +952,119 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     }
 
     const Transaction &t = inst.trans();
-    switch (t.type()) {
-        case TransType::EXCHANGE:
-        {
-#ifndef TRADE_FEATURE
-            break;
-#endif
-            auto emdg = t.GetExtension(ExchangeOrder::exchange_order);
-            //qDebug() << "new ExchangeOrder " << emdg.DebugString();
+    if (t.type() != TransType::EXCHANGE) return;
 
-            //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
-            mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum);
-            break;
-        }
-        default:
-            break;
+#ifndef TRADE_FEATURE
+    qWarning() << "ProcessInsideStamped bad FutContract ndef feature";
+    return;
+#endif
+
+    ExchangeOrder emdg = t.GetExtension(ExchangeOrder::exchange_order);
+
+#ifdef TRACE
+    qDebug() << "new ExchangeOrder " << emdg.DebugString().data();
+#endif
+
+    //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
+
+    if (emdg.type() == ExchangeOrder_Type_CANCEL ) {
+        mExchangeData.OnCancelOrderMsg(emdg,seqnum,fn,blocknum);
+        return;
     }
 
+    const FutContract *fc;
+    std::string symbol;
+    if ( !emdg.has_futcontract() &&
+         inst.trans().version() == 1 &&
+         ( !emdg.has_symbol() || emdg.symbol() == "") ) {
+        fc = &mFutContract;
+    }
+    else {
+        if ( !emdg.has_futcontract() && emdg.has_symbol() && emdg.symbol().size() > 6 ) {
+            if ( emdg.symbol().back() == 's' )
+               mFutContract.set_type(FutContract_Type_SEASON);
+            else {
+                mFutContract.set_type(FutContract_Type_WEEKLY);
+                if ( emdg.symbol().back() == '0') {
+//                    ffc.set_week(std::stoi(emdg.symbol().substr(emdg.symbol().size()-2,2)));
+                    mFutContract.set_week( emdg.symbol().at(emdg.symbol().size()-2) - '0');
+                    mFutContract.set_week(mFutContract.week()+10);
+                }
+                else
+                   mFutContract.set_week( emdg.symbol().back() - '0');
+            }
+            fc = &mFutContract;
+        }
+        else
+            fc = &emdg.futcontract();
+    }
+
+    if ( !emdg.has_symbol() || emdg.symbol() == "") {
+        if ( !emdg.has_playerid() || emdg.playerid() == "") {
+            qWarning() << "invalid tx inside stamped" << inst.trans().type();
+            return;
+        }
+        symbol = mData.GetPlayerStatus(emdg.playerid()).symbol();
+        if ( symbol == "" )  {
+            symbol = emdg.playerid();
+            if ( symbol.back() == 's' ) {
+                mFutContract.set_type(FutContract_Type_SEASON);
+                fc = &mFutContract;
+            }
+        }
+        else {
+            symbol += to_string(fc->season()-2000);
+            if ( fc->type() == FutContract_Type_WEEKLY )
+                symbol += "w" + to_string(fc->week());
+            else
+                symbol += "s";
+        }
+    }
+    else
+        symbol = emdg.symbol();
+
+    switch ( fc->type() ) {
+    case FutContract_Type_WEEKLY:
+        if ( fc->week() != mGlobalState.week() ||
+            mGlobalState.state() != GlobalState_State_INSEASON ||
+            fc->season() != mGlobalState.season()) {
+                qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                return;
+        }
+        break;
+    case FutContract_Type_ROW:
+        if ( fc->season() != mGlobalState.season() ||
+            mGlobalState.state() != GlobalState_State_INSEASON ) {
+                qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                return;
+        }
+        break;
+
+    case FutContract_Type_SEASON:
+        if ( fc->season() < mExchangeData.mMinSeason || fc->season() > mExchangeData.mMaxSeason) {
+            qWarning() << "ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
+            return;
+        }
+        break;
+    default:
+        return;
+        break;
+    }
+
+    /*
+    auto it = mData.mSym2Pid.find(symbol);
+    if ( it == end(mData.mSym2Pid) ) {
+        qWarning() << "ProcessInsideStamped bad symbol" << fc->DebugString().data(), emdg.DebugString().data(), symbol.data();
+        return;
+    }
+
+    if ( it->second != emdg.playerid() && emdg.playerid() != "" ) {
+        qWarning() << "ProcessInsideStamped bad player ! match symbol" << fc->DebugString().data(), emdg.DebugString().data(), symbol.data();
+        return;
+    }
+    */
+
+    mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum,fc,symbol);
 }
 
 void BlockProcessor::OnWeekOver(int week) {
@@ -953,19 +1080,27 @@ void BlockProcessor::OnWeekOver(int week) {
 void BlockProcessor::OnWeekStart(int week) {
     mNameData.OnWeekStart(week);
     mData.OnWeekStart(week);
-#ifdef TRADE_FEATURe
+#ifdef TRADE_FEATURE
     mExchangeData.OnWeekStart(week);
 #endif
     mLastWeekStart = true;
 
     emit WeekStart(week);
+
+#ifdef TRADE_FEATURE
+    mFutContract.set_week(week);
+#endif
 }
 
 void BlockProcessor::OnSeasonStart(int season) {
     mNameData.OnSeasonStart(season);
     mData.OnSeasonStart(season);
-//    mExchangeData.OnSeasonStart(season);
+    mExchangeData.OnSeasonStart(season);
     emit SeasonStart(season);
+#ifdef TRADE_FEATURE
+    mFutContract.set_season(season);
+#endif
+
 }
 
 void BlockProcessor::OnSeasonEnd(int season) {
@@ -1021,7 +1156,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
 bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
     qDebug() << st.DebugString().data();
 
-    if (st.trans().version() != Commissioner::TRANS_VERSION)
+    if (st.trans().version() > Commissioner::TRANS_VERSION || st.trans().version() < 1)
     {
         qCritical() << " !verifySignedTransaction wrong trans version! ";
         return false;
@@ -1092,7 +1227,7 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
     return ret;
     }
     std::shared_ptr<FantasyName> ret;
-    if (st.trans().version() != Commissioner::TRANS_VERSION) {
+    if (st.trans().version() > Commissioner::TRANS_VERSION || st.trans().version() < 1 ) {
         qCritical() << " !verifySignedTransaction wrong trans version! ";
         return ret;
     }
@@ -1123,7 +1258,7 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
     return ret;
 }
 
-bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &nt, 
+bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &nt,
     const pb::signature& sig, const pb::sha256 &digest) {
 
     if ( !Commissioner::isAliasAvailable(nt.fantasy_name()) )
@@ -1152,24 +1287,24 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
     }
     else qDebug() << " ssssss veroify name";
 
-	auto proof = nt.proof();
-	switch (proof.type())
-	{
-		case NameProof_Type_TWEET:
-		{
-			auto tp = proof.GetExtension(TweetProof::tweet_proof);
-			//TODO verify tweet
-			return true;
-		}
-		break;
+    auto proof = nt.proof();
+    switch (proof.type())
+    {
+        case NameProof_Type_TWEET:
+        {
+            auto tp = proof.GetExtension(TweetProof::tweet_proof);
+            //TODO verify tweet
+            return true;
+        }
+        break;
 
-		case NameProof_Type_ORACLE:
-		{
-			return true;//TODO
-			//verify oracle
-			if (!Commissioner::verifyOracle(sig, digest))
+        case NameProof_Type_ORACLE:
+        {
+            return true;//TODO
+            //verify oracle
+            if (!Commissioner::verifyOracle(sig, digest))
 #ifdef NO_ORACLE_CHECK_TESTING
-			if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
+            if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
 #endif
             {
                 qCritical() << "Processor::process name proof oracle failed";
@@ -1179,30 +1314,30 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
             }
             else
                 return true;
-		}
-		break;
+        }
+        break;
 
-		default:
+        default:
             return true;
-			break;
-	}
-	/*
-	assert(pow.hash() == pfn->hash());
-	Commissioner::Hash2Pk.emplace(pow.hash(), pfn->pubkey);
-	Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
-	if (nt.has_name_pow())
+            break;
+    }
+    /*
+    assert(pow.hash() == pfn->hash());
+    Commissioner::Hash2Pk.emplace(pow.hash(), pfn->pubkey);
+    Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+    if (nt.has_name_pow())
 
-	else if (nt.has_tweet_proof())
-	{
-	auto top = nt.tweet_proof();
-	pfn->pubkey = Commissioner::str2pk(top.public_key());
-	pfn->alias = nt.fantasy_name();
-	//assert(pow.hash() == pfn->hash());
-	Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
-	Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
-	continue;
-	}
-	*/
+    else if (nt.has_tweet_proof())
+    {
+    auto top = nt.tweet_proof();
+    pfn->pubkey = Commissioner::str2pk(top.public_key());
+    pfn->alias = nt.fantasy_name();
+    //assert(pow.hash() == pfn->hash());
+    Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
+    Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+    continue;
+    }
+    */
 }
 
 BlockProcessor::BlockProcessor(NFLStateData &data, FantasyNameData &namedata, ExchangeData &ed) :

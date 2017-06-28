@@ -94,8 +94,9 @@ public:
 
     void updateWeeklySchedule(int season,int week, const fantasybit::WeeklySchedule &weekly) {
 
-        qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
-
+        #ifdef TRACE2
+                qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
+        #endif
         clear();
 
         setweek(week);
@@ -143,8 +144,6 @@ public:
 
 };
 
-Q_DECLARE_METATYPE(WeeklyScheduleModelItem*)
-Q_DECLARE_METATYPE(WeeklyScheduleModel*)
 
 class WeeklyScheduleViewFilterProxyModel : public SortFilterProxyModel {
     Q_OBJECT
@@ -208,5 +207,9 @@ protected:
     }
 };
 }
+
+using namespace pb;
+Q_DECLARE_METATYPE(WeeklyScheduleModelItem*)
+Q_DECLARE_METATYPE(WeeklyScheduleModel*)
 
 #endif // WEEKLYSCHEDULEMODEL_H

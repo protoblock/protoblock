@@ -50,6 +50,16 @@ void ProtoScreen::initialize() {
     setpixelRatio (desktop->devicePixelRatio ());
 
 
+    qDebug() << "displayWidthInch" << displayWidthInch;
+    qDebug() << "displayHeightInch" << displayHeightInch;
+    qDebug() << "m_displayDiagonalSize" << m_displayDiagonalSize;
+    qDebug() << "m_devicePixelRatio" << m_devicePixelRatio;
+    qDebug() << "desktop->size ().width()" << desktop->size ().width();
+    qDebug() << "desktop->size ().height()" << desktop->size ().height();
+    qDebug() << "desktop->availableGeometry().height()" << desktop->availableGeometry().height();
+    qDebug() << "desktop->availableGeometry().width()" << desktop->availableGeometry().width();
+    qDebug() << "desktop->geometry()" << desktop->geometry();
+
     setavailrect(desktop->availableGeometry());
     updateFormFactor ();
     m_bInitialized = true;
@@ -59,13 +69,17 @@ void ProtoScreen::initialize() {
 }
 
 void ProtoScreen::setGridUnit(const double &unit) {
-    if( m_gridUnit == unit ){
-        return;
-    }else {
+    qDebug() << "m_gridUnit" << m_gridUnit;
+    qDebug() << "unit" << unit;
+
+    if( unit != 1.0 ) {
         m_gridUnit = (unit * m_gridUnit) ;
         emit gridUnitChanged();
     }
-     updateFonts();
+
+    qDebug() << "m_gridUnit" << m_gridUnit;
+
+    updateFonts();
 }
 
 double ProtoScreen::guToPx(double units) {
@@ -208,6 +222,16 @@ void ProtoScreen::updateFormFactor(){
     double m_169 =  qSqrt (pow((m_screen->physicalSize().width()), 2) +
                            qPow((m_screen->physicalSize().height()), 2)) * 0.039370;
 
+    qDebug() << " jayberg " << m_169 << m_displayDiagonalSize;
+
+    qDebug() << "m_169" << m_169;
+    qDebug() << "m_screen->physicalSize().width())" << m_screen->physicalSize().width();
+    qDebug() << "m_screen->physicalSize().height()" << m_screen->physicalSize().height();
+    qDebug() << " m_screen->logicalDotsPerInch() " << m_screen->logicalDotsPerInch();
+
+
+//    m_169 = m_displayDiagonalSize;
+
     // Check to see if this is a ios
     if ( sysInfo.productType () == "ios") {
         // NOw that we know it is a IOS
@@ -348,7 +372,7 @@ void ProtoScreen::updateFormFactor(){
              )
     {
         double newwindowsscale = 1.0;
-        qDebug() << " windows " << m_screen->logicalDotsPerInch();
+
 
         //        SOURCE
         //      https://msdn.microsoft.com/en-us/library/windows/desktop/dn469266(v=vs.85).aspx
@@ -373,7 +397,6 @@ void ProtoScreen::updateFormFactor(){
             }
         }
         else if (m_169 <= 16.9){
-            qDebug() << " windows " << m_screen->logicalDotsPerInch();
             if ( m_screen->logicalDotsPerInch() >= 120 && m_screen->logicalDotsPerInch()  < 192){
                 newwindowsscale = 1.25;
             }
@@ -430,6 +453,10 @@ double ProtoScreen::scaleSize() const
 
 void ProtoScreen::setScaleSize(const double &size)
 {
+    qDebug() << "m_scaleSize" << m_scaleSize;
+    qDebug() << "size" << size;
+
+
     if ( m_scaleSize == size)
         return;
     m_scaleSize = size;
@@ -445,7 +472,18 @@ void ProtoScreen::updateFonts() {
         m_fonts[MEDIUM] = guToPx(3.5);
         m_fonts[NORMAL] = guToPx(2.5);
         m_fonts[SMALL] = guToPx(2);
+        m_fonts[VERYSMALL] = guToPx(1.6);
         m_fonts[TINY] = guToPx(1.2);
+
+        m_fonts[XXLARGE] = guToPx(5);
+        m_fonts[XXLARGE] = guToPx(4.7);
+        m_fonts[XLARGE] = guToPx(4);
+        m_fonts[LARGE] = guToPx(3.5);
+        m_fonts[MEDIUM] = guToPx(2.5);
+        m_fonts[NORMAL] = guToPx(2);
+        m_fonts[SMALL] = guToPx(1.6);
+        m_fonts[VERYSMALL] = guToPx(1.2);
+        m_fonts[TINY] = guToPx(.90);
     }
 
     else if (m_formFactor == "tv") {
@@ -455,6 +493,7 @@ void ProtoScreen::updateFonts() {
         m_fonts[MEDIUM] = guToPx(4.5);
         m_fonts[NORMAL] = guToPx(3.5);
         m_fonts[SMALL] = guToPx(3);
+        m_fonts[VERYSMALL] = guToPx(2.5);
         m_fonts[TINY] = guToPx(2);
     }
     // FIXME make this with android and iphone options
@@ -465,6 +504,7 @@ void ProtoScreen::updateFonts() {
         m_fonts[MEDIUM] = guToPx(3.5);
         m_fonts[NORMAL] = guToPx(2.5);
         m_fonts[SMALL] = guToPx(2);
+        m_fonts[VERYSMALL] = guToPx(1.5);
         m_fonts[TINY] = guToPx(1.2);
     }
 
@@ -476,6 +516,7 @@ void ProtoScreen::updateFonts() {
         m_fonts[MEDIUM] = guToPx(2.8);
         m_fonts[NORMAL] = guToPx(2.0);
         m_fonts[SMALL] = guToPx(1.5);
+        m_fonts[VERYSMALL] = guToPx(1.0);
         m_fonts[TINY] = guToPx(.5);
     }
     else if (m_formFactor == "phone" && m_systemType == "android"){
@@ -485,6 +526,7 @@ void ProtoScreen::updateFonts() {
         m_fonts[MEDIUM] = guToPx(3.8);
         m_fonts[NORMAL] = guToPx(3.0);
         m_fonts[SMALL] = guToPx(2.5);
+        m_fonts[VERYSMALL] = guToPx(2.0);
         m_fonts[TINY] = guToPx(1.2);
     }
 }

@@ -1,3 +1,6 @@
+osx {
+QMAKE_MAC_SDK = macosx10.12
+}
 TEMPLATE = lib
 TARGET = Material.Extras
 QT += qml quick

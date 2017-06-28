@@ -265,7 +265,6 @@ public:
 
 };
 
-Q_DECLARE_METATYPE(DepthMarketModel*)
 
 //message ContractOHLC {
 //    optional string symbol = 10;
@@ -312,4 +311,9 @@ Q_DECLARE_METATYPE(DepthMarketModel*)
 //    return data->propertyValue<PropertyNames::CHANGE>();
 
 }
+
+using namespace pb;
+Q_DECLARE_METATYPE(DepthMarketModel*)
+
+
 #endif // DEPTHMARKETMODEL_H

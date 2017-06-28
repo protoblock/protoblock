@@ -15,6 +15,7 @@ Item {
     property int side
     property int qty
     property int price
+    property double wid: parent.width / 7.0
     property string symbolp
     property string refnum
     property int elevation : 0
@@ -29,55 +30,32 @@ Item {
         RowLayout {
             id: rowLayout1
             anchors.fill: parent
-
+            spacing: 0
 
             Material.IconButton{
                 Layout.fillHeight: true
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
-//              hasColor: true
+                Layout.preferredWidth: wid
                 color: "red"
-//                iconSource: "qrc:/icons/navigation_close.png"
                 onClicked: {
                     MiddleMan.doCancel(refnum)
                 }
                 action: Material.Action {
-//                        name: "Copy-Clone Projection"
                     iconName: "awesome/times"
-//                    text: "Copy-Clone Projection"
-//                    tooltip: "Copy and Replace your projection"
-//                        hoverAnimation: true
                 }
-
             }
-
-//            Rectangle{
-//                id: info
-//                Layout.fillHeight: true
-//                Layout.fillWidth: false
-//                Layout.preferredWidth:   2
-//                color: infoColor
-//            }
 
             Material.Label {
                 id: label1
                 text: symbol
                 Layout.fillHeight: true
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
+                Layout.preferredWidth: wid * 2.0
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
             }
 
-            Material.Label {
-                id: label2
-                text: refnum
-                Layout.fillHeight: true
-                verticalAlignment: Text.AlignVCenter
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
-                horizontalAlignment: Text.AlignHCenter
-            }
 
             Material.Label {
                 id: label3
@@ -85,18 +63,10 @@ Item {
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
+                Layout.preferredWidth: wid
                 horizontalAlignment: Text.AlignHCenter
-            }
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
 
-            Material.Label {
-                id: label4
-                text: price.toString()
-                Layout.fillHeight: true
-                verticalAlignment: Text.AlignVCenter
-                Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
-                horizontalAlignment: Text.AlignHCenter
             }
 
             Material.Label {
@@ -105,9 +75,36 @@ Item {
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 Layout.fillWidth: false
-                Layout.preferredWidth: (parent.width / 6) - 2
+                Layout.preferredWidth: wid
                 horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+
             }
+
+            Material.Label {
+                id: label4
+                text: price.toString()
+                Layout.fillHeight: true
+                verticalAlignment: Text.AlignVCenter
+                Layout.fillWidth: false
+                Layout.preferredWidth: wid
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+
+            }
+
+
+            Material.Label {
+                id: label2
+                text: refnum
+                Layout.fillHeight: true
+                verticalAlignment: Text.AlignVCenter
+                Layout.fillWidth: false
+                Layout.preferredWidth: wid
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            }
+
 
         }
     }

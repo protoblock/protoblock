@@ -37,6 +37,8 @@ public:
 
     virtual fantasybit::PlayerBase GetPlayerBase(std::string playerId)= 0;
 
+    virtual fantasybit::PlayerStatus GetPlayerStatus(std::string playerId) = 0;
+
     virtual std::vector<std::shared_ptr<fantasybit::FantasyName>> GetLeaderBoard()= 0;
 
     virtual std::unordered_map<std::string,int> GetProjByName(const std::string &nm)= 0;
@@ -49,7 +51,7 @@ public:
     virtual fantasybit::GameStatus GetGameStatus(std::string gid)= 0;
 
 
-    virtual fantasybit::MyFantasyName importMnemonic(std::string &in)= 0;
+    virtual fantasybit::MyFantasyName importMnemonic(const std::string &in)= 0;
     virtual std::string exportMnemonic(std::string &in)= 0;
     virtual int GetAvgProjection(const std::string &playerid) = 0;
 
@@ -59,6 +61,11 @@ public:
 
     virtual std::vector<MarketSnapshot>
                     GetCurrentMarketSnaps() = 0;
+    virtual std::map<std::string,std::string> GetAllSymbols() = 0;
+
+    virtual PlayerDetail GetPlayerDetail(const std::string &symbol) = 0;
+
+    virtual std::string GetPidfromSymb(const std::string &symb) = 0;
 
 
 };
@@ -90,7 +97,6 @@ protected: //signals: // <- ignored by moc and only serves as documentation aid
     virtual void BlockNum(int) = 0;
 
 public: //slots:
-    virtual void OnGetMyNames() = 0;
     virtual void OnUseName(QString) = 0;
 
 

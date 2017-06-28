@@ -133,7 +133,7 @@ public:
                 this, SLOT(networkAccessibleChangedSlot(QNetworkAccessManager::NetworkAccessibility)));
     }
 
-    bool postProtoMessageData(const QString & route,const QString & contentType,const google::protobuf::Message & protoMessage){
+    bool postProtoMessageData(const QString & route,const QString & contentType,const GOOGLE_NAMESPACE::protobuf::Message & protoMessage){
         std::string data = protoMessage.SerializeAsString().data();
         return postRawData(route,contentType,data.data(),data.size());
     }
@@ -142,7 +142,7 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
-        PostDataDecorator decorator(&myNetworkManager,&request);        
+        PostDataDecorator decorator(&myNetworkManager,&request);
         myCurrentNetworkReply = decorator.postBinaryData(contentType,postData);
         if (myCurrentNetworkReply == NULL) return false;
         waitForReply();
@@ -164,7 +164,7 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
-        PostDataDecorator decorator(&myNetworkManager,&request);        
+        PostDataDecorator decorator(&myNetworkManager,&request);
         myCurrentNetworkReply = decorator.postJsonData(contentType,jsonDoc);
         if (myCurrentNetworkReply == NULL) return false;
         waitForReply();
@@ -518,7 +518,7 @@ public:
         QMap<QString,QVariant> params;
         //hard coded url
         //TODO move to settings
-        QString customRoute("block-height");      
+        QString customRoute("block-height");
         client.getData(customRoute,params,headers);
         auto response = client.lastReply();
         QString str( response );

@@ -190,15 +190,22 @@ void MainLAPIWorker::OnInSync(int32_t num) {
     else {
         numto = num;
         intervalstart = 2000;
-        emit ProcessNext();
+        if ( amlive )
+            emit ProcessNext();
     }
 }
 
 bool MainLAPIWorker::doProcessBlock() {
+    qDebug() << " doprocess";
     int32_t next;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         next = last_block+1;
+        if ( quitting ) {
+            qDebug() << " quiting doprocess";
+            QCoreApplication::exit();
+            return false;
+        }
     }
     auto b = fantasybit::Node::getLocalBlock(next);
     if (!b) {
@@ -215,22 +222,25 @@ bool MainLAPIWorker::doProcessBlock() {
 
 #include <QAbstractEventDispatcher>
 void MainLAPIWorker::ProcessBlock() {
-
+    qDebug() << " ProcessBlock";
     int docount = 0;
     bool catchingup;
     do {
         if ( !doProcessBlock() ) return;
         emit BlockNum(last_block);
         count = pcount = 0;
-        emit BlockNum(last_block);
         {
             std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
             catchingup = !amlive && last_block < numto;
+            if ( quitting ) {
+                qDebug() << " quiting MainLAPIWorker::ProcessBlock()";
+                QCoreApplication::exit();
+                return;
+            }
         }
 
         if ( catchingup )
         {
-
             if ( docount++ == 50 ) {
                 QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
                 docount = 0;
@@ -238,6 +248,7 @@ void MainLAPIWorker::ProcessBlock() {
         }
 
         else if ( !amlive ) {
+
             {
                 std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
                 amlive = true;
@@ -255,6 +266,7 @@ void MainLAPIWorker::ProcessBlock() {
         docount=0;
 #endif
 
+//    } while ( ++docount < 5);
     } while( catchingup );
 }
 
@@ -277,6 +289,20 @@ void MainLAPIWorker::OnBlockError(int32_t last) {
     emit BlockError(last);
 }
 
+void MainLAPIWorker::Quit() {
+    qDebug() << "ml Quit ";
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        quitting = true;
+        timer->stop();
+        timer->setSingleShot(true);
+        qDebug() << "ml Quitting " << quitting;
+        if (amlive && numto == last_block)
+            QCoreApplication::exit();
+        timer->start(1);
+    }
+}
+
 void MainLAPIWorker::Timer() {
 #ifdef TESTING_PRE_ROW_TRADE_FEATURE
     if ( justwentlive ) {
@@ -284,20 +310,26 @@ void MainLAPIWorker::Timer() {
     }
 #endif
 
-    //qDebug() << " Timer ";
     bool numtogtlast;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         numtogtlast = (numto > last_block);
+        if ( quitting ) {
+            qDebug() << " Timer quiting";
+            QCoreApplication::exit();
+            return;
+        }
     }
     bcount++;
     pcount++;
     if ( !amlive ) {
-        emit ProcessNext();
+//        emit ProcessNext();
         if ( bcount > 10 && pcount < 2)
             emit GetNext();
         else if ( bcount < 3 && numto < std::numeric_limits<int32_t>::max())
             emit GetNext();
+
+        emit ProcessNext();
     }
     else if ( numtogtlast ) {
         emit ProcessNext();
@@ -316,7 +348,7 @@ void MainLAPIWorker::Timer() {
     //        qInfo() << " timerr " << interval;
             if ( interval < intervalmax && interval > 500) {
                 timer->start(interval);
-    //            qInfo() << " timeout ";
+                qDebug() << " timeout " << interval;
     //            if ( true )
     //                emit GameStart("201600110");
             }
@@ -345,6 +377,12 @@ bool MainLAPIWorker::Process(fantasybit::Block &b) {
             last_block = last;
         else
             qDebug() << " shoud bever be here! ? reorg? fork? ";
+
+        if ( quitting ) {
+            qDebug() << "Process quiting";
+            QCoreApplication::exit();
+            return false;
+        }
     }
     return true;
 }
@@ -568,7 +606,7 @@ void MainLAPIWorker::DoPostTr(SignedTransaction &st) {
     rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 }
 
-void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
+void MainLAPIWorker::DoSubscribe(const std::string &name, bool suborun) {
 
     if ( suborun ) {
         namedata.Subscribe(name);

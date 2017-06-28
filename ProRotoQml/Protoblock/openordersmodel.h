@@ -69,14 +69,14 @@ public:
     }
 
     void Update(fantasybit::FullOrderDelta &fo) {
-        qDebug() << " openorders update " << fo.openorder.DebugString().data() << fo.playerid.data() << fo.fname.data();
-        if ( fo.playerid.data() != m_pidsymbol)
-            qCritical() << " OpenOrdersModel bad " << fo.playerid.data() << m_pidsymbol;
+        qDebug() << " openorders update " << fo.openorder.DebugString().data() << fo.symbol.data() << fo.fname.data();
+        if ( fo.symbol.data() != m_pidsymbol)
+            qCritical() << " OpenOrdersModel bad " << fo.symbol.data() << m_pidsymbol;
 
         auto it = this->getByUid(QString::number(fo.openorder.refnum()));
         if ( it == nullptr ) {
             auto *it = new OpenOrdersModelItem(fo.openorder,this);
-            it->setsymbol(fo.playerid.data());
+            it->setsymbol(fo.symbol.data());
             append(it);
             qDebug() << m_pidsymbol << "OpenOrdersModel::Update appended";
         }
@@ -103,6 +103,7 @@ class TradingPositionsModelItem : public QObject {
 
     OpenOrdersModel mOpenOrdersModel;
     QML_READONLY_CSTREF_PROPERTY (QString, symbol)
+    QML_READONLY_CSTREF_PROPERTY (qint32, multiplier)
     QML_READONLY_CSTREF_PROPERTY (qint32, netprice)
     QML_READONLY_CSTREF_PROPERTY (qint32, netqty)
     QML_READONLY_CSTREF_PROPERTY (double, openpnl)
@@ -121,6 +122,7 @@ public:
         m_netprice = 0;
         m_netqty   = 0;
         mOpenOrdersModel.setpidsymbol(m_symbol);
+        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
     }
 
     explicit TradingPositionsModelItem(const AllOdersSymbol &allordersymbol,
@@ -136,6 +138,8 @@ public:
     {
 //        mOpenOrdersModel.setfantasyname(allordersymbol.fname().data());
 //        for ( auto &pio : allordersymbol())
+
+        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
 
         if ( m_pOpenOrdersModel == nullptr )
             m_pOpenOrdersModel = new OpenOrdersModel();
@@ -158,6 +162,8 @@ public:
                                 QObject{parent} {
 
         m_symbol = pidppvc.first.data();
+        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
+
         auto &mypair = pidppvc.second;
         auto &myorders = mypair.second;
         Update(mypair.first);
@@ -172,7 +178,7 @@ public:
         setnetqty(pos.netqty);
         setnetprice(pos.netprice);
         if ( pos.netqty == 0 ) {
-            setopenpnl(pos.netqty * 100.0);
+            setopenpnl(pos.netqty * m_multiplier);
             setavgprice(0);
         }
         else {
@@ -191,7 +197,7 @@ class TradingPositionsModel : public QQmlObjectListModel<TradingPositionsModelIt
     Q_OBJECT
 //    QML_READONLY_CSTREF_PROPERTY(QString, symbol)
     QML_READONLY_CSTREF_PROPERTY(QString, fantasyname)
-    QML_READONLY_CSTREF_PROPERTY (double, totalopenpnl)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (double, totalopenpnl)
 
 public:
     explicit TradingPositionsModel (QObject *          parent      = Q_NULLPTR,
@@ -212,7 +218,7 @@ public:
 
     void updateAllOrders(const std::string &fname, const ordsnap_t &myorderpositions) {
         clear();
-        m_totalopenpnl = 0.0;
+        settotalopenpnl(0.0);
         setfantasyname(fname.data());
 
         for ( auto p : myorderpositions ) {
@@ -222,12 +228,12 @@ public:
 
             auto it = new TradingPositionsModelItem(p,this);
             append(it);
-            m_totalopenpnl += it->get_openpnl();
+            settotalopenpnl(it->get_openpnl());
         }
     }
 
     void Update(fantasybit::FullOrderDelta &fo) {
-        auto it = getOrCreate(fo.playerid.data());
+        auto it = getOrCreate(fo.symbol.data());
         if ( it != nullptr )
             it->Update(fo);
         else

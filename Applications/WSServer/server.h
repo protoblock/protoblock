@@ -3,15 +3,24 @@
 
 #include "StateData.pb.h"
 //#include "TxServer.h"
-#include "LiteServer.h"
 #include "ExchangeData.h"
 #include "Data.h"
 #include "pbgateways.h"
 #include "dataservice.h"
 #include "Commissioner.h"
 #include <unordered_set>
+#include <stack>
 
-using namespace fantasybit;
+namespace fantasybit {
+
+struct fnameptrs {
+    fnameptrs(AllOdersFname *ao = nullptr) : fnameAllOdersFname(ao) {}
+    AllOdersFname *fnameAllOdersFname;
+    std::unordered_map<int32_t,Order *> mSeqOrderMap;
+    std::unordered_map<string, AllOdersSymbol *>    fnamesymbolAllOrders;
+    std::unordered_map< AllOdersSymbol *, std::stack<Order *>>  openOrderSlots;
+    std::stack<AllOdersSymbol *> openOrderSymbolSlot;
+};
 
 class Server : public QObject {
     Q_OBJECT
@@ -22,40 +31,102 @@ class Server : public QObject {
     void setupConnection(pb::IPBGateway *ingateway);
     void initData();
 
-#ifdef TESTING_ONLY
-    QTimer testGameStart;
-    std::unordered_map<string,GameData> holdGameData;
-#endif
-
     void resetRosterProjScheduleData();
-public:
 
+    pb::IPBGateway *mGateway = nullptr;
+    QObject *mOGateway;
+    bool amLive = false;
+
+    std::unordered_map<std::string,int> mPlayerId2Index;
+    std::unordered_set<std::string> blocknames;
+    std::unordered_set<std::string> posnames;
+    std::unordered_set<std::string> depthsymbols;
+
+    int currblock = 0;
+
+public:
     static Server *instance();
+
+    void init();
+    void setContext(pb::IPBGateway *ingateway) {
+        qDebug() << " setContext " << bool(ingateway == nullptr);
+        mGateway = ingateway;
+        setupConnection(mGateway);
+        qDebug() << " setContext2 " << bool(mGateway == nullptr);
+    }
+
+
+
+
+
+
+public:
     WSReply mGetCurrRostersReply;
     fantasybit::GetAllNamesRep mAllNamesRep;
     fantasybit::GetCurrRostersRep *mGetCurrRostersRep;
     QByteArray mGetCurrRostersRepStrBytesWSReply;
     std::string mGetCurrRostersRepStrWSreply;
 
-    static fantasybit::ExchangeData TheExchange;
-
     GetGlobalStateRep GlobalStateRep;
     GetScheduleRep ScheduleRep;
 
     ProjByName *avgProjByName, zeroProjByName;
     std::unordered_map<std::string,ProjByName *> mProjByNames;
-    std::unordered_map<std::string,int> mPlayerId2Index;
 
-//    std::unordered_map<std::string,std::pair<int,int>> mFname2BlockCount;
-    std::unordered_set<std::string> blocknames;
-    int currblock = 0;
+    std::unordered_map<std::string,FantasyNameBal *> mPk2Bal;
 
+    ROWMarket *getRowmarket(const std::string &pid);
+    GetDepthRep * getDepthRep(const std::string &playerid);
+
+    fantasybit::GetROWMarketRep mROWMarketRep;
+
+    fnameptrs &getfnameptrs(const std::string &fname, bool clean = false);
+
+    void cleanIt(fnameptrs &fptr) {
+    //    for ( auto &all : fptr.fnamesymbolAllOrders ) {
+    //        all.second->orders.clear();
+    //    }
+        fptr.fnameAllOdersFname->clear_pidorders();
+        fptr.mSeqOrderMap.clear();
+        fptr.fnamesymbolAllOrders.clear();
+        fptr.openOrderSlots.clear();
+        fptr.openOrderSymbolSlot = std::stack<AllOdersSymbol *> {};
+    }
+
+    void cleanIt(const std::string &fname) {
+        auto it = fnameptrsmap.find(fname);
+        if ( it != end(fnameptrsmap))
+            cleanIt(it->second);
+    }
+
+    void UnSubscribe(const std::string &fname) {
+        qDebug() << " unsubscribe " << fname.data();
+        emit DoSubscribe(fname,false);
+        cleanIt(fname);
+    }
+
+    void Subscribe(const std::string &fname) {
+        qDebug() << " subscribe " << fname.data();
+        emit DoSubscribe(fname,true);
+        getFnameSnap(fname);
+    }
+
+
+    AllOdersSymbol *getAllOdersSymbol(fnameptrs &fptr, const std::string &symbol);
+    Order *addOrder(fnameptrs &fptr, AllOdersSymbol *allords, const Order &orderin);
+    void ProcessMarketSnapShot(fantasybit::MarketSnapshot *mt);
+private:
 
 //    static fantasybit::GetROWMarketRep ROWMarketRep;
 //    static NFLStateData  NFLData;
-    std::unordered_map<std::string,FantasyNameBal *> mPk2Bal;
+    void getFnameSnap(const std::string &fname);
+
+    std::unordered_map<std::string, ROWMarket *> mPidROWMarket;
+    std::unordered_map<std::string, GetDepthRep *> mPidGetDepthRep;
+
     std::unordered_map<std::string,int> mPk2Index;
 
+    std::unordered_map< std::string, fnameptrs>  fnameptrsmap;
 
     void AddNames(const FantasyNameBal &fnb) {
 //        qDebug() << " server::addnames " << fnb.DebugString().data();
@@ -97,6 +168,19 @@ public:
 //        = {fbp.count(),fbp.block()};
     }
 
+    void saveMarket(const std::string &symbol) {
+
+    }
+
+    void saveDepth(const std::string &symbol) {
+        depthsymbols.insert(symbol);
+    }
+
+    void savePos(const std::string &fname) {
+        posnames.insert(fname);
+    }
+
+    std::unordered_map<std::string,std::string> mSymb2Pid;
 
 //    static void AddNames(FantasyNameBal *pFn) {
 //        mAllNamesRep.add_names(pFn->name());
@@ -105,21 +189,12 @@ public:
 
 //    }
 
-    static bool goodPid(const std::string &pid) {
-        auto pb = DataService::instance()->GetPlayerBase(pid);
-        return pb.has_last() && pb.last() != "";
-    }
+//    bool goodPid(const std::string &pid) {
+//        auto pb = DataService::instance()->GetPlayerBase(pid);
+//        return pb.has_last() && pb.last() != "";
+//    }
 
-    pb::IPBGateway *mGateway = nullptr;
-    void setContext(pb::IPBGateway *ingateway) {
-        qDebug() << " setContext " << bool(ingateway == nullptr);
-        mGateway = ingateway;
-        setupConnection(mGateway);
-        qDebug() << " setContext2 " << bool(mGateway == nullptr);
 
-    }
-
-    bool amLive = false;
 protected slots:
     void OnNewFantasyName(fantasybit::FantasyNameBal fnb) {
         AddNames(fnb);
@@ -178,8 +253,22 @@ protected slots:
             emit onNewProj(name);
         }
         blocknames.clear();
-        currblock = n;
 
+        if ( depthsymbols.size() > 0) {
+            emit newRow();
+            for ( const auto &symb : depthsymbols) {
+                emit newDepth(symb);
+            }
+        }
+        depthsymbols.clear();
+
+        for ( const auto &name : posnames) {
+            emit newPos(name);
+        }
+        posnames.clear();
+
+
+        currblock = n;
     }
 
 #ifdef TESTING_ONLY
@@ -202,12 +291,62 @@ protected slots:
 #endif
 
 
+    void OnMarketTicker(fantasybit::MarketTicker,int32_t);
+//    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
+    void OnDepthDelta(fantasybit::DepthFeedDelta*);
+    void OnTradeTick(fantasybit::TradeTic*);
+    void OnNewPos(fantasybit::FullPosition);
+    void OnNewOO(fantasybit::FullOrderDelta);
+
 signals:
     void onNewProj(const std::string &name );
     void GameStart(string);
-    void GoLive();
+    void GoLive();    
+    void ready();
+    void DoSubscribe(const string &name, bool suborun);
+    void newDepth(const string &name );
+    void newPos(const string &name );
+    void newRow();
+};
+
+
+}
+#endif //SERVER_H
+/*
+ *
+ *
+ *
+class Server {
+public:
+    fantasybit::GetAllNamesRep mAllNamesRep;
+    static fantasybit::ExchangeData TheExchange;
+//    static fantasybit::GetROWMarketRep ROWMarketRep;
+    static NFLStateData  NFLData;
+    std::unordered_map<std::string,FantasyNameBal *> mPk2Bal;
+
+    void AddNames(const FantasyNameBal &fnb) {
+        mAllNamesRep.add_names(fnb.name());
+        FantasyNameBal *p = Server::AllNamesRep.add_fnb();
+        p->CopyFrom(fnb);
+        Pk2Bal.insert({fnb.public_key(),p});
+    }
+
+    void AddNames(FantasyNameBal *pFn) {
+        Server::AllNamesRep.add_names(pFn->name());
+        Server::AllNamesRep.mutable_fnb()->AddAllocated(pFn);
+        Pk2Bal.insert({pFn->public_key(),pFn});
+
+    }
+
+    static bool goodPid(const std::string &pid) {
+        auto pb = NFLData.GetPlayerBase(pid);
+        return pb.has_last() && pb.last() != "";
+    }
+
+    static std::unordered_map<std::string,FantasyNameBal> myNewNames;
 
 };
 
 
-#endif //SERVER_H
+
+ */

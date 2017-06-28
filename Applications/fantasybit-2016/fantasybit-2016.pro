@@ -8,7 +8,16 @@ CONFIG += qt c++11 static
 
 #CONFIG += c++11
 
-TARGET = fantasybit-2016D
+
+    !contains(DEFINES, PRODFOOTBALL){
+        TARGET = STAGING-fantasybit-2016D
+    }
+
+    contains(DEFINES, PRODFOOTBALL){
+        TARGET = fantasybit-2016D
+    }
+
+
 #CONFIG += qt console
 CONFIG -= app_bundle
 
@@ -18,9 +27,9 @@ TEMPLATE = lib
 
 #DEFINES += TRACE
 
+    include($$PWD/../../pri/core.pri)
 
 win32 {
-    include($$PWD/../../pri/core.pri)
 }
 
 
@@ -31,7 +40,7 @@ INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlModels
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlSuperMacros
 
 SOURCES += \
-    $$PWD/../../../fantasybit-2015/tradingfootball/playerloader.cpp \
+#    $$PWD/../../../fantasybit-2015/tradingfootball/playerloader.cpp \
     main.cpp \
     $$PWD/Data.cpp \
     $$PWD/DistributionAlgo.cpp \
@@ -59,7 +68,7 @@ SOURCES += \
     $$PWD/NodeWorker.cpp \
     $$PWD/iresolvable.cpp \
     $$PWD/dataservice.cpp \
-    fullgateway.cpp \
+    $$PWD/fullgateway.cpp \
     $$PWD/importLoader.cpp
 
 

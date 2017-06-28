@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
 //    qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
 
-    Core::instance()->bootstrap();
+
 
 
 //    GameStatsLoaderFD gamestatsloader;
@@ -115,6 +115,8 @@ int main(int argc, char *argv[])
 
     //MainLAPIWorker *mw = ;
     //mw->dataService = DataService::instance();
+
+    Core::instance()->bootstrap();
     pb::FullGateway *fg = new pb::FullGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
                                      DataService::instance());
     pb::Mediator::instance()->setContext(fg);
@@ -124,6 +126,13 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("MiddleMan", pb::Mediator::instance());
     pb::ImportLoader il;
     engine.rootContext()->setContextProperty("ImportLoader", &il);
+
+    MainLAPIWorker *ml = Core::resolveByName<MainLAPIWorker>("coreapi");
+//    QObject::connect(&engine, SIGNAL(quit()),
+    //QObject::connect(&app, SIGNAL(aboutToQuit()),
+    app.setQuitOnLastWindowClosed(false);
+    QObject::connect(&app, SIGNAL(lastWindowClosed()),
+                     ml, SLOT(Quit()));
 
     //qmlRegisterSingletonType<pb::Mediator>(uri,1,0,"MiddleMan",middleMan);
 

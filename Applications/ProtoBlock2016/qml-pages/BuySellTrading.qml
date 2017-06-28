@@ -38,7 +38,7 @@ Item {
 //        anchors.fill: parent
 //        spacing: 10
         //buy
-        RowLayout {
+    RowLayout {
 //            anchors.centerIn: parent
 //            Layout.fillWidth: true
 //            Layout.fillHeight: true
@@ -88,7 +88,7 @@ Item {
                     id: buyspin
                     decimals: 0
                     stepSize: 1.0
-                    maximumValue: 40
+                    maximumValue: (inplay.multiplier && inplay.multiplier > 0) ? (400 / inplay.multiplier) : 400;
                     minimumValue:  1
                     value: 1
                     Layout.column: 2
@@ -217,14 +217,14 @@ Item {
                     id: sellspin
                     decimals: 0
                     stepSize: 1.0
-                    maximumValue: 40
+                    maximumValue: (inplay.multiplier && inplay.multiplier > 0) ? (400 / inplay.multiplier) : 400;
                     minimumValue:  1
-                    value: 40
+                    value: maximumValue
                     Layout.column: 2
                     Layout.row: 1
     //                anchors.centerIn: parent
                     onValueChanged: {
-
+                        console.log(inplay.multiplier + "multiplier " + maximumValue)
                     }
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true
@@ -311,7 +311,7 @@ Item {
                 }
             }
         }
-        }
+    }
 //    }
 
     /*
@@ -703,7 +703,7 @@ Item {
         property string player
         id: myTradeDialog
         positiveButtonText: side + " Now"
-        title: "Confirm Trade - Week " + MiddleMan.theWeek  + " Contract"
+        title: "Confirm Trade - Season 2017 Contract"
         text: "Protoblock Player: " + realRoot.uname
         dialogContent: Column {
             anchors.fill: parent
@@ -737,7 +737,9 @@ Item {
                 rootLoader.source = "qrc:/Account.qml"
                 pageHelper.selectedTabIndex = 3;
             }
-            else MiddleMan.doTrade(
+            else if ( inplay.symbol != "" )
+                MiddleMan.doTrade(
+                     inplay.playerid,
                     inplay.symbol
                     ,(side == "Buy") ? true : false
                  ,myTradeDialog.price
