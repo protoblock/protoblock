@@ -240,7 +240,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: fbdelFB
             }
 
             TableViewColumn{
@@ -632,6 +632,21 @@ Item {
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
             text: (styleData.value < 1) ? "" : styleData.value;
             font.bold: false;
+        }
+    }
+
+    Component {
+        id: fbdelFB
+
+        Material.Label {
+            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            text: (styleData.value < 1) ? "" : styleData.value;
+            font.bold: false;
+            font.family: fontfamFB
         }
     }
 

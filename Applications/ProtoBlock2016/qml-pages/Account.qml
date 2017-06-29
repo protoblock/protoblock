@@ -88,6 +88,8 @@ Item {
                     }
                     valueText: "Skill(" + model.bits + " ƑɃ) Stake(" + model.stake +" ƑɃ)"
                     onClicked: MiddleMan.useName(model.name)
+                    itemValueLabel.font.family: fontfamFB
+
                 }
             }
         }

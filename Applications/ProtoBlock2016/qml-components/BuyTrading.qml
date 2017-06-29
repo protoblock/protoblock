@@ -354,6 +354,7 @@ Item {
                             id: totalval
                             text: Math.round(pricecombo.currentIndex * qtyCB.currentIndex) + " ƑɃ"
                             color: "darkred"
+                            font.family: fontfamFB
                        }
 //                    }
                     Label {

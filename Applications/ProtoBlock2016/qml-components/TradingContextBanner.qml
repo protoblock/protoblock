@@ -66,7 +66,7 @@ Material.Card {
                 backgroundColor: "white"
                 color: themeroot.theme.primaryColor
                 helpShown: true
-                helperHeader: inplay.fullname + " (" + inplay.position + ") Season Contract"
+                helperHeader: inplay.fullname + " (" + inplay.pos + ") Season Contract"
                 helperTxt: "16 games 16 weeks. Season long contracts settle at the total points from a 16 game season. " +
                             "the season is from week1-week16. (week 16 is counted twice instead of using week 17)." +
                             "These expire at the total fantasy points scored by " + inplay.fullname +
@@ -677,7 +677,7 @@ Material.Card {
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     color: !inplay ? dcolor : (inplay.mypnl < 0) ? "red" : (inplay.mypnl > 0) ? "green" : Material.Theme.light.textColor
-
+                    font.family: fontfamFB
                 }
 
 
@@ -861,6 +861,7 @@ Material.Card {
 //                    color: !inplay ? Material.Theme.light.textColor : inplay.bsdiff === 1 ? lightgreen :
 //                                             inplay.bsdiff === -1 ? lightred :  Material.Theme.light.textColor
 
+                    font.family: fontfamFB
                 }
 
                 Material.Label {
@@ -873,6 +874,7 @@ Material.Card {
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     color: (!inplayf || inplayf.totalopenpnl === 0) ? Material.Theme.light.textColor : inplayf.totalopenpnl > 0 ? "green" : "red"
+                    font.family: fontfamFB
                 }
 
                 Material.Label {
@@ -884,6 +886,7 @@ Material.Card {
                     Layout.column: 4
                     Layout.row: 1
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.family: fontfamFB
                 }
 
                 Material.Label {
@@ -896,6 +899,7 @@ Material.Card {
                     Layout.column: 4
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.family: fontfamFB
                 }
 
             }
