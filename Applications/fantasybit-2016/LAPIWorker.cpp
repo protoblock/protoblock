@@ -338,6 +338,7 @@ void MainLAPIWorker::Timer() {
     }
 #ifdef LIGHT_CLIENT_ONLY
     emit GetNext();
+    return;
 #else
     else {
         count++;
