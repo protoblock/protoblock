@@ -179,6 +179,7 @@ Card {
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
 //                    color: !inplay ? Material.Theme.light.textColor : inplay.bsdiff === 1 ? lightgreen :
 //                                             inplay.bsdiff === -1 ? lightred :  Material.Theme.light.textColor
+                    font.family: fontfamFB
 
                 }
 
@@ -192,6 +193,7 @@ Card {
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     color: (!inplay || inplay.totalopenpnl === 0) ? Material.Theme.light.textColor : inplay.totalopenpnl > 0 ? "green" : "red"
+                    font.family: fontfamFB
                 }
 
                 Material.Label {
@@ -203,6 +205,7 @@ Card {
                     Layout.column: 4
                     Layout.row: 1
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.family: fontfamFB
                 }
 
                 Material.Label {
@@ -215,6 +218,7 @@ Card {
                     Layout.column: 4
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.family: fontfamFB
                 }
 
             }

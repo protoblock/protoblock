@@ -10,7 +10,6 @@ Item {
     property string text
     property string color: "white"
     property string backgroundColor: "black"
-    property string hekperColor: "white"
     property int fontSize: ProtoScreen.font(ProtoScreen.LARGE)
     property bool bold: false
     property int elevation: 2
@@ -25,7 +24,7 @@ Item {
     width: parent.width
     Card{
         height: parent.height
-        width: parent.width - (!bannerRoot.helpShown ? 0.0 : ProtoScreen.guToPx(6))
+        width: parent.width
         backgroundColor: bannerRoot.backgroundColor
         elevation: bannerRoot.elevation
         radius: 0
@@ -33,7 +32,7 @@ Item {
             id: bannerTxt
             text: bannerRoot.text
             height:parent.height
-            width: parent.width - ProtoScreen.guToPx(1.25)
+            width: parent.width - ProtoScreen.guToPx(1.25)  - (!bannerRoot.helpShown ? 0.0 : ProtoScreen.guToPx(6))
             font.pixelSize: bannerRoot.fontSize
             font.bold: bannerRoot.bold
             color: bannerRoot.color

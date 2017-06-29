@@ -81,6 +81,8 @@ Item {
                         source:  "qrc:/icons/action_account_circle.png"
                     }
                     valueText: "Skill: " + model.bits + "  ƑɃ"
+                    itemValueLabel.font.family: fontfamFB
+
                 }
             }
 

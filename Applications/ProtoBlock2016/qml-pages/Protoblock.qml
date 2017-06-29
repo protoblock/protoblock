@@ -48,7 +48,7 @@ Item {
 
                     CardWithBanner{
                         width: parent.width / 1.07
-                        bannerText: "Protoblock 2016"
+                        bannerText: "Protoblock "
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "Protoblock is new game based directly on NFL PPR projections.  It distinguishes skilled experts while eliminating luck factors.  The game is fair, open and decentralized in a way that makes each Protoblock Player an owner."
                     }

@@ -33,6 +33,7 @@ Material.ApplicationWindow{
     property string msgString
     property bool reloadorderpos: true
 
+    property string  fontfamFB:  Device.productType === "osx" ? "Helvetica Neue" : "Roboto"
 
     statusBar: StatusBar {
 

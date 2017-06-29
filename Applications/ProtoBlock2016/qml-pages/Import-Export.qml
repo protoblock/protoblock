@@ -51,6 +51,7 @@ Item{
                 itemLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                 itemValueLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                 valueText: "Balance : " + (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.stake).toLocaleString()) + " ƑɃ"
+                itemValueLabel.font.family: fontfamFB
             }
 
             Card{

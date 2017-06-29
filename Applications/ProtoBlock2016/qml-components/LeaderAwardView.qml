@@ -142,6 +142,7 @@ Item {
 
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     text: (styleData.value)
+                    font.family: fontfamFB
                 }
             }
         }
