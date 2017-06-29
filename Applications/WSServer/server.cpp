@@ -880,6 +880,7 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
 
     std::string strtweet;
     auto it = getRowmarket(tt->symbol());
+
     strtweet = it->playerdata().player_base().first() + " " +
             it->playerdata().player_base().last();
     if ( strtweet.length() > 31)
@@ -888,11 +889,14 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
     strtweet += " (";
     std::string teamid = it->playerdata().player_status().teamid();
     if ( teamid == "") teamid = "FA";
-    strtweet += teamid +"," + it->playerdata().player_base().position();
-    strtweet += " - 2017 Totals - trading at " + to_string(tt->price());
-    strtweet += " @protoblock";
-    strtweet += "\nhttp://protoblock.com/ticks.html?playerid=" + tt->symbol();
-    strtweet += "$" + tt->symbol() +" #ƑantasyɃits";
+    strtweet += teamid +", " + it->playerdata().player_base().position();
+    strtweet += ") 2017 - ";
+
+    std::string price = to_string(tt->price()) + (tt->tic() < 0 ? " ↓" : tt->tic() > 0 ? " ↑" : "");
+    strtweet += " trading at: " + price;
+    strtweet += "\n«" + tt->symbol() + "» @protoblock";
+    strtweet += "\nhttp://protoblock.com/ticks.html?symbol=" + tt->symbol();
+    strtweet += "\n#fantasyfootball #fantasybits $ƑɃ";
     qDebug() << " sending tweet " << strtweet.data();
     sock.send(strtweet.data(), strtweet.size(),0);
     qDebug() << " sent tweet " << strtweet.data();
