@@ -11,6 +11,12 @@
 #include <unordered_set>
 #include <stack>
 
+#ifdef WSSERVER_WRITE_TWEET
+#include <nanomsg/nn.hpp>
+#include <nanomsg/nn.h>
+#include <nanomsg/pair.h>
+#endif
+
 namespace fantasybit {
 
 struct fnameptrs {
@@ -25,7 +31,11 @@ struct fnameptrs {
 class Server : public QObject {
     Q_OBJECT
 
-    explicit Server(QObject *parent = 0) :  QObject(parent) {}
+    explicit Server(QObject *parent = 0) :
+    #ifdef WSSERVER_WRITE_TWEET
+        sock{AF_SP, NN_PAIR},
+    #endif
+        QObject(parent) {}
 
     static Server *myInstance;
     void setupConnection(pb::IPBGateway *ingateway);
@@ -46,6 +56,20 @@ class Server : public QObject {
 
 public:
     static Server *instance();
+#ifdef WSSERVER_WRITE_TWEET
+    Server::~Server() {
+        nn_term();
+    }
+    void TweetIt(fantasybit::TradeTic *tt);
+    nn::socket sock;
+    std::unordered_map<string,std::pair<bool,std::chrono::steady_clock::time_point>> mLastTweet;
+
+    static QString getLink(const string &is) {
+        return QString("protoblock.com/ticks.html?playerid=%1").arg(is.data());
+    }
+    std::chrono::steady_clock::time_point last_tweet;
+#endif
+
 
     void init();
     void setContext(pb::IPBGateway *ingateway) {

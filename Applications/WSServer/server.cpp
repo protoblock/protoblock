@@ -72,6 +72,11 @@ void Server::init() {
     connect( mOGateway, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
             this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
 
+#ifdef WSSERVER_WRITE_TWEET
+    sock.bind("tcp://127.0.0.1:5088");
+#endif
+
+
     ready();
 }
 
@@ -445,7 +450,7 @@ void Server::OnTradeTick(fantasybit::TradeTic* tt) {
     if ( tt->islow() )
        pROWMarket->mutable_ohlc()->set_low(tt->price());
 
-#ifdef TIMEAGENTWRITETWEETS
+#ifdef WSSERVER_WRITE_TWEET
     TweetIt(tt);
 #endif
 
@@ -865,5 +870,99 @@ void Server::getFnameSnap(const std::string &fname) {
 
     }
 }
+
+#ifdef WSSERVER_WRITE_TWEET
+void Server::TweetIt(fantasybit::TradeTic *tt) {
+    qDebug() << " TweetIt " << tt->DebugString().data();
+
+    if ( !amLive )
+        return;
+
+    std::string strtweet;
+    auto it = getRowmarket(tt->symbol());
+    strtweet = it->playerdata().player_base().first() + " " +
+            it->playerdata().player_base().last();
+    if ( strtweet.length() > 31)
+        strtweet = it->playerdata().player_base().last();
+
+    strtweet += " (";
+    std::string teamid = it->playerdata().player_status().teamid();
+    if ( teamid == "") teamid = "FA";
+    strtweet += teamid +"," + it->playerdata().player_base().position();
+    strtweet += " - 2017 Totals - trading at " + to_string(tt->price());
+    strtweet += " @protoblock";
+    strtweet += "\nhttp://protoblock.com/ticks.html?playerid=" + tt->symbol();
+    strtweet += "$" + tt->symbol() +" #ƑantasyɃits";
+    qDebug() << " sending tweet " << strtweet.data();
+    sock.send(strtweet.data(), strtweet.size(),0);
+    qDebug() << " sent tweet " << strtweet.data();
+
+
+     /*
+    "name"
+    " (WR TEN) - 2017 Totals - last trade @ 100 "
+    "http://protoblock.com/ticks.html?playerid=$RBRBa17s"
+    "$RBRBa17s "
+    "@protoblock #fantasyfootball"
+    "12/21/17 12:12:12.12"
+
+    "01234567890123456789012345678901 (WR TEN) - 2017 Totals - trading at 100 @protoblock "
+    "http://protoblock.com/ticks.html?playerid=RBRBa17s"
+    "$RBRBa17s  #fantasybits"
+     */
+
+    /*
+    QString tweet = "%1 (%3, %2) trading at %4";
+    tweet = tweet.arg(pname,pos,t,to_string(tt->price()).data());
+    QString end = "\n%1\nWeek %2 %3\n@protoblock #fantasyfootball %4";
+    end = end.arg(getLink(tt->symbol()), to_string(m_theWeek).data(),
+                  TimetoTweetString(),m_pWeeklyScheduleModel->getTwitterGame(t) );
+    string tosend = tweet.toStdString() + end.toStdString() ;
+    qDebug() << " sending tweet " << tosend.data();
+    sock.send(tosend.data(), tosend.size(),0);
+    qDebug() << " sent tweet " << tosend.data();
+    */
+
+    /*
+    bool doit = false;
+    QString type(" ");
+    if ( tt->ishigh() || tt->islow()) {
+        int price = 0;
+        auto &lasttime = mLastTweet[tt->symbol()];
+        auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
+                            (std::chrono::system_clock::now()-lasttime.second).count());
+
+        if ( tt->islow() && (sincelast > 30 || lasttime.first)) {
+            if ( !tt->ishigh() )
+                type = " at new Low! ";
+            lasttime.first = false;
+            lasttime.second = std::chrono::system_clock::now();
+            doit = true;;
+        }
+        else if ( tt->ishigh() && (sincelast > 30 || !lasttime.first)) {
+            type = " at new High! ";
+            lasttime.first = true;
+            lasttime.second = std::chrono::system_clock::now();
+            doit = true;
+        }
+    }
+
+    if ( !doit ) {
+         auto sincelast = (std::chrono::duration_cast<std::chrono::minutes>
+                             (std::chrono::system_clock::now()-last_tweet).count());
+         if ( sincelast > 30)
+            doit = true;
+
+         type = " ";
+    }
+
+    if ( !doit ) return;
+
+    last_tweet = std::chrono::system_clock::now();
+
+    */
+}
+
+#endif
 
 Server *Server::myInstance;

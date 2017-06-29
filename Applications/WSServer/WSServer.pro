@@ -27,6 +27,11 @@ OTHER_FILES += $$PWD/sslechoclient.html
 DEFINES += MAX_NAMES_LB=1000
 #DEFINES += TRACE
 
+DEFINES += WSSERVER_WRITE_TWEET
+contains(DEFINES, WSSERVER_WRITE_TWEET) {
+    INCLUDEPATH += $$DIRPREFIX/windows/3rdParty/nanomsg
+    LIBS += -lnanomsg
+}
 
 #win32 {
 #    include($$PWD/../../pri/core.pri)
