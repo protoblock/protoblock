@@ -9,6 +9,7 @@ include ($$PWD/../../pri/qml-utils.pri)
 #include ($$PWD/../../pri/qml-torrent.pri)
 include ($$PWD/../../pri/qml-realChat.pri)
 
+QMAKE_LFLAGS_DEBUG += /INCREMENTAL:NO
 
 CONFIG(debug, debug|release) {
     QMAKE_LFLAGS_DEBUG += /INCREMENTAL:NO
@@ -25,6 +26,7 @@ QT += qml quick core websockets network xmlpatterns qml-private quick-private
 #sql
 #sql webchannel
 CONFIG += c++11
+CONFIG += Console
 
 contains(DEFINES, DATAAGENTWRITENAMES){
     QT += sql
@@ -80,21 +82,23 @@ RESOURCES += $$PWD/qml/qml.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH = . ..
 
-DISTFILES += \
-    android/AndroidManifest.xml \
-    android/gradle/wrapper/gradle-wrapper.jar \
-    android/gradlew \
-    android/res/values/libs.xml \
-    android/build.gradle \
-    android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat
 
-
-ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 FANTASYBITLIB += fantasybit-2016D
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+    DISTFILES += \
+        android/AndroidManifest.xml \
+        android/gradle/wrapper/gradle-wrapper.jar \
+        android/gradlew \
+        android/res/values/libs.xml \
+        android/build.gradle \
+        android/gradle/wrapper/gradle-wrapper.properties \
+        android/gradlew.bat
+
+
+    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
     ANDROID_EXTRA_LIBS = \
              $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so
 #             $$DIRPREFIX/android/extrenal-android/lib/libcrypto.so \
@@ -146,3 +150,5 @@ include ($$PWD/../../pri/genproto.pri)
 INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
 DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
 
+CONFIG(debug,debug|release):message("Debug mode")
+CONFIG(release,debug|release):message("Release mode")

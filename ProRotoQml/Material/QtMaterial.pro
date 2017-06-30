@@ -11,3 +11,6 @@ SUBDIRS += \
                        Material/ListItems \
                        Material/Extras \
                        Material/Styles
+
+CONFIG(debug,debug|release):message("Debug mode")
+CONFIG(release,debug|release):message("Release mode")

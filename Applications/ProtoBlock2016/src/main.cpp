@@ -140,6 +140,7 @@ int main(int argc, char *argv[])
 //    qDebug() << " last seq " << sql.lastSeq() << " last seq";
 //    return 0;
 
+    qDebug() << engine.importPathList();
     engine.dumpObjectInfo();
     engine.load(QUrl(QStringLiteral("qrc:/MaterialMain.qml")));
 

@@ -25,4 +25,4 @@ OTHER_FILES += \
 
 OTHER_FILES += $$PWD/GenerateProto/*.proto
 
-QMAKE_MAC_SDK = macosx10.12
+#QMAKE_MAC_SDK = macosx10.12
