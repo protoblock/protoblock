@@ -166,8 +166,8 @@ public:
             result += (pba.first().at(0));
             result += (pba.last().at(0));
 
-//            if ( result == "JB")
-//                qDebug() << "jbjbjbj" << pba.DebugString().data();
+            if ( result == "KM")
+                qDebug() << "jbjbjbj" << pba.DebugString().data();
 
             auto it = mUniqueSymbol.find(result);
             if ( it == mUniqueSymbol.end()) {
@@ -220,11 +220,17 @@ public:
             mUniqueSymbol.insert({initials,ar});
         }
         else {
-            if (ticker.size() < 5)
-                it->second[index] = 'a';
+            if (ticker.size() < 5) {
+                if ( it->second[index] < 'a')
+                    it->second[index] = 'a';
+            }
             else if ( it->second[index] <= ticker[4] )
                 it->second[index] = ticker[4]+1;
         }
+
+//        if ( initials == "KM" && pos == "RB") {
+//            qDebug() << "jbjbjbj" << ticker.data() << it->second[index];
+//        }
     }
 
     void TeamNameChange(const std::string &playerid, const PlayerBase &pb, const PlayerStatus &ps);
