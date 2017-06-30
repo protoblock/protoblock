@@ -305,6 +305,10 @@ bool Node::SyncTo(int32_t gh) {
     string previd;
     int count = 0;
 
+#ifdef TRACE4
+    qDebug() << " current_hight " << current_hight << "current_boot.blocknum()" <<current_boot.blocknum();
+#endif
+
     if ( current_hight == current_boot.blocknum() ) {
         previd = current_boot.previd();
         if ( previd == "" )

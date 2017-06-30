@@ -336,11 +336,12 @@ void MainLAPIWorker::Timer() {
         if ( bcount < 3)
             emit GetNext();
     }
-#ifdef LIGHT_CLIENT_ONLY
-    emit GetNext();
-    return;
-#else
+
     else {
+#ifdef LIGHT_CLIENT_ONLY
+        emit GetNext();
+        return;
+#else
         count++;
         emit GetNext();
         //emit ProcessNext();
@@ -354,8 +355,9 @@ void MainLAPIWorker::Timer() {
     //                emit GameStart("201600110");
             }
         }
-    }
 #endif
+    }
+
 }
 
 bool MainLAPIWorker::Process(fantasybit::Block &b) {
