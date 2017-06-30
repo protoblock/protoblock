@@ -44,7 +44,7 @@ Item {
 
                 }
 
-                Label {
+                Material.Label {
                     text: model.symbol
                     Layout.fillHeight: true
                     verticalAlignment: Text.AlignVCenter
@@ -54,7 +54,7 @@ Item {
                     font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
 
                 }
-                Label {
+                Material.Label {
                     text: !model.fullname ? MiddleMan.fillPlayerBase(model.symbol, model.playerid) : model.fullname
                     Layout.fillHeight: true
                     verticalAlignment: Text.AlignVCenter
