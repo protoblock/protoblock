@@ -135,7 +135,9 @@ PnlResults SettlePositionsRawStake::
     for(const auto& settlepos : positions.positions()) {
         int hispnl = (settlepos.qty() * intresult) + settlepos.price() * 100;
         pnl[settlepos.pk()] = make_pair(settlepos,hispnl);
+#ifdef TRACE
         qDebug() << settlepos.DebugString().data();
+#endif
 //        " pnl " <<  hispnl << " result " << result <<
 //                    " pos " << settlepos.second.first << " " << settlepos.second.second;
 

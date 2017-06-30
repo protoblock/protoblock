@@ -609,7 +609,9 @@ bool NFLStateData::GetGameResult(const std::string &gameid, GameResult &result) 
         if (!result.ParseFromString(temp) )
             qWarning() << " cant parse game result";
         else {
+#ifdef TRACE4
             qDebug() << result.DebugString().data();
+#endif
             return true;
         }
     }
@@ -889,7 +891,7 @@ GameStatus NFLStateData::GetUpdatedGameStatus(string id) {
         gs.ParseFromString(temp);
         if ( gs.has_datetime() && gs.datetime() < 1)
             gs.set_datetime(-1);
-        qDebug() << key.data() << gs.DebugString().data ();
+//        qDebug() << key.data() << gs.status().DebugString().data();
      }
     return gs;
 }

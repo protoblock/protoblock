@@ -182,10 +182,10 @@ public:
 //    }
 
     Q_INVOKABLE void startDepth(const QString& symbol) {
-        qDebug() << " startDepth " << symbol;
+//        qDebug() << " startDepth " << symbol;
         auto *it = mPlayerQuoteSliceModel.getByUid(symbol);
         if ( it != nullptr ) {
-            qDebug() << " startDepth good" << symbol;
+//            qDebug() << " startDepth good" << symbol;
 
 //          m_pPlayerQuoteSliceModelItem = it;
             update_pPlayerQuoteSliceModelItem(it);
@@ -199,7 +199,7 @@ public:
             update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
         }
         else {
-            qDebug() << " startDepth !good getOrCreate" << symbol;
+//            qDebug() << " startDepth !good getOrCreate" << symbol;
             update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
         }
 //        depthBackup--;
@@ -286,17 +286,17 @@ public:
 
     //projections
     Q_INVOKABLE void select(int row, int command) {
-        qDebug() << " meiator selected" << row << " commsnd " << command;
+//        qDebug() << " meiator selected" << row << " commsnd " << command;
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Select);
     }
 
     Q_INVOKABLE void toggle(int row, int command) {
-        qDebug() << " meiator selected" << row << " commsnd " << command;
+//        qDebug() << " meiator selected" << row << " commsnd " << command;
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Toggle);
     }
 
     Q_INVOKABLE void deselect(int row, int command) {
-        qDebug() << " meiator deselected" << row << " commsnd " << command;
+//        qDebug() << " meiator deselected" << row << " commsnd " << command;
         m_pQItemSelectionModel->select(m_pWeeklyScheduleModel->index(row),QItemSelectionModel::Deselect);
     }
 
@@ -397,7 +397,7 @@ public:
     }
 
     Q_INVOKABLE void copyProj(int column, QString value, bool clone, bool random = false) {
-        qDebug() << "CopyProj " << column << value << clone;
+//        qDebug() << "CopyProj " << column << value << clone;
 
         if ( value == "Average") {
             for ( auto *it : mPlayerProjModel) {
@@ -468,17 +468,17 @@ public:
 
     //results
     Q_INVOKABLE void selectP(int row, int command) {
-        qDebug() << " meiator selectedP" << row << " commsnd " << command;
+//        qDebug() << " meiator selectedP" << row << " commsnd " << command;
         m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Select);
     }
 
     Q_INVOKABLE void toggleP(int row, int command) {
-        qDebug() << " meiator toggleP" << row << " commsnd " << command;
+//        qDebug() << " meiator toggleP" << row << " commsnd " << command;
         m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Toggle);
     }
 
     Q_INVOKABLE void deselectP(int row, int command) {
-        qDebug() << " meiator deselectedP" << row << " commsnd " << command;
+//        qDebug() << " meiator deselectedP" << row << " commsnd " << command;
         m_pPrevQItemSelectionModel->select(m_pPreviousWeekScheduleModel->index(row),QItemSelectionModel::Deselect);
     }
 
@@ -522,7 +522,7 @@ public:
     }
 
     Q_INVOKABLE void setPrevWeekData(int week) {
-        qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
+//        qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
         setprevSelectedPlayerDisplay("");
         if ( !amLive ) return;
 
@@ -581,7 +581,7 @@ public:
     }
 
     Q_INVOKABLE void setPrevWeekResultLeaderSelection(QString in) {
-        qDebug() << " setPrevWeekResultLeaderSelection " << in;
+//        qDebug() << " setPrevWeekResultLeaderSelection " << in;
         if ( !amLive ) return;
 
         auto it = mPlayerResultModel.getByUid(in);
@@ -609,7 +609,7 @@ public:
     //fantasy name - manage
 //    Q_INVOKABLE void pk2fname(const QString&);
     Q_INVOKABLE void checkname(QString s) {
-        qDebug() << " inside checkname" << s;
+//        qDebug() << " inside checkname" << s;
         emit doNameCheck(s);
     }
 
@@ -725,12 +725,12 @@ protected slots:
 
     //projections
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
-        qDebug() << " mediator selectionChanged " << selected << deselected;
+//        qDebug() << " mediator selectionChanged " << selected << deselected;
         m_pProjectionsViewFilterProxyModel->invalidate();
     }
 
     void selectionPrevChanged(const QItemSelection &selected, const QItemSelection &deselected) {
-        qDebug() << " mediator selectionPrevChanged " << selected << deselected;
+//        qDebug() << " mediator selectionPrevChanged " << selected << deselected;
         m_pResultsViewFilterProxyModel->invalidate();
     }
 
@@ -793,7 +793,7 @@ private:
             route = route.append("?position=all%20positions&week=%1").arg(week);
 
 
-        qDebug() << " calling route " << route;
+//        qDebug() << " calling route " << route;
 
         QMap<QString,QString>  headers;
         QMap<QString,QVariant> params;
@@ -854,7 +854,7 @@ public slots:
     void GameOver(string);
     void onControlMessage(QString);
     void NewFantasyName(fantasybit::FantasyNameBal fnb) {
-        qDebug() << "NewFantasyName " << fnb.DebugString().data();
+//        qDebug() << "NewFantasyName " << fnb.DebugString().data();
         auto it = mFantasyNameBalModel.getByUid(fnb.name().data());
         if ( it == nullptr) {
             auto *item = new FantasyNameBalModelItem(fnb);

@@ -1154,8 +1154,6 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
 }
 
 bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
-    qDebug() << st.DebugString().data();
-
     if (st.trans().version() > Commissioner::TRANS_VERSION || st.trans().version() < 1)
     {
         qCritical() << " !verifySignedTransaction wrong trans version! ";

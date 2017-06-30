@@ -205,7 +205,7 @@ public:
     }
 
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
-        qDebug() << " sort called" << column;
+//        qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
 
 //                qDebug() << " << cc " << columnCount();
@@ -261,16 +261,16 @@ protected:
         if ( index.row() < 0 )
             return true;
 
-        qDebug() << "setDatasetDatasetDatasetData setting data" << index.row() << index.column();
+//        qDebug() << "setDatasetDatasetDatasetData setting data" << index.row() << index.column();
 
         auto myindex = mapToSource(index);
 
-        qDebug() << "setDatasetDatasetDatasetData after map" << myindex.row() << myindex.column();
+//        qDebug() << "setDatasetDatasetDatasetData after map" << myindex.row() << myindex.column();
 
         PlayerProjModel * model = dynamic_cast<PlayerProjModel *>(sourceModel());
         if (model==NULL) return true;
 
-        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
+//        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
 
         model->at(myindex.row())->set_projection(value.toInt());
 //        if ( model->at(index.row())->get_firstname() )

@@ -10,8 +10,9 @@ import Material 1.0 as Material
 import Material.ListItems 1.0 as ListItem
 import Material.Extras 1.0
 
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
+
 
 import Communi 3.0
 

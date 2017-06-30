@@ -56,7 +56,7 @@ public:
         m_gameid = in.id().data();
 
 
-        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
+//        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
     }
 
     explicit WeeklyScheduleModelItem(const fantasybit::GameInfo &in,fantasybit::GameStatus_Status gs, QObject *parent = nullptr) :  QObject(parent) {
@@ -67,7 +67,7 @@ public:
         m_gameid = in.id().data();
 
 
-        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
+//        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
     }
 
     explicit WeeklyScheduleModelItem(WeeklyScheduleModelItem *in,fantasybit::GameStatus_Status gs, QObject *parent = nullptr)

@@ -50,15 +50,15 @@ void ProtoScreen::initialize() {
     setpixelRatio (desktop->devicePixelRatio ());
 
 
-    qDebug() << "displayWidthInch" << displayWidthInch;
-    qDebug() << "displayHeightInch" << displayHeightInch;
-    qDebug() << "m_displayDiagonalSize" << m_displayDiagonalSize;
-    qDebug() << "m_devicePixelRatio" << m_devicePixelRatio;
-    qDebug() << "desktop->size ().width()" << desktop->size ().width();
-    qDebug() << "desktop->size ().height()" << desktop->size ().height();
-    qDebug() << "desktop->availableGeometry().height()" << desktop->availableGeometry().height();
-    qDebug() << "desktop->availableGeometry().width()" << desktop->availableGeometry().width();
-    qDebug() << "desktop->geometry()" << desktop->geometry();
+//    qDebug() << "displayWidthInch" << displayWidthInch;
+//    qDebug() << "displayHeightInch" << displayHeightInch;
+//    qDebug() << "m_displayDiagonalSize" << m_displayDiagonalSize;
+//    qDebug() << "m_devicePixelRatio" << m_devicePixelRatio;
+//    qDebug() << "desktop->size ().width()" << desktop->size ().width();
+//    qDebug() << "desktop->size ().height()" << desktop->size ().height();
+//    qDebug() << "desktop->availableGeometry().height()" << desktop->availableGeometry().height();
+//    qDebug() << "desktop->availableGeometry().width()" << desktop->availableGeometry().width();
+//    qDebug() << "desktop->geometry()" << desktop->geometry();
 
     setavailrect(desktop->availableGeometry());
     updateFormFactor ();
@@ -222,12 +222,12 @@ void ProtoScreen::updateFormFactor(){
     double m_169 =  qSqrt (pow((m_screen->physicalSize().width()), 2) +
                            qPow((m_screen->physicalSize().height()), 2)) * 0.039370;
 
-    qDebug() << " jayberg " << m_169 << m_displayDiagonalSize;
+//    qDebug() << " jayberg " << m_169 << m_displayDiagonalSize;
 
-    qDebug() << "m_169" << m_169;
-    qDebug() << "m_screen->physicalSize().width())" << m_screen->physicalSize().width();
-    qDebug() << "m_screen->physicalSize().height()" << m_screen->physicalSize().height();
-    qDebug() << " m_screen->logicalDotsPerInch() " << m_screen->logicalDotsPerInch();
+//    qDebug() << "m_169" << m_169;
+//    qDebug() << "m_screen->physicalSize().width())" << m_screen->physicalSize().width();
+//    qDebug() << "m_screen->physicalSize().height()" << m_screen->physicalSize().height();
+//    qDebug() << " m_screen->logicalDotsPerInch() " << m_screen->logicalDotsPerInch();
 
 
 //    m_169 = m_displayDiagonalSize;
@@ -347,7 +347,7 @@ void ProtoScreen::updateFormFactor(){
         }
         else
         {
-            qDebug() << "we know that it is android but we do not know the DPI so we have to make another work around";
+//            qDebug() << "we know that it is android but we do not know the DPI so we have to make another work around";
             //            delete m_screen;
             return;
         }
@@ -453,8 +453,8 @@ double ProtoScreen::scaleSize() const
 
 void ProtoScreen::setScaleSize(const double &size)
 {
-    qDebug() << "m_scaleSize" << m_scaleSize;
-    qDebug() << "size" << size;
+//    qDebug() << "m_scaleSize" << m_scaleSize;
+//    qDebug() << "size" << size;
 
 
     if ( m_scaleSize == size)

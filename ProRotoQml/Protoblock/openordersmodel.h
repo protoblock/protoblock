@@ -69,7 +69,7 @@ public:
     }
 
     void Update(fantasybit::FullOrderDelta &fo) {
-        qDebug() << " openorders update " << fo.openorder.DebugString().data() << fo.symbol.data() << fo.fname.data();
+//        qDebug() << " openorders update " << fo.openorder.DebugString().data() << fo.symbol.data() << fo.fname.data();
         if ( fo.symbol.data() != m_pidsymbol)
             qCritical() << " OpenOrdersModel bad " << fo.symbol.data() << m_pidsymbol;
 
@@ -78,16 +78,16 @@ public:
             auto *it = new OpenOrdersModelItem(fo.openorder,this);
             it->setsymbol(fo.symbol.data());
             append(it);
-            qDebug() << m_pidsymbol << "OpenOrdersModel::Update appended";
+//            qDebug() << m_pidsymbol << "OpenOrdersModel::Update appended";
         }
         else if (fo.openorder.core().size() <= 0) {
             this->remove(it);
-            qDebug() << m_pidsymbol << "OpenOrdersModel::Update removed";
+//            qDebug() << m_pidsymbol << "OpenOrdersModel::Update removed";
 
         }
         else {
             it->Update(fo);
-            qDebug() << m_pidsymbol << "OpenOrdersModel::Update updated";
+//            qDebug() << m_pidsymbol << "OpenOrdersModel::Update updated";
 
         }
     }

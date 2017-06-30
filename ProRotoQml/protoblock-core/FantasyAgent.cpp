@@ -43,7 +43,6 @@ FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
 
 bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
 
-    qDebug() << "readFromSecret " << readfrom.data();
     std::vector<Secret3> temp;
     {
         Reader<Secret3> read{ readfrom };

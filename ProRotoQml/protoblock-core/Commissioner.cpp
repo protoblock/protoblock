@@ -331,7 +331,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     genesisBootFile = genesisBootFile +  filename;
     QFileInfo check_file(genesisBootFile);
     if ( !check_file.exists() ) {
-        qDebug() << "! check_file.exists() genesisBootFile" << genesisBootFile;
+//        qDebug() << "! check_file.exists() genesisBootFile" << genesisBootFile;
 
         QString links("http://protoblock.com");
         QString route(filename);
@@ -342,7 +342,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
 
         QUrl url;
         url.setUrl(links);
-        qDebug() << " chec url " << url.toString() << route << "|";
+//        qDebug() << " chec url " << url.toString() << route << "|";
         RestfullClient rest (url);
         rest.getData(route);
         auto resp = rest.lastReply();
@@ -354,7 +354,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
 //        qDebug() << "not got it url resp.size()" << resp.size() << resp;
 //        return head;
 
-        qDebug() << " got it url genesisBootFile" << filename;
+//        qDebug() << " got it url genesisBootFile" << filename;
         QFile *m_file = new QFile();
         m_file->setFileName(genesisBootFile);
         m_file->open(QIODevice::WriteOnly);
@@ -369,7 +369,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
         return head;
     }
 
-    qDebug() << " reading genesisBootFile" << genesisBootFile;
+//    qDebug() << " reading genesisBootFile" << genesisBootFile;
     Reader<KeyValue> reader{genesisBootFile.toStdString()};
     qDebug() << "makeGenesisBoot good?" << reader.good() ;
     if ( !reader.good() )
@@ -384,7 +384,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
             qDebug() << " error writing bootstrap" << kv.DebugString().data();
     }
 
-    qDebug() << kv.DebugString().data();
+//    qDebug() << kv.DebugString().data();
 
 
     if ( headhash != "" )

@@ -288,16 +288,16 @@ void Mediator::updateWeek() {
             }
 
             for ( auto tvec : sorted ) {
-                qDebug() << " tvec sorted " << tvec.first;
+//                qDebug() << " tvec sorted " << tvec.first;
                 for ( auto p : tvec.second ) {
-                    qDebug() << " p tvec " << p.second << p.first.DebugString().data();
+//                    qDebug() << " p tvec " << p.second << p.first.DebugString().data();
                     if ( p.second == GameStatus_Status_CLOSED )
                         m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
                     else
                         m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
                 }
             }
-            qDebug() << " done sorted ";
+//            qDebug() << " done sorted ";
 
 
 //            if ( status.status() == GameStatus_Status_CLOSED )
@@ -376,7 +376,7 @@ void Mediator::updateWeek() {
 //                        qDebug() << " rettt " << ret;
                         if ( ret == 0 &&
                              (syb.size() != 4 || symbol.at(4) == '1') ) {
-                             qDebug() << "stripped raw symbol" << symbol.data() << syb.data() << iit->second.data();
+//                             qDebug() << "stripped raw symbol" << symbol.data() << syb.data() << iit->second.data();
                              if ( it == nullptr ) {
                                 it = new PlayerQuoteSliceModelItem(symbol.data());
                                 mPlayerQuoteSliceModel.append(it);
@@ -659,7 +659,6 @@ Mediator *Mediator::instance() {
 }
 
 QString Mediator::importMnemonic(const QString &importStr) {
-    qDebug() << " try import";
     auto ret = mGateway->dataService->importMnemonic(importStr.toStdString());
 
     qDebug() << " try import";
@@ -903,7 +902,7 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
 }
 
 void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
-    qDebug() << "level2 Trading::Mediator " << fo.fname << fo.openorder.DebugString().data();
+//    qDebug() << "level2 Trading::Mediator " << fo.fname << fo.openorder.DebugString().data();
 
     if ( fo.fname != myFantasyName )
         return;

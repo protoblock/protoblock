@@ -192,7 +192,9 @@ public:
             }
         }
 
+#ifdef TRACE
         qDebug() << result.data() << "GenerateTicker" << pid.data() << pba.DebugString().data() << ps.DebugString().data();
+#endif
         return result;
     }
 

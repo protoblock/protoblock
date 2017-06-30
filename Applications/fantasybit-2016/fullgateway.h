@@ -238,13 +238,11 @@ public slots:
     }
 
     void nameCheck(QString s) {
-        qDebug() << " in name check " << s;
         emit nameAvail(s,Commissioner::isAliasAvailable(s.toStdString()));
     }
 
     void OnGetMyNames() {}
     void UseName(QString s) {
-        qDebug() << "fullgate  slot use name";
         emit OnUseName(s);
     }
 
