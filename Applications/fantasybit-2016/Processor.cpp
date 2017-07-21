@@ -25,9 +25,7 @@
 #include "pbutils.h"
 #include "ldbwriter.h"
 
-#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
-#include "SqlStuff.h"
-#endif
+
 
 #ifdef BLOCK_EXPLORER
 #include "blockexplorer.h"

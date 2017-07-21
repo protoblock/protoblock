@@ -23,6 +23,9 @@
 #include "blockexplorer.h"
 #endif
 
+#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
+#include "SqlStuff.h"
+#endif
 
 
 
@@ -44,7 +47,11 @@ class BlockProcessor : public QObject {
                      const pb::signature&, const pb::sha256 &);
     bool amlive = false;
     FutContract mFutContract;
+
+#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
     SqlStuff sql;
+#endif
+
 public slots:
     void OnLive(bool) {
         amlive = true;
