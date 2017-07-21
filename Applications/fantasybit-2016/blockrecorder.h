@@ -23,6 +23,7 @@ public:
 public:
         static int zeroblock;
 
+    static int BlockTimestamp;
     void init();
     /*
     void initAllData();

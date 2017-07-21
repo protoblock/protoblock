@@ -142,6 +142,7 @@ int32_t BlockProcessor::process(Block &sblock) {
 //        qInfo() << bs.data();
 //    }
 
+    BlockRecorder::BlockTimestamp = sblock.signedhead().head().timestamp();
     mRecorder.startBlock(sblock.signedhead().head().num());
 
 //    if ( sblock.signedhead().head().num() == 1199 ) {
