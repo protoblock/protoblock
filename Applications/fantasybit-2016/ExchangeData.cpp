@@ -1483,7 +1483,7 @@ void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
     auto dt = currentNewYorkTime();
     pExchangeData->get()->OnTrade(mSymbol,tt);
 #ifdef TIMEAGENTWRITEFILLS
-#ifndef TIMEAGENTWRITEFILLS_FORCE
+#if !defined(TIMEAGENTWRITEFILLS_FORCE) || defined(TIMEAGENTWRITEFILLS_FORCE_NOTICKS)
     if ( !pExchangeData->get()->amlive )
         return;
 #endif
