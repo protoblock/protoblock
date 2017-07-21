@@ -26,6 +26,9 @@
 #include <set>
 #include <leveldb/comparator.h>
 #include "pbutils.h"
+#ifdef TIMEAGENTWRITEFILLS
+#include "SqlStuff.h"
+#endif
 
 using namespace std;
 
@@ -300,10 +303,20 @@ class ExchangeData : public QObject {
     void StoreOhlc(string mSymbol);
     void ProcessBookDelta(const BookDelta &bd);
 
+
+
 public:
-    ExchangeData() : mMaxSeason(2017), mMinSeason(2017) {
+    ExchangeData() : mMaxSeason(2017), mMinSeason(2017)
+#if defined(TIMEAGENTWRITEFILLS)
+      , mSql{"protoblock","timeagentwrite"}
+#endif
+    {
 
     }
+
+#if defined(TIMEAGENTWRITEFILLS)
+    fantasybit::SqlStuff mSql;
+#endif
 
     int64_t MAXSEQ;
     void init();

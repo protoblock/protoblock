@@ -25,10 +25,8 @@
 #include "pbutils.h"
 #include "ldbwriter.h"
 
-#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQL)
-//#include "playerloader.h"
-#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
-
+#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
+#include "SqlStuff.h"
 #endif
 
 #ifdef BLOCK_EXPLORER
@@ -41,9 +39,7 @@
 namespace fantasybit
 {
 
-#if defined(SQL) || defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT)
-    SqlStuff sql("satoshifantasy","distribution");
-#endif
+
 
 void BlockProcessor::hardReset() {
     mRecorder.closeAll();
@@ -458,11 +454,6 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 {
 #ifndef DATAAGENTWRITENAMES_FORCE
                 if ( !amlive ) break;
-#endif
-
-#ifdef DATAAGENTWRITENAMES_FORCE_GAMEID
-                if ( rd.game_result().gameid() != "201601224" ) break;
-                qDebug() << " DATAAGENTWRITENAMES_FORCE !!!!!!!!!!!!!!!!!!!!!!!!";
 #endif
 
                 Distribution dist{};
@@ -1340,6 +1331,9 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 }
 
 BlockProcessor::BlockProcessor(NFLStateData &data, FantasyNameData &namedata, ExchangeData &ed) :
+    #if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT)
+        sql("satoshifantasy","distribution"),
+    #endif
     mData(data), mNameData(namedata) , mExchangeData(ed) {}
 
 

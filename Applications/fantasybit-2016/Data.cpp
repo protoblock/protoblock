@@ -17,8 +17,8 @@
 using namespace std;
 using namespace fantasybit;
 
-#ifdef DATAAGENTWRITENAMES
-#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
+#if  defined(DATAAGENTWRITENAMES) || defined(WRITESYMBOLS)
+#include "SqlStuff.h"
 #endif
 
 
@@ -306,6 +306,10 @@ void NFLStateData::init() {
 
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+#ifdef WRITESYMBOLS_FORCE
+        SqlStuff sql("tfprod","symbolstataus");
+#endif
+
 #ifdef WRITE_BOOTSTRAP
         //Writer<PlayerStatus> writer{ GET_ROOT_DIR() + "bootstrap/PlayerStatus.txt" };
         Writer<PlayerData> writer3{ GET_ROOT_DIR() + "bootstrap/PlayerData.txt"};
@@ -354,6 +358,9 @@ void NFLStateData::init() {
             if ( ps.symbol() != "" ) {
                 FromTicker(ps.symbol());
                 mSym2Pid[ps.symbol()] = pid;
+#ifdef WRITESYMBOLS_FORCE
+                sql.playerStatus(ps,pid);
+#endif
             }
             else
                 qWarning() << " no ticker!! " << ps.DebugString().data();
@@ -626,6 +633,15 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
         PlayerStatus ps2(ps);
         ps2.set_symbol(GenerateTicker(playerid,ps));
 
+#ifdef WRITESYMBOLS
+#ifndef WRITESYMBOLS_FORCE
+        if ( !amlive )
+#endif
+        {
+        SqlStuff sql("tfprod","symbolstataus");
+        sql.playerStatus(ps2,playerid);
+        }
+#endif
         if ( !statusstore->Put(write_sync, playerid, ps2.SerializeAsString()).ok())
             qWarning() << "bad write statusstore";
         qDebug() << ps2.DebugString().data();

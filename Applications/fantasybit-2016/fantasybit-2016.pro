@@ -149,3 +149,9 @@ HEADERS += \
 
 INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
 DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
+
+contains(DEFINES, SQLSTUFF) {
+    SOURCES += $$PWD/SqlStuff.cpp
+    HEADERS += $$PWD/SqlStuff.h
+    #include (./o2/o2.pri)
+}

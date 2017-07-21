@@ -17,9 +17,6 @@
 #include "fullgateway.h"
 #include "importLoader.h"
 //#include "RunGuard.h"
-#ifdef DATAAGENTWRITENAMES
-#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
-#endif
 #include "DataPersist.h"
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
@@ -165,5 +162,6 @@ int main(int argc, char *argv[])
     }
     }
     /**/
+    qDebug() << "xxxx" << QCoreApplication::libraryPaths();
     return app.exec();
 }

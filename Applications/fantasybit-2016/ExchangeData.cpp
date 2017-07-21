@@ -13,13 +13,9 @@
 #include "leveldb/slice.h"
 #include <QGlobalStatic>
 #include "dataservice.h"
-#ifdef TIMEAGENTWRITEFILLS
-#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
-#endif
 
-#if defined(TIMEAGENTWRITEFILLS)
-    SqlStuff sql("satoshifantasy","timeagentwrite");
-#endif
+
+
 
 
 using namespace std;
@@ -34,6 +30,8 @@ void ExchangeData::init() {
     std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     pExchangeData->set(this);
     mBookDelta->write_sync.sync = true;
+
+
     qDebug() << "level2 ExchangeData init";
     write_sync.sync = true;
     leveldb::Options options;
@@ -500,12 +498,14 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
     SaveBookDelta();
 
 #ifdef TIMEAGENTWRITEFILLS
-    if ( !amlive ) return;
+#ifndef TIMEAGENTWRITEFILLS_FORCE
+    if ( !amlive )
+        return;
+#endif
     if ( mBookDelta->level1tic_size() > 0 ) {
 //        SqlStuff sql("satoshifantasy","md_level1");
-        sql.mdlevel1(mBookDelta->playerid(),mMarketQuote[mBookDelta->playerid()]);
+        mSql.mdlevel1(mBookDelta->symbol(),mMarketQuote[mBookDelta->symbol()]);
     }
-
 #endif
 }
 
@@ -969,11 +969,11 @@ void ExchangeData::OnTrade(const string &symbol, fantasybit::TradeTic *tt) {
     }
 
 #ifdef TIMEAGENTWRITEFILLS
-    if ( amlive ) {
-    SqlStuff sql("satoshifantasy","playerquotes");
-    sql.quote(symbol,myphlc);
-    }
-
+#ifndef TIMEAGENTWRITEFILLS_FORCE
+    if ( !amlive )
+        return;
+#endif
+        mSql.quote(symbol,myphlc);
 #endif
 }
 
@@ -1486,14 +1486,13 @@ void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
 #ifndef TIMEAGENTWRITEFILLS_FORCE
     if ( !pExchangeData->get()->amlive )
         return;
-
-#else
 #endif
+    timestamp = BlockRecorder::BlockTimestamp;
 
     qDebug() << " sql epoch " << timestamp;
 
 //    SqlStuff sql("satoshifantasy","ticker");
-    sql.fill(mSymbol,tt,pExchangeData->get()->mWeek,timestamp,o.refnum());
+    pExchangeData->get()->mSql.fill(mSymbol,tt,timestamp,o.refnum());
 
 #endif
 }
@@ -1617,7 +1616,7 @@ void ExchangeData::OnTradeSessionStart(int season,int week) {
 
             ohlc.set_open(price);
             {
-                sql.openprice(mdl1.first,price,week);
+                mSql.openprice(mdl1.first,price,week);
             }
 
   //          SessionOpenTic *sot = sots.add_opentic();

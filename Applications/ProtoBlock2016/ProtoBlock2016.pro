@@ -26,23 +26,16 @@ QT += qml quick core websockets network xmlpatterns qml-private quick-private
 #sql
 #sql webchannel
 CONFIG += c++11
-CONFIG += Console
+#CONFIG += Console
 
-contains(DEFINES, DATAAGENTWRITENAMES){
+
+contains(DEFINES, SQLSTUFF){
     QT += sql
-    CONFIG += Console
 }
 
-contains(DEFINES, TIMEAGENTWRITEFILLS){
-    QT += sql
+contains(DEFINES, CONSOLE) {
     CONFIG += Console
 }
-
-contains(DEFINES, DATAAGENTWRITEPROFIT){
-    QT += sql
-    CONFIG += Console
-}
-
 
 osx{
     CONFIG+=app_bundle

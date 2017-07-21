@@ -16,9 +16,8 @@
 #include <vector>
 #include <mutex>
 #include "iresolvable.h"
-#ifdef USE_PB_GATEWAYS
-#endif
 #include "pbgateways.h"
+
 using fantasybit::GlobalState;
 using namespace fantasybit;
 using namespace std;

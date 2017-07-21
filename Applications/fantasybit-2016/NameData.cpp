@@ -21,7 +21,7 @@
 #include "DataPersist.h"
 
 #ifdef DATAAGENTWRITENAMES
-#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
+#include "SqlStuff.h"
 #endif
 using namespace std;
 using namespace fantasybit;
@@ -383,7 +383,8 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
 
 #ifdef DATAAGENTWRITENAMES
 #if !defined(DATAAGENTWRITENAMES_FORCE) || defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
-    if ( amlive )
+    if ( !amlive )
+        return;
 #endif
     if ( name != Commissioner::FantasyAgentName())
     {

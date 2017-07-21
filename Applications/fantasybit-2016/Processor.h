@@ -44,6 +44,7 @@ class BlockProcessor : public QObject {
                      const pb::signature&, const pb::sha256 &);
     bool amlive = false;
     FutContract mFutContract;
+    SqlStuff sql;
 public slots:
     void OnLive(bool) {
         amlive = true;
