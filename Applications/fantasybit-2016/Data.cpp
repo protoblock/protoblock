@@ -306,7 +306,7 @@ void NFLStateData::init() {
 
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
-#ifdef WRITESYMBOLS_FORCE
+#ifdef WRITESYMBOLS_FORCE_INITALL
         SqlStuff sql("tfprod","symbolstatausforce");
 #endif
 
@@ -358,7 +358,7 @@ void NFLStateData::init() {
             if ( ps.symbol() != "" ) {
                 FromTicker(ps.symbol());
                 mSym2Pid[ps.symbol()] = pid;
-#ifdef WRITESYMBOLS_FORCE
+#ifdef WRITESYMBOLS_FORCE_INITALL
                 sql.playerStatus(ps,pid);
 #endif
             }
@@ -635,16 +635,17 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
 
 #ifdef WRITESYMBOLS
 #ifndef WRITESYMBOLS_FORCE
-        if ( !amlive )
+        if ( amlive )
 #endif
         {
-        SqlStuff sql("tfprod","symbolstataus");
-        sql.playerStatus(ps2,playerid);
+            qDebug() << " try write status " << ps2.DebugString().data();
+            SqlStuff sql("tfprod","symbolstataus");
+            sql.playerStatus(ps2,playerid);
         }
 #endif
         if ( !statusstore->Put(write_sync, playerid, ps2.SerializeAsString()).ok())
             qWarning() << "bad write statusstore";
-        qDebug() << ps2.DebugString().data();
+        qDebug() << "UpdatePlayerStatus" << ps2.DebugString().data();
 
         mSym2Pid[ps2.symbol()] = playerid;
         MyPlayerStatus[playerid] = ps2;
@@ -660,6 +661,16 @@ void NFLStateData::UpdatePlayerStatus(const std::string &playerid, const PlayerS
         else
             ps2.set_symbol(old.symbol());
 
+#ifdef WRITESYMBOLS_FORCE_SPECIAL
+#ifndef WRITESYMBOLS_FORCE
+        if ( amlive )
+#endif
+        {
+            qDebug() << " special try write status " << ps2.DebugString().data();
+            SqlStuff sql("tfprod","symbolstatus");
+            sql.playerStatus(ps2,playerid);
+        }
+#endif
         if ( !statusstore->Put(write_sync, playerid, ps2.SerializeAsString()).ok())
             qWarning() << "bad write statusstore";
         qDebug() << ps2.DebugString().data();

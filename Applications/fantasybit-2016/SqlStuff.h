@@ -721,9 +721,17 @@ struct SqlStuff {
         QSqlQuery insertQuery(db);
 
         if ( pd.has_player_base() ) {
-            insertQuery.prepare
-                ("INSERT INTO player (playerid,first,last,team,pos,roster_status)"
-                 "VALUES(:pid,:f,:l,:t,:pos,:rs)");
+            if ( pd.player_status().has_symbol() && pd.player_status().symbol() != "" ) {
+                insertQuery.prepare
+                    ("INSERT INTO player (playerid,first,last,team,pos,roster_status, symbol)"
+                     "VALUES(:pid,:f,:l,:t,:pos,:rs, :sy)");
+
+                insertQuery.bindValue(":sy", QString::fromStdString(pd.player_status().symbol()));
+            }
+            else
+                insertQuery.prepare
+                    ("INSERT INTO player (playerid,first,last,team,pos,roster_status)"
+                     "VALUES(:pid,:f,:l,:t,:pos,:rs)");
 
             insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
             insertQuery.bindValue(":f",QString::fromStdString(pd.player_base().first()));
@@ -741,13 +749,17 @@ struct SqlStuff {
                 insertQuery.bindValue(":rs", QChar('A'));
             else
                 insertQuery.bindValue(":rs", QChar('I'));
-
-            if ( pd.player_status().has_symbol() && pd.player_status().symbol() != "" )
-                insertQuery.bindValue(":sy", QString::fromStdString(pd.player_status().symbol()));
         }
         else if (pd.has_player_status()) {
-            insertQuery.prepare
-                ("UPDATE player set team = :t, roster_status = :rs, symbol = :sy where playerid = :pid");
+            if ( pd.player_status().has_symbol() && pd.player_status().symbol() != "" ) {
+                insertQuery.prepare
+                    ("UPDATE player set team = :t, roster_status = :rs, symbol = :sy where playerid = :pid");
+                insertQuery.bindValue(":sy", QString::fromStdString(pd.player_status().symbol()));
+            }
+            else
+                insertQuery.prepare
+                    ("UPDATE player set team = :t, roster_status = :rs where playerid = :pid");
+
             insertQuery.bindValue(":pid",std::stoi(pd.playerid()));
             if ( pd.player_status().has_teamid())
                 insertQuery.bindValue(":t",QString::fromStdString(pd.player_status().teamid()));
@@ -758,17 +770,13 @@ struct SqlStuff {
                 insertQuery.bindValue(":rs", QChar('A'));
             else
                 insertQuery.bindValue(":rs", QChar('I'));
-
-            if ( pd.player_status().has_symbol() && pd.player_status().symbol() != "" )
-                insertQuery.bindValue(":sy", QString::fromStdString(pd.player_status().symbol()));
-//            else
-//                insertQuery.bindValue(":sy", QString::fromStdString(pd.playerid()));
         }
         else return;
 
         bool good = insertQuery.exec();
         db.close();
 
+        qDebug() << " sql query " << insertQuery.executedQuery() << pd.DebugString().data();
         if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
         }
@@ -801,7 +809,8 @@ struct SqlStuff {
         bool good = insertQuery.exec();
         db.close();
 
-        qDebug() << " sql query " << insertQuery.executedQuery();
+        qDebug() << " sql query " << insertQuery.executedQuery() << ps.DebugString().data() << playerid.data();
+
         if ( ! good )
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
 
