@@ -742,6 +742,8 @@ struct SqlStuff {
             else
                 insertQuery.bindValue(":rs", QChar('I'));
 
+            if ( pd.player_status().has_symbol() && pd.player_status().symbol() != "" )
+                insertQuery.bindValue(":sy", QString::fromStdString(pd.player_status().symbol()));
         }
         else if (pd.has_player_status()) {
             insertQuery.prepare
@@ -759,8 +761,8 @@ struct SqlStuff {
 
             if ( pd.player_status().has_symbol() && pd.player_status().symbol() != "" )
                 insertQuery.bindValue(":sy", QString::fromStdString(pd.player_status().symbol()));
-            else
-                insertQuery.bindValue(":sy", QString::fromStdString(pd.playerid()));
+//            else
+//                insertQuery.bindValue(":sy", QString::fromStdString(pd.playerid()));
         }
         else return;
 
@@ -792,13 +794,14 @@ struct SqlStuff {
 
         if ( ps.has_symbol() && ps.symbol() != "" )
             insertQuery.bindValue(":sy", QString::fromStdString(ps.symbol()));
-        else
-            insertQuery.bindValue(":sy", QString::fromStdString(playerid));
+//        else
+//            insertQuery.bindValue(":sy", QString::fromStdString(playerid));
 
 
         bool good = insertQuery.exec();
         db.close();
 
+        qDebug() << " sql query " << insertQuery.executedQuery();
         if ( ! good )
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
 

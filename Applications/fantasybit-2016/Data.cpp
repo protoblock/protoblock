@@ -307,7 +307,7 @@ void NFLStateData::init() {
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 #ifdef WRITESYMBOLS_FORCE
-        SqlStuff sql("tfprod","symbolstataus");
+        SqlStuff sql("tfprod","symbolstatausforce");
 #endif
 
 #ifdef WRITE_BOOTSTRAP
