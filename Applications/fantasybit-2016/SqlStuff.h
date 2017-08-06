@@ -787,8 +787,17 @@ struct SqlStuff {
         QSqlDatabase db = QSqlDatabase::database (conname);
         QSqlQuery insertQuery(db);
 
-        insertQuery.prepare
-            ("UPDATE player set team = :t, roster_status = :rs, symbol = :sy where playerid = :pid");
+        if ( ps.has_symbol() && ps.symbol() != "" ) {
+            insertQuery.prepare
+                ("UPDATE player set team = :t, roster_status = :rs, symbol = :sy where playerid = :pid");
+
+            insertQuery.bindValue(":sy", QString::fromStdString(ps.symbol()));
+        }
+        else {
+            insertQuery.prepare
+                ("UPDATE player set team = :t, roster_status = :rs where playerid = :pid");
+        }
+
         insertQuery.bindValue(":pid",std::stoi(playerid));
         if ( ps.has_teamid())
             insertQuery.bindValue(":t",QString::fromStdString(ps.teamid()));
@@ -800,8 +809,7 @@ struct SqlStuff {
         else
             insertQuery.bindValue(":rs", QChar('I'));
 
-        if ( ps.has_symbol() && ps.symbol() != "" )
-            insertQuery.bindValue(":sy", QString::fromStdString(ps.symbol()));
+
 //        else
 //            insertQuery.bindValue(":sy", QString::fromStdString(playerid));
 
