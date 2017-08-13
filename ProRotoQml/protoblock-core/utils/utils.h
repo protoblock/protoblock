@@ -227,7 +227,7 @@ namespace pb {
     static std::vector<char> from_base58( const std::string& base58_str ) {
        std::vector<unsigned char> out;
        if( !DecodeBase58( base58_str.c_str(), out ) ) {
-//         qDebug() << "Unable to decode base58 string ${base58_str}" << base58_str.data();
+            qDebug() << "Unable to decode base58 string ${base58_str}" << base58_str.data();
        }
        return std::vector<char>((const char*)out.data(), ((const char*)out.data())+out.size() );
     }
