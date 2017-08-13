@@ -49,7 +49,7 @@ struct SqlStuff {
 
     QString conname;
     void init(std::string dbname, std::string connectionName) {
-        qDebug() << "sql init " << dbname << connectionName;
+        qDebug() << "sql init " << dbname.data ()<< connectionName.data ();
         conname = QString::fromStdString(connectionName);
         QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL",conname);
 
@@ -121,7 +121,7 @@ struct SqlStuff {
         SignedTransaction st{};
         st.ParseFromArray(btx.data(),btx.size());
 
-        qDebug() << st.DebugString();
+        qDebug() << st.DebugString().data ();
 
     }
 
@@ -420,7 +420,7 @@ struct SqlStuff {
 
         if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
-            qDebug() << dist.DebugString();
+            qDebug() << dist.DebugString().data ();
         }
     }
 
@@ -451,7 +451,7 @@ struct SqlStuff {
 
         if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
-            qDebug() << dist.DebugString();
+            qDebug() << dist.DebugString().data ();
         }
     }
 
@@ -481,7 +481,7 @@ struct SqlStuff {
 
         if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
-            qDebug() << dist.DebugString();
+            qDebug() << dist.DebugString().data ();
         }
     }
 
@@ -526,7 +526,7 @@ struct SqlStuff {
 
         if ( ! good ) {
             qDebug() << " exec ret " << insertQuery.lastError().databaseText();
-            qDebug() << ohlc.DebugString();
+            qDebug() << ohlc.DebugString().data ();
         }
     }
 

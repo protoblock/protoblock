@@ -12,6 +12,7 @@
 #include "../city.hpp"
 #include "base58.h"
 #include "genericsingleton.h"
+#include <openssl/ripemd.h>
 
 namespace pb {
     uint8_t from_hex( char c );
@@ -79,6 +80,7 @@ namespace pb {
         unsigned char key_data[33];
         unsigned char * begin() {  return &key_data[0]; }
         const unsigned char * begin() const {  return &key_data[0]; }
+
 
     };
 
@@ -186,6 +188,8 @@ namespace pb {
         secp256k1_sha256_finalize(&hasher, out32);
     }
 
+
+
     inline secp256k1_ecdsa_signature  parse_der(const unsigned char *input, size_t inputlen) {
         secp256k1_ecdsa_signature sig;
         auto ret = secp256k1_ecdsa_signature_parse_der(pb::TheCTX::instance()->CTX(),&sig,input,inputlen);
@@ -215,6 +219,23 @@ namespace pb {
     inline pb::sha256 hashit(const GOOGLE_NAMESPACE::protobuf::Message  &in) {
         return hashit(in.SerializeAsString());
     }
+
+    static std::string toBtcAddress(const public_key_data &in ) {
+        pb::sha256 ret;
+        hashc(in.key_data, 33, ret.data);
+        qDebug() << ret.str ().data ();
+        unsigned char hash2data[25];
+        unsigned char *hash2 = hash2data;//new unsigned char[25];
+
+        RIPEMD160(ret.data, sizeof(ret.data), (unsigned char*)&hash2[1]);
+        hash2[0] = 0;
+        hashc(hash2, 21, ret.data);
+        pb::sha256  ret2x;
+        hashc(ret.data,sizeof(ret.data),ret2x.data);
+        memcpy((unsigned char*)&hash2[21],ret2x.begin (),4);
+        return EncodeBase58(hash2,hash2+25);
+    }
+
 
     static std::string to_base58( const public_key_data &in ) {
         return EncodeBase58( in.key_data, in.key_data+33);
