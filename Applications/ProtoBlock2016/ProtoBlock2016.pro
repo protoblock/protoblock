@@ -54,6 +54,8 @@ macx {
 
 # Copy the custom Info.plist to the app bundle
     OTHER_FILES += Info.plist
+#    OTHER_FILES += /nwork/protoblock/hold/boot2strap201700.out
+
     plist.path = "$$DESTDIR/$$join(TARGET,,,.app)/Contents"
     plist.files = $PWD/Info.plist
     INSTALLS += plist
@@ -62,6 +64,13 @@ macx {
     QMAKE_CXXFLAGS += -gdwarf-2
     ICON = icon.icns
     CONFIG += x86
+
+    resources.files = $$PWD/../../hold/boot2strap201700.out
+    resources.path =  "$$DESTDIR/$$join(TARGET,,,.app)/Resources"
+
+#    INSTALLS += resources
+
+
 
 }
 
@@ -145,3 +154,6 @@ DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
 
 CONFIG(debug,debug|release):message("Debug mode")
 CONFIG(release,debug|release):message("Release mode")
+
+DISTFILES += \
+    ../../hold/boot2strap201700.out
