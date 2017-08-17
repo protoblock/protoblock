@@ -311,6 +311,7 @@ Item {
                 width: ProtoScreen.guToPx(7)
 
 
+
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -327,7 +328,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(7)
 
-
+                visible: myTheWeek > 1
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -341,7 +342,7 @@ Item {
 
             TableViewColumn {
                 role: "leaders2016"
-                title: "2016"
+                title: "2017"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 

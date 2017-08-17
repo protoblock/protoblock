@@ -34,6 +34,7 @@ class PlayerProjModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, teamid)
     QML_READONLY_CSTREF_PROPERTY (int, status)
     QML_READONLY_CSTREF_PROPERTY (QString, playerid)
+    QML_READONLY_CSTREF_PROPERTY (QString, symbol)
     QML_WRITABLE_VAR_PROPERTY(int, projection)
     QML_WRITABLE_VAR_PROPERTY (int, knownProjection)
     QML_WRITABLE_VAR_PROPERTY (int, projectionStatus)
@@ -62,6 +63,7 @@ public:
         m_teamid = teamid.data();
         m_status = pd.team_status;
         m_playerid = playerid.data();
+        m_symbol = pd.symbol.data();
         m_gameid = gameid;
         m_projection = 0;
         m_knownProjection = 0;

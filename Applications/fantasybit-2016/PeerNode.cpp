@@ -546,7 +546,7 @@ Bootstrap Node::getLastLocalBoot() {
 
     int week;
     if ( weekstr == "")
-        week = 3;
+        week = -1;
     else
         week = stoi(weekstr);
 

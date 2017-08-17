@@ -309,9 +309,20 @@ void Mediator::updateWeek() {
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
 
+            auto gss = mGateway->dataService->GetAllSymbols();
+            int count = 0;
+            for ( auto gs : gss ) {
+                //if (count++ > 10 ) break;
+                //qDebug() << "gs " << gs.first.data();
+                mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
+            }
+
             const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
             qDebug() << "  vms " << vms.size();
-            mPlayerQuoteSliceModel.Update(vms,mPlayerProjModel);
+            string suffix = "17w";
+            suffix += (m_theWeek < 9) ? "0" : "";
+            suffix += to_string(m_theWeek);
+            mPlayerQuoteSliceModel.Update(vms,mPlayerProjModel, suffix );
 //            OnGotMarketSnaps();
 
 #ifdef NOTDEF

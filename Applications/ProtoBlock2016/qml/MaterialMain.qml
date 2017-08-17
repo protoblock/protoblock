@@ -128,8 +128,8 @@ Material.ApplicationWindow{
 
     property string defaultname
 
-    property string start: "qrc:/Trading.qml"
-    property int startindex: 1
+    property string start: "qrc:/Projections.qml"
+    property int startindex: 0
     property string  errorString
     property bool  reloadleaders: false
 
@@ -238,8 +238,7 @@ Material.ApplicationWindow{
 
         actionBar.integratedTabBar: true
         actionBar.iconSize:   ProtoScreen.guToPx(2.5)
-        actionBar.customContent:
-            Material.Label{
+        actionBar.customContent:    Material.Label {
             text: realRoot.uname
             verticalAlignment: navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
             font{
@@ -261,7 +260,7 @@ Material.ApplicationWindow{
                 }
                 bottom: parent.bottom
             }
-        }
+        }   
         actionBar.maxActionCount: navDrawer.enabled ? 1:3
         actions: [
             Material.Action {

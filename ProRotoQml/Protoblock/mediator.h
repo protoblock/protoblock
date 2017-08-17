@@ -539,7 +539,7 @@ public:
         else if (week >= 17) {
             season = m_thePrevSeason + 1;
 
-            if ( season > 2016)
+            if ( season > m_theSeason)
                 return;
 
             week = 1;

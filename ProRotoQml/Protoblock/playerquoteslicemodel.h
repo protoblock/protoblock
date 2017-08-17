@@ -166,7 +166,7 @@ public:
 //       m_depthModel = new DepthMarketModel()
     }
 
-    explicit PlayerQuoteSliceModelItem(const pb::PlayerProjModelItem &in) :
+    explicit PlayerQuoteSliceModelItem(const pb::PlayerProjModelItem &in,const std::string &suffix) :
         mDepthMarketModel{},
         m_pDepthMarketModel{&mDepthMarketModel},
 //        m_depthModel{&mDepthMarketModel},
@@ -188,7 +188,7 @@ public:
 //        m_hi = in.ohlc().high();
 //        m_lo = in.ohlc().low();
         m_playerid = in.get_playerid();
-        m_symbol = m_playerid; //TODO
+        m_symbol = QString("%1%2").arg(in.get_symbol()).arg(suffix.data());
 //        mDepthMarketModel.append(new DepthMarketModelItem(100,2,30,50));
 //        mDepthMarketModel.append(new DepthMarketModelItem(200,1,31,1));
         m_lastprice = 0;
@@ -243,7 +243,7 @@ public:
                         QObject(nullptr) {
 
         setplayerid(it->get_playerid());
-        setsymbol(it->get_playerid());//TODO
+        setsymbol(it->get_symbol());
 //        qDebug() << " PlayerQuoteSliceModelItem new " << it->get_playerid();
         Update(it);
     }
@@ -440,9 +440,9 @@ public:
     }
 
     void Update(const std::vector<MarketSnapshot> &vms,
-                const PlayerProjModel &ppm) {
+                const PlayerProjModel &ppm,const string &suffix = "17s") {
        for ( auto ppmit : ppm ) {
-           Update(ppmit);
+           Update(ppmit,suffix);
        }
        for ( const auto &it : vms) {
            Update(it);
@@ -461,7 +461,7 @@ public:
     bool Update(MarketTicker *ms,int32_t blocknum) {
         auto *it = getByUid(ms->symbol().data());
         if ( it == nullptr ) {
-            qDebug() << " dont have this symbol" << ms->symbol().data();
+            qDebug() << "Update(MarketTicker *ms dont have this symbol" << ms->symbol().data();
             return false;
         }
         else {
@@ -476,7 +476,7 @@ public:
     void Update(TradeTic *ms) {
         auto *it = getByUid(ms->symbol().data());
         if ( it == nullptr )
-            qDebug() << " dont have this symbol" << ms->symbol().data();
+            qDebug() << "Update(TradeTic *ms) dont have this symbol" << ms->symbol().data();
         else {
             it->Update(ms);
             if ( it->get_myposition() != 0 || it->get_myavg() != 0.0)
@@ -484,10 +484,10 @@ public:
         }
     }
 
-    void Update(PlayerProjModelItem *item) {
-        auto *it = getByUid(item->get_playerid());
+    void Update(PlayerProjModelItem *item, const string &suffix) {
+        auto *it = getByUid(QString("%1%2").arg(item->get_symbol()).arg(suffix.data()));
         if ( it == nullptr )
-            append(new PlayerQuoteSliceModelItem(item));
+            append(new PlayerQuoteSliceModelItem(*item,suffix));
         else
             it->Update(item);
     }

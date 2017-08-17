@@ -18,7 +18,7 @@ Item {
 //                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek :
 //    (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
 //    property string seasontext: MiddleMan.seasonString + " 2016 "
-    property string seasontext: " 2017 Season Trading - " // MiddleMan.seasonString + " 2017 Season Trading "
+    property string seasontext: " 2017 Trading - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
     property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
 
