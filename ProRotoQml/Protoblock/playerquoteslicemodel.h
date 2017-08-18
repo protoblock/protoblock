@@ -191,6 +191,7 @@ public:
         m_symbol = QString("%1%2").arg(in.get_symbol()).arg(suffix.data());
 //        mDepthMarketModel.append(new DepthMarketModelItem(100,2,30,50));
 //        mDepthMarketModel.append(new DepthMarketModelItem(200,1,31,1));
+        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
         m_lastprice = 0;
 //        m_BackgroundColor = "transparent";
     }
@@ -244,6 +245,7 @@ public:
 
         setplayerid(it->get_playerid());
         setsymbol(it->get_symbol());
+        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
 //        qDebug() << " PlayerQuoteSliceModelItem new " << it->get_playerid();
         Update(it);
     }
