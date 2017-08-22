@@ -872,6 +872,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
     if ( nameonly ) return;
 
+    map<int,SignedTransaction> doStamped;
    // for (const SignedTransaction &st : b.signed_transactions()) //
     for (int j = start; j < b.signed_transactions_size(); j++)
     {
@@ -921,9 +922,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         case TransType::STAMPED: {
             auto stamped = t.GetExtension(StampedTrans::stamped_trans);
+            doStamped.insert({stamped.seqnum(),stamped.signed_orig()});
             qDebug() << "new StampedTrans " << stamped.timestamp() << stamped.seqnum();
-
-            ProcessInsideStamped(stamped.signed_orig(),stamped.seqnum(),b.signedhead().head().num());
 
             break;
         }
@@ -931,6 +931,10 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         default:
             break;
         }
+    }
+
+    for ( auto & nextstamped : doStamped) {
+        ProcessInsideStamped(nextstamped.second,nextstamped.first,b.signedhead().head().num());
     }
 }
 

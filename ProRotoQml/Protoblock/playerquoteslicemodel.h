@@ -475,15 +475,18 @@ public:
         return true;
     }
 
-    void Update(TradeTic *ms) {
+    bool Update(TradeTic *ms) {
         auto *it = getByUid(ms->symbol().data());
-        if ( it == nullptr )
+        if ( it == nullptr ) {
             qDebug() << "Update(TradeTic *ms) dont have this symbol" << ms->symbol().data();
+            return false;
+        }
         else {
             it->Update(ms);
             if ( it->get_myposition() != 0 || it->get_myavg() != 0.0)
                 emit MyPosPriceChange(it);
         }
+        return true;
     }
 
     void Update(PlayerProjModelItem *item, const string &suffix) {
@@ -494,12 +497,16 @@ public:
             it->Update(item);
     }
 
-    void Update(fantasybit::DepthFeedDelta* dfd) {
+    bool Update(fantasybit::DepthFeedDelta* dfd) {
         auto *it = getByUid(dfd->symbol().data());
-        if ( it == nullptr )
+        if ( it == nullptr ) {
             qDebug() << " playquote update Depth delys symbol not found" << dfd->symbol();
+            return false;
+        }
         else
             it->get_pDepthMarketModel()->Update(dfd);
+
+        return true;
     }
 
     void UpdateSymbols(const PlayerDetail &pd, PlayerSymbolsModelItem *p, int blocknum = 0, const string &suffix = "17s") {

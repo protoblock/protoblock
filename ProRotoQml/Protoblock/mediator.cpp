@@ -807,7 +807,15 @@ void Mediator::OnMarketTicker(fantasybit::MarketTicker mt, int32_t blocknum) {
     qDebug() << "Mediator OnMarketTicker " << mt.DebugString().data();
 #endif
 
-    mPlayerQuoteSliceModel.Update(&mt,blocknum);
+    if ( !mPlayerQuoteSliceModel.Update(&mt,blocknum) ) {
+        auto it = new PlayerQuoteSliceModelItem(mt.symbol().data());
+        mPlayerQuoteSliceModel.append(it);
+        int size = (mt.symbol().at(4) == '1') ? 4 : 5;
+        string syb = mt.symbol().substr(0,size);
+        auto ppd = mGateway->dataService->GetPlayerDetail(syb);
+        it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
+        mPlayerQuoteSliceModel.Update(&mt,blocknum);
+    }
 
 }
 
@@ -818,7 +826,15 @@ void Mediator::OnTradeTick(fantasybit::TradeTic* tt) {
     qDebug() << "Mediator TradeTic " << tt->DebugString().data();
 #endif
 
-    mPlayerQuoteSliceModel.Update(tt);
+    if ( !mPlayerQuoteSliceModel.Update(tt) ) {
+        auto it = new PlayerQuoteSliceModelItem(tt->symbol().data());
+        mPlayerQuoteSliceModel.append(it);
+        int size = (tt->symbol().at(4) == '1') ? 4 : 5;
+        string syb = tt->symbol().substr(0,size);
+        auto ppd = mGateway->dataService->GetPlayerDetail(syb);
+        it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
+        mPlayerQuoteSliceModel.Update(tt);
+    }
 }
 
 void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
@@ -828,7 +844,15 @@ void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
     qDebug() << "level2 OnDepthDelta " << dfd->DebugString().data();
 #endif
 
-    mPlayerQuoteSliceModel.Update(dfd);
+    if ( !mPlayerQuoteSliceModel.Update(dfd) ) {
+        auto it = new PlayerQuoteSliceModelItem(dfd->symbol().data());
+        mPlayerQuoteSliceModel.append(it);
+        int size = (dfd->symbol().at(4) == '1') ? 4 : 5;
+        string syb = dfd->symbol().substr(0,size);
+        auto ppd = mGateway->dataService->GetPlayerDetail(syb);
+        it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
+        mPlayerQuoteSliceModel.Update(dfd);
+    }
 }
 
 void Mediator::OnNewPos(fantasybit::FullPosition fp) {
