@@ -186,6 +186,8 @@ public:
         auto *it = mPlayerQuoteSliceModel.getByUid(symbol);
         if ( it != nullptr ) {
 //            qDebug() << " startDepth good" << symbol;
+
+//          m_pPlayerQuoteSliceModelItem = it;
             update_pPlayerQuoteSliceModelItem(it);
             update_pDepthMarketModel(it->get_pDepthMarketModel());
         }
@@ -200,6 +202,28 @@ public:
 //            qDebug() << " startDepth !good getOrCreate" << symbol;
             update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
         }
+//        depthBackup--;
+//        if ( depthBackup <= 0 ) {
+//            depthBackup = 0;
+////            depthInterval = 1000;
+//        }
+////        else
+////            depthInterval = 1000 * (depthBackup / 5);
+
+//        depthCount = 0;
+////        depthInterval = 1000 * (depthBackup / 5);
+////        if ( depthInterval < 1000 )
+////           depthInterval = 1000;
+
+//        changeDepthContext(symbol);
+//        getDepthRep();
+////        qDebug() << "startDepth depthInterval " << depthInterval << " bu " << depthBackup;
+
+//        if ( !polldepth.isActive() )
+//            polldepth.start(depthInterval);
+//        11
+//        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+//        getOrderPos();
     }
 
 //    Q_INVOKABLE  QStringList getAllSymbols() {
@@ -208,6 +232,18 @@ public:
 //        return hold;
 //    }
 
+//    Q_INVOKABLE void stopDepth(const QString& symbol) {
+//        polldepth.stop();
+//        depthBackup -= 5;
+//        if ( depthBackup < 0 ) depthBackup = 0;
+//        depthCount = 0;
+//    }
+//    Q_INVOKABLE void changeDepthContext(const QString& context) {
+//        if ( mGetDepthReq.GetExtension(GetDepthReq::req).pid().data() != context )
+//            mGetDepthReq.MutableExtension(GetDepthReq::req)->set_pid(context.toStdString());
+
+////            m_currentPidContext = context;
+//    }
     Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
 
@@ -311,6 +347,14 @@ public:
 
     std::unordered_map<int,std::string> coltorole;
     Q_INVOKABLE QString addFnameColumn(QString fname,int col) {
+//        mPlayerProjModel.AddColumn(fname.toUtf8());
+//        m_pProjectionsViewFilterProxyModel->ret.append(fname);
+//        qDebug() << " ret " << m_pProjectionsViewFilterProxyModel->ret;
+//        m_pProjectionsViewFilterProxyModel->ret.append("pos");
+//        m_pProjectionsViewFilterProxyModel->invalidate();
+//        m_pProjectionsViewFilterProxyModel->insertColumn(5);
+//        for (int i =0;i<5;i++)
+//            if ( fnametorole)
         QString ret = fnames[fnameindex].data();
         if ( ++fnameindex >= 5 )
             fnameindex = 0;
@@ -872,6 +916,74 @@ public slots:
     void OnNewPos(fantasybit::FullPosition);
     void OnNewOO(fantasybit::FullOrderDelta);
     void MyPosPriceChange(PlayerQuoteSliceModelItem*);
+
+    /*
+    void OnMarketTicker(fantasybit::MarketTicker *mt) {
+        if ( mt->symbol() == "" )
+            return;
+    #ifdef TRACE
+        qDebug() << "Mediator OnMarketTicker " << mt->DebugString().data();
+    #endif
+
+        if ( !m_pPlayerQuoteSliceModel->Update(mt) ) {
+            qDebug() << "mediato OnMarketTicker  bad";
+            auto *item = mPlayerProjModel.getByUid(mt->symbol().data());
+            if ( item == nullptr )
+                qDebug() << "nullptr mediato OnMarketTicker  bad again" << mt->symbol().data();
+            else {
+                m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(item));
+                if ( !m_pPlayerQuoteSliceModel->Update(mt) )
+                    qDebug() << "mediato OnMarketTicker  bad again";
+                else
+                    qDebug() << "mediato OnMarketTicker  good again";
+            }
+        }
+        else
+            qDebug() << " mediato OnMarketTicker good";
+
+    }
+
+    void tradeTestingTimeout() {
+        if ( testCount++ >= 5) // m_pPlayerQuoteSliceModel->count())
+            testCount = 0;
+        auto it = m_pPlayerQuoteSliceModel->at(testCount);
+//        if (it->get_lastprice() > 5) testCount++;
+//        it->setlastprice();
+//        it->LastNew(it->get_lastprice() > 1 ? it->get_lastprice()-1 : it->get_lastprice()+1);
+    }
+*/
+
+/*
+    void OnGotMarketSnaps() {
+#ifdef TRACE
+        qDebug() << " OnGotMarketSnaps " << m_theWeek;
+#endif
+        if ( m_pPlayerQuoteSliceModel->filledWeekRoster(m_theWeek) )
+            return;
+
+
+#ifdef TRACE
+        qDebug() << " OnGotMarketSnaps loop " << mPlayerProjModel.size();
+#endif
+//        for ( auto it : mPlayerProjModel ) {
+//           m_pPlayerQuoteSliceModel->Update(it);
+//        }
+
+        for ( auto it : *m_pPlayerQuoteSliceModel ) {
+            auto *item = mPlayerProjModel.getByUid(it->get_symbol());
+            if ( item == nullptr ) {
+                qDebug() << "mediator OnGotMarketSnaps failed to get symbol " << it->get_symbol();
+                m_pPlayerQuoteSliceModel->remove(it);
+            }
+            else
+                it->Update(item);
+        }
+
+        m_pPlayerQuoteSliceViewFilterProxyModel->invalidate();
+
+    }
+*/
+
 
 private:
     vector<MyFantasyName> myGoodNames;
