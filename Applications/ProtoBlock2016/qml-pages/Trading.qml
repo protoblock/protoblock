@@ -6,27 +6,29 @@ import Material 1.0
 //import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
 import QtQuick.Layouts 1.1
-import Material.Styles 1.0
-import QtQuick.Controls.Styles 1.4
+//import Material.Styles 1.0
+//import QtQuick.Controls.Styles 1.4
+//import "../qml-components/TradingContextBanner.qml"
+//import "../qml-components/*.qml"
 
 
 Item {
-    id: topi
 //    property int week:
 //        MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
-//                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
+//                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek :
+//    (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
 //    property string seasontext: MiddleMan.seasonString + " 2016 "
-    property string seasontext: MiddleMan.seasonString + " 2016 - Week " + MiddleMan.theWeek
+    property string seasontext: " 2017 Trading - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
+    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
 
     Component.onCompleted: {
-         pageHelper.title = "Trading"
-        console.log(" proj wisth" + parent.width + " 2 " + rootLoader.width + " 3 " + themeroot.width + " 4 " + realRoot.width + " 5 " + pageHelper.width)
-    }
+        pageHelper.title = "Trading"
+        console.log("trading completed")
+     }
 
         // spacer
     Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
-
 
     Card {
         id: topcard
@@ -42,7 +44,7 @@ Item {
             text: seasontext + " " + liveorresult
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-            color: themeroot.theme.primaryColor
+            color: liveorresult === "Live" ? "green" : "red"//themeroot.theme.primaryColor
             Layout.fillHeight: true
             Layout.fillWidth: false
             verticalAlignment: Text.AlignVCenter
@@ -52,47 +54,15 @@ Item {
 
         SystemPalette { id: pal }
 
-
         TradingContextBanner {
             id: tcbx
             anchors.top: cBan.bottom
-            Layout.preferredWidth: parent.width * .50
-//            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.preferredWidth: parent.width
             anchors.left: parent.left
             width: parent.width
             anchors.leftMargin: ProtoScreen.guToPx(.25)
+            recwidth: dsplit.width
         }
-//        RowLayout {
-//            id: tcb
-//            width: parent.width
-//            anchors.top: cBan.bottom
-//            height: ProtoScreen.guToPx(8)
-
-//            Layout.fillWidth: true
-//            Layout.fillHeight: true
-//            spacing: 1
-
-//            TradingContextBanner {
-//                id: tcbx
-//                anchors.top: tcb.top
-//                Layout.preferredWidth: parent.width * .50
-//    //            anchors.horizontalCenter: parent.horizontalCenter
-//                anchors.left: parent.left
-////                width: parent.width
-//                anchors.leftMargin: ProtoScreen.guToPx(.25)
-//            }
-
-//            FantasyNameContextBanner {
-//                id: fcbx
-//                anchors.top: tcb.top
-//                Layout.preferredWidth: parent.width * .50
-
-//    //            anchors.horizontalCenter: parent.horizontalCenter
-//    //            width: parent.width * .50
-//                anchors.right: parent.right
-//                anchors.rightMargin: ProtoScreen.guToPx(.25)
-//            }
-//        }
 
         Item {
             id: itema
@@ -100,173 +70,90 @@ Item {
             anchors.topMargin: ProtoScreen.guToPx(.25)
             width: parent.width
             height: parent.height - tcbx.height - cBan.height
+
             SplitView {
+                anchors.fill: parent
                 orientation: Qt.Horizontal
                 handleDelegate: handeldel
-                width: parent.width
-                height: parent.height
-//                SplitView {
-//                    id: rightr
-//                    orientation: Qt.Vertical
-////                    handleDelegate: handeldel
-////                    width: parent.width
-//                    height: parent.h`eight
-////                    anchors.leftMargin: 10
-//                    Layout.minimumWidth: parent.width * .20
-//                    Layout.maximumWidth: parent.width * .70
-
-//                    Card {
-//                        MarketDepthTable {}
-//                        Layout.maximumHeight: parent.height * .90
-//                        Layout.minimumHeight: parent.height * .10
-//                        Layout.fillHeight: true
-//                    }
-//                    Card {
-//                        Layout.maximumHeight: parent.height * .90
-//                        Layout.minimumHeight: parent.height * .10
-//                        Orders {
-//                           anchors.fill: parent
-//                        }
-////                        Column{
-////                            anchors.fill: parent
-
-////                            TextField{
-////                                id: txt
-////                                text: "hello"
-////                                property string color: "white"
-////                                style: TextFieldStyle{
-////                                    background: Rectangle {
-////                                        id: rect
-////                                        radius: 2
-////                                        implicitWidth: 100
-////                                        implicitHeight: 24
-////                                        border.color: "#333"
-////                                        border.width: 1
-////                                        color: txt.color
-////                                        Behavior on color {
-////                                            SequentialAnimation {
-////                                                loops: 1
-////                                                ColorAnimation { from: "white"; to: "red"; duration: 1 }
-////                                                ColorAnimation { from: "red"; to: "white";  duration: 3000 }
-////                                            }
-////                                        }
-////                                    }
-////                                }
-////                            }
-////                            Button{
-////                                text: "blink"
-////                                onClicked: {
-////                                    txt.color = "red";
-////                                    txt.color = "white";
-////                                }
-////                            }
-////                        }
-//                    }
-//                }
-
+//                width: parent.width
+//                height: parent.height
 
                 SplitView {
-                    Layout.minimumWidth: parent.width * 0
+                    id: dsplit
+                    Layout.minimumWidth: parent.width * .10
                     Layout.maximumWidth: parent.width * .50
                     orientation: Qt.Vertical
                     height: parent.height
-                    width: ProtoScreen.guToPx(40)
+//                    Layout.preferredWidth: ProtoScreen.guToPx(40)
 
                     Card {
-                        MarketDepthTable {}
-                        Layout.maximumHeight: parent.height
-                        Layout.minimumHeight: parent.height * 0
+                        Layout.maximumHeight: parent.height * .70
+                        Layout.minimumHeight: parent.height * .30
+                        backgroundColor: "#f5f5f5"
                         Layout.fillHeight: true
+                        //Layout.preferredHeight: ProtoScreen.guToPx(80)
 
+                        MarketDepthTable {}
+//                       Orders {
+//                          anchors.centerIn: parent
+//                          anchors.fill: parent
+//                       }
                     }
 
                     Card {
-                        Layout.maximumHeight: parent.height
-                        Layout.minimumHeight: parent.height * 0
-                        backgroundColor: "#f5f5f5"
-                        TabView {
-                            anchors.fill: parent
-                            Tab {
-                                title: "Orders"
-                                Orders {
-                                   anchors.centerIn: parent
-                                   anchors.fill: parent
-                                }
-                            }
-                            Tab {
-                                title: "Buy"
-                                BuyTab {
-                                   anchors.fill: parent
-                                   anchors.centerIn: parent
-                                }
-                            }
-                            Tab {
-                                title: "Sell"
-                                BuyTab {
-                                   anchors.fill: parent
-                                   anchors.centerIn: parent
-                                }
-                            }
-
-                            style: TabViewStyle {
-//                                frameOverlap: ProtoScreen.guToPx(.25)
-                                tabsAlignment: Qt.AlignHCenter
-//                                tabOverlap: ProtoScreen.guToPx(-1)
-                                tab: Rectangle  {
-                                    color: {
-                                        if ( styleData.selected ) return "#f5f5f5"
-                                        else if (styleData.title === "Buy")
-                                            return "green"
-                                        else if ( styleData.title === "Sell")
-                                            return "red"
-                                        else return themeroot.theme.primaryColor
-                                    }
-                                    implicitWidth: ProtoScreen.guToPx(10)
-                                    implicitHeight: ProtoScreen.guToPx(3)
-                                    radius: 2
-                                    Label {
-                                        id: text
-                                        anchors.centerIn: parent
-                                        anchors.fill: parent
-                                        verticalAlignment: Text.AlignVCenter
-                                        horizontalAlignment: Text.AlignHCenter
-                                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-
-                                        text: styleData.title
-                                        color: styleData.selected ? "black" : "#f5f5f5"
-                                    }
-                                }
-                                frame: Rectangle { color: "#f5f5f5" }
-                            }
+                        Layout.maximumHeight: parent.height * .70
+                        Layout.minimumHeight: parent.height * .30
+                        //MarketDepthTable {}
+                        Orders {
+                            mysymbol: !inplay ? "" : inplay.symbol
                         }
+
                     }
 
                 }
+
+                Card {
+                    id: popcard
+                    Layout.minimumWidth: parent.width * 0
+                    Layout.maximumWidth: parent.width * .25
+                    height: parent.height * .80
+                    enabled: wwww.ss
+                    visible: wwww.ss
+
+                    Card {
+                        anchors.top: parent.top
+                        height: parent.height
+                        ListSymbolSearch {
+                            id: lss
+                            property alias ss: wwww.ss
+                        }
+                        //ROWTradingTable {}
+                    }
+                    onEnabledChanged: {
+                    }
+                }
+
                 Card {
                     Layout.minimumWidth: parent.width * .50
                     Layout.maximumWidth: parent.width
                     Layout.fillWidth: true
                     height: parent.height
-//                    backgroundColor: "grey"
 
                     Card {
+                        id: wkt
                         height: parent.height - bcard.height
                         width: parent.width
-                        id: wkt
-//                        backgroundColor: "orange"
 
-                        WkTradingTable {}
+                        WkTradingTable {
+                            id: wwww
+                        }
                     }
 
                     Card {
                         anchors.top: wkt.bottom
-//                        backgroundColor: "yellow"
                         id: bcard
                         height: ProtoScreen.guToPx(16)
                         width: parent.width
-//                        height: parent.height * .40
-//                        width: parent.width
-//                        anchors.bottom: parent.bottom
 
                         BuySellTrading {
                             id: bt
@@ -275,22 +162,6 @@ Item {
                     }
 
                 }
-
-//                Card {
-//                    Layout.minimumWidth: parent.width * .10
-//                    Layout.maximumWidth: parent.width * .30
-////                    Layout.fillWidth: true
-
-//                    TradingFloor {}
-//                }
-
-//                Card {
-//                    Layout.minimumWidth: parent.width * .10
-//                    Layout.maximumWidth: parent.width * .30
-////                    Layout.fillWidth: true
-
-//                    Portfolio {}
-//                }
             }
         }
     }

@@ -13,6 +13,7 @@ Item {
     anchors.fill: parent
 
     property variant selectedModel
+    property bool posvisible: false
 //    property alias ccount: tvr.columnCount
     property int focuscount: 0
     property string who: "default"
@@ -23,6 +24,12 @@ Item {
     property bool qb: true
     property bool wr: true
     property bool rb: true
+
+    property int ocol: 5
+//    property int pcol: ocol + ocount
+//    property int lcol: pcol + pcount
+//    property int qcol: lcol + lcount
+//    property int vcol: qcol + qcount
 
     Item {
         id: i2
@@ -240,7 +247,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
                 width: ProtoScreen.guToPx(10)
-                delegate: fbdel
+                delegate: fbdelFB
             }
 
             TableViewColumn{
@@ -259,6 +266,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(10)
                 delegate: fbdel
+                visible: posvisible
             }
 
             TableViewColumn {
@@ -268,6 +276,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(10)
                 delegate: negdel
+                visible: posvisible
             }
             TableViewColumn {
                 role: "myprice"
@@ -276,6 +285,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(10)
                 delegate: negdelfix
+                visible: posvisible
             }
 
 
@@ -286,6 +296,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(10)
                 delegate: negdel
+                visible: posvisible
             }
 
 
@@ -536,6 +547,54 @@ Item {
                     }
                 }
 
+                Material.IconButton {
+//                    anchors.horizontalCenter: parent.horizontalCenter
+//                    anchors.bottom: parent.bottom
+                    anchors.centerIn: parent
+                    anchors.fill: parent
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    color: Material.Theme.light.textColor
+                    onClicked: {
+                        posvisible = true;
+                    }
+                    size: ProtoScreen.guToPx(1.5)
+
+
+                    visible: styleData.column === ocol && !posvisible
+                    enabled: visible
+                    action: Material.Action {
+                        iconName: "awesome/expand"
+                        hoverAnimation: true
+                        name: "details"
+                    }
+                }
+
+                Material.IconButton {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    Layout.fillHeight: false
+                    Layout.fillWidth: false
+                    width: ProtoScreen.guToPx(6)
+                    height: parent.height
+                    onClicked: {
+                        posvisible = false;
+                    }
+                    size: ProtoScreen.guToPx(1.5)
+                    color: Material.Theme.light.textColor
+
+
+                    visible: styleData.column === ocol + 2 && posvisible
+                    enabled: visible
+                    action: Material.Action {
+                        iconName: "awesome/compress"
+//                        hoverAnimation: true
+                        name: "less"
+                    }
+                }
+
             }
 
             Material.Card {
@@ -632,6 +691,21 @@ Item {
             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
             text: (styleData.value < 1) ? "" : styleData.value;
             font.bold: false;
+        }
+    }
+
+    Component {
+        id: fbdelFB
+
+        Material.Label {
+            anchors.centerIn: parent
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+
+            font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+            text: (styleData.value < 1) ? "" : styleData.value;
+            font.bold: false;
+            font.family: fontfamFB
         }
     }
 

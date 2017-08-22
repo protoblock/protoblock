@@ -43,7 +43,6 @@ FantasyAgent::FantasyAgent(string filename ) : client{nullptr} {
 
 bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
 
-    qDebug() << "readFromSecret " << readfrom.data();
     std::vector<Secret3> temp;
     {
         Reader<Secret3> read{ readfrom };
@@ -69,6 +68,11 @@ bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
                   m_oracle = pr;
                 qInfo() << " is oracle key";
             }
+
+            auto pk = Commissioner::str2pk (secret.public_key ());
+            std::string btc1 = pb::toBtcAddress (pk);
+            qDebug() << secret.public_key ().data () << btc1.data ();
+
         }
     }
 
@@ -167,6 +171,9 @@ bool FantasyAgent::testIt(Secret3 secret) {
     auto s21 = mnpriv.get_secret().str();
 
 
+//    std::string btc1 = pb::toBtcAddress (pubk1);
+
+//    qDebug() << btc1.data ();
 //    if ( pubk1 == pubk2 ) {
 //        qDebug() << " == " << Commissioner::pk2str(pubk1) << Commissioner::pk2str(pubk2);
 //    }

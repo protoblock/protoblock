@@ -9,9 +9,10 @@ include ($$PWD/../../pri/qml-utils.pri)
 #include ($$PWD/../../pri/qml-torrent.pri)
 include ($$PWD/../../pri/qml-realChat.pri)
 
+#QMAKE_LFLAGS_DEBUG += /INCREMENTAL:NO
 
 CONFIG(debug, debug|release) {
-    QMAKE_LFLAGS_DEBUG += /INCREMENTAL:NO
+#    QMAKE_LFLAGS_DEBUG += /INCREMENTAL:NO
 }
 #qtHaveModule(webengine) {
 #    QT += webengine
@@ -25,22 +26,16 @@ QT += qml quick core websockets network xmlpatterns qml-private quick-private
 #sql
 #sql webchannel
 CONFIG += c++11
+#CONFIG += Console
 
-contains(DEFINES, DATAAGENTWRITENAMES){
+
+contains(DEFINES, SQLSTUFF){
     QT += sql
-    CONFIG += Console
 }
 
-contains(DEFINES, TIMEAGENTWRITEFILLS){
-    QT += sql
+contains(DEFINES, CONSOLE) {
     CONFIG += Console
 }
-
-contains(DEFINES, DATAAGENTWRITEPROFIT){
-    QT += sql
-    CONFIG += Console
-}
-
 
 osx{
     CONFIG+=app_bundle
@@ -59,6 +54,8 @@ macx {
 
 # Copy the custom Info.plist to the app bundle
     OTHER_FILES += Info.plist
+#    OTHER_FILES += /nwork/protoblock/hold/boot2strap201700.out
+
     plist.path = "$$DESTDIR/$$join(TARGET,,,.app)/Contents"
     plist.files = $PWD/Info.plist
     INSTALLS += plist
@@ -67,6 +64,13 @@ macx {
     QMAKE_CXXFLAGS += -gdwarf-2
     ICON = icon.icns
     CONFIG += x86
+
+    resources.files = $$PWD/../../hold/boot2strap201700.out
+    resources.path =  "$$DESTDIR/$$join(TARGET,,,.app)/Resources"
+
+#    INSTALLS += resources
+
+
 
 }
 
@@ -80,21 +84,23 @@ RESOURCES += $$PWD/qml/qml.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH = . ..
 
-DISTFILES += \
-    android/AndroidManifest.xml \
-    android/gradle/wrapper/gradle-wrapper.jar \
-    android/gradlew \
-    android/res/values/libs.xml \
-    android/build.gradle \
-    android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat
 
-
-ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 FANTASYBITLIB += fantasybit-2016D
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+    DISTFILES += \
+        android/AndroidManifest.xml \
+        android/gradle/wrapper/gradle-wrapper.jar \
+        android/gradlew \
+        android/res/values/libs.xml \
+        android/build.gradle \
+        android/gradle/wrapper/gradle-wrapper.properties \
+        android/gradlew.bat
+
+
+    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
     ANDROID_EXTRA_LIBS = \
              $$DIRPREFIX/android/extrenal-android/lib/libprotobuf.so
 #             $$DIRPREFIX/android/extrenal-android/lib/libcrypto.so \
@@ -125,7 +131,7 @@ win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasy
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/lib$$FANTASYBITLIB.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/$$FANTASYBITLIB.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/$$FANTASYBITLIB.lib
-else:macx: PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/lib$$FANTASYBITLIB.a
+else:macx: PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/$$FANTASYBITLIB.a
 
 INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/protoblock-core
@@ -146,3 +152,8 @@ include ($$PWD/../../pri/genproto.pri)
 INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
 DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
 
+CONFIG(debug,debug|release):message("Debug mode")
+CONFIG(release,debug|release):message("Release mode")
+
+DISTFILES += \
+    ../../hold/boot2strap201700.out

@@ -69,7 +69,6 @@ QObject *protoScreen(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine)
     Q_UNUSED(scriptEngine)
-    qDebug() << " only once ";
     ProtoScreen *protoScreens = new ProtoScreen();
     return protoScreens;
 }

@@ -56,7 +56,7 @@ public:
         m_gameid = in.id().data();
 
 
-        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
+//        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
     }
 
     explicit WeeklyScheduleModelItem(const fantasybit::GameInfo &in,fantasybit::GameStatus_Status gs, QObject *parent = nullptr) :  QObject(parent) {
@@ -67,7 +67,7 @@ public:
         m_gameid = in.id().data();
 
 
-        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
+//        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
     }
 
     explicit WeeklyScheduleModelItem(WeeklyScheduleModelItem *in,fantasybit::GameStatus_Status gs, QObject *parent = nullptr)
@@ -94,8 +94,9 @@ public:
 
     void updateWeeklySchedule(int season,int week, const fantasybit::WeeklySchedule &weekly) {
 
-        qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
-
+        #ifdef TRACE2
+                qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
+        #endif
         clear();
 
         setweek(week);
@@ -143,8 +144,6 @@ public:
 
 };
 
-Q_DECLARE_METATYPE(WeeklyScheduleModelItem*)
-Q_DECLARE_METATYPE(WeeklyScheduleModel*)
 
 class WeeklyScheduleViewFilterProxyModel : public SortFilterProxyModel {
     Q_OBJECT
@@ -208,5 +207,9 @@ protected:
     }
 };
 }
+
+using namespace pb;
+Q_DECLARE_METATYPE(WeeklyScheduleModelItem*)
+Q_DECLARE_METATYPE(WeeklyScheduleModel*)
 
 #endif // WEEKLYSCHEDULEMODEL_H

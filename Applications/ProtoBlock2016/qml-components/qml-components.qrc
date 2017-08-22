@@ -26,5 +26,6 @@
         <file>MarketDepthTable.qml</file>
         <file>TradingContextBanner.qml</file>
         <file>FantasyNameContextBanner.qml</file>
+        <file>ListSymbolSearch.qml</file>
     </qresource>
 </RCC>

@@ -18,7 +18,7 @@ Material.Card {
     property string lightred: "red"//"#ffc8c8"
     property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
     property double recwidth: ProtoScreen.guToPx(20)
-    property bool haveplayer: inplay && inplay.playerid !== ""
+    property bool haveplayer: inplay && inplay.symbol !== ""
     property bool haveposition: inplay && inplay.myposition !== 0
     property color dcolor: Material.Theme.light.textColor
 
@@ -46,12 +46,12 @@ Material.Card {
 //        anchors.left: parent.left
         Layout.fillWidth: true
         Layout.fillHeight: true
-        spacing: 10
+        spacing: 0
 
         //name symbol
         Rectangle {
-            Layout.preferredWidth: Math.max(recwidth * 2.0,pname.width)
-            Layout.minimumWidth: Math.max(recwidth * 2.0,pname.width)
+            Layout.preferredWidth: recwidth
+            //Layout.minimumWidth: pname.width)
             Layout.preferredHeight: parent.height
             Layout.fillWidth: false
             border.width: 0
@@ -62,79 +62,95 @@ Material.Card {
                 fontSize: ProtoScreen.font(ProtoScreen.SMALL)
                 bold: true
                 anchors.left: parent.left
-                text: " 2016 Week " + MiddleMan.theWeek + " Contract"
-                color: "white"
-                backgroundColor: haveplayer ? themeroot.theme.primaryColor : "transparent"
+                text: " 2017 Season Contract (" + inplay.symbol + ")    "
+                backgroundColor: "white"
+                color: themeroot.theme.primaryColor
+                helpShown: true
+                helperHeader: inplay.fullname + " (" + inplay.pos + ") Season Contract"
+                helperTxt: "16 games 16 weeks. Season long contracts settle at the total points from a 16 game season. " +
+                            "the season is from week1-week16. (week 16 is counted twice instead of using week 17)." +
+                            "These expire at the total fantasy points scored by " + inplay.fullname +
+                            ". The \"Writer\" (seller) must give the \"Buyer\", fantasy bits equal to the amount of fantsy points scored " +
+                            "It is 1 Fantasy Bit per Fantasy Point in these season long contracts." +
+                            "The game is to try to buy below the actual settlement number," +
+                            "or alternativly to write (sell) at a price above the actual final number. " +
+                            "With all the known risks, how much are you willing to \"pay\" for the contract? " +
+                            "For how much would you be willing to " +
+                            " write, or sell, the contract, knowing that you keep all the points in cae of injury," +
+                            " but have to pay up in case of a breakout?"
 
                 width: parent.width
                 height: ProtoScreen.guToPx(3)
                 anchors.top: parent.top
-                anchrosHType: "left"
+                //anchors.horizontalCenter: parent.horizontalCenter
+                anchrosHType: "center"
                 elevation: 0
             }
 
             Material.Card {
-                Layout.fillWidth: false
+                Layout.fillWidth: true
                 id: pname
                 anchors.top: cwc.bottom
                 backgroundColor:  "white"
                 height: parent.height - cwc.height
-                width: teamicon.size + pname2.implicitWidth + symb1.implicitWidth
+                width: parent.width // teamicon.width + pname2.implicitWidth
+//                anchors.horizontalCenter: parent.horizontalCenter
                 elevation: 0
-                Row {
+                RowLayout {
                     id: trow
-                    anchors.verticalCenter: parent.verticalCenter
-//                    anchors.centerIn: parent
+//                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.fill: parent
 //                    anchors.centerIn: parent
 //                    width: teamicon.size + pname2.implicitWidth + symb1.implicitWidth //+ ProtoScreen.guToPx(.38)
 
                     Icon {
+                        Layout.fillWidth: false
                         id: teamicon
                         hasColor:false
                         source: "qrc:/"+ inplay.teamid+".PNG"
-                        width: ProtoScreen.guToPx(6)
-//                        height: ProtoScreen.guToPx(6)
-                        size: ProtoScreen.guToPx(6)
+                        width: ProtoScreen.guToPx(5)
+                        height: ProtoScreen.guToPx(5)
+                        size: ProtoScreen.guToPx(3)
                         anchors {
                             verticalCenter: parent.verticalCenter
     //                        left: parent.left
-    //                        leftMargin: ProtoScreen.guToPx(.125)
+                            leftMargin: ProtoScreen.guToPx(.125)
                         }
                     }
 
                     Material.Label {
                         Layout.fillWidth: true
-                        elide: Text.ElideRight
+                        //elide: Text.ElideRight
                         id: pname2
                         text: !haveplayer ? "" : inplay.fullname + " (" + inplay.pos +") "
         //                anchors.fill: parent
-        //                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
 
                         anchors {
                             verticalCenter: parent.verticalCenter
-    //                        left: teamicon.right
-    //                        leftMargin: ProtoScreen.guToPx(.125)
+                            left: teamicon.right
+                            //leftMargin: ProtoScreen.guToPx(.125)
                         }
                     }
 
-                    Material.Label {
-                        Layout.fillWidth: true
-                        elide: Text.ElideRight
-                        id: symb1
-                        text: !haveplayer ? "" : " - " + inplay.playerid
-        //                anchors.fill: parent
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
+//                    Material.Label {
+//                        Layout.fillWidth: true
+//                        elide: Text.ElideRight
+//                        id: symb1
+//                        text: !haveplayer ? "" : " - " + inplay.symbol
+//        //                anchors.fill: parent
+//                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+//                        verticalAlignment: Text.AlignVCenter
+//                        horizontalAlignment: Text.AlignHCenter
 
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-    //                        left: pname2.right
-    //                        leftMargin: ProtoScreen.guToPx(.125)
-                        }
-                    }
+//                        anchors {
+//                            verticalCenter: parent.verticalCenter
+//    //                        left: pname2.right
+//    //                        leftMargin: ProtoScreen.guToPx(.125)
+//                        }
+//                    }
                 }
             }
         }
@@ -199,6 +215,8 @@ Material.Card {
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 2
                     Layout.row: 1
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.bold: true
                 }
 
                 Material.Label {
@@ -423,7 +441,7 @@ Material.Card {
                 Material.Label {
                     text: inplay.ask === 0 ? "" : inplay.ask
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 2
@@ -437,7 +455,7 @@ Material.Card {
                 Material.Label {
                     text: "Vol:"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 5
@@ -462,7 +480,7 @@ Material.Card {
     //                width: parent.width * .50
     //                height: parent.height * .50
                     text: "Chng:"
-//                    verticalAlignment: Text.AlignVCenter
+                    verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignRight
                     Layout.column: 5
                     Layout.row: 2
@@ -476,7 +494,7 @@ Material.Card {
                     text: ((inplay.change > 0) ? "+" : "" ) + inplay.change.toString() + " "
     //                Layout.fillHeight: true
     //                Layout.fillWidth:  false
-//                    verticalAlignment: Text.AlignVCenter
+                    verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignLeft
     //                color: icon.color
                     Layout.column: 6
@@ -492,7 +510,7 @@ Material.Card {
                 Material.Label {
                     text: "Hi:"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignHCenter
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 3
@@ -503,7 +521,7 @@ Material.Card {
                 Material.Label {
                     text: "Lo:"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 3
@@ -514,7 +532,7 @@ Material.Card {
                 Material.Label {
                     text: inplay.hi
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignHCenter
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 4
@@ -525,7 +543,7 @@ Material.Card {
                 Material.Label {
                     text: inplay.lo
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
+//                    horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 4
@@ -659,7 +677,7 @@ Material.Card {
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     color: !inplay ? dcolor : (inplay.mypnl < 0) ? "red" : (inplay.mypnl > 0) ? "green" : Material.Theme.light.textColor
-
+                    font.family: fontfamFB
                 }
 
 
@@ -735,7 +753,7 @@ Material.Card {
         Material.Card {
             elevation: 0
             height: parent.height
-            Layout.fillWidth: false
+            Layout.fillWidth: true
             id: fnameCARD
             Layout.preferredWidth: fbl12.width + ProtoScreen.guToPx(.5)
             anchors.rightMargin: ProtoScreen.guToPx(.25)
@@ -843,6 +861,7 @@ Material.Card {
 //                    color: !inplay ? Material.Theme.light.textColor : inplay.bsdiff === 1 ? lightgreen :
 //                                             inplay.bsdiff === -1 ? lightred :  Material.Theme.light.textColor
 
+                    font.family: fontfamFB
                 }
 
                 Material.Label {
@@ -855,6 +874,7 @@ Material.Card {
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     color: (!inplayf || inplayf.totalopenpnl === 0) ? Material.Theme.light.textColor : inplayf.totalopenpnl > 0 ? "green" : "red"
+                    font.family: fontfamFB
                 }
 
                 Material.Label {
@@ -866,6 +886,7 @@ Material.Card {
                     Layout.column: 4
                     Layout.row: 1
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.family: fontfamFB
                 }
 
                 Material.Label {
@@ -878,6 +899,7 @@ Material.Card {
                     Layout.column: 4
                     Layout.row: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.family: fontfamFB
                 }
 
             }

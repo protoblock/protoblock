@@ -1,3 +1,6 @@
+osx {
+QMAKE_MAC_SDK = macosx10.12
+}
 TEMPLATE = lib
 TARGET = Material
 QT += qml quick core
@@ -143,3 +146,6 @@ RESOURCES += \
     core.qrc \
     fonts/fonts.qrc
 
+message("materialpro" $$installPath)
+CONFIG(debug,debug|release):message("Debug mode")
+CONFIG(release,debug|release):message("Release mode")

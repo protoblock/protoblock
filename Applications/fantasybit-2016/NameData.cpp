@@ -21,7 +21,7 @@
 #include "DataPersist.h"
 
 #ifdef DATAAGENTWRITENAMES
-#include "../../../fantasybit-2015/tradingfootball/playerloader.h"
+#include "SqlStuff.h"
 #endif
 using namespace std;
 using namespace fantasybit;
@@ -205,7 +205,7 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
 void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     auto hash = FantasyName::name_hash(name);
 
-    qDebug() << "adding pnl " << name << pnl;
+    qDebug() << "adding pnl " << name.data() << pnl;
     string temp;
     leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
     if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {
@@ -223,7 +223,9 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     }
     //if ( name == "Windo")
     //    qDebug() << "abcdefg" << fn.DebugString();
+#ifdef TRACE
     qDebug() << "adding pnl" << pnl << " :: " << name.data ()<< fn.public_key().data ()<< fn.stake() << fn.bits();
+#endif
 //    OnFantasyNamePnl(fn);
 }
 
@@ -381,7 +383,8 @@ void FantasyNameData::OnFantasyName(std::shared_ptr<FantasyName> fn) {
 
 #ifdef DATAAGENTWRITENAMES
 #if !defined(DATAAGENTWRITENAMES_FORCE) || defined(DATAAGENTWRITENAMES_FORCE_NONAMES)
-    if ( amlive )
+    if ( !amlive )
+        return;
 #endif
     if ( name != Commissioner::FantasyAgentName())
     {

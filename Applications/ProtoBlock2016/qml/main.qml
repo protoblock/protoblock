@@ -28,9 +28,6 @@ Quick.Window {
 
     property string theme: "Material"
     property string  err
-    property string currentTeamInFocus
-    property string currentHomeTeam
-    property string currentAwayTeam
     property string helperTxt
     property string helperHeader: "Help"
     property bool reloadrowquote: true

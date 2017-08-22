@@ -24,6 +24,7 @@ namespace pb {
 using namespace fantasybit;
 
 
+
 class PlayerProjModelItem : public QObject {
     Q_OBJECT
     QML_READONLY_CSTREF_PROPERTY (QString, fullname)
@@ -33,6 +34,7 @@ class PlayerProjModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY (QString, teamid)
     QML_READONLY_CSTREF_PROPERTY (int, status)
     QML_READONLY_CSTREF_PROPERTY (QString, playerid)
+    QML_READONLY_CSTREF_PROPERTY (QString, symbol)
     QML_WRITABLE_VAR_PROPERTY(int, projection)
     QML_WRITABLE_VAR_PROPERTY (int, knownProjection)
     QML_WRITABLE_VAR_PROPERTY (int, projectionStatus)
@@ -61,6 +63,7 @@ public:
         m_teamid = teamid.data();
         m_status = pd.team_status;
         m_playerid = playerid.data();
+        m_symbol = pd.symbol.data();
         m_gameid = gameid;
         m_projection = 0;
         m_knownProjection = 0;
@@ -130,8 +133,6 @@ public:
     }
 };
 
-Q_DECLARE_METATYPE(PlayerProjModelItem*)
-Q_DECLARE_METATYPE(PlayerProjModel*)
 
 class ProjectionsViewFilterProxyModel : public SortFilterProxyModel
 {
@@ -206,7 +207,7 @@ public:
     }
 
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
-        qDebug() << " sort called" << column;
+//        qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
 
 //                qDebug() << " << cc " << columnCount();
@@ -262,16 +263,16 @@ protected:
         if ( index.row() < 0 )
             return true;
 
-        qDebug() << "setDatasetDatasetDatasetData setting data" << index.row() << index.column();
+//        qDebug() << "setDatasetDatasetDatasetData setting data" << index.row() << index.column();
 
         auto myindex = mapToSource(index);
 
-        qDebug() << "setDatasetDatasetDatasetData after map" << myindex.row() << myindex.column();
+//        qDebug() << "setDatasetDatasetDatasetData after map" << myindex.row() << myindex.column();
 
         PlayerProjModel * model = dynamic_cast<PlayerProjModel *>(sourceModel());
         if (model==NULL) return true;
 
-        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
+//        qDebug() << " index model->at(index.row())->get_firstname() " << model->at(myindex.row())->get_firstname();
 
         model->at(myindex.row())->set_projection(value.toInt());
 //        if ( model->at(index.row())->get_firstname() )
@@ -358,8 +359,16 @@ public:
 
 class LeaderBaordFantasyNameModel : public QQmlObjectListModel<LeaderBaordFantasyNameModelItem> {};
 
-Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
+}
+using namespace pb;
 
+Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
+Q_DECLARE_METATYPE(PlayerProjModelItem*)
+Q_DECLARE_METATYPE(PlayerProjModel*)
+
+
+
+#endif // PLAYERPROJMODEL_H
 
 
 
@@ -394,7 +403,4 @@ Q_DECLARE_METATYPE(LeaderBaordFantasyNameModel *)
 
 //std::vector<fantasybit::GameRoster> DataService::GetCurrentWeekGameRosters()
 
-}
-
-#endif // PLAYERPROJMODEL_H
 

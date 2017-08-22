@@ -32,7 +32,7 @@ Item {
             id: bannerTxt
             text: bannerRoot.text
             height:parent.height
-            width: parent.width - ProtoScreen.guToPx(1.25)
+            width: parent.width - ProtoScreen.guToPx(1.25)  - (!bannerRoot.helpShown ? 0.0 : ProtoScreen.guToPx(6))
             font.pixelSize: bannerRoot.fontSize
             font.bold: bannerRoot.bold
             color: bannerRoot.color
@@ -94,16 +94,26 @@ Item {
     }
 
 
-    Icon {
+    IconButton {
         id: helperArea
         visible: helpShown
         width: ProtoScreen.guToPx(4)
         height: width
         anchors.right: parent.right
         anchors.rightMargin: ProtoScreen.guToPx(1)
+        anchors.leftMargin: ProtoScreen.guToPx(1)
         anchors.verticalCenter: parent.verticalCenter
-        source: "qrc:/icons/ic_help.png"
-        color: "white"
+        iconSource: "qrc:/icons/ic_help.png"
+        color: bannerRoot.color
+        size: ProtoScreen.guToPx(2.5)
+
+        onClicked: {
+            realRoot.helperHeader = bannerRoot.helperHeader
+            realRoot.helperTxt = bannerRoot.helperTxt
+            helperDialog.toggle()
+        }
+
+        /*
         MouseArea{
             anchors.fill: helperArea
             onClicked: {
@@ -112,6 +122,7 @@ Item {
                 helperDialog.toggle()
             }
         }
+        */
     }
 
 

@@ -1,54 +1,8 @@
+include ($$PWD/defs.pri)
+
 ##############
 ## Globals
 ##############
-#DEFINES += DATAAGENTWRITENAMES
-#DEFINES += DATAAGENTWRITENAMES_FORCE
-#DEFINES += DATAAGENTWRITENAMES_FORCE_GAMEID
-#DEFINES += DATAAGENTWRITENAMES_FORCE_NONAMES
-#DEFINES += DATAAGENTWRITENAMES_SPECIAL
-#DEFINES += DATAAGENTWRITEPROFIT
-#DEFINES += SQL
-#DEFINES += TIMEAGENTWRITETWEETS
-DEFINES += NOTHING
-#DEFINES += NOCHECK_LOCAL_BOOTSTRAP_MINUS1
-#DEFINES += TIMEAGENTWRITEFILLS
-#DEFINES += TIMEAGENTWRITEFILLS_FORCE
-
-DEFINES += BUILD_STABLE
-DEFINES += PRODFOOTBALL
-DEFINES += TRADE_FEATURE
-#DEFINES += TESTING_PRE_ROW_TRADE_FEATURE
-#DEFINES += LIGHT_CLIENT_ONLY
-#DEFINES += USE_LOCALHOST_SERVER
-#DEFINES += USE_LOCALNETWORKHOST_SERVER
-#DEFINES += STOP_HEIGHT_TEST
-#DEFINES += FULL_NODE_CLIENT
-#DEFINES += USE_PB_GATEWAYS
-#DEFINES += STOP_HEIGHT_TEST
-DEFINES += USE_NUM_NONE
-DEFINES += USE_FIELD_10X26
-DEFINES += USE_FIELD_INV_BUILTIN
-DEFINES += USE_SCALAR_8X32
-DEFINES += USE_SCALAR_INV_BUILTIN
-
-#DEFINES += TIMEAGENTWRITEFILLS
-#DEFINES += BLOCK_STEP
-DEFINES += NO_SQL_LEADERS
-
-#DEFINES += CUSTOM_TESTING_PATH
-
-#DEFINES += NOSYNC
-
-DEFINES += NOUSE_GENESIS_BOOT
-DEFINES += USE_LOCAL_GENESIS
-DEFINES += NOCHECK_LOCAL_BOOTSTRAP
-DEFINES += JAYHACK
-
-DEFINES += END2016ADD2014
-DEFINES += NO_REMOVEALL_TRADING
-
-#DEFINES += TRACE
-#DEFINES += TRACEDEBUG
 
 contains (QMAKE_HOST.os, Darwin){
     message("Host is OSX")
@@ -57,6 +11,7 @@ contains (QMAKE_HOST.os, Darwin){
     message("Host is Windows")
     DIRPREFIX = C:\work\prebuiltLibs
 }
+
 
 
 ##############
@@ -68,10 +23,11 @@ win32 {
     INCLUDEPATH +=   $$DIRPREFIX/windows/3rdParty
     INCLUDEPATH += $$DIRPREFIX/windows/3rdParty/secp256k1
 
-    contains(DEFINES, TIMEAGENTWRITETWEETS) {
-        INCLUDEPATH += $$DIRPREFIX/windows/3rdParty/nanomsg
-        LIBS += -lnanomsg
-    }
+
+#    contains(DEFINES, WSSERVER_WRITE_TWEET) {
+#        INCLUDEPATH += $$DIRPREFIX/windows/3rdParty/nanomsg
+#        LIBS += -lnanomsg
+#    }
 
    ## FIXME
     LIBS+= -L$$DIRPREFIX/windows/libwin64
@@ -97,8 +53,23 @@ win32 {
  #   INCLUDEPATH += $${BOOST_DIR}
 
 }
+osx {
+    QMAKE_MAC_SDK = macosx10.12
+}
+macx {
+#    include(/Users/satoshi/work/trading.football/externals/leveldb.pri)
+#    LIBS+=/Users/satoshi/work/fantasybit-2015/libosx64/libleveldb.a
+}
 
-##############
+unix:macx {
+#    LIBS+=/usr/local/lib/libleveldb.a
+#    LIBS+=/Users/satoshi/work/leveldb/libleveldb.a
+#    INCLUDEPATH += /Users/satoshi/Desktop/fc/osx/protoblock/3rdParty
+    LIBS += /Users/satoshi/work/fantasybit-2015/externals/leveldb/libleveldb.a
+    INCLUDEPATH += /Users/satoshi/work/fantasybit-2015/externals/leveldb/include/
+}
+
+##############Ï
 ##     OSX
 ##############
 
@@ -107,11 +78,13 @@ macx{
     INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
     DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/osx/include
 
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+#    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libprotobuf.a
+    LIBS += /Users/satoshi/Desktop/fc/osx/protobuf/protobuf-2.5.0/src/.libs/libprotobuf.a
+    PRE_TARGETDEPS += /Users/satoshi/Desktop/fc/osx/protobuf/protobuf-2.5.0/src/.libs/libprotobuf.a
 
-    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
-    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
+#    LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
+#    PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libsecp256k1.a
 
     LIBS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a
     PRE_TARGETDEPS += /Users/$$(USER)/Desktop/fc/prebuilt/osx/lib/libssl.a

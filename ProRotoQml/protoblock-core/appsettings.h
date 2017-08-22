@@ -104,20 +104,24 @@ private:
                 return storagePath(storageDirName)+"/"+"GenesisTransition-Tr-Transaction.txt";
             #endif
             #ifdef Q_OS_MAC
-                QDir dir(QApplication::applicationDirPath());
+            {
+                QDir dir(QCoreApplication::applicationDirPath());
                 dir.cdUp();
                 dir.cd("Resources");
                 return dir.absolutePath()+QString("/GenesisTransition-Tr-Transaction.txt");
+            }
             #endif
             case GenesisTransition2014Location :
             #ifdef Q_OS_WIN
                 return storagePath(storageDirName)+"/"+"Transition2014.out";
             #endif
             #ifdef Q_OS_MAC
-                QDir dir(QApplication::applicationDirPath());
+            {
+                QDir dir(QCoreApplication::applicationDirPath());
                 dir.cdUp();
                 dir.cd("Resources");
                 return dir.absolutePath()+QString("/Transition2014.out");
+            }
             #endif
 
             case GenesisBootLocation2016 :
@@ -125,10 +129,12 @@ private:
                 return storagePath(storageDirName);//+"bootstraptest201601.out";
             #endif
             #ifdef Q_OS_MAC
-                QDir dir(QApplication::applicationDirPath());
+            {
+                QDir dir(QCoreApplication::applicationDirPath());
                 dir.cdUp();
                 dir.cd("Resources");
                 return dir.absolutePath()+QString("/");//bootstraptest201601.out");
+            }
             #endif
 
 

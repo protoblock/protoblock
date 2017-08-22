@@ -1913,6 +1913,13 @@ class GameStatusMeta : public ::google::protobuf::Message {
   inline ::std::string* release_next();
   inline void set_allocated_next(::std::string* next);
 
+  // optional int32 season = 70;
+  inline bool has_season() const;
+  inline void clear_season();
+  static const int kSeasonFieldNumber = 70;
+  inline ::google::protobuf::int32 season() const;
+  inline void set_season(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.GameStatusMeta)
  private:
   inline void set_has_id();
@@ -1931,6 +1938,8 @@ class GameStatusMeta : public ::google::protobuf::Message {
   inline void clear_has_prev();
   inline void set_has_next();
   inline void clear_has_next();
+  inline void set_has_season();
+  inline void clear_has_season();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1938,13 +1947,14 @@ class GameStatusMeta : public ::google::protobuf::Message {
   ::fantasybit::GameInfo* gameinfo_;
   ::fantasybit::GameStatus* gamesatus_;
   ::std::string* gamemetaid_;
+  ::google::protobuf::int32 week_;
+  ::google::protobuf::int32 season_;
   ::std::string* datametaid_;
   ::std::string* prev_;
   ::std::string* next_;
-  ::google::protobuf::int32 week_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -12031,6 +12041,28 @@ inline void GameStatusMeta::set_allocated_next(::std::string* next) {
     clear_has_next();
     next_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional int32 season = 70;
+inline bool GameStatusMeta::has_season() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void GameStatusMeta::set_has_season() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void GameStatusMeta::clear_has_season() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void GameStatusMeta::clear_season() {
+  season_ = 0;
+  clear_has_season();
+}
+inline ::google::protobuf::int32 GameStatusMeta::season() const {
+  return season_;
+}
+inline void GameStatusMeta::set_season(::google::protobuf::int32 value) {
+  set_has_season();
+  season_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -27,6 +27,11 @@ OTHER_FILES += $$PWD/sslechoclient.html
 DEFINES += MAX_NAMES_LB=1000
 #DEFINES += TRACE
 
+DEFINES += WSSERVER_WRITE_TWEET
+contains(DEFINES, WSSERVER_WRITE_TWEET) {
+    INCLUDEPATH += $$DIRPREFIX/windows/3rdParty/nanomsg
+    LIBS += -lnanomsg
+}
 
 #win32 {
 #    include($$PWD/../../pri/core.pri)
@@ -55,7 +60,8 @@ HEADERS += \
 #    $$PWD/Data.h \
 #    $$PWD/txpool.h \
 #    $$PWD/ExchangeData.h \
-    LiteServer.h
+    LiteServer.h \
+    $$PWD/wsgateway.h
 #    TxServer.h
 
 ## FIXME add in libs here for levelDB as it is the only thing ATM that is using it.
@@ -79,19 +85,25 @@ HEADERS += \
 #        DEPENDPATH += $$PWD/../../ProRotoQml/protoblock-core/bitcoin-core-base58
 #}
 
+FANTASYBITLIB += fantasybit-2016D
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/release/ -lfantasybit-2016D
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/debug/ -lfantasybit-2016D
-else:macx: LIBS += -L$$OUT_PWD/../fantasybit-2016/ -lfantasybit-2016D
+
+!contains(DEFINES, PRODFOOTBALL){
+    FANTASYBITLIB = STAGING-$$FANTASYBITLIB
+}
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/release/ -l$$FANTASYBITLIB
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/debug/ -l$$FANTASYBITLIB
+else:macx: LIBS += -L$$OUT_PWD/../fantasybit-2016/ -l$$FANTASYBITLIB
 
 INCLUDEPATH += $$PWD/../fantasybit-2016
 DEPENDPATH += $$PWD/../fantasybit-2016
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/libfantasybit-2016D.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/libfantasybit-2016D.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/fantasybit-2016D.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/fantasybit-2016D.lib
-else:macx: PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/libfantasybit-2016D.a
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/lib$$FANTASYBITLIB.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/lib$$FANTASYBITLIB.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/$$FANTASYBITLIB.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/$$FANTASYBITLIB.lib
+else:macx: PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/libSTAGING-fantasybit-2016D.a
 
 INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/protoblock-core
@@ -106,10 +118,8 @@ include ($$PWD/../../pri/genproto.pri)
 #message(win32 $$INCLUDEPATH)
 
 #win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/release/ -lProRotoQml.Protoblockd
-#else:win32:CONFIG(debug, debug|rFelease): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/debug/ -lProRotoQml.Protoblockd
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/debug/ -lProRotoQml.Protoblockd
 #else:unix: LIBS += -L$$OUT_PWD/../../ProRotoQml/Protoblock/ -lProRotoQml.Protoblockd
 
 INCLUDEPATH += $$PWD/../../ProRotoQml/Protoblock
 DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
-
-

@@ -245,6 +245,7 @@ Item {
 
     Label {
         id: label
+        visible: !integratedTabBar
 //        visible: customContentView.children.length === 0 &&
 //                (!integratedTabBar || !tabBar.visible)
         textFormat: Text.PlainText
@@ -260,7 +261,7 @@ Item {
                0
             }
         }
-        font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
+        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
         color: Theme.lightDark(actionBar.backgroundColor, Theme.light.textColor,
                                                             Theme.dark.textColor)
         elide: Text.ElideRight
@@ -298,7 +299,7 @@ Item {
         }
 
         height: parent.implicitHeight
-        spacing: ProtoScreen.guToPx(3)
+        spacing: ProtoScreen.guToPx(1)
 
         Repeater {
             model: __internal.visibleActions.length > maxActionCount

@@ -22,6 +22,8 @@ public:
 
     std::vector<fantasybit::GameResult> GetPrevWeekGameResults(int season,int week);
 
+    std::map<std::string,std::string> GetAllSymbols();
+
     fantasybit::WeeklySchedule GetWeeklySchedule(int season,int week);
 
     fantasybit::PlayerBase GetPlayerBase(std::string playerId);
@@ -39,8 +41,9 @@ public:
     std::unordered_map<std::string,fantasybit::PlayerDetail> GetTeamRoster(const std::string &teamid);
     fantasybit::GameStatus GetGameStatus(string gid);
 
+    PlayerDetail GetPlayerDetail(const std::string &symbol);
 
-    fantasybit::MyFantasyName importMnemonic(std::string &in);
+    fantasybit::MyFantasyName importMnemonic(const std::string &in);
     std::string exportMnemonic(std::string &in);
 
     ordsnap_t
@@ -51,6 +54,8 @@ public:
     //void getTeamPlayers(std::string teamId);
     int GetAvgProjection(const string &playerid);
     std::vector<MarketSnapshot> GetCurrentMarketSnaps();
+
+    std::string GetPidfromSymb(const std::string &symb);
 };
 
 

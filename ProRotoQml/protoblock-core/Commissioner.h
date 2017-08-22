@@ -173,7 +173,7 @@ public:
         nametrans.mutable_proof()->CopyFrom(np);
 
         Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_version(Commissioner::GENESIS_NUM);
         trans.set_type(TransType::NAME);
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
@@ -192,7 +192,7 @@ public:
         nametrans.mutable_proof()->CopyFrom(nameproof);
 
         Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_version(Commissioner::GENESIS_NUM);
         trans.set_type(TransType::NAME);
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
@@ -211,7 +211,7 @@ public:
         nametrans.mutable_proof()->CopyFrom(nameproof);
 
         Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_version(Commissioner::GENESIS_NUM);
         trans.set_type(TransType::NAME);
         trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
@@ -227,7 +227,7 @@ public:
         dt.set_week(1);
 
         Transaction trans{};
-        trans.set_version(Commissioner::TRANS_VERSION);
+        trans.set_version(Commissioner::GENESIS_NUM);
         trans.set_type(TransType::DATA);
         trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
 
@@ -304,15 +304,15 @@ public:
 
     static Block makeGenesisBlockRaw();
     static Block makeGenesisBlock();
-    static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = "201601");
+    static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = "201700");
     static bool BootStrapFileExists(string);
 
     static const int BLOCK_VERSION = 1;
-    static const int TRANS_VERSION = 1;
+    static const int TRANS_VERSION = 2;
     static const int GENESIS_NUM = 1;
 
 
-    static bool verify(const pb::signature &sig, const pb::sha256 &digest, pb::public_key_data& pk) {
+    static bool verify(const pb::signature &sig, const pb::sha256 &digest, const pb::public_key_data& pk) {
           return pb::public_key(pk).verify(digest, sig);// pb::public_key(sig, digest) == pub;
     }
 

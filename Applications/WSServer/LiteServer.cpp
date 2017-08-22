@@ -9,31 +9,45 @@
 //#include "src/protoblockapi.h"
 
 #include "Commissioner.h"
-//#include "txpool.h"
 #include "server.h"
 
 QT_USE_NAMESPACE
 
 
 LiteServer::LiteServer(quint16 port, bool debug, QObject *parent) :
+    mPort(port),
     QObject(parent),
     m_pWebSocketServer(new QWebSocketServer(QStringLiteral("WS LiteServer"),
-                                            QWebSocketServer::NonSecureMode, this)),
-//    m_clients(),
-    m_debug(debug),
-    mPort(port)
-{
+                                    QWebSocketServer::NonSecureMode, this)),
+    m_clients() {
+
+    connect (this,SIGNAL(error(QString)),this,SLOT(handleError(QString)));
 
     gameStart.set_ctype(GETGAMESTART);
     mWSReplyGetProjectionRep.set_ctype(GETPROJECTIONS);
     mGetProjectionRep = mWSReplyGetProjectionRep.MutableExtension(GetProjectionRep::rep);
 
-    Server *server = Server::instance();
+    mWSReplyGetOrdersRep.set_ctype(GETORDERS);
+    mGetOrdersRep = mWSReplyGetOrdersRep.MutableExtension(GetOrdersRep::rep);
 
-    connect(server,&Server::onNewProj, this, &LiteServer::onNewProj);
-    connect(server,&Server::GameStart, this, &LiteServer::GameStart);
+    mRepDepth.set_ctype(GETDEPTH);
+    mGetDepthRep = mRepDepth.MutableExtension(GetDepthRep::rep);
 
-    connect(server,&Server::GoLive,this, &LiteServer::OnLive);
+    rowRep.set_ctype(GETROWMARKET);
+    mServer = Server::instance();
+
+    connect(mServer,&Server::onNewProj, this, &LiteServer::onNewProj);
+    connect(mServer,&Server::GameStart, this, &LiteServer::GameStart);
+    connect(mServer,&Server::GoLive,this, &LiteServer::OnLive);
+
+    connect(mServer,&Server::newDepth, this, &LiteServer::newDepth);
+    connect(mServer,&Server::newPos, this, &LiteServer::newPos);
+    connect(mServer,&Server::newRow, this, &LiteServer::newRow);
+}
+
+LiteServer::~LiteServer() {
+    m_pWebSocketServer->close();
+    qDeleteAll(m_clients.begin(), m_clients.end());
 }
 
 void LiteServer::OnLive() {
@@ -58,120 +72,45 @@ void LiteServer::GameStart(string gameid) {
         it.first->sendBinaryMessage(qbuf);
 }
 
+void LiteServer::newRow() {
+    rowRep.SetAllocatedExtension(GetROWMarketRep::rep,&mServer->mROWMarketRep);
+    rowRep.SerializeToString(&mRepstr);
+    mGetROWMarketRepArray.resize(rowRep.ByteSize());
+    rowRep.SerializeToArray(mGetROWMarketRepArray.data(),mGetROWMarketRepArray.size());
+    rowRep.ReleaseExtension(GetROWMarketRep::rep);
+
+    for (auto it : mSocketSubscribed )
+        it.first->sendBinaryMessage(mGetROWMarketRepArray);
+}
+
 void LiteServer::onNewConnection() {
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
 
-    mSocketSubscribed[pSocket] = "";
     connect(pSocket, &QWebSocket::binaryMessageReceived, this, &LiteServer::processBinaryMessage);
     connect(pSocket, &QWebSocket::disconnected, this, &LiteServer::socketDisconnected);
-
+    m_clients << pSocket;
 }
 
-
 //enum CType {
-//CHECKNAME = 1;
-//NEWTX = 2;
-//PK2FNAME = 3;
-//GETSTATUS = 4;
-//GETALLNAMES = 5;
-//GETROWMARKET = 6;
-//GETDEPTH = 7;
-//GETORDERS = 8;
-//GETPOSITIONS = 9;
-//SUBSCRIBEFNAME = 10;
-//GETGLOBALSTATE = 11;
-//GETSCHEDULE = 12;
-//GETGAMEROSTER = 13;
-//GETAVGPROJECTION = 14;
-//GETPROJECTIONS = 15;
+//    CHECKNAME = 1;
+//    NEWTX = 2;
+//    PK2FNAME = 3;
+//    GETSTATUS = 4;
+//    GETALLNAMES = 5;
+//    GETROWMARKET = 6;
+//    GETDEPTH = 7;
 //}
 void LiteServer::processBinaryMessage(const QByteArray &message) {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
 
     fantasybit::WsReq req;
-//    req.ParseFromString(message.toStdString());
-    req.ParseFromArray(message.data(),message.size());
+    req.ParseFromString(message.toStdString());
     fantasybit::WSReply rep;
 
-    qDebug() << " LITESERVER processBinaryMessage " << req.DebugString().data();
-int i =0;
+    qDebug() << " processBinaryMessage " << req.DebugString().data();
+
     switch ( req.ctype() ) {
-//        case SUBSCRIBEFNAME: {
-//            auto fname = req.GetExtension(SubscribeReq::req).name();
-//            auto &vec = mSocketSubscribed[pClient];
-//            vec.push_back(fname);
-//            auto &set = mFnameSubscribed[fname];
-//            if ( set.size() == 0 ) {
-//                getFnameSnap(fname);
-//                Server::TheExchange.Subscribe(fname);
-//                //todo get snap
-//            }
-//            set.insert(pClient);
-//            return;
-//        }
-//        case CHECKNAME: //is name available
-//        {
-//            rep.set_ctype(CHECKNAME);
-//            CheckNameRep cr;
-//            cr.mutable_req()->CopyFrom(req.GetExtension(CheckNameReq::req));
-//            if ( fantasybit::Commissioner::isAliasAvailable(cr.req().fantasy_name()))
-//                cr.set_isavail("true");
-//            else
-//                cr.set_isavail("false");
-
-//            qDebug() << " liteserver " << cr.req().fantasy_name().data() << cr.isavail().data();
-
-//            cr.set_isavail("false");
-//            rep.MutableExtension(CheckNameRep::rep)->CopyFrom(cr);
-//            rep.SerializeToString(&mRepstr);
-//            break;
-//        }
-        case GETALLNAMES: { //get all names
-                            // todo: replace with leaderboard
-//            doSendLeaders(pClient);
-//            return;
-            qDebug() << " GETALLNAMESGETALLNAMES ";
-            rep.set_ctype(GETALLNAMES);
-//            rep.SerializeToString(&mRepstr);
-//            break;
-    //            rep.MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
-            GetAllNamesRep &ganp = Server::instance()->mAllNamesRep;
-            rep.SetAllocatedExtension(GetAllNamesRep::rep,&(Server::instance()->mAllNamesRep));
-//            qDebug() << "GETALLNAMES liteserver " << rep.DebugString().data();
-            qDebug() << "GETALLNAMES liteserver1 ";
-            qDebug() << " ganp.names_size() " << ganp.names_size();
-
-//            for ( auto it : ganp.fnb())
-//                qDebug() << it.DebugString().data();
-
-//            qDebug() << "GETALLNAMES liteserver2 ";
-//            qDebug() << " rep.names_size() " << rep.GetExtension(GetAllNamesRep::rep).names_size();
-//            for ( auto it : rep.GetExtension(GetAllNamesRep::rep).fnb())
-//                qDebug() << it.DebugString().data();
-
-//            qDebug() << rep.DebugString().data();
-            qDebug() << "GETALLNAMES liteserver3 ";
-            qDebug() << "names-size " << Server::instance()->mAllNamesRep.names_size();
-//            for ( auto it : Server::instance()->mAllNamesRep.fnb())
-//                qDebug() << it.DebugString().data();
-
-//            qDebug() << Server::instance()->mAllNamesRep.DebugString().data();
-                // << Server::instance()->AllNamesRep.DebugString().data();
-            rep.SerializeToString(&mRepstr);
-            WSReply rep2;
-            rep2.ParseFromString(mRepstr);
-            qDebug() << "GETALLNAMES liteserver4 ";
-            qDebug() << " rep2.names_size() " << rep2.GetExtension(GetAllNamesRep::rep).names_size();
-
-//            for ( auto it : rep2.GetExtension(GetAllNamesRep::rep).fnb())
-//                qDebug() << it.DebugString().data();
-
-
-            rep.ReleaseExtension(GetAllNamesRep::rep);
-            break;
-        }
-        case PK2FNAME: //return Fantasy Name given public Key
-        {
+        case PK2FNAME: {
             Pk2FnameRep pkr;
             pkr.mutable_req()->CopyFrom(req.GetExtension(Pk2FnameReq::req));
             rep.set_ctype(PK2FNAME);
@@ -180,8 +119,8 @@ int i =0;
                 pkr.set_fname("");
             else {
                 pkr.set_fname(fname->alias());
-                auto it = Server::instance()->mPk2Bal.find(pkr.req().pk());
-                if ( it != end(Server::instance()->mPk2Bal))
+                auto it = mServer->mPk2Bal.find(pkr.req().pk());
+                if ( it != end(mServer->mPk2Bal))
                     pkr.set_allocated_fnb(it->second);
             }
 
@@ -193,11 +132,20 @@ int i =0;
             break;
         }
 
+        case GETALLNAMES: {
+            rep.set_ctype(GETALLNAMES);
+            GetAllNamesRep &ganp = mServer->mAllNamesRep;
+            rep.SetAllocatedExtension(GetAllNamesRep::rep,&(mServer->mAllNamesRep));
+            rep.SerializeToString(&mRepstr);
+            rep.ReleaseExtension(GetAllNamesRep::rep);
+            break;
+        }
+
         case GETGLOBALSTATE:
-            qDebug() << "LiteServer server GlobalStateRep " << Server::instance()->GlobalStateRep.DebugString().data();
+            qDebug() << "LiteServer server GlobalStateRep " << mServer->GlobalStateRep.DebugString().data();
 
             rep.set_ctype(GETGLOBALSTATE);
-            rep.SetAllocatedExtension(GetGlobalStateRep::rep,&Server::instance()->GlobalStateRep);
+            rep.SetAllocatedExtension(GetGlobalStateRep::rep,&mServer->GlobalStateRep);
             rep.SerializeToString(&mRepstr);
             qDebug() << "LiteServer GlobalStateRep " << rep.DebugString().data();
             rep.ReleaseExtension(GetGlobalStateRep::rep);
@@ -205,415 +153,316 @@ int i =0;
 
         case GETSCHEDULE:
             rep.set_ctype(GETSCHEDULE);
-            rep.SetAllocatedExtension(GetScheduleRep::rep,&Server::instance()->ScheduleRep);
+            rep.SetAllocatedExtension(GetScheduleRep::rep,&mServer->ScheduleRep);
             rep.SerializeToString(&mRepstr);
             rep.ReleaseExtension(GetScheduleRep::rep);
             break;
 
         case GETGAMEROSTER: {
-            QByteArray qb(Server::instance()->mGetCurrRostersRepStrWSreply.data(),
-                          (size_t)Server::instance()->mGetCurrRostersRepStrWSreply.size());
+            QByteArray qb(mServer->mGetCurrRostersRepStrWSreply.data(),
+                          (size_t)mServer->mGetCurrRostersRepStrWSreply.size());
             pClient->sendBinaryMessage(qb);
-//            rep.set_ctype(GETGAMEROSTER);
-//            rep.SetAllocatedExtension(GetScheduleRep::rep,&Server::instance()->ScheduleRep);
-//            rep.SerializeToString(&mRepstr);
-//            rep.ReleaseExtension(GetScheduleRep::rep);
+    //            rep.set_ctype(GETGAMEROSTER);
+    //            rep.SetAllocatedExtension(GetScheduleRep::rep,&mServer->ScheduleRep);
+    //            rep.SerializeToString(&mRepstr);
+    //            rep.ReleaseExtension(GetScheduleRep::rep);
             return;
             break;
         }
 
         case GETPROJECTIONS: {
-
             auto &name = req.GetExtension(GetProjectionReq::req).fname();
             if ( name != "") {
-                mFnameSubscribed[name] = pClient;
-                mSocketSubscribed[pClient] = name;
+                mFnameSubscribed[name].insert(pClient);
+                mSocketSubscribed[pClient].push_back(name);
+                mServer->Subscribe(name);
             }
             doSendProjections(pClient,name);
             return;
             break;
         }
 
+        case GETDEPTH: {
+//            rep.set_ctype(GETDEPTH);
+            auto &pid = req.GetExtension(GetDepthReq::req).pid();
 
+            if ( pid != "") {
+                auto &syb = mSocketSymbol[pClient];
+                if ( syb != pid && syb != "") {
+                    auto iit = mSymbolSubscribed.find(syb);
+                    if ( iit != end(mSymbolSubscribed))
+                        iit->second.erase(pClient);
+                }
 
-//            qDebug() << " GETPROJECTIONS " << i++;
-//            qDebug() << " GETPROJECTIONS " << i++;
+                mSymbolSubscribed[pid].insert(pClient);
+                syb = pid;
+            }
 
-////                mGetProjectionRep.set_allocated_projs(&ppn);
-//            qDebug() << " GETPROJECTIONS " << i++;
+            doSendDepth(pid,pClient);
+            return;
+            break;
+        }
 
-////                        set_allocated_avg(&Server::instance()->avgProjByName);
-//            qDebug() << " GETPROJECTIONS " << i++;
-
-
-//            qDebug() << " GETPROJECTIONS " << i++;
-
-
-////            mGetProjectionRep.release_avg();
-//            qDebug() << " GETPROJECTIONS ppn" << i++ << ppn.name().data();
-
-//            if ( ppn.name() != "" ) {
-//                qDebug() << " GETPROJECTIONS ppn try" << i++ << ppn.name().data();
-
-////                mGetProjectionRep.release_projs();
-//            }
-//            qDebug() << " GETPROJECTIONS " << i++;
-
+        case GETROWMARKET:
+//            rep.set_ctype(GETROWMARKET);
+//    //            rep.SetAllocatedExtension( MutableExtension(GetAllNamesRep::rep)->CopyFrom(*AllNamesRepPtr);
+//            rep.SerializeToString(&mRepstr);
 //            break;
-//        }
+
+            rep.set_ctype(GETROWMARKET);
+            rep.SetAllocatedExtension(GetROWMarketRep::rep,&mServer->mROWMarketRep);
+            rep.SerializeToString(&mRepstr);
+            rep.ReleaseExtension(GetROWMarketRep::rep);
+            break;
+
+        case GETORDERS: {
+            rep.set_ctype(GETORDERS);
+            GetOrdersRep gor;
+            auto &fp = mServer->getfnameptrs(req.GetExtension(GetOrdersReq::req).fname());
+            gor.set_allocated_oorders(fp.fnameAllOdersFname);
+            rep.SetAllocatedExtension(GetOrdersRep::rep,&gor);
+            rep.SerializeToString(&mRepstr);
+            gor.release_oorders();
+            rep.ReleaseExtension(GetOrdersRep::rep);
+            break;
+        }
+
         default:
+            break;
             return;
     }
 
 //        rep.mutable_req()->CopyFrom(req);
 
     QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
-
     pClient->sendBinaryMessage(qb);
 
-
-    if ( rep.ctype() == GETALLNAMES ) {
-        qDebug() << rep.ctype() <<" size " << Server::instance()->mAllNamesRep.names_size();
-        WSReply rep2;
-        rep2.ParseFromString(mRepstr);
-        qDebug() << "GETALLNAMES liteserver5 ";
-        qDebug() << " rep2.names_size() " << rep2.GetExtension(GetAllNamesRep::rep).names_size();
-
-//        for ( auto it : rep2.GetExtension(GetAllNamesRep::rep).fnb())
-//            qDebug() << it.DebugString().data();
-
-    }
-//    else if ( rep.ctype() == GETROWMARKET)
-//        qDebug() << mROWMarketRep.DebugString().data();
-//    else if ( rep.ctype() == GETGLOBALSTATE) {
-//        WSReply gsr;
-//        gsr.ParseFromString(mRepstr);
-//        qDebug() << " LITESERVER out" << gsr.DebugString().data();
-//    }
-
+    if ( rep.ctype() == GETALLNAMES )
+        qDebug() << rep.ctype() <<" size " << mServer->mAllNamesRep.names_size();
+    else if ( rep.ctype() == GETROWMARKET)
+        qDebug() << mServer->mROWMarketRep.DebugString().data();
 
     mRepstr.clear();
     return;
 }
 
 
+void LiteServer::doSendDepth(const std::string &symbol,
+                             QWebSocket *pClient,
+                             const std::set<QWebSocket *> *pClientSet) {
+
+    mGetDepthRep = mServer->getDepthRep(symbol);
+    if ( mGetDepthRep == nullptr ) {
+        qDebug() << " bad doSendDepth request" << symbol;
+        return;
+    }
+    mRepDepth.SetAllocatedExtension(GetDepthRep::rep,mGetDepthRep);
+    mRepDepthArray.resize(mRepDepth.ByteSize());
+    mRepDepth.SerializeToArray(mRepDepthArray.data(),mRepDepthArray.size());
+
+#ifdef TRACE2
+    qDebug() << mRepDepth.DebugString().data();
+#endif
+
+    mRepDepth.ReleaseExtension(GetDepthRep::rep);
+    if ( pClient )
+        pClient->sendBinaryMessage(mRepDepthArray);
+
+    if ( pClientSet ) {
+        for ( const auto pcs : *pClientSet) {
+            if ( pcs )
+                pcs->sendBinaryMessage(mRepDepthArray);
+        }
+    }
+    //mGetDepthRep->set_allocated_rowmarket(mServer->getRowmarket(symbol));
+    //mRepDepth.SetAllocatedExtension(GetDepthRep::rep,depths);
+
+
+
+//    rep.ReleaseExtension(GetDepthRep::rep);
+//    depths->release_rowmarket();
+//    QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
+
+
+}
+
+void LiteServer::doSendOrders(QWebSocket *pClient,const std::string & fname ) {
+
+    if ( fname == "" ) return;
+
+    auto &fp = mServer->getfnameptrs(fname);
+    mGetOrdersRep->set_allocated_oorders(fp.fnameAllOdersFname);
+    mGetOrdersRepArray.resize(mWSReplyGetOrdersRep.ByteSize());
+    mWSReplyGetOrdersRep.SerializeToArray(mGetOrdersRepArray.data(), mGetOrdersRepArray.size());
+    mGetOrdersRep->release_oorders();
+
+    if ( pClient )
+        pClient->sendBinaryMessage(mGetOrdersRepArray);
+}
+
 void LiteServer::doSendProjections(QWebSocket *pClient,const std::string & fname ) {
     ProjByName *ppn = nullptr;
     if ( fname != "" ) {
-        ppn = Server::instance()->mProjByNames[fname];
+        ppn = mServer->mProjByNames[fname];
         mGetProjectionRep->set_allocated_projs(ppn);
     }
 
-    mGetProjectionRep->set_allocated_avg(Server::instance()->avgProjByName);
+    mGetProjectionRep->set_allocated_avg(mServer->avgProjByName);
     mWSReplybyteArray.resize(mWSReplyGetProjectionRep.ByteSize());
     mWSReplyGetProjectionRep.SerializeToArray(mWSReplybyteArray.data(), mWSReplybyteArray.size());
-    Server::instance()->avgProjByName = mGetProjectionRep->release_avg();
+    mServer->avgProjByName = mGetProjectionRep->release_avg();
     if ( ppn != nullptr )
         ppn = mGetProjectionRep->release_projs();
     pClient->sendBinaryMessage(mWSReplybyteArray);
 }
 
-void LiteServer::doSendLeaders(QWebSocket *pClient) {
-    fantasybit::WSReply rep;
-    rep.set_ctype(GETALLNAMES);
-    GetAllNamesRep &ganp = Server::instance()->mAllNamesRep;
-    rep.SetAllocatedExtension(GetAllNamesRep::rep,&(Server::instance()->mAllNamesRep));
-    rep.SerializeToString(&mRepstr);
-    rep.ReleaseExtension(GetAllNamesRep::rep);
-    QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
-    pClient->sendBinaryMessage(qb);
+void LiteServer::socketDisconnected() {
+    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
+    qDebug() << "socketDisconnected:" << pClient  << " Reason: " << pClient->closeReason ();
+
+    auto it = mSocketSubscribed.find(pClient);
+    if ( it != end(mSocketSubscribed)) {
+        for ( auto &fn : it->second) {
+            auto iit = mFnameSubscribed.find(fn);
+            if ( iit == end(mFnameSubscribed))
+                continue;
+
+            iit->second.erase(pClient);
+            if ( iit->second.empty() ) {
+               mServer->UnSubscribe(fn);
+            }
+        }
+        mSocketSubscribed.erase(it);
+    }
+
+    {
+    auto it = mSocketSymbol.find(pClient);
+    if ( it != end(mSocketSymbol)) {
+        auto iit = mSymbolSubscribed.find(it->second);
+        if ( iit != end(mSymbolSubscribed))
+            iit->second.erase(pClient);
+        mSocketSymbol.erase(it);
+    }
+    }
+
+
+    if (pClient) {
+        m_clients.removeAll(pClient);
+        pClient->deleteLater();
+    }
 }
 
-void LiteServer::socketDisconnected()
-{
+/*
+void LiteServer::socketDisconnected() {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
     qDebug() << "socketDisconnected:" << pClient  << " Reason: " << pClient->closeReason ();
 
     mFnameSubscribed.erase(mSocketSubscribed[pClient]);
     mSocketSubscribed.erase(pClient);
-//    auto it = mSocketSubscribed.find(pClient);
 
     pClient->deleteLater();
 }
+*/
 
-void LiteServer::handleError(const QString err)
-{
+void LiteServer::handleError(const QString err) {
     qDebug() << "LiteServer ProRoto Error " << err ;
 }
 
-//void LiteServer::getFnameSnap(const std::string &fname) {
-//    auto myorderpositions = Server::TheExchange.GetOrdersPositionsByName(fname);
 
-//#ifdef TRACE
-//    qDebug() << "lite getFnameSnap 1" << fname.data() << myorderpositions.size();
+/*
+void LiteServer::doSendLeaders(QWebSocket *pClient) {
+    fantasybit::WSReply rep;
+    rep.set_ctype(GETALLNAMES);
+    GetAllNamesRep &ganp = mServer->mAllNamesRep;
+    rep.SetAllocatedExtension(GetAllNamesRep::rep,&(mServer->mAllNamesRep));
+    rep.SerializeToString(&mRepstr);
+    rep.ReleaseExtension(GetAllNamesRep::rep);
+    QByteArray qb(mRepstr.data(),(size_t)mRepstr.size());
+    pClient->sendBinaryMessage(qb);
+}
+*/
+/*
+    QObject::connect(&Server::TheExchange,SIGNAL(NewMarketSnapShot(fantasybit::MarketSnapshot*)),
+                      this,SLOT(OnMarketSnapShot(fantasybit::MarketSnapshot*)));
+
+    QObject::connect(&Server::TheExchange,SIGNAL(NewMarketTicker(fantasybit::MarketTicker *)),
+                      this,SLOT(OnMarketTicker(fantasybit::MarketTicker *)));
+
+    QObject::connect(&Server::TheExchange,SIGNAL(NewTradeTic(fantasybit::TradeTic*)),
+                      this,SLOT(OnTradeTick(fantasybit::TradeTic*)));
+
+    QObject::connect(&Server::TheExchange,SIGNAL(NewDepthDelta(fantasybit::DepthFeedDelta*)),
+                      this,SLOT(OnDepthDelta(fantasybit::DepthFeedDelta*)));
+
+    QObject::connect(&Server::TheExchange,
+                     SIGNAL(NewOO(fantasybit::FullOrderDelta)),
+                      this,SLOT(OnNewOO(fantasybit::FullOrderDelta)));
+
+    QObject::connect(&Server::TheExchange,
+                     SIGNAL(NewPos(fantasybit::FullPosition)),
+                      this,SLOT(OnNewPos(fantasybit::FullPosition)));
+
+
+void LiteServer::OnMarketSnapShot(fantasybit::MarketSnapshot* mt) {
+    if ( mt->symbol() == "" )
+        return;
+#ifdef TRACE2
+    qDebug() << "level2 OnMarketSnapShot " << mt->DebugString().data();
+#endif
+
+#ifndef SEASON_TRADING
+/*    if ( mt->week() != mCurrentWeek )
+        SetCurrentWeekData(mt->week());
 //#endif
-////    double totpnl = 0.0;
 
-//    fnameptrs &fptr = getfnameptrs(fname,true);
-//    for ( auto &p : myorderpositions ) {
+//    ROWMarket *pROWMarket = getRowmarket(mt->symbol());
 
-//        qDebug() << "lite getFnameSnap 2" << p.first << p.second.first.ToString();
-//        auto &mypair = p.second;
-//        auto &myorders = mypair.second;
-////        {
-////            auto &stake = openOrderSymbolSlot[allof];
-////            stack.push(allords);
-////        }
-////        else {
-//        if ( !myorders.empty() || p.second.first.netprice != 0 || p.second.first.netqty != 0) {
-//            AllOdersSymbol *allords = getAllOdersSymbol(fptr,p.first);
-//            if ( allords == nullptr ) return;
+//    if ( mt->has_quote())
+//        pROWMarket->set_allocated_quote(mt->release_quote());
 
-//            for ( auto o : myorders) {
-//                Order *po = addOrder(fptr,allords,o);
-//                fptr.mSeqOrderMap[o.refnum()] = po;
-//            }
+//    if ( mt->has_ohlc())
+//        pROWMarket->set_allocated_ohlc(mt->release_ohlc());
 
-//            allords->set_netprice(p.second.first.netprice);
-//            allords->set_avg(0);
-//            if ( p.second.first.netqty != 0 ) {
-//                allords->set_netqty(p.second.first.netqty);
-//                if (  p.second.first.netprice != 0 ) {
-//                    double avg = (double)p.second.first.netprice / (double)p.second.first.netqty ;
-//                    avg  = avg * -1.0;
-//                    allords->set_avg(avg);
-//                }
-//            }
-//            else {
-//                allords->set_pnl(p.second.first.netprice);
-//                allords->set_netqty(0);
-//            }
-//        }
+////#ifdef TRACE2
+////    qDebug() << "LiteServer::OnMarketSnapShot " << pROWMarket->DebugString().data();
+////#endif
 
-////        int netqty = p.second.first.netqty;
-////        double avg = 0;
-////        double pnl = 0;
-////        if ( netqty ==0 ) {
-////            pnl = p.second.first.netprice * 100;
-////        }
-////        else  {
-////            ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
-////            int bid = item->propertyValue<PropertyNames::BID>().toInt();
-////            int ask = item->propertyValue<PropertyNames::ASK>().toInt();
-////            int price = (netqty > 0) ? bid :  ask;
-
-////            if ( bid == 0 && ask == 0 )
-////                pnl = 0;
-////            else
-////                pnl = 100 * ((price * netqty) + p.second.first.netprice);
-
-////        }
-
-////        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),netqty);
-////        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(p.first.data(),avg);
-////        mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(p.first.data(),pnl);
-
-////        if ( p.first == myPlayerid) {
-////            ui->posQty->setValue(netqty);
-////            ui->posAvgPrice->setValue(avg);
-////            ui->posOpenPnl->setValue(pnl);
-////        }
-
-////        totpnl += pnl;
-
-////    }
-
-////    ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+totpnl);
-
-//    }
-//}
-
-////        int netqty = p.second.first.netqty;
-//        double avg = 0;
-//        double pnl = 0;
-//        if ( netqty ==0 ) {
-//            pnl = p.second.first.netprice * 100;
-//        }
-//        else  {
-//            ViewModel * item = mPlayerListModel.itemByKey(p.first.data());
-//            int bid = item->propertyValue<PropertyNames::BID>().toInt();
-//            int ask = item->propertyValue<PropertyNames::ASK>().toInt();
-//            int price = (netqty > 0) ? bid :  ask;
-
-//            if ( bid == 0 && ask == 0 )
-//                pnl = 0;
-//            else
-//                pnl = 100 * ((price * netqty) + p.second.first.netprice);
-//            avg = p.second.first.netprice / (netqty * -1);
-//        }
-
-//        mPlayerListModel.updateItemProperty<PropertyNames::MYPOS>(p.first.data(),netqty);
-//        mPlayerListModel.updateItemProperty<PropertyNames::MYAVG>(p.first.data(),avg);
-//        mPlayerListModel.updateItemProperty<PropertyNames::MYPNL>(p.first.data(),pnl);
-
-//        if ( p.first == myPlayerid) {
-//            ui->posQty->setValue(netqty);
-//            ui->posAvgPrice->setValue(avg);
-//            ui->posOpenPnl->setValue(pnl);
-//        }
-
-//        totpnl += pnl;
-
-//    }
-
-//    ui->fantasybitPnl->setValue(ui->fantasybitPnl->value()+totpnl);
-//    invalidateOrderFilters();
-
-//}
-
-//void LiteServer::OnNewOO(const fantasybit::FullOrderDelta &fo) {
-//    qDebug() << "level2 Trading::OnNewOO " << fo.fname.data() << fo.openorder.DebugString().data();
-
-//    auto &o = fo.openorder;
-
-//    auto &fptr = getfnameptrs(fo.fname);
-//    auto it = fptr.mSeqOrderMap.find(o.refnum());
-//    bool found =  ( it != end(fptr.mSeqOrderMap));
-
-//    if ( o.core().size() <= 0) {
-//        if ( !found )
+//    if ( mt->depth_size() > 0 ) {
+//        GetDepthRep *depths = getDepthRep(mt->symbol());
+//        if ( depths == nullptr) {
+//            qDebug() << " error bad depth LiteServer::OnMarketSnapShot" << mt->DebugString().data();
 //            return;
-//        else {
-//            Order *hold = it->second;
-//            hold->set_refnum(0);
-//            fptr.mSeqOrderMap.erase(it);
-//            auto it2 = fptr.fnamesymbolAllOrders.find(fo.playerid);
-//            if ( it2 != end(fptr.fnamesymbolAllOrders)) {
-///*                if ( *hold == it2->second->mutable_orders()->rbegin() )
-//                    it2->second->orders().RemoveLast();
-//                else */
-//                {
-//                    auto &s = fptr.openOrderSlots[it2->second];
-//                    s.push(hold);
-//                    if ( s.size() == it2->second->orders_size() ) {
-//                       AllOdersSymbol *hold2 = it2->second;
-//                       hold2->clear_orders();
-//                       if ( hold2->netprice() == 0 && hold2->netqty() == 0 && hold2->pnl() == 0) {
-//                           hold2->clear_symbol();
-
-//                           fptr.fnamesymbolAllOrders.erase(it2);
-//                           if ( fptr.fnameAllOdersFname != nullptr) {
-//                                if ( fptr.openOrderSymbolSlot.size() +1 == fptr.fnameAllOdersFname->pidorders_size() )
-//                                    cleanIt(fptr);
-//                                else
-//                                    fptr.openOrderSymbolSlot.push(hold2);
-//                           }
-//                       }
-//                    }
-//                }
-//            }
 //        }
-//    }
-//    else if ( found ) {
-//        it->second->mutable_core()->set_size(fo.openorder.core().size());
-//    }
-//    else {
-//        AllOdersSymbol *allords = getAllOdersSymbol(fptr,fo.playerid);
-//        Order *po = addOrder(fptr,allords,fo.openorder);
-//        fptr.mSeqOrderMap[po->refnum()] = po;
-//    }
 
-//    //                            AllOdersFname *hold3 = it3->second;
-//    //                            openOrderSymbolSlot.erase(it3->second);
-//    //                            fname2sAllOdersFname.erase(it3);
-//    //                            hold3->Clear();
-//    //                            delete hold3;
+//        depths->mutable_depthitems()->Swap(mt->mutable_depth());
 
-//}
-
-//LiteServer::fnameptrs & LiteServer::getfnameptrs(const std::string &fname, bool clean) {
-//    auto it = fnameptrsmap.find(fname);
-//    if ( it == end(fnameptrsmap)) {
-//        auto *aof = AllOdersFname::default_instance().New();
-//        aof->set_fname(fname);
-//        auto it2 = fnameptrsmap.insert({fname,aof});
-//#ifdef TRACE
-//        qDebug() << " getfnameptrs " << fname.data() << " new " << it2.first->second.fnameAllOdersFname->DebugString().data();
+//#ifdef TRACE2
+//        qDebug() << "LiteServer::OnMarketSnapShot depths" << depths->DebugString().data();
 //#endif
-//        return it2.first->second;
-//    }
-//    else {
-//        if ( clean )
-//            cleanIt(it->second);
-//        return it->second;
-//    }
-//}
 
-//AllOdersSymbol * LiteServer::getAllOdersSymbol(fnameptrs &fptr,const std::string &symbol) {
-//    auto it = fptr.fnamesymbolAllOrders.find(symbol);
-//    if ( it == end(fptr.fnamesymbolAllOrders)) {
-//        AllOdersSymbol *allords;
-//        auto &s = fptr.openOrderSymbolSlot;
-//        if ( !s.empty() ) {
-//            allords = s.top();
-//            s.pop();
-//        }
-//        else {
-//            allords = fptr.fnameAllOdersFname->mutable_pidorders()->Add();
-////            allords = AllOdersSymbol::default_instance().New();
-//        }
-
-//        allords->set_symbol(symbol);
-//        fptr.fnamesymbolAllOrders.insert({symbol,allords});
-//        return allords;
-//    }
-//    else
-//        return it->second;
-//}
-
-//void LiteServer::cleanIt(fnameptrs &fptr) {
-////    for ( auto &all : fptr.fnamesymbolAllOrders ) {
-////        all.second->orders.clear();
-////    }
-//    fptr.fnameAllOdersFname->clear_pidorders();
-//    fptr.mSeqOrderMap.clear();
-//    fptr.fnamesymbolAllOrders.clear();
-//    fptr.openOrderSlots.clear();
-//    fptr.openOrderSymbolSlot = std::stack<AllOdersSymbol *> {};
-//}
-
-//void LiteServer::cleanIt(const std::string &fname) {
-//    auto it = fnameptrsmap.find(fname);
-//    if ( it != end(fnameptrsmap))
-//        cleanIt(it->second);
-//}
-
-
-//Order * LiteServer::addOrder(fnameptrs &fptr,AllOdersSymbol *allords,const Order &orderin) {
-//    auto &s = fptr.openOrderSlots[allords];
-//    if ( !s.empty() ) {
-//        Order *op = s.top();
-//        s.pop();
-//        op->CopyFrom(orderin);
-////        delete orderin;
-//        return op;
-//    }
-//    else {
-//        auto ret = allords->add_orders();
-//        ret->CopyFrom(orderin);
-//        return ret;
+////        Reserve(mt->depth_size());
+////        for ( int i = mt->depth_size(); i >0 ; i--) {
+////            mt->mutable_depth()->ReleaseLast();
+////            depths->mutable_depthitems(i) add_depthitems(i) )
+////        }
+////        for ( auto *d : mt->
+////        depths->Adepthitems().AddAllocated();
 //    }
 //}
 
-//void LiteServer::OnNewPos(const fantasybit::FullPosition &fp) {
-//    qDebug() << "level2 Trading::OnNewPos " <f!L< fp.pos.ToString().data() << fp.playerid.data() << fp.fname.data();
+*/
 
-//    fnameptrs &fptr = getfnameptrs(fp.fname);
-//    AllOdersSymbol *allords = getAllOdersSymbol(fptr,fp.playerid);
-//    if ( allords == nullptr ) return;
 
-//    allords->set_netprice(fp.pos.netprice);
-//    allords->set_avg(0);
-//    if ( fp.pos.netqty != 0 ) {
-//        allords->set_netqty(fp.pos.netqty);
-//        if ( fp.pos.netprice != 0  )
-//           allords->set_avg(fp.pos.netprice / (allords->netqty() * -1));
-//    }
-//    else {
-//        allords->set_pnl(fp.pos.netprice);
-//        allords->set_netqty(0);
-//    }
-//}
+
+
+
+/*
+
+
+
+*/
+
+
 //        int netqty = fp.pos.netqty;
 //        double avg = 0;
 //        double pnl = 0;
@@ -639,3 +488,21 @@ void LiteServer::handleError(const QString err)
 //        }
 //    }
 //}
+
+/*
+case CHECKNAME:
+{
+    rep.set_ctype(CHECKNAME);
+    CheckNameRep cr;
+    cr.mutable_req()->CopyFrom(req.GetExtension(CheckNameReq::req));
+    if ( fantasybit::Commissioner::isAliasAvailable(cr.req().fantasy_name()))
+        cr.set_isavail("true");
+    else
+        cr.set_isavail("false");
+
+    rep.MutableExtension(CheckNameRep::rep)->CopyFrom(cr);
+    rep.SerializeToString(&mRepstr);
+    break;
+}
+
+*/

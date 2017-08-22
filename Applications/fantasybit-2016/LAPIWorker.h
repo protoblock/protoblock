@@ -16,9 +16,8 @@
 #include <vector>
 #include <mutex>
 #include "iresolvable.h"
-#ifdef USE_PB_GATEWAYS
-#endif
 #include "pbgateways.h"
+
 using fantasybit::GlobalState;
 using namespace fantasybit;
 using namespace std;
@@ -40,6 +39,7 @@ class MainLAPIWorker : public QObject , public IResolvable
 #endif
     int32_t numto = std::numeric_limits<int32_t>::max();
     bool amlive = false;
+    bool quitting = false;
     QTimer * timer;
     fantasybit::FantasyAgent agent{};
     fantasybit::NFLStateData data;
@@ -150,17 +150,20 @@ public slots:
     void OnProjTX(vector<fantasybit::FantasyBitProj>);
 
     void OnNewOrder(fantasybit::ExchangeOrder);
+
+    void Quit();
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
     //void OnNameBal(fantasybit::FantasyNameBal);
     //void OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
+
+    void DoSubscribe(const string &name, bool suborun);
 
     //dataagent
 #ifdef DATAAGENT
     void BeOracle();
 #endif
 private:
-    void DoSubscribe(const string &name, bool suborun);
 
     bool Process(fantasybit::Block &b);
     bool doProcessBlock();

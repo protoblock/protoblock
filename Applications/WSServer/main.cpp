@@ -5,8 +5,8 @@
 #include "server.h"
 
 #include "core.h"
-#include "fullgateway.h"
-
+#include "wsgateway.h"
+#include "LiteServer.h"
 
 #include "Commissioner.h"
 void sortedPermutations ( char str[] );
@@ -66,11 +66,12 @@ int main(int argc, char *argv[])
 
     Core::instance()->bootstrap();
 
-    pb::FullGateway *fg = new pb::FullGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
+    pb::WsGateway *fg = new pb::WsGateway(Core::resolveByName<MainLAPIWorker>("coreapi"),
                                      DataService::instance());
 
     Server::instance()->setContext(fg);
-    fg->ClientReady();
+    Server::instance()->init();
+//    fg->ClientReady();
 
 //    TxServer *txserver = new TxServer(PB_WS_TX_PORT, debug);
 //    QObject::connect(txserver, &TxServer::closed, &a, &QCoreApplication::quit);

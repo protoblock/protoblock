@@ -216,7 +216,7 @@ Block Commissioner::makeGenesisBlock() {
     nametrans.mutable_proof()->CopyFrom(nameproof);
 
     Transaction trans{};
-    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_version(Commissioner::GENESIS_NUM);
     trans.set_type(TransType::NAME);
     trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
 
@@ -308,9 +308,9 @@ Block Commissioner::makeGenesisBlock() {
 }
 
 bool Commissioner::BootStrapFileExists(string genesiskey) {
-    string prefix = "bootstrap";
-    if ( stoi(genesiskey) < 201607 )
-        prefix += "test";
+    string prefix = "boot2strap";
+//    if ( stoi(genesiskey) < 201607 )
+//        prefix += "test";
     QString filename = string(prefix + genesiskey + ".out").data();
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
     genesisBootFile = genesisBootFile +  filename;
@@ -322,15 +322,16 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
     string headhash;
 
-    string prefix = "bootstrap";
-    if ( stoi(genesiskey) < 201607 )
-        prefix += "test";
+    string prefix = "boot2strap";
+//    if ( stoi(genesiskey) < 201607 )
+//        prefix += "test";
+
     QString filename = string(prefix + genesiskey + ".out").data();
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
     genesisBootFile = genesisBootFile +  filename;
     QFileInfo check_file(genesisBootFile);
     if ( !check_file.exists() ) {
-        qDebug() << "! check_file.exists() genesisBootFile" << genesisBootFile;
+//        qDebug() << "! check_file.exists() genesisBootFile" << genesisBootFile;
 
         QString links("http://protoblock.com");
         QString route(filename);
@@ -341,7 +342,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
 
         QUrl url;
         url.setUrl(links);
-        qDebug() << " chec url " << url.toString() << route << "|";
+//        qDebug() << " chec url " << url.toString() << route << "|";
         RestfullClient rest (url);
         rest.getData(route);
         auto resp = rest.lastReply();
@@ -353,7 +354,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
 //        qDebug() << "not got it url resp.size()" << resp.size() << resp;
 //        return head;
 
-        qDebug() << " got it url genesisBootFile" << filename;
+//        qDebug() << " got it url genesisBootFile" << filename;
         QFile *m_file = new QFile();
         m_file->setFileName(genesisBootFile);
         m_file->open(QIODevice::WriteOnly);
@@ -368,7 +369,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
         return head;
     }
 
-    qDebug() << " reading genesisBootFile" << genesisBootFile;
+//    qDebug() << " reading genesisBootFile" << genesisBootFile;
     Reader<KeyValue> reader{genesisBootFile.toStdString()};
     qDebug() << "makeGenesisBoot good?" << reader.good() ;
     if ( !reader.good() )
@@ -383,7 +384,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
             qDebug() << " error writing bootstrap" << kv.DebugString().data();
     }
 
-    qDebug() << kv.DebugString().data();
+//    qDebug() << kv.DebugString().data();
 
 
     if ( headhash != "" )
@@ -431,7 +432,7 @@ Transaction Commissioner::GenesisTransition()
     }
 */
     Transaction trans{};
-    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_version(Commissioner::GENESIS_NUM);
     trans.set_type(TransType::DATA);
     //trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
 

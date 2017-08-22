@@ -18,8 +18,12 @@ SUBDIRS += \
 #        $$PWD/PeerTwoPeerChat \
 #        $$PWD/Backend/backend.pro
 #        $$PWD/Torrent/torrent.pro
-       $$PWD/libcommuni/libcommuni.pro
+#       $$PWD/libcommuni/libcommuni.pro
 
 
 #Backend.depends = jsonpb
+
+QMAKE_MAC_SDK = macosx10.12
+
+
 

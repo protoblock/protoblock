@@ -36,10 +36,12 @@ void TeamColors::setPrimaryMap()
     map.insert("PHI" , "#004953");
     map.insert("PIT" , "#111C24");
     map.insert("SD" , "#002244");
+    map.insert("LAC" , "#002244");
     map.insert("SEA" , "#00338D");
     map.insert("SF" , "#97233F");
     map.insert("STL", "#002147");
     map.insert("LA", "#002147");
+    map.insert("LAR", "#002147");
     map.insert("TB" , "#A71930");
     map.insert("TEN" , "#002147");
     map.insert("WAS", "#822433" );
@@ -74,11 +76,13 @@ void TeamColors::setPrimaryMap()
     map2.insert("PHI" , "#111C24");
     map2.insert("PIT" , "#FFB612");
     map2.insert("SD" , "#FFB612");
+    map2.insert("LAC" , "#FFB612");
     map2.insert("SEA" , "#008542");
     map2.insert("SF" , "#8E6E4D");
     //
     map2.insert("STL", "#95774D");
     map2.insert("LA", "#95774D");
+    map2.insert("LAR", "#95774D");
     map2.insert("TB" , "#665C4F");
     map2.insert("TEN" , "#4B92DB");
     map2.insert("WAS", "#FFB612" );

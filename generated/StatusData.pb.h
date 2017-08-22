@@ -232,6 +232,18 @@ class PlayerStatus : public ::google::protobuf::Message {
   inline ::fantasybit::PlayerResult* release_totals();
   inline void set_allocated_totals(::fantasybit::PlayerResult* totals);
 
+  // optional string symbol = 50;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 50;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
   // @@protoc_insertion_point(class_scope:fantasybit.PlayerStatus)
  private:
   inline void set_has_teamid();
@@ -240,15 +252,18 @@ class PlayerStatus : public ::google::protobuf::Message {
   inline void clear_has_status();
   inline void set_has_totals();
   inline void clear_has_totals();
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* teamid_;
   ::fantasybit::PlayerResult* totals_;
+  ::std::string* symbol_;
   int status_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_StatusData_2eproto();
   friend void protobuf_AssignDesc_StatusData_2eproto();
@@ -794,6 +809,76 @@ inline void PlayerStatus::set_allocated_totals(::fantasybit::PlayerResult* total
     set_has_totals();
   } else {
     clear_has_totals();
+  }
+}
+
+// optional string symbol = 50;
+inline bool PlayerStatus::has_symbol() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void PlayerStatus::set_has_symbol() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void PlayerStatus::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void PlayerStatus::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& PlayerStatus::symbol() const {
+  return *symbol_;
+}
+inline void PlayerStatus::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void PlayerStatus::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void PlayerStatus::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* PlayerStatus::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* PlayerStatus::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void PlayerStatus::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

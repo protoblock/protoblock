@@ -46,7 +46,7 @@ public:
                 this, &FullGateway::LiveProj);
 
         connect( mlapi, &MainLAPIWorker::MyNames,
-                this,  [this](vector<fantasybit::MyFantasyName> &mynames) {
+                this,  [this](vector<fantasybit::MyFantasyName> mynames) {
             m_mynames = mynames;
             if ( heslive )
                 emit MyNames(mynames);
@@ -238,13 +238,11 @@ public slots:
     }
 
     void nameCheck(QString s) {
-        qDebug() << " in name check " << s;
         emit nameAvail(s,Commissioner::isAliasAvailable(s.toStdString()));
     }
 
     void OnGetMyNames() {}
     void UseName(QString s) {
-        qDebug() << "fullgate  slot use name";
         emit OnUseName(s);
     }
 

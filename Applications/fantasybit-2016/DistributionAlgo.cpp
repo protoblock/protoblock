@@ -26,8 +26,9 @@ NameValuePairs<int>
     NameValuePairs<int> award{};
     if (projections.size() == 0 || result <= 0.0001 ) {
         if ( result > 0.0001 ) {
-            award[agent] = result * 100.0;
-            qInfo() << "no projections agent " << agent << " gets balance " << result;
+            double aw = result * 100.0;
+            award[agent] =  std::round(aw);
+            qInfo() << "no projections agent " << agent << " gets balance " << result << aw;
 
         }
 		return award;
@@ -50,7 +51,9 @@ NameValuePairs<int>
 //        qDebug() << pair.first << " projection " << pair.second << " diff " << diff;
     }
   
-    mean /= diffs.size();
+    if ( diffs.size() > 1  )
+        mean /= diffs.size();
+
     //qInfo() << "mean " << mean;
 
     
@@ -133,7 +136,9 @@ PnlResults SettlePositionsRawStake::
     for(const auto& settlepos : positions.positions()) {
         int hispnl = (settlepos.qty() * intresult) + settlepos.price() * 100;
         pnl[settlepos.pk()] = make_pair(settlepos,hispnl);
+#ifdef TRACE
         qDebug() << settlepos.DebugString().data();
+#endif
 //        " pnl " <<  hispnl << " result " << result <<
 //                    " pos " << settlepos.second.first << " " << settlepos.second.second;
 

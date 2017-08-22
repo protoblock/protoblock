@@ -41,9 +41,11 @@ namespace fantasybit {
     static std::string PB_WS_CHAT = "app.trading.football";
     static std::string PB_WS_TX = "app.trading.football";
 #endif
-    static int PB_WS_LITE_AGENT_PORT = 4001;
-    static int PB_WS_TX_PORT = 4000;
-    static int PB_WS_CHAT_PORT = 4002;
+//    static int PB_WS_LITE_AGENT_PORT = 4001;
+//    static int PB_WS_TX_PORT = 4000;
+//    static int PB_WS_CHAT_PORT = 4002;
+
+    static int PB_WS_LITE_AGENT_PORT = 9111;
 
     static std::string PAPIURL = "https://stagingapi.trading.football:4545";
     static std::string LAPIURL = "https://stagingapi.trading.football:9854";
@@ -53,9 +55,9 @@ namespace fantasybit {
     static bool IS_TEST_NET = true;
 #else
     static bool IS_TEST_NET = false;
-    static int PB_WS_LITE_AGENT_PORT = 6111;
-    static int PB_WS_TX_PORT = 6110;
-    static int PB_WS_CHAT_PORT = 6112;
+    static int PB_WS_LITE_AGENT_PORT = 9111;
+    static int PB_WS_TX_PORT = 9110;
+    static int PB_WS_CHAT_PORT = 9112;
 
 #ifdef USE_LOCALNETWORKHOST_SERVER
     static std::string PB_WS_LITE_AGENT = "192.168.42.80";
@@ -227,6 +229,8 @@ namespace fantasybit {
         PlayerBase base;
         PlayerStatus::Status team_status;
         PlayerGameStatus game_status;
+        std::string symbol;
+        std::string team;
     };
 
     struct GameRoster {

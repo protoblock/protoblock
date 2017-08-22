@@ -247,7 +247,8 @@ Item {
                     width: parent.width
                     wrapMode: Text.WordWrap
                     text: 'Fantasybit (ƑɃ) Distribution Algorithim '
-                    font { family: 'Helvetica Neue'; pixelSize: ProtoScreen.font(ProtoScreen.MEDIUM) }
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.MEDIUM)
+                    font.family: fontfamFB
 
                     font.bold: true
                     anchors.horizontalCenter: parent.horizontalCenter
