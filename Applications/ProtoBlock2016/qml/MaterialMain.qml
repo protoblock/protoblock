@@ -82,7 +82,7 @@ Material.ApplicationWindow{
         }
     }
 
-    title: "Protoblock " + MiddleMan.theSeason + " Devel"
+//    title: "Protoblock " + MiddleMan.theSeason + " Devel"
 //    flags: Qt.Window
     id: themeroot
     visible: true
@@ -642,6 +642,9 @@ Material.ApplicationWindow{
                     }
                     else
                         Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
+
+                    updateDialog.close()
+                    themeroot.close()
                 }
             }
         }
@@ -741,7 +744,7 @@ Material.ApplicationWindow{
 
     function compairVersions(d){
         if (realRoot.version < d){
-            //            console.log("there is a update")
+            console.log("there is a update")
             updateDialog.toggle()
         }else{
 
