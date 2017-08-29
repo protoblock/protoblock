@@ -48,7 +48,8 @@ Item {
 
     property int tabPadding: isLargeDevice ? ProtoScreen.guToPx(3) : ProtoScreen.guToPx(1.5)
     property int tabMinWidth: isLargeDevice ? ProtoScreen.guToPx(20) : ProtoScreen.guToPx(9)
-    property int selectedIndex: 0
+    property int
+    Index: 0
     property bool darkBackground
     property color highlightColor: Theme.tabHighlightColor
     property color textColor: darkBackground ? Theme.dark.textColor : Theme.light.accentColor
@@ -219,9 +220,9 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         maximumLineCount: 2
 
-                        Behavior on color {
-                            ColorAnimation { duration: 200 }
-                        }
+//                        Behavior on color {
+//                            ColorAnimation { duration: 200 }
+//                        }
                     }
 
                     IconButton {
