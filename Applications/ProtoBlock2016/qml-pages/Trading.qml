@@ -102,7 +102,7 @@ Item {
 
         Rectangle {
             id: barrec
-            height: cBan.height - ProtoScreen.guToPx(1)
+            height: cBan.height - ProtoScreen.guToPx(1.25)
             width: ProtoScreen.guToPx(22)
             anchors.right: parent.right
             anchors.rightMargin: ProtoScreen.guToPx(2)
@@ -115,6 +115,7 @@ Item {
             border.color: "transparent"
             border.width: ProtoScreen.guToPx(.125)
             TabBar {
+                selectedIndex: 0
                 id: bar
                 tabs: ["wk" + MiddleMan.theWeek ,"row"]
                 centered: true
@@ -150,125 +151,7 @@ Item {
 //               stack.push({item: rowTrading, properties:{objectName:"rowTrading"}})
 //               stack.push({item: wkTrading, properties:{objectName:"wkTrading"}})
 
-               console.log( " stack " + width)
-            }
-
-            Item {
-                id: rowTrading
-                width: parent.width
-                height: parent.height
-
-                TradingContextBanner {
-                    id: tcbx
-                    inplay: tradingroot.inplay
-                    anchors.top: parent.top
-                    Layout.preferredWidth: parent.width
-                    anchors.left: parent.left
-                    width: parent.width
-                    anchors.leftMargin: ProtoScreen.guToPx(.25)
-                    recwidth: dsplit.width
-                }
-
-                Item {
-                    id: itema
-                    anchors.top: tcbx.bottom
-                    anchors.topMargin: ProtoScreen.guToPx(.25)
-                    width: parent.width
-                    height: parent.height - tcbx.height - cBan.height
-
-                    SplitView {
-                        anchors.fill: parent
-                        orientation: Qt.Horizontal
-                        handleDelegate: handeldel
-        //                width: parent.width
-        //                height: parent.height
-
-                        SplitView {
-                            id: dsplit
-                            Layout.minimumWidth: parent.width * .10
-                            Layout.maximumWidth: parent.width * .50
-                            orientation: Qt.Vertical
-                            height: parent.height
-        //                    Layout.preferredWidth: ProtoScreen.guToPx(40)
-
-                            Card {
-                                Layout.maximumHeight: parent.height * .70
-                                Layout.minimumHeight: parent.height * .30
-                                backgroundColor: "#f5f5f5"
-                                Layout.fillHeight: true
-                                //Layout.preferredHeight: ProtoScreen.guToPx(80)
-
-                                MarketDepthTable {}
-        //                       Orders {
-        //                          anchors.centerIn: parent
-        //                          anchors.fill: parent
-        //                       }
-                            }
-
-                            Card {
-                                Layout.maximumHeight: parent.height * .70
-                                Layout.minimumHeight: parent.height * .30
-                                //MarketDepthTable {}
-                                Orders {
-                                    mysymbol: !inplay ? "" : inplay.symbol
-                                }
-
-                            }
-
-                        }
-
-                        Card {
-                            id: popcard
-                            Layout.minimumWidth: parent.width * 0
-                            Layout.maximumWidth: parent.width * .25
-                            height: parent.height * .80
-                            enabled: wwww.ss
-                            visible: wwww.ss
-
-                            Card {
-                                anchors.top: parent.top
-                                height: parent.height
-                                ListSymbolSearch {
-                                    id: lss
-                                    property alias ss: wwww.ss
-                                }
-                                //ROWTradingTable {}
-                            }
-                            onEnabledChanged: {
-                            }
-                        }
-
-                        Card {
-                            Layout.minimumWidth: parent.width * .50
-                            Layout.maximumWidth: parent.width
-                            Layout.fillWidth: true
-                            height: parent.height
-
-                            Card {
-                                id: wkt
-                                height: parent.height - bcard.height
-                                width: parent.width
-
-                                WkTradingTable {
-                                    id: wwww
-                                }
-                            }
-
-                            Card {
-                                anchors.top: wkt.bottom
-                                id: bcard
-                                height: ProtoScreen.guToPx(16)
-                                width: parent.width
-
-                                BuySellTrading {
-                                    id: bt
-                                    anchors.fill: parent
-                                }
-                            }
-
-                        }
-                    }
-                }
+               console.log( " stack " + lwidth)
             }
 
             Item {
@@ -389,6 +272,124 @@ Item {
                 }
 
             }
+            Item {
+                id: rowTrading
+                width: parent.width
+                height: parent.height
+
+                TradingContextBanner {
+                    id: tcbx
+                    inplay: tradingroot.inplay
+                    anchors.top: parent.top
+                    Layout.preferredWidth: parent.width
+                    anchors.left: parent.left
+                    width: parent.width
+                    anchors.leftMargin: ProtoScreen.guToPx(.25)
+                    recwidth: dsplit.width
+                }
+
+                Item {
+                    id: itema
+                    anchors.top: tcbx.bottom
+                    anchors.topMargin: ProtoScreen.guToPx(.25)
+                    width: parent.width
+                    height: parent.height - tcbx.height - cBan.height
+
+                    SplitView {
+                        anchors.fill: parent
+                        orientation: Qt.Horizontal
+                        handleDelegate: handeldel
+        //                width: parent.width
+        //                height: parent.height
+
+                        SplitView {
+                            id: dsplit
+                            Layout.minimumWidth: parent.width * .10
+                            Layout.maximumWidth: parent.width * .50
+                            orientation: Qt.Vertical
+                            height: parent.height
+        //                    Layout.preferredWidth: ProtoScreen.guToPx(40)
+
+                            Card {
+                                Layout.maximumHeight: parent.height * .70
+                                Layout.minimumHeight: parent.height * .30
+                                backgroundColor: "#f5f5f5"
+                                Layout.fillHeight: true
+                                //Layout.preferredHeight: ProtoScreen.guToPx(80)
+
+                                MarketDepthTable {}
+        //                       Orders {
+        //                          anchors.centerIn: parent
+        //                          anchors.fill: parent
+        //                       }
+                            }
+
+                            Card {
+                                Layout.maximumHeight: parent.height * .70
+                                Layout.minimumHeight: parent.height * .30
+                                //MarketDepthTable {}
+                                Orders {
+                                    mysymbol: !inplay ? "" : inplay.symbol
+                                }
+
+                            }
+
+                        }
+
+                        Card {
+                            id: popcard
+                            Layout.minimumWidth: parent.width * 0
+                            Layout.maximumWidth: parent.width * .25
+                            height: parent.height * .80
+                            enabled: wwww.ss
+                            visible: wwww.ss
+
+                            Card {
+                                anchors.top: parent.top
+                                height: parent.height
+                                ListSymbolSearch {
+                                    id: lss
+                                    property alias ss: wwww.ss
+                                }
+                                //ROWTradingTable {}
+                            }
+                            onEnabledChanged: {
+                            }
+                        }
+
+                        Card {
+                            Layout.minimumWidth: parent.width * .50
+                            Layout.maximumWidth: parent.width
+                            Layout.fillWidth: true
+                            height: parent.height
+
+                            Card {
+                                id: wkt
+                                height: parent.height - bcard.height
+                                width: parent.width
+
+                                WkTradingTable {
+                                    id: wwww
+                                }
+                            }
+
+                            Card {
+                                anchors.top: wkt.bottom
+                                id: bcard
+                                height: ProtoScreen.guToPx(16)
+                                width: parent.width
+
+                                BuySellTrading {
+                                    id: bt
+                                    anchors.fill: parent
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
         }
     }
 
