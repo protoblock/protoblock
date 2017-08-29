@@ -20,9 +20,11 @@ Item {
 //                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek :
 //    (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
 //    property string seasontext: MiddleMan.seasonString + " 2016 "
-    property string seasontext: " 2017 Trading - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
+    property string seasontext: "NFL Season " + MiddleMan.theSeason + " - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
     property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
+
+    property string wkorrow: "WEEK-" + MiddleMan.theWeek
 
     Component.onCompleted: {
         pageHelper.title = "Trading"
@@ -44,143 +46,104 @@ Item {
         }
 
         Rectangle {
-            height: cBan.height - ProtoScreen.guToPx(1)
-            width: ProtoScreen.guToPx(18)
-            anchors.right: cBan.left
-//            anchors.rightMargin: ProtoScreen.guToPx(4)
-//            anchors.left: parent.left
-            color: "transparent" // Theme.light.textColor//themeroot.theme.secondaryColor
-            radius: 2
-            anchors.bottom: cban.bottom
+//            height: cBan.height - ProtoScreen.guToPx(1)
+            width: stack.lwidth
+            anchors.left: parent.left
+            anchors.margins: ProtoScreen.guToPx(1)
+            color: "gray" // Theme.light.textColor//themeroot.theme.secondaryColor
+//            radius: 2
+            anchors.verticalCenter: cBan.verticalCenter
+            visible: liveorresult === "Live"
+            Layout.fillHeight: true
+            Layout.fillWidth: false
 
-            TabBar {
-                id: bar
-                tabs: ["week " + MiddleMan.theWeek ,"rest-of-way"]
-                width: parent.width
-                darkBackground: false
-            }
-
-            StackLayout {
-                width: parent.width
-                currentIndex: bar.currentIndex
-                Item {
-                    id: homeTab
-                }
-                Item {
-                    id: discoverTab
-                }
-                Item {
-                    id: activityTab
-                }
-            }
-
-            Slider {
-                id: slidertog
-                enabled: false
-                visible: false
-                orientation: Qt.Horizontal
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-//                height:
-//                anchors.right: bandepth.left
-//                anchors.rightMargin: ProtoScreen.guToPx(2)
-//                anchors.left: boundquote.left
-//                height: boundquote.height + boundingRect.height
-//                width: (boundquote.width - bandepth.width) / 2
-//                anchors.horizontalCenter: teamicon.horizontalCenter
-                numericValueLabel: false
-//                alwaysShowValueLabel: true
-                tickmarksEnabled: false
-                minimumValue: 0
-                value: 0
-                maximumValue: 1
-                stepSize: 1
-                knobLabel: (value === 1) ? "ROW" : "Weekly";
-                knobDiameter: ProtoScreen.guToPx(6)
-                onPressedChanged: {
-                    if ( value === 1) {
-                        value = 0;
-                    }
-                    else {
-                        value = 1;
-                    }
-                }
-                onValueChanged: {
-                    if ( stack.currentItem.objectName === "wkTrading" ) {
-                        stack.pop();
-                    }
-                    else {
-                        stack.push({item: wkTrading, properties:{objectName:"wkTrading"}})
-                    }
-                }
-            }
-
-
-            Switch {
-                enabled:  false
-                visible: false
-                id: switchtog
-                anchors.fill: parent
-//                anchors.centerIn: parent
-                onClicked: {
-                    if ( stack.currentItem.objectName === "wkTrading" ) {
-                        stack.pop();
-                    }
-                    else {
-                        stack.push({item: wkTrading, properties:{objectName:"wkTrading"}})
-                    }
-
-                }
+            Label {
+                anchors.centerIn: parent
+                text: wkorrow + " FANTASY FUTURES";
+                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                color: "green" //themeroot.theme.primaryColor //liveorresult === "Live" ?  :
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                id: futlabel
+                font.bold: true
             }
         }
+
+
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
             text: seasontext + " " + liveorresult
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-            color: liveorresult === "Live" ? "green" : "red"//themeroot.theme.primaryColor
+            color: themeroot.theme.primaryColor //liveorresult === "Live" ?  :
             Layout.fillHeight: true
             Layout.fillWidth: false
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             id: cBan
         }
+
+        Label {
+            text: "TRADE: "
+            color: "green"
+            anchors.right: barrec.left
+            anchors.margins: ProtoScreen.guToPx(.25)
+            font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+            Layout.fillHeight: true
+            Layout.fillWidth: false
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.verticalCenter: barrec.verticalCenter
+            font.bold: true
+            id: tradeLbl
+        }
+
         Rectangle {
-            height: cBan.height - ProtoScreen.guToPx(1)
-            width: ProtoScreen.guToPx(6)
-            anchors.left: cBan.right
-            anchors.leftMargin: ProtoScreen.guToPx(4)
-            color: "gray" // Theme.light.textColor//themeroot.theme.secondaryColor
-            radius: 2
+            id: barrec
+            height: cBan.height //- ProtoScreen.guToPx(1)
+            width: ProtoScreen.guToPx(20)
+            anchors.right: parent.right
+            anchors.rightMargin: ProtoScreen.guToPx(2)
+//            anchors.left: parent.left
+            color: themeroot.theme.primaryColor // Theme.light.textColor//themeroot.theme.secondaryColor
+//            radius: ProtoScreen.guToPx(.5)
             anchors.verticalCenter: cBan.verticalCenter
-
-            IconButton {
-                id: right
-                color: "white"
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            TabBar {
+                id: bar
+                tabs: ["wk" + MiddleMan.theWeek ,"row"]
+                centered: false
+//                width: parent.width / 2.0
+                darkBackground: true
                 anchors.centerIn: parent
-                size: ProtoScreen.guToPx(5)
-
-                action: Action {
-                    iconName: "awesome/caret_right"
-                    tooltip: "Next Week"
+                anchors.fill: parent
+//                anchors.margins: ProtoScreen.guToPx(.125)
+                onSelectedIndexChanged: {
+                    wkorrow = (tabs[selectedIndex] === "row") ? ("REST-OF-WAY") : ("WEEK-" + MiddleMan.theWeek)
                 }
-                enabled: true
+                Layout.fillHeight: false
+                Layout.fillWidth: false
             }
         }
 
         SystemPalette { id: pal }
 
-        StackView {
+        StackLayout {
+            currentIndex: bar.selectedIndex
+
             anchors.top: cBan.bottom
             anchors.topMargin: ProtoScreen.guToPx(.25)
             width: parent.width
             height: parent.height
             id: stack
+            property real lwidth: (currentIndex === 0) ? tcbx.recwidth : tcbxW.recwidth
+
 //                anchors.fill: parent
 
             Component.onCompleted: {
-               stack.push({item: rowTrading, properties:{objectName:"rowTrading"}})
-               stack.push({item: wkTrading, properties:{objectName:"wkTrading"}})
+//               stack.push({item: rowTrading, properties:{objectName:"rowTrading"}})
+//               stack.push({item: wkTrading, properties:{objectName:"wkTrading"}})
 
                console.log( " stack " + width)
             }

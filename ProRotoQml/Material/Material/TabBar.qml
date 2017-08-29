@@ -48,8 +48,7 @@ Item {
 
     property int tabPadding: isLargeDevice ? ProtoScreen.guToPx(3) : ProtoScreen.guToPx(1.5)
     property int tabMinWidth: isLargeDevice ? ProtoScreen.guToPx(20) : ProtoScreen.guToPx(9)
-    property int
-    Index: 0
+    property int selectedIndex: 0
     property bool darkBackground
     property color highlightColor: Theme.tabHighlightColor
     property color textColor: darkBackground ? Theme.dark.textColor : Theme.light.accentColor
@@ -176,13 +175,13 @@ Item {
 
             property bool selected: index == tabBar.selectedIndex
 
-            property var tab: isTabView ? tabs.getTab(index) : modelData
+            property var tab: tabBar.isTabView ? tabs.getTab(index) : modelData
 
             Ink {
                 anchors.fill: parent
-                enabled: tab.enabled
+                enabled: tab.enabled || !tabBar.isTabView
                 onClicked: tabBar.selectedIndex = index
-
+                id: ink
                 Row {
                     id: row
 
@@ -197,7 +196,7 @@ Item {
                                 ? "icon://" + tabItem.tab.iconName : ""
                         color: tabItem.selected
                                 ? darkBackground ? Theme.dark.iconColor : Theme.light.accentColor
-                                : darkBackground ? Theme.dark.shade(tab.enabled ? 0.6 : 0.2) : Theme.light.shade(tab.enabled ? 0.6 : 0.2)
+                                : darkBackground ? Theme.dark.shade(ink.enabled ? 0.6 : 0.2) : Theme.light.shade(ink.enabled ? 0.6 : 0.2)
 
                         visible: source != "" && source != "icon://"
 
@@ -213,16 +212,16 @@ Item {
                                 ? tabItem.tab : tabItem.tab.title
                         color: tabItem.selected
                                 ? darkBackground ? Theme.dark.textColor : Theme.light.accentColor
-                                : darkBackground ? Theme.dark.shade(tab.enabled ? 0.6 : 0.2) : Theme.light.shade(tab.enabled ? 0.6 : 0.2)
+                                : darkBackground ? Theme.dark.shade(ink.enabled ? 0.6 : 0.2) : Theme.light.shade(ink.enabled ? 0.6 : 0.2)
 
                         style: "body2"
                         font.capitalization: Font.AllUppercase
                         anchors.verticalCenter: parent.verticalCenter
                         maximumLineCount: 2
 
-//                        Behavior on color {
-//                            ColorAnimation { duration: 200 }
-//                        }
+                        Behavior on color {
+                            ColorAnimation { duration: 200 }
+                        }
                     }
 
                     IconButton {
@@ -230,7 +229,7 @@ Item {
                         visible: tab.hasOwnProperty("canRemove") && tab.canRemove && (tabs.hasOwnProperty("removeTab") || tab.hasOwnProperty("close"))
                         color: tabItem.selected
                                 ? darkBackground ? Theme.dark.iconColor : Theme.light.accentColor
-                                : darkBackground ? Theme.dark.shade(tab.enabled ? 0.6 : 0.2) : Theme.light.shade(tab.enabled ? 0.6 : 0.2)
+                                : darkBackground ? Theme.dark.shade(ink.enabled ? 0.6 : 0.2) : Theme.light.shade(ink.enabled ? 0.6 : 0.2)
                         onClicked: tabBar.removeTab(tab, index)
                         size: ProtoScreen.guToPx(2.5)
                     }
