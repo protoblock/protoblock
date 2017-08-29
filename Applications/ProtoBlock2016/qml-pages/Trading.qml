@@ -37,7 +37,9 @@ Item {
     Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
 
     Card {
+        flat: true
         id: topcard
+        radius: 0
         width: parent.width
         height: parent.height
         anchors{
@@ -100,8 +102,8 @@ Item {
 
         Rectangle {
             id: barrec
-            height: cBan.height //- ProtoScreen.guToPx(1)
-            width: ProtoScreen.guToPx(20)
+            height: cBan.height - ProtoScreen.guToPx(1)
+            width: ProtoScreen.guToPx(22)
             anchors.right: parent.right
             anchors.rightMargin: ProtoScreen.guToPx(2)
 //            anchors.left: parent.left
@@ -110,11 +112,14 @@ Item {
             anchors.verticalCenter: cBan.verticalCenter
             Layout.fillHeight: true
             Layout.fillWidth: true
+            border.color: "transparent"
+            border.width: ProtoScreen.guToPx(.125)
             TabBar {
                 id: bar
                 tabs: ["wk" + MiddleMan.theWeek ,"row"]
-                centered: false
-//                width: parent.width / 2.0
+                centered: true
+//                width: parent.width * 95.0
+//                height: parent.height * 95.0
                 darkBackground: true
                 anchors.centerIn: parent
                 anchors.fill: parent
@@ -123,7 +128,7 @@ Item {
                     wkorrow = (tabs[selectedIndex] === "row") ? ("REST-OF-WAY") : ("WEEK-" + MiddleMan.theWeek)
                 }
                 Layout.fillHeight: false
-                Layout.fillWidth: false
+                Layout.fillWidth: true
             }
         }
 
