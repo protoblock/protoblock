@@ -75,7 +75,9 @@ Item {
                 console.log("wk tvr comleted")
                 console.log(quotemodel)
                 console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.size)
-
+                currentRow = Qt.binding(function() {
+                        return quotemodel.getViewIndexFromSymbol(dsymbol) ;
+                })
             }
 
             onSelectionChanged: {

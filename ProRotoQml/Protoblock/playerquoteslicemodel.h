@@ -627,6 +627,14 @@ public:
         return model->at(sindex.row())->get_symbol();
     }
 
+    Q_INVOKABLE int getViewIndexFromSymbol(QString  symbol) {
+        qDebug() <<"getViewIndexFromSymbol " << symbol;
+        PlayerQuoteSliceModel * model = dynamic_cast<PlayerQuoteSliceModel *>(sourceModel());
+        auto sindex = model->indexOf (model->getByUid (symbol));
+        qDebug() << sindex << mapFromSource (index(sindex,0)).row ();
+        return mapFromSource (index(sindex,0)).row ();
+    }
+
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE {
 //        qDebug() << " sort called" << column;
         QSortFilterProxyModel::sort(column, order);
