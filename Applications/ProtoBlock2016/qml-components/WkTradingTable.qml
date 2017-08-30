@@ -34,7 +34,7 @@ Item {
     property int qcol: lcol + lcount
     property int vcol: qcol + qcount
 
-    property alias quotemodel: tvr.model
+    property variant quotemodel: undefined
 
     //quotemodel: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
 
@@ -71,7 +71,7 @@ Item {
             Component.onCompleted: {
 //                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
 //                selection.select(0);
-                model.sortAgain("blocknum",Qt.DescendingOrder)
+                quotemodel.sortAgain("blocknum",Qt.DescendingOrder)
                 console.log("wk tvr comleted")
                 console.log(quotemodel)
                 console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.size)
@@ -102,15 +102,15 @@ Item {
             height: parent.height
             implicitWidth: parent.width
 //            model: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel //
-
+            model: quotemodel
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                quotemodel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             onSortIndicatorOrderChanged: {
-                MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                quotemodel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
 
@@ -1025,15 +1025,15 @@ Item {
         }
     }
 
-    Connections {
-        target: MiddleMan
-        onThePrevWeekChanged: tvr.selectedRow = -1
-    }
+//    Connections {
+//        target: MiddleMan
+//        onThePrevWeekChanged: tvr.selectedRow = -1
+//    }
 
     function update() {
         console.log(" MkTrading update")
         tvr.selection.forEach(function(rowIndex) {
-            dsymbol = tvr.model.getPlayerSliceModelUid(rowIndex)
+            dsymbol = quotemodel.getPlayerSliceModelUid(rowIndex)
             MiddleMan.startDepth(dsymbol);
             //,tvr.model.roleForName("awardsModel"))
 //            if (row && row.awardsModel) rowtt.selectedModel = row.awardsModel

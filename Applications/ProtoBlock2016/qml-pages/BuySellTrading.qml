@@ -18,7 +18,8 @@ Item {
     id: pit
     property string contract
     property string symbol
-    property variant inplay: MiddleMan.pROWPlayerQuoteSliceModelItem
+    property variant inplay:  undefined
+//        MiddleMan.pROWPlayerQuoteSliceModelItem
 
 
     Layout.fillWidth: true

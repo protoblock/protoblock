@@ -123,7 +123,7 @@ Material.ApplicationWindow{
 //                   (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight) : ProtoScreen.availableHeight
 
 //        themeroot.show();
-//        themeroot.showMaximized()
+        themeroot.showMaximized()
         rootLoader.source = start
 
     }
@@ -262,7 +262,7 @@ Material.ApplicationWindow{
                 }
                 bottom: parent.bottom
             }
-        }   
+        }
         actionBar.maxActionCount: navDrawer.enabled ? 1:3
         actions: [
             Material.Action {

@@ -14,17 +14,20 @@ import ProRotoQml.Theme 1.0
 
 Material.Card {
     id: thisroot
+
+    property variant inplayf: undefined
+    property variant inplay: undefined
+
+
     property string lightgreen: "green"//"#c8ffc8"
     property string lightred: "red"//"#ffc8c8"
-    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
     property double recwidth: ProtoScreen.guToPx(20)
     property bool haveplayer: inplay && inplay.symbol !== ""
     property bool haveposition: inplay && inplay.myposition !== 0
     property color dcolor: Material.Theme.light.textColor
 
-    property variant inplayf: MiddleMan.pROWTradingPositionsModel
     property bool havefname: inplayf && inplayf.fantasyname !== ""
-    property variant mybalance: 0//MiddleMan.pMyFantasyNameBalance
+    property variant mybalance: MiddleMan.pMyFantasyNameBalance
 //    Layout.fillWidth: true
 
 //    Layout.fillWidth: true
@@ -34,7 +37,7 @@ Material.Card {
 //    anchors.left: parent.left
     height: rl.height //!haveplayer ? 0 : rl.height
 //    flat: true
-    elevation: 0//!haveposition ? 2 : 6
+    elevation: !haveposition ? 2 : 6
 //    width: parent.width
 //    border.color: !haveposition ? "transparent" : themeroot.theme.accentColor
 //    border.width: !haveposition ? 0 : ProtoScreen.guToPx(.25)
@@ -91,7 +94,7 @@ Material.Card {
                 Layout.fillWidth: true
                 id: pname
                 anchors.top: cwc.bottom
-                backgroundColor:  "white"
+                backgroundColor: "white"// (!inplay || inplay.teamid === "" ) ? "white" : TeamInfo.getPrimaryAt(inplay.teamid)//themeroot.theme.accentColor//"white"
                 height: parent.height - cwc.height
                 width: parent.width // teamicon.width + pname2.implicitWidth
 //                anchors.horizontalCenter: parent.horizontalCenter
@@ -107,7 +110,7 @@ Material.Card {
                         Layout.fillWidth: false
                         id: teamicon
                         hasColor:false
-                        source: "qrc:/"+ inplay.teamid+".PNG"
+                        source: "qrc:/"+ ((!inplay || inplay.teamid === "") ? "FA" :  inplay.teamid)+".PNG"
                         width: ProtoScreen.guToPx(5)
                         height: ProtoScreen.guToPx(5)
                         size: ProtoScreen.guToPx(3)
@@ -127,7 +130,8 @@ Material.Card {
                         font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
-
+                        color: (!inplay || inplay.teamid === "") ? themeroot.theme.primaryColor : TeamInfo.getPrimaryAt(inplay.teamid)
+                        font.bold: true
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: teamicon.right

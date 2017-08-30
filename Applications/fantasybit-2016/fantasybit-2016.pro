@@ -61,7 +61,7 @@ SOURCES += \
 #    $$PWD/FantasyAgent.cpp \
 #    $$PWD/timestate.cpp \
     $$PWD/ExchangeData.cpp \
-    $$PWD/ExchangeProxy.cpp \
+#    $$PWD/ExchangeProxy.cpp \
 #    $$PWD/trading.cpp \
     $$PWD/NameData.cpp \
     $$PWD/core.cpp \
@@ -83,7 +83,7 @@ HEADERS += \
     $$PWD/NameData.h \
     $$PWD/Processor.h \
     $$PWD/ExchangeData.h \
-    $$PWD/ExchangeProxy.h \
+#    $$PWD/ExchangeProxy.h \
     $$PWD/RestFullCall.h \
     $$PWD/LAPIWorker.h \
     $$PWD/NodeWorker.h \
