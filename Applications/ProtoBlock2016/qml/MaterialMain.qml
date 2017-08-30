@@ -193,7 +193,7 @@ Material.ApplicationWindow{
 
     //Level Three
     property var  levelThree: [
-        "Roto World", "CBS" , "ESPN", "NFL","TradingFloor" //"Twitter"
+        "Roto World", "CBS" , "ESPN", "NFL","Twitter"//"TradingFloor" //
     ]
     property var levelThreeIcons: [
         "qrc:/icons/ic_help.png",

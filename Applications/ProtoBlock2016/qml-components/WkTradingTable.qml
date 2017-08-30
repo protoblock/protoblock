@@ -34,13 +34,15 @@ Item {
     property int qcol: lcol + lcount
     property int vcol: qcol + qcount
 
-    property var quotemodel: undefined
+    property alias quotemodel: tvr.model
+
+    //quotemodel: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
 
 //    property int rowcol: bcol + 1
     property int poscol: pcol + 1
     property int teamcol: pcol + 2
-//    property int scount:
-
+    property string dsymbol: ""
+    property int symbindex: -1
 
     //My Orders
         // My Positions
@@ -65,13 +67,14 @@ Item {
 
         TableView {
             id: tvr
+            alternatingRowColors: true
             Component.onCompleted: {
 //                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
 //                selection.select(0);
                 model.sortAgain("blocknum",Qt.DescendingOrder)
-                console.log("tvr comleted")
+                console.log("wk tvr comleted")
                 console.log(quotemodel)
-                console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel)
+                console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.size)
 
             }
 
@@ -79,12 +82,12 @@ Item {
                 console.log("changed" + currentRow);
 //                console.log("selected" + currentRow + model.data(currentRow,"lastname"));
 //                            prevlpv.modelPick = model.data(currentRow,"awardsModel");
-                selectedRow = currentRow
+//                selectedRow = currentRow
             }
 
             onClicked: {
                 console.log("clicked" + currentRow);
-                tvr.selectedRow = currentRow
+//                tvr.selectedRow = currentRow
             }
 
             onCurrentRowChanged: {
@@ -92,21 +95,25 @@ Item {
                 tvr.selectedRow = currentRow
             }
 
+
+
             highlightOnFocus: true
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
             implicitWidth: parent.width
-            model: quotemodel//MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
+//            model: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel //
 
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             onSortIndicatorOrderChanged: {
-                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
+
+
 
             headerDelegate: headerdel
             frameVisible: false
@@ -114,40 +121,67 @@ Item {
 
 //            currentRow: 0
             property int selectedRow: -1
+            currentRow: -1
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
                color: (styleData.row===tvr.selectedRow)
 //                      || (MiddleMan.pPlayerQuoteSliceModelItem && MiddleMan.pPlayerQuoteSliceModelItem.symbol === model.data(styleData.row,"symbol")))
-                       ? "Light Grey" : (styleData.alternate ? "#f5f5f5" : "transparent")
+                       ? Material.Theme.accentColor
+                            : (styleData.alternate?"#dcdcdc":"transparent")
+//                                                              Material.Theme.light.subTextColor : Material.Theme.light.hintColor)
+               //                         (styleData.alternate ? "#c4c4c4"  : "transparent")
 
+               // "#dcdcdc"
+//                Component.onCompleted: {
+//                    if ( model.symbol === dsymbol )
+//                        console.log("styleData.row" + styleData.row)
+//                }
             }
 
             TableViewColumn {
                 role: "symbol"
                 title: "Symbol"
-                horizontalAlignment: Text.AlignHCenter
+                horizontalAlignment: Text.AlignLeft
                 movable: false
                 width: ProtoScreen.guToPx(8)
                 delegate: Material.Card {
-                    anchors.centerIn: parent
-                    flat: true
-                    radius: 12
+                     flat: true
+                    radius: 0
                     border.width: 0
-                    anchors.rightMargin: ProtoScreen.guToPx(5)
-                    anchors.leftMargin: ProtoScreen.guToPx(5)
-
+                    anchors.fill: parent
+                    anchors.centerIn: parent
+                    anchors.leftMargin: ProtoScreen.guToPx(1)
+                    anchors.topMargin: ProtoScreen.guToPx(.25)
+                    anchors.bottomMargin: ProtoScreen.guToPx(.25)
                     backgroundColor: "transparent"
-                    width: ProtoScreen.guToPx(9) // ml.width * 3
+//                    width: ProtoScreen.guToPx(9) // ml.width * 3
                     Material.Label {
-                        anchors.centerIn: parent
+
+                        anchors.verticalCenter: parent.verticalCenter
+//                        anchors.left: parent.left
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
-
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                        text: styleData.value;
-                        font.bold: false;
+                        font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL)+ ProtoScreen.font(ProtoScreen.VERYSMALL))/2.0
+                        text: styleData.value
+                        Layout.fillWidth: false
+                        Layout.fillHeight: true
+//                        font.bold: true
                     }
+//                    Component.onCompleted: {
+//                        if ( dsymbol === styleData.value ) {
+//                            symbindex = styleData.row;
+//                            console.log("symbindex " + symbindex + " " +dsymbol);
+//                        }
+//                    }
 
+//                    Component.onCompleted: {
+//                        if ( styleData.value === dsymbol ) {
+//                            console.log(" oncompleted " + styleData.value)
+
+//                            if ( tvr.selectedRow !== styleData.row )
+//                                tvr.selectedRow = styleData.row
+//                        }
+//                    }
                 }
             }
 
@@ -185,7 +219,7 @@ Item {
 
             //**** Player
             TableViewColumn {
-                role: "lastname"
+                role: "fullname"
                 title: "Player Name"
                 horizontalAlignment : Text.AlignLeft
                 movable: false
@@ -212,18 +246,29 @@ Item {
 
                     Component.onCompleted: {
                     lll.text = Qt.binding(function() {
+
                         if ( !model )
                             return styleData.value
-                        else
+                        else {
+//                            if ( model.symbol === dsymbol) {
+//                                if (styleData.row !==tvr.selectedRow ) {
+//                                    tvr.currentRow = styleData.row;
+//                                }
+//                            }
+//                            else if (styleData.row===tvr.selectedRow ) {
+//                                tvr.currentRow = -1;
+//                            }
                             return model.fullname
+                        }
 
                     })
 
                     backgroundColor = Qt.binding(function() {
                         if ( !model )
                             return "transparent"
-                        else if (styleData.row===tvr.selectedRow )
-                            return "Light Grey"
+                        else if (styleData.row===tvr.selectedRow ) {
+                            return "Light Grey";
+                        }
                         else {
                             switch(model.pos) {
                             case "WR":
@@ -671,9 +716,9 @@ Item {
                     anchors.fill: parent
                     onCurrentTextChanged: {
                         if ( styleData.column === poscol )
-                            MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.setPos(currentText)
+                            MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.setPos(currentText)
                         else if ( styleData.column === teamcol)
-                            MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.setTeam(currentText)
+                            MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.setTeam(currentText)
 
                     }
                 }
@@ -976,10 +1021,11 @@ Item {
 
     Connections {
         target: tvr.selection
-        onSelectionChanged: {
+
+        onSelectionChanged : {
 
             wktt.update();
-            console.log("row onSelectionChanged");
+            console.log("row onCurrentRowChanged onSelectionChanged");
         }
     }
 
@@ -991,7 +1037,8 @@ Item {
     function update() {
         console.log(" MkTrading update")
         tvr.selection.forEach(function(rowIndex) {
-            MiddleMan.startDepth(tvr.model.getPlayerSliceModelUid(rowIndex));
+            dsymbol = tvr.model.getPlayerSliceModelUid(rowIndex)
+            MiddleMan.startDepth(dsymbol);
             //,tvr.model.roleForName("awardsModel"))
 //            if (row && row.awardsModel) rowtt.selectedModel = row.awardsModel
         })

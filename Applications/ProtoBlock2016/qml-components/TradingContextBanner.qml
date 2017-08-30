@@ -16,15 +16,15 @@ Material.Card {
     id: thisroot
     property string lightgreen: "green"//"#c8ffc8"
     property string lightred: "red"//"#ffc8c8"
-    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
+    property variant inplay: MiddleMan.pROWPlayerQuoteSliceModelItem
     property double recwidth: ProtoScreen.guToPx(20)
     property bool haveplayer: inplay && inplay.symbol !== ""
     property bool haveposition: inplay && inplay.myposition !== 0
     property color dcolor: Material.Theme.light.textColor
 
-    property variant inplayf: MiddleMan.pTradingPositionsModel
+    property variant inplayf: MiddleMan.pROWTradingPositionsModel
     property bool havefname: inplayf && inplayf.fantasyname !== ""
-    property variant mybalance: MiddleMan.pMyFantasyNameBalance
+    property variant mybalance: MiddleMan.pROWMyFantasyNameBalance
 //    Layout.fillWidth: true
 
 //    Layout.fillWidth: true
@@ -237,144 +237,6 @@ Material.Card {
             }
         }
 
-        //last
-//        Rectangle {
-//            Layout.fillWidth: true
-////            anchors.margins: 0
-//            Layout.fillHeight: true
-////            border.color: "red" //"lightgrey"
-//            border.width: ProtoScreen.guToPx(.125)
-//            Layout.preferredWidth: l2.implicitWidth
-////            Layout.maximumWidth: recwidth
-//            anchors.verticalCenter: parent.verticalCenter
-////            width: lr.width
-////            anchors.centerIn: parent
-
-
-////            width: parent.width *.50
-////            anchors.top: pname.bottom
-////            anchors.left: parent.horizontalCenter
-//            height: parent.height
-//            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
-
-////            Row {
-////                anchors.left: parent.left
-//////                anchors.verticalCenter: parent.verticalCenter
-////                anchors.centerIn: parent
-////                id: lr
-//////                anchors.centerIn: parent
-////                width: l1.implicitWidth + l2.implicitWidth // + ProtoScreen.guToPx(.25)
-
-////                Material.Label {
-////                    id: l1
-////        //                width: parent.width * .50
-////        //                height: parent.height * .50
-////                    text: inplay.playerid === 0 ?  "" : "Last: "
-////                    verticalAlignment: Text.AlignVCenter
-////                    horizontalAlignment: Text.AlignHCenter
-////                    anchors.verticalCenter: parent.verticalCenter
-////        //                    horizontalAlignment: Text.AlignRight
-//////                    anchors.leftMargin: ProtoScreen.guToPx(.125)
-////                    elide: Text.ElideRight
-
-////                }
-
-//                Material.Label{
-//                    id: l2
-////                    id: lastval
-//                    text: !haveplayer ?  "" : inplay.lastprice
-//        //                Layout.fillHeight: true
-//        //                Layout.fillWidth:  false
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignHCenter
-//        //                    color: icon.color
-//    //                Layout.column: 3
-//    //                Layout.row: 1
-//    //    //                    Layout.columnSpan: 2
-//    //                Layout.rowSpan: 2
-//                    anchors.centerIn: parent
-//                    font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-////                    anchors.rightMargin: ProtoScreen.guToPx(.125)
-//                    color: (!haveplayer || inplay.lastprice === 0) ? "transparent" : dcolor
-//                }
-////            }
-//        }
-/*
-        Rectangle {
-            border.color: "lightgrey"
-            border.width: ProtoScreen.guToPx(.125)
-            width: ProtoScreen.guToPx(20)
-
-//            width: parent.width *.50
-//            anchors.top: pname.bottom
-//            anchors.left: parent.horizontalCenter
-            height: lrec.height
-            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
-
-            GridLayout {
-                anchors.centerIn: parent
-                columns: 3
-                rows: 3
-
-                Material.Label {
-    //                width: parent.width * .50
-    //                height: parent.height * .50
-                    text: "Last:"
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignRight
-                    Layout.column: 1
-                    Layout.row: 1
-                    Layout.columnSpan: 2
-                    Layout.rowSpan: 2
-                }
-
-                Material.Label {
-    //                width: parent.width * .50
-    //                height: parent.height * .50
-                    text: "Change:"
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignRight
-                    Layout.column: 1
-                    Layout.row: 3
-                    Layout.columnSpan: 2
-//                    Layout.rowSpan: 2
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                }
-
-                Material.Label{
-                    id: lastval
-                    text: inplay.lastprice === 0 ?  "" : inplay.lastprice
-    //                Layout.fillHeight: true
-    //                Layout.fillWidth:  false
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignLeft
-//                    color: icon.color
-                    Layout.column: 3
-                    Layout.row: 1
-//                    Layout.columnSpan: 2
-                    Layout.rowSpan: 2
-                }
-
-                Material.Label{
-                    id: change
-                    text: ((inplay.change > 0) ? "+" : "" ) + inplay.change.toString() + " "
-    //                Layout.fillHeight: true
-    //                Layout.fillWidth:  false
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignLeft
-    //                color: icon.color
-                    Layout.column: 3
-                    Layout.row: 3
-//                    Layout.columnSpan: 2
-//                    Layout.rowSpan: 2
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    color: { inplay.change < 0 ? Colors.red :
-                             inplay.change > 0 ? Colors.green : Colors.black
-                    }
-                }
-            }
-        }
-*/
         //bid-ask-hi-lo
         Card {
             elevation: 0

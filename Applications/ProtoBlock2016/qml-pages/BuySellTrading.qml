@@ -18,7 +18,7 @@ Item {
     id: pit
     property string contract
     property string symbol
-    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
+    property variant inplay: MiddleMan.pROWPlayerQuoteSliceModelItem
 
 
     Layout.fillWidth: true
@@ -88,7 +88,7 @@ Item {
                     id: buyspin
                     decimals: 0
                     stepSize: 1.0
-                    maximumValue: (inplay.multiplier || inplay.multiplier  === 100) ? 40 : 400// (400 / inplay.multiplier) : 400;
+                    maximumValue: (!inplay.multiplier || inplay.multiplier  === 100) ? 40 : 400// (400 / inplay.multiplier) : 400;
                     minimumValue:  1
                     value: 1
                     Layout.column: 2
@@ -223,7 +223,7 @@ Item {
                     decimals: 0
                     stepSize: 1.0
 //                    maximumValue: (inplay.multiplier && inplay.multiplier > 0) ? (400 / inplay.multiplier) : 400;
-                    maximumValue: (inplay.multiplier || inplay.multiplier  === 100) ? 40 : 400// (400 / inplay.multiplier) : 400;
+                    maximumValue: (!inplay.multiplier || inplay.multiplier  === 100) ? 40 : 400// (400 / inplay.multiplier) : 400;
                     minimumValue:  1
                     value: maximumValue
                     Layout.column: 2

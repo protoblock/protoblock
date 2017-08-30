@@ -54,7 +54,7 @@ Item {
 
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
-               color: styleData.alternate?"#f5f5f5":"transparent"
+               color: styleData.alternate?"#dcdcdc":"transparent"
             }
 
             headerDelegate:  Rectangle {

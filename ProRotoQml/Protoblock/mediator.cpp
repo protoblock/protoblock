@@ -55,9 +55,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
-    PlayerQuoteSliceModelItem dumm(&dummyPlayerSymbolsModelItem,"","17s");
-    auto f = dumm.get_firstname();
-    qDebug() << f << " ||";
+//    PlayerQuoteSliceModelItem dumm(&dummyPlayerSymbolsModelItem,"","17s");
+//    auto f = dumm.get_firstname();
+//    qDebug() << f << " ||";
 
     fnameindex = 0;
     //leader models
@@ -108,18 +108,19 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultsViewFilterProxyModel->setDynamicSortFilter(true);
 
 
-
-    //trading
-//    m_pPlayerQuoteSliceModel = &m_pPlayerQuoteSliceModel;
     m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(&mPlayerQuoteSliceModel);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("symbol");
     m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
 
+    //trading
+//    m_pPlayerQuoteSliceModel = &m_pPlayerQuoteSliceModel;
     m_pROWPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
     m_pROWPlayerQuoteSliceViewFilterProxyModel->setSourceModel(&mROWPlayerQuoteSliceModel);
     m_pROWPlayerQuoteSliceViewFilterProxyModel->setSortRole("symbol");
     m_pROWPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
+
+
 
     m_useSelected = true;
     m_busySend = false;

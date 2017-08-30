@@ -12,11 +12,11 @@ Item {
     id: topi
     property int week: (MiddleMan.theWeek === 0 && MiddleMan.theSeason === 0) || !stack || !stack.currentItem ? 0 :
                           (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek : (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
-    property string seasontext:
+    property string seasontext: !stack.currentItem ? "!stack" : (
                 (stack.currentItem.objectName === "prevWeekS" ? "NFL Season " + MiddleMan.thePrevSeason
                                                               : (stack.currentItem.objectName === "nextWeekS" ? "NFL Season " + MiddleMan.theNextSeason
                                                               : MiddleMan.seasonString + " " + MiddleMan.theSeason))
-                                                                    + " - Week "
+                                                                    + " - Week ")
 
     property string liveorresult: MiddleMan.liveSync === "Sync" || !stack || !stack.currentItem ? "Sync" :
                                        (stack.currentItem.objectName === "prevWeekS" ? "Result" :
@@ -178,6 +178,7 @@ Item {
             height: parent.height
             id: stack
 //                anchors.fill: parent
+            initialItem: pptS
 
             Component.onCompleted: {
                stack.push({item: prevWeekS, properties:{objectName:"prevWeekS"}})
@@ -185,6 +186,10 @@ Item {
 
                console.log( " stack " + width)
             }
+
+//            Component.onStatusChanged: {
+//                console.log( " stack  onStatusChanged" )
+//            }
 
             Item {
                 id: pptS

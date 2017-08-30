@@ -55,7 +55,7 @@ Item {
                 anchors.horizontalCenter: boundingRect.horizontalCenter
                 width: parent.width
                 clip: true
-                model: MiddleMan.pGlobalOpenOrdersModel
+                model: MiddleMan.pROWGlobalOpenOrdersModel
                 headerPositioning: ListView.OverlayHeader
                 header: RowLayout {
                     z: 2

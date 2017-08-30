@@ -21,11 +21,11 @@ Card {
     id: mdview
     anchors.fill: parent
 
-    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
+    property variant inplay: MiddleMan.pROWPlayerQuoteSliceModelItem
     property var iwidth: parent.width / 4.2
 
     TableView {
-        model: MiddleMan.pDepthMarketModel
+        model: MiddleMan.pROWDepthMarketModel
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         id: depthvm
@@ -36,7 +36,7 @@ Card {
 
         rowDelegate: Rectangle {
            height: ProtoScreen.guToPx(5)
-           color: styleData.alternate?"#f5f5f5":"transparent"
+           color: styleData.alternate?"#dcdcdc":"transparent"
         }
 
         headerDelegate:  Rectangle {
