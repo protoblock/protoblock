@@ -167,12 +167,8 @@ Item {
                         Layout.fillHeight: true
 //                        font.bold: true
                     }
-//                    Component.onCompleted: {
-//                        if ( dsymbol === styleData.value ) {
-//                            symbindex = styleData.row;
-//                            console.log("symbindex " + symbindex + " " +dsymbol);
-//                        }
-//                    }
+                    Component.onCompleted: {
+                    }
 
 //                    Component.onCompleted: {
 //                        if ( styleData.value === dsymbol ) {

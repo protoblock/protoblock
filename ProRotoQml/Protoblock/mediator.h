@@ -178,7 +178,7 @@ public:
     }
 
     Q_INVOKABLE void startDepth(const QString& symbol) {
-//        qDebug() << " startDepth " << symbol;
+        qDebug() << " startDepth " << symbol;
         bool isweekly = isWeekly(symbol);
         if ( symbol == (isweekly ? m_pPlayerQuoteSliceModelItem->get_symbol() :
                          m_pROWPlayerQuoteSliceModelItem->get_symbol()) )
@@ -576,7 +576,6 @@ public:
 //    }
 
     Q_INVOKABLE void addTradingSymbol(const QString &symbol,bool isweekly) {
-        isweekly = false;
         auto it = mPlayerSymbolsModel.getByUid(symbol);
         if ( it == nullptr ) {
             qDebug() << "error addTradingSymbol" << symbol;

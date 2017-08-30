@@ -16,7 +16,7 @@ Material.Card {
     id: thisroot
     property string lightgreen: "green"//"#c8ffc8"
     property string lightred: "red"//"#ffc8c8"
-    property variant inplay: MiddleMan.pROWPlayerQuoteSliceModelItem
+    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
     property double recwidth: ProtoScreen.guToPx(20)
     property bool haveplayer: inplay && inplay.symbol !== ""
     property bool haveposition: inplay && inplay.myposition !== 0
@@ -24,7 +24,7 @@ Material.Card {
 
     property variant inplayf: MiddleMan.pROWTradingPositionsModel
     property bool havefname: inplayf && inplayf.fantasyname !== ""
-    property variant mybalance: MiddleMan.pROWMyFantasyNameBalance
+    property variant mybalance: 0//MiddleMan.pMyFantasyNameBalance
 //    Layout.fillWidth: true
 
 //    Layout.fillWidth: true
@@ -34,7 +34,7 @@ Material.Card {
 //    anchors.left: parent.left
     height: rl.height //!haveplayer ? 0 : rl.height
 //    flat: true
-    elevation: !haveposition ? 2 : 6
+    elevation: 0//!haveposition ? 2 : 6
 //    width: parent.width
 //    border.color: !haveposition ? "transparent" : themeroot.theme.accentColor
 //    border.width: !haveposition ? 0 : ProtoScreen.guToPx(.25)
