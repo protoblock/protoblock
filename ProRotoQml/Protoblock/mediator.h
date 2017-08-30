@@ -583,7 +583,7 @@ public:
     }
 
     void addQuoteSymbol(const std::string &symbol) {
-        QString stripped = fantasybit::stipSymbol(symbol).data();
+        QString stripped = fantasybit::stripSymbol(symbol).data();
         auto it = mPlayerSymbolsModel.getByUid(stripped);
         if ( it == nullptr ) {
             qDebug() << "error addQuoteSymbol" << symbol.data();

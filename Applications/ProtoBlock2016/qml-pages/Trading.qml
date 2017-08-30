@@ -143,7 +143,7 @@ Item {
             width: parent.width
             height: parent.height
             id: stack
-            property real lwidth: (currentIndex === 0) ? tcbx.recwidth : tcbxW.recwidth
+            property real lwidth: tcbxW.recwidth//(currentIndex === 0) ? tcbx.recwidth : tcbxW.recwidth
 
 //                anchors.fill: parent
 
@@ -400,7 +400,7 @@ Item {
         id: handeldel
 
         Item {
-            height: itema.height
+            height: itemaW.height
             anchors.margins: 0
             Rectangle {
                 border.width: 0
