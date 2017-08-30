@@ -34,6 +34,7 @@ Item {
     property int qcol: lcol + lcount
     property int vcol: qcol + qcount
 
+    property var quotemodel: undefined
 
 //    property int rowcol: bcol + 1
     property int poscol: pcol + 1
@@ -69,6 +70,9 @@ Item {
 //                selection.select(0);
                 model.sortAgain("blocknum",Qt.DescendingOrder)
                 console.log("tvr comleted")
+                console.log(quotemodel)
+                console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel)
+
             }
 
             onSelectionChanged: {
@@ -92,7 +96,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
             implicitWidth: parent.width
-            model: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
+            model: quotemodel//MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
 
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder

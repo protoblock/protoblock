@@ -3,6 +3,9 @@ message(core $$PWD)
 INCLUDEPATH += $$PWD/../ProRotoQml/protoblock-core
 INCLUDEPATH += $$PWD/../ProRotoQml/protoblock-core/bitcoin-core-base58
 
+INCLUDEPATH += $$PWD/../ProRotoQml/QmlModels
+INCLUDEPATH += $$PWD/../ProRotoQml/QmlModels/QmlSuperMacros
+
 SOURCES += \
 #    protoblockcore.cpp \
     $$PWD/../ProRotoQml/protoblock-core/FantasyAgent.cpp \

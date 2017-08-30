@@ -130,8 +130,8 @@ Material.ApplicationWindow{
 
     property string defaultname
 
-    property string start: "qrc:/Projections.qml"
-    property int startindex: 0
+    property string start: "qrc:/Trading.qml"
+    property int startindex: 1
     property string  errorString
     property bool  reloadleaders: false
 
@@ -193,7 +193,7 @@ Material.ApplicationWindow{
 
     //Level Three
     property var  levelThree: [
-        "Roto World", "CBS" , "ESPN", "NFL","Twitter"
+        "Roto World", "CBS" , "ESPN", "NFL","TradingFloor" //"Twitter"
     ]
     property var levelThreeIcons: [
         "qrc:/icons/ic_help.png",

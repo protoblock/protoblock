@@ -241,6 +241,21 @@ namespace fantasybit {
 
     };
 
+    static bool isWeekly(const QString &symbol) {
+        return symbol.endsWith('w');
+    }
+
+    static bool isWeekly(const std::string &symbol) {
+        return symbol.back() == 'w';
+    }
+
+    static std::string stripSymbol(const std::string &symbol) {
+        if  (symbol.size() < 6 )
+            return symbol;
+
+        return symbol.substr(0,(symbol.at(4) > '9') ? 5 : 4);
+    }
+
 
 }
 

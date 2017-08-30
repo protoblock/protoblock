@@ -216,10 +216,14 @@ public:
            append(new TradingPositionsModelItem(aos,this));
     }
 
-    void updateAllOrders(const std::string &fname, const ordsnap_t &myorderpositions) {
+    void clearForUpdateFname(const std::string &fname) {
         clear();
         settotalopenpnl(0.0);
         setfantasyname(fname.data());
+    }
+
+    void updateAllOrders(const std::string &fname, const ordsnap_t &myorderpositions) {
+        clearForUpdateFname(fname);
 
         for ( auto p : myorderpositions ) {
           //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;

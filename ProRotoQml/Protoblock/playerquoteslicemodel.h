@@ -12,72 +12,35 @@
 #include <QtCore/qsortfilterproxymodel.h>
 #include "openordersmodel.h"
 #include "depthmarketmodel.h"
+#include "PlayerSymbolsModel.h"
 #include <QTimer>
 
 namespace pb {
 using namespace fantasybit;
 
 //class PlayerProjModelItem;
-
-class PlayerSymbolsModelItem : public QObject {
-    Q_OBJECT
-
-    QML_READONLY_CSTREF_PROPERTY (QString, playerid)
-    QML_READONLY_CSTREF_PROPERTY (QString, symbol)
-
-    QML_READONLY_CSTREF_PROPERTY (QString, pos)
-    QML_READONLY_CSTREF_PROPERTY (QString, lastname)
-    QML_READONLY_CSTREF_PROPERTY (QString, firstname)
-    QML_READONLY_CSTREF_PROPERTY (QString, teamid)
-    QML_READONLY_CSTREF_PROPERTY (QString , fullname)
-public:
-    PlayerSymbolsModelItem(const QString &in, const QString &in2) : m_playerid(in), m_symbol(in2), QObject(nullptr) {
-    }
-
-    void Update(const PlayerBase &pb) {
-        m_pos = pb.position().data();
-        m_fullname =  QString("%1, %2")
-                .arg ( pb.last().data() )
-                .arg ( pb.first().data());
-    }
-
-};
-
-class PlayerSymbolsModel : public QQmlObjectListModel<PlayerSymbolsModelItem>{
-    Q_OBJECT
-
-public:
-    explicit PlayerSymbolsModel (QObject *          parent      = Q_NULLPTR,
-                                 const QByteArray & displayRole = {"symbol"},
-                                  const QByteArray & uidRole     = {"symbol"})
-        : QQmlObjectListModel (parent,displayRole,uidRole) {}
-
-    QString Update(const QString &syb, const PlayerBase &pb) {
-        auto *item = this->getByUid(syb);
-        item->Update(pb);
-        return item->get_fullname();
-    }
-};
-
 class PlayerQuoteSliceModelItem : public QObject {
     Q_OBJECT
 
     DepthMarketModel mDepthMarketModel;
 //    OpenOrdersModel mOpenOrdersModel;
+    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+//    QML_READONLY_PTR_PROPERTY(PlayerProjModelItem, pPlayerProjItem)
+    QML_READONLY_PTR_PROPERTY(PlayerSymbolsModelItem, pPlayerSymbolsModelItem)
 
     QML_READONLY_CSTREF_PROPERTY (QString, playerid)
     QML_READONLY_CSTREF_PROPERTY (QString, symbol)
     QML_READONLY_CSTREF_PROPERTY (qint32, multiplier)
 
-    QML_READONLY_CSTREF_PROPERTY (QString, pos)
-    QML_READONLY_CSTREF_PROPERTY (QString, lastname)
-    QML_READONLY_CSTREF_PROPERTY (QString, firstname)
-    QML_READONLY_CSTREF_PROPERTY (QString, teamid)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, pos, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, lastname, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, firstname, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, teamid, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString , fullname, pPlayerSymbolsModelItem)
 
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, lastprice)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, lastsize)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, bidsize)
-    QML_READONLY_CSTREF_PROPERTY (QString , fullname)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, bid)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, ask)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, asksize)
@@ -87,7 +50,7 @@ class PlayerQuoteSliceModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, hi)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, lo)
 
-
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, oi)
 
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, myposition)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (qint32, mypnl)
@@ -109,9 +72,7 @@ class PlayerQuoteSliceModelItem : public QObject {
 
 //    QML_OBJMODEL_PROPERTY (OpenOrdersModel, ordersModel)
 //    QML_OBJMODEL_PROPERTY (DepthMarketModel, depthModel)
-    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
-    QML_READONLY_PTR_PROPERTY(PlayerProjModelItem, pPlayerProjItem)
-    QML_READONLY_PTR_PROPERTY(PlayerSymbolsModelItem, pPlayerSymbolsModelItem)
+
 
 
     const char* LIGHTGREEN = "#c8ffc8";
@@ -119,6 +80,28 @@ class PlayerQuoteSliceModelItem : public QObject {
 
 public:
 
+    explicit PlayerQuoteSliceModelItem(pb::PlayerSymbolsModelItem *ppmi,
+                                       const QString &insymbol,
+                                       const QString &suffix,
+                                       int blocknum = 0) :
+                            mDepthMarketModel{}
+                            ,m_pDepthMarketModel{&mDepthMarketModel}
+                            ,m_pPlayerSymbolsModelItem{ppmi}
+                            ,QObject(nullptr) {
+
+        m_playerid = m_pPlayerSymbolsModelItem->get_playerid();
+        if ( !insymbol.isEmpty())
+            m_symbol = insymbol;
+        else
+            m_symbol = QString("%1%2").arg(m_pPlayerSymbolsModelItem->get_symbol()).arg(suffix);
+
+        m_multiplier = fantasybit::isWeekly(m_symbol) ? 100.0 : 1.0;
+        m_lastprice = 0;
+        m_blocknum = blocknum;
+    }
+
+//    PlayerQuoteSliceModelItem() :  QObject(nullptr) {}
+  /*
     explicit PlayerQuoteSliceModelItem(const fantasybit::ROWMarket &in) :  QObject(nullptr) {
         m_lastprice = in.quote().l();
         m_pos = in.playerdata().player_base().position().data();
@@ -165,19 +148,20 @@ public:
 
 //       m_depthModel = new DepthMarketModel()
     }
+    */
 
-    explicit PlayerQuoteSliceModelItem(const pb::PlayerProjModelItem &in,const std::string &suffix) :
-        mDepthMarketModel{},
-        m_pDepthMarketModel{&mDepthMarketModel},
 //        m_depthModel{&mDepthMarketModel},
 //        m_cDepthMarketModel,
-        QObject(nullptr) {
+
 //        m_lastprice = in.quote().l();
-        m_pos = in.get_pos();
-        m_firstname = in.get_firstname();
-        m_lastname = in.get_lastname();
-        m_teamid = in.get_teamid();
-        m_fullname =  in.get_fullname();
+
+//        m_pPlayerSymbolsModelItem = in.get_pPlayerSymbolsModelItem();
+//        m_pos = in.get_pos();
+//        m_firstname = in.get_firstname();
+//        m_lastname = in.get_lastname();
+//        m_teamid = in.get_teamid();
+//        m_fullname =  in.get_fullname();
+
 //        m_bidsize = in.quote().bs();
 //        m_bid = in.quote().b();
 //        m_ask = in.quote().a();
@@ -187,15 +171,14 @@ public:
 //        m_updown = in.quote().udn();
 //        m_hi = in.ohlc().high();
 //        m_lo = in.ohlc().low();
-        m_playerid = in.get_playerid();
-        m_symbol = QString("%1%2").arg(in.get_symbol()).arg(suffix.data());
+
 //        mDepthMarketModel.append(new DepthMarketModelItem(100,2,30,50));
 //        mDepthMarketModel.append(new DepthMarketModelItem(200,1,31,1));
-        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
-        m_lastprice = 0;
-//        m_BackgroundColor = "transparent";
-    }
 
+//        m_BackgroundColor = "transparent";
+//    }
+
+    /*
     explicit PlayerQuoteSliceModelItem(const QString &symb) :
         m_symbol(symb.data()),
         mDepthMarketModel{},
@@ -203,7 +186,8 @@ public:
         QObject(nullptr) {
         m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
     }
-
+    */
+/*
     void setProperties(const fantasybit::PlayerDetail &in,
                        PlayerSymbolsModelItem *p ,
                        int blocknum) {
@@ -224,8 +208,22 @@ public:
         m_lastprice = 0;
         m_blocknum = blocknum;
     }
+*/
 
+    void setProperties(PlayerSymbolsModelItem *p ,
+                       int blocknum,
+                       const QString &insymbol) {
+        if ( p == nullptr ) return;
 
+        m_pPlayerSymbolsModelItem = p;
+        setplayerid(p->get_playerid());
+        m_symbol = insymbol;
+        if ( m_symbol == "" ) qDebug() << "bad";//should not
+        m_blocknum = blocknum;
+        m_multiplier = fantasybit::isWeekly(m_symbol) ? 100.0 : 1.0;
+    }
+
+    /*
     explicit PlayerQuoteSliceModelItem(const fantasybit::MarketSnapshot  &ms) :
                         mDepthMarketModel{},
                         m_pDepthMarketModel{&mDepthMarketModel},
@@ -250,6 +248,7 @@ public:
         Update(it);
     }
 
+    */
     void Update(const MarketSnapshot &rms) {
         setblocknum(rms.blocknum());
         const MarketSnapshot *ms = &rms;
@@ -375,18 +374,18 @@ public:
         if ( dotime )
             QTimer::singleShot(3000, this, SLOT(resetLast()));
     }
-
+/*
     void Update(PlayerProjModelItem *it) {
 //        qDebug() << " PlayerQuoteSliceModelItem update " << it->get_playerid();
 
         m_pPlayerProjItem = it;
-        setfirstname(it->get_firstname());
-        setlastname(it->get_lastname());
-        setteamid(it->get_teamid());
-        setpos(it->get_pos());
-        setfullname(it->get_fullname());
+//        setfirstname(it->get_firstname());
+//        setlastname(it->get_lastname());
+//        setteamid(it->get_teamid());
+//        setpos(it->get_pos());
+//        setfullname(it->get_fullname());
     }
-
+*/
 public slots:
     void resetBid() {
         setbdiff(0);
@@ -441,6 +440,7 @@ public:
         return false;
     }
 
+    /*
     void Update(const std::vector<MarketSnapshot> &vms,
                 const PlayerProjModel &ppm,const string &suffix = "17s") {
        for ( auto ppmit : ppm ) {
@@ -450,14 +450,16 @@ public:
            Update(it);
        }
     }
+    */
 
-    void Update(const MarketSnapshot &ms) {
+    bool Update(const MarketSnapshot &ms) {
         auto *it = getByUid(ms.symbol().data());
-        if ( it != nullptr )
+        if ( it == nullptr )
+            return false;
+        else {
             it->Update(ms);
-
-//            append(new PlayerQuoteSliceModelItem(ms));
-//        else
+            return true;
+        }
     }
 
     bool Update(MarketTicker *ms,int32_t blocknum) {
@@ -488,7 +490,7 @@ public:
         }
         return true;
     }
-
+    /*
     void Update(PlayerProjModelItem *item, const string &suffix) {
         auto *it = getByUid(QString("%1%2").arg(item->get_symbol()).arg(suffix.data()));
         if ( it == nullptr )
@@ -496,7 +498,7 @@ public:
         else
             it->Update(item);
     }
-
+    */
     bool Update(fantasybit::DepthFeedDelta* dfd) {
         auto *it = getByUid(dfd->symbol().data());
         if ( it == nullptr ) {
@@ -509,14 +511,26 @@ public:
         return true;
     }
 
-    void UpdateSymbols(const PlayerDetail &pd, PlayerSymbolsModelItem *p, int blocknum = 0, const string &suffix = "17s") {
+    void UpdateSymbols(PlayerSymbolsModelItem *p, int blocknum = 0, const string &suffix = "17s") {
         QString symb = QString("%1%2").arg(p->get_symbol()).arg(suffix.data());
         auto *item = getByUid(symb);
         if ( !item ) {
-            item = new PlayerQuoteSliceModelItem(symb);
+            item = new PlayerQuoteSliceModelItem(p,symb,suffix.data(),blocknum);
             this->append(item);
         }
-        item->setProperties(pd,p,blocknum);
+        else
+            item->setProperties(p,blocknum,symb);
+    }
+
+    void UpdateSymbol(PlayerSymbolsModelItem *p, int blocknum, const string &symbol) {
+        QString symb = symbol.data();
+        auto *item = getByUid(symb);
+        if ( !item ) {
+            item = new PlayerQuoteSliceModelItem(p,symb,"",blocknum);
+            this->append(item);
+        }
+        else
+            item->setProperties(p,blocknum,symb);
     }
 
 signals:
@@ -748,8 +762,7 @@ protected:
 using namespace pb;
 Q_DECLARE_METATYPE(PlayerQuoteSliceModel*)
 Q_DECLARE_METATYPE(PlayerQuoteSliceModelItem*)
-Q_DECLARE_METATYPE(PlayerSymbolsModel*)
-Q_DECLARE_METATYPE(PlayerSymbolsModelItem*)
+
 
 //https://github.com/mkawserm/ModelsTest/blob/master/main.cpp
 

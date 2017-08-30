@@ -252,6 +252,7 @@ Item {
 
                                 WkTradingTable {
                                     id: wwwwW
+                                    quotemodel: MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel
                                 }
                             }
 
@@ -272,7 +273,7 @@ Item {
                 }
 
             }
-            Item {
+ /*           Item {
                 id: rowTrading
                 width: parent.width
                 height: parent.height
@@ -370,6 +371,8 @@ Item {
 
                                 WkTradingTable {
                                     id: wwww
+                                    property var ss: false
+                                   quotemodel: MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel
                                 }
                             }
 
@@ -389,7 +392,7 @@ Item {
                     }
                 }
             }
-
+*/
         }
     }
 
