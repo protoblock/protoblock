@@ -975,7 +975,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     }
     else {
         if ( !emdg.has_futcontract() && emdg.has_symbol() && emdg.symbol().size() > 6 ) {
-            if ( emdg.symbol().back() == 's' )
+            if ( !fantasybit::isWeekly(emdg.symbol()))
                mFutContract.set_type(FutContract_Type_SEASON);
             else {
                 mFutContract.set_type(FutContract_Type_WEEKLY);
@@ -1001,7 +1001,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
         symbol = mData.GetPlayerStatus(emdg.playerid()).symbol();
         if ( symbol == "" )  {
             symbol = emdg.playerid();
-            if ( symbol.back() == 's' ) {
+            if ( !fantasybit::isWeekly(symbol)) {
                 mFutContract.set_type(FutContract_Type_SEASON);
                 fc = &mFutContract;
             }

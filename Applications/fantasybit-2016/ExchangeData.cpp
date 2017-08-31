@@ -179,7 +179,7 @@ void ExchangeData::init() {
                 qDebug() << "level2 ExchangeData new init BookDelta for" << bd.symbol().data();
 #endif
 
-                it2.first->second->ResetLimitBook(bd.symbol().back() == 's' ? 400 : 40);//mLimitBook.reset(new LimitBook());
+                it2.first->second->ResetLimitBook(fantasybit::isWeekly(bd.symbol())  ? 40 : 400);//mLimitBook.reset(new LimitBook());
 
                 it3 = it2.first;
             }
@@ -298,7 +298,7 @@ void ExchangeData::init() {
                 qDebug() << "level2 ExchangeData new for pos" << tickersymbol.data();
 #endif
 
-                it2.first->second->ResetLimitBook(tickersymbol.back() == 's' ? 400 : 40);//mLimitBook.reset(new LimitBook());
+                it2.first->second->ResetLimitBook(fantasybit::isWeekly(tickersymbol) ? 40 : 400);//mLimitBook.reset(new LimitBook());
 
                 it3 = it2.first;
             }
@@ -457,7 +457,7 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
         }
         it = it2.first;
 //        it->second->ResetLimitBook(fc->type() == FutContract_Type_WEEKLY ? 40 : 400 );
-        it->second->ResetLimitBook(symbol.back() == 's' ? 400 : 40 );
+        it->second->ResetLimitBook(fantasybit::isWeekly(symbol)  ? 40 : 400 );
     }
 
     if ( it->second->islocked) {

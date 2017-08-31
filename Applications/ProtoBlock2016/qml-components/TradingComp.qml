@@ -97,7 +97,6 @@ Item {
                     height: parent.height
                     ListSymbolSearch  {
                         id: lss
-                        wk: true
                         property alias ss: wwww.ss
                     }
                     //ROWTradingTable {}

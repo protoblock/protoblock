@@ -59,18 +59,25 @@ public:
 //        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
     }
 
-    explicit WeeklyScheduleModelItem(const fantasybit::GameInfo &in,fantasybit::GameStatus_Status gs, QObject *parent = nullptr) :  QObject(parent) {
-        m_time = fromTime_t_toFantasyString(in.time());
+    explicit WeeklyScheduleModelItem(const fantasybit::GameInfo &in,fantasybit::GameStatus gs, QObject *parent = nullptr) :  QObject(parent) {
+       if ( gs.datetime () > 0 )
+           m_time = fromTime_t_toFantasyString( gs.datetime ());
+       else
+            m_time = fromTime_t_toFantasyString( in.time() );
+
+       if ( gs.status () == GameStatus_Status_INGAME)
+           m_time.append ('k');
+
         m_away = in.away().data();
         m_home = in.home().data();
-        set_status(GameStatusToString(gs));
+        set_status(GameStatusToString(gs.status ()));
         m_gameid = in.id().data();
 
 
 //        qDebug() << " WeeklyScheduleModelItem"  << m_time << m_away << m_home;
     }
 
-    explicit WeeklyScheduleModelItem(WeeklyScheduleModelItem *in,fantasybit::GameStatus_Status gs, QObject *parent = nullptr)
+    explicit WeeklyScheduleModelItem(WeeklyScheduleModelItem *in,fantasybit::GameStatus::Status gs, QObject *parent = nullptr)
                                                 :  QObject(parent) {
         m_time = in->get_time();
         m_away = in->get_away();

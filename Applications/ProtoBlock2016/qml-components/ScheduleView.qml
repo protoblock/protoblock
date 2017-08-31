@@ -71,7 +71,7 @@ Material.Card {
 //            gamedel
 //        focus: true
         section.delegate: sectionDelegate
-        section.property: "time"
+        section.property: "time" //time"
         section.criteria: ViewSection.FullString
         spacing: 0
 
@@ -186,6 +186,7 @@ Material.Card {
 
     Component {
         id: sectionDelegate
+
         Rectangle {
             width: parent.width
             height: t.height//ProtoScreen.guToPx(1.5);
@@ -210,12 +211,14 @@ Material.Card {
 
                 Component.onCompleted: {
                     secsel[section] = ""
+                    console.out (" section " + section)
                 }
             }
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
+                    console.log ("togglr setting section " + section +  secsel[section])
                     if ( secsel[section] === "on")
                     secsel[section] = "off"
                 else secsel[section] = "on"
@@ -237,6 +240,7 @@ Material.Card {
 
         id: gamedel
         Material.Card {
+//            property string timestatus: model.time
             id: dcard
             function myMethod() {
                 console.log("Button was clicked!" + secsel[time])

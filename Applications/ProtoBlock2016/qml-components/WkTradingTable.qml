@@ -34,7 +34,7 @@ Item {
     property int qcol: lcol + lcount
     property int vcol: qcol + qcount
 
-    property variant quotemodel: undefined
+    property variant quotemodel
 
     //quotemodel: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
 
@@ -74,7 +74,7 @@ Item {
                 quotemodel.sortAgain("blocknum",Qt.DescendingOrder)
                 console.log("wk tvr comleted")
                 console.log(quotemodel)
-                console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.size)
+//                console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.size)
 //                currentRow = Qt.binding(function() {
 //                        return quotemodel.getViewIndexFromSymbol(dsymbol) ;
 //                })
@@ -714,9 +714,10 @@ Item {
                     anchors.fill: parent
                     onCurrentTextChanged: {
                         if ( styleData.column === poscol )
-                            MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.setPos(currentText)
+                            quotemodel.setPos(currentText)
                         else if ( styleData.column === teamcol)
-                            MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.setTeam(currentText)
+                            quotemodel.setTeam(currentText)
+                           // MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.setTeam(currentText)
 
                     }
                 }

@@ -56,7 +56,7 @@ class Mediator : public QObject {
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceViewFilterProxyModel, pROWPlayerQuoteSliceViewFilterProxyModel)
 
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
-    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)   
+    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
 
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pROWDepthMarketModel)
@@ -161,9 +161,9 @@ public:
     QStringList m_allROWList;
 
 
-    Q_INVOKABLE PlayerQuoteSliceViewFilterProxyModel * getProxyQuoteModel(bool isweekly = true) {
-        return isweekly ? m_pPlayerQuoteSliceViewFilterProxyModel : m_pROWPlayerQuoteSliceViewFilterProxyModel;
-    }
+//    Q_INVOKABLE PlayerQuoteSliceViewFilterProxyModel * getProxyQuoteModel(bool isweekly = true) {
+//        return isweekly ? m_pPlayerQuoteSliceViewFilterProxyModel : m_pROWPlayerQuoteSliceViewFilterProxyModel;
+//    }
 
     inline PlayerQuoteSliceModel & getQuoteModel(bool isweekly = true) {
         return isweekly ? mPlayerQuoteSliceModel : mROWPlayerQuoteSliceModel;
@@ -575,16 +575,7 @@ public:
 //            return model->get_fullname() + " (" + model->get_pos() +")" ;
 //    }
 
-    Q_INVOKABLE void addTradingSymbol(const QString &symbol,bool isweekly) {
-        auto it = mPlayerSymbolsModel.getByUid(symbol);
-        if ( it == nullptr ) {
-            qDebug() << "error addTradingSymbol" << symbol;
-        }
-        else {
-            getQuoteModel(isweekly).UpdateSymbols(it,m_blocknum,
-                                                  isweekly ? mWeeklySuffix : mSeasonSuffix);
-        }
-    }
+    Q_INVOKABLE void addTradingSymbol(const QString &symbol,bool isweekly);
 
     void addQuoteSymbol(const std::string &symbol) {
         QString stripped = fantasybit::stripSymbol(symbol).data();

@@ -926,6 +926,8 @@ GameStatus NFLStateData::GetUpdatedGameStatus(string id) {
 vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
 
     vector<GameRoster> retgr{};
+    std::map<GameStatus_Status,vector<GameRoster>> mretgr;
+
     if ( !amlive ) {
         qWarning() << "am not live" ;
     }
@@ -950,8 +952,14 @@ vector<GameRoster> NFLStateData::GetCurrentWeekGameRosters() {
 
         gr.homeroster = GetTeamRoster(g.home());
         gr.awayroster = GetTeamRoster(g.away());
-        retgr.push_back(gr);
+
+        mretgr[gr.status].push_back (gr);
     }
+
+    for(auto &vecs : mretgr)
+        retgr.insert(retgr.end(),
+                     std::make_move_iterator(vecs.second.begin()),
+                     std::make_move_iterator(vecs.second.end()));
 
     return retgr;
 }
@@ -983,27 +991,28 @@ std::unordered_map<std::string,PlayerDetail>
 //    if ( it != end(MyTeamRoster))
 //        qDebug() << " found it" << it->second.size();
 
-    auto teamroster = MyTeamRoster[teamid];
-    qDebug() << teamroster.size();
-    string temp;
-    for ( auto p : teamroster) {
-        auto ps = MyPlayerStatus[p];
-        if ( ps.teamid() != teamid  ||
-             false)//ps.status() != PlayerStatus::ACTIVE)
-            continue;
+//    auto teamroster = MyTeamRoster[teamid];
+//    qDebug() << teamroster.size();
+//    string temp;
+    for ( auto p : MyTeamRoster.at (teamid)) {
+//        auto ps = MyPlayerStatus[p];
+//        if ( ps.teamid() != teamid  ||
+//             false)//ps.status() != PlayerStatus::ACTIVE)
+//            continue;
 
-        PlayerDetail pd;
-        pd.base = GetPlayerBase(p);
-        pd.team_status = ps.status();
-        pd.game_status = PlayerGameStatus::NA;
-        pd.symbol = ps.symbol();
-        vpb[p] = pd;
+        vpb[p] = GetPlayerDetail(p,true);
+//        PlayerDetail pd;
+//        pd.base = GetPlayerBase(p);
+//        pd.team_status = ps.status();
+//        pd.game_status = PlayerGameStatus::NA;
+//        pd.symbol = ps.symbol();
+//        vpb[p] = pd;
     }
     return vpb;
 }
 
-PlayerDetail NFLStateData::GetPlayerDetail(const std::string &symbol) {
-    auto p = mSym2Pid[symbol];
+PlayerDetail NFLStateData::GetPlayerDetail(const std::string &symbol,bool ispid) {
+    auto p = ispid ? symbol : mSym2Pid[symbol];
     auto ps = MyPlayerStatus[p];
 
     PlayerDetail pdt;

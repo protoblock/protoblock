@@ -122,24 +122,27 @@ public:
         m_netprice = 0;
         m_netqty   = 0;
         mOpenOrdersModel.setpidsymbol(m_symbol);
-        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
+        dosetMultiplier();
     }
 
+    inline void dosetMultiplier() {
+        m_multiplier = fantasybit::isWeekly(m_symbol)  ? 100.0 : 1.0;
+    }
     explicit TradingPositionsModelItem(const AllOdersSymbol &allordersymbol,
                                        QObject *parent = Q_NULLPTR)
-                : m_symbol{allordersymbol.symbol().data()},
+                : QObject{parent},
+                  m_symbol{allordersymbol.symbol().data()},
                   m_netprice{allordersymbol.netprice()},
                   m_netqty{allordersymbol.netqty()},
                   m_openpnl{allordersymbol.pnl()},
 //                  mOpenOrdersModel(),
-                  m_pOpenOrdersModel{nullptr},
                   m_avgprice(0.0),
-                  QObject{parent}
+                  m_pOpenOrdersModel{nullptr}
     {
 //        mOpenOrdersModel.setfantasyname(allordersymbol.fname().data());
 //        for ( auto &pio : allordersymbol())
 
-        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
+        dosetMultiplier();
 
         if ( m_pOpenOrdersModel == nullptr )
             m_pOpenOrdersModel = new OpenOrdersModel();
@@ -162,7 +165,7 @@ public:
                                 QObject{parent} {
 
         m_symbol = pidppvc.first.data();
-        m_multiplier = (m_symbol[m_symbol.length()-1] == 's') ? 1.0 : 100.0;
+        dosetMultiplier();
 
         auto &mypair = pidppvc.second;
         auto &myorders = mypair.second;

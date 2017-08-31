@@ -334,13 +334,13 @@ void Mediator::updateWeek() {
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
             //DO Schedule
-            std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>>> sorted;
+            std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus>>> sorted;
             fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theSeason,m_theWeek);
             for ( auto &gi : weekly.games()) {
                 auto status = mGateway->dataService->GetGameStatus(gi.id());
-                std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>> &vec =
+                std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus>> &vec =
                         sorted[gi.time()];
-                vec.emplace_back(std::make_pair(gi,status.status()));
+                vec.emplace_back(std::make_pair(gi,status));
             }
 
             vector<WeeklyScheduleModelItem *> holdingame;
@@ -348,9 +348,9 @@ void Mediator::updateWeek() {
 //                qDebug() << " tvec sorted " << tvec.first;
                 for ( auto p : tvec.second ) {
 //                    qDebug() << " p tvec " << p.second << p.first.DebugString().data();
-                    if ( p.second == GameStatus_Status_CLOSED )
+                    if ( p.second.status() == GameStatus_Status_CLOSED )
                         m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
-                    else if ( p.second == GameStatus_Status_INGAME )
+                    else if ( p.second.status() == GameStatus_Status_INGAME )
                         holdingame.push_back(new WeeklyScheduleModelItem(p.first,p.second,this));
                     else
                         m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
@@ -389,10 +389,19 @@ void Mediator::updateWeek() {
             set_thisWeekPrev(false);
         }
 
+//        std::string sss = "BMWR17w01";
+//        if ( !getQuoteModel().Update(ms)) {
+//            addQuoteSymbol(ms.symbol());
+//            if ( !getQuoteModel(ms.symbol()).Update(ms))
+//                qDebug() << "error updateweek" << ms.DebugString().data();
+//        }
+
         //get snapshot for all symbols
         const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
         qDebug() << "  vms " << vms.size();
         for ( auto ms : vms ) {
+//            if ( ms.symbol () == "BMWR17s")
+//                ms.set_symbol ( "BMWR17w01");
             if ( !getQuoteModel(ms.symbol()).Update(ms)) {
                 addQuoteSymbol(ms.symbol());
                 if ( !getQuoteModel(ms.symbol()).Update(ms))
@@ -745,7 +754,7 @@ void Mediator::useName(const QString &name) {
     emit OnUseName(name);
 }
 
-QString Mediator::init() {  
+QString Mediator::init() {
     connect( mOGateway, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
             this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
 
@@ -944,24 +953,36 @@ void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
 
 Mediator *Mediator::myInstance;
 
+void Mediator::addTradingSymbol(const QString &symbol, bool isweekly) {
+    qDebug() << "mediator addTradingSymbol " << symbol <<  isweekly;
+    auto it = mPlayerSymbolsModel.getByUid(symbol);
+    if ( it == nullptr ) {
+        qDebug() << "error addTradingSymbol" << symbol;
+    }
+    else {
+        getQuoteModel(isweekly).UpdateSymbols(it,m_blocknum,
+                                              isweekly ? mWeeklySuffix : mSeasonSuffix);
+    }
+}
+
 }
 
 
-              //    if ( !m_fantasy_agent.HaveClient() ) {
-              //        qDebug() << "error no CLient";
+//    if ( !m_fantasy_agent.HaveClient() ) {
+//        qDebug() << "error no CLient";
 
-              //        return;
-              //    }
-              //    ExchangeOrder eo;
-              //    eo.set_type(ExchangeOrder::CANCEL);
-              //    eo.set_cancel_oref(id);
+//        return;
+//    }
+//    ExchangeOrder eo;
+//    eo.set_type(ExchangeOrder::CANCEL);
+//    eo.set_cancel_oref(id);
 
-              //#ifdef TRACE
-              //    qDebug() << "cancelTrade id " << id;
-              //#endif
+//#ifdef TRACE
+//    qDebug() << "cancelTrade id " << id;
+//#endif
 
-              //    Transaction trans{};
-              //    trans.set_version(Commissioner::TRANS_VERSION);
+//    Transaction trans{};
+//    trans.set_version(Commissioner::TRANS_VERSION);
               //    trans.set_type(TransType::EXCHANGE);
               //    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
 
