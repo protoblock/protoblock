@@ -141,6 +141,7 @@ Item {
                 depthmodel: MiddleMan.pDepthMarketModel
                 globalorders: MiddleMan.pGlobalOpenOrdersModel
                 quoteproxymodel: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
+                isweekly: true
             }
 
             TradingComp  {
@@ -152,6 +153,7 @@ Item {
                 depthmodel: MiddleMan.pROWDepthMarketModel
                 globalorders: MiddleMan.pROQGlobalOpenOrdersModel
                 quoteproxymodel: MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel
+                isweekly: false
             }
 
         }

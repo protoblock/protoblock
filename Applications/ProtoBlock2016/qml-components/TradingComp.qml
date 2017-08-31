@@ -21,6 +21,7 @@ Item {
     property alias leftwidth: depths.width;
     property alias globalorders: orders.globalorders;
     property alias quoteproxymodel: wwww.quotemodel
+    property alias isweekly: lss.wk
 
 
     TradingContextBanner {

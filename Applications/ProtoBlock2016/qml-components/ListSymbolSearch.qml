@@ -36,6 +36,7 @@ Item {
                     Layout.preferredWidth: (parent.width / 8.0)
                     color: "black"
                     onClicked: {
+                        console.log("adding trading symbols")
                         MiddleMan.addTradingSymbol(model.symbol,listsearch.wk)
                     }
                     action: Material.Action {
