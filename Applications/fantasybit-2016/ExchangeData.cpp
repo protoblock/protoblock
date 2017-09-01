@@ -914,7 +914,10 @@ void ExchangeData::OnMarketTicker(const string &symbol, fantasybit::MarketTicker
         mquote.set_as(mt.size());
     }
 
-    if ( amlive ) {
+#ifndef FORCE_LIVE
+    if ( amlive )
+#endif
+    {
         emit NewMarketTicker(mt,mBookDelta->blocknum());
     }
 }
@@ -963,8 +966,10 @@ void ExchangeData::OnTrade(const string &symbol, fantasybit::TradeTic *tt) {
     }
 
     //StoreOhlc(playerid);
-
-    if ( amlive ) {
+#ifndef FORCE_LIVE
+    if ( amlive )
+#endif
+    {
        emit NewTradeTic(tt);
     }
 
