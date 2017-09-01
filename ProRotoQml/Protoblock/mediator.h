@@ -746,13 +746,13 @@ private:
 
     bool amLive = false;
 
-    void getLeaders(int week,bool lastweek, bool all2016 = false) {
+    void getLeaders(int week,bool lastweek, bool all20XX = false) {
 #ifdef NO_SQL_LEADERS
         return;
 #endif
-        QString links("https://158.222.102.83:4545");
+        QString links("https://app.trading.football:4545");
         QString route("fantasy/leaders");
-        if ( !all2016 )
+        if ( !all20XX )
             route = route.append("?position=all%20positions&week=%1").arg(week);
 
 
@@ -784,8 +784,8 @@ private:
 
             auto *item = mFantasyNameBalModel.getByUid(name);
             if ( item == nullptr ) continue;
-            if ( all2016 )
-                item->set_leaders2016(score);
+            if ( all20XX )
+                item->set_leaders20XX(score);
             else if ( lastweek )
                 item->set_lastweek(score);
             else

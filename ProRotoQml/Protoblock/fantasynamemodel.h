@@ -21,7 +21,7 @@ class FantasyNameBalModelItem : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (quint64, bits)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, thisweek)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, lastweek)
-    QML_WRITABLE_CSTREF_PROPERTY (quint64, leaders2016)
+    QML_WRITABLE_CSTREF_PROPERTY (quint64, leaders20XX)
     QML_WRITABLE_CSTREF_PROPERTY (int, numberproj)
     QML_WRITABLE_CSTREF_PROPERTY (int, lastupdate)
 
@@ -32,7 +32,7 @@ public:
         m_bits = 0;
         m_thisweek = 0;
         m_lastweek = 0;
-        m_leaders2016 = 0;
+        m_leaders20XX = 0;
         m_numberproj = m_lastupdate = 0;
     }
 
@@ -42,7 +42,7 @@ public:
         m_bits = 0;
         m_thisweek = 0;
         m_lastweek = 0;
-        m_leaders2016 = 0;
+        m_leaders20XX = 0;
         m_numberproj = m_lastupdate = 0;
     }
     explicit FantasyNameBalModelItem(const fantasybit::FantasyNameBal &in) :  QObject(nullptr) {
@@ -52,7 +52,7 @@ public:
         m_bits = in.bits();
         m_thisweek = 0;
         m_lastweek = 0;
-        m_leaders2016 = 0;
+        m_leaders20XX = 0;
         m_numberproj = m_lastupdate = 0;
 //        m_chash = in.chash();
     }
@@ -68,7 +68,7 @@ public:
         set_lastupdate(blocknump.first);
         m_thisweek = 0;
         m_lastweek = 0;
-        m_leaders2016 = 0;
+        m_leaders20XX = 0;
 
     }
 
@@ -81,7 +81,7 @@ public:
 //        set_chash(in.get_chash());
         m_thisweek = 0;
         m_lastweek = 0;
-        m_leaders2016 = 0;
+        m_leaders20XX = 0;
         m_numberproj = m_lastupdate = 0;
 
     }
