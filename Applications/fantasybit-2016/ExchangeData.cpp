@@ -59,10 +59,11 @@ void ExchangeData::init() {
 
             for (auto ha : {QString("home"),QString("away")} )
             for ( auto bp : ha == "home" ? gsp.home() : gsp.away()) {
-                if ( bp.symbol() == "" ) {
-                    if ( bp.playerid() != "")
-                        mLockedSymb.insert(bp.playerid());
-                    continue;
+
+                if ( bp.playerid() != "") {
+                    mLockedSymb.insert(bp.playerid());
+                    if ( bp.symbol() == "" )
+                        continue;
                 }
 
                 auto it2 = mLimitBooks.insert(make_pair(bp.symbol(),
@@ -423,7 +424,12 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
     qDebug() << "level2 ExchangeData OnOrderNew oooooo " << fn->alias().data() << eo.DebugString().data();
 #endif
 
+    if ( end(mLockedSymb) != mLockedSymb.find (fantasybit::stripSymbol (symbol)) ) {
+        qWarning() << "invalid order, locked limitbook for" << symbol.data();
+        return;
+    }
     //MatchingEngine &ma;
+    /*
     auto it = mLimitBooks.find(symbol);
     if ( it == end(mLimitBooks)) {
         if ( mLockedSymb.size() > 0 ) {
@@ -437,8 +443,10 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
                 }
             }
         }
+        */
 
-
+    auto it = mLimitBooks.find(symbol);
+    if ( it == end(mLimitBooks)) {
         //todo: confirm player_id even exists
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnOrderNew create new book " << symbol.data();
@@ -705,7 +713,7 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
 
     auto it = mLimitBooks.find(ticker);
     if ( it == end(mLimitBooks)) {
-        qWarning() << "invalid cancel LimitBook not found for" << eo.DebugString().data();
+        qWarning() << "invalid cancel LimitBook not found for" << eo.DebugString().data() << ticker.data ();
         return;
     }
 
@@ -837,7 +845,7 @@ void ExchangeData::OnGameStart(const std::string &gid,
 
             if ( sym.size() == 4 && it->first.at(4) != '1') break;
 
-            lockit = false;
+//            lockit = false;
             bp.set_symbol(it->first);
             it->second->islocked = true;
 #ifdef TRACE
@@ -854,8 +862,8 @@ void ExchangeData::OnGameStart(const std::string &gid,
 #endif
             }
 
-            if ( ha == "home") gsp.add_home()->CopyFrom(bp);
-            else gsp.add_away()->CopyFrom(bp);
+//            if ( ha == "home") gsp.add_home()->CopyFrom(bp);
+//            else gsp.add_away()->CopyFrom(bp);
 
 //            if ( ++it == end(mLimitBooks) )
 //                break;
@@ -1116,7 +1124,10 @@ MarketSnapshot* MatchingEngine::makeSnapshot(MarketSnapshot *ms) {
 #ifdef TRACE
     qDebug() << "level2 makeSnapshot";// << symbol;
 #endif
-    if ( islocked ) return ms;
+    if ( islocked ) {
+        qDebug() << "level2 makeSnapshot islocked" << ms->symbol ().data ();// << symbol;
+        return ms;
+    }
     ms->set_blocknum(blocknum);
     int a = 1;
     int b = mLimitBook->BOOK_SIZE;
