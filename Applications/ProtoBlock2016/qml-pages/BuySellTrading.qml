@@ -21,6 +21,7 @@ Item {
     property variant inplay:  undefined
 //        MiddleMan.pROWPlayerQuoteSliceModelItem
 
+    property bool isweekly
 
     Layout.fillWidth: true
     property int depthsize: 5
@@ -704,6 +705,7 @@ Item {
 //    }
     Dialog {
         height: ProtoScreen.guToPx(34)
+        property int count: 0
         minimumHeight: ProtoScreen.guToPx(8)
         width: ProtoScreen.guToPx(77)
         minimumWidth: ProtoScreen.guToPx(16)
@@ -715,7 +717,7 @@ Item {
         property string player
         id: myTradeDialog
         positiveButtonText: side + " Now"
-        title: "Confirm Trade - Season 2017 Contract"
+        title: "Confirm Trade - " + (isweekly ? ("2017 Week- " + tradingroot.theqmlweek) : ("Season " + theqmlseason)) + " Contract"
         text: "Protoblock Player: " + realRoot.uname
         dialogContent: Column {
             anchors.fill: parent
@@ -749,7 +751,18 @@ Item {
                 rootLoader.source = "qrc:/Account.qml"
                 pageHelper.selectedTabIndex = 3;
             }
+            else if ( MiddleMan.pMyFantasyNameBalance.stake <= 0 ) {
+                console.log("Error: Zero Balace - must have balance to trade")
+                title = "Error: Zero Balace - must have balance to trade";
+                if ( count === 0) {
+                    count = 1
+                    show()
+                }
+            }
+
             else if ( inplay.symbol !== "" )
+                console.log(MiddleMan.pMyFantasyNameBalance.stake +  " Balace - must have balance to trade")
+
                 MiddleMan.doTrade(
                      inplay.playerid,
                     inplay.symbol

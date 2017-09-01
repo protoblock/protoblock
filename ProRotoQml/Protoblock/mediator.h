@@ -39,14 +39,38 @@ class Mediator : public QObject {
 
     explicit Mediator(QObject *parent = 0);
     //trading
+
+
+    //quotes
+    PlayerQuoteSliceModel mPlayerQuoteSliceModel;
+    PlayerQuoteSliceModel mROWPlayerQuoteSliceModel;
+
+    //depth
+    DepthMarketModel mDepthMarketModel;
+    DepthMarketModel mROWDepthMarketModel;
+
+    //positions
+    TradingPositionsModel mTradingPositionsModel;
+    TradingPositionsModel mROWTradingPositionsModel;
+
+    //fnamebal
+    FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
+    PlayerSymbolsModel mPlayerSymbolsModel;
+
     PlayerSymbolsModelItem dummyPlayerSymbolsModelItem;
     PlayerQuoteSliceModelItem dummyPlayerQuoteSliceModelItem;
     OpenOrdersModel dummyOpenOrdersModel;
     FantasyNameBalModelItem dummyFantasyNameBalModelItem;
 
+    PlayerProjModel mPlayerProjModel;
+    QItemSelectionModel myGamesSelectionModel;
+    PlayerResultModel mPlayerResultModel;
+    QItemSelectionModel myPrevGamesSelectionModel;
+
+
+    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerSymbolsModel)
 
     QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
-    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerSymbolsModel)
 
     //Trading
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
@@ -56,11 +80,12 @@ class Mediator : public QObject {
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceViewFilterProxyModel, pROWPlayerQuoteSliceViewFilterProxyModel)
 
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
-    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
-    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
-
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pROWDepthMarketModel)
+
+    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pROWGlobalOpenOrdersModel)
+
+    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pROWTradingPositionsModel)
 
 
@@ -95,15 +120,11 @@ class Mediator : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY(bool,useSelected)
     QML_WRITABLE_CSTREF_PROPERTY(bool,thisWeekPrev)
 
-    QML_READONLY_CSTREF_PROPERTY (qint32, height)
-    QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
 
 
     QML_READONLY_CSTREF_PROPERTY (QString, controlMessage)
     QML_WRITABLE_CSTREF_PROPERTY(bool,busySend)
 
-    PlayerProjModel mPlayerProjModel;
-    QItemSelectionModel myGamesSelectionModel;
     pb::IPBGateway *mGateway = nullptr;
     QObject *mOGateway;
     void setupConnection(pb::IPBGateway *ingateway);
@@ -112,9 +133,6 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (qint32, thePrevWeek)
     QML_READONLY_CSTREF_PROPERTY (qint32, thePrevSeason)
 
-    PlayerResultModel mPlayerResultModel;
-    QItemSelectionModel myPrevGamesSelectionModel;
-    PlayerSymbolsModel mPlayerSymbolsModel;
 
         //schedule
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeekClosedScheduleModel)
@@ -130,6 +148,8 @@ class Mediator : public QObject {
 //    QML_READONLY_PTR_PROPERTY (QQmlObjectListModel<FantasyBitAwardModelItem>, pResultSelectedModel)
     QQmlObjectListModel<FantasyBitAwardModelItem> dummyResultSelectedModel;
 
+    QML_READONLY_CSTREF_PROPERTY (qint32, height)
+    QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
 
 
     static Mediator *myInstance;
@@ -175,6 +195,10 @@ public:
 
     inline PlayerQuoteSliceModel & getQuoteModel(const std::string &symbol) {
         return getQuoteModel(fantasybit::isWeekly(symbol));
+    }
+
+    Q_INVOKABLE bool isGlobalWeekly(const QString &symbol) {
+        return fantasybit::isWeekly(symbol);
     }
 
     Q_INVOKABLE void startDepth(const QString& symbol) {
@@ -706,20 +730,6 @@ private:
 
     //    WeeklyScheduleModel mWeeklyScheduleModel;
 
-    //quotes
-    PlayerQuoteSliceModel mPlayerQuoteSliceModel;
-    PlayerQuoteSliceModel mROWPlayerQuoteSliceModel;
-
-    //depth
-    DepthMarketModel mDepthMarketModel;
-    DepthMarketModel mROWDepthMarketModel;
-
-    //positions
-    TradingPositionsModel mTradingPositionsModel;
-    TradingPositionsModel mROWTradingPositionsModel;
-
-    //fnamebal
-    FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
 
     //oms
 //    OpenOrdersModel mOpenOrdersModel;

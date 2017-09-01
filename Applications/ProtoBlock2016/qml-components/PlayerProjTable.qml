@@ -25,7 +25,7 @@ Item {
         id: i2
         anchors.top: parent.top
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(5)
+        height: parent.height //- ProtoScreen.guToPx(5)
 
         TableView {
             id: tv
@@ -75,7 +75,7 @@ Item {
 
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
-               color: styleData.alternate?"#dcdcdc":"transparent"
+               color: styleData.alternate?"#f5f5f5":"transparent"
             }
 
             TableViewColumn {

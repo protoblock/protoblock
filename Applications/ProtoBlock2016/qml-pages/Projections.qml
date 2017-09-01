@@ -175,7 +175,7 @@ Item {
             anchors.top: cBan.bottom
             anchors.topMargin: ProtoScreen.guToPx(.25)
             width: parent.width
-            height: parent.height
+            height: parent.height - cBan.height//- ProtoScreen.guToPx(1)
             id: stack
 //                anchors.fill: parent
             initialItem: pptS
@@ -356,7 +356,7 @@ Item {
         id: handeldel
 
         Item {
-            height: parent.height-cBan.height
+            height: parent.height//-cBan.height
             anchors.margins: 0
             Rectangle {
                 border.width: 0

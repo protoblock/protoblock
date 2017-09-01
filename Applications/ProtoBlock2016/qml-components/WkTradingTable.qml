@@ -78,6 +78,8 @@ Item {
 //                currentRow = Qt.binding(function() {
 //                        return quotemodel.getViewIndexFromSymbol(dsymbol) ;
 //                })
+//                currentRow = 0
+                currentRowChanged()
             }
 
             onSelectionChanged: {
@@ -123,17 +125,22 @@ Item {
 
 //            currentRow: 0
             property int selectedRow: -1
-            currentRow: -1
+            currentRow: 0
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
-               color: (styleData.row===tvr.selectedRow)
-//                      || (MiddleMan.pPlayerQuoteSliceModelItem && MiddleMan.pPlayerQuoteSliceModelItem.symbol === model.data(styleData.row,"symbol")))
-                       ? Material.Theme.accentColor
-                            : (styleData.alternate?"#dcdcdc":"transparent")
-//                                                              Material.Theme.light.subTextColor : Material.Theme.light.hintColor)
-               //                         (styleData.alternate ? "#c4c4c4"  : "transparent")
+//               color: styleData.alternate?"#f5f5f5":"transparent"
+               color:  !model ? "transparent" : (  (model.symbol === dsymbol) ? "Light Grey"
+                                                                                : (styleData.alternate?"#f5f5f5":"transparent"))
+                                                                                         //Material.Theme.accentColor
+//               color: (styleData.row===tvr.selectedRow)
+//                                           ? Material.Theme.accentColor
+//                                                : (styleData.alternate?"#f5f5f5":"transparent")
 
-               // "#dcdcdc"
+//                      || (MiddleMan.pPlayerQuoteSliceModelItem && MiddleMan.pPlayerQuoteSliceModelItem.symbol === model.data(styleData.row,"symbol")))
+//                                                              Material.Theme.light.subTextColor : Material.Theme.light.hintColor)
+               //                         (styleData.alternate ? "#f5f5f5"  : "transparent")
+
+               // "#f5f5f5"
 //                Component.onCompleted: {
 //                    if ( model.symbol === dsymbol )
 //                        console.log("styleData.row" + styleData.row)
@@ -264,10 +271,18 @@ Item {
                     backgroundColor = Qt.binding(function() {
                         if ( !model )
                             return "transparent"
-                        else if (styleData.row===tvr.selectedRow ) {
-                            return "Light Grey";
+//                        else if (m.row===tvr.selectedRow ) {
+//                            return "transparent"//Light Grey";
+//                        }
+                        else if (dsymbol === model.symbol) {
+                            return "transparent"
+
+//                            lll.color = "white"
+//                            return "green"
                         }
+
                         else {
+                            lll.color = Material.Theme.light.textColor
                             switch(model.pos) {
                             case "WR":
                                 return "#FEFBB6";
@@ -316,9 +331,22 @@ Item {
                     }
                     Component.onCompleted: {
                         backgroundColor = Qt.binding(function() {
-                            if (styleData.row===tvr.selectedRow )
-                                return "Light Grey"
-                            else
+//                            if (styleData.row===tvr.selectedRow )
+//                                return "Light Grey"
+//                            else
+                            if ( !model ) {
+//                                lbl.color = Material.Theme.light.textColor;
+                                return "transparent";
+                            }
+
+                            if (dsymbol === model.symbol) {
+                                return "transparent";
+
+//                                lbl.color = "white"
+//                                return "green"
+                            }
+//                            lbl.color = Material.Theme.light.textColor
+
                             switch(styleData.value) {
                                 case "WR":
                                     return "#FEFBB6";

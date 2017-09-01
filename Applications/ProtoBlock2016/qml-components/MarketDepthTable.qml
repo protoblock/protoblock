@@ -39,7 +39,7 @@ Card {
 
         rowDelegate: Rectangle {
            height: ProtoScreen.guToPx(5)
-           color: styleData.alternate?"#dcdcdc":"transparent"
+           color: styleData.alternate?"#f5f5f5":"transparent"
         }
 
         headerDelegate:  Rectangle {

@@ -34,7 +34,7 @@ Item {
             sortIndicatorColumn: 1
             highlightOnFocus:   false
 //            anchors.fill: parent
-            height: parent.height - ProtoScreen.guToPx(5)
+            height: parent.height //- ProtoScreen.guToPx(5)
             implicitWidth: parent.width
 
             selectionMode: SelectionMode.NoSelection
@@ -54,7 +54,7 @@ Item {
 
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
-               color: styleData.alternate?"#dcdcdc":"transparent"
+               color: styleData.alternate?"#f5f5f5":"transparent"
             }
 
             headerDelegate:  Rectangle {

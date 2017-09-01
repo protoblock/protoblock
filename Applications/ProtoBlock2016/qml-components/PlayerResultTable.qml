@@ -35,7 +35,7 @@ Item {
         id: i2
         anchors.top: parent.top
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(5)
+        height: parent.height //- ProtoScreen.guToPx(5)
 
         TableView {
             id: tvr
@@ -89,9 +89,9 @@ Item {
 //                  id: myPalette;
 //                  colorGroup: SystemPalette.Inactive
 //               }
-               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#dcdcdc":"transparent"
+               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#f5f5f5":"transparent"
 //               {
-//                  var baseColor = styleData.alternate?"#dcdcdc":"transparent"
+//                  var baseColor = styleData.alternate?"#f5f5f5":"transparent"
 //                  return styleData.selected?myPalette.highlight:baseColor
 //               }
             }
@@ -620,6 +620,8 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     color: (styleData.column >= 5 && styleData.column <= 9) ? Material.Theme.light.textColor : "white"
                     //                    font.bold: styleData.column === 4
+                    font.family: styleData.column ===  4 ? fontfamFB : "Roboto"
+
                 }
             }
 

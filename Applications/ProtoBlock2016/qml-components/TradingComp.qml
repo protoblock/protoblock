@@ -21,8 +21,7 @@ Item {
     property alias leftwidth: depths.width;
     property alias globalorders: orders.globalorders;
     property alias quoteproxymodel: wwww.quotemodel
-    property alias isweekly: lss.wk
-
+    property bool isweekly
 
     TradingContextBanner {
         id: tcb
@@ -33,6 +32,7 @@ Item {
         width: parent.width
         anchors.leftMargin: ProtoScreen.guToPx(.25)
         recwidth: leftwidth
+        weeklycontract: isweekly
 //        inplayf: tpos
     }
 
@@ -79,6 +79,7 @@ Item {
                     Orders {
                         id: orders
                         mysymbol: !quoteitem ? "" : quoteitem.symbol
+//                        isweekly: isweekly
                     }
                 }
 
@@ -97,6 +98,7 @@ Item {
                     height: parent.height
                     ListSymbolSearch  {
                         id: lss
+                        wk: isweekly
                         property alias ss: wwww.ss
                     }
                     //ROWTradingTable {}

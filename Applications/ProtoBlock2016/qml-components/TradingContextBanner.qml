@@ -15,6 +15,8 @@ import ProRotoQml.Theme 1.0
 Material.Card {
     id: thisroot
 
+//    flat: true
+    backgroundColor: "white"
     property variant inplayf: undefined
     property variant inplay: undefined
 
@@ -28,6 +30,14 @@ Material.Card {
 
     property bool havefname: inplayf && inplayf.fantasyname !== ""
     property variant mybalance: MiddleMan.pMyFantasyNameBalance
+
+//    property alias inplaytext: cwc.text
+
+    property bool weeklycontract: true
+    property string inplaytext: (weeklycontract ? ("Week " + tradingroot.theqmlweek ) : (tradingroot.theqmlseason + "  Season"))  + " Contract"
+
+
+
 //    Layout.fillWidth: true
 
 //    Layout.fillWidth: true
@@ -65,11 +75,11 @@ Material.Card {
                 fontSize: ProtoScreen.font(ProtoScreen.SMALL)
                 bold: true
                 anchors.left: parent.left
-                text: " 2017 Season Contract (" + inplay.symbol + ")    "
+                text: inplaytext + "  (" + inplay.symbol + ")    "
                 backgroundColor: "white"
                 color: themeroot.theme.primaryColor
                 helpShown: true
-                helperHeader: inplay.fullname + " (" + inplay.pos + ") Season Contract"
+                helperHeader: inplay.fullname + " (" + inplay.pos + ") " + text
                 helperTxt: "16 games 16 weeks. Season long contracts settle at the total points from a 16 game season. " +
                             "the season is from week1-week16. (week 16 is counted twice instead of using week 17)." +
                             "These expire at the total fantasy points scored by " + inplay.fullname +
@@ -716,7 +726,7 @@ Material.Card {
                 }
 
                 Material.Label {
-                    text: !mybalance ? "" : (mybalance.stake + (!inplayf ? 0 : inplayf.totalopenpnl)).toLocaleString() + " ƑɃ"
+                    text: !mybalance ? "" : (mybalance.stake + (!tradingroot.totalopenpnl ? 0 : tradingroot.totalopenpnl)).toLocaleString() + " ƑɃ"
                     verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignRight
 

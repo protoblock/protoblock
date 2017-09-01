@@ -110,7 +110,7 @@ Material.ApplicationWindow{
 
         uname = MiddleMan.init()
         if ( uname  === "" ){
-//            loginDialog.toggle()
+            loginDialog.toggle()
         }
         else {
 
@@ -130,8 +130,8 @@ Material.ApplicationWindow{
 
     property string defaultname
 
-    property string start: "qrc:/Trading.qml"
-    property int startindex: 1
+    property string start: "qrc:/Projections.qml"
+    property int startindex: 0
     property string  errorString
     property bool  reloadleaders: false
 

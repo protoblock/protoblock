@@ -123,9 +123,9 @@ Item {
 //                  id: myPalette;
 //                  colorGroup: SystemPalette.Inactive
 //               }
-               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#dcdcdc":"transparent"
+               color: styleData.row===tvr.selectedRow ? "Light Grey" : styleData.alternate?"#f5f5f5":"transparent"
 //               {
-//                  var baseColor = styleData.alternate?"#dcdcdc":"transparent"
+//                  var baseColor = styleData.alternate?"#f5f5f5":"transparent"
 //                  return styleData.selected?myPalette.highlight:baseColor
 //               }
             }

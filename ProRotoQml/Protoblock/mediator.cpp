@@ -12,46 +12,53 @@ namespace pb {
 Mediator::Mediator(QObject *parent) :  QObject(parent),
                     mPlayerQuoteSliceModel{this,"","symbol"},
                     mROWPlayerQuoteSliceModel{this,"","symbol"},
+                    mDepthMarketModel{},
+                    mROWDepthMarketModel{},
+                    mTradingPositionsModel{this,QByteArray(),{"symbol"}},
+                    mROWTradingPositionsModel{this,QByteArray(),{"symbol"}},
 
-                    dummyPlayerSymbolsModelItem("0","@@RB"),
-                    dummyPlayerQuoteSliceModelItem(&dummyPlayerSymbolsModelItem,"","17s",0),
+
+                    mFantasyNameBalModel(this,QByteArray(),{"name"}),
+                    mGoodNameBalModel(this,QByteArray(),{"name"}),
+                    mPlayerSymbolsModel{this,{"symbol"},{"symbol"}},
+
+                    dummyPlayerSymbolsModelItem("0",""),//@@RB"),
+                    dummyPlayerQuoteSliceModelItem(&dummyPlayerSymbolsModelItem,"","",0),
+//                    dummyPlayerQuoteSliceModelItem(&dummyPlayerSymbolsModelItem,"","17s",0),
+
+                    dummyFantasyNameBalModelItem(),
+
+                    myGamesSelectionModel{},
+                    myPrevGamesSelectionModel{},
+
+                    m_pPlayerSymbolsModel(new SortFilterProxyModel),
+                    m_pFantasyNameBalModel(&mFantasyNameBalModel),
+
+
                     m_pPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
                     m_pROWPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
 
-                    mDepthMarketModel{},
-                    m_pDepthMarketModel(&mDepthMarketModel),
 
-                    mROWDepthMarketModel{},
+                    m_pDepthMarketModel(&mDepthMarketModel),
                     m_pROWDepthMarketModel(&mROWDepthMarketModel),
 
                     m_pGlobalOpenOrdersModel(&dummyOpenOrdersModel),
                     m_pROWGlobalOpenOrdersModel(&dummyOpenOrdersModel),
 
-                    mTradingPositionsModel{this,QByteArray(),{"symbol"}},
                     m_pTradingPositionsModel(&mTradingPositionsModel),
-
-                    mROWTradingPositionsModel{this,QByteArray(),{"symbol"}},
                     m_pROWTradingPositionsModel(&mROWTradingPositionsModel),
 
-
-                    mFantasyNameBalModel(this,QByteArray(),{"name"}),
-                    mPlayerSymbolsModel{this,{"symbol"},{"symbol"}},
-                    m_pPlayerSymbolsModel(new SortFilterProxyModel),
-                    m_pFantasyNameBalModel(&mFantasyNameBalModel),
-                    mGoodNameBalModel{this,QByteArray(),{"name"}},
                     m_pGoodNameBalModel(&mGoodNameBalModel),
+                    m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem},
 
 
-                    myGamesSelectionModel{},
-                    myPrevGamesSelectionModel{},
+                    m_pLeaderBoardSortModel(new SortFilterProxyModel),
                     m_pQItemSelectionModel(&myGamesSelectionModel),
                     m_pPrevQItemSelectionModel(&myPrevGamesSelectionModel),
-                    m_pLeaderBoardSortModel(new SortFilterProxyModel),
                     m_pResultSelectedModel(new SortFilterProxyModel),
-                    m_blocknum(0),
                     m_height(0),
-                    dummyFantasyNameBalModelItem(),
-                    m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem} {
+                    m_blocknum(0) ,
+                    myFantasyName{""} {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
@@ -150,10 +157,13 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
 
     if ( nullptr != mGoodNameBalModel.getByUid(myname.name().data()) ) {
 //        if ( myFantasyName != "" ) return;
+        qDebug() << " already have name in GoodName";
     }
     else {
         auto it = mFantasyNameBalModel.getByUid(myname.name().data());
         if ( it != nullptr) {
+            qDebug() << " dont have name in GoodName, have name in mFantasyNameBalMode adding good";
+
             auto it2 = new FantasyNameBalModelItem(*it);
             mGoodNameBalModel.append(it2);
         }
@@ -170,8 +180,8 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
         }
     }
 
-    update_pMyFantasyNameBalance(mGoodNameBalModel.getByUid(myname.name().data()));
     myFantasyName = myname.name();
+    update_pMyFantasyNameBalance(mGoodNameBalModel.getByUid(myname.name().data()));
     qDebug() << "Mediator  emitting using fantasy name " << myname.name().data();
     myGamesSelectionModel.reset();
     emit usingFantasyName(myname.name().data());
@@ -215,11 +225,18 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
 
         if ( nullptr != mGoodNameBalModel.getByUid(m.name().data()) ) continue;
 
+        qDebug() <<  m.name ().data () << " not in mGoodNameBalModel";
         auto it = mFantasyNameBalModel.getByUid(m.name().data());
         if ( it != nullptr) {
-            mGoodNameBalModel.insert(mGoodNameBalModel.size(),it);
+            qDebug() <<  m.name ().data () << " is in mFantasyNameBalModel";
+            mGoodNameBalModel.append(new FantasyNameBalModelItem(*it));
             auto it2 = mGoodNameBalModel.getByUid(m.name().data());
+            if ( it2 == nullptr)
+                qDebug() << " nullptr? should have in good name wtf";
         }
+        else
+            qDebug() <<  m.name ().data () << " not in mFantasyNameBalModel";
+
     }
 
     qDebug() << " namename wins " << heighest << hname.data();
@@ -229,7 +246,8 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
 }
 
 void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
-    FantasyNameBalModelItem *item = (FantasyNameBalModelItem *)mGoodNameBalModel.get(fnb.name().data());
+    qDebug() << "  NameBal " << fnb.DebugString ().data ();
+    FantasyNameBalModelItem *item =  mGoodNameBalModel.getByUid (fnb.name().data());
     if ( !item || item->get_name() != fnb.name().data()) {
         //mGoodNameBalModel.insert(mGoodNameBalModel.size(),FantasyNameBalModelItem(fnb));
     }
@@ -942,7 +960,7 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
 }
 
 void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
-//    qDebug() << "level2 Trading::Mediator " << fo.fname << fo.openorder.DebugString().data();
+    qDebug() << "level2 Trading::Mediator " << fo.fname << fo.symbol.data () << fo.openorder.DebugString().data();
 
     if ( fo.fname != myFantasyName )
         return;

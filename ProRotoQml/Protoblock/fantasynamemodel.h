@@ -73,6 +73,7 @@ public:
     }
 
     explicit    FantasyNameBalModelItem(const FantasyNameBalModelItem &in) : QObject(nullptr) {
+        qDebug() << "FantasyNameBalModelItem copy constructin " << in.get_name ();
         set_name( in.get_name());
         set_pk(in.get_pk());
         set_stake(in.get_stake());
@@ -123,7 +124,7 @@ public:
     }
 
     void update (FantasyNameBalModelItem *in) {
-        FantasyNameBalModelItem *my = (FantasyNameBalModelItem *)get(in->get_name());
+        FantasyNameBalModelItem *my = getByUid (in->get_name());
         if ( my )
             my->update(*in);
         else {
@@ -136,4 +137,6 @@ public:
 };
 
 Q_DECLARE_METATYPE(FantasyNameBalModel*)
+Q_DECLARE_METATYPE(FantasyNameBalModelItem*)
+
 #endif // FANTASYNAMEMODEL_H

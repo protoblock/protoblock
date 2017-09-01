@@ -15,6 +15,13 @@ Item {
     property string liveorresult: MiddleMan.liveSync
     property string wkorrow: "WEEK-" + MiddleMan.theWeek
 
+    property int theqmlweek: MiddleMan.theWeek
+    property int theqmlseason: MiddleMan.theSeason
+
+    property double totalopenpnl: MiddleMan.pROWTradingPositionsModel.totalopenpnl
+                                                                            +
+                                                             MiddleMan.pTradingPositionsModel.totalopenpnl
+
     Component.onCompleted: {
         pageHelper.title = "Trading"
         console.log("trading completed")
@@ -42,7 +49,7 @@ Item {
             width: stack.topdepthleftwidth
             anchors.left: parent.left
             anchors.margins: ProtoScreen.guToPx(1)
-            color: "gray" // Theme.light.textColor//themeroot.theme.secondaryColor
+            color: "transparent" // Theme.light.textColor//themeroot.theme.secondaryColor
 //            radius: 2
             anchors.verticalCenter: cBan.verticalCenter
             visible: liveorresult === "Live"
@@ -96,7 +103,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: ProtoScreen.guToPx(2)
 //            anchors.left: parent.left
-            color: themeroot.theme.primaryColor // Theme.light.textColor//themeroot.theme.secondaryColor
+            color:  themeroot.theme.primaryColor // Theme.light.textColor//themeroot.theme.secondaryColor
 //            radius: ProtoScreen.guToPx(.5)
             anchors.verticalCenter: cBan.verticalCenter
             Layout.fillHeight: true
@@ -151,7 +158,7 @@ Item {
                 quoteitem: MiddleMan.pROWPlayerQuoteSliceModelItem
                 tradepos:   MiddleMan.pROWTradingPositionsModel
                 depthmodel: MiddleMan.pROWDepthMarketModel
-                globalorders: MiddleMan.pROQGlobalOpenOrdersModel
+                globalorders: MiddleMan.pROWGlobalOpenOrdersModel
                 quoteproxymodel: MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel
                 isweekly: false
             }
