@@ -27,7 +27,7 @@ Item {
         TableView {
             id: tv
             Component.onCompleted: {
-                resizeColumnsToContents()
+//                resizeColumnsToContents()
                 model.sortAgain("lastupdate",Qt.DescendingOrder)
             }
 
@@ -252,22 +252,6 @@ Item {
 //                }
             }
 
-            TableViewColumn {
-                role: "bits"
-                title: "Overall"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(10)
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
 
 
 
@@ -276,7 +260,7 @@ Item {
                 role: "lastupdate"
                 title: "Block"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -291,7 +275,7 @@ Item {
                 role: "numberproj"
                 title: "Count"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(7)
+                width: ProtoScreen.guToPx(4)
 
 
                 delegate: Material.Label {
@@ -341,8 +325,8 @@ Item {
 
 
             TableViewColumn {
-                role: "leaders2016"
-                title: "2017"
+                role: "leaders20XX"
+                title: MiddleMan.theSeason
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
@@ -357,6 +341,22 @@ Item {
                 }
             }
 
+            TableViewColumn {
+                role: "bits"
+                title: "Overall"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(10)
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
 
 
 
