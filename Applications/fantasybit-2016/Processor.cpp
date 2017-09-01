@@ -1009,7 +1009,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
         else {
             symbol += to_string(fc->season()-2000);
             if ( fc->type() == FutContract_Type_WEEKLY )
-                symbol += "w" + to_string(fc->week());
+                symbol += (fc->week() < 10 ? "w0" : "w")  + to_string(fc->week());
             else
                 symbol += "s";
         }

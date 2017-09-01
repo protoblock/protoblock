@@ -414,6 +414,8 @@ void Mediator::updateWeek() {
 //                qDebug() << "error updateweek" << ms.DebugString().data();
 //        }
 
+        //clear weekly
+        getQuoteModel (true).clear ();
         //get snapshot for all symbols
         const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
         qDebug() << "  vms " << vms.size();
