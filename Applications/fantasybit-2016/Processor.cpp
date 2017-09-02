@@ -1005,6 +1005,11 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
                 mFutContract.set_type(FutContract_Type_SEASON);
                 fc = &mFutContract;
             }
+            else {
+                mFutContract.set_type(FutContract_Type_WEEKLY);
+                fc = &mFutContract;
+                //to do check week !
+            }
         }
         else {
             symbol += to_string(fc->season()-2000);

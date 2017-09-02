@@ -760,7 +760,7 @@ Item {
                 }
             }
 
-            else if ( inplay.symbol !== "" )
+            else if ( inplay.symbol !== "" ) {
                 console.log(MiddleMan.pMyFantasyNameBalance.stake +  " Balace - must have balance to trade")
 
                 MiddleMan.doTrade(
@@ -770,6 +770,7 @@ Item {
                  ,myTradeDialog.price
                  ,myTradeDialog.qty
                     )
+            }
         }
 
     }
