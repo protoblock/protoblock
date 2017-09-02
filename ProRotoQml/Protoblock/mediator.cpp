@@ -58,7 +58,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_pResultSelectedModel(new SortFilterProxyModel),
                     m_height(0),
                     m_blocknum(0) ,
-                    myFantasyName{""} {
+                    myFantasyName("") {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
