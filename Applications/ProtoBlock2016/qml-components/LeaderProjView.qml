@@ -275,7 +275,7 @@ Item {
                 role: "numberproj"
                 title: "Count"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(4)
+                width: ProtoScreen.guToPx(5)
 
 
                 delegate: Material.Label {
@@ -292,7 +292,7 @@ Item {
                 role:  "thisweek"
                 title: "wk" + myTheWeek
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(7)
+                width: ProtoScreen.guToPx(5)
 
 
 
@@ -310,7 +310,7 @@ Item {
                 role:  "lastweek"
                 title: "wk" + (myTheWeek-1)
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(7)
+                width: ProtoScreen.guToPx(5)
 
                 visible: myTheWeek > 1
                 delegate: Material.Label {
@@ -345,7 +345,7 @@ Item {
                 role: "bits"
                 title: "Overall"
                 horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
 
 
                 delegate: Material.Label {

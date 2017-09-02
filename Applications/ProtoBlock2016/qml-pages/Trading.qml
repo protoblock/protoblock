@@ -127,6 +127,15 @@ Item {
                 Layout.fillHeight: false
                 Layout.fillWidth: true
             }
+
+            Rectangle {
+                anchors.horizontalCenter: parent.horizontalCenter;
+                width: ProtoScreen.guToPx(.125)
+                height: parent.height
+                color: "white"
+                anchors.verticalCenter: parent.verticalCenter
+
+            }
         }
 
         StackLayout {

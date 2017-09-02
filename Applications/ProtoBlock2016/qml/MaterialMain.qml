@@ -111,8 +111,8 @@ Material.ApplicationWindow{
         uname = MiddleMan.init()
         if ( uname  === "" ){
 //            loginDialog.toggle()
-            start = "qrc:/Projections.qml";
-            startindex = 3
+//            start = "qrc:/Account.qml";
+//            startindex = 3
         }
         else {
 

@@ -153,14 +153,14 @@ Item {
             TableViewColumn {
                 id: tvm
                 role: "pos"
-                title: "Position"
+                title: "Pos"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
 
 //                width: parent.width
 //                anchors.fill: parent
 //                width: lbl.implicitWidth + 2
-                width: ProtoScreen.guToPx(7)
+                width: ProtoScreen.guToPx(4)
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -262,7 +262,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 delegate: projdel
                 movable: false
-                width: ProtoScreen.guToPx(16)
+                width: ProtoScreen.guToPx(14)
             }
 
             TableViewColumn{
@@ -270,7 +270,7 @@ Item {
                 title: "Average"
                 horizontalAlignment : Text.AlignHCenter
                 movable: false
-                width: ProtoScreen.guToPx(10)
+                width: ProtoScreen.guToPx(8)
                 delegate: copydel
 //                delegate: Material.Label {
 //                    anchors.centerIn: parent
@@ -391,14 +391,14 @@ Item {
                         topw.focuscount = 1
 
                    lbl.text = Qt.binding(function(){
-                       if ( model.knownProjection !==  value)
+                       if ( tv.model.knownProjection !==  value)
                            return model.knownProjection
                        else
                            return "  "
                    })
 
                     rec.border.width = Qt.binding(function(){
-                        if ( model.knownProjection !==  value)
+                        if ( tv.model.knownProjection !==  value)
                             return ProtoScreen.guToPx(.25)
                         else
                             return 0
