@@ -352,6 +352,9 @@ void Mediator::updateWeek() {
         }
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
+            m_pWeeklyScheduleModel->clear ();
+            m_pWeekClosedScheduleModel->clear ();
+
             //DO Schedule
             std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus>>> sorted;
             fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theSeason,m_theWeek);
