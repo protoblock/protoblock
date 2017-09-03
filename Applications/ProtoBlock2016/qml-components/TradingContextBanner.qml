@@ -36,6 +36,26 @@ Material.Card {
     property bool weeklycontract: true
     property string inplaytext: (weeklycontract ? ("Week " + tradingroot.theqmlweek ) : (tradingroot.theqmlseason + "  Season"))  + " Contract"
 
+    property string helperTxtweekly: "Contract settles at 100 times the total number of PPR fantasy points scored by " + inplay.fullname
+                                     + " in Week-" + tradingroot.theqmlweek +
+                "If he scores 20 points, then the \"Writer\" (short seller) has to deliver 2000 Fantasybits to the Buyer" +
+                 "Knowing this, how much would you pay for this contract? If you project him to score 30 points, then you would win, 1000 Fantasybits" +
+                 "where the buyer owes the seller the price of the trade times 100, and the seller owes th buyer the total fantsy point scored times 100." +
+                  "If you beleive he is a bust, then you can now monetize this beleife in the blockchain fantasy football forwards exchange!" +
+                  "A good way to start, is to place a sell order (ask) at his ceiling and buy order at his floor, and see if someone takes the other side!"
+
+    property string helperTxtseason: "16 games 16 weeks. Season long contracts are Rest-of-The way contracts, and settle at the total fantsy points " +
+                                     " from a 16 game season. " +
+                "The season runs from week1-week16. (week 16 is counted twice instead of using week 17)." +
+                "These expire at the total fantasy points scored by " + inplay.fullname +
+                ". The \"Writer\" (seller) must give the \"Buyer\", Fantasybits equal to the amount of PPR fantasy points scored. " +
+                "It is 1 Fantasybit per Fantasy Point in these ROW contracts." +
+                "The idea is to try to buy below the actual settlement number," +
+                "or alternativly to \"Write\" contracts (sell) at a price above the actual final number. " +
+                "With all the known risks, how much are you willing to \"pay\" for the contract? " +
+                "For how much would you be willing to " +
+                " write the contract, knowing that you get keep all the points in case of injury or bust? " +
+                " Keep in mind, that you will have to pay the total poomts  scored in the case of a breakout!"
 
 
 //    Layout.fillWidth: true
@@ -80,17 +100,8 @@ Material.Card {
                 color: themeroot.theme.primaryColor
                 helpShown: true
                 helperHeader: inplay.fullname + " (" + inplay.pos + ") " + text
-                helperTxt: "16 games 16 weeks. Season long contracts settle at the total points from a 16 game season. " +
-                            "the season is from week1-week16. (week 16 is counted twice instead of using week 17)." +
-                            "These expire at the total fantasy points scored by " + inplay.fullname +
-                            ". The \"Writer\" (seller) must give the \"Buyer\", fantasy bits equal to the amount of fantsy points scored " +
-                            "It is 1 Fantasy Bit per Fantasy Point in these season long contracts." +
-                            "The game is to try to buy below the actual settlement number," +
-                            "or alternativly to write (sell) at a price above the actual final number. " +
-                            "With all the known risks, how much are you willing to \"pay\" for the contract? " +
-                            "For how much would you be willing to " +
-                            " write, or sell, the contract, knowing that you keep all the points in cae of injury," +
-                            " but have to pay up in case of a breakout?"
+                helperTxt: weeklycontract ? helperTxtWeekly : helperTxtSeason
+
 
                 width: parent.width
                 height: ProtoScreen.guToPx(3)
