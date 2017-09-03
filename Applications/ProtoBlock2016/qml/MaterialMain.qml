@@ -91,10 +91,10 @@ Material.ApplicationWindow{
 
     width: (Device.productType === "windows" || Device.productType === "osx") ?
                Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
-    height: (Device.productType === "windows" || Device.productType === "osx") ?
-               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
+//    height: (Device.productType === "windows" || Device.productType === "osx") ?
+//               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
 
-//    height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
+    height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
     color: "transparent"
     Component.onCompleted: {
         setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
@@ -124,8 +124,8 @@ Material.ApplicationWindow{
 //        height = (Device.productType === "windows" || Device.productType === "osx") ?
 //                   (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight) : ProtoScreen.availableHeight
 
-//        themeroot.show();
-        themeroot.showMaximized()
+        themeroot.show();
+//        themeroot.showMaximized()
         rootLoader.source = start
 
     }

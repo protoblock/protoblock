@@ -28,7 +28,7 @@ Item {
     }
 
         // spacer
-    Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
+//    Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
 
 
     Card {
@@ -42,6 +42,7 @@ Item {
             horizontalCenter: parent.horizontalCenter
 //                margins: ProtoScreen.guToPx(.125)
         }
+        backgroundColor: "white"
 
         Rectangle {
             height: cBan.height - ProtoScreen.guToPx(1)
