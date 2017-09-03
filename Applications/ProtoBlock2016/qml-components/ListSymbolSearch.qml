@@ -10,6 +10,7 @@ import QtQuick.Layouts 1.1
 
 Item {
     property bool ss: false
+    property bool wk: true
 
     id: listsearch
     width: parent.width
@@ -35,7 +36,8 @@ Item {
                     Layout.preferredWidth: (parent.width / 8.0)
                     color: "black"
                     onClicked: {
-                        MiddleMan.addTradingSymbol(model.symbol)
+                        console.log("adding trading symbols")
+                        MiddleMan.addTradingSymbol(model.symbol,listsearch.wk)
                     }
                     action: Material.Action {
                         iconName: "awesome/plus"
@@ -55,7 +57,8 @@ Item {
 
                 }
                 Material.Label {
-                    text: !model.fullname ? MiddleMan.fillPlayerBase(model.symbol, model.playerid) : model.fullname
+//                    text: !model.fullname ? MiddleMan.fillPlayerBase(model.symbol, model.playerid) : model.fullname
+                    text: MiddleMan.checkFullName(model.fullname,model.symbol)
                     Layout.fillHeight: true
                     verticalAlignment: Text.AlignVCenter
                     Layout.fillWidth: false

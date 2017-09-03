@@ -27,5 +27,6 @@
         <file>TradingContextBanner.qml</file>
         <file>FantasyNameContextBanner.qml</file>
         <file>ListSymbolSearch.qml</file>
+        <file>TradingComp.qml</file>
     </qresource>
 </RCC>

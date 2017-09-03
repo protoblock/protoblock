@@ -1,37 +1,42 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4
+//import QtQuick.Controls 2.2 as Controls
+
 //import ProRotoQml.Sql 1.0
 import Material.ListItems 1.0 as ListItems
 import Material 1.0
 //import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
-import QtQuick.Layouts 1.1
-//import Material.Styles 1.0
-//import QtQuick.Controls.Styles 1.4
-//import "../qml-components/TradingContextBanner.qml"
-//import "../qml-components/*.qml"
+import QtQuick.Layouts 1.3
 
 
 Item {
-//    property int week:
-//        MiddleMan.theWeek === 0 || !stack || !stack.currentItem ? 0 :
-//                          (stack.currentItem.objectName === "prevWeekS" ? MiddleMan.thePrevWeek :
-//    (stack.currentItem.objectName === "nextWeekS" ? MiddleMan.theNextWeek : MiddleMan.theWeek))
-//    property string seasontext: MiddleMan.seasonString + " 2016 "
-    property string seasontext: " 2017 Trading - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
+    property string seasontext: "NFL Season " + MiddleMan.theSeason + " - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
-    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
+    property string wkorrow: "WEEK-" + MiddleMan.theWeek
+
+    property int theqmlweek: MiddleMan.theWeek
+    property int theqmlseason: MiddleMan.theSeason
+
+    property double totalopenpnl: MiddleMan.pROWTradingPositionsModel.totalopenpnl
+                                                                            +
+                                                             MiddleMan.pTradingPositionsModel.totalopenpnl
 
     Component.onCompleted: {
         pageHelper.title = "Trading"
         console.log("trading completed")
      }
 
+    id: tradingroot
+
         // spacer
     Rectangle{width: ProtoScreen.guToPx(.125); height: ProtoScreen.guToPx(1);color: "transparent"}
 
     Card {
+        backgroundColor: "white"
+        flat: true
         id: topcard
+        radius: 0
         width: parent.width
         height: parent.height
         anchors{
@@ -39,12 +44,36 @@ Item {
             horizontalCenter: parent.horizontalCenter
         }
 
+        Rectangle {
+//            height: cBan.height - ProtoScreen.guToPx(1)
+            width: stack.topdepthleftwidth
+            anchors.left: parent.left
+            anchors.margins: ProtoScreen.guToPx(1)
+            color: "transparent" // Theme.light.textColor//themeroot.theme.secondaryColor
+//            radius: 2
+            anchors.verticalCenter: cBan.verticalCenter
+            visible: liveorresult === "Live"
+            Layout.fillHeight: true
+            Layout.fillWidth: false
+
+            Label {
+                anchors.centerIn: parent
+                text: wkorrow + " FANTASY FUTURES";
+                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                color: "green" //themeroot.theme.primaryColor //liveorresult === "Live" ?  :
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                id: futlabel
+                font.bold: true
+            }
+        }
+
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
             text: seasontext + " " + liveorresult
 
             font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-            color: liveorresult === "Live" ? "green" : "red"//themeroot.theme.primaryColor
+            color: themeroot.theme.primaryColor //liveorresult === "Live" ?  :
             Layout.fillHeight: true
             Layout.fillWidth: false
             verticalAlignment: Text.AlignVCenter
@@ -52,157 +81,114 @@ Item {
             id: cBan
         }
 
-        SystemPalette { id: pal }
-
-        TradingContextBanner {
-            id: tcbx
-            anchors.top: cBan.bottom
-            Layout.preferredWidth: parent.width
-            anchors.left: parent.left
-            width: parent.width
-            anchors.leftMargin: ProtoScreen.guToPx(.25)
-            recwidth: dsplit.width
+        Label {
+            text: "TRADE: "
+            color: "green"
+            anchors.right: barrec.left
+            anchors.margins: ProtoScreen.guToPx(.25)
+            font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+            Layout.fillHeight: true
+            Layout.fillWidth: false
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.verticalCenter: barrec.verticalCenter
+            font.bold: true
+            id: tradeLbl
         }
 
-        Item {
-            id: itema
-            anchors.top: tcbx.bottom
+        Rectangle {
+            id: barrec
+            height: cBan.height - ProtoScreen.guToPx(1.25)
+            width: ProtoScreen.guToPx(22)
+            anchors.right: parent.right
+            anchors.rightMargin: ProtoScreen.guToPx(2)
+//            anchors.left: parent.left
+            color:  themeroot.theme.primaryColor // Theme.light.textColor//themeroot.theme.secondaryColor
+//            radius: ProtoScreen.guToPx(.5)
+            anchors.verticalCenter: cBan.verticalCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            border.color: "transparent"
+            border.width: ProtoScreen.guToPx(.125)
+            TabBar {
+                selectedIndex: 0
+                id: bar
+                tabs: ["wk" + MiddleMan.theWeek ,"row"]
+                centered: true
+//                width: parent.width * 95.0
+//                height: parent.height * 95.0
+                darkBackground: true
+                anchors.centerIn: parent
+                anchors.fill: parent
+//                anchors.margins: ProtoScreen.guToPx(.125)
+                onSelectedIndexChanged: {
+                    wkorrow = (tabs[selectedIndex] === "row") ? ("REST-OF-WAY") : ("WEEK-" + MiddleMan.theWeek)
+                }
+                Layout.fillHeight: false
+                Layout.fillWidth: true
+            }
+
+            Rectangle {
+                anchors.horizontalCenter: parent.horizontalCenter;
+                width: ProtoScreen.guToPx(.125)
+                height: parent.height
+                color: "white"
+                anchors.verticalCenter: parent.verticalCenter
+
+            }
+        }
+
+        StackLayout {
+            currentIndex: bar.selectedIndex
+
+            anchors.top: cBan.bottom
             anchors.topMargin: ProtoScreen.guToPx(.25)
             width: parent.width
-            height: parent.height - tcbx.height - cBan.height
+            height: parent.height - cBan.height
+            id: stack
+            property real topdepthleftwidth: (currentIndex === 0) ? wkTrading.leftwidth : rowTrading.leftwidth
 
-            SplitView {
-                anchors.fill: parent
-                orientation: Qt.Horizontal
-                handleDelegate: handeldel
-//                width: parent.width
-//                height: parent.height
-
-                SplitView {
-                    id: dsplit
-                    Layout.minimumWidth: parent.width * .10
-                    Layout.maximumWidth: parent.width * .50
-                    orientation: Qt.Vertical
-                    height: parent.height
-//                    Layout.preferredWidth: ProtoScreen.guToPx(40)
-
-                    Card {
-                        Layout.maximumHeight: parent.height * .70
-                        Layout.minimumHeight: parent.height * .30
-                        backgroundColor: "#f5f5f5"
-                        Layout.fillHeight: true
-                        //Layout.preferredHeight: ProtoScreen.guToPx(80)
-
-                        MarketDepthTable {}
-//                       Orders {
-//                          anchors.centerIn: parent
-//                          anchors.fill: parent
-//                       }
-                    }
-
-                    Card {
-                        Layout.maximumHeight: parent.height * .70
-                        Layout.minimumHeight: parent.height * .30
-                        //MarketDepthTable {}
-                        Orders {
-                            mysymbol: !inplay ? "" : inplay.symbol
-                        }
-
-                    }
-
-                }
-
-                Card {
-                    id: popcard
-                    Layout.minimumWidth: parent.width * 0
-                    Layout.maximumWidth: parent.width * .25
-                    height: parent.height * .80
-                    enabled: wwww.ss
-                    visible: wwww.ss
-
-                    Card {
-                        anchors.top: parent.top
-                        height: parent.height
-                        ListSymbolSearch {
-                            id: lss
-                            property alias ss: wwww.ss
-                        }
-                        //ROWTradingTable {}
-                    }
-                    onEnabledChanged: {
-                    }
-                }
-
-                Card {
-                    Layout.minimumWidth: parent.width * .50
-                    Layout.maximumWidth: parent.width
-                    Layout.fillWidth: true
-                    height: parent.height
-
-                    Card {
-                        id: wkt
-                        height: parent.height - bcard.height
-                        width: parent.width
-
-                        WkTradingTable {
-                            id: wwww
-                        }
-                    }
-
-                    Card {
-                        anchors.top: wkt.bottom
-                        id: bcard
-                        height: ProtoScreen.guToPx(16)
-                        width: parent.width
-
-                        BuySellTrading {
-                            id: bt
-                            anchors.fill: parent
-                        }
-                    }
-
-                }
+            TradingComp  {
+                id: wkTrading
+                width: parent.width
+                height: parent.height
+                quoteitem: MiddleMan.pPlayerQuoteSliceModelItem
+                tradepos:   MiddleMan.pTradingPositionsModel
+                depthmodel: MiddleMan.pDepthMarketModel
+                globalorders: MiddleMan.pGlobalOpenOrdersModel
+                quoteproxymodel: MiddleMan.pPlayerQuoteSliceViewFilterProxyModel
+                isweekly: true
             }
+
+            TradingComp  {
+                id: rowTrading
+                width: parent.width
+                height: parent.height
+                quoteitem: MiddleMan.pROWPlayerQuoteSliceModelItem
+                tradepos:   MiddleMan.pROWTradingPositionsModel
+                depthmodel: MiddleMan.pROWDepthMarketModel
+                globalorders: MiddleMan.pROWGlobalOpenOrdersModel
+                quoteproxymodel: MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel
+                isweekly: false
+            }
+
         }
     }
 
-    Component {
-        id: handeldel
-
-        Item {
-            height: itema.height
-            anchors.margins: 0
-            Rectangle {
-                border.width: 0
-                id: rec
-                width: styleData.hovered ? ProtoScreen.guToPx(.25) : ProtoScreen.guToPx(.1)
-                color: styleData.hovered ? "black" : Qt.darker(pal.window, 1.5)
-                height: parent.height
-                anchors.right: rec3.left
-            }
-            Rectangle {
-                border.width: 0
-                id: rec3
-                width: styleData.hovered ? ProtoScreen.guToPx(.35) : ProtoScreen.guToPx(.1)
-
-                height: parent.height
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: styleData.hovered ? "white" : Qt.darker(pal.window, 1.5)
-            }
-            Rectangle {
-               border.width: 0
-               id: rec2
-               width: styleData.hovered ? ProtoScreen.guToPx(.25) : ProtoScreen.guToPx(.1)
-
-               height: parent.height
-               anchors.left: rec3.right
-               color: styleData.hovered ? "black" : Qt.darker(pal.window, 1.5)
-            }
+    Connections {
+        target: MiddleMan
+        onHaveWeeklySymbol: {
+            console.log( " onhaveweekly ")
+            if (wkTrading.wwww.viewselection.count === 0 )
+                wkTrading.wwww.viewselection.count.select(0)
         }
+        onHaveRowSymbol: {
+            console.log( " onhaverow ")
+            if (rowTrading.wwww.viewselection.count === 0 )
+                rowTrading.wwww.viewselection.count.select(0)
+        }
+
     }
+
 }
-
-
-
-
 

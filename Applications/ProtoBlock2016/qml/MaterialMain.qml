@@ -19,7 +19,7 @@ import Communi 3.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "2.3" //version
+    property string version: "2.4" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -82,6 +82,8 @@ Material.ApplicationWindow{
         }
     }
 
+//    title: "Protoblock " + MiddleMan.theSeason + " Devel"
+//    flags: Qt.Window
     id: themeroot
     visible: true
 //    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
@@ -89,10 +91,10 @@ Material.ApplicationWindow{
 
     width: (Device.productType === "windows" || Device.productType === "osx") ?
                Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
-//    height: (Device.productType === "windows" || Device.productType === "osx") ?
-//               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
+    height: (Device.productType === "windows" || Device.productType === "osx") ?
+               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
 
-    height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
+//    height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
     color: "transparent"
     Component.onCompleted: {
         setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
@@ -109,6 +111,8 @@ Material.ApplicationWindow{
         uname = MiddleMan.init()
         if ( uname  === "" ){
 //            loginDialog.toggle()
+//            start = "qrc:/Account.qml";
+//            startindex = 3
         }
         else {
 
@@ -121,7 +125,7 @@ Material.ApplicationWindow{
 //                   (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight) : ProtoScreen.availableHeight
 
 //        themeroot.show();
-//        themeroot.showMaximized()
+        themeroot.showMaximized()
         rootLoader.source = start
 
     }
@@ -191,7 +195,7 @@ Material.ApplicationWindow{
 
     //Level Three
     property var  levelThree: [
-        "Roto World", "CBS" , "ESPN", "NFL","Twitter"
+        "Roto World", "CBS" , "ESPN", "NFL","Twitter"//"TradingFloor" //
     ]
     property var levelThreeIcons: [
         "qrc:/icons/ic_help.png",
@@ -260,7 +264,7 @@ Material.ApplicationWindow{
                 }
                 bottom: parent.bottom
             }
-        }   
+        }
         actionBar.maxActionCount: navDrawer.enabled ? 1:3
         actions: [
             Material.Action {
@@ -640,6 +644,9 @@ Material.ApplicationWindow{
                     }
                     else
                         Qt.openUrlExternally("http://protoblock.com/template/downloads.html")
+
+                    updateDialog.close()
+                    themeroot.close()
                 }
             }
         }
@@ -739,7 +746,7 @@ Material.ApplicationWindow{
 
     function compairVersions(d){
         if (realRoot.version < d){
-            //            console.log("there is a update")
+            console.log("there is a update")
             updateDialog.toggle()
         }else{
 

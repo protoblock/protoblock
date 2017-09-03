@@ -433,7 +433,10 @@ public:
     void OnTrade(const string &symbol, fantasybit::TradeTic *tt);
     void OnMarketTicker(const string &symbol, fantasybit::MarketTicker &mt);
     void OnNewDepth(const string &symbol, fantasybit::DepthFeedDelta *df) {
-        if ( amlive ) {
+#ifndef FORCE_LIVE
+    if ( amlive )
+#endif
+        {
             df->set_symbol(symbol);
             emit NewDepthDelta(df);
         }

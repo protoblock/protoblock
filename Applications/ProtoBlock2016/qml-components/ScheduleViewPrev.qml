@@ -54,7 +54,7 @@ Material.Card {
         property bool first: true
 //        anchors.fill: parent
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(8)
+        height: parent.height //- ProtoScreen.guToPx(8)
         id: lv
         model: MiddleMan.pPreviousWeekScheduleModel
         headerPositioning: ListView.OverlayHeader
@@ -334,7 +334,7 @@ Material.Card {
                 dcard.elevation = Qt.binding(
                     function() {
                         if ( isl.isSelected(lv.model.index(index,0)) )
-                            return 5;
+                            return 1;
                         else
                             return 0
                     }
@@ -343,7 +343,7 @@ Material.Card {
                 dcard.backgroundColor = Qt.binding(
                     function() {
                         if ( isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection )
-                            return "white";
+                            return index % 2 == 0 ?"#f5f5f5":"white";
                         else
                             return Qt.darker("white",1.20)
                     }
@@ -388,10 +388,10 @@ Material.Card {
             property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
 
 
-            elevation: isl.isSelected(lv.model.index(index,0)) ? 5 : 0
+            elevation: isl.isSelected(lv.model.index(index,0)) ? 1 : 0
 //                    border.color =  isl.isSelected(lv.model.index(index,0)) ? "Green" : "transparent"
 //                    border.width = isl.isSelected(lv.model.index(index,0)) ? 2 : 0
-            backgroundColor: (isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection)  ? "white" : Qt.darker("white",1.20)
+            backgroundColor: (isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection)  ? (index % 2 == 0 ?"#f5f5f5":"white") : Qt.darker("white",1.20)
 
         RowLayout {
             anchors.fill: parent
@@ -471,7 +471,7 @@ Material.Card {
                     dcard.elevation = Qt.binding(
                         function() {
                             if ( isl.isSelected(lv.model.index(index,0)) )
-                                return 5;
+                                return 1;
                             else
                                 return 0
                         }
@@ -480,7 +480,7 @@ Material.Card {
                     dcard.backgroundColor = Qt.binding(
                         function() {
                             if ( isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection )
-                                return "white";
+                                return index % 2 == 0 ?"#f5f5f5":"white";
                             else
                                 return Qt.darker("white",1.20)
                         }

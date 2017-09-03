@@ -61,6 +61,7 @@ SOURCES += \
 #    $$PWD/FantasyAgent.cpp \
 #    $$PWD/timestate.cpp \
     $$PWD/ExchangeData.cpp \
+#    $$PWD/ExchangeProxy.cpp \
 #    $$PWD/trading.cpp \
     $$PWD/NameData.cpp \
     $$PWD/core.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
     $$PWD/NameData.h \
     $$PWD/Processor.h \
     $$PWD/ExchangeData.h \
+#    $$PWD/ExchangeProxy.h \
     $$PWD/RestFullCall.h \
     $$PWD/LAPIWorker.h \
     $$PWD/NodeWorker.h \
@@ -111,6 +113,7 @@ HEADERS += \
     $$PWD/../../ProRotoQml/protoblock/socketclient.h \
     $$PWD/../../ProRotoQml/protoblock/mediator.h \
     $$PWD/../../ProRotoQml/protoblock/playerquoteslicemodel.h \
+    $$PWD/../../ProRotoQml/protoblock/PlayerSymbolsModel.h \
     $$PWD/../../ProRotoQml/protoblock/depthmarketmodel.h \
     $$PWD/../../ProRotoQml/protoblock/fantasynamemodel.h \
     $$PWD/../../ProRotoQml/protoblock/openordersmodel.h \

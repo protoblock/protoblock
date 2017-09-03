@@ -54,11 +54,12 @@ Material.Card {
         property bool first: true
 //        anchors.fill: parent
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(5)
+        height: parent.height //- ProtoScreen.guToPx(5)
         id: lv
         model: MiddleMan.pWeeklyScheduleModel
 //        MiddleMan.pWeeklyScheduleModel
 //        selectionModel: MiddleMan.pQItemSelectionModel
+
         headerPositioning: ListView.OverlayHeader
         header : header
         delegate : gamedel
@@ -71,7 +72,7 @@ Material.Card {
 //            gamedel
 //        focus: true
         section.delegate: sectionDelegate
-        section.property: "time"
+        section.property: "time" //time"
         section.criteria: ViewSection.FullString
         spacing: 0
 
@@ -186,6 +187,7 @@ Material.Card {
 
     Component {
         id: sectionDelegate
+
         Rectangle {
             width: parent.width
             height: t.height//ProtoScreen.guToPx(1.5);
@@ -210,12 +212,14 @@ Material.Card {
 
                 Component.onCompleted: {
                     secsel[section] = ""
+                    console.log (" section " + section)
                 }
             }
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
+                    console.log ("togglr setting section " + section +  secsel[section])
                     if ( secsel[section] === "on")
                     secsel[section] = "off"
                 else secsel[section] = "on"
@@ -237,6 +241,7 @@ Material.Card {
 
         id: gamedel
         Material.Card {
+//            property string timestatus: model.time
             id: dcard
             function myMethod() {
                 console.log("Button was clicked!" + secsel[time])
@@ -257,7 +262,8 @@ Material.Card {
                 dcard.backgroundColor = Qt.binding(
                     function() {
                         if ( isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection )
-                            return "white";
+                            return  index % 2 == 0 ?"#f5f5f5":"white"
+
                         else
                             return Qt.darker("white",1.20)
                     }
@@ -305,7 +311,7 @@ Material.Card {
             elevation: isl.isSelected(lv.model.index(index,0)) ? 5 : 0
 //                    border.color =  isl.isSelected(lv.model.index(index,0)) ? "Green" : "transparent"
 //                    border.width = isl.isSelected(lv.model.index(index,0)) ? 2 : 0
-            backgroundColor: (isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection)  ? "white" : Qt.darker("white",1.20)
+            backgroundColor: (isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection)  ? (index % 2 == 0?"#f5f5f5":"white") : Qt.darker("white",1.20)
 
         RowLayout {
             anchors.fill: parent
@@ -394,7 +400,8 @@ Material.Card {
                     dcard.backgroundColor = Qt.binding(
                         function() {
                             if ( isl.isSelected(lv.model.index(index,0)) || !isl.hasSelection )
-                                return "white";
+//                                return "white";
+                                return index % 2 == 0 ?"#f5f5f5":"white";
                             else
                                 return Qt.darker("white",1.20)
                         }

@@ -30,7 +30,7 @@ Item {
 
             sortIndicatorColumn: 1
             highlightOnFocus:   false
-            height: parent.height - ProtoScreen.guToPx(5)
+            height: parent.height //- ProtoScreen.guToPx(5)
             implicitWidth: parent.width
 
             selectionMode: SelectionMode.NoSelection
@@ -74,6 +74,8 @@ Item {
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
                         color: "white"
+                        font.family: styleData.column ===  2 ? fontfamFB : "Roboto"
+
                     }
                 }
             }

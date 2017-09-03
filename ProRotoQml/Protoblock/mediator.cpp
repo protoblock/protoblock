@@ -10,34 +10,62 @@ using namespace fantasybit;
 namespace pb {
 
 Mediator::Mediator(QObject *parent) :  QObject(parent),
-    mPlayerQuoteSliceModel{this,"","symbol"},
-    dummyPlayerQuoteSliceModelItem(fantasybit::ROWMarket::default_instance()),
-    m_pPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
-    mDepthMarketModel{},
-    m_pDepthMarketModel(&mDepthMarketModel),
-    m_pGlobalOpenOrdersModel(&dummyOpenOrdersModel),
-    mFantasyNameBalModel(this,QByteArray(),{"name"}),
-    mPlayerSymbolsModel{this,{"symbol"},{"symbol"}},
-    m_pPlayerSymbolsModel(new SortFilterProxyModel),
-    m_pFantasyNameBalModel(&mFantasyNameBalModel),
-    mGoodNameBalModel{this,QByteArray(),{"name"}},
-    m_pGoodNameBalModel(&mGoodNameBalModel),
-    mTradingPositionsModel{this,QByteArray(),{"symbol"}},
-    m_pTradingPositionsModel(&mTradingPositionsModel),
-    myGamesSelectionModel{},
-    myPrevGamesSelectionModel{},
-    m_pQItemSelectionModel(&myGamesSelectionModel),
-    m_pPrevQItemSelectionModel(&myPrevGamesSelectionModel),
-    m_pLeaderBoardSortModel(new SortFilterProxyModel),
-    m_pResultSelectedModel(new SortFilterProxyModel),
-    m_blocknum(0),
-    m_height(0),
-    dummyFantasyNameBalModelItem(),
-    m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem} {
+                    mPlayerQuoteSliceModel{this,"","symbol"},
+                    mROWPlayerQuoteSliceModel{this,"","symbol"},
+                    mDepthMarketModel{},
+                    mROWDepthMarketModel{},
+                    mTradingPositionsModel{this,QByteArray(),{"symbol"}},
+                    mROWTradingPositionsModel{this,QByteArray(),{"symbol"}},
+
+
+                    mFantasyNameBalModel(this,QByteArray(),{"name"}),
+                    mGoodNameBalModel(this,QByteArray(),{"name"}),
+                    mPlayerSymbolsModel{this,{"symbol"},{"symbol"}},
+
+                    dummyPlayerSymbolsModelItem("0",""),//@@RB"),
+                    dummyPlayerQuoteSliceModelItem(&dummyPlayerSymbolsModelItem,"","",0),
+//                    dummyPlayerQuoteSliceModelItem(&dummyPlayerSymbolsModelItem,"","17s",0),
+
+                    dummyFantasyNameBalModelItem(),
+
+                    myGamesSelectionModel{},
+                    myPrevGamesSelectionModel{},
+
+                    m_pPlayerSymbolsModel(new SortFilterProxyModel),
+                    m_pFantasyNameBalModel(&mFantasyNameBalModel),
+
+
+                    m_pPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
+                    m_pROWPlayerQuoteSliceModelItem(&dummyPlayerQuoteSliceModelItem),
+
+
+                    m_pDepthMarketModel(&mDepthMarketModel),
+                    m_pROWDepthMarketModel(&mROWDepthMarketModel),
+
+                    m_pGlobalOpenOrdersModel(&dummyOpenOrdersModel),
+                    m_pROWGlobalOpenOrdersModel(&dummyOpenOrdersModel),
+
+                    m_pTradingPositionsModel(&mTradingPositionsModel),
+                    m_pROWTradingPositionsModel(&mROWTradingPositionsModel),
+
+                    m_pGoodNameBalModel(&mGoodNameBalModel),
+                    m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem},
+
+
+                    m_pLeaderBoardSortModel(new SortFilterProxyModel),
+                    m_pQItemSelectionModel(&myGamesSelectionModel),
+                    m_pPrevQItemSelectionModel(&myPrevGamesSelectionModel),
+                    m_pResultSelectedModel(new SortFilterProxyModel),
+                    m_height(0),
+                    m_blocknum(0) ,
+                    myFantasyName("") ,
+                    m_theSeason(2017) {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
-
+//    PlayerQuoteSliceModelItem dumm(&dummyPlayerSymbolsModelItem,"","17s");
+//    auto f = dumm.get_firstname();
+//    qDebug() << f << " ||";
 
     fnameindex = 0;
     //leader models
@@ -70,6 +98,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_theNextSeason = 0;
     m_thePrevSeason = 0;
     m_theSeason = 2014;
+    mSeasonSuffix = "14s";
+    mWeeklySuffix = "00w";
 
     //player selection
     m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
@@ -86,13 +116,18 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultsViewFilterProxyModel->setDynamicSortFilter(true);
 
 
-
-    //trading
-//    m_pPlayerQuoteSliceModel = &m_pPlayerQuoteSliceModel;
     m_pPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSourceModel(&mPlayerQuoteSliceModel);
     m_pPlayerQuoteSliceViewFilterProxyModel->setSortRole("symbol");
     m_pPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
+
+    //trading
+//    m_pPlayerQuoteSliceModel = &m_pPlayerQuoteSliceModel;
+    m_pROWPlayerQuoteSliceViewFilterProxyModel =  new PlayerQuoteSliceViewFilterProxyModel(this);
+    m_pROWPlayerQuoteSliceViewFilterProxyModel->setSourceModel(&mROWPlayerQuoteSliceModel);
+    m_pROWPlayerQuoteSliceViewFilterProxyModel->setSortRole("symbol");
+    m_pROWPlayerQuoteSliceViewFilterProxyModel->setDynamicSortFilter(true);
+
 
 
     m_useSelected = true;
@@ -104,17 +139,15 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pResultSelectedModel->setSortRole("award");
     m_pResultSelectedModel->setDynamicSortFilter(true);
 
-//    setcontrolMessage("<html><style type=\"text/css\"></style>Companion Protoblock APP now available on " \
-//                      "<a href=\"https://itunes.apple.com/us/app/protoblock-2016/id1133758199?ls=1&mt=8\">iTunes</a>" \
-//                      " and <a href=\"https://play.google.com/store/apps/details?id=org.proto.protoblock\">Google Play!</a></html>");
-
 
     setcontrolMessage("<html><style type=\"text/css\"></style>Fantasy Ticker Feed now live on Twitter " \
                       "<a href=\"https://twitter.com/prototicker\">@prototicker</a></html>");
 
     connect(&mPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
             this, &Mediator::MyPosPriceChange);
-//    connect(&tradeTesting, &QTimer::timeout, this, &Mediator::tradeTestingTimeout );
+
+    connect(&mROWPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
+            this, &Mediator::MyPosPriceChange);
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -125,10 +158,13 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
 
     if ( nullptr != mGoodNameBalModel.getByUid(myname.name().data()) ) {
 //        if ( myFantasyName != "" ) return;
+        qDebug() << " already have name in GoodName";
     }
     else {
         auto it = mFantasyNameBalModel.getByUid(myname.name().data());
         if ( it != nullptr) {
+            qDebug() << " dont have name in GoodName, have name in mFantasyNameBalMode adding good";
+
             auto it2 = new FantasyNameBalModelItem(*it);
             mGoodNameBalModel.append(it2);
         }
@@ -145,8 +181,8 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
         }
     }
 
-    update_pMyFantasyNameBalance(mGoodNameBalModel.getByUid(myname.name().data()));
     myFantasyName = myname.name();
+    update_pMyFantasyNameBalance(mGoodNameBalModel.getByUid(myname.name().data()));
     qDebug() << "Mediator  emitting using fantasy name " << myname.name().data();
     myGamesSelectionModel.reset();
     emit usingFantasyName(myname.name().data());
@@ -190,11 +226,18 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
 
         if ( nullptr != mGoodNameBalModel.getByUid(m.name().data()) ) continue;
 
+        qDebug() <<  m.name ().data () << " not in mGoodNameBalModel";
         auto it = mFantasyNameBalModel.getByUid(m.name().data());
         if ( it != nullptr) {
-            mGoodNameBalModel.insert(mGoodNameBalModel.size(),it);
+            qDebug() <<  m.name ().data () << " is in mFantasyNameBalModel";
+            mGoodNameBalModel.append(new FantasyNameBalModelItem(*it));
             auto it2 = mGoodNameBalModel.getByUid(m.name().data());
+            if ( it2 == nullptr)
+                qDebug() << " nullptr? should have in good name wtf";
         }
+        else
+            qDebug() <<  m.name ().data () << " not in mFantasyNameBalModel";
+
     }
 
     qDebug() << " namename wins " << heighest << hname.data();
@@ -204,7 +247,8 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
 }
 
 void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
-    FantasyNameBalModelItem *item = (FantasyNameBalModelItem *)mGoodNameBalModel.get(fnb.name().data());
+    qDebug() << "  NameBal " << fnb.DebugString ().data ();
+    FantasyNameBalModelItem *item =  mGoodNameBalModel.getByUid (fnb.name().data());
     if ( !item || item->get_name() != fnb.name().data()) {
         //mGoodNameBalModel.insert(mGoodNameBalModel.size(),FantasyNameBalModelItem(fnb));
     }
@@ -215,12 +259,33 @@ void Mediator::NameBal(fantasybit::FantasyNameBal fnb) {
 
 }
 
-void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {}
+void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {
+    auto *item = mPlayerProjModel.getByUid(in.first.data());
+
+    PlayerSymbolsModelItem *it = nullptr;
+    if ( item ) {
+        item->setstatus(in.second.status());
+        it = item->get_pPlayerSymbolsModelItem();
+    }
+
+    if ( it == nullptr )
+        it = mPlayerSymbolsModel.getByUid(in.second.symbol().data());
+
+    if ( it == nullptr) {
+        qDebug() << "PlayerStatusChange error " << in.second.DebugString().data();
+        return;
+    }
+
+    checkFullName(it->get_fullname(),it->get_symbol());
+    it->setteamid(in.second.teamid().data());
+}
 
 void Mediator::GlobalStateChange(GlobalState gs) {
     qDebug() << "Mediator GlobalStateChange " << gs.DebugString().data();
 
     if ( gs.week() > 0 && gs.week() < 18) {
+        UpdateSeasonWeek(gs.season(),gs.week());
+
         if ( amLive && gs.week() > m_theWeek) {
             updateWeek();
         }
@@ -239,6 +304,8 @@ void Mediator::LiveGui(GlobalState gs) {
         amLive = true;
         settheWeek(gs.week());
         settheSeason(gs.season());
+
+        UpdateSeasonWeek(gs.season(),gs.week());
 
         setliveSync("Live");
         if ( gs.state() == GlobalState_State_OFFSEASON ) {
@@ -276,47 +343,57 @@ void Mediator::updateWeek() {
     else {
         set_busySend(false);
 
+        {
+            auto gss = mGateway->dataService->GetAllSymbols();
+            for ( auto gs : gss ) {
+                if ( mPlayerSymbolsModel.getByUid(gs.first.data()) == nullptr)
+                    mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
+            }
+        }
 
         if ( m_theWeek > 0  && m_theWeek < 17) {
-            std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>>> sorted;
+            m_pWeeklyScheduleModel->clear ();
+            m_pWeekClosedScheduleModel->clear ();
+
+            //DO Schedule
+            std::map<int,std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus>>> sorted;
             fantasybit::WeeklySchedule weekly = mGateway->dataService->GetWeeklySchedule(m_theSeason,m_theWeek);
             for ( auto &gi : weekly.games()) {
                 auto status = mGateway->dataService->GetGameStatus(gi.id());
-                std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus_Status>> &vec =
+                std::vector<std::pair<fantasybit::GameInfo,fantasybit::GameStatus>> &vec =
                         sorted[gi.time()];
-                vec.emplace_back(std::make_pair(gi,status.status()));
+                vec.emplace_back(std::make_pair(gi,status));
             }
 
+            vector<WeeklyScheduleModelItem *> holdingame;
             for ( auto tvec : sorted ) {
 //                qDebug() << " tvec sorted " << tvec.first;
                 for ( auto p : tvec.second ) {
 //                    qDebug() << " p tvec " << p.second << p.first.DebugString().data();
-                    if ( p.second == GameStatus_Status_CLOSED )
+                    if ( p.second.status() == GameStatus_Status_CLOSED )
                         m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
+                    else if ( p.second.status() == GameStatus_Status_INGAME )
+                        holdingame.push_back(new WeeklyScheduleModelItem(p.first,p.second,this));
                     else
                         m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(p.first,p.second,this));
                 }
             }
-//            qDebug() << " done sorted ";
+
+            //ingame goes at end
+            for ( auto h : holdingame)
+                m_pWeeklyScheduleModel->append(h);
+
+            set_thisWeekPrev(m_pWeekClosedScheduleModel->count() > 0);
+            //END Schedule
 
 
-//            if ( status.status() == GameStatus_Status_CLOSED )
-//                m_pWeekClosedScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeekClosedScheduleModel));
-//            else
-//                m_pWeeklyScheduleModel->append(new WeeklyScheduleModelItem(gi,status.status(),m_pWeeklyScheduleModel));
-
-
+            //playerprojmodels
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
-            mPlayerProjModel.updateRosters(vgr,mGateway->dataService);
+            mPlayerSymbolsModel.Update(vgr);
+            mPlayerProjModel.updateRosters(vgr,mGateway->dataService,mPlayerSymbolsModel);
+            m_pProjectionsViewFilterProxyModel->invalidate();
 
-            auto gss = mGateway->dataService->GetAllSymbols();
-            int count = 0;
-            for ( auto gs : gss ) {
-                //if (count++ > 10 ) break;
-                //qDebug() << "gs " << gs.first.data();
-                mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
-            }
-
+            /*
             const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
             qDebug() << "  vms " << vms.size();
             string suffix = "17w";
@@ -325,6 +402,54 @@ void Mediator::updateWeek() {
             mPlayerQuoteSliceModel.Update(vms,mPlayerProjModel, suffix );
 //            OnGotMarketSnaps();
 
+            */
+
+        }
+        else { //off season
+            m_pWeeklyScheduleModel->clear();
+            mPlayerProjModel.clear();
+            set_thisWeekPrev(false);
+        }
+
+//        std::string sss = "BMWR17w01";
+//        if ( !getQuoteModel().Update(ms)) {
+//            addQuoteSymbol(ms.symbol());
+//            if ( !getQuoteModel(ms.symbol()).Update(ms))
+//                qDebug() << "error updateweek" << ms.DebugString().data();
+//        }
+
+        //clear weekly
+        getQuoteModel (true).clear ();
+        //get snapshot for all symbols
+        const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
+        qDebug() << "  vms " << vms.size();
+        for ( auto ms : vms ) {
+//            if ( ms.symbol () == "BMWR17s")
+//                ms.set_symbol ( "BMWR17w01");
+            if ( !getQuoteModel(ms.symbol()).Update(ms)) {
+                addQuoteSymbol(ms.symbol());
+                if ( !getQuoteModel(ms.symbol()).Update(ms))
+                    qDebug() << "error updateweek" << ms.DebugString().data();
+            }
+
+            if ( amLive ) {
+                if ( getQuoteModel(ms.symbol()).count () == 1) {
+                    if ( isWeekly(ms.symbol ())) {
+                        qDebug() << " emit haveWeeklySymbol";
+                        emit haveWeeklySymbol ();
+                    }
+                    else emit haveRowSymbol ();
+                }
+            }
+        }
+
+        if (myFantasyName != "" )
+            updateOnChangeFantasyName();
+
+        updateLiveLeaders();
+    }
+}
+
 #ifdef NOTDEF
             int i = 0;
             for( auto it : mPlayerProjModel ) {
@@ -332,99 +457,6 @@ void Mediator::updateWeek() {
                 m_pPlayerQuoteSliceModel->append(new PlayerQuoteSliceModelItem(*it));
             }
 #endif
-            set_thisWeekPrev(m_pWeekClosedScheduleModel->count() > 0);
-
-            if (myFantasyName != "" )
-                updateOnChangeFantasyName();
-
-            m_pProjectionsViewFilterProxyModel->invalidate();
-        }
-        else {
-            m_pWeeklyScheduleModel->clear();
-//            mPlayerQuoteSliceModel.clear();
-            mPlayerProjModel.clear();
-            set_thisWeekPrev(false);
-            /*
-            {
-            PlayerDetail pd;
-            pd.base = mGateway->dataService->GetPlayerBase("1255");
-            PlayerStatus ps = mGateway->dataService->GetPlayerStatus("1255");
-            PlayerProjModelItem *pp = new PlayerProjModelItem(pd,"GB","1255",QString(""),0,true,nullptr);
-            PlayerQuoteSliceModelItem *p = new PlayerQuoteSliceModelItem(*pp);
-            p->setsymbol((ps.symbol() + "17s").data());
-            mPlayerQuoteSliceModel.append(p);
-            }
-            {
-            PlayerDetail pd;
-            pd.base = mGateway->dataService->GetPlayerBase("1387");
-            PlayerStatus ps = mGateway->dataService->GetPlayerStatus("1387");
-            PlayerProjModelItem *pp = new PlayerProjModelItem(pd,"CHI","1387",QString(""),0,true,nullptr);
-            PlayerQuoteSliceModelItem *p = new PlayerQuoteSliceModelItem(*pp);
-            p->setsymbol((ps.symbol() + "17s").data());
-            mPlayerQuoteSliceModel.append(p);
-            }
-            /**/
-            auto gss = mGateway->dataService->GetAllSymbols();
-            int count = 0;
-            for ( auto gs : gss ) {
-                //if (count++ > 10 ) break;
-                //qDebug() << "gs " << gs.first.data();
-                mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
-            }
-
-
-            const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
-            qDebug() << "  vms " << vms.size();
-            for ( auto ms : vms ) {
-                string syb;
-                string symbol = ms.symbol();
-                auto *it = mPlayerQuoteSliceModel.getByUid(symbol.data());
-                if ( it == nullptr || it->get_pPlayerSymbolsModelItem() == nullptr) {
-                    auto iit = gss.lower_bound(symbol);
-                    if ( iit != begin(gss)) {
-                        syb = (--iit)->first;
-                        int ret = syb.compare(0,syb.size(),symbol.data(),syb.size());
-//                        qDebug() << " rettt " << ret;
-                        if ( ret == 0 &&
-                             (syb.size() != 4 || symbol.at(4) == '1') ) {
-//                             qDebug() << "stripped raw symbol" << symbol.data() << syb.data() << iit->second.data();
-                             if ( it == nullptr ) {
-                                it = new PlayerQuoteSliceModelItem(symbol.data());
-                                mPlayerQuoteSliceModel.append(it);
-                             }
-                        }
-//                        else if ( syb.compare(0,syb.size(),symbol) == 0 ) {
-//                                if (syb.size() != 4 || symbol.at(4) == '1')
-//                                    qDebug() << "goood";
-//                                else
-//                                    qWarning() << " syb.size() " << syb.size() << symbol.at(4);
-//                        }
-                        else
-                            qWarning() << " cant find " << syb.data() << " | " << symbol.data();
-                    }
-                }
-                else {
-                    syb = it->get_pPlayerSymbolsModelItem()->get_symbol().toStdString();
-                }
-
-                if ( it == nullptr || syb == "")
-                    qWarning() << " nulls cant find " << symbol.data();
-                else {
-                    auto ppd = mGateway->dataService->GetPlayerDetail(syb);
-                    it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
-                    it->Update(ms);
-                }
-            }
-
-            if (myFantasyName != "" )
-                updateOnChangeFantasyName();
-
-
-        }
-
-        updateLiveLeaders();
-    }
-}
 
 void Mediator::updateOnChangeFantasyName() {
     updateCurrentFantasyPlayerProjections();
@@ -452,6 +484,7 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
 
 void Mediator::updateCurrentFantasyPlayerOrderPositions() {
 
+
     for ( auto tit : mTradingPositionsModel ) {
         auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
@@ -460,14 +493,32 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
         it->setmypnl(0);
     }
 
+    for ( auto tit : mROWTradingPositionsModel ) {
+        auto it = mROWPlayerQuoteSliceModel.getByUid(tit->get_symbol());
+        if ( it == nullptr) continue;
+        it->setmyavg(0);
+        it->setmyposition(0);
+        it->setmypnl(0);
+    }
 
-//    ui->posQty->setValue(0);
-//    ui->posAvgPrice->setValue(0);
-//    ui->posOpenPnl->setValue(0);
-//    myPositionsName = myFantasyName;
 
     auto myorderpositions = mGateway->dataService->GetOrdersPositionsByName(myFantasyName);
-    mTradingPositionsModel.updateAllOrders(myFantasyName,myorderpositions);
+    mTradingPositionsModel.clearForUpdateFname(myFantasyName);
+    mROWTradingPositionsModel.clearForUpdateFname(myFantasyName);
+    TradingPositionsModelItem *t = nullptr;
+    for ( auto p : myorderpositions ) {
+      //  qDebug() << "level2 Trading SetMyPositions" << p.first << p.second;
+        auto &mypair = p.second;
+        auto &myorders = mypair.second;
+
+        auto t = isWeekly(p.first) ? &mTradingPositionsModel : &mROWTradingPositionsModel;
+
+        auto it = new TradingPositionsModelItem(p,t);
+        t->append(it);
+        t->settotalopenpnl(it->get_openpnl());
+    }
+
+//    mTradingPositionsModel.updateAllOrders(myFantasyName,myorderpositions);
 //    mTradingPositionsModel.setfantasyname(myFantasyName.data());
 
 
@@ -475,13 +526,30 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
     qDebug() << "level2 Trading SetMyPositions" << myFantasyName.data() << myorderpositions.size();
 #endif
 
+   mTradingPositionsModel.settotalopenpnl(calcTotalPnl(mTradingPositionsModel,mPlayerQuoteSliceModel));
+   mROWTradingPositionsModel.settotalopenpnl(calcTotalPnl(mROWTradingPositionsModel,mROWPlayerQuoteSliceModel));
+
+   update_pGlobalOpenOrdersModel(updateGlobalOrder(mTradingPositionsModel,m_pPlayerQuoteSliceModelItem));
+   update_pROWGlobalOpenOrdersModel(updateGlobalOrder(mROWTradingPositionsModel,m_pROWPlayerQuoteSliceModelItem));
+
+}
+
+OpenOrdersModel *Mediator::updateGlobalOrder(TradingPositionsModel &tpm, PlayerQuoteSliceModelItem *pqsmi) {
+    if ( pqsmi ) {
+        auto tit = tpm.getByUid(pqsmi->get_symbol());
+        if ( tit != nullptr ){
+            return tit->get_pOpenOrdersModel();
+        }
+    }
+
+    return &dummyOpenOrdersModel;
+}
+
+double Mediator::calcTotalPnl(TradingPositionsModel &tpm, PlayerQuoteSliceModel &pqsm) {
     int i = 0;
     double totpnl = 0.0;
-//    qDebug() << ++i << " here ";
-    for ( auto tit : mTradingPositionsModel ) {
-//        qDebug() << i << "loop here ";
-
-        auto it = mPlayerQuoteSliceModel.getByUid(tit->get_symbol());
+    for ( auto tit : tpm ) {
+        auto it = pqsm.getByUid(tit->get_symbol());
         if ( it == nullptr) continue;
         int netqty = tit->get_netqty();
 //        qDebug() << ++i << " here ";
@@ -496,56 +564,22 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
             if ( price == 0 )
                 price = it->get_lastprice();
 
-//            if ( netqty > 0 ) {
-//                if ( (price = it->get_bid()) == 0 ) {
-//                    if ( it->get_ask() != 0 && it->get_ask() < it->get_lastprice() )
-//                        price = it->get_ask();
-//                    else
-//                        price = it->get_lastprice();
-//                }
-//            }
-//            else {
-//                if ( (price = it->get_ask()) == 0 ) {
-//                    if ( it->get_bid() != 0 && it->get_bid() < it->get_lastprice() )
-//                        price = it->get_ask();
-//                    else
-//                        price = it->get_lastprice();
-//                }
-//            }
-
             if ( price == 0 )
                 pnl = 0.0;
             else
                 pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
-//            qDebug() << ++i << " here ";
-
         }
-//        qDebug() << ++i << " here ";
 
-
-        //mTradingPositionsModel.UpdatePnl(tit,it->get_bid(),it->get_ask());
         it->setmyavg(avg);
         it->setmyposition(netqty);
         qDebug() << tit->get_symbol() << " setmyposition " << netqty;
         it->setmypnl(pnl);
         tit->setopenpnl(pnl);
         totpnl += pnl;
-//        qDebug() << ++i << " here ";
-
-    }
-    mTradingPositionsModel.settotalopenpnl(totpnl);
-
-    if ( m_pPlayerQuoteSliceModelItem ) {
-        auto tit = mTradingPositionsModel.getByUid(m_pPlayerQuoteSliceModelItem->get_symbol());
-        if ( tit != nullptr ){
-            update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
-            return;
-        }
     }
 
-    update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
-
+    return totpnl;
 }
 
 void Mediator::NewWeek(int week) {
@@ -554,6 +588,8 @@ void Mediator::NewWeek(int week) {
         if ( mGateway->dataService->GetGlobalState().season() > 2014 )
             settheSeason(mGateway->dataService->GetGlobalState().season());
     }
+
+    UpdateSeasonWeek(m_theSeason,week);
 
     set_busySend(false);
 //    set_thisWeekPrev = false;
@@ -567,13 +603,16 @@ void Mediator::NewWeek(int week) {
     }
     else if ( m_theSeason > 2014 ) {
         m_pWeeklyScheduleModel->clear();
+        //ToDo: maybe only if live
         updateWeek();
     }
 }
 
 void Mediator::NewSeason(int season) {
     settheSeason(season);
+    UpdateSeasonWeek(season,1);
 }
+
 void Mediator::GameStart(string gameid) {
     m_pWeeklyScheduleModel->UpdateStatus(gameid,GameStatus_Status_INGAME);
 
@@ -749,7 +788,7 @@ void Mediator::useName(const QString &name) {
     emit OnUseName(name);
 }
 
-QString Mediator::init() {  
+QString Mediator::init() {
     connect( mOGateway, SIGNAL   ( LiveGui(fantasybit::GlobalState)     ),
             this,      SLOT     (  LiveGui(fantasybit::GlobalState)     ));
 
@@ -807,14 +846,11 @@ void Mediator::OnMarketTicker(fantasybit::MarketTicker mt, int32_t blocknum) {
     qDebug() << "Mediator OnMarketTicker " << mt.DebugString().data();
 #endif
 
-    if ( !mPlayerQuoteSliceModel.Update(&mt,blocknum) ) {
-        auto it = new PlayerQuoteSliceModelItem(mt.symbol().data());
-        mPlayerQuoteSliceModel.append(it);
-        int size = (mt.symbol().at(4) == '1') ? 4 : 5;
-        string syb = mt.symbol().substr(0,size);
-        auto ppd = mGateway->dataService->GetPlayerDetail(syb);
-        it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
-        mPlayerQuoteSliceModel.Update(&mt,blocknum);
+    if ( !getQuoteModel(mt.symbol()).Update(&mt,blocknum) ) {
+        addQuoteSymbol(mt.symbol());
+
+        if ( !getQuoteModel(mt.symbol()).Update(&mt,blocknum) )
+            qDebug() << "error OnMarketTicker" << mt.DebugString().data();
     }
 
 }
@@ -826,14 +862,11 @@ void Mediator::OnTradeTick(fantasybit::TradeTic* tt) {
     qDebug() << "Mediator TradeTic " << tt->DebugString().data();
 #endif
 
-    if ( !mPlayerQuoteSliceModel.Update(tt) ) {
-        auto it = new PlayerQuoteSliceModelItem(tt->symbol().data());
-        mPlayerQuoteSliceModel.append(it);
-        int size = (tt->symbol().at(4) == '1') ? 4 : 5;
-        string syb = tt->symbol().substr(0,size);
-        auto ppd = mGateway->dataService->GetPlayerDetail(syb);
-        it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
-        mPlayerQuoteSliceModel.Update(tt);
+    if ( !getQuoteModel(tt->symbol()).Update(tt) ) {
+        addQuoteSymbol(tt->symbol());
+
+        if ( !getQuoteModel(tt->symbol()).Update(tt))
+            qDebug() << "error OnMarketTicker" << tt->DebugString().data();
     }
 }
 
@@ -844,15 +877,12 @@ void Mediator::OnDepthDelta(fantasybit::DepthFeedDelta* dfd) {
     qDebug() << "level2 OnDepthDelta " << dfd->DebugString().data();
 #endif
 
-    if ( !mPlayerQuoteSliceModel.Update(dfd) ) {
-        auto it = new PlayerQuoteSliceModelItem(dfd->symbol().data());
-        mPlayerQuoteSliceModel.append(it);
-        int size = (dfd->symbol().at(4) == '1') ? 4 : 5;
-        string syb = dfd->symbol().substr(0,size);
-        auto ppd = mGateway->dataService->GetPlayerDetail(syb);
-        it->setProperties(ppd,mPlayerSymbolsModel.getByUid(syb.data()),0);
-        mPlayerQuoteSliceModel.Update(dfd);
-    }
+     if ( !getQuoteModel(dfd->symbol()).Update(dfd)) {
+         addQuoteSymbol(dfd->symbol());
+
+         if ( !getQuoteModel(dfd->symbol()).Update(dfd) )
+             qDebug() << "error OnMarketTicker" << dfd->DebugString().data();
+     }
 }
 
 void Mediator::OnNewPos(fantasybit::FullPosition fp) {
@@ -862,8 +892,11 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     if ( fp.fname != myFantasyName )
         return;
 
-    auto it = mPlayerQuoteSliceModel.getByUid(fp.symbol.data());
-    auto tit = mTradingPositionsModel.getOrCreate(fp.symbol.data());
+    bool isweekly = isWeekly(fp.symbol);
+    auto it = getQuoteModel(isweekly).getByUid(fp.symbol.data());
+    auto tit = isweekly ? mTradingPositionsModel.getOrCreate(fp.symbol.data()) :
+                       mROWTradingPositionsModel.getOrCreate(fp.symbol.data());
+
     if ( tit == nullptr )
         return;
 
@@ -894,14 +927,18 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
 
     qDebug() << tit->get_symbol() << " setmyposition " << netqty;
 
-    double newtotal = mTradingPositionsModel.get_totalopenpnl()
-                + (pnl - holdpnl);
-    mTradingPositionsModel.settotalopenpnl(newtotal);
+    auto &tpm = isweekly ? mTradingPositionsModel : mROWTradingPositionsModel;
+    double newtotal = tpm.get_totalopenpnl() + (pnl - holdpnl);
+    tpm.settotalopenpnl(newtotal);
 }
 
 void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
     qDebug() << " MyPosPriceChange " << it->get_symbol();
-    auto tit = mTradingPositionsModel.getByUid(it->get_symbol());
+
+    bool isweekly = fantasybit::isWeekly(it->get_symbol());
+    auto tit = isweekly ? mTradingPositionsModel.getByUid(it->get_symbol()) :
+                       mROWTradingPositionsModel.getByUid(it->get_symbol());
+
     if ( tit == nullptr ) {
         qDebug() << " MyPosPriceChange error tit == nullptr  Mediator::MyPosPriceChange";
         return;
@@ -930,19 +967,38 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
 
     qDebug() << tit->get_symbol() << " setmyposition " << netqty;
 
-    double newtotal = mTradingPositionsModel.get_totalopenpnl()
-                + (pnl - holdpnl);
-    mTradingPositionsModel.settotalopenpnl(newtotal);
+    auto &tpm = isweekly ? mTradingPositionsModel : mROWTradingPositionsModel;
 
+    double newtotal = tpm.get_totalopenpnl()
+                + (pnl - holdpnl);
+
+    tpm.settotalopenpnl(newtotal);
 }
 
 void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
-//    qDebug() << "level2 Trading::Mediator " << fo.fname << fo.openorder.DebugString().data();
+    qDebug() << "level2 Trading::Mediator " << fo.fname << fo.symbol.data () << fo.openorder.DebugString().data();
 
     if ( fo.fname != myFantasyName )
         return;
 
-    mTradingPositionsModel.Update(fo);
+    (isWeekly(fo.symbol) ? mTradingPositionsModel : mROWTradingPositionsModel).Update(fo);
+}
+
+
+Mediator *Mediator::myInstance;
+
+void Mediator::addTradingSymbol(const QString &symbol, bool isweekly) {
+    qDebug() << "mediator addTradingSymbol " << symbol <<  isweekly;
+    auto it = mPlayerSymbolsModel.getByUid(symbol);
+    if ( it == nullptr ) {
+        qDebug() << "error addTradingSymbol" << symbol;
+    }
+    else {
+        getQuoteModel(isweekly).UpdateSymbols(it,m_blocknum,
+                                              isweekly ? mWeeklySuffix : mSeasonSuffix);
+    }
+}
+
 }
 
 
@@ -961,49 +1017,43 @@ void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
 
 //    Transaction trans{};
 //    trans.set_version(Commissioner::TRANS_VERSION);
-//    trans.set_type(TransType::EXCHANGE);
-//    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
+              //    trans.set_type(TransType::EXCHANGE);
+              //    trans.MutableExtension(ExchangeOrder::exchange_order)->CopyFrom(eo);
 
-//    SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
+              //    SignedTransaction sn = m_fantasy_agent.makeSigned(trans);
 
-//    auto pk = m_fantasy_agent.pubKey();
-//    pb::sha256 digest(sn.id());
-//    if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
-//        qDebug() << " bad signature ";
-//    else
-//        qDebug() << " good signature ";
+              //    auto pk = m_fantasy_agent.pubKey();
+              //    pb::sha256 digest(sn.id());
+              //    if ( !Commissioner::verify(Commissioner::str2sig(sn.sig()),digest,pk) )
+              //        qDebug() << " bad signature ";
+              //    else
+              //        qDebug() << " good signature ";
 
-//    auto txstr = sn.SerializeAsString();
+              //    auto txstr = sn.SerializeAsString();
 
-//    QByteArray qb(txstr.data(),(size_t)txstr.size());
+              //    QByteArray qb(txstr.data(),(size_t)txstr.size());
 
-//    qDebug() << " mediator doTestTrade";
-//    m_txsocket.sendBinaryMessage(qb);
+              //    qDebug() << " mediator doTestTrade";
+              //    m_txsocket.sendBinaryMessage(qb);
 
-//    depthCount = 0;
-//    depthBackup-=10;
-//    if ( depthBackup < 0 ) {
-//        depthBackup = 0;
-//        depthInterval = 1000;
-//    }
-//    else
-//        depthInterval = 1000 * (depthBackup / 5);
+              //    depthCount = 0;
+              //    depthBackup-=10;
+              //    if ( depthBackup < 0 ) {
+              //        depthBackup = 0;
+              //        depthInterval = 1000;
+              //    }
+              //    else
+              //        depthInterval = 1000 * (depthBackup / 5);
 
-//    if ( depthInterval < 1600 ) {
-//       getDepthRep();
-//       depthInterval = 1000;
-//    }
-//    polldepth.start(depthInterval);
-////    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
-////    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
-////    getOrderPos();
+              //    if ( depthInterval < 1600 ) {
+              //       getDepthRep();
+              //       depthInterval = 1000;
+              //    }
+              //    polldepth.start(depthInterval);
+              ////    qDebug() << " doTrade depthInterval " << depthInterval << " depthBackup " << depthBackup << " depthCount " << depthCount;
+              ////    getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
+              ////    getOrderPos();
 
-
-
-
-Mediator *Mediator::myInstance;
-
-}
 
 //#include <QStandardPaths>
 //std::string Mediator::lastYearPath() {

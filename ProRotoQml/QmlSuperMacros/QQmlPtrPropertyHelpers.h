@@ -66,5 +66,27 @@ class _QmlPtrProperty_ : public QObject {
     QML_CONSTANT_PTR_PROPERTY (QString, var3)
 };
 
+//#define QML_READONLY_PTR_PROPERTY_PROXY_PTR_CREF(type, name, proxycr) \
+//    protected: \
+//        Q_PROPERTY (type * name READ MAKE_GETTER_NAME (name) NOTIFY name##Changed) \
+//    private: \
+//        type * m_##name; \
+//    public: \
+//        type * MAKE_GETTER_NAME (name) (void) const { \
+//            return proxy->m_##name ; \
+//        } \
+//        bool update_##name (type * name) { \
+//            bool ret = false; \
+//            if ((ret = m_##name != name)) { \
+//                m_##name = name; \
+//                emit name##Changed (m_##name); \
+//            } \
+//            return ret; \
+//        } \
+//    Q_SIGNALS: \
+//        void name##Changed (type * name); \
+//    private:
+
+
 #endif // QQMLPTRPROPERTYHELPERS
 

@@ -18,14 +18,17 @@ Card {
 //                depthvm.model = MiddleMan.pPlayerQuoteSliceModelItem.pDepthMarketModel
     }
 
+    property alias depthmm:  depthvm.model
+    property variant inplay: undefined
+
     id: mdview
     anchors.fill: parent
 
-    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
+    //MiddleMan.pROWPlayerQuoteSliceModelItem
     property var iwidth: parent.width / 4.2
 
     TableView {
-        model: MiddleMan.pDepthMarketModel
+//        model: inplay
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         id: depthvm

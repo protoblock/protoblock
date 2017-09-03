@@ -11,6 +11,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3 as Controls
 import QtQuick.Controls.Styles 1.3 as ControlStyles
+import ProRotoQml.Theme 1.0
 
 
 /*!
@@ -35,8 +36,9 @@ Controls.Switch {
 
     style: ControlStyles.SwitchStyle {
         handle: View {
-            width: 22 * Units.dp
-            height: 22 * Units.dp
+            width: ProtoScreen.guToPx(22)
+            height: ProtoScreen.guToPx(22)
+
             radius: height / 2
             elevation: 2
             backgroundColor: control.enabled ? control.checked ? control.color
@@ -47,13 +49,13 @@ Controls.Switch {
         }
 
         groove: Item {
-            width: 40 * Units.dp
-            height: 22 * Units.dp
+            width: ProtoScreen.guToPx(40)
+            height: ProtoScreen.guToPx(22)
 
             Rectangle {
                 anchors.centerIn: parent
-                width: parent.width - 2 * Units.dp
-                height: 16 * Units.dp
+                width: parent.width - ProtoScreen.guToPx(2)
+                height: ProtoScreen.guToPx(16)
                 radius: height / 2
                 color: control.enabled ? control.checked ? Theme.alpha(control.color, 0.5)
                                                          : darkBackground ? Qt.rgba(1, 1, 1, 0.26)

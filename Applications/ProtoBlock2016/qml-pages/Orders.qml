@@ -13,6 +13,8 @@ Item {
 //    anchors.fill: parent
     property double dihight: ProtoScreen.guToPx(4)
     property string mysymbol: ""
+//    property alias dihightordersl
+    property alias globalorders: ordersl.model;
 
     anchors.fill: parent
 
@@ -55,7 +57,7 @@ Item {
                 anchors.horizontalCenter: boundingRect.horizontalCenter
                 width: parent.width
                 clip: true
-                model: MiddleMan.pGlobalOpenOrdersModel
+//                model: MiddleMan.pROWGlobalOpenOrdersModel
                 headerPositioning: ListView.OverlayHeader
                 header: RowLayout {
                     z: 2

@@ -19,6 +19,10 @@
 #include "pbgateways.h"
 #include "weeklyschedulemodel.h"
 #include <QItemSelectionModel>
+#include "QQmlConstRefPropertyHelpers.h"
+#include "QQmlPtrPropertyHelpers.h"
+#include "PlayerSymbolsModel.h"
+#include "QQmlConstRefPropertyHelpers.h"
 
 namespace pb {
 using namespace fantasybit;
@@ -27,11 +31,13 @@ using namespace fantasybit;
 
 class PlayerProjModelItem : public QObject {
     Q_OBJECT
-    QML_READONLY_CSTREF_PROPERTY (QString, fullname)
-    QML_READONLY_CSTREF_PROPERTY (QString, lastname)
-    QML_READONLY_CSTREF_PROPERTY (QString, firstname)
-    QML_READONLY_CSTREF_PROPERTY (QString, pos)
-    QML_READONLY_CSTREF_PROPERTY (QString, teamid)
+
+    QML_READONLY_PTR_PROPERTY(PlayerSymbolsModelItem, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, fullname, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, lastname, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, firstname, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, pos, pPlayerSymbolsModelItem)
+    QML_CONSTANT_CSTREF_PROPERTY_PROXY (QString, teamid, pPlayerSymbolsModelItem)
     QML_READONLY_CSTREF_PROPERTY (int, status)
     QML_READONLY_CSTREF_PROPERTY (QString, playerid)
     QML_READONLY_CSTREF_PROPERTY (QString, symbol)
@@ -49,21 +55,21 @@ class PlayerProjModelItem : public QObject {
 
 public:
 
-    explicit PlayerProjModelItem(const fantasybit::PlayerDetail &pd, const std::string &teamid,
-                                 const std::string &playerid, const QString &gameid,
+    explicit PlayerProjModelItem(PlayerSymbolsModelItem *psmi,
+                                 const fantasybit::PlayerDetail &pd,
+                                 const std::string &playerid,
+                                 const QString &gameid,
                                  int avg,
                                  bool gameopen,
                                  QObject *parent = nullptr) :  QObject(parent) {
-        m_fullname =  QString("%1 %2")
-                .arg ( pd.base.first ().data () )
-                .arg ( pd.base.last ().data () );
-        m_firstname = pd.base.first().data();
-        m_lastname = pd.base.last().data();
-        m_pos = pd.base.position().data();
-        m_teamid = teamid.data();
+        m_pPlayerSymbolsModelItem = psmi;
         m_status = pd.team_status;
         m_playerid = playerid.data();
         m_symbol = pd.symbol.data();
+        if ( m_playerid != psmi->get_playerid() || m_symbol != psmi->get_symbol()) {
+            qDebug() << "PlayerProjModelItem Criticle error" << m_playerid << m_symbol;
+            return;
+        }
         m_gameid = gameid;
         m_projection = 0;
         m_knownProjection = 0;
@@ -89,13 +95,11 @@ public:
         : QQmlObjectListModel (parent,displayRole,uidRole) {}
 
 
-    void updateRosters(const std::vector<pb::GameRoster> &inrosters, pb::IDataService *ds) {
-
-//        qDebug() << " updateWeeklySchedule"  << week << weekly.DebugString().data();
+    void updateRosters(const std::vector<pb::GameRoster> &inrosters,
+                       pb::IDataService *ds,
+                       const PlayerSymbolsModel &inplayersymbol) {
 
         clear();
-
-//        setweek(week);
 
         for(const pb::GameRoster & game  : inrosters) {
             if ( game.status > GameStatus_Status_INGAME)
@@ -104,22 +108,24 @@ public:
             // add game
             QString gameId = game.info.id().data();
             //add home players
-            for(const auto& player : game.homeroster) {
-                append(new PlayerProjModelItem(player.second,game.info.home(),
-                                               player.first.data(),gameId,
-                                               ds->GetAvgProjection(player.first),
-                                               game.status < GameStatus_Status_INGAME,
-                                               this));
+            for (auto ha : {QString("home"),QString("away")}) {
+                for(const auto& player : (ha == QString("home")) ? game.homeroster : game.awayroster) {
+
+                    auto it = inplayersymbol.getByUid(player.second.symbol.data());
+                    if ( !it ) {
+                        qDebug() << "PlayerProjModel::updateRosters sont have symbol error " << player.second.symbol.data() << player.first.data();
+                        continue;
+                    }
+                    append(new PlayerProjModelItem(it,
+                                                   player.second,
+                                                   player.first,
+                                                   gameId,
+                                                   ds->GetAvgProjection(player.first),
+                                                   game.status < GameStatus_Status_INGAME,
+                                                   this));
+                }
             }
 
-            //add away players
-            for(const auto& player : game.awayroster) {
-                append(new PlayerProjModelItem(player.second,game.info.away(),
-                                               player.first.data(),gameId,
-                                               ds->GetAvgProjection(player.first),
-                                               game.status < GameStatus_Status_INGAME,
-                                               this));
-            }
         }
     }
 

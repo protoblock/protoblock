@@ -53,7 +53,7 @@ class NFLStateData : public QObject {
 
     //std::map<std::string, bool> TeamLocked;
 
-    void removePlayerTeam(const std::string &pid,const std::string &tid) {       
+    void removePlayerTeam(const std::string &pid,const std::string &tid) {
 
         MyTeamRoster[tid].erase(pid);
     }
@@ -123,7 +123,7 @@ public:
     std::unordered_map<std::string,PlayerDetail>
             GetTeamRoster(const std::string &teamid);
 
-    PlayerDetail GetPlayerDetail(const std::string &symbol);
+    PlayerDetail GetPlayerDetail(const std::string &symbol,bool ispid = false);
 
     /*
     mUniqueSymbol["AB"]

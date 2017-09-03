@@ -14,17 +14,57 @@ import ProRotoQml.Theme 1.0
 
 Material.Card {
     id: thisroot
+
+//    flat: true
+    backgroundColor: "white"
+    property variant inplayf: undefined
+    property variant inplay: undefined
+
+
     property string lightgreen: "green"//"#c8ffc8"
     property string lightred: "red"//"#ffc8c8"
-    property variant inplay: MiddleMan.pPlayerQuoteSliceModelItem
     property double recwidth: ProtoScreen.guToPx(20)
     property bool haveplayer: inplay && inplay.symbol !== ""
     property bool haveposition: inplay && inplay.myposition !== 0
     property color dcolor: Material.Theme.light.textColor
 
-    property variant inplayf: MiddleMan.pTradingPositionsModel
     property bool havefname: inplayf && inplayf.fantasyname !== ""
     property variant mybalance: MiddleMan.pMyFantasyNameBalance
+
+//    property alias inplaytext: cwc.text
+
+    property bool weeklycontract: true
+    property string inplaytext: (weeklycontract ? ("Week " + tradingroot.theqmlweek ) : (tradingroot.theqmlseason + "  Season"))  + " Contract"
+
+    property string helperTxtweekly:
+                         "This contract settles at 100 times the total number of PPR fantasy points scored by "
+                                    +  inplay.firstname + " " + inplay.lastname
+                                     + " in Week " + tradingroot.theqmlweek
+                  + ". If he scores 20 points, then the \"Writer\" (short seller) has to deliver 2000 Fantasybits to the Buyer.\n\n"
+                 + "Knowing this, how much would you pay for this contract? "
+                 + "If you think "+  inplay.firstname + " will score 30 points, and it costs you only 20, then "
+                   +   themeroot.uname + " (you), would have a profit of 1000 Fantasybits!\n\n"
+                  + "After the game, the buyer owes the seller 100 times the traded price per contract, "
+                + "and the seller must \"deliver\" the total number of fantasy points scored by " + inplay.firstname + ",  to the buyer, in Fantasybits (x100),  per contract!\n\n" +
+                  "If you can predict weekly busts, then you can now monetize your skills, in this first ever blockchain based, fantasy football forwards exchange!\n\n"
+                  +"A good way to start, is, to place a Sell order (ask) at each players ceiling, and at the same time place a Buy order at each players floor. This is called \"passive market making\", where you are, quite literally,  getting paid for your Fantasy Football Skills!"
+
+    property string helperTxtseason: "16 games in 16 weeks (16x16).\n\n"
+                +"Season long contracts are Rest-of-Way contracts, and settle at the total PPR fantasy points " +
+                " from a 16 game season. " +
+                "The season runs from Week1-Week16. (Week16 is counted twice instead of using Week17).\n\n" +
+                "These contract expire at the end of the season, and settle at the total PPR fantasy points scored by " + inplay.firstname + " " + inplay.lastname +
+                ", for the \"Rest-of-the-Way\" this season.\n\n"
+                +"The \"Writer\" (seller) must give the \"Holder\" (buyer), Fantasybits equal to the amount of PPR fantasy points scored. " +
+                "It is 1 Fantasybit for each Fantasy Point, in these ROW contracts.\n\n" +
+                "The idea is to try to buy below the actual settlement number, " +
+                "or alternativly to \"Write\" (sell) contracts, at a price above the actual final number.\n\n" +
+                "With all the known risks, how much are you willing to \"pay\" (bid) for the contract? " +
+                "At what price would you be willing to " +
+                " \"write\" the contract? In other words, what is your \"ask\", knowing that you get keep all the points in case of injury or bust? " +
+                "While keeping in mind, the risk that you would have to pay the total points scored in the case of a breakout!"
+
+
 //    Layout.fillWidth: true
 
 //    Layout.fillWidth: true
@@ -62,22 +102,13 @@ Material.Card {
                 fontSize: ProtoScreen.font(ProtoScreen.SMALL)
                 bold: true
                 anchors.left: parent.left
-                text: " 2017 Season Contract (" + inplay.symbol + ")    "
+                text: inplaytext + "  (" + inplay.symbol + ")    "
                 backgroundColor: "white"
                 color: themeroot.theme.primaryColor
                 helpShown: true
-                helperHeader: inplay.fullname + " (" + inplay.pos + ") Season Contract"
-                helperTxt: "16 games 16 weeks. Season long contracts settle at the total points from a 16 game season. " +
-                            "the season is from week1-week16. (week 16 is counted twice instead of using week 17)." +
-                            "These expire at the total fantasy points scored by " + inplay.fullname +
-                            ". The \"Writer\" (seller) must give the \"Buyer\", fantasy bits equal to the amount of fantsy points scored " +
-                            "It is 1 Fantasy Bit per Fantasy Point in these season long contracts." +
-                            "The game is to try to buy below the actual settlement number," +
-                            "or alternativly to write (sell) at a price above the actual final number. " +
-                            "With all the known risks, how much are you willing to \"pay\" for the contract? " +
-                            "For how much would you be willing to " +
-                            " write, or sell, the contract, knowing that you keep all the points in cae of injury," +
-                            " but have to pay up in case of a breakout?"
+                helperHeader: inplay.fullname + " (" + inplay.pos + ") " + text
+                helperTxt: weeklycontract ? helperTxtweekly : helperTxtseason
+
 
                 width: parent.width
                 height: ProtoScreen.guToPx(3)
@@ -91,7 +122,7 @@ Material.Card {
                 Layout.fillWidth: true
                 id: pname
                 anchors.top: cwc.bottom
-                backgroundColor:  "white"
+                backgroundColor: "white"// (!inplay || inplay.teamid === "" ) ? "white" : TeamInfo.getPrimaryAt(inplay.teamid)//themeroot.theme.accentColor//"white"
                 height: parent.height - cwc.height
                 width: parent.width // teamicon.width + pname2.implicitWidth
 //                anchors.horizontalCenter: parent.horizontalCenter
@@ -107,7 +138,7 @@ Material.Card {
                         Layout.fillWidth: false
                         id: teamicon
                         hasColor:false
-                        source: "qrc:/"+ inplay.teamid+".PNG"
+                        source: "qrc:/"+ ((!inplay || inplay.teamid === "") ? "FA" :  inplay.teamid)+".PNG"
                         width: ProtoScreen.guToPx(5)
                         height: ProtoScreen.guToPx(5)
                         size: ProtoScreen.guToPx(3)
@@ -127,7 +158,8 @@ Material.Card {
                         font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
-
+                        color: (!inplay || inplay.teamid === "") ? themeroot.theme.primaryColor : TeamInfo.getPrimaryAt(inplay.teamid)
+                        font.bold: true
                         anchors {
                             verticalCenter: parent.verticalCenter
                             left: teamicon.right
@@ -237,144 +269,6 @@ Material.Card {
             }
         }
 
-        //last
-//        Rectangle {
-//            Layout.fillWidth: true
-////            anchors.margins: 0
-//            Layout.fillHeight: true
-////            border.color: "red" //"lightgrey"
-//            border.width: ProtoScreen.guToPx(.125)
-//            Layout.preferredWidth: l2.implicitWidth
-////            Layout.maximumWidth: recwidth
-//            anchors.verticalCenter: parent.verticalCenter
-////            width: lr.width
-////            anchors.centerIn: parent
-
-
-////            width: parent.width *.50
-////            anchors.top: pname.bottom
-////            anchors.left: parent.horizontalCenter
-//            height: parent.height
-//            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
-
-////            Row {
-////                anchors.left: parent.left
-//////                anchors.verticalCenter: parent.verticalCenter
-////                anchors.centerIn: parent
-////                id: lr
-//////                anchors.centerIn: parent
-////                width: l1.implicitWidth + l2.implicitWidth // + ProtoScreen.guToPx(.25)
-
-////                Material.Label {
-////                    id: l1
-////        //                width: parent.width * .50
-////        //                height: parent.height * .50
-////                    text: inplay.playerid === 0 ?  "" : "Last: "
-////                    verticalAlignment: Text.AlignVCenter
-////                    horizontalAlignment: Text.AlignHCenter
-////                    anchors.verticalCenter: parent.verticalCenter
-////        //                    horizontalAlignment: Text.AlignRight
-//////                    anchors.leftMargin: ProtoScreen.guToPx(.125)
-////                    elide: Text.ElideRight
-
-////                }
-
-//                Material.Label{
-//                    id: l2
-////                    id: lastval
-//                    text: !haveplayer ?  "" : inplay.lastprice
-//        //                Layout.fillHeight: true
-//        //                Layout.fillWidth:  false
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignHCenter
-//        //                    color: icon.color
-//    //                Layout.column: 3
-//    //                Layout.row: 1
-//    //    //                    Layout.columnSpan: 2
-//    //                Layout.rowSpan: 2
-//                    anchors.centerIn: parent
-//                    font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-////                    anchors.rightMargin: ProtoScreen.guToPx(.125)
-//                    color: (!haveplayer || inplay.lastprice === 0) ? "transparent" : dcolor
-//                }
-////            }
-//        }
-/*
-        Rectangle {
-            border.color: "lightgrey"
-            border.width: ProtoScreen.guToPx(.125)
-            width: ProtoScreen.guToPx(20)
-
-//            width: parent.width *.50
-//            anchors.top: pname.bottom
-//            anchors.left: parent.horizontalCenter
-            height: lrec.height
-            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
-
-            GridLayout {
-                anchors.centerIn: parent
-                columns: 3
-                rows: 3
-
-                Material.Label {
-    //                width: parent.width * .50
-    //                height: parent.height * .50
-                    text: "Last:"
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignRight
-                    Layout.column: 1
-                    Layout.row: 1
-                    Layout.columnSpan: 2
-                    Layout.rowSpan: 2
-                }
-
-                Material.Label {
-    //                width: parent.width * .50
-    //                height: parent.height * .50
-                    text: "Change:"
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignRight
-                    Layout.column: 1
-                    Layout.row: 3
-                    Layout.columnSpan: 2
-//                    Layout.rowSpan: 2
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                }
-
-                Material.Label{
-                    id: lastval
-                    text: inplay.lastprice === 0 ?  "" : inplay.lastprice
-    //                Layout.fillHeight: true
-    //                Layout.fillWidth:  false
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignLeft
-//                    color: icon.color
-                    Layout.column: 3
-                    Layout.row: 1
-//                    Layout.columnSpan: 2
-                    Layout.rowSpan: 2
-                }
-
-                Material.Label{
-                    id: change
-                    text: ((inplay.change > 0) ? "+" : "" ) + inplay.change.toString() + " "
-    //                Layout.fillHeight: true
-    //                Layout.fillWidth:  false
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignLeft
-    //                color: icon.color
-                    Layout.column: 3
-                    Layout.row: 3
-//                    Layout.columnSpan: 2
-//                    Layout.rowSpan: 2
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    color: { inplay.change < 0 ? Colors.red :
-                             inplay.change > 0 ? Colors.green : Colors.black
-                    }
-                }
-            }
-        }
-*/
         //bid-ask-hi-lo
         Card {
             elevation: 0
@@ -850,7 +744,7 @@ Material.Card {
                 }
 
                 Material.Label {
-                    text: !mybalance ? "" : (mybalance.stake + (!inplayf ? 0 : inplayf.totalopenpnl)).toLocaleString() + " ƑɃ"
+                    text: !mybalance ? "" : (mybalance.stake + (!tradingroot.totalopenpnl ? 0 : tradingroot.totalopenpnl)).toLocaleString() + " ƑɃ"
                     verticalAlignment: Text.AlignVCenter
 //                    horizontalAlignment: Text.AlignRight
 

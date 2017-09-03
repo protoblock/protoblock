@@ -23,7 +23,7 @@ Material.Card {
         property bool first: true
 //        anchors.fill: parent
         width: parent.width
-        height: parent.height - ProtoScreen.guToPx(8)
+        height: parent.height //- ProtoScreen.guToPx(8)
         id: lv2
         model: MiddleMan.pNextWeekScheduleModel
         headerPositioning: ListView.OverlayHeader

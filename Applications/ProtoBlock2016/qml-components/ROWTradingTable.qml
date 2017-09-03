@@ -76,7 +76,7 @@ Item {
             Component.onCompleted: {
 //                MiddleMan.pPlayerQuoteSliceViewFilterProxyModel.sortAgain("lastprice", sortIndicatorOrder)
 //                selection.select(0);
-                console.log("tvr comleted")
+                console.log("row tvr comleted")
             }
 
             onSelectionChanged: {

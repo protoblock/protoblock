@@ -38,35 +38,55 @@ class Mediator : public QObject {
     Q_OBJECT
 
     explicit Mediator(QObject *parent = 0);
-    //    QML_READONLY_CSTREF_PROPERTY (QString, namefrompk)
-    //    QML_READONLY_CSTREF_PROPERTY (QString, encyptPath)
-    //    QML_READONLY_CSTREF_PROPERTY (bool, engineStatus)
-    //    QML_READONLY_CSTREF_PROPERTY (QString, currentPidContext)
+    //trading
 
 
-    //    Q_PROPERTY(QString playersName READ playersName  NOTIFY playersNameChanged)
-    //    Q_PROPERTY(QString  playersStatus READ playersStatus  NOTIFY playersStatusChanged)
+    //quotes
+    PlayerQuoteSliceModel mPlayerQuoteSliceModel;
+    PlayerQuoteSliceModel mROWPlayerQuoteSliceModel;
 
-    //    Q_PROPERTY(MyNameStatus myNameStatus READ myNameStatus NOTIFY myNameStatusChanged)
-    //    Q_ENUMS (MyNameStatus)
+    //depth
+    DepthMarketModel mDepthMarketModel;
+    DepthMarketModel mROWDepthMarketModel;
 
-    //    QML_CONSTANT_CSTREF_PROPERTY (QString, chatServerAddr)
+    //positions
+    TradingPositionsModel mTradingPositionsModel;
+    TradingPositionsModel mROWTradingPositionsModel;
 
-    QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
+    //fnamebal
+    FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
+    PlayerSymbolsModel mPlayerSymbolsModel;
+
+    PlayerSymbolsModelItem dummyPlayerSymbolsModelItem;
+    PlayerQuoteSliceModelItem dummyPlayerQuoteSliceModelItem;
+    OpenOrdersModel dummyOpenOrdersModel;
+    FantasyNameBalModelItem dummyFantasyNameBalModelItem;
+
+    PlayerProjModel mPlayerProjModel;
+    QItemSelectionModel myGamesSelectionModel;
+    PlayerResultModel mPlayerResultModel;
+    QItemSelectionModel myPrevGamesSelectionModel;
+
 
     QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerSymbolsModel)
 
+    QML_READONLY_PTR_PROPERTY(FantasyNameBalModel, pFantasyNameBalModel)
+
     //Trading
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModelItem)
-//    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModel, pPlayerQuoteSliceModel)
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pROWPlayerQuoteSliceModelItem)
+
     QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceViewFilterProxyModel, pPlayerQuoteSliceViewFilterProxyModel)
-//    QML_READONLY_PTR_PROPERTY(QStringListModel, pPrevPosFilter)
+    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceViewFilterProxyModel, pROWPlayerQuoteSliceViewFilterProxyModel)
 
     QML_READONLY_PTR_PROPERTY(DepthMarketModel, pDepthMarketModel)
+    QML_READONLY_PTR_PROPERTY(DepthMarketModel, pROWDepthMarketModel)
+
     QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pGlobalOpenOrdersModel)
-//    //QML_WRITABLE_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
+    QML_READONLY_PTR_PROPERTY(OpenOrdersModel, pROWGlobalOpenOrdersModel)
+
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
-//    std::unordered_map<std::string,TradingPositionsModel *> modelMap;
+    QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pROWTradingPositionsModel)
 
 
 
@@ -100,22 +120,11 @@ class Mediator : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY(bool,useSelected)
     QML_WRITABLE_CSTREF_PROPERTY(bool,thisWeekPrev)
 
-    QML_READONLY_CSTREF_PROPERTY (qint32, height)
-    QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
 
 
     QML_READONLY_CSTREF_PROPERTY (QString, controlMessage)
     QML_WRITABLE_CSTREF_PROPERTY(bool,busySend)
 
-    //    QML_READONLY_PTR_PROPERTY(PlayerQuoteSliceModelItem, pPlayerQuoteSliceModel)
-    //    QML_LIST_PROPERTY(Mediator,goodFname,QString)
-    //    QML_READONLY_CSTREF_PROPERTY (QStringList, allNames2)
-    //    Q_PROPERTY(QQmlListProperty<QString> goodFnames READ goodFnames NOTIFY goodFnamesChanged)
-
-
-
-    PlayerProjModel mPlayerProjModel;
-    QItemSelectionModel myGamesSelectionModel;
     pb::IPBGateway *mGateway = nullptr;
     QObject *mOGateway;
     void setupConnection(pb::IPBGateway *ingateway);
@@ -124,9 +133,6 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (qint32, thePrevWeek)
     QML_READONLY_CSTREF_PROPERTY (qint32, thePrevSeason)
 
-    PlayerResultModel mPlayerResultModel;
-    QItemSelectionModel myPrevGamesSelectionModel;
-    PlayerSymbolsModel mPlayerSymbolsModel;
 
         //schedule
     QML_READONLY_PTR_PROPERTY(WeeklyScheduleModel, pWeekClosedScheduleModel)
@@ -142,10 +148,9 @@ class Mediator : public QObject {
 //    QML_READONLY_PTR_PROPERTY (QQmlObjectListModel<FantasyBitAwardModelItem>, pResultSelectedModel)
     QQmlObjectListModel<FantasyBitAwardModelItem> dummyResultSelectedModel;
 
-    //trading
-    PlayerQuoteSliceModelItem dummyPlayerQuoteSliceModelItem;
-    OpenOrdersModel dummyOpenOrdersModel;
-    FantasyNameBalModelItem dummyFantasyNameBalModelItem;
+    QML_READONLY_CSTREF_PROPERTY (qint32, height)
+    QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
+
 
     static Mediator *myInstance;
 public:
@@ -175,114 +180,67 @@ public:
     QStringList m_allNamesList;
     QStringList m_allROWList;
 
-//    Q_INVOKABLE void doDepth() {
-//        depthCount = 0;
-//        if ( polldepth.interval() >= 3000 )
-//            getDepthRep();
+
+//    Q_INVOKABLE PlayerQuoteSliceViewFilterProxyModel * getProxyQuoteModel(bool isweekly = true) {
+//        return isweekly ? m_pPlayerQuoteSliceViewFilterProxyModel : m_pROWPlayerQuoteSliceViewFilterProxyModel;
 //    }
 
+    inline PlayerQuoteSliceModel & getQuoteModel(bool isweekly = true) {
+        return isweekly ? mPlayerQuoteSliceModel : mROWPlayerQuoteSliceModel;
+    }
+
+    inline PlayerQuoteSliceModel & getQuoteModel(const QString &symbol) {
+        return getQuoteModel(fantasybit::isWeekly(symbol));
+    }
+
+    inline PlayerQuoteSliceModel & getQuoteModel(const std::string &symbol) {
+        return getQuoteModel(fantasybit::isWeekly(symbol));
+    }
+
+    Q_INVOKABLE bool isGlobalWeekly(const QString &symbol) {
+        return fantasybit::isWeekly(symbol);
+    }
+
     Q_INVOKABLE void startDepth(const QString& symbol) {
-//        qDebug() << " startDepth " << symbol;
-        auto *it = mPlayerQuoteSliceModel.getByUid(symbol);
+        qDebug() << " startDepth " << symbol;
+        bool isweekly = isWeekly(symbol);
+        if ( symbol == (isweekly ? m_pPlayerQuoteSliceModelItem->get_symbol() :
+                         m_pROWPlayerQuoteSliceModelItem->get_symbol()) )
+            return;
+
+        auto *it = getQuoteModel(isweekly).getByUid(symbol);
         if ( it != nullptr ) {
-//            qDebug() << " startDepth good" << symbol;
+            isweekly ? update_pPlayerQuoteSliceModelItem(it)
+                     : update_pROWPlayerQuoteSliceModelItem(it);
 
-//          m_pPlayerQuoteSliceModelItem = it;
-            update_pPlayerQuoteSliceModelItem(it);
-            update_pDepthMarketModel(it->get_pDepthMarketModel());
+            isweekly ? update_pDepthMarketModel(it->get_pDepthMarketModel())
+                     : update_pROWDepthMarketModel(it->get_pDepthMarketModel());
         }
-        else
-            update_pDepthMarketModel(&mDepthMarketModel);
+        else {
+            isweekly ? update_pDepthMarketModel(&mDepthMarketModel)
+                     : update_pROWDepthMarketModel(&mROWDepthMarketModel);
+        }
 
-        auto tit = mTradingPositionsModel.getOrCreate(symbol);
+        auto tit = isweekly ? mTradingPositionsModel.getOrCreate(symbol) :
+                             mROWTradingPositionsModel.getOrCreate(symbol);
+
         if ( tit != nullptr ) {
-            update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
+            isweekly ? update_pGlobalOpenOrdersModel(tit->get_pOpenOrdersModel())
+                     : update_pROWGlobalOpenOrdersModel(tit->get_pOpenOrdersModel());
         }
         else {
 //            qDebug() << " startDepth !good getOrCreate" << symbol;
-            update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel);
+            isweekly ? update_pGlobalOpenOrdersModel(&dummyOpenOrdersModel)
+                     :  update_pROWGlobalOpenOrdersModel(&dummyOpenOrdersModel);
         }
-//        depthBackup--;
-//        if ( depthBackup <= 0 ) {
-//            depthBackup = 0;
-////            depthInterval = 1000;
-//        }
-////        else
-////            depthInterval = 1000 * (depthBackup / 5);
-
-//        depthCount = 0;
-////        depthInterval = 1000 * (depthBackup / 5);
-////        if ( depthInterval < 1000 )
-////           depthInterval = 1000;
-
-//        changeDepthContext(symbol);
-//        getDepthRep();
-////        qDebug() << "startDepth depthInterval " << depthInterval << " bu " << depthBackup;
-
-//        if ( !polldepth.isActive() )
-//            polldepth.start(depthInterval);
-//        11
-//        getOrderReq(FantasyName::name_hash(m_fantasy_agent.currentClient()));
-//        getOrderPos();
     }
 
-//    Q_INVOKABLE  QStringList getAllSymbols() {
-//        auto &hold =  mGateway->dataService->GetAllSymbols();
-//        qDebug() << " GetAllSymbols " << hold.count();
-//        return hold;
-//    }
-
-//    Q_INVOKABLE void stopDepth(const QString& symbol) {
-//        polldepth.stop();
-//        depthBackup -= 5;
-//        if ( depthBackup < 0 ) depthBackup = 0;
-//        depthCount = 0;
-//    }
-//    Q_INVOKABLE void changeDepthContext(const QString& context) {
-//        if ( mGetDepthReq.GetExtension(GetDepthReq::req).pid().data() != context )
-//            mGetDepthReq.MutableExtension(GetDepthReq::req)->set_pid(context.toStdString());
-
-////            m_currentPidContext = context;
-//    }
     Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
 
-//    QString playersStatus()const;
-//    void setPlayersStatus(const QString &playersStatus);
-
-//    QString playersName();
-//    void setPlayersName(const QString &playersName);
-
-    // Q_INVOKABLE void newOrder(const QString &id, int qty, int price);
-
-
-//    Q_INVOKABLE void allNamesGet();
-
-    /*trading
-    Q_INVOKABLE void rowMarketGet();
-    Q_INVOKABLE void getOrderPos(const QString&);
-    Q_INVOKABLE void getOrderPos();
-    Q_INVOKABLE void setOrderModel(const QString& symbol) {
-        if  ( amLive )
-            return;
-
-        auto model = m_pTradingPositionsModel->getByUid(symbol);
-        if ( model == nullptr ) {
-//            auto model2 = m_pPlayerQuoteSliceModel->getByUid(uid);
-//            if ( model2 != nullptr) {
-//                AllOdersFname allf{};
-//                allf.set_fname(m_fantasy_agent);
-//                m_pTradingPositionsModel->append(new TradingPositionsMode);
-//            }
-            qDebug() << " bad data for m_pTradingPositionsModel " << symbol;
-        }
-        else
-            m_pGlobalOpenOrdersModel = model->get_pOpenOrdersModel();
-    }
-    */
-    Q_INVOKABLE QString getOrderModelSymbol() {
-        return m_pGlobalOpenOrdersModel->get_pidsymbol();
-    }
+//    Q_INVOKABLE QString getOrderModelSymbol() {
+//        return m_pGlobalOpenOrdersModel->get_pidsymbol();
+//    }
 
     //projections
     Q_INVOKABLE void select(int row, int command) {
@@ -601,7 +559,7 @@ public:
     }
 
 
-    bool usingRandomNames = false;
+//    bool usingRandomNames = false;
 
     std::vector<std::string> fnames;
     int fnameindex;
@@ -621,37 +579,52 @@ public:
     Q_INVOKABLE QStringList goodList() { return m_goodList; }
     Q_INVOKABLE QStringList allNamesList() { return m_allNamesList; }
 
-    //portfolio
-    Q_INVOKABLE QString fillPlayerBase(const QString &syb, const QString &pid) {
-        return mPlayerSymbolsModel.Update(syb, mGateway->dataService->GetPlayerBase(pid.toStdString()));
+    //trading
+    Q_INVOKABLE QString checkFullName(const QString &fullname, const QString &syb) {
+        if ( fullname != "" )
+            return fullname;
+
+        return mPlayerSymbolsModel.Update(syb, mGateway->dataService->GetPlayerDetail(syb.toStdString()));
     }
 
-    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
 
-        auto model = mPlayerQuoteSliceModel.getByUid(uid);
-        if ( model == nullptr ) {
-            qDebug() << " bad data for getPlayerNamePos " << uid;
-            return "";
+//    Q_INVOKABLE QString getPlayerNamePos(const QString &uid) {
+
+//        auto model = mPlayaddtrerQuoteSliceModel.getByUid(uid);
+//        if ( model == nullptr ) {
+//            qDebug() << " bad data for getPlayerNamePos " << uid;
+//            return "";
+//        }
+//        else
+//            return model->get_fullname() + " (" + model->get_pos() +")" ;
+//    }
+
+    Q_INVOKABLE void addTradingSymbol(const QString &symbol,bool isweekly);
+
+    void addQuoteSymbol(const std::string &symbol) {
+        QString stripped = fantasybit::stripSymbol(symbol).data();
+        auto it = mPlayerSymbolsModel.getByUid(stripped);
+        if ( it == nullptr ) {
+            qDebug() << "error addQuoteSymbol" << symbol.data();
         }
-        else
-            return model->get_fullname() + " (" + model->get_pos() +")" ;
-    }
-
-    Q_INVOKABLE void addTradingSymbol(const QString &symbol) {
-        auto ppd = mGateway->dataService->GetPlayerDetail(symbol.toStdString());
-        mPlayerQuoteSliceModel.UpdateSymbols(ppd,mPlayerSymbolsModel.getByUid(symbol),m_blocknum,"17s");
+        else if ( checkFullName(it->get_fullname(),stripped) == "")
+            qDebug() << "error addQuoteSymbol checkFullName" << symbol.data() << stripped;
+        else {
+//            bool isweekly = fantasybit::isWeekly(symbol);
+            getQuoteModel(symbol).UpdateSymbol(it,m_blocknum,symbol);
+        }
     }
 
     //data
-    Q_INVOKABLE QString getTeamid(const QString &uid) {
-        auto model = mPlayerQuoteSliceModel.getByUid(uid);
-        if ( model == nullptr ) {
-            qDebug() << " bad data for getTeamid " << uid;
-            return "";
-        }
-        else
-            return model->get_teamid();
-    }
+//    Q_INVOKABLE QString getTeamid(const QString &uid) {
+//        auto model = mPlayerQuoteSliceModel.getByUid(uid);
+//        if ( model == nullptr ) {
+//            qDebug() << " bad data for getTeamid " << uid;
+//            return "";
+//        }
+//        else
+//            return model->get_teamid();
+//    }
 
     //schedule
     Q_INVOKABLE void setScheduleFilter(const QString& filter) {
@@ -665,22 +638,19 @@ public:
         if ( h > m_height )
             emit NewHeightStop(h);
     }
+
     //oms
-    void subscribeOrderPos(const QString &name);
-    void getOrderReq(const QString &name,const QString symbol="");
+//    void subscribeOrderPos(const QString &name);
+//    void getOrderReq(const QString &name,const QString symbol="");
 
     //name
-    void OnGoodName(const QString &goodname, const fantasybit::FantasyNameBal &fnb);
+//    void OnGoodName(const QString &goodname, const fantasybit::FantasyNameBal &fnb);
 
     void updateCurrentFantasyPlayerProjections();
 signals:
     void importSuccess(const QString name, bool passfail);
     void usingFantasyName(const QString &name);
     void nameCheckGet( const QString & name, const QString & status );
-    //    void myNameChang (const QString & name, QString status );
-    //    void myNameStatusChanged();
-    //    void nameStatusChanged (QString, QString);
-
     void OnClaimName(QString name);
 
     void OnUseName(QString); //tell agent to use the name
@@ -697,6 +667,9 @@ signals:
     void NewOrder(fantasybit::ExchangeOrder);
 
     void NewHeightStop(int);
+
+    void haveWeeklySymbol();
+    void haveRowSymbol();
 
 protected slots:
 //    void handdleUsingName(const QString &name);
@@ -738,58 +711,51 @@ private slots:
 //    void OnpPlayerQuoteSliceModelItemChanged (PlayerQuoteSliceModelItem * name);
 
 private:
-    std::string lastPk2name;
+//    std::string lastPk2name;
     //fantasybit::FantasyAgent m_fantasy_agent;
     std::string myFantasyName;
 
-    QString m_playersName;
-    QString m_playersStatus;
-    std::string m_lastSignedplayer;
+//    QString m_playersName;
+//    QString m_playersStatus;
+//    std::string m_lastSignedplayer;
 
-    ordsnap_t mMyPosOrders;
-    std::unordered_map<std::string, std::string> m_myPubkeyFname;
-    std::unordered_map<std::string, uint64_t> m_myPubkeyHash;
-    std::unordered_map<uint64_t, std::string> m_myHashFname;
+//    ordsnap_t mMyPosOrders;
+//    std::unordered_map<std::string, std::string> m_myPubkeyFname;
+//    std::unordered_map<std::string, uint64_t> m_myPubkeyHash;
+//    std::unordered_map<uint64_t, std::string> m_myHashFname;
 
-    void doPk2fname(const std::string &pkstr);
+//    void doPk2fname(const std::string &pkstr);
 
     //timers
-    QTimer signPlayerStatus;
-    QTimer polldepth;
-    QTimer tradeTesting;
+//    QTimer signPlayerStatus;
+//    QTimer polldepth;
+//    QTimer tradeTesting;
 
     //    WeeklyScheduleModel mWeeklyScheduleModel;
 
-    //quotes
-    PlayerQuoteSliceModel mPlayerQuoteSliceModel;
-    //depth
-    DepthMarketModel mDepthMarketModel;
-
-    //fnamebal
-    FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
 
     //oms
-    OpenOrdersModel mOpenOrdersModel;
+//    OpenOrdersModel mOpenOrdersModel;
 
     //depth todo
-    QString testid;
+//    QString testid;
 //    WsReq mGetDepthReq;
-    bool isbid;
+//    bool isbid;
     //    void getOrderReq(uint64_t cname);
-    int depthCount;
-    int depthBackup;
-    int depthInterval;
-    TradingPositionsModel mTradingPositionsModel;
+//    int depthCount;
+//    int depthBackup;
+//    int depthInterval;
+
 
     bool amLive = false;
 
-    void getLeaders(int week,bool lastweek, bool all2016 = false) {
+    void getLeaders(int week,bool lastweek, bool all20XX = false) {
 #ifdef NO_SQL_LEADERS
         return;
 #endif
-        QString links("https://158.222.102.83:4545");
+        QString links("https://app.trading.football:4545");
         QString route("fantasy/leaders");
-        if ( !all2016 )
+        if ( !all20XX )
             route = route.append("?position=all%20positions&week=%1").arg(week);
 
 
@@ -821,8 +787,8 @@ private:
 
             auto *item = mFantasyNameBalModel.getByUid(name);
             if ( item == nullptr ) continue;
-            if ( all2016 )
-                item->set_leaders2016(score);
+            if ( all20XX )
+                item->set_leaders20XX(score);
             else if ( lastweek )
                 item->set_lastweek(score);
             else
@@ -838,6 +804,16 @@ private:
         getLeaders(m_theWeek,false,false);
         getLeaders(0,false,true);
         m_pLeaderBoardSortModel->invalidate();
+    }
+
+    void UpdateSeasonWeek(int season, int week) {
+        mSeasonSuffix = to_string(season-2000);
+        mWeeklySuffix = mSeasonSuffix;
+        mSeasonSuffix += "s";
+        mWeeklySuffix += "w";
+        mWeeklySuffix += (week <= 9) ? "0" : "";
+        mWeeklySuffix += to_string(week);
+
     }
 
 public slots:
@@ -910,14 +886,27 @@ public slots:
         }
     }
     void OnMarketTicker(fantasybit::MarketTicker,int32_t);
-//    void OnMarketSnapShot(fantasybit::MarketSnapshot*);
     void OnDepthDelta(fantasybit::DepthFeedDelta*);
     void OnTradeTick(fantasybit::TradeTic*);
     void OnNewPos(fantasybit::FullPosition);
     void OnNewOO(fantasybit::FullOrderDelta);
     void MyPosPriceChange(PlayerQuoteSliceModelItem*);
 
+private:
+//    vector<MyFantasyName> myGoodNames;
+    void updateWeek();
+
+    void updateOnChangeFantasyName();
+    void updateCurrentFantasyPlayerOrderPositions();
+    std::string mSeasonSuffix, mWeeklySuffix;
+    double calcTotalPnl(TradingPositionsModel &tpm, PlayerQuoteSliceModel &pqsm);
+    OpenOrdersModel *updateGlobalOrder(TradingPositionsModel &tpm, PlayerQuoteSliceModelItem *pqsmi);
+};
+}
+#endif // MEDIATOR_H
+
     /*
+     *     int testCount = 0;
     void OnMarketTicker(fantasybit::MarketTicker *mt) {
         if ( mt->symbol() == "" )
             return;
@@ -985,15 +974,6 @@ public slots:
 */
 
 
-private:
-    vector<MyFantasyName> myGoodNames;
-    void updateWeek();
-    int testCount = 0;
-    void updateOnChangeFantasyName();
-    void updateCurrentFantasyPlayerOrderPositions();
-};
-}
-#endif // MEDIATOR_H
 
 
 
