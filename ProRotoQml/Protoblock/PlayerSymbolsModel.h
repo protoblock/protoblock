@@ -25,8 +25,8 @@ public:
     explicit PlayerSymbolsModelItem(const QString &in, const QString &in2)
         : m_playerid(in), m_symbol(in2), QObject(nullptr) {
 
-        m_firstname = "first";
-        m_lastname = "last";
+        m_firstname = "Barry";
+        m_lastname = "Sanders";
     }
 
     void Update(const PlayerBase &pb) {
