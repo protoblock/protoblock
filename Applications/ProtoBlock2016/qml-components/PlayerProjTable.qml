@@ -309,27 +309,27 @@ Item {
         Rectangle {
             id: rec
             anchors.fill: parent
-            border.width: !model ? 0 : (model.knownProjection !==  model.projection) ?
-                                ProtoScreen.guToPx(.25) : 0
+            border.width: !model ? 0 : ((model.knownProjection !==  model.projection) ?
+                                ProtoScreen.guToPx(.25) : 0)
 //                          (model.projection === model.knownProjection) ? 0 : ProtoScreen.guToPx(.125)
             border.color: themeroot.theme.accentColor
-                        width: ProtoScreen.guToPx(16)
+            width: ProtoScreen.guToPx(16)
             color: "transparent"
 
             Material.Label {
                 anchors.right: sb.left
 //                anchors.leftMargin: ProtoScreen.guToPx(.125)
-
+                anchors.left: parent.left
                 anchors.margins: ProtoScreen.guToPx(.125)
 
 //                focus: true
                 id: lbl
 
-                width: ProtoScreen.guToPx(6) - ProtoScreen.guToPx(.125 * 2.0)
+                width: ProtoScreen.guToPx(6) - ProtoScreen.guToPx(.125) * 2.0
 
                 height: parent.height
-                text: !model ? "" : (model.knownProjection !==  model.projection)
-                      ? model.knownProjection : ""
+                text: !model ? "" : ((model.knownProjection !==  model.projection)
+                      ? model.knownProjection : "")
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -369,11 +369,11 @@ Item {
                 anchors.right: parent.right
                 anchors.margins: ProtoScreen.guToPx(.125)
 //                anchors.right: parent.right
-                width: ProtoScreen.guToPx(10)
-                height: parent.height
+                width: ProtoScreen.guToPx(8)
+                height: parent.height * .86
     //            width: parent.width * .70
                 font: lbl.font
-
+                anchors.verticalCenter: parent.verticalCenter
                 decimals: 0
                 stepSize: 1.0
                 maximumValue: 40
@@ -387,18 +387,18 @@ Item {
                    tv.model.setData(tv.model.index(styleData.row,0),
                                     value, 0)
 
-                    if ( model.knownProjection !==  value)
+                    if ( model && (model.knownProjection !==  value) && (topw.focuscount != 1))
                         topw.focuscount = 1
 
                    lbl.text = Qt.binding(function(){
-                       if ( tv.model.knownProjection !==  value)
+                       if ( model && model.knownProjection !==  value)
                            return model.knownProjection
                        else
                            return "  "
                    })
 
                     rec.border.width = Qt.binding(function(){
-                        if ( tv.model.knownProjection !==  value)
+                        if ( model && (model.knownProjection !==  value))
                             return ProtoScreen.guToPx(.25)
                         else
                             return 0
