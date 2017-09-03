@@ -428,6 +428,13 @@ void Mediator::updateWeek() {
                 if ( !getQuoteModel(ms.symbol()).Update(ms))
                     qDebug() << "error updateweek" << ms.DebugString().data();
             }
+            if ( getQuoteModel(ms.symbol()).count () == 1) {
+                if ( isWeekly(ms.symbol ())) {
+                    qDebug() << " emit haveWeeklySymbol";
+                    emit haveWeeklySymbol ();
+                }
+                else emit haveRowSymbol ();
+            }
         }
 
         if (myFantasyName != "" )

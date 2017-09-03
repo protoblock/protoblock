@@ -668,6 +668,9 @@ signals:
 
     void NewHeightStop(int);
 
+    void haveWeeklySymbol();
+    void haveRowSymbol();
+
 protected slots:
 //    void handdleUsingName(const QString &name);
 //    void handdleNameStatus(const QString &name,const QString &status );

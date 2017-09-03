@@ -44,6 +44,7 @@ Item {
     property string dsymbol: ""
     property int symbindex: -1
 
+    property alias viewselection: tvr.selection
     //My Orders
         // My Positions
         // My PnL
@@ -74,12 +75,15 @@ Item {
                 quotemodel.sortAgain("blocknum",Qt.DescendingOrder)
                 console.log("wk tvr comleted")
                 console.log(quotemodel)
+                tvr.selection.select(0)
 //                console.log(MiddleMan.pROWPlayerQuoteSliceViewFilterProxyModel.size)
 //                currentRow = Qt.binding(function() {
 //                        return quotemodel.getViewIndexFromSymbol(dsymbol) ;
 //                })
 //                currentRow = 0
-                currentRowChanged()
+//                tvr.selection.select(0)
+//                currentRowChanged()
+//                tvr.selection
             }
 
             onSelectionChanged: {
@@ -94,10 +98,10 @@ Item {
 //                tvr.selectedRow = currentRow
             }
 
-            onCurrentRowChanged: {
-                console.log("onCurrentRowChanged" + currentRow);
-                tvr.selectedRow = currentRow
-            }
+//            onCurrentRowChanged: {
+//                console.log("onCurrentRowChanged" + currentRow);
+//                tvr.selectedRow = currentRow
+//            }
 
 
 
@@ -117,14 +121,12 @@ Item {
                 quotemodel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
-
-
             headerDelegate: headerdel
             frameVisible: false
             selectionMode: SelectionMode.SingleSelection
 
 //            currentRow: 0
-            property int selectedRow: -1
+//            property int selectedRow: 0
             currentRow: 0
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
@@ -1050,16 +1052,11 @@ Item {
         target: tvr.selection
 
         onSelectionChanged : {
-
             wktt.update();
             console.log("row onCurrentRowChanged onSelectionChanged");
         }
     }
 
-//    Connections {
-//        target: MiddleMan
-//        onThePrevWeekChanged: tvr.selectedRow = -1
-//    }
 
     function update() {
         console.log(" MkTrading update")

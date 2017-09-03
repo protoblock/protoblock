@@ -174,5 +174,21 @@ Item {
 
         }
     }
+
+    Connections {
+        target: MiddleMan
+        onHaveWeeklySymbol: {
+            console.log( " onhaveweekly ")
+            if (wkTrading.wwww.viewselection.count === 0 )
+                wkTrading.wwww.viewselection.count.select(0)
+        }
+        onHaveRowSymbol: {
+            console.log( " onhaverow ")
+            if (rowTrading.wwww.viewselection.count === 0 )
+                rowTrading.wwww.viewselection.count.select(0)
+        }
+
+    }
+
 }
 
