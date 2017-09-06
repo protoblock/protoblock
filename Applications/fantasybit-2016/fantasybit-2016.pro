@@ -40,7 +40,6 @@ INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlModels
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/QmlSuperMacros
 
 SOURCES += \
-#    $$PWD/../../../fantasybit-2015/tradingfootball/playerloader.cpp \
     main.cpp \
     $$PWD/Data.cpp \
     $$PWD/DistributionAlgo.cpp \
@@ -157,4 +156,9 @@ contains(DEFINES, SQLSTUFF) {
     SOURCES += $$PWD/SqlStuff.cpp
     HEADERS += $$PWD/SqlStuff.h
     #include (./o2/o2.pri)
+}
+
+contains (DEFINES, PLAYERLOADERFD) {
+    SOURCES += $$PWD/../../../fantasybit-2015/tradingfootball/playerloader.cpp
+    HEADERS += $$PWD/../../../fantasybit-2015/tradingfootball/playerloader.h
 }

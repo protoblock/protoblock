@@ -455,7 +455,8 @@ Item {
 //                    color: "black"
 //                    iconSource: "icon://" + "awesome/undo"// "qrc:/icons/navigation_close.png"
                     onClicked: {
-                        importexportDialog.show();
+//                        importexportDialog.show();
+                        MiddleMan.copyFDProj()
                     }
 
                     size: ProtoScreen.guToPx(2.5)

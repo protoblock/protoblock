@@ -27,6 +27,9 @@
 #include "RestFullCall.h"
 #include "playerresultmodel.h"
 #include "ExchangeData.h"
+#ifdef PLAYERLOADERFD
+#include "../../fantasybit-2015/tradingfootball/playerloader.h"
+#endif
 
 using namespace std;
 
@@ -156,7 +159,22 @@ class Mediator : public QObject {
 public:
     static Mediator *instance();
 
+    Q_INVOKABLE void copyFDProj() {
+        ProjectionsLoaderFD pl;
+        CopyProjectionsFrmoFantasyData(pl.loadProj(m_theWeek));
+    }
     void CopyTheseProjections(const std::vector<fantasybit::PlayerPoints> &these) {
+        for ( auto t : these) {
+            auto *item = mPlayerProjModel.getByUid(t.playerid().data());
+            if ( !item ) continue;
+            if ( !item->get_isopen() ) continue;
+            if ( t.points() <= 0 ) continue;
+            item->set_projection(t.points());
+        }
+        m_pProjectionsViewFilterProxyModel->invalidate();
+    }
+
+    void CopyProjectionsFrmoFantasyData(const std::vector<fantasybit::PlayerPoints> &these) {
         for ( auto t : these) {
             auto *item = mPlayerProjModel.getByUid(t.playerid().data());
             if ( !item ) continue;
