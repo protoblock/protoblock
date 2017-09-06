@@ -165,6 +165,9 @@ void ExchangeData::init() {
             myset.insert(bd.seqnum());
             mSeqNameMap[bd.seqnum()] = bd.fantasy_name();
 */
+            if ( bd.symbol () == "@@RB17s") {
+                qDebug() << "@@RB";
+             }
             auto it3 = mLimitBooks.find(bd.symbol());
             if ( it3 == end(mLimitBooks)) {
                 auto it2 = mLimitBooks.insert(make_pair(bd.symbol(),
@@ -709,6 +712,17 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
         ticker = mit->second.symbol;
         ord.mutable_core()->CopyFrom(mit->second.livecore);
         ord.set_refnum(eo.cancel_oref());
+    }
+
+    auto sit = mSeqNameMap.find (ord.refnum ());
+    if ( end(mSeqNameMap) == sit ) {
+         qWarning() << "invalid cancel Refnum not found for" << eo.DebugString().data() << ord.refnum ();
+         return;
+    }
+
+    if ( sit->second != fn->alias () ) {
+        qWarning() << "invalid cancel Refnum not found for" << eo.DebugString().data() << ord.refnum ();
+        return;
     }
 
     auto it = mLimitBooks.find(ticker);
