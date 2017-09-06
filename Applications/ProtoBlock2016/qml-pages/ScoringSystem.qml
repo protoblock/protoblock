@@ -30,7 +30,7 @@ Item {
 
                     ListElement {
                         name: "Passing Yards	"
-                        unitpoints: 	.5
+                        unitpoints: 	.05
                         unitdes: "points per yard"
                         team: "Offense"
                     }
@@ -50,7 +50,7 @@ Item {
                     }
                     ListElement {
                         name: "Rushing Yards	"
-                        unitpoints: 	.5
+                        unitpoints: 	.1
                         unitdes: "points per yard"
                         team: "Offense"
 

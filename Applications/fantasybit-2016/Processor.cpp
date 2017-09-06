@@ -161,13 +161,12 @@ int32_t BlockProcessor::process(Block &sblock) {
     if ( mLastWeekStart ) {
         mLastWeekStart = false;
         int week = mData.GetGlobalState().week();
-        auto boot = mData.makeBootStrap(2016,
+        auto boot = mData.makeBootStrap(mData.GetGlobalState().season (),
                                         mData.GetGlobalState().week(),
                                         lastidprocessed-1);
-        boot.set_key((week < 10 ? "20160" : "2016") + to_string(week));
+        boot.set_key(to_string(mData.GetGlobalState().season ()) +  (week < 10 ? "0" : "") + to_string(week));
         boot.set_previd(sblock.signedhead().head().prev_id());
         mNameData.addBootStrap(&boot,true);
-
     }
 #endif
 
@@ -966,6 +965,10 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
         return;
     }
 
+    if ( emdg.symbol () == "@@RB17s")  {
+        qDebug() << "@@RB";
+     }
+
     const FutContract *fc;
     std::string symbol;
     if ( !emdg.has_futcontract() &&
@@ -1063,7 +1066,11 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     }
     */
 
-    mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum,fc,symbol);
+   if (  mData.mSym2Pid.find (fantasybit::stripSymbol (symbol)) == end(mData.mSym2Pid) ) {
+       qWarning() << "ProcessInsideStamped bad Symbol" << symbol.data () << fc->DebugString().data() << emdg.DebugString().data();
+       return;
+   }
+   mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum,fc,symbol);
 }
 
 void BlockProcessor::OnWeekOver(int week) {
