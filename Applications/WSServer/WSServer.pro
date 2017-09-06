@@ -89,7 +89,7 @@ FANTASYBITLIB += fantasybit-2016D
 
 
 !contains(DEFINES, PRODFOOTBALL){
-    FANTASYBITLIB = STAGING-$$FANTASYBITLIB
+    FANTASYBITLIB = STAGING-$${FANTASYBITLIB}
 }
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/release/ -l$$FANTASYBITLIB
@@ -99,11 +99,11 @@ else:macx: LIBS += -L$$OUT_PWD/../fantasybit-2016/ -l$$FANTASYBITLIB
 INCLUDEPATH += $$PWD/../fantasybit-2016
 DEPENDPATH += $$PWD/../fantasybit-2016
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/lib$$FANTASYBITLIB.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/lib$$FANTASYBITLIB.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/$$FANTASYBITLIB.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/$$FANTASYBITLIB.lib
-else:macx: PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/libSTAGING-fantasybit-2016D.a
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/lib$${FANTASYBITLIB}.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/lib$${FANTASYBITLIB}.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/release/$${FANTASYBITLIB}.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/debug/$${FANTASYBITLIB}.lib
+else:macx: PRE_TARGETDEPS += $$OUT_PWD/../fantasybit-2016/lib$${FANTASYBITLIB}.a
 
 INCLUDEPATH  += $$PWD/../../ProRotoQml/Protoblock
 INCLUDEPATH +=  $$PWD/../../ProRotoQml/protoblock-core

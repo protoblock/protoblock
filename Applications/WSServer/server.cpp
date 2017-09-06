@@ -119,6 +119,7 @@ void Server::initData() {
     }
 //        updateLiveLeaders();
 
+
     mAllNamesRep.Clear();
     mPk2Index.clear();
     mPk2Bal.clear();
@@ -890,7 +891,9 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
     std::string teamid = it->playerdata().player_status().teamid();
     if ( teamid == "") teamid = "FA";
     strtweet += teamid +", " + it->playerdata().player_base().position();
-    strtweet += ") 2017 - ";
+    strtweet +=  fantasybit::isWeekly(tt->symbol())
+            ? ") ROW - "
+            : (") Week " + to_string(GlobalStateRep.globalstate().week()));
 
     std::string price = to_string(tt->price()) + (tt->tic() < 0 ? " ↓" : tt->tic() > 0 ? " ↑" : "");
     strtweet += " trading at: " + price;
