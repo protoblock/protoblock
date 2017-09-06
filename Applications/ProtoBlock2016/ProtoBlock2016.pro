@@ -26,7 +26,7 @@ QT += qml quick core websockets network xmlpatterns qml-private quick-private
 #sql
 #sql webchannel
 CONFIG += c++11
-#CONFIG += Console
+CONFIG += Console
 
 
 contains(DEFINES, SQLSTUFF){

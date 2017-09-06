@@ -159,10 +159,13 @@ class Mediator : public QObject {
 public:
     static Mediator *instance();
 
+#ifdef PLAYERLOADERFD
     Q_INVOKABLE void copyFDProj() {
         ProjectionsLoaderFD pl;
         CopyProjectionsFrmoFantasyData(pl.loadProj(m_theWeek));
     }
+#endif
+
     void CopyTheseProjections(const std::vector<fantasybit::PlayerPoints> &these) {
         for ( auto t : these) {
             auto *item = mPlayerProjModel.getByUid(t.playerid().data());
