@@ -63,7 +63,7 @@ Item {
                 font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
                 width: parent.width
                 wrapMode: Text.WordWrap
-                text: "2016 Leaderboard"
+                text: "2017 Leaderboard"
             }
             Label{
                 id: mainSubText
@@ -187,8 +187,8 @@ Item {
                 onClicked: {
                     currentLevel = currentLevel -1
                     if(currentLevel === 0 ){
-                        mainTitle.text = "2016 Leaderboard"
-                        mainSubText.text = (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText )
+                        mainTitle.text = "2017 Leaderboard"
+                        mainSubText.text = (week.currentText == "all weeks" ? "2017" : "Week " + week.currentText )
                         jsonGetter.source =  baseUrl + "fantasy/leaders?week=" + replaceSpace(week.currentText)
                     }else{
                         mainTitle.text = lastTitle
@@ -321,7 +321,7 @@ Item {
 
             text: "Fantasy Name: " + model.name
 
-            subText: (week.currentText == "all weeks" ? "2016" : "Week " + week.currentText ) + " Balance: " +  model.score
+            subText: (week.currentText == "all weeks" ? "2017" : "Week " + week.currentText ) + " Balance: " +  model.score
 
             subColor: MiddleMan.isMyName(model.name) ?
                        (model.name !== uname ? themeroot.theme.accentColor : Theme.light.textColor)
