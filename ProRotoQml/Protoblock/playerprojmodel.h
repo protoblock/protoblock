@@ -105,6 +105,7 @@ public:
             if ( game.status > GameStatus_Status_INGAME)
                 continue;
 
+//            std::multimap<int,PlayerProjModelItem*,std::greater<int>> sorted;
             // add game
             QString gameId = game.info.id().data();
             //add home players
