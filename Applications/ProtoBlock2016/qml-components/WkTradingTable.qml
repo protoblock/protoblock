@@ -131,7 +131,7 @@ Item {
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
 //               color: styleData.alternate?"#f5f5f5":"transparent"
-               color:  !model ? "transparent" : (  (model.symbol === dsymbol) ? "Light Grey"
+               color:  !tvr.model ? "transparent" : (  (tvr.model.symbol === dsymbol) ? "Light Grey"
                                                                                 : (styleData.alternate?"#f5f5f5":"transparent"))
                                                                                          //Material.Theme.accentColor
 //               color: (styleData.row===tvr.selectedRow)

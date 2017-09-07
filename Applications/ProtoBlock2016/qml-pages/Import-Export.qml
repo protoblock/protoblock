@@ -236,7 +236,7 @@ Item{
                     Card{
                          id:seCard
                          width: parent.width / 2.0
-                         height:  imBan2.height * 2
+                         height:  theSecert.implicitHeight//Ban2.height * 2
                          elevation: visible? 5 : 0
                          opacity: secretTxt.opacity
                          anchors.horizontalCenter: parent.horizontalCenter
