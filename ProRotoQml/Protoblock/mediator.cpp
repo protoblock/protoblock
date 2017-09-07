@@ -105,7 +105,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
     m_pProjectionsViewFilterProxyModel->setSourceModel(&mPlayerProjModel);
 
-    m_pProjectionsViewFilterProxyModel->setSortRole("pos");//mPlayerProjModel.roleForName("pos"));
+    m_pProjectionsViewFilterProxyModel->setSortRole("knownProjection");//mPlayerProjModel.roleForName("pos"));
     m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(false);
 
     //results
@@ -387,11 +387,13 @@ void Mediator::updateWeek() {
             //END Schedule
 
 
+
             //playerprojmodels
             const auto &vgr = mGateway->dataService->GetCurrentWeekGameRosters();
             mPlayerSymbolsModel.Update(vgr);
             mPlayerProjModel.updateRosters(vgr,mGateway->dataService,mPlayerSymbolsModel);
-            m_pProjectionsViewFilterProxyModel->invalidate();
+
+//            m_pPlayerProjModel->setSortRole ()
 
             /*
             const auto &vms = mGateway->dataService->GetCurrentMarketSnaps();
@@ -447,6 +449,9 @@ void Mediator::updateWeek() {
             updateOnChangeFantasyName();
 
         updateLiveLeaders();
+//        emit updateWeekData ();
+//        m_pProjectionsViewFilterProxyModel->setDynamicSortFilter(false);
+
     }
 }
 
@@ -480,6 +485,10 @@ void Mediator::updateCurrentFantasyPlayerProjections(){
         item->set_knownProjection(it->second);
         item->set_projection(it->second);
     }
+
+    m_pProjectionsViewFilterProxyModel->setSortRole ("knownProjection");
+    m_pProjectionsViewFilterProxyModel->sortAgain ("knownProjection",Qt::SortOrder::DescendingOrder);
+
 }
 
 void Mediator::updateCurrentFantasyPlayerOrderPositions() {

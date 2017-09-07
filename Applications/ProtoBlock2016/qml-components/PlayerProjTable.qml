@@ -36,6 +36,7 @@ Item {
 //                   return ProtoScreen.guToPx(6) * columnCount
 //                })
                 ppt.addcolumn.connect(addcolumnMethod)
+//                model.sortAgain("knownProjection",Qt.DescendingOrder)
             }
 
             function addcolumnMethod(fname) {
@@ -62,12 +63,20 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+
+//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                console.log( " sort colm changed ")
             }
 
             onSortIndicatorOrderChanged: {
-                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+
+                console.log( " sort ind ord changed ")
+
             }
+
 
             headerDelegate: headerdel
             frameVisible: false
@@ -257,7 +266,7 @@ Item {
             }
 
             TableViewColumn{
-                role: "knownProjection"
+                role: "projection"
                 title: "My Projection"
                 horizontalAlignment : Text.AlignHCenter
                 delegate: projdel
@@ -339,11 +348,13 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         console.log(" cliocked ")
-                        if ( lbl.text !== "  " && parseInt(lbl.text) !== model.projection) {
-                            tv.model.setData(tv.model.index(styleData.row,0),
-                                             parseInt(lbl.text), 0)
+                        if ( lbl.text !== "  " && model.knownProjection !== model.projection ) {
+//                                parseInt(lbl.text) !== model.projection) {
+                            model.projection = model.knownProjection
+//                            tv.model.setData(tv.model.index(styleData.row,0),
+//                                             parseInt(lbl.text), 0)
                             lbl.text = Qt.binding(function(){
-                                if ( !model ) return "";
+                                if ( !model ) return " ";
                                 else if (model.knownProjection !==  model.projection)
                                     return model.knownProjection
                                 else
@@ -378,20 +389,24 @@ Item {
                 stepSize: 1.0
                 maximumValue: 40
                 minimumValue:       0
-                value: !model ? 0 : model.projection
+                value: styleData.value// !model ? 0 : model.projection
                 horizontalAlignment: Text.AlignHCenter
 
                 onEditingFinished: {
                    //                           styleData.value = value
                    console.log(" editing done " + styleData.row + " " + styleData.column + " s " + styleData.selected + "v  " + styleData.value);
-                   tv.model.setData(tv.model.index(styleData.row,0),
-                                    value, 0)
+//                   tv.model.setData(tv.model.index(styleData.row,0),
+//                                    value, 0)
+                    model.projection = value
 
                     if ( model && (model.knownProjection !==  value) && (topw.focuscount != 1))
                         topw.focuscount = 1
 
                    lbl.text = Qt.binding(function(){
-                       if ( model && model.knownProjection !==  value)
+                       if ( !model ) return ""
+                       else if ( !model.knownProjection && value > 0 )
+                           return "0"
+                       else if (model.knownProjection !==  value)
                            return model.knownProjection
                        else
                            return "  "
@@ -521,6 +536,7 @@ Item {
                         }
                         else
                             MiddleMan.sendProjections()
+                        but.focus = false
                     }
 
                     backgroundColor: themeroot.theme.accentColor
@@ -619,7 +635,7 @@ Item {
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor
+                    styleData.column  === tv.sortIndicatorColumn ? (styleData.column === pcol ? "black" : themeroot.theme.accentColor)
                                                                  : "black"
                 Material.Label {
                     anchors.margins: ProtoScreen.guToPx(.25)
@@ -688,6 +704,20 @@ Item {
         }
 
     }
+
+//    Connections {
+//        target: MiddleMan
+
+//        onUpdateWeekData: {
+//            Loader.source = themeroot.start
+//            console.log(" onLiveSyncChanged changd");
+////            tv.model.sortAgain("knownProjection",Qt.DescendingOrder)
+//            MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+//            tv.sortIndicatorColumn =    MiddleMan.pProjectionsViewFilterProxyModel
+//            MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
+//        }
+
+//    }
 }
 //    Component {
 //        id: itdel

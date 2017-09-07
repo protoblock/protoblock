@@ -155,6 +155,8 @@ class Mediator : public QObject {
     QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
 
 
+//    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerProjModel)
+
     static Mediator *myInstance;
 public:
     static Mediator *instance();
@@ -369,7 +371,7 @@ public:
             else if ( column == "fname5")
                 item->set_fname5(it->second);
         }
-        m_pProjectionsViewFilterProxyModel->invalidate();
+//        m_pProjectionsViewFilterProxyModel->invalidate();
 //        m_pProjectionsViewFilterProxyModel->endResetModel();
 
 
@@ -676,6 +678,7 @@ signals:
 
     void OnUseName(QString); //tell agent to use the name
     void ready();
+//    void updateWeekData();
     /*
     void playersNameChanged();
     void playersStatusChanged();
