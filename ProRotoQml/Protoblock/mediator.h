@@ -389,9 +389,17 @@ public:
                         continue;
                 }
                 if ( it->get_avg() > 0 )
-                    if ( clone || it->get_projection () == 0)
-                        if  ( it->get_projection() != it->get_avg())
-                            it->set_projection(it->get_avg());
+                    if ( clone || it->get_projection () == 0) {
+                        if  ( it->get_projection() != it->get_avg()) {
+                            int projection = it->get_avg();
+                            if ( random ) {
+                                 int num = qrand() % ((200 + 1) - 1) + 1;
+                                 double percent = num / 100.0;
+                                 projection = (double)projection * percent;
+                            }
+                            it->set_projection(projection);
+                        }
+                    }
 
             }
             m_pProjectionsViewFilterProxyModel->invalidate();
@@ -421,6 +429,7 @@ public:
 
                 int projection = it->second;
                 if ( random ) {
+                     srand((unsigned)time(NULL));
                      int num = qrand() % ((200 + 1) - 1) + 1;
                      double percent = num / 100.0;
                      projection = (double)projection * percent;
@@ -437,13 +446,15 @@ public:
 
     }
 
-//    Q_INVOKABLE void randomUseNames() {
-//        for ( auto *it : mGoodNameBalModel) {
-//            useName(it->get_name());
-//            copyProj(6,"@SpreadSheetFF",false,true);
-//            sendProjections();
-//        }
-//    }
+    Q_INVOKABLE void randomUseNames() {
+        for ( auto *it : mGoodNameBalModel) {
+            useName(it->get_name());
+            QThread::currentThread()->msleep(1000);
+            copyProj(6,"JayBNY",false,true);
+            sendProjections();
+            QThread::currentThread()->msleep(1000);
+        }
+    }
 
     //results
     Q_INVOKABLE void selectP(int row, int command) {
