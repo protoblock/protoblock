@@ -891,7 +891,7 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
     std::string teamid = it->playerdata().player_status().teamid();
     if ( teamid == "") teamid = "FA";
     strtweet += teamid +", " + it->playerdata().player_base().position();
-    strtweet +=  fantasybit::isWeekly(tt->symbol())
+    strtweet +=  !fantasybit::isWeekly(tt->symbol())
             ? ") ROW - "
             : (") Week " + to_string(GlobalStateRep.globalstate().week()));
 
