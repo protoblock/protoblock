@@ -1,21 +1,38 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4 as Controls
-//import ProRotoQml.Protoblock 1.0
+
 import Material 1.0
 import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 import QtQuick.Controls 1.4 as Controls
+import QtQuick.Layouts 1.0
+
 
 Item{
+
+    TextEdit {
+        id: cliphelper
+        visible: false
+    }
 
     Component.onCompleted: {
         pageHelper.title = "Import-Export"
         secretTxt.text = ""
+        console.log ( "Import-Export on coplete")
     }
+
+    Component.onDestruction: {
+        console.log ( "Import-Export on destroy")
+        cliphelper.text = realRoot.uname
+        cliphelper.selectAll()
+        cliphelper.copy()
+        secretTxt.text = ""
+    }
+
     Flickable{
         width: parent.width
         height: parent.height
-        contentHeight: parent.height //(parent.height + bacard2.height + bacard) * 1.2
+        contentHeight: parent.height * 2 //(parent.height + bacard2.height + bacard) * 1.2
         contentWidth: parent.width
         boundsBehavior:  Flickable.StopAtBounds
         interactive: true
@@ -53,6 +70,8 @@ Item{
                 valueText: "Balance : " + (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.stake).toLocaleString()) + " ƑɃ"
                 itemValueLabel.font.family: fontfamFB
             }
+
+
 
             Card{
                 id: bcard
@@ -126,9 +145,8 @@ Item{
                         helperTxt: "Use this to export your 12 word password.  This is so that you can also sign in on other devices with the import option "
                     }
                     Button{
-                        property string mypk
                         id: exportButton
-                        text: "Export"
+                        text: "EXPORT"
                         width: parent.width / 1.07
                         backgroundColor: themeroot.theme.primaryColor
                         elevation: 1
@@ -138,53 +156,105 @@ Item{
                             mySecretDialog.show()
                         }
                     }
-                    Button{
-                        property string mypk
-                        id: clearSecret
-                        elevation: 2
+
+
+                    RowLayout {
+                        id: rll
                         visible: secretTxt.contentWidth >= 1 ? true : false
-                        opacity: visible ? 1: 0
-                        text: "Clear Secret"
-                        backgroundColor: themeroot.theme.primaryColor
-                        width: parent.width / 1.07
+                        width: parent.width / 2.0
+                        spacing: 2
                         anchors.horizontalCenter: parent.horizontalCenter
-                        Behavior on opacity {NumberAnimation{duration: 1000;}}
-                        onClicked: {
-                            if(secretTxt.contentWidth >= 1 ){
-                                secretTxt.text = ""
+
+
+                        Button{
+//                            Layout.implicitWidth: parent.height / 2.0
+                            Layout.fillWidth: true;
+                            id: clearSecret
+                            elevation: 2
+                            visible: rll.visible //secretTxt.contentWidth >= 1 ? true : false
+                            opacity: visible ? 1: 0
+                            text: "Ok got it!"
+                            backgroundColor: themeroot.theme.primaryColor
+//                            width: parent.width
+                            Behavior on opacity {NumberAnimation{duration: 1000;}}
+                            onClicked: {
+                                if(secretTxt.contentWidth >= 1 ){
+                                    theSecert.text = ""
+                                    secretTxt.text = ""
+                                    console.log("clearing ")
+                                    cliphelper.text = themeroot.uname
+                                    cliphelper.selectAll()
+                                    cliphelper.copy()
+                                    copySecret.text = "Copy Secret"
+                                    clearSecret.text = "Ok got it!"
+                                    copySecret.enabled = true
+                                }
+                            }
+                        }
+
+                        Button{
+                            Layout.fillWidth: true;
+//                            Layout.implicitWidth: parent.height / 2.0
+                            id: copySecret
+                            elevation: 2
+                            visible: rll.visible //secretTxt.contentWidth >= 1 ? true : false
+                            opacity: visible ? 1: 0
+                            text: "Copy Secret"
+                            backgroundColor: themeroot.theme.primaryColor
+//                            width: parent.width
+                            Behavior on opacity {NumberAnimation{duration: 1000;}}
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    console.log("copying ")
+                                    cliphelper.text = theSecert.text
+                                    cliphelper.selectAll()
+                                    cliphelper.copy()
+                                    cliphelper.text = ""
+                                    copySecret.text = "Secret Copied"
+                                    copySecret.enabled = false
+                                    clearSecret.text = "Ok got it! (clear clipboard)"
+
+                                }
                             }
                         }
                     }
+
                     Label {
                         id: secretTxt
-                        width: parent.width / 1.07
+                        width: parent.width / 2.0
+                        anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                         horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.WordWrap
                         opacity: contentWidth > 0 ? 1 : 0
                         Behavior on visible {NumberAnimation{duration: 1200;}}
+
                     }
                     Card{
                          id:seCard
-                         width: parent.width / 1.07
+                         width: parent.width / 2.0
                          height:  imBan2.height * 2
                          elevation: visible? 5 : 0
                          opacity: secretTxt.opacity
                          anchors.horizontalCenter: parent.horizontalCenter
-                        Label{
+                        Label {
                             anchors.fill: parent
                             id: theSecert
+                            width: parent.width * .90
 //                            width: parent.width / 1.07
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter
                             font.bold: true
+                            font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
                             horizontalAlignment: Text.AlignHCenter
-//                            visible: secretTxt.opacity > 0? true : false
-//                            readOnly: true
+                            wrapMode: Text.WordWrap
                         }
-//                        Behavior on visible {NumberAnimation{duration: 1200;}}
 
                     }
+
                 }
             }
         }
@@ -193,6 +263,13 @@ Item{
 
 
         Dialog {
+            height: ProtoScreen.guToPx(34)
+            minimumHeight: ProtoScreen.guToPx(8)
+            width: Math.min(height * 2,parent.width - ProtoScreen.guToPx(1))
+            minimumWidth: ProtoScreen.guToPx(16)
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+
             id: mySecretDialog
             title: "12 word account secret"
             positiveButtonText: "Show"
@@ -208,5 +285,16 @@ Item{
                 theSecert.text =  MiddleMan.getSecret()
             }
         }
+//        Item {
+//            id: clipit
+//            opacity: 0
+
+//            function copy(text) {
+//                helper.text = text;
+////                helper.selectAll();
+//                helper.copy();
+//            }
+
+//        }
     }
 }
