@@ -194,12 +194,14 @@ void protobuf_AssignDesc_StaticData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Stats));
   PlayerResult_descriptor_ = file->message_type(7);
-  static const int PlayerResult_offsets_[5] = {
+  static const int PlayerResult_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, result_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, stats_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, fantaybitaward_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, fantasybitpnl_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, rowposdividend_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, symbol_),
   };
   PlayerResult_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -359,23 +361,24 @@ void protobuf_AddDesc_StaticData_2eproto() {
     "\001(\005\022\r\n\005onept\030n \001(\005\"s\n\005Stats\022\"\n\006ostats\030\n "
     "\001(\0132\022.fantasybit.Ostats\022\"\n\006dstats\030\024 \001(\0132"
     "\022.fantasybit.Dstats\022\"\n\006kstats\030\036 \001(\0132\022.fa"
-    "ntasybit.Kstats\"\271\001\n\014PlayerResult\022\020\n\010play"
+    "ntasybit.Kstats\"\374\001\n\014PlayerResult\022\020\n\010play"
     "erid\030\024 \001(\t\022\016\n\006result\030( \001(\002\022 \n\005stats\0302 \001("
     "\0132\021.fantasybit.Stats\0223\n\016fantaybitaward\030<"
     " \003(\0132\033.fantasybit.FantasyBitAward\0220\n\rfan"
     "tasybitpnl\030F \003(\0132\031.fantasybit.FantasyBit"
-    "Pnl\"\265\001\n\nGameResult\022\016\n\006gameid\030\001 \001(\t\022-\n\013ho"
-    "me_result\030\n \003(\0132\030.fantasybit.PlayerResul"
-    "t\022-\n\013away_result\030\024 \003(\0132\030.fantasybit.Play"
-    "erResult\022\023\n\013kickofftime\030\036 \001(\r\022\021\n\thomeTot"
-    "al\030( \001(\002\022\021\n\tawayTotal\0302 \001(\002\"_\n\014SeasonRes"
-    "ult\022\016\n\006season\030\001 \001(\004\0220\n\016player_results\030\n "
-    "\003(\0132\030.fantasybit.PlayerResult\022\r\n\005total\030\024"
-    " \001(\002\"\237\001\n\024PlayerContractSymbol\022\016\n\006symbol\030"
-    "\n \001(\t\022\020\n\010playerid\030\024 \001(\t\022\017\n\007sybhash\030\036 \001(\004"
-    "\022\020\n\010initals2\030( \001(\t\022\014\n\004seq2\0302 \001(\t\022\r\n\005year"
-    "2\030< \001(\t\022\021\n\ttype1sorw\030F \001(\t\022\022\n\nweek1or04s"
-    "\030P \001(\t", 1326);
+    "Pnl\0221\n\016rowposdividend\030P \003(\0132\031.fantasybit"
+    ".FantasyBitPnl\022\016\n\006symbol\030Z \001(\t\"\265\001\n\nGameR"
+    "esult\022\016\n\006gameid\030\001 \001(\t\022-\n\013home_result\030\n \003"
+    "(\0132\030.fantasybit.PlayerResult\022-\n\013away_res"
+    "ult\030\024 \003(\0132\030.fantasybit.PlayerResult\022\023\n\013k"
+    "ickofftime\030\036 \001(\r\022\021\n\thomeTotal\030( \001(\002\022\021\n\ta"
+    "wayTotal\0302 \001(\002\"_\n\014SeasonResult\022\016\n\006season"
+    "\030\001 \001(\004\0220\n\016player_results\030\n \003(\0132\030.fantasy"
+    "bit.PlayerResult\022\r\n\005total\030\024 \001(\002\"\237\001\n\024Play"
+    "erContractSymbol\022\016\n\006symbol\030\n \001(\t\022\020\n\010play"
+    "erid\030\024 \001(\t\022\017\n\007sybhash\030\036 \001(\004\022\020\n\010initals2\030"
+    "( \001(\t\022\014\n\004seq2\0302 \001(\t\022\r\n\005year2\030< \001(\t\022\021\n\tty"
+    "pe1sorw\030F \001(\t\022\022\n\nweek1or04s\030P \001(\t", 1393);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StaticData.proto", &protobuf_RegisterTypes);
   PlayerBase::default_instance_ = new PlayerBase();
@@ -3008,6 +3011,8 @@ const int PlayerResult::kResultFieldNumber;
 const int PlayerResult::kStatsFieldNumber;
 const int PlayerResult::kFantaybitawardFieldNumber;
 const int PlayerResult::kFantasybitpnlFieldNumber;
+const int PlayerResult::kRowposdividendFieldNumber;
+const int PlayerResult::kSymbolFieldNumber;
 #endif  // !_MSC_VER
 
 PlayerResult::PlayerResult()
@@ -3030,6 +3035,7 @@ void PlayerResult::SharedCtor() {
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   result_ = 0;
   stats_ = NULL;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3040,6 +3046,9 @@ PlayerResult::~PlayerResult() {
 void PlayerResult::SharedDtor() {
   if (playerid_ != &::google::protobuf::internal::kEmptyString) {
     delete playerid_;
+  }
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
   }
   if (this != default_instance_) {
     delete stats_;
@@ -3078,9 +3087,15 @@ void PlayerResult::Clear() {
     if (has_stats()) {
       if (stats_ != NULL) stats_->::fantasybit::Stats::Clear();
     }
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
   }
   fantaybitaward_.Clear();
   fantasybitpnl_.Clear();
+  rowposdividend_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3163,6 +3178,38 @@ bool PlayerResult::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(562)) goto parse_fantasybitpnl;
+        if (input->ExpectTag(642)) goto parse_rowposdividend;
+        break;
+      }
+
+      // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+      case 80: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_rowposdividend:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_rowposdividend()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(642)) goto parse_rowposdividend;
+        if (input->ExpectTag(722)) goto parse_symbol;
+        break;
+      }
+
+      // optional string symbol = 90;
+      case 90: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_symbol:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3217,6 +3264,21 @@ void PlayerResult::SerializeWithCachedSizes(
       70, this->fantasybitpnl(i), output);
   }
 
+  // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+  for (int i = 0; i < this->rowposdividend_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      80, this->rowposdividend(i), output);
+  }
+
+  // optional string symbol = 90;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      90, this->symbol(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3261,6 +3323,23 @@ void PlayerResult::SerializeWithCachedSizes(
         70, this->fantasybitpnl(i), target);
   }
 
+  // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+  for (int i = 0; i < this->rowposdividend_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        80, this->rowposdividend(i), target);
+  }
+
+  // optional string symbol = 90;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        90, this->symbol(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -3291,6 +3370,13 @@ int PlayerResult::ByteSize() const {
           this->stats());
     }
 
+    // optional string symbol = 90;
+    if (has_symbol()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
+    }
+
   }
   // repeated .fantasybit.FantasyBitAward fantaybitaward = 60;
   total_size += 2 * this->fantaybitaward_size();
@@ -3306,6 +3392,14 @@ int PlayerResult::ByteSize() const {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         this->fantasybitpnl(i));
+  }
+
+  // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+  total_size += 2 * this->rowposdividend_size();
+  for (int i = 0; i < this->rowposdividend_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->rowposdividend(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -3335,6 +3429,7 @@ void PlayerResult::MergeFrom(const PlayerResult& from) {
   GOOGLE_CHECK_NE(&from, this);
   fantaybitaward_.MergeFrom(from.fantaybitaward_);
   fantasybitpnl_.MergeFrom(from.fantasybitpnl_);
+  rowposdividend_.MergeFrom(from.rowposdividend_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_playerid()) {
       set_playerid(from.playerid());
@@ -3344,6 +3439,9 @@ void PlayerResult::MergeFrom(const PlayerResult& from) {
     }
     if (from.has_stats()) {
       mutable_stats()->::fantasybit::Stats::MergeFrom(from.stats());
+    }
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3373,6 +3471,8 @@ void PlayerResult::Swap(PlayerResult* other) {
     std::swap(stats_, other->stats_);
     fantaybitaward_.Swap(&other->fantaybitaward_);
     fantasybitpnl_.Swap(&other->fantasybitpnl_);
+    rowposdividend_.Swap(&other->rowposdividend_);
+    std::swap(symbol_, other->symbol_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

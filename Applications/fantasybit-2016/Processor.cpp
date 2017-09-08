@@ -354,7 +354,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 //                qDebug() << allprojs.DebugString().data();
 
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
-                unordered_map<string,BookPos *> posmap;
+                unordered_map<string,std::pair<BookPos *,BookPos *>> posmap;
 
                 for (auto ha : {QString("home"),QString("away")}) {
                     for ( auto fpj : (ha == QString("home")) ? allprojs.home() : allprojs.away())
@@ -366,7 +366,13 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     auto rgsp =  (ha == QString("home")) ? gsp.mutable_home() : gsp.mutable_away();
                     for ( int i=0; i<rgsp->size();i++) {
                         BookPos *bp = rgsp->Mutable(i);
-                        posmap[mData.mSym2Pid[bp->playerid()]] = bp;
+                        auto pid = mData.mSym2Pid[bp->playerid()];
+                        auto bpp = posmap[pid];
+                        if ( isWeekly(bp->symbol()))
+                            bpp.first = bp;
+                        else
+                            bpp.second = bp;
+                        posmap[pid] = bpp;
                     }
 #endif
                 }
@@ -405,13 +411,13 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                         auto proj = projmaps[haresult.Get(i).playerid()];
 
-                        BookPos  *bpos = nullptr;
+                        std::pair<BookPos *,BookPos *> bpospair;
                         if ( !nopnl ) {
-                            bpos = posmap[haresult.Get(i).playerid()];
+                            bpospair = posmap[haresult.Get(i).playerid()];
                         }
 
                         total += haresult.Get(i).result();
-                        processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
+                        processResultProj(mut_haresult->Mutable(i),proj,bpospair,blocksigner);
                         mData.UpdatePlayerStats(haresult.Get(i));
                     }
 
@@ -592,7 +598,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
 void BlockProcessor::processResultProj(PlayerResult* playerresultP,
                                        std::unordered_map<std::string,int> &proj,
-                                       BookPos *pbpos,
+                                       std::pair<BookPos *, BookPos *> pbpospair,
                                        const std::string &blocksigner) {
     auto &playerresult = *playerresultP;
 //    PlayerResult awards;
@@ -617,17 +623,32 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     //playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
     //return awards;
 
-    if ( pbpos == nullptr) return;
+    if ( pbpospair.first != nullptr) {
+        playerresultP->set_symbol(pbpospair.first->playerid());
+        SettlePositionsRawStake set(*(pbpospair.first));
+        auto pnls = set.settle(playerresult.result(), blocksigner);
+        for (auto r : pnls ) {
+            FantasyBitPnl &fba = *playerresult.mutable_fantasybitpnl()->Add();
+            fba.mutable_spos()->CopyFrom(r.second.first);
+            fba.set_pnl(r.second.second);
+            fba.set_name(r.first);
+            //awards.add_fantaybitaward()->CopyFrom(fba);
+            mNameData.AddPnL(r.first,r.second.second);
+        }
+    }
 
-    SettlePositionsRawStake set(*pbpos);
-    auto pnls = set.settle(playerresult.result(), blocksigner);
-    for (auto r : pnls ) {
-        FantasyBitPnl &fba = *playerresult.mutable_fantasybitpnl()->Add();
-        fba.mutable_spos()->CopyFrom(r.second.first);
-        fba.set_pnl(r.second.second);
-        fba.set_name(r.first);
-        //awards.add_fantaybitaward()->CopyFrom(fba);
-        mNameData.AddPnL(r.first,r.second.second);
+    if ( pbpospair.second != nullptr) {
+        playerresultP->set_symbol(pbpospair.second->playerid());
+        SettleROWPositionsRawStake set(*(pbpospair.second));
+        auto pnls = set.settle(playerresult.result(), blocksigner);
+        for (auto r : pnls ) {
+            FantasyBitPnl &fba = *playerresult.mutable_rowposdividend()->Add();
+            fba.mutable_spos()->CopyFrom(r.second.first);
+            fba.set_pnl(r.second.second);
+            fba.set_name(r.first);
+            //awards.add_fantaybitaward()->CopyFrom(fba);
+            mNameData.AddPnL(r.first,r.second.second);
+        }
     }
 }
 
@@ -1348,7 +1369,9 @@ BlockProcessor::BlockProcessor(NFLStateData &data, FantasyNameData &namedata, Ex
     #if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT)
         sql("satoshifantasy","distribution"),
     #endif
-    mData(data), mNameData(namedata) , mExchangeData(ed) {}
+    mData(data), mNameData(namedata) , mExchangeData(ed) {
+
+    }
 
 
 }

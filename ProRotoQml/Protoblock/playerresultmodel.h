@@ -86,6 +86,10 @@ class PlayerResultModelItem : public QObject {
     QML_READONLY_CSTREF_PROPERTY_INIT0 (double, myprice)
     QML_READONLY_CSTREF_PROPERTY_INIT0 (int, mypnl)
 
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, myrowpnl)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (double, myrowprice)
+    QML_READONLY_CSTREF_PROPERTY_INIT0 (int, myrowpos)
+
 public:
 
     explicit PlayerResultModelItem(const fantasybit::PlayerBase &pd,
@@ -159,6 +163,16 @@ public:
 //                m_myprice = abs(it.spos().price());
                 if ( m_mypos != 0 ) {
                     m_myprice = double(it.spos().price()) / (m_mypos * -1.0);
+                }
+            }
+        }
+
+        for ( auto it : pr.rowposdividend()) {
+            if ( fname == it.name() ) {
+                m_myrowpnl = it.pnl();
+                m_myrowpos = it.spos().qty();
+                if ( m_myrowpos != 0 ) {
+                    m_myrowprice = double(it.spos().price()) / (m_myrowpos * -1.0);
                 }
 
             }

@@ -89,7 +89,7 @@ public:
             getFNverifySt(const SignedTransaction &st);
     void processResultProj(PlayerResult* playerresult,
                            std::unordered_map<std::string,int> &proj,
-                           BookPos *,
+                           std::pair<BookPos *, BookPos *>,
                            const std::string &blocksigner);
 
     void OnWeekOver(int week);

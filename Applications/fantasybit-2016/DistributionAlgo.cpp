@@ -147,4 +147,35 @@ PnlResults SettlePositionsRawStake::
     return pnl;
 }
 
+PnlResults SettleROWPositionsRawStake::
+            settle(
+                const double result,
+                const std::string &agent
+            ) const {
+
+    PnlResults pnl{};
+    if (positions.positions().size() == 0)
+        return pnl;
+
+    //double mean = 0;
+    //vector<double> diffs;
+    //diffs.reserve(positions.size());
+//    int intresult = floor((result * 100.0) + 0.5);
+
+    for(const auto& settlepos : positions.positions()) {
+        double qty = settlepos.qty();
+        double dpnl = qty * result;
+        int intpnl = floor((dpnl) + 0.5);
+        pnl[settlepos.pk()] = make_pair(settlepos,intpnl);
+#ifdef TRACE
+        qDebug() << settlepos.DebugString().data();
+#endif
+//        " pnl " <<  hispnl << " result " << result <<
+//                    " pos " << settlepos.second.first << " " << settlepos.second.second;
+
+    }
+
+    return pnl;
+}
+
 }

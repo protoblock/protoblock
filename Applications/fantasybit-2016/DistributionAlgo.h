@@ -50,6 +50,13 @@ struct SettlePositionsRawStake : SettlePositions {
     SettlePositionsRawStake(const BookPos &p) : SettlePositions(p) {}
     PnlResults settle(const double result, const std::string &agent) const;
 };
+
+//todo: use PnlROWResults
+using PnlROWResults = NameValuePairs<std::pair<SettlePos,double> >;
+struct SettleROWPositionsRawStake : SettlePositions {
+    SettleROWPositionsRawStake(const BookPos &p) : SettlePositions(p) {}
+    PnlResults settle(const double result, const std::string &agent) const;
+};
 // Jay Todo - Se
 
 }

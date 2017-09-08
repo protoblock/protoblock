@@ -1027,6 +1027,30 @@ class PlayerResult : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >*
       mutable_fantasybitpnl();
 
+  // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+  inline int rowposdividend_size() const;
+  inline void clear_rowposdividend();
+  static const int kRowposdividendFieldNumber = 80;
+  inline const ::fantasybit::FantasyBitPnl& rowposdividend(int index) const;
+  inline ::fantasybit::FantasyBitPnl* mutable_rowposdividend(int index);
+  inline ::fantasybit::FantasyBitPnl* add_rowposdividend();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >&
+      rowposdividend() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >*
+      mutable_rowposdividend();
+
+  // optional string symbol = 90;
+  inline bool has_symbol() const;
+  inline void clear_symbol();
+  static const int kSymbolFieldNumber = 90;
+  inline const ::std::string& symbol() const;
+  inline void set_symbol(const ::std::string& value);
+  inline void set_symbol(const char* value);
+  inline void set_symbol(const char* value, size_t size);
+  inline ::std::string* mutable_symbol();
+  inline ::std::string* release_symbol();
+  inline void set_allocated_symbol(::std::string* symbol);
+
   // @@protoc_insertion_point(class_scope:fantasybit.PlayerResult)
  private:
   inline void set_has_playerid();
@@ -1035,6 +1059,8 @@ class PlayerResult : public ::google::protobuf::Message {
   inline void clear_has_result();
   inline void set_has_stats();
   inline void clear_has_stats();
+  inline void set_has_symbol();
+  inline void clear_has_symbol();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1042,10 +1068,12 @@ class PlayerResult : public ::google::protobuf::Message {
   ::fantasybit::Stats* stats_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitAward > fantaybitaward_;
   ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl > fantasybitpnl_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl > rowposdividend_;
+  ::std::string* symbol_;
   float result_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_StaticData_2eproto();
   friend void protobuf_AssignDesc_StaticData_2eproto();
@@ -2770,6 +2798,101 @@ PlayerResult::fantasybitpnl() const {
 inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >*
 PlayerResult::mutable_fantasybitpnl() {
   return &fantasybitpnl_;
+}
+
+// repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+inline int PlayerResult::rowposdividend_size() const {
+  return rowposdividend_.size();
+}
+inline void PlayerResult::clear_rowposdividend() {
+  rowposdividend_.Clear();
+}
+inline const ::fantasybit::FantasyBitPnl& PlayerResult::rowposdividend(int index) const {
+  return rowposdividend_.Get(index);
+}
+inline ::fantasybit::FantasyBitPnl* PlayerResult::mutable_rowposdividend(int index) {
+  return rowposdividend_.Mutable(index);
+}
+inline ::fantasybit::FantasyBitPnl* PlayerResult::add_rowposdividend() {
+  return rowposdividend_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >&
+PlayerResult::rowposdividend() const {
+  return rowposdividend_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::FantasyBitPnl >*
+PlayerResult::mutable_rowposdividend() {
+  return &rowposdividend_;
+}
+
+// optional string symbol = 90;
+inline bool PlayerResult::has_symbol() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void PlayerResult::set_has_symbol() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void PlayerResult::clear_has_symbol() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void PlayerResult::clear_symbol() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    symbol_->clear();
+  }
+  clear_has_symbol();
+}
+inline const ::std::string& PlayerResult::symbol() const {
+  return *symbol_;
+}
+inline void PlayerResult::set_symbol(const ::std::string& value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void PlayerResult::set_symbol(const char* value) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(value);
+}
+inline void PlayerResult::set_symbol(const char* value, size_t size) {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  symbol_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* PlayerResult::mutable_symbol() {
+  set_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    symbol_ = new ::std::string;
+  }
+  return symbol_;
+}
+inline ::std::string* PlayerResult::release_symbol() {
+  clear_has_symbol();
+  if (symbol_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = symbol_;
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void PlayerResult::set_allocated_symbol(::std::string* symbol) {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (symbol) {
+    set_has_symbol();
+    symbol_ = symbol;
+  } else {
+    clear_has_symbol();
+    symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

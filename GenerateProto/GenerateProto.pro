@@ -59,3 +59,5 @@ protobuf_impl.commands = $$escape_expand(\n)
 protobuf_impl.variable_out = SOURCES
 QMAKE_EXTRA_COMPILERS += protobuf_impl
 }
+
+#protoc --cpp_out=D:\work\protoblock\generated --proto_path=D:\work\protoblock\GenerateProto D:\work\protoblock\GenerateProto\*.proto

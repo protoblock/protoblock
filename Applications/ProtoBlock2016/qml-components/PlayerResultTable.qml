@@ -26,6 +26,7 @@ Item {
     property bool rb: true
 
     property int ocol: 5
+    property int numocols: 8
 //    property int pcol: ocol + ocount
 //    property int lcol: pcol + pcount
 //    property int qcol: lcol + lcount
@@ -266,7 +267,7 @@ Item {
                 movable: false
                 width: ProtoScreen.guToPx(10)
                 delegate: fbdel
-                visible: posvisible
+//                visible: posvisible
             }
 
             TableViewColumn {
@@ -278,6 +279,7 @@ Item {
                 delegate: negdel
                 visible: posvisible
             }
+
             TableViewColumn {
                 role: "myprice"
                 title: "My Price"
@@ -287,7 +289,6 @@ Item {
                 delegate: negdelfix
                 visible: posvisible
             }
-
 
             TableViewColumn {
                 role: "mypnl"
@@ -299,6 +300,35 @@ Item {
                 visible: posvisible
             }
 
+            TableViewColumn {
+                role: "myrowpos"
+                title: "ROW Pos"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdel
+                visible: posvisible
+            }
+
+            TableViewColumn {
+                role: "myrowprice"
+                title: "ROW Price"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdelfix
+                visible: posvisible
+            }
+
+            TableViewColumn {
+                role: "myrowpnl"
+                title: "ROW Pnl"
+                horizontalAlignment : Text.AlignHCenter
+                movable: false
+                width: ProtoScreen.guToPx(10)
+                delegate: negdel
+                visible: posvisible
+            }
 
             TableViewColumn {
                 role: "PassYd"
@@ -309,6 +339,7 @@ Item {
                 delegate: fbdel
                 visible: qb
             }
+
             TableViewColumn {
                 role: "PassTD"
                 title: "PassTD"
@@ -601,7 +632,7 @@ Item {
                 id: mcbot
                 width: parent.width
                 height: parent.height * .50
-                backgroundColor: (styleData.column >= 5 && styleData.column <= 9) ? themeroot.theme.accentColor :
+                backgroundColor: (styleData.column >= ocol && styleData.column < (ocol + numocols)) ? themeroot.theme.accentColor :
                                  themeroot.theme.primaryColor
                 anchors.bottom: parent.bottom
                 radius: 1
@@ -618,7 +649,7 @@ Item {
                     wrapMode: Text.WordWrap
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    color: (styleData.column >= 5 && styleData.column <= 9) ? Material.Theme.light.textColor : "white"
+                    color: (styleData.column >= ocol && styleData.column < (ocol + numocols)) ? Material.Theme.light.textColor : "white"
                     //                    font.bold: styleData.column === 4
                     font.family: styleData.column ===  4 ? fontfamFB : "Roboto"
 

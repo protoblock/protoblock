@@ -850,13 +850,15 @@ void ExchangeData::OnGameStart(const std::string &gid,
         string &sym = iit.second.symbol;
         BookPos bp{};
 //        bp.set_symbol(sym);
-        bp.set_playerid(sym);
+//        bp.set_playerid(sym);
 
-        bool lockit = true;
+//        bool lockit = true;
         for (auto it = mLimitBooks.lower_bound(sym);
              it != end(mLimitBooks) && it->first.compare(0,sym.size(),sym) == 0;
              it++) {
 
+            bp.Clear();
+            bp.set_playerid(sym);
             if ( sym.size() == 4 && it->first.at(4) != '1') break;
 
 //            lockit = false;
@@ -876,17 +878,22 @@ void ExchangeData::OnGameStart(const std::string &gid,
 #endif
             }
 
-//            if ( ha == "home") gsp.add_home()->CopyFrom(bp);
-//            else gsp.add_away()->CopyFrom(bp);
+            //seperate book pos for ROW and week
+            if ( ha == "home") gsp.add_home()->CopyFrom(bp);
+            else gsp.add_away()->CopyFrom(bp);
 
 //            if ( ++it == end(mLimitBooks) )
 //                break;
         }
-        if ( lockit ) {
-            mLockedSymb.insert(sym);
-            if ( ha == "home") gsp.add_home()->CopyFrom(bp);
-            else gsp.add_away()->CopyFrom(bp);
-        }
+
+        //single lock for stripped symbol
+        mLockedSymb.insert(sym);
+
+//        if ( lockit ) {
+//            mLockedSymb.insert(sym);
+//            if ( ha == "home") gsp.add_home()->CopyFrom(bp);
+//            else gsp.add_away()->CopyFrom(bp);
+//        }
     }
 
     if (!settlestore->Put(write_sync, gid, gsp.SerializeAsString()).ok())

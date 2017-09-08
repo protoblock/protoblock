@@ -62,6 +62,7 @@ message PlayerResult {
     repeated FantasyBitAward fantaybitaward = 60;
     repeated FantasyBitPnl fantasybitpnl = 70;
     repeated FantasyBitPnl rowposdividend = 80;
+    optional string symbol = 90;
 
 }
 
