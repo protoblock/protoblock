@@ -424,6 +424,71 @@ struct SqlStuff {
         }
     }
 
+    void distribute(std::vector<Distribution> &dists) {
+
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
+        QSqlQuery insertQuery(db);
+
+        for ( auto &dist : dists) {
+            insertQuery.prepare
+                ("INSERT INTO distribution "
+                 "(fantasynameid,gameid,playerid,teamid,season,week,projection,award,result)"
+                 "VALUES(:fnid, :gid, :pid,:tid,:s,:w,:proj,:award, :res)");
+
+            insertQuery.bindValue(":fnid",dist.fantasy_nameid());
+            insertQuery.bindValue(":gid",QString::fromStdString(dist.gameid()));
+            insertQuery.bindValue(":pid",QString::fromStdString(dist.playerid()));
+            insertQuery.bindValue(":tid",QString::fromStdString(dist.teamid()));
+            insertQuery.bindValue(":s",dist.season());
+            insertQuery.bindValue(":w",dist.week());
+            insertQuery.bindValue(":proj",dist.proj());
+            insertQuery.bindValue(":award",dist.award());
+            insertQuery.bindValue(":res",dist.result());
+
+
+            bool good = insertQuery.exec();
+            //db.close();
+
+            if ( ! good ) {
+                qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+                qDebug() << dist.DebugString().data ();
+            }
+        }
+    }
+
+    void profit(std::vector<Profits> &profs) {
+        QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection
+        QSqlQuery insertQuery(db);
+
+        for ( auto &dist : profs) {
+            insertQuery.prepare
+                ("INSERT INTO profits "
+                 "(fantasynameid,gameid,playerid,teamid,season,week,qty,price,pnl,result)"
+                 "VALUES(:fnid, :gid, :pid,:tid,:s,:w,:qty,:price,:pnl,:res)");
+
+            insertQuery.bindValue(":fnid",dist.fantasy_nameid());
+            insertQuery.bindValue(":gid",QString::fromStdString(dist.gameid()));
+            insertQuery.bindValue(":pid",QString::fromStdString(dist.playerid()));
+            insertQuery.bindValue(":tid",QString::fromStdString(dist.teamid()));
+            insertQuery.bindValue(":s",dist.season());
+            insertQuery.bindValue(":w",dist.week());
+            insertQuery.bindValue(":qty",dist.qty());
+            insertQuery.bindValue(":price",dist.price());
+            insertQuery.bindValue(":pnl",dist.pnl());
+            insertQuery.bindValue(":res",dist.result());
+
+
+            bool good = insertQuery.exec();
+            //db.close();
+
+            if ( ! good ) {
+                qDebug() << " exec ret " << insertQuery.lastError().databaseText();
+                qDebug() << dist.DebugString().data ();
+            }
+
+        }
+    }
+
     void profit(Profits &dist) {
 
         QSqlDatabase db = QSqlDatabase::database (conname); // Open Connection

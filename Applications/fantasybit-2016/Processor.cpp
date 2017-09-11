@@ -459,6 +459,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( !amlive ) break;
 #endif
 
+                std::vector<Distribution> dists;
+                std::vector<Profits> profs;
                 Distribution dist{};
                 Profits prof{};
                 dist.set_gameid(rd.game_result().gameid());
@@ -482,7 +484,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         dist.set_proj(fba.proj());
                         dist.set_award(fba.award());
 #ifdef DATAAGENTWRITENAMES
-                        sql.distribute(dist);
+                        dists.push_back(dist);
+//                        sql.distribute(dist);
 #endif
                     }
 
@@ -493,7 +496,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
                         prof.set_pnl(fba.pnl());
 #ifdef DATAAGENTWRITEPROFIT
-                        sql.profit(prof);
+                        profs.push_back(profs);
+//                        sql.profit(prof);
 #endif
                     }
                 }
@@ -514,7 +518,8 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         auto ds = dist.SerializeAsString();
 
 #ifdef DATAAGENTWRITENAMES
-                        sql.distribute(dist);
+                        dists.push_back(dist);
+//                        sql.distribute(dist);
 #endif
 
                     }
@@ -527,11 +532,24 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_pnl(fba.pnl());
 
 #ifdef DATAAGENTWRITEPROFIT
-                        sql.profit(prof);
+                        profs.push_back(prof);
+//                        sql.profit(prof);
 #endif
 
                     }
                 }
+
+
+#ifdef DATAAGENTWRITENAMES
+                sql.distribute(dists);
+#endif
+
+#ifdef DATAAGENTWRITEPROFIT
+                sql.profit(profs);
+#endif
+
+
+
                 }
 #endif
                 break;
