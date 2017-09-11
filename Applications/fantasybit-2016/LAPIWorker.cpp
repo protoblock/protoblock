@@ -304,6 +304,7 @@ void MainLAPIWorker::Quit() {
 }
 
 void MainLAPIWorker::Timer() {
+    qDebug() << " MainLAPIWorker::Timer() " << QDateTime::currentDateTime();
 #ifdef TESTING_PRE_ROW_TRADE_FEATURE
     if ( justwentlive ) {
         justwentlive = false;
