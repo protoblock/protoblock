@@ -166,6 +166,7 @@ int32_t BlockProcessor::process(Block &sblock) {
                                         lastidprocessed-1);
         boot.set_key(to_string(mData.GetGlobalState().season ()) +  (week < 10 ? "0" : "") + to_string(week));
         boot.set_previd(sblock.signedhead().head().prev_id());
+        mExchangeData.addBootStrap(&boot);
         mNameData.addBootStrap(&boot,true);
     }
 #endif
@@ -1222,7 +1223,7 @@ bool BlockProcessor::verifyBootstrap(LdbWriter &ldb,const Bootstrap &bs) {
 //    std::unordered_map<std::string,PlayerMeta> m_playermetamap;
     //    auto mroot = loadMerkleMap(ldb,bs.playermetaroot(),m_playermetamap);
 
-    std::vector<std::string> roots{bs.playermetaroot(), bs.gamemetaroot(), bs.fnamemetaroot() };
+    std::vector<std::string> roots{bs.playermetaroot(), bs.gamemetaroot(), bs.fnamemetaroot(), bs.posmetaroot() };
     for ( auto root : roots) {
         MerkleTree mtree;
         ldb.read(root,mtree);

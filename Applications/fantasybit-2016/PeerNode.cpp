@@ -67,6 +67,17 @@ void Node::init() {
     }
 #endif
 
+#ifndef NO_REMOVEALL_SEASON_TRADING
+    QFileInfo check_file( (GET_ROOT_DIR() + "seasontrade2017wk2").data ());
+    if (!check_file.exists() ) {
+        pb::remove_all(GET_ROOT_DIR() + "index/");
+        pb::remove_all(GET_ROOT_DIR() + "block/");
+        pb::remove_all(GET_ROOT_DIR() + "trade/");
+        QFile file( (GET_ROOT_DIR() + "seasontrade2017wk2").data () );
+        file.open(QIODevice::WriteOnly);
+    }
+#endif
+
     write_sync.sync = true;
 
     Int32Comparator *cmp = new Int32Comparator();
@@ -501,8 +512,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 11302 )
-        num = 11302;
+    if (num > 11305 )
+        num = 11305;
     qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
@@ -627,7 +638,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 11302;
+    height = 11305;
     qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 

@@ -286,13 +286,19 @@ void Mediator::GlobalStateChange(GlobalState gs) {
     if ( gs.week() > 0 && gs.week() < 18) {
         UpdateSeasonWeek(gs.season(),gs.week());
 
-        if ( amLive && gs.week() > m_theWeek) {
-            updateWeek();
-        }
+
         if ( m_thePrevWeek == m_theWeek)
             setthePrevWeek(gs.week());
 
-        settheWeek(gs.week());
+        if ( amLive && gs.week() > m_theWeek) {
+            settheWeek(gs.week());
+            updateWeek();
+        }
+        else
+            updateWeek();
+
+
+
         set_busySend(false);
     }
 }

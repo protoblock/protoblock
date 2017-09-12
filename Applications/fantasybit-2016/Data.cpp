@@ -124,7 +124,10 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     leveldb::DB::Open(options, filedir("playerstore"), &db3);
     leveldb::DB *db5;
     leveldb::DB::Open(options, filedir("namestore"), &db5);
-
+    leveldb::DB *db6;
+    string file = GET_ROOT_DIR();
+    file += "trade/posstore";
+    leveldb::DB::Open(options, file, &db6);
 
 
     Bootstrap head;
@@ -224,6 +227,24 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
 
             }
         }
+
+
+        {
+            MerkleTree mtree;
+            std::vector< std::pair<std::string,  PosMeta> > mapt;
+            pb::loadMerkleMap(ldb,head.posmetaroot(),mtree,mapt);
+
+            for ( auto p : mapt) {
+                PosMeta &pm = p.second;
+                StorePos sp;
+                sp.set_price(pm.price());
+                sp.set_qty(pm.qty());
+
+                string key(pm.name() + ":" + pm.playerid());
+                db6->Put(write_sync, key, sp.SerializeAsString());
+                sp.Clear();
+            }
+        }
     }
 
     //if onlyresult
@@ -246,6 +267,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
     delete db3;
     delete db4;
     delete db5;
+    delete db6;
 }
 #endif
 

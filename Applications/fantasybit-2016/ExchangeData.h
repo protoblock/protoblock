@@ -26,6 +26,8 @@
 #include <set>
 #include <leveldb/comparator.h>
 #include "pbutils.h"
+#include "PeerNode.h"
+
 #ifdef TIMEAGENTWRITEFILLS
 #include "SqlStuff.h"
 #endif
@@ -510,6 +512,41 @@ public:
         //                continue;
         //            }
 
+    }
+
+    void addBootStrap(Bootstrap *in) {
+        LdbWriter ldb;
+        ldb.init(Node::bootstrap.get());
+        Bootstrap &bs = *in;
+
+        bs.set_posmetaroot(BootStrapRowPositions(ldb));
+
+        return;
+    }
+
+    std::string BootStrapRowPositions(LdbWriter &ldb) {
+        auto *it = posstore->NewIterator(leveldb::ReadOptions());
+        PosMeta pm;
+        MerkleTree tree;
+
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            StorePos sp;
+            auto str = it->key().ToString();
+            int ii =  str.find_first_of(':');
+            auto fname = str.substr(0, ii);
+            auto tickersymbol = str.substr(ii + 1);
+
+            sp.ParseFromArray(it->value().data(),it->value().size());
+            pm.set_name(fname);
+            pm.set_playerid(tickersymbol);
+            pm.set_qty(sp.qty());
+            pm.set_price(sp.price());
+            tree.add_leaves(ldb.write(pm));
+        }
+        delete it;
+
+        tree.set_root(pb::makeMerkleRoot(tree.leaves()));
+        return ldb.write(tree.root(),tree.SerializeAsString());
     }
 
 signals:

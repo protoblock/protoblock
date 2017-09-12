@@ -716,4 +716,5 @@ message Bootstrap {
     optional bytes fnamemetaroot = 30;
     optional bytes previd = 40;
     optional bytes gameresultroot = 50;
+    optional bytes posmetaroot = 60;
 }

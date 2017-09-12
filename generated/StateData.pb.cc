@@ -1296,7 +1296,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(KeyValue));
   Bootstrap_descriptor_ = file->message_type(60);
-  static const int Bootstrap_offsets_[9] = {
+  static const int Bootstrap_offsets_[10] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, blocknum_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, week_),
@@ -1306,6 +1306,7 @@ void protobuf_AssignDesc_StateData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, fnamemetaroot_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, previd_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, gameresultroot_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bootstrap, posmetaroot_),
   };
   Bootstrap_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1781,19 +1782,19 @@ void protobuf_AddDesc_StateData_2eproto() {
     "ybit.ProjByName\022#\n\003avg\030\036 \001(\0132\026.fantasybi"
     "t.ProjByName2\?\n\003rep\022\023.fantasybit.WSReply"
     "\030\254\007 \001(\0132\034.fantasybit.GetProjectionRep\"&\n"
-    "\010KeyValue\022\013\n\003key\030\n \001(\014\022\r\n\005value\030\024 \001(\014\"\265\001"
+    "\010KeyValue\022\013\n\003key\030\n \001(\014\022\r\n\005value\030\024 \001(\014\"\312\001"
     "\n\tBootstrap\022\013\n\003key\030\001 \001(\t\022\020\n\010blocknum\030\002 \001"
     "(\005\022\014\n\004week\030\003 \001(\005\022\016\n\006season\030\004 \001(\005\022\024\n\014game"
     "metaroot\030\n \001(\014\022\026\n\016playermetaroot\030\024 \001(\014\022\025"
     "\n\rfnamemetaroot\030\036 \001(\014\022\016\n\006previd\030( \001(\014\022\026\n"
-    "\016gameresultroot\0302 \001(\014*\214\002\n\005CType\022\010\n\004NONE\020"
-    "\000\022\r\n\tCHECKNAME\020\001\022\t\n\005NEWTX\020\002\022\014\n\010PK2FNAME\020"
-    "\003\022\r\n\tGETSTATUS\020\004\022\017\n\013GETALLNAMES\020\005\022\020\n\014GET"
-    "ROWMARKET\020\006\022\014\n\010GETDEPTH\020\007\022\r\n\tGETORDERS\020\010"
-    "\022\020\n\014GETPOSITIONS\020\t\022\022\n\016SUBSCRIBEFNAME\020\n\022\022"
-    "\n\016GETGLOBALSTATE\020\013\022\017\n\013GETSCHEDULE\020\014\022\021\n\rG"
-    "ETGAMEROSTER\020\r\022\022\n\016GETPROJECTIONS\020\017\022\020\n\014GE"
-    "TGAMESTART\020\020", 7972);
+    "\016gameresultroot\0302 \001(\014\022\023\n\013posmetaroot\030< \001"
+    "(\014*\214\002\n\005CType\022\010\n\004NONE\020\000\022\r\n\tCHECKNAME\020\001\022\t\n"
+    "\005NEWTX\020\002\022\014\n\010PK2FNAME\020\003\022\r\n\tGETSTATUS\020\004\022\017\n"
+    "\013GETALLNAMES\020\005\022\020\n\014GETROWMARKET\020\006\022\014\n\010GETD"
+    "EPTH\020\007\022\r\n\tGETORDERS\020\010\022\020\n\014GETPOSITIONS\020\t\022"
+    "\022\n\016SUBSCRIBEFNAME\020\n\022\022\n\016GETGLOBALSTATE\020\013\022"
+    "\017\n\013GETSCHEDULE\020\014\022\021\n\rGETGAMEROSTER\020\r\022\022\n\016G"
+    "ETPROJECTIONS\020\017\022\020\n\014GETGAMESTART\020\020", 7993);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StateData.proto", &protobuf_RegisterTypes);
   BlockMeta::default_instance_ = new BlockMeta();
@@ -23645,6 +23646,7 @@ const int Bootstrap::kPlayermetarootFieldNumber;
 const int Bootstrap::kFnamemetarootFieldNumber;
 const int Bootstrap::kPrevidFieldNumber;
 const int Bootstrap::kGameresultrootFieldNumber;
+const int Bootstrap::kPosmetarootFieldNumber;
 #endif  // !_MSC_VER
 
 Bootstrap::Bootstrap()
@@ -23672,6 +23674,7 @@ void Bootstrap::SharedCtor() {
   fnamemetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   previd_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   gameresultroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  posmetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -23697,6 +23700,9 @@ void Bootstrap::SharedDtor() {
   }
   if (gameresultroot_ != &::google::protobuf::internal::kEmptyString) {
     delete gameresultroot_;
+  }
+  if (posmetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete posmetaroot_;
   }
   if (this != default_instance_) {
   }
@@ -23758,6 +23764,11 @@ void Bootstrap::Clear() {
     if (has_gameresultroot()) {
       if (gameresultroot_ != &::google::protobuf::internal::kEmptyString) {
         gameresultroot_->clear();
+      }
+    }
+    if (has_posmetaroot()) {
+      if (posmetaroot_ != &::google::protobuf::internal::kEmptyString) {
+        posmetaroot_->clear();
       }
     }
   }
@@ -23901,6 +23912,20 @@ bool Bootstrap::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(482)) goto parse_posmetaroot;
+        break;
+      }
+
+      // optional bytes posmetaroot = 60;
+      case 60: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_posmetaroot:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_posmetaroot()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -23977,6 +24002,12 @@ void Bootstrap::SerializeWithCachedSizes(
       50, this->gameresultroot(), output);
   }
 
+  // optional bytes posmetaroot = 60;
+  if (has_posmetaroot()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      60, this->posmetaroot(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -24043,6 +24074,13 @@ void Bootstrap::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         50, this->gameresultroot(), target);
+  }
+
+  // optional bytes posmetaroot = 60;
+  if (has_posmetaroot()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        60, this->posmetaroot(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -24121,6 +24159,13 @@ int Bootstrap::ByteSize() const {
           this->gameresultroot());
     }
 
+    // optional bytes posmetaroot = 60;
+    if (has_posmetaroot()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->posmetaroot());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -24177,6 +24222,9 @@ void Bootstrap::MergeFrom(const Bootstrap& from) {
     if (from.has_gameresultroot()) {
       set_gameresultroot(from.gameresultroot());
     }
+    if (from.has_posmetaroot()) {
+      set_posmetaroot(from.posmetaroot());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -24209,6 +24257,7 @@ void Bootstrap::Swap(Bootstrap* other) {
     std::swap(fnamemetaroot_, other->fnamemetaroot_);
     std::swap(previd_, other->previd_);
     std::swap(gameresultroot_, other->gameresultroot_);
+    std::swap(posmetaroot_, other->posmetaroot_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

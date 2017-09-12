@@ -7901,6 +7901,18 @@ class Bootstrap : public ::google::protobuf::Message {
   inline ::std::string* release_gameresultroot();
   inline void set_allocated_gameresultroot(::std::string* gameresultroot);
 
+  // optional bytes posmetaroot = 60;
+  inline bool has_posmetaroot() const;
+  inline void clear_posmetaroot();
+  static const int kPosmetarootFieldNumber = 60;
+  inline const ::std::string& posmetaroot() const;
+  inline void set_posmetaroot(const ::std::string& value);
+  inline void set_posmetaroot(const char* value);
+  inline void set_posmetaroot(const void* value, size_t size);
+  inline ::std::string* mutable_posmetaroot();
+  inline ::std::string* release_posmetaroot();
+  inline void set_allocated_posmetaroot(::std::string* posmetaroot);
+
   // @@protoc_insertion_point(class_scope:fantasybit.Bootstrap)
  private:
   inline void set_has_key();
@@ -7921,6 +7933,8 @@ class Bootstrap : public ::google::protobuf::Message {
   inline void clear_has_previd();
   inline void set_has_gameresultroot();
   inline void clear_has_gameresultroot();
+  inline void set_has_posmetaroot();
+  inline void clear_has_posmetaroot();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -7932,10 +7946,11 @@ class Bootstrap : public ::google::protobuf::Message {
   ::std::string* fnamemetaroot_;
   ::std::string* previd_;
   ::std::string* gameresultroot_;
+  ::std::string* posmetaroot_;
   ::google::protobuf::int32 season_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -21348,6 +21363,76 @@ inline void Bootstrap::set_allocated_gameresultroot(::std::string* gameresultroo
   } else {
     clear_has_gameresultroot();
     gameresultroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes posmetaroot = 60;
+inline bool Bootstrap::has_posmetaroot() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Bootstrap::set_has_posmetaroot() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Bootstrap::clear_has_posmetaroot() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Bootstrap::clear_posmetaroot() {
+  if (posmetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    posmetaroot_->clear();
+  }
+  clear_has_posmetaroot();
+}
+inline const ::std::string& Bootstrap::posmetaroot() const {
+  return *posmetaroot_;
+}
+inline void Bootstrap::set_posmetaroot(const ::std::string& value) {
+  set_has_posmetaroot();
+  if (posmetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    posmetaroot_ = new ::std::string;
+  }
+  posmetaroot_->assign(value);
+}
+inline void Bootstrap::set_posmetaroot(const char* value) {
+  set_has_posmetaroot();
+  if (posmetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    posmetaroot_ = new ::std::string;
+  }
+  posmetaroot_->assign(value);
+}
+inline void Bootstrap::set_posmetaroot(const void* value, size_t size) {
+  set_has_posmetaroot();
+  if (posmetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    posmetaroot_ = new ::std::string;
+  }
+  posmetaroot_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bootstrap::mutable_posmetaroot() {
+  set_has_posmetaroot();
+  if (posmetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    posmetaroot_ = new ::std::string;
+  }
+  return posmetaroot_;
+}
+inline ::std::string* Bootstrap::release_posmetaroot() {
+  clear_has_posmetaroot();
+  if (posmetaroot_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = posmetaroot_;
+    posmetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bootstrap::set_allocated_posmetaroot(::std::string* posmetaroot) {
+  if (posmetaroot_ != &::google::protobuf::internal::kEmptyString) {
+    delete posmetaroot_;
+  }
+  if (posmetaroot) {
+    set_has_posmetaroot();
+    posmetaroot_ = posmetaroot;
+  } else {
+    clear_has_posmetaroot();
+    posmetaroot_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

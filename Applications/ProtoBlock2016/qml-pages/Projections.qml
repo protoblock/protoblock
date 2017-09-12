@@ -80,9 +80,9 @@ Item {
                     console.log( "left" + stack.currentItem.objectName)
                     if ( stack.currentItem.objectName === "pptS" ) {
                         if ( MiddleMan.thisWeekPrev)
-                            MiddleMan.setPrevWeekData(MiddleMan.theWeek)
+                            MiddleMan.setPrevWeekData(MiddleMan.theWeek,MiddleMan.theSeason)
                         else
-                            MiddleMan.setPrevWeekData(MiddleMan.theWeek-1)
+                            MiddleMan.setPrevWeekData(MiddleMan.theWeek-1,MiddleMan.theSeason)
                         stack.pop();
                     }
                     else if ( stack.currentItem.objectName === "nextWeekS" ) {
@@ -92,7 +92,7 @@ Item {
                             MiddleMan.setNextWeekData(MiddleMan.theNextWeek-1 )
                     }
                     else
-                        MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek-1)
+                        MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek-1,MiddleMan.thePrevSeason)
                 }
             }
         }
@@ -157,7 +157,7 @@ Item {
                                 )
                             stack.push({item: pptS, properties:{objectName:"pptS"}});
                         else {
-                            MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek+1)
+                            MiddleMan.setPrevWeekData(MiddleMan.thePrevWeek+1,MiddleMan.thePrevSeason)
                         }
                     }
                     else if ( stack.currentItem.objectName === "pptS" ) {

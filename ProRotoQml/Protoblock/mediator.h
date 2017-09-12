@@ -513,12 +513,15 @@ public:
                                   mGateway->dataService->GetWeeklySchedule(season,week));
     }
 
-    Q_INVOKABLE void setPrevWeekData(int week) {
+    Q_INVOKABLE void setPrevWeekData(int week, int season) {
 //        qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
         setprevSelectedPlayerDisplay("");
         if ( !amLive ) return;
 
-        int season = m_thePrevSeason;
+//        int season = m_thePrevSeason;
+        if ( season != m_thePrevSeason )
+            setthePrevSeason(season);
+//        m_thePrevSeason = season;
 
         if ( week <= 0 ) {
             season = m_thePrevSeason-1;
