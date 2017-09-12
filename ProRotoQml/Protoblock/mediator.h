@@ -917,7 +917,7 @@ public slots:
                 m_pProjectionsViewFilterProxyModel->invalidate();
             }
 
-//            updateLiveLeaders(false);
+            updateLiveLeaders(false);
         }
     }
     void OnMarketTicker(fantasybit::MarketTicker,int32_t);

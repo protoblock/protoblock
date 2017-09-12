@@ -256,6 +256,21 @@ namespace fantasybit {
         return symbol.substr(0,(symbol.at(4) > '9') ? 5 : 4);
     }
 
+    static std::string contractSymbolSuffix(int season, int week, bool isweekly) {
+        std::string ret = std::to_string(season-2000);
+        if ( isweekly) {
+            ret += "w";
+            if ( week < 9)
+                ret += "0";
+
+            ret += std::to_string(week);
+        }
+        else
+            ret += "s";
+
+        return ret;
+    }
+
 
 }
 

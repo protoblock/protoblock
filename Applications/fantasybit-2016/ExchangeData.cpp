@@ -306,6 +306,7 @@ void ExchangeData::init() {
 
                 it3 = it2.first;
             }
+            //ToDO already have this from settlepos?
             it3->second->mPkPos.insert(make_pair(fname,pos));
         }
         delete it;
@@ -319,7 +320,7 @@ void ExchangeData::MergeMarketQuote(const string &playerid,const MarketQuote &in
 }
 */
 
-void ExchangeData::closeAll() {
+void ExchangeData::closeAll(bool saverow) {
     std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     mPositions.clear();
     mLimitBooks.clear();
@@ -354,6 +355,14 @@ void ExchangeData::closeAll() {
     {
         auto *it = posstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            if ( saverow ) {
+                auto str = it->key().ToString();
+                int ii =  str.find_first_of(':');
+                auto tickersymbol = str.substr(ii + 1);
+                if ( !fantasybit::isWeekly(tickersymbol))
+                    continue;
+            }
+
             posstore->Delete(write_sync,it->key());
         }
         delete it;
@@ -363,7 +372,7 @@ void ExchangeData::closeAll() {
 }
 
 void ExchangeData::clearNewWeek() {
-    closeAll();
+    closeAll(true);
 //    removeAll();
 //    init();
 }
@@ -761,6 +770,7 @@ Position ExchangeData::getPosition(const string &fname,const string &symbol) {
 
     return ret;
 }
+
 
 /*
 void ExchangeData::OnGameResult(const GameResult&gs) {

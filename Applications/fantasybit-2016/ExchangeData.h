@@ -320,7 +320,7 @@ public:
 
     int64_t MAXSEQ;
     void init();
-    void closeAll();
+    void closeAll(bool saverow = false);
 
     void removeAll() {
         settlestore.reset();
@@ -490,6 +490,27 @@ public:
     ordsnap_t  GetOrdersPositionsByName(const std::string &fname);
     std::recursive_mutex ex_mutex{};
 
+    void processGameResult(const GameResult&gs, const std::string &symbolsuffix) {
+        std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+        for (auto ha : { QString("home"),QString("away")})
+        for (auto &pr : (ha == QString("home")) ? gs.home_result() : gs.away_result()) {
+            std::string tradesymbol = pr.symbol() + symbolsuffix; //CKQB + 17s
+            for ( auto &rowdiv : pr.rowposdividend() ) {
+                // pr.result; // the dividend
+                // rowdiv.name; //fantasyname
+                Position &mypos = mPositions[rowdiv.name()][tradesymbol];
+                mypos.netprice += mypos.netqty * pr.result();
+                OnNewPosition(rowdiv.name(),mypos,tradesymbol);
+            }
+        }
+
+        //            auto it = mLimitBooks.find(tradesymbol);
+        //            if ( it == end(mLimitBooks)) {
+        //                qWarning() << "processGameResult Error no mLimitBooks" << tradesymbol.data();
+        //                continue;
+        //            }
+
+    }
 
 signals:
     void NewMarketTicker(fantasybit::MarketTicker,int32_t);

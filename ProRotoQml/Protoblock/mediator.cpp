@@ -582,7 +582,7 @@ double Mediator::calcTotalPnl(TradingPositionsModel &tpm, PlayerQuoteSliceModel 
 
         it->setmyavg(avg);
         it->setmyposition(netqty);
-        qDebug() << tit->get_symbol() << " setmyposition " << netqty;
+        qDebug() << tit->get_symbol() << " setmyposition " << netqty << "tit->get_netprice()" << tit->get_netprice() << "tit->get_multiplier()" << tit->get_multiplier();
         it->setmypnl(pnl);
         tit->setopenpnl(pnl);
         totpnl += pnl;

@@ -428,31 +428,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                 }
 
-                /*
-                if( rd.game_result().away_result_size() <= 0 )
-                    qCritical() << "no away result" + QTD(rd.DebugString());
-                else
-                    //for (auto result : rd.game_result().away_result() ) {
-                    for ( int i =0; i < rd.game_result().away_result_size(); i++) {
-                        qDebug() << rd.game_result().away_result(i).playerid()
-                                 << rd.game_result().away_result(i).result();
-
-                        auto proj = projmaps[rd.game_result().away_result(i).playerid()];
-                        //if ( proj.size() == 0 )
-                        //    continue;
-                        processResultProj(rd.mutable_game_result()->mutable_away_result(i),
-                                          proj,blocksigner);
-                        //result.mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
-                        //rd.mutable_game_result()->
-                        //        mutable_away_result(i)->mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
-                    }
-
-                //for (auto result : rd.game_result().away_result() )
-                //    qDebug() << result.playerid() << result.fantaybitaward_size();
-
-                */
                 mData.ProcessAddGameResult(rd.game_result().gameid(),rd.game_result());
+                mExchangeData.processGameResult(rd.game_result(),
+                              fantasybit::contractSymbolSuffix(mFutContract.season(),mFutContract.week(),false));
+
                 haveresults = true;
+
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT
                 {
 #ifndef DATAAGENTWRITENAMES_FORCE
@@ -496,7 +477,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
                         prof.set_pnl(fba.pnl());
 #ifdef DATAAGENTWRITEPROFIT
-                        profs.push_back(profs);
+                        profs.push_back(prof);
 //                        sql.profit(prof);
 #endif
                     }
@@ -641,6 +622,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     //playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
     //return awards;
 
+    //weekly
     if ( pbpospair.first != nullptr) {
         playerresultP->set_symbol(pbpospair.first->playerid());
         SettlePositionsRawStake set(*(pbpospair.first));
@@ -655,6 +637,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
         }
     }
 
+    //season - row
     if ( pbpospair.second != nullptr) {
         playerresultP->set_symbol(pbpospair.second->playerid());
         SettleROWPositionsRawStake set(*(pbpospair.second));
@@ -778,7 +761,10 @@ void BlockProcessor::process(const DataTransition &indt) {
 #ifdef TRADE_FEATURE
         std::unordered_map<string,BookPos> pos;
         mExchangeData.GetRemainingSettlePos(pos);
-        for ( auto sbp : pos ) {
+        for ( auto &sbp : pos ) {
+            if ( !isWeekly(sbp.first))
+                continue;
+
             SettlePositionsRawStake set(sbp.second);
             auto pnls = set.settle(0.0, Commissioner::FantasyAgentName());
             for (auto r : pnls ) {
