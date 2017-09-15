@@ -132,6 +132,7 @@ Item {
                         id: bt
                         anchors.fill: parent
                         inplay: quoteitem
+                        isweekly: trcomp.isweekly
                     }
                 }
 
