@@ -106,7 +106,7 @@ void MainLAPIWorker::GoLive() {
     numto = 0;
     intervalstart = 1000;
 #ifdef LIGHT_CLIENT_ONLY
-    intervalstart = 500;
+    intervalstart = 1000;
 #endif
 
 
@@ -114,6 +114,7 @@ void MainLAPIWorker::GoLive() {
     justwentlive = true;
 #endif
 
+    timer->stop();
     timer->start(intervalstart);
 
     qDebug() << "emit LiveData(true)";
@@ -163,6 +164,7 @@ void MainLAPIWorker::startPoint(){
     }
 
     intervalstart = 5000;
+    timer->stop();
     timer->start(intervalstart);
 }
 

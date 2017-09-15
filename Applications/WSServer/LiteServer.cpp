@@ -174,7 +174,7 @@ void LiteServer::processBinaryMessage(const QByteArray &message) {
             auto &name = req.GetExtension(GetProjectionReq::req).fname();
             if ( name != "") {
                 mFnameSubscribed[name].insert(pClient);
-                mSocketSubscribed[pClient].push_back(name);
+                mSocketSubscribed[pClient].insert(name);
                 mServer->Subscribe(name);
             }
             doSendProjections(pClient,name);

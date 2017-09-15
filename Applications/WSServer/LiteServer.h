@@ -79,7 +79,7 @@ private:
     std::string mRepstr;
     WSReply gameStart;
 
-    std::unordered_map<QWebSocket *, std::vector<std::string>> mSocketSubscribed;
+    std::unordered_map<QWebSocket *, std::set<std::string>> mSocketSubscribed;
     std::unordered_map<std::string, std::set<QWebSocket *>> mFnameSubscribed;
     std::unordered_map<std::string, std::set<QWebSocket *>> mSymbolSubscribed;
     std::unordered_map<QWebSocket *, std::string> mSocketSymbol;
