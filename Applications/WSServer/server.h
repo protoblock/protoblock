@@ -139,6 +139,7 @@ public:
     AllOdersSymbol *getAllOdersSymbol(fnameptrs &fptr, const std::string &symbol);
     Order *addOrder(fnameptrs &fptr, AllOdersSymbol *allords, const Order &orderin);
     void ProcessMarketSnapShot(fantasybit::MarketSnapshot *mt);
+    bool doReset;
 private:
 
 //    static fantasybit::GetROWMarketRep ROWMarketRep;
@@ -239,9 +240,6 @@ protected slots:
     void MyNames(vector<fantasybit::MyFantasyName>);
     void NameBal(fantasybit::FantasyNameBal);
     void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
-
-    void NewWeek(int);
-    void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);
     */
@@ -255,7 +253,9 @@ protected slots:
             initData();
     }
 
-    void ResetData() { resetRosterProjScheduleData(); }
+    void ResetData(string) {
+        doReset = true;
+    }
 
     void Height(int h) {
         qDebug() << " height " << h;
@@ -266,6 +266,11 @@ protected slots:
         qDebug() << "slot BlockNum " << n;
 //        setblocknum(n);
         if ( !amLive ) return;
+
+        if ( doReset ) {
+            doReset = false;
+            resetRosterProjScheduleData();
+        }
 
         for ( auto name : blocknames) {
             auto fnptr = Commissioner::getName(name);

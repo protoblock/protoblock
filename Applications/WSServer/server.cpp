@@ -77,6 +77,7 @@ void Server::init() {
 #endif
 
 
+    doReset = false;
     ready();
 }
 
@@ -217,6 +218,7 @@ void Server::ProcessMarketSnapShot(fantasybit::MarketSnapshot* mt) {
         //            mGateway->dataService->GetWeeklySchedule(GlobalStateRep.globalstate().week()));
 
 void Server::resetRosterProjScheduleData() {
+    qDebug() << " resetRosterProjScheduleData ";
     mGetCurrRostersReply.Clear();
     zeroProjByName.Clear();
     avgProjByName->Clear();
@@ -228,7 +230,7 @@ void Server::resetRosterProjScheduleData() {
 
     for (GameRoster &gr : mGateway->dataService->GetCurrentWeekGameRosters() ) {
 
-        if ( gr.status >= GameStatus_Status_INGAME )
+        if ( gr.status != GameStatus_Status_SCHEDULED )
             continue;
 
         #ifdef TESTING_ONLY
