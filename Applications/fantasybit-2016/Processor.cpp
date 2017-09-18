@@ -437,9 +437,9 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT
                 {
-#ifndef DATAAGENTWRITENAMES_FORCE
+    #ifndef DATAAGENTWRITENAMES_FORCE
                 if ( !amlive ) break;
-#endif
+    #endif
 
                 std::vector<Distribution> dists;
                 std::vector<Profits> profs;
@@ -465,10 +465,10 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         dist.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
                         dist.set_proj(fba.proj());
                         dist.set_award(fba.award());
-#ifdef DATAAGENTWRITENAMES
+    #ifdef DATAAGENTWRITENAMES
                         dists.push_back(dist);
 //                        sql.distribute(dist);
-#endif
+    #endif
                     }
 
                     for ( auto fba : res.fantasybitpnl()) {
@@ -477,10 +477,10 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_qty(fba.spos().qty());
                         prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
                         prof.set_pnl(fba.pnl());
-#ifdef DATAAGENTWRITEPROFIT
+    #ifdef DATAAGENTWRITEPROFIT
                         profs.push_back(prof);
 //                        sql.profit(prof);
-#endif
+    #endif
                     }
                 }
 
@@ -499,10 +499,10 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         emit new_dataDistribution(dist);
                         auto ds = dist.SerializeAsString();
 
-#ifdef DATAAGENTWRITENAMES
+    #ifdef DATAAGENTWRITENAMES
                         dists.push_back(dist);
 //                        sql.distribute(dist);
-#endif
+    #endif
 
                     }
 
@@ -513,24 +513,23 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
                         prof.set_pnl(fba.pnl());
 
-#ifdef DATAAGENTWRITEPROFIT
+    #ifdef DATAAGENTWRITEPROFIT
                         profs.push_back(prof);
 //                        sql.profit(prof);
-#endif
+    #endif
 
                     }
                 }
 
+                SqlStuff sql{"satoshifantasy","distribution"};
 
-#ifdef DATAAGENTWRITENAMES
+    #ifdef DATAAGENTWRITENAMES
                 sql.distribute(dists);
-#endif
+    #endif
 
-#ifdef DATAAGENTWRITEPROFIT
+    #ifdef DATAAGENTWRITEPROFIT
                 sql.profit(profs);
-#endif
-
-
+    #endif
 
                 }
 #endif
@@ -1371,9 +1370,9 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
 }
 
 BlockProcessor::BlockProcessor(NFLStateData &data, FantasyNameData &namedata, ExchangeData &ed) :
-    #if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT)
-        sql("satoshifantasy","distribution"),
-    #endif
+//    #if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT)
+//        sql("satoshifantasy","distribution"),
+//    #endif
     mData(data), mNameData(namedata) , mExchangeData(ed) {
 
     }

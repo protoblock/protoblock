@@ -48,9 +48,9 @@ class BlockProcessor : public QObject {
     bool amlive = false;
     FutContract mFutContract;
 
-#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
-    SqlStuff sql;
-#endif
+//#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
+//    SqlStuff sql;
+//#endif
 
 public slots:
     void OnLive(bool) {
