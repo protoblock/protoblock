@@ -557,7 +557,7 @@ public:
                 setthePrevSeason(season);
         }
 
-        if ( week == m_theWeek) {
+        if ( week == m_theWeek && season == m_theSeason) {
            m_pPreviousWeekScheduleModel->clear();
 //           for ( auto *it : m_pWeekClosedScheduleModel->)
            m_pPreviousWeekScheduleModel->append(m_pWeekClosedScheduleModel->toList());
