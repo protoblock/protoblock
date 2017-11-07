@@ -7,7 +7,7 @@ AppSettings::AppSettings(){
     QCoreApplication::setApplicationName(APPLICATION_NAME);
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QSettings::setPath(QSettings::IniFormat,
-                       QSettings::SystemScope,
+                       QSettings::UserScope,
                        QCoreApplication::applicationDirPath());
     //TODO sync
 }
@@ -20,10 +20,9 @@ QVariant AppSettings::getSetting(SettingsKeys settingKey) {
     QVariant value = settings.value(settingName);
     if (!value.isValid()) {
         QMutexLocker locker(&myMutex);
-        if (!value.isValid())
-            return DefaultAppSettings::getDefaultSetting(settingKey);
+        value = DefaultAppSettings::getDefaultSetting(settingKey);
     }
-    return settings.value(settingName);
+    return value;
 }
 
 void AppSettings::setSetting(SettingsKeys settingKey,QVariant & value){
@@ -32,3 +31,7 @@ void AppSettings::setSetting(SettingsKeys settingKey,QVariant & value){
     settings.setValue(settingName,value);
 }
 
+QVariant AppSettings::getSetting(QString settingName) {
+    QSettings settings;
+    return settings.value(settingName);
+}

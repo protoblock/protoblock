@@ -148,6 +148,7 @@ public:
     ~AppSettings();
 
     QVariant getSetting(SettingsKeys settingKey);
+    QVariant getSetting(QString settingName);
     void setSetting(SettingsKeys settingKey,QVariant & value);
 private:
     static QString storagePath(const QString & dirName){

@@ -15,6 +15,8 @@
 #include <QtSql/QSqlError>
 #include "ApiData.pb.h"
 #include "Commissioner.h"
+#include "platform.h"
+#include "appsettings.h"
 
 
 namespace fantasybit {
@@ -56,9 +58,16 @@ struct SqlStuff {
         db.setHostName(DBIP.data());
         db.setPort(3306);
         db.setDatabaseName(dbname.data());
-        db.setUserName("root");
-        db.setPassword("fantasyf00tball!");
-        //bool success = true;
+
+        QString value = Platform::instance()->settings()->getSetting("dbUserName").toString();
+        if (  value == "" )
+            value = "root";
+        db.setUserName(value);
+        Platform::instance()->settings()->getSetting("dbPassword").toString();
+        if (  value == "" )
+            value = "fantasyf00tball!";
+        db.setPassword(value);
+
         if (!db.open()) {
              qDebug() << "Database error occurred :" << db.lastError().databaseText();
              //LogIt(db.lastError().databaseText().toStdString());
