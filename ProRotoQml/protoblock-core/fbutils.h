@@ -271,7 +271,20 @@ namespace fantasybit {
         return ret;
     }
 
+    static int getSymbolWeek(const std::string &symbol) {
+        int ret = 0;
 
+        size_t pos = symbol.rfind('w');
+        if ( pos != std::string::npos && pos+1 == symbol.size ()-2) {
+            try {
+                ret = std::stoi(symbol.substr (pos+1));
+            } catch(const std::invalid_argument& e) {
+                std::cout << "getSymbolWeek invalid_argument";
+                ret = 0;
+            }
+        }
+        return ret;
+    }
 }
 
 #endif

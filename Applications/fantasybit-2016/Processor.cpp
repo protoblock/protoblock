@@ -1007,13 +1007,7 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
                mFutContract.set_type(FutContract_Type_SEASON);
             else {
                 mFutContract.set_type(FutContract_Type_WEEKLY);
-                if ( emdg.symbol().back() == '0') {
-//                    ffc.set_week(std::stoi(emdg.symbol().substr(emdg.symbol().size()-2,2)));
-                    mFutContract.set_week( emdg.symbol().at(emdg.symbol().size()-2) - '0');
-                    mFutContract.set_week(mFutContract.week()+10);
-                }
-                else
-                   mFutContract.set_week( emdg.symbol().back() - '0');
+                mFutContract.set_week(fantasybit::getSymbolWeek(emdg.symbol ()));
             }
             fc = &mFutContract;
         }
