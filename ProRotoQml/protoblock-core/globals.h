@@ -33,11 +33,11 @@
 #endif
 
 #ifndef MINOR_VERSION
-  #define MINOR_VERSION  3
+  #define MINOR_VERSION  4
 #endif
 
 #ifndef REVISION_NUMBER
-  #define REVISION_NUMBER 0
+  #define REVISION_NUMBER 5
 #endif
 
 #ifndef BUILD_NUMBER
