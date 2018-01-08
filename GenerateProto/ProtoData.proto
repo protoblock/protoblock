@@ -114,6 +114,7 @@ enum TransType {
     STAMPED = 7;
     EXCHANGE = 8;
     EXCHANGE_BLOCK = 9;
+    TRANSFER = 10;
 }
 
 message Transaction {
@@ -132,6 +133,18 @@ message NameTrans {
     optional bytes public_key=20;
     optional NameProof proof = 30;
 
+}
+
+message TransferTrans { 
+    extend Transaction {
+        optional TransferTrans transfer_tran = 400;
+    }
+
+    optional string from = 10;
+    optional string to = 20;
+    optional uint64 amount = 30;
+
+    optional uint64 nonce = 100;
 }
 
 message SignedTransaction {
