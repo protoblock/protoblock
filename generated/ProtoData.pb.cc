@@ -328,9 +328,10 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MasterProof));
   Transaction_descriptor_ = file->message_type(10);
-  static const int Transaction_offsets_[2] = {
+  static const int Transaction_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Transaction, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Transaction, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Transaction, nonce_),
   };
   Transaction_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -361,11 +362,10 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NameTrans));
   TransferTrans_descriptor_ = file->message_type(12);
-  static const int TransferTrans_offsets_[4] = {
+  static const int TransferTrans_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, from_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, to_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, amount_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, nonce_),
   };
   TransferTrans_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1046,14 +1046,14 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "\017new_oracle_name\030B \001(\0132\035.fantasybit.Sign"
     "edTransaction2E\n\014master_proof\022\025.fantasyb"
     "it.NameProof\030\221\003 \001(\0132\027.fantasybit.MasterP"
-    "roof\"M\n\013Transaction\022\017\n\007version\030\001 \001(\005\022#\n\004"
-    "type\030\002 \001(\0162\025.fantasybit.TransType*\010\010d\020\200\200"
-    "\200\200\002\"\240\001\n\tNameTrans\022\024\n\014fantasy_name\030\n \001(\t\022"
-    "\022\n\npublic_key\030\024 \001(\014\022$\n\005proof\030\036 \001(\0132\025.fan"
-    "tasybit.NameProof2C\n\nname_trans\022\027.fantas"
-    "ybit.Transaction\030\310\001 \001(\0132\025.fantasybit.Nam"
-    "eTrans\"\224\001\n\rTransferTrans\022\014\n\004from\030\n \001(\t\022\n"
-    "\n\002to\030\024 \001(\t\022\016\n\006amount\030\036 \001(\004\022\r\n\005nonce\030d \001("
+    "roof\"\\\n\013Transaction\022\017\n\007version\030\001 \001(\005\022#\n\004"
+    "type\030\002 \001(\0162\025.fantasybit.TransType\022\r\n\005non"
+    "ce\030\n \001(\004*\010\010d\020\200\200\200\200\002\"\240\001\n\tNameTrans\022\024\n\014fant"
+    "asy_name\030\n \001(\t\022\022\n\npublic_key\030\024 \001(\014\022$\n\005pr"
+    "oof\030\036 \001(\0132\025.fantasybit.NameProof2C\n\nname"
+    "_trans\022\027.fantasybit.Transaction\030\310\001 \001(\0132\025"
+    ".fantasybit.NameTrans\"\205\001\n\rTransferTrans\022"
+    "\014\n\004from\030\n \001(\t\022\n\n\002to\030\024 \001(\t\022\016\n\006amount\030\036 \001("
     "\0042J\n\rtransfer_tran\022\027.fantasybit.Transact"
     "ion\030\220\003 \001(\0132\031.fantasybit.TransferTrans\"j\n"
     "\021SignedTransaction\022&\n\005trans\030\n \001(\0132\027.fant"
@@ -4586,6 +4586,7 @@ void MasterProof::Swap(MasterProof* other) {
 #ifndef _MSC_VER
 const int Transaction::kVersionFieldNumber;
 const int Transaction::kTypeFieldNumber;
+const int Transaction::kNonceFieldNumber;
 #endif  // !_MSC_VER
 
 Transaction::Transaction()
@@ -4606,6 +4607,7 @@ void Transaction::SharedCtor() {
   _cached_size_ = 0;
   version_ = 0;
   type_ = 0;
+  nonce_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4644,6 +4646,7 @@ void Transaction::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     version_ = 0;
     type_ = 0;
+    nonce_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -4687,6 +4690,22 @@ bool Transaction::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(80)) goto parse_nonce;
+        break;
+      }
+
+      // optional uint64 nonce = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_nonce:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &nonce_)));
+          set_has_nonce();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4725,6 +4744,11 @@ void Transaction::SerializeWithCachedSizes(
       2, this->type(), output);
   }
 
+  // optional uint64 nonce = 10;
+  if (has_nonce()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(10, this->nonce(), output);
+  }
+
   // Extension range [100, 536870912)
   _extensions_.SerializeWithCachedSizes(
       100, 536870912, output);
@@ -4746,6 +4770,11 @@ void Transaction::SerializeWithCachedSizes(
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       2, this->type(), target);
+  }
+
+  // optional uint64 nonce = 10;
+  if (has_nonce()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(10, this->nonce(), target);
   }
 
   // Extension range [100, 536870912)
@@ -4774,6 +4803,13 @@ int Transaction::ByteSize() const {
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional uint64 nonce = 10;
+    if (has_nonce()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->nonce());
     }
 
   }
@@ -4811,6 +4847,9 @@ void Transaction::MergeFrom(const Transaction& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
+    if (from.has_nonce()) {
+      set_nonce(from.nonce());
+    }
   }
   _extensions_.MergeFrom(from._extensions_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -4838,6 +4877,7 @@ void Transaction::Swap(Transaction* other) {
   if (other != this) {
     std::swap(version_, other->version_);
     std::swap(type_, other->type_);
+    std::swap(nonce_, other->nonce_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -5187,7 +5227,6 @@ void NameTrans::Swap(NameTrans* other) {
 const int TransferTrans::kFromFieldNumber;
 const int TransferTrans::kToFieldNumber;
 const int TransferTrans::kAmountFieldNumber;
-const int TransferTrans::kNonceFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -5215,7 +5254,6 @@ void TransferTrans::SharedCtor() {
   from_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   to_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   amount_ = GOOGLE_ULONGLONG(0);
-  nonce_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5268,7 +5306,6 @@ void TransferTrans::Clear() {
       }
     }
     amount_ = GOOGLE_ULONGLONG(0);
-    nonce_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -5325,22 +5362,6 @@ bool TransferTrans::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(800)) goto parse_nonce;
-        break;
-      }
-
-      // optional uint64 nonce = 100;
-      case 100: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_nonce:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &nonce_)));
-          set_has_nonce();
-        } else {
-          goto handle_uninterpreted;
-        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -5386,11 +5407,6 @@ void TransferTrans::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->amount(), output);
   }
 
-  // optional uint64 nonce = 100;
-  if (has_nonce()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(100, this->nonce(), output);
-  }
-
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -5424,11 +5440,6 @@ void TransferTrans::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->amount(), target);
   }
 
-  // optional uint64 nonce = 100;
-  if (has_nonce()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(100, this->nonce(), target);
-  }
-
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -5459,13 +5470,6 @@ int TransferTrans::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->amount());
-    }
-
-    // optional uint64 nonce = 100;
-    if (has_nonce()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->nonce());
     }
 
   }
@@ -5504,9 +5508,6 @@ void TransferTrans::MergeFrom(const TransferTrans& from) {
     if (from.has_amount()) {
       set_amount(from.amount());
     }
-    if (from.has_nonce()) {
-      set_nonce(from.nonce());
-    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -5533,7 +5534,6 @@ void TransferTrans::Swap(TransferTrans* other) {
     std::swap(from_, other->from_);
     std::swap(to_, other->to_);
     std::swap(amount_, other->amount_);
-    std::swap(nonce_, other->nonce_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -1593,6 +1593,13 @@ class Transaction : public ::google::protobuf::Message {
   inline ::fantasybit::TransType type() const;
   inline void set_type(::fantasybit::TransType value);
 
+  // optional uint64 nonce = 10;
+  inline bool has_nonce() const;
+  inline void clear_nonce();
+  static const int kNonceFieldNumber = 10;
+  inline ::google::protobuf::uint64 nonce() const;
+  inline void set_nonce(::google::protobuf::uint64 value);
+
   GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(Transaction)
   // @@protoc_insertion_point(class_scope:fantasybit.Transaction)
  private:
@@ -1600,6 +1607,8 @@ class Transaction : public ::google::protobuf::Message {
   inline void clear_has_version();
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_nonce();
+  inline void clear_has_nonce();
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
@@ -1607,9 +1616,10 @@ class Transaction : public ::google::protobuf::Message {
 
   ::google::protobuf::int32 version_;
   int type_;
+  ::google::protobuf::uint64 nonce_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -1823,13 +1833,6 @@ class TransferTrans : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 amount() const;
   inline void set_amount(::google::protobuf::uint64 value);
 
-  // optional uint64 nonce = 100;
-  inline bool has_nonce() const;
-  inline void clear_nonce();
-  static const int kNonceFieldNumber = 100;
-  inline ::google::protobuf::uint64 nonce() const;
-  inline void set_nonce(::google::protobuf::uint64 value);
-
   static const int kTransferTranFieldNumber = 400;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::TransferTrans >, 11, false >
@@ -1842,18 +1845,15 @@ class TransferTrans : public ::google::protobuf::Message {
   inline void clear_has_to();
   inline void set_has_amount();
   inline void clear_has_amount();
-  inline void set_has_nonce();
-  inline void clear_has_nonce();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* from_;
   ::std::string* to_;
   ::google::protobuf::uint64 amount_;
-  ::google::protobuf::uint64 nonce_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -6458,6 +6458,28 @@ inline void Transaction::set_type(::fantasybit::TransType value) {
   type_ = value;
 }
 
+// optional uint64 nonce = 10;
+inline bool Transaction::has_nonce() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Transaction::set_has_nonce() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Transaction::clear_has_nonce() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Transaction::clear_nonce() {
+  nonce_ = GOOGLE_ULONGLONG(0);
+  clear_has_nonce();
+}
+inline ::google::protobuf::uint64 Transaction::nonce() const {
+  return nonce_;
+}
+inline void Transaction::set_nonce(::google::protobuf::uint64 value) {
+  set_has_nonce();
+  nonce_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // NameTrans
@@ -6804,28 +6826,6 @@ inline ::google::protobuf::uint64 TransferTrans::amount() const {
 inline void TransferTrans::set_amount(::google::protobuf::uint64 value) {
   set_has_amount();
   amount_ = value;
-}
-
-// optional uint64 nonce = 100;
-inline bool TransferTrans::has_nonce() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void TransferTrans::set_has_nonce() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void TransferTrans::clear_has_nonce() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void TransferTrans::clear_nonce() {
-  nonce_ = GOOGLE_ULONGLONG(0);
-  clear_has_nonce();
-}
-inline ::google::protobuf::uint64 TransferTrans::nonce() const {
-  return nonce_;
-}
-inline void TransferTrans::set_nonce(::google::protobuf::uint64 value) {
-  set_has_nonce();
-  nonce_ = value;
 }
 
 // -------------------------------------------------------------------
