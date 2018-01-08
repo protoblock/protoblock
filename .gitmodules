@@ -1,0 +1,6 @@
+[submodule "ProRotoQml/Communi"]
+	path = ProRotoQml/libcommuni
+	url = https://github.com/communi/libcommuni.git
+[submodule "GenerateProto/Protodata"]
+	path = GenerateProto/Protodata
+	url = https://github.com/protoblock/Protodata.git
