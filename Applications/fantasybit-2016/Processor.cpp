@@ -919,6 +919,15 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         switch (t.type())
         {
+        case TransType::TRANSFER: {
+            const TransferTrans & trt = t.GetExtension(TransferTrans::transfer_tran);
+            if ( true ) {  // transfer is valid
+                mNameData.DoTransfer (trt.from (), trt.to (), trt.amount ());
+            }
+            break;
+
+        }
+
         case TransType::PROJECTION_BLOCK: {
             const ProjectionTransBlock & ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
             //qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();

@@ -106,6 +106,10 @@ public:
     }
     */
 
+
+    void DoTransfer(const std::string &from,const std::string &to, const uint64_t amount, uint64_t nonce = 0);
+
+
     void AddNewName(std::string name, std::string pubkey,int32_t blocknum = 0);
     void AddBalance(const std::string name,uint64_t amount);
     void AddPnL(const std::string name, int64_t pnl);

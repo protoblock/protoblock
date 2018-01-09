@@ -145,6 +145,11 @@ void FantasyNameData::closeAll() {
     //reset num for week todo:
 }
 
+void FantasyNameData::DoTransfer(const string &from, const string &to, const uint64_t amount, uint64_t nonce) {
+    AddPnL(to,amount);
+    AddPnL (from, 0-amount);
+}
+
 void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t blocknum) {
     FantasyNameBal fn{};
     fn.set_name(name);

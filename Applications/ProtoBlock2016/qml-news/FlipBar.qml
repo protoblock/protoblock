@@ -131,4 +131,9 @@ Item {
             qt_TexCoord0 = qt_MultiTexCoord0;
         }"
     }
+    states: [
+        State {
+            name: "State1"
+        }
+    ]
 }
