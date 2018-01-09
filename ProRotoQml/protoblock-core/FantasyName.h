@@ -58,7 +58,7 @@ private:
     mutable std::recursive_mutex nonce_mutex{};
 public:
     FantasyName(const alias_t &inalias, const pb::public_key_data &inpubkey)
-        : mAlias(inalias) , mPubkey(inpubkey) , balance (0), stakedelta(0), m_nonce(0) {}
+        : mAlias(inalias) , mPubkey(inpubkey) , balance (0), stakedelta(0), m_nonce(1000) {}
 
     FantasyName ( const FantasyName &in )
         : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance), stakedelta(in.stakedelta),
