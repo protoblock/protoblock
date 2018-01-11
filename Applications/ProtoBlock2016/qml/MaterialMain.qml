@@ -145,17 +145,19 @@ Material.ApplicationWindow{
 
 
     // Pages
-    property var sections: [ levelOne, levelTwo, levelThree,levelFour, levelFive ]
+    property var sections: [ levelZero, levelOne, levelTwo, levelThree,levelFour, levelFive ]
     property var sectionsIcons: [
+        levelZeroIcons,
         levelOneIcons,
         levelTwoIcons,
         levelThreeIcons,
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Projections","Trading",  "NFL News", "Account", "Protoblock"  ]
-    property var sectionTitlesAlias: [ "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Wallet", "Projections","Trading",  "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Wallet", "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
+        "qrc:/icons/local_atm.png",
         "qrc:/icons/ic_poll.png",
         "qrc:/icons/ic_timeline.png",
         "qrc:/icons/newspaper.png",
@@ -176,20 +178,21 @@ Material.ApplicationWindow{
         tabHighlightColor: Colors.accentColor
     }
 
-    // Level One Trading
-    property var levelTwo: [ "Trading"]
+    // Level Zero
+    property var levelZero: [ "Wallet"]
+    property var levelZeroIcons: [
+        "qrc:/icons/local_atm.png"
+    ]
 
-    //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
-
-
-    property var levelTwoIcons: [
+    // Level One
+    property var levelOne: [ "Projections"]
+    property var levelOneIcons: [
         "qrc:/icons/newspaper.png"
     ]
 
-
     // Level Two
-    property var levelOne: [ "Projections"]
-    property var levelOneIcons: [
+    property var levelTwo: [ "Trading"]
+    property var levelTwoIcons: [
         "qrc:/icons/newspaper.png"
     ]
 
@@ -224,7 +227,7 @@ Material.ApplicationWindow{
 
     property string selectedComponent: sections[0][0]
 
-    property var sectionLeftEnable: [ false, false, true, true, true]
+    property var sectionLeftEnable: [ true, false, false, true, true, true]
 
     initialPage:  Material.TabbedPage {
         property bool expanded: true
@@ -243,7 +246,8 @@ Material.ApplicationWindow{
         actionBar.integratedTabBar: true
         actionBar.iconSize:   ProtoScreen.guToPx(2.5)
         actionBar.customContent:    Material.Label {
-            text: realRoot.uname
+            text: realRoot.uname + "   [" +
+                  (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.stake).toLocaleString()) + " ƑɃ]"
             verticalAlignment: navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
             font{
                 family: "Roboto"

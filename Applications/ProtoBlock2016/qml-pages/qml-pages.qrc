@@ -23,5 +23,6 @@
         <file>ScoringSystem.qml</file>
         <file>BuySellTrading.qml</file>
         <file>BuyTab.qml</file>
+        <file>Wallet.qml</file>
     </qresource>
 </RCC>
