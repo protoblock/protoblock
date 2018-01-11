@@ -260,7 +260,7 @@ public:
 
     Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
-
+    Q_INVOKABLE void doTransfer(const qint32 amount, QString toname);
 //    Q_INVOKABLE QString getOrderModelSymbol() {
 //        return m_pGlobalOpenOrdersModel->get_pidsymbol();
 //    }
@@ -703,6 +703,7 @@ signals:
     void doNameCheck(QString);
     void NewProjection(vector<fantasybit::FantasyBitProj>);
     void NewOrder(fantasybit::ExchangeOrder);
+    void NewTransfer(fantasybit::TransferTrans);
 
     void NewHeightStop(int);
 
@@ -880,7 +881,13 @@ public slots:
 
     void AnyFantasyNameBalance(fantasybit::FantasyNameBal fnb) {
         auto *item = mFantasyNameBalModel.getByUid(fnb.name().data());
-        if ( item == nullptr ) return;
+        if ( item == nullptr ) {
+            qDebug() << " AnyFantasyNameBalance !found " << fnb.DebugString().data();
+            return;
+        }
+        else
+            qDebug() << " AnyFantasyNameBalance found " << fnb.DebugString().data();
+
         item->update(fnb);
         mFantasyNameBalModel.update(item);
     }

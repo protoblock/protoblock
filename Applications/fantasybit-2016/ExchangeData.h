@@ -44,6 +44,7 @@ struct OpenOrder {
 struct Position {
     int netqty;
     int netprice;
+    int openpnl;
     string ToString() const {
         return to_string(netqty) + " " + to_string(netprice);
     }
@@ -294,6 +295,8 @@ class ExchangeData : public QObject {
     std::unordered_map<int32_t,OpenOrder> mOpenOrders;
     std::unordered_map<std::string,std::set<int32_t>> mNameSeqMap;
     std::unordered_map<int32_t,std::string> mSeqNameMap;
+    std::unordered_map<string,int> mTotOpenPnl;
+
 
     std::set<std::string> mLockedSymb;
     std::set<std::string> mSubscribed;
@@ -307,6 +310,7 @@ class ExchangeData : public QObject {
 
 
 
+    void UpdateOpenPnl(MatchingEngine &ma);
 public:
     ExchangeData() : mMaxSeason(2017), mMinSeason(2017)
 #if defined(TIMEAGENTWRITEFILLS)
@@ -549,6 +553,7 @@ public:
         return ldb.write(tree.root(),tree.SerializeAsString());
     }
 
+    int GetOpenPnl(const std::string &fname);
 signals:
     void NewMarketTicker(fantasybit::MarketTicker,int32_t);
     void NewMarketSnapShot(fantasybit::MarketSnapshot*);

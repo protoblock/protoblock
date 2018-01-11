@@ -8,10 +8,16 @@ import QtQuick.Layouts 1.1
 import ProRotoQml.Theme 1.0
 
 Item {
-    Component.onCompleted: { pageHelper.title = "Wallet"; }
+    Component.onCompleted: {
+        pageHelper.title = "Wallet";
+        console.log("onCompleted netbal " + netbal)
+        console.log("onCompleted stakebal " + stakebal)
+        console.log("onCompleted maximumValue " + sendqty.maximumValue)
+    }
 
-    property var stakebal: !MiddleMan.pMyFantasyNameBalance ?  "0" : (MiddleMan.pMyFantasyNameBalance.stake).toLocaleString();
-    property var skillbal: !MiddleMan.pMyFantasyNameBalance ?  "0" : (MiddleMan.pMyFantasyNameBalance.bits).toLocaleString();
+    property string stakebal: !MiddleMan.pMyFantasyNameBalance ?  "0" : (MiddleMan.pMyFantasyNameBalance.stake).toLocaleString();
+    property string skillbal: !MiddleMan.pMyFantasyNameBalance ?  "0" : (MiddleMan.pMyFantasyNameBalance.bits).toLocaleString();
+    property string netbal: !MiddleMan.pMyFantasyNameBalance ?  "0" : (MiddleMan.pMyFantasyNameBalance.net).toLocaleString();
 
     ColumnLayout {
         spacing: ProtoScreen.guToPx(2)
@@ -19,7 +25,7 @@ Item {
         anchors.left: parent.left
         anchors.margins: ProtoScreen.guToPx(2)
         ListItems.Subtitled {
-            Layout.preferredWidth: ProtoScreen.guToPx(60)
+            Layout.preferredWidth: ProtoScreen.guToPx(80)
             id: thelist
             elevation: 1
             text: MiddleMan.pMyFantasyNameBalance.name
@@ -34,13 +40,13 @@ Item {
             itemValueLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
             itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
 
-            valueText: "Skill(" + skillbal + " ƑɃ) Stake(" + stakebal +" ƑɃ)"
+            valueText: "Skill[" + skillbal + " ƑɃ] Stake[" + stakebal +" ƑɃ] Net[" + netbal + " ƑɃ]";
             itemValueLabel.font.family: fontfamFB
         }
 
         Card {
             id: sendcard
-            Layout.preferredWidth: ProtoScreen.guToPx(60)
+            Layout.preferredWidth: ProtoScreen.guToPx(80)
             Layout.preferredHeight: ProtoScreen.guToPx(12)
 //            height: ProtoScreen.guToPx(30)
 //            width: ProtoScreen.guToPx(100)
@@ -75,7 +81,7 @@ Item {
                     Layout.columnSpan: 5
                     Layout.fillHeight: true
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    implicitWidth: ProtoScreen.guToPx(40)
+                    implicitWidth: ProtoScreen.guToPx(62)
                 }
 
 
@@ -94,9 +100,10 @@ Item {
 
                 SpinBox {
                     id: sendqty
+                    enabled: MiddleMan.liveSync === "Live"
                     decimals: 0
                     stepSize: 1.0
-                    maximumValue: MiddleMan.pMyFantasyNameBalance.bits
+                    maximumValue: Math.max(0, Math.min(MiddleMan.pMyFantasyNameBalance.net, MiddleMan.pMyFantasyNameBalance.stake))
                     minimumValue:  0
                     value: 0
                     Layout.column: 2
@@ -104,6 +111,13 @@ Item {
                     Layout.alignment: Qt.AlignLeft
                     Layout.fillWidth: false
                     Layout.preferredWidth: ProtoScreen.guToPx(9)
+                    onValueChanged: {
+                        console.log("netbal " + netbal)
+                        console.log("stakebal " + stakebal)
+                        console.log("maximumValue " + maximumValue)
+                        console.log("maxnim" + Math.max(0, Math.min(netbal, stakebal)))
+
+                    }
                 }
 
 
@@ -171,9 +185,13 @@ Item {
 
         onAccepted: {
             if ( realRoot.uname !== "" )  {
-                if ( mytransferdialog.amount <= MiddleMan.pMyFantasyNameBalance.bits) {
-                    MiddleMan.doTransfer(mytransferdialog.amount,mytransferdialog.to)
-               }
+                if ( mytransferdialog.amount > 0 &&
+                        mytransferdialog.amount <= Math.min(MiddleMan.pMyFantasyNameBalance.net, MiddleMan.pMyFantasyNameBalance.stake)) {
+                    MiddleMan.doTransfer(mytransferdialog.amount,mytransferdialog.to);
+                }
+                else {
+                    console.log("not enough funds" + Math.min(MiddleMan.pMyFantasyNameBalance.net, MiddleMan.pMyFantasyNameBalance.stake))  ;
+                }
             }
 
         }

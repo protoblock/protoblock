@@ -311,6 +311,13 @@ void ExchangeData::init() {
         }
         delete it;
     }
+
+
+    //update total pnl
+    for ( auto &it : mLimitBooks) {
+        UpdateOpenPnl(*(it.second));
+    }
+
 }
 
 /*
@@ -406,7 +413,7 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
     mBookDelta->set_blocknum(blocknum);
     qDebug() << symbol.data() << ":newOrder:" << seqnum << " : " << fn->alias().data();
 
-    bool exitonly = fn->getStakeBalance() <= 0;
+    bool exitonly = fn->getStakeBalance() + GetOpenPnl(fn->alias()) <= 0;
 
 #ifdef NO_EXITONLY
     exitonly = false;
@@ -512,8 +519,10 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
 
     //mBookDelta->set_playerid(eo.playerid());
     mBookDelta->set_fantasy_name(fn->alias());
-    if ( mBookDelta->level1tic_size() > 0 )
+    if ( mBookDelta->level1tic_size() > 0 ) {
         ma.blocknum = mBookDelta->blocknum();
+        UpdateOpenPnl(ma);
+    }
 
     SaveBookDelta();
 
@@ -754,10 +763,50 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
     ma.mLimitBook->CancelOrder(ord);
     mBookDelta->set_symbol(ticker);
     mBookDelta->set_fantasy_name(fn->alias());
-    if ( mBookDelta->level1tic_size() > 0 )
+    if ( mBookDelta->level1tic_size() > 0 ) {
         ma.blocknum = mBookDelta->blocknum();
+        UpdateOpenPnl(ma);
+    }
     SaveBookDelta();
 
+}
+
+void ExchangeData::UpdateOpenPnl(MatchingEngine &ma) {
+    const MarketQuote &mq = mMarketQuote[ma.mSymbol];
+
+    if ( ma.islocked ) return;
+
+    if ( ma.mPkPos.size() == 0)
+        return;
+
+    int bid = mq.b();
+    int ask = mq.a();
+    if ( ask == 0) ask = ma.mLimitBook->BOOK_SIZE+1;
+    int multiplier = ma.mLimitBook->BOOK_SIZE == 40 ? 100 : 1;
+
+    for ( auto &p : ma.mPkPos ) {
+        Position &pos = p.second;
+        Position &mypos = mPositions[p.first][ma.mSymbol];
+        if ( mypos.netprice != pos.netprice || mypos.netqty != pos.netqty)
+            qDebug() << " bad pos";
+
+        int pnl = 0;
+        if ( pos.netqty == 0 )
+            pnl = pos.netprice * multiplier;
+        else {
+            int price = (pos.netqty > 0) ? bid : ask;
+            pnl = multiplier * ((price *  pos.netqty) + pos.netprice);
+        }
+        int diff = pnl - pos.openpnl;
+        if ( diff != 0) {
+            pos.openpnl = pnl;
+            {
+                std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+                int &tot = mTotOpenPnl[p.first];
+                tot += diff;
+            }
+        }
+    }
 }
 
 Position ExchangeData::getPosition(const string &fname,const string &symbol) {
@@ -1582,6 +1631,16 @@ void LimitBook::NewNew(Order &order) {
 #ifdef TRACE
         qDebug() << order.refnum() << "level2 NewNew " << order.DebugString().data();
 #endif
+
+}
+
+int ExchangeData::GetOpenPnl(const std::string &fname) {
+   std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
+   auto it = mTotOpenPnl.find(fname);
+   if ( it == end(mTotOpenPnl) )
+       return 0;
+
+   return it->second;
 
 }
 

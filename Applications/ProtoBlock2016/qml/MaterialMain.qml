@@ -36,6 +36,8 @@ Material.ApplicationWindow{
 
     property string  fontfamFB:  Device.productType === "osx" ? "Helvetica Neue" : "Roboto"
 
+    property int accountTab: 4
+
     statusBar: StatusBar {
 
         RowLayout {
@@ -247,7 +249,7 @@ Material.ApplicationWindow{
         actionBar.iconSize:   ProtoScreen.guToPx(2.5)
         actionBar.customContent:    Material.Label {
             text: realRoot.uname + "   [" +
-                  (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.stake).toLocaleString()) + " ƑɃ]"
+                  (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.net).toLocaleString()) + " ƑɃ]"
             verticalAlignment: navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
             font{
                 family: "Roboto"
@@ -722,7 +724,7 @@ Material.ApplicationWindow{
             if ( uname !== name || uname === "") {
                 uname = name
                 msgString = "You are now playing as: " + name
-                if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
+                if( pageHelper.selectedTabIndex === accountTab || loginDialog.visible === true){
                     rootLoader.source = start
                     pageHelper.selectedTabIndex = startindex;
                     usingNameDialog.open()

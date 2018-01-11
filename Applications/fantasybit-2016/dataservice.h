@@ -56,6 +56,7 @@ public:
     std::vector<MarketSnapshot> GetCurrentMarketSnaps();
 
     std::string GetPidfromSymb(const std::string &symb);
+    int GetOpenPnl(const std::string &fname);
 };
 
 

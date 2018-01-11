@@ -922,7 +922,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         case TransType::TRANSFER: {
             const TransferTrans & trt = t.GetExtension(TransferTrans::transfer_tran);
             if ( true ) {  // transfer is valid
-                mNameData.DoTransfer (trt.from (), trt.to (), trt.amount ());
+                int pnl = mExchangeData.GetOpenPnl(trt.from());
+                mNameData.DoTransfer (trt.from (), trt.to (), trt.amount (), pnl);
             }
             break;
 
