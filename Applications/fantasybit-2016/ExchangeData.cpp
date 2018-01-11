@@ -378,7 +378,7 @@ void ExchangeData::closeAll(bool saverow) {
 
 }
 
-void ExchangeData::clearNewWeek() {
+void ExchangeData::clearNewWeek(bool inseason) {
     closeAll(true);
 //    removeAll();
 //    init();
@@ -972,7 +972,7 @@ void ExchangeData::OnWeekOver(int week) {
         ProcessResultOver(it.first,0);
     }
     */
-    clearNewWeek();
+    clearNewWeek(week < 16);
     mWeek = 0;
 }
 

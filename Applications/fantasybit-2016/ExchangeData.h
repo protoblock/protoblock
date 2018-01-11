@@ -406,7 +406,7 @@ public:
                   const std::unordered_map<std::string,PlayerDetail> &home,
                   const std::unordered_map<std::string,PlayerDetail> &away
                      );
-    void clearNewWeek();
+    void clearNewWeek(bool = false);
 
     void OnSeasonStart(int season) {
         mSeason = season;
@@ -428,6 +428,53 @@ public:
         mWeek = week;
 //        if (amlive)
 //            doEmitSnap();
+        auto *it = posstore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            auto str = it->key().ToString();
+            int ii =  str.find_first_of(':');
+            auto fname = str.substr(0, ii);
+            auto tickersymbol = str.substr(ii + 1);
+
+            StorePos sp;
+            if ( !sp.ParseFromString(it->value().ToString()) )
+                continue;
+
+#ifdef TRACE
+            qDebug() << "OnWeekStart level2 ExchangeData posstore " << str.data() << sp.DebugString().data() << " |";
+#endif
+            auto &plist = mPositions[fname];
+            Position &pos = plist[tickersymbol];
+            pos.netprice = sp.price();
+            pos.netqty = sp.qty();
+
+            auto it3 = mLimitBooks.find(tickersymbol);
+            if ( it3 == end(mLimitBooks) ) {
+
+                auto it2 = mLimitBooks.insert(make_pair(tickersymbol,
+                               unique_ptr<MatchingEngine>(new MatchingEngine(tickersymbol,false))));
+
+                if ( !it2.second ) {
+                    qWarning() << "level2 unable to insert for" << tickersymbol.data();
+                    continue;
+                }
+
+#ifdef TRACE
+                qDebug() << "level2 ExchangeData new for pos" << tickersymbol.data();
+#endif
+
+                it2.first->second->ResetLimitBook(fantasybit::isWeekly(tickersymbol) ? 40 : 400);//mLimitBook.reset(new LimitBook());
+
+                it3 = it2.first;
+            }
+            //ToDO already have this from settlepos?
+            it3->second->mPkPos.insert(make_pair(fname,pos));
+        }
+        delete it;
+
+        //update total pnl
+        for ( auto &it : mLimitBooks) {
+            UpdateOpenPnl(*(it.second));
+        }
     }
 
     std::string filedir(const std::string &in) {
