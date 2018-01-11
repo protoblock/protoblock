@@ -253,6 +253,9 @@ public slots:
         connect(Mediator::instance(),&Mediator::NewOrder,
                 mlapi,&MainLAPIWorker::OnNewOrder);
 
+        connect(Mediator::instance(),&Mediator::NewTransfer,
+                mlapi,&MainLAPIWorker::OnNewTransfer);
+
         Mediator *med = Mediator::instance();
         ExchangeData *exchangedata = &(mlapi->ExData());
 
