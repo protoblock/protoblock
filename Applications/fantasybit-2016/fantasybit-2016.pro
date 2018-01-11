@@ -6,6 +6,8 @@ include($$PWD/../../pri/macrosAndModels.pri)
 QT += core network websockets
 CONFIG += qt c++11 static
 
+CONFIG += resources_big
+
 #CONFIG += c++11
 
 
