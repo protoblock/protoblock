@@ -512,8 +512,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 11671 )
-        num = 11671;
+    if (num > 13306 )
+        num = 13306;
     qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
@@ -566,6 +566,10 @@ Bootstrap Node::getLastLocalBoot() {
 
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
+#endif
+
+#ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY0
+    week = 0;
 #endif
 
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_MINUS1
@@ -638,7 +642,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 11671;
+    height = 13306;
     qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 
