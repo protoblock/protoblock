@@ -762,7 +762,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         std::unordered_map<string,BookPos> pos;
         mExchangeData.GetRemainingSettlePos(pos);
         for ( auto &sbp : pos ) {
-            if ( !isWeekly(sbp.first))
+            if ( !isWeekly(sbp.first) && indt.week() < 16)
                 continue;
 
             SettlePositionsRawStake set(sbp.second);
