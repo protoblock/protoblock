@@ -55,7 +55,7 @@ struct SettlePositionsRawStake : SettlePositions {
 using PnlROWResults = NameValuePairs<std::pair<SettlePos,double> >;
 struct SettleROWPositionsRawStake : SettlePositions {
     SettleROWPositionsRawStake(const BookPos &p) : SettlePositions(p) {}
-    PnlResults settle(const double result, const std::string &agent) const;
+    PnlResults settle(const double result, const std::string &agent, bool iswk16 = false) const;
 };
 // Jay Todo - Se
 

@@ -340,6 +340,7 @@ void ExchangeData::closeAll(bool saverow) {
     mNameSeqMap.clear();
     mSeqNameMap.clear();
     mLockedSymb.clear();
+    mTotOpenPnl.clear();
     ///snapstore.reset();
     ///
     ///
@@ -379,7 +380,7 @@ void ExchangeData::closeAll(bool saverow) {
 }
 
 void ExchangeData::clearNewWeek(bool inseason) {
-    closeAll(true);
+    closeAll(inseason);
 //    removeAll();
 //    init();
 }
@@ -781,7 +782,14 @@ void ExchangeData::UpdateOpenPnl(MatchingEngine &ma) {
 
     int bid = mq.b();
     int ask = mq.a();
-    if ( ask == 0) ask = ma.mLimitBook->BOOK_SIZE+1;
+    if ( ask == 0) {
+        if ( fantasybit::isWeekly(ma.mSymbol) )
+            ask = 41;
+        else {
+            ask = (16 - mWeek) * 40;
+            if ( ask > 401) ask = 401;
+        }
+    }
     int multiplier = ma.mLimitBook->BOOK_SIZE == 40 ? 100 : 1;
 
     for ( auto &p : ma.mPkPos ) {

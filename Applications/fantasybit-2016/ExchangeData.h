@@ -552,7 +552,23 @@ public:
                 // pr.result; // the dividend
                 // rowdiv.name; //fantasyname
                 Position &mypos = mPositions[rowdiv.name()][tradesymbol];
-                mypos.netprice += mypos.netqty * pr.result();
+
+                int divamount = mypos.netqty * pr.result();
+                if ( mypos.netqty > 0 ) {
+                    if ( divamount + mypos.netprice > 0 ) {
+                        if ( mypos.netprice < 0 )
+                            mypos.netprice = 0;
+                    }
+                    else  mypos.netprice += divamount;
+
+                }
+                else if ( mypos.netqty < 0 ) {
+                    if ( divamount + mypos.netprice < 0 ) {
+                        if ( mypos.netprice > 0 )
+                            mypos.netprice = 0;
+                    }
+                    else  mypos.netprice += divamount;
+                }
                 OnNewPosition(rowdiv.name(),mypos,tradesymbol);
             }
         }

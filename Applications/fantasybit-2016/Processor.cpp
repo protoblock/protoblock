@@ -641,7 +641,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     if ( pbpospair.second != nullptr) {
         playerresultP->set_symbol(pbpospair.second->playerid());
         SettleROWPositionsRawStake set(*(pbpospair.second));
-        auto pnls = set.settle(playerresult.result(), blocksigner);
+        auto pnls = set.settle(playerresult.result(), blocksigner,mGlobalState.week() == 16);
         for (auto r : pnls ) {
             FantasyBitPnl &fba = *playerresult.mutable_rowposdividend()->Add();
             fba.mutable_spos()->CopyFrom(r.second.first);
