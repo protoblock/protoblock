@@ -414,7 +414,9 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
     mBookDelta->set_blocknum(blocknum);
     qDebug() << symbol.data() << ":newOrder:" << seqnum << " : " << fn->alias().data();
 
-    bool exitonly = fn->getStakeBalance() + GetOpenPnl(fn->alias()) <= 0;
+    int stake = fn->getStakeBalance();
+    int openpnl = GetOpenPnl(fn->alias());
+    bool exitonly =  (stake + openpnl)  <= 0;
 
 #ifdef NO_EXITONLY
     exitonly = false;
@@ -555,7 +557,9 @@ void ExchangeData::OnNewPosition(const string &fname,
     if (!posstore->Put(write_sync, key, spos.SerializeAsString()).ok())
         qWarning() << " error writing posstore" << fname.data() << symbol.data();
 
-    mLimitBooks[symbol]->mPkPos[fname] = pos;
+    Position &bookpos = mLimitBooks[symbol]->mPkPos[fname];
+    bookpos.netqty = pos.netqty;
+    bookpos.netprice = pos.netprice;
 
     if ( !amlive ) return;
 

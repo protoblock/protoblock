@@ -102,10 +102,10 @@ int32_t BlockProcessor::init() {
     mFutContract.set_type(FutContract_Type_WEEKLY);
     GlobalState &gs = mGlobalState;
     mFutContract.set_season(gs.season());
-    if ( gs.state() == GlobalState_State_INSEASON )
+    //if ( gs.state() == GlobalState_State_INSEASON )
         mFutContract.set_week(gs.week());
-    else
-        mFutContract.set_week(0);
+    //else
+    //    mFutContract.set_week(0);
 #endif
 
     return lastidprocessed;
@@ -1057,23 +1057,23 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     switch ( fc->type() ) {
     case FutContract_Type_WEEKLY:
         if ( fc->week() != mGlobalState.week() ||
-            mGlobalState.state() != GlobalState_State_INSEASON ||
+//            mGlobalState.state() != GlobalState_State_INSEASON ||
             fc->season() != mGlobalState.season()) {
-                qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                qWarning() << "1 ProcessInsideStamped bad FutContract" << fc->DebugString().data() << mGlobalState.DebugString().data();
                 return;
         }
         break;
     case FutContract_Type_ROW:
         if ( fc->season() != mGlobalState.season() ||
             mGlobalState.state() != GlobalState_State_INSEASON ) {
-                qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                qWarning() << "2 ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
                 return;
         }
         break;
 
     case FutContract_Type_SEASON:
         if ( fc->season() < mExchangeData.mMinSeason || fc->season() > mExchangeData.mMaxSeason) {
-            qWarning() << "ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
+            qWarning() << "3 ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
             return;
         }
         break;

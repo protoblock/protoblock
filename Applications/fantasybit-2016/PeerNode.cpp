@@ -619,6 +619,9 @@ Bootstrap Node::getLastLocalBoot() {
             else {
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
+                head.set_week(21);
+                head.set_season(2017);
+                ldb.write(head.key(),ldb.write(head));
                 done = true;
             }
         }
