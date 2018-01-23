@@ -1044,8 +1044,12 @@ void Mediator::addTradingSymbol(const QString &symbol, bool isweekly) {
         qDebug() << "error addTradingSymbol" << symbol;
     }
     else {
+#ifdef SUPERBOWL52LIVE
+        mPlayerQuoteSliceModel.UpdateSymbols(it,m_blocknum,"17w21");
+#else
         getQuoteModel(isweekly).UpdateSymbols(it,m_blocknum,
                                               isweekly ? mWeeklySuffix : mSeasonSuffix);
+#endif
     }
 }
 

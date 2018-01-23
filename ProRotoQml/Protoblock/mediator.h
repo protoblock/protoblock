@@ -514,7 +514,7 @@ public:
     }
 
     Q_INVOKABLE void setPrevWeekData(int week, int season) {
-//        qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
+        qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
         setprevSelectedPlayerDisplay("");
         if ( !amLive ) return;
 
@@ -531,13 +531,18 @@ public:
 
             week = 16;
         }
-        else if (week >= 17) {
-            season = m_thePrevSeason + 1;
+        else if (week >= 17 ) {
+            if ( week < m_theWeek && season == m_theSeason) {
+                week = 16;
+            }
+            else {
+                season = m_thePrevSeason + 1;
 
-            if ( season > m_theSeason)
-                return;
+                if ( season > m_theSeason)
+                    return;
 
-            week = 1;
+                week = 1;
+            }
         }
 
         if ( week > m_theWeek && season == m_theSeason )
