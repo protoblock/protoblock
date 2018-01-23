@@ -245,8 +245,10 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
     }
 
     qDebug() << " namename wins " << heighest << hname.data();
-    if ( myFantasyName == "" && hname != "" )
+    if ( myFantasyName == "" && hname != "" && heighest >= 20)
         useName(hname.data());
+    else
+        emit noName();
 
 }
 

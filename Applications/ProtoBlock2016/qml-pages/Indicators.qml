@@ -30,7 +30,7 @@ Item {
             iconName: "qrc:/icons/action_account_circle.png"
             onClicked: {
                 rootLoader.source = "qrc:/Account.qml"
-                pageHelper.selectedTabIndex = 3
+                pageHelper.selectedTabIndex = themeroot.accountIndex
                 pageHelper.title = "Account Settings"
             }
         }

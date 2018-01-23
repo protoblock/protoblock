@@ -532,7 +532,7 @@ Item {
                         topw.focuscount = 0
                         if ( realRoot.uname === "" ) {
                             rootLoader.source = "qrc:/Account.qml"
-                            pageHelper.selectedTabIndex = 3;
+                            pageHelper.selectedTabIndex = themeroot.accountIndex;
                         }
                         else
                             MiddleMan.sendProjections()

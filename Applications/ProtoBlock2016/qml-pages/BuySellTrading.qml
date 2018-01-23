@@ -171,7 +171,7 @@ Item {
                     onClicked : {
                         if ( realRoot.uname === "" ) {
                             rootLoader.source = "qrc:/Account.qml"
-                            pageHelper.selectedTabIndex = 3;
+                            pageHelper.selectedTabIndex = themeroot.accountIndex;
                         }
                         else if ( inplay.symbol !== "") {
                             console.log(" price " + buyspin.value )
@@ -309,7 +309,7 @@ Item {
                     onClicked : {
                         if ( realRoot.uname === "" ) {
                             rootLoader.source = "qrc:/Account.qml"
-                            pageHelper.selectedTabIndex = 3;
+                            pageHelper.selectedTabIndex = themeroot.accountIndex;
                         }
                         else if ( inplay.symbol !== "") {
                             console.log(" price " + sellspin.value )
@@ -749,7 +749,7 @@ Item {
         onAccepted: {
             if ( realRoot.uname === "" ) {
                 rootLoader.source = "qrc:/Account.qml"
-                pageHelper.selectedTabIndex = 3;
+                pageHelper.selectedTabIndex = themeroot.accountIndex;
             }
             else if ( MiddleMan.pMyFantasyNameBalance.stake <= 0 ) {
                 console.log("Error: Zero Balace - must have balance to trade")

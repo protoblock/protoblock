@@ -946,7 +946,7 @@ Item {
         onAccepted: {
             if ( realRoot.uname === "" ) {
                 rootLoader.source = "qrc:/Account.qml"
-                pageHelper.selectedTabIndex = 3;
+                pageHelper.selectedTabIndex = themeroot.accountIndex;
             }
             else MiddleMan.doTrade(
                     inplay.symbol

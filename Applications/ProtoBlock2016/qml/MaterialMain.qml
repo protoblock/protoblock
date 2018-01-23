@@ -126,16 +126,18 @@ Material.ApplicationWindow{
 //        height = (Device.productType === "windows" || Device.productType === "osx") ?
 //                   (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight) : ProtoScreen.availableHeight
 
-        themeroot.show();
 //        themeroot.showMaximized()
+        themeroot.show();
         rootLoader.source = start
 
     }
 
     property string defaultname
 
-    property string start: "qrc:/Projections.qml"
-    property int startindex: 0
+    property string start: "qrc:/Trading.qml"
+    property string account: "qrc:/Account.qml"
+    property int startindex: 1
+    property int accountIndex: 4
     property string  errorString
     property bool  reloadleaders: false
 
@@ -156,12 +158,12 @@ Material.ApplicationWindow{
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Wallet", "Projections","Trading",  "NFL News", "Account", "Protoblock"  ]
-    property var sectionTitlesAlias: [ "Wallet", "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Wallet", "Trading","Projections",  "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Wallet", "Trading", "Projections", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
         "qrc:/icons/local_atm.png",
-        "qrc:/icons/ic_poll.png",
         "qrc:/icons/ic_timeline.png",
+        "qrc:/icons/ic_poll.png",
         "qrc:/icons/newspaper.png",
         "qrc:/icons/action_account_circle.png",
         "qrc:/icons/ic_help.png"
@@ -187,13 +189,13 @@ Material.ApplicationWindow{
     ]
 
     // Level One
-    property var levelOne: [ "Projections"]
+    property var levelOne: [ "Trading"]
     property var levelOneIcons: [
         "qrc:/icons/newspaper.png"
     ]
 
     // Level Two
-    property var levelTwo: [ "Trading"]
+    property var levelTwo: [ "Projections"]
     property var levelTwoIcons: [
         "qrc:/icons/newspaper.png"
     ]
@@ -234,7 +236,7 @@ Material.ApplicationWindow{
     initialPage:  Material.TabbedPage {
         property bool expanded: true
         id: pageHelper
-        title: "Protoblock 2017"
+        title: "Protoblock"
         selectedTabIndex: startindex
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
@@ -278,7 +280,7 @@ Material.ApplicationWindow{
                 name: "Account"
                 onTriggered: {
                     rootLoader.source = "qrc:/Account.qml"
-                    pageHelper.selectedTabIndex = 3
+                    pageHelper.selectedTabIndex = accountIndex
                     pageHelper.title = "Account Settings"
                 }
             }
@@ -719,14 +721,20 @@ Material.ApplicationWindow{
             }
         }
 
+        onNoName: {
+            console.log("no name");
+            pageHelper.selectedTabIndex = accountIndex;
+            rootLoader.source = account
+        }
+
         onUsingFantasyName: {
             console.log(uname + " qml usingfantay name " + name)
             if ( uname !== name || uname === "") {
                 uname = name
                 msgString = "You are now playing as: " + name
-                if( pageHelper.selectedTabIndex === accountTab || loginDialog.visible === true){
+                if( pageHelper.selectedTabIndex === accountIndex || loginDialog.visible === true){
+                    pageHelper.selectedTabIndex = startindex
                     rootLoader.source = start
-                    pageHelper.selectedTabIndex = startindex;
                     usingNameDialog.open()
                 }
                 else

@@ -809,7 +809,7 @@ Item {
                     onClicked: {
                         console.log("clicked send")
                         rootLoader.source = "qrc:/Account.qml"
-                        pageHelper.selectedTabIndex = 3;
+                        pageHelper.selectedTabIndex = themeroot.accountIndex;
                     }
                     size: ProtoScreen.guToPx(2.5)
 

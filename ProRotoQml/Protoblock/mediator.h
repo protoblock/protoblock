@@ -44,7 +44,7 @@ class Mediator : public QObject {
     //trading
 
 
-    //quotes
+    //quotesf
     PlayerQuoteSliceModel mPlayerQuoteSliceModel;
     PlayerQuoteSliceModel mROWPlayerQuoteSliceModel;
 
@@ -694,7 +694,7 @@ signals:
     void usingFantasyName(const QString &name);
     void nameCheckGet( const QString & name, const QString & status );
     void OnClaimName(QString name);
-
+    void noName();
     void OnUseName(QString); //tell agent to use the name
     void ready();
 //    void updateWeekData();

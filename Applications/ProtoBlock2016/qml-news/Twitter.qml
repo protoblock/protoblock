@@ -4,8 +4,6 @@ import "tweetsearch.js" as Helper
 
 Rectangle {
     id: main
-    width: parent.width
-    height: parent.height
     color: "transparent"
 
     property int inAnimDur: 250
@@ -40,7 +38,7 @@ Rectangle {
     TweetsModel {
         id: tweetsModel
         onIsLoaded: {
-//            console.debug("Reload")
+            console.debug("Twitter Reload")
             idx = new Array()
             for (var i = 0; i < tweetsModel.model.count; i++) {
                 var id = tweetsModel.model.get(i).id
