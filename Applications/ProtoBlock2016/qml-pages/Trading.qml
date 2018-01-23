@@ -11,7 +11,8 @@ import QtQuick.Layouts 1.3
 
 
 Item {
-    property string seasontext: "NFL Season " + MiddleMan.theSeason + " - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
+    property string seasontext: "NFL Season 2017 Super Bowl"
+    // + MiddleMan.theSeason + " - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
     property string wkorrow: "WEEK-" + MiddleMan.theWeek
 
@@ -58,7 +59,7 @@ Item {
 
             Label {
                 anchors.centerIn: parent
-                text: wkorrow + " FANTASY FUTURES";
+                text: "SB-52 FANTASY FUTURES";
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 color: "green" //themeroot.theme.primaryColor //liveorresult === "Live" ?  :
                 verticalAlignment: Text.AlignVCenter
