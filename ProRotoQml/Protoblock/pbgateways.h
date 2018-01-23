@@ -69,6 +69,8 @@ public:
 
     virtual int GetOpenPnl(const std::string &fname) = 0;
 
+    virtual std::map<std::string, std::string> GetTeamSymbols(const std::list<std::string> &teams) = 0;
+
 
 };
 

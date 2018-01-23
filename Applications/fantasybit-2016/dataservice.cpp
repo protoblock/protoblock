@@ -37,6 +37,12 @@ std::map<std::string,std::string> DataService::GetAllSymbols() {
     return worker->NFLState().GetAllSymbols();
 }
 
+std::map<std::string,std::string> DataService::GetTeamSymbols(const std::list<std::string> &teams)  {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetTeamSymbols(teams);
+}
+
+
 fantasybit::WeeklySchedule DataService::GetWeeklySchedule(int season,int week) {
 //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");

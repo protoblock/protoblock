@@ -57,6 +57,7 @@ public:
 
     std::string GetPidfromSymb(const std::string &symb);
     int GetOpenPnl(const std::string &fname);
+    std::map<std::string, std::string> GetTeamSymbols(const std::list<std::string> &teams);
 };
 
 

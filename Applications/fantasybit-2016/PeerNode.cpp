@@ -56,6 +56,17 @@ void Node::init() {
 //    }
 #endif
 
+#ifdef STARTSUPERBOWL52
+        QFileInfo check_file1( (GET_ROOT_DIR() + "startSuperbowl52").data ());
+        if (!check_file1.exists() ) {
+            pb::remove_all(GET_ROOT_DIR() + "index/");
+            pb::remove_all(GET_ROOT_DIR() + "block/");
+            pb::remove_all(GET_ROOT_DIR() + "trade/");
+            QFile file( (GET_ROOT_DIR() + "startSuperbowl52").data () );
+            file.open(QIODevice::WriteOnly);
+        }
+#endif
+
 #ifdef START2017WITH2014
     QFileInfo check_file( (GET_ROOT_DIR() + "start2017").data ());
     if (!check_file.exists() ) {
@@ -563,7 +574,6 @@ Bootstrap Node::getLastLocalBoot() {
 
 //    if ( week == 0 )
 //        week = 8;
-
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
 #endif

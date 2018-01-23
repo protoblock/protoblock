@@ -354,7 +354,11 @@ void Mediator::updateWeek() {
         set_busySend(false);
 
         {
+#ifndef SUPERBOWL52LIVE
             auto gss = mGateway->dataService->GetAllSymbols();
+#else
+            auto gss = mGateway->dataService->GetTeamSymbols({"NE","PHI"});
+#endif
             for ( auto gs : gss ) {
                 if ( mPlayerSymbolsModel.getByUid(gs.first.data()) == nullptr)
                     mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
