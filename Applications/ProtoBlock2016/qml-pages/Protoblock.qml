@@ -8,7 +8,6 @@ import QtQuick.Layouts 1.3
 import ProRotoQml.Theme 1.0
 
 //import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Theme 1.0
 Item {
     Flickable{
         height: parent.height

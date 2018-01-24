@@ -149,7 +149,7 @@ std::string Platform::getRootDir() {
        qDebug() << "savePath " << pRet;
        return  pRet.toStdString ();
     }
-    else if (systemInfo.productType () == "osx" || systemInfo.productType () == "macosx")
+    else if (systemInfo.productType () == "osx" || systemInfo.productType () == "macos")
     {
         QString pRet = QStandardPaths::standardLocations (QStandardPaths::HomeLocation).first ();
          pRet.append ("/Library/Application Support/ProtoBlock2016/");

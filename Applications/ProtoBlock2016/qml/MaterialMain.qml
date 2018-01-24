@@ -254,7 +254,7 @@ Material.ApplicationWindow{
                   (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.net).toLocaleString()) + " ƑɃ]"
             verticalAlignment: navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
             font{
-                family: "Roboto"
+                family: fontfamFB
                 bold: true
                 pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
             }
