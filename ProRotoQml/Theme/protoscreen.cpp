@@ -434,7 +434,7 @@ void ProtoScreen::updateFormFactor(){
 
     // MACOSX
 
-    if(sysInfo.productType() == "osx"){
+    if(sysInfo.productType() == "osx" || sysInfo.productType() == "macos"){
         finalFormFactor ("osx", m_windowsDesktopScale , m_169);
         return;
     }

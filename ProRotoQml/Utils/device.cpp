@@ -29,7 +29,7 @@ Device::Device(QObject *parent)
    setkernelType(systemInfo.kernelType ());
    setkernelVersion(systemInfo.kernelVersion ());
    setproductType(systemInfo.productType ());
-   setproductVersion(systemInfo.productType ());
+   setproductVersion(systemInfo.productVersion ());
    setprettyProductName(systemInfo.prettyProductName ());
 
     setdp( m_screen->devicePixelRatio () );

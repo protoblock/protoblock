@@ -34,7 +34,7 @@ Material.ApplicationWindow{
     property string msgString
     property bool reloadorderpos: true
 
-    property string  fontfamFB:  Device.productType === "osx" ? "Helvetica Neue" : "Roboto"
+    property string  fontfamFB:  (Device.productType === "macos" || Device.productType === "osx ") ? "Helvetica Neue" : "Roboto"
 
     statusBar: StatusBar {
 
@@ -89,7 +89,7 @@ Material.ApplicationWindow{
 //    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
 //    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
 
-    width: (Device.productType === "windows" || Device.productType === "osx") ?
+    width: (Device.productType === "windows" || Device.productType === "osx" || Device.productType === "macos") ?
                Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
 //    height: (Device.productType === "windows" || Device.productType === "osx") ?
 //               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
