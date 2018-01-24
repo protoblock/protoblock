@@ -65,6 +65,12 @@ bytes decodeMnemonic(const string& mnemonic) {
     int wordindex = 0;
     for (string word : words) {
         // Find the word index
+        if ( word == "infacnt") word = "infant";
+        else if ( word == "accross") word = "across";
+        else if ( word == "acheive") word = "achieve";
+        else if ( word == "emply") word = "employ";
+        else if ( word == "visibile") word = "visible";
+
         uint index = std::distance(wordlist.begin(),
                 std::find(wordlist.begin(), wordlist.end(), word));
         if (index == wordlist.size()) {

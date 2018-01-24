@@ -36,7 +36,6 @@ Item {
 //                   return ProtoScreen.guToPx(6) * columnCount
 //                })
                 ppt.addcolumn.connect(addcolumnMethod)
-//                model.sortAgain("knownProjection",Qt.DescendingOrder)
             }
 
             function addcolumnMethod(fname) {
@@ -63,20 +62,12 @@ Item {
             sortIndicatorVisible: true
             sortIndicatorOrder: Qt.DescendingOrder
             onSortIndicatorColumnChanged: {
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-
-//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                console.log( " sort colm changed ")
+                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
 
             onSortIndicatorOrderChanged: {
-//                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-                model.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-
-                console.log( " sort ind ord changed ")
-
+                MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
             }
-
 
             headerDelegate: headerdel
             frameVisible: false
@@ -88,12 +79,13 @@ Item {
             }
 
             TableViewColumn {
-                role: "lastname"
+                role: "fullname"
                 title: "Player Name"
                 horizontalAlignment : Text.AlignLeft
                 movable: false
 
-                delegate: Material.Card {
+                delegate: playernamedel
+                /*Material.Card {
                     flat: true
 //                    elevation: 0
                     radius: 0
@@ -156,7 +148,7 @@ Item {
                             }
                         })
                     }
-                }
+                }*/
             }
 
             TableViewColumn {
@@ -170,6 +162,8 @@ Item {
 //                anchors.fill: parent
 //                width: lbl.implicitWidth + 2
                 width: ProtoScreen.guToPx(4)
+                delegate: playernamedel
+                /*
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -221,6 +215,7 @@ Item {
 //                        return lbl.implicitWidth + 4
 //                    })
 //                }
+                */
             }
 
             TableViewColumn{
@@ -266,7 +261,7 @@ Item {
             }
 
             TableViewColumn{
-                role: "projection"
+                role: "knownProjection"
                 title: "My Projection"
                 horizontalAlignment : Text.AlignHCenter
                 delegate: projdel
@@ -318,27 +313,27 @@ Item {
         Rectangle {
             id: rec
             anchors.fill: parent
-            border.width: !model ? 0 : ((model.knownProjection !==  model.projection) ?
-                                ProtoScreen.guToPx(.25) : 0)
+            border.width: !model ? 0 : (model.knownProjection !==  model.projection) ?
+                                ProtoScreen.guToPx(.25) : 0
 //                          (model.projection === model.knownProjection) ? 0 : ProtoScreen.guToPx(.125)
             border.color: themeroot.theme.accentColor
-            width: ProtoScreen.guToPx(16)
+                        width: ProtoScreen.guToPx(16)
             color: "transparent"
 
             Material.Label {
                 anchors.right: sb.left
 //                anchors.leftMargin: ProtoScreen.guToPx(.125)
-                anchors.left: parent.left
+
                 anchors.margins: ProtoScreen.guToPx(.125)
 
 //                focus: true
                 id: lbl
 
-                width: ProtoScreen.guToPx(6) - ProtoScreen.guToPx(.125) * 2.0
+                width: ProtoScreen.guToPx(6) - ProtoScreen.guToPx(.125 * 2.0)
 
                 height: parent.height
-                text: !model ? "" : ((model.knownProjection !==  model.projection)
-                      ? model.knownProjection : "")
+                text: !model ? "" : (model.knownProjection !==  model.projection)
+                      ? model.knownProjection : ""
                 font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -348,13 +343,11 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         console.log(" cliocked ")
-                        if ( lbl.text !== "  " && model.knownProjection !== model.projection ) {
-//                                parseInt(lbl.text) !== model.projection) {
-                            model.projection = model.knownProjection
-//                            tv.model.setData(tv.model.index(styleData.row,0),
-//                                             parseInt(lbl.text), 0)
+                        if ( lbl.text !== "  " && parseInt(lbl.text) !== model.projection) {
+                            tv.model.setData(tv.model.index(styleData.row,0),
+                                             parseInt(lbl.text), 0)
                             lbl.text = Qt.binding(function(){
-                                if ( !model ) return " ";
+                                if ( !model ) return "";
                                 else if (model.knownProjection !==  model.projection)
                                     return model.knownProjection
                                 else
@@ -380,40 +373,36 @@ Item {
                 anchors.right: parent.right
                 anchors.margins: ProtoScreen.guToPx(.125)
 //                anchors.right: parent.right
-                width: ProtoScreen.guToPx(8)
-                height: parent.height * .86
+                width: ProtoScreen.guToPx(10)
+                height: parent.height
     //            width: parent.width * .70
                 font: lbl.font
-                anchors.verticalCenter: parent.verticalCenter
+
                 decimals: 0
                 stepSize: 1.0
                 maximumValue: 40
                 minimumValue:       0
-                value: styleData.value// !model ? 0 : model.projection
+                value: !model ? 0 : model.projection
                 horizontalAlignment: Text.AlignHCenter
 
                 onEditingFinished: {
                    //                           styleData.value = value
                    console.log(" editing done " + styleData.row + " " + styleData.column + " s " + styleData.selected + "v  " + styleData.value);
-//                   tv.model.setData(tv.model.index(styleData.row,0),
-//                                    value, 0)
-                    model.projection = value
+                   tv.model.setData(tv.model.index(styleData.row,0),
+                                    value, 0)
 
-                    if ( model && (model.knownProjection !==  value) && (topw.focuscount != 1))
+                    if ( model.knownProjection !==  value)
                         topw.focuscount = 1
 
                    lbl.text = Qt.binding(function(){
-                       if ( !model ) return ""
-                       else if ( !model.knownProjection && value > 0 )
-                           return "0"
-                       else if (model.knownProjection !==  value)
+                       if ( tv.model.knownProjection !==  value)
                            return model.knownProjection
                        else
                            return "  "
                    })
 
                     rec.border.width = Qt.binding(function(){
-                        if ( model && (model.knownProjection !==  value))
+                        if ( tv.model.knownProjection !==  value)
                             return ProtoScreen.guToPx(.25)
                         else
                             return 0
@@ -471,7 +460,6 @@ Item {
 //                    iconSource: "icon://" + "awesome/undo"// "qrc:/icons/navigation_close.png"
                     onClicked: {
                         importexportDialog.show();
-//                        MiddleMan.copyFDProj()
                     }
 
                     size: ProtoScreen.guToPx(2.5)
@@ -532,11 +520,10 @@ Item {
                         topw.focuscount = 0
                         if ( realRoot.uname === "" ) {
                             rootLoader.source = "qrc:/Account.qml"
-                            pageHelper.selectedTabIndex = themeroot.accountIndex;
+                            pageHelper.selectedTabIndex = 3;
                         }
                         else
                             MiddleMan.sendProjections()
-                        but.focus = false
                     }
 
                     backgroundColor: themeroot.theme.accentColor
@@ -635,7 +622,7 @@ Item {
                 anchors.bottom: parent.bottom
                 radius: 1
                 border.color:
-                    styleData.column  === tv.sortIndicatorColumn ? (styleData.column === pcol ? "black" : themeroot.theme.accentColor)
+                    styleData.column  === tv.sortIndicatorColumn ? themeroot.theme.accentColor
                                                                  : "black"
                 Material.Label {
                     anchors.margins: ProtoScreen.guToPx(.25)
@@ -705,19 +692,51 @@ Item {
 
     }
 
-//    Connections {
-//        target: MiddleMan
+    Component {
+        id: playernamedel
+        Material.Card {
+                flat: true
+                radius: 0
+                border.width: 0
+                anchors.fill: parent
+                backgroundColor: "transparent"
+                Material.Label {
+                    id: lll
+                    anchors.leftMargin: ProtoScreen.guToPx(.25)
+                    anchors.topMargin: ProtoScreen.guToPx(.25)
+                    anchors.bottomMargin: ProtoScreen.guToPx(.25)
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    text: styleData.value
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    Component.onCompleted: {
+                        switch(styleData.value) {
+                             case "WR":
+                                 backgroundColor=  "#FEFBB6";
+                                 break;
+                             case "RB":
+                                 backgroundColor=  "#BCFAAD";break;
+                             case "QB":
+                                 backgroundColor=  "#F8ADAA";break;
+                             case "TE":
+                                 backgroundColor=  "#CCB4F0";break;
+                             case "K":
+                                 backgroundColor=  "#FBD580";break;
+                             case "DEF":
+                                 backgroundColor=  "#AFE1FF";break;
+                             default:
+                                 backgroundColor=  "transparent";break;
+                         }
+                    }
 
-//        onUpdateWeekData: {
-//            Loader.source = themeroot.start
-//            console.log(" onLiveSyncChanged changd");
-////            tv.model.sortAgain("knownProjection",Qt.DescendingOrder)
-//            MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-//            tv.sortIndicatorColumn =    MiddleMan.pProjectionsViewFilterProxyModel
-//            MiddleMan.pProjectionsViewFilterProxyModel.sortAgain(getColumn(sortIndicatorColumn).role, sortIndicatorOrder)
-//        }
+                }
+            }
+     }
 
-//    }
 }
 //    Component {
 //        id: itdel

@@ -142,7 +142,7 @@ Item {
                 }
                 enabled: MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && (
                              (stack.currentItem.objectName === "prevWeekS") ||
-                             (stack.currentItem.objectName === "pptS") ||
+                             (stack.currentItem.objectName === "pptS" && MiddleMan.theWeek < 16) ||
                              (stack.currentItem.objectName === "nextWeekS" && (MiddleMan.theNextWeek < 16 || MiddleMan.theSeason > MiddleMan.theNextSeason)))
 
 //                enabled:  MiddleMan.liveSync !== "Sync" && stack && stack.currentItem && MiddleMan.thePrevWeek > 1
@@ -153,7 +153,10 @@ Item {
                                 ||
                              (MiddleMan.thisWeekPrev && MiddleMan.thePrevWeek === MiddleMan.theWeek)
                                 ||
-                             (MiddleMan.thePrevWeek === 16 && MiddleMan.thePrevSeason === MiddleMan.theSeason-1 && (MiddleMan.theWeek < 1 || (MiddleMan.theWeek === 1 && !MiddleMan.thisWeekPrev )))
+                             (MiddleMan.thePrevWeek === 16 && MiddleMan.thePrevSeason === MiddleMan.theSeason-1 &&
+                                (MiddleMan.theWeek < 1 || (MiddleMan.theWeek === 1 && !MiddleMan.thisWeekPrev )))
+                                ||
+                             (MiddleMan.thePrevWeek === 16 && MiddleMan.thePrevSeason === MiddleMan.theSeason && MiddleMan.theWeek > 16)
                                 )
                             stack.push({item: pptS, properties:{objectName:"pptS"}});
                         else {

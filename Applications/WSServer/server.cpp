@@ -61,6 +61,9 @@ void Server::setupConnection(pb::IPBGateway *ingateway) {
     connect( that, SIGNAL   (  AnyFantasyNameBalance(fantasybit::FantasyNameBal)    ),
             this,  SLOT     (  OnAnyFantasyNameBalance(fantasybit::FantasyNameBal)      ));
 
+    connect( that, SIGNAL   (  NameBal(fantasybit::FantasyNameBal)    ),
+            this,  SLOT     (  OnAnyFantasyNameBalance(fantasybit::FantasyNameBal)      ));
+
     connect( that, SIGNAL(Height(int)),
              this, SLOT(Height(int)));
 
@@ -893,6 +896,8 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
     std::string teamid = it->playerdata().player_status().teamid();
     if ( teamid == "") teamid = "FA";
     strtweet += teamid +", " + it->playerdata().player_base().position();
+
+#ifndef SUPERBOWL52LIVE
     strtweet +=  !fantasybit::isWeekly(tt->symbol())
             ? ") ROW - "
             : (") Week " + to_string(GlobalStateRep.globalstate().week()));
@@ -906,6 +911,17 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
     sock.send(strtweet.data(), strtweet.size(),0);
     qDebug() << " sent tweet " << strtweet.data();
 
+#else
+    std::string price = to_string(tt->price()) + (tt->tic() < 0 ? " ↓" : tt->tic() > 0 ? " ↑" : "");
+    strtweet += " trading at: " + price + " fantasy points for SuperBowl LII";
+    strtweet += "\n«" + tt->symbol() + "» @protoblock";
+    strtweet += "\nhttp://protoblock.com/ticks.html?symbol=" + tt->symbol();
+    strtweet += "\n#fantasyfootball #fantasybits $ƑɃ #sb52 #blockchain";
+    qDebug() << " sending tweet " << strtweet.data();
+    sock.send(strtweet.data(), strtweet.size(),0);
+    qDebug() << " sent tweet " << strtweet.data();
+
+#endif
 
      /*
     "name"

@@ -37,6 +37,12 @@ std::map<std::string,std::string> DataService::GetAllSymbols() {
     return worker->NFLState().GetAllSymbols();
 }
 
+std::map<std::string,std::string> DataService::GetTeamSymbols(const std::list<std::string> &teams)  {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetTeamSymbols(teams);
+}
+
+
 fantasybit::WeeklySchedule DataService::GetWeeklySchedule(int season,int week) {
 //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
@@ -110,6 +116,10 @@ ordsnap_t DataService::GetOrdersPositionsByName(const std::string &fname) {
     return worker->ExData().GetOrdersPositionsByName(fname);
 }
 
+int DataService::GetOpenPnl(const std::string &fname) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->ExData().GetOpenPnl(fname);
+}
 
 std::unordered_map<int, pair<bool, std::string> > DataService::getAllKnownPlayerStatus(){
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");

@@ -44,8 +44,8 @@ Item {
         }
 
         ListElement{
-            name: "CBS Sports"
-            source: "Feeds/CBS"
+            name: "CBS"
+            source: "CBS"
             subT:  "All the latest news from rotoworld"
         }
         ListElement{

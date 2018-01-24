@@ -59,6 +59,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* NameTrans_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   NameTrans_reflection_ = NULL;
+const ::google::protobuf::Descriptor* TransferTrans_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  TransferTrans_reflection_ = NULL;
 const ::google::protobuf::Descriptor* SignedTransaction_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SignedTransaction_reflection_ = NULL;
@@ -325,9 +328,10 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MasterProof));
   Transaction_descriptor_ = file->message_type(10);
-  static const int Transaction_offsets_[2] = {
+  static const int Transaction_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Transaction, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Transaction, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Transaction, nonce_),
   };
   Transaction_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -357,7 +361,24 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NameTrans));
-  SignedTransaction_descriptor_ = file->message_type(12);
+  TransferTrans_descriptor_ = file->message_type(12);
+  static const int TransferTrans_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, from_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, to_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, amount_),
+  };
+  TransferTrans_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      TransferTrans_descriptor_,
+      TransferTrans::default_instance_,
+      TransferTrans_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TransferTrans, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(TransferTrans));
+  SignedTransaction_descriptor_ = file->message_type(13);
   static const int SignedTransaction_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SignedTransaction, trans_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SignedTransaction, id_),
@@ -375,7 +396,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SignedTransaction));
-  BlockHeader_descriptor_ = file->message_type(13);
+  BlockHeader_descriptor_ = file->message_type(14);
   static const int BlockHeader_offsets_[9] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BlockHeader, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BlockHeader, num_),
@@ -399,7 +420,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BlockHeader));
   BlockHeader_Type_descriptor_ = BlockHeader_descriptor_->enum_type(0);
-  SignedBlockHeader_descriptor_ = file->message_type(14);
+  SignedBlockHeader_descriptor_ = file->message_type(15);
   static const int SignedBlockHeader_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SignedBlockHeader, head_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SignedBlockHeader, sig_),
@@ -415,7 +436,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SignedBlockHeader));
-  Block_descriptor_ = file->message_type(15);
+  Block_descriptor_ = file->message_type(16);
   static const int Block_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Block, signedhead_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Block, signed_transactions_),
@@ -431,7 +452,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Block));
-  NodeRequest_descriptor_ = file->message_type(16);
+  NodeRequest_descriptor_ = file->message_type(17);
   static const int NodeRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeRequest, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeRequest, myip_),
@@ -450,7 +471,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NodeRequest));
   NodeRequest_Type_descriptor_ = NodeRequest_descriptor_->enum_type(0);
-  NodeReply_descriptor_ = file->message_type(17);
+  NodeReply_descriptor_ = file->message_type(18);
   static const int NodeReply_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeReply, hight_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeReply, ips_),
@@ -466,7 +487,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NodeReply));
-  FantasyPlayerPoints_descriptor_ = file->message_type(18);
+  FantasyPlayerPoints_descriptor_ = file->message_type(19);
   static const int FantasyPlayerPoints_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyPlayerPoints, season_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FantasyPlayerPoints, week_),
@@ -485,7 +506,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FantasyPlayerPoints));
-  ProjectionTrans_descriptor_ = file->message_type(19);
+  ProjectionTrans_descriptor_ = file->message_type(20);
   static const int ProjectionTrans_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTrans, season_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTrans, week_),
@@ -503,7 +524,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjectionTrans));
-  PlayerPoints_descriptor_ = file->message_type(20);
+  PlayerPoints_descriptor_ = file->message_type(21);
   static const int PlayerPoints_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerPoints, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerPoints, points_),
@@ -519,7 +540,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PlayerPoints));
-  ProjectionTransBlock_descriptor_ = file->message_type(21);
+  ProjectionTransBlock_descriptor_ = file->message_type(22);
   static const int ProjectionTransBlock_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTransBlock, season_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProjectionTransBlock, week_),
@@ -536,7 +557,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProjectionTransBlock));
-  Data_descriptor_ = file->message_type(22);
+  Data_descriptor_ = file->message_type(23);
   static const int Data_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, type_),
@@ -553,7 +574,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Data));
   Data_Type_descriptor_ = Data_descriptor_->enum_type(0);
-  PlayerData_descriptor_ = file->message_type(23);
+  PlayerData_descriptor_ = file->message_type(24);
   static const int PlayerData_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerData, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerData, player_base_),
@@ -571,7 +592,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PlayerData));
-  GameData_descriptor_ = file->message_type(24);
+  GameData_descriptor_ = file->message_type(25);
   static const int GameData_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameData, gameid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameData, status_),
@@ -587,7 +608,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameData));
-  ResultData_descriptor_ = file->message_type(25);
+  ResultData_descriptor_ = file->message_type(26);
   static const int ResultData_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ResultData, game_result_),
   };
@@ -602,7 +623,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ResultData));
-  ScheduleData_descriptor_ = file->message_type(26);
+  ScheduleData_descriptor_ = file->message_type(27);
   static const int ScheduleData_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScheduleData, week_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScheduleData, weekly_),
@@ -618,7 +639,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ScheduleData));
-  DataTransition_descriptor_ = file->message_type(27);
+  DataTransition_descriptor_ = file->message_type(28);
   static const int DataTransition_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataTransition, season_),
@@ -637,7 +658,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DataTransition));
-  TeamState_descriptor_ = file->message_type(28);
+  TeamState_descriptor_ = file->message_type(29);
   static const int TeamState_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamState, state_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TeamState, week_),
@@ -655,7 +676,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TeamState));
   TeamState_State_descriptor_ = TeamState_descriptor_->enum_type(0);
-  DeltaData_descriptor_ = file->message_type(29);
+  DeltaData_descriptor_ = file->message_type(30);
   static const int DeltaData_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeltaData, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeltaData, myfantasyname_),
@@ -676,7 +697,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DeltaData));
   DeltaData_Type_descriptor_ = DeltaData_descriptor_->enum_type(0);
-  MessageData_descriptor_ = file->message_type(30);
+  MessageData_descriptor_ = file->message_type(31);
   static const int MessageData_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MessageData, msg_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MessageData, gt_),
@@ -693,7 +714,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MessageData));
-  StampedTrans_descriptor_ = file->message_type(31);
+  StampedTrans_descriptor_ = file->message_type(32);
   static const int StampedTrans_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StampedTrans, timestamp_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StampedTrans, seqnum_),
@@ -711,7 +732,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(StampedTrans));
-  ExchangeOrder_descriptor_ = file->message_type(32);
+  ExchangeOrder_descriptor_ = file->message_type(33);
   static const int ExchangeOrder_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExchangeOrder, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExchangeOrder, playerid_),
@@ -732,7 +753,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ExchangeOrder));
   ExchangeOrder_Type_descriptor_ = ExchangeOrder_descriptor_->enum_type(0);
-  OrderUnique_descriptor_ = file->message_type(33);
+  OrderUnique_descriptor_ = file->message_type(34);
   static const int OrderUnique_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OrderUnique, public_key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OrderUnique, season_),
@@ -752,7 +773,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(OrderUnique));
-  OrderDeets_descriptor_ = file->message_type(34);
+  OrderDeets_descriptor_ = file->message_type(35);
   static const int OrderDeets_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OrderDeets, oid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OrderDeets, order_),
@@ -769,7 +790,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(OrderDeets));
-  InsideUnique_descriptor_ = file->message_type(35);
+  InsideUnique_descriptor_ = file->message_type(36);
   static const int InsideUnique_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InsideUnique, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InsideUnique, public_key_),
@@ -790,7 +811,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(InsideUnique));
-  TimeTransition_descriptor_ = file->message_type(36);
+  TimeTransition_descriptor_ = file->message_type(37);
   static const int TimeTransition_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimeTransition, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimeTransition, season_),
@@ -847,6 +868,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     Transaction_descriptor_, &Transaction::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     NameTrans_descriptor_, &NameTrans::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    TransferTrans_descriptor_, &TransferTrans::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SignedTransaction_descriptor_, &SignedTransaction::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -926,6 +949,8 @@ void protobuf_ShutdownFile_ProtoData_2eproto() {
   delete Transaction_reflection_;
   delete NameTrans::default_instance_;
   delete NameTrans_reflection_;
+  delete TransferTrans::default_instance_;
+  delete TransferTrans_reflection_;
   delete SignedTransaction::default_instance_;
   delete SignedTransaction_reflection_;
   delete BlockHeader::default_instance_;
@@ -1021,121 +1046,125 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "\017new_oracle_name\030B \001(\0132\035.fantasybit.Sign"
     "edTransaction2E\n\014master_proof\022\025.fantasyb"
     "it.NameProof\030\221\003 \001(\0132\027.fantasybit.MasterP"
-    "roof\"M\n\013Transaction\022\017\n\007version\030\001 \001(\005\022#\n\004"
-    "type\030\002 \001(\0162\025.fantasybit.TransType*\010\010d\020\200\200"
-    "\200\200\002\"\240\001\n\tNameTrans\022\024\n\014fantasy_name\030\n \001(\t\022"
-    "\022\n\npublic_key\030\024 \001(\014\022$\n\005proof\030\036 \001(\0132\025.fan"
-    "tasybit.NameProof2C\n\nname_trans\022\027.fantas"
-    "ybit.Transaction\030\310\001 \001(\0132\025.fantasybit.Nam"
-    "eTrans\"j\n\021SignedTransaction\022&\n\005trans\030\n \001"
-    "(\0132\027.fantasybit.Transaction\022\n\n\002id\030\024 \001(\014\022"
-    "\013\n\003sig\030\036 \001(\014\022\024\n\014fantasy_name\030( \001(\t\"\370\001\n\013B"
-    "lockHeader\022\017\n\007version\030\001 \001(\005\022\013\n\003num\030\n \001(\005"
-    "\022\017\n\007prev_id\030\024 \001(\014\022\021\n\ttimestamp\030\025 \001(\005\022\024\n\014"
-    "generator_pk\030\036 \001(\014\022\026\n\016generating_sig\030( \001"
-    "(\014\022\022\n\nbasetarget\0302 \001(\005\022/\n\tblocktype\030< \001("
-    "\0162\034.fantasybit.BlockHeader.Type\022\026\n\016trans"
-    "action_id\030F \001(\014\"\034\n\004Type\022\n\n\006NORMAL\020\001\022\010\n\004D"
-    "ATA\020\002\"G\n\021SignedBlockHeader\022%\n\004head\030\n \001(\013"
-    "2\027.fantasybit.BlockHeader\022\013\n\003sig\030\036 \001(\t\"\201"
-    "\001\n\005Block\0221\n\nsignedhead\030\n \001(\0132\035.fantasybi"
-    "t.SignedBlockHeader\022:\n\023signed_transactio"
-    "ns\030\024 \003(\0132\035.fantasybit.SignedTransaction*"
-    "\t\010\350\007\020\200\200\200\200\002\"\257\001\n\013NodeRequest\022*\n\004type\030\n \001(\016"
-    "2\034.fantasybit.NodeRequest.Type\022\014\n\004myip\030\024"
-    " \001(\t\022\013\n\003num\030\036 \001(\005\022\016\n\006myhost\030( \001(\t\"I\n\004Typ"
-    "e\022\r\n\tHANDSHAKE\020\001\022\021\n\rBLOCK_REQUEST\020\002\022\021\n\rH"
-    "IGHT_REQUEST\020\003\022\014\n\010NAT_TEST\020\004\"\'\n\tNodeRepl"
-    "y\022\r\n\005hight\030\n \001(\005\022\013\n\003ips\030\024 \003(\t\"e\n\023Fantasy"
-    "PlayerPoints\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001"
-    "(\r\022\020\n\010playerid\030\036 \001(\t\022\016\n\006points\030( \001(\005\022\016\n\006"
-    "result\0302 \001(\002\"\234\001\n\017ProjectionTrans\022\016\n\006seas"
-    "on\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022\020\n\010playerid\030\036 \001(\t"
-    "\022\016\n\006points\030( \001(\0052I\n\nproj_trans\022\027.fantasy"
-    "bit.Transaction\030\311\001 \001(\0132\033.fantasybit.Proj"
-    "ectionTrans\"0\n\014PlayerPoints\022\020\n\010playerid\030"
-    "\036 \001(\t\022\016\n\006points\030( \001(\005\"\273\001\n\024ProjectionTran"
-    "sBlock\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022/\n\r"
-    "player_points\030\036 \003(\0132\030.fantasybit.PlayerP"
-    "oints2T\n\020proj_trans_block\022\027.fantasybit.T"
-    "ransaction\030\323\001 \001(\0132 .fantasybit.Projectio"
-    "nTransBlock\"\213\001\n\004Data\022\017\n\007version\030\n \001(\005\022#\n"
-    "\004type\030\024 \001(\0162\025.fantasybit.Data.Type\"C\n\004Ty"
-    "pe\022\014\n\010SCHEDULE\020\000\022\n\n\006PLAYER\020\001\022\010\n\004GAME\020\002\022\n"
-    "\n\006RESULT\020\003\022\013\n\007MESSAGE\020\004*\010\010d\020\200\200\200\200\002\"\365\001\n\nPl"
-    "ayerData\022\020\n\010playerid\030\n \001(\t\022+\n\013player_bas"
-    "e\030\024 \001(\0132\026.fantasybit.PlayerBase\022/\n\rplaye"
-    "r_status\030\036 \001(\0132\030.fantasybit.PlayerStatus"
-    "\0228\n\022player_game_status\030( \001(\0162\034.fantasybi"
-    "t.PlayerGameStatus2=\n\013player_data\022\020.fant"
-    "asybit.Data\030e \001(\0132\026.fantasybit.PlayerDat"
-    "a\"}\n\010GameData\022\016\n\006gameid\030\n \001(\t\022&\n\006status\030"
-    "\024 \001(\0132\026.fantasybit.GameStatus29\n\tgame_da"
-    "ta\022\020.fantasybit.Data\030o \001(\0132\024.fantasybit."
-    "GameData\"y\n\nResultData\022+\n\013game_result\030\n "
-    "\001(\0132\026.fantasybit.GameResult2>\n\013result_da"
-    "ta\022\020.fantasybit.Data\030\312\001 \001(\0132\026.fantasybit"
-    ".ResultData\"\214\001\n\014ScheduleData\022\014\n\004week\030\001 \001"
-    "(\005\022*\n\006weekly\030\n \001(\0132\032.fantasybit.WeeklySc"
-    "hedule2B\n\rschedule_data\022\020.fantasybit.Dat"
-    "a\030\256\002 \001(\0132\030.fantasybit.ScheduleData\"\342\001\n\016D"
-    "ataTransition\022 \n\004type\030\001 \001(\0162\022.fantasybit"
-    ".TrType\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022&\n"
-    "\010gamedata\030\036 \003(\0132\024.fantasybit.GameData\022\036\n"
-    "\004data\030( \003(\0132\020.fantasybit.Data2H\n\ndata_tr"
-    "ans\022\027.fantasybit.Transaction\030\313\001 \001(\0132\032.fa"
-    "ntasybit.DataTransition\"w\n\tTeamState\022*\n\005"
-    "state\030\001 \001(\0162\033.fantasybit.TeamState.State"
-    "\022\014\n\004week\030\n \001(\r\022\016\n\006teamid\030\024 \001(\t\" \n\005State\022"
-    "\013\n\007PREGAME\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDeltaData\022("
-    "\n\004type\030\001 \001(\0162\032.fantasybit.DeltaData.Type"
-    "\0220\n\rmyfantasyname\030\002 \003(\0132\031.fantasybit.MyF"
-    "antasyName\022,\n\013globalstate\030\n \001(\0132\027.fantas"
-    "ybit.GlobalState\022)\n\nteamstates\030\024 \003(\0132\025.f"
-    "antasybit.TeamState\022\037\n\005datas\030\036 \003(\0132\020.fan"
-    "tasybit.Data\022*\n\007players\030( \003(\0132\031.fantasyb"
-    "it.FantasyPlayer\"#\n\004Type\022\014\n\010SNAPSHOT\020\002\022\r"
-    "\n\tHEARTBEAT\020\003*\t\010\350\007\020\200\200\200\200\002\"t\n\013MessageData\022"
-    "\013\n\003msg\030\n \001(\t\022\n\n\002gt\030\024 \001(\005\022\n\n\002lt\030\036 \001(\0052@\n\014"
-    "message_data\022\020.fantasybit.Data\030\224\003 \001(\0132\027."
-    "fantasybit.MessageData\"\301\001\n\014StampedTrans\022"
-    "\021\n\ttimestamp\030\n \001(\004\022\016\n\006seqnum\030\024 \001(\005\022\017\n\007pr"
-    "evseq\030\025 \001(\005\0222\n\013signed_orig\030\036 \001(\0132\035.fanta"
-    "sybit.SignedTransaction2I\n\rstamped_trans"
-    "\022\027.fantasybit.Transaction\030\254\002 \001(\0132\030.fanta"
-    "sybit.StampedTrans\"\311\002\n\rExchangeOrder\022,\n\004"
-    "type\030\n \001(\0162\036.fantasybit.ExchangeOrder.Ty"
-    "pe\022\020\n\010playerid\030( \001(\t\022#\n\004core\0302 \001(\0132\025.fan"
-    "tasybit.OrderCore\022\023\n\013cancel_oref\030d \001(\005\022,"
-    "\n\013futcontract\030n \001(\0132\027.fantasybit.FutCont"
-    "ract\022\016\n\006symbol\030x \001(\t\"(\n\004Type\022\007\n\003NEW\020\001\022\n\n"
-    "\006CANCEL\020\002\022\013\n\007REPLACE\020\003*\t\010\364\003\020\200\200\200\200\0022K\n\016exc"
-    "hange_order\022\027.fantasybit.Transaction\030\266\002 "
-    "\001(\0132\031.fantasybit.ExchangeOrder\"q\n\013OrderU"
-    "nique\022\022\n\npublic_key\030\n \001(\t\022\016\n\006season\030\024 \001("
-    "\r\022\014\n\004week\030\036 \001(\r\022\017\n\007buyside\030( \001(\010\022\020\n\010play"
-    "erid\0302 \001(\t\022\r\n\005price\030F \001(\005\"O\n\nOrderDeets\022"
-    "\013\n\003oid\030\n \001(\014\022&\n\005order\030\024 \001(\0132\027.fantasybit"
-    ".OrderUnique\022\014\n\004size\030\036 \001(\005\"\227\001\n\014InsideUni"
-    "que\022\020\n\010playerid\0302 \001(\t\022\022\n\npublic_key\030\n \001("
-    "\t\022\017\n\007buyside\030( \001(\010\022\r\n\005price\030F \001(\005\022\013\n\003oid"
-    "\030\013 \001(\014\022&\n\005order\030\024 \001(\0132\027.fantasybit.Order"
-    "Unique\022\014\n\004size\030\036 \001(\005\"\316\001\n\016TimeTransition\022"
-    "-\n\004type\030\001 \001(\0162\037.fantasybit.TimeTransitio"
-    "n.Type\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"%\n\004"
-    "Type\022\r\n\tTRADEOPEN\020\002\022\016\n\nTRADECLOSE\020\0032H\n\nt"
-    "ime_trans\022\027.fantasybit.Transaction\030\257\002 \001("
-    "\0132\032.fantasybit.TimeTransition*Y\n\014MyNameS"
-    "tatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequeste"
-    "d\020\005\022\024\n\020transaction_sent\020\017\022\r\n\tconfirmed\020\024"
-    "*\233\001\n\tTransType\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001"
-    "\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003\022\024\n\020PROJECTION_BLO"
-    "CK\020\004\022\017\n\013MASTER_NAME\020\005\022\010\n\004TIME\020\006\022\013\n\007STAMP"
-    "ED\020\007\022\014\n\010EXCHANGE\020\010\022\022\n\016EXCHANGE_BLOCK\020\t*\214"
-    "\001\n\006TrType\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEND\020"
-    "\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKO"
-    "VER\020\007\022\025\n\021TRADESESSIONSTART\020\010\022\037\n\033TRADESES"
-    "SIONCLOSEANDPREOPEN\020\t", 5901);
+    "roof\"\\\n\013Transaction\022\017\n\007version\030\001 \001(\005\022#\n\004"
+    "type\030\002 \001(\0162\025.fantasybit.TransType\022\r\n\005non"
+    "ce\030\n \001(\004*\010\010d\020\200\200\200\200\002\"\240\001\n\tNameTrans\022\024\n\014fant"
+    "asy_name\030\n \001(\t\022\022\n\npublic_key\030\024 \001(\014\022$\n\005pr"
+    "oof\030\036 \001(\0132\025.fantasybit.NameProof2C\n\nname"
+    "_trans\022\027.fantasybit.Transaction\030\310\001 \001(\0132\025"
+    ".fantasybit.NameTrans\"\205\001\n\rTransferTrans\022"
+    "\014\n\004from\030\n \001(\t\022\n\n\002to\030\024 \001(\t\022\016\n\006amount\030\036 \001("
+    "\0042J\n\rtransfer_tran\022\027.fantasybit.Transact"
+    "ion\030\220\003 \001(\0132\031.fantasybit.TransferTrans\"j\n"
+    "\021SignedTransaction\022&\n\005trans\030\n \001(\0132\027.fant"
+    "asybit.Transaction\022\n\n\002id\030\024 \001(\014\022\013\n\003sig\030\036 "
+    "\001(\014\022\024\n\014fantasy_name\030( \001(\t\"\370\001\n\013BlockHeade"
+    "r\022\017\n\007version\030\001 \001(\005\022\013\n\003num\030\n \001(\005\022\017\n\007prev_"
+    "id\030\024 \001(\014\022\021\n\ttimestamp\030\025 \001(\005\022\024\n\014generator"
+    "_pk\030\036 \001(\014\022\026\n\016generating_sig\030( \001(\014\022\022\n\nbas"
+    "etarget\0302 \001(\005\022/\n\tblocktype\030< \001(\0162\034.fanta"
+    "sybit.BlockHeader.Type\022\026\n\016transaction_id"
+    "\030F \001(\014\"\034\n\004Type\022\n\n\006NORMAL\020\001\022\010\n\004DATA\020\002\"G\n\021"
+    "SignedBlockHeader\022%\n\004head\030\n \001(\0132\027.fantas"
+    "ybit.BlockHeader\022\013\n\003sig\030\036 \001(\t\"\201\001\n\005Block\022"
+    "1\n\nsignedhead\030\n \001(\0132\035.fantasybit.SignedB"
+    "lockHeader\022:\n\023signed_transactions\030\024 \003(\0132"
+    "\035.fantasybit.SignedTransaction*\t\010\350\007\020\200\200\200\200"
+    "\002\"\257\001\n\013NodeRequest\022*\n\004type\030\n \001(\0162\034.fantas"
+    "ybit.NodeRequest.Type\022\014\n\004myip\030\024 \001(\t\022\013\n\003n"
+    "um\030\036 \001(\005\022\016\n\006myhost\030( \001(\t\"I\n\004Type\022\r\n\tHAND"
+    "SHAKE\020\001\022\021\n\rBLOCK_REQUEST\020\002\022\021\n\rHIGHT_REQU"
+    "EST\020\003\022\014\n\010NAT_TEST\020\004\"\'\n\tNodeReply\022\r\n\005high"
+    "t\030\n \001(\005\022\013\n\003ips\030\024 \003(\t\"e\n\023FantasyPlayerPoi"
+    "nts\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022\020\n\010pla"
+    "yerid\030\036 \001(\t\022\016\n\006points\030( \001(\005\022\016\n\006result\0302 "
+    "\001(\002\"\234\001\n\017ProjectionTrans\022\016\n\006season\030\n \001(\r\022"
+    "\014\n\004week\030\024 \001(\r\022\020\n\010playerid\030\036 \001(\t\022\016\n\006point"
+    "s\030( \001(\0052I\n\nproj_trans\022\027.fantasybit.Trans"
+    "action\030\311\001 \001(\0132\033.fantasybit.ProjectionTra"
+    "ns\"0\n\014PlayerPoints\022\020\n\010playerid\030\036 \001(\t\022\016\n\006"
+    "points\030( \001(\005\"\273\001\n\024ProjectionTransBlock\022\016\n"
+    "\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022/\n\rplayer_po"
+    "ints\030\036 \003(\0132\030.fantasybit.PlayerPoints2T\n\020"
+    "proj_trans_block\022\027.fantasybit.Transactio"
+    "n\030\323\001 \001(\0132 .fantasybit.ProjectionTransBlo"
+    "ck\"\213\001\n\004Data\022\017\n\007version\030\n \001(\005\022#\n\004type\030\024 \001"
+    "(\0162\025.fantasybit.Data.Type\"C\n\004Type\022\014\n\010SCH"
+    "EDULE\020\000\022\n\n\006PLAYER\020\001\022\010\n\004GAME\020\002\022\n\n\006RESULT\020"
+    "\003\022\013\n\007MESSAGE\020\004*\010\010d\020\200\200\200\200\002\"\365\001\n\nPlayerData\022"
+    "\020\n\010playerid\030\n \001(\t\022+\n\013player_base\030\024 \001(\0132\026"
+    ".fantasybit.PlayerBase\022/\n\rplayer_status\030"
+    "\036 \001(\0132\030.fantasybit.PlayerStatus\0228\n\022playe"
+    "r_game_status\030( \001(\0162\034.fantasybit.PlayerG"
+    "ameStatus2=\n\013player_data\022\020.fantasybit.Da"
+    "ta\030e \001(\0132\026.fantasybit.PlayerData\"}\n\010Game"
+    "Data\022\016\n\006gameid\030\n \001(\t\022&\n\006status\030\024 \001(\0132\026.f"
+    "antasybit.GameStatus29\n\tgame_data\022\020.fant"
+    "asybit.Data\030o \001(\0132\024.fantasybit.GameData\""
+    "y\n\nResultData\022+\n\013game_result\030\n \001(\0132\026.fan"
+    "tasybit.GameResult2>\n\013result_data\022\020.fant"
+    "asybit.Data\030\312\001 \001(\0132\026.fantasybit.ResultDa"
+    "ta\"\214\001\n\014ScheduleData\022\014\n\004week\030\001 \001(\005\022*\n\006wee"
+    "kly\030\n \001(\0132\032.fantasybit.WeeklySchedule2B\n"
+    "\rschedule_data\022\020.fantasybit.Data\030\256\002 \001(\0132"
+    "\030.fantasybit.ScheduleData\"\342\001\n\016DataTransi"
+    "tion\022 \n\004type\030\001 \001(\0162\022.fantasybit.TrType\022\016"
+    "\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\022&\n\010gamedata"
+    "\030\036 \003(\0132\024.fantasybit.GameData\022\036\n\004data\030( \003"
+    "(\0132\020.fantasybit.Data2H\n\ndata_trans\022\027.fan"
+    "tasybit.Transaction\030\313\001 \001(\0132\032.fantasybit."
+    "DataTransition\"w\n\tTeamState\022*\n\005state\030\001 \001"
+    "(\0162\033.fantasybit.TeamState.State\022\014\n\004week\030"
+    "\n \001(\r\022\016\n\006teamid\030\024 \001(\t\" \n\005State\022\013\n\007PREGAM"
+    "E\020\001\022\n\n\006INGAME\020\002\"\275\002\n\tDeltaData\022(\n\004type\030\001 "
+    "\001(\0162\032.fantasybit.DeltaData.Type\0220\n\rmyfan"
+    "tasyname\030\002 \003(\0132\031.fantasybit.MyFantasyNam"
+    "e\022,\n\013globalstate\030\n \001(\0132\027.fantasybit.Glob"
+    "alState\022)\n\nteamstates\030\024 \003(\0132\025.fantasybit"
+    ".TeamState\022\037\n\005datas\030\036 \003(\0132\020.fantasybit.D"
+    "ata\022*\n\007players\030( \003(\0132\031.fantasybit.Fantas"
+    "yPlayer\"#\n\004Type\022\014\n\010SNAPSHOT\020\002\022\r\n\tHEARTBE"
+    "AT\020\003*\t\010\350\007\020\200\200\200\200\002\"t\n\013MessageData\022\013\n\003msg\030\n "
+    "\001(\t\022\n\n\002gt\030\024 \001(\005\022\n\n\002lt\030\036 \001(\0052@\n\014message_d"
+    "ata\022\020.fantasybit.Data\030\224\003 \001(\0132\027.fantasybi"
+    "t.MessageData\"\301\001\n\014StampedTrans\022\021\n\ttimest"
+    "amp\030\n \001(\004\022\016\n\006seqnum\030\024 \001(\005\022\017\n\007prevseq\030\025 \001"
+    "(\005\0222\n\013signed_orig\030\036 \001(\0132\035.fantasybit.Sig"
+    "nedTransaction2I\n\rstamped_trans\022\027.fantas"
+    "ybit.Transaction\030\254\002 \001(\0132\030.fantasybit.Sta"
+    "mpedTrans\"\311\002\n\rExchangeOrder\022,\n\004type\030\n \001("
+    "\0162\036.fantasybit.ExchangeOrder.Type\022\020\n\010pla"
+    "yerid\030( \001(\t\022#\n\004core\0302 \001(\0132\025.fantasybit.O"
+    "rderCore\022\023\n\013cancel_oref\030d \001(\005\022,\n\013futcont"
+    "ract\030n \001(\0132\027.fantasybit.FutContract\022\016\n\006s"
+    "ymbol\030x \001(\t\"(\n\004Type\022\007\n\003NEW\020\001\022\n\n\006CANCEL\020\002"
+    "\022\013\n\007REPLACE\020\003*\t\010\364\003\020\200\200\200\200\0022K\n\016exchange_ord"
+    "er\022\027.fantasybit.Transaction\030\266\002 \001(\0132\031.fan"
+    "tasybit.ExchangeOrder\"q\n\013OrderUnique\022\022\n\n"
+    "public_key\030\n \001(\t\022\016\n\006season\030\024 \001(\r\022\014\n\004week"
+    "\030\036 \001(\r\022\017\n\007buyside\030( \001(\010\022\020\n\010playerid\0302 \001("
+    "\t\022\r\n\005price\030F \001(\005\"O\n\nOrderDeets\022\013\n\003oid\030\n "
+    "\001(\014\022&\n\005order\030\024 \001(\0132\027.fantasybit.OrderUni"
+    "que\022\014\n\004size\030\036 \001(\005\"\227\001\n\014InsideUnique\022\020\n\010pl"
+    "ayerid\0302 \001(\t\022\022\n\npublic_key\030\n \001(\t\022\017\n\007buys"
+    "ide\030( \001(\010\022\r\n\005price\030F \001(\005\022\013\n\003oid\030\013 \001(\014\022&\n"
+    "\005order\030\024 \001(\0132\027.fantasybit.OrderUnique\022\014\n"
+    "\004size\030\036 \001(\005\"\316\001\n\016TimeTransition\022-\n\004type\030\001"
+    " \001(\0162\037.fantasybit.TimeTransition.Type\022\016\n"
+    "\006season\030\n \001(\r\022\014\n\004week\030\024 \001(\r\"%\n\004Type\022\r\n\tT"
+    "RADEOPEN\020\002\022\016\n\nTRADECLOSE\020\0032H\n\ntime_trans"
+    "\022\027.fantasybit.Transaction\030\257\002 \001(\0132\032.fanta"
+    "sybit.TimeTransition*Y\n\014MyNameStatus\022\010\n\004"
+    "none\020\001\022\013\n\007notavil\020\002\022\r\n\trequested\020\005\022\024\n\020tr"
+    "ansaction_sent\020\017\022\r\n\tconfirmed\020\024*\251\001\n\tTran"
+    "sType\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESUL"
+    "T\020\002\022\010\n\004DATA\020\003\022\024\n\020PROJECTION_BLOCK\020\004\022\017\n\013M"
+    "ASTER_NAME\020\005\022\010\n\004TIME\020\006\022\013\n\007STAMPED\020\007\022\014\n\010E"
+    "XCHANGE\020\010\022\022\n\016EXCHANGE_BLOCK\020\t\022\014\n\010TRANSFE"
+    "R\020\n*\214\001\n\006TrType\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASO"
+    "NEND\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010"
+    "WEEKOVER\020\007\022\025\n\021TRADESESSIONSTART\020\010\022\037\n\033TRA"
+    "DESESSIONCLOSEANDPREOPEN\020\t", 6066);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -1150,6 +1179,7 @@ void protobuf_AddDesc_ProtoData_2eproto() {
   MasterProof::default_instance_ = new MasterProof();
   Transaction::default_instance_ = new Transaction();
   NameTrans::default_instance_ = new NameTrans();
+  TransferTrans::default_instance_ = new TransferTrans();
   SignedTransaction::default_instance_ = new SignedTransaction();
   BlockHeader::default_instance_ = new BlockHeader();
   SignedBlockHeader::default_instance_ = new SignedBlockHeader();
@@ -1199,6 +1229,11 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     &::fantasybit::Transaction::default_instance(),
     200, 11, false, false,
     &::fantasybit::NameTrans::default_instance());
+  TransferTrans::default_instance_->InitAsDefaultInstance();
+  ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
+    &::fantasybit::Transaction::default_instance(),
+    400, 11, false, false,
+    &::fantasybit::TransferTrans::default_instance());
   SignedTransaction::default_instance_->InitAsDefaultInstance();
   BlockHeader::default_instance_->InitAsDefaultInstance();
   SignedBlockHeader::default_instance_->InitAsDefaultInstance();
@@ -1310,6 +1345,7 @@ bool TransType_IsValid(int value) {
     case 7:
     case 8:
     case 9:
+    case 10:
       return true;
     default:
       return false;
@@ -4550,6 +4586,7 @@ void MasterProof::Swap(MasterProof* other) {
 #ifndef _MSC_VER
 const int Transaction::kVersionFieldNumber;
 const int Transaction::kTypeFieldNumber;
+const int Transaction::kNonceFieldNumber;
 #endif  // !_MSC_VER
 
 Transaction::Transaction()
@@ -4570,6 +4607,7 @@ void Transaction::SharedCtor() {
   _cached_size_ = 0;
   version_ = 0;
   type_ = 0;
+  nonce_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4608,6 +4646,7 @@ void Transaction::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     version_ = 0;
     type_ = 0;
+    nonce_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -4651,6 +4690,22 @@ bool Transaction::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(80)) goto parse_nonce;
+        break;
+      }
+
+      // optional uint64 nonce = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_nonce:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &nonce_)));
+          set_has_nonce();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4689,6 +4744,11 @@ void Transaction::SerializeWithCachedSizes(
       2, this->type(), output);
   }
 
+  // optional uint64 nonce = 10;
+  if (has_nonce()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(10, this->nonce(), output);
+  }
+
   // Extension range [100, 536870912)
   _extensions_.SerializeWithCachedSizes(
       100, 536870912, output);
@@ -4710,6 +4770,11 @@ void Transaction::SerializeWithCachedSizes(
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       2, this->type(), target);
+  }
+
+  // optional uint64 nonce = 10;
+  if (has_nonce()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(10, this->nonce(), target);
   }
 
   // Extension range [100, 536870912)
@@ -4738,6 +4803,13 @@ int Transaction::ByteSize() const {
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional uint64 nonce = 10;
+    if (has_nonce()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->nonce());
     }
 
   }
@@ -4775,6 +4847,9 @@ void Transaction::MergeFrom(const Transaction& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
+    if (from.has_nonce()) {
+      set_nonce(from.nonce());
+    }
   }
   _extensions_.MergeFrom(from._extensions_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -4802,6 +4877,7 @@ void Transaction::Swap(Transaction* other) {
   if (other != this) {
     std::swap(version_, other->version_);
     std::swap(type_, other->type_);
+    std::swap(nonce_, other->nonce_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -5141,6 +5217,334 @@ void NameTrans::Swap(NameTrans* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = NameTrans_descriptor_;
   metadata.reflection = NameTrans_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int TransferTrans::kFromFieldNumber;
+const int TransferTrans::kToFieldNumber;
+const int TransferTrans::kAmountFieldNumber;
+#endif  // !_MSC_VER
+
+#ifndef _MSC_VER
+const int TransferTrans::kTransferTranFieldNumber;
+#endif
+::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+    ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::TransferTrans >, 11, false >
+  TransferTrans::transfer_tran(kTransferTranFieldNumber, ::fantasybit::TransferTrans::default_instance());
+TransferTrans::TransferTrans()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void TransferTrans::InitAsDefaultInstance() {
+}
+
+TransferTrans::TransferTrans(const TransferTrans& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void TransferTrans::SharedCtor() {
+  _cached_size_ = 0;
+  from_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  to_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  amount_ = GOOGLE_ULONGLONG(0);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+TransferTrans::~TransferTrans() {
+  SharedDtor();
+}
+
+void TransferTrans::SharedDtor() {
+  if (from_ != &::google::protobuf::internal::kEmptyString) {
+    delete from_;
+  }
+  if (to_ != &::google::protobuf::internal::kEmptyString) {
+    delete to_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void TransferTrans::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* TransferTrans::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return TransferTrans_descriptor_;
+}
+
+const TransferTrans& TransferTrans::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ProtoData_2eproto();
+  return *default_instance_;
+}
+
+TransferTrans* TransferTrans::default_instance_ = NULL;
+
+TransferTrans* TransferTrans::New() const {
+  return new TransferTrans;
+}
+
+void TransferTrans::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_from()) {
+      if (from_ != &::google::protobuf::internal::kEmptyString) {
+        from_->clear();
+      }
+    }
+    if (has_to()) {
+      if (to_ != &::google::protobuf::internal::kEmptyString) {
+        to_->clear();
+      }
+    }
+    amount_ = GOOGLE_ULONGLONG(0);
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool TransferTrans::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string from = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_from()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->from().data(), this->from().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_to;
+        break;
+      }
+
+      // optional string to = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_to:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_to()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->to().data(), this->to().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_amount;
+        break;
+      }
+
+      // optional uint64 amount = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_amount:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &amount_)));
+          set_has_amount();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void TransferTrans::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string from = 10;
+  if (has_from()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->from().data(), this->from().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      10, this->from(), output);
+  }
+
+  // optional string to = 20;
+  if (has_to()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->to().data(), this->to().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      20, this->to(), output);
+  }
+
+  // optional uint64 amount = 30;
+  if (has_amount()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->amount(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* TransferTrans::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string from = 10;
+  if (has_from()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->from().data(), this->from().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        10, this->from(), target);
+  }
+
+  // optional string to = 20;
+  if (has_to()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->to().data(), this->to().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        20, this->to(), target);
+  }
+
+  // optional uint64 amount = 30;
+  if (has_amount()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->amount(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int TransferTrans::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string from = 10;
+    if (has_from()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->from());
+    }
+
+    // optional string to = 20;
+    if (has_to()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->to());
+    }
+
+    // optional uint64 amount = 30;
+    if (has_amount()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->amount());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void TransferTrans::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const TransferTrans* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const TransferTrans*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void TransferTrans::MergeFrom(const TransferTrans& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_from()) {
+      set_from(from.from());
+    }
+    if (from.has_to()) {
+      set_to(from.to());
+    }
+    if (from.has_amount()) {
+      set_amount(from.amount());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void TransferTrans::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void TransferTrans::CopyFrom(const TransferTrans& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool TransferTrans::IsInitialized() const {
+
+  return true;
+}
+
+void TransferTrans::Swap(TransferTrans* other) {
+  if (other != this) {
+    std::swap(from_, other->from_);
+    std::swap(to_, other->to_);
+    std::swap(amount_, other->amount_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata TransferTrans::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = TransferTrans_descriptor_;
+  metadata.reflection = TransferTrans_reflection_;
   return metadata;
 }
 

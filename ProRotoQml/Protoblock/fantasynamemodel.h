@@ -19,6 +19,8 @@ class FantasyNameBalModelItem : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (QString, pk)
     QML_WRITABLE_CSTREF_PROPERTY (qint64, stake)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, bits)
+    QML_WRITABLE_CSTREF_PROPERTY (qint64, pnl)
+    QML_WRITABLE_CSTREF_PROPERTY (qint64, net)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, thisweek)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, lastweek)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, leaders20XX)
@@ -34,6 +36,8 @@ public:
         m_lastweek = 0;
         m_leaders20XX = 0;
         m_numberproj = m_lastupdate = 0;
+        m_pnl = 0;
+        m_net = 0;
     }
 
     explicit FantasyNameBalModelItem(QString &name) :  QObject(nullptr) {
@@ -44,12 +48,16 @@ public:
         m_lastweek = 0;
         m_leaders20XX = 0;
         m_numberproj = m_lastupdate = 0;
+        m_pnl = 0;
+        m_net = 0;
     }
     explicit FantasyNameBalModelItem(const fantasybit::FantasyNameBal &in) :  QObject(nullptr) {
         m_name = in.name().data();
         m_pk = in.public_key().data();
         m_stake = in.stake() + in.bits();
         m_bits = in.bits();
+        m_pnl = 0;
+        m_net = m_stake + m_pnl;
         m_thisweek = 0;
         m_lastweek = 0;
         m_leaders20XX = 0;
@@ -62,6 +70,8 @@ public:
         m_pk = Commissioner::pk2str(in.pubkey()).data();
         m_stake = in.getStakeBalance();
         m_bits = in.getBalance();
+        m_pnl = 0;
+        m_net = m_stake + m_pnl;
 //        m_chash = in.hash();
         auto blocknump = in.getBlockNump ();
         set_numberproj(blocknump.second);
@@ -78,6 +88,8 @@ public:
         set_pk(in.get_pk());
         set_stake(in.get_stake());
         set_bits(in.get_bits());
+        set_pnl(in.get_pnl());
+        set_net(in.get_net());
 //        set_chash(in.get_chash());
         m_thisweek = 0;
         m_lastweek = 0;
@@ -89,9 +101,12 @@ public:
     void    update(const fantasybit::FantasyNameBal &in) {
         set_name(in.name().data());
         set_pk (in.public_key().data());
-        if ( in.has_stake() )
-            set_stake ( in.stake() );
+        if ( in.has_stake() ) {
+            set_stake ( in.stake() + in.bits() );
+            set_net( m_stake + m_pnl);
+        }
         set_bits ( in.bits());
+
 
 //        set_chash(in.chash());
     }
@@ -101,7 +116,15 @@ public:
         set_pk(in.get_pk());
         set_stake(in.get_stake());
         set_bits(in.get_bits());
+        set_pnl(in.get_pnl());
+        set_net(in.get_net());
+
 //        set_chash(in.get_chash());
+    }
+
+    void updatePnl(int pnl) {
+        set_pnl(pnl);
+        set_net(m_stake + pnl);
     }
 };
 

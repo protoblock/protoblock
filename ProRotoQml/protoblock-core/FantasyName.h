@@ -52,14 +52,17 @@ private:
     stakebits stakedelta;
     int numberproj;
     int32_t lastupdate;
+    uint64_t m_nonce;
 
     std::recursive_mutex bal_mutex{};
+    mutable std::recursive_mutex nonce_mutex{};
 public:
     FantasyName(const alias_t &inalias, const pb::public_key_data &inpubkey)
-        : mAlias(inalias) , mPubkey(inpubkey) , balance (0), stakedelta(0) {}
+        : mAlias(inalias) , mPubkey(inpubkey) , balance (0), stakedelta(0), m_nonce(1000) {}
 
     FantasyName ( const FantasyName &in )
-        : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance), stakedelta(in.stakedelta) {}
+        : mAlias(in.alias()) , mPubkey(in.pubkey()) , balance (in.balance), stakedelta(in.stakedelta),
+          m_nonce(in.m_nonce) {}
 
     UInt64 getBalance()  {
         std::lock_guard<std::recursive_mutex> lockg{ bal_mutex };
@@ -124,6 +127,16 @@ public:
         stakedelta = b;
     }
 
+    uint64_t nonce() const {
+        std::lock_guard<std::recursive_mutex> lockg{ nonce_mutex };
+        return m_nonce;
+    }
+
+    uint64_t inc_nonce() {
+        std::lock_guard<std::recursive_mutex> lockg{ nonce_mutex };
+        ++m_nonce;
+        return m_nonce;
+    }
 
     hash_t hash() const {
         return name_hash(alias());
@@ -156,7 +169,8 @@ public:
               To_String(stakedelta.bits()) + ") stake-balance(" +
               To_String(getStakeBalance()) +") lastupdate(" +
               To_String(getBlockNump ().first)+") lastupdate(" +
-                        To_String(getBlockNump ().second);
+              To_String(getBlockNump ().second) + ") nonce(" +
+              To_String(nonce()) + ") ";
     }
 
     static hash_t name_hash( const alias_t& n );

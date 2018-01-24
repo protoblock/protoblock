@@ -150,6 +150,7 @@ public slots:
     void OnProjTX(vector<fantasybit::FantasyBitProj>);
 
     void OnNewOrder(fantasybit::ExchangeOrder);
+    void OnNewTransfer(fantasybit::TransferTrans);
 
     void Quit();
     //data

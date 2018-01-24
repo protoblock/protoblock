@@ -145,6 +145,13 @@ void FantasyNameData::closeAll() {
     //reset num for week todo:
 }
 
+void FantasyNameData::DoTransfer(const string &from, const string &to,
+                                 const uint64_t amount, int openpnl, uint64_t nonce) {
+    if ( DeltaTransfer (from, openpnl, 0-amount, true) )
+        if ( !DeltaTransfer(to, 0, amount ) )
+            DeltaTransfer(from, 0, amount);
+}
+
 void FantasyNameData::AddNewName(std::string name,std::string pubkey, int32_t blocknum) {
     FantasyNameBal fn{};
     fn.set_name(name);
@@ -202,6 +209,43 @@ void FantasyNameData::AddBalance(const std::string name, uint64_t amount) {
     }
 }
 
+bool FantasyNameData::DeltaTransfer(const std::string name, int64_t openpnl, int64_t amount, bool issender) {
+    auto hash = FantasyName::name_hash(name);
+
+    qDebug() << "DeltaTransfer " << name.data() << openpnl << amount;
+    string temp;
+    leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
+    if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {
+        qWarning() << "cant DeltaTransfer" << name.c_str();
+        return false;
+    }
+
+    FantasyNameBal fn{};
+    fn.ParseFromString(temp);
+    if ( issender ) {
+        int avail = fn.bits() + fn.stake();
+        if ( openpnl < 0)
+            avail += openpnl;
+
+        if ( avail + amount < 0 )
+            return false;
+    }
+
+    fn.set_stake(fn.stake() + amount);
+    namestore->Put(write_sync, hkey, fn.SerializeAsString());
+    auto fnp = Commissioner::getName(hash);
+    if ( fnp != nullptr) {
+        fnp->addProfitLoss(amount);
+    }
+
+#ifdef TRACE
+    qDebug() << "DeltaTransfer" << amount << " :: " << name.data () << fn.public_key().data ()<< fn.stake() << fn.bits();
+#endif
+
+    OnFantasyNamePnl(fn);
+    return true;
+}
+
 void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     auto hash = FantasyName::name_hash(name);
 
@@ -209,7 +253,7 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     string temp;
     leveldb::Slice hkey((char*)&hash, sizeof(hash_t));
     if ( !namestore->Get(leveldb::ReadOptions(), hkey, &temp).ok() ) {
-        qWarning() << "cant name to add balance" << name.c_str();
+        qWarning() << "cant name to AddPnL" << name.c_str();
         return;
     }
 
@@ -221,12 +265,11 @@ void FantasyNameData::AddPnL(const std::string name, int64_t pnl) {
     if ( fnp != nullptr) {
         fnp->addProfitLoss(pnl);
     }
-    //if ( name == "Windo")
-    //    qDebug() << "abcdefg" << fn.DebugString();
+
 #ifdef TRACE
     qDebug() << "adding pnl" << pnl << " :: " << name.data ()<< fn.public_key().data ()<< fn.stake() << fn.bits();
 #endif
-//    OnFantasyNamePnl(fn);
+
 }
 
 void FantasyNameData::AddProjection(const string &name, const string &player,
@@ -420,8 +463,13 @@ void FantasyNameData::OnFantasyNamePnl(FantasyNameBal &fn) {
     if ( !amlive )
         return;
 
-    if ( mSubscribed.find(fn.name()) != end(mSubscribed))
-        emit FantasyNamePnl(fn);
+    if ( mSubscribed.find(fn.name()) != end(mSubscribed)) {
+        qDebug() << " yes subscribed " << fn.DebugString().data();
+        emit FantasyNameBalance(fn);
+    }
+    else {
+        qDebug() << " no subscribed " << fn.DebugString().data();
+    }
 }
 
 

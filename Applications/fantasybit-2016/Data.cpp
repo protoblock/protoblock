@@ -139,7 +139,7 @@ void NFLStateData::InitCheckpoint(bool onlyresult) {
         GlobalState gs;
         gs.set_season(head.season());
         gs.set_week(head.week());
-        if ( gs.week() >= 1)
+        if ( gs.week() >= 1 && gs.week() <= 16)
             gs.set_state(GlobalState_State_INSEASON);
         else
             gs.set_state(GlobalState_State_OFFSEASON);

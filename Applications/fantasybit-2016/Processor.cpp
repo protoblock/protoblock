@@ -102,10 +102,10 @@ int32_t BlockProcessor::init() {
     mFutContract.set_type(FutContract_Type_WEEKLY);
     GlobalState &gs = mGlobalState;
     mFutContract.set_season(gs.season());
-    if ( gs.state() == GlobalState_State_INSEASON )
+    //if ( gs.state() == GlobalState_State_INSEASON )
         mFutContract.set_week(gs.week());
-    else
-        mFutContract.set_week(0);
+    //else
+    //    mFutContract.set_week(0);
 #endif
 
     return lastidprocessed;
@@ -641,7 +641,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     if ( pbpospair.second != nullptr) {
         playerresultP->set_symbol(pbpospair.second->playerid());
         SettleROWPositionsRawStake set(*(pbpospair.second));
-        auto pnls = set.settle(playerresult.result(), blocksigner);
+        auto pnls = set.settle(playerresult.result(), blocksigner,mGlobalState.week() == 16);
         for (auto r : pnls ) {
             FantasyBitPnl &fba = *playerresult.mutable_rowposdividend()->Add();
             fba.mutable_spos()->CopyFrom(r.second.first);
@@ -762,7 +762,7 @@ void BlockProcessor::process(const DataTransition &indt) {
         std::unordered_map<string,BookPos> pos;
         mExchangeData.GetRemainingSettlePos(pos);
         for ( auto &sbp : pos ) {
-            if ( !isWeekly(sbp.first))
+            if ( !isWeekly(sbp.first) && indt.week() < 16)
                 continue;
 
             SettlePositionsRawStake set(sbp.second);
@@ -919,6 +919,16 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         switch (t.type())
         {
+        case TransType::TRANSFER: {
+            const TransferTrans & trt = t.GetExtension(TransferTrans::transfer_tran);
+            if ( true ) {  // transfer is valid
+                int pnl = mExchangeData.GetOpenPnl(trt.from());
+                mNameData.DoTransfer (trt.from (), trt.to (), trt.amount (), pnl);
+            }
+            break;
+
+        }
+
         case TransType::PROJECTION_BLOCK: {
             const ProjectionTransBlock & ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
             //qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
@@ -1047,23 +1057,23 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     switch ( fc->type() ) {
     case FutContract_Type_WEEKLY:
         if ( fc->week() != mGlobalState.week() ||
-            mGlobalState.state() != GlobalState_State_INSEASON ||
+//            mGlobalState.state() != GlobalState_State_INSEASON ||
             fc->season() != mGlobalState.season()) {
-                qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                qWarning() << "1 ProcessInsideStamped bad FutContract" << fc->DebugString().data() << mGlobalState.DebugString().data();
                 return;
         }
         break;
     case FutContract_Type_ROW:
         if ( fc->season() != mGlobalState.season() ||
             mGlobalState.state() != GlobalState_State_INSEASON ) {
-                qWarning() << "ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                qWarning() << "2 ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
                 return;
         }
         break;
 
     case FutContract_Type_SEASON:
         if ( fc->season() < mExchangeData.mMinSeason || fc->season() > mExchangeData.mMaxSeason) {
-            qWarning() << "ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
+            qWarning() << "3 ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
             return;
         }
         break;

@@ -19,7 +19,7 @@ import Communi 3.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "2.4.5" //version
+    property string version: "2.5" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -35,6 +35,8 @@ Material.ApplicationWindow{
     property bool reloadorderpos: true
 
     property string  fontfamFB:  (Device.productType === "macos" || Device.productType === "osx ") ? "Helvetica Neue" : "Roboto"
+
+    property int accountTab: 4
 
     statusBar: StatusBar {
 
@@ -124,16 +126,18 @@ Material.ApplicationWindow{
 //        height = (Device.productType === "windows" || Device.productType === "osx") ?
 //                   (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight) : ProtoScreen.availableHeight
 
-        themeroot.show();
 //        themeroot.showMaximized()
+        themeroot.show();
         rootLoader.source = start
 
     }
 
     property string defaultname
 
-    property string start: "qrc:/Projections.qml"
-    property int startindex: 0
+    property string start: "qrc:/Trading.qml"
+    property string account: "qrc:/Account.qml"
+    property int startindex: 1
+    property int accountIndex: 4
     property string  errorString
     property bool  reloadleaders: false
 
@@ -145,19 +149,21 @@ Material.ApplicationWindow{
 
 
     // Pages
-    property var sections: [ levelOne, levelTwo, levelThree,levelFour, levelFive ]
+    property var sections: [ levelZero, levelOne, levelTwo, levelThree,levelFour, levelFive ]
     property var sectionsIcons: [
+        levelZeroIcons,
         levelOneIcons,
         levelTwoIcons,
         levelThreeIcons,
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Projections","Trading",  "NFL News", "Account", "Protoblock"  ]
-    property var sectionTitlesAlias: [ "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Wallet", "Trading","Projections",  "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Wallet", "Trading", "Projections", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
-        "qrc:/icons/ic_poll.png",
+        "qrc:/icons/local_atm.png",
         "qrc:/icons/ic_timeline.png",
+        "qrc:/icons/ic_poll.png",
         "qrc:/icons/newspaper.png",
         "qrc:/icons/action_account_circle.png",
         "qrc:/icons/ic_help.png"
@@ -176,20 +182,21 @@ Material.ApplicationWindow{
         tabHighlightColor: Colors.accentColor
     }
 
-    // Level One Trading
-    property var levelTwo: [ "Trading"]
+    // Level Zero
+    property var levelZero: [ "Wallet"]
+    property var levelZeroIcons: [
+        "qrc:/icons/local_atm.png"
+    ]
 
-    //    ,"SeasonLongLandingPage", "WeeklyLandingPage"
-
-
-    property var levelTwoIcons: [
+    // Level One
+    property var levelOne: [ "Trading"]
+    property var levelOneIcons: [
         "qrc:/icons/newspaper.png"
     ]
 
-
     // Level Two
-    property var levelOne: [ "Projections"]
-    property var levelOneIcons: [
+    property var levelTwo: [ "Projections"]
+    property var levelTwoIcons: [
         "qrc:/icons/newspaper.png"
     ]
 
@@ -224,12 +231,12 @@ Material.ApplicationWindow{
 
     property string selectedComponent: sections[0][0]
 
-    property var sectionLeftEnable: [ false, false, true, true, true]
+    property var sectionLeftEnable: [ true, false, false, true, true, true]
 
     initialPage:  Material.TabbedPage {
         property bool expanded: true
         id: pageHelper
-        title: "Protoblock 2017"
+        title: "Protoblock"
         selectedTabIndex: startindex
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
@@ -243,7 +250,8 @@ Material.ApplicationWindow{
         actionBar.integratedTabBar: true
         actionBar.iconSize:   ProtoScreen.guToPx(2.5)
         actionBar.customContent:    Material.Label {
-            text: realRoot.uname
+            text: realRoot.uname + "   [" +
+                  (!MiddleMan.pMyFantasyNameBalance ? "0" : (MiddleMan.pMyFantasyNameBalance.net).toLocaleString()) + " ƑɃ]"
             verticalAlignment: navDrawer.enabled ? Text.AlignVCenter : Text.AlignTop
             font{
                 family: "Roboto"
@@ -272,7 +280,7 @@ Material.ApplicationWindow{
                 name: "Account"
                 onTriggered: {
                     rootLoader.source = "qrc:/Account.qml"
-                    pageHelper.selectedTabIndex = 3
+                    pageHelper.selectedTabIndex = accountIndex
                     pageHelper.title = "Account Settings"
                 }
             }
@@ -713,14 +721,20 @@ Material.ApplicationWindow{
             }
         }
 
+        onNoName: {
+            console.log("no name");
+            pageHelper.selectedTabIndex = accountIndex;
+            rootLoader.source = account
+        }
+
         onUsingFantasyName: {
             console.log(uname + " qml usingfantay name " + name)
             if ( uname !== name || uname === "") {
                 uname = name
                 msgString = "You are now playing as: " + name
-                if( pageHelper.selectedTabIndex === 3 || loginDialog.visible === true){
+                if( pageHelper.selectedTabIndex === accountIndex || loginDialog.visible === true){
+                    pageHelper.selectedTabIndex = startindex
                     rootLoader.source = start
-                    pageHelper.selectedTabIndex = startindex;
                     usingNameDialog.open()
                 }
                 else

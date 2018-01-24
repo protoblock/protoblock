@@ -145,6 +145,19 @@ public:
         return mSym2Pid;
     }
 
+    std::map<std::string,std::string> GetTeamSymbols(const std::list<std::string> &teams)  {
+        std::map<std::string,std::string> ret;
+        for ( auto t : teams ) {
+            auto tpids = MyTeamRoster[t];
+            for ( auto pid : tpids ) {
+                    PlayerStatus ps = MyPlayerStatus[pid];
+                    ret[ps.symbol ()] = pid;
+            }
+        }
+
+        return ret;
+    }
+
     GameStatus GetUpdatedGameStatus(std::string id);
     WeeklySchedule GetWeeklySchedule(int season,int week);
 

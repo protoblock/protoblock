@@ -285,6 +285,11 @@ namespace fantasybit {
         }
         return ret;
     }
+
+    static int sbliihome = 19;
+    static int sbliiaway = 23;
+    static int sbgameid = 201712119;
+
 }
 
 #endif

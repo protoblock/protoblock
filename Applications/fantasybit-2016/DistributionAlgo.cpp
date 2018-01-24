@@ -150,7 +150,8 @@ PnlResults SettlePositionsRawStake::
 PnlResults SettleROWPositionsRawStake::
             settle(
                 const double result,
-                const std::string &agent
+                const std::string &agent,
+                bool iswk16
             ) const {
 
     PnlResults pnl{};
@@ -164,7 +165,17 @@ PnlResults SettleROWPositionsRawStake::
 
     for(const auto& settlepos : positions.positions()) {
         double qty = settlepos.qty();
-        double dpnl = qty * result;
+        double myresult = result;
+        if ( iswk16 )
+            myresult *= 2.0;
+        double dpnl = qty * myresult;
+        if ( iswk16 ) {
+//            double remainpnl =  + dpnl;
+//            if ( remainpnl < 0.0001)
+//                remainpnl = 0.0;
+
+            dpnl += (double)settlepos.price();
+        }
         int intpnl = floor((dpnl) + 0.5);
         pnl[settlepos.pk()] = make_pair(settlepos,intpnl);
 #ifdef TRACE

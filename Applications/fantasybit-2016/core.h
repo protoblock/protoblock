@@ -103,6 +103,7 @@ Q_DECLARE_METATYPE(fantasybit::DepthFeedDelta*)
 Q_DECLARE_METATYPE(fantasybit::TradeTic*)
 Q_DECLARE_METATYPE(fantasybit::FullPosition)
 Q_DECLARE_METATYPE(fantasybit::FullOrderDelta)
+Q_DECLARE_METATYPE(fantasybit::TransferTrans)
 
 
 #endif // CORE_H

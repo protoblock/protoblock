@@ -44,7 +44,7 @@ class Mediator : public QObject {
     //trading
 
 
-    //quotes
+    //quotesf
     PlayerQuoteSliceModel mPlayerQuoteSliceModel;
     PlayerQuoteSliceModel mROWPlayerQuoteSliceModel;
 
@@ -260,7 +260,7 @@ public:
 
     Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
-
+    Q_INVOKABLE void doTransfer(const qint32 amount, QString toname);
 //    Q_INVOKABLE QString getOrderModelSymbol() {
 //        return m_pGlobalOpenOrdersModel->get_pidsymbol();
 //    }
@@ -514,7 +514,7 @@ public:
     }
 
     Q_INVOKABLE void setPrevWeekData(int week, int season) {
-//        qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
+        qDebug() << "setPrevWeekData" << week << m_thePrevSeason << m_theSeason << m_thePrevWeek << m_theWeek << m_thisWeekPrev;
         setprevSelectedPlayerDisplay("");
         if ( !amLive ) return;
 
@@ -531,13 +531,18 @@ public:
 
             week = 16;
         }
-        else if (week >= 17) {
-            season = m_thePrevSeason + 1;
+        else if (week >= 17 ) {
+            if ( week < m_theWeek && season == m_theSeason) {
+                week = 16;
+            }
+            else {
+                season = m_thePrevSeason + 1;
 
-            if ( season > m_theSeason)
-                return;
+                if ( season > m_theSeason)
+                    return;
 
-            week = 1;
+                week = 1;
+            }
         }
 
         if ( week > m_theWeek && season == m_theSeason )
@@ -689,7 +694,7 @@ signals:
     void usingFantasyName(const QString &name);
     void nameCheckGet( const QString & name, const QString & status );
     void OnClaimName(QString name);
-
+    void noName();
     void OnUseName(QString); //tell agent to use the name
     void ready();
 //    void updateWeekData();
@@ -703,6 +708,7 @@ signals:
     void doNameCheck(QString);
     void NewProjection(vector<fantasybit::FantasyBitProj>);
     void NewOrder(fantasybit::ExchangeOrder);
+    void NewTransfer(fantasybit::TransferTrans);
 
     void NewHeightStop(int);
 
@@ -880,7 +886,13 @@ public slots:
 
     void AnyFantasyNameBalance(fantasybit::FantasyNameBal fnb) {
         auto *item = mFantasyNameBalModel.getByUid(fnb.name().data());
-        if ( item == nullptr ) return;
+        if ( item == nullptr ) {
+            qDebug() << " AnyFantasyNameBalance !found " << fnb.DebugString().data();
+            return;
+        }
+        else
+            qDebug() << " AnyFantasyNameBalance found " << fnb.DebugString().data();
+
         item->update(fnb);
         mFantasyNameBalModel.update(item);
     }

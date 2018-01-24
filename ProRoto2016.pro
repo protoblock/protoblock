@@ -23,6 +23,6 @@ OTHER_FILES += \
 
 #            $$PWD/pri/qml-realChat.pri
 
-OTHER_FILES += $$PWD/GenerateProto/*.proto
+OTHER_FILES += $$PWD/GenerateProto/Protodata/proto/*.proto
 
 #QMAKE_MAC_SDK = macosx10.12

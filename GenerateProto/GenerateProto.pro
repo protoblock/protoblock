@@ -6,15 +6,17 @@ CONFIG += c++11 \
                     ordered \
                     warn_off
 
+PROTOLOC = $$PWD/Protodata/proto
+
 ## SOURCES
 PROTOS += \
-    $$PWD/ApiData.proto \
-    $$PWD/ExData.proto \
-    $$PWD/NameData.proto \
-    $$PWD/StaticData.proto \
-    $$PWD/StatusData.proto \
-    $$PWD/ProtoData.proto \
-    $$PWD/StateData.proto
+    $$PROTOLOC/ApiData.proto \
+    $$PROTOLOC/ExData.proto \
+    $$PROTOLOC/NameData.proto \
+    $$PROTOLOC/StaticData.proto \
+    $$PROTOLOC/StatusData.proto \
+    $$PROTOLOC/ProtoData.proto \
+    $$PROTOLOC/StateData.proto
 
 
 DEFINES += BUILD_PROTO
@@ -45,7 +47,7 @@ protobuf_decl.commands =/usr/local/Cellar/protobuf/2.5.0/bin/protoc --cpp_out=$$
 
 
 win32{
-    protobuf_decl.commands = protoc --cpp_out=$$PWD/../$$GENERATEDDIR/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
+    protobuf_decl.commands = protoc --cpp_out=$$GENERATEDDIR/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
 }
 
 protobuf_decl.variable_out = HEADERS

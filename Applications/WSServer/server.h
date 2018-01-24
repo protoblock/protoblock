@@ -238,7 +238,12 @@ protected slots:
     /*
     void NameStatus(fantasybit::MyFantasyName);
     void MyNames(vector<fantasybit::MyFantasyName>);
-    void NameBal(fantasybit::FantasyNameBal);
+    */
+    void NameBal(fantasybit::FantasyNameBal) {
+        qDebug() << "server:NameBall called!";
+    }
+
+    /*
     void PlayerStatusChange(pair<string,fantasybit::PlayerStatus> in);
     void GameOver(string);
     void onControlMessage(QString);

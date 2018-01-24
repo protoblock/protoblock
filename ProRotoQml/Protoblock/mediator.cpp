@@ -182,7 +182,9 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     }
 
     myFantasyName = myname.name();
-    update_pMyFantasyNameBalance(mGoodNameBalModel.getByUid(myname.name().data()));
+    auto mgit = mGoodNameBalModel.getByUid(myname.name().data());
+    mgit->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName));
+    update_pMyFantasyNameBalance(mgit);
     qDebug() << "Mediator  emitting using fantasy name " << myname.name().data();
     myGamesSelectionModel.reset();
     emit usingFantasyName(myname.name().data());
@@ -234,6 +236,8 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
             auto it2 = mGoodNameBalModel.getByUid(m.name().data());
             if ( it2 == nullptr)
                 qDebug() << " nullptr? should have in good name wtf";
+            else
+                it2->updatePnl(mGateway->dataService->GetOpenPnl(m.name().data()));
         }
         else
             qDebug() <<  m.name ().data () << " not in mFantasyNameBalModel";
@@ -241,8 +245,10 @@ void Mediator::MyNames(vector<MyFantasyName> mfn) {
     }
 
     qDebug() << " namename wins " << heighest << hname.data();
-    if ( myFantasyName == "" && hname != "" )
+    if ( myFantasyName == "" && hname != "" && heighest >= 20)
         useName(hname.data());
+    else
+        emit noName();
 
 }
 
@@ -350,7 +356,11 @@ void Mediator::updateWeek() {
         set_busySend(false);
 
         {
+#ifndef SUPERBOWL52LIVE
             auto gss = mGateway->dataService->GetAllSymbols();
+#else
+            auto gss = mGateway->dataService->GetTeamSymbols({"NE","PHI"});
+#endif
             for ( auto gs : gss ) {
                 if ( mPlayerSymbolsModel.getByUid(gs.first.data()) == nullptr)
                     mPlayerSymbolsModel.append(new PlayerSymbolsModelItem(gs.second.data(),gs.first.data()));
@@ -451,8 +461,11 @@ void Mediator::updateWeek() {
             }
         }
 
-        if (myFantasyName != "" )
+        if (myFantasyName != "" ) {
             updateOnChangeFantasyName();
+            m_pMyFantasyNameBalance->updatePnl(mGateway->dataService->
+                                             GetOpenPnl(m_pMyFantasyNameBalance->get_name().toStdString()));
+        }
 
         updateLiveLeaders();
 //        emit updateWeekData ();
@@ -547,6 +560,7 @@ void Mediator::updateCurrentFantasyPlayerOrderPositions() {
    update_pGlobalOpenOrdersModel(updateGlobalOrder(mTradingPositionsModel,m_pPlayerQuoteSliceModelItem));
    update_pROWGlobalOpenOrdersModel(updateGlobalOrder(mROWTradingPositionsModel,m_pROWPlayerQuoteSliceModelItem));
 
+
 }
 
 OpenOrdersModel *Mediator::updateGlobalOrder(TradingPositionsModel &tpm, PlayerQuoteSliceModelItem *pqsmi) {
@@ -575,14 +589,17 @@ double Mediator::calcTotalPnl(TradingPositionsModel &tpm, PlayerQuoteSliceModel 
             pnl = tit->get_netprice() * tit->get_multiplier();
         }
         else {
-            int price = (netqty > 0) ? it->get_bid() : it->get_ask();
+            int price = (netqty > 0) ? it->get_bid() :
+                                       it->get_ask();
             if ( price == 0 )
-                price = it->get_lastprice();
+                price = (netqty > 0) ? 0 : ( fantasybit::isWeekly(tit->get_symbol()) ? 41 : 401) ;
+//                price = it->get_lastprice();
 
-            if ( price == 0 )
-                pnl = 0.0;
-            else
-                pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
+
+//            if ( price == 0 )
+//                pnl = 0.0;
+//            else
+            pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
             avg = tit->get_netprice()  / (netqty * -1.0);
         }
 
@@ -842,6 +859,16 @@ void Mediator::doTrade(QString playerid, QString symbol, bool isbuy, const qint3
     emit NewOrder(eo);
 }
 
+void Mediator::doTransfer(const qint32 amount, QString toname) {
+    qDebug() << " do transfer" << amount << "from: " << myFantasyName.data() << "to: " << toname;
+    TransferTrans tt;
+    tt.set_from(myFantasyName);
+    tt.set_to(toname.toStdString());
+    tt.set_amount(amount);
+
+    emit NewTransfer(tt);
+}
+
 void Mediator::doCancel(qint32 id) {
     ExchangeOrder eo;
     eo.set_type(ExchangeOrder::CANCEL);
@@ -927,11 +954,14 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     else if ( it != nullptr ) {
         int price = (netqty > 0) ? it->get_bid() : it->get_ask();
         if ( price == 0 )
-            price = it->get_lastprice();
-        if ( price == 0 )
-            pnl = 0;
-        else
-            pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
+            price = (netqty > 0) ? 0 : ( isweekly ? 41 : 401) ;
+
+//        if ( price == 0 )
+//            price = it->get_lastprice();
+//        if ( price == 0 )
+//            pnl = 0;
+//        else
+        pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
         avg = tit->get_netprice()  / (netqty * -1.0);
     }
 
@@ -945,6 +975,8 @@ void Mediator::OnNewPos(fantasybit::FullPosition fp) {
     auto &tpm = isweekly ? mTradingPositionsModel : mROWTradingPositionsModel;
     double newtotal = tpm.get_totalopenpnl() + (pnl - holdpnl);
     tpm.settotalopenpnl(newtotal);
+    m_pMyFantasyNameBalance->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName));
+
 }
 
 void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
@@ -969,11 +1001,14 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
     else if ( it != nullptr ) {
         int price = (netqty > 0) ? it->get_bid() : it->get_ask();
         if ( price == 0 )
-            price = it->get_lastprice();
-        if ( price == 0 )
-            pnl = 0;
-        else
-            pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
+            price = (netqty > 0) ? 0 : ( isweekly ? 41 : 401) ;
+
+//        if ( price == 0 )
+//            price = it->get_lastprice();
+//        if ( price == 0 )
+//            pnl = 0;
+//        else
+        pnl = tit->get_multiplier() * ((price * netqty) + tit->get_netprice());
         avg = tit->get_netprice()  / (netqty * -1.0);
     }
 
@@ -988,6 +1023,8 @@ void Mediator::MyPosPriceChange(PlayerQuoteSliceModelItem* it) {
                 + (pnl - holdpnl);
 
     tpm.settotalopenpnl(newtotal);
+    m_pMyFantasyNameBalance->updatePnl(mGateway->dataService->
+                                     GetOpenPnl(m_pMyFantasyNameBalance->get_name().toStdString()));
 }
 
 void Mediator::OnNewOO(fantasybit::FullOrderDelta fo) {
@@ -1009,8 +1046,12 @@ void Mediator::addTradingSymbol(const QString &symbol, bool isweekly) {
         qDebug() << "error addTradingSymbol" << symbol;
     }
     else {
+#ifdef SUPERBOWL52LIVE
+        mPlayerQuoteSliceModel.UpdateSymbols(it,m_blocknum,"17w21");
+#else
         getQuoteModel(isweekly).UpdateSymbols(it,m_blocknum,
                                               isweekly ? mWeeklySuffix : mSeasonSuffix);
+#endif
     }
 }
 

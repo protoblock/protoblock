@@ -56,6 +56,17 @@ void Node::init() {
 //    }
 #endif
 
+#ifdef STARTSUPERBOWL52
+        QFileInfo check_file1( (GET_ROOT_DIR() + "startSuperbowl52").data ());
+        if (!check_file1.exists() ) {
+            pb::remove_all(GET_ROOT_DIR() + "index/");
+            pb::remove_all(GET_ROOT_DIR() + "block/");
+            pb::remove_all(GET_ROOT_DIR() + "trade/");
+            QFile file( (GET_ROOT_DIR() + "startSuperbowl52").data () );
+            file.open(QIODevice::WriteOnly);
+        }
+#endif
+
 #ifdef START2017WITH2014
     QFileInfo check_file( (GET_ROOT_DIR() + "start2017").data ());
     if (!check_file.exists() ) {
@@ -512,8 +523,8 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 11671 )
-        num = 11671;
+    if (num > 13306 )
+        num = 13306;
     qWarning() << " STOP_HEIGHT_TEST " << num;
 #endif
 
@@ -563,9 +574,12 @@ Bootstrap Node::getLastLocalBoot() {
 
 //    if ( week == 0 )
 //        week = 8;
-
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
+#endif
+
+#ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY0
+    week = 0;
 #endif
 
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_MINUS1
@@ -605,6 +619,9 @@ Bootstrap Node::getLastLocalBoot() {
             else {
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
+                head.set_week(21);
+                head.set_season(2017);
+                ldb.write(head.key(),ldb.write(head));
                 done = true;
             }
         }
@@ -638,7 +655,7 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 11671;
+    height = 13306;
     qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
 #endif
 

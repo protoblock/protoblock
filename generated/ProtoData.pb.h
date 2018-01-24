@@ -49,6 +49,7 @@ class TweetProof;
 class MasterProof;
 class Transaction;
 class NameTrans;
+class TransferTrans;
 class SignedTransaction;
 class BlockHeader;
 class SignedBlockHeader;
@@ -312,11 +313,12 @@ enum TransType {
   TIME = 6,
   STAMPED = 7,
   EXCHANGE = 8,
-  EXCHANGE_BLOCK = 9
+  EXCHANGE_BLOCK = 9,
+  TRANSFER = 10
 };
 bool TransType_IsValid(int value);
 const TransType TransType_MIN = NAME;
-const TransType TransType_MAX = EXCHANGE_BLOCK;
+const TransType TransType_MAX = TRANSFER;
 const int TransType_ARRAYSIZE = TransType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* TransType_descriptor();
@@ -1591,6 +1593,13 @@ class Transaction : public ::google::protobuf::Message {
   inline ::fantasybit::TransType type() const;
   inline void set_type(::fantasybit::TransType value);
 
+  // optional uint64 nonce = 10;
+  inline bool has_nonce() const;
+  inline void clear_nonce();
+  static const int kNonceFieldNumber = 10;
+  inline ::google::protobuf::uint64 nonce() const;
+  inline void set_nonce(::google::protobuf::uint64 value);
+
   GOOGLE_PROTOBUF_EXTENSION_ACCESSORS(Transaction)
   // @@protoc_insertion_point(class_scope:fantasybit.Transaction)
  private:
@@ -1598,6 +1607,8 @@ class Transaction : public ::google::protobuf::Message {
   inline void clear_has_version();
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_nonce();
+  inline void clear_has_nonce();
 
   ::google::protobuf::internal::ExtensionSet _extensions_;
 
@@ -1605,9 +1616,10 @@ class Transaction : public ::google::protobuf::Message {
 
   ::google::protobuf::int32 version_;
   int type_;
+  ::google::protobuf::uint64 nonce_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -1733,6 +1745,122 @@ class NameTrans : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static NameTrans* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class TransferTrans : public ::google::protobuf::Message {
+ public:
+  TransferTrans();
+  virtual ~TransferTrans();
+
+  TransferTrans(const TransferTrans& from);
+
+  inline TransferTrans& operator=(const TransferTrans& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TransferTrans& default_instance();
+
+  void Swap(TransferTrans* other);
+
+  // implements Message ----------------------------------------------
+
+  TransferTrans* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const TransferTrans& from);
+  void MergeFrom(const TransferTrans& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string from = 10;
+  inline bool has_from() const;
+  inline void clear_from();
+  static const int kFromFieldNumber = 10;
+  inline const ::std::string& from() const;
+  inline void set_from(const ::std::string& value);
+  inline void set_from(const char* value);
+  inline void set_from(const char* value, size_t size);
+  inline ::std::string* mutable_from();
+  inline ::std::string* release_from();
+  inline void set_allocated_from(::std::string* from);
+
+  // optional string to = 20;
+  inline bool has_to() const;
+  inline void clear_to();
+  static const int kToFieldNumber = 20;
+  inline const ::std::string& to() const;
+  inline void set_to(const ::std::string& value);
+  inline void set_to(const char* value);
+  inline void set_to(const char* value, size_t size);
+  inline ::std::string* mutable_to();
+  inline ::std::string* release_to();
+  inline void set_allocated_to(::std::string* to);
+
+  // optional uint64 amount = 30;
+  inline bool has_amount() const;
+  inline void clear_amount();
+  static const int kAmountFieldNumber = 30;
+  inline ::google::protobuf::uint64 amount() const;
+  inline void set_amount(::google::protobuf::uint64 value);
+
+  static const int kTransferTranFieldNumber = 400;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::TransferTrans >, 11, false >
+    transfer_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.TransferTrans)
+ private:
+  inline void set_has_from();
+  inline void clear_has_from();
+  inline void set_has_to();
+  inline void clear_has_to();
+  inline void set_has_amount();
+  inline void clear_has_amount();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* from_;
+  ::std::string* to_;
+  ::google::protobuf::uint64 amount_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static TransferTrans* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -6330,6 +6458,28 @@ inline void Transaction::set_type(::fantasybit::TransType value) {
   type_ = value;
 }
 
+// optional uint64 nonce = 10;
+inline bool Transaction::has_nonce() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Transaction::set_has_nonce() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Transaction::clear_has_nonce() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Transaction::clear_nonce() {
+  nonce_ = GOOGLE_ULONGLONG(0);
+  clear_has_nonce();
+}
+inline ::google::protobuf::uint64 Transaction::nonce() const {
+  return nonce_;
+}
+inline void Transaction::set_nonce(::google::protobuf::uint64 value) {
+  set_has_nonce();
+  nonce_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // NameTrans
@@ -6510,6 +6660,172 @@ inline void NameTrans::set_allocated_proof(::fantasybit::NameProof* proof) {
   } else {
     clear_has_proof();
   }
+}
+
+// -------------------------------------------------------------------
+
+// TransferTrans
+
+// optional string from = 10;
+inline bool TransferTrans::has_from() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TransferTrans::set_has_from() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TransferTrans::clear_has_from() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TransferTrans::clear_from() {
+  if (from_ != &::google::protobuf::internal::kEmptyString) {
+    from_->clear();
+  }
+  clear_has_from();
+}
+inline const ::std::string& TransferTrans::from() const {
+  return *from_;
+}
+inline void TransferTrans::set_from(const ::std::string& value) {
+  set_has_from();
+  if (from_ == &::google::protobuf::internal::kEmptyString) {
+    from_ = new ::std::string;
+  }
+  from_->assign(value);
+}
+inline void TransferTrans::set_from(const char* value) {
+  set_has_from();
+  if (from_ == &::google::protobuf::internal::kEmptyString) {
+    from_ = new ::std::string;
+  }
+  from_->assign(value);
+}
+inline void TransferTrans::set_from(const char* value, size_t size) {
+  set_has_from();
+  if (from_ == &::google::protobuf::internal::kEmptyString) {
+    from_ = new ::std::string;
+  }
+  from_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* TransferTrans::mutable_from() {
+  set_has_from();
+  if (from_ == &::google::protobuf::internal::kEmptyString) {
+    from_ = new ::std::string;
+  }
+  return from_;
+}
+inline ::std::string* TransferTrans::release_from() {
+  clear_has_from();
+  if (from_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = from_;
+    from_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void TransferTrans::set_allocated_from(::std::string* from) {
+  if (from_ != &::google::protobuf::internal::kEmptyString) {
+    delete from_;
+  }
+  if (from) {
+    set_has_from();
+    from_ = from;
+  } else {
+    clear_has_from();
+    from_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string to = 20;
+inline bool TransferTrans::has_to() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void TransferTrans::set_has_to() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void TransferTrans::clear_has_to() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void TransferTrans::clear_to() {
+  if (to_ != &::google::protobuf::internal::kEmptyString) {
+    to_->clear();
+  }
+  clear_has_to();
+}
+inline const ::std::string& TransferTrans::to() const {
+  return *to_;
+}
+inline void TransferTrans::set_to(const ::std::string& value) {
+  set_has_to();
+  if (to_ == &::google::protobuf::internal::kEmptyString) {
+    to_ = new ::std::string;
+  }
+  to_->assign(value);
+}
+inline void TransferTrans::set_to(const char* value) {
+  set_has_to();
+  if (to_ == &::google::protobuf::internal::kEmptyString) {
+    to_ = new ::std::string;
+  }
+  to_->assign(value);
+}
+inline void TransferTrans::set_to(const char* value, size_t size) {
+  set_has_to();
+  if (to_ == &::google::protobuf::internal::kEmptyString) {
+    to_ = new ::std::string;
+  }
+  to_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* TransferTrans::mutable_to() {
+  set_has_to();
+  if (to_ == &::google::protobuf::internal::kEmptyString) {
+    to_ = new ::std::string;
+  }
+  return to_;
+}
+inline ::std::string* TransferTrans::release_to() {
+  clear_has_to();
+  if (to_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = to_;
+    to_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void TransferTrans::set_allocated_to(::std::string* to) {
+  if (to_ != &::google::protobuf::internal::kEmptyString) {
+    delete to_;
+  }
+  if (to) {
+    set_has_to();
+    to_ = to;
+  } else {
+    clear_has_to();
+    to_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional uint64 amount = 30;
+inline bool TransferTrans::has_amount() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void TransferTrans::set_has_amount() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void TransferTrans::clear_has_amount() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void TransferTrans::clear_amount() {
+  amount_ = GOOGLE_ULONGLONG(0);
+  clear_has_amount();
+}
+inline ::google::protobuf::uint64 TransferTrans::amount() const {
+  return amount_;
+}
+inline void TransferTrans::set_amount(::google::protobuf::uint64 value) {
+  set_has_amount();
+  amount_ = value;
 }
 
 // -------------------------------------------------------------------

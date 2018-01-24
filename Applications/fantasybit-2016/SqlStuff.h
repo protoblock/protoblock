@@ -62,10 +62,12 @@ struct SqlStuff {
         QString value = Platform::instance()->settings()->getSetting("dbUserName").toString();
         if (  value == "" )
             value = "root";
+        qDebug() << " user " << value;
         db.setUserName(value);
-        Platform::instance()->settings()->getSetting("dbPassword").toString();
+        value = Platform::instance()->settings()->getSetting("dbPassword").toString();
         if (  value == "" )
             value = "fantasyf00tball!";
+        qDebug() << " password " << value;
         db.setPassword(value);
 
         if (!db.open()) {

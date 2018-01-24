@@ -67,6 +67,10 @@ public:
 
     virtual std::string GetPidfromSymb(const std::string &symb) = 0;
 
+    virtual int GetOpenPnl(const std::string &fname) = 0;
+
+    virtual std::map<std::string, std::string> GetTeamSymbols(const std::list<std::string> &teams) = 0;
+
 
 };
 

@@ -306,7 +306,7 @@ void MainLAPIWorker::Quit() {
 }
 
 void MainLAPIWorker::Timer() {
-    qDebug() << " MainLAPIWorker::Timer() " << QDateTime::currentDateTime();
+//    qDebug() << " MainLAPIWorker::Timer() " << QDateTime::currentDateTime();
 #ifdef TESTING_PRE_ROW_TRADE_FEATURE
     if ( justwentlive ) {
         justwentlive = false;
@@ -632,6 +632,19 @@ void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
     DoPostTr(sn);
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
+}
+
+void MainLAPIWorker::OnNewTransfer(TransferTrans tt) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::TRANSFER);
+    trans.MutableExtension(TransferTrans::transfer_tran)->CopyFrom(tt);
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+    DoPostTx(sn);
     DoSubscribe(myCurrentName.name(),true);
     count = bcount = 0;
     timer->start(intervalstart);
