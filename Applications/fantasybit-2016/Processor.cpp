@@ -975,7 +975,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum,int32_t blocknum) {
     auto fn = BlockProcessor::getFNverifySt(inst);
     if ( !fn ) {
-        qWarning() << "invalid tx inside stamped" << inst.trans().type();
+        qWarning() << "invalid tx inside stamped" << inst.trans().DebugString().data();
         return;
     }
 

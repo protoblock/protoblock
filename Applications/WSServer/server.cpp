@@ -913,7 +913,7 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
 
 #else
     std::string price = to_string(tt->price()) + (tt->tic() < 0 ? " ↓" : tt->tic() > 0 ? " ↑" : "");
-    strtweet += " trading at: " + price + " fantasy points for SuperBowl LII";
+    strtweet += ") trading at: " + price + " fantasy points for SuperBowl LII";
     strtweet += "\n«" + tt->symbol() + "» @protoblock";
     strtweet += "\nhttp://protoblock.com/ticks.html?symbol=" + tt->symbol();
     strtweet += "\n#fantasyfootball #fantasybits $ƑɃ #sb52 #blockchain";
