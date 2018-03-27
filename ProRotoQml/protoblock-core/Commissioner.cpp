@@ -324,7 +324,7 @@ Block Commissioner::makeGenesisBlock() {
 }
 
 bool Commissioner::BootStrapFileExists(string genesiskey) {
-    string prefix = "boot2strap";
+    string prefix = "boot3strap";
 //    if ( stoi(genesiskey) < 201607 )
 //        prefix += "test";
     QString filename = string(prefix + genesiskey + ".out").data();
@@ -338,7 +338,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
     string headhash;
 
-    string prefix = "boot2strap";
+    string prefix = "boot3strap";
 //    if ( stoi(genesiskey) < 201607 )
 //        prefix += "test";
 
