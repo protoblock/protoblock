@@ -70,7 +70,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     fnameindex = 0;
     //leader models
     m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
-    m_pLeaderBoardSortModel->setSortRole("lastupdate");//mPlayerProjModel.roleForName("pos"));
+    m_pLeaderBoardSortModel->setSortRole("bits");//mPlayerProjModel.roleForName("pos"));
     m_pLeaderBoardSortModel->setDynamicSortFilter(true);
 
     m_pPlayerSymbolsModel->setSourceModel(&mPlayerSymbolsModel);

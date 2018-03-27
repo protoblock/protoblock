@@ -28,7 +28,7 @@ Item {
             id: tv
             Component.onCompleted: {
 //                resizeColumnsToContents()
-                model.sortAgain("lastupdate",Qt.DescendingOrder)
+                model.sortAgain("bits",Qt.DescendingOrder)
             }
 
             sortIndicatorColumn: 1
@@ -254,76 +254,6 @@ Item {
 
 
 
-
-
-            TableViewColumn{
-                role: "lastupdate"
-                title: "Block"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(8)
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: styleData.value
-                }
-            }
-
-            TableViewColumn{
-                role: "numberproj"
-                title: "Count"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(5)
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
-            TableViewColumn{
-                role:  "thisweek"
-                title: "wk" + myTheWeek
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(5)
-
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
-            TableViewColumn{
-                role:  "lastweek"
-                title: "wk" + (myTheWeek-1)
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(5)
-
-                visible: myTheWeek > 1
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
-
             TableViewColumn {
                 role: "leaders20XX"
                 title: MiddleMan.theSeason
@@ -374,6 +304,108 @@ Item {
                     text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
                 }
             }
+
+            TableViewColumn {
+                role: "pnl"
+                title: "PnL"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            TableViewColumn {
+                role: "net"
+                title: "Net"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            TableViewColumn{
+                role: "lastupdate"
+                title: "Block"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(5)
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: styleData.value
+                }
+            }
+/*
+            TableViewColumn{
+                role: "numberproj"
+                title: "Count"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(5)
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+/*
+            TableViewColumn{
+                role:  "thisweek"
+                title: "wk" + myTheWeek
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(5)
+
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            TableViewColumn{
+                role:  "lastweek"
+                title: "wk" + (myTheWeek-1)
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(5)
+
+                visible: myTheWeek > 1
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+*/
 
 
 

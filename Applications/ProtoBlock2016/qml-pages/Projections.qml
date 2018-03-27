@@ -274,7 +274,7 @@ Item {
                     Card {
                         anchors.leftMargin: 10
                         id: rightr
-                        Layout.minimumWidth: parent.width * .30
+                        Layout.minimumWidth: parent.width * .40
                         Layout.maximumWidth: parent.width * .80
                         LeaderProjView {
                             id: lpv
