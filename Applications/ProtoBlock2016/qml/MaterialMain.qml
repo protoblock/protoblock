@@ -158,12 +158,12 @@ Material.ApplicationWindow{
         levelFourIcons,
         levelFiveIcons
     ]
-    property var sectionTitles: [ "Wallet", "Trading","Projections",  "NFL News", "Account", "Protoblock"  ]
-    property var sectionTitlesAlias: [ "Wallet", "Trading", "Projections", "NFL News", "Account", "Protoblock" ]
+    property var sectionTitles: [ "Wallet", "Projections", "Trading", "NFL News", "Account", "Protoblock"  ]
+    property var sectionTitlesAlias: [ "Wallet",  "Projections", "Trading", "NFL News", "Account", "Protoblock" ]
     property var sectionTitlesIcons: [
         "qrc:/icons/local_atm.png",
-        "qrc:/icons/ic_timeline.png",
         "qrc:/icons/ic_poll.png",
+        "qrc:/icons/ic_timeline.png",
         "qrc:/icons/newspaper.png",
         "qrc:/icons/action_account_circle.png",
         "qrc:/icons/ic_help.png"
@@ -189,14 +189,14 @@ Material.ApplicationWindow{
     ]
 
     // Level One
-    property var levelOne: [ "Trading"]
-    property var levelOneIcons: [
+    property var levelTwo: [ "Trading"]
+    property var levelTwoIcons: [
         "qrc:/icons/newspaper.png"
     ]
 
     // Level Two
-    property var levelTwo: [ "Projections"]
-    property var levelTwoIcons: [
+    property var levelOne: [ "Projections"]
+    property var levelOneIcons: [
         "qrc:/icons/newspaper.png"
     ]
 
