@@ -39,21 +39,15 @@ void Node::init() {
     doSpecialResults = false;
 #endif
 
-#ifndef NO_REMOVEALL_TRADING
-    QFileInfo check_file( (GET_ROOT_DIR() + "firsttrade").data ());
+#ifndef NO_REMOVEALL_FORK1
+    QFileInfo check_file( (GET_ROOT_DIR() + "fork1").data ());
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "firsttrade").data () );
+        QFile file( (GET_ROOT_DIR() + "fork1").data () );
         file.open(QIODevice::WriteOnly);
     }
-
-//    QDir dir((GET_ROOT_DIR() + "trade/").data());
-//    if ( !dir.exists() ) {
-//        pb::remove_all(GET_ROOT_DIR() + "index/");
-//        pb::remove_all(GET_ROOT_DIR() + "block/");
-//    }
 #endif
 
 #ifdef STARTSUPERBOWL52
@@ -78,7 +72,7 @@ void Node::init() {
     }
 #endif
 
-#ifndef NO_REMOVEALL_SEASON_TRADING
+#ifdef REMOVEALL_SEASON_TRADING
     QFileInfo check_file( (GET_ROOT_DIR() + "seasontrade2017wk2").data ());
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");

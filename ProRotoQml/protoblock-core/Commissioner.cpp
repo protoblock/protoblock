@@ -295,6 +295,22 @@ Block Commissioner::makeGenesisBlock() {
         st.mutable_trans()->CopyFrom(tx);
         b.add_signed_transactions()->CopyFrom(st);
     }
+
+    QString filename = "/2014signedtx%1.out";
+    int count =0;
+    while ( true ) {
+        QString skillsaleFile = Platform::instance()->settings()->getSetting(AppSettings::ApplicationStorageDir).toString();
+        Reader<SignedTransaction> readertx2(skillsaleFile.toStdString() + filename.arg(count).toStdString());
+        if ( !readertx2.good() )
+            break;
+        SignedTransaction stx;
+        while ( readertx2.ReadNext(stx) ) {
+            qDebug() << stx.DebugString().data();
+            b.add_signed_transactions()->CopyFrom(stx);
+        }
+        count++;
+    }
+
 #endif
 
    // b.add_signed_transactions()->CopyFrom(dasn);

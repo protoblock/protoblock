@@ -207,8 +207,20 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
 
 #ifdef JAYHACK
     if ( sblock.signedhead().head().num() == 1 ) {
+        std::unordered_map<int,Block> weeklyProj;
         qDebug() << " jay hack 1";
         processTxfrom(sblock,1,true);
+        for ( int i = 1; i < sblock.signed_transactions_size(); i++) {
+            if ( sblock.signed_transactions(i).trans().type() == TransType::PROJECTION_BLOCK) {
+                const ProjectionTransBlock & ptb = sblock.signed_transactions(i).trans().GetExtension(ProjectionTransBlock::proj_trans_block);
+                Block &b = weeklyProj[ptb.week()];
+                b.add_signed_transactions()->CopyFrom(sblock.signed_transactions(i));
+            }
+            else {
+                qDebug() << sblock.signed_transactions(i).trans().DebugString().data();
+            }
+        }
+        int doweek = 1;
         for ( int i = 1; i < sblock.signed_transactions_size(); i++) {
             if ( sblock.signed_transactions(i).trans().type() != TransType::DATA)
                 continue;
@@ -217,6 +229,12 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
             if (dt.data_size() > 0)
                 process(dt.data(), "FantasyAgent", dt.type(),dt.season());
 
+            if ( dt.type() == TrType::GAMESTART) {
+                if ( dt.week() == doweek ) {
+                    doweek++;
+                    processTxfrom(weeklyProj[dt.week()],0,false);
+                }
+            }
             process(dt);
         }
 
