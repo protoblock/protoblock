@@ -167,7 +167,7 @@ public:
     GameInfo GetGameInfo(string gameid);
 
     std::string GenerateTicker(const std::string &pid,const PlayerStatus &ps) {
-        std::string result;
+        std::string result = "";
         PlayerBase pba = GetPlayerBase(pid);
         if ( pba.position() == "DEF") {
             result = ps.teamid();
