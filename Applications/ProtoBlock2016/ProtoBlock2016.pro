@@ -66,7 +66,7 @@ macx {
     ICON = icon.icns
     CONFIG += x86
 
-    resources.files = $$PWD/../../hold/boot2strap201700.out
+    resources.files = $$PWD/../../hold/boot3strap201716.out
     resources.path =  "$$DESTDIR/$$join(TARGET,,,.app)/Resources"
 
 #    INSTALLS += resources
@@ -159,4 +159,4 @@ CONFIG(debug,debug|release):message("Debug mode")
 CONFIG(release,debug|release):message("Release mode")
 
 DISTFILES += \
-    ../../hold/boot2strap201700.out
+    ../../hold/boot3strap201716.out
