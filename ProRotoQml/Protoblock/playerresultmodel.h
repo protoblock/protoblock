@@ -109,7 +109,7 @@ public:
         m_playerid = pr.playerid().data();
         m_gameid = gameid;
         m_result = pr.result();
-        m_fb = pr.result() * 100.0;
+        m_fb = std::lround(pr.result() * 100.0);
 
 
 

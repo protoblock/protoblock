@@ -27,7 +27,7 @@ NameValuePairs<int>
     if (projections.size() == 0 || result <= 0.0001 ) {
         if ( result > 0.0001 ) {
             double aw = result * 100.0;
-            award[agent] =  std::round(aw);
+            award[agent] =  std::lround(aw);
             qInfo() << "no projections agent " << agent << " gets balance " << result << aw;
 
         }
@@ -39,6 +39,9 @@ NameValuePairs<int>
     diffs.reserve(projections.size());
     
     double maxdiff = result;
+    if ( maxdiff < 1.0 ) {
+        maxdiff = .99;
+    }
 
     for(const auto& pair : projections) {
         double diff = result - pair.second;
@@ -70,7 +73,7 @@ NameValuePairs<int>
 
     if (sum == 0.0) {
         qInfo() << "no projections within 100% " << agent << " gets balance " << result;
-        award[agent] = result * 100.0;
+        award[agent] = std::lround(result * 100.0);
         return award;
     }
 
@@ -95,7 +98,7 @@ NameValuePairs<int>
 		if (diff <= maxdiff)
 		{
 			double amount = (result - diff)*payout;
-            award[pair.first] = amount * 100.0;
+            award[pair.first] = std::lround(amount * 100.0);
 			total += amount;
 //            qInfo() << pair.first << " projection " << pair.second << " award " << amount;
 		}
@@ -106,7 +109,7 @@ NameValuePairs<int>
     double leftover = result - total;
     if (leftover > 0.00001) {
         int hold = award[agent];
-        award[agent] = hold + leftover;
+        award[agent] = hold + std::lround(leftover);;
         qDebug() << "agent " << agent << " leftovers " << leftover;
 
     }
