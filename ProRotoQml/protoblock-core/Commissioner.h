@@ -308,6 +308,9 @@ public:
     static bool BootStrapFileExists(string);
 
     static const int BLOCK_VERSION = 1;
+    // 4/12/2018 -
+    //  TRANS_VERSION - 4  version4 requires timestamps
+    //
     static const int TRANS_VERSION = 4;
     static const int GENESIS_NUM = 1;
 

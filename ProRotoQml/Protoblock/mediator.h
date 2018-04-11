@@ -841,7 +841,7 @@ private:
     }
 
     void updateLiveLeaders(bool getLastWeek = true) {
-        mFantasyNameBalModel.updateleaders(mGateway->dataService->GetLeaderBoard());
+        mFantasyNameBalModel.updateleaders(mGateway->dataService);
 
         if ( m_theWeek-1 > 0 && getLastWeek)
             getLeaders(m_theWeek-1,true,false);
