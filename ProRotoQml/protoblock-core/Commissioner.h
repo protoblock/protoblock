@@ -308,7 +308,7 @@ public:
     static bool BootStrapFileExists(string);
 
     static const int BLOCK_VERSION = 1;
-    static const int TRANS_VERSION = 3;
+    static const int TRANS_VERSION = 4;
     static const int GENESIS_NUM = 1;
 
 
