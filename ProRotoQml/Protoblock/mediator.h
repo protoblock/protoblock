@@ -27,6 +27,7 @@
 #include "RestFullCall.h"
 #include "playerresultmodel.h"
 #include "ExchangeData.h"
+
 #ifdef PLAYERLOADERFD
 #include "../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
@@ -153,6 +154,9 @@ class Mediator : public QObject {
 
     QML_READONLY_CSTREF_PROPERTY (qint32, height)
     QML_READONLY_CSTREF_PROPERTY (qint32, blocknum)
+
+    QML_WRITABLE_CSTREF_PROPERTY (qint32, blocknum_string_num)
+    QML_READONLY_CSTREF_PROPERTY (QString, blocknum_string)
 
 
 //    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerProjModel)
@@ -941,6 +945,12 @@ public slots:
     void OnNewPos(fantasybit::FullPosition);
     void OnNewOO(fantasybit::FullOrderDelta);
     void MyPosPriceChange(PlayerQuoteSliceModelItem*);
+
+    void doBlockString(qint32 num) {
+        auto &b = Node::getLocalBlock(num);
+        if ( b )
+            setblocknum_string((*b).DebugString().data());
+    }
 
 private:
 //    vector<MyFantasyName> myGoodNames;

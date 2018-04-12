@@ -183,8 +183,9 @@ Material.ApplicationWindow{
     }
 
     // Level Zero
-    property var levelZero: [ "Wallet"]
+    property var levelZero: [ "Wallet", "Explorer"]
     property var levelZeroIcons: [
+        "qrc:/icons/local_atm.png",
         "qrc:/icons/local_atm.png"
     ]
 

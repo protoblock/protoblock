@@ -148,6 +148,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     connect(&mROWPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
             this, &Mediator::MyPosPriceChange);
+
+    connect(this, &Mediator::blocknum_string_numChanged, this, &Mediator::doBlockString);
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
