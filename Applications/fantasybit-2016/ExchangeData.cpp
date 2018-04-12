@@ -618,8 +618,8 @@ void ExchangeData::SaveBookDelta() {
     int32_t seqnum = mBookDelta->seqnum();
     leveldb::Slice snum((char*)&seqnum, sizeof(int32_t));
     leveldb::Status st = bookdeltastore->Put(mBookDelta->write_sync, snum, mBookDelta->mSerialized );
-    if ( !st.ok());
-        qWarning() << " error writing bookdeltastore";
+    if ( !st.ok() )
+        qWarning() << " error writing bookdeltastore" << st.ToString().data();
 
     {
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
