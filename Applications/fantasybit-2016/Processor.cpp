@@ -739,8 +739,9 @@ void BlockProcessor::process(const DataTransition &indt) {
                 mData.OnGlobalState(mGlobalState);
                 OnWeekStart(1);
             }
-            else
+            else {
                 qWarning() << "wrong week! " << indt.DebugString().data() << mGlobalState.DebugString().data();
+            }
             //mGlobalState.set_week(indt.week());
         }
 
@@ -803,24 +804,32 @@ void BlockProcessor::process(const DataTransition &indt) {
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
         if (indt.week() == 16) {
-            if (mGlobalState.season() == indt.season()) {
+            qInfo() <<  "season " << indt.season() << " Over ";
+            if ( mGlobalState.season() == 2017 && indt.season() == 2017) {
                 OnSeasonEnd(mGlobalState.season());
-                mGlobalState.set_season(indt.season()+1);
+                mGlobalState.set_state(GlobalState_State_OFFSEASON);
+                mGlobalState.set_week(21);
+                mData.OnGlobalState(mGlobalState);
             }
             else {
-                OnSeasonEnd(mGlobalState.season());
-                mGlobalState.set_season(mGlobalState.season()+1);
-                qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
+                if (mGlobalState.season() == indt.season()) {
+                    OnSeasonEnd(mGlobalState.season());
+                    mGlobalState.set_season(indt.season()+1);
+                }
+                else {
+                    OnSeasonEnd(mGlobalState.season());
+                    mGlobalState.set_season(mGlobalState.season()+1);
+                    qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
+                }
+
+
+                newweek = 0;
+                mGlobalState.set_state(GlobalState_State_OFFSEASON);
+                mGlobalState.set_week(0);
+                mData.OnGlobalState(mGlobalState);
+                //OnSeasonStart(mGlobalState.season());
+                //OnWeekStart(0);
             }
-
-
-            newweek = 0;
-            qInfo() <<  "season " << indt.season() << " Over ";
-            mGlobalState.set_state(GlobalState_State_OFFSEASON);
-            mGlobalState.set_week(0);
-            mData.OnGlobalState(mGlobalState);
-            //OnSeasonStart(mGlobalState.season());
-            //OnWeekStart(0);
         }
         else {
             mGlobalState.set_week(newweek);
