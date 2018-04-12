@@ -11,8 +11,8 @@ import QtQuick.Layouts 1.3
 
 
 Item {
-    property string seasontext: "NFL Season 2017 Super Bowl"
-    // + MiddleMan.theSeason + " - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
+    property string seasontext: //"NFL Season 2017 Super Bowl"
+    "NFL Season" + MiddleMan.theSeason + " - Week " + MiddleMan.theWeek // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
     property string wkorrow: "WEEK-" + MiddleMan.theWeek
 
@@ -59,7 +59,7 @@ Item {
 
             Label {
                 anchors.centerIn: parent
-                text: "SB-52 FANTASY FUTURES";
+                text: wkorrow + " FANTASY FUTURES";
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 color: "green" //themeroot.theme.primaryColor //liveorresult === "Live" ?  :
                 verticalAlignment: Text.AlignVCenter
@@ -112,8 +112,9 @@ Item {
             border.color: "transparent"
             border.width: ProtoScreen.guToPx(.125)
             TabBar {
-                selectedIndex: 0
+                selectedIndex: MiddleMan.theWeek === 0 ? 1 : 0
                 id: bar
+//                tabs: MiddleMan.theWeek === 0 ? ["wk1", MiddleMan.theSeason] : ["wk" + MiddleMan.theWeek ,"row"]
                 tabs: ["wk" + MiddleMan.theWeek ,"row"]
                 centered: true
 //                width: parent.width * 95.0
@@ -123,10 +124,12 @@ Item {
                 anchors.fill: parent
 //                anchors.margins: ProtoScreen.guToPx(.125)
                 onSelectedIndexChanged: {
-                    wkorrow = (tabs[selectedIndex] === "row") ? ("REST-OF-WAY") : ("WEEK-" + MiddleMan.theWeek)
+                    wkorrow = (tabs[selectedIndex] === "row") ? ( MiddleMan.theWeek === 0 ? "SEASON-LONG" : "REST-OF-WAY")
+                                                              : ("WEEK-" + MiddleMan.theWeek)
                 }
                 Layout.fillHeight: false
                 Layout.fillWidth: true
+                enabled: MiddleMan.theWeek !== 0
             }
 
             Rectangle {
