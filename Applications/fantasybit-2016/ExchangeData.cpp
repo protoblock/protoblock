@@ -908,6 +908,13 @@ void ExchangeData::OnGameStart(const std::string &gid,
               const std::unordered_map<std::string,PlayerDetail> &home,
               const std::unordered_map<std::string,PlayerDetail> &away
               ) {
+    lockSymbols(gid,home,away);
+}
+
+void ExchangeData::lockSymbols(const std::string &gid,
+              const std::unordered_map<std::string,PlayerDetail> &home,
+              const std::unordered_map<std::string,PlayerDetail> &away
+              ) {
 
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnGameStart " << gid.data();
@@ -917,56 +924,47 @@ void ExchangeData::OnGameStart(const std::string &gid,
     gsp.set_gameid(gid);
 
     for (auto ha : { QString("home"),QString("away")})
-    for ( auto iit : ha == "home" ? home : away) {
-        string &sym = iit.second.symbol;
-        BookPos bp{};
-//        bp.set_symbol(sym);
-//        bp.set_playerid(sym);
+    {
+        for ( auto iit : ha == "home" ? home : away) {
+            string &sym = iit.second.symbol;
+            BookPos bp{};
+            for (auto it = mLimitBooks.lower_bound(sym);
+                 it != end(mLimitBooks) && it->first.compare(0,sym.size(),sym) == 0;
+                 it++) {
 
-//        bool lockit = true;
-        for (auto it = mLimitBooks.lower_bound(sym);
-             it != end(mLimitBooks) && it->first.compare(0,sym.size(),sym) == 0;
-             it++) {
+                bp.Clear();
+                bp.set_playerid(sym);
+                //1-9 is part of year and 1-z is extra suffix
+                //skip if > 9 - wrong symbol - no match
+                if ( sym.size() == 4 && it->first.at(4) > '9') {
+                    break;
+                }
 
-            bp.Clear();
-            bp.set_playerid(sym);
-            if ( sym.size() == 4 && it->first.at(4) != '1') break;
-
-//            lockit = false;
-            bp.set_symbol(it->first);
-            it->second->islocked = true;
+                bp.set_symbol(it->first);
+                it->second->islocked = true;
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnGameStart locking " << it->first.data();
 #endif
-            for ( auto p : it->second->mPkPos ) {
-                SettlePos sp;
-                sp.set_qty(p.second.netqty);
-                sp.set_price(p.second.netprice);
-                sp.set_pk(p.first);
-                bp.add_positions()->CopyFrom(sp);
+                for ( auto p : it->second->mPkPos ) {
+                    SettlePos sp;
+                    sp.set_qty(p.second.netqty);
+                    sp.set_price(p.second.netprice);
+                    sp.set_pk(p.first);
+                    bp.add_positions()->CopyFrom(sp);
 #ifdef TRACE
     qDebug() << "level2 ExchangeData OnGameStart settlepos oooooo" << sp.DebugString().data();
 #endif
+                }
+
+                //seperate book pos for ROW and week
+                if ( ha == "home") gsp.add_home()->CopyFrom(bp);
+                else gsp.add_away()->CopyFrom(bp);
             }
 
-            //seperate book pos for ROW and week
-            if ( ha == "home") gsp.add_home()->CopyFrom(bp);
-            else gsp.add_away()->CopyFrom(bp);
-
-//            if ( ++it == end(mLimitBooks) )
-//                break;
+            //single lock for stripped symbol
+            mLockedSymb.insert(sym);
         }
-
-        //single lock for stripped symbol
-        mLockedSymb.insert(sym);
-
-//        if ( lockit ) {
-//            mLockedSymb.insert(sym);
-//            if ( ha == "home") gsp.add_home()->CopyFrom(bp);
-//            else gsp.add_away()->CopyFrom(bp);
-//        }
     }
-
     if (!settlestore->Put(write_sync, gid, gsp.SerializeAsString()).ok())
         qWarning() << "error writing settlestore" << gid.data();
     else

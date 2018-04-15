@@ -406,6 +406,11 @@ public:
                   const std::unordered_map<std::string,PlayerDetail> &home,
                   const std::unordered_map<std::string,PlayerDetail> &away
                      );
+    void lockSymbols(const std::string &gid,
+                  const std::unordered_map<std::string,PlayerDetail> &home,
+                  const std::unordered_map<std::string,PlayerDetail> &away
+                     );
+
     void clearNewWeek(bool = false);
 
     void OnSeasonStart(int season) {
@@ -572,13 +577,6 @@ public:
                 OnNewPosition(rowdiv.name(),mypos,tradesymbol);
             }
         }
-
-        //            auto it = mLimitBooks.find(tradesymbol);
-        //            if ( it == end(mLimitBooks)) {
-        //                qWarning() << "processGameResult Error no mLimitBooks" << tradesymbol.data();
-        //                continue;
-        //            }
-
     }
 
     void addBootStrap(Bootstrap *in) {
