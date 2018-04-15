@@ -347,14 +347,40 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     break;
                 }
 
-//                if ( rd.game_result().gameid() == "201601111")
-//                    qDebug() << " 201601111";
-                /*
-                if ( !sanity(rd.fpp()) ) {
-                    qCritical() << " invalid result skipping" << rd.DebugString();
-                    break;
+                bool noproj = false;
+#ifdef HACK_2018
+                //superbowl Lii
+                //fantasydata 201730421
+                //gid 201712119
+                //
+                string gid = "201712119";
+                if ( rd.game_result().gameid() == gid) {
+                    noproj = true;
+                    GameStatus gs;
+                    gs.set_datetime(1517715000);
+                    gs.set_status(GameStatus::INGAME);
+                    mData.OnGameStart(gid,gs);
+
+                    GameInfo gi;
+                    gi.set_id(gid);
+                    gi.set_home("NE");
+                    gi.set_away("PHI");
+                    mData.UpdateGameStatus(gid,gs,true);
+
+                    auto homeroster = mData.GetTeamRoster(gi.home());
+                    auto awayroster = mData.GetTeamRoster(gi.away());
+
+                    vector<string> homep, awayp;
+                    for ( auto hr : homeroster) {
+                        homep.push_back(hr.first);
+                    }
+                    for ( auto hr : awayroster)
+                        awayp.push_back(hr.first);
+
+                    mExchangeData.OnGameStart(gid,homeroster,awayroster);
                 }
-                */
+#endif
+
                 auto st = mData.GetUpdatedGameStatus(rd.game_result().gameid());
                 if ( st.status() == GameStatus::CLOSED ) {
                     qWarning() << rd.game_result().gameid().data() << " game already closed - ignorning result ";
@@ -397,12 +423,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 }
 
 
-                //for ( auto fpj : allprojs.away())
-                //   projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
-
-
                 for (auto ha : {QString("home"),QString("away")}) {
-
                     qDebug() << "****" << ha;
                     int size =  (ha == QString("home")) ?
                                 rd.game_result().home_result_size()
@@ -436,7 +457,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         }
 
                         total += haresult.Get(i).result();
-                        processResultProj(mut_haresult->Mutable(i),proj,bpospair,blocksigner);
+                        processResultProj(mut_haresult->Mutable(i),proj,bpospair,blocksigner,noproj);
                         mData.UpdatePlayerStats(haresult.Get(i));
                     }
 
@@ -616,7 +637,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 void BlockProcessor::processResultProj(PlayerResult* playerresultP,
                                        std::unordered_map<std::string,int> &proj,
                                        std::pair<BookPos *, BookPos *> pbpospair,
-                                       const std::string &blocksigner) {
+                                       const std::string &blocksigner, bool noproj) {
     auto &playerresult = *playerresultP;
 //    PlayerResult awards;
     DistribuePointsAvg dist(proj);
@@ -628,6 +649,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     //}
 
     //decltype(PlayerResult::default_instance().fantaybitaward())
+    if ( !noproj )
     for (auto r : rewards ) {
         FantasyBitAward &fba = *playerresult.mutable_fantaybitaward()->Add();
         fba.set_name(r.first);
