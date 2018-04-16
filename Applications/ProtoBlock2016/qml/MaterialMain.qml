@@ -136,7 +136,7 @@ Material.ApplicationWindow{
 
     property string start: "qrc:/Projections.qml"
     property string account: "qrc:/Account.qml"
-    property int startindex: 2
+    property int startindex: 1
     property int accountIndex: 4
     property string  errorString
     property bool  reloadleaders: false
@@ -280,9 +280,9 @@ Material.ApplicationWindow{
                 iconName: "qrc:/icons/action_account_circle.png"
                 name: "Account"
                 onTriggered: {
-                    rootLoader.source = "qrc:/Account.qml"
+//                    rootLoader.source = "qrc:/Account.qml"
                     pageHelper.selectedTabIndex = accountIndex
-                    pageHelper.title = "Account Settings"
+//                    pageHelper.title = "Account Settings"
                 }
             }
 //            ,Material.Action {
