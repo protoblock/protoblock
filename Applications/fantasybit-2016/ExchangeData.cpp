@@ -26,7 +26,17 @@ Q_GLOBAL_STATIC(BookDeltaMediator, mBookDelta)
 Q_GLOBAL_STATIC(ExchangeDataHolder, pExchangeData)
 
 
-void ExchangeData::init() {
+void ExchangeData::init(const fantasybit::GlobalState &st) {
+    mWeek = st.week();
+    mSeason = st.season();
+    if ( mWeek > 16)
+        mMinSeason = mSeason+1;
+    else
+        mMinSeason = mSeason;
+
+    if ( mMaxSeason < mMinSeason)
+        mMaxSeason = mMinSeason;
+
     std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
     pExchangeData->set(this);
     mBookDelta->write_sync.sync = true;

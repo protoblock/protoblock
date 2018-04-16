@@ -325,7 +325,7 @@ public:
 #endif
 
     int64_t MAXSEQ;
-    void init();
+    void init(const fantasybit::GlobalState &);
     void closeAll(bool saverow = false);
 
     void removeAll() {

@@ -83,8 +83,9 @@ int32_t BlockProcessor::init() {
 
     mData.init();
     mNameData.init();
+    mGlobalState = mData.GetGlobalState();
 #ifdef TRADE_FEATURE
-    mExchangeData.init();
+    mExchangeData.init(mGlobalState);
 #endif
 
 //    OnSeasonStart(mData.GetGlobalState().season());
@@ -97,7 +98,7 @@ int32_t BlockProcessor::init() {
     bx.init();//lastidprocessed);
 #endif
 
-    mGlobalState = mData.GetGlobalState();
+
 #ifdef TRADE_FEATURE
     mFutContract.set_type(FutContract_Type_WEEKLY);
     GlobalState &gs = mGlobalState;
