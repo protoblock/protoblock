@@ -11,13 +11,17 @@ CONFIG += resources_big
 #CONFIG += c++11
 
 
-    !contains(DEFINES, PRODFOOTBALL){
-        TARGET = STAGING-fantasybit-2016D
-    }
+!contains(DEFINES, PRODFOOTBALL){
+    TARGET = STAGING-fantasybit-2016D
+}
 
-    contains(DEFINES, PRODFOOTBALL){
-        TARGET = fantasybit-2016D
-    }
+contains(DEFINES, PRODFOOTBALL){
+    TARGET = fantasybit-2016D
+}
+
+contains(DEFINES, DATAAGENTDEFS){
+    TARGET = DATAAGENT-$${TARGET}
+}
 
 
 #CONFIG += qt console

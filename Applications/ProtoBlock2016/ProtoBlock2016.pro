@@ -121,6 +121,10 @@ ios{
     FANTASYBITLIB = STAGING-$${FANTASYBITLIB}
 }
 
+contains(DEFINES, DATAAGENTDEFS){
+    FANTASYBITLIB = ERROR-$${FANTASYBITLIB}
+}
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/release/ -l$$FANTASYBITLIB
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/debug/ -l$$FANTASYBITLIB
 else:macx: LIBS += -L$$OUT_PWD/../fantasybit-2016/ -l$$FANTASYBITLIB
