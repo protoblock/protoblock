@@ -416,10 +416,14 @@ public:
     void OnSeasonStart(int season) {
         mSeason = season;
         mMinSeason = season;
+        if ( mMaxSeason < mMinSeason)
+            mMaxSeason = mMinSeason;
     }
 
     void OnSeasonEnd(int season) {
         mMinSeason = season+1;
+        if ( mMaxSeason < mMinSeason)
+            mMaxSeason = mMinSeason;
     }
 
     int mWeek;

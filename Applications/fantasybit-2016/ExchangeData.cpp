@@ -1614,6 +1614,12 @@ qDebug() << "level2 ExchangeData OnLive qqqqqq" << fnames.size();
 
     const auto &st = DataService::instance()->GetGlobalState();
     mWeek = st.week();
+    mSeason = st.season();
+    if ( mMinSeason < mSeason )
+        mMinSeason = mSeason;
+
+    if ( mMaxSeason < mMinSeason)
+        mMaxSeason = mMinSeason;
 
 //    doEmitSnap();
 
@@ -1703,6 +1709,7 @@ ordsnap_t  ExchangeData::GetOrdersPositionsByName(const std::string &fname) {
 }
 
 void ExchangeData::OnTradeSessionStart(int season,int week) {
+    //todo:
     if ( week == 0 ) {
         if ( season >= mMaxSeason )
             mMaxSeason = season;

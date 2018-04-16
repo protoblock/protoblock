@@ -719,10 +719,13 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
         break;
     case TrType::SEASONEND:
-        break;
         if (mGlobalState.state() != GlobalState_State_INSEASON) {
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-//            break;
+            if ( mGlobalState.week() >= 17) {
+                OnSeasonEnd(mGlobalState.season());
+                mGlobalState.set_season(indt.season()+1);
+                mGlobalState.set_week(0);
+            }
         }
         else {
             qInfo() <<  indt.season() << " Season End :( ";
@@ -797,8 +800,10 @@ void BlockProcessor::process(const DataTransition &indt) {
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
 
-        if ( indt.week() != mGlobalState.week())
+        if ( indt.week() != mGlobalState.week()) {
             qWarning() << indt.type() << " wrong week" << mGlobalState.week() << indt.week();
+            break;
+        }
 #ifdef TRADE_FEATURE
         std::unordered_map<string,BookPos> pos;
         mExchangeData.GetRemainingSettlePos(pos);
@@ -825,9 +830,9 @@ void BlockProcessor::process(const DataTransition &indt) {
         OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
-        if (indt.week() == 16) {
+        if (indt.week() >= 16) {
             qInfo() <<  "season " << indt.season() << " Over ";
-            if ( mGlobalState.season() == 2017 && indt.season() == 2017) {
+            if ( mGlobalState.season() == 2017 && indt.season() == 2017 && indt.week() < 21) {
                 OnSeasonEnd(mGlobalState.season());
                 mGlobalState.set_state(GlobalState_State_OFFSEASON);
                 mGlobalState.set_week(21);
@@ -862,6 +867,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     }
     case TrType::TRADESESSIONSTART:
     {
+        //todo
         mExchangeData.OnTradeSessionStart(indt.season(),indt.week());
         break;
     }
@@ -1115,14 +1121,14 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     case FutContract_Type_ROW:
         if ( fc->season() != mGlobalState.season() ||
             mGlobalState.state() != GlobalState_State_INSEASON ) {
-                qWarning() << "2 ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                qWarning() << "2 ProcessInsideStamped bad FutContract" << fc->DebugString().data() << emdg.DebugString().data();
                 return;
         }
         break;
 
     case FutContract_Type_SEASON:
         if ( fc->season() < mExchangeData.mMinSeason || fc->season() > mExchangeData.mMaxSeason) {
-            qWarning() << "3 ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
+            qWarning() << "3 ProcessInsideStamped bad FutContract season" << fc->DebugString().data() << emdg.DebugString().data();
             return;
         }
         break;
@@ -1187,11 +1193,14 @@ void BlockProcessor::OnSeasonStart(int season) {
 
 }
 
-void BlockProcessor::OnSeasonEnd(int season) {
+void BlockProcessor::OnSeasonEnd(int oldseason) {
 //    mNameData.OnSeasonEnd(season);
-    mData.OnSeasonEnd(season);
-//    mExchangeData.OnSeasonStart(season);
+    mData.OnSeasonEnd(oldseason);
+    mExchangeData.OnSeasonEnd(oldseason);
 //    emit WeekStart(week);
+#ifdef TRADE_FEATURE
+    mFutContract.set_season(oldseason+1);
+#endif
 }
 
 

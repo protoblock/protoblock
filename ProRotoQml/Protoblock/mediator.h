@@ -523,8 +523,8 @@ public:
         if ( !amLive ) return;
 
 //        int season = m_thePrevSeason;
-        if ( season != m_thePrevSeason )
-            setthePrevSeason(season);
+//        if ( season != m_thePrevSeason )
+//            setthePrevSeason(season);
 //        m_thePrevSeason = season;
 
         if ( week <= 0 ) {

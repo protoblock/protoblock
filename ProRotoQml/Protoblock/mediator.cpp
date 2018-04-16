@@ -291,9 +291,9 @@ void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {
 void Mediator::GlobalStateChange(GlobalState gs) {
     qDebug() << "Mediator GlobalStateChange " << gs.DebugString().data();
 
-    if ( gs.week() > 0 && gs.week() < 18) {
+//    if ( gs.week() > 0 && gs.week() < 18)
+    {
         UpdateSeasonWeek(gs.season(),gs.week());
-
 
         if ( m_thePrevWeek == m_theWeek)
             setthePrevWeek(gs.week());
@@ -304,8 +304,6 @@ void Mediator::GlobalStateChange(GlobalState gs) {
         }
         else
             updateWeek();
-
-
 
         set_busySend(false);
     }
