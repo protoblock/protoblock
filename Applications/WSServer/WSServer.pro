@@ -27,7 +27,7 @@ OTHER_FILES += $$PWD/sslechoclient.html
 DEFINES += MAX_NAMES_LB=1000
 #DEFINES += TRACE
 
-DEFINES += WSSERVER_WRITE_TWEET
+#DEFINES += WSSERVER_WRITE_TWEET
 contains(DEFINES, WSSERVER_WRITE_TWEET) {
     INCLUDEPATH += $$DIRPREFIX/windows/3rdParty/nanomsg
     LIBS += -lnanomsg
@@ -87,9 +87,12 @@ HEADERS += \
 
 FANTASYBITLIB += fantasybit-2016D
 
-
 !contains(DEFINES, PRODFOOTBALL){
     FANTASYBITLIB = STAGING-$${FANTASYBITLIB}
+}
+
+contains(DEFINES, DATAAGENTDEFS){
+    FANTASYBITLIB = ERROR-$${FANTASYBITLIB}
 }
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../fantasybit-2016/release/ -l$$FANTASYBITLIB
