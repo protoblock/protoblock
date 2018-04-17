@@ -71,7 +71,10 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     //leader models
     m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
     m_pLeaderBoardSortModel->setSortRole("bits");//mPlayerProjModel.roleForName("pos"));
-    m_pLeaderBoardSortModel->setDynamicSortFilter(true);
+//    m_pLeaderBoardSortModel->setDynamicSortFilter(true);
+    m_pLeaderBoardSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_pLeaderBoardSortModel->setFilterRole({"name"});
+    m_pLeaderBoardSortModel->setFilterSyntax(SortFilterProxyModel::FilterSyntax::FixedString);
 
     m_pPlayerSymbolsModel->setSourceModel(&mPlayerSymbolsModel);
     m_pPlayerSymbolsModel->setSortRole({"fullname"});
