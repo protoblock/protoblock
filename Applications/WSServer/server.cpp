@@ -899,7 +899,7 @@ void Server::TweetIt(fantasybit::TradeTic *tt) {
 
 #ifndef SUPERBOWL52LIVE
     strtweet +=  !fantasybit::isWeekly(tt->symbol())
-            ? ") ROW - "
+            ? (") " + to_string(GlobalStateRep.globalstate().season()) + " Season")
             : (") Week " + to_string(GlobalStateRep.globalstate().week()));
 
     std::string price = to_string(tt->price()) + (tt->tic() < 0 ? " ↓" : tt->tic() > 0 ? " ↑" : "");
