@@ -40,12 +40,12 @@ void Node::init() {
 #endif
 
 #ifndef NO_REMOVEALL_FORK1
-    QFileInfo check_file( (GET_ROOT_DIR() + "fork1").data ());
+    QFileInfo check_file( (GET_ROOT_DIR() + "postfork1").data ());
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "fork1").data () );
+        QFile file( (GET_ROOT_DIR() + "postfork1").data () );
         file.open(QIODevice::WriteOnly);
     }
 #endif
@@ -538,6 +538,30 @@ int32_t Node::myLastGlobalBlockNum() {
     return myglobalheight;
 }
 
+int Node::getBootSeason() {
+    QString links(PAPIURL.data());
+    //QString links("https://158.222.102.83:4545");
+    QString route("season");
+
+    QMap<QString,QString>  headers;
+    QMap<QString,QVariant> params;
+
+    QUrl url;
+    url.setUrl(links);
+    RestfullClient rest (url);
+    rest.getData(route);
+    auto resp = rest.lastReply();
+
+    qDebug() << resp;
+    QJsonDocument ret = QJsonDocument::fromJson(resp);
+    qDebug() << ret.isNull() << ret.isEmpty() << ret.isArray() << ret.isObject();
+
+    QJsonObject jo = ret.object();
+    auto sseason = jo.value("season").toString().toStdString();
+
+    return stoi(sseason);
+}
+
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
 Bootstrap Node::getLastLocalBoot() {
     QString links(PAPIURL.data());
@@ -566,8 +590,9 @@ Bootstrap Node::getLastLocalBoot() {
     else
         week = stoi(weekstr);
 
-//    if ( week == 0 )
-//        week = 8;
+    //todo: season
+    int sseason = getBootSeason();
+
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
 #endif
@@ -587,11 +612,17 @@ Bootstrap Node::getLastLocalBoot() {
     bool done = false;
     while ( !done ) {
         if ( week < 0 ) {
-            done = true;
-            break;
+            sseason--;
+            if ( sseason < 2017 ) {
+                done = true;
+                break;
+            }
+            else {
+                week = 16;
+            }
         }
 
-        string globalhead = (week < 10 ? "20170" : "2017") + to_string(week);
+        string globalhead = to_string(sseason) + (week < 10 ?  + "0" : "") + to_string(week);
 
 #ifndef NO_DOSPECIALRESULTS
         if ( globalhead == "201613" && !Commissioner::BootStrapFileExists(globalhead) ) {
@@ -610,14 +641,15 @@ Bootstrap Node::getLastLocalBoot() {
                 week--;
                 //return;
             }
-            else {
+            else
+                done = true;
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
-                head.set_week(21);
-                head.set_season(2017);
-                ldb.write(head.key(),ldb.write(head));
-                done = true;
-            }
+                if ( head.key() == "201716" ) {
+                    head.set_week(21);
+                    head.set_season(2017);
+                    ldb.write(head.key(),ldb.write(head));
+                }
         }
         else {
             done = true;

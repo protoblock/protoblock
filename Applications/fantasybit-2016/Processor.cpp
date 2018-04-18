@@ -83,8 +83,9 @@ int32_t BlockProcessor::init() {
 
     mData.init();
     mNameData.init();
+    mGlobalState = mData.GetGlobalState();
 #ifdef TRADE_FEATURE
-    mExchangeData.init();
+    mExchangeData.init(mGlobalState);
 #endif
 
 //    OnSeasonStart(mData.GetGlobalState().season());
@@ -97,7 +98,7 @@ int32_t BlockProcessor::init() {
     bx.init();//lastidprocessed);
 #endif
 
-    mGlobalState = mData.GetGlobalState();
+
 #ifdef TRADE_FEATURE
     mFutContract.set_type(FutContract_Type_WEEKLY);
     GlobalState &gs = mGlobalState;
@@ -347,14 +348,40 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     break;
                 }
 
-//                if ( rd.game_result().gameid() == "201601111")
-//                    qDebug() << " 201601111";
-                /*
-                if ( !sanity(rd.fpp()) ) {
-                    qCritical() << " invalid result skipping" << rd.DebugString();
-                    break;
+                bool noproj = false;
+#ifdef HACK_2018
+                //superbowl Lii
+                //fantasydata 201730421
+                //gid 201712119
+                //
+                string gid = "201712119";
+                if ( rd.game_result().gameid() == gid) {
+                    noproj = true;
+                    GameStatus gs;
+                    gs.set_datetime(1517715000);
+                    gs.set_status(GameStatus::INGAME);
+                    mData.OnGameStart(gid,gs);
+
+                    GameInfo gi;
+                    gi.set_id(gid);
+                    gi.set_home("NE");
+                    gi.set_away("PHI");
+                    mData.UpdateGameStatus(gid,gs,true);
+
+                    auto homeroster = mData.GetTeamRoster(gi.home());
+                    auto awayroster = mData.GetTeamRoster(gi.away());
+
+                    vector<string> homep, awayp;
+                    for ( auto hr : homeroster) {
+                        homep.push_back(hr.first);
+                    }
+                    for ( auto hr : awayroster)
+                        awayp.push_back(hr.first);
+
+                    mExchangeData.OnGameStart(gid,homeroster,awayroster);
                 }
-                */
+#endif
+
                 auto st = mData.GetUpdatedGameStatus(rd.game_result().gameid());
                 if ( st.status() == GameStatus::CLOSED ) {
                     qWarning() << rd.game_result().gameid().data() << " game already closed - ignorning result ";
@@ -397,12 +424,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 }
 
 
-                //for ( auto fpj : allprojs.away())
-                //   projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
-
-
                 for (auto ha : {QString("home"),QString("away")}) {
-
                     qDebug() << "****" << ha;
                     int size =  (ha == QString("home")) ?
                                 rd.game_result().home_result_size()
@@ -436,7 +458,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         }
 
                         total += haresult.Get(i).result();
-                        processResultProj(mut_haresult->Mutable(i),proj,bpospair,blocksigner);
+                        processResultProj(mut_haresult->Mutable(i),proj,bpospair,blocksigner,noproj);
                         mData.UpdatePlayerStats(haresult.Get(i));
                     }
 
@@ -616,7 +638,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 void BlockProcessor::processResultProj(PlayerResult* playerresultP,
                                        std::unordered_map<std::string,int> &proj,
                                        std::pair<BookPos *, BookPos *> pbpospair,
-                                       const std::string &blocksigner) {
+                                       const std::string &blocksigner, bool noproj) {
     auto &playerresult = *playerresultP;
 //    PlayerResult awards;
     DistribuePointsAvg dist(proj);
@@ -628,6 +650,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     //}
 
     //decltype(PlayerResult::default_instance().fantaybitaward())
+    if ( !noproj )
     for (auto r : rewards ) {
         FantasyBitAward &fba = *playerresult.mutable_fantaybitaward()->Add();
         fba.set_name(r.first);
@@ -697,10 +720,13 @@ void BlockProcessor::process(const DataTransition &indt) {
         }
         break;
     case TrType::SEASONEND:
-        break;
         if (mGlobalState.state() != GlobalState_State_INSEASON) {
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-//            break;
+            if ( mGlobalState.week() >= 17) {
+                OnSeasonEnd(mGlobalState.season());
+                mGlobalState.set_season(indt.season()+1);
+                mGlobalState.set_week(0);
+            }
         }
         else {
             qInfo() <<  indt.season() << " Season End :( ";
@@ -739,8 +765,9 @@ void BlockProcessor::process(const DataTransition &indt) {
                 mData.OnGlobalState(mGlobalState);
                 OnWeekStart(1);
             }
-            else
+            else {
                 qWarning() << "wrong week! " << indt.DebugString().data() << mGlobalState.DebugString().data();
+            }
             //mGlobalState.set_week(indt.week());
         }
 
@@ -774,8 +801,10 @@ void BlockProcessor::process(const DataTransition &indt) {
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
 
-        if ( indt.week() != mGlobalState.week())
+        if ( indt.week() != mGlobalState.week()) {
             qWarning() << indt.type() << " wrong week" << mGlobalState.week() << indt.week();
+            break;
+        }
 #ifdef TRADE_FEATURE
         std::unordered_map<string,BookPos> pos;
         mExchangeData.GetRemainingSettlePos(pos);
@@ -802,25 +831,33 @@ void BlockProcessor::process(const DataTransition &indt) {
         OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
-        if (indt.week() == 16) {
-            if (mGlobalState.season() == indt.season()) {
+        if (indt.week() >= 16) {
+            qInfo() <<  "season " << indt.season() << " Over ";
+            if ( mGlobalState.season() == 2017 && indt.season() == 2017 && indt.week() < 21) {
                 OnSeasonEnd(mGlobalState.season());
-                mGlobalState.set_season(indt.season()+1);
+                mGlobalState.set_state(GlobalState_State_OFFSEASON);
+                mGlobalState.set_week(21);
+                mData.OnGlobalState(mGlobalState);
             }
             else {
-                OnSeasonEnd(mGlobalState.season());
-                mGlobalState.set_season(mGlobalState.season()+1);
-                qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
+                if (mGlobalState.season() == indt.season()) {
+                    OnSeasonEnd(mGlobalState.season());
+                    mGlobalState.set_season(indt.season()+1);
+                }
+                else {
+                    OnSeasonEnd(mGlobalState.season());
+                    mGlobalState.set_season(mGlobalState.season()+1);
+                    qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
+                }
+
+
+                newweek = 0;
+                mGlobalState.set_state(GlobalState_State_OFFSEASON);
+                mGlobalState.set_week(0);
+                mData.OnGlobalState(mGlobalState);
+                //OnSeasonStart(mGlobalState.season());
+                //OnWeekStart(0);
             }
-
-
-            newweek = 0;
-            qInfo() <<  "season " << indt.season() << " Over ";
-            mGlobalState.set_state(GlobalState_State_OFFSEASON);
-            mGlobalState.set_week(0);
-            mData.OnGlobalState(mGlobalState);
-            //OnSeasonStart(mGlobalState.season());
-            //OnWeekStart(0);
         }
         else {
             mGlobalState.set_week(newweek);
@@ -831,6 +868,7 @@ void BlockProcessor::process(const DataTransition &indt) {
     }
     case TrType::TRADESESSIONSTART:
     {
+        //todo
         mExchangeData.OnTradeSessionStart(indt.season(),indt.week());
         break;
     }
@@ -1084,14 +1122,14 @@ void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t 
     case FutContract_Type_ROW:
         if ( fc->season() != mGlobalState.season() ||
             mGlobalState.state() != GlobalState_State_INSEASON ) {
-                qWarning() << "2 ProcessInsideStamped bad FutContract" << fc->DebugString().data(), emdg.DebugString().data();
+                qWarning() << "2 ProcessInsideStamped bad FutContract" << fc->DebugString().data() << emdg.DebugString().data();
                 return;
         }
         break;
 
     case FutContract_Type_SEASON:
         if ( fc->season() < mExchangeData.mMinSeason || fc->season() > mExchangeData.mMaxSeason) {
-            qWarning() << "3 ProcessInsideStamped bad FutContract season" << fc->DebugString().data(), emdg.DebugString().data();
+            qWarning() << "3 ProcessInsideStamped bad FutContract season" << fc->DebugString().data() << emdg.DebugString().data();
             return;
         }
         break;
@@ -1156,11 +1194,14 @@ void BlockProcessor::OnSeasonStart(int season) {
 
 }
 
-void BlockProcessor::OnSeasonEnd(int season) {
+void BlockProcessor::OnSeasonEnd(int oldseason) {
 //    mNameData.OnSeasonEnd(season);
-    mData.OnSeasonEnd(season);
-//    mExchangeData.OnSeasonStart(season);
+    mData.OnSeasonEnd(oldseason);
+    mExchangeData.OnSeasonEnd(oldseason);
 //    emit WeekStart(week);
+#ifdef TRADE_FEATURE
+    mFutContract.set_season(oldseason+1);
+#endif
 }
 
 

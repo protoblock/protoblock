@@ -105,10 +105,6 @@ void MainLAPIWorker::GoLive() {
     amlive = true;
     numto = 0;
     intervalstart = 1000;
-#ifdef LIGHT_CLIENT_ONLY
-    intervalstart = 1000;
-#endif
-
 
 #ifdef TESTING_PRE_ROW_TRADE_FEATURE
     justwentlive = true;
@@ -341,7 +337,7 @@ void MainLAPIWorker::Timer() {
     }
 
     else {
-#ifdef LIGHT_CLIENT_ONLY
+#ifdef NO_TIMEOUT
         emit GetNext();
         return;
 #else

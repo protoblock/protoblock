@@ -24,5 +24,6 @@
         <file>BuySellTrading.qml</file>
         <file>BuyTab.qml</file>
         <file>Wallet.qml</file>
+        <file>Explorer.qml</file>
     </qresource>
 </RCC>

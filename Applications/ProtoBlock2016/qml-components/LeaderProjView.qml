@@ -256,7 +256,7 @@ Item {
 
             TableViewColumn {
                 role: "leaders20XX"
-                title: MiddleMan.theSeason
+                title: myTheWeek === 0 ? MiddleMan.theSeason-1 : MiddleMan.theSeason
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
@@ -273,7 +273,7 @@ Item {
 
             TableViewColumn {
                 role: "bits"
-                title: "Overall"
+                title: "Skill"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 

@@ -10,6 +10,7 @@
 #include <QQmlHelpersCommon.h>
 #include "FantasyName.h"
 #include "Commissioner.h"
+#include <pbgateways.h>
 
 using namespace fantasybit;
 
@@ -145,6 +146,17 @@ public:
             append(new FantasyNameBalModelItem(*fPlayer));
         }
     }
+
+
+    void updateleaders(pb::IDataService *dataservice) {
+        clear();
+        for(std::shared_ptr<fantasybit::FantasyName> fPlayer  : dataservice->GetLeaderBoard()) {
+            auto *item = new FantasyNameBalModelItem(*fPlayer);
+            item->updatePnl(dataservice->GetOpenPnl(fPlayer->alias()));
+            append(item);
+        }
+    }
+
 
     void update (FantasyNameBalModelItem *in) {
         FantasyNameBalModelItem *my = getByUid (in->get_name());

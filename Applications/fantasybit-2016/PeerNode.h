@@ -87,6 +87,8 @@ public:
 
     void Cleaner();
     bool Cleanit(Block *b) ;
+private:
+    static int getBootSeason();
 };
 
 

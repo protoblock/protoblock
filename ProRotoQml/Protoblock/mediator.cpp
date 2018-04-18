@@ -71,7 +71,10 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     //leader models
     m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
     m_pLeaderBoardSortModel->setSortRole("bits");//mPlayerProjModel.roleForName("pos"));
-    m_pLeaderBoardSortModel->setDynamicSortFilter(true);
+//    m_pLeaderBoardSortModel->setDynamicSortFilter(true);
+    m_pLeaderBoardSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_pLeaderBoardSortModel->setFilterRole({"name"});
+    m_pLeaderBoardSortModel->setFilterSyntax(SortFilterProxyModel::FilterSyntax::FixedString);
 
     m_pPlayerSymbolsModel->setSourceModel(&mPlayerSymbolsModel);
     m_pPlayerSymbolsModel->setSortRole({"fullname"});
@@ -148,6 +151,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 
     connect(&mROWPlayerQuoteSliceModel,&PlayerQuoteSliceModel::MyPosPriceChange,
             this, &Mediator::MyPosPriceChange);
+
+    connect(this, &Mediator::blocknum_string_numChanged, this, &Mediator::doBlockString);
 }
 
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
@@ -289,9 +294,9 @@ void Mediator::PlayerStatusChange(pair<string, PlayerStatus> in) {
 void Mediator::GlobalStateChange(GlobalState gs) {
     qDebug() << "Mediator GlobalStateChange " << gs.DebugString().data();
 
-    if ( gs.week() > 0 && gs.week() < 18) {
+//    if ( gs.week() > 0 && gs.week() < 18)
+    {
         UpdateSeasonWeek(gs.season(),gs.week());
-
 
         if ( m_thePrevWeek == m_theWeek)
             setthePrevWeek(gs.week());
@@ -302,8 +307,6 @@ void Mediator::GlobalStateChange(GlobalState gs) {
         }
         else
             updateWeek();
-
-
 
         set_busySend(false);
     }

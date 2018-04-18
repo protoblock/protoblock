@@ -325,7 +325,7 @@ public:
 #endif
 
     int64_t MAXSEQ;
-    void init();
+    void init(const fantasybit::GlobalState &);
     void closeAll(bool saverow = false);
 
     void removeAll() {
@@ -406,15 +406,24 @@ public:
                   const std::unordered_map<std::string,PlayerDetail> &home,
                   const std::unordered_map<std::string,PlayerDetail> &away
                      );
+    void lockSymbols(const std::string &gid,
+                  const std::unordered_map<std::string,PlayerDetail> &home,
+                  const std::unordered_map<std::string,PlayerDetail> &away
+                     );
+
     void clearNewWeek(bool = false);
 
     void OnSeasonStart(int season) {
         mSeason = season;
         mMinSeason = season;
+        if ( mMaxSeason < mMinSeason)
+            mMaxSeason = mMinSeason;
     }
 
     void OnSeasonEnd(int season) {
         mMinSeason = season+1;
+        if ( mMaxSeason < mMinSeason)
+            mMaxSeason = mMinSeason;
     }
 
     int mWeek;
@@ -572,13 +581,6 @@ public:
                 OnNewPosition(rowdiv.name(),mypos,tradesymbol);
             }
         }
-
-        //            auto it = mLimitBooks.find(tradesymbol);
-        //            if ( it == end(mLimitBooks)) {
-        //                qWarning() << "processGameResult Error no mLimitBooks" << tradesymbol.data();
-        //                continue;
-        //            }
-
     }
 
     void addBootStrap(Bootstrap *in) {

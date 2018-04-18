@@ -19,7 +19,7 @@ import Communi 3.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "2.6" //version
+    property string version: "2.7" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -136,7 +136,7 @@ Material.ApplicationWindow{
 
     property string start: "qrc:/Projections.qml"
     property string account: "qrc:/Account.qml"
-    property int startindex: 2
+    property int startindex: 1
     property int accountIndex: 4
     property string  errorString
     property bool  reloadleaders: false
@@ -183,8 +183,9 @@ Material.ApplicationWindow{
     }
 
     // Level Zero
-    property var levelZero: [ "Wallet"]
+    property var levelZero: [ "Wallet", "Explorer"]
     property var levelZeroIcons: [
+        "qrc:/icons/local_atm.png",
         "qrc:/icons/local_atm.png"
     ]
 
@@ -279,9 +280,9 @@ Material.ApplicationWindow{
                 iconName: "qrc:/icons/action_account_circle.png"
                 name: "Account"
                 onTriggered: {
-                    rootLoader.source = "qrc:/Account.qml"
+//                    rootLoader.source = "qrc:/Account.qml"
                     pageHelper.selectedTabIndex = accountIndex
-                    pageHelper.title = "Account Settings"
+//                    pageHelper.title = "Account Settings"
                 }
             }
 //            ,Material.Action {

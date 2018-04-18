@@ -286,10 +286,9 @@ namespace fantasybit {
         return ret;
     }
 
-    static int sbliihome = 19;
-    static int sbliiaway = 23;
-    static int sbgameid = 201712119;
-
+    static uint64_t time_since_epoch() {
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    }
 }
 
 #endif

@@ -316,7 +316,10 @@ bool FantasyAgent::AmFantasyAgent(std::string pubkey) {
 }
 
 SignedTransaction FantasyAgent::makeSigned(Transaction &trans) {
-   SignedTransaction st{};
+    if ( trans.version() >= 4 )
+        trans.set_nonce(time_since_epoch());
+
+    SignedTransaction st{};
     st.mutable_trans()->CopyFrom(trans);
     string strTrans = string(trans.SerializeAsString());
     std::pair<std::string, std::string> p = getIdSig(strTrans);

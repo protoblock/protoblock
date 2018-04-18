@@ -90,7 +90,7 @@ public:
     void processResultProj(PlayerResult* playerresult,
                            std::unordered_map<std::string,int> &proj,
                            std::pair<BookPos *, BookPos *>,
-                           const std::string &blocksigner);
+                           const std::string &blocksigner, bool = false);
 
     void OnWeekOver(int week);
     void OnWeekStart(int week);
