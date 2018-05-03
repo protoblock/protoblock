@@ -4,7 +4,7 @@ Proof-of-Skill Consensus protocol design notes
 ## Theory
 
 ### Emergent Centralization 
-In decentralize systems, centralization tends to eventually emerge due to the efficiency gains. In Bitcoin, mining has centralized issues around ASIC producers and mining pools.  
+In decentralize systems, centralization tends to eventually emerge due to the efficiency gains. In Bitcoin, mining has centralized around ASIC producers and mining pools.  
 
 By explicitly choosing centralization points, when designing new blockchains, you alleviate the pressure of natural future centralization points
 
