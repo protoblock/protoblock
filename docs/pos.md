@@ -141,8 +141,27 @@ Competing Blockchain forks are measured based on their cummulativeDifficulty.
 baseTarget is set to
 ````baseTarget = previous_baseTarget * TimeSinceLastBlock / 40````
 
-### Forks
+This may open a "tail switching" attack, which comes from N@S (nothing-at-stake) that is, within the long-run, an arbitrary chain can win the competition in term of the _Block Measure Function_, which leads to very long history re-writes. [..][3]  
 
+### Forks
+When two block signers near simultaneously win the right to sign the next block, a natural fork will occur. 
+
+If signerA wins at time T and signerB wins at time T+1, then what if nodeA gets signerB's block before signerA's block? Does nodeA build on the first block it received (signerB), or the stronger of the two (signerA)? If the signerB knows that signerA is active and live on the network, then maybe signerA should not even create/sign/send a block? This is knows as ["Transparent Forging"](https://nxtwiki.org/wiki/Transparent_Forging) in NXT. 
+
+However, transparent forging requires nodes that are "unlocked" to sign blocks when it’s their turn, otherwise they temporarily lose their right to sign. This solves "Selfish mining" and reduces "nothing at stake" incentive. The downside is, signers lose their anonymity, and can be traced to an IP address, which open up DDOS and other attack vectors. 
+
+_Transparent Forging_ idea is that an account will decide to either generate a new block or skip their turn for the benfit of the network. This works because accounts are able to predict when a different forger will sign this block at a technically early timestamp. [..][6]
+
+_Multibranch Forging_ is an alternate approuch - "If you can generate - do it and tell others". So every since node will generate a sign every block, and each node will create a local _Blocktree_ a tree of blockchains, and then they will all come to consensus on the stringest chain with the BlockMeasureFunction. Blocktree turn N@S problem upside down, where eveyone explicitly works on all forks by design. [..][4]
+
+### Data Agents 
+To solve N@S and grinding issues, NXT and other POS systems use developer checkpoints and/or time delay rules, where your stake can only be used 1000 blocks in the future. Other bockchains such as EOS have rules as to how many blocks back a fork can occur. 
+
+Protoblock has special _dataTransitions_ events related to NFL data and stats, where _DataAgents_ will sign blocks with consensus of a majority of the network. These events create natural checkpoints, as these trnsaction have a reference to a recent block, and these events have consensus of the network. This will mitigate these POS attack vectors. [..][5] 
+
+## ToDo
+* Simulate POS for natural forks 
+* Test _Block Measure Function_ 
 
 #### References
 Bergstake <https://drive.google.com/file/d/0B4APw_r5QuqTOWJhWDlOOENlaEk/view?usp=sharing>
@@ -159,10 +178,18 @@ Bergstake – distributed consensus, jaybny
 Distributed Engineered Autonomous Agents : Satoshi Fantasy - Jay Berg
 [Protoblock Original Whitepaper SatoshiFantasy.pdf](http://protoblock.com/Protoblock_Original_Whitepaper-SatoshiFantasy.pdf)
 
+Multibranch forging algorithms: tailsswitching eﬀect and chain measures - andruiman
+<https://www.scribd.com/document/256073121/Multibranch-forging-algorithms-tails-switching-effect-and-chain-measures>
+
+PoS forging algorithms: multi-strategy forgingand related security issues - andruiman
+<https://www.scribd.com/document/256072839/PoS-forging-algorithms-multi-strategy-forging-and-related-security-issues>
+
 [1]: https://download.wpsoftware.net/bitcoin/alts.pdf
 [2]: https://blog.ethereum.org/2014/07/05/stake/
-
-
+[3]: https://www.scribd.com/document/256073121/Multibranch-forging-algorithms-tails-switching-effect-and-chain-measures
+[4]: https://www.scribd.com/document/256072839/PoS-forging-algorithms-multi-strategy-forging-and-related-security-issues
+[5]: http://protoblock.com/Protoblock_Original_Whitepaper-SatoshiFantasy.pdf
+[6]: https://nxtwiki.org/wiki/Transparent_Forging
 
 <https://github.com/ConsensusResearch/articles-papers/blob/master/articles/inside-pos-2.md>
 
