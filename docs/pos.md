@@ -207,5 +207,6 @@ PoS forging algorithms: multi-strategy forgingand related security issues - andr
 
 https://www.jelurida.com/sites/default/files/NxtForging.pdf
 
+https://bravenewcoin.com/assets/Whitepapers/NxtWhitepaper-v122-rev4.pdf
 
 
