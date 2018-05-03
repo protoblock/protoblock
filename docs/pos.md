@@ -143,7 +143,19 @@ baseTarget is set to
 
 This may open a "tail switching" attack, which comes from N@S (nothing-at-stake) that is, within the long-run, an arbitrary chain can win the competition in term of the _Block Measure Function_, which leads to very long history re-writes. [..][3]  
 
-### Forks
+**alternate formula from wiki:** <https://nxtwiki.org/wiki/Whitepaper:Nxt>
+
+
+````Dcb = Dpb + 2^64 / Tb````
+
+where:
+
+* _Dcb_ is the difficulty of the current block
+* _Dpb_ is the difficulty of the previous block
+* _Tb_ is the base target value for the current block
+
+
+### Forkshttps://nxtwiki.org/wiki/Whitepaper:Nxt>
 When two block signers near simultaneously win the right to sign the next block, a natural fork will occur. 
 
 If signerA wins at time T and signerB wins at time T+1, then what if nodeA gets signerB's block before signerA's block? Does nodeA build on the first block it received (signerB), or the stronger of the two (signerA)? If the signerB knows that signerA is active and live on the network, then maybe signerA should not even create/sign/send a block? This is knows as ["Transparent Forging"](https://nxtwiki.org/wiki/Transparent_Forging) in NXT. 
