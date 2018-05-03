@@ -29,30 +29,29 @@ A solution was alluded to by Vitalik Buterin.
 ```` nevertheless the existence of the algorithm is encouraging because it suggests that long-range-nothing-at-stake might be fundamentally resolvable ```` [..][2]
 
 
-~~*Theorem2:* Distributed Consensus can reached via “proof-of-stake” if the following conditions are met:
+~~*Theorem2:* Distributed Consensus can reached via “proof-of-stake” if the following conditions are met:~~
 
-~~1. Stake is static and is immutably tied to a specific public-key
-2. Block signer selection algorithm is independent of the contents of any block data
-3. The set of public-keys in the selection algorithm was chosen with a decentralized protocol
+~~1. Stake is static and is immutably tied to a specific public-key~~
+~~2. Block signer selection algorithm is independent of the contents of any block data~~
+~~3. The set of public-keys in the selection algorithm was chosen with a decentralized protocol~~
  
-~~This solution has been described with various names.
+~~This solution has been described with various names.~~
 
-~~* "Proof-of-Skill" 
-* "Virtual Perpetual Mining Rig" 
-* ["Bergstake"](https://bitcointalk.org/index.php?topic=572454.msg6241082#msg6241082) 
-* "Proof-of-Proof-of-Work" 
+ ~~*"Proof-of-Skill"~~
+ ~~*"Virtual Perpetual Mining Rig"~~
+ ~~*["Bergstake"](https://bitcointalk.org/index.php?topic=572454.msg6241082#msg6241082)~~
+ ~~*"Proof-of-Proof-of-Work"~~ 
 
-~~*Even Bitcoin can switch to POS, with Proof-of-POW*
+~~*Even Bitcoin can switch to POS, with Proof-of-POW*~~
 
-~~_The idea, described by others before, is to use POW from previous blocks to build a virtual mining rig. Miners who solved POW would secure the private-keys that controls the outputs from the coinbase transaction in each block. The set of all public-keys from coinbase outputs is used as the “Stake” in POS. Even when the coinbase coins are transferred, the “Stake” keys do not change._
+~~_The idea, described by others before, is to use POW from previous blocks to build a virtual mining rig. Miners who solved POW would secure the private-keys that controls the outputs from the coinbase transaction in each block. The set of all public-keys from coinbase outputs is used as the “Stake” in POS. Even when the coinbase coins are transferred, the “Stake” keys do not change._~~
 
 
-~~blockchain|static stake|decentralized process
-~~----------|------------|---------------------
-~~bitcoin|coinbase tx|POW
-breakoutcoin|bergstake|ICO 
-protoblock|FantasySkill|Projections 
-~~
+~~blockchain|static stake|decentralized process~~
+~~----------|------------|---------------------~~
+~~bitcoin|coinbase tx|POW~~
+~~breakoutcoin|bergstake|ICO~~
+~~protoblock|FantasySkill|Projections~~
 
 ### Proof-Of-Skill 
 _"Intuitively, it seems impossible to obtain distributed consensus without provably consuming some resource outside of the system"_ [..][1]
