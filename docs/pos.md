@@ -155,7 +155,7 @@ where:
 * _Tb_ is the base target value for the current block
 
 
-### Forkshttps://nxtwiki.org/wiki/Whitepaper:Nxt>
+### Forks <https://nxtwiki.org/wiki/Whitepaper:Nxt>
 When two block signers near simultaneously win the right to sign the next block, a natural fork will occur. 
 
 If signerA wins at time T and signerB wins at time T+1, then what if nodeA gets signerB's block before signerA's block? Does nodeA build on the first block it received (signerB), or the stronger of the two (signerA)? If the signerB knows that signerA is active and live on the network, then maybe signerA should not even create/sign/send a block? This is knows as ["Transparent Forging"](https://nxtwiki.org/wiki/Transparent_Forging) in NXT. 
@@ -164,7 +164,7 @@ However, transparent forging requires nodes that are "unlocked" to sign blocks w
 
 _Transparent Forging_ idea is that an account will decide to either generate a new block or skip their turn for the benfit of the network. This works because accounts are able to predict when a different forger will sign this block at a technically early timestamp. [..][6]
 
-_Multibranch Forging_ is an alternate approuch - "If you can generate - do it and tell others". So every since node will generate a sign every block, and each node will create a local _Blocktree_ a tree of blockchains, and then they will all come to consensus on the stringest chain with the BlockMeasureFunction. Blocktree turn N@S problem upside down, where eveyone explicitly works on all forks by design. [..][4]
+_Multibranch Forging_ is an alternate approuch - "If you can generate - do it and tell others". So every since node will generate a sign every block, and each node will create a local _Blocktree_ a tree of blockchains, and then they will all come to consensus on the stringest chain with the BlockMeasureFunction. Blocktrees turn N@S problem upside down, where eveyone explicitly works on all forks by design. [..][4]
 
 ### Data Agents 
 To solve N@S and grinding issues, NXT and other POS systems use developer checkpoints and/or time delay rules, where your stake can only be used 1000 blocks in the future. Other bockchains such as EOS have rules as to how many blocks back a fork can occur. 
