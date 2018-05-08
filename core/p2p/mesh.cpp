@@ -7,6 +7,9 @@
 //
 */
 #include "mesh.h"
+#include "peer.h"
+
+using namespace pb;
 
 mesh::mesh()
 {

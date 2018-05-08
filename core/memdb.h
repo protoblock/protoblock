@@ -9,9 +9,21 @@
 #ifndef MEMDB_H
 #define MEMDB_H
 
-#include <fbutils>
-
 namespace pb {
+
+static int PORT_HAND = 10130;
+static int PORT_SYNC_SERV = 10125;
+static int PORT_LIVE_BLOCK = 10126;
+static int PORT_LIVE_TX = 10127;
+static int PORT_LIVE_TX_NAT = 10128;
+
+static std::string GET_ROOT_DIR() {
+    return ROOT_DIR_;
+}
+
+static std::string FB_PORT(int port) {
+    return std::string(":").append(std::to_string(port));
+}
 
 template <typename T>
 class memdb {

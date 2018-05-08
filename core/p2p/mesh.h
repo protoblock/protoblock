@@ -1,5 +1,5 @@
 /*
-//  mesh.h.h
+//  mesh.h
 //
 //  Protoblock
 //
@@ -9,12 +9,18 @@
 #ifndef MESH_H
 #define MESH_H
 
-namespace protoblock {
+#include <string>
+
+namespace pb {
 
 class mesh
 {
 public:
     mesh();
+
+    void sendForProcessing(const std::string &msg) {
+
+    }
 };
 
 }

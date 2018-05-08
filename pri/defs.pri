@@ -11,6 +11,21 @@ win32 {
     INCLUDEPATH += $$DIRPREFIX
     LIBS+= -L$$DIRPREFIX
 
+    #nng
     LIBS += -lnng
+
+
+    #protobuf
+    CONFIG(debug, debug|release) {
+        LIBS += -llibprotobufd
+        LIBS += -lleveldbd
+    }
+    else {
+        LIBS += -llibprotobuf
+        LIBS += -lleveldb
+    }
+    #openssl
+    LIBS += -llibeay32 \
+            -lssleay32
 }
 
