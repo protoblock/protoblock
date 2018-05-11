@@ -36,8 +36,10 @@ struct work {
     mesh *mesh;
 };
 
-class mesh
+class mesh : public QObject
 {
+    Q_OBJECT
+
     nng_socket   _socket;
     nng_listener listener;
     nng_aio      *receiveAio;
@@ -65,6 +67,11 @@ public:
 
     void recvAio() {
         nng_recv_aio(_socket,receiveAio);
+    }
+
+    void connectTO(std::string peer) {
+        qDebug() << "mesh::connectto" << peer.data();
+        onNewSynced(peer);
     }
 
     void onNewSynced(const std::string &peer) {
@@ -254,6 +261,7 @@ public:
     }
 
     void doDial(const std::string &peer) {
+        qDebug() << " try dial peer " << peer.data();
         auto it = dialers.find(peer);
         if ( it == end(dialers)) {
             nng_dialer myd;
@@ -261,6 +269,8 @@ public:
             int rv = nng_dial(_socket, mesh::makeAddress(peer).c_str(), &iit->second, 0);
             if ( rv != 0 )
                 qDebug() << mesh::makeAddress(peer).data() << nng_strerror(rv);
+            else
+                qDebug() << " dialled " << peer.data() << rv;
         }
 //        struct work *w = makeWork(peer);
 //        int rv = nng_pipe_notify(_socket, &mesh::onNotify, w);
