@@ -9,6 +9,7 @@ DIRPREFIX = $$PWD/../libs/
 win32 {
     message(win32 Build)
     INCLUDEPATH += $$DIRPREFIX
+    INCLUDEPATH += $$DIRPREFIX/nng/
     LIBS+= -L$$DIRPREFIX
 
     #nng
