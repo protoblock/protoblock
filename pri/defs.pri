@@ -28,4 +28,19 @@ win32 {
     LIBS += -llibeay32 \
             -lssleay32
 }
+macx {
+    message(macx Build)
+    INCLUDEPATH += $$DIRPREFIX
+    LIBS+= -L$$DIRPREFIX
+
+    #nng
+    LIBS += -lnng_static
+
+
+    #protobuf
+    LIBS += -lprotobuf
+    LIBS += -lleveldb
+    LIBS += -lssl
+    LIBS += -lcrypto
+}
 
