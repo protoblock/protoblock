@@ -112,6 +112,17 @@ public:
 
         bool goodconnection = (goodlist && !olddial) || (gooddial && !oldlist);
 
+        qDebug() << "mesh::onConnected" << peer.data()
+                 << "gooddial" << gooddial
+                 << "goodlist" << goodlist
+                 << "goodconnection" << goodconnection
+                 << "olddial" << olddial
+                 << "oldlist" << oldlist
+                 << "isknown" << isknown
+                 << "alreadyconnected" << alreadyconnected;
+
+
+
         if ( goodconnection ) {
             if ( alreadyconnected )
                 qDebug() << "mesh::onConnected" << "but already connected?!?" << peer.data() ;
@@ -321,11 +332,19 @@ public:
             qha.setAddress(obuf.s_in6.sa_addr);
             qha.setAddress(qha.toIPv4Address());
             remoteaddress = qha.toString().toStdString();
+            qDebug() << "port" << obuf.s_in6.sa_port;
+            qDebug() << "port2" << qFromBigEndian(obuf.s_in6.sa_port);
+            qDebug() << "port3" << qToBigEndian(obuf.s_in6.sa_port);
+
         }
         else if ( obuf.s_family == NNG_AF_INET) {
             qha.setAddress(qFromBigEndian(obuf.s_in.sa_addr));
 //            qha.setAddress(qha.toIPv4Address());
             remoteaddress = qha.toString().toStdString();
+            qDebug() << "port" << obuf.s_in6.sa_port;
+            qDebug() << "port2" << qFromBigEndian(obuf.s_in.sa_port);
+            qDebug() << "port3" << qToBigEndian(obuf.s_in.sa_port);
+
         }
 
         qDebug() << "mesh::onNotify" << "remote address" << remoteaddress.data() ;
