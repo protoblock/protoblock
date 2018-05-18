@@ -32,11 +32,13 @@
 #include <iostream>
 
 #include "console.h"
-
+#include <protobufsocketreader.h>
+#include <testserver.h>
+#include <threadedqobject.h>
 
 pb::mesh myMesh;
 
-
+using namespace pb;
 //static const char *
 //ip4tostr(void *addr)
 //{
@@ -137,7 +139,7 @@ void notify(nng_pipe p, nng_pipe_action act, void *arg) {
 
 }
 
-int main(int argc, char *argv[])
+int domain1(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
@@ -147,6 +149,7 @@ int main(int argc, char *argv[])
     myPeer.init();
 
     myMesh.init();
+    myMesh.recvAio();
 
     nng_socket   sock;
     nng_rep0_open_raw(&sock);
@@ -158,6 +161,42 @@ int main(int argc, char *argv[])
     console.run();
     QObject::connect(&console, SIGNAL(quit()), &a, SLOT(quit()));
     QObject::connect(&console, &Console::command, &myMesh, &pb::mesh::connectTO);
+    QObject::connect(&console, &Console::sendto, &myMesh, &pb::mesh::putto);
+
+    return a.exec();
+}
+
+int main(int argc, char *argv[]) {
+    QCoreApplication a(argc, argv);
+
+
+    ThreadedQObject<Console> console; ;
+    QObject::connect(console.thread(),SIGNAL(started()),console.object(),SLOT(run()));
+    console.thread()->start();
+
+    QObject::connect(console.object(), SIGNAL(quit()), &a, SLOT(quit()));
+
+
+#ifndef CLIENT
+    pb::ProtobufSocketReader psr;
+    QObject::connect(console.object(), &Console::command, &psr, &pb::ProtobufSocketReader::connectTO);
+#else
+    ThreadedQObject<TestServer> server;
+    QObject::connect(server.thread(),SIGNAL(started()),server.object(),SLOT(start()));
+    server.thread()->start();
+
+    pb::ProtobufSocketWriter psw;
+
+
+    //QObject::connect(&server, &pb::TestServer::newConnection, &server, &pb::TestServer::sendTo);
+    QObject::connect(server.object(), &pb::TestServer::newConnection, server.object(), &pb::TestServer::onXXNewConnection);
+    QObject::connect(console.object(), &Console::sendto, &psw, &pb::ProtobufSocketWriter::sendTo);
+
+    QObject::connect(server.object(), &pb::TestServer::connected, &psw, &pb::ProtobufSocketWriter::setTcp);
+
+#endif
+
+    qRegisterMetaType<std::string>("std::string");
 
     return a.exec();
 }

@@ -25,11 +25,14 @@ class Console : public QObject
 public:
     Console();
 
+public slots:
     void run();
 
 signals:
     void quit();
     void command(std::string);
+    void sendto();
+
 
 private:
 #ifdef Q_OS_WIN
@@ -42,15 +45,6 @@ private slots:
     void readCommand(HANDLE hEvent);
 };
 
-inline Console::Console()
-{
-#ifdef Q_OS_WIN
-    m_notifier = new QWinEventNotifier(GetStdHandle(STD_INPUT_HANDLE));
-    connect(m_notifier, &QWinEventNotifier::activated,this, &Console::readCommand);
-#else
-    m_notifier = new QSocketNotifier(fileno(stdin), QSocketNotifier::Read, this);
-    connect(m_notifier, &QSocketNotifier::activated,this, SLOT(readCommand()));
-#endif
-}
+inline Console::Console() {}
 
 #endif // CONSOLE_H

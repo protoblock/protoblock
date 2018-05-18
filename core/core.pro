@@ -12,11 +12,14 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += \
-    $$PWD/main.cpp \
-    console.cpp
+SOURCES += $$PWD/main.cpp \
+    console.cpp \
+    protobufsocketreader.cpp
 
 TARGET = testcore
 
-HEADERS += \
-    console.h
+HEADERS += console.h \
+    protobufsocketreader.h \
+    socketcopyinginputstream.h \
+    testserver.h \
+    threadedqobject.h

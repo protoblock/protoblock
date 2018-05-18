@@ -42,7 +42,6 @@ class mesh : public QObject
 
     nng_socket   _socket;
     nng_listener listener;
-    nng_aio      *receiveAio;
     std::set<std::string> connected;
     std::set<std::string> known;
     std::map<std::string,nng_dialer> dialers;
@@ -51,6 +50,8 @@ class mesh : public QObject
     int numKnownConnected;
 public:
     mesh();
+
+    nng_aio      *receiveAio;
 
     void sendForProcessing(const std::string &msg) {
 
@@ -80,6 +81,8 @@ public:
         if ( newknown )
             known.insert(it,peer);
 
+        doDial(peer);
+        return;
         if ( numKnownConnected < 8) {
             auto mit = connected.find(peer);
             if ( mit == end(connected))
@@ -311,9 +314,37 @@ public:
 
 //    }
 
-    static void callBack(void *) {
+    void putto() {
+       putPipe("158.222.102.175");
+    }
+
+    void putPipe(const std::string  &peer) {
+        qDebug() << "put pipe" << peer.data();
+        nng_msg *msg;
+
+        int rv = nng_msg_alloc(&msg,5);
+        rv = nng_msg_append(msg,"msgit",5);
+
+        auto it = listen_pipes.find(peer);
+        if ( it != end(listen_pipes)) {
+            nng_msg_set_pipe(msg,it->second);
+//            nni_msgq_tryput(it->second.sendq,msg);
+            nng_sendmsg(_socket,msg,0);
+        }
+
+//        nng_msg_set_pipe(nng_msg *msg, nng_pipe p);
+        }
+
+    static void callBack(void *m) {
 
         qDebug() << "mesh::calback";
+        mesh *mm = (mesh *)m;
+        nng_msg *msg = nng_aio_get_msg(mm->receiveAio);
+        int sz = nng_msg_len(msg);
+        char* buf = (char *)nng_msg_body(msg);
+        std::string rec;
+        rec.assign(buf,sz);
+        qDebug() << rec.data();
 
     }
 
@@ -322,11 +353,12 @@ public:
         qDebug() << "mesh::onNotify";
 
         mesh *mymesh = (mesh *)arg;
+        std::string remoteaddress = "";
 
+        {
         nng_sockaddr obuf;
         nng_pipe_getopt_sockaddr(p,NNG_OPT_REMADDR,&obuf);
         qDebug() << NNG_OPT_REMADDR << obuf.s_family;
-        std::string remoteaddress = "";
         QHostAddress qha;
         if ( obuf.s_family == NNG_AF_INET6) {
             qha.setAddress(obuf.s_in6.sa_addr);
@@ -348,6 +380,58 @@ public:
         }
 
         qDebug() << "mesh::onNotify" << "remote address" << remoteaddress.data() ;
+        }
+        {
+            char* obuf;
+            nng_pipe_getopt_string(p,NNG_OPT_URL,&obuf);
+            qDebug() << NNG_OPT_URL << "option::" << obuf << ":: done";
+        }
+
+        {
+            nng_sockaddr obuf;
+            nng_pipe_getopt_sockaddr(p,NNG_OPT_LOCADDR,&obuf);
+            qDebug() << NNG_OPT_LOCADDR << obuf.s_family;
+            std::string localaddress = "";
+
+            QHostAddress qha;
+            if ( obuf.s_family == NNG_AF_INET6) {
+                qha.setAddress(obuf.s_in6.sa_addr);
+                qha.setAddress(qha.toIPv4Address());
+                localaddress = qha.toString().toStdString();
+                qDebug() << "port" << obuf.s_in6.sa_port;
+                qDebug() << "port2" << qFromBigEndian(obuf.s_in6.sa_port);
+                qDebug() << "port3" << qToBigEndian(obuf.s_in6.sa_port);
+
+            }
+            else if ( obuf.s_family == NNG_AF_INET) {
+                qha.setAddress(qFromBigEndian(obuf.s_in.sa_addr));
+    //            qha.setAddress(qha.toIPv4Address());
+                localaddress = qha.toString().toStdString();
+                qDebug() << "port" << obuf.s_in6.sa_port;
+                qDebug() << "port2" << qFromBigEndian(obuf.s_in.sa_port);
+                qDebug() << "port3" << qToBigEndian(obuf.s_in.sa_port);
+
+            }
+            qDebug() << "mesh::onNotify" << "local address" << localaddress.data() ;
+
+        }
+
+        {
+            int obuf;
+            nng_pipe_getopt_int(p,NNG_OPT_PEER,&obuf);
+            qDebug() << NNG_OPT_PEER << "option::" << obuf << ":: done";
+        }
+        {
+            char* obuf;
+            nng_pipe_getopt_string(p,NNG_OPT_PEERNAME,&obuf);
+            qDebug() << NNG_OPT_PEERNAME << "option::" << obuf << ":: done";
+        }
+        {
+            char* obuf;
+            nng_pipe_getopt_string(p,NNG_OPT_SOCKNAME,&obuf);
+            qDebug() << NNG_OPT_SOCKNAME << "option::" << obuf << ":: done";
+        }
+
 
         int dialerid = nng_dialer_id(nng_pipe_dialer(p));
 //        bool listenerid = nng_listener_id(nng_pipe_listener(p));

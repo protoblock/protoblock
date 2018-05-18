@@ -85,7 +85,15 @@ int main(int argc, char *argv[])
     nng_msg *msg;
 
     nng_listener listener;
-    rv = nng_listen(sock, "tcp://:10130", &listener, 0);
+    rv = nng_listen(sock, "tcp://:10128", &listener, 0);
+
+    nng_sockaddr obuf;
+
+    nng_listener_getopt_sockaddr(listener,NNG_OPT_LOCADDR,&obuf);
+    qDebug() << NNG_OPT_LOCADDR << obuf.s_family;
+
+    nng_sockaddr_in6 in = obuf.s_in6;
+    qDebug() << NNG_OPT_LOCADDR << in.sa_addr[12] << "." <<  in.sa_addr[13] << "." <<  in.sa_addr[14] << "." << in.sa_addr[15];
 
 
     rv = nng_recvmsg(sock,&msg,0);
