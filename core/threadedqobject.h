@@ -11,10 +11,11 @@ public:
     ThreadedQObject(){
         myObjectInstance.moveToThread(&myWorkerThread);
     }
+
     ~ThreadedQObject(){
-        if (myWorkerThread.isRunning())
-            myWorkerThread.quit();
-        myWorkerThread.wait();//AKA join
+//        if (myWorkerThread.isRunning())
+//            myWorkerThread.quit();
+//        myWorkerThread.wait();//AKA join
     }
 
     T * object() { return & myObjectInstance; }
@@ -24,6 +25,12 @@ protected :
     QThread myWorkerThread;
     T myObjectInstance;
 };
+
+
+//Object::deleteLater   - QThread::finished
+
+
+
 
 
 #endif // THREADEDQOBJECT_H

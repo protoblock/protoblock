@@ -6,7 +6,9 @@
 //  Created by Jay Berg on 5/8/2018
 //
 */
-#include <QCoreApplication>
+//#include <QCoreApplication>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 #include <QDebug>
 
 #include <nng/nng.h>
@@ -19,7 +21,7 @@
 #include "mesh.h"
 
 #ifndef _WIN32
-#include <arpa/inet.h>
+#include <arpa/inet.h>blo
 #endif
 #ifdef _WIN32
 #include <windows.h>
@@ -36,6 +38,10 @@
 #include <testserver.h>
 #include <threadedqobject.h>
 
+#include <QNetworkInterface>
+#include <QDateTime>
+
+#include <nodeclient.h>
 pb::mesh myMesh;
 
 using namespace pb;
@@ -66,7 +72,7 @@ using namespace pb;
 
 //#endif
 //}
-
+/*
 void notify(nng_pipe p, nng_pipe_action act, void *arg) {
     qDebug() << "server  notify ";
 
@@ -165,12 +171,98 @@ int domain1(int argc, char *argv[])
 
     return a.exec();
 }
-
+*/
 int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
+    QGuiApplication a(argc, argv);
+
+    QQmlApplicationEngine engine;
+    engine.load(QUrl("qrc:/main.qml"));
+
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+
+    foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
+        QNetworkInterface::InterfaceFlags flags = netInterface.flags();
+        if( (bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)){
+            foreach (const QNetworkAddressEntry &address, netInterface.addressEntries()) {
+                if(address.ip().protocol() == QAbstractSocket::IPv4Protocol)
+                    qDebug() << address.ip().toString();
+            }
+        }
+    }
+
+//    QTcpSocket dnsTestSocket;
+//     QString localIP="127.0.0.1";    //fall back
+//     QString googleDns = "8.8.8.83";  //try google DNS or sth. else reliable first
+//     dnsTestSocket.connectToHost(googleDns, 53);
+//     if (dnsTestSocket.waitForConnected(3000))
+//     {
+//         localIP = dnsTestSocket.localAddress().toString();
+//     }
+//     else
+//     {
+//         foreach (const QHostAddress &address, QNetworkInterface::allAddresses())
+//         {
+//             QString guessedGatewayAddress = address.toString().section( ".",0,2 ) + ".1";
+
+//             if (address.protocol() == QAbstractSocket::IPv4Protocol
+//                 && address != QHostAddress(QHostAddress::LocalHost)
+//                 )
+//             {
+//                 dnsTestSocket.connectToHost(guessedGatewayAddress, 53);
+//                 if (dnsTestSocket.waitForConnected(3000))
+//                 {
+//                     localIP = dnsTestSocket.localAddress().toString();
+//                     break;
+//                 }
+//             }
+//         }
+//     }
+
+//     qDebug() <<localIP;
+
+     ThreadedQObject<NodeClient> node;
+
+     QObject::connect(node.thread(),SIGNAL(started()),node.object(),SLOT(startPoint()));
+
+     node.thread()->start();
+     QObject::connect(node.thread(),&QThread::finished,node.object(),&QObject::deleteLater);
+
+//     Console console2;
+//     QObject::connect(&console2, SIGNAL(quit()), &a, SLOT(quit()));
+//     console2.run();
+
+//     nc.getMyIp("http://ss.me/ip");
+
+//     for ( auto str : {
+//           "http://api.ipify.org/",
+//           "http://myexternalip.com/raw",
+//           "http://icanhazip.com/",
+//           "http://myip.dnsomatic.com/",
+//           "http://ifcaonfig.me/ip"} )
+
+//         nc.getMyIp(str);
+
+//     http://api.ipify.org/
+//     http://myexternalip.com/raw
+//     http://icanhazip.com/
+//     http://myip.dnsomatic.com/
+//     http://ifconfig.me/ip
+
+     qDebug() << "main" << QThread::currentThreadId();
 
 
-    ThreadedQObject<Console> console; ;
+     QObject::connect(&a, SIGNAL(lastWindowClosed()),
+                      node.thread(), SLOT(quit()));
+     QObject::connect(node.thread(),&QThread::finished,node.object(),&QObject::deleteLater);
+
+
+//    QObject::connect(&a, &QGuiApplication::lastWindowClosed, node.thread(), &QThread::quit );
+
+
+    return a.exec();
+#ifdef XXXX
+
+    ThreadedQObject<Console> console;
     QObject::connect(console.thread(),SIGNAL(started()),console.object(),SLOT(run()));
     console.thread()->start();
 
@@ -199,4 +291,6 @@ int main(int argc, char *argv[]) {
     qRegisterMetaType<std::string>("std::string");
 
     return a.exec();
+
+#endif
 }

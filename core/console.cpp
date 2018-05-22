@@ -8,6 +8,8 @@
 */
 #include <iostream>
 #include "console.h"
+#include <QThread>
+#include <QDebug>
 
 void Console::run()
 {
@@ -37,6 +39,7 @@ void Console::readCommand(HANDLE hEvent)
     }
     else if (line == "x") {
         std::cout << "> " << std::flush;
+        qDebug() << "commad" << QThread::currentThreadId();
     }
     else {
         std::cout << "Echo: " << line << std::endl;
