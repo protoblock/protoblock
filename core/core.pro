@@ -5,6 +5,9 @@ include($$PWD/../pri/protos.pri)
 QT += core network gui qml quick
 #QT -= gui
 
+QT += qml quick core websockets network xmlpatterns qml-private quick-private
+
+
 CONFIG += c++11
 
 #CONFIG += console
@@ -15,7 +18,11 @@ TEMPLATE = app
 SOURCES += $$PWD/main.cpp \
     console.cpp \
     protobufsocketreader.cpp \
-    nodeclient.cpp
+    nodeclient.cpp \
+    connectionmanager.cpp \
+    peerwireclient.cpp \
+    peerstore.cpp \
+    nodeserver.cpp
 
 TARGET = testcore
 
@@ -24,7 +31,11 @@ HEADERS += console.h \
     socketcopyinginputstream.h \
     testserver.h \
     threadedqobject.h \
-    nodeclient.h
+    nodeclient.h \
+    connectionmanager.h \
+    peerstore.h \
+    peerwireclient.h \
+    nodeserver.h
 
 DISTFILES += \
     main.qml

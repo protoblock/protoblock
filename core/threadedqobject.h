@@ -13,9 +13,9 @@ public:
     }
 
     ~ThreadedQObject(){
-//        if (myWorkerThread.isRunning())
-//            myWorkerThread.quit();
-//        myWorkerThread.wait();//AKA join
+        if (myWorkerThread.isRunning())
+            myWorkerThread.quit();
+        myWorkerThread.wait();//AKA join
     }
 
     T * object() { return & myObjectInstance; }

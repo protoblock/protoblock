@@ -3,5 +3,7 @@ package pb;
 message Peer {
     optional string address = 10;
     optional uint64 lastSync = 20;
+    optional uint32 port = 30;
 }
 
+message Meta

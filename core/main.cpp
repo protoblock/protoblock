@@ -17,8 +17,8 @@
 
 #include <ws2tcpip.h>
 
-#include "peer.h"
-#include "mesh.h"
+//#include "peer.h"
+//#include "mesh.h"
 
 #ifndef _WIN32
 #include <arpa/inet.h>blo
@@ -42,7 +42,9 @@
 #include <QDateTime>
 
 #include <nodeclient.h>
-pb::mesh myMesh;
+
+#include <connectionmanager.h>
+//pb::mesh myMesh;
 
 using namespace pb;
 //static const char *
@@ -178,6 +180,10 @@ int main(int argc, char *argv[]) {
     QQmlApplicationEngine engine;
     engine.load(QUrl("qrc:/main.qml"));
 
+         qDebug() << "main" << QThread::currentThreadId();
+         qDebug() << ConnectionManager::instance()->clientId();
+
+
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
     foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
@@ -220,12 +226,26 @@ int main(int argc, char *argv[]) {
 
 //     qDebug() <<localIP;
 
-     ThreadedQObject<NodeClient> node;
+    QThread* thread = new QThread;
+    NodeClient* worker = new NodeClient();
+    worker->moveToThread(thread);
+//    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    QObject::connect(thread, SIGNAL(started()), worker, SLOT(startPoint()));
+//    QObject::connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+//    QObject::connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    QObject::connect(thread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    QObject::connect(&a, &QGuiApplication::lastWindowClosed, thread, &QThread::quit );
+    thread->start();
 
-     QObject::connect(node.thread(),SIGNAL(started()),node.object(),SLOT(startPoint()));
+//     ThreadedQObject<NodeClient> node;
 
-     node.thread()->start();
-     QObject::connect(node.thread(),&QThread::finished,node.object(),&QObject::deleteLater);
+//     QObject::connect(node.thread(),SIGNAL(started()),node.object(),SLOT(startPoint()));
+
+//     node.thread()->start();
+
+//     QObject::connect(node.thread(),&QThread::finished,node.object(),&QObject::deleteLater);
+
+//     QObject::connect(&engine, &QQmlApplicationEngine::quit, node.thread(), &QThread::quit);
 
 //     Console console2;
 //     QObject::connect(&console2, SIGNAL(quit()), &a, SLOT(quit()));
@@ -248,13 +268,11 @@ int main(int argc, char *argv[]) {
 //     http://myip.dnsomatic.com/
 //     http://ifconfig.me/ip
 
-     qDebug() << "main" << QThread::currentThreadId();
 
 
-     QObject::connect(&a, SIGNAL(lastWindowClosed()),
-                      node.thread(), SLOT(quit()));
-     QObject::connect(node.thread(),&QThread::finished,node.object(),&QObject::deleteLater);
 
+//     QObject::connect(&a, SIGNAL(lastWindowClosed()),
+//                      node.thread(), SLOT(quit()));
 
 //    QObject::connect(&a, &QGuiApplication::lastWindowClosed, node.thread(), &QThread::quit );
 
