@@ -5,3 +5,6 @@ HEADERS += \
 
 SOURCES += \
     $$GENERATEDDIR/P2PData.pb.cc
+
+
+OTHER_FILES += $$PWD/../core/proto/P2Pdata.proto

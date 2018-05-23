@@ -1,0 +1,203 @@
+//
+// Protoblock State Machine
+// Jay Berg 5/18/18 
+//
+
+
+//
+// Map: BlockchainState 
+//
+//
+
+%start BlockchainMap::Startup
+%map BlockchainMap
+%%
+// State    Transition		End State           Action(s)
+Startup
+{
+
+}
+
+Syncing
+{
+    //transition
+    InSync
+        //Guard condition
+        [ctxt.lastBlockNow() == true]
+
+        //Next state
+        Running
+        //Actions
+        {
+            Broadcast("live");
+            StartSigning();
+        }
+}
+
+Reorg
+{
+}
+
+Running
+{
+}
+
+
+Flat		Entry				{ CheckExecutionStatus(); }	
+{
+		LongCommand				Flat			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.New); } 
+		ShortCommand			Flat			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.New); } 
+		LongEntryFilled			Long			{}
+		ShortEntryFilled		Short			{}
+		MoveStopCommand			Flat			{}
+		MoveTargetCommand		Flat			{}
+		NewTrade				Flat			{}
+}
+
+Long		Entry				{ CheckExecutionStatus(); }	
+{
+		LongCommand				Long			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.AddOn); } 
+		ShortCommand			Long			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.Reverse); } 
+		LongEntryFilled			Long			{}
+		ShortEntryFilled		Short			{}
+		MoveStopCommand			Long			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.MoveStop); }
+		MoveTargetCommand		Long			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.MoveTarget); }
+		NewTrade				Long			{ mExecutionStrategy.OnPrice(ctxt.Instrument.Trade.Price); }
+}
+
+Short		Entry				{ CheckExecutionStatus(); }	
+{
+		LongCommand				Short			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.Reverse); }   
+		ShortCommand			Short			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.AddOn); }
+		LongEntryFilled			Long			{}
+		ShortEntryFilled		Short			{}
+		MoveStopCommand			Short			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.MoveStop); }
+		MoveTargetCommand		Short			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.MoveTarget); }
+		NewTrade				Short			{ mExecutionStrategy.OnPrice(ctxt.Instrument.Trade.Price); }
+}
+
+Default		Entry				{ CheckExecutionStatus(); }										
+{
+		OnFlat				Flat				{}
+		PauseCommand		pop(PauseCommand)	{ EmitNewSignal(JTrade.Flat,AlphaExecutionCommands.CancelAll); }
+		GetFlatCommand		nil					{ EmitNewSignal(JTrade.Flat,AlphaExecutionCommands.CancelFlat); }
+		EODStop				pop(EODStop)		{ EmitNewSignal(JTrade.Flat,AlphaExecutionCommands.CancelFlat); }
+		StartCommand		nil					{}
+}	
+					
+%%
+
+
+%import JBUtils
+%import VardonStrategyBase
+%import QuantFactory
+
+%start MainMap::PreMarket
+%class GrayBox_core_ats
+
+%map MainMap
+%%
+// State	
+//		Transition			End State						Action(s)
+//
+PreMarket					Exit							{ OnSessionStart(); }		
+{
+		SessionOpen			[ ctxt.IsReadyToTrade() ] 
+							Trading/push(Trading::Flat)		{}
+								
+		SessionOpen			Paused							{}	
+}
+
+PostMarket					Entry							{ OnSessionClose(); }
+{
+}
+
+Trading
+{
+}
+
+Paused						
+{
+		StartCommand		push(Trading::Flat)				{ SetReadyToTrade(true, false); }
+		GetFlatCommand		nil								{ EmitNewSignal(JTrade.Flat,AlphaExecutionCommands.GoFlat); }
+}
+
+EODStop						
+{
+		StartCommand		push(Trading::Flat)				{ SetReadyToTrade(true, false); }
+		PauseCommand		nil								{}
+		GetFlatCommand		nil								{ EmitNewSignal(JTrade.Flat,AlphaExecutionCommands.GoFlat); }
+}
+
+
+
+Default
+{
+		SessionClose		PostMarket						{}
+		
+		EODStop				nil								{ SetReadyToTrade(false, true); }
+		GetFlatCommand		nil								{ SetReadyToTrade(false, true); }		
+		StartCommand		nil								{ SetReadyToTrade(true, true); }
+		PauseCommand		nil								{ SetReadyToTrade(false, true); }
+
+		MoveStopCommand		nil								{}
+		MoveTargetCommand	nil								{}
+		NewTrade			nil								{}
+		OnFlat				nil								{}
+		LongCommand			nil								{}
+		ShortCommand		nil								{}
+}
+
+%%
+
+//
+// Map: Trading
+//
+//
+
+%map Trading
+%%
+
+Flat		Entry				{ CheckExecutionStatus(); }	
+{
+		LongCommand				Flat			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.New); } 
+		ShortCommand			Flat			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.New); } 
+		LongEntryFilled			Long			{}
+		ShortEntryFilled		Short			{}
+		MoveStopCommand			Flat			{}
+		MoveTargetCommand		Flat			{}
+		NewTrade				Flat			{}
+}
+
+Long		Entry				{ CheckExecutionStatus(); }	
+{
+		LongCommand				Long			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.AddOn); } 
+		ShortCommand			Long			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.Reverse); } 
+		LongEntryFilled			Long			{}
+		ShortEntryFilled		Short			{}
+		MoveStopCommand			Long			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.MoveStop); }
+		MoveTargetCommand		Long			{ EmitNewSignal(JTrade.Long,AlphaExecutionCommands.MoveTarget); }
+		NewTrade				Long			{ mExecutionStrategy.OnPrice(ctxt.Instrument.Trade.Price); }
+}
+
+Short		Entry				{ CheckExecutionStatus(); }	
+{
+		LongCommand				Short			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.Reverse); }   
+		ShortCommand			Short			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.AddOn); }
+		LongEntryFilled			Long			{}
+		ShortEntryFilled		Short			{}
+		MoveStopCommand			Short			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.MoveStop); }
+		MoveTargetCommand		Short			{ EmitNewSignal(JTrade.Short,AlphaExecutionCommands.MoveTarget); }
+		NewTrade				Short			{ mExecutionStrategy.OnPrice(ctxt.Instrument.Trade.Price); }
+}
+
+Default		Entry				{ CheckExecutionStatus(); }										
+{
+		OnFlat				Flat				{}
+		PauseCommand		pop(PauseCommand)	{ EmitNewSignal(JTrade.Flat,AlphaExecutionCommands.CancelAll); }
+		GetFlatCommand		nil					{ EmitNewSignal(JTrade.Flat,AlphaExecutionCommands.CancelFlat); }
+		EODStop				pop(EODStop)		{ EmitNewSignal(JTrade.Flat,AlphaExecutionCommands.CancelFlat); }
+		StartCommand		nil					{}
+}	
+					
+%%

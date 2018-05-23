@@ -6,7 +6,9 @@
 //  Created by Jay Berg on 5/8/2018
 //
 */
-#include <QCoreApplication>
+//#include <QCoreApplication>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 #include <QDebug>
 
 #include <nng/nng.h>
@@ -15,11 +17,11 @@
 
 #include <ws2tcpip.h>
 
-#include "peer.h"
-#include "mesh.h"
+//#include "peer.h"
+//#include "mesh.h"
 
 #ifndef _WIN32
-#include <arpa/inet.h>
+#include <arpa/inet.h>blo
 #endif
 #ifdef _WIN32
 #include <windows.h>
@@ -32,11 +34,19 @@
 #include <iostream>
 
 #include "console.h"
+#include <protobufsocketreader.h>
+#include <testserver.h>
+#include <threadedqobject.h>
 
+#include <QNetworkInterface>
+#include <QDateTime>
 
-pb::mesh myMesh;
+#include <nodeclient.h>
 
+#include <connectionmanager.h>
+//pb::mesh myMesh;
 
+using namespace pb;
 //static const char *
 //ip4tostr(void *addr)
 //{
@@ -64,7 +74,7 @@ pb::mesh myMesh;
 
 //#endif
 //}
-
+/*
 void notify(nng_pipe p, nng_pipe_action act, void *arg) {
     qDebug() << "server  notify ";
 
@@ -137,7 +147,7 @@ void notify(nng_pipe p, nng_pipe_action act, void *arg) {
 
 }
 
-int main(int argc, char *argv[])
+int domain1(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
@@ -147,6 +157,7 @@ int main(int argc, char *argv[])
     myPeer.init();
 
     myMesh.init();
+    myMesh.recvAio();
 
     nng_socket   sock;
     nng_rep0_open_raw(&sock);
@@ -158,6 +169,146 @@ int main(int argc, char *argv[])
     console.run();
     QObject::connect(&console, SIGNAL(quit()), &a, SLOT(quit()));
     QObject::connect(&console, &Console::command, &myMesh, &pb::mesh::connectTO);
+    QObject::connect(&console, &Console::sendto, &myMesh, &pb::mesh::putto);
 
     return a.exec();
+}
+*/
+int main(int argc, char *argv[]) {
+    QGuiApplication a(argc, argv);
+
+    QQmlApplicationEngine engine;
+    engine.load(QUrl("qrc:/main.qml"));
+
+         qDebug() << "main" << QThread::currentThreadId();
+         qDebug() << ConnectionManager::instance()->clientId();
+
+
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+
+    foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
+        QNetworkInterface::InterfaceFlags flags = netInterface.flags();
+        if( (bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)){
+            foreach (const QNetworkAddressEntry &address, netInterface.addressEntries()) {
+                if(address.ip().protocol() == QAbstractSocket::IPv4Protocol)
+                    qDebug() << address.ip().toString();
+            }
+        }
+    }
+
+//    QTcpSocket dnsTestSocket;
+//     QString localIP="127.0.0.1";    //fall back
+//     QString googleDns = "8.8.8.83";  //try google DNS or sth. else reliable first
+//     dnsTestSocket.connectToHost(googleDns, 53);
+//     if (dnsTestSocket.waitForConnected(3000))
+//     {
+//         localIP = dnsTestSocket.localAddress().toString();
+//     }
+//     else
+//     {
+//         foreach (const QHostAddress &address, QNetworkInterface::allAddresses())
+//         {
+//             QString guessedGatewayAddress = address.toString().section( ".",0,2 ) + ".1";
+
+//             if (address.protocol() == QAbstractSocket::IPv4Protocol
+//                 && address != QHostAddress(QHostAddress::LocalHost)
+//                 )
+//             {
+//                 dnsTestSocket.connectToHost(guessedGatewayAddress, 53);
+//                 if (dnsTestSocket.waitForConnected(3000))
+//                 {
+//                     localIP = dnsTestSocket.localAddress().toString();
+//                     break;
+//                 }
+//             }
+//         }
+//     }
+
+//     qDebug() <<localIP;
+
+    QThread* thread = new QThread;
+    NodeClient* worker = new NodeClient();
+    worker->moveToThread(thread);
+//    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+    QObject::connect(thread, SIGNAL(started()), worker, SLOT(startPoint()));
+//    QObject::connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+//    QObject::connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    QObject::connect(thread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    QObject::connect(&a, &QGuiApplication::lastWindowClosed, thread, &QThread::quit );
+    thread->start();
+
+//     ThreadedQObject<NodeClient> node;
+
+//     QObject::connect(node.thread(),SIGNAL(started()),node.object(),SLOT(startPoint()));
+
+//     node.thread()->start();
+
+//     QObject::connect(node.thread(),&QThread::finished,node.object(),&QObject::deleteLater);
+
+//     QObject::connect(&engine, &QQmlApplicationEngine::quit, node.thread(), &QThread::quit);
+
+//     Console console2;
+//     QObject::connect(&console2, SIGNAL(quit()), &a, SLOT(quit()));
+//     console2.run();
+
+//     nc.getMyIp("http://ss.me/ip");
+
+//     for ( auto str : {
+//           "http://api.ipify.org/",
+//           "http://myexternalip.com/raw",
+//           "http://icanhazip.com/",
+//           "http://myip.dnsomatic.com/",
+//           "http://ifcaonfig.me/ip"} )
+
+//         nc.getMyIp(str);
+
+//     http://api.ipify.org/
+//     http://myexternalip.com/raw
+//     http://icanhazip.com/
+//     http://myip.dnsomatic.com/
+//     http://ifconfig.me/ip
+
+
+
+
+//     QObject::connect(&a, SIGNAL(lastWindowClosed()),
+//                      node.thread(), SLOT(quit()));
+
+//    QObject::connect(&a, &QGuiApplication::lastWindowClosed, node.thread(), &QThread::quit );
+
+
+    return a.exec();
+#ifdef XXXX
+
+    ThreadedQObject<Console> console;
+    QObject::connect(console.thread(),SIGNAL(started()),console.object(),SLOT(run()));
+    console.thread()->start();
+
+    QObject::connect(console.object(), SIGNAL(quit()), &a, SLOT(quit()));
+
+
+#ifndef CLIENT
+    pb::ProtobufSocketReader psr;
+    QObject::connect(console.object(), &Console::command, &psr, &pb::ProtobufSocketReader::connectTO);
+#else
+    ThreadedQObject<TestServer> server;
+    QObject::connect(server.thread(),SIGNAL(started()),server.object(),SLOT(start()));
+    server.thread()->start();
+
+    pb::ProtobufSocketWriter psw;
+
+
+    //QObject::connect(&server, &pb::TestServer::newConnection, &server, &pb::TestServer::sendTo);
+    QObject::connect(server.object(), &pb::TestServer::newConnection, server.object(), &pb::TestServer::onXXNewConnection);
+    QObject::connect(console.object(), &Console::sendto, &psw, &pb::ProtobufSocketWriter::sendTo);
+
+    QObject::connect(server.object(), &pb::TestServer::connected, &psw, &pb::ProtobufSocketWriter::setTcp);
+
+#endif
+
+    qRegisterMetaType<std::string>("std::string");
+
+    return a.exec();
+
+#endif
 }

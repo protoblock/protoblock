@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
     rv = nng_msg_alloc(&msg,0);
     rv = nng_msg_append(msg,"msg",3);
-    rv = nng_dial(sock, "tcp://50.0.50.206:10130", &dialer, 0);
+    rv = nng_dial(sock, "tcp://[50.0.50.206]:10128", &dialer, 0);
 
     nng_msleep(3600);
 //    rv = nng_dial(sock, "tcp://50.0.50.206:10130", NULL, 0);
