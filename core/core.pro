@@ -9,8 +9,8 @@ QT += qml quick core websockets network xmlpatterns qml-private quick-private
 
 
 CONFIG += c++11
-
-#CONFIG += console
+QT -= gui
+CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
@@ -22,7 +22,9 @@ SOURCES += $$PWD/main.cpp \
     connectionmanager.cpp \
     peerwireclient.cpp \
     peerstore.cpp \
-    nodeserver.cpp
+    nodeserver.cpp \
+    node.cpp \
+    peerwire.cpp
 
 TARGET = testcore
 
@@ -35,10 +37,11 @@ HEADERS += console.h \
     connectionmanager.h \
     peerstore.h \
     peerwireclient.h \
-    nodeserver.h
+    nodeserver.h \
+    node.h \
+    peerwire.h
 
 DISTFILES += \
     main.qml
 
-RESOURCES += $$PWD/qml/qml.qrc \
-    qml/qml.qrc
+RESOURCES += $$PWD/qml/qml.qrc

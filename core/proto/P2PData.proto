@@ -19,6 +19,7 @@ message Peer {
 
     optional string address = 10;
     optional uint32 port = 30;
+    optional IsListening is_listening = 40;
 }
 
 message SessionId {
@@ -53,16 +54,18 @@ message ChainHead {
 
 message PeerChainStatus {
     enum ChainState { _dontuse_ = 0;
-        STARTING = 1;
-        SEARCHING = 2;
-        CONNECTING = 3;
-        SYNCING = 4;
-        LIVE = 5;
+        STARTING = 2;
+        SEARCHING = 4;
         REORG = 6;
-        STOPPING = 7;
-        ABORTING = 8;
+        STOPPING = 8;
+        ABORTING = 10;
+        CONNECTING = 40;
+        SYNCING = 50;
+        LIVE = 60;
+
     }
 
+    optional ChainState         chain_state = 1;
     optional ChainHead          last_dea = 10;
     optional ChainHead          last_irreversible = 20;
     optional uint32             mempool_count = 30;
@@ -85,7 +88,9 @@ message MsgHello {
 enum MsgType { _dontuse_ = 0;
     INTRO = 1;
     HELLO = 2;
-    ALIVE = 3;
+    ALIVE = 4;
+//    = 8;
+//    = 16;
 }
 
 //PEERLIST = 2;
@@ -100,11 +105,13 @@ message WireMsg {
 
     optional MsgIntro intro = 20;
     optional MsgHello hello = 30;
+    optional MsgAlive alive = 40;
+
 }
 
 //    enum Network {
 //        UNKNOWN = 0;
-//        TEST = 1;
+//        XTEST = 1;
 //        PROD = 2;
 //    }
 

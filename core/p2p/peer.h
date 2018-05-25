@@ -17,6 +17,8 @@
 
 namespace pb {
 
+using fantasybit::Peer;
+
 //struct peerdb {
 //   std::string address;
 //   int64_t     epoch;
