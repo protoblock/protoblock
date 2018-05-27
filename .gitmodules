@@ -1,0 +1,3 @@
+[submodule "QsLog"]
+	path = QsLog
+	url = https://github.com/victronenergy/QsLog

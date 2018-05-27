@@ -1,9 +1,147 @@
-package pb;
+/*
+//  P2PData.proto
+//
+//  Protoblock
+//
+//  Created by Jay Berg on 5/21/2018
+//
+*/
+syntax = "proto2";
+package fantasybit;
 
 message Peer {
+    enum IsListening { _dontuse_ = 0;
+        NOTSURE = 1;
+        ITHINKSO = 2;
+        YES = 3;
+        NO = 4;
+    }
+
     optional string address = 10;
-    optional uint64 lastSync = 20;
     optional uint32 port = 30;
+    optional IsListening is_listening = 40;
 }
 
-message Meta
+message SessionId {
+    enum NetworkID { _dontuse_ = 0;
+        TEST = 1;
+        PROD = 2;
+    }
+
+    optional NetworkID  network_id = 1;
+    optional uint32     wire_version = 10;
+    optional uint32     start_time = 20;
+    optional bytes      uuid = 30;
+}
+
+message WirePeer {
+    optional SessionId  session_id = 10;
+    optional Peer       peer = 20;
+}
+
+message MsgIntro {
+    optional WirePeer iam = 10;
+    optional WirePeer youare = 20;
+    repeated Peer     everyone = 30;
+}
+
+message ChainHead {
+    optional int32  height = 10;
+    optional int32  weight = 20;
+    optional bytes  id = 30;
+//    optional SignedBlockHeader sblock_header = 40;
+}
+
+message PeerChainStatus {
+    enum ChainState { _dontuse_ = 0;
+        STARTING = 2;
+        SEARCHING = 4;
+        REORG = 6;
+        STOPPING = 8;
+        ABORTING = 10;
+        CONNECTING = 40;
+        SYNCING = 50;
+        LIVE = 60;
+
+    }
+
+    optional ChainState         chain_state = 1;
+    optional ChainHead          last_dea = 10;
+    optional ChainHead          last_irreversible = 20;
+    optional uint32             mempool_count = 30;
+    optional uint32             mempool_size = 40;
+    optional uint64             last_block_timestamp = 50;
+    optional uint64             last_tx_timestamp = 60;
+}
+
+message MsgAlive {
+    optional PeerChainStatus    peer_status = 30;
+    optional uint64             timestamp = 40;
+}
+
+message MsgHello {
+    optional MsgIntro           update = 10;
+    repeated WirePeer           connections = 20;
+    //MsgAlive
+}
+
+enum MsgType { _dontuse_ = 0;
+    INTRO = 1;
+    HELLO = 2;
+    ALIVE = 4;
+//    = 8;
+//    = 16;
+}
+
+//PEERLIST = 2;
+//REQUEST = 3;
+//REPLY = 4;
+//FYI = 5;
+//BLOCK = 6;
+//TX = 7;
+
+message WireMsg {
+    optional MsgType type = 10;
+
+    optional MsgIntro intro = 20;
+    optional MsgHello hello = 30;
+    optional MsgAlive alive = 40;
+
+}
+
+//    enum Network {
+//        UNKNOWN = 0;
+//        XTEST = 1;
+//        PROD = 2;
+//    }
+
+//    enum Context {
+//        UNKNOWN = 0;
+//        HANDSHAKE = 1;
+//        IDENTIFY = 2;
+//        PORTTEST = 3;
+//        SYNCING = 4;
+//        REQREP = 5;
+//        LIVE = 6;
+//        HEARTBEAT = 7;
+//    }
+
+//    required Network                    network = 1;
+//    optional uint32                     version = 10;
+//    optional Context                    context = 20;
+//    optional MsgType                    msgtype = 30;
+//    optional HandShake                  handshake = 40;
+//    repeated Peer                       peers = 50 [packed=true];
+//    optional Block                      live_block = 60;
+//    optional SignedTransaction          live_tx = 70;
+//    repeated Block                      old_blocks = 80 [packed=true];
+//    repeated SignedTransaction          old_tx = 90 [packed=true];
+
+//}
+
+//message Peer {
+//    optional string address = 10;
+//    optional uint64 lastSync = 20;
+//    optional uint32 port = 30;
+//}
+

@@ -42,9 +42,12 @@
 #include <QDateTime>
 
 #include <nodeclient.h>
+#include <node.h>
 
 #include <connectionmanager.h>
 //pb::mesh myMesh;
+#include <QsLog/QsLog.h>
+#include <QDir>
 
 using namespace pb;
 //static const char *
@@ -174,16 +177,63 @@ int domain1(int argc, char *argv[])
     return a.exec();
 }
 */
+
+void logFunction(const QString &message, QsLogging::Level level)
+{
+    std::cout << "From log function: " << qPrintable(message) << " " << static_cast<int>(level)
+              << std::endl;
+
+     qDebug() << "logFunction thread" << QThread::currentThreadId() << __FILE__ << '@' << __LINE__;
+}
+
 int main(int argc, char *argv[]) {
     QGuiApplication a(argc, argv);
 
     QQmlApplicationEngine engine;
     engine.load(QUrl("qrc:/main.qml"));
 
+//    qSetMessagePattern("[%{time yyyyMMdd h:mm:ss.zzz t} %{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}] %{file}:%{line} - %{message}");
+
          qDebug() << "main" << QThread::currentThreadId();
          qDebug() << ConnectionManager::instance()->clientId();
 
+         /*
 
+    using namespace QsLogging;
+
+    // 1. init the logging mechanism
+    Logger& logger = Logger::instance();
+    logger.setLoggingLevel(QsLogging::TraceLevel);
+    QDir dir(a.applicationDirPath());
+    const QString sLogPath(dir.filePath("log3.txt"));
+
+    // 2. add two destinations
+    DestinationPtr fileDestination(DestinationFactory::MakeFileDestination(
+      sLogPath, EnableLogRotation, MaxSizeBytes(512), MaxOldLogCount(2)));
+//    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
+//    DestinationPtr functorDestination(DestinationFactory::MakeFunctorDestination(&logFunction));
+//    logger.addDestination(debugDestination);
+    logger.addDestination(fileDestination);
+//    logger.addDestination(functorDestination);
+
+    // 3. start logging
+    QLOG_INFO() << "Program started";
+    QLOG_INFO() << "Built with Qt" << QT_VERSION_STR << "running on" << qVersion();
+
+    QLOG_TRACE() << "Here's a" << QString::fromUtf8("trace") << "message";
+    QLOG_DEBUG() << "Here's a" << static_cast<int>(QsLogging::DebugLevel) << "message";
+    QLOG_WARN()  << "Uh-oh!";
+    qDebug() << "This message won't be picked up by the logger";
+    QLOG_ERROR() << "An error has occurred";
+    qWarning() << "Neither will this one";
+    QLOG_FATAL() << "Fatal error!";
+
+    logger.setLoggingLevel(QsLogging::OffLevel);
+    for (int i = 0;i < 10000000;++i) {
+        QLOG_ERROR() << QString::fromUtf8("this message should not be visible");
+    }
+    logger.setLoggingLevel(QsLogging::TraceLevel);
+    */
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
     foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
@@ -227,7 +277,7 @@ int main(int argc, char *argv[]) {
 //     qDebug() <<localIP;
 
     QThread* thread = new QThread;
-    NodeClient* worker = new NodeClient();
+    Node* worker = new Node();
     worker->moveToThread(thread);
 //    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
     QObject::connect(thread, SIGNAL(started()), worker, SLOT(startPoint()));

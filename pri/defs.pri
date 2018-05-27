@@ -13,7 +13,7 @@ win32 {
     LIBS+= -L$$DIRPREFIX
 
     #nng
-    LIBS += -lnng
+#    LIBS += -lQsLog2
 
 
     #protobuf

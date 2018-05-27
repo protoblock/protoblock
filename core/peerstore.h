@@ -17,6 +17,7 @@
 
 namespace pb {
 
+using fantasybit::Peer;
 //struct peerdb {
 //   std::string address;
 //   int64_t     epoch;
@@ -29,7 +30,7 @@ static int PORT_LIVE_BLOCK = 10126;
 static int PORT_LIVE_TX = 10127;
 static int PORT_LIVE_TX_NAT = 10128;
 
-static std::string ROOT_DIR_("C:/fantasybit/");
+static std::string ROOT_DIR_("C:/fantasybit-testcore/");
 
 static std::string GET_ROOT_DIR() {
     return ROOT_DIR_;
