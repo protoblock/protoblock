@@ -35,6 +35,7 @@ class Node : public QTcpServer
 
 public:
     explicit Node(QObject *parent = 0);
+    static Node *instance();
     ~Node();
 
     void getMyIp();
@@ -43,10 +44,12 @@ public:
 
 signals:
     void tryGetIp();
+    void newPeer(fantasybit::Peer &);
 
 public slots:
     void startPoint();
     void connectToPeers();
+    void OnNewWireMsg(const fantasybit::WireMsg &msg);
 
 protected:
     void incomingConnection(qintptr socketDescriptor) Q_DECL_OVERRIDE;
@@ -66,18 +69,24 @@ private:
     bool connectingToClients = false;
     void callPeerConnector();
 
+    //timer
+    int m_pendingNatTimer = 0;
+
     pb::PeerStore pstore;
-
-    std::unordered_set<Peer *> knownpeers;
-
+    std::string m_selfkey;
+    std::unordered_map<std::string,Peer *> knownpeers;
     std::unordered_map<std::string,Peer *> m_connectedUUID;
-    std::unordered_set<PeerWire *> m_connections;
+    std::unordered_map<Peer *,PeerWire *> m_connections;
+
+    std::vector<std::string> m_pending_nat_test;
 
     int m_numoutgoing = 0;
 
     fantasybit::PeerChainStatus::ChainState getChainState() const;
     void setChainState(const fantasybit::PeerChainStatus::ChainState state);
 };
+
+Q_DECLARE_METATYPE(fantasybit::Peer)
 
 
 }

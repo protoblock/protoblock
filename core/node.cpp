@@ -15,6 +15,15 @@
 using namespace pb;
 using namespace fantasybit;
 
+Q_GLOBAL_STATIC(Node, nodeClient)
+
+static const int NatTestTimerDelay = 5000;
+
+Node *Node::instance()
+{
+    return nodeClient();
+}
+
 Node::Node(QObject *parent) : QTcpServer(parent), http(this)
 {
     mPeer.set_is_listening(Peer::NOTSURE);
@@ -44,13 +53,12 @@ Node::Node(QObject *parent) : QTcpServer(parent), http(this)
         np->CopyFrom(pp.second);
         if ( np->port() == 0 )
             np->set_port(PORT_DEFAULT);
-        knownpeers.insert(np);
+        knownpeers.insert({pp.first,np});
     }
-}
-
-Node::~Node() {
 
 }
+
+Node::~Node() {}
 
 void Node::startPoint()
 {
@@ -150,14 +158,18 @@ void Node::startServer() {
 void Node::incomingConnection(qintptr socketDescriptor)
 {
     qDebug() << " incomingConnection ";
-    PeerWire *client = new PeerWire(this);
-    QHostAddress qh = client->setSocketDescriptor(socketDescriptor);
+    PeerWire *client = new PeerWire(PeerWire::Incoming,this);
+    connect(client,&PeerWire::NewWireMsg,this,&Node::OnNewWireMsg);
     Peer *p = new fantasybit::Peer;
     p->set_is_listening(Peer::NOTSURE);
-    p->set_address(QHostAddress(qh.toIPv4Address()).toString().toStdString());
     p->set_port(0);
-    client->init(p);
-    m_connections.insert(client);
+    p->set_address("");
+    client->setPeer(p);
+    m_connections.insert({p,client});
+    client->init();
+    QHostAddress qh = client->setSocketDescriptor(socketDescriptor);
+    p->set_address(QHostAddress(qh.toIPv4Address()).toString().toStdString());
+//    client->sendIntro();
 }
 
 void Node::callPeerConnector()
@@ -190,13 +202,16 @@ void Node::connectToPeers()
 
 //    // Find the list of peers we are not currently connected to, where
 //    // the more interesting peers are listed more than once.
-    std::vector<Peer *> freePeers{knownpeers.begin(),knownpeers.end()};
+    std::vector<std::string> freePeers;//{knownpeersbegin(),knownpeers.end()};
+    for (const auto &s : knownpeers)
+        freePeers.push_back(s.first);
+
+//    for ( )
     std::vector<bool> used;
     used.assign(freePeers.size(),false);
     int remaining = freePeers.size();
     // Start as many connections as we can
     while (m_numoutgoing < MAX_OUTBOUND && remaining > 0) {
-        PeerWire *client = new PeerWire(this);
 //        RateController::instance()->addSocket(client);
 //        ConnectionManager::instance()->addConnection(client);
 
@@ -215,6 +230,10 @@ void Node::connectToPeers()
         } while (used.at(index));
         remaining--;
         used.at(index) = true;
+        auto host = freePeers.at(index);
+        if ( host == m_selfkey)
+            continue;
+
 
 //        client->setPeer();
 //        peer->connectStart = QDateTime::currentDateTime().toTime_t();
@@ -224,20 +243,165 @@ void Node::connectToPeers()
 //        qDebug() << peer->address << peer->port;
 //        peer->noConnectTries++;
 //        client->setPeer(peer);
-        client->init(freePeers.at(index));
+        Peer *p = knownpeers[host];
+        if ( m_connections.find(p) != end(m_connections) )
+            continue;
+
+        PeerWire *client = new PeerWire(PeerWire::Outgoing,this);
+        connect(client,&PeerWire::NewWireMsg,this,&Node::OnNewWireMsg);
+        m_connections.insert({p,client});
+        client->setPeer(p);
+        client->init();
         client->connectToHost();
     }
 
-    if ( freePeers.size() == 0 )
-        callPeerConnector();
+//    if ( freePeers.size() == 0 )
+    callPeerConnector();
+}
+
+void Node::OnNewWireMsg(const WireMsg &msg) {
+
+    switch ( msg.type() ) {
+    case MsgType::INTRO: {
+        SessionId const& hisid =  msg.intro().iam().session_id();
+        SessionId const& myid =  msg.intro().youare().session_id();
+
+        Peer const& hpeer =  msg.intro().iam().peer();
+        Peer const& mpeer =  msg.intro().youare().peer();
+        PeerWire *pr = qobject_cast<PeerWire *>(sender());
+
+        PeerWire::DoAction nextaction;
+
+        if ( hisid.uuid() == mSessionId.uuid()) {
+            qDebug() << " connected to self " << pr->PeerState();
+
+            pr->diconnectFromHost();
+
+            if ( pr->PeerState() & PeerWire::Incoming)
+                m_selfkey = mpeer.address() + FB_PORT(mpeer.port());
+
+            return;
+        }
+
+        if ( hisid.network_id() != mSessionId.network_id() || hisid.wire_version() != mSessionId.wire_version()) {
+            qDebug() << " bad id disconnect" << hisid.DebugString().data();
+            pr->diconnectFromHost();
+            nextaction = PeerWire::Disconnect;
+            break;
+        }
+
+
+        if ( mPeer.is_listening() != Peer::YES && (pr->PeerState() & PeerWire::Incoming) )
+            mPeer.set_is_listening(Peer::YES);
+
+        if ( pr->PeerState() & PeerWire::Incoming ) {
+            auto uit = m_connectedUUID.find(hisid.uuid());
+            bool knowuuid = ( uit != end(m_connectedUUID));
+
+            std::string hispaddress = hpeer.address() + FB_PORT(hpeer.port());
+            auto pit = knownpeers.find(hispaddress);
+            bool knowp = ( pit != end(knownpeers));
+
+            auto pp = m_connections.find(pr->peer());
+            bool haveconn = (pp != end(m_connections));
+
+            if ( !haveconn ) {
+                qCritical() << " should be connected ";
+                nextaction = PeerWire::Disconnect;
+            }
+            else if ( pr != pp->second ){
+                qCritical() << " is diff connection ";
+                nextaction = PeerWire::Disconnect;
+            }
+            else if ( !knowuuid ) {  //normal case
+                nextaction = PeerWire::Intro;
+
+                m_connectedUUID.insert({hisid.uuid(),pr->peer()});
+                pr->mSessionId.CopyFrom(hisid);
+                if ( hpeer.is_listening() == Peer::NO) {
+                    pr->peer()->set_is_listening(Peer::NO);
+                }
+                else if ( hpeer.is_listening() == Peer::YES ) {
+                    if ( !knowp ) {
+                        knownpeers.insert({hispaddress,pr->peer()});
+                        //emit newPeer(*pr->peer()); ToDo:
+                    }
+                    pr->peer()->set_is_listening(Peer::ITHINKSO);
+                }
+                else if ( hpeer.is_listening() == Peer::NO )
+                   pr->peer()->set_is_listening(Peer::NO);
+
+                else if ( hpeer.is_listening() == Peer::NOTSURE) {
+                    //do connect test
+                    m_pending_nat_test.push_back(hisid.uuid());
+                    if (!m_pendingNatTimer)
+                        m_pendingNatTimer = startTimer(NatTestTimerDelay);
+                }
+            }
+            else if ( !(pr->PeerState() & PeerWire::Outgoing) ) {
+                if ( uit->second == pr->peer() ) {
+                    qCritical() << "a should never be here";
+//                    pr->diconnectFromHost();
+                    break;
+                }
+
+                if ( myid.uuid() == mSessionId.uuid() ) {
+                    qCritical() << "b should never be here";
+//                    break;
+                }
+
+                if ( !knowp ) {
+                    qCritical() << "c should never be here";
+                    break;
+                }
+
+                auto c2 = m_connections.find(uit->second);
+                if ( c2 == end(m_connections)) {
+                    qCritical() << "d should never be here";
+                    break;
+                }
+
+                PeerWire *out = c2->second;
+                if ( out->mSessionId.uuid() != myid.uuid())
+                    qCritical() << "e should never be here";
+                else if ( out->PeerState() & PeerWire::Incoming)
+                    qCritical() << "f should never be here";
+                else {
+                    out->SetPeerState(out->PeerState() | PeerWire::Incoming);
+                    pr->mSessionId.CopyFrom(out->mSessionId);
+                    pr->setPeer(out->peer());
+                    //handshake then disconnect
+                    nextaction = PeerWire::DoAction::IntroThenDisconnect;
+                }
+            }
+            else {
+                if ( myid.uuid() != mSessionId.uuid())
+                    qCritical() << "g should never be here";
+                nextaction = PeerWire::Hello;
+            }
+        }
+        else {
+            m_connectedUUID.insert({hisid.uuid(),pr->peer()});
+            pr->mSessionId.CopyFrom(hisid);
+            nextaction = PeerWire::Hello;
+        }
+
+        pr->setAction(nextaction);
+
+    }
+    default:
+        break;
+    }
+
+    qDebug() << " OnNewWireMsg " << msg.DebugString().data();
 }
 
 
 
 decltype(pb::Node::IP_URLS) pb::Node::IP_URLS {
-     "http://api.ipify.org/",
-     "http://myexternalip.com/raw",
-     "http://icanhazip.com/",
+    "http://api.ipify.org/",
+    "http://myexternalip.com/raw",
+    "http://icanhazip.com/",
      "http://myip.dnsomatic.com/",
      "http://ifcaonfig.me/ip"
 };
