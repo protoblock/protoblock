@@ -16,8 +16,8 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += $$PWD/main.cpp \
-    console.cpp \
-    protobufsocketreader.cpp \
+#    console.cpp \
+#    protobufsocketreader.cpp \
     nodeclient.cpp \
     connectionmanager.cpp \
     peerwireclient.cpp \
@@ -28,10 +28,11 @@ SOURCES += $$PWD/main.cpp \
 
 TARGET = testcore
 
-HEADERS += console.h \
-    protobufsocketreader.h \
+HEADERS += \
+#console.h \
+#    protobufsocketreader.h \
     socketcopyinginputstream.h \
-    testserver.h \
+#    testserver.h \
     threadedqobject.h \
     nodeclient.h \
     connectionmanager.h \

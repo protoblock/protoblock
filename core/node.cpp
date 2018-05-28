@@ -32,9 +32,8 @@ Node::Node(QObject *parent) : QTcpServer(parent), http(this)
     mSessionId.set_network_id(IS_TEST_NET ? SessionId::TEST : SessionId::PROD);
     mSessionId.set_wire_version(WIRE_VERSION);
 
-    int genesisepoch = 1397433600;
     int startupTime = int(QDateTime::currentDateTime().toTime_t());
-    mSessionId.set_start_time(startupTime - genesisepoch);
+    mSessionId.set_start_time(startupTime - GENEIS_EPOCH);
     unsigned char buf[6];
     int ret = RAND_bytes(buf, 6);
 
@@ -294,9 +293,10 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
         if ( mPeer.is_listening() != Peer::YES && (pr->PeerState() & PeerWire::Incoming) )
             mPeer.set_is_listening(Peer::YES);
 
+        auto uit = m_connectedUUID.find(hisid.uuid());
+        bool knowuuid = ( uit != end(m_connectedUUID));
+
         if ( pr->PeerState() & PeerWire::Incoming ) {
-            auto uit = m_connectedUUID.find(hisid.uuid());
-            bool knowuuid = ( uit != end(m_connectedUUID));
 
             std::string hispaddress = hpeer.address() + FB_PORT(hpeer.port());
             auto pit = knownpeers.find(hispaddress);
@@ -367,11 +367,16 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                 else if ( out->PeerState() & PeerWire::Incoming)
                     qCritical() << "f should never be here";
                 else {
-                    out->SetPeerState(out->PeerState() | PeerWire::Incoming);
-                    pr->mSessionId.CopyFrom(out->mSessionId);
-                    pr->setPeer(out->peer());
+                    if ( out->mInIntro.youare ().session_id ().start_time () > pr->mSessionId.start_time () ) {
+                        out->setAction(PeerWire::DoAction::Disconnect);
+                    }
+                    else {
+                        pr->SetPeerState(out->PeerState() | PeerWire::Outgoing);
+                        pr->mSessionId.set_uuid (out->mInIntro.iam ().session_id ().uuid ());
+                        pr->setPeer(out->peer());
+                        nextaction = PeerWire::DoAction::Intro;
+                    }
                     //handshake then disconnect
-                    nextaction = PeerWire::DoAction::IntroThenDisconnect;
                 }
             }
             else {
@@ -381,6 +386,32 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
             }
         }
         else {
+            if (knowuuid ) {
+                auto c2 = m_connections.find(uit->second);
+                if ( c2 == end(m_connections)) {
+                    qCritical() << "d should never be here";
+                    break;
+                }
+
+                PeerWire *in = c2->second;
+                if ( in->mSessionId.uuid() != myid.uuid())
+                    qCritical() << "e should never be here";
+                else if ( in->PeerState() & PeerWire::Outgoing)
+                    qCritical() << "f should never be here";
+                else {
+
+                    if ( pr->mOutIntro.youare ().session_id ().start_time () > in->mInIntro.youare ().session_id ().start_time () ) {
+                        pr->setAction(PeerWire::DoAction::Disconnect);
+                        in->SetPeerState(in->PeerState() | PeerWire::Outgoing);
+                    }
+                    else {
+                        pr->SetPeerState(pr->PeerState() | PeerWire::Incoming);
+                    }
+                }
+
+            }
+//                * PeerA -  On-OutGoing-InIntroMsg (if OutGoing->OutIntro->youare-starttime > Incoming->InIntro->youare-starttime) disconnect outgoing
+
             m_connectedUUID.insert({hisid.uuid(),pr->peer()});
             pr->mSessionId.CopyFrom(hisid);
             nextaction = PeerWire::Hello;
@@ -396,7 +427,51 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
     qDebug() << " OnNewWireMsg " << msg.DebugString().data();
 }
 
-
+/*
+* Session 1
+ *  1. PeerA connect to PeerB
+ *  2. PeerA send intro to PeerB
+ *             iam.start_time - global session start
+ *             youare.start_time - time this socket connected
+ * 3. PeerB send intro to PeerA
+ *             iam.start_time - global session start
+ *             youare.start_time - time this socket connected
+ *
+ * PeerA is outgoing
+ * PeerB is incomming
+ *
+ * Rule1 - outgoing will initiate disconnect on duplicate
+ * Rule2 - on two connecttions most recent outgoing - youare.start_time will disconnect
+ *
+ * PeerA - OutIntro->youare-starttime  - is used
+ * PeerB - InIntro -> youare-starttime  - is used
+ *
+ *
+ * * Session 2
+ *  1. PeerB connect to PeerA
+ *  2. PeerB send intro to PeerA
+ *             iam.start_time - global session start
+ *             youare.start_time - time this socket connected
+ * 3. PeerA send intro to PeerB
+ *             iam.start_time - global session start
+ *             youare.start_time - time this socket connected
+ *
+ * PeerB is outgoing
+ * PeerA is incomming
+ *
+ * Rule1 - outgoing will initiate disconnect on duplicate
+ * Rule2 - on two connecttions most recent outgoing - youare.start_time will disconnect
+ *
+ * PeerB - OutIntro->youare-starttime  - is used
+ * PeerA - InIntro -> youare-starttime  - is used
+ *
+ *
+ * Algo to decide:
+ *
+ * PeerA -  On-OutGoing-InIntroMsg (if OutGoing->OutIntro->youare-starttime > Incoming->InIntro->youare-starttime) disconnect outgoing
+ * PeerB -  On-OutGoing-InIntroMsg  (if OutGoing->OutIntro->youare-starttime > Incoming>InIntro->youare-starttime) disconnect outgoing
+ *
+ * */
 
 decltype(pb::Node::IP_URLS) pb::Node::IP_URLS {
     "http://api.ipify.org/",

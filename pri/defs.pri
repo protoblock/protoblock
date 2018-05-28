@@ -35,7 +35,7 @@ macx {
     LIBS+= -L$$DIRPREFIX
 
     #nng
-    LIBS += -lnng_static
+#    LIBS += -lnng_static
 
 
     #protobuf

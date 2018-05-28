@@ -26,6 +26,8 @@ static bool IS_TEST_NET = true;
 static const int WIRE_VERSION = 1;
 static const int MAX_OUTBOUND = 8;
 
+static int GENEIS_EPOCH = 1397433600;
+
 
 namespace pb {
 
@@ -86,9 +88,8 @@ private:
     void setChainState(const fantasybit::PeerChainStatus::ChainState state);
 };
 
-Q_DECLARE_METATYPE(fantasybit::Peer)
-
-
 }
+
+Q_DECLARE_METATYPE(fantasybit::Peer)
 
 #endif // NODE_H

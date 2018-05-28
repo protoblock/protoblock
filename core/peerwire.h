@@ -83,6 +83,9 @@ public:
     void setPeer(fantasybit::Peer *peer);
 
     fantasybit::SessionId mSessionId;
+    fantasybit::MsgIntro mInIntro;
+    fantasybit::MsgIntro mOutIntro;
+
 //    std::string mKnownpeer;
 
 signals:

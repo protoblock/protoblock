@@ -2,5 +2,5 @@ CONFIG += ordered
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    $$PWD/apps \
+#    $$PWD/apps \
     $$PWD/core

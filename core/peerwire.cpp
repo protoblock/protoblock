@@ -31,7 +31,7 @@ QHostAddress PeerWire::setSocketDescriptor(qintptr socketDescriptor) {
     bool ret =  m_socket.setSocketDescriptor(socketDescriptor);
     if ( !ret ) return QHostAddress();
 
-    mSessionId.set_start_time(int(QDateTime::currentDateTime().toTime_t()));
+    mSessionId.set_start_time(int(QDateTime::currentDateTime().toTime_t())- GENEIS_EPOCH);
     qDebug() << " setSocketDescriptor " << m_socket.peerAddress() << m_socket.peerPort();
     return m_socket.peerAddress();
 }
@@ -63,7 +63,7 @@ void PeerWire::SocketStateChange(QAbstractSocket::SocketState state) {
 void PeerWire::SocketConnected() {
     if ( m_peer != NULL )  {
         m_peer->set_is_listening(Peer::YES);
-        mSessionId.set_start_time(int(QDateTime::currentDateTime().toTime_t()));
+        mSessionId.set_start_time(int(QDateTime::currentDateTime().toTime_t())-GENEIS_EPOCH);
         qDebug() << m_peer->address().data() << "PeerWire::connected" << mPWstate;
         if (!m_sendIntro && m_socket.state() == QAbstractSocket::ConnectedState)
             sendIntro();
@@ -94,19 +94,21 @@ void PeerWire::sendIntro()
     WireMsg wiremsg;
     wiremsg.set_type(MsgType::INTRO);
 
-    MsgIntro *intro = wiremsg.mutable_intro();
+    MsgIntro *intro = &mOutIntro;
     WirePeer *me = intro->mutable_iam();
     SessionId *sid = me->mutable_session_id();
     sid->CopyFrom(Node::mSessionId);
     me->set_allocated_peer(&Node::mPeer);
 
-    intro->mutable_youare()->set_allocated_peer(m_peer);
+    intro->mutable_youare()->mutable_peer ()->CopyFrom (*m_peer);
     SessionId *psid = intro->mutable_youare()->mutable_session_id();
+    psid->CopyFrom (mSessionId);
 //    psid->set_start_time(m_startTime);
 
+    wiremsg.set_allocated_intro (intro);
     doWrite(wiremsg);
 
-    me->release_peer();
+    wiremsg.release_intro ();
 }
 
 void PeerWire::onReadyRead()

@@ -15,7 +15,7 @@
 #include <nng/protocol/reqrep0/rep.h>
 #include <nng/protocol/reqrep0/req.h>
 
-#include <ws2tcpip.h>
+//#include <ws2tcpip.h>
 
 //#include "peer.h"
 //#include "mesh.h"
@@ -33,9 +33,9 @@
 #include <QHostAddress>
 #include <iostream>
 
-#include "console.h"
-#include <protobufsocketreader.h>
-#include <testserver.h>
+//#include "console.h"
+//#include <protobufsocketreader.h>
+//#include <testserver.h>
 #include <threadedqobject.h>
 
 #include <QNetworkInterface>
@@ -46,7 +46,7 @@
 
 #include <connectionmanager.h>
 //pb::mesh myMesh;
-#include <QsLog/QsLog.h>
+//#include <QsLog/QsLog.h>
 #include <QDir>
 
 using namespace pb;
@@ -176,7 +176,7 @@ int domain1(int argc, char *argv[])
 
     return a.exec();
 }
-*/
+
 
 void logFunction(const QString &message, QsLogging::Level level)
 {
@@ -185,7 +185,7 @@ void logFunction(const QString &message, QsLogging::Level level)
 
      qDebug() << "logFunction thread" << QThread::currentThreadId() << __FILE__ << '@' << __LINE__;
 }
-
+*/
 int main(int argc, char *argv[]) {
     QGuiApplication a(argc, argv);
 
