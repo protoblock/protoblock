@@ -26,6 +26,9 @@ Node *Node::instance()
 
 Node::Node(QObject *parent) : QTcpServer(parent), http(this)
 {
+
+    qRegisterMetaType<PeerWire::DoAction>("PeerWire::DoAction");
+
     mPeer.set_is_listening(Peer::NOTSURE);
     mPeer.set_port(PORT_DEFAULT);
 
@@ -269,12 +272,10 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
         Peer const& mpeer =  msg.intro().youare().peer();
         PeerWire *pr = qobject_cast<PeerWire *>(sender());
 
-        PeerWire::DoAction nextaction;
-
         if ( hisid.uuid() == mSessionId.uuid()) {
             qDebug() << " connected to self " << pr->PeerState();
 
-            pr->diconnectFromHost();
+            emit pr->NewAction(PeerWire::Disconnect);
 
             if ( pr->PeerState() & PeerWire::Incoming)
                 m_selfkey = mpeer.address() + FB_PORT(mpeer.port());
@@ -284,11 +285,14 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
 
         if ( hisid.network_id() != mSessionId.network_id() || hisid.wire_version() != mSessionId.wire_version()) {
             qDebug() << " bad id disconnect" << hisid.DebugString().data();
-            pr->diconnectFromHost();
-            nextaction = PeerWire::Disconnect;
+
+            if ( pr->PeerState() & PeerWire::Incoming )
+                emit pr->NewAction(PeerWire::Intro);
+            else
+                emit pr->NewAction(PeerWire::Disconnect);
+
             break;
         }
-
 
         if ( mPeer.is_listening() != Peer::YES && (pr->PeerState() & PeerWire::Incoming) )
             mPeer.set_is_listening(Peer::YES);
@@ -307,15 +311,13 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
 
             if ( !haveconn ) {
                 qCritical() << " should be connected ";
-                nextaction = PeerWire::Disconnect;
+                emit pr->NewAction(PeerWire::Disconnect);
             }
             else if ( pr != pp->second ){
                 qCritical() << " is diff connection ";
-                nextaction = PeerWire::Disconnect;
+                emit pr->NewAction(PeerWire::Disconnect);
             }
             else if ( !knowuuid ) {  //normal case
-                nextaction = PeerWire::Intro;
-
                 m_connectedUUID.insert({hisid.uuid(),pr->peer()});
                 pr->mSessionId.CopyFrom(hisid);
                 if ( hpeer.is_listening() == Peer::NO) {
@@ -337,6 +339,8 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                     if (!m_pendingNatTimer)
                         m_pendingNatTimer = startTimer(NatTestTimerDelay);
                 }
+
+                emit pr->NewAction(PeerWire::Intro);
             }
             else if ( !(pr->PeerState() & PeerWire::Outgoing) ) {
                 if ( uit->second == pr->peer() ) {
@@ -368,13 +372,13 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                     qCritical() << "f should never be here";
                 else {
                     if ( out->mInIntro.youare ().session_id ().start_time () > pr->mSessionId.start_time () ) {
-                        out->setAction(PeerWire::DoAction::Disconnect);
+                        emit pr->NewAction(PeerWire::Disconnect);
                     }
                     else {
                         pr->SetPeerState(out->PeerState() | PeerWire::Outgoing);
                         pr->mSessionId.set_uuid (out->mInIntro.iam ().session_id ().uuid ());
                         pr->setPeer(out->peer());
-                        nextaction = PeerWire::DoAction::Intro;
+                        emit pr->NewAction(PeerWire::Intro);
                     }
                     //handshake then disconnect
                 }
@@ -382,7 +386,7 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
             else {
                 if ( myid.uuid() != mSessionId.uuid())
                     qCritical() << "g should never be here";
-                nextaction = PeerWire::Hello;
+                emit pr->NewAction(PeerWire::Hello);
             }
         }
         else {
@@ -401,8 +405,9 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                 else {
 
                     if ( pr->mOutIntro.youare ().session_id ().start_time () > in->mInIntro.youare ().session_id ().start_time () ) {
-                        pr->setAction(PeerWire::DoAction::Disconnect);
                         in->SetPeerState(in->PeerState() | PeerWire::Outgoing);
+                        emit pr->NewAction(PeerWire::Disconnect);
+                        break;
                     }
                     else {
                         pr->SetPeerState(pr->PeerState() | PeerWire::Incoming);
@@ -414,11 +419,9 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
 
             m_connectedUUID.insert({hisid.uuid(),pr->peer()});
             pr->mSessionId.CopyFrom(hisid);
-            nextaction = PeerWire::Hello;
+            emit pr->NewAction(PeerWire::Hello);
+
         }
-
-        pr->setAction(nextaction);
-
     }
     default:
         break;

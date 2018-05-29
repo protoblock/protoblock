@@ -40,11 +40,12 @@ public:
         Hello,
         Disconnect
     };
+    Q_ENUM(DoAction)
 
-    void setAction(DoAction in) {
-        mNextAction = in;
-        qDebug() << " new action " << in;
-    }
+//    void setAction(DoAction in) {
+//        mNextAction = in;
+//        qDebug() << " new action " << in;
+//    }
 
     PeerWire(PeerWireState state, QObject *parent = 0);
     fantasybit::Peer *peer() const { return m_peer;}
@@ -90,12 +91,16 @@ public:
 
 signals:
     void NewWireMsg(const fantasybit::WireMsg &);
+    void NewAction(DoAction act);
+
 protected:
     void timerEvent(QTimerEvent *event) override;
 
 public slots:
     void SocketStateChange(QAbstractSocket::SocketState state);
     void SocketConnected();
+
+    void OnNewAction(DoAction act);
 
 private slots:
 //    void sendHandShake();
@@ -122,7 +127,7 @@ private:
 //    uint64_t m_startTime;
     fantasybit::Peer *m_peer;
 
-    DoAction mNextAction;
+//    DoAction mNextAction;
     uint64_t inittime;
     QTcpSocket m_socket;
 };

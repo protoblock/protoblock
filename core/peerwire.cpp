@@ -37,7 +37,9 @@ QHostAddress PeerWire::setSocketDescriptor(qintptr socketDescriptor) {
 }
 
 void PeerWire::init() {
-    mNextAction = None;
+//    mNextAction = None;
+    connect(this, &PeerWire::NewAction, this, &PeerWire::OnNewAction, Qt::QueuedConnection);
+
     inittime = (std::chrono::duration_cast<std::chrono::milliseconds>
                 (std::chrono::system_clock::now().time_since_epoch()).count());
 
@@ -71,6 +73,16 @@ void PeerWire::SocketConnected() {
     else
         qDebug() << "NULL PeerWire::connected";
 
+}
+
+void PeerWire::OnNewAction(DoAction act)
+{
+    if ( act == Intro ) {
+        sendIntro();
+    }
+    else if ( act == Disconnect) {
+        diconnectFromHost();
+    }
 }
 
 void PeerWire::setPeer(fantasybit::Peer *peer) {
@@ -158,18 +170,18 @@ void PeerWire::timerEvent(QTimerEvent *event) {
     if ( event->timerId() == mActionTimer ) {
         qDebug() << " actionTimer ";
 
-        if ( mNextAction == Intro ) {
-            mNextAction = None;
-            sendIntro();
-        }
-        else if ( mNextAction == IntroThenDisconnect) {
-            mNextAction = Disconnect;
-            sendIntro();
-        }
-        else if ( mNextAction == Disconnect) {
-            mNextAction = None;
-            diconnectFromHost();
-        }
+//        if ( mNextAction == Intro ) {
+//            mNextAction = None;
+//            sendIntro();
+//        }
+//        else if ( mNextAction == IntroThenDisconnect) {
+//            mNextAction = Disconnect;
+//            sendIntro();
+//        }
+//        else if ( mNextAction == Disconnect) {
+//            mNextAction = None;
+//            diconnectFromHost();
+//        }
     }
 }
 
