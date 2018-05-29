@@ -14,7 +14,7 @@
 #include <QHostAddress>
 #include <QTcpServer>
 
-#include <vector>
+#include <queue>
 
 #include "P2PData.pb.h"
 #include "peerstore.h"
@@ -28,6 +28,7 @@ static const int MAX_OUTBOUND = 8;
 
 static int GENEIS_EPOCH = 1397433600;
 
+using fantasybit::Peer;
 
 namespace pb {
 
@@ -43,20 +44,32 @@ public:
     void getMyIp();
     static fantasybit::SessionId mSessionId;
     static fantasybit::Peer mPeer;
+    static std::string PeerIpPort(const fantasybit::Peer &p) {
+        return p.address() + FB_PORT(p.port());
+    }
 
 signals:
     void tryGetIp();
-    void newPeer(fantasybit::Peer &);
+    void NewPeer(const std::string &);
+    void ListeningStateChange();
 
 public slots:
     void startPoint();
     void connectToPeers();
     void OnNewWireMsg(const fantasybit::WireMsg &msg);
+    void WireConnected();
+    void WireDisconnected();
 
 protected:
     void incomingConnection(qintptr socketDescriptor) Q_DECL_OVERRIDE;
+    void timerEvent(QTimerEvent *event) override;
 
 private:
+    void AddKnownPeer(const std::string &pap, fantasybit::Peer *p) {
+        knownpeers.insert({pap,p});
+        emit NewPeer(pap);
+    }
+
     //get self ip
     bool gotMyIp = false;
     QNetworkAccessManager http;
@@ -80,13 +93,16 @@ private:
     std::unordered_map<std::string,Peer *> m_connectedUUID;
     std::unordered_map<Peer *,PeerWire *> m_connections;
 
-    std::vector<std::string> m_pending_nat_test;
+    std::unordered_set<Peer *> testingnat;
+    std::queue<Peer> m_pending_nat_test;
 
     int m_numoutgoing = 0;
+    int m_numincomming = 0;
 
     fantasybit::PeerChainStatus::ChainState getChainState() const;
     void setChainState(const fantasybit::PeerChainStatus::ChainState state);
-};
+    PeerWire * newPeerWire(Peer *p,bool isOutgoing);
+    };
 
 }
 

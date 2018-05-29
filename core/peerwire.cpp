@@ -27,13 +27,19 @@ static const int ActionTimeout = 2000;
 PeerWire::PeerWire(PeerWireState state, QObject *parent)
     : mPWstate(state), QObject(parent) {}
 
-QHostAddress PeerWire::setSocketDescriptor(qintptr socketDescriptor) {
+bool PeerWire::setSocketDescriptor(qintptr socketDescriptor) {
     bool ret =  m_socket.setSocketDescriptor(socketDescriptor);
-    if ( !ret ) return QHostAddress();
+    if ( !ret ) {
+        qDebug() << " PeerWire::setSocketDescriptor " << ret;
+    }
+    else {
+//        mSessionId.set_start_time(int(QDateTime::currentDateTime().toTime_t())- GENEIS_EPOCH);
+        qDebug() << " setSocketDescriptor " << m_socket.peerAddress() << m_socket.peerPort();
+        m_peer->set_address(m_socket.peerAddress().toString().toStdString());
+        SocketConnected ();
+    }
 
-    mSessionId.set_start_time(int(QDateTime::currentDateTime().toTime_t())- GENEIS_EPOCH);
-    qDebug() << " setSocketDescriptor " << m_socket.peerAddress() << m_socket.peerPort();
-    return m_socket.peerAddress();
+    return ret;
 }
 
 void PeerWire::init() {
@@ -48,14 +54,29 @@ void PeerWire::init() {
     connect(&m_socket, &QTcpSocket::connected, this, &PeerWire::SocketConnected);
     connect(&m_socket, &QTcpSocket::readyRead, this, &PeerWire::onReadyRead);
 
+    connect(&m_socket, &QTcpSocket::disconnected, this, &PeerWire::SocketDisconnected);
+    connect(&m_socket, &QTcpSocket::hostFound, this, &PeerWire::SocketHostFound);
+//    connect(&m_socket, &QTcpSocket::error, this, &PeerWire::OnSocketError);
+    connect(&m_socket, SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(OnSocketError(QAbstractSocket::SocketError)));
+
+
     qDebug() << "init " << m_peer->address().data() << "PeerWire::socketStateChanged" << m_socket.state() << mPWstate << inittime;
     m_timeoutTimer = startTimer(ConnectTimeout);
     mActionTimer = startTimer(ActionTimeout);
+}
 
+void PeerWire::SocketHostFound() {
+    qDebug() << "PeerWire::SocketHostFound Found Host" << peer()->address ().data ();
+}
 
+void PeerWire::OnSocketError(QAbstractSocket::SocketError err) {
+    qDebug() << "PeerWire::OnSocketError" << peer()->address ().data () << err;
 }
 
 void PeerWire::SocketStateChange(QAbstractSocket::SocketState state) {
+    qDebug() << "PeerWire::SocketStateChange" << peer()->address ().data ();
+
     if ( this->m_peer != NULL )
         qDebug() << inittime << "PeerWire::socketStateChanged" << state << mPWstate;
     else
@@ -63,33 +84,51 @@ void PeerWire::SocketStateChange(QAbstractSocket::SocketState state) {
 }
 
 void PeerWire::SocketConnected() {
-    if ( m_peer != NULL )  {
-        m_peer->set_is_listening(Peer::YES);
-        mSessionId.set_start_time(int(QDateTime::currentDateTime().toTime_t())-GENEIS_EPOCH);
-        qDebug() << m_peer->address().data() << "PeerWire::connected" << mPWstate;
-        if (!m_sendIntro && m_socket.state() == QAbstractSocket::ConnectedState)
-            sendIntro();
+    if ( mSessionId.start_time () == 0 ) {
+        mSessionId.set_start_time (
+            (int(QDateTime::currentDateTime().toTime_t())-GENEIS_EPOCH));
+
+        emit OnConnected ();
     }
-    else
-        qDebug() << "NULL PeerWire::connected";
+
+//    if ( m_peer != NULL )  {
+//        m_peer->set_is_listening(Peer::YES);
+//        mSessionId.set_start_time(int(QDateTime::currentDateTime().toTime_t())-GENEIS_EPOCH);
+//        qDebug() << m_peer->address().data() << "PeerWire::connected" << mPWstate;
+//        if (!m_sendIntro && m_socket.state() == QAbstractSocket::ConnectedState)
+//            sendIntro();
+//    }
+//    else
+//        qDebug() << "NULL PeerWire::connected";
 
 }
 
+void PeerWire::SocketDisconnected () {
+    emit OnDisconnected ();
+}
+
+
+
 void PeerWire::OnNewAction(DoAction act)
 {
+    qDebug() << " PeerWire::OnnewAction " << act;
     if ( act == Intro ) {
-        sendIntro();
+        sendIntro(false);
     }
     else if ( act == Disconnect) {
         diconnectFromHost();
     }
+    else if ( act == NatIntro) {
+        sendIntro(true);
+    }
+
 }
 
 void PeerWire::setPeer(fantasybit::Peer *peer) {
     m_peer = peer;
 }
 
-void PeerWire::sendIntro()
+void PeerWire::sendIntro(bool nattest)
 {
     if (m_sendIntro || m_socket.state() != QAbstractSocket::ConnectedState) {
         qDebug() << " sendIntro " << m_socket.state();
@@ -110,7 +149,9 @@ void PeerWire::sendIntro()
     WirePeer *me = intro->mutable_iam();
     SessionId *sid = me->mutable_session_id();
     sid->CopyFrom(Node::mSessionId);
-    me->set_allocated_peer(&Node::mPeer);
+    me->mutable_peer()->CopyFrom(Node::mPeer);
+    if ( nattest )
+        sid->set_uuid (sid->uuid () + "-NAT");
 
     intro->mutable_youare()->mutable_peer ()->CopyFrom (*m_peer);
     SessionId *psid = intro->mutable_youare()->mutable_session_id();
@@ -152,6 +193,7 @@ void PeerWire::doWrite(const WireMsg &msg)
     SocketCopyingOutputStream scos(&m_socket);
     google::protobuf::io::CopyingOutputStreamAdaptor cos_adp(&scos);
 
+    qDebug() << "doWrite sending " << msg.DebugString ().data ();
     if (!writeDelimitedTo(msg, &cos_adp) ) {
         qDebug() << " error in write ";
         return;

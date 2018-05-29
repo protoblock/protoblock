@@ -36,7 +36,7 @@ public:
     enum DoAction {
         None,
         Intro,
-        IntroThenDisconnect,
+        NatIntro,
         Hello,
         Disconnect
     };
@@ -50,7 +50,7 @@ public:
     PeerWire(PeerWireState state, QObject *parent = 0);
     fantasybit::Peer *peer() const { return m_peer;}
 
-    QHostAddress setSocketDescriptor(qintptr socketDescriptor);
+    bool setSocketDescriptor(qintptr socketDescriptor);
 
     void connectToHost() {
         m_socket.connectToHost(peer()->address().data(), peer()->port());
@@ -80,7 +80,7 @@ public:
     void SetPeerState(PeerWireState in) { mPWstate = in; }
 
 
-    void sendIntro();
+    void sendIntro(bool nattest = false);
     void setPeer(fantasybit::Peer *peer);
 
     fantasybit::SessionId mSessionId;
@@ -92,13 +92,19 @@ public:
 signals:
     void NewWireMsg(const fantasybit::WireMsg &);
     void NewAction(DoAction act);
+    void OnDisconnected();
+    void OnConnected();
+
 
 protected:
     void timerEvent(QTimerEvent *event) override;
 
 public slots:
+    void SocketHostFound();
+    void OnSocketError(QAbstractSocket::SocketError);
     void SocketStateChange(QAbstractSocket::SocketState state);
     void SocketConnected();
+    void SocketDisconnected();
 
     void OnNewAction(DoAction act);
 

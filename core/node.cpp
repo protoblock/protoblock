@@ -11,6 +11,8 @@
 #include <openssl/rand.h>
 #include <QTimer>
 #include <peerwire.h>
+#include <QTimerEvent>
+
 
 using namespace pb;
 using namespace fantasybit;
@@ -26,7 +28,6 @@ Node *Node::instance()
 
 Node::Node(QObject *parent) : QTcpServer(parent), http(this)
 {
-
     qRegisterMetaType<PeerWire::DoAction>("PeerWire::DoAction");
 
     mPeer.set_is_listening(Peer::NOTSURE);
@@ -55,6 +56,7 @@ Node::Node(QObject *parent) : QTcpServer(parent), http(this)
         np->CopyFrom(pp.second);
         if ( np->port() == 0 )
             np->set_port(PORT_DEFAULT);
+        np->set_is_listening (Peer::YES);
         knownpeers.insert({pp.first,np});
     }
 
@@ -160,17 +162,17 @@ void Node::startServer() {
 void Node::incomingConnection(qintptr socketDescriptor)
 {
     qDebug() << " incomingConnection ";
-    PeerWire *client = new PeerWire(PeerWire::Incoming,this);
-    connect(client,&PeerWire::NewWireMsg,this,&Node::OnNewWireMsg);
+//    PeerWire *client = new PeerWire(PeerWire::Incoming,this);
+
     Peer *p = new fantasybit::Peer;
     p->set_is_listening(Peer::NOTSURE);
     p->set_port(0);
     p->set_address("");
-    client->setPeer(p);
-    m_connections.insert({p,client});
-    client->init();
-    QHostAddress qh = client->setSocketDescriptor(socketDescriptor);
-    p->set_address(QHostAddress(qh.toIPv4Address()).toString().toStdString());
+
+    PeerWire *client = newPeerWire(p,false);
+    if ( client ) client->setSocketDescriptor(socketDescriptor);
+
+//    p->set_address(QHostAddress(qh.toIPv4Address()).toString().toStdString());
 //    client->sendIntro();
 }
 
@@ -249,17 +251,107 @@ void Node::connectToPeers()
         if ( m_connections.find(p) != end(m_connections) )
             continue;
 
-        PeerWire *client = new PeerWire(PeerWire::Outgoing,this);
-        connect(client,&PeerWire::NewWireMsg,this,&Node::OnNewWireMsg);
-        m_connections.insert({p,client});
-        client->setPeer(p);
-        client->init();
+        PeerWire *client = newPeerWire(p,true);
         client->connectToHost();
     }
 
 //    if ( freePeers.size() == 0 )
     callPeerConnector();
 }
+
+void Node::WireConnected() {
+    PeerWire *pr = qobject_cast<PeerWire *>(sender());
+
+    if ( pr->PeerState() & PeerWire::Outgoing ) {
+        if ( testingnat.find(pr->peer()) != end(testingnat)) {
+            emit pr->NewAction(PeerWire::NatIntro);
+        }
+        else {
+            ++m_numoutgoing;
+            emit pr->NewAction(PeerWire::Intro);
+        }
+    }
+    else ++m_numincomming;
+}
+
+void Node::WireDisconnected() {
+    PeerWire *pr = qobject_cast<PeerWire *>(sender());
+
+    if ( pr->PeerState() & PeerWire::Outgoing ) {
+        qDebug() << "WireDisconnected  Outgoing";
+        --m_numoutgoing;
+    }
+    else {
+        qDebug() << "WireDisconnected  InComing";
+        --m_numincomming;
+    }
+
+    qDebug() << pr->peer()->DebugString().data();
+    qDebug() << pr->mSessionId.DebugString().data();
+
+}
+
+
+PeerWire * Node::newPeerWire(Peer *p, bool isOutgoing) {
+    PeerWire *client = new PeerWire(isOutgoing ? PeerWire::Outgoing : PeerWire::Incoming,this);
+
+    m_connections.insert({p,client});
+    client->setPeer(p);
+    client->init();
+
+    connect(client,&PeerWire::NewWireMsg,this,&Node::OnNewWireMsg);
+    connect(client,&PeerWire::OnConnected,this,&Node::WireConnected);
+    connect(client,&PeerWire::OnDisconnected,this,&Node::WireDisconnected);
+
+    return client;
+}
+
+
+/*
+* Session 1
+ *  1. PeerA connect to PeerB
+ *  2. PeerA send intro to PeerB
+ *             iam.start_time - global session start
+ *             youare.start_time - time this socket connected
+ * 3. PeerB send intro to PeerA
+ *             iam.start_time - global session start
+ *             youare.start_time - time this socket connected
+ *
+ * PeerA is outgoing
+ * PeerB is incomming
+ *
+ * Rule1 - outgoing will initiate disconnect on duplicate
+ * Rule2 - on two connecttions most recent outgoing - youare.start_time will disconnect
+ *
+ * PeerA - OutIntro->youare-starttime  - is used
+ * PeerB - InIntro -> youare-starttime  - is used
+ *
+ *
+ * * Session 2
+ *  1. PeerB connect to PeerA
+ *  2. PeerB send intro to PeerA
+ *             iam.start_time - global session start
+ *             youare.start_time - time this socket connected
+ * 3. PeerA send intro to PeerB
+ *             iam.start_time - global session start
+ *             youare.start_time - time this socket connected
+ *
+ * PeerB is outgoing
+ * PeerA is incomming
+ *
+ * Rule1 - outgoing will initiate disconnect on duplicate
+ * Rule2 - on two connecttions most recent outgoing - youare.start_time will disconnect
+ *
+ * PeerB - OutIntro->youare-starttime  - is used
+ * PeerA - InIntro -> youare-starttime  - is used
+ *
+ *
+ * Algo to decide:
+ *
+ * PeerA -  On-OutGoing-InIntroMsg (if OutGoing->OutIntro->youare-starttime > Incoming->InIntro->youare-starttime) disconnect outgoing
+ * PeerB -  On-OutGoing-InIntroMsg  (if OutGoing->OutIntro->youare-starttime > Incoming>InIntro->youare-starttime) disconnect outgoing
+ *
+ * */
 
 void Node::OnNewWireMsg(const WireMsg &msg) {
 
@@ -272,6 +364,7 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
         Peer const& mpeer =  msg.intro().youare().peer();
         PeerWire *pr = qobject_cast<PeerWire *>(sender());
 
+        //check self connection
         if ( hisid.uuid() == mSessionId.uuid()) {
             qDebug() << " connected to self " << pr->PeerState();
 
@@ -281,6 +374,12 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                 m_selfkey = mpeer.address() + FB_PORT(mpeer.port());
 
             return;
+        }
+
+        //now i know im listening - and not somehow self connecting
+        if ( mPeer.is_listening() != Peer::YES && (pr->PeerState() & PeerWire::Incoming) ) {
+            mPeer.set_is_listening(Peer::YES);
+            emit ListeningStateChange();
         }
 
         if ( hisid.network_id() != mSessionId.network_id() || hisid.wire_version() != mSessionId.wire_version()) {
@@ -294,15 +393,11 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
             break;
         }
 
-        if ( mPeer.is_listening() != Peer::YES && (pr->PeerState() & PeerWire::Incoming) )
-            mPeer.set_is_listening(Peer::YES);
-
         auto uit = m_connectedUUID.find(hisid.uuid());
         bool knowuuid = ( uit != end(m_connectedUUID));
 
         if ( pr->PeerState() & PeerWire::Incoming ) {
-
-            std::string hispaddress = hpeer.address() + FB_PORT(hpeer.port());
+            std::string hispaddress = PeerIpPort(hpeer);
             auto pit = knownpeers.find(hispaddress);
             bool knowp = ( pit != end(knownpeers));
 
@@ -325,7 +420,8 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                 }
                 else if ( hpeer.is_listening() == Peer::YES ) {
                     if ( !knowp ) {
-                        knownpeers.insert({hispaddress,pr->peer()});
+                        AddKnownPeer(hispaddress,pr->peer());
+//                        knownpeers.insert({hispaddress,pr->peer()});
                         //emit newPeer(*pr->peer()); ToDo:
                     }
                     pr->peer()->set_is_listening(Peer::ITHINKSO);
@@ -335,7 +431,7 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
 
                 else if ( hpeer.is_listening() == Peer::NOTSURE) {
                     //do connect test
-                    m_pending_nat_test.push_back(hisid.uuid());
+                    m_pending_nat_test.push(hpeer);
                     if (!m_pendingNatTimer)
                         m_pendingNatTimer = startTimer(NatTestTimerDelay);
                 }
@@ -390,6 +486,20 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
             }
         }
         else {
+            std::string peeradd = PeerIpPort(*pr->peer ());
+            auto pita = knownpeers.find(peeradd);
+            bool knowpa = ( pita != end(knownpeers));
+
+            if ( !knowpa ) // connected to peer, but have not added to known hosts yet
+                AddKnownPeer(peeradd,pr->peer());
+
+            auto natit = testingnat.find(pr->peer());
+            if ( natit != end(testingnat)) {
+                testingnat.erase(natit);
+                emit pr->NewAction(PeerWire::Disconnect);
+                break;
+            }
+
             if (knowuuid ) {
                 auto c2 = m_connections.find(uit->second);
                 if ( c2 == end(m_connections)) {
@@ -403,23 +513,32 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                 else if ( in->PeerState() & PeerWire::Outgoing)
                     qCritical() << "f should never be here";
                 else {
-
+                    //disconnect one of the connections
                     if ( pr->mOutIntro.youare ().session_id ().start_time () > in->mInIntro.youare ().session_id ().start_time () ) {
                         in->SetPeerState(in->PeerState() | PeerWire::Outgoing);
                         emit pr->NewAction(PeerWire::Disconnect);
-                        break;
                     }
                     else {
                         pr->SetPeerState(pr->PeerState() | PeerWire::Incoming);
                     }
                 }
-
             }
 //                * PeerA -  On-OutGoing-InIntroMsg (if OutGoing->OutIntro->youare-starttime > Incoming->InIntro->youare-starttime) disconnect outgoing
+            else { //outgoing new connection
+                if ( hpeer.address () == mMyAddress ) {
+                    //someone else on my network is listening
+                    if ( PeerIpPort(mPeer) == PeerIpPort (hpeer)) {
+                        if ( mPeer.is_listening () != Peer::YES ) {
+                            mPeer.set_is_listening(Peer::NO);
+                            emit ListeningStateChange();
+                        }
+                    }
+                }
 
-            m_connectedUUID.insert({hisid.uuid(),pr->peer()});
-            pr->mSessionId.CopyFrom(hisid);
-            emit pr->NewAction(PeerWire::Hello);
+                m_connectedUUID.insert({hisid.uuid(),pr->peer()});
+                pr->mSessionId.set_uuid (hisid.uuid ());
+                emit pr->NewAction(PeerWire::Hello);
+            }
 
         }
     }
@@ -430,51 +549,26 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
     qDebug() << " OnNewWireMsg " << msg.DebugString().data();
 }
 
-/*
-* Session 1
- *  1. PeerA connect to PeerB
- *  2. PeerA send intro to PeerB
- *             iam.start_time - global session start
- *             youare.start_time - time this socket connected
- * 3. PeerB send intro to PeerA
- *             iam.start_time - global session start
- *             youare.start_time - time this socket connected
- *
- * PeerA is outgoing
- * PeerB is incomming
- *
- * Rule1 - outgoing will initiate disconnect on duplicate
- * Rule2 - on two connecttions most recent outgoing - youare.start_time will disconnect
- *
- * PeerA - OutIntro->youare-starttime  - is used
- * PeerB - InIntro -> youare-starttime  - is used
- *
- *
- * * Session 2
- *  1. PeerB connect to PeerA
- *  2. PeerB send intro to PeerA
- *             iam.start_time - global session start
- *             youare.start_time - time this socket connected
- * 3. PeerA send intro to PeerB
- *             iam.start_time - global session start
- *             youare.start_time - time this socket connected
- *
- * PeerB is outgoing
- * PeerA is incomming
- *
- * Rule1 - outgoing will initiate disconnect on duplicate
- * Rule2 - on two connecttions most recent outgoing - youare.start_time will disconnect
- *
- * PeerB - OutIntro->youare-starttime  - is used
- * PeerA - InIntro -> youare-starttime  - is used
- *
- *
- * Algo to decide:
- *
- * PeerA -  On-OutGoing-InIntroMsg (if OutGoing->OutIntro->youare-starttime > Incoming->InIntro->youare-starttime) disconnect outgoing
- * PeerB -  On-OutGoing-InIntroMsg  (if OutGoing->OutIntro->youare-starttime > Incoming>InIntro->youare-starttime) disconnect outgoing
- *
- * */
+
+void Node::timerEvent(QTimerEvent *event) {
+    if ( event->timerId() == m_pendingNatTimer ) {
+        auto natpeer = m_pending_nat_test.front ();
+        m_pending_nat_test.pop ();
+
+        if ( m_pending_nat_test.empty() )
+            killTimer(m_pendingNatTimer);
+
+        Peer *p = new fantasybit::Peer;
+        p->CopyFrom (natpeer);
+        p->set_is_listening (Peer::YES);
+
+        if ( m_numoutgoing >= MAX_OUTBOUND)
+            testingnat.insert (p);
+
+        PeerWire *client = newPeerWire(p,true);
+        client->connectToHost ();
+    }
+}
 
 decltype(pb::Node::IP_URLS) pb::Node::IP_URLS {
     "http://api.ipify.org/",
