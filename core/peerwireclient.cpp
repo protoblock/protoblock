@@ -56,8 +56,8 @@
 
 
 static const int PendingRequestTimeout = 60 * 1000;
-static const int ClientTimeout = 120 * 1000;
-static const int ConnectTimeout = 60 * 1000;
+static const int ClientTimeout = 10000;//120 * 1000;
+static const int ConnectTimeout = 10000;//60 * 1000;
 static const int KeepAliveInterval = 30 * 1000;
 static const int RateControlTimerDelay = 2000;
 static const int MinimalHeaderSize = 48;
@@ -413,9 +413,24 @@ void PeerWireClient::diconnectFromHost()
     socket.disconnectFromHost();
 }
 
+bool PeerWireClient::setSocketDescriptor(qintptr socketDescriptor, SocketState state,
+                                          OpenMode openMode) {
+    bool ret = socket.setSocketDescriptor(socketDescriptor,state,openMode);
+
+    qDebug() << " setSocketDescriptor " << socket.peerAddress() << socket.peerPort();
+    return ret;
+}
+
 void PeerWireClient::timerEvent(QTimerEvent *event)
 {
     qDebug() << " PeerWireClient::timerEvent ";
+
+    if ( socket.peerAddress() != QHostAddress::Null) {
+        QHostAddress tt (socket.peerAddress().toIPv4Address());
+        qDebug() << " timerEvent " << socket.peerAddress() << socket.peerPort() << tt.toString();
+    }
+
+
     if (event->timerId() == transferSpeedTimer) {
         // Rotate the upload / download records.
         for (int i = 6; i >= 0; --i) {

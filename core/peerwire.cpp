@@ -20,8 +20,8 @@ using namespace  fantasybit;
 using namespace  pb;
 
 static const int ConnectTimeout = 30000;//60 * 1000;
-static const int ClientTimeout = 120 * 1000;
-static const int ActionTimeout = 2000;
+static const int ClientTimeout = 10000;//120 * 1000;
+//static const int ActionTimeout = 10000;
 
 
 PeerWire::PeerWire(PeerWireState state, QObject *parent)
@@ -61,17 +61,17 @@ void PeerWire::init() {
             this, SLOT(OnSocketError(QAbstractSocket::SocketError)));
 
 
-    qDebug() << "init " << m_peer->address().data() << "PeerWire::socketStateChanged" << m_socket.state() << mPWstate << inittime;
+    qDebug() << "init " <<  m_peer->address().data() << "PeerWire::socketStateChanged" << m_socket.state() << mPWstate << inittime;
     m_timeoutTimer = startTimer(ConnectTimeout);
-    mActionTimer = startTimer(ActionTimeout);
+//    mActionTimer = startTimer(ActionTimeout);
 }
 
 void PeerWire::SocketHostFound() {
-    qDebug() << "PeerWire::SocketHostFound Found Host" << peer()->address ().data ();
+    qDebug() << "PeerWire::SocketHostFound Found Host" << peer()->address ().data () << mPWstate;
 }
 
 void PeerWire::OnSocketError(QAbstractSocket::SocketError err) {
-    qDebug() << "PeerWire::OnSocketError" << peer()->address ().data () << err;
+    qDebug() << "PeerWire::OnSocketError" << peer()->address ().data () << mPWstate << err;
 }
 
 void PeerWire::SocketStateChange(QAbstractSocket::SocketState state) {
@@ -104,6 +104,9 @@ void PeerWire::SocketConnected() {
 }
 
 void PeerWire::SocketDisconnected () {
+    if ( m_timeoutTimer )
+        killTimer(m_timeoutTimer);
+
     emit OnDisconnected ();
 }
 
@@ -208,9 +211,8 @@ void PeerWire::timerEvent(QTimerEvent *event) {
 //    else
 //        qDebug() << "NULL PeerWire::timerEvent " << m_socket.state();
 
-    qDebug() << " timerEvent ";
-    if ( event->timerId() == mActionTimer ) {
-        qDebug() << " actionTimer ";
+    if ( event->timerId() == m_timeoutTimer ) {
+        qDebug() << " m_timeoutTimer ";
 
 //        if ( mNextAction == Intro ) {
 //            mNextAction = None;

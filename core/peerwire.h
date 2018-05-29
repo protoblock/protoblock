@@ -58,7 +58,9 @@ public:
 
     void diconnectFromHost() {
 //        m_socket.abort();
-        killTimer(mActionTimer);
+//        killTimer(mActionTimer);
+        if ( m_timeoutTimer )
+            killTimer(m_timeoutTimer);
         m_socket.disconnectFromHost();
     }
 
@@ -125,7 +127,7 @@ private:
     int m_timeoutTimer;
     int pendingRequestTimer;
     bool invalidateTimeout;
-    int mActionTimer;
+//    int mActionTimer;
 
     //state
     PeerWireState mPWstate;

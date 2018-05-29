@@ -371,7 +371,7 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
             emit pr->NewAction(PeerWire::Disconnect);
 
             if ( pr->PeerState() & PeerWire::Incoming)
-                m_selfkey = mpeer.address() + FB_PORT(mpeer.port());
+                m_selfkey = PeerIpPort(mpeer);
 
             return;
         }
@@ -414,7 +414,7 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
             }
             else if ( !knowuuid ) {  //normal case
                 m_connectedUUID.insert({hisid.uuid(),pr->peer()});
-                pr->mSessionId.CopyFrom(hisid);
+                pr->mSessionId.set_uuid(hisid.uuid());
                 if ( hpeer.is_listening() == Peer::NO) {
                     pr->peer()->set_is_listening(Peer::NO);
                 }
@@ -430,58 +430,62 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                    pr->peer()->set_is_listening(Peer::NO);
 
                 else if ( hpeer.is_listening() == Peer::NOTSURE) {
-                    //do connect test
-                    m_pending_nat_test.push(hpeer);
-                    if (!m_pendingNatTimer)
-                        m_pendingNatTimer = startTimer(NatTestTimerDelay);
+                    if ( hispaddress == m_selfkey )
+                        pr->peer()->set_is_listening(Peer::NO);
+                    else {
+                        qDebug() << "queue nat test ";
+                        //do connect test
+                        m_pending_nat_test.push(hpeer);
+                        if (!m_pendingNatTimer)
+                            m_pendingNatTimer = startTimer(NatTestTimerDelay);
+                   }
                 }
 
                 emit pr->NewAction(PeerWire::Intro);
             }
             else if ( !(pr->PeerState() & PeerWire::Outgoing) ) {
                 if ( uit->second == pr->peer() ) {
-                    qCritical() << "a should never be here";
+                    qCritical() << "a should never be here - same address differnt peer pointer" ;
 //                    pr->diconnectFromHost();
                     break;
                 }
 
                 if ( myid.uuid() == mSessionId.uuid() ) {
-                    qCritical() << "b should never be here";
+                    qCritical() << "b should never be here - he shouldnt not know me yet";
 //                    break;
                 }
 
                 if ( !knowp ) {
-                    qCritical() << "c should never be here";
+                    qCritical() << "c should never be here - i should know this peer";
                     break;
                 }
 
                 auto c2 = m_connections.find(uit->second);
                 if ( c2 == end(m_connections)) {
-                    qCritical() << "d should never be here";
+                    qCritical() << "d should never be here - should have other connection";
                     break;
                 }
 
                 PeerWire *out = c2->second;
-                if ( out->mSessionId.uuid() != myid.uuid())
-                    qCritical() << "e should never be here";
+                if ( out->mSessionId.uuid() != hisid.uuid())
+                    qCritical() << "e should never be here - hisid incoming should be out.sessionid";
                 else if ( out->PeerState() & PeerWire::Incoming)
-                    qCritical() << "f should never be here";
+                    qCritical() << "f should never be here - out should be out";
                 else {
-                    if ( out->mInIntro.youare ().session_id ().start_time () > pr->mSessionId.start_time () ) {
-                        emit pr->NewAction(PeerWire::Disconnect);
-                    }
-                    else {
-                        pr->SetPeerState(out->PeerState() | PeerWire::Outgoing);
-                        pr->mSessionId.set_uuid (out->mInIntro.iam ().session_id ().uuid ());
-                        pr->setPeer(out->peer());
-                        emit pr->NewAction(PeerWire::Intro);
-                    }
-                    //handshake then disconnect
+                    pr->SetPeerState(pr->PeerState() | PeerWire::Outgoing);
+                    out->SetPeerState(out->PeerState() | PeerWire::Incoming);
+
+                    pr->mSessionId.set_uuid (out->mInIntro.iam ().session_id ().uuid ());
+                    pr->setPeer(out->peer());
+                    emit pr->NewAction(PeerWire::Intro);
+
+                    if ( out->mInIntro.youare ().session_id ().start_time () > pr->mSessionId.start_time () )
+                        emit out->NewAction(PeerWire::Disconnect);
                 }
             }
             else {
                 if ( myid.uuid() != mSessionId.uuid())
-                    qCritical() << "g should never be here";
+                    qCritical() << "g should never be here - he should know me by now";
                 emit pr->NewAction(PeerWire::Hello);
             }
         }
@@ -503,23 +507,25 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
             if (knowuuid ) {
                 auto c2 = m_connections.find(uit->second);
                 if ( c2 == end(m_connections)) {
-                    qCritical() << "d should never be here";
+                    qCritical() << "d2 should never be here - should have connection 1";
                     break;
                 }
 
                 PeerWire *in = c2->second;
-                if ( in->mSessionId.uuid() != myid.uuid())
-                    qCritical() << "e should never be here";
+                if ( in->mSessionId.uuid() != hisid.uuid())
+                    qCritical() << "e2 should never be here hisid outgoing should be in.sessionid";
                 else if ( in->PeerState() & PeerWire::Outgoing)
-                    qCritical() << "f should never be here";
+                    qCritical() << "f2 should never be here in should be in";
                 else {
                     //disconnect one of the connections
+                    pr->SetPeerState(pr->PeerState() | PeerWire::Incoming);
+                    in->SetPeerState(in->PeerState() | PeerWire::Outgoing);
+
+                    pr->mSessionId.set_uuid (in->mOutIntro.youare().session_id().uuid ());
+
                     if ( pr->mOutIntro.youare ().session_id ().start_time () > in->mInIntro.youare ().session_id ().start_time () ) {
                         in->SetPeerState(in->PeerState() | PeerWire::Outgoing);
                         emit pr->NewAction(PeerWire::Disconnect);
-                    }
-                    else {
-                        pr->SetPeerState(pr->PeerState() | PeerWire::Incoming);
                     }
                 }
             }
@@ -528,11 +534,16 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                 if ( hpeer.address () == mMyAddress ) {
                     //someone else on my network is listening
                     if ( PeerIpPort(mPeer) == PeerIpPort (hpeer)) {
-                        if ( mPeer.is_listening () != Peer::YES ) {
+                        if ( mPeer.is_listening () != Peer::NO ) {
                             mPeer.set_is_listening(Peer::NO);
                             emit ListeningStateChange();
                         }
                     }
+                }
+
+                if ( mpeer.is_listening() == Peer::NO && mPeer.is_listening() == Peer::NOTSURE) {
+                    mPeer.set_is_listening(Peer::NO);
+                    emit ListeningStateChange();
                 }
 
                 m_connectedUUID.insert({hisid.uuid(),pr->peer()});
@@ -558,15 +569,29 @@ void Node::timerEvent(QTimerEvent *event) {
         if ( m_pending_nat_test.empty() )
             killTimer(m_pendingNatTimer);
 
-        Peer *p = new fantasybit::Peer;
-        p->CopyFrom (natpeer);
-        p->set_is_listening (Peer::YES);
+        auto pit = knownpeers.find(PeerIpPort(natpeer));
+        bool knowp = ( pit != end(knownpeers));
 
-        if ( m_numoutgoing >= MAX_OUTBOUND)
-            testingnat.insert (p);
+        auto pp = m_connections.find(pit->second);
+        bool haveconn = (pp != end(m_connections));
 
-        PeerWire *client = newPeerWire(p,true);
-        client->connectToHost ();
+        if ( !haveconn ) {
+            Peer *p;
+
+            if ( knowp )
+                p = pit->second;
+            else {
+                p = new fantasybit::Peer();
+                p->CopyFrom (natpeer);
+                p->set_is_listening (Peer::YES);
+            }
+
+            if ( m_numoutgoing >= MAX_OUTBOUND)
+                testingnat.insert (p);
+
+            PeerWire *client = newPeerWire(p,true);
+            client->connectToHost ();
+        }
     }
 }
 
