@@ -62,7 +62,10 @@ Node::Node(QObject *parent) : QTcpServer(parent), http(this)
 
 }
 
-Node::~Node() {}
+Node::~Node() {
+
+
+}
 
 void Node::startPoint()
 {
@@ -417,6 +420,7 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
         auto uit = m_connectedUUID.find(hisid.uuid());
         bool knowuuid = ( uit != end(m_connectedUUID));
 
+        pr->mInIntro = msg.intro();
         if ( pr->PeerState() & PeerWire::Incoming ) {
             std::string hispaddress = PeerIpPort(hpeer);
             auto pit = knownpeers.find(hispaddress);
@@ -585,17 +589,21 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
 void Node::timerEvent(QTimerEvent *event) {
     if ( event->timerId() == m_pendingNatTimer ) {
         PeerWire * pr = m_pending_nat_test.front ();
-        const Peer &natpeer = pr->mInIntro.iam().peer();
+        Peer natpeer = pr->mInIntro.iam().peer();
         m_pending_nat_test.pop ();
 
         if ( m_pending_nat_test.empty() )
             killTimer(m_pendingNatTimer);
 
+        bool haveconn = false;
+
         auto pit = knownpeers.find(PeerIpPort(natpeer));
         bool knowp = ( pit != end(knownpeers));
 
-        auto pp = m_connections.find(pit->second);
-        bool haveconn = (pp != end(m_connections));
+        if ( knowp ) {
+            auto pp = m_connections.find(pit->second);
+            bool haveconn = (pp != end(m_connections));
+        }
 
         if ( !haveconn ) {
             Peer *p;

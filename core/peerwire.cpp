@@ -25,7 +25,9 @@ static const int ClientTimeout = 10000;//120 * 1000;
 
 
 PeerWire::PeerWire(PeerWireState state, QObject *parent)
-    : mPWstate(state), QObject(parent) {}
+    : mPWstate(state), QObject(parent) {
+    m_timeoutTimer = 0;
+}
 
 bool PeerWire::setSocketDescriptor(qintptr socketDescriptor) {
     bool ret =  m_socket.setSocketDescriptor(socketDescriptor);
@@ -93,6 +95,7 @@ void PeerWire::SocketConnected() {
 
     if ( m_timeoutTimer )
         killTimer(m_timeoutTimer);
+    m_timeoutTimer = 0;
 
     if ( mSessionId.start_time () == 0 ) {
         mSessionId.set_start_time (
@@ -116,6 +119,7 @@ void PeerWire::SocketConnected() {
 void PeerWire::SocketDisconnected () {
     if ( m_timeoutTimer )
         killTimer(m_timeoutTimer);
+    m_timeoutTimer = 0;
 
     emit OnDisconnected ();
 }
@@ -151,19 +155,21 @@ void PeerWire::setPeer(fantasybit::Peer *peer) {
 
 void PeerWire::sendNatNo()
 {
-    if (m_sendIntro || m_socket.state() != QAbstractSocket::ConnectedState) {
-        qDebug() << " sendNatNo " << m_socket.state();
+    qDebug() << " sendNatNo " << m_socket.state();
+
+    if (m_socket.state() != QAbstractSocket::ConnectedState) {
         return;
     }
 
     WireMsg wiremsg;
     wiremsg.set_type(MsgType::INTRO);
 
-    MsgIntro &natmsg = *wiremsg.mutable_intro();
+    MsgIntro natmsg;
     natmsg.mutable_youare()->CopyFrom(mInIntro.iam());
     natmsg.mutable_iam()->CopyFrom(mInIntro.youare());
     natmsg.mutable_iam()->mutable_session_id()->set_uuid("NAT");
     natmsg.mutable_youare()->mutable_peer()->set_is_listening(Peer::NO);
+    wiremsg.mutable_intro()->CopyFrom(natmsg);
     doWrite(wiremsg);
 }
 
@@ -251,6 +257,7 @@ void PeerWire::timerEvent(QTimerEvent *event) {
         if ( m_socket.state() == QAbstractSocket::UnconnectedState) {
             if ( m_timeoutTimer ) {
                 killTimer(m_timeoutTimer);
+                m_timeoutTimer = 0;
                 emit OnTimeout();
             }
         }
