@@ -264,7 +264,12 @@ void Node::WireConnected() {
 
     if ( pr->PeerState() & PeerWire::Outgoing ) {
         if ( testingnat.find(pr->peer()) != end(testingnat)) {
-            emit pr->NewAction(PeerWire::NatIntro);
+            if ( m_numoutgoing < MAX_OUTBOUND ) {
+                ++m_numoutgoing;
+                testingnat.erase(pr->peer());
+                emit pr->NewAction(PeerWire::Intro);
+            }
+            else emit pr->NewAction(PeerWire::NatIntro);
         }
         else {
             ++m_numoutgoing;
@@ -278,16 +283,22 @@ void Node::WireDisconnected() {
     PeerWire *pr = qobject_cast<PeerWire *>(sender());
 
     if ( pr->PeerState() & PeerWire::Outgoing ) {
-        qDebug() << "WireDisconnected  Outgoing";
-        --m_numoutgoing;
+        if ( testingnat.find(pr->peer()) != end(testingnat)) {
+             testingnat.erase(pr->peer());
+             qDebug() << "WireDisconnected  Outgoing Nat " << pr->peer()->address().data();
+        }
+        else {
+            qDebug() << "WireDisconnected  Outgoing";
+            --m_numoutgoing;
+        }
     }
     else {
         qDebug() << "WireDisconnected  InComing";
         --m_numincomming;
     }
 
-    qDebug() << pr->peer()->DebugString().data();
-    qDebug() << pr->mSessionId.DebugString().data();
+    qDebug() << "WireDisconnected" << pr->peer()->DebugString().data();
+    qDebug() << "WireDisconnected" << pr->mSessionId.DebugString().data();
 
 }
 
@@ -302,6 +313,7 @@ PeerWire * Node::newPeerWire(Peer *p, bool isOutgoing) {
     connect(client,&PeerWire::NewWireMsg,this,&Node::OnNewWireMsg);
     connect(client,&PeerWire::OnConnected,this,&Node::WireConnected);
     connect(client,&PeerWire::OnDisconnected,this,&Node::WireDisconnected);
+    connect(client,&PeerWire::OnTimeout,this,&Node::WireTimeout);
 
     return client;
 }
@@ -382,6 +394,15 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
             emit ListeningStateChange();
         }
 
+        if ( hisid.uuid() == "NAT" ) {
+            if ( mPeer.is_listening() != Peer::NO && mpeer.is_listening() == Peer::NO ) {
+                mPeer.set_is_listening(Peer::NO);
+                emit ListeningStateChange();
+            }
+
+            return;
+        }
+
         if ( hisid.network_id() != mSessionId.network_id() || hisid.wire_version() != mSessionId.wire_version()) {
             qDebug() << " bad id disconnect" << hisid.DebugString().data();
 
@@ -435,7 +456,7 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
                     else {
                         qDebug() << "queue nat test ";
                         //do connect test
-                        m_pending_nat_test.push(hpeer);
+                        m_pending_nat_test.push(pr);
                         if (!m_pendingNatTimer)
                             m_pendingNatTimer = startTimer(NatTestTimerDelay);
                    }
@@ -499,7 +520,7 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
 
             auto natit = testingnat.find(pr->peer());
             if ( natit != end(testingnat)) {
-                testingnat.erase(natit);
+//                testingnat.erase(natit);
                 emit pr->NewAction(PeerWire::Disconnect);
                 break;
             }
@@ -563,7 +584,8 @@ void Node::OnNewWireMsg(const WireMsg &msg) {
 
 void Node::timerEvent(QTimerEvent *event) {
     if ( event->timerId() == m_pendingNatTimer ) {
-        auto natpeer = m_pending_nat_test.front ();
+        PeerWire * pr = m_pending_nat_test.front ();
+        const Peer &natpeer = pr->mInIntro.iam().peer();
         m_pending_nat_test.pop ();
 
         if ( m_pending_nat_test.empty() )
@@ -586,10 +608,11 @@ void Node::timerEvent(QTimerEvent *event) {
                 p->set_is_listening (Peer::YES);
             }
 
-            if ( m_numoutgoing >= MAX_OUTBOUND)
-                testingnat.insert (p);
+//            if ( m_numoutgoing >= MAX_OUTBOUND)
+            testingnat.insert (p);
 
             PeerWire *client = newPeerWire(p,true);
+            connect(client,&PeerWire::OnTimeout,pr,&PeerWire::NatTimeout,Qt::QueuedConnection);
             client->connectToHost ();
         }
     }

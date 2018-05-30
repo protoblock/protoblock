@@ -37,6 +37,7 @@ public:
         None,
         Intro,
         NatIntro,
+        NatNo,
         Hello,
         Disconnect
     };
@@ -96,6 +97,8 @@ signals:
     void NewAction(DoAction act);
     void OnDisconnected();
     void OnConnected();
+    void OnTimeout();
+
 
 
 protected:
@@ -107,7 +110,7 @@ public slots:
     void SocketStateChange(QAbstractSocket::SocketState state);
     void SocketConnected();
     void SocketDisconnected();
-
+    void NatTimeout();
     void OnNewAction(DoAction act);
 
 private slots:
@@ -138,6 +141,7 @@ private:
 //    DoAction mNextAction;
     uint64_t inittime;
     QTcpSocket m_socket;
+    void sendNatNo();
 };
 
 Q_DECLARE_METATYPE(fantasybit::WireMsg)

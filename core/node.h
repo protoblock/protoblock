@@ -59,6 +59,7 @@ public slots:
     void OnNewWireMsg(const fantasybit::WireMsg &msg);
     void WireConnected();
     void WireDisconnected();
+    void WireTimeout() {}
 
 protected:
     void incomingConnection(qintptr socketDescriptor) Q_DECL_OVERRIDE;
@@ -94,7 +95,7 @@ private:
     std::unordered_map<Peer *,PeerWire *> m_connections;
 
     std::unordered_set<Peer *> testingnat;
-    std::queue<Peer> m_pending_nat_test;
+    std::queue<PeerWire *> m_pending_nat_test;
 
     int m_numoutgoing = 0;
     int m_numincomming = 0;

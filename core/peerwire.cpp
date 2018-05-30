@@ -19,7 +19,7 @@
 using namespace  fantasybit;
 using namespace  pb;
 
-static const int ConnectTimeout = 30000;//60 * 1000;
+static const int ConnectTimeout = 8000;//60 * 1000;
 static const int ClientTimeout = 10000;//120 * 1000;
 //static const int ActionTimeout = 10000;
 
@@ -71,6 +71,12 @@ void PeerWire::SocketHostFound() {
 }
 
 void PeerWire::OnSocketError(QAbstractSocket::SocketError err) {
+    if ( err == QAbstractSocket::ConnectionRefusedError) {
+        if ( m_timeoutTimer ) {
+            killTimer(m_timeoutTimer);
+            emit OnTimeout();
+        }
+    }
     qDebug() << "PeerWire::OnSocketError" << peer()->address ().data () << mPWstate << err;
 }
 
@@ -84,6 +90,10 @@ void PeerWire::SocketStateChange(QAbstractSocket::SocketState state) {
 }
 
 void PeerWire::SocketConnected() {
+
+    if ( m_timeoutTimer )
+        killTimer(m_timeoutTimer);
+
     if ( mSessionId.start_time () == 0 ) {
         mSessionId.set_start_time (
             (int(QDateTime::currentDateTime().toTime_t())-GENEIS_EPOCH));
@@ -110,6 +120,11 @@ void PeerWire::SocketDisconnected () {
     emit OnDisconnected ();
 }
 
+void PeerWire::NatTimeout()
+{
+    emit NewAction(PeerWire::NatNo);
+}
+
 
 
 void PeerWire::OnNewAction(DoAction act)
@@ -124,11 +139,32 @@ void PeerWire::OnNewAction(DoAction act)
     else if ( act == NatIntro) {
         sendIntro(true);
     }
+    else if ( act == NatNo ) {
+        sendNatNo();
+    }
 
 }
 
 void PeerWire::setPeer(fantasybit::Peer *peer) {
     m_peer = peer;
+}
+
+void PeerWire::sendNatNo()
+{
+    if (m_sendIntro || m_socket.state() != QAbstractSocket::ConnectedState) {
+        qDebug() << " sendNatNo " << m_socket.state();
+        return;
+    }
+
+    WireMsg wiremsg;
+    wiremsg.set_type(MsgType::INTRO);
+
+    MsgIntro &natmsg = *wiremsg.mutable_intro();
+    natmsg.mutable_youare()->CopyFrom(mInIntro.iam());
+    natmsg.mutable_iam()->CopyFrom(mInIntro.youare());
+    natmsg.mutable_iam()->mutable_session_id()->set_uuid("NAT");
+    natmsg.mutable_youare()->mutable_peer()->set_is_listening(Peer::NO);
+    doWrite(wiremsg);
 }
 
 void PeerWire::sendIntro(bool nattest)
@@ -141,9 +177,7 @@ void PeerWire::sendIntro(bool nattest)
     m_sendIntro = true;
 
     // Restart the timeout
-    if (m_timeoutTimer)
-        killTimer(m_timeoutTimer);
-    m_timeoutTimer = startTimer(ClientTimeout);
+//    m_timeoutTimer = startTimer(ClientTimeout);
 
     WireMsg wiremsg;
     wiremsg.set_type(MsgType::INTRO);
@@ -213,6 +247,16 @@ void PeerWire::timerEvent(QTimerEvent *event) {
 
     if ( event->timerId() == m_timeoutTimer ) {
         qDebug() << " m_timeoutTimer ";
+
+        if ( m_socket.state() == QAbstractSocket::UnconnectedState) {
+            if ( m_timeoutTimer ) {
+                killTimer(m_timeoutTimer);
+                emit OnTimeout();
+            }
+        }
+
+        qDebug() << m_peer->address().data() << m_socket.state() << mPWstate << inittime;
+
 
 //        if ( mNextAction == Intro ) {
 //            mNextAction = None;
