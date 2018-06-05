@@ -944,6 +944,17 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
         return false;;
     }
 
+    if ( t.version() >= 4 ) {
+        auto diff = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
+                std::chrono::nanoseconds(t.nonce());
+
+        if ( diff > std::chrono::hours{48} )  {
+            qCritical() << " !isValidTx timeout " << BlockRecorder::BlockTimestamp;
+            return false;
+        }
+
+    }
+
     return true;
 }
 
@@ -1269,6 +1280,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
     return true;
 }
 
+/*
 bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
     if (st.trans().version() > Commissioner::TRANS_VERSION || st.trans().version() < 1)
     {
@@ -1300,7 +1312,7 @@ bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
 
     return true;
 }
-
+*/
 bool BlockProcessor::verifyBootstrap(LdbWriter &ldb,const Bootstrap &bs) {
 
 //    std::string errorstr;

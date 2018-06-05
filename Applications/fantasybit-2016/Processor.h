@@ -83,7 +83,7 @@ public:
     bool isValidTx(const SignedTransaction &st);
     void processTxfrom(const Block &b,int start = 0,bool nameonly = false);
     static bool verifySignedBlock(const Block &sblock);
-    static bool verifySignedTransaction(const SignedTransaction &st);
+//    static bool verifySignedTransaction(const SignedTransaction &st);
     static bool verifyBootstrap(LdbWriter &ldb, const Bootstrap &bs);
     std::shared_ptr<FantasyName>
             getFNverifySt(const SignedTransaction &st);
