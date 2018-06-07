@@ -216,9 +216,12 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
                 const ProjectionTransBlock & ptb = sblock.signed_transactions(i).trans().GetExtension(ProjectionTransBlock::proj_trans_block);
                 Block &b = weeklyProj[ptb.week()];
                 b.add_signed_transactions()->CopyFrom(sblock.signed_transactions(i));
+                if ( sblock.signed_transactions(i).id() == "")
+                    qDebug() << "bad tx ";
+
             }
-            else {
-                qDebug() << sblock.signed_transactions(i).trans().DebugString().data();
+            else if (sblock.signed_transactions(i).trans().type() != TransType::NAME) {
+                qDebug() << "not name "  << sblock.signed_transactions(i).trans().DebugString().data();
             }
         }
         int doweek = 1;
@@ -239,19 +242,24 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
             process(dt);
         }
 
-        qDebug() << " jay hack 2";
+       {
+            auto st = sblock.signed_transactions(0);
+            auto dt = st.trans().GetExtension(DataTransition::data_trans);
+            process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
+            process(dt);
+        }
 
-
-//        return true;
+        qDebug() << " jay hack 2";       
+        return true;
     }
 #endif
+    {
 
     auto st = sblock.signed_transactions(0);
     if (st.trans().type() != TransType::DATA)  {
         qCritical() << "expect first Transaction for Data block to be Data";
         return false;
     }
-
 
     auto dt = st.trans().GetExtension(DataTransition::data_trans);
     if (dt.data_size() > 0)
@@ -265,6 +273,8 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
 #endif
 //    qDebug() << dt.DebugString().data();
     process(dt);
+
+    }
 
     return true;
 }
