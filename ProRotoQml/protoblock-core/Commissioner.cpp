@@ -231,20 +231,27 @@ Block Commissioner::makeGenesisBlock() {
 
 
 
+
     Transaction gt{};
     QString genesisDataFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisTranactionLocation).toString();
+    {
     Reader<Transaction> treader{genesisDataFile.toStdString()};
     treader.ReadNext(gt);
+    qDebug() << " good " << treader.good();
+    }
 
-//    qDebug() << " good " << treader.good() << genesisDataFile << gt.DebugString().data();
+
+    qDebug() << genesisDataFile;
+    DataTransition abc1 = gt.GetExtension(DataTransition::data_trans);
+    for (const auto abc2 : abc1.data()) {
+        qDebug() << " data " << abc2.DebugString().data();
+    }
+
+
 
 
     //qDebug() << sn.sig() << sn.id();
-
     //dagent.makeGenesis();
-
-
-
     //auto p = dagent.getIdSig(gt.SerializeAsString());
 
 
@@ -252,6 +259,7 @@ Block Commissioner::makeGenesisBlock() {
     sst.mutable_trans()->CopyFrom(gt);
     sst.set_id("458bc71888897c2182a8c84b230d616198f57ec0600b527317fedd2280c5d3fb");
     sst.set_sig("iKx1CJMnxRcFL5jjJuQdEkYadpQZaBLVDgcMYkmPLrxNMTegRmHAnHb28NQQfvk5bLi4WPA5raFQJMq3XCdjbGCaD9xwJcgNQV");
+
 
     //qDebug() << p.first << p.second;
 
@@ -285,15 +293,18 @@ Block Commissioner::makeGenesisBlock() {
     b.add_signed_transactions()->CopyFrom(sst);
     b.add_signed_transactions()->CopyFrom(st);
 
+//    qDebug() << " first tx " << sst.DebugString().data();
+    qDebug() << " second tx " << st.DebugString().data();
+
 #ifdef JAYHACK
     QString genesis2014DataFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisTransition2014Location).toString();
     Reader<Transaction> readertx(genesis2014DataFile.toStdString());
     Transaction tx;
     while ( readertx.ReadNext(tx) ) {
 //        qDebug() << tx.DebugString().data();
-        SignedTransaction st;
-        st.mutable_trans()->CopyFrom(tx);
-        b.add_signed_transactions()->CopyFrom(st);
+        SignedTransaction lst;
+        lst.mutable_trans()->CopyFrom(tx);
+        b.add_signed_transactions()->CopyFrom(lst);
     }
 
     QString filename = "/2014signedtx%1.out";
@@ -305,8 +316,11 @@ Block Commissioner::makeGenesisBlock() {
             break;
         SignedTransaction stx;
         while ( readertx2.ReadNext(stx) ) {
-            qDebug() << stx.DebugString().data();
             b.add_signed_transactions()->CopyFrom(stx);
+            if ( stx.id() == "")
+                qDebug() << "bad tx ";
+
+            qDebug() << stx.DebugString().data();
         }
         count++;
     }
