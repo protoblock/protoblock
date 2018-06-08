@@ -947,7 +947,7 @@ public slots:
     void MyPosPriceChange(PlayerQuoteSliceModelItem*);
 
     void doBlockString(qint32 num) {
-        auto &b = Node::getLocalBlock(num);
+        auto b = Node::getLocalBlock(num);
         if ( b )
             setblocknum_string((*b).DebugString().data());
     }
