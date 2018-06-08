@@ -34,7 +34,8 @@ public:
         ConfirmSendAndCopyProjections,
         GenesisTranactionLocation,
         GenesisTransition2014Location,
-        GenesisBootLocation2016
+        GenesisBootLocation2016,
+        Year2014SignedTxLocation,
     };
 
 private:
@@ -61,6 +62,7 @@ private:
         case GenesisTranactionLocation : return "genesistranactionlocation";
         case GenesisBootLocation2016 : return "GenesisBootLocation2016";
         case GenesisTransition2014Location : return "GenesisTransition2014Location";
+        case Year2014SignedTxLocation : return  "Year2014SignedTxLocation";
         default:
             return "";
         }
@@ -134,6 +136,19 @@ private:
                 dir.cdUp();
                 dir.cd("Resources");
                 return dir.absolutePath()+QString("/");//bootstraptest201601.out");
+            }
+            #endif
+
+            case Year2014SignedTxLocation:
+            #ifdef Q_OS_WIN
+                return storagePath(storageDirName);
+            #endif
+            #ifdef Q_OS_MAC
+            {
+                QDir dir(QCoreApplication::applicationDirPath());
+                dir.cdUp();
+                dir.cd("Resources");
+                return dir.absolutePath()+QString("/");
             }
             #endif
 

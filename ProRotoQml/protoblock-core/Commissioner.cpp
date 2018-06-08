@@ -299,7 +299,7 @@ Block Commissioner::makeGenesisBlock() {
     QString filename = "/2014signedtx%1.out";
     int count =0;
     while ( true ) {
-        QString skillsaleFile = Platform::instance()->settings()->getSetting(AppSettings::ApplicationStorageDir).toString();
+        QString skillsaleFile = Platform::instance()->settings()->getSetting(AppSettings::Year2014SignedTxLocation).toString();
         Reader<SignedTransaction> readertx2(skillsaleFile.toStdString() + filename.arg(count).toStdString());
         if ( !readertx2.good() )
             break;
