@@ -783,6 +783,18 @@ void BlockProcessor::process(const DataTransition &indt) {
 
         break;
     case TrType::GAMESTART:
+        if (mGlobalState.week() != indt.week()) {
+            if ( mGlobalState.week() == 0 && indt.week() == 1) {
+                mGlobalState.set_week(1);
+                mData.OnGlobalState(mGlobalState);
+                OnWeekStart(1);
+            }
+            else {
+                qWarning() << "wrong week! " << indt.DebugString().data() << mGlobalState.DebugString().data();
+            }
+            //mGlobalState.set_week(indt.week());
+        }
+
         for (auto t : indt.gamedata()) {
             mData.OnGameStart(t.gameid(),t.status());
             qInfo() <<  "Kickoff for game " << t.DebugString().data();
