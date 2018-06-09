@@ -191,8 +191,8 @@ void PeerWire::sendIntro(bool nattest)
     MsgIntro *intro = &mOutIntro;
     WirePeer *me = intro->mutable_iam();
     SessionId *sid = me->mutable_session_id();
-    sid->CopyFrom(Node::mSessionId);
-    me->mutable_peer()->CopyFrom(Node::mPeer);
+    sid->CopyFrom(Node::instance()->mSessionId);
+    me->mutable_peer()->CopyFrom(Node::instance()->mPeer);
     if ( nattest )
         sid->set_uuid (sid->uuid () + "-NAT");
 

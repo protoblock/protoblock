@@ -42,12 +42,13 @@ public:
     ~Node();
 
     void getMyIp();
-    static fantasybit::SessionId mSessionId;
-    static fantasybit::Peer mPeer;
-    static std::string PeerIpPort(const fantasybit::Peer &p) {
+    fantasybit::SessionId mSessionId;
+    fantasybit::Peer mPeer;
+    std::string PeerIpPort(const fantasybit::Peer &p) {
         return p.address() + FB_PORT(p.port());
     }
 
+    void init();
 signals:
     void tryGetIp();
     void NewPeer(const std::string &);

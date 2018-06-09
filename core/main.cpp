@@ -277,7 +277,7 @@ int main(int argc, char *argv[]) {
 //     qDebug() <<localIP;
 
     QThread* thread = new QThread;
-    Node* worker = new Node();
+    Node* worker = Node::instance();
     worker->moveToThread(thread);
 //    connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
     QObject::connect(thread, SIGNAL(started()), worker, SLOT(startPoint()));

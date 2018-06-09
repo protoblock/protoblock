@@ -27,11 +27,16 @@ Node *Node::instance()
 }
 
 Node::Node(QObject *parent) : QTcpServer(parent), http(this)
-{
+{}
+
+
+void Node::init() {
     qRegisterMetaType<PeerWire::DoAction>("PeerWire::DoAction");
 
     mPeer.set_is_listening(Peer::NOTSURE);
     mPeer.set_port(PORT_DEFAULT);
+
+    mSessionId.ByteSize();
 
     mSessionId.set_network_id(IS_TEST_NET ? SessionId::TEST : SessionId::PROD);
     mSessionId.set_wire_version(WIRE_VERSION);
@@ -46,7 +51,8 @@ Node::Node(QObject *parent) : QTcpServer(parent), http(this)
     else
         mSessionId.set_uuid(QByteArray((const char *)buf,6).toBase64().toStdString());
 
-    qDebug() << mSessionId.DebugString().data();
+    auto s = mSessionId.DebugString();
+    qDebug() << s.data();
 
     mPeerChainStatus.set_chain_state(PeerChainStatus::STARTING);
 
@@ -69,6 +75,7 @@ Node::~Node() {
 
 void Node::startPoint()
 {
+    init();
     connect(this, &Node::tryGetIp, this, &Node::getMyIp, Qt::QueuedConnection);
 
     getMyIp();
@@ -634,5 +641,5 @@ decltype(pb::Node::IP_URLS) pb::Node::IP_URLS {
      "http://ifcaonfig.me/ip"
 };
 
-decltype (pb::Node::mSessionId) pb::Node::mSessionId{};
-decltype (pb::Node::mPeer)      pb::Node::mPeer{};
+//decltype (pb::Node::mSessionId) pb::Node::mSessionId{};
+//decltype (pb::Node::mPeer)      pb::Node::mPeer{};

@@ -1,4 +1,4 @@
-include ($$PWD/p2p/p2p.pri)
+#include ($$PWD/p2p/p2p.pri)
 include ($$PWD/../pri/deps.pri)
 include($$PWD/../pri/protos.pri)
 
