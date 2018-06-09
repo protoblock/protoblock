@@ -949,7 +949,12 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
                 std::chrono::nanoseconds(t.nonce());
 
         if ( diff > std::chrono::hours{48} )  {
-            qCritical() << " !isValidTx timeout " << BlockRecorder::BlockTimestamp;
+            qCritical() << " !isValidTx timeout older than 48 hours" << BlockRecorder::BlockTimestamp;
+            return false;
+        }
+
+        if ( diff < std::chrono::minutes{60} )
+            qCritical() << " !isValidTx from the future - max 60 minutes allowed" << BlockRecorder::BlockTimestamp;
             return false;
         }
 
