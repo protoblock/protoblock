@@ -59,7 +59,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_height(0),
                     m_blocknum(0) ,
                     myFantasyName("") ,
-                    m_theSeason(2017) {
+                    m_theSeason(2017),
+                    m_pAccountsModel(new SortFilterProxyModel)  {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
 
@@ -75,6 +76,18 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_pLeaderBoardSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_pLeaderBoardSortModel->setFilterRole({"name"});
     m_pLeaderBoardSortModel->setFilterSyntax(SortFilterProxyModel::FilterSyntax::FixedString);
+
+    //wallet models
+    m_pAccountsModel->setSourceModel(m_pFantasyNameBalModel);
+    m_pAccountsModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_pAccountsModel->setFilterRole({"name"});
+    m_pAccountsModel->setFilterSyntax(SortFilterProxyModel::FilterSyntax::FixedString);
+    m_pAccountsModel->setSortRole("name");
+//    m_pAccountsModel->setDynamicSortFilter(true);
+
+
+
+
 
     m_pPlayerSymbolsModel->setSourceModel(&mPlayerSymbolsModel);
     m_pPlayerSymbolsModel->setSortRole({"fullname"});
