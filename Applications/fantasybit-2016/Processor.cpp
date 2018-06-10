@@ -140,6 +140,12 @@ int32_t BlockProcessor::process(Block &sblock) {
     BlockRecorder::BlockTimestamp = sblock.signedhead().head().timestamp();
     mRecorder.startBlock(sblock.signedhead().head().num());
 
+    auto ip = mTimeOfTxidBlock.insert({sblock.signedhead().head().timestamp(),{}});
+    if ( ip.second )
+        mCurrBTxid = &ip.first->second;
+    else
+        mCurrBTxid = nullptr;
+
 //    if ( sblock.signedhead().head().num() == 1199 ) {
 //        qInfo() << sblock.DebugString();
 //        auto str = sblock.DebugString();
@@ -157,6 +163,32 @@ int32_t BlockProcessor::process(Block &sblock) {
 
     qInfo() << " BLOCK(" << sblock.signedhead().head().num() << ") processed! ";
     lastidprocessed = mRecorder.endBlock(sblock.signedhead().head().num());
+
+    if ( mCurrBTxid ) {
+        for ( const auto &id : *mCurrBTxid ) {
+            mUsedTxId.insert(id);
+        }
+    }
+
+
+    auto lastvalid = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
+            std::chrono::hours{50};
+
+    qDebug() << lastvalid.count();
+
+
+    auto iter = mTimeOfTxidBlock.begin();
+    while ( iter != end(mTimeOfTxidBlock) ) {
+        if ( iter->first > lastvalid.count() )
+            break;
+
+        for ( const auto &itv : iter->second ) {
+            mUsedTxId.erase(itv);
+        }
+
+        iter = mTimeOfTxidBlock.erase(iter);
+    }
+
 
 #ifndef NOUSE_GENESIS_BOOT
     if ( mLastWeekStart ) {
@@ -261,8 +293,18 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
         return false;
     }
 
+    bool nodt = false;
     auto dt = st.trans().GetExtension(DataTransition::data_trans);
-    if (dt.data_size() > 0)
+    if ( st.trans().version() >= 4 ) {
+        if ( mUsedTxId.find(st.id()) != end(mUsedTxId)) {
+            qDebug() << " invalid id already used " << st.DebugString().data();
+            nodt = true;
+        }
+        else if ( mCurrBTxid )
+                mCurrBTxid->push_back(st.id());
+    }
+
+    if ( !nodt && dt.data_size() > 0)
         process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
 
     if (sblock.signed_transactions_size() > 1)
@@ -272,7 +314,8 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
     qDebug() << "processing ccccc" << dt.type() << dt.season() << dt.week();
 #endif
 //    qDebug() << dt.DebugString().data();
-    process(dt);
+
+    if ( !nodt ) process(dt);
 
     }
 
@@ -462,9 +505,11 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                         auto proj = projmaps[haresult.Get(i).playerid()];
 
-                        std::pair<BookPos *,BookPos *> bpospair;
+                        std::pair<BookPos *,BookPos *> bpospair{nullptr,nullptr};
                         if ( !nopnl ) {
-                            bpospair = posmap[haresult.Get(i).playerid()];
+                            auto iter = posmap.find(haresult.Get(i).playerid());
+                            if ( iter != end(posmap) )
+                                bpospair = iter->second;
                         }
 
                         total += haresult.Get(i).result();
@@ -948,16 +993,29 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
         auto diff = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
                 std::chrono::nanoseconds(t.nonce());
 
-        if ( diff > std::chrono::hours{48} )  {
+        auto diff2 = std::chrono::nanoseconds(t.nonce()) - std::chrono::seconds(BlockRecorder::BlockTimestamp);
+        auto sd2 = std::chrono::duration_cast<std::chrono::seconds>(diff);
+        qDebug() << sd2.count();
+
+        auto sd = std::chrono::duration_cast<std::chrono::minutes>(diff);
+        qDebug() << sd.count() << " -60" << std::chrono::minutes{-60}.count();
+
+        if ( std::chrono::duration_cast<std::chrono::hours>(diff).count() > std::chrono::hours{48}.count() )  {
             qCritical() << " !isValidTx timeout older than 48 hours" << BlockRecorder::BlockTimestamp;
             return false;
         }
 
-        if ( diff < std::chrono::minutes{60} )
+        if ( std::chrono::duration_cast<std::chrono::minutes>(diff).count() < std::chrono::minutes{-60}.count() ) {
             qCritical() << " !isValidTx from the future - max 60 minutes allowed" << BlockRecorder::BlockTimestamp;
             return false;
         }
 
+        if ( mUsedTxId.find(st.id()) != end(mUsedTxId)) {
+            qDebug() << "isValidTx invalid id already used ";
+            return false;
+        }
+        else if ( mCurrBTxid )
+            mCurrBTxid->push_back(st.id());
     }
 
     return true;

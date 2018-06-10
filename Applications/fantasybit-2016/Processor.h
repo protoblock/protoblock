@@ -51,6 +51,9 @@ class BlockProcessor : public QObject {
 //#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
 //    SqlStuff sql;
 //#endif
+    std::unordered_set<std::string> mUsedTxId;
+    std::map<int,std::vector<std::string>> mTimeOfTxidBlock;
+    std::vector<std::string> *mCurrBTxid;
 
 public slots:
     void OnLive(bool) {
