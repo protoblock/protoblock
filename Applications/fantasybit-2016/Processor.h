@@ -51,6 +51,9 @@ class BlockProcessor : public QObject {
 //#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
 //    SqlStuff sql;
 //#endif
+    std::unordered_set<std::string> mUsedTxId;
+    std::map<int,std::vector<std::string>> mTimeOfTxidBlock;
+    std::vector<std::string> *mCurrBTxid;
 
 public slots:
     void OnLive(bool) {
@@ -83,7 +86,7 @@ public:
     bool isValidTx(const SignedTransaction &st);
     void processTxfrom(const Block &b,int start = 0,bool nameonly = false);
     static bool verifySignedBlock(const Block &sblock);
-    static bool verifySignedTransaction(const SignedTransaction &st);
+//    static bool verifySignedTransaction(const SignedTransaction &st);
     static bool verifyBootstrap(LdbWriter &ldb, const Bootstrap &bs);
     std::shared_ptr<FantasyName>
             getFNverifySt(const SignedTransaction &st);

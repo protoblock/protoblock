@@ -158,6 +158,9 @@ class Mediator : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (qint32, blocknum_string_num)
     QML_READONLY_CSTREF_PROPERTY (QString, blocknum_string)
 
+    //wallet
+    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pAccountsModel)
+
 
 //    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerProjModel)
 
