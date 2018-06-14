@@ -9,6 +9,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import QtQuick.Window 2.2
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import Material 1.0
@@ -372,8 +373,6 @@ Item {
     Dropdown {
         id: overflowMenu
         objectName: "overflowMenu"
-        width: ProtoScreen.guToPx(31.25)
-        height: columnView.height + ProtoScreen.guToPx(2)
 
         ColumnLayout {
             id: columnView
@@ -382,6 +381,7 @@ Item {
 
             Repeater {
                 model: __internal.visibleActions.length - (maxActionCount - 1)
+
 
                 ListItem.Standard {
                     id: listItem
@@ -399,6 +399,7 @@ Item {
                         overflowMenu.close()
                     }
                 }
+
             }
         }
     }

@@ -34,7 +34,7 @@ Material.ApplicationWindow{
     property string msgString
     property bool reloadorderpos: true
 
-    property string  fontfamFB:  (Device.productType === "macos" || Device.productType === "osx ") ? "Helvetica Neue" : "Roboto"
+    property string  fontfamFB:  (Device.productType === "macos" || Device.productType === "osx") ? "Helvetica Neue" : "Roboto"
 
     property int accountTab: 4
 
@@ -102,6 +102,7 @@ Material.ApplicationWindow{
         setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
         setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
 
+        console.log ( "Device.productType " + Device.productType );
         console.log( "actual " + height + " ProtoScreen.guToPx(150) "  + ProtoScreen.guToPx(150) + " real " + realRoot.height
                     + " avail " + ProtoScreen.availableHeight + " all " + ProtoScreen.desktopHeight + " design " + ProtoScreen.designHeight)
 
