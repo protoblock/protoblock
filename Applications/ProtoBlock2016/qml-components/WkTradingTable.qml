@@ -128,7 +128,26 @@ Item {
 //            currentRow: 0
 //            property int selectedRow: 0
             currentRow: 0
-            rowDelegate: rowdel
+            rowDelegate: Rectangle {
+               height: ProtoScreen.guToPx(3)
+//               color: styleData.alternate?"#f5f5f5":"transparent"
+               color:  !quotemodel ? "transparent" : (  (quotemodel.symbol === dsymbol) ? "Light Grey"
+                                                                                : (styleData.alternate?"#f5f5f5":"transparent"))
+                                                                                         //Material.Theme.accentColor
+//               color: (styleData.row===tvr.selectedRow)
+//                                           ? Material.Theme.accentColor
+//                                                : (styleData.alternate?"#f5f5f5":"transparent")
+
+//                      || (MiddleMan.pPlayerQuoteSliceModelItem && MiddleMan.pPlayerQuoteSliceModelItem.symbol === model.data(styleData.row,"symbol")))
+//                                                              Material.Theme.light.subTextColor : Material.Theme.light.hintColor)
+               //                         (styleData.alternate ? "#f5f5f5"  : "transparent")
+
+               // "#f5f5f5"
+//                Component.onCompleted: {
+//                    if ( model.symbol === dsymbol )
+//                        console.log("styleData.row" + styleData.row)
+//                }
+            }
 
             TableViewColumn {
                 role: "symbol"
@@ -1028,22 +1047,6 @@ Item {
         }
     }
 
-    Component {
-        id: rowdel
-
-        Rectangle {
-           height: ProtoScreen.guToPx(3)
-           color:  {
-               if (quotemodel === "undefined" || !quotemodel) return "transparent";
-               else {
-                   console.log( quotemodel.symbol)
-                   if (quotemodel.symbol === dsymbol) return "Light Grey"
-                   else return (styleData.alternate?"#f5f5f5":"transparent");
-               }
-           }
-        }
-
-    }
 
     Connections {
         target: tvr.selection

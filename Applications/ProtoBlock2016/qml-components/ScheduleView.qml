@@ -288,6 +288,10 @@ Material.Card {
 
             }
 
+            Component.onDestruction: {
+                topc.changed.disconnect(myMethod)
+            }
+
 //            ListView.view.model.isSelected(index)
 //            border.color:  isl.isRowSelected(index,0) ? "red" : "grey"
 //ListView.view.model.indexOf(modelData))
