@@ -86,7 +86,7 @@ Material.Card {
 //        anchors.left: parent.left
         Layout.fillWidth: true
         Layout.fillHeight: true
-        spacing: 0
+        spacing: ProtoScreen.guToPx(.01)
 
         //name symbol
         Rectangle {
@@ -143,10 +143,11 @@ Material.Card {
                         height: ProtoScreen.guToPx(5)
                         size: ProtoScreen.guToPx(3)
                         anchors {
-                            verticalCenter: parent.verticalCenter
+//                            verticalCenter: parent.verticalCenter
     //                        left: parent.left
-                            leftMargin: ProtoScreen.guToPx(.125)
+//                            leftMargin: ProtoScreen.guToPx(.125)
                         }
+                        Layout.alignment: Qt.AlignVCenter
                     }
 
                     Material.Label {
@@ -161,10 +162,11 @@ Material.Card {
                         color: (!inplay || inplay.teamid === "") ? themeroot.theme.primaryColor : TeamInfo.getPrimaryAt(inplay.teamid)
                         font.bold: true
                         anchors {
-                            verticalCenter: parent.verticalCenter
-                            left: teamicon.right
+//                            verticalCenter: parent.verticalCenter
+//                            left: teamicon.right
                             //leftMargin: ProtoScreen.guToPx(.125)
                         }
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                     }
 
 //                    Material.Label {
@@ -190,13 +192,13 @@ Material.Card {
 
         //last my pos - pnl
         Card {
-            Layout.fillWidth: true
+            Layout.fillWidth: false
             id: lspo
 //            border.color: themeroot.theme.accentColor
 //            border.width: ProtoScreen.guToPx(.125)
 //            Layout.preferredWidth: recwidth * 2
             height: parent.height
-            Layout.preferredWidth: lposgrid.implicitWidth
+//            Layout.preferredWidth: lposgrid.implicitWidth
             anchors.margins: ProtoScreen.guToPx(.125)
 //            anchors.centerIn: parent
 
@@ -278,8 +280,8 @@ Material.Card {
 //            border.width: ProtoScreen.guToPx(.125)
 //            Layout.preferredWidth: recwidth * 2
             height: parent.height
-            Layout.minimumWidth: tgrid.implicitWidth
-            Layout.preferredWidth: tgrid.implicitWidth
+//            Layout.minimumWidth: tgrid.implicitWidth
+//            Layout.preferredWidth: tgrid.implicitWidth
 //            anchors.centerIn: parent
 
 //            width: parent.width *.50
@@ -508,7 +510,7 @@ Material.Card {
 //            border.width: ProtoScreen.guToPx(.125)
 //            Layout.preferredWidth: recwidth * 2
             height: parent.height
-            Layout.preferredWidth: posgrid.implicitWidth
+//            Layout.preferredWidth: posgrid.implicitWidth
 //            anchors.centerIn: parent
 
 //            width: parent.width *.50
@@ -649,7 +651,7 @@ Material.Card {
             height: parent.height
             Layout.fillWidth: true
             id: fnameCARD
-            Layout.preferredWidth: fbl12.width + ProtoScreen.guToPx(.5)
+//            Layout.preferredWidth: fbl12.width + ProtoScreen.guToPx(.5)
             anchors.rightMargin: ProtoScreen.guToPx(.25)
             anchors.leftMargin: ProtoScreen.guToPx(.25)
 //            width: fbl1.implicitWidth
@@ -680,8 +682,8 @@ Material.Card {
             border.width: 0
 //            Layout.preferredWidth: recwidth * 2
             height: parent.height
-            Layout.minimumWidth: tgrid2.implicitWidth
-            Layout.preferredWidth: tgrid2.implicitWidth
+//            Layout.minimumWidth: tgrid2.implicitWidth
+//            Layout.preferredWidth: tgrid2.implicitWidth
             Layout.alignment: Qt.AlignLeft
 //            anchors.centerIn: parent
 

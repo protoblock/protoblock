@@ -21,7 +21,7 @@ using namespace Botan;
 class SecureNodes : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
+    Q_PROPERTY(QString password READ password WRITE     setPassword NOTIFY passwordChanged)
     Q_PROPERTY(QString directory READ directory WRITE setDirectory NOTIFY directoryChanged)
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
     Q_PROPERTY(bool fullDirectory READ fullDirectory WRITE setFullDirectory NOTIFY fullDirectoryChanged)

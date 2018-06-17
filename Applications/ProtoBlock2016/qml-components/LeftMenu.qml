@@ -1,6 +1,8 @@
 import QtQuick 2.5
 import Material 1.0
 import Material.ListItems 1.0 as ListItem
+import QtQuick.Layouts 1.1
+
 
 Item {
     property string strCheck: section[0]
@@ -8,7 +10,7 @@ Item {
         id: sidebar
 //        width: ProtoScreen.guToPx(31.25)
         expanded: !navDrawer.enabled && pageHelper.expanded
-        Column {
+        ColumnLayout {
             width: parent.width
             Repeater {
                 model: section

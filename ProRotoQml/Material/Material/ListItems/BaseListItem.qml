@@ -11,6 +11,8 @@
 import QtQuick 2.4
 import Material 1.0
 import ProRotoQml.Utils 1.0
+import QtQuick.Layouts 1.1
+
 
 /*!
    \qmltype BaseListItem
@@ -22,10 +24,12 @@ import ProRotoQml.Utils 1.0
  */
 View {
     id: listItem
-    anchors {
-        left: parent ? parent.left : undefined
-        right: parent ? parent.right : undefined
-    }
+
+    Layout.fillWidth : true
+//    anchors {
+//        left: parent ? parent.left : undefined
+//        right: parent ? parent.right : undefined
+//    }
 
     property int margins: 16 * Units.dp
 
