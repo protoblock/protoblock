@@ -43,10 +43,19 @@ Item {
                 id: placeHolder
                 source: model.userImage // "qrc:/icons/action_account_circle.png"
                 fillMode: Image.PreserveAspectFit
+                MouseArea {
+                    id: mouseArea
+                    anchors.fill: parent
+                    onClicked: {
+                        flipBar.flipUp()
+                        flipBar.flipped = true
+                    }
+                }
             }
 
-//            onClicked: {
-//                Qt.openUrlExternally(model.text)
+
+//            onLinkActivated: {
+//                Qt.openUrlExternally(model.uri)
 //            }
 
 //            Image {

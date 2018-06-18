@@ -18,6 +18,9 @@
 #include "importLoader.h"
 //#include "RunGuard.h"
 #include "DataPersist.h"
+#include <QQmlContext>
+#include <QQuickStyle>
+
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
@@ -34,6 +37,10 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+
+
+    QQuickStyle::setStyle("Material");
+
 //    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 //    QSysInfo sysInfo;
 //    QString sInfo = sysInfo.productType ();

@@ -7,16 +7,19 @@ import Material.ListItems 1.0 as ListItems
 
 Item {
     signal reload()
+    anchors.fill: parent
     ListView{
         width: parent.width
         height: parent.height
         clip: true
         spacing: 3
         model:xmlModel
+
         delegate: ListItems.Subtitled{
+            width: parent.width
             elevation:  5
             text: model.title
-            subText: model.summary + "   Copyright 2016, RotoWorld"
+            subText: model.summary + "   Copyright 2018, RotoWorld"
             maximumLineCount: 2
             onClicked:{
                 Qt.openUrlExternally(model.link)

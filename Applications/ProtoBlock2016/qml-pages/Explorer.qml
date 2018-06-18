@@ -9,7 +9,8 @@ import ProRotoQml.Theme 1.0
 
 Item {
     Component.onCompleted: {
-        pageHelper.title = "Exploror";
+        pageHelper.title = "Explorer";
+        MiddleMan.set_blocknum_string_num(blocknum.value)
     }
     id: explorer
     anchors.fill: parent
@@ -23,13 +24,14 @@ Item {
         anchors.fill: parent
         Card {
             Layout.preferredWidth: ProtoScreen.guToPx(80)
-            Layout.preferredHeight: ProtoScreen.guToPx(12)
+            Layout.preferredHeight: ProtoScreen.guToPx(10)
 
             GridLayout {
-                anchors.fill: parent
+//                anchors.fill: parent
                 anchors.margins: ProtoScreen.guToPx(1)
-                columns: 6
-                rows: 2
+                anchors.centerIn: parent
+                columns: 2
+                rows: 1
                 Label {
                     id: lblblock
                     text: "Block:"
@@ -41,10 +43,11 @@ Item {
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 1
                     Layout.row: 1
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 }
 
                 SpinBox {
+                    focus: true
                     id: blocknum
                     enabled: MiddleMan.liveSync === "Live"
                     decimals: 0
@@ -57,29 +60,32 @@ Item {
                     Layout.alignment: Qt.AlignLeft
                     Layout.fillWidth: false
                     Layout.preferredWidth: ProtoScreen.guToPx(9)
-                    onValueChanged: {}
-                }
-
-                Button {
-                    enabled: MiddleMan.liveSync === "Live"
-                    elevation: 2
-                    id: sendbut
-                    text: "explore"
-                    Layout.column: 2
-                    Layout.row: 2
-                    Layout.alignment: Qt.AlignLeft
-                    Layout.fillWidth: false
-                    Layout.fillHeight: false
-                    onClicked : {
+                    onValueChanged: {
                         MiddleMan.set_blocknum_string_num(blocknum.value)
-                        console.log(MiddleMan.blocknum_string)
                     }
-                    Layout.preferredHeight: ProtoScreen.guToPx(3)
-                    Layout.preferredWidth: ProtoScreen.guToPx(9)
-
                 }
+
+//                Button {
+//                    enabled: MiddleMan.liveSync === "Live"
+//                    elevation: 2
+//                    id: sendbut
+//                    text: "explore"
+//                    Layout.column: 2
+//                    Layout.row: 2
+//                    Layout.alignment: Qt.AlignLeft
+//                    Layout.fillWidth: false
+//                    Layout.fillHeight: false
+//                    onClicked : {
+//                        MiddleMan.set_blocknum_string_num(blocknum.value)
+//                        console.log(MiddleMan.blocknum_string)
+//                    }
+//                    Layout.preferredHeight: ProtoScreen.guToPx(3)
+//                    Layout.preferredWidth: ProtoScreen.guToPx(9)
+
+//                }
             }
         }
+
         TextArea{
             Layout.preferredWidth: ProtoScreen.guToPx(80)
             Layout.preferredHeight: contentHeight

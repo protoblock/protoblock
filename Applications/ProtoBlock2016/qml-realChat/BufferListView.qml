@@ -32,6 +32,7 @@ Card {
         ListView {
             id: listView
             delegate: ListItems.Subtitled {
+                width: parent.width
                 property bool first: index === 0
                 property bool current: model.buffer === currentBuffer
                 elevation: 1

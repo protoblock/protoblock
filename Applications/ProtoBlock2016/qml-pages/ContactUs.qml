@@ -45,9 +45,10 @@ Item {
                     elevation:  5
                     text: model.source
                     subText: model.subT
+                    width: parent.width
                     maximumLineCount: 2
                     onClicked:{
-                        model.name == "Chat" ?
+                        model.name === "Chat" ?
                                     rootLoader.source ="qrc:/ProtoChat.qml"
                                   :
                             Qt.openUrlExternally(model.link)

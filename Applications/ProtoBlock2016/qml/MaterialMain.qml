@@ -19,11 +19,12 @@ import Communi 3.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "2.7" //version
+    property string version: "2.8" //version
     property alias realRoot: themeroot
 
     property string  uname
 
+    property string waitingName: ""
     property string  err
     property string currentTeamInFocus
     property string currentHomeTeam
@@ -102,7 +103,7 @@ Material.ApplicationWindow{
         setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
         setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
 
-        console.log ( "Device.productType " + Device.productType );
+        console.log ( "Device.productType " + Device.productType + " Qt.platform.os " + Qt.platform.os);
         console.log( "actual " + height + " ProtoScreen.guToPx(150) "  + ProtoScreen.guToPx(150) + " real " + realRoot.height
                     + " avail " + ProtoScreen.availableHeight + " all " + ProtoScreen.desktopHeight + " design " + ProtoScreen.designHeight)
 
@@ -129,15 +130,15 @@ Material.ApplicationWindow{
 
 //        themeroot.showMaximized()
         themeroot.show();
-        rootLoader.source = start
-
+        pageHelper.selectedTabIndex = startindex
+//        rootLoader.source = start
     }
 
     property string defaultname
 
-    property string start: "qrc:/Projections.qml"
+    property string start: "qrc:/Trading.qml"
     property string account: "qrc:/Account.qml"
-    property int startindex: 1
+    property int startindex: 2
     property int accountIndex: 4
     property string  errorString
     property bool  reloadleaders: false
@@ -171,14 +172,14 @@ Material.ApplicationWindow{
     ]
 
 
-    property int  currentTabInFocus: 3
+//    property int  currentTabInFocus: 3
 
     property string pageSwitcher
     property string currentPage: sections[0][0]
     property int loginCardScale: 1
 
     theme {
-        primaryColor: Colors.primaryColor
+        primaryColor: "#103558"
         accentColor: Colors.accentColor
         tabHighlightColor: Colors.accentColor
     }
@@ -236,10 +237,10 @@ Material.ApplicationWindow{
     property var sectionLeftEnable: [ true, false, false, true, true, true]
 
     initialPage:  Material.TabbedPage {
-        property bool expanded: true
+        property bool expanded: false
         id: pageHelper
         title: "Protoblock"
-        selectedTabIndex: startindex
+        selectedTabIndex: startIndex
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
@@ -363,6 +364,7 @@ Material.ApplicationWindow{
 
         Loader {
             id: rootLoader
+            source: start
             // sidebar is ProtoScreen.guToPx(31.25)
             width: (navDrawer.enabled === true) ? themeroot.width  :
                   pageHelper.width - (pageHelper.expanded === false ? 0.0 : ProtoScreen.guToPx(31.25))
@@ -538,28 +540,19 @@ Material.ApplicationWindow{
 
 
     //Login dialog (only when user does not have a secert3)
-    Material.Dialog {
+    GetName {
         id: loginDialog
-        hasActions: false
-        width: themeroot.width / 1.07
+        anchors.fill: parent
         anchors.centerIn: parent
-        height: themeroot.height - 1
-        contentMargins: 0
-        GetName{
-            width: loginDialog.width
-            height: loginDialog.height
-        }
     }
 
     Material.Dialog {
         id: accountErrorDialog
         title: "Unavailable"
         positiveButtonText: "Back"
-        negativeButtonText:  loginDialog.visible ?  "" : "Import"
+        negativeButtonText:  "Import"
         onRejected: {
-            if (loginDialog.visible === false){
-                rootLoader.source = "qrc:/Import-Export.qml"
-            }
+            rootLoader.source = "qrc:/Import-Export.qml"
         }
         Column{
             spacing: ProtoScreen.guToPx(2)
@@ -573,36 +566,33 @@ Material.ApplicationWindow{
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
         }
-
-
-
     }
 
 
-    Material.Dialog{
-        id: loginErrorDialog
-        title: "Error in Signup"
-        Material.Label{
-            width: parent.width
-            height: parent.height
-            wrapMode: Text.WordWrap
-            text:  themeroot.errorString
-            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
-        }
-    }
+//    Material.Dialog{
+//        id: loginErrorDialog
+//        title: "Error in Signup"
+//        Material.Label{
+//            width: parent.width
+//            height: parent.height
+//            wrapMode: Text.WordWrap
+//            text:  themeroot.errorString
+//            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
+//        }
+//    }
 
 
-    Material.Dialog{
-        id: chatErrorDialog
-        title: "Error In chat"
-        Material.Label{
-            width: parent.width
-            height: parent.height
-            wrapMode: Text.WordWrap
-            text:  "We are sorry but you are either not on the internet or have not cliamed a name"
-            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
-        }
-    }
+//    Material.Dialog{
+//        id: chatErrorDialog
+//        title: "Error In chat"
+//        Material.Label{
+//            width: parent.width
+//            height: parent.height
+//            wrapMode: Text.WordWrap
+//            text:  "We are sorry but you are either not on the internet or have not cliamed a name"
+//            font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
+//        }
+//    }
 
 
 
@@ -703,44 +693,47 @@ Material.ApplicationWindow{
             console.log( "namehcek material main" + name + status)
             if(status === "true" ) {
                 MiddleMan.signPlayer(name)
-                if ( loginDialog.visible )
-                    loginDialog.close()
-
-                themeroot.reloadleaders = false
-                rootLoader.source = start
-                pageHelper.selectedTabIndex = startindex;
-                rootLoader.showMaximized
+                waitingName = name
+                themeroot.reloadleaders = true
+//                rootLoader.source = start
+//                pageHelper.selectedTabIndex = startindex;
+//                rootLoader.showMaximized
             }
             else {
                 errorString = name + " is already claimed. Please try with a different name. If this is your name from last year or another device, "
-                if (loginDialog.visible){
-                    errorString = errorString + "please find the import/export features within the Account tab."
-                }else if (!loginDialog.visible){
-                    errorString = errorString + " Please click Import below."
-                }
-                errorString = errorString + "\n\nFor more assistance please contact the protoblock staff at <contact@protoblock.com>"
+                errorString = errorString + " Please click Import below."
+                errorString = errorString + "\n\nFor more assistance please contact the protoblock at <contact@protoblock.com>"
                 accountErrorDialog.open()
             }
         }
 
         onNoName: {
             console.log("no name");
-            pageHelper.selectedTabIndex = accountIndex;
-            rootLoader.source = account
+            loginDialog.currentindex = loginDialog.start
+            loginDialog.open();
         }
 
         onUsingFantasyName: {
             console.log(uname + " qml usingfantay name " + name)
+            var dosecret = (waitingName === name)
+            if ( dosecret ) waitingName = ""
+
             if ( uname !== name || uname === "") {
                 uname = name
                 msgString = "You are now playing as: " + name
-                if( pageHelper.selectedTabIndex === accountIndex || loginDialog.visible === true){
+                if( pageHelper.selectedTabIndex === accountIndex){
                     pageHelper.selectedTabIndex = startindex
-                    rootLoader.source = start
-                    usingNameDialog.open()
+//                    rootLoader.source = start
+                    if ( !dosecret )
+                        usingNameDialog.open()
                 }
                 else
                     console.log(" no popup")
+
+                if ( dosecret ) {
+                    loginDialog.currentindex = loginDialog.secret
+                    loginDialog.open()
+                }
             }
             else console.log("ignoring usingfantasyname")
         }
@@ -755,7 +748,6 @@ Material.ApplicationWindow{
                 importExportStatus = "Error: Import failed, please try again"
                 myImportDialog.open()
             }
-//            console.log(passfail + "onImportSucess " + name )
         }
     }
 

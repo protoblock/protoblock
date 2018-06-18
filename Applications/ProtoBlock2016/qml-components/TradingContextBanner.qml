@@ -7,7 +7,7 @@ import Material.ListItems 1.0 as ListItems
 import ProRotoQml.Theme 1.0
 //import ProRotoQml.Protoblock 1.0
 import QtQuick.Layouts 1.1
-import Material 1.0
+//import Material 1.0
 
 import ProRotoQml.Theme 1.0
 
@@ -134,7 +134,7 @@ Material.Card {
 //                    anchors.centerIn: parent
 //                    width: teamicon.size + pname2.implicitWidth + symb1.implicitWidth //+ ProtoScreen.guToPx(.38)
 
-                    Icon {
+                    Material.Icon {
                         Layout.fillWidth: false
                         id: teamicon
                         hasColor:false
@@ -191,16 +191,17 @@ Material.Card {
 
 
         //last my pos - pnl
-        Card {
-            Layout.fillWidth: false
+        Material.Card {
+            Layout.fillWidth: true
             id: lspo
 //            border.color: themeroot.theme.accentColor
 //            border.width: ProtoScreen.guToPx(.125)
 //            Layout.preferredWidth: recwidth * 2
             height: parent.height
-//            Layout.preferredWidth: lposgrid.implicitWidth
-            anchors.margins: ProtoScreen.guToPx(.125)
+//            Layout.preferredWidth: lposgrid.implicitWidth + ProtoScreen.guToPx(.125)
+//            anchors.margins: ProtoScreen.guToPx(.125)
 //            anchors.centerIn: parent
+            width: ProtoScreen.guToPx(18.5)
 
 //            width: parent.width *.50
 //            anchors.top: pname.bottom
@@ -242,9 +243,9 @@ Material.Card {
                 }
 
                 Material.Label {
-                    text: !haveplayer ?  "" : inplay.lastprice
+                    text: !inplay  ?  "" : inplay.lastprice
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignLeft
+//                    horizontalAlignment: Text.AlignLeft
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 2
@@ -257,7 +258,7 @@ Material.Card {
                     text: !haveposition ? "" : (inplay.myposition < 0) ? "Short(" + Math.abs(inplay.myposition) + ")" :
                                                                                  "Long(" + inplay.myposition + ")"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignLeft
+//                    horizontalAlignment: Text.AlignLeft
 
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 2
@@ -272,8 +273,8 @@ Material.Card {
         }
 
         //bid-ask-hi-lo
-        Card {
-            elevation: 0
+        Material.Card {
+//            elevation: 0
             Layout.fillWidth: true
             id: lrec
 //            border.color: "green"//"lightgrey"
@@ -449,61 +450,8 @@ Material.Card {
             }
         }
 
-//        //my positions
-//        Rectangle {
-//            Layout.fillWidth: true
-////            anchors.margins: 0
-//            border.color: "orange" //"lightgrey"
-//            border.width: 0//ProtoScreen.guToPx(.125)
-////            Layout.preferredWidth: recwidth
-//            Layout.preferredWidth: pr.width
-////            anchors.centerIn: parent
-
-
-////            width: parent.width *.50
-////            anchors.top: pname.bottom
-////            anchors.left: parent.horizontalCenter
-//            height: parent.height
-////            color: inplay.vdiff !== 0 ?  "lightgrey" : "transparent"
-
-//            Column {
-////                anchors.verticalCenter: parent.verticalCenter
-//                id: pr
-//                anchors.centerIn: parent
-//                height: parent.height
-
-////                width: p1.implicitWidth + p2.implicitWidth
-////                anchors.leftMargin: ProtoScreen.guToPx(.125)
-////                anchors.rightMargin: ProtoScreen.guToPx(.125)
-
-//                Material.Label {
-//                    id: p1
-//                    text: !haveplayer ? "" : "My Position"
-//                    verticalAlignment: Text.AlignVCenter
-//                    Layout.alignment: Qt.AlignCenter
-////                    anchors.top: parent.top
-//                    anchors.horizontalCenter: parent.horizontalCenter
-//        //                    horizontalAlignment: Text.AlignRight
-
-//                }
-
-//                Material.Label{
-//                    id: p2
-////                    id: lastval
-//                    text: !haveposition ? "" : (inplay.myposition < 0) ? "Short(" + Math.abs(inplay.myposition) + ")" :
-//                                                                                 "Long(" + inplay.myposition + ")"
-////                    verticalAlignment: Text.AlignVCenter
-////                    anchors.top: p.verticalCenter
-////                    font.pixelSize: ProtoScreen.font(ProtoScreen.LARGE)
-//                     anchors.horizontalCenter: parent.horizontalCenter
-//                    color: !haveposition ? dcolor : (inplay.myposition < 0) ? "red" : (inplay.myposition > 0) ? "green" : dcolor
-
-//                }
-//            }
-//        }
-
         //avg - pnl
-        Card {
+        Material.Card {
             Layout.fillWidth: true
             id: posrec
 //            border.color: themeroot.theme.accentColor
@@ -512,7 +460,7 @@ Material.Card {
             height: parent.height
 //            Layout.preferredWidth: posgrid.implicitWidth
 //            anchors.centerIn: parent
-
+            width: ProtoScreen.guToPx(18.5)
 //            width: parent.width *.50
 //            anchors.top: pname.bottom
 //            anchors.right: parent.horizontalCenter
@@ -580,77 +528,12 @@ Material.Card {
             }
         }
 
-        //fname
-//        Rectangle {
-//            enabled: false
-//            Layout.preferredWidth: cwc2.width//Math.max(fname.width,cwc2.width)
-//            Layout.minimumWidth: cwc2.width//Math.max(fname.width,cwc2.width)
-//            Layout.preferredHeight: parent.height
-//            Layout.fillWidth: true
-//            border.width: 0
-//            Layout.alignment: Qt.AlignRight
-////            anchors.centerIn: parent
-//            Card {
-//                Layout.fillWidth: true
-//                id: cwc2
-//                anchors.left: parent.left
-////                width: ProtoScreen.guToPx(28)
-//                backgroundColor: havefname ? themeroot.theme.accentColor : "white"
-
-//                width: Math.max(fname.width,cwc2b.width)
-//                height: ProtoScreen.guToPx(3)
-//                anchors.top: parent.top
-//                elevation: 0
-//                Material.Label {
-//                    id: cwc2b
-//                    text: "Protoblock Trader Account"
-//    //                anchors.fill: parent
-//    //                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignHCenter
-
-//                    anchors {
-//                        verticalCenter: parent.verticalCenter
-////                        centerIn: parent
-//    //                        left: teamicon.right
-//    //                        leftMargin: ProtoScreen.guToPx(.125)
-//                    }
-//                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-//                }
-
-//            }
-
-//            Material.Card {
-//                anchors.top: cwc2.bottom
-//                height: parent.height - cwc2.height
-//                Layout.fillWidth: true
-//                id: fname
-//                width: fbl1.implicitWidth
-////                flat: true
-//                elevation: 0
-//                Material.Label {
-//                    id: fbl1
-//                    text: !havefname ? "" : inplayf.fantasyname
-//    //                anchors.fill: parent
-//    //                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
-//                    verticalAlignment: Text.AlignVCenter
-//                    horizontalAlignment: Text.AlignHCenter
-
-//                    anchors {
-////                        verticalCenter: parent.verticalCenter
-//                        centerIn: parent
-//    //                        left: teamicon.right
-//    //                        leftMargin: ProtoScreen.guToPx(.125)
-//                    }
-//                }
-//            }
-//        }
-
         Material.Card {
             elevation: 0
             height: parent.height
             Layout.fillWidth: true
             id: fnameCARD
+            width: ProtoScreen.guToPx(18.5)
 //            Layout.preferredWidth: fbl12.width + ProtoScreen.guToPx(.5)
             anchors.rightMargin: ProtoScreen.guToPx(.25)
             anchors.leftMargin: ProtoScreen.guToPx(.25)
@@ -676,15 +559,15 @@ Material.Card {
         }
 
         //balances
-        Card {
+        Material.Card {
             Layout.fillWidth: true
             id: lrec2
-            border.width: 0
+//            border.width: 0
 //            Layout.preferredWidth: recwidth * 2
             height: parent.height
 //            Layout.minimumWidth: tgrid2.implicitWidth
 //            Layout.preferredWidth: tgrid2.implicitWidth
-            Layout.alignment: Qt.AlignLeft
+//            Layout.alignment: Qt.AlignLeft
 //            anchors.centerIn: parent
 
 //            width: parent.width *.50

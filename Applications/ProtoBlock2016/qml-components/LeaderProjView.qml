@@ -19,6 +19,10 @@ Item {
     anchors.fill: parent
 //    anchors.margins: ProtoScreen.guToPx(1)
 
+    Component.onCompleted: {
+        MiddleMan.pLeaderBoardSortModel.filterString = ""
+    }
+
     Item {
 //        anchors.top: cb.bottom
         width: parent.width

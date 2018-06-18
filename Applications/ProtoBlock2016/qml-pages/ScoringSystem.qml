@@ -201,6 +201,7 @@ Item {
                         valueText: unitpoints + " " + unitdes
 //                        Layout.fillWidth: true
                         height: ProtoScreen.guToPx(3)
+                        width: parent.width
                     }
                 }
         }

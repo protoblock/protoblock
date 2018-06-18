@@ -47,7 +47,7 @@ Item {
 
                     CardWithBanner{
                         width: parent.width / 1.07
-                        bannerText: "Protoblock "
+                        bannerText: "Professional Rotisserie Blockchain "
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "Protoblock is new game based directly on NFL PPR projections.  It distinguishes skilled experts while eliminating luck factors.  The game is fair, open and decentralized in a way that makes each Protoblock Player an owner."
                     }
@@ -69,9 +69,9 @@ Item {
 
                     CardWithBanner{
                         width: parent.width / 1.07
-                        bannerText: "2017 Season Long Contracts "
+                        bannerText: "2018 Season Long Contracts "
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Hedge dynasty risk, with  future season long 2017 contracts. Contact us for more info. contact@protoblock.com"
+                        text: "Hedge dynasty risk, with  future season long 2018 contracts. Contact us for more info. contact@protoblock.com"
                     }
 
                 }

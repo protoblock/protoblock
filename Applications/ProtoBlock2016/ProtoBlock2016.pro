@@ -23,7 +23,7 @@ CONFIG(debug, debug|release) {
 TARGET = Protoblock
 TEMPLATE = app
 #QT += xmlpatterns xml qml quick core websockets sql network qml-private quick-private testlib
-QT += qml quick core websockets network xmlpatterns qml-private quick-private
+QT += qml quick core websockets network xmlpatterns qml-private quick-private quickcontrols2
 #sql
 #sql webchannel
 CONFIG += c++11

@@ -1,91 +1,120 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.4 as Contols
-import Material 1.0
-
-//import ProRotoQml.Protoblock 1.0
+import QtQuick 2.6
+import QtQuick.Layouts 1.3
+import Material 1.0 as Material
 import ProRotoQml.Theme 1.0
+import Material.Extras 1.0
+import QtQuick.Controls 2.0
+import Material.ListItems 1.0 as ListItems
 
-Item {
-    id: loginPage
-    property string defaultTxt: "Register to play. Choose any name or your twitter id."
-        Column{
+//import QtQuick.Controls.Material 2.0
+//import QtQuick.Controls.Universal 2.0
+
+Material.PopupBase {
+    id: onboardsplash
+    globalMouseAreaEnabled: false
+    dismissOnTap: false
+
+    property alias currentindex: stackView.currentIndex
+    property int secret: 1
+    property int start: 0
+
+
+    opacity: showing ? 1 : 0
+    visible: opacity > 0
+//    overlayLayer: "dialogOverlayLayer"
+
+    StackLayout  {
+        id: stackView
+        anchors.fill: parent
+        currentIndex: 0//tabBar.currentIndex+1
+
+
+        Material.View {
+            anchors.centerIn: parent;
             anchors.fill: parent
-            spacing: ProtoScreen.guToPx(2)
-            Banner{
-                id: aboutHeader
-                width: parent.width
-                height:   parent.height / 10
-                backgroundColor:  Colors.primaryColor
-                elevation: 2
-                anchrosType: "verticalCenter"
-                text: qsTr("Please pick a username")
-                bold: true
-                fontSize: ProtoScreen.font(ProtoScreen.NORMAL)
-                helpShown: true
-                helperHeader: "Username help"
-                helperTxt: "Your Protoblock name is your perminant fantasy identity. It is fully controlled by you and this device. We will not ask for your email address. There is no central server for recovery. See Import-Export screen for backup and recovery"
+            backgroundColor: themeroot.theme.primaryColor
+            id: view
 
-            }
-            Image {
-                id: logo
-                source: "qrc:/logoFinal.png"
-                width: parent.width / 1.07
-                height: parent.height / 5.7
-                fillMode: Image.PreserveAspectFit
+            Label {
+                id: label1
+                color: "white";
+                text: qsTr("Welcome to Protoblock")
+//                    Layout.columnSpan: 4
+                verticalAlignment: Text.AlignVCenter
+//                    font.pixelSize: 17
+                font.bold: true
+                textFormat: Text.RichText
+                horizontalAlignment: Text.AlignHCenter
+                enabled: true
+                font.pixelSize:ProtoScreen.font( ProtoScreen.LARGE)
+                Layout.alignment: Qt.AlignCenter
+                Layout.fillHeight: true;
+                anchors.topMargin: ProtoScreen.guToPx(10)
+                anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
             }
-            Label  {
-                id: welcomeTxt
-                text: defaultTxt
-                width: parent.width / 1.07
-                height: ProtoScreen.font(ProtoScreen.NORMAL)
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.WordWrap
-                font.pixelSize: ProtoScreen.formFactor !== "desktop" ? ProtoScreen.font(ProtoScreen.SMALL) : ProtoScreen.font(ProtoScreen.NORMAL)
-            }
 
-            // Spacer
-            Rectangle{width: 1;color: "transparent";height: ProtoScreen.guToPx(2)}
-            LoginBox{
-               width: parent.width / 1.07
-               height: parent.height - ( logo.height + welcomeTxt.height + aboutHeader.height ) * 1.5
-               anchors.horizontalCenter: parent.horizontalCenter
-             }
+            ColumnLayout {
+//                anchors.centerIn: parent;
+                anchors.topMargin: ProtoScreen.guToPx(20)
+                id: columnLayout1
+                clip: false
+                spacing: ProtoScreen.guToPx(5)
+                anchors.top: label1.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: ProtoScreen.guToPx(30)
 
-            Label{
-                id: errorLabel
-                color: Theme.accentColor
-                width: parent.width
-                horizontalAlignment:  Text.AlignHCenter
-                font.family: "Roboto"
-                font.pixelSize: ProtoScreen.guToPx(2.75)
-                wrapMode: Text.WordWrap
-                onTextChanged: scale = scale +1
-                Behavior on scale {
-                    NumberAnimation{
-                        duration: 1200 ; from: 0 ; to: 1 ; easing.type: Easing.OutBounce
+                Material.Button {
+                    text: "Create New Account"
+                    Layout.preferredHeight: ProtoScreen.guToPx(8)
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillWidth: true;
+                    elevation: 1
+                    onClicked: {
+                        onboardsplash.close();
+//                        rootLoader.source = "qrc:/Account.qml"
+                        pageHelper.selectedTabIndex = themeroot.accountIndex;
+                    }
+                }
+
+                Material.Button {
+                    text: "Import Account"
+                    Layout.preferredHeight: ProtoScreen.guToPx(8)
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillWidth: true;
+                    elevation: 1
+//                    textColor: Material.Theme.light.textColor
+                    onClicked: {
+                        onboardsplash.close();
+                        pageHelper.selectedTabIndex = themeroot.accountIndex;
+                        rootLoader.source = "qrc:/Import-Export.qml"
+                    }
+                }
+
+                Material.Button {
+                    text: "Skip to App"
+                    Layout.preferredHeight: ProtoScreen.guToPx(8)
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillWidth: true;
+                    elevation: 1
+                    onClicked: {
+                        onboardsplash.close();
                     }
                 }
             }
-        }//col
+        }
 
+        Secret {
+            isdisplay: currentindex === secret
+        }
 
-    function nameCheckBlank(s) {
-        if ( s.length === 0 ) {
-            return
-        }
-        else if ( s.length > 45) {
-            errorString = "Sorry but that fantasy name is just to long. Please try again."
-            accountErrorDialog.toggle()
-        }
-        else {
-            MiddleMan.checkname(s)
-        }
+//            Account {}
+//            Secret {}
+//            Bitcoin {}
+//            Balance {}
     }
 
-    SequentialAnimation{
-        id: welcomeTxtAnimation
-        NumberAnimation { target: welcomeTxt ; property: "opacity"; from: 1; to: 0; duration: 1; }
-        NumberAnimation { target: welcomeTxt ; property: "opacity"; from: 0; to: 1; duration: 600; }
+    function show() {
+        open()
     }
 }

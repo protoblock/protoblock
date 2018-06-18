@@ -62,7 +62,7 @@ Item {
                     width: parent.width /  1.07
                     wrapMode: Text.WordWrap
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Protoblock is the first blockchain gaming company for fantasy football. A new era of fantasy football began with the launch of the first ever blockchain based fantasy football game for 2015. The upcoming 2016 season will take this one step farther with our new mobile apps, and much, much more."
+                    text: "Protoblock is the origional football blockchain. A new era of fantasy football began with the launch of the first ever blockchain based fantasy football game in 2014. The upcoming 2018 season will take this one step farther with our new mobile apps, and much, much more."
                 }
 
                 Label{

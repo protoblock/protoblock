@@ -146,7 +146,7 @@ Material.Card {
                                 anchors.bottom: parent.bottom
                                 width: parent.width
                                 border.color:"black"
-                                backgroundColor: Colors.blue
+                                backgroundColor: themeroot.theme.primaryColor
                                 height: parent.height * .50
                                 Material.Label {
                                     anchors.centerIn: parent

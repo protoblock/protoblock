@@ -170,7 +170,7 @@ Item {
                     Layout.fillWidth: true
                     onClicked : {
                         if ( realRoot.uname === "" ) {
-                            rootLoader.source = "qrc:/Account.qml"
+//                            rootLoader.source = "qrc:/Account.qml"
                             pageHelper.selectedTabIndex = themeroot.accountIndex;
                         }
                         else if ( inplay.symbol !== "") {
@@ -308,7 +308,7 @@ Item {
 
                     onClicked : {
                         if ( realRoot.uname === "" ) {
-                            rootLoader.source = "qrc:/Account.qml"
+//                            rootLoader.source = "qrc:/Account.qml"
                             pageHelper.selectedTabIndex = themeroot.accountIndex;
                         }
                         else if ( inplay.symbol !== "") {
@@ -748,7 +748,7 @@ Item {
 
         onAccepted: {
             if ( realRoot.uname === "" ) {
-                rootLoader.source = "qrc:/Account.qml"
+//                rootLoader.source = "qrc:/Account.qml"
                 pageHelper.selectedTabIndex = themeroot.accountIndex;
             }
             else if ( MiddleMan.pMyFantasyNameBalance.stake <= 0 ) {

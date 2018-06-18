@@ -24,9 +24,6 @@ Item {
                         console.log(section[index])
                         var theFile = modelData
 
-
-
-
                         rootLoader.source  = Qt.resolvedUrl(theFile.replace(/\s/g, "") + ".qml" )
                     }
                 }

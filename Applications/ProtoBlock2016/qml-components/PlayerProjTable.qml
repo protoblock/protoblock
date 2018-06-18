@@ -531,7 +531,7 @@ Item {
                         console.log("clicked send")
                         topw.focuscount = 0
                         if ( realRoot.uname === "" ) {
-                            rootLoader.source = "qrc:/Account.qml"
+//                            rootLoader.source = "qrc:/Account.qml"
                             pageHelper.selectedTabIndex = themeroot.accountIndex;
                         }
                         else

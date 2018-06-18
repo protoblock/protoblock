@@ -311,6 +311,7 @@ Item {
     Component{
         id: levelZeroDel
         ListItem.Subtitled {
+            width: parent.width
             backgroundColor: MiddleMan.isMyName(model.name) ?
                                  (model.name !== uname ? Theme.light.textColor : themeroot.theme.accentColor )
                                : (elevation > 0 ? "white" : "transparent")
@@ -352,6 +353,7 @@ Item {
         id: levelOneDel
         //FIXME add a team icon
         ListItem.Subtitled {
+            width: parent.width
 
             text: model.firstName +" " + model.lastName +  " ("+ model.pos + ") - Week " + model.week
             subText: "Projection: " + model.projection + " Result: " + model.result
@@ -382,6 +384,7 @@ Item {
     Component{
         id: levelTwoDel
         ListItem.Subtitled {
+            width: parent.width
             backgroundColor: MiddleMan.isMyName(model.fantasyName) ?
                                  (model.fantasyName !== uname ? Theme.light.textColor : themeroot.theme.accentColor )
                                : (elevation > 0 ? "white" : "transparent")

@@ -51,18 +51,20 @@ Item {
         Material.Card {
             id: sendcard
             Layout.preferredWidth: ProtoScreen.guToPx(80)
-            Layout.preferredHeight: ProtoScreen.guToPx(12)
+            Layout.preferredHeight: ProtoScreen.guToPx(18)
 //            height: ProtoScreen.guToPx(30)
 //            width: ProtoScreen.guToPx(100)
 //            anchors.margins: ProtoScreen.guToPx(1)
             GridLayout {
+                anchors.centerIn: parent
                 id: scardgrid
                 anchors.fill: parent
-                anchors.margins: ProtoScreen.guToPx(1)
-                columns: 6
+                anchors.margins: ProtoScreen.guToPx(2)
+                columns: 8
                 rows: 3
                 Label {
-                    text: "Send To:"
+                    text: "Send to:"
+                    Layout.preferredWidth: ProtoScreen.guToPx(10)
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
@@ -70,8 +72,10 @@ Item {
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 1
                     Layout.row: 1
+                    Layout.columnSpan: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     Layout.fillWidth: true
+                    Layout.fillHeight: false
                 }
 
                 Material.TextField {
@@ -81,14 +85,14 @@ Item {
                     property int status: 0
                     placeholderText: "enter fantasyname"
                     inputMethodHints: Qt.ImhNoPredictiveText;
-                    Layout.column: 2
+                    Layout.column: 3
                     Layout.row: 1
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true
                     Layout.columnSpan: 3
-                    Layout.fillHeight: true
+//                    Layout.fillHeight: true
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    implicitWidth: ProtoScreen.guToPx(50)
+                    Layout.preferredWidth: ProtoScreen.guToPx(50)
                     textColor: status === 0 ? Colors.black : status === 1 ? Colors.green : Colors.red
                     onTextChanged: {
                         console.log("nameto onTextChanged " +  textColor)
@@ -108,7 +112,7 @@ Item {
                         if ( text !== comboto.currentText ) {
                             var idx = comboto.find(text, Qt.MatchFixedString)
                             if (idx > -1) {
-                                comboto.currentIndex = idx;
+//                                comboto.currentIndex = idx;
                                 setting = true;
                                 text = comboto.textAt(idx)
                                 setting = false;
@@ -143,9 +147,11 @@ Item {
                 }
 
                 Mat2.ComboBox {
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                     anchors.right: nameto.right
                     flat: true
-
+//                    highlighted: false
                     inputMethodHints: Qt.ImhNoPredictiveText
                     id: comboto
                     model: MiddleMan.pAccountsModel
@@ -153,12 +159,12 @@ Item {
 
                     textRole: "name"
 
-                    Layout.column: 5
+                    Layout.column: 6
                     Layout.row: 1
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true
                     Layout.columnSpan: 2
-                    implicitWidth: ProtoScreen.guToPx(20)
+                    Layout.preferredWidth: ProtoScreen.guToPx(20)
 
                     Component.onCompleted: {
                         model.sortAgain("name",Qt.AscendingOrder)
@@ -178,6 +184,7 @@ Item {
                             MiddleMan.pAccountsModel.filterString = currentText;
                             MiddleMan.pAccountsModel.invalidate()
                             nameto.status = 1
+                            currentIndex = -1
                             nameto.setting = false
                         }
                     }
@@ -209,6 +216,7 @@ Item {
                     Layout.alignment: Qt.AlignCenter
                     Layout.column: 1
                     Layout.row: 2
+                    Layout.columnSpan: 2
                     font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
                 }
 
@@ -223,9 +231,9 @@ Item {
 //                    from: 0
 
                     value: 0
-                    Layout.column: 2
+                    Layout.column: 3
                     Layout.row: 2
-                    Layout.alignment: Qt.AlignLeft
+                    Layout.alignment: Qt.AlignRight
                     Layout.fillWidth: false
                     Layout.preferredWidth: ProtoScreen.guToPx(9)
                     onValueChanged: {
@@ -246,8 +254,8 @@ Item {
 //                    backgroundColor: themeroot.theme.accentColor
                     Layout.column: 2
                     Layout.row: 3
-//                    Layout.columnSpan: 1
-                    Layout.alignment: Qt.AlignLeft
+                    Layout.columnSpan: 2
+                    Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: false
                     Layout.fillHeight: false
                     onClicked : {

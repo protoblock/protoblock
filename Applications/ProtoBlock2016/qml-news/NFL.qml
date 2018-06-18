@@ -12,9 +12,10 @@ Item {
         spacing: 3
         model:xmlModel
         delegate: ListItems.Subtitled{
+            width: parent.width
             elevation:  5
             text: model.title
-            subText: model.summary + "  © 2016 NFL Enterprises LLC"
+            subText: model.summary + "  © 2018 NFL Enterprises LLC"
             maximumLineCount: 2
             onClicked:{model.link
                 console.log()

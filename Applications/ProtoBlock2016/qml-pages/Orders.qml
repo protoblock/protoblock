@@ -74,7 +74,7 @@ Item {
                             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
                             Layout.preferredWidth: (parent.width / 7.0) * (modelData === "Symbol") ? 2.0 : 1.0;
                             border.color:"black"
-                            backgroundColor: Colors.blue
+                            backgroundColor: themeroot.theme.primaryColor
         //                    border.width:  ProtoScreen.guToPx(.2)
                             radius: 0
                             Label{

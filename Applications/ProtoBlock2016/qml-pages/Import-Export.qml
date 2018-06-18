@@ -15,6 +15,8 @@ Item{
         visible: false
     }
 
+    property real maxwidt: Math.min(ProtoScreen.guToPx(100),parent.width)
+
     Component.onCompleted: {
         pageHelper.title = "Import-Export"
         secretTxt.text = ""
@@ -30,10 +32,10 @@ Item{
     }
 
     Flickable{
-        width: parent.width
+        width: maxwidt
         height: parent.height
         contentHeight: parent.height * 2 //(parent.height + bacard2.height + bacard) * 1.2
-        contentWidth: parent.width
+        contentWidth: maxwidt
         boundsBehavior:  Flickable.StopAtBounds
         interactive: true
         Column{
@@ -47,7 +49,7 @@ Item{
             spacing: ProtoScreen.guToPx(1.25)
             Label {
                 id: welcomeTxt
-                width: parent.width
+                width: parent.width / 1.07
                 font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 horizontalAlignment: Text.AlignHCenter
                 text: "Your Protoblock name is your identity. It is managed by your device, there is no central server. A secret 12-word pass phrase is used for back-up and recovery. Only you control your password. If you lose your device and your 12-word password, access to your account will be lost. Use the export option to see your 12-word secret."
@@ -72,65 +74,12 @@ Item{
             }
 
 
-
-            Card{
-                id: bcard
-                height: nameText.height + importButton.height + imBan.height + ProtoScreen.guToPx(6)
-                width: parent.width
-                anchors.horizontalCenter: parent.horizontalCenter
-                elevation: 5
-                Banner{
-                    id: imBan
-                    text: "Import"
-                    backgroundColor: themeroot.theme.primaryColor
-                    helpShown: true
-                    helperHeader: "Import and export help"
-                    helperTxt: "Import last years fantasy name or import a name from another device. Just enter in you 12 word password and the import will happen. "
-                }
-                Column{
-                    width: parent.width
-                    height: parent.height - imBan.height
-                    anchors.top: imBan.bottom
-                    anchors.topMargin: ProtoScreen.guToPx(1)
-                    spacing: ProtoScreen.guToPx(4)
-
-                  TextField {
-                        id: nameText
-                        width: parent.width / 1.07
-                        helperText: "Please enter in your 12 word secret"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        inputMethodHints: Qt.ImhNoPredictiveText;
-                    }
-
-                    Button{
-                        id: importButton
-                        text: "IMPORT"
-                        width: parent.width / 1.07
-                        backgroundColor: themeroot.theme.primaryColor
-                        elevation: 1
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        onClicked: {
-                            var mypk = MiddleMan.importMnemonic(nameText.text)
-//                            if ( mypk === "" ) {
-//                                importExportStatus = "Error: Import failed, please try again"
-//                            } else {
-//                                importExportStatus = "Trying to import with key: " + mypk
-//                            }
-//                            myImportDialog.show()
-                            nameText.text = ""
-                            statusTxt.text = importExportStatus;
-                            secretTxt.text = ""
-                        }
-                    }
-                }
-            }
-
             Card{
                 id: bacard2
-                height:(( imBan2.height + exportButton.height) * 2 ) + (clearSecret.height + secretTxt.paintedHeight + seCard.height) * 2
-                width: parent.width
-                anchors.horizontalCenter: parent.horizontalCenter
-                elevation: 5
+                height: imBan2.height + exportButton.height + ProtoScreen.guToPx(6)
+                width: thelist.width
+//                anchors.horizontalCenter: parent.horizontalCenter
+                elevation: 1
                 Behavior on height{NumberAnimation{duration: 1200;easing.type: Easing.OutQuad}}
                 Column{
                     width: parent.width
@@ -149,15 +98,16 @@ Item{
                         text: "EXPORT"
                         width: parent.width / 1.07
                         backgroundColor: themeroot.theme.primaryColor
-                        elevation: 1
+                        elevation: 5
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
                             secretTxt.text = ""
-                            mySecretDialog.show()
+                            loginDialog.currentindex = loginDialog.secret
+                            loginDialog.open()
                         }
                     }
 
-
+/*
                     RowLayout {
                         id: rll
                         visible: secretTxt.contentWidth >= 1 ? true : false
@@ -254,9 +204,62 @@ Item{
                         }
 
                     }
-
+*/
                 }
             }
+
+            Card{
+                id: bcard
+                height: nameText.height + importButton.height + imBan.height + ProtoScreen.guToPx(6)
+                width: thelist.width
+//                anchors.horizontalCenter: parent.horizontalCenter
+                elevation: 1
+                Banner{
+                    id: imBan
+                    text: "Import"
+                    backgroundColor: themeroot.theme.primaryColor
+                    helpShown: true
+                    helperHeader: "Import and export help"
+                    helperTxt: "Import last years fantasy name or import a name from another device. Just enter in you 12 word password and the import will happen. "
+                }
+                Column{
+                    width: parent.width
+                    height: parent.height - imBan.height
+                    anchors.top: imBan.bottom
+                    anchors.topMargin: ProtoScreen.guToPx(1)
+                    spacing: ProtoScreen.guToPx(4)
+
+                    TextField {
+                        id: nameText
+                        width: parent.width / 1.07
+                        helperText: "Please enter in your 12 word secret"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        inputMethodHints: Qt.ImhNoPredictiveText;
+                    }
+
+                    Button{
+                        id: importButton
+                        text: "IMPORT"
+                        width: parent.width / 1.07
+                        backgroundColor: themeroot.theme.primaryColor
+                        elevation: 1
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        onClicked: {
+                            var mypk = MiddleMan.importMnemonic(nameText.text)
+//                            if ( mypk === "" ) {
+//                                importExportStatus = "Error: Import failed, please try again"
+//                            } else {
+//                                importExportStatus = "Trying to import with key: " + mypk
+//                            }
+//                            myImportDialog.show()
+                            nameText.text = ""
+                            statusTxt.text = importExportStatus;
+                            secretTxt.text = ""
+                        }
+                    }
+                }
+            }
+
         }
 
 
