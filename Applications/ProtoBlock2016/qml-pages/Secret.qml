@@ -10,6 +10,10 @@ import ProRotoQml.Theme 1.0
 Pane {
     id: secretpage
 
+//    width: ProtoScreen.guToPx(30)
+
+//    contentWidth: view.implicitWidth
+
     Component.onCompleted: {
         console.log("secret " + MiddleMan.getSecret())
     }
@@ -18,6 +22,8 @@ Pane {
         id: cliphelper
         visible: false
     }
+
+    property real maxwidt: Math.min(ProtoScreen.guToPx(60),parent.width)
 
 //    TextEdit {
 //        id: pasthelper
@@ -40,26 +46,31 @@ Pane {
     property bool didcopy: false
 //    property bool didpaste: false
 
-    readonly property int itemWidth:  (secretpage.availableWidth / 6) * 5
+    readonly property int itemWidth:  (colsec.width / 6) * 5
 
     Column {
-        anchors.fill: parent
+        id: colsec
+        anchors.top: parent.top
+        height: parent.height
+        width: maxwidt
         anchors.topMargin: ProtoScreen.guToPx(2)
-        spacing: 10
+        spacing: ProtoScreen.guToPx(2)
         anchors.horizontalCenter: parent.horizontalCenter
 
         Column {
-            spacing: 4
+            spacing: ProtoScreen.guToPx(.5)
             anchors.horizontalCenter: parent.horizontalCenter
-            width: (secretpage.width / 6) *5
+            width: (colsec.width / 6) *5
 
             Label {
                 wrapMode: Label.Wrap
                 anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment: Qt.AlignHCenter
-                width: (secretpage.width / 6) *5
+                width: (colsec.width / 6) *5
 
                 text: "Write down your 12 word recover secret!"
+                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+
 
 //                       isdisplay ?
 //                          ( CoinSale.secretIsVerified ?
@@ -75,7 +86,7 @@ Pane {
             Label {
                 wrapMode: Label.Wrap
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: (secretpage.width / 6) *5
+                width: (colsec.width / 6) *5
 
                 text: "These words are needed to obtain your Fantsybits. Hint: Click to copy secret to clipboard"
 
@@ -89,7 +100,8 @@ Pane {
 //                            :
 //                                "Type in or paste (right click) your 12 secret words, your bain wallet. Verify your brain wallet before sending bitcoin to funding address! ");
 
-                font.pixelSize: 12
+                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+
             }
         }
 
@@ -100,14 +112,14 @@ Pane {
 
             Column {
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 5
+                spacing: ProtoScreen.guToPx(1)
                 width: itemWidth
 
                 GridView {
                     width: parent.width
-                    implicitHeight: 200
+                    implicitHeight: ProtoScreen.guToPx(25)
                     id: grid
-                    cellHeight: 200 / 6
+                    cellHeight: ProtoScreen.guToPx(25) / 6
                     cellWidth: itemWidth / 2
 
                     Layout.fillWidth: true
@@ -153,7 +165,7 @@ Pane {
 
         Column {
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 10;
+            spacing: ProtoScreen.guToPx(2);
             Button {
                 id: button1
                 enabled: true//!CoinSale.secretIsVerified //CoinSale.currName === "" ||  isverify
@@ -224,30 +236,37 @@ Pane {
             width: grid.cellWidth
             height: grid.cellHeight
 
+
             RowLayout {
                 height: parent.height
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 2
+//                spacing: ProtoScreen.guToPx(1)
+//                Layout.alignment: index < 6 ? Qt.AlignRight : Qt.AlignLeft
 
                 Label {
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: index < 6 ? Text.AlignLeft : Text.AlignRight
+                    horizontalAlignment: Text.AlignRight
+
+//                    horizontalAlignment: index < 6 ? Text.AlignLeft : Text.AlignRight
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: -2
                     Layout.preferredWidth: parent.width * .20
                     id: lb
                     text: (index < 9 ? " " : "") +(index+1) + ": "
-                    font.pixelSize: 16
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+//                    Layout.alignment: Qt.AlignRight
+
 
                 }
                 TextField {
                     height: parent.height
                     anchors.verticalCenter: parent.verticalCenter
                     verticalAlignment: Text.AlignBottom
-                    Layout.alignment: Qt.AlignLeft
-                    font.pixelSize: 16
+//                    horizontalAlignment: Text.AlignLeft
+//                    Layout.alignment: Qt.AlignLeft
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                     text: (secretWordsIn.length <= index) ? "" :  secretWordsIn[index]
                     font.bold: true
                     readOnly: true//secretpage.isdisplay
@@ -255,6 +274,7 @@ Pane {
 //                        console.log(index + "text changed " + text)
                         secretOut[index] = text
                     }
+//                    Layout.fillWidth: true
                 }
             }
         }
