@@ -37,6 +37,7 @@ Material.ApplicationWindow{
 
     property string  fontfamFB:  (Device.productType === "macos" || Device.productType === "osx") ? "Helvetica Neue" : "Roboto"
 
+    property bool firstname: false
     property int accountTab: 4
 
     statusBar: StatusBar {
@@ -130,7 +131,7 @@ Material.ApplicationWindow{
 
 //        themeroot.showMaximized()
         themeroot.show();
-        pageHelper.selectedTabIndex = startindex
+//        pageHelper.selectedTabIndex = startindex
 //        rootLoader.source = start
     }
 
@@ -240,7 +241,7 @@ Material.ApplicationWindow{
         property bool expanded: false
         id: pageHelper
         title: "Protoblock"
-        selectedTabIndex: startIndex
+        selectedTabIndex: 0
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
@@ -709,8 +710,10 @@ Material.ApplicationWindow{
 
         onNoName: {
             console.log("no name");
+            pageHelper.selectedTabIndex = startindex
             loginDialog.currentindex = loginDialog.start
             loginDialog.open();
+            firstname = true
         }
 
         onUsingFantasyName: {
@@ -726,6 +729,10 @@ Material.ApplicationWindow{
 //                    rootLoader.source = start
                     if ( !dosecret )
                         usingNameDialog.open()
+                }
+                else if ( !firstname ) {
+                    pageHelper.selectedTabIndex = startindex
+                    firstname = true;
                 }
                 else
                     console.log(" no popup")

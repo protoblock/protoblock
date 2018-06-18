@@ -131,18 +131,20 @@ Item {
             rowDelegate: Rectangle {
                height: ProtoScreen.guToPx(3)
 //               color: styleData.alternate?"#f5f5f5":"transparent"
-               color:  !model ? "transparent" : (  (model.symbol === dsymbol) ? "Light Grey"
-                                                                                : (styleData.alternate?"#f5f5f5":"transparent"))
-                                                                                         //Material.Theme.accentColor
-//               color: (styleData.row===tvr.selectedRow)
-//                                           ? Material.Theme.accentColor
-//                                                : (styleData.alternate?"#f5f5f5":"transparent")
+               color: {
+                   if ( typeof (model) === "undefined" ) {
+                       return "transparent"
+                   }
+                   else if ( !model )
+                       return "transparent"
+                   else if ( model.symbol === dsymbol )
+                       return "Light Grey"
+                   else if ( styleData.alternate )
+                       return "#f5f5f5"
+                   else
+                       "transparent"
+               }
 
-//                      || (MiddleMan.pPlayerQuoteSliceModelItem && MiddleMan.pPlayerQuoteSliceModelItem.symbol === model.data(styleData.row,"symbol")))
-//                                                              Material.Theme.light.subTextColor : Material.Theme.light.hintColor)
-               //                         (styleData.alternate ? "#f5f5f5"  : "transparent")
-
-               // "#f5f5f5"
 //                Component.onCompleted: {
 //                    if ( model.symbol === dsymbol )
 //                        console.log("styleData.row" + styleData.row)
