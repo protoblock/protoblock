@@ -27,7 +27,7 @@ QT += qml quick core websockets network xmlpatterns qml-private quick-private qu
 #sql
 #sql webchannel
 CONFIG += c++11
-#CONFIG += Console
+CONFIG += Console
 
 
 contains(DEFINES, SQLSTUFF){
@@ -79,11 +79,13 @@ SOURCES += \
     $$PWD/src/main.cpp \
     $$PWD/src/runguard.cpp
 
-RC_FILE = myap.rc
+#RC_FILE = myap.rc
 
-RESOURCES += $$PWD/qml/qml.qrc
+win32:RC_ICONS += myappico.ico
+
+RESOURCES += $$PWD/qml-main/qml-main.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH = . ..
+#QML_IMPORT_PATH = . ..
 
 
 
