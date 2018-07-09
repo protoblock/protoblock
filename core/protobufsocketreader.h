@@ -24,6 +24,11 @@
 #include <qabstracteventdispatcher.h>
 
 
+
+class PBData : public QSharedData {
+
+};
+
 namespace pb {
 
 class ProtobufSocketReader : public QObject
@@ -57,7 +62,7 @@ private:
     google::protobuf::io::CopyingInputStreamAdaptor *_CopyingInputStreamAdaptor = nullptr;
     google::protobuf::io::CodedInputStream *_CodedInputStream = nullptr;
     SocketCopyingInputStream *_SocketCopyingInputStream;
-    Peer msg;
+    fantasybit::Peer msg;
 
 public:
     QTcpSocket *m_socket;
@@ -85,7 +90,7 @@ public:
 
         for (;;)
          {
-             Peer myMessage;
+             fantasybit::Peer myMessage;
              if ( !readDelimitedFrom(&cisa, &myMessage) )
                  return;
              qDebug() << myMessage.DebugString().data();
@@ -199,7 +204,6 @@ public:
 };
 
 
-
 class ProtobufSocketWriter : public QObject
 {
     Q_OBJECT
@@ -236,24 +240,22 @@ private:
 
     google::protobuf::io::CopyingOutputStreamAdaptor *_CopyingOutputStreamAdaptor = nullptr;
     google::protobuf::io::CodedOutputStream *_CodedOutputStream = nullptr;
-    Peer msg;
+    fantasybit::Peer msg;
 
 public:
     QTcpSocket *m_socket;
 
     void sendTo()
     {
-
-
         SocketCopyingOutputStream scos(m_socket);
         google::protobuf::io::CopyingOutputStreamAdaptor cos_adp(&scos);
 
         int i = 0;
         do {
             {
-            Peer myMessage;
+            fantasybit::Peer myMessage;
             myMessage.set_address("hello world");
-            myMessage.set_lastsync(i);
+//            myMessage.set_lastsync(i);
             if (!writeDelimitedTo(myMessage, &cos_adp) ) return;
             // Now we have to flush, otherwise the write to the socket won't happen until enough bytes accumulate
             cos_adp.Flush();
@@ -348,8 +350,6 @@ public:
            return true;
        }
 };
-
-
 
 }
 

@@ -15,8 +15,11 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
+INCLUDEPATH += $$PWD/
+INCLUDEPATH += $$PWD/bitcoin-core-base58
+
+
 SOURCES += $$PWD/main.cpp \
-#    console.cpp \
 #    protobufsocketreader.cpp \
     nodeclient.cpp \
     connectionmanager.cpp \
@@ -24,7 +27,13 @@ SOURCES += $$PWD/main.cpp \
     peerstore.cpp \
     nodeserver.cpp \
     node.cpp \
-    peerwire.cpp
+    peerwire.cpp \
+    $$PWD/bitcoin-core-base58/base58.cpp \
+    $$PWD/utils/utils.cpp \
+    Commissioner.cpp \
+    FantasyName.cpp
+
+
 
 TARGET = testcore
 
@@ -40,7 +49,12 @@ HEADERS += \
     peerwireclient.h \
     nodeserver.h \
     node.h \
-    peerwire.h
+    peerwire.h \
+    $$PWD/bitcoin-core-base58/base58.h \
+    $$PWD/utils/utils.h \
+    Commissioner.h \
+    FantasyName.h
+
 
 DISTFILES += \
     main.qml

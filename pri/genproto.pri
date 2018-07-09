@@ -1,5 +1,5 @@
 macx {
-    GENERATEDDIR = $$PWD/../core/proto/generated
+    GENERATEDDIR = $$PWD/../share/generated
     DEFINES += GOOGLE_NAMESPACE=google
     message(macx $$GENERATEDDIR)
 }
@@ -7,9 +7,8 @@ macx {
 ios{
     DEFINES += GOOGLE_NAMESPACE=google_public
     GENERATEDDIR = $$PWD/../generated-public
-    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/include
-    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/include
-
+#    INCLUDEPATH += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/include
+#    DEPENDPATH += /Users/$$(USER)/Desktop/fc/prebuilt/ios/extrenal/include
 }
 
 android{
@@ -20,9 +19,9 @@ android{
 }
 
 win32 {
-    GENERATEDDIR = $$PWD/../core/proto/generated
+    GENERATEDDIR = $$PWD/../share/generated
     DEFINES += GOOGLE_NAMESPACE=google
-    message(win32osx $$GENERATEDDIR)
+    message(win32 $$GENERATEDDIR)
 }
 
 

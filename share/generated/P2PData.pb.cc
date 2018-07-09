@@ -62,9 +62,10 @@ void protobuf_AssignDesc_P2PData_2eproto() {
       "P2PData.proto");
   GOOGLE_CHECK(file != NULL);
   Peer_descriptor_ = file->message_type(0);
-  static const int Peer_offsets_[2] = {
+  static const int Peer_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Peer, address_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Peer, port_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Peer, is_listening_),
   };
   Peer_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -148,7 +149,8 @@ void protobuf_AssignDesc_P2PData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ChainHead));
   PeerChainStatus_descriptor_ = file->message_type(5);
-  static const int PeerChainStatus_offsets_[6] = {
+  static const int PeerChainStatus_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PeerChainStatus, chain_state_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PeerChainStatus, last_dea_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PeerChainStatus, last_irreversible_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PeerChainStatus, mempool_count_),
@@ -201,10 +203,11 @@ void protobuf_AssignDesc_P2PData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MsgHello));
   WireMsg_descriptor_ = file->message_type(8);
-  static const int WireMsg_offsets_[3] = {
+  static const int WireMsg_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WireMsg, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WireMsg, intro_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WireMsg, hello_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WireMsg, alive_),
   };
   WireMsg_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -280,38 +283,42 @@ void protobuf_AddDesc_P2PData_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\rP2PData.proto\022\nfantasybit\"o\n\004Peer\022\017\n\007a"
-    "ddress\030\n \001(\t\022\014\n\004port\030\036 \001(\r\"H\n\013IsListenin"
-    "g\022\r\n\t_dontuse_\020\000\022\013\n\007NOTSURE\020\001\022\014\n\010ITHINKS"
-    "O\020\002\022\007\n\003YES\020\003\022\006\n\002NO\020\004\"\250\001\n\tSessionId\0223\n\nne"
-    "twork_id\030\001 \001(\0162\037.fantasybit.SessionId.Ne"
-    "tworkID\022\024\n\014wire_version\030\n \001(\r\022\022\n\nstart_t"
-    "ime\030\024 \001(\r\022\014\n\004uuid\030\036 \001(\014\".\n\tNetworkID\022\r\n\t"
-    "_dontuse_\020\000\022\010\n\004TEST\020\001\022\010\n\004PROD\020\002\"U\n\010WireP"
-    "eer\022)\n\nsession_id\030\n \001(\0132\025.fantasybit.Ses"
-    "sionId\022\036\n\004peer\030\024 \001(\0132\020.fantasybit.Peer\"w"
-    "\n\010MsgIntro\022!\n\003iam\030\n \001(\0132\024.fantasybit.Wir"
-    "ePeer\022$\n\006youare\030\024 \001(\0132\024.fantasybit.WireP"
-    "eer\022\"\n\010everyone\030\036 \003(\0132\020.fantasybit.Peer\""
-    "7\n\tChainHead\022\016\n\006height\030\n \001(\005\022\016\n\006weight\030\024"
-    " \001(\005\022\n\n\002id\030\036 \001(\014\"\333\002\n\017PeerChainStatus\022\'\n\010"
-    "last_dea\030\n \001(\0132\025.fantasybit.ChainHead\0220\n"
-    "\021last_irreversible\030\024 \001(\0132\025.fantasybit.Ch"
-    "ainHead\022\025\n\rmempool_count\030\036 \001(\r\022\024\n\014mempoo"
-    "l_size\030( \001(\r\022\034\n\024last_block_timestamp\0302 \001"
-    "(\004\022\031\n\021last_tx_timestamp\030< \001(\004\"\206\001\n\nChainS"
-    "tate\022\r\n\t_dontuse_\020\000\022\014\n\010STARTING\020\001\022\r\n\tSEA"
-    "RCHING\020\002\022\016\n\nCONNECTING\020\003\022\013\n\007SYNCING\020\004\022\010\n"
-    "\004LIVE\020\005\022\t\n\005REORG\020\006\022\014\n\010STOPPING\020\007\022\014\n\010ABOR"
-    "TING\020\010\"O\n\010MsgAlive\0220\n\013peer_status\030\036 \001(\0132"
-    "\033.fantasybit.PeerChainStatus\022\021\n\ttimestam"
-    "p\030( \001(\004\"[\n\010MsgHello\022$\n\006update\030\n \001(\0132\024.fa"
-    "ntasybit.MsgIntro\022)\n\013connections\030\024 \003(\0132\024"
-    ".fantasybit.WirePeer\"v\n\007WireMsg\022!\n\004type\030"
-    "\n \001(\0162\023.fantasybit.MsgType\022#\n\005intro\030\024 \001("
-    "\0132\024.fantasybit.MsgIntro\022#\n\005hello\030\036 \001(\0132\024"
-    ".fantasybit.MsgHello*9\n\007MsgType\022\r\n\t_dont"
-    "use_\020\000\022\t\n\005INTRO\020\001\022\t\n\005HELLO\020\002\022\t\n\005ALIVE\020\003", 1279);
+    "\n\rP2PData.proto\022\nfantasybit\"\243\001\n\004Peer\022\017\n\007"
+    "address\030\n \001(\t\022\014\n\004port\030\036 \001(\r\0222\n\014is_listen"
+    "ing\030( \001(\0162\034.fantasybit.Peer.IsListening\""
+    "H\n\013IsListening\022\r\n\t_dontuse_\020\000\022\013\n\007NOTSURE"
+    "\020\001\022\014\n\010ITHINKSO\020\002\022\007\n\003YES\020\003\022\006\n\002NO\020\004\"\250\001\n\tSe"
+    "ssionId\0223\n\nnetwork_id\030\001 \001(\0162\037.fantasybit"
+    ".SessionId.NetworkID\022\024\n\014wire_version\030\n \001"
+    "(\r\022\022\n\nstart_time\030\024 \001(\r\022\014\n\004uuid\030\036 \001(\014\".\n\t"
+    "NetworkID\022\r\n\t_dontuse_\020\000\022\010\n\004TEST\020\001\022\010\n\004PR"
+    "OD\020\002\"U\n\010WirePeer\022)\n\nsession_id\030\n \001(\0132\025.f"
+    "antasybit.SessionId\022\036\n\004peer\030\024 \001(\0132\020.fant"
+    "asybit.Peer\"w\n\010MsgIntro\022!\n\003iam\030\n \001(\0132\024.f"
+    "antasybit.WirePeer\022$\n\006youare\030\024 \001(\0132\024.fan"
+    "tasybit.WirePeer\022\"\n\010everyone\030\036 \003(\0132\020.fan"
+    "tasybit.Peer\"7\n\tChainHead\022\016\n\006height\030\n \001("
+    "\005\022\016\n\006weight\030\024 \001(\005\022\n\n\002id\030\036 \001(\014\"\230\003\n\017PeerCh"
+    "ainStatus\022;\n\013chain_state\030\001 \001(\0162&.fantasy"
+    "bit.PeerChainStatus.ChainState\022\'\n\010last_d"
+    "ea\030\n \001(\0132\025.fantasybit.ChainHead\0220\n\021last_"
+    "irreversible\030\024 \001(\0132\025.fantasybit.ChainHea"
+    "d\022\025\n\rmempool_count\030\036 \001(\r\022\024\n\014mempool_size"
+    "\030( \001(\r\022\034\n\024last_block_timestamp\0302 \001(\004\022\031\n\021"
+    "last_tx_timestamp\030< \001(\004\"\206\001\n\nChainState\022\r"
+    "\n\t_dontuse_\020\000\022\014\n\010STARTING\020\002\022\r\n\tSEARCHING"
+    "\020\004\022\t\n\005REORG\020\006\022\014\n\010STOPPING\020\010\022\014\n\010ABORTING\020"
+    "\n\022\016\n\nCONNECTING\020(\022\013\n\007SYNCING\0202\022\010\n\004LIVE\020<"
+    "\"O\n\010MsgAlive\0220\n\013peer_status\030\036 \001(\0132\033.fant"
+    "asybit.PeerChainStatus\022\021\n\ttimestamp\030( \001("
+    "\004\"[\n\010MsgHello\022$\n\006update\030\n \001(\0132\024.fantasyb"
+    "it.MsgIntro\022)\n\013connections\030\024 \003(\0132\024.fanta"
+    "sybit.WirePeer\"\233\001\n\007WireMsg\022!\n\004type\030\n \001(\016"
+    "2\023.fantasybit.MsgType\022#\n\005intro\030\024 \001(\0132\024.f"
+    "antasybit.MsgIntro\022#\n\005hello\030\036 \001(\0132\024.fant"
+    "asybit.MsgHello\022#\n\005alive\030( \001(\0132\024.fantasy"
+    "bit.MsgAlive*9\n\007MsgType\022\r\n\t_dontuse_\020\000\022\t"
+    "\n\005INTRO\020\001\022\t\n\005HELLO\020\002\022\t\n\005ALIVE\020\004", 1431);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "P2PData.proto", &protobuf_RegisterTypes);
   Peer::default_instance_ = new Peer();
@@ -350,7 +357,7 @@ bool MsgType_IsValid(int value) {
     case 0:
     case 1:
     case 2:
-    case 3:
+    case 4:
       return true;
     default:
       return false;
@@ -390,6 +397,7 @@ const int Peer::IsListening_ARRAYSIZE;
 #ifndef _MSC_VER
 const int Peer::kAddressFieldNumber;
 const int Peer::kPortFieldNumber;
+const int Peer::kIsListeningFieldNumber;
 #endif  // !_MSC_VER
 
 Peer::Peer()
@@ -410,6 +418,7 @@ void Peer::SharedCtor() {
   _cached_size_ = 0;
   address_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   port_ = 0u;
+  is_listening_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -454,6 +463,7 @@ void Peer::Clear() {
       }
     }
     port_ = 0u;
+    is_listening_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -493,6 +503,27 @@ bool Peer::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(320)) goto parse_is_listening;
+        break;
+      }
+
+      // optional .fantasybit.Peer.IsListening is_listening = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_is_listening:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::fantasybit::Peer_IsListening_IsValid(value)) {
+            set_is_listening(static_cast< ::fantasybit::Peer_IsListening >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(40, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -529,6 +560,12 @@ void Peer::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(30, this->port(), output);
   }
 
+  // optional .fantasybit.Peer.IsListening is_listening = 40;
+  if (has_is_listening()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      40, this->is_listening(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -550,6 +587,12 @@ void Peer::SerializeWithCachedSizes(
   // optional uint32 port = 30;
   if (has_port()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(30, this->port(), target);
+  }
+
+  // optional .fantasybit.Peer.IsListening is_listening = 40;
+  if (has_is_listening()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      40, this->is_listening(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -575,6 +618,12 @@ int Peer::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->port());
+    }
+
+    // optional .fantasybit.Peer.IsListening is_listening = 40;
+    if (has_is_listening()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->is_listening());
     }
 
   }
@@ -610,6 +659,9 @@ void Peer::MergeFrom(const Peer& from) {
     if (from.has_port()) {
       set_port(from.port());
     }
+    if (from.has_is_listening()) {
+      set_is_listening(from.is_listening());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -635,6 +687,7 @@ void Peer::Swap(Peer* other) {
   if (other != this) {
     std::swap(address_, other->address_);
     std::swap(port_, other->port_);
+    std::swap(is_listening_, other->is_listening_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -1876,14 +1929,14 @@ const ::google::protobuf::EnumDescriptor* PeerChainStatus_ChainState_descriptor(
 bool PeerChainStatus_ChainState_IsValid(int value) {
   switch(value) {
     case 0:
-    case 1:
     case 2:
-    case 3:
     case 4:
-    case 5:
     case 6:
-    case 7:
     case 8:
+    case 10:
+    case 40:
+    case 50:
+    case 60:
       return true;
     default:
       return false;
@@ -1894,17 +1947,18 @@ bool PeerChainStatus_ChainState_IsValid(int value) {
 const PeerChainStatus_ChainState PeerChainStatus::_dontuse_;
 const PeerChainStatus_ChainState PeerChainStatus::STARTING;
 const PeerChainStatus_ChainState PeerChainStatus::SEARCHING;
-const PeerChainStatus_ChainState PeerChainStatus::CONNECTING;
-const PeerChainStatus_ChainState PeerChainStatus::SYNCING;
-const PeerChainStatus_ChainState PeerChainStatus::LIVE;
 const PeerChainStatus_ChainState PeerChainStatus::REORG;
 const PeerChainStatus_ChainState PeerChainStatus::STOPPING;
 const PeerChainStatus_ChainState PeerChainStatus::ABORTING;
+const PeerChainStatus_ChainState PeerChainStatus::CONNECTING;
+const PeerChainStatus_ChainState PeerChainStatus::SYNCING;
+const PeerChainStatus_ChainState PeerChainStatus::LIVE;
 const PeerChainStatus_ChainState PeerChainStatus::ChainState_MIN;
 const PeerChainStatus_ChainState PeerChainStatus::ChainState_MAX;
 const int PeerChainStatus::ChainState_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
+const int PeerChainStatus::kChainStateFieldNumber;
 const int PeerChainStatus::kLastDeaFieldNumber;
 const int PeerChainStatus::kLastIrreversibleFieldNumber;
 const int PeerChainStatus::kMempoolCountFieldNumber;
@@ -1931,6 +1985,7 @@ PeerChainStatus::PeerChainStatus(const PeerChainStatus& from)
 
 void PeerChainStatus::SharedCtor() {
   _cached_size_ = 0;
+  chain_state_ = 0;
   last_dea_ = NULL;
   last_irreversible_ = NULL;
   mempool_count_ = 0u;
@@ -1974,6 +2029,7 @@ PeerChainStatus* PeerChainStatus::New() const {
 
 void PeerChainStatus::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    chain_state_ = 0;
     if (has_last_dea()) {
       if (last_dea_ != NULL) last_dea_->::fantasybit::ChainHead::Clear();
     }
@@ -1995,10 +2051,31 @@ bool PeerChainStatus::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .fantasybit.PeerChainStatus.ChainState chain_state = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::fantasybit::PeerChainStatus_ChainState_IsValid(value)) {
+            set_chain_state(static_cast< ::fantasybit::PeerChainStatus_ChainState >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(82)) goto parse_last_dea;
+        break;
+      }
+
       // optional .fantasybit.ChainHead last_dea = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_last_dea:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_last_dea()));
         } else {
@@ -2104,6 +2181,12 @@ bool PeerChainStatus::MergePartialFromCodedStream(
 
 void PeerChainStatus::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .fantasybit.PeerChainStatus.ChainState chain_state = 1;
+  if (has_chain_state()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->chain_state(), output);
+  }
+
   // optional .fantasybit.ChainHead last_dea = 10;
   if (has_last_dea()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -2144,6 +2227,12 @@ void PeerChainStatus::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* PeerChainStatus::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // optional .fantasybit.PeerChainStatus.ChainState chain_state = 1;
+  if (has_chain_state()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->chain_state(), target);
+  }
+
   // optional .fantasybit.ChainHead last_dea = 10;
   if (has_last_dea()) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -2189,6 +2278,12 @@ int PeerChainStatus::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .fantasybit.PeerChainStatus.ChainState chain_state = 1;
+    if (has_chain_state()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->chain_state());
+    }
+
     // optional .fantasybit.ChainHead last_dea = 10;
     if (has_last_dea()) {
       total_size += 1 +
@@ -2258,6 +2353,9 @@ void PeerChainStatus::MergeFrom(const ::google::protobuf::Message& from) {
 void PeerChainStatus::MergeFrom(const PeerChainStatus& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_chain_state()) {
+      set_chain_state(from.chain_state());
+    }
     if (from.has_last_dea()) {
       mutable_last_dea()->::fantasybit::ChainHead::MergeFrom(from.last_dea());
     }
@@ -2299,6 +2397,7 @@ bool PeerChainStatus::IsInitialized() const {
 
 void PeerChainStatus::Swap(PeerChainStatus* other) {
   if (other != this) {
+    std::swap(chain_state_, other->chain_state_);
     std::swap(last_dea_, other->last_dea_);
     std::swap(last_irreversible_, other->last_irreversible_);
     std::swap(mempool_count_, other->mempool_count_);
@@ -2832,6 +2931,7 @@ void MsgHello::Swap(MsgHello* other) {
 const int WireMsg::kTypeFieldNumber;
 const int WireMsg::kIntroFieldNumber;
 const int WireMsg::kHelloFieldNumber;
+const int WireMsg::kAliveFieldNumber;
 #endif  // !_MSC_VER
 
 WireMsg::WireMsg()
@@ -2842,6 +2942,7 @@ WireMsg::WireMsg()
 void WireMsg::InitAsDefaultInstance() {
   intro_ = const_cast< ::fantasybit::MsgIntro*>(&::fantasybit::MsgIntro::default_instance());
   hello_ = const_cast< ::fantasybit::MsgHello*>(&::fantasybit::MsgHello::default_instance());
+  alive_ = const_cast< ::fantasybit::MsgAlive*>(&::fantasybit::MsgAlive::default_instance());
 }
 
 WireMsg::WireMsg(const WireMsg& from)
@@ -2855,6 +2956,7 @@ void WireMsg::SharedCtor() {
   type_ = 0;
   intro_ = NULL;
   hello_ = NULL;
+  alive_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2866,6 +2968,7 @@ void WireMsg::SharedDtor() {
   if (this != default_instance_) {
     delete intro_;
     delete hello_;
+    delete alive_;
   }
 }
 
@@ -2898,6 +3001,9 @@ void WireMsg::Clear() {
     }
     if (has_hello()) {
       if (hello_ != NULL) hello_->::fantasybit::MsgHello::Clear();
+    }
+    if (has_alive()) {
+      if (alive_ != NULL) alive_->::fantasybit::MsgAlive::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2954,6 +3060,20 @@ bool WireMsg::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(322)) goto parse_alive;
+        break;
+      }
+
+      // optional .fantasybit.MsgAlive alive = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_alive:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_alive()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2994,6 +3114,12 @@ void WireMsg::SerializeWithCachedSizes(
       30, this->hello(), output);
   }
 
+  // optional .fantasybit.MsgAlive alive = 40;
+  if (has_alive()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      40, this->alive(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3020,6 +3146,13 @@ void WireMsg::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         30, this->hello(), target);
+  }
+
+  // optional .fantasybit.MsgAlive alive = 40;
+  if (has_alive()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        40, this->alive(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3051,6 +3184,13 @@ int WireMsg::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->hello());
+    }
+
+    // optional .fantasybit.MsgAlive alive = 40;
+    if (has_alive()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->alive());
     }
 
   }
@@ -3089,6 +3229,9 @@ void WireMsg::MergeFrom(const WireMsg& from) {
     if (from.has_hello()) {
       mutable_hello()->::fantasybit::MsgHello::MergeFrom(from.hello());
     }
+    if (from.has_alive()) {
+      mutable_alive()->::fantasybit::MsgAlive::MergeFrom(from.alive());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -3115,6 +3258,7 @@ void WireMsg::Swap(WireMsg* other) {
     std::swap(type_, other->type_);
     std::swap(intro_, other->intro_);
     std::swap(hello_, other->hello_);
+    std::swap(alive_, other->alive_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

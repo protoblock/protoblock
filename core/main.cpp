@@ -44,7 +44,7 @@
 #include <nodeclient.h>
 #include <node.h>
 
-#include <connectionmanager.h>
+//#include <connectionmanager.h>
 //pb::mesh myMesh;
 //#include <QsLog/QsLog.h>
 #include <QDir>
@@ -194,8 +194,8 @@ int main(int argc, char *argv[]) {
 
 //    qSetMessagePattern("[%{time yyyyMMdd h:mm:ss.zzz t} %{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}] %{file}:%{line} - %{message}");
 
-         qDebug() << "main" << QThread::currentThreadId();
-         qDebug() << ConnectionManager::instance()->clientId();
+//         qDebug() << "main" << QThread::currentThreadId();
+//         qDebug() << ConnectionManager::instance()->clientId();
 
          /*
 

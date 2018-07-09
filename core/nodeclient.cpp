@@ -96,7 +96,7 @@ public:
     int lastProgressValue;
     qint64 downloadedBytes;
     qint64 uploadedBytes;
-    int downloadRate[RateControlWindowLength];
+    int downloadRate[RateControlWindowLength];F
     int uploadRate[RateControlWindowLength];
     int transferRateTimer;
     */
@@ -224,20 +224,17 @@ void NodeClient::getMyIp()
 
                     qreply->deleteLater();
                     qreply->abort();
-                    if ( gotMyIp )
-                        return;
-
-                    if ( answer != "") {
-                        myIp = answer;
-                        qDebug() << " got ip" << myIp;
-                        gotMyIp = true;
-                        emit gotPublicIp(true);
+                    if ( !gotMyIp ) {
+                        if ( answer == "")
+                            emit tryGetIp();
+                        else {
+                            myIp = answer;
+                            qDebug() << " got ip" << myIp;
+                            gotMyIp = true;
+                            emit gotPublicIp(true);
+                        }
                     }
-                    else
-                        emit tryGetIp();
                 }
-
-                qreply->deleteLater();
             }
     );
 
@@ -295,7 +292,9 @@ NodeClient::~NodeClient()
 
 void NodeClient::startServer() {
     // Start the server
+    qDebug() << " startserver ";
     NodeServer *server = NodeServer::instance();
+//    connect(server,NodeServer::)
     if (!server->isListening()) {
         // Set up the peer wire server
         server->listen(QHostAddress::Any, pb::PORT_DEFAULT);

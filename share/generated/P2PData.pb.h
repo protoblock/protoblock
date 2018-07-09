@@ -88,18 +88,18 @@ inline bool SessionId_NetworkID_Parse(
 }
 enum PeerChainStatus_ChainState {
   PeerChainStatus_ChainState__dontuse_ = 0,
-  PeerChainStatus_ChainState_STARTING = 1,
-  PeerChainStatus_ChainState_SEARCHING = 2,
-  PeerChainStatus_ChainState_CONNECTING = 3,
-  PeerChainStatus_ChainState_SYNCING = 4,
-  PeerChainStatus_ChainState_LIVE = 5,
+  PeerChainStatus_ChainState_STARTING = 2,
+  PeerChainStatus_ChainState_SEARCHING = 4,
   PeerChainStatus_ChainState_REORG = 6,
-  PeerChainStatus_ChainState_STOPPING = 7,
-  PeerChainStatus_ChainState_ABORTING = 8
+  PeerChainStatus_ChainState_STOPPING = 8,
+  PeerChainStatus_ChainState_ABORTING = 10,
+  PeerChainStatus_ChainState_CONNECTING = 40,
+  PeerChainStatus_ChainState_SYNCING = 50,
+  PeerChainStatus_ChainState_LIVE = 60
 };
 bool PeerChainStatus_ChainState_IsValid(int value);
 const PeerChainStatus_ChainState PeerChainStatus_ChainState_ChainState_MIN = PeerChainStatus_ChainState__dontuse_;
-const PeerChainStatus_ChainState PeerChainStatus_ChainState_ChainState_MAX = PeerChainStatus_ChainState_ABORTING;
+const PeerChainStatus_ChainState PeerChainStatus_ChainState_ChainState_MAX = PeerChainStatus_ChainState_LIVE;
 const int PeerChainStatus_ChainState_ChainState_ARRAYSIZE = PeerChainStatus_ChainState_ChainState_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* PeerChainStatus_ChainState_descriptor();
@@ -116,7 +116,7 @@ enum MsgType {
   _dontuse_ = 0,
   INTRO = 1,
   HELLO = 2,
-  ALIVE = 3
+  ALIVE = 4
 };
 bool MsgType_IsValid(int value);
 const MsgType MsgType_MIN = _dontuse_;
@@ -235,20 +235,30 @@ class Peer : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 port() const;
   inline void set_port(::google::protobuf::uint32 value);
 
+  // optional .fantasybit.Peer.IsListening is_listening = 40;
+  inline bool has_is_listening() const;
+  inline void clear_is_listening();
+  static const int kIsListeningFieldNumber = 40;
+  inline ::fantasybit::Peer_IsListening is_listening() const;
+  inline void set_is_listening(::fantasybit::Peer_IsListening value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.Peer)
  private:
   inline void set_has_address();
   inline void clear_has_address();
   inline void set_has_port();
   inline void clear_has_port();
+  inline void set_has_is_listening();
+  inline void clear_has_is_listening();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* address_;
   ::google::protobuf::uint32 port_;
+  int is_listening_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_P2PData_2eproto();
   friend void protobuf_AssignDesc_P2PData_2eproto();
@@ -769,12 +779,12 @@ class PeerChainStatus : public ::google::protobuf::Message {
   static const ChainState _dontuse_ = PeerChainStatus_ChainState__dontuse_;
   static const ChainState STARTING = PeerChainStatus_ChainState_STARTING;
   static const ChainState SEARCHING = PeerChainStatus_ChainState_SEARCHING;
-  static const ChainState CONNECTING = PeerChainStatus_ChainState_CONNECTING;
-  static const ChainState SYNCING = PeerChainStatus_ChainState_SYNCING;
-  static const ChainState LIVE = PeerChainStatus_ChainState_LIVE;
   static const ChainState REORG = PeerChainStatus_ChainState_REORG;
   static const ChainState STOPPING = PeerChainStatus_ChainState_STOPPING;
   static const ChainState ABORTING = PeerChainStatus_ChainState_ABORTING;
+  static const ChainState CONNECTING = PeerChainStatus_ChainState_CONNECTING;
+  static const ChainState SYNCING = PeerChainStatus_ChainState_SYNCING;
+  static const ChainState LIVE = PeerChainStatus_ChainState_LIVE;
   static inline bool ChainState_IsValid(int value) {
     return PeerChainStatus_ChainState_IsValid(value);
   }
@@ -797,6 +807,13 @@ class PeerChainStatus : public ::google::protobuf::Message {
   }
 
   // accessors -------------------------------------------------------
+
+  // optional .fantasybit.PeerChainStatus.ChainState chain_state = 1;
+  inline bool has_chain_state() const;
+  inline void clear_chain_state();
+  static const int kChainStateFieldNumber = 1;
+  inline ::fantasybit::PeerChainStatus_ChainState chain_state() const;
+  inline void set_chain_state(::fantasybit::PeerChainStatus_ChainState value);
 
   // optional .fantasybit.ChainHead last_dea = 10;
   inline bool has_last_dea() const;
@@ -846,6 +863,8 @@ class PeerChainStatus : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:fantasybit.PeerChainStatus)
  private:
+  inline void set_has_chain_state();
+  inline void clear_has_chain_state();
   inline void set_has_last_dea();
   inline void clear_has_last_dea();
   inline void set_has_last_irreversible();
@@ -862,14 +881,15 @@ class PeerChainStatus : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::fantasybit::ChainHead* last_dea_;
-  ::fantasybit::ChainHead* last_irreversible_;
+  int chain_state_;
   ::google::protobuf::uint32 mempool_count_;
-  ::google::protobuf::uint32 mempool_size_;
+  ::fantasybit::ChainHead* last_irreversible_;
   ::google::protobuf::uint64 last_block_timestamp_;
   ::google::protobuf::uint64 last_tx_timestamp_;
+  ::google::protobuf::uint32 mempool_size_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_P2PData_2eproto();
   friend void protobuf_AssignDesc_P2PData_2eproto();
@@ -1150,6 +1170,15 @@ class WireMsg : public ::google::protobuf::Message {
   inline ::fantasybit::MsgHello* release_hello();
   inline void set_allocated_hello(::fantasybit::MsgHello* hello);
 
+  // optional .fantasybit.MsgAlive alive = 40;
+  inline bool has_alive() const;
+  inline void clear_alive();
+  static const int kAliveFieldNumber = 40;
+  inline const ::fantasybit::MsgAlive& alive() const;
+  inline ::fantasybit::MsgAlive* mutable_alive();
+  inline ::fantasybit::MsgAlive* release_alive();
+  inline void set_allocated_alive(::fantasybit::MsgAlive* alive);
+
   // @@protoc_insertion_point(class_scope:fantasybit.WireMsg)
  private:
   inline void set_has_type();
@@ -1158,15 +1187,18 @@ class WireMsg : public ::google::protobuf::Message {
   inline void clear_has_intro();
   inline void set_has_hello();
   inline void clear_has_hello();
+  inline void set_has_alive();
+  inline void clear_has_alive();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::fantasybit::MsgIntro* intro_;
   ::fantasybit::MsgHello* hello_;
+  ::fantasybit::MsgAlive* alive_;
   int type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_P2PData_2eproto();
   friend void protobuf_AssignDesc_P2PData_2eproto();
@@ -1272,6 +1304,29 @@ inline ::google::protobuf::uint32 Peer::port() const {
 inline void Peer::set_port(::google::protobuf::uint32 value) {
   set_has_port();
   port_ = value;
+}
+
+// optional .fantasybit.Peer.IsListening is_listening = 40;
+inline bool Peer::has_is_listening() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Peer::set_has_is_listening() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Peer::clear_has_is_listening() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Peer::clear_is_listening() {
+  is_listening_ = 0;
+  clear_has_is_listening();
+}
+inline ::fantasybit::Peer_IsListening Peer::is_listening() const {
+  return static_cast< ::fantasybit::Peer_IsListening >(is_listening_);
+}
+inline void Peer::set_is_listening(::fantasybit::Peer_IsListening value) {
+  assert(::fantasybit::Peer_IsListening_IsValid(value));
+  set_has_is_listening();
+  is_listening_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1722,15 +1777,38 @@ inline void ChainHead::set_allocated_id(::std::string* id) {
 
 // PeerChainStatus
 
-// optional .fantasybit.ChainHead last_dea = 10;
-inline bool PeerChainStatus::has_last_dea() const {
+// optional .fantasybit.PeerChainStatus.ChainState chain_state = 1;
+inline bool PeerChainStatus::has_chain_state() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void PeerChainStatus::set_has_last_dea() {
+inline void PeerChainStatus::set_has_chain_state() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void PeerChainStatus::clear_has_last_dea() {
+inline void PeerChainStatus::clear_has_chain_state() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void PeerChainStatus::clear_chain_state() {
+  chain_state_ = 0;
+  clear_has_chain_state();
+}
+inline ::fantasybit::PeerChainStatus_ChainState PeerChainStatus::chain_state() const {
+  return static_cast< ::fantasybit::PeerChainStatus_ChainState >(chain_state_);
+}
+inline void PeerChainStatus::set_chain_state(::fantasybit::PeerChainStatus_ChainState value) {
+  assert(::fantasybit::PeerChainStatus_ChainState_IsValid(value));
+  set_has_chain_state();
+  chain_state_ = value;
+}
+
+// optional .fantasybit.ChainHead last_dea = 10;
+inline bool PeerChainStatus::has_last_dea() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void PeerChainStatus::set_has_last_dea() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void PeerChainStatus::clear_has_last_dea() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void PeerChainStatus::clear_last_dea() {
   if (last_dea_ != NULL) last_dea_->::fantasybit::ChainHead::Clear();
@@ -1762,13 +1840,13 @@ inline void PeerChainStatus::set_allocated_last_dea(::fantasybit::ChainHead* las
 
 // optional .fantasybit.ChainHead last_irreversible = 20;
 inline bool PeerChainStatus::has_last_irreversible() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void PeerChainStatus::set_has_last_irreversible() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void PeerChainStatus::clear_has_last_irreversible() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void PeerChainStatus::clear_last_irreversible() {
   if (last_irreversible_ != NULL) last_irreversible_->::fantasybit::ChainHead::Clear();
@@ -1800,13 +1878,13 @@ inline void PeerChainStatus::set_allocated_last_irreversible(::fantasybit::Chain
 
 // optional uint32 mempool_count = 30;
 inline bool PeerChainStatus::has_mempool_count() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void PeerChainStatus::set_has_mempool_count() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void PeerChainStatus::clear_has_mempool_count() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void PeerChainStatus::clear_mempool_count() {
   mempool_count_ = 0u;
@@ -1822,13 +1900,13 @@ inline void PeerChainStatus::set_mempool_count(::google::protobuf::uint32 value)
 
 // optional uint32 mempool_size = 40;
 inline bool PeerChainStatus::has_mempool_size() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void PeerChainStatus::set_has_mempool_size() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void PeerChainStatus::clear_has_mempool_size() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void PeerChainStatus::clear_mempool_size() {
   mempool_size_ = 0u;
@@ -1844,13 +1922,13 @@ inline void PeerChainStatus::set_mempool_size(::google::protobuf::uint32 value) 
 
 // optional uint64 last_block_timestamp = 50;
 inline bool PeerChainStatus::has_last_block_timestamp() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void PeerChainStatus::set_has_last_block_timestamp() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void PeerChainStatus::clear_has_last_block_timestamp() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void PeerChainStatus::clear_last_block_timestamp() {
   last_block_timestamp_ = GOOGLE_ULONGLONG(0);
@@ -1866,13 +1944,13 @@ inline void PeerChainStatus::set_last_block_timestamp(::google::protobuf::uint64
 
 // optional uint64 last_tx_timestamp = 60;
 inline bool PeerChainStatus::has_last_tx_timestamp() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void PeerChainStatus::set_has_last_tx_timestamp() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void PeerChainStatus::clear_has_last_tx_timestamp() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void PeerChainStatus::clear_last_tx_timestamp() {
   last_tx_timestamp_ = GOOGLE_ULONGLONG(0);
@@ -2117,6 +2195,44 @@ inline void WireMsg::set_allocated_hello(::fantasybit::MsgHello* hello) {
     set_has_hello();
   } else {
     clear_has_hello();
+  }
+}
+
+// optional .fantasybit.MsgAlive alive = 40;
+inline bool WireMsg::has_alive() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void WireMsg::set_has_alive() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void WireMsg::clear_has_alive() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void WireMsg::clear_alive() {
+  if (alive_ != NULL) alive_->::fantasybit::MsgAlive::Clear();
+  clear_has_alive();
+}
+inline const ::fantasybit::MsgAlive& WireMsg::alive() const {
+  return alive_ != NULL ? *alive_ : *default_instance_->alive_;
+}
+inline ::fantasybit::MsgAlive* WireMsg::mutable_alive() {
+  set_has_alive();
+  if (alive_ == NULL) alive_ = new ::fantasybit::MsgAlive;
+  return alive_;
+}
+inline ::fantasybit::MsgAlive* WireMsg::release_alive() {
+  clear_has_alive();
+  ::fantasybit::MsgAlive* temp = alive_;
+  alive_ = NULL;
+  return temp;
+}
+inline void WireMsg::set_allocated_alive(::fantasybit::MsgAlive* alive) {
+  delete alive_;
+  alive_ = alive;
+  if (alive) {
+    set_has_alive();
+  } else {
+    clear_has_alive();
   }
 }
 

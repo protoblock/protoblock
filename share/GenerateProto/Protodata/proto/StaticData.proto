@@ -1,0 +1,152 @@
+syntax = "proto2";
+package fantasybit;
+import "NameData.proto";
+
+message PlayerBase {
+    optional string first=30;
+    optional string last=40;
+    optional string position=50;
+}
+
+message GameInfo {
+    optional string id = 10;
+    optional string home = 20;
+    optional string away = 30;
+    optional uint32 time = 40;
+}
+
+message WeeklySchedule {
+    repeated GameInfo games = 10;
+    repeated string byes = 20;
+}
+
+message Kstats {
+    optional int32 pa = 10;
+    repeated int32 fg = 20;
+}
+
+message Dstats {
+    optional int32 twopt = 100;
+    optional int32 onept = 110;
+    optional int32 deftd = 120;
+    optional int32 sfty = 130;
+    optional int32 turnovers = 140;
+    optional int32 sacks = 150;
+    optional int32 ptsa = 160;
+}
+
+message Ostats {
+    optional int32 passyds = 10;
+    optional int32 passtd = 20;
+    optional int32 rushyds = 30;
+    optional int32 rushtd = 40;
+    optional int32 recyds = 50;
+    optional int32 rectd = 60;
+    optional int32 rec = 70;
+    optional int32 pint = 80;
+    optional int32 fumble = 90;
+    optional int32 twopt = 100;
+    optional int32 onept = 110;
+}
+
+message Stats {
+    optional Ostats ostats = 10;
+    optional Dstats dstats = 20;
+    optional Kstats kstats = 30;
+}
+
+message PlayerResult {
+    optional string playerid = 20;
+    optional float result = 40;
+    optional Stats stats = 50;
+    repeated FantasyBitAward fantaybitaward = 60;
+    repeated FantasyBitPnl fantasybitpnl = 70;
+    repeated FantasyBitPnl rowposdividend = 80;
+    optional string symbol = 90;
+
+}
+
+message GameResult {
+    optional string  gameid = 1;
+    repeated PlayerResult home_result = 10;
+    repeated PlayerResult away_result = 20;
+    optional uint32 kickofftime = 30;
+    optional float homeTotal = 40;
+    optional float awayTotal = 50;
+}
+
+message SeasonResult {
+    optional uint64  season = 1;
+    repeated PlayerResult player_results = 10;
+    optional float total = 20;
+}
+
+message PlayerContractSymbol {
+    optional string symbol = 10;
+    optional string playerid = 20;
+    optional uint64 sybhash = 30;
+    optional string initals2 = 40;
+    optional string seq2 = 50;
+    optional string year2 = 60;
+    optional string type1sorw = 70;
+    optional string week1or04s = 80;
+}
+
+/*
+// digits:
+
+1-2: first initial, last initial
+3-4: seq (0a,0b...0z,1a,1b,1c,9z,Aa,Ab,....Za)
+4-5: year (16,17,18,19)
+6: (contract type, 1-f weekly week1 - week16, or 0 for season long )
+7: week# ( hexadecimal 0=season  1=week1,2,3,4,5,6,7,8,9,a,b,c,d,e,f=15)
+
+Arizona Cardinals 2016 Season contract = AC0a160
+AC = Arizona Cardinals
+0a = the first sequece of "AC"
+16 = 2016
+0 = week 0 = season long
+
+
+Adrian Peterson 2016 Week 14 Contract
+AP0a16e
+AP = initials
+0a = first one
+16 = year
+e = 14 in hex
+
+
+to generate symbols from player ids - start with player id 1 , and keep track of seqence for initals
+
+so keep a count of all initals
+
+SS0a - steve smith 1a - 1st one
+SS0b - steve smith 1b - 2nd one
+SS0
+
+
+AC0a160 can be shotened to  AC16
+AP0a16e can be shotened to  AP16We  - or APe for on the run - current year - weeklys  APS - season
+
+all symbols should be city hash unique
+
+weeks:
+A  C  E  F  G  H  I  J  K  N  O  P  S  T  U  X  Y
+01 02 03 04 05 06 07 08	09 10 11 12 13 14 15 16 17
+
+valid chars:   CEFGHIJKNOPSTUXY.
+
+AP.iij.16.
+
+mappings:
+invalid: B D L M Q R V W Z
+valid:   C E N O S T X Y A
+
+
+(2_digit initials)(0-4 digits + iniitlas unique)(year)(week char)
+
+(AP).(C).(16).(T)
+
+
+*/
+

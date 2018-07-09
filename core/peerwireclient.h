@@ -78,7 +78,7 @@ struct NodeBlock
     int offset;
     int length;
 };
-
+//https://cmiclab.cs.ucl.ac.uk/mespak/NiftyLink/tree/master/Code/Libraries/NetworkQt
 class PeerWireClient : public QTcpSocket
 {
     Q_OBJECT
@@ -133,9 +133,7 @@ public:
     void diconnectFromHost();
 
     bool setSocketDescriptor(qintptr socketDescriptor, SocketState state = ConnectedState,
-                             OpenMode openMode = ReadWrite) Q_DECL_OVERRIDE {
-        return socket.setSocketDescriptor(socketDescriptor,state,openMode);
-    }
+                             OpenMode openMode = ReadWrite) Q_DECL_OVERRIDE;
 signals:
     void infoHashReceived(const QByteArray &infoHash);
     void readyToTransfer();
