@@ -2,6 +2,8 @@
 
 #include <QObject>
 
+NodeWorker::NodeWorker(QObject * parent):  QObject(parent) {}
+
 int32_t NodeWorker::preinit() {
     node.init();
     auto h = node.getLastGlobalBlockNum();

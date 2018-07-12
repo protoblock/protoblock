@@ -2,18 +2,7 @@
 #define NODEWORKER_H
 
 #include <QObject>
-//#include <QSharedDataPointer>
-//#include <QNetworkAccessManager>
-//#include <QNetworkReply>
-//#include <QEventLoop>
-//#include <QRunnable>
-//#include <QApplication>
-//#include <QWaitCondition>
-//#include "globals.h"
 #include "PeerNode.h"
-//#include <QTimer.h>
-//#include <algorithm>
-
 
 class NodeWorker : public QObject
 {
