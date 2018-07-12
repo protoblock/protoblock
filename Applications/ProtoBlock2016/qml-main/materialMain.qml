@@ -19,7 +19,7 @@ import Communi 3.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "2.8" //version
+    property string version: "2.9" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -237,7 +237,7 @@ Material.ApplicationWindow{
         property bool expanded: false
         id: pageHelper
         title: "Protoblock"
-        selectedTabIndex: 0
+        selectedTabIndex: 1
         onSelectedTabChanged: {
             title = sectionTitles[selectedTabIndex]
             var cp = sectionTitles[selectedTabIndex]
