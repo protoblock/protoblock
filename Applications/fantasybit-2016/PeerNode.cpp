@@ -144,7 +144,7 @@ void Node::init() {
             }
     }
     current_hight = getLastLocalBlockNum();
-    intSTOP_HEIGHT_TEST = current_hight;
+//    intSTOP_HEIGHT_TEST = current_hight;
 #endif
 
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
