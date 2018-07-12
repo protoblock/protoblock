@@ -200,7 +200,7 @@ signed_transactions {
 bool Commissioner::BootStrapFileExists(string genesiskey) {
     string prefix = "boot4strap";
     QString filename = string(prefix + genesiskey + ".out").data();
-    QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
+    QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::ResourceLocation).toString();
     genesisBootFile = genesisBootFile +  filename;
     QFileInfo check_file(genesisBootFile);
     return check_file.exists();
@@ -213,7 +213,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     string prefix = "boot4strap";
 
     QString filename = string(prefix + genesiskey + ".out").data();
-    QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
+    QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::ResourceLocation).toString();
     genesisBootFile = genesisBootFile +  filename;
     QFileInfo check_file(genesisBootFile);
     if ( !check_file.exists() ) {

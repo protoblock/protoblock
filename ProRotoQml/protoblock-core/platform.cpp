@@ -149,20 +149,18 @@ std::string Platform::getRootDir() {
        qDebug() << "savePath " << pRet;
        return  pRet.toStdString ();
     }
-    else if (systemInfo.productType () == "osx" || systemInfo.productType () == "macos")
-    {
-        QString pRet = QStandardPaths::standardLocations (QStandardPaths::HomeLocation).first ();
-         pRet.append ("/Library/Application Support/ProtoBlock2016/");
-        createIosDir (pRet);
-         return pRet.toStdString ();
-    }
+//    else if (systemInfo.productType () == "osx" || systemInfo.productType () == "macos")
+//    {
+//        QString pRet = QStandardPaths::standardLocations (QStandardPaths::HomeLocation).first ();
+//         pRet.append ("/Library/Application Support/ProtoBlock2016/");
+//        createIosDir (pRet);
+//         return pRet.toStdString ();
+//    }
     else
     {
         QString qstrPath = AppSettings::instance()->
                 getSetting(AppSettings::ApplicationStorageDir).toString();
         createIosDir (qstrPath);
-        //+QString(QDir::separator());
-//        qDebug() <<  qstrPath.toStdString();
         return qstrPath.toStdString();
     }
 }

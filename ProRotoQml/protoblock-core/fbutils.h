@@ -20,6 +20,9 @@
 #include "platform.h"
 #include<sstream>
 #include "ProtoData.pb.h"
+#include "platform.h"
+#include "appsettings.h"
+
 
 #define QTD QString::fromStdString
 
@@ -132,7 +135,15 @@ namespace fantasybit {
     }
 
 
-    static std::string GET_ROOT_DIR() {
+    static std::string GET_ROOT_DIR(bool is_resource = false) {
+#ifdef Q_OS_MAC
+        if ( is_resource ) {
+            QString thefile =
+                    Platform::instance()->settings()->getSetting(AppSettings::ResourceLocation).toString();
+
+            return thefile.toStdString ();
+        }
+#endif
         return Platform::instance()->getRootDir();
     }
 
@@ -150,7 +161,7 @@ namespace fantasybit {
         PORT_LIVE_TX += 1000;
         PORT_LIVE_TX_NAT += 1000;
     }
-*/
+    */
 
     template < typename T >
     std::map<int, std::string> proto_enum_map() {

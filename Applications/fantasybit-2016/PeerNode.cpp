@@ -125,14 +125,16 @@ void Node::init() {
 //    Node::txpool.reset(db4);
 
     current_hight = getLastLocalBlockNum();
-//    qInfo() <<  "76 current_hight" << current_hight;
+    qDebug() <<  "PeerNode current_hight" << current_hight;
 
 #ifdef BLK18
     if ( current_hight == 0) {
             Block bl;
-            Reader<Block> reader{ GET_ROOT_DIR() + "blk18.out"};
+            Reader<Block> reader{ GET_ROOT_DIR(true) + "blk18.out"};
             //"D:\\work\\build-ProRoto2016-Desktop_Qt_5_10_1_MSVC2013_64bit-Debug\\Applications\\ProtoBlock2016\\debug\\storage\\newblocks.out"};
-            if ( reader.good() ) {
+            if ( !reader.good() )
+                qCritical() << "!good" << GET_ROOT_DIR() + "blk18.out";
+            else {
                 int count = 0;
                 while ( reader.ReadNext(bl) ) {
                     int32_t height = bl.signedhead().head().num();

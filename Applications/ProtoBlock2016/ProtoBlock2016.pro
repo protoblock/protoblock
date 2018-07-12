@@ -54,25 +54,21 @@ macx {
 
 
 # Copy the custom Info.plist to the app bundle
-    OTHER_FILES += Info.plist
+#    OTHER_FILES += Info.plist
 #    OTHER_FILES += /nwork/protoblock/hold/boot2strap201700.out
+#    plist.path = "$$DESTDIR/$$join(TARGET,,,.app)/Contents"
+#    plist.files = $$PWD/Info.plist
+#    INSTALLS += plist
 
-    plist.path = "$$DESTDIR/$$join(TARGET,,,.app)/Contents"
-    plist.files = $PWD/Info.plist
-    INSTALLS += plist
     # set fags
     QMAKE_CFLAGS += -gdwarf-2
     QMAKE_CXXFLAGS += -gdwarf-2
     ICON = icon.icns
     CONFIG += x86
 
-    resources.files = $$PWD/../../hold/boot3strap201716.out
-    resources.path =  "$$DESTDIR/$$join(TARGET,,,.app)/Resources"
-
-#    INSTALLS += resources
-
-
-
+    APP_RESOURCE.files = $$PWD/blk18.out
+    APP_RESOURCE.path =  Contents/Resources
+    QMAKE_BUNDLE_DATA += APP_RESOURCE
 }
 
 SOURCES += \

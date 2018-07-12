@@ -19,7 +19,6 @@ class AppSettings : public GenericSingleton<AppSettings> {
 
 public:
     enum SettingsKeys {
-        LastFantasyName,
         ServerIp,
         ServerPort,
         LogFilePath,
@@ -32,10 +31,7 @@ public:
         LogMessagePattern,
         LeaderBoardRefreshInterval,
         ConfirmSendAndCopyProjections,
-        GenesisTranactionLocation,
-        GenesisTransition2014Location,
-        GenesisBootLocation2016,
-        Year2014SignedTxLocation,
+        ResourceLocation
     };
 
 private:
@@ -46,25 +42,19 @@ private:
 
     QString translateSettingEnum(SettingsKeys settings) const {
         switch (settings) {
-        case LastFantasyName:  return "lastfantasyname";
-        case ServerIp:  return "serverip";
-        case ServerPort:  return "serverport";
-        case LogFilePath:  return "logfilepath";
-        case ApplicationStorageDir: return "applicationstoragedir";
-        case PortHand  :return  "porthand";
-        case PortStncServ: return "portstncserv";
-        case PortLiveBlock: return "portliveblock";
-        case PortLiveTx: return "portlivetx";
-        case PortLiveTxNat: return "portlivetxnat";
-        case LogMessagePattern: return "logmessagepattern";
-        case LeaderBoardRefreshInterval : return "leaderboardrefreshinterval";
-        case ConfirmSendAndCopyProjections : return "confirmsendandcopyprojections";
-        case GenesisTranactionLocation : return "genesistranactionlocation";
-        case GenesisBootLocation2016 : return "GenesisBootLocation2016";
-        case GenesisTransition2014Location : return "GenesisTransition2014Location";
-        case Year2014SignedTxLocation : return  "Year2014SignedTxLocation";
-        default:
-            return "";
+            case ServerIp:  return "serverip";
+            case ServerPort:  return "serverport";
+            case LogFilePath:  return "logfilepath";
+            case ApplicationStorageDir: return "applicationstoragedir";
+            case PortHand  :return  "porthand";
+            case PortStncServ: return "portstncserv";
+            case PortLiveBlock: return "portliveblock";
+            case PortLiveTx: return "portlivetx";
+            case PortLiveTxNat: return "portlivetxnat";
+            case LogMessagePattern: return "logmessagepattern";
+            case LeaderBoardRefreshInterval : return "leaderboardrefreshinterval";
+            case ConfirmSendAndCopyProjections : return "confirmsendandcopyprojections";
+            case ResourceLocation : return "ResourceLocation";
         }
     }
 
@@ -76,11 +66,14 @@ private:
         DefaultAppSettings(){}
         ~DefaultAppSettings() {}
         static QVariant getDefaultSetting(SettingsKeys settingKey){
+#ifdef CUSTOM_TESTING_PATH
+            QString storageDirName = QString("/storage-test");
+#else
             QString storageDirName =QString("/storage");
+#endif
             QString logFileName = QString("/protoblock-2018.log");
 
             switch (settingKey) {
-            case LastFantasyName:  return "";
             case ServerIp:  return "127.0.0.1";
             case ServerPort:  return 80;
             case LogFilePath:  return logPath(logFileName);
@@ -101,47 +94,9 @@ private:
                         "- %{message}";
             case LeaderBoardRefreshInterval: return 5;
             case ConfirmSendAndCopyProjections: return true;
-            case GenesisTranactionLocation :
-            #ifdef Q_OS_WIN
-                return storagePath(storageDirName)+"/"+"GenesisTransition-Tr-Transaction.txt";
-            #endif
-            #ifdef Q_OS_MAC
-            {
-                QDir dir(QCoreApplication::applicationDirPath());
-                dir.cdUp();
-                dir.cd("Resources");
-                return dir.absolutePath()+QString("/GenesisTransition-Tr-Transaction.txt");
-            }
-            #endif
-            case GenesisTransition2014Location :
-            #ifdef Q_OS_WIN
-                return storagePath(storageDirName)+"/"+"Transition2014.out";
-            #endif
-            #ifdef Q_OS_MAC
-            {
-                QDir dir(QCoreApplication::applicationDirPath());
-                dir.cdUp();
-                dir.cd("Resources");
-                return dir.absolutePath()+QString("/Transition2014.out");
-            }
-            #endif
-
-            case GenesisBootLocation2016 :
+            case ResourceLocation :
             #ifdef Q_OS_WIN
                 return storagePath(storageDirName);//+"bootstraptest201601.out";
-            #endif
-            #ifdef Q_OS_MAC
-            {
-                QDir dir(QCoreApplication::applicationDirPath());
-                dir.cdUp();
-                dir.cd("Resources");
-                return dir.absolutePath()+QString("/");//bootstraptest201601.out");
-            }
-            #endif
-
-            case Year2014SignedTxLocation:
-            #ifdef Q_OS_WIN
-                return storagePath(storageDirName);
             #endif
             #ifdef Q_OS_MAC
             {
@@ -151,7 +106,6 @@ private:
                 return dir.absolutePath()+QString("/");
             }
             #endif
-
 
             }
         }
@@ -176,7 +130,19 @@ private:
 #endif
         #endif
         #ifdef Q_OS_MAC
-            return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)+"/tradingfootball/"+dirName);
+            {
+                QString pRet = QStandardPaths::standardLocations (QStandardPaths::HomeLocation).first ();
+#ifndef PRODFOOTBALL
+                pRet.append ("/Library/Application Support/Protoblock-stage/");
+#else
+                pRet.append ("/Library/Application Support/Protoblock/");
+#endif
+        #ifdef CUSTOM_TESTING_PATH
+                pRet.append(dirName).append ("/");
+        #endif
+
+                return pRet;
+            }
         #endif
     }
 
@@ -185,7 +151,15 @@ private:
             return QCoreApplication::applicationDirPath() + fileName;
         #endif
         #ifdef Q_OS_MAC
-           return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation))+"/tradingfootball/"+fileName;
+
+            QString pRet = QStandardPaths::standardLocations (QStandardPaths::HomeLocation).first ();
+#ifndef PRODFOOTBALL
+            pRet.append ("/Library/Application Support/Protoblock-stage/");
+#else
+            pRet.append ("/Library/Application Support/Protoblock/");
+#endif
+
+            return pRet.append (fileName);
         #endif
     }
     static QString makePath(const QString & path){
