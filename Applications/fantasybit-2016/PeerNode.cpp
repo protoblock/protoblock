@@ -34,10 +34,11 @@ namespace fantasybit
 {
 
 #ifdef STOP_HEIGHT_TEST
-    int intSTOP_HEIGHT_TEST = 14918;
+//    int intSTOP_HEIGHT_TEST = 14918;
+    int intSTOP_HEIGHT_TEST = -1;
 #endif
 
-Node::Node() { }
+Node::Node() { current_boot.set_blocknum(-1);}
 void Node::init() {
 #ifndef NO_DOSPECIALRESULTS
     doSpecialResults = false;
@@ -604,11 +605,11 @@ Bootstrap Node::getLastLocalBoot() {
                 done = true;
                 qDebug() << " getLastLocalBoot " << head.DebugString().data();
                 ldb.write("head",head.key());
-                if ( head.key() == "201716" ) {
-                    head.set_week(21);
-                    head.set_season(2017);
-                    ldb.write(head.key(),ldb.write(head));
-                }
+//                if ( head.key() == "201716" ) {
+//                    head.set_week(21);
+//                    head.set_season(2017);
+//                    ldb.write(head.key(),ldb.write(head));
+//                }
         }
         else {
             done = true;
