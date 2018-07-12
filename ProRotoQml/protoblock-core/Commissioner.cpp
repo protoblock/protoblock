@@ -49,6 +49,7 @@ Block Commissioner::makeGenesisBlock()
     genesis_transition_st.set_fantasy_name("FantasyAgent");
 #ifndef PRODFOOTBALL
     genesis_transition_st.set_sig("J5CdCsogMw2a5ZUH5BLCH58RLtMYTXGwd3aUheFWuvPj63DbKSkvQdDxysZAnLRnwLmah4MSWT2oWaax3hsHYrg");
+    genesis_transition_st.set_sig("2ktZ5Um2TVkrUD6iWJqAWPEfCHWzQ9Z6id5rnRnwSHpRe6fT4Ra5GRiY8NcSLGEa1WyfPB5d3GT3XwTi1X7J1sfY");
 #else
     genesis_transition_st.set_sig("2ktZ5Um2TVkrUD6iWJqAWPEfCHWzQ9Z6id5rnRnwSHpRe6fT4Ra5GRiY8NcSLGEa1WyfPB5d3GT3XwTi1X7J1sfY");
 #endif
@@ -70,6 +71,8 @@ Block Commissioner::makeGenesisBlock()
 #ifndef PRODFOOTBALL
     agent_st.set_id("65399b01d283f15deafc1bf5c86d71e4f67afd26cd69e30d3bf282489c1b769b");
     agent_st.set_sig("59daD7UtP7pGPaU4avZHZcyjCKMwSGL8RMP1m3KtWwiuVkX3XL3bAC8YxyPTpo6d1Fyyu7UmpsaByQXgm8XY1eM2");
+    agent_st.set_id("14aaf2551bb80878446ea3cf1638b55ab9092ab9959c82dc76fa6433f230511c");
+    agent_st.set_sig("2NA9KRUCRWAEHycjcvY2ZNxfUpKaUmeF7W63uxK8ZedZRGB1zZdsd6ezUzs7V7tLFXkWi3Za8ACPKvr7TV1pggDV");
 #else
     agent_st.set_id("14aaf2551bb80878446ea3cf1638b55ab9092ab9959c82dc76fa6433f230511c");
     agent_st.set_sig("2NA9KRUCRWAEHycjcvY2ZNxfUpKaUmeF7W63uxK8ZedZRGB1zZdsd6ezUzs7V7tLFXkWi3Za8ACPKvr7TV1pggDV");
@@ -90,6 +93,10 @@ Block Commissioner::makeGenesisBlock()
     bh.set_generating_sig("33319199662b78c55f0def95399a67d6dda4dc920958b7209dc65da2dbc01801");
     bh.set_transaction_id("4859318116a237b5c369b4c253122d3731ad846ad099ead9c18149668c2895d3");
     signedhead.set_sig("4LYuzs6PYu9QDD1sRg8NKg6UK6pd5X815Hb2FEZWw8ekCL9QoepWL5WpT1vVeeBcE757Ny5pqPxVjhLcngEsyftZ");
+    bh.set_generating_sig("61b198fd17d49893e324cd7e840f6bfc87bdf4da54afea0515b40e200b87dab6"); //pb::hashit(bh.generator_pk()).str()
+    bh.set_transaction_id("d2501817a50746a32327c348078cac9932b51511917f335726ce730a6c7bedc5"); //pb::makeMerkleRoot(genesis_block.signed_transactions())
+    signedhead.set_sig("5BRi8K5hyKtpSodvjzNWGeaoianxWJmbG5TpeCLgs7YvtzG3hfEjAWsNbr9qzoso6nf4SZVkbZdHViLGrqQGV9JV");
+
 #else
     bh.set_generating_sig("61b198fd17d49893e324cd7e840f6bfc87bdf4da54afea0515b40e200b87dab6"); //pb::hashit(bh.generator_pk()).str()
     bh.set_transaction_id("d2501817a50746a32327c348078cac9932b51511917f335726ce730a6c7bedc5"); //pb::makeMerkleRoot(genesis_block.signed_transactions())
@@ -267,7 +274,9 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
 pb::public_key_data Commissioner::GENESIS_PUB_KEY
 {
 #ifndef PRODFOOTBALL
-      Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"))
+//      Commissioner::str2pk(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"))
+     Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
+
 #else
       Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
 #endif

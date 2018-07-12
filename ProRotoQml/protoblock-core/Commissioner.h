@@ -129,7 +129,9 @@ public:
     static bool verifyOracle(const pb::signature &sig, const pb::sha256 &digest)
     {
 #ifndef PRODFOOTBALL
-        return verify(sig, digest, GENESIS_PUB_KEY) || verify(sig, digest, PROD_GENESIS_PUB_KEY);
+        return verify(sig, digest, GENESIS_PUB_KEY);// || verify(sig, digest, MASTER_PUB_KEY);
+
+//        return verify(sig, digest, GENESIS_PUB_KEY) || verify(sig, digest, PROD_GENESIS_PUB_KEY);
 #else
         return verify(sig, digest, GENESIS_PUB_KEY);// || verify(sig, digest, MASTER_PUB_KEY);
 #endif
