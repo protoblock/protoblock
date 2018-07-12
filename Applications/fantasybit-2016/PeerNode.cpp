@@ -152,7 +152,7 @@ void Node::init() {
 
     if ( current_boot.blocknum() > 0 ) {
         BlockRecorder::zeroblock = current_boot.blocknum();
-        if ( current_boot.blocknum() > current_hight ) {
+        if ( current_boot.blocknum() >= current_hight ) {
             current_hight = current_boot.blocknum();
             LdbWriter ldb;
             ldb.init(Node::bootstrap.get());

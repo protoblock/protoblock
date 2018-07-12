@@ -27,7 +27,7 @@ QT += qml quick core websockets network xmlpatterns qml-private quick-private qu
 #sql
 #sql webchannel
 CONFIG += c++11
-CONFIG += Console
+#CONFIG += Console
 
 
 contains(DEFINES, SQLSTUFF){
@@ -164,5 +164,5 @@ DEPENDPATH += $$PWD/../../ProRotoQml/Protoblock
 CONFIG(debug,debug|release):message("Debug mode")
 CONFIG(release,debug|release):message("Release mode")
 
-DISTFILES += \
-    ../../hold/boot3strap201716.out
+#DISTFILES += \
+#    ../../hold/boot3strap201716.out
