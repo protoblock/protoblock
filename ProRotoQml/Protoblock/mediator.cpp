@@ -318,7 +318,7 @@ void Mediator::GlobalStateChange(GlobalState gs) {
             settheWeek(gs.week());
             updateWeek();
         }
-        else
+        else if ( !(gs.season() == 2014 && gs.week() <= 1) )
             updateWeek();
 
         set_busySend(false);
@@ -649,10 +649,11 @@ void Mediator::NewWeek(int week) {
     if ( amLive ) {
         updateLiveLeaders();
     }
-    else if ( m_theSeason > 2014 ) {
+    else {
         m_pWeeklyScheduleModel->clear();
         //ToDo: maybe only if live
-        updateWeek();
+        if ( !(m_theSeason == 2014 && week <= 1) )
+            updateWeek();
     }
 }
 

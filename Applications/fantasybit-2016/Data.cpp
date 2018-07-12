@@ -578,7 +578,7 @@ void NFLStateData::OnSeasonEnd(int season) {
     }
     delete it;
 
-    qCritical() << season << "Season total" << sr.total();//pr.DebugString().data();
+    qInfo() << season << "Season total" << sr.total();//pr.DebugString().data();
 
     if ( !statsstore->Put(write_sync, to_string(season), sr.SerializeAsString()).ok())
         qWarning() << " error writing season "  << season;
@@ -596,7 +596,7 @@ void NFLStateData::AddNewWeeklySchedule(int season,int week, const WeeklySchedul
         return;
     }
     else {
-        qDebug() << "AddNewWeeklySchedule! cant find " << key.data();
+        qDebug() << "AddNewWeeklySchedule " << key.data();
     }
     qDebug() << ws.DebugString().data();
     GameStatus gs{};

@@ -76,8 +76,8 @@ private:
         DefaultAppSettings(){}
         ~DefaultAppSettings() {}
         static QVariant getDefaultSetting(SettingsKeys settingKey){
-            QString storageDirName =QString("storage");
-            QString logFileName = QString("protoblock-2016.log");
+            QString storageDirName =QString("/storage");
+            QString logFileName = QString("/protoblock-2018.log");
 
             switch (settingKey) {
             case LastFantasyName:  return "";
@@ -172,7 +172,7 @@ private:
         return "D:/data/stageprotoblock/storage/";
 //        return "C:\\work\\build-ProRoto2016-Release-57\\Applications\\ProtoBlock2016\\release/storage/";
 #else
-            return QCoreApplication::applicationDirPath()+"/storage/";
+            return QCoreApplication::applicationDirPath()+dirName+"/";
 #endif
         #endif
         #ifdef Q_OS_MAC
@@ -182,7 +182,7 @@ private:
 
     static QString logPath(const QString & fileName){
         #ifdef Q_OS_WIN
-            return "./cutefantasy-2016.log";
+            return QCoreApplication::applicationDirPath() + fileName;
         #endif
         #ifdef Q_OS_MAC
            return makePath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation))+"/tradingfootball/"+fileName;

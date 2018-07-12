@@ -33,6 +33,10 @@ using namespace std;
 namespace fantasybit
 {
 
+#ifdef STOP_HEIGHT_TEST
+    int intSTOP_HEIGHT_TEST = 14918;
+#endif
+
 Node::Node() { }
 void Node::init() {
 #ifndef NO_DOSPECIALRESULTS
@@ -40,12 +44,12 @@ void Node::init() {
 #endif
 
 #ifndef NO_REMOVEALL_FORK1
-    QFileInfo check_file( (GET_ROOT_DIR() + "postfork1").data ());
+    QFileInfo check_file( (GET_ROOT_DIR() + "postfork1.1").data ());
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "postfork1").data () );
+        QFile file( (GET_ROOT_DIR() + "postfork1.1").data () );
         file.open(QIODevice::WriteOnly);
     }
 #endif
@@ -122,6 +126,26 @@ void Node::init() {
     current_hight = getLastLocalBlockNum();
 //    qInfo() <<  "76 current_hight" << current_hight;
 
+#ifdef BLK18
+    if ( current_hight == 0) {
+            Block bl;
+            Reader<Block> reader{ GET_ROOT_DIR() + "blk18.out"};
+            //"D:\\work\\build-ProRoto2016-Desktop_Qt_5_10_1_MSVC2013_64bit-Debug\\Applications\\ProtoBlock2016\\debug\\storage\\newblocks.out"};
+            if ( reader.good() ) {
+                int count = 0;
+                while ( reader.ReadNext(bl) ) {
+                    int32_t height = bl.signedhead().head().num();
+                    leveldb::Slice value((char*)&height, sizeof(int32_t));
+                    blockchain->Put(write_sync, value, bl.SerializeAsString());
+                    qDebug() << "jayberg blockchain put " << height << count++;
+                }
+                qDebug() << " jayberg wrote " << bl.signedhead().head().num();
+            }
+    }
+    current_hight = getLastLocalBlockNum();
+    intSTOP_HEIGHT_TEST = current_hight;
+#endif
+
 #ifndef NOCHECK_LOCAL_BOOTSTRAP
     current_boot = getLastLocalBoot();
     qInfo() <<  "current_boot" << current_boot.DebugString().data();
@@ -157,29 +181,14 @@ void Node::init() {
     }
 #endif
 
-#ifdef CHECKPOINTS_2015
-    if ( current_hight < Commissioner::DeveloperCheckpointHigh() ) {
-        auto dc = Commissioner::getCheckPoint();
-
-        current_hight = Commissioner::DeveloperCheckpointHigh();
-
-        leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
-        blockchain->Put(write_sync, value, dc.SerializeAsString());
-        current_hight = getLastLocalBlockNum();
-
-        NFLStateData::InitCheckpoint();
-        BlockRecorder::InitCheckpoint(current_hight);
-    }
-#endif
 
 #ifndef NOUSE_GENESIS_BOOT
     if ( current_hight == 0 ) {
         LdbWriter ldb;
         ldb.init(Node::bootstrap.get());
         current_boot = Commissioner::makeGenesisBoot(ldb);
-        if ( current_boot.blocknum() <= 0 ) {
+        if ( current_boot.blocknum() < 0 )
             qCritical() << " !current_boot.blocknum() <= 0 ";
-        }
         else if (current_boot.blocknum() < current_hight)
             qCritical() << " current_boot.blocknum() < current_hight" << current_boot.blocknum() <<  current_hight;
         else {
@@ -213,28 +222,8 @@ void Node::init() {
         qDebug() << " current_hight " << current_hight << current_boot.DebugString().data();
 #else
     if (current_hight == 0) {
-
-  /*
-        Block sb{};
-        Reader<Block> b1r{GET_ROOT_DIR() +   "fantasybit-genesis-9-8-14-block.data"};
-        if ( !b1r.good() )
-            qCritical() << " No genesis ";
-        else
-            b1r.ReadNext(sb);
-*/
-
-        //qInfo() <<  "no blocks - making Genesis";
         auto  sb = Commissioner::makeGenesisBlock();
 
-        {
-        //    Writer<Block> writer{ GET_ROOT_DIR() + "genesisAlpha.out", ios::app };
-        //    writer(sb);
-        }
-        //qInfo() <<  "|" << QTD(sb.DebugString()) << "|";
-
-        qInfo() <<  "done";
-
-//        QThread::currentThread()->msleep(10000);
 #ifdef TRACEDEBUG
         qDebug() << " current sb ";
         qDebug() << sb.DebugString().data();
@@ -243,48 +232,18 @@ void Node::init() {
         if (!BlockProcessor::verifySignedBlock(sb))
             qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
         else {
-            current_hight = 1;
-
+            current_hight = 0;
             leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
             blockchain->Put(write_sync, value, sb.SerializeAsString());
             current_hight = getLastLocalBlockNum();
         }
-
-#ifdef TRACEDEBUG
-        qDebug() << " 2 current sb ";
-#endif
-
-/*
-        if ( !b1r.good() )
-            qCritical() << " No num 1 genesis ";
-        else
-            b1r.odNext(sb);
-
-        if (!BlockProcessor::verifySignedBlock(sb)) {
-            qCritical() << " !BlockProcessor::verifySignedBlock(sb) ";
-            return;
-        }
-        else {
-
-        current_hight = 1;
-
-        leveldb::Slice value1((char*)&current_hight, sizeof(int));
-        blockchain->Put(write_sync, value1, sb.SerializeAsString());
-        current_hight = getLastLocalBlockNum();
-        }
-*/
-
     }
 #endif
-
-    //assert(getLastBlockNum() > 0);
-
-    qInfo() <<  "229 current_hight " << current_hight;
+    qInfo() <<  "current_hight " << current_hight;
 }
 
 
 void Node::BackSync(int32_t to) {
-
     leveldb::WriteBatch batch;
     for ( int32_t i=getLastLocalBlockNum();i>to;i--) {
         leveldb::Slice key((char*)&i, sizeof(int32_t));
@@ -293,7 +252,6 @@ void Node::BackSync(int32_t to) {
     auto s = blockchain->Write(write_sync, &batch);
 
     current_hight = getLastLocalBlockNum();
-
 }
 
 bool Node::Sync() {
@@ -327,8 +285,6 @@ bool Node::SyncTo(int32_t gh) {
 
     if ( current_hight == current_boot.blocknum() ) {
         previd = current_boot.previd();
-        if ( previd == "" )
-            previd = "5d36c22996521c97c0bb69406a3df9c15d2ca6be79224eced13b2522824dd951";
 #ifdef CHECKPOINTS_2015
 //    if ( current_hight == Commissioner::DeveloperCheckpointHigh())
 //        previd = Commissioner::DeveloperCheckPointId();
@@ -517,9 +473,10 @@ int32_t Node::getLastLocalBlockNum() {
     delete it;
 
 #ifdef STOP_HEIGHT_TEST
-    if (num > 13486 )
-        num = 13486;
-    qWarning() << " STOP_HEIGHT_TEST " << num;
+    if (num > intSTOP_HEIGHT_TEST && intSTOP_HEIGHT_TEST != -1) {
+        qWarning() << " STOP_HEIGHT_TEST " << num << intSTOP_HEIGHT_TEST;
+        num = intSTOP_HEIGHT_TEST;
+    }
 #endif
 
     return num;
@@ -531,6 +488,7 @@ int32_t Node::myLastGlobalBlockNum() {
         std::lock_guard<std::mutex> lockg{ blockchain_mutex };
         myglobalheight = GlobalHeight;
     }
+
 
 #ifdef TRACE4
     qDebug() << " myglobalheight " << myglobalheight;
@@ -616,6 +574,7 @@ Bootstrap Node::getLastLocalBoot() {
             if ( sseason < 2017 ) {
                 done = true;
                 break;
+
             }
             else {
                 week = 16;
@@ -681,11 +640,13 @@ fc::optional<int32_t> Node::getLastGlobalBlockNum() {
 #endif
 
 #ifdef STOP_HEIGHT_TEST
-    height = 13486;
-    qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
+    if ( height != intSTOP_HEIGHT_TEST && intSTOP_HEIGHT_TEST != -1 ) {
+        height = intSTOP_HEIGHT_TEST;
+        qWarning() << "getLastGlobalBlockNum STOP_HEIGHT_TEST" << height;
+    }
 #endif
 
-    if ( myLastGlobalBlockNum() < height )
+    if ( myLastGlobalBlockNum() != height )
         setLastGlobalBlockNum(height);
 
     return height;
@@ -760,11 +721,6 @@ fc::optional<Block> Node::getGlobalBlock(int32_t num) {
 
     //if ( height < num  ) return;
     string bs = RestfullService::getBlk(PAPIURL.data(),num);
-#ifdef WTFISTHIS
-    Block bb{};
-    bb.ParseFromString(bs);
-    qInfo() << "getGlobalBlock("<< num <<") " << bb.SerializeAsString().size() << bb.DebugString();
-#endif
 
     block = Block{};
     (*block).ParseFromString(bs);
@@ -790,72 +746,6 @@ std::vector<Block> Node::getGlobalBlock(int32_t num, int32_t bend) {
     }
 
     return ret;
-}
-
-
-//void Node::ClearTx(const Block &b) {
-//    for (const auto &st : b.signed_transactions()) {
-//        Node::txpool->Delete(leveldb::WriteOptions(), st.id());
-//    }
-//}
-
-void Node::Cleaner() {
-    Block b{};
-    std::vector<Block> replace{};
-    auto *it = blockchain->NewIterator(leveldb::ReadOptions());
-    for (it->SeekToFirst() ;it->Valid();it->Next() ) {
-        b.ParseFromString(it->value().ToString());
-        if ( Cleanit(&b) )
-            replace.push_back(b);
-    }
-    delete it;
-
-    for ( auto b : replace) {
-        int32_t bnum = b.signedhead().head().num();
-        leveldb::Slice snum((char*)&bnum, sizeof(int32_t));
-
-        blockchain->Put(write_sync, snum, b.SerializeAsString());
-        //  Cleanit(&b);
-
-        //string bdata = b.SerializeAsString();
-        //RestfullClient rest(QUrl(LAPIURL.data()));
-        //rest.postRawData("block/"+QString::number(bnum),"xxx",bdata.data(),bdata.size());
-
-    }
-}
-
-bool Node::Cleanit(Block *b) {
-    auto dt = //b.signed_transactions(0).trans().GetExtension(DataTransition::data_trans);
-    b->mutable_signed_transactions(0)->mutable_trans()->MutableExtension(DataTransition::data_trans);
-    bool replaceit = false;
-    for ( int i=0;i<dt->data_size(); i++) {
-        if ( dt->data(i).type() != Data::RESULT) continue;
-        replaceit = true;
-
-        Data *d = dt->mutable_data(i);
-        ResultData *prd = d->MutableExtension(ResultData::result_data);
-        for ( int i =0; i < prd->game_result().home_result_size(); i++) {
-            PlayerResult *pr = prd->mutable_game_result()->mutable_home_result(i);
-            if ( !pr->stats().has_kstats() ) continue;
-
-            if ( pr->stats().kstats().fg_size() == 0) continue;
-
-            double newres = BlockProcessor::CalcResults(pr->stats());
-            pr->set_result(newres);
-        }
-        for ( int i =0; i < prd->game_result().away_result_size(); i++) {
-            PlayerResult *pr = prd->mutable_game_result()->mutable_away_result(i);
-            if ( !pr->stats().has_kstats() ) continue;
-
-            if ( pr->stats().kstats().fg_size() == 0) continue;
-
-            double newres = BlockProcessor::CalcResults(pr->stats());
-            pr->set_result(newres);
-        }
-
-    }
-    return replaceit;
-
 }
 
 decltype(Node::blockchain) Node::blockchain;

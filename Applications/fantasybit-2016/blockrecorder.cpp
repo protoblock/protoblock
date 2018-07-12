@@ -5,7 +5,7 @@
 
 using namespace fantasybit ;
 
-int BlockRecorder::zeroblock(0);
+int BlockRecorder::zeroblock(-1);
 int BlockRecorder::BlockTimestamp(0);
 
 void BlockRecorder::InitCheckpoint(int32_t lastblock) {

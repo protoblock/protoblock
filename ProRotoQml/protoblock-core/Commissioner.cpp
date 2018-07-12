@@ -22,325 +22,176 @@ using namespace std;
 
 namespace fantasybit {
 
+Block Commissioner::makeGenesisBlock()
+{
+    Block genesis_block{};
+    std::string GENESIS_PUB_KEY_STR = pk2str(GENESIS_PUB_KEY);
 
+    //GenesisTransition
+    SignedTransaction &genesis_transition_st = *genesis_block.add_signed_transactions();
+    Transaction &genesis_transition_tx = *genesis_transition_st.mutable_trans();
+    genesis_transition_tx.set_version(1);
+    genesis_transition_tx.set_type(TransType::DATA);
 
+    DataTransition &genesis_transition = *genesis_transition_tx.MutableExtension(DataTransition::data_trans);
+    genesis_transition.set_type(TrType::SEASONSTART);
+    genesis_transition.set_season(2014);
+    genesis_transition.set_week(0);
 
-Block Commissioner::makeGenesisBlockRaw() { Block b; return b; } /*`
-    //return;
-    Block b;
-    {
-    Reader<Block> reader{GET_ROOT_DIR() +   "FantasyBit-Genesis-0-block.data"};
-    if ( !reader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !reader.ReadNext(b) )
-            qCritical() << " No genesis ";
-    }
-    qDebug() << b.DebugString();
+    Data &data_msg = *genesis_transition.add_data();
+    data_msg.set_type(Data_Type_MESSAGE);
+    data_msg.MutableExtension(MessageData::message_data)->set_msg(
+        "Distributed Engineered Autonomous Agents : Satoshi Fantasy. April 2014. "
+        "dcc76458aeaab9ebe5e17abb704f292511ce2f7b8b30336b8f12cf46da2ad71e"
+    );
 
-
-    //return;
-    Block b1;
-    {
-    Reader<Block> reader{GET_ROOT_DIR() +   "FantasyBit-Genesis-1-block.data"};
-    if ( !reader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !reader.ReadNext(b) )
-            qCritical() << " No genesis ";
-    }
-    qDebug() << b.DebugString();
-
-*/
-/*
-    FantasyAgent dagent;
-    dagent.beDataAgent();
-
-    //dagent.signPlayer("FantasyAgent");
-    dagent.writeNomNonic("data.no.out");
-
-    Transaction dasn =
-            makeFantasyAgent();
-
-    SignedTransaction dasn =
-            makeFantasyAgent();
-
-
-    FantasyAgent magent {"master.out"};
-    magent.signPlayer("FantasyMaster");
-    magent.writeNomNonic("master.no.out");
-
-    FantasyAgent dagent {"data.out"};
-    dagent.signPlayer("FantasyAgent");
-    dagent.writeNomNonic("data.no.out");
-
-    SignedTransaction dasn =
-            makeFantasyAgent(dagent);
-
-    SignedTransaction
-    masn = makeGenesisName(magent);
-
-    SignedTransaction
-    mansn = makeAgentName(magent,dasn);
-
-
-    {
-    Writer<SignedTransaction> writer{ GET_ROOT_DIR() + "dasn"};
-    writer(dasn);
-    }
-    {
-    Writer<SignedTransaction> writer{ GET_ROOT_DIR() + "masn"};
-    writer(masn);
-    }
-    {
-    Writer<SignedTransaction> writer{ GET_ROOT_DIR() + "mansn"};
-    writer(mansn);
-    }
-
-    Transaction mtx = MasterGenesisTransition();
-    auto smtx = magent.makeSigned(mtx);
-
-    BlockHeader zerohead = MasterGenesisBlockHeader(magent,masn,smtx);
-
-    SignedBlockHeader mastersbh{};
-    mastersbh = magent.makeSigned(zerohead);
-    //mastersbh = pr.second;
-    //pr.first = id
-
-    Block b{};
-    b.mutable_signedhead()->CopyFrom(mastersbh);
-    b.add_signed_transactions()->CopyFrom(smtx);
-    b.add_signed_transactions()->CopyFrom(masn);
-    b.add_signed_transactions()->CopyFrom(mansn);
-
-    {
-    Writer<Block> writer{ GET_ROOT_DIR() + "FantasyBit-Genesis-0-block.data"};
-    writer(b);
-    }
-
-
-    FantasyAgent fa;
-    fa.beDataAgent();
-
-
-
-    auto gt = GenesisTransition();
-    auto sgt = dagent.makeSigned(gt);
-    BlockHeader onehead = GenesisBlockHeader(zerohead,dagent,dasn,sgt);
-
-    SignedBlockHeader dasbh{};
-    dasbh = dagent.makeSigned(onehead);
-    //mastersbh = pr.second;
-    //pr.first = id
-
-    Block b1{};
-    b.mutable_signedhead()->CopyFrom(mastersbh);
-    b.add_signed_transactions()->CopyFrom(smtx);
-    b.add_signed_transactions()->CopyFrom(masn);
-    {
-    Writer<Block> writer{ GET_ROOT_DIR() + "FantasyBit-Genesis-1-block.data"};
-    writer(b1);
-    }
-
-
-
-    return b1;
-
-}
-*/
-
-// pair<Block,Block>
-
-#ifdef XXXSTAGINGFOOTBALL
-
-Block Commissioner::makeGenesisBlock() {
-    Block b{};
-
-    /*
-    uint32_t sz = sizeof(genesis_data);
-
-    b.ParseFromArray(genesis_data,sizeof(genesis_data));
-
-    return b;
-
-    b.ParseFromArray(genesis_data,sizeof(genesis_data));
-
-    return b;
-*/
-    Reader<Block> reader{GET_ROOT_DIR() + "genesisAlpha.out"};
-    if ( !reader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( !reader.ReadNext(b) )
-            qCritical() << " No genesis ";
-
-    return b;
-}
-
+    genesis_transition_st.set_id("c96ca89a0b9b219836f1d9ae7599120236b446dd96196d190034cb5747ac1ef9");
+    genesis_transition_st.set_fantasy_name("FantasyAgent");
+#ifndef PRODFOOTBALL
+    genesis_transition_st.set_sig("J5CdCsogMw2a5ZUH5BLCH58RLtMYTXGwd3aUheFWuvPj63DbKSkvQdDxysZAnLRnwLmah4MSWT2oWaax3hsHYrg");
 #else
-
-Block Commissioner::makeGenesisBlock() {
-   // Block b{};
-
-    /*
-    Reader<Block> reader{GET_ROOT_DIR() + "FantasyBit-Genesis-1-block.data.out"};
-    reader.ReadNext(b);
-    if ( !reader.good() )
-        qCritical() << " No genesis ";
-    else
-        if ( reader.ReadNext(b) )
-            qCritical() << " No genesis ";
-
-    return b;
-*/
-
-   // Writer<Block> writer{ GET_ROOT_DIR() + "FantasyBit-Genesis-1-block.data"};
-
-    //FantasyAgent dagent;
-    //dagent.beDataAgent();
-
-    //dagent.signPlayer("FantasyAgent");
-    //dagent.writeNomNonic("data.no.out");
-
-  //  Transaction tx =
-   //         makeFantasyAgent();
-    //auto sn = dagent.makeSigned(tx);
-
-
-    NameProof nameproof{};
-    nameproof.set_type(NameProof_Type_ORACLE);
-
-    NameTrans nametrans{};
-    nametrans.set_public_key("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4");
-    nametrans.set_fantasy_name(FantasyAgentName());
-    nametrans.mutable_proof()->CopyFrom(nameproof);
-
-    Transaction trans{};
-    trans.set_version(Commissioner::GENESIS_NUM);
-    trans.set_type(TransType::NAME);
-    trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
-
-
-    SignedTransaction st{};
-    st.mutable_trans()->CopyFrom(trans);
-    //auto p = getIdSig(trans.SerializeAsString());
-    st.set_id("ccae751b85a84496b78286e4ca3264d793fb5b248d1a145d3a377b1a0779fbeb");
-    st.set_sig("iKx1CJNVRPp2LuCwkp66NfZTKxdZ98AknYYVzRtbuwT7RtDcATHc7WWruscbpkJ6qUcDBiDBjrkukRF7FmoJ97ikLFsb3bpiwG");
-    st.set_fantasy_name("FantasyAgent");
-
-
-
-
-
-    Transaction gt{};
-    QString genesisDataFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisTranactionLocation).toString();
-    {
-    Reader<Transaction> treader{genesisDataFile.toStdString()};
-    treader.ReadNext(gt);
-    qDebug() << " good " << treader.good();
-    }
-
-
-    qDebug() << genesisDataFile;
-    DataTransition abc1 = gt.GetExtension(DataTransition::data_trans);
-    for (const auto abc2 : abc1.data()) {
-        qDebug() << " data " << abc2.DebugString().data();
-    }
-
-
-
-
-    //qDebug() << sn.sig() << sn.id();
-    //dagent.makeGenesis();
-    //auto p = dagent.getIdSig(gt.SerializeAsString());
-
-
-    SignedTransaction sst;
-    sst.mutable_trans()->CopyFrom(gt);
-    sst.set_id("458bc71888897c2182a8c84b230d616198f57ec0600b527317fedd2280c5d3fb");
-    sst.set_sig("iKx1CJMnxRcFL5jjJuQdEkYadpQZaBLVDgcMYkmPLrxNMTegRmHAnHb28NQQfvk5bLi4WPA5raFQJMq3XCdjbGCaD9xwJcgNQV");
-
-
-    //qDebug() << p.first << p.second;
-
-
-    BlockHeader bh{};
-    bh.set_version(1);
-    bh.set_num(1);
-    bh.set_prev_id("000000000000");
-
-    bh.set_timestamp(1441683084);
-
-    bh.set_generator_pk("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4");
-    bh.set_generating_sig(pb::hashit(bh.generator_pk()).str());
-    bh.set_basetarget(0); //todo
-    bh.set_blocktype(BlockHeader_Type_DATA);
-
-    auto root = pb::hashit(sst.id() + st.id());
-    bh.set_transaction_id(root.str());
-
-
-    //SignedBlockHeader dasbh{};
-    // dasbh = dagent.makeSigned(bh);
-    SignedBlockHeader sbh{};
-    sbh.mutable_head()->CopyFrom(bh);
-    sbh.set_sig("iKkkiBsva3XYQPGdGFLFudhPMJeyiYNhJ8Tp57UTwjdACbYpPLAJt2RLd8g8mpCVTqCwJUCNXKmo7KrfzSHAkHo6sqv7LskAP9");
-    //qDebug() << dasbh.sig();
-
-
-    Block b{};
-    b.mutable_signedhead()->CopyFrom(sbh);
-    b.add_signed_transactions()->CopyFrom(sst);
-    b.add_signed_transactions()->CopyFrom(st);
-
-//    qDebug() << " first tx " << sst.DebugString().data();
-    qDebug() << " second tx " << st.DebugString().data();
-
-#ifdef JAYHACK
-    QString genesis2014DataFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisTransition2014Location).toString();
-    Reader<Transaction> readertx(genesis2014DataFile.toStdString());
-    Transaction tx;
-    while ( readertx.ReadNext(tx) ) {
-//        qDebug() << tx.DebugString().data();
-        SignedTransaction lst;
-        lst.mutable_trans()->CopyFrom(tx);
-        b.add_signed_transactions()->CopyFrom(lst);
-    }
-
-    QString filename = "/2014signedtx%1.out";
-    int count =0;
-    while ( true ) {
-        QString skillsaleFile = Platform::instance()->settings()->getSetting(AppSettings::Year2014SignedTxLocation).toString();
-        Reader<SignedTransaction> readertx2(skillsaleFile.toStdString() + filename.arg(count).toStdString());
-        if ( !readertx2.good() )
-            break;
-        SignedTransaction stx;
-        while ( readertx2.ReadNext(stx) ) {
-            b.add_signed_transactions()->CopyFrom(stx);
-            if ( stx.id() == "")
-                qDebug() << "bad tx ";
-
-            qDebug() << stx.DebugString().data();
-        }
-        count++;
-    }
-
+    genesis_transition_st.set_sig("2ktZ5Um2TVkrUD6iWJqAWPEfCHWzQ9Z6id5rnRnwSHpRe6fT4Ra5GRiY8NcSLGEa1WyfPB5d3GT3XwTi1X7J1sfY");
 #endif
 
-   // b.add_signed_transactions()->CopyFrom(dasn);
+    //makeFantasyAgent
+    SignedTransaction &agent_st = *genesis_block.add_signed_transactions();
+    Transaction &agenttrans = *agent_st.mutable_trans();
+    agenttrans.set_version(1);
+    agenttrans.set_type(TransType::NAME);
 
-   // Writer<Block> writer{ GET_ROOT_DIR() + "FantasyBit-Genesis-1-block.data", ios::app };
-    //writer(b);
-    //writer(b1);
+    NameTrans &nametrans = *agenttrans.MutableExtension(NameTrans::name_trans);
+    //genesis.name_hash = 10576213825162658308;// FantasyName::name_hash("FantasyAgent");
+    nametrans.set_fantasy_name("FantasyAgent");
+    nametrans.set_public_key(GENESIS_PUB_KEY_STR);//"25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4");
+    nametrans.set_recovery_key("xXGLATXkcfrk96dnky3USYVMnEw6RpaiRv4XKFZF3kEE");
+    nametrans.set_am_agent(true);
 
-    return b;
+    agent_st.set_fantasy_name("FantasyAgent");
+#ifndef PRODFOOTBALL
+    agent_st.set_id("65399b01d283f15deafc1bf5c86d71e4f67afd26cd69e30d3bf282489c1b769b");
+    agent_st.set_sig("59daD7UtP7pGPaU4avZHZcyjCKMwSGL8RMP1m3KtWwiuVkX3XL3bAC8YxyPTpo6d1Fyyu7UmpsaByQXgm8XY1eM2");
+#else
+    agent_st.set_id("14aaf2551bb80878446ea3cf1638b55ab9092ab9959c82dc76fa6433f230511c");
+    agent_st.set_sig("2NA9KRUCRWAEHycjcvY2ZNxfUpKaUmeF7W63uxK8ZedZRGB1zZdsd6ezUzs7V7tLFXkWi3Za8ACPKvr7TV1pggDV");
+#endif
 
+    //GenesisBlockHeader
+    SignedBlockHeader &signedhead = *genesis_block.mutable_signedhead();
+    BlockHeader &bh = *signedhead.mutable_head();
+    bh.set_version(1);
+    bh.set_num(0);
+    bh.set_prev_id("0000000000000000000000000000000000000000000000000000000000000000");
+    bh.set_timestamp(1408989677); // 0 - Genesis - 1408989677 converts to Monday August 25, 2014 14:01:17 (pm) in time zone America/New York (EDT)
+    bh.set_generator_pk(GENESIS_PUB_KEY_STR);//"25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4");
+    bh.set_basetarget(230584300921369395); // (9223372036854775808 / 40) = 100% = (2^64 / 40)
+    bh.set_blocktype(BlockHeader_Type_DATA);
+
+#ifndef PRODFOOTBALL
+    bh.set_generating_sig("33319199662b78c55f0def95399a67d6dda4dc920958b7209dc65da2dbc01801");
+    bh.set_transaction_id("4859318116a237b5c369b4c253122d3731ad846ad099ead9c18149668c2895d3");
+    signedhead.set_sig("4LYuzs6PYu9QDD1sRg8NKg6UK6pd5X815Hb2FEZWw8ekCL9QoepWL5WpT1vVeeBcE757Ny5pqPxVjhLcngEsyftZ");
+#else
+    bh.set_generating_sig("61b198fd17d49893e324cd7e840f6bfc87bdf4da54afea0515b40e200b87dab6"); //pb::hashit(bh.generator_pk()).str()
+    bh.set_transaction_id("d2501817a50746a32327c348078cac9932b51511917f335726ce730a6c7bedc5"); //pb::makeMerkleRoot(genesis_block.signed_transactions())
+    signedhead.set_sig("5BRi8K5hyKtpSodvjzNWGeaoianxWJmbG5TpeCLgs7YvtzG3hfEjAWsNbr9qzoso6nf4SZVkbZdHViLGrqQGV9JV");
+#endif
+
+    return genesis_block;
+
+/********************************************************************************************
+signedhead {
+  head {
+    version: 1
+    num: 0
+    prev_id: "0000000000000000000000000000000000000000000000000000000000000000"
+    timestamp: 1408989677
+    generator_pk: "25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"
+    generating_sig: "61b198fd17d49893e324cd7e840f6bfc87bdf4da54afea0515b40e200b87dab6"
+    basetarget: 230584300921369395
+    blocktype: DATA
+    transaction_id: "d2501817a50746a32327c348078cac9932b51511917f335726ce730a6c7bedc5"
+  }
+  sig: "5BRi8K5hyKtpSodvjzNWGeaoianxWJmbG5TpeCLgs7YvtzG3hfEjAWsNbr9qzoso6nf4SZVkbZdHViLGrqQGV9JV"
+}
+signed_transactions {
+  trans {
+    version: 1
+    type: DATA
+    [fantasybit.DataTransition.data_trans] {
+      type: SEASONSTART
+      season: 2014
+      week: 0
+      data {
+        type: MESSAGE
+        [fantasybit.MessageData.message_data] {
+          msg: "Distributed Engineered Autonomous Agents : Satoshi Fantasy. April 2014. dcc76458aeaab9ebe5e17abb704f292511ce2f7b8b30336b8f12cf46da2ad71e"
+        }
+      }
+    }
+  }
+  id: "c96ca89a0b9b219836f1d9ae7599120236b446dd96196d190034cb5747ac1ef9"
+  sig: "2ktZ5Um2TVkrUD6iWJqAWPEfCHWzQ9Z6id5rnRnwSHpRe6fT4Ra5GRiY8NcSLGEa1WyfPB5d3GT3XwTi1X7J1sfY"
+  fantasy_name: "FantasyAgent"
+}
+signed_transactions {
+  trans {
+    version: 1
+    type: NAME
+    [fantasybit.NameTrans.name_trans] {
+      fantasy_name: "FantasyAgent"
+      public_key: "25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"
+      recovery_key: "xXGLATXkcfrk96dnky3USYVMnEw6RpaiRv4XKFZF3kEE"
+      am_agent: true
+    }
+  }
+  id: "14aaf2551bb80878446ea3cf1638b55ab9092ab9959c82dc76fa6433f230511c"
+  sig: "2NA9KRUCRWAEHycjcvY2ZNxfUpKaUmeF7W63uxK8ZedZRGB1zZdsd6ezUzs7V7tLFXkWi3Za8ACPKvr7TV1pggDV"
+  fantasy_name: "FantasyAgent"
+}
+********************************************************************************************/
+
+/*
+    NameTrans nametrans{};
+    nametrans.set_hash(10576213825162658308);
+    nametrans.set_public_key(std::string("mT1M2MeDjA1RsWkwT7cjE6bbjprcNi84cWyWNvWU1iBa"));
+    nametrans.set_nonce(57428892);
+    nametrans.set_utc_sec(1408989677);
+    nametrans.set_prev_id("00000000000000000000000000000000000000000000000000000000");
+    nametrans.set_sig("iKkkiYrzqzRo4Cgz1TeZty4JY4KUrDWyPgeF5tKpeRoRD14zWubsFneY8fW7UodCpP3JXXrFvWh6UkSWD7NcktHDK9gb4i9D3m");
+    nametrans.set_sigid("19cacff77cae784ada296272e43b6dd6f22975d1");
+
+    Transaction trans{};
+    trans.set_version(1);
+    trans.set_type(TransType::NAME);
+    //[fantasybit.NameTrans.name_trans]
+    trans.MutableExtension(NameTrans::name_trans)->CopyFrom(nametrans);
+    SignedTransaction st{};
+    st.mutable_trans()->CopyFrom(trans);
+    st.set_id("6ca607c105f8f9adfa652a89c285e58a1848f35caef132267e0385f79c453eb4");
+    st.set_sig("iKkki4FAQFoNR4foHVv1KNqfnJ1Fm1xuTToW3LgRjfAem2PSuPU3cH7ZPiJNm3xyTLt2bJx5kdRMfn1aEhfCGiTsHbE3PHBeis");
+    st.set_fantasy_name("FantasyAgent");
+
+    BlockHeader bh{};
+    bh.set_prev_id("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    bh.set_num(0);
+
+    Block b{};
+    b.mutable_head()->CopyFrom(bh);
+    SignedTransaction* st2 = b.add_signed_transactions();
+    st2->CopyFrom(st);
+
+    SignedBlock sb{};
+    sb.mutable_block()->CopyFrom(b);
+    sb.set_id("c9348ceb2551871534121114cd707c40653303250602aad6c6e0c67c522e5e9c");
+    sb.set_sig("iKkkiYr6vYFtkRtxCeWQvu7iZ9oFdLwrpRe1P3XYUwZz3BvBuwiufWTFj1JSRJ3d1zjvp9W2whNVTWtT5Jxtn1ByyiW3qQYMyy");
+
+    //std::cout << sb.DebugString();
+    //Commissioner::GenesisBlock = sb;
+    */
 }
 
 bool Commissioner::BootStrapFileExists(string genesiskey) {
-    string prefix = "boot3strap";
-//    if ( stoi(genesiskey) < 201607 )
-//        prefix += "test";
+    string prefix = "boot4strap";
     QString filename = string(prefix + genesiskey + ".out").data();
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
     genesisBootFile = genesisBootFile +  filename;
@@ -352,16 +203,13 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     Bootstrap head;
     string headhash;
 
-    string prefix = "boot3strap";
-//    if ( stoi(genesiskey) < 201607 )
-//        prefix += "test";
+    string prefix = "boot4strap";
 
     QString filename = string(prefix + genesiskey + ".out").data();
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::GenesisBootLocation2016).toString();
     genesisBootFile = genesisBootFile +  filename;
     QFileInfo check_file(genesisBootFile);
     if ( !check_file.exists() ) {
-//        qDebug() << "! check_file.exists() genesisBootFile" << genesisBootFile;
 
         QString links("http://protoblock.com");
         QString route(filename);
@@ -372,7 +220,6 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
 
         QUrl url;
         url.setUrl(links);
-//        qDebug() << " chec url " << url.toString() << route << "|";
         RestfullClient rest (url);
         rest.getData(route);
         auto resp = rest.lastReply();
@@ -381,10 +228,6 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
             return head;
         }
 
-//        qDebug() << "not got it url resp.size()" << resp.size() << resp;
-//        return head;
-
-//        qDebug() << " got it url genesisBootFile" << filename;
         QFile *m_file = new QFile();
         m_file->setFileName(genesisBootFile);
         m_file->open(QIODevice::WriteOnly);
@@ -399,7 +242,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
         return head;
     }
 
-//    qDebug() << " reading genesisBootFile" << genesisBootFile;
+    qDebug() << " reading genesisBootFile" << genesisBootFile;
     Reader<KeyValue> reader{genesisBootFile.toStdString()};
     qDebug() << "makeGenesisBoot good?" << reader.good() ;
     if ( !reader.good() )
@@ -414,173 +257,12 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
             qDebug() << " error writing bootstrap" << kv.DebugString().data();
     }
 
-//    qDebug() << kv.DebugString().data();
-
 
     if ( headhash != "" )
         ldb.read(headhash,head);
 
     return head;
 }
-
-#endif
-
-Transaction Commissioner::GenesisTransition()
-{
-    DataTransition dt{};
-
-    dt.set_type(TrType::HEARTBEAT);
-    dt.set_season(2015);
-    dt.set_week(1);
-
-/*
-    PlayerLoaderTR pltr{};
-    auto players = pltr.loadPlayersFromTradeRadar(true);
-
-    Data d{};
-
-    d.Clear();
-    d.set_type(Data::PLAYER);
-    //PlayerData pd{};
-    for ( auto pd : players ) {
-        //TODOpd.set_teamid(t.second);
-        d.MutableExtension(PlayerData::player_data)->CopyFrom(pd);
-        Data *d2 = dt.add_data();
-        d2->CopyFrom(d);
-    }
-
-    ScheduleLoader sl{};
-    auto weeks = sl.loadScheduleFromJsonFile();
-
-    for ( auto sd : weeks ) {
-        d.Clear();
-        d.set_type(Data::SCHEDULE);
-
-        d.MutableExtension(ScheduleData::schedule_data)->CopyFrom(sd);
-        Data *d2 = dt.add_data();
-        d2->CopyFrom(d);
-    }
-*/
-    Transaction trans{};
-    trans.set_version(Commissioner::GENESIS_NUM);
-    trans.set_type(TransType::DATA);
-    //trans.MutableExtension(DataTransition::data_trans)->CopyFrom(dt);
-
-    return trans;
-
-
-    //PlayerLoader pl{};
-
-    //auto players = pl.loadPlayersFromJsonFile();
-
-}
-
-
-/*
-    uint32_t sz = sizeof(genesis_data);
-
-    b.ParseFromArray(genesis_data,sizeof(genesis_data));
-
-    return b;
-
-    b.ParseFromArray(genesis_data,sizeof(genesis_data));
-
-    return b;
-*/
-
-
-
-    /*
-    FantasyAgent agent;
-    agent.beDataAgent();
-
-    auto gtrans = Commissioner::makeGenesisName(agent);
-    auto gtransition = Commissioner::makeGenesisTransition();
-
-    auto bh = GenesisBlockHeader();
-
-    SignedBlockHeader sbh{};
-    sbh.mutable_head()->CopyFrom(bh);
-
-    auto p = agent.getIdSig(sbh.head().SerializeAsString());
-    //sbh.set_sig("iKZWEJXwTRmfX8HYEAFfohcsArUk2a76faYE6jSMtVVKhzPXk89QC24eDuigNj6b1WcX28JHiFhWkEBm79akAZ7Q1UvnKdh5z7");
-
-    //auto genesisblockhash = p.first;  "4f15942fc7cc2e418ee6d3f6bb4f0ef34d49863b21458d7445110783c8dcfd99"
-
-    sbh.set_sig(p.second);
-    b.mutable_signedhead()->CopyFrom(sbh);
-    b.add_signed_transactions()->CopyFrom(gtransition);
-    b.add_signed_transactions()->CopyFrom(gtrans);
-
-
-*/
-
-
-/*
-    Writer<Block> reader{GET_ROOT_DIR() + "genesis2015Prod.out"};
-    if ( !reader.good() )
-        qCritical() << " cant write genesis ";
-    else
-        reader(b);
-*/
-
-
-    /*
-    d.Clear();
-    d.set_type(Data::SCHEDULE);
-    ScheduleData sd{};
-    WeeklySchedule ws{};
-    sd.set_week(3);
-
-    GameInfo gi{};
-    gi.set_id("201500320");
-    gi.set_home("NO");
-    gi.set_away("HOU");
-    gi.set_time(1440964800); //8/30  4:pm edt
-    ws.add_games()->CopyFrom(gi);
-
-    gi.Clear();
-    gi.set_id("201500323");
-    gi.set_home("ARZ");
-    gi.set_away("OAK");
-    gi.set_time(1440979200); //8/30  4:pm edt
-    ws.add_games()->CopyFrom(gi);
-
-    sd.mutable_weekly()->CopyFrom(ws);
-
-*/
-
-//const fc::bigint& max224()
-//{
-//    static fc::bigint m = [](){
-//        char data[224/8+1];
-//        memset( data, 0xff, sizeof(data) );
-//        data[0] = 0;
-//        return fc::bigint(data,sizeof(data));
-//    }();
-//    return m;
-//}
-
-//uint64_t difficulty( const fc::sha224& hash_value )
-//{
-//    if( hash_value == fc::sha224() ) return uint64_t(-1); // div by 0
-
-//    auto dif = max224() / fc::bigint( (char*)&hash_value, sizeof(hash_value) );
-//    int64_t tmp = dif.to_int64();
-//    // possible if hash_value starts with 1
-//    if( tmp < 0 ) tmp = 0;
-//    return tmp;
-//}
-
-pb::public_key_data Commissioner::MASTER_PUB_KEY {
-
-#ifndef PRODFOOTBALL
-    Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
-#else
-    Commissioner::str2pk(std::string("qCxpbzdgBAMGiLYkcs1KhsMH2gXbTP27NJWV8eAgh4j9"))
-#endif
-
-};
 
 pb::public_key_data Commissioner::GENESIS_PUB_KEY
 {
@@ -591,7 +273,12 @@ pb::public_key_data Commissioner::GENESIS_PUB_KEY
 #endif
 };
 
-
+#ifndef PRODFOOTBALL
+pb::public_key_data Commissioner::PROD_GENESIS_PUB_KEY
+{
+      Commissioner::str2pk(std::string("25dTUQHwaPHdN2fXjpryz5jrrXxU6NNfKgrpJRA4VheJ4"))
+};
+#endif
 
 std::unordered_map<pb::public_key_data,std::shared_ptr<FantasyName>> Commissioner::FantasyNames{};
 std::map<hash_t,pb::public_key_data> Commissioner::Hash2Pk{};

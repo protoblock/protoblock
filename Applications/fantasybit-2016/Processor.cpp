@@ -174,7 +174,7 @@ int32_t BlockProcessor::process(Block &sblock) {
     auto lastvalid = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
             std::chrono::hours{50};
 
-    qDebug() << lastvalid.count();
+    qDebug() << BlockRecorder::BlockTimestamp << "lastvalid " << lastvalid.count();
 
 
     auto iter = mTimeOfTxidBlock.begin();
@@ -287,35 +287,38 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
 #endif
     {
 
-    auto st = sblock.signed_transactions(0);
-    if (st.trans().type() != TransType::DATA)  {
-        qCritical() << "expect first Transaction for Data block to be Data";
-        return false;
-    }
-
-    bool nodt = false;
-    auto dt = st.trans().GetExtension(DataTransition::data_trans);
-    if ( st.trans().version() >= 4 ) {
-        if ( mUsedTxId.find(st.id()) != end(mUsedTxId)) {
-            qDebug() << " invalid id already used " << st.DebugString().data();
-            nodt = true;
+        auto st = sblock.signed_transactions(0);
+        if (st.trans().type() != TransType::DATA)  {
+            qDebug() << "expect first Transaction for Data block to be Data";
+            processTxfrom(sblock, 0);
+    //        return false;
         }
-        else if ( mCurrBTxid )
-                mCurrBTxid->push_back(st.id());
-    }
+        else  {
+            bool nodt = false;
+            auto dt = st.trans().GetExtension(DataTransition::data_trans);
+            if ( st.trans().version() >= 4 ) {
+                if ( mUsedTxId.find(st.id()) != end(mUsedTxId)) {
+                    qDebug() << " invalid id already used " << st.id().data();
+                    nodt = true;
+                }
+                else if ( mCurrBTxid )
+                        mCurrBTxid->push_back(st.id());
+            }
 
-    if ( !nodt && dt.data_size() > 0)
-        process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
+            if ( !nodt && dt.data_size() > 0)
+                process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
 
-    if (sblock.signed_transactions_size() > 1)
-        processTxfrom(sblock, 1);
 
-#ifdef TRACE
-    qDebug() << "processing ccccc" << dt.type() << dt.season() << dt.week();
-#endif
-//    qDebug() << dt.DebugString().data();
+            if (sblock.signed_transactions_size() > 1)
+                processTxfrom(sblock, 1);
 
-    if ( !nodt ) process(dt);
+    #ifdef TRACE
+        qDebug() << "processing ccccc" << dt.type() << dt.season() << dt.week();
+    #endif
+    //    qDebug() << dt.DebugString().data();
+
+            if ( !nodt ) process(dt);
+        }
 
     }
 
@@ -642,7 +645,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
             case Data_Type_MESSAGE: {
                 auto msg = d.GetExtension(MessageData::message_data);
-                if ( msg.has_msg() ) {
+                if ( msg.has_msg() && amlive) {
                     onControlMessage(QString::fromStdString(msg.msg()));
 
 //                    qWarning() << "Control messgae" << msg.DebugString().data();
@@ -1026,8 +1029,13 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
     //first do name transactions
     for (int i = start; i < b.signed_transactions_size(); i++) {
 
-        if ( b.signed_transactions(i).trans().type() != TransType::NAME)
-            continue;
+        if ( b.signed_transactions(i).trans().type() == TransType::NAME) {
+            if ( !b.signed_transactions(i).trans().HasExtension(NameTrans::name_trans) ) {
+                qWarning() << " is not name - bad tx?";
+                continue;
+            }
+        }
+        else continue;
 
         qDebug() << "processing name tx " << i;//b.signed_transactions(i).trans().DebugString().data();// TransType_Name(t.type());
         auto &st = b.signed_transactions(i);
@@ -1333,7 +1341,7 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
     //assert(Commissioner::verifyOracle(sig, digest));
     if (!Commissioner::verifyOracle(sig, digest))
 #ifdef NO_ORACLE_CHECK_TESTING
-        if (!Commissioner::GENESIS_NUM == sblock.block().head().num())
+        if (!Commissioner::GENESIS_NUM == sblock.signedhead().head().num())
 #endif
         {
             qCritical() << " Invalid Block Signer!";

@@ -338,11 +338,13 @@ enum TrType {
   GAMESTART = 6,
   WEEKOVER = 7,
   TRADESESSIONSTART = 8,
-  TRADESESSIONCLOSEANDPREOPEN = 9
+  TRADESESSIONCLOSEANDPREOPEN = 9,
+  PLAYOFFSTART = 10,
+  SUPERBOWLEND = 12
 };
 bool TrType_IsValid(int value);
 const TrType TrType_MIN = SEASONSTART;
-const TrType TrType_MAX = TRADESESSIONCLOSEANDPREOPEN;
+const TrType TrType_MAX = SUPERBOWLEND;
 const int TrType_ARRAYSIZE = TrType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* TrType_descriptor();
@@ -1717,6 +1719,37 @@ class NameTrans : public ::google::protobuf::Message {
   inline ::fantasybit::NameProof* release_proof();
   inline void set_allocated_proof(::fantasybit::NameProof* proof);
 
+  // optional bytes recovery_key = 40;
+  inline bool has_recovery_key() const;
+  inline void clear_recovery_key();
+  static const int kRecoveryKeyFieldNumber = 40;
+  inline const ::std::string& recovery_key() const;
+  inline void set_recovery_key(const ::std::string& value);
+  inline void set_recovery_key(const char* value);
+  inline void set_recovery_key(const void* value, size_t size);
+  inline ::std::string* mutable_recovery_key();
+  inline ::std::string* release_recovery_key();
+  inline void set_allocated_recovery_key(::std::string* recovery_key);
+
+  // optional bool am_agent = 50;
+  inline bool has_am_agent() const;
+  inline void clear_am_agent();
+  static const int kAmAgentFieldNumber = 50;
+  inline bool am_agent() const;
+  inline void set_am_agent(bool value);
+
+  // optional string my_agent = 60;
+  inline bool has_my_agent() const;
+  inline void clear_my_agent();
+  static const int kMyAgentFieldNumber = 60;
+  inline const ::std::string& my_agent() const;
+  inline void set_my_agent(const ::std::string& value);
+  inline void set_my_agent(const char* value);
+  inline void set_my_agent(const char* value, size_t size);
+  inline ::std::string* mutable_my_agent();
+  inline ::std::string* release_my_agent();
+  inline void set_allocated_my_agent(::std::string* my_agent);
+
   static const int kNameTransFieldNumber = 200;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::NameTrans >, 11, false >
@@ -1729,15 +1762,24 @@ class NameTrans : public ::google::protobuf::Message {
   inline void clear_has_public_key();
   inline void set_has_proof();
   inline void clear_has_proof();
+  inline void set_has_recovery_key();
+  inline void clear_has_recovery_key();
+  inline void set_has_am_agent();
+  inline void clear_has_am_agent();
+  inline void set_has_my_agent();
+  inline void clear_has_my_agent();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* fantasy_name_;
   ::std::string* public_key_;
   ::fantasybit::NameProof* proof_;
+  ::std::string* recovery_key_;
+  ::std::string* my_agent_;
+  bool am_agent_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -2128,12 +2170,12 @@ class BlockHeader : public ::google::protobuf::Message {
   inline ::std::string* release_generating_sig();
   inline void set_allocated_generating_sig(::std::string* generating_sig);
 
-  // optional int32 basetarget = 50;
+  // optional uint64 basetarget = 50;
   inline bool has_basetarget() const;
   inline void clear_basetarget();
   static const int kBasetargetFieldNumber = 50;
-  inline ::google::protobuf::int32 basetarget() const;
-  inline void set_basetarget(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint64 basetarget() const;
+  inline void set_basetarget(::google::protobuf::uint64 value);
 
   // optional .fantasybit.BlockHeader.Type blocktype = 60;
   inline bool has_blocktype() const;
@@ -2181,11 +2223,11 @@ class BlockHeader : public ::google::protobuf::Message {
   ::google::protobuf::int32 num_;
   ::std::string* prev_id_;
   ::std::string* generator_pk_;
-  ::google::protobuf::int32 timestamp_;
-  ::google::protobuf::int32 basetarget_;
   ::std::string* generating_sig_;
-  ::std::string* transaction_id_;
+  ::google::protobuf::int32 timestamp_;
   int blocktype_;
+  ::google::protobuf::uint64 basetarget_;
+  ::std::string* transaction_id_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
@@ -6662,6 +6704,168 @@ inline void NameTrans::set_allocated_proof(::fantasybit::NameProof* proof) {
   }
 }
 
+// optional bytes recovery_key = 40;
+inline bool NameTrans::has_recovery_key() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void NameTrans::set_has_recovery_key() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void NameTrans::clear_has_recovery_key() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void NameTrans::clear_recovery_key() {
+  if (recovery_key_ != &::google::protobuf::internal::kEmptyString) {
+    recovery_key_->clear();
+  }
+  clear_has_recovery_key();
+}
+inline const ::std::string& NameTrans::recovery_key() const {
+  return *recovery_key_;
+}
+inline void NameTrans::set_recovery_key(const ::std::string& value) {
+  set_has_recovery_key();
+  if (recovery_key_ == &::google::protobuf::internal::kEmptyString) {
+    recovery_key_ = new ::std::string;
+  }
+  recovery_key_->assign(value);
+}
+inline void NameTrans::set_recovery_key(const char* value) {
+  set_has_recovery_key();
+  if (recovery_key_ == &::google::protobuf::internal::kEmptyString) {
+    recovery_key_ = new ::std::string;
+  }
+  recovery_key_->assign(value);
+}
+inline void NameTrans::set_recovery_key(const void* value, size_t size) {
+  set_has_recovery_key();
+  if (recovery_key_ == &::google::protobuf::internal::kEmptyString) {
+    recovery_key_ = new ::std::string;
+  }
+  recovery_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NameTrans::mutable_recovery_key() {
+  set_has_recovery_key();
+  if (recovery_key_ == &::google::protobuf::internal::kEmptyString) {
+    recovery_key_ = new ::std::string;
+  }
+  return recovery_key_;
+}
+inline ::std::string* NameTrans::release_recovery_key() {
+  clear_has_recovery_key();
+  if (recovery_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = recovery_key_;
+    recovery_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NameTrans::set_allocated_recovery_key(::std::string* recovery_key) {
+  if (recovery_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete recovery_key_;
+  }
+  if (recovery_key) {
+    set_has_recovery_key();
+    recovery_key_ = recovery_key;
+  } else {
+    clear_has_recovery_key();
+    recovery_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bool am_agent = 50;
+inline bool NameTrans::has_am_agent() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void NameTrans::set_has_am_agent() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void NameTrans::clear_has_am_agent() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void NameTrans::clear_am_agent() {
+  am_agent_ = false;
+  clear_has_am_agent();
+}
+inline bool NameTrans::am_agent() const {
+  return am_agent_;
+}
+inline void NameTrans::set_am_agent(bool value) {
+  set_has_am_agent();
+  am_agent_ = value;
+}
+
+// optional string my_agent = 60;
+inline bool NameTrans::has_my_agent() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void NameTrans::set_has_my_agent() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void NameTrans::clear_has_my_agent() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void NameTrans::clear_my_agent() {
+  if (my_agent_ != &::google::protobuf::internal::kEmptyString) {
+    my_agent_->clear();
+  }
+  clear_has_my_agent();
+}
+inline const ::std::string& NameTrans::my_agent() const {
+  return *my_agent_;
+}
+inline void NameTrans::set_my_agent(const ::std::string& value) {
+  set_has_my_agent();
+  if (my_agent_ == &::google::protobuf::internal::kEmptyString) {
+    my_agent_ = new ::std::string;
+  }
+  my_agent_->assign(value);
+}
+inline void NameTrans::set_my_agent(const char* value) {
+  set_has_my_agent();
+  if (my_agent_ == &::google::protobuf::internal::kEmptyString) {
+    my_agent_ = new ::std::string;
+  }
+  my_agent_->assign(value);
+}
+inline void NameTrans::set_my_agent(const char* value, size_t size) {
+  set_has_my_agent();
+  if (my_agent_ == &::google::protobuf::internal::kEmptyString) {
+    my_agent_ = new ::std::string;
+  }
+  my_agent_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NameTrans::mutable_my_agent() {
+  set_has_my_agent();
+  if (my_agent_ == &::google::protobuf::internal::kEmptyString) {
+    my_agent_ = new ::std::string;
+  }
+  return my_agent_;
+}
+inline ::std::string* NameTrans::release_my_agent() {
+  clear_has_my_agent();
+  if (my_agent_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = my_agent_;
+    my_agent_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NameTrans::set_allocated_my_agent(::std::string* my_agent) {
+  if (my_agent_ != &::google::protobuf::internal::kEmptyString) {
+    delete my_agent_;
+  }
+  if (my_agent) {
+    set_has_my_agent();
+    my_agent_ = my_agent;
+  } else {
+    clear_has_my_agent();
+    my_agent_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // TransferTrans
@@ -7360,7 +7564,7 @@ inline void BlockHeader::set_allocated_generating_sig(::std::string* generating_
   }
 }
 
-// optional int32 basetarget = 50;
+// optional uint64 basetarget = 50;
 inline bool BlockHeader::has_basetarget() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
@@ -7371,13 +7575,13 @@ inline void BlockHeader::clear_has_basetarget() {
   _has_bits_[0] &= ~0x00000040u;
 }
 inline void BlockHeader::clear_basetarget() {
-  basetarget_ = 0;
+  basetarget_ = GOOGLE_ULONGLONG(0);
   clear_has_basetarget();
 }
-inline ::google::protobuf::int32 BlockHeader::basetarget() const {
+inline ::google::protobuf::uint64 BlockHeader::basetarget() const {
   return basetarget_;
 }
-inline void BlockHeader::set_basetarget(::google::protobuf::int32 value) {
+inline void BlockHeader::set_basetarget(::google::protobuf::uint64 value) {
   set_has_basetarget();
   basetarget_ = value;
 }

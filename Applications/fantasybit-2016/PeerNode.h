@@ -8,19 +8,11 @@
 
 #ifndef __fantasybit__Node__
 #define __fantasybit__Node__
-/*
-#include <assert.h>
-#include <string>
-#include <iostream>
-#include <set>
-#include <vector>
-*/
 
 #include <mutex>
 #include "fbutils.h"
 
 #include <optional.hpp>
-//#include "boostLog.h"
 #include <leveldb/db.h>
 #include "ProtoData.pb.h"
 #include <memory>
@@ -72,7 +64,6 @@ public:
     static bool doSpecialResults;
 #endif
 
-//    static void ClearTx(const Block &);
 	static std::shared_ptr<leveldb::DB> blockchain;
 //    static std::shared_ptr<leveldb::DB> txpool;
     static int32_t GlobalHeight;
@@ -85,8 +76,6 @@ public:
 
     static bool forking;
 
-    void Cleaner();
-    bool Cleanit(Block *b) ;
 private:
     static int getBootSeason();
 };
@@ -113,8 +102,6 @@ class Int32Comparator : public leveldb::Comparator {
   void FindShortestSeparator(std::string*, const leveldb::Slice&) const { }
   void FindShortSuccessor(std::string*) const { }
 };
-//static std::string SEED_NODE("162.254.27.226");
-//static std::string SEED_HOST("Jets");
 
 }
 

@@ -11,7 +11,7 @@ class BlockRecorder {
 
     std::unique_ptr<leveldb::DB> blockstatus;  // lastblock -> status // last block processed
     leveldb::WriteOptions write_sync{};
-    int32_t lastBlock = 0;
+    int32_t lastBlock = -1;
 public:
     static void InitCheckpoint(int32_t);
 

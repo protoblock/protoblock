@@ -22,7 +22,7 @@ class Writer
     bool gd = false;
 public:
     typedef T indata;
-    Writer(const std::string &file,std::ios::openmode flags =  std::ios::in)
+    Writer(const std::string &file,std::ios::openmode flags =  std::ios::app)
         :
         mFs(file,std::ios::out | std::ios::binary | flags)
     {
@@ -79,6 +79,7 @@ public:
             gd = true;
             _IstreamInputStream = new GOOGLE_NAMESPACE::protobuf::io::IstreamInputStream(&mFs);
             _CodedInputStream = new GOOGLE_NAMESPACE::protobuf::io::CodedInputStream(_IstreamInputStream);
+            _CodedInputStream->SetTotalBytesLimit(128000000,128000000);
         }
     }
 

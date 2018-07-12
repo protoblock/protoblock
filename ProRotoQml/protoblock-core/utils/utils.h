@@ -236,6 +236,21 @@ namespace pb {
         return EncodeBase58(hash2,hash2+25);
     }
 
+    static pb::sha256 hashit(const public_key_data &in) {
+        pb::sha256 ret;
+        hashc(in.key_data, 33, ret.data);
+        return ret;
+    }
+
+    static pb::sha256 generating_signature(const sha256 &prev_gs, const public_key_data &pk) {
+        pb::sha256 ret;
+        secp256k1_sha256_t hasher;
+        secp256k1_sha256_initialize(&hasher);
+        secp256k1_sha256_write(&hasher, prev_gs.begin(), 32);
+        secp256k1_sha256_write(&hasher, pk.begin(), 33);
+        secp256k1_sha256_finalize(&hasher, ret.data);
+        return ret;
+    }
 
     static std::string to_base58( const public_key_data &in ) {
         return EncodeBase58( in.key_data, in.key_data+33);

@@ -754,7 +754,7 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
     }
 
     if ( sit->second != fn->alias () ) {
-        qWarning() << "invalid cancel Refnum not found for" << eo.DebugString().data() << ord.refnum ();
+        qWarning() << "invalid alias for" << sit->second.data() << fn->alias().data() << eo.DebugString().data() << ord.refnum ();
         return;
     }
 

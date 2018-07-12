@@ -53,7 +53,7 @@ Item {
                     decimals: 0
                     stepSize: 1.0
                     maximumValue: MiddleMan.height
-                    minimumValue: 1
+                    minimumValue: 0
                     value: MiddleMan.height
                     Layout.column: 2
                     Layout.row: 1

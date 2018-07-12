@@ -76,6 +76,61 @@ static std::string makeMerkleRoot(decltype(fantasybit::MerkleTree::default_insta
     return "";
 }
 
+static std::string makeMerkleRoot(decltype(fantasybit::Block::default_instance().signed_transactions()) &in) {
+    std::queue<pb::sha256> merkle;
+
+    for (const auto &elem : in ) {
+        merkle.push(elem.id());
+    }
+
+    if (merkle.empty())
+        return "";//(fc::sha256) NULL;
+
+    int rows = 0;
+    while (merkle.size() > 1) {
+       /*
+        if (merkle.size() % 2 != 0) {
+            merkle.push(merkle.back());
+        }
+       */
+        std::queue<pb::sha256> new_merkle;
+
+        rows++;
+        int j =  merkle.size();
+
+        while (merkle.size() > 1) {
+            j =  merkle.size();
+
+            pb::sha256 first = merkle.front();
+            merkle.pop();
+
+            j =  merkle.size();
+
+            pb::sha256 second = merkle.front();
+            merkle.pop();
+
+            j =  merkle.size();
+
+            std::string concat;
+
+            concat = (std::string) first + (std::string) second;
+
+            new_merkle.push(pb::hashit(concat));
+        }
+        if ( merkle.size() == 1) {
+            new_merkle.push(merkle.front());
+            merkle.pop();
+        }
+
+        j =  merkle.size();
+
+        merkle = new_merkle;
+    }
+
+    return merkle.front();
+
+    return "";
+}
 
 /*
 template<class T>

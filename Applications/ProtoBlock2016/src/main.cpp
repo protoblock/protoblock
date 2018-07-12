@@ -27,6 +27,25 @@
 #endif // QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QSysInfo>
 
+
+#ifndef NO_DEBUG_FILE_OUT
+void messageHandler(QtMsgType type,
+                    const QMessageLogContext &context,
+                    const QString &message)
+{
+
+#ifndef ALLOW_DEBUG
+    return;
+#else
+    static QString logFileName = AppSettings::instance()->getSetting(AppSettings::LogFilePath).toString();
+    static std::ofstream  logFile(logFileName.toStdString(),std::ofstream::app);
+    if (logFile)
+        logFile << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
+#endif
+
+}
+#endif
+
 //fix me check the arguments here and
 // add help page
 int main(int argc, char *argv[])
@@ -37,6 +56,11 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+
+#ifndef NO_DEBUG_FILE_OUT
+    qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
+    qInstallMessageHandler(messageHandler);
+#endif
 
 
     QQuickStyle::setStyle("Material");
@@ -83,10 +107,10 @@ int main(int argc, char *argv[])
 //    engine.load(QUrl(":/materialMain.qml"));
 
 
-    QDirIterator it(":", QDirIterator::Subdirectories);
-    while (it.hasNext()) {
-        qDebug() << it.next();
-    }
+//    QDirIterator it(":", QDirIterator::Subdirectories);
+//    while (it.hasNext()) {
+//        qDebug() << it.next();
+//    }
     /*
     AllStatsLoader2014 asl;
     std::vector<Transaction> txs = asl.loadAllDataWeek1to16for2014();

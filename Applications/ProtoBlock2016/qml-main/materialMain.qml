@@ -114,14 +114,10 @@ Material.ApplicationWindow{
         console.log("Primary Color " +  Colors.primaryColor  +  " themeroot Active ?  " + themeroot.active)
 
         uname = MiddleMan.init()
-        if ( uname  === "" ){
-//            loginDialog.toggle()
-//            start = "qrc:/Account.qml";
-//            startindex = 3
+        if ( MiddleMan.liveSync === "Sync" ) {
+            pageHelper.selectedTabIndex = 1
         }
-        else {
 
-        }
 
 //        themeroot.show();
 //        width = (Device.productType === "windows" || Device.productType === "osx") ?

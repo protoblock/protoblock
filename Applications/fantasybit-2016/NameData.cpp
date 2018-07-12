@@ -484,8 +484,9 @@ void FantasyNameData::OnWeekOver(int in) {
     for (it->SeekToFirst(); it->Valid(); it->Next())
         projstore->Delete(write_sync, it->key());
 
-    for ( auto fnb : Commissioner::GetFantasyNames() )
-        fnb->setBlockNump(0,0);
+    if ( amlive )
+        for ( auto fnb : Commissioner::GetFantasyNames() )
+            fnb->setBlockNump(0,0);
 
     delete it;
     qDebug() << " clearProjections ";
