@@ -45,12 +45,12 @@ void Node::init() {
 #endif
 
 #ifndef NO_REMOVEALL_FORK1
-    QFileInfo check_file( (GET_ROOT_DIR() + "postfork1.1").data ());
+    QFileInfo check_file( (GET_ROOT_DIR() + "postfork1.2").data ());
     if (!check_file.exists() ) {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "postfork1.1").data () );
+        QFile file( (GET_ROOT_DIR() + "postfork1.2").data () );
         file.open(QIODevice::WriteOnly);
     }
 #endif
