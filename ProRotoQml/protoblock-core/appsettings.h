@@ -135,7 +135,7 @@ private:
 #ifndef PRODFOOTBALL
                 pRet.append ("/Library/Application Support/Protoblock-stage/");
 #else
-                pRet.append ("/Library/Application Support/Protoblock/");
+                pRet.append ("/Library/Application Support/ProtoBlock2016/");
 #endif
         #ifdef CUSTOM_TESTING_PATH
                 pRet.append(dirName).append ("/");
@@ -156,7 +156,7 @@ private:
 #ifndef PRODFOOTBALL
             pRet.append ("/Library/Application Support/Protoblock-stage/");
 #else
-            pRet.append ("/Library/Application Support/Protoblock/");
+            pRet.append ("/Library/Application Support/ProtoBlock2016/");
 #endif
 
             return pRet.append (fileName);
