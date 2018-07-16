@@ -907,6 +907,7 @@ void BlockProcessor::process(const DataTransition &indt) {
                 OnSeasonEnd(mGlobalState.season());
                 mGlobalState.set_state(GlobalState_State_OFFSEASON);
                 mGlobalState.set_week(21);
+                mFutContract.set_season(2017);
                 mData.OnGlobalState(mGlobalState);
             }
             else {

@@ -454,6 +454,7 @@ void NFLStateData::closeAll() {
     playerstore.reset();
     staticstore.reset();
     statusstore.reset();
+    statsstore.reset();
 }
 
 GameInfo NFLStateData::GetGameInfo(string gameid) {

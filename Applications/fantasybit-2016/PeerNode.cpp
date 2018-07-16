@@ -165,9 +165,12 @@ void Node::init() {
             }
             else {
                 current_hight = current_boot.blocknum();
-                Block sb;
-                leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
-                blockchain->Put(write_sync, value, sb.SerializeAsString());
+                auto sbgood = getLocalBlock(current_hight);
+                if ( !sbgood || current_boot.previd() != FantasyAgent::BlockHash(*sbgood) ) {
+                    Block sb;
+                    leveldb::Slice value((char*)&current_hight, sizeof(int32_t));
+                    blockchain->Put(write_sync, value, sb.SerializeAsString());
+                }
                 current_hight = getLastLocalBlockNum();
 
                 pb::remove_all(Platform::instance()->getRootDir() + "index/");
