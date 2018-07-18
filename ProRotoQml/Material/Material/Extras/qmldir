@@ -1,0 +1,7 @@
+module Material.Extras
+
+AutomaticGrid 1.0 AutomaticGrid.qml
+CircleImage 1.0 CircleImage.qml
+CircleMask 1.0 CircleMask.qml
+ColumnFlow 1.0 ColumnFlow.qml
+Image 1.0 Image.qml

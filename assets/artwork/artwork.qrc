@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>adrianPeterson.jpg</file>
+        <file>football.jpg</file>
+        <file>Larry-Fitzgerald.png</file>
+        <file>report_problem.png</file>
+        <file>tom-Brady.png</file>
+    </qresource>
+</RCC>

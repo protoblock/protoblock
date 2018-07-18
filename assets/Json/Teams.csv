@@ -1,0 +1,33 @@
+Key,TeamID,PlayerID,City,Name,Conference,Division,FullName,StadiumID,ByeWeek,AverageDraftPosition,AverageDraftPositionPPR,HeadCoach,OffensiveCoordinator,DefensiveCoordinator,SpecialTeamsCoach,OffensiveScheme,DefensiveScheme,UpcomingSalary,UpcomingOpponent,UpcomingOpponentRank,UpcomingOpponentPositionRank
+ARI,1,1,Arizona,Cardinals,NFC,West,Arizona Cardinals,29,9,121.8,129,Bruce Arians,James Bettcher,Harold Goodwin,Amos Jones,2TE,3-4,4700,NE,3,3
+ATL,2,2,Atlanta,Falcons,NFC,South,Atlanta Falcons,25,11,,,Dan Quinn,Richard Smith,Kyle Shanahan,Keith Armstrong,3WR,4-3,4200,TB,17,17
+BAL,3,36,Baltimore,Ravens,AFC,North,Baltimore Ravens,7,8,212,,John Harbaugh,Dean Pees,Marc Trestman,Jerry Rosburg,2TE,3-4,4000,BUF,11,11
+BUF,4,37,Buffalo,Bills,AFC,East,Buffalo Bills,1,10,197.1,185.5,Rex Ryan,Dennis Thurman,Greg Roman,Danny Crossman,3WR,4-3,4500,BAL,23,23
+CAR,5,5,Carolina,Panthers,NFC,South,Carolina Panthers,26,7,128.5,126.8,Ron Rivera,Sean McDermott,Mike Shula,Bruce DeHaven,PRO,4-3,5200,DEN,25,25
+CHI,6,38,Chicago,Bears,NFC,North,Chicago Bears,20,9,221.2,,John Fox,Vic Fangio,Dowell Loggains,Jeff Rodgers,3WR,3-4,4500,HOU,15,15
+CIN,7,7,Cincinnati,Bengals,AFC,North,Cincinnati Bengals,5,9,172.3,164.2,Marvin Lewis,Paul Guenther,Ken Zampese,Darrin Simmons,2TE,4-3,5000,NYJ,13,13
+CLE,8,8,Cleveland,Browns,AFC,North,Cleveland Browns,6,13,,,Hue Jackson,Ray Horton,Pep Hamilton,Chris Tabor,3WR,3-4,4000,PHI,22,22
+DAL,9,48,Dallas,Cowboys,NFC,East,Dallas Cowboys,17,7,199.7,,Jason Garrett,Rod Marinelli,Scott Linehan,Rich Bisaccia,2TE,4-3,4300,NYG,8,8
+DEN,10,49,Denver,Broncos,AFC,West,Denver Broncos,13,11,115.4,117.2,Gary Kubiak,Wade Phillips,Rick Dennison,Joe DeCamillis,3WR,3-4,5200,CAR,2,2
+DET,11,11,Detroit,Lions,NFC,North,Detroit Lions,21,10,204.8,,Jim Caldwell,Teryl Austin,Jim Bob Cooter,John Bonamego,2TE,4-3,4600,IND,26,26
+GB,12,12,Green Bay,Packers,NFC,North,Green Bay Packers,22,4,213.6,214.9,Mike McCarthy,Dom Capers,Edgar Bennett,Ron Zook,3WR,3-4,4500,JAX,29,29
+HOU,13,13,Houston,Texans,AFC,South,Houston Texans,11,9,137.3,144.1,Bill O'Brien,Romeo Crennel,George Godsey,Larry Izzo,3WR,3-4,4800,CHI,24,24
+IND,14,14,Indianapolis,Colts,AFC,South,Indianapolis Colts,9,10,,,Chuck Pagano,Ted Monachino,Rob Chudzinski,Tom McMahon,3WR,3-4,4200,DET,14,14
+JAX,15,52,Jacksonville,Jaguars,AFC,South,Jacksonville Jaguars,10,5,210.1,212.3,Gus Bradley,Todd Wash,Greg Olson,Mike Mallory,2TE,4-3,4200,GB,16,16
+KC,16,55,Kansas City,Chiefs,AFC,West,Kansas City Chiefs,15,5,133.2,148.5,Andy Reid,Bob Sutton,Brad Childress & Matt Nagy,Dave Toub,PRO,3-4,5100,SD,27,27
+LA,32,32,Los Angeles,Rams,NFC,West,Los Angeles Rams,38,8,151.1,153,Jeff Fisher,Gregg Williams,Rob Boras,John Fassel,2TE,4-3,4600,SF,28,28
+MIA,19,64,Miami,Dolphins,AFC,East,Miami Dolphins,2,8,212.1,210.1,Adam Gase,Vance Joseph,Clyde Christensen,Darren Rizzi,3WR,4-3,4200,SEA,11,11
+MIN,20,67,Minnesota,Vikings,NFC,North,Minnesota Vikings,36,6,158.9,165.3,Mike Zimmer,George Edwards,Norv Turner,Mike Priefer,3WR,4-3,4500,TEN,32,32
+NE,21,21,New England,Patriots,AFC,East,New England Patriots,4,9,154.8,178.9,Bill Belichick,Matt Patricia,Josh McDaniels,Joe Judge,3WR,4-3,4800,ARI,1,1
+NO,22,69,New Orleans,Saints,NFC,South,New Orleans Saints,27,5,,,Sean Payton,Dennis Allen,Pete Carmichael,Greg McMahon,3WR,4-3,4100,OAK,18,18
+NYG,23,75,New York,Giants,NFC,East,New York Giants,3,8,217.8,211,Ben  McAdoo,Steve Spagnulo,Mike Sullivan,Tom Quinn,3WR,4-3,4400,DAL,30,30
+NYJ,24,82,New York,Jets,AFC,East,New York Jets,3,11,155.3,159,Todd Bowles,Kacy Rodgers,Chan Gailey,Brant Boyer,3WR,3-4,4700,CIN,4,4
+OAK,25,83,Oakland,Raiders,AFC,West,Oakland Raiders,16,10,188.9,209.8,Jack Del Rio,Ken Norton Jr,Bill Musgrave,Brad Seely,PRO,4-3,4200,NO,5,5
+PHI,26,26,Philadelphia,Eagles,NFC,East,Philadelphia Eagles,18,4,216.5,219.4,Doug Pederson,Jim Schwartz,Frank Reich,Dave Fipp,3WR,4-3,4600,CLE,31,31
+PIT,28,28,Pittsburgh,Steelers,AFC,North,Pittsburgh Steelers,8,8,212.3,214.1,Mike Tomlin,Keith Butler,Todd Haley,Danny Smith,2TE,3-4,4900,WAS,10,10
+SD,29,84,San Diego,Chargers,AFC,West,San Diego Chargers,14,11,,,Mike McCoy,John Pagano,Ken Whisenhunt,Craig Aukerman,3WR,3-4,4200,KC,7,7
+SEA,30,90,Seattle,Seahawks,NFC,West,Seattle Seahawks,31,5,127.7,127.9,Pete Carroll,Kris Richard,Darrell Bevell,Brian Schneider,2TE,4-3,5200,MIA,18,18
+SF,31,93,San Francisco,49ers,NFC,West,San Francisco 49ers,37,8,,,Chip Kelly,Jim O'Neil,Curtis Modkins,Derius Swinton,3WR,3-4,4400,LA,20,20
+TB,33,95,Tampa Bay,Buccaneers,NFC,South,Tampa Bay Buccaneers,24,6,,,Dirk Koetter,Mike Smith,Todd Monken,Nate Kaczor,2TE,4-3,4200,ATL,21,21
+TEN,34,34,Tennessee,Titans,AFC,South,Tennessee Titans,12,13,,,Mike Mularkey,Dick LeBeau,Terry Robiskie,Bobby April,2TE,3-4,4100,MIN,9,9
+WAS,35,97,Washington,Redskins,NFC,East,Washington Redskins,19,9,211.2,,Jay Gruden,Joe Barry,Sean McVay,Ben Kotwica,3WR,3-4,4700,PIT,6,6

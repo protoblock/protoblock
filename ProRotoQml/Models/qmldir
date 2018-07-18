@@ -1,0 +1,3 @@
+module ProRotoQml.Models
+plugin ProRotoQml.Models
+classname ProRotoQmlModelsPlugin

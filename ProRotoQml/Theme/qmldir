@@ -1,0 +1,3 @@
+module ProRotoQml.Theme
+plugin ProRotoQml.Theme
+classname ProRotoQmlThemePlugin

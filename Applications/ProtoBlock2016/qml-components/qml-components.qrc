@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>CardWithBanner.qml</file>
+        <file>Banner.qml</file>
+        <file>BaserModel.qml</file>
+        <file>BoxText.qml</file>
+        <file>LeftMenu.qml</file>
+        <file>MaterialComboBox.qml</file>
+        <file>PageHelper.qml</file>
+        <file>Splash.qml</file>
+        <file>LoginBox.qml</file>
+        <file>CardWithContent.qml</file>
+        <file>MarketDepthCard.qml</file>
+        <file>MarketDepthCardAsk.qml</file>
+        <file>OMSCard.qml</file>
+        <file>BuyTrading.qml</file>
+        <file>ScheduleView.qml</file>
+        <file>PlayerProjTable.qml</file>
+        <file>LeaderProjView.qml</file>
+        <file>LeaderAwardView.qml</file>
+        <file>PlayerResultTable.qml</file>
+        <file>ScheduleViewPrev.qml</file>
+        <file>ScheduleViewNext.qml</file>
+        <file>ROWTradingTable.qml</file>
+        <file>WkTradingTable.qml</file>
+        <file>MarketDepthTable.qml</file>
+        <file>TradingContextBanner.qml</file>
+        <file>FantasyNameContextBanner.qml</file>
+        <file>ListSymbolSearch.qml</file>
+        <file>TradingComp.qml</file>
+    </qresource>
+</RCC>

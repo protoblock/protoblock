@@ -1,0 +1,12 @@
+#ifndef REMOTE_LINUX_EXPORT_H
+#define REMOTE_LINUX_EXPORT_H
+
+#include <qglobal.h>
+
+#if defined(REMOTELINUX_LIBRARY)
+#  define REMOTELINUX_EXPORT Q_DECL_EXPORT
+#else
+#  define REMOTELINUX_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // REMOTE_LINUX_EXPORT_H

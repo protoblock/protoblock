@@ -1,0 +1,38 @@
+StadiumID,Name,City,State,Country,Capacity,PlayingSurface,GeoLat,GeoLong
+1,Ralph Wilson Stadium,Orchard Park,NY,USA,73079,Artificial,42.773758,-78.786837
+2,Sun Life Stadium,Miami Gardens,FL,USA,76100,Grass,25.95774,-80.238781
+3,MetLife Stadium,East Rutherford,NJ,USA,82500,Artificial,40.813611,-74.074444
+4,Gillette Stadium,Foxborough,MA,USA,68756,Grass,42.090866,-71.264244
+5,Paul Brown Stadium,Cincinnati,OH,USA,65535,Artificial,39.095309,-84.516003
+6,FirstEnergy Stadium,Cleveland,OH,USA,71516,Artificial,41.505885,-81.699458
+7,M&T Bank Stadium,Baltimore,MD,USA,71008,Artificial,39.277985,-76.622788
+8,Heinz Field,Pittsburgh,PA,USA,65050,Grass,40.446751,-80.015707
+9,Lucas Oil Stadium,Indianapolis,IN,USA,67000,Dome,39.760056,-86.163806
+10,EverBank Field,Jacksonville,FL,USA,67246,Artificial,30.323813,-81.637199
+11,Reliant Stadium,Houston,TX,USA,71054,Dome,29.684543,-95.410932
+12,LP Field,Nashville,TN,USA,6914,Grass,36.166441,-86.771253
+13,Sports Authority Field at Mile High,Denver,CO,USA,76125,Grass,39.743936,-105.020097
+14,Qualcomm Stadium,San Diego,CA,USA,70561,Grass,32.783188,-117.119439
+15,Arrowhead Stadium,Kansas City,MO,USA,76416,Grass,39.049002,-94.483864
+16,O.co Coliseum,Oakland,CA,USA,53200,Grass,37.751613,-122.200509
+17,AT&T Stadium,Arlington,TX,USA,80000,Dome,32.747778,-97.092778
+18,Lincoln Financial Field,Philadelphia,PA,USA,68532,Grass,39.900771,-75.167469
+19,FedEx Field,Landover,MD,USA,85000,Grass,38.907652,-76.864479
+20,Soldier Field,Chicago,IL,USA,61500,Grass,41.86232,-87.616699
+21,Ford Field,Detroit,MI,USA,65000,Dome,42.340021,-83.045777
+22,Lambeau Field,Green Bay,WI,USA,80750,Grass,44.501389,-88.061944
+23,Mall of America Field,Minneapolis,MN,US,64111,Dome,44.976,-93.225
+24,Raymond James Stadium,Tampa Bay,FL,USA,65890,Grass,27.975967,-82.50335
+25,Georgia Dome,Atlanta,GA,USA,74228,Dome,33.757614,-84.400972
+26,Bank of America Stadium,Charlotte,NC,USA,73778,Grass,35.225808,-80.852861
+27,Mercedes-Benz Superdome,New Orleans,LA,USA,73208,Dome,29.950931,-90.081364
+28,Candlestick Park,San Francisco,CA,US,70207,Grass,37.404108,-121.970274
+29,University of Phoenix Stadium,Glendale,AZ,USA,63400,Dome,33.527558,-112.263036
+30,Edward Jones Dome,St. Louis,MO,USA,66000,Dome,38.632975,-90.188547
+31,CenturyLink Field,Seattle,WA,USA,67000,Artificial,47.595153,-122.331625
+33,Wembley Stadium,London,,UK,86000,Dome,39.049002,-94.483864
+34,Rogers Centre,Toronto,,CA,86000,Dome,,
+35,Fawcett Stadium,Canton,OH,USA,22375,Artificial,,
+36,TCF Bank Stadium,Minneapolis,MN,USA,50805,,44.976,-93.225
+37,Levi's Stadium,Santa Clara,CA,USA,68500,,37.404108,-121.970274
+38,Los Angeles Memorial Coliseum,Los Angeles,CA,USA,93607,Grass,34.014167,-118.287778

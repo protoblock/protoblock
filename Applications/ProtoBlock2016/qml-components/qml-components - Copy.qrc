@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/">
+        <file>CardWithBanner.qml</file>
+        <file>Banner.qml</file>
+        <file>BaserModel.qml</file>
+        <file>BoxText.qml</file>
+        <file>LeftMenu.qml</file>
+        <file>LocalJsonCaller.qml</file>
+        <file>MaterialComboBox.qml</file>
+        <file>PageHelper.qml</file>
+        <file>PDialog.qml</file>
+        <file>PlayersCard.qml</file>
+        <file>RoundImage.qml</file>
+        <file>Splash.qml</file>
+        <file>TradingCard.qml</file>
+        <file>MaterialTopBar.qml</file>
+        <file>LoginBox.qml</file>
+        <file>LeftMenu.qml</file>
+        <file>Banner.qml</file>
+        <file>LoginBox.qml</file>
+        <file>PageHelper.qml</file>
+        <file>BuyTrading.qml</file>
+        <file>CardWithContent.qml</file>
+        <file>Coverflow.qml</file>
+        <file>MarketDepthCard.qml</file>
+        <file>MaterialListPlayer.qml</file>
+        <file>MaterialTable.qml</file>
+        <file>MaterialTextField.qml</file>
+        <file>CardWithBanner.qml</file>
+        <file>BaserModel.qml</file>
+        <file>BoxText.qml</file>
+        <file>LocalJsonCaller.qml</file>
+        <file>MaterialComboBox.qml</file>
+        <file>MaterialTopBar.qml</file>
+        <file>PDialog.qml</file>
+        <file>PlayersCard.qml</file>
+        <file>RoundImage.qml</file>
+        <file>Splash.qml</file>
+        <file>TradingCard.qml</file>
+    </qresource>
+</RCC>

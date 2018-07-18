@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ProtoChat.qml</file>
+        <file>BufferListView.qml</file>
+        <file>TextEntry.qml</file>
+        <file>UserListView.qml</file>
+        <file>MessageFormatter.qml</file>
+        <file>TextBrowser.qml</file>
+        <file>TopicLabel.qml</file>
+        <file>ChatPage.qml</file>
+    </qresource>
+</RCC>
