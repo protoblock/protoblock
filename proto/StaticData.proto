@@ -1,0 +1,73 @@
+package fantasybit;
+import "NameData.proto";
+
+message PlayerBase {
+    optional string first=30;
+    optional string last=40;
+    optional string position=50;
+}
+
+message GameInfo {
+    optional string id = 10;
+    optional string home = 20;
+    optional string away = 30;
+    optional uint32 time = 40;
+}
+
+message WeeklySchedule {
+    repeated GameInfo games = 10;
+    repeated string byes = 20;
+}
+
+message Kstats {
+    optional int32 pa = 10;
+    repeated int32 fg = 20;
+}
+
+message Dstats {
+    optional int32 twopt = 100;
+    optional int32 onept = 110;
+    optional int32 deftd = 120;
+    optional int32 sfty = 130;
+    optional int32 turnovers = 140;
+    optional int32 sacks = 150;
+    optional int32 ptsa = 160;
+}
+
+message Ostats {
+    optional int32 passyds = 10;
+    optional int32 passtd = 20;
+    optional int32 rushyds = 30;
+    optional int32 rushtd = 40;
+    optional int32 recyds = 50;
+    optional int32 rectd = 60;
+    optional int32 rec = 70;
+    optional int32 pint = 80;
+    optional int32 fumble = 90;
+    optional int32 twopt = 100;
+    optional int32 onept = 110;
+}
+
+message Stats {
+    optional Ostats ostats = 10;
+    optional Dstats dstats = 20;
+    optional Kstats kstats = 30;
+}
+
+message PlayerResult {
+    optional string playerid = 20;
+    optional float result = 40;
+    optional Stats stats = 50;
+    repeated FantasyBitAward fantaybitaward = 60;
+    repeated FantasyBitPnl fantasybitpnl = 70;
+}
+
+message GameResult {
+    optional string  gameid = 1;
+    repeated PlayerResult home_result = 10;
+    repeated PlayerResult away_result = 20;
+    optional uint32 kickofftime = 30;
+}
+
+
+

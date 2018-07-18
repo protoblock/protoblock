@@ -1,0 +1,53 @@
+package fantasybit;
+
+message PlayerStatus {
+    enum Status {
+        ACTIVE = 0;
+        INACTIVE = 1;
+        OTHER = 3;
+        FA = 4;
+    }
+
+    optional string teamid = 20;
+    optional Status status = 30;
+}
+
+enum PlayerGameStatus {
+    OUT = 0;
+    IN = 1;
+    NA = 2;
+}
+
+
+message GameStatus {
+    enum Status {
+        SCHEDULED = 0;
+        PREGAME = 2;
+        INGAME = 3;
+        POSTGAME = 5;
+        CLOSED = 4;
+    }
+
+    optional Status status = 10;
+    optional uint32 datetime  = 20;
+}
+
+message TeamDepth {
+    repeated string qb = 10;
+    repeated string rb = 20;
+    repeated string wr = 30;
+    repeated string te = 40;
+    repeated string k = 50;
+}
+
+
+message GlobalState {
+    enum State {
+        OFFSEASON = 10;
+        INSEASON = 30;
+    }
+
+    optional State state =1;
+    optional uint32 season =10;
+    optional uint32 week = 20;
+}

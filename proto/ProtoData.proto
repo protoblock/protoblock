@@ -1,0 +1,413 @@
+// protoc --proto_path=src --cpp_out= ProtoData.proto 
+
+package fantasybit;
+import "StaticData.proto";
+import "StatusData.proto";
+import "ExData.proto";
+enum MyNameStatus 
+{
+    none=1;
+    notavil=2;
+    requested=5;
+    transaction_sent=15;
+    confirmed=20;
+}
+
+message MyFantasyName
+{
+    optional string name=1;
+    optional MyNameStatus status=2;
+}
+
+message FantasyPlayer {
+	optional string name = 10;
+	optional uint64 bits = 20;
+} 
+
+message Secret
+{
+    required string private_key = 1;
+    optional MyFantasyName myfantasyname=2;
+    optional NameTrans nametran = 10;
+} 	
+
+message Secret2
+{
+    optional string private_key = 1;
+    optional string fantasy_name = 20;
+    optional string public_key = 30;
+}
+
+message Secret3
+{
+    optional string private_key = 1;
+    optional string mnemonic_key = 3;
+    optional string fantasy_name = 20;
+    optional string public_key = 30;
+}
+
+
+message OutData {
+	enum Type { MYFANTASYNAME = 1; SNAPSHOT = 2; HEARTBEAT=3; }
+	required Type type = 1;
+
+	optional MyFantasyName myfantasyname = 2;	
+  	extensions 100 to max;
+}
+
+// Elsewhere...
+//extend OutData {
+//	optional int32 test = 100;	
+//}
+
+message InData {
+	enum Type { MINENAME = 1; QUIT=2; HEARTBEAT=3; CONNECT=4; MAKE_BLOCK=5; NEWNAME=6; PROJ=7;DATA=8;}
+	required Type type = 1;
+	
+	optional string data = 2;	
+	optional string data2 = 3;	
+	optional int32 num = 4;
+        optional DataTransition data_trans=5;
+  	extensions 100 to max;
+}
+
+// Elsewhere...
+//extend InData {
+//	optional int32 test = 100;	
+//}
+
+
+message NameProof 
+{
+        enum Type { POW=1; TWEET=2; ORACLE=3; MASTER=4; }
+	optional Type type = 1;
+	extensions 200 to max;
+}
+
+message TweetProof
+{ 
+	extend NameProof {
+		optional TweetProof tweet_proof = 201;
+	}
+
+	optional string tweet = 10;
+}
+
+message MasterProof {
+        extend NameProof {
+                optional MasterProof  master_proof = 401;
+        }
+
+        optional string season = 10;
+        optional int32 week = 20;
+        optional int32 timestamp = 21;
+        optional SignedTransaction new_oracle_name =66;
+}
+
+enum TransType {
+	NAME = 0;
+	PROJECTION = 1;
+	RESULT = 2;
+	DATA = 3;	
+        PROJECTION_BLOCK = 4;
+        MASTER_NAME = 5;
+        TIME = 6;
+        STAMPED = 7;
+        EXCHANGE = 8;
+        EXCHANGE_BLOCK = 9;
+}
+
+message Transaction {
+	optional int32 version = 1;
+	optional TransType type = 2;
+	
+	extensions 100 to max;
+}
+	
+message NameTrans {
+	extend Transaction {
+		optional NameTrans name_trans = 200;
+	}
+	
+	optional string fantasy_name = 10;
+	optional bytes public_key=20;
+	optional NameProof proof = 30;
+
+}
+
+message SignedTransaction {
+	optional Transaction trans = 10;
+	optional bytes id = 20;
+	optional bytes sig = 30;	
+	optional string fantasy_name = 40;       
+}
+
+//message BlockHeader {
+//	optional int32 num = 10;
+//	optional bytes prev_id = 20; 
+//}
+
+message BlockHeader {
+        enum Type { NORMAL=1; DATA=2; }
+
+	optional int32 version = 1;
+	optional int32 num = 10;
+	optional bytes prev_id = 20; 		
+	optional int32 timestamp = 21;
+	optional bytes generator_pk=30;
+	optional bytes generating_sig=40; //hash(prev(generating_sig) + generator_pk)
+	optional int32 basetarget=50;
+	optional Type blocktype = 60;
+	optional bytes transaction_id = 70;
+}
+
+message SignedBlockHeader {
+	optional BlockHeader head = 10;
+	optional string sig = 30;	
+}
+
+message Block {
+	optional SignedBlockHeader signedhead = 10;
+	repeated SignedTransaction signed_transactions = 20;
+
+
+	extensions 1000 to max;
+}
+
+message NodeRequest
+{
+	enum Type { HANDSHAKE=1; BLOCK_REQUEST=2; HIGHT_REQUEST=3; NAT_TEST=4;}
+	optional Type type = 10;
+	optional string myip=20;
+	optional int32 num=30;
+	optional string myhost=40;
+}
+
+message NodeReply
+{
+	optional int32 hight=10;
+	repeated string ips=20;
+}
+
+////////////////////////////////////////////////////////////
+// FantasyPlayerPoints used for projections and results   //
+// does not contain team                                  //
+// player + week is enough                                //
+////////////////////////////////////////////////////////////
+message FantasyPlayerPoints {
+	optional uint32 season = 10;	
+	optional uint32 week = 20;
+	optional string playerid = 30;
+        optional int32 points = 40;
+        optional float result = 50;
+}
+
+////////////////////////////////////////////////////////////
+// ProjectionTrans used to make projections 
+////////////////////////////////////////////////////////////
+message ProjectionTrans {
+    extend Transaction {
+        optional ProjectionTrans proj_trans = 201;
+    }
+
+    optional uint32 season = 10;
+    optional uint32 week = 20;
+    optional string playerid = 30;
+    optional int32 points = 40;
+}
+
+message PlayerPoints {
+    optional string playerid = 30;
+    optional int32 points = 40;
+}
+
+message ProjectionTransBlock {
+    extend Transaction {
+        optional ProjectionTransBlock proj_trans_block = 211;
+    }
+
+    optional uint32 season = 10;
+    optional uint32 week = 20;
+    repeated PlayerPoints player_points = 30;
+}
+
+
+
+message Data {
+    enum Type {
+        SCHEDULE = 0;
+        PLAYER = 1;
+        GAME = 2;
+        RESULT = 3;
+        MESSAGE = 4;
+    }
+
+    optional int32 version = 10;
+    optional Type type = 20;
+
+    extensions 100 to max;
+}
+
+
+message PlayerData {
+    extend Data {
+        optional PlayerData player_data = 101;
+    }
+
+    optional string playerid = 10;
+    optional PlayerBase player_base = 20;
+    optional PlayerStatus player_status = 30;
+    optional PlayerGameStatus player_game_status = 40;
+}
+
+message GameData {
+    extend Data {
+        optional GameData game_data = 111;
+    }
+
+    optional string gameid=10;
+    optional GameStatus status=20;
+}
+
+message ResultData {
+    extend Data {
+        optional ResultData result_data = 202;
+    }
+
+    optional GameResult game_result = 10;
+}
+
+message ScheduleData {
+    extend Data {
+        optional ScheduleData schedule_data = 302;
+    }
+
+    optional int32 week = 1;
+    optional WeeklySchedule weekly = 10;
+}
+
+
+message DataTransition {
+    extend Transaction {
+        optional DataTransition data_trans = 203;
+    }
+
+    enum Type {
+        SEASONSTART=2; // before week1 - week1 projection can start
+        SEASONEND=3; //after last week of season
+        HEARTBEAT=5; //anytime
+        GAMESTART=6; //list of teamids to cut off projections for week
+        WEEKOVER=7; //clear all projections
+        TRADESESSIONSTART=8;
+        TRADESESSIONCLOSEANDPREOPEN=9;
+    }
+
+    optional Type type =1;
+    optional uint32 season =10;
+    optional uint32 week = 20;
+    repeated GameData gamedata = 30;
+    repeated Data data = 40;
+}
+
+message TeamState {
+	enum State { 
+		PREGAME = 1;
+		INGAME = 2;
+	}
+
+	optional State state =1;
+	optional uint32 week =10;
+	optional string teamid = 20;
+}
+
+message DeltaData {
+	enum Type { SNAPSHOT = 2; HEARTBEAT=3; }
+	optional Type type=1;
+ 	repeated MyFantasyName myfantasyname = 2;
+	optional GlobalState globalstate = 10;
+  	repeated TeamState teamstates = 20;
+  	repeated Data datas = 30;
+  	repeated FantasyPlayer players = 40;
+
+  	extensions 1000 to max;
+}
+
+message MessageData {
+    extend Data {
+        optional MessageData message_data = 404;
+    }
+
+    optional string msg = 10;
+    optional int32 gt  = 20;
+    optional int32 lt = 30;
+}
+
+
+message StampedTrans {
+    extend Transaction {
+        optional StampedTrans stamped_trans = 300;
+    }
+
+    optional uint64 timestamp = 10;
+    optional int32 seqnum = 20;
+    optional int32 prevseq  = 21;
+    optional SignedTransaction signed_orig = 30;
+}
+
+message ExchangeOrder {
+    extend Transaction {
+        optional ExchangeOrder exchange_order = 310;
+    }
+
+    enum Type { NEW=1; CANCEL=2; REPLACE=3; }
+
+    optional Type type = 10;
+    optional string playerid = 40;
+    optional OrderCore core = 50;
+    optional int32 cancel_oref = 100;
+
+    extensions 500 to max;
+}
+
+message OrderUnique {
+    optional string public_key = 10;
+    optional uint32 season =20;
+    optional uint32 week = 30;
+    optional bool buyside = 40;
+    optional string playerid = 50;
+    optional int32 price = 70;
+}
+
+message OrderDeets {
+    optional bytes oid = 10;
+    optional OrderUnique order = 20;
+    optional int32 size  = 30;
+}
+
+message InsideUnique {
+    optional string playerid = 50;
+    optional string public_key = 10;
+    optional bool buyside = 40;
+    optional int32 price = 70;
+
+    optional bytes oid = 11;
+    optional OrderUnique order = 20;
+    optional int32 size  = 30;
+}
+
+
+message TimeTransition {
+    extend Transaction {
+        optional TimeTransition time_trans = 303;
+    }
+
+    enum Type {
+        TRADEOPEN=2; // trading session opened
+        TRADECLOSE=3; // trading session closed
+    }
+
+    optional Type type =1;
+    optional uint32 season =10;
+    optional uint32 week = 20;
+}
+
