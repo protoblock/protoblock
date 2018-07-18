@@ -6,4 +6,3 @@ Docs
 [Proof-of-Skill Consensus](pos.md)
 
 [Accounts](accounts.md)
-ff
