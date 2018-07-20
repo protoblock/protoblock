@@ -5,84 +5,76 @@
 //  Created by Jay Berg on 4/8/14.
 //
 //
-#include "globals.h"
-#include <iostream>
-#include "RunGuard.h"
-#include "mainwindow.h"
+#include <QCoreApplication>
 #include "core.h"
-#include <QDesktopWidget>
+#include "PeerNode.h"
+#include "FantasyAgent.h"
 
-#ifdef DATAAGENTGUI
-    #include "testingwindow.h"
-#endif
+using namespace fantasybit;
 
-#include <QMetaType>
-
-//using namespace fantasybit;
-
-//Q_DECLARE_METATYPE(fantasybit::GlobalState)
-//Q_DECLARE_METATYPE(fantasybit::MyFantasyName)
-//Q_DECLARE_METATYPE(fantasybit::FantasyBitProj)
-//Q_DECLARE_METATYPE(vector<fantasybit::MyFantasyName>)
-
-#include "playerloader.h"
-
-int domain(int argc, char *argv[]){0
-
-    RunGuard guard( "tradingfootballprodapp" );
-        if ( !guard.tryToRun() )
-            return 0;
-
-    QApplication a(argc, argv);
-
-
-    //MikeClayLoader loader;
-    //loader.loadProjFromLink(14);
-    //Commissioner::makeGenesisBlock();
-    //return 0;
-    /*
-    SqlStuff sql;
-    int i = sql.getpidT("cfc93f5e-105e-4a5e-88d3-f4279893cfa8");
-    i = sql.maxPid();
-    */
-
-    //ExchangeData ed;
-    //ed.init();
-    //ExchangeOrder eo;
-    //eo.
-    //ed.OnNewOrderMsg();
-    //return 0;
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
 
     Core::instance()->bootstrap();
-    MainWindow form;
 
-    if ( false ){
+    Core::instance()->guiIsAwake();
+    if ( false ) {
     Node node;
+
     node.init();
-    node.Cleaner();
-    return 0;
+    bool ret = node.Sync();
+
+    fantasybit::FantasyAgent agent{};
+    fantasybit::NFLStateData data;
+    fantasybit::FantasyNameData namedata;
+
+    fantasybit::ExchangeData exchangedata;
+
+    fantasybit::BlockProcessor processor(data,namedata, exchangedata);
+
+    int32_t last_block = processor.init();
+
+    auto gnum = node.getLastGlobalBlockNum();
+
+    while ( last_block < *gnum) {
+        int32_t next;
+        next = last_block+1;
+        auto b = fantasybit::Node::getLocalBlock(next);
+        if (!b) {
+            qWarning() << " !b";
+            break;
+            //        return false;
+        }
+        else {
+
+            int32_t last = processor.process(*b);
+            if ( last == -1 ) {
+                qDebug() << " last = -1";
+                break;
+
+                //emit OnError();
+    //            timer->start(5000);
+    //            return false;
+            }
+
+
+            else {
+    //            std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+                if ( last == last_block+1)
+                    last_block = last;
+                else {
+                    qDebug() << " shoud bever be here! ? reorg? fork? ";
+                    break;
+                }
+            }
+        }
+    }
     }
 
-   // SqlStuff sql("tfprod","max");
-   // int mySeq = sql.maxPid();
-
-  //SqlStuff sql("satoshifantasy","tradesxx");
-  //int mySeq = sql.lastSeq();
-
-
-#ifdef DATAAGENTGUI
-    TestingWindow dform;
-#endif
-
-    QRect screenGeometry = QApplication::desktop()->screenGeometry();
-    int x = (screenGeometry.width()-form.width()) / 2;
-    int y = (screenGeometry.height()-form.height()) / 2;
-    form.move(x, y);
-    form.show();
-
-#ifdef DATAAGENTGUI
-    dform.show();
-#endif
+    QThread::currentThread()->msleep(10000);
+    Core::resolveByName<MainLAPIWorker>("coreapi")->NFLState().seasonFreeze(2015);
+    Core::resolveByName<MainLAPIWorker>("coreapi")->NameData().seasonFreeze(2015);
 
     return a.exec();
 }
