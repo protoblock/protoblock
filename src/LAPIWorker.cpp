@@ -45,7 +45,7 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
 
     //data processing
-    //QObject::connect(this,SIGNAL(LiveData(bool)),&exchangedata,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(LiveData(bool)),&exchangedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
@@ -57,6 +57,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
 
     //data to data signals
     QObject::connect(&processor,SIGNAL(WeekStart(int)),this,SIGNAL(NewWeek(int)));
+    QObject::connect(&processor,SIGNAL(SeasonStart(int)),this,SIGNAL(NewSeason(int)));
+
 
     //QObject::connect(&data,SIGNAL(NewGameResult(string)),this,SIGNAL(GameOver(string)));
 
@@ -86,12 +88,29 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(&processor,SIGNAL(onControlMessage(QString)),
                      this,SIGNAL(onControlMessage(QString)));
 
+    QObject::connect(&namedata,SIGNAL(FantasyNameFound(string)),
+                     this,SLOT(OnFoundName(string)));
+
+    QObject::connect(&namedata,SIGNAL(NewFantasyName(fantasybit::FantasyNameBal)),
+                     this,SIGNAL(NewFantasyName(fantasybit::FantasyNameBal)));
+
+    QObject::connect(&namedata,SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)),
+                     this,SIGNAL(AnyFantasyNameBalance(fantasybit::FantasyNameBal)));
+
+    connect(&processor,&BlockProcessor::FinishedResults,this, &MainLAPIWorker::FinishedResults);
+
 }
 
 void MainLAPIWorker::GoLive() {
     amlive = true;
     numto = 0;
     intervalstart = 1000;
+
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    justwentlive = true;
+#endif
+
+    timer->stop();
     timer->start(intervalstart);
 
     qDebug() << "emit LiveData(true)";
@@ -100,29 +119,32 @@ void MainLAPIWorker::GoLive() {
     qDebug() << "emit LiveGui(data.GetGlobalState())" << data.GetGlobalState().DebugString();
     OnGetMyNames();
 
-
 }
 
 void MainLAPIWorker::startPoint(){
 
     qDebug("Main Core Thread started");
 
-    Core::instance()->waitForGui();
+//    Core::instance()->waitForGui();
 
 #ifndef NOSYNC
     auto h = myNodeWorker->preinit();
     emit Height(h);
     node.thread()->start();
+
+
+
 #endif
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         last_block = processor.init();
+        qDebug() << " startPoint last_block " << last_block;
 #ifdef NOSYNC
         Node node;
         node.init();
         numto = Node::getLastLocalBlockNum();
 #ifdef BLOCK_STEP
-        int gonum = 3500 ;
+        int gonum = numto ;
         numto = (gonum >= last_block) ? gonum : last_block;
 #endif
         emit Height(numto);
@@ -130,13 +152,15 @@ void MainLAPIWorker::startPoint(){
 #endif
 
         if ( last_block < 0 ) {
-        //emit OnError();
-            last_block = 0;
+            //emit OnError();
+            qDebug() << " lapi last_block < 0 ";
+            last_block = BlockRecorder::zeroblock;
         }
         emit BlockNum(last_block);
     }
 
     intervalstart = 5000;
+    timer->stop();
     timer->start(intervalstart);
 }
 
@@ -145,7 +169,7 @@ void MainLAPIWorker::ResetIndex() {
     processor.hardReset();
     last_block = processor.init();
     if ( last_block < 0 ) {
-        last_block = 0;
+        last_block = BlockRecorder::zeroblock;
     }
 }
 
@@ -156,31 +180,38 @@ void MainLAPIWorker::OnInSync(int32_t num) {
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         myamlive = (!amlive && num == last_block);
+        qDebug() << "myamlive" << myamlive << last_block;
     }
-    qDebug() << "myamlive" << myamlive;
 
     if ( myamlive )
         GoLive();
     else {
         numto = num;
         intervalstart = 2000;
-        emit ProcessNext();
+        if ( amlive )
+            emit ProcessNext();
     }
 }
 
 bool MainLAPIWorker::doProcessBlock() {
+    qDebug() << " doprocess";
     int32_t next;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         next = last_block+1;
+        if ( quitting ) {
+            qDebug() << " quiting doprocess";
+            QCoreApplication::exit();
+            return false;
+        }
     }
     auto b = fantasybit::Node::getLocalBlock(next);
     if (!b) {
-        qWarning() << " !b";
+        qWarning() << " !b" << next;
         return false;
     }
     if ( !Process(*b) ) {
-        qWarning() << " !Process";
+        qWarning() << "MainLAPIWorker::doProcessBlock nope !Process";
         return false;
     }
 
@@ -189,20 +220,25 @@ bool MainLAPIWorker::doProcessBlock() {
 
 #include <QAbstractEventDispatcher>
 void MainLAPIWorker::ProcessBlock() {
-
+    qDebug() << " ProcessBlock";
     int docount = 0;
     bool catchingup;
     do {
         if ( !doProcessBlock() ) return;
+        emit BlockNum(last_block);
         count = pcount = 0;
         {
             std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
             catchingup = !amlive && last_block < numto;
+            if ( quitting ) {
+                qDebug() << " quiting MainLAPIWorker::ProcessBlock()";
+                QCoreApplication::exit();
+                return;
+            }
         }
 
         if ( catchingup )
         {
-            emit BlockNum(last_block);
             if ( docount++ == 50 ) {
                 QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
                 docount = 0;
@@ -210,10 +246,12 @@ void MainLAPIWorker::ProcessBlock() {
         }
 
         else if ( !amlive ) {
+
             {
                 std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
                 amlive = true;
             }
+
             GoLive();
         }
 //        else if ( docount < numto) {
@@ -226,6 +264,7 @@ void MainLAPIWorker::ProcessBlock() {
         docount=0;
 #endif
 
+//    } while ( ++docount < 5);
     } while( catchingup );
 }
 
@@ -237,6 +276,7 @@ void MainLAPIWorker::OnSeenBlock(int32_t num) {
     }
     timer->start(intervalstart);
     count = bcount = 0;
+    emit Height(num);
 }
 
 void MainLAPIWorker::OnBlockError(int32_t last) {
@@ -247,34 +287,74 @@ void MainLAPIWorker::OnBlockError(int32_t last) {
     emit BlockError(last);
 }
 
+void MainLAPIWorker::Quit() {
+    qDebug() << "ml Quit ";
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
+        quitting = true;
+        timer->stop();
+        timer->setSingleShot(true);
+        qDebug() << "ml Quitting " << quitting;
+        if (amlive && numto == last_block)
+            QCoreApplication::exit();
+        timer->start(1);
+    }
+}
+
 void MainLAPIWorker::Timer() {
-    //qDebug() << " Timer ";
+//    qDebug() << " MainLAPIWorker::Timer() " << QDateTime::currentDateTime();
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    if ( justwentlive ) {
+        justwentlive = false;
+    }
+#endif
+
     bool numtogtlast;
     {
         std::lock_guard<std::recursive_mutex> lockg{ last_mutex };
         numtogtlast = (numto > last_block);
+        if ( quitting ) {
+            qDebug() << " Timer quiting";
+            QCoreApplication::exit();
+            return;
+        }
     }
     bcount++;
     pcount++;
     if ( !amlive ) {
-        emit ProcessNext();
+//        emit ProcessNext();
         if ( bcount > 10 && pcount < 2)
             emit GetNext();
         else if ( bcount < 3 && numto < std::numeric_limits<int32_t>::max())
             emit GetNext();
+
+        emit ProcessNext();
     }
     else if ( numtogtlast ) {
         emit ProcessNext();
         if ( bcount < 3)
             emit GetNext();
     }
+
     else {
+#ifdef NO_TIMEOUT
+        emit GetNext();
+        return;
+#else
         count++;
         emit GetNext();
         //emit ProcessNext();
-        int interval = count*intervalstart*2;
-        if ( interval < intervalmax && interval > 10)
-            timer->start(interval);
+        if ( count%10 == 0 ) {
+            int interval = count/10*intervalstart*2;
+    //        qInfo() << " timerr " << interval;
+            if ( interval < intervalmax && interval > 500) {
+                timer->start(interval);
+                qDebug() << " timeout " << interval;
+    //            if ( true )
+    //                emit GameStart("201600110");
+            }
+        }
+#endif
     }
 
 }
@@ -299,6 +379,12 @@ bool MainLAPIWorker::Process(fantasybit::Block &b) {
             last_block = last;
         else
             qDebug() << " shoud bever be here! ? reorg? fork? ";
+
+        if ( quitting ) {
+            qDebug() << "Process quiting";
+            QCoreApplication::exit();
+            return false;
+        }
     }
     return true;
 }
@@ -316,14 +402,15 @@ void MainLAPIWorker::OnNameBal(fantasybit::FantasyNameBal bal) {
 
 void MainLAPIWorker::OnGetMyNames() {
     vector<MyFantasyName> my;
-    myfantasynames = agent.getMyNamesStatus();
-    for(auto p : myfantasynames) {
+
+    my = agent.getMyNamesStatus();
+    for(auto p : my) {
         /*
         if ( amlive )
         if ( p.second.status() < MyNameStatus::confirmed )
             namedata.Subscribe(p.first);
         */
-        my.push_back(p.second);
+        myfantasynames[p.name()] = p;
     }
 
 
@@ -341,10 +428,11 @@ void MainLAPIWorker::OnGetMyNames() {
 
 //from Gui
 void MainLAPIWorker::OnUseName(QString name) {
+    qDebug() << " OnUseName " << name;
     myCurrentName.set_name(name.toStdString());
     myCurrentName.set_status(MyNameStatus::requested);
 
-    myfantasynames = agent.getMyNamesStatus();
+    //myfantasynames = agent.getMyNamesStatus();
 
     auto it = myfantasynames.find(name.toStdString());
     if ( it != end(myfantasynames)) {
@@ -353,10 +441,10 @@ void MainLAPIWorker::OnUseName(QString name) {
         }
     }
 
-    if ( myCurrentName.status() < MyNameStatus::confirmed)
+    if ( myCurrentName.status() >= MyNameStatus::requested)
         DoSubscribe(myCurrentName.name(),true);
 
-    qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
+    qDebug() << "malpi NameStatus(myCurrentName)" << myCurrentName.DebugString().data();
     emit NameStatus(myCurrentName);
 }
 
@@ -398,8 +486,11 @@ void MainLAPIWorker::OnClaimName(QString name) {
         agent.onSignedTransaction(sn);
         DoSubscribe(myCurrentName.name(),true);
         DoPostTx(sn);
+        count = bcount = 0;
+        timer->start(intervalstart);
     }
 
+    myfantasynames[myCurrentName.name()] = myCurrentName;
     qDebug() << "NameStatus(myCurrentName)" << myCurrentName.DebugString();
     emit NameStatus(myCurrentName);
 }
@@ -449,6 +540,10 @@ void MainLAPIWorker::OnProjTX(vector<fantasybit::FantasyBitProj> vinp) {
     agent.onSignedTransaction(sn);
     DoPostTx(sn);
     DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+//    timer->stop();
+//    Timer();
+    timer->start(intervalstart);
 }
 
 //tx status
@@ -489,12 +584,15 @@ void MainLAPIWorker::OnProjLive(fantasybit::FantasyBitProj proj) {
 }
 
 
+#ifdef DATAAGENT
+
 void MainLAPIWorker::BeOracle() {
     if ( agent.beDataAgent() ) {
         auto ns = agent.getCurrentNamesStatus();
         emit NameStatus(ns);
     }
 }
+#endif
 
 void MainLAPIWorker::DoPostTx(SignedTransaction &st) {
     auto txstr = st.SerializeAsString();
@@ -510,7 +608,7 @@ void MainLAPIWorker::DoPostTr(SignedTransaction &st) {
     rest.postRawData("trade","octet-stream",txstr.data(),((size_t)txstr.size()));
 }
 
-void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
+void MainLAPIWorker::DoSubscribe(const std::string &name, bool suborun) {
 
     if ( suborun ) {
         namedata.Subscribe(name);
@@ -522,9 +620,7 @@ void MainLAPIWorker::DoSubscribe(const string &name, bool suborun) {
     }
 }
 
-/*
 void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
-
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::EXCHANGE);
@@ -532,9 +628,24 @@ void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
     DoPostTr(sn);
-    //namedata.Subscribe(myCurrentName.name());
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
 }
-*/
+
+void MainLAPIWorker::OnNewTransfer(TransferTrans tt) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::TRANSFER);
+    trans.MutableExtension(TransferTrans::transfer_tran)->CopyFrom(tt);
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+    DoPostTx(sn);
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
+}
+
 /*ys
 //ToDo: convert names with a status OnLive()
 myfantasynames = agent.getMyNamesStatus();

@@ -10,27 +10,53 @@ std::unordered_map<std::string,PlayerDetail>
     return worker->NFLState().GetTeamRoster(teamid);
 }
 
+std::vector<MarketSnapshot> DataService::GetCurrentMarketSnaps() {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->ExData().GetCurrentMarketSnaps();
+}
+
 std::vector<fantasybit::GameRoster> DataService::GetCurrentWeekGameRosters(){
     //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->NFLState().GetCurrentWeekGameRosters();
 }
 
-std::vector<fantasybit::GameResult> DataService::GetPrevWeekGameResults(int week){
-    //QMutexLocker(&DataService::instance()->myMutex);
+int DataService::GetAvgProjection(const string &playerid) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
-    return worker->NFLState().GetPrevWeekGameResults(week);
+    return worker->NameData().GetAvgProj(playerid);
 }
 
-fantasybit::WeeklySchedule DataService::GetWeeklySchedule(int week) {
+std::vector<fantasybit::GameResult> DataService::GetPrevWeekGameResults(int season,int week){
+    //QMutexLocker(&DataService::instance()->myMutex);
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetPrevWeekGameResults(season,week);
+}
+
+std::map<std::string,std::string> DataService::GetAllSymbols() {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetAllSymbols();
+}
+
+std::map<std::string,std::string> DataService::GetTeamSymbols(const std::list<std::string> &teams)  {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetTeamSymbols(teams);
+}
+
+
+fantasybit::WeeklySchedule DataService::GetWeeklySchedule(int season,int week) {
 //QMutexLocker(&DataService::instance()->myMutex);
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
-    return worker->NFLState().GetWeeklySchedule(week);
+    return worker->NFLState().GetWeeklySchedule(season,week);
 }
 
 fantasybit::PlayerBase DataService::GetPlayerBase(std::string playerId) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->NFLState().GetPlayerBase(playerId);
+}
+
+fantasybit::PlayerStatus DataService::GetPlayerStatus(std::string playerId) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetPlayerStatus(playerId);
 }
 
 
@@ -39,17 +65,22 @@ fantasybit::GameStatus DataService::GetGameStatus(string gid) {
     return worker->NFLState().GetUpdatedGameStatus(gid);
 }
 
+PlayerDetail DataService::GetPlayerDetail(const std::string &symbol) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().GetPlayerDetail(symbol);
+}
+
 
 std::vector<std::shared_ptr<fantasybit::FantasyName>> DataService::GetLeaderBoard() {
-    auto v = Commissioner::GetFantasyNames();
+    return Commissioner::GetFantasyNames();
 
-    std::sort(v.begin(), v.end(),
-        [](shared_ptr<FantasyName> f1, shared_ptr<FantasyName> f2){
-            return (f2->getBalance() == f1->getBalance()) ? (f1->hash() < f2->hash() ) :
-                                                       (f2->getBalance() < f1->getBalance());
-        });
+//    std::sort(v.begin(), v.end(),
+//        [](shared_ptr<FantasyName> f1, shared_ptr<FantasyName> f2){
+//            return (f2->getBalance() == f1->getBalance()) ? (f1->hash() < f2->hash() ) :
+//                                                       (f2->getBalance() < f1->getBalance());
+//        });
 
-    return v;
+//    return v;
 }
 
 // curent week
@@ -70,7 +101,7 @@ fantasybit::GlobalState DataService::GetGlobalState() {
 }
 
 
-MyFantasyName DataService::importMnemonic(std::string &in) {
+MyFantasyName DataService::importMnemonic(const std::string &in) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->Agent().UseMnemonic(in);
 }
@@ -83,5 +114,20 @@ string DataService::exportMnemonic(std::string &in) {
 ordsnap_t DataService::GetOrdersPositionsByName(const std::string &fname) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->ExData().GetOrdersPositionsByName(fname);
+}
+
+int DataService::GetOpenPnl(const std::string &fname) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->ExData().GetOpenPnl(fname);
+}
+
+std::unordered_map<int, pair<bool, std::string> > DataService::getAllKnownPlayerStatus(){
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().myKnownPlayerStatus();
+}
+
+std::string DataService::GetPidfromSymb(const std::string &symb) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->NFLState().mSym2Pid[symb];
 }
 

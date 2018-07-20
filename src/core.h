@@ -13,14 +13,23 @@
 #include "threadedqobject.h"
 #include "LAPIWorker.h"
 #include "ProtoData.pb.h"
+#include "ApiData.pb.h"
+#include "ExchangeData.h"
+#include "Processor.h"
+#include "ExData.pb.h"
+
+#include <vector>
+
+using std::vector;
 
 class IResolvable;
 class Core : public GenericSingleton<Core>
 {
     friend class GenericSingleton<Core>;
 
-    Core();    
+    Core();
 
+    bool oldstuff;
 public:
 
     ~Core();   
@@ -74,9 +83,9 @@ private:
 
 };
 
-void messageHandler(QtMsgType type,
-                    const QMessageLogContext &context,
-                    const QString &message);
+//void messageHandler(QtMsgType type,
+//                    const QMessageLogContext &context,
+//                    const QString &message);
 
 Q_DECLARE_METATYPE(fantasybit::GlobalState)
 Q_DECLARE_METATYPE(fantasybit::MyFantasyName)
@@ -88,12 +97,13 @@ Q_DECLARE_METATYPE(fantasybit::Distribution)
 Q_DECLARE_METATYPE(fantasybit::FantasyNameHash)
 Q_DECLARE_METATYPE(fantasybit::FantasyNameBal)
 Q_DECLARE_METATYPE(fantasybit::ExchangeOrder)
-Q_DECLARE_METATYPE(fantasybit::MarketTicker*)
+Q_DECLARE_METATYPE(fantasybit::MarketTicker)
 Q_DECLARE_METATYPE(fantasybit::MarketSnapshot*)
 Q_DECLARE_METATYPE(fantasybit::DepthFeedDelta*)
 Q_DECLARE_METATYPE(fantasybit::TradeTic*)
 Q_DECLARE_METATYPE(fantasybit::FullPosition)
 Q_DECLARE_METATYPE(fantasybit::FullOrderDelta)
+Q_DECLARE_METATYPE(fantasybit::TransferTrans)
 
 
 #endif // CORE_H

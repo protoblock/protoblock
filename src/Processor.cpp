@@ -5,18 +5,15 @@
 //  Created by Jay Berg on 8/24/14.
 //
 //
-#include <QApplication>
 
 #include <utility>
 #include "Commissioner.h"
 #include "ProtoData.pb.h"
-#include <fc/crypto/sha256.hpp>
-#include <fc/crypto/elliptic.hpp>
-#include <fc/filesystem.hpp>
+#include <utils/utils.h>
 #include <algorithm>
 #include <iostream>
 #include "fbutils.h"
-#include "Source.h"
+//#include "Source.h"
 #include "DistributionAlgo.h"
 #include "blockrecorder.h"
 #include "Processor.h"
@@ -25,9 +22,10 @@
 #include "ApiData.pb.h"
 #include "RestFullCall.h"
 #include "fbutils.h"
-#if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT || defined SQL
-#include "playerloader.h"
-#endif
+#include "pbutils.h"
+#include "ldbwriter.h"
+
+
 
 #ifdef BLOCK_EXPLORER
 #include "blockexplorer.h"
@@ -39,9 +37,7 @@
 namespace fantasybit
 {
 
-#ifdef SQL
-    SqlStuff sql("satoshifantasy","distribution");
-#endif
+
 
 void BlockProcessor::hardReset() {
     mRecorder.closeAll();
@@ -49,12 +45,15 @@ void BlockProcessor::hardReset() {
     mNameData.closeAll();
 #ifdef TRADE_FEATURE
     mExchangeData.closeAll();
-
     mExchangeData.removeAll();
 #endif
 
+    pb::remove_all(Platform::instance()->getRootDir() + "index/");
+#ifndef NOUSE_GENESIS_BOOT
+    NFLStateData::InitCheckpoint();
+#endif
+    BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
 
-    fc::remove_all(Platform::instance()->getRootDir() + "index/");
 }
 
 int32_t BlockProcessor::init() {
@@ -64,29 +63,50 @@ int32_t BlockProcessor::init() {
         emit InvalidState(mRecorder.getLastBlockId());
         qInfo() <<  "mRecorder not valid! ";
         mRecorder.closeAll();
-        fc::remove_all(Platform::instance()->getRootDir() + "index/");
+        pb::remove_all(Platform::instance()->getRootDir() + "index/");
         qInfo() <<  "delete all leveldb, should have nothing";
+
+#ifndef NOUSE_GENESIS_BOOT
+        NFLStateData::InitCheckpoint();
+#endif
+        BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
+        qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
+
         mRecorder.init();
         if (!mRecorder.isValid() ) {
             qInfo() <<  "mRecorder not valid! ";
             InvalidState(mRecorder.getLastBlockId());
             return -1;
         }
+
     }
 
     mData.init();
     mNameData.init();
+    mGlobalState = mData.GetGlobalState();
 #ifdef TRADE_FEATURE
-    mExchangeData.init();
+    mExchangeData.init(mGlobalState);
 #endif
 
+//    OnSeasonStart(mData.GetGlobalState().season());
 
-    qInfo() <<  "YES mRecorder is valid";
+    //qInfo() <<  "YES mRecorder is valid";
 
     lastidprocessed =  mRecorder.getLastBlockId();
 
 #ifdef BLOCK_EXPLORER
     bx.init();//lastidprocessed);
+#endif
+
+
+#ifdef TRADE_FEATURE
+    mFutContract.set_type(FutContract_Type_WEEKLY);
+    GlobalState &gs = mGlobalState;
+    mFutContract.set_season(gs.season());
+    //if ( gs.state() == GlobalState_State_INSEASON )
+        mFutContract.set_week(gs.week());
+    //else
+    //    mFutContract.set_week(0);
 #endif
 
     return lastidprocessed;
@@ -95,14 +115,21 @@ int32_t BlockProcessor::init() {
 
 int32_t BlockProcessor::process(Block &sblock) {
 
-    qDebug() << "process: " << sblock.signedhead().head().num();
+    //qDebug() << "BlockProcessor process head().num(): " << sblock.signedhead().head().num();
+#ifdef TRACE
+    if ( sblock.signed_transactions_size() > 0) {
+//        qDebug() << "BlockProcessor processsb0 sblock.signed_transactions(0).DebugString().data() ";
+//        qDebug() << sblock.signed_transactions(0).DebugString().data();
+    }
+#endif
+
     if (!verifySignedBlock(sblock)) {
         //qCritical() << "verifySignedBlock failed! ";
         qCritical() << "verifySignedBlock failed! ";
         return -1;
     }
     else {
-        qInfo() << "yes verifySignedBlock " <<  sblock.signedhead().head().num();
+        //qInfo() << "yes verifySignedBlock " <<  sblock.signedhead().head().num();
     }
 
 //    if ( sblock.signedhead().head().num() == 139 ) {
@@ -110,7 +137,14 @@ int32_t BlockProcessor::process(Block &sblock) {
 //        qInfo() << bs.data();
 //    }
 
+    BlockRecorder::BlockTimestamp = sblock.signedhead().head().timestamp();
     mRecorder.startBlock(sblock.signedhead().head().num());
+
+    auto ip = mTimeOfTxidBlock.insert({sblock.signedhead().head().timestamp(),{}});
+    if ( ip.second )
+        mCurrBTxid = &ip.first->second;
+    else
+        mCurrBTxid = nullptr;
 
 //    if ( sblock.signedhead().head().num() == 1199 ) {
 //        qInfo() << sblock.DebugString();
@@ -129,6 +163,47 @@ int32_t BlockProcessor::process(Block &sblock) {
 
     qInfo() << " BLOCK(" << sblock.signedhead().head().num() << ") processed! ";
     lastidprocessed = mRecorder.endBlock(sblock.signedhead().head().num());
+
+    if ( mCurrBTxid ) {
+        for ( const auto &id : *mCurrBTxid ) {
+            mUsedTxId.insert(id);
+        }
+    }
+
+
+    auto lastvalid = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
+            std::chrono::hours{50};
+
+    qDebug() << BlockRecorder::BlockTimestamp << "lastvalid " << lastvalid.count();
+
+
+    auto iter = mTimeOfTxidBlock.begin();
+    while ( iter != end(mTimeOfTxidBlock) ) {
+        if ( iter->first > lastvalid.count() )
+            break;
+
+        for ( const auto &itv : iter->second ) {
+            mUsedTxId.erase(itv);
+        }
+
+        iter = mTimeOfTxidBlock.erase(iter);
+    }
+
+
+#ifndef NOUSE_GENESIS_BOOT
+    if ( mLastWeekStart ) {
+        mLastWeekStart = false;
+        int week = mData.GetGlobalState().week();
+        auto boot = mData.makeBootStrap(mData.GetGlobalState().season (),
+                                        mData.GetGlobalState().week(),
+                                        lastidprocessed-1);
+        boot.set_key(to_string(mData.GetGlobalState().season ()) +  (week < 10 ? "0" : "") + to_string(week));
+        boot.set_previd(sblock.signedhead().head().prev_id());
+        mExchangeData.addBootStrap(&boot);
+        mNameData.addBootStrap(&boot,true);
+    }
+#endif
+
 #ifdef CLEAN_BLOCKS
     mRecorder.endBlock();
 #ifdef BLOCK_EXPLORER
@@ -163,20 +238,89 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
         return false;
     }
 
-    auto st = sblock.signed_transactions(0);
-    if (st.trans().type() != TransType::DATA)  {
-        qCritical() << "expect first Transaction for Data block to be Data";
-        return false;
+#ifdef JAYHACK
+    if ( sblock.signedhead().head().num() == 1 ) {
+        std::unordered_map<int,Block> weeklyProj;
+        qDebug() << " jay hack 1";
+        processTxfrom(sblock,1,true);
+        for ( int i = 1; i < sblock.signed_transactions_size(); i++) {
+            if ( sblock.signed_transactions(i).trans().type() == TransType::PROJECTION_BLOCK) {
+                const ProjectionTransBlock & ptb = sblock.signed_transactions(i).trans().GetExtension(ProjectionTransBlock::proj_trans_block);
+                Block &b = weeklyProj[ptb.week()];
+                b.add_signed_transactions()->CopyFrom(sblock.signed_transactions(i));
+                if ( sblock.signed_transactions(i).id() == "")
+                    qDebug() << "bad tx ";
+
+            }
+            else if (sblock.signed_transactions(i).trans().type() != TransType::NAME) {
+                qDebug() << "not name "  << sblock.signed_transactions(i).trans().DebugString().data();
+            }
+        }
+        int doweek = 1;
+        for ( int i = 1; i < sblock.signed_transactions_size(); i++) {
+            if ( sblock.signed_transactions(i).trans().type() != TransType::DATA)
+                continue;
+
+            auto dt = sblock.signed_transactions(i).trans().GetExtension(DataTransition::data_trans);
+            if (dt.data_size() > 0)
+                process(dt.data(), "FantasyAgent", dt.type(),dt.season());
+
+            if ( dt.type() == TrType::GAMESTART) {
+                if ( dt.week() == doweek ) {
+                    doweek++;
+                    processTxfrom(weeklyProj[dt.week()],0,false);
+                }
+            }
+            process(dt);
+        }
+
+       {
+            auto st = sblock.signed_transactions(0);
+            auto dt = st.trans().GetExtension(DataTransition::data_trans);
+            process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
+            process(dt);
+        }
+
+        qDebug() << " jay hack 2";       
+        return true;
     }
+#endif
+    {
 
-    auto dt = st.trans().GetExtension(DataTransition::data_trans);
-    if (dt.data_size() > 0)
-        process(dt.data(), st.fantasy_name(), dt.type());
+        auto st = sblock.signed_transactions(0);
+        if (st.trans().type() != TransType::DATA)  {
+            qDebug() << "expect first Transaction for Data block to be Data";
+            processTxfrom(sblock, 0);
+    //        return false;
+        }
+        else  {
+            bool nodt = false;
+            auto dt = st.trans().GetExtension(DataTransition::data_trans);
+            if ( st.trans().version() >= 4 ) {
+                if ( mUsedTxId.find(st.id()) != end(mUsedTxId)) {
+                    qDebug() << " invalid id already used " << st.id().data();
+                    nodt = true;
+                }
+                else if ( mCurrBTxid )
+                        mCurrBTxid->push_back(st.id());
+            }
 
-    if (sblock.signed_transactions_size() > 1)
-        processTxfrom(sblock, 1);
+            if ( !nodt && dt.data_size() > 0)
+                process(dt.data(), st.fantasy_name(), dt.type(), dt.season());
 
-    process(dt);
+
+            if (sblock.signed_transactions_size() > 1)
+                processTxfrom(sblock, 1);
+
+    #ifdef TRACE
+        qDebug() << "processing ccccc" << dt.type() << dt.season() << dt.week();
+    #endif
+    //    qDebug() << dt.DebugString().data();
+
+            if ( !nodt ) process(dt);
+        }
+
+    }
 
     return true;
 }
@@ -205,10 +349,11 @@ bool BlockProcessor::sanity(const FantasyPlayerPoints &fpp) {
 }
 */
 void BlockProcessor::process(decltype(DataTransition::default_instance().data()) in,
-            const std::string &blocksigner,TrType transtype )  {
+            const std::string &blocksigner,TrType transtype, int season )  {
 
     //outDelta.mutable_datas()->CopyFrom(in);
 
+    bool haveresults = false;
     for (const auto d : in) {
         Data *nd;
         PlayerData tpd{};
@@ -221,16 +366,18 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                     qCritical() << "no playerid" + QTD(tpd.DebugString());
                     break;
                 }
-                int pid = std::stoi(tpd.playerid());
-                if (pid > 0 & pid <= 32 ) { //Team DEF
-                    if ( transtype !=  SEASONSTART) {
-                        qCritical() << "Teams cant change names" << d.DebugString().data();
-                        break;
-                    }
+//                if ( tpd.playerid() == "1179")
+//                    qDebug() << "";
+//                int pid = std::stoi(tpd.playerid());
+//                if (pid > 0 && pid <= 32 ) { //Team DEF
+//                    if ( transtype !=  SEASONSTART) {
+//                        qCritical() << "Teams cant change names" << d.DebugString().data();
+//                        break;
+//                    }
 
-                    mData.TeamNameChange(tpd.playerid(),tpd.player_base(),tpd.player_status());
-                    break;
-                }
+//                    mData.TeamNameChange(tpd.playerid(),tpd.player_base(),tpd.player_status());
+//                    break;
+//                }
                 if ( tpd.has_player_base() )
                     mData.AddNewPlayer(tpd.playerid(),tpd.player_base());
                 if ( tpd.has_player_status() )
@@ -245,7 +392,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 if ( ttd.has_status() && ttd.has_gameid() )
                     mData.UpdateGameStatus(ttd.gameid(),ttd.status());
                 else {
-                    qCritical() << "no data" + QTD(ttd.DebugString());
+                    qCritical() << "no data" << ttd.DebugString().data();
                 }
                 break;
             case Data_Type_RESULT:
@@ -253,28 +400,63 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 rd = d.GetExtension(ResultData::result_data);
 
                 if ( !rd.has_game_result()) {
-                    qCritical() << "no data" + QTD(ttd.DebugString());
+                    qCritical() << "no data" << ttd.DebugString().data();
                     break;
                 }
 
-                if ( rd.game_result().gameid() == "201500122")
-                    qDebug() << " 201500122 ";
-                /*
-                if ( !sanity(rd.fpp()) ) {
-                    qCritical() << " invalid result skipping" << rd.DebugString();
+                bool noproj = false;
+#ifdef HACK_2018
+                //superbowl Lii
+                //fantasydata 201730421
+                //gid 201712119
+                //
+                string gid = "201712119";
+                if ( rd.game_result().gameid() == gid) {
+                    noproj = true;
+                    GameStatus gs;
+                    gs.set_datetime(1517715000);
+                    gs.set_status(GameStatus::INGAME);
+                    mData.OnGameStart(gid,gs);
+
+                    GameInfo gi;
+                    gi.set_id(gid);
+                    gi.set_home("NE");
+                    gi.set_away("PHI");
+                    mData.UpdateGameStatus(gid,gs,true);
+
+                    auto homeroster = mData.GetTeamRoster(gi.home());
+                    auto awayroster = mData.GetTeamRoster(gi.away());
+
+                    vector<string> homep, awayp;
+                    for ( auto hr : homeroster) {
+                        homep.push_back(hr.first);
+                    }
+                    for ( auto hr : awayroster)
+                        awayp.push_back(hr.first);
+
+                    mExchangeData.OnGameStart(gid,homeroster,awayroster);
+                }
+#endif
+
+                auto st = mData.GetUpdatedGameStatus(rd.game_result().gameid());
+                if ( st.status() == GameStatus::CLOSED ) {
+                    qWarning() << rd.game_result().gameid().data() << " game already closed - ignorning result ";
                     break;
                 }
-                */
+
                 auto allprojs = mNameData.GetGameProj(rd.game_result().gameid());
                 bool nopnl = false;
+#ifdef TRADE_FEATURE
                 GameSettlePos gsp;
                 if ( !mExchangeData.GetGameSettlePos(rd.game_result().gameid(),gsp) )
                    nopnl = true;
-
-                qDebug() << gsp.DebugString();
+#else
+                nopnl = true;
+#endif
+//                qDebug() << allprojs.DebugString().data();
 
                 unordered_map<string,std::unordered_map<std::string,int>> projmaps;
-                unordered_map<string,BookPos *> posmap;
+                unordered_map<string,std::pair<BookPos *,BookPos *>> posmap;
 
                 for (auto ha : {QString("home"),QString("away")}) {
                     for ( auto fpj : (ha == QString("home")) ? allprojs.home() : allprojs.away())
@@ -282,27 +464,30 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
                     if ( nopnl ) continue;
 
+#ifdef TRADE_FEATURE
                     auto rgsp =  (ha == QString("home")) ? gsp.mutable_home() : gsp.mutable_away();
                     for ( int i=0; i<rgsp->size();i++) {
                         BookPos *bp = rgsp->Mutable(i);
-                        posmap[bp->playerid()] = bp;
+                        auto pid = mData.mSym2Pid[bp->playerid()];
+                        auto bpp = posmap[pid];
+                        if ( isWeekly(bp->symbol()))
+                            bpp.first = bp;
+                        else
+                            bpp.second = bp;
+                        posmap[pid] = bpp;
                     }
+#endif
                 }
 
 
-                //for ( auto fpj : allprojs.away())
-                //   projmaps[fpj.playerid()].insert(make_pair(fpj.name(),fpj.proj()));
-
-
                 for (auto ha : {QString("home"),QString("away")}) {
-
                     qDebug() << "****" << ha;
                     int size =  (ha == QString("home")) ?
                                 rd.game_result().home_result_size()
                                 :  rd.game_result().away_result_size();
 
                     if( size <= 0) {
-                        qCritical() << "no" << ha << " result" + QTD(rd.DebugString());
+                        qCritical() << "no" << ha << " result" << rd.DebugString().data();
                         continue;
                     }
 
@@ -316,55 +501,46 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                                 rd.mutable_game_result()->mutable_home_result()
                                 :  rd.mutable_game_result()->mutable_away_result();
 
+                    double total = 0.0;
                     for ( int i =0; i < size; i++) {
-                        qDebug() << haresult.Get(i).playerid()
-                                 << haresult.Get(i).result();
-                        if ( haresult.Get(i).playerid() == "1122")
-                            qDebug() << "1122";
+                        //qDebug() << haresult.Get(i).playerid()
+                          //       << haresult.Get(i).result();
 
                         auto proj = projmaps[haresult.Get(i).playerid()];
-                        //if ( proj.size() == 0 )
-                        //    continue;
 
-                        BookPos  *bpos = nullptr;
+                        std::pair<BookPos *,BookPos *> bpospair{nullptr,nullptr};
                         if ( !nopnl ) {
-                            bpos = posmap[haresult.Get(i).playerid()];
+                            auto iter = posmap.find(haresult.Get(i).playerid());
+                            if ( iter != end(posmap) )
+                                bpospair = iter->second;
                         }
 
-                        processResultProj(mut_haresult->Mutable(i),proj,bpos,blocksigner);
-                        }
-                }
-
-                /*
-                if( rd.game_result().away_result_size() <= 0 )
-                    qCritical() << "no away result" + QTD(rd.DebugString());
-                else
-                    //for (auto result : rd.game_result().away_result() ) {
-                    for ( int i =0; i < rd.game_result().away_result_size(); i++) {
-                        qDebug() << rd.game_result().away_result(i).playerid()
-                                 << rd.game_result().away_result(i).result();
-
-                        auto proj = projmaps[rd.game_result().away_result(i).playerid()];
-                        //if ( proj.size() == 0 )
-                        //    continue;
-                        processResultProj(rd.mutable_game_result()->mutable_away_result(i),
-                                          proj,blocksigner);
-                        //result.mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
-                        //rd.mutable_game_result()->
-                        //        mutable_away_result(i)->mutable_fantaybitaward()->CopyFrom(delta.fantaybitaward());
+                        total += haresult.Get(i).result();
+                        processResultProj(mut_haresult->Mutable(i),proj,bpospair,blocksigner,noproj);
+                        mData.UpdatePlayerStats(haresult.Get(i));
                     }
 
-                //for (auto result : rd.game_result().away_result() )
-                //    qDebug() << result.playerid() << result.fantaybitaward_size();
+                    if ( ha == QString("home") )
+                        rd.mutable_game_result()->set_hometotal(total);
+                    else
+                        rd.mutable_game_result()->set_awaytotal(total);
 
-                */
-                mData.AddGameResult(rd.game_result().gameid(),rd.game_result());
+                }
+
+                mData.ProcessAddGameResult(rd.game_result().gameid(),rd.game_result());
+                mExchangeData.processGameResult(rd.game_result(),
+                              fantasybit::contractSymbolSuffix(mFutContract.season(),mFutContract.week(),false));
+
+                haveresults = true;
+
 #if defined DATAAGENTWRITENAMES || defined DATAAGENTWRITEPROFIT
                 {
-#ifndef DATAAGENTWRITENAMES_FORCE
+    #ifndef DATAAGENTWRITENAMES_FORCE
                 if ( !amlive ) break;
-#endif
+    #endif
 
+                std::vector<Distribution> dists;
+                std::vector<Profits> profs;
                 Distribution dist{};
                 Profits prof{};
                 dist.set_gameid(rd.game_result().gameid());
@@ -387,9 +563,10 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         dist.set_fantasy_nameid(FantasyName::name_hash(fba.name()));
                         dist.set_proj(fba.proj());
                         dist.set_award(fba.award());
-#ifdef DATAAGENTWRITENAMES
-                        sql.distribute(dist);
-#endif
+    #ifdef DATAAGENTWRITENAMES
+                        dists.push_back(dist);
+//                        sql.distribute(dist);
+    #endif
                     }
 
                     for ( auto fba : res.fantasybitpnl()) {
@@ -398,9 +575,10 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_qty(fba.spos().qty());
                         prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
                         prof.set_pnl(fba.pnl());
-#ifdef DATAAGENTWRITEPROFIT
-                        sql.profit(prof);
-#endif
+    #ifdef DATAAGENTWRITEPROFIT
+                        profs.push_back(prof);
+//                        sql.profit(prof);
+    #endif
                     }
                 }
 
@@ -419,9 +597,10 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         emit new_dataDistribution(dist);
                         auto ds = dist.SerializeAsString();
 
-#ifdef DATAAGENTWRITENAMES
-                        sql.distribute(dist);
-#endif
+    #ifdef DATAAGENTWRITENAMES
+                        dists.push_back(dist);
+//                        sql.distribute(dist);
+    #endif
 
                     }
 
@@ -432,12 +611,24 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         prof.set_price(fba.spos().price() / ( (prof.qty() == 0) ? 1 : -prof.qty()));
                         prof.set_pnl(fba.pnl());
 
-#ifdef DATAAGENTWRITEPROFIT
-                        sql.profit(prof);
-#endif
+    #ifdef DATAAGENTWRITEPROFIT
+                        profs.push_back(prof);
+//                        sql.profit(prof);
+    #endif
 
                     }
                 }
+
+                SqlStuff sql{"satoshifantasy","distribution"};
+
+    #ifdef DATAAGENTWRITENAMES
+                sql.distribute(dists);
+    #endif
+
+    #ifdef DATAAGENTWRITEPROFIT
+                sql.profit(profs);
+    #endif
+
                 }
 #endif
                 break;
@@ -445,7 +636,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
             case Data_Type_SCHEDULE: {
                 auto sd = d.GetExtension(ScheduleData::schedule_data);
                 if ( sd.has_week() && sd.has_weekly() )
-                    mData.AddNewWeeklySchedule(sd.week(),sd.weekly());
+                    mData.AddNewWeeklySchedule(season,sd.week(),sd.weekly());
                 else {
                     qCritical() << "no data" + QTD(sd.DebugString());
                 }
@@ -454,8 +645,12 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
 
             case Data_Type_MESSAGE: {
                 auto msg = d.GetExtension(MessageData::message_data);
-                if ( msg.has_msg() ) {
-                    qWarning() << "Control messgae" << msg.DebugString();
+                if ( msg.has_msg() && amlive) {
+                    onControlMessage(QString::fromStdString(msg.msg()));
+
+//                    qWarning() << "Control messgae" << msg.DebugString().data();
+                }
+                /*
 #ifdef Q_OS_MAC
                     if ( msg.msg().find("win64") != string::npos )
 #endif
@@ -484,6 +679,7 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                         onControlMessage(QString::fromStdString(msg.msg()));
 
                 }
+                */
                 break;
             }
             default:
@@ -491,15 +687,18 @@ void BlockProcessor::process(decltype(DataTransition::default_instance().data())
                 break;
         }
     }
+
+    if ( haveresults && amlive )
+        emit FinishedResults();
 }
 
 
 void BlockProcessor::processResultProj(PlayerResult* playerresultP,
                                        std::unordered_map<std::string,int> &proj,
-                                       BookPos *pbpos,
-                                       const std::string &blocksigner) {
+                                       std::pair<BookPos *, BookPos *> pbpospair,
+                                       const std::string &blocksigner, bool noproj) {
     auto &playerresult = *playerresultP;
-    PlayerResult awards;
+//    PlayerResult awards;
     DistribuePointsAvg dist(proj);
     auto rewards = dist.distribute(playerresult.result(), blocksigner);
 
@@ -509,6 +708,7 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     //}
 
     //decltype(PlayerResult::default_instance().fantaybitaward())
+    if ( !noproj )
     for (auto r : rewards ) {
         FantasyBitAward &fba = *playerresult.mutable_fantaybitaward()->Add();
         fba.set_name(r.first);
@@ -521,22 +721,39 @@ void BlockProcessor::processResultProj(PlayerResult* playerresultP,
     //playerresult.mutable_fantaybitaward()->CopyFrom(awards.fantaybitaward());
     //return awards;
 
-    if ( pbpos == nullptr) return;
+    //weekly
+    if ( pbpospair.first != nullptr) {
+        playerresultP->set_symbol(pbpospair.first->playerid());
+        SettlePositionsRawStake set(*(pbpospair.first));
+        auto pnls = set.settle(playerresult.result(), blocksigner);
+        for (auto r : pnls ) {
+            FantasyBitPnl &fba = *playerresult.mutable_fantasybitpnl()->Add();
+            fba.mutable_spos()->CopyFrom(r.second.first);
+            fba.set_pnl(r.second.second);
+            fba.set_name(r.first);
+            //awards.add_fantaybitaward()->CopyFrom(fba);
+            mNameData.AddPnL(r.first,r.second.second);
+        }
+    }
 
-    SettlePositionsRawStake set(*pbpos);
-    auto pnls = set.settle(playerresult.result(), blocksigner);
-    for (auto r : pnls ) {
-        FantasyBitPnl &fba = *playerresult.mutable_fantasybitpnl()->Add();
-        fba.mutable_spos()->CopyFrom(r.second.first);
-        fba.set_pnl(r.second.second);
-        fba.set_name(r.first);
-        //awards.add_fantaybitaward()->CopyFrom(fba);
-        mNameData.AddPnL(r.first,r.second.second);
+    //season - row
+    if ( pbpospair.second != nullptr) {
+        playerresultP->set_symbol(pbpospair.second->playerid());
+        SettleROWPositionsRawStake set(*(pbpospair.second));
+        auto pnls = set.settle(playerresult.result(), blocksigner,mGlobalState.week() == 16);
+        for (auto r : pnls ) {
+            FantasyBitPnl &fba = *playerresult.mutable_rowposdividend()->Add();
+            fba.mutable_spos()->CopyFrom(r.second.first);
+            fba.set_pnl(r.second.second);
+            fba.set_name(r.first);
+            //awards.add_fantaybitaward()->CopyFrom(fba);
+            mNameData.AddPnL(r.first,r.second.second);
+        }
     }
 }
 
 void BlockProcessor::process(const DataTransition &indt) {
-    auto mGlobalState = mData.GetGlobalState();
+
     switch (indt.type())
     {
     case TrType::SEASONSTART:
@@ -546,32 +763,49 @@ void BlockProcessor::process(const DataTransition &indt) {
         {
             qInfo() <<  indt.season() << " Season Start week" << indt.week();
             if (mGlobalState.season() != indt.season()) {
-                qWarning() << "wrong season! " << indt.DebugString();
+                qWarning() << "wrong season! " << indt.DebugString().data();
                 mGlobalState.set_season(indt.season());
             }
-            mGlobalState.set_week(indt.week());
+            mGlobalState.set_week(0);//indt.week());
             mGlobalState.set_state(GlobalState_State_INSEASON);
             mData.OnGlobalState(mGlobalState);
-            OnWeekStart(indt.week());
+            OnSeasonStart(indt.season());
+            if ( indt.week() == 0) {
+                mGlobalState.set_week(indt.week());
+                mData.OnGlobalState(mGlobalState);
+                OnWeekStart(indt.week());
+            }
         }
         break;
     case TrType::SEASONEND:
-        if (mGlobalState.state() != GlobalState_State_INSEASON)
+        if (mGlobalState.state() != GlobalState_State_INSEASON) {
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
-
-
-        qInfo() <<  indt.season() << " Season End :( ";
-
-        if (mGlobalState.season() == indt.season() - 1) {}
-        else if (mGlobalState.season() != indt.season()) {
-            qWarning() << "wrong season! " << indt.DebugString();
-            mGlobalState.set_season(indt.season());
+            if ( mGlobalState.week() >= 17) {
+                OnSeasonEnd(mGlobalState.season());
+                mGlobalState.set_season(indt.season()+1);
+                mGlobalState.set_week(0);
+            }
         }
+        else {
+            qInfo() <<  indt.season() << " Season End :( ";
 
-        mGlobalState.set_season(mGlobalState.season() + 1);
+            if (mGlobalState.season() == indt.season() - 1) {
+                qInfo() <<  indt.season() << "bad Season End :( " << mGlobalState.season();
+            }
+            else if (mGlobalState.season() == indt.season()) {
+                OnSeasonEnd(mGlobalState.season());
+                mGlobalState.set_season(indt.season()+1);
+                mGlobalState.set_week(0);
+
+            }
+            else {
+                qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
+            }
+        }
 
         mGlobalState.set_state(GlobalState_State_OFFSEASON);
         mData.OnGlobalState(mGlobalState);
+
 
         //outDelta.mutable_globalstate()->CopyFrom(mGlobalState);
         break;
@@ -579,32 +813,54 @@ void BlockProcessor::process(const DataTransition &indt) {
     case TrType::HEARTBEAT:
         //todo: deal w data in this msg
         if (mGlobalState.season() != indt.season()) {
-            qWarning() << "wrong season! " << indt.DebugString();
+            qWarning() << "wrong season! " << indt.DebugString().data();
             //mGlobalState.set_season(indt.season());
         }
 
         if (mGlobalState.week() != indt.week()) {
-            qWarning() << "wrong week! " << indt.DebugString();
+            if ( mGlobalState.week() == 0 && indt.week() == 1) {
+                mGlobalState.set_week(1);
+                mData.OnGlobalState(mGlobalState);
+                OnWeekStart(1);
+            }
+            else {
+                qWarning() << "wrong week! " << indt.DebugString().data() << mGlobalState.DebugString().data();
+            }
             //mGlobalState.set_week(indt.week());
         }
 
         break;
     case TrType::GAMESTART:
+        if (mGlobalState.week() != indt.week()) {
+            if ( mGlobalState.week() == 0 && indt.week() == 1) {
+                mGlobalState.set_week(1);
+                mData.OnGlobalState(mGlobalState);
+                OnWeekStart(1);
+            }
+            else {
+                qWarning() << "wrong week! " << indt.DebugString().data() << mGlobalState.DebugString().data();
+            }
+            //mGlobalState.set_week(indt.week());
+        }
+
         for (auto t : indt.gamedata()) {
             mData.OnGameStart(t.gameid(),t.status());
-            qInfo() <<  "Kickoff for game " << t.DebugString();
+            qInfo() <<  "Kickoff for game " << t.DebugString().data();
             auto gi =  mData.GetGameInfo(t.gameid());
             auto homeroster = mData.GetTeamRoster(gi.home());
             auto awayroster = mData.GetTeamRoster(gi.away());
+//            if ( gi.away() == "CLE" )
+//                qDebug() << "" ;
             vector<string> homep, awayp;
-            for ( auto hr : homeroster)
+            for ( auto hr : homeroster) {
                 homep.push_back(hr.first);
+            }
             for ( auto hr : awayroster)
                 awayp.push_back(hr.first);
 
             mNameData.OnGameStart(t.gameid(),homep,awayp);
 #ifdef TRADE_FEATURE
-            mExchangeData.OnGameStart(t.gameid(),homep,awayp);
+            mExchangeData.OnGameStart(t.gameid(),homeroster,awayroster);
 #endif
 
         }
@@ -615,11 +871,17 @@ void BlockProcessor::process(const DataTransition &indt) {
         if (mGlobalState.state() != GlobalState_State_INSEASON)
             qWarning() << indt.type() << " baad transition for current state " << mGlobalState.state();
 
-        if ( indt.week() != mGlobalState.week())
+        if ( indt.week() != mGlobalState.week()) {
             qWarning() << indt.type() << " wrong week" << mGlobalState.week() << indt.week();
+            break;
+        }
+#ifdef TRADE_FEATURE
+        std::unordered_map<string,BookPos> pos;
+        mExchangeData.GetRemainingSettlePos(pos);
+        for ( auto &sbp : pos ) {
+            if ( !isWeekly(sbp.first) && indt.week() < 16)
+                continue;
 
-        auto pos = mExchangeData.GetRemainingSettlePos();
-        for ( auto sbp : pos ) {
             SettlePositionsRawStake set(sbp.second);
             auto pnls = set.settle(0.0, Commissioner::FantasyAgentName());
             for (auto r : pnls ) {
@@ -630,18 +892,43 @@ void BlockProcessor::process(const DataTransition &indt) {
                 mNameData.AddPnL(r.first,r.second.second);
             }
         }
+#endif
 
-
+#ifdef JAYHACK
+//        if (indt.week() == 16)
+//            break;
+#endif
         OnWeekOver(indt.week());
         int newweek = indt.week() + 1;
         qInfo() <<  "week " << indt.week() << " Over ";
-        if (indt.week() == 16) {
-            newweek = 0;
+        if (indt.week() >= 16) {
             qInfo() <<  "season " << indt.season() << " Over ";
-            mGlobalState.set_state(GlobalState_State_OFFSEASON);
-            mGlobalState.set_season(mGlobalState.season() + 1);
-            mGlobalState.set_week(0);
-            mData.OnGlobalState(mGlobalState);
+            if ( mGlobalState.season() == 2017 && indt.season() == 2017 && indt.week() < 21) {
+                OnSeasonEnd(mGlobalState.season());
+                mGlobalState.set_state(GlobalState_State_OFFSEASON);
+                mGlobalState.set_week(21);
+                mFutContract.set_season(2017);
+                mData.OnGlobalState(mGlobalState);
+            }
+            else {
+                if (mGlobalState.season() == indt.season()) {
+                    OnSeasonEnd(mGlobalState.season());
+                    mGlobalState.set_season(indt.season()+1);
+                }
+                else {
+                    OnSeasonEnd(mGlobalState.season());
+                    mGlobalState.set_season(mGlobalState.season()+1);
+                    qWarning() << "warning wrong season! using mGlobalState.season()+1" << mGlobalState.season()+1  << indt.DebugString().data();
+                }
+
+
+                newweek = 0;
+                mGlobalState.set_state(GlobalState_State_OFFSEASON);
+                mGlobalState.set_week(0);
+                mData.OnGlobalState(mGlobalState);
+                //OnSeasonStart(mGlobalState.season());
+                //OnWeekStart(0);
+            }
         }
         else {
             mGlobalState.set_week(newweek);
@@ -652,7 +939,8 @@ void BlockProcessor::process(const DataTransition &indt) {
     }
     case TrType::TRADESESSIONSTART:
     {
-        mExchangeData.OnTradeSessionStart(indt.week());
+        //todo
+        mExchangeData.OnTradeSessionStart(indt.season(),indt.week());
         break;
     }
     default:
@@ -662,20 +950,20 @@ void BlockProcessor::process(const DataTransition &indt) {
 
 bool BlockProcessor::isValidTx(const SignedTransaction &st) {
     const Transaction &t = st.trans();
-    fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
+    pb::sha256 digest = pb::hashit(t.SerializeAsString());
     if (digest.str() != st.id()) {
         qCritical() << "digest.str() != st.id() ";
         //fbutils::LogFalse(std::string("Processor::process signed transaction hash error digest ").append(st.DebugString()));
         return false;
     }
 
-    if (t.version() != Commissioner::TRANS_VERSION) {
+    if (t.version() > Commissioner::TRANS_VERSION || t.version() < 1) {
         qCritical() << "t.version() != Commissioner::TRANS_VERSION";
         //fbutils::LogFalse(std::string("Processor::process wrong transaction version ").append(st.DebugString()));
         return false;
     }
 
-    fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+    pb::signature sig = Commissioner::str2sig(st.sig());
     if ( st.trans().type() == TransType::STAMPED) {
         if ( Commissioner::verifyOracle(sig, digest) )
             return true;
@@ -692,7 +980,7 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
     if (t.type() == TransType::NAME) {
         auto nt = t.GetExtension(NameTrans::name_trans);
         if (!verify_name(st, nt, sig, digest)) {
-            qInfo() << " !verify name";
+            qDebug() << "t.type() == TransType::NAME !verify name";
             return false;
         }
 
@@ -705,29 +993,56 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
         return false;;
     }
 
+    if ( t.version() >= 4 ) {
+        auto diff = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
+                std::chrono::nanoseconds(t.nonce());
+
+        auto diff2 = std::chrono::nanoseconds(t.nonce()) - std::chrono::seconds(BlockRecorder::BlockTimestamp);
+        auto sd2 = std::chrono::duration_cast<std::chrono::seconds>(diff);
+        qDebug() << sd2.count();
+
+        auto sd = std::chrono::duration_cast<std::chrono::minutes>(diff);
+        qDebug() << sd.count() << " -60" << std::chrono::minutes{-60}.count();
+
+        if ( std::chrono::duration_cast<std::chrono::hours>(diff).count() > std::chrono::hours{48}.count() )  {
+            qCritical() << " !isValidTx timeout older than 48 hours" << BlockRecorder::BlockTimestamp;
+            return false;
+        }
+
+        if ( std::chrono::duration_cast<std::chrono::minutes>(diff).count() < std::chrono::minutes{-60}.count() ) {
+            qCritical() << " !isValidTx from the future - max 60 minutes allowed" << BlockRecorder::BlockTimestamp;
+            return false;
+        }
+
+        if ( mUsedTxId.find(st.id()) != end(mUsedTxId)) {
+            qDebug() << "isValidTx invalid id already used ";
+            return false;
+        }
+        else if ( mCurrBTxid )
+            mCurrBTxid->push_back(st.id());
+    }
+
     return true;
 }
 
-void BlockProcessor::processTxfrom(const Block &b,int start) {
+void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
     //first do name transactions
     for (int i = start; i < b.signed_transactions_size(); i++) {
 
-        if ( b.signed_transactions(i).trans().type() != TransType::NAME)
-            continue;
+        if ( b.signed_transactions(i).trans().type() == TransType::NAME) {
+            if ( !b.signed_transactions(i).trans().HasExtension(NameTrans::name_trans) ) {
+                qWarning() << " is not name - bad tx?";
+                continue;
+            }
+        }
+        else continue;
 
-        qDebug() << "processing name tx " << b.signed_transactions(i).trans().DebugString();// TransType_Name(t.type());
+        qDebug() << "processing name tx " << i;//b.signed_transactions(i).trans().DebugString().data();// TransType_Name(t.type());
         auto &st = b.signed_transactions(i);
         if ( !isValidTx(st)) {
-
-            qDebug() << " imvalid tx 1" << st.DebugString() ;
+            qDebug() << " imvalid tx 1" << st.DebugString().data() ;
             continue;
-        }
-        else if ( st.fantasy_name() == "Kola") {
-            qDebug() << "good name kola";
-        }
-        else if ( st.fantasy_name() == "Ellis") {
-            qDebug() << "good name ellis";
         }
 
 #ifdef CLEAN_BLOCKS
@@ -735,61 +1050,53 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 #endif
 
         const NameTrans & nt = b.signed_transactions(i).trans().GetExtension(NameTrans::name_trans);
-        mNameData.AddNewName(nt.fantasy_name(), nt.public_key() );
+        mNameData.AddNewName(nt.fantasy_name(), nt.public_key(), b.signedhead().head().num() );
         qInfo() <<  "verified " << FantasyName::name_hash(nt.fantasy_name());
 
     }
 
+    if ( nameonly ) return;
+
+    map<int,SignedTransaction> doStamped;
    // for (const SignedTransaction &st : b.signed_transactions()) //
-    for ( int i = start; i < b.signed_transactions_size(); i++)
+    for (int j = start; j < b.signed_transactions_size(); j++)
     {
-        if ( b.signed_transactions(i).trans().type() == TransType::NAME)
+        if ( b.signed_transactions(j).trans().type() == TransType::NAME)
             continue;
 
-        const SignedTransaction &st = b.signed_transactions(i);
-        const Transaction &t = b.signed_transactions(i).trans();
-        //fc::sha256 digest = fc::sha256::hash(t.SerializeAsString());
+        const SignedTransaction &st = b.signed_transactions(j);
+        const Transaction &t = b.signed_transactions(j).trans();
+        //pb::sha256 digest = pb::sha256::hash(t.SerializeAsString());
 
-        qDebug() << "processing tx " << st.DebugString();
+        //qDebug() << "processing tx " << st.DebugString().data();
 
         if (!isValidTx(st)) {
-            qDebug() << " imvalid tx 2";
-
-            if ( st.fantasy_name() == "Kola")
-                continue;
-            if ( st.fantasy_name() == "Ellis")
-                continue;
-            if ( st.fantasy_name() == "mb41407")
-                continue;
-            if ( st.fantasy_name() == "Trader1515")
-                continue;
-
+            qDebug() << " imvalid tx 2" << st.DebugString().data();
             continue;
         }
-        else if ( st.fantasy_name() == "Kola") {
-            qDebug() << "good kola";
-        }
-        else if ( st.fantasy_name() == "Ellis") {
-            qDebug() << "good ellis";
-        }
-        else if ( st.fantasy_name() == "Trader1515") {
-            qDebug() << "good trader1515";
-        }
-        else if ( st.fantasy_name() == "mb41407") {
-            qDebug() << "good mb41407";
-        }
-
 #ifdef CLEAN_BLOCKS
         mRecorder.addTx(st);
 #endif
 
         switch (t.type())
         {
+        case TransType::TRANSFER: {
+            const TransferTrans & trt = t.GetExtension(TransferTrans::transfer_tran);
+            if ( true ) {  // transfer is valid
+                int pnl = mExchangeData.GetOpenPnl(trt.from());
+                mNameData.DoTransfer (trt.from (), trt.to (), trt.amount (), pnl);
+            }
+            break;
+
+        }
+
         case TransType::PROJECTION_BLOCK: {
             const ProjectionTransBlock & ptb = t.GetExtension(ProjectionTransBlock::proj_trans_block);
-            qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
+            //qDebug() << st.fantasy_name() << "new projection block";// << ptb.DebugString();
             for (const PlayerPoints & pt : ptb.player_points() ) {
-                mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
+                mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
+//                if ( st.fantasy_name() == "@SpreadSheetFF" && pt.playerid() == "1179")
+//                    qDebug() << pt.DebugString().data();
             }
 
             break;
@@ -799,8 +1106,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
         case TransType::PROJECTION:
         {
             auto pt = t.GetExtension(ProjectionTrans::proj_trans);
-            qDebug() << st.fantasy_name() << "new projection " << pt.DebugString();
-            mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points());
+//            qDebug() << st.fantasy_name() << "new projection " << pt.DebugString().data();
+            mNameData.AddProjection(st.fantasy_name(), pt.playerid(), pt.points(),b.signedhead().head().num());
             break;
         }
 
@@ -810,9 +1117,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
 
         case TransType::STAMPED: {
             auto stamped = t.GetExtension(StampedTrans::stamped_trans);
+            doStamped.insert({stamped.seqnum(),stamped.signed_orig()});
             qDebug() << "new StampedTrans " << stamped.timestamp() << stamped.seqnum();
-
-            ProcessInsideStamped(stamped.signed_orig(),stamped.seqnum());
 
             break;
         }
@@ -821,33 +1127,140 @@ void BlockProcessor::processTxfrom(const Block &b,int start) {
             break;
         }
     }
+
+    for ( auto & nextstamped : doStamped) {
+        ProcessInsideStamped(nextstamped.second,nextstamped.first,b.signedhead().head().num());
+    }
 }
 
-void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum) {
+void BlockProcessor::ProcessInsideStamped(const SignedTransaction &inst,int32_t seqnum,int32_t blocknum) {
     auto fn = BlockProcessor::getFNverifySt(inst);
     if ( !fn ) {
-        qWarning() << "invalid tx inside stamped" << inst.trans().type();
+        qWarning() << "invalid tx inside stamped" << inst.trans().DebugString().data();
         return;
     }
 
     const Transaction &t = inst.trans();
-    switch (t.type()) {
-        case TransType::EXCHANGE:
-        {
-#ifndef TRADE_FEATURE
-            break;
-#endif
-            auto emdg = t.GetExtension(ExchangeOrder::exchange_order);
-            //qDebug() << "new ExchangeOrder " << emdg.DebugString();
+    if (t.type() != TransType::EXCHANGE) return;
 
-            //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
-            mExchangeData.OnNewOrderMsg(emdg,seqnum,fn);
-            break;
-        }
-        default:
-            break;
+#ifndef TRADE_FEATURE
+    qWarning() << "ProcessInsideStamped bad FutContract ndef feature";
+    return;
+#endif
+
+    ExchangeOrder emdg = t.GetExtension(ExchangeOrder::exchange_order);
+
+#ifdef TRACE
+    qDebug() << "new ExchangeOrder " << emdg.DebugString().data();
+#endif
+
+    //bool subscribe = mNameData.IsSubscribed(fn->FantasyName.alias());
+
+    if (emdg.type() == ExchangeOrder_Type_CANCEL ) {
+        mExchangeData.OnCancelOrderMsg(emdg,seqnum,fn,blocknum);
+        return;
     }
 
+    if ( emdg.symbol () == "@@RB17s")  {
+        qDebug() << "@@RB";
+     }
+
+    const FutContract *fc;
+    std::string symbol;
+    if ( !emdg.has_futcontract() &&
+         inst.trans().version() == 1 &&
+         ( !emdg.has_symbol() || emdg.symbol() == "") ) {
+        fc = &mFutContract;
+    }
+    else {
+        if ( !emdg.has_futcontract() && emdg.has_symbol() && emdg.symbol().size() > 6 ) {
+            if ( !fantasybit::isWeekly(emdg.symbol()))
+               mFutContract.set_type(FutContract_Type_SEASON);
+            else {
+                mFutContract.set_type(FutContract_Type_WEEKLY);
+                mFutContract.set_week(fantasybit::getSymbolWeek(emdg.symbol ()));
+            }
+            fc = &mFutContract;
+        }
+        else
+            fc = &emdg.futcontract();
+    }
+
+    if ( !emdg.has_symbol() || emdg.symbol() == "") {
+        if ( !emdg.has_playerid() || emdg.playerid() == "") {
+            qWarning() << "invalid tx inside stamped" << inst.trans().type();
+            return;
+        }
+        symbol = mData.GetPlayerStatus(emdg.playerid()).symbol();
+        if ( symbol == "" )  {
+            symbol = emdg.playerid();
+            if ( !fantasybit::isWeekly(symbol)) {
+                mFutContract.set_type(FutContract_Type_SEASON);
+                fc = &mFutContract;
+            }
+            else {
+                mFutContract.set_type(FutContract_Type_WEEKLY);
+                fc = &mFutContract;
+                //to do check week !
+            }
+        }
+        else {
+            symbol += to_string(fc->season()-2000);
+            if ( fc->type() == FutContract_Type_WEEKLY )
+                symbol += (fc->week() < 10 ? "w0" : "w")  + to_string(fc->week());
+            else
+                symbol += "s";
+        }
+    }
+    else
+        symbol = emdg.symbol();
+
+    switch ( fc->type() ) {
+    case FutContract_Type_WEEKLY:
+        if ( fc->week() != mGlobalState.week() ||
+//            mGlobalState.state() != GlobalState_State_INSEASON ||
+            fc->season() != mGlobalState.season()) {
+                qWarning() << "1 ProcessInsideStamped bad FutContract" << fc->DebugString().data() << mGlobalState.DebugString().data();
+                return;
+        }
+        break;
+    case FutContract_Type_ROW:
+        if ( fc->season() != mGlobalState.season() ||
+            mGlobalState.state() != GlobalState_State_INSEASON ) {
+                qWarning() << "2 ProcessInsideStamped bad FutContract" << fc->DebugString().data() << emdg.DebugString().data();
+                return;
+        }
+        break;
+
+    case FutContract_Type_SEASON:
+        if ( fc->season() < mExchangeData.mMinSeason || fc->season() > mExchangeData.mMaxSeason) {
+            qWarning() << "3 ProcessInsideStamped bad FutContract season" << fc->DebugString().data() << emdg.DebugString().data();
+            return;
+        }
+        break;
+    default:
+        return;
+        break;
+    }
+
+    /*
+    auto it = mData.mSym2Pid.find(symbol);
+    if ( it == end(mData.mSym2Pid) ) {
+        qWarning() << "ProcessInsideStamped bad symbol" << fc->DebugString().data(), emdg.DebugString().data(), symbol.data();
+        return;
+    }
+
+    if ( it->second != emdg.playerid() && emdg.playerid() != "" ) {
+        qWarning() << "ProcessInsideStamped bad player ! match symbol" << fc->DebugString().data(), emdg.DebugString().data(), symbol.data();
+        return;
+    }
+    */
+
+   if (  mData.mSym2Pid.find (fantasybit::stripSymbol (symbol)) == end(mData.mSym2Pid) ) {
+       qWarning() << "ProcessInsideStamped bad Symbol" << symbol.data () << fc->DebugString().data() << emdg.DebugString().data();
+       return;
+   }
+   mExchangeData.OnNewOrderMsg(emdg,seqnum,fn,blocknum,fc,symbol);
 }
 
 void BlockProcessor::OnWeekOver(int week) {
@@ -863,31 +1276,73 @@ void BlockProcessor::OnWeekOver(int week) {
 void BlockProcessor::OnWeekStart(int week) {
     mNameData.OnWeekStart(week);
     mData.OnWeekStart(week);
+#ifdef TRADE_FEATURE
     mExchangeData.OnWeekStart(week);
+#endif
+    mLastWeekStart = true;
+
     emit WeekStart(week);
+
+#ifdef TRADE_FEATURE
+    mFutContract.set_week(week);
+#endif
 }
+
+void BlockProcessor::OnSeasonStart(int season) {
+    mNameData.OnSeasonStart(season);
+    mData.OnSeasonStart(season);
+    mExchangeData.OnSeasonStart(season);
+    emit SeasonStart(season);
+#ifdef TRADE_FEATURE
+    mFutContract.set_season(season);
+#endif
+
+}
+
+void BlockProcessor::OnSeasonEnd(int oldseason) {
+//    mNameData.OnSeasonEnd(season);
+    mData.OnSeasonEnd(oldseason);
+    mExchangeData.OnSeasonEnd(oldseason);
+//    emit WeekStart(week);
+#ifdef TRADE_FEATURE
+    mFutContract.set_season(oldseason+1);
+#endif
+}
+
 
 bool BlockProcessor::verifySignedBlock(const Block &sblock)
 {
-    //qDebug() << sblock.DebugString();
+//    return true;
+    //qDebug() << verifySignedBlock;
+#ifdef TRACEDEBUG
+    qDebug() << " verifySignedBlock " << sblock.signedhead().head().DebugString().data();
+#endif
 
     if (sblock.signedhead().head().version() != Commissioner::BLOCK_VERSION)
     {
         qCritical() << " !verifySignedBlock wrong block version! ";
     //    return false;
     }
-    fc::sha256 digest = fc::sha256::hash(sblock.signedhead().head().SerializeAsString());
-    qDebug() << "qqqqqq" << sblock.signedhead().head().num() << digest.str() << sblock.signedhead().head().prev_id();
+
+#ifdef TRACEDEBUG
+    else
+        qDebug() << "yes verifySignedBlock " ;
+#endif
+    pb::sha256 digest = pb::hashit(sblock.signedhead().head().SerializeAsString());
+
+    //qDebug() << "qqqqqq" << sblock.signedhead().head().num()
+    //         << digest.str().data() << sblock.signedhead().head().prev_id();
     //if (digest.str() != sblock.signedhead().id())
     //	return
     //fbutils::LogFalse(std::string("Processor::process block hash error digest \n").append(sblock.DebugString()).append(digest.str()));
     //assert(digest.str() == sblock.id());
 
-    fc::ecc::signature sig = Commissioner::str2sig(sblock.signedhead().sig());
+    pb::signature sig = Commissioner::str2sig(sblock.signedhead().sig());
+
     //assert(Commissioner::verifyOracle(sig, digest));
     if (!Commissioner::verifyOracle(sig, digest))
 #ifdef NO_ORACLE_CHECK_TESTING
-        if (!Commissioner::GENESIS_NUM == sblock.block().head().num())
+        if (!Commissioner::GENESIS_NUM == sblock.signedhead().head().num())
 #endif
         {
             qCritical() << " Invalid Block Signer!";
@@ -897,16 +1352,15 @@ bool BlockProcessor::verifySignedBlock(const Block &sblock)
     return true;
 }
 
+/*
 bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
-    qDebug() << st.DebugString();
-
-    if (st.trans().version() != Commissioner::TRANS_VERSION)
+    if (st.trans().version() > Commissioner::TRANS_VERSION || st.trans().version() < 1)
     {
         qCritical() << " !verifySignedTransaction wrong trans version! ";
         return false;
     }
 
-    fc::sha256 digest = fc::sha256::hash(st.trans().SerializeAsString());
+    pb::sha256 digest = pb::hashit(st.trans().SerializeAsString());
     if (digest.str() != st.id()) {
         qCritical() << "digest.str() != st.id() ";
         return false;
@@ -917,7 +1371,7 @@ bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
         return false;;
     }
 
-    fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+    pb::signature sig = Commissioner::str2sig(st.sig());
     if (st.trans().type() != TransType::NAME)
         if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
         {
@@ -930,16 +1384,53 @@ bool BlockProcessor::verifySignedTransaction(const SignedTransaction &st) {
 
     return true;
 }
+*/
+bool BlockProcessor::verifyBootstrap(LdbWriter &ldb,const Bootstrap &bs) {
+
+//    std::string errorstr;
+//    std::unordered_map<std::string,PlayerMeta> m_playermetamap;
+    //    auto mroot = loadMerkleMap(ldb,bs.playermetaroot(),m_playermetamap);
+
+    std::vector<std::string> roots{bs.playermetaroot(), bs.gamemetaroot(), bs.fnamemetaroot(), bs.posmetaroot() };
+    for ( auto root : roots) {
+        MerkleTree mtree;
+        ldb.read(root,mtree);
+        if ( mtree.root() != root )
+            return false;
+
+        mtree.set_root(pb::makeMerkleRoot(mtree.leaves()));
+        if ( mtree.root() != root )
+            return false;
+
+        MerkleTree mtree2;
+        for ( auto shp : mtree.leaves()) {
+            mtree2.add_leaves(pb::hashit(ldb.read(shp)).str());
+        }
+
+        mtree.set_root(pb::makeMerkleRoot(mtree2.leaves()));
+        if ( mtree.root() != root )
+            return false;
+    }
+
+    return true;
+}
 
 std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransaction &st) {
+    {
+    auto ret = Commissioner::getName(st.fantasy_name());
 
+    if ( !isValidTx(st) )
+        ret.reset();
+
+    return ret;
+    }
     std::shared_ptr<FantasyName> ret;
-    if (st.trans().version() != Commissioner::TRANS_VERSION) {
+    if (st.trans().version() > Commissioner::TRANS_VERSION || st.trans().version() < 1 ) {
         qCritical() << " !verifySignedTransaction wrong trans version! ";
         return ret;
     }
 
-    fc::sha256 digest = fc::sha256::hash(st.trans().SerializeAsString());
+    pb::sha256 digest = pb::hashit(st.trans().SerializeAsString());
     if (digest.str() != st.id()) {
         qCritical() << "digest.str() != st.id() ";
         return ret;
@@ -950,26 +1441,27 @@ std::shared_ptr<FantasyName> BlockProcessor::getFNverifySt(const SignedTransacti
         return ret;
     }
 
+
+
     ret = Commissioner::getName(st.fantasy_name());
     if ( !ret )
-        qCritical() << " cant find FantasyName" << st.fantasy_name();
+        qCritical() << " cant find FantasyName" << st.fantasy_name().data();
     else {
-        fc::ecc::signature sig = Commissioner::str2sig(st.sig());
+        pb::signature sig = Commissioner::str2sig(st.sig());
         if ( !Commissioner::verify(sig,digest,ret->pubkey()) ) {
             ret.reset();
-            qCritical() << "verify error" << st.fantasy_name() << "getFNverifySt";
+            qCritical() << "verify error" << st.fantasy_name().data() << "getFNverifySt";
         }
     }
     return ret;
 }
 
-bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &nt, 
-	const fc::ecc::signature& sig, const fc::sha256 &digest) { 
+bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &nt,
+    const pb::signature& sig, const pb::sha256 &digest) {
 
     if ( !Commissioner::isAliasAvailable(nt.fantasy_name()) )
     {
-        qCritical() << std::string("Processor::process failure: FantasyName(").
-                        append(nt.fantasy_name() + ")  hash already used ");
+        qCritical() << "Processor::process failure: FantasyName(" << nt.fantasy_name().data() << ")  hash already used ";
         return false;
     }
 
@@ -977,75 +1469,82 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
     auto pk = Commissioner::str2pk(nt.public_key());
     auto name = Commissioner::getName(pk);
     if ( name != nullptr ) {
-        qCritical() << std::string("verfiy_name failure: FantasyName(").
-                        append(nt.fantasy_name() + ")  pubkey already n use") +
-                         name->ToString();
+        qCritical() << "verfiy_name failure: FantasyName(" <<
+                        nt.fantasy_name().data() << ")  pubkey already n use" <<
+                         name->ToString().data();
                         //.append(st.DebugString());
 
         return false;
     }
 
     if ( !Commissioner::verify(sig,digest,pk)) {
-        qCritical() << "verfiy_name verify failure";
-        return false;
+        if ( !Commissioner::verifyOracle(sig,digest)) {
+            qDebug() << "verfiy_name verify failure";
+            return false;
+        }
     }
     else qDebug() << " ssssss veroify name";
 
-	auto proof = nt.proof();
-	switch (proof.type())
-	{
-		case NameProof_Type_TWEET:
-		{
-			auto tp = proof.GetExtension(TweetProof::tweet_proof);
-			//TODO verify tweet
-			return true;
-		}
-		break;
+    auto proof = nt.proof();
+    switch (proof.type())
+    {
+        case NameProof_Type_TWEET:
+        {
+            auto tp = proof.GetExtension(TweetProof::tweet_proof);
+            //TODO verify tweet
+            return true;
+        }
+        break;
 
-		case NameProof_Type_ORACLE:
-		{
-			return true;//TODO
-			//verify oracle
-			if (!Commissioner::verifyOracle(sig, digest))
+        case NameProof_Type_ORACLE:
+        {
+            return true;//TODO
+            //verify oracle
+            if (!Commissioner::verifyOracle(sig, digest))
 #ifdef NO_ORACLE_CHECK_TESTING
-			if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
+            if (!Commissioner::verifyByName(sig, digest, st.fantasy_name()))
 #endif
             {
-                qCritical() << std::string("Processor::process name proof oracle failed")
-                                 .append(st.DebugString());
+                qCritical() << "Processor::process name proof oracle failed";
+                qDebug() << st.DebugString().data();
 
                 return false;
             }
             else
                 return true;
-		}
-		break;
+        }
+        break;
 
-		default:
+        default:
             return true;
-			break;
-	}
-	/*
-	assert(pow.hash() == pfn->hash());
-	Commissioner::Hash2Pk.emplace(pow.hash(), pfn->pubkey);
-	Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
-	if (nt.has_name_pow())
+            break;
+    }
+    /*
+    assert(pow.hash() == pfn->hash());
+    Commissioner::Hash2Pk.emplace(pow.hash(), pfn->pubkey);
+    Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+    if (nt.has_name_pow())
 
-	else if (nt.has_tweet_proof())
-	{
-	auto top = nt.tweet_proof();
-	pfn->pubkey = Commissioner::str2pk(top.public_key());
-	pfn->alias = nt.fantasy_name();
-	//assert(pow.hash() == pfn->hash());
-	Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
-	Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
-	continue;
-	}
-	*/
+    else if (nt.has_tweet_proof())
+    {
+    auto top = nt.tweet_proof();
+    pfn->pubkey = Commissioner::str2pk(top.public_key());
+    pfn->alias = nt.fantasy_name();
+    //assert(pow.hash() == pfn->hash());
+    Commissioner::Hash2Pk.emplace(pfn->hash(), pfn->pubkey);
+    Commissioner::FantasyNames.emplace(pfn->pubkey, pfn);
+    continue;
+    }
+    */
 }
 
 BlockProcessor::BlockProcessor(NFLStateData &data, FantasyNameData &namedata, ExchangeData &ed) :
-    mData(data), mNameData(namedata) , mExchangeData(ed) {}
+//    #if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT)
+//        sql("satoshifantasy","distribution"),
+//    #endif
+    mData(data), mNameData(namedata) , mExchangeData(ed) {
+
+    }
 
 
 }

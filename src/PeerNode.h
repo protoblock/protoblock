@@ -8,23 +8,16 @@
 
 #ifndef __fantasybit__Node__
 #define __fantasybit__Node__
-/*
-#include <assert.h>
-#include <string>
-#include <iostream>
-#include <set>
-#include <vector>
-*/
 
 #include <mutex>
 #include "fbutils.h"
 
-#include <fc/optional.hpp>
-//#include "boostLog.h"
+#include <optional.hpp>
 #include <leveldb/db.h>
 #include "ProtoData.pb.h"
 #include <memory>
 #include <leveldb/comparator.h>
+#include "StateData.pb.h"
 
 namespace fantasybit
 {
@@ -33,6 +26,8 @@ class Node
 {
     int32_t current_hight = 0;
     int32_t global_height = 0;
+    Bootstrap current_boot{};
+
 public:
     Node();
     void init();
@@ -56,24 +51,33 @@ public:
 
     static std::vector<Block> getGlobalBlock(int32_t num, int32_t bend) ;
 
+#ifndef NOCHECK_LOCAL_BOOTSTRAP
+    static Bootstrap getLastLocalBoot();
+#endif
+
     static int32_t getLastLocalBlockNum();
     static int32_t myLastGlobalBlockNum();
     static void setLastGlobalBlockNum(int32_t num);
     static std::mutex blockchain_mutex;
 
-    static void ClearTx(const Block &);
-	static std::shared_ptr<leveldb::DB> blockchain;
-    static std::shared_ptr<leveldb::DB> txpool;
-    static int32_t GlobalHeight;
-    static bool addTxPool(const std::string &id, std::string &txstr)  {
-        return (txpool->Put(leveldb::WriteOptions(), id, txstr ).ok());
+#ifndef NO_DOSPECIALRESULTS
+    static bool doSpecialResults;
+#endif
 
-    }
+	static std::shared_ptr<leveldb::DB> blockchain;
+//    static std::shared_ptr<leveldb::DB> txpool;
+    static int32_t GlobalHeight;
+//    static bool addTxPool(const std::string &id, std::string &txstr)  {
+//        return (txpool->Put(leveldb::WriteOptions(), id, txstr ).ok());
+
+//    }
+
+    static std::shared_ptr<leveldb::DB> bootstrap;
 
     static bool forking;
 
-    void Cleaner();
-    bool Cleanit(Block *b) ;
+private:
+    static int getBootSeason();
 };
 
 
@@ -98,8 +102,6 @@ class Int32Comparator : public leveldb::Comparator {
   void FindShortestSeparator(std::string*, const leveldb::Slice&) const { }
   void FindShortSuccessor(std::string*) const { }
 };
-//static std::string SEED_NODE("162.254.27.226");
-//static std::string SEED_HOST("Jets");
 
 }
 

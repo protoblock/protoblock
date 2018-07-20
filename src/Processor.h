@@ -14,16 +14,18 @@
 #include "blockrecorder.h"
 #include "Data.h"
 #include "NameData.h"
-#include <fc/crypto/sha256.hpp>
-#include <fc/crypto/elliptic.hpp>
+#include <utils/utils.h>
 #include "ProtoData.pb.h"
 #include "ApiData.pb.h"
-#include "timestate.h"
+//#include "timestate.h"
 #include "ExchangeData.h"
 #ifdef BLOCK_EXPLORER
 #include "blockexplorer.h"
 #endif
 
+#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
+#include "SqlStuff.h"
+#endif
 
 
 
@@ -31,7 +33,6 @@ namespace fantasybit
 {
 
 class BlockProcessor : public QObject {
-
     Q_OBJECT
 
     BlockRecorder mRecorder{};
@@ -40,22 +41,33 @@ class BlockProcessor : public QObject {
     ExchangeData &mExchangeData;
     int32_t realHeight = 0;
     int32_t lastidprocessed = 0;
-    //GlobalState mGlobalState{};
+    bool mLastWeekStart = false;
+    GlobalState mGlobalState;
     bool verify_name(const SignedTransaction &, const NameTrans &,
-                     const fc::ecc::signature&, const fc::sha256 &);
+                     const pb::signature&, const pb::sha256 &);
     bool amlive = false;
+    FutContract mFutContract;
+
+//#if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT) || defined(SQLSTUFF)
+//    SqlStuff sql;
+//#endif
+    std::unordered_set<std::string> mUsedTxId;
+    std::map<int,std::vector<std::string>> mTimeOfTxidBlock;
+    std::vector<std::string> *mCurrBTxid;
+
 public slots:
     void OnLive(bool) {
         amlive = true;
     }
 
 signals:
+    void SeasonStart(int);
     void WeekStart(int);
     void WeekOver(int);
     void InvalidState(int);   
     void new_dataDistribution(fantasybit::Distribution);
     void onControlMessage(QString);
-
+    void FinishedResults();
 
 public:
     BlockProcessor(NFLStateData &data, FantasyNameData &namedata,
@@ -69,24 +81,25 @@ public:
     //bool sanity(const FantasyPlayerPoints &fpp);
 	void process(decltype(DataTransition::default_instance().data()) in, 
                 const std::string &blocksigner,
-                 const TrType);
+                 const TrType, int season);
     void process(const DataTransition &indt);
     bool isValidTx(const SignedTransaction &st);
-    void processTxfrom(const Block &b,int start = 0);
+    void processTxfrom(const Block &b,int start = 0,bool nameonly = false);
     static bool verifySignedBlock(const Block &sblock);
-    static bool verifySignedTransaction(const SignedTransaction &st);
-    static std::shared_ptr<FantasyName>
+//    static bool verifySignedTransaction(const SignedTransaction &st);
+    static bool verifyBootstrap(LdbWriter &ldb, const Bootstrap &bs);
+    std::shared_ptr<FantasyName>
             getFNverifySt(const SignedTransaction &st);
     void processResultProj(PlayerResult* playerresult,
                            std::unordered_map<std::string,int> &proj,
-                           BookPos *,
-                           const std::string &blocksigner);
+                           std::pair<BookPos *, BookPos *>,
+                           const std::string &blocksigner, bool = false);
 
     void OnWeekOver(int week);
     void OnWeekStart(int week);
 
     void hardReset();
-    void ProcessInsideStamped(const SignedTransaction &inst, int32_t);
+    void ProcessInsideStamped(const SignedTransaction &inst, int32_t, int32_t);
 
 #ifdef BLOCK_EXPLORER
     fantasybit_bx::BlockExplorer bx;
@@ -166,6 +179,10 @@ public:
         iret = (double)ret / 100.0;
         return iret;
     }
+
+    void OnSeasonStart(int season);
+    void OnSeasonEnd(int season);
+
 
 };
 

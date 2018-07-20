@@ -7,7 +7,6 @@
 #include "NodeWorker.h"
 #include "FantasyAgent.h"
 #include "Processor.h"
-#include "FantasyAgent.h"
 #include "NameData.h"
 #include "Data.h"
 #include "NameData.pb.h"
@@ -17,15 +16,19 @@
 #include <vector>
 #include <mutex>
 #include "iresolvable.h"
+#include "pbgateways.h"
 
 using fantasybit::GlobalState;
 using namespace fantasybit;
 using namespace std;
 class MainLAPIWorker : public QObject , public IResolvable
+        , public pb::IPBGateway
+
 {
     Q_OBJECT
+    Q_INTERFACES(pb::IPBGateway)
 
-    int intervalmax = 60000;
+    int intervalmax = 30000;
     int intervalstart = 500;
     int bcount =0;
     int pcount =0;
@@ -36,6 +39,7 @@ class MainLAPIWorker : public QObject , public IResolvable
 #endif
     int32_t numto = std::numeric_limits<int32_t>::max();
     bool amlive = false;
+    bool quitting = false;
     QTimer * timer;
     fantasybit::FantasyAgent agent{};
     fantasybit::NFLStateData data;
@@ -53,6 +57,9 @@ class MainLAPIWorker : public QObject , public IResolvable
 
     std::recursive_mutex last_mutex{};
 
+#ifdef TESTING_PRE_ROW_TRADE_FEATURE
+    bool justwentlive = false;
+#endif
 public:
     MainLAPIWorker(QObject * parent=0);
     ~MainLAPIWorker(){}
@@ -99,6 +106,7 @@ signals:
     void GlobalStateChange(fantasybit::GlobalState);
     void LiveGui(fantasybit::GlobalState);
     void NewWeek(int);
+    void NewSeason(int);
     void GameStart(string);
     void GameOver(string);
     void onControlMessage(QString);
@@ -107,6 +115,13 @@ signals:
 
     void Height(int);
     void BlockNum(int);
+
+    void NewFantasyName(fantasybit::FantasyNameBal);
+
+    void AnyFantasyNameBalance(fantasybit::FantasyNameBal);
+
+    void FinishedResults();
+
 
 public slots:
 
@@ -134,20 +149,26 @@ public slots:
     void OnClaimName(QString);
     void OnProjTX(vector<fantasybit::FantasyBitProj>);
 
-    //void OnNewOrder(fantasybit::ExchangeOrder);
+    void OnNewOrder(fantasybit::ExchangeOrder);
+    void OnNewTransfer(fantasybit::TransferTrans);
+
+    void Quit();
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);
     //void OnNameBal(fantasybit::FantasyNameBal);
     //void OnPlayerStatusChange(pair<string,fantasybit::PlayerStatus>);
 
-    //dataagent
-    void BeOracle();
-private:
     void DoSubscribe(const string &name, bool suborun);
+
+    //dataagent
+#ifdef DATAAGENT
+    void BeOracle();
+#endif
+private:
 
     bool Process(fantasybit::Block &b);
     bool doProcessBlock();
-
+    string m_txstr;
     //void doNewDelta();
 
 };

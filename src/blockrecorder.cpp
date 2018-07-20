@@ -5,6 +5,8 @@
 
 using namespace fantasybit ;
 
+int BlockRecorder::zeroblock(-1);
+int BlockRecorder::BlockTimestamp(0);
 
 void BlockRecorder::InitCheckpoint(int32_t lastblock) {
     leveldb::DB *db1;
@@ -27,21 +29,22 @@ void BlockRecorder::init() {
     leveldb::Status status;
 
     status = leveldb::DB::Open(options, filedir("blockstatus"), &db1);
-    qDebug() << filedir("blockstatus");
+    qDebug() << filedir("blockstatus").data();
     if (!status.ok()) {
         std::string err = status.ToString();
-        qWarning() << err;
+        qWarning() << err.data();
     }
     blockstatus.reset(db1);
     std::string value;
     status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);
     if (!status.ok()) {
-        lastBlock =  0;
-        qWarning() << "!ok no blocks";
+        lastBlock =  BlockRecorder::zeroblock;
+        qWarning() << "!ok no blocks start from " << lastBlock;
     }
     else {
         lastBlock = *(reinterpret_cast<const int32_t *>(value.data()));
-        qInfo() << "lastBLock: " << lastBlock;
+        qInfo() << "BlockRecorder::init lastBLock: " << lastBlock;
+
     }
 
     #ifdef CLEAN_BLOCKS
@@ -59,18 +62,25 @@ void BlockRecorder::init() {
 
 
 void BlockRecorder::startBlock(int32_t num) {
+#ifdef TRACEDEBUG
+        qDebug() << " startBlock " << num;
+#endif
+
     leveldb::Slice value((char*)&num, sizeof(int32_t));
     blockstatus->Put(write_sync, "processing", value);
     blockstatus->Put(write_sync, "lastblock", value);
-    qInfo() << "starting block: " << num;
+    //qInfo() << "starting block: " << num;
 }
 
 
 int32_t BlockRecorder::endBlock(int32_t num) {
+#ifdef TRACEDEBUG
+        qDebug() << " endBlock " << num;
+#endif
     int32_t none = -1;
     leveldb::Slice value((char*)&none, sizeof(int32_t));
     blockstatus->Put(write_sync, "processing", value);
-    qInfo() << "end block: " << num;
+    //qInfo() << "end block: " << num;
     return num;
 }
 
@@ -81,7 +91,7 @@ bool BlockRecorder::isValid() {
         return true;
 
     int32_t num = *(reinterpret_cast<const int32_t *>(value.data()));
-    return num < 0;
+    return num < 0 && lastBlock > BlockRecorder::zeroblock;
 }
 
 

@@ -133,7 +133,7 @@ public:
                 this, SLOT(networkAccessibleChangedSlot(QNetworkAccessManager::NetworkAccessibility)));
     }
 
-    bool postProtoMessageData(const QString & route,const QString & contentType,const google::protobuf::Message & protoMessage){
+    bool postProtoMessageData(const QString & route,const QString & contentType,const GOOGLE_NAMESPACE::protobuf::Message & protoMessage){
         std::string data = protoMessage.SerializeAsString().data();
         return postRawData(route,contentType,data.data(),data.size());
     }
@@ -142,7 +142,7 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
-        PostDataDecorator decorator(&myNetworkManager,&request);        
+        PostDataDecorator decorator(&myNetworkManager,&request);
         myCurrentNetworkReply = decorator.postBinaryData(contentType,postData);
         if (myCurrentNetworkReply == NULL) return false;
         waitForReply();
@@ -164,7 +164,7 @@ public:
         QNetworkRequest request;
         restNetworkStatus();
         request.setUrl(QUrl(myBaseUrl.toString()+"/"+route));
-        PostDataDecorator decorator(&myNetworkManager,&request);        
+        PostDataDecorator decorator(&myNetworkManager,&request);
         myCurrentNetworkReply = decorator.postJsonData(contentType,jsonDoc);
         if (myCurrentNetworkReply == NULL) return false;
         waitForReply();
@@ -238,7 +238,7 @@ public:
     }
 
     QByteArray lastReply() {
-#ifdef TRACE
+#ifdef TRACE3
         if ( myLastRepliedData.size() > 100 )
             qDebug() << myLastRepliedData.size();
         else
@@ -248,6 +248,11 @@ public:
         return myLastRepliedData;
     }
 
+    int lastCode() {
+        return statusCode;
+    }
+
+    int statusCode = 0;
 
     bool postTData(const QString & route,
                  const QMap<QString,QString> parameters,
@@ -302,6 +307,9 @@ private slots:
         //qDebug() << "finishedSlot";
         if (reply != NULL){
             myLastRepliedData = reply->readAll();
+            statusCode =
+                    reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
             reply->deleteLater();
         }
         else
@@ -319,19 +327,25 @@ private slots:
     }
 
     void networkErrorSlot(QNetworkReply::NetworkError error ) {
-        if (myCurrentNetworkReply != NULL){
-            QUrl redirection =
-                    myCurrentNetworkReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        if (myCurrentNetworkReply == NULL)
+            return;
 
-            if (redirection.isValid()) //no action is taken we're always allowing redirection
-                qDebug() << "server redirection : " << redirection.toString() ;
-            else {
-                qDebug() << "net error : " << myCurrentNetworkReply->errorString();
-                //the finsihed signal will follow
-            }
+        QUrl redirection =
+                myCurrentNetworkReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+
+        if (redirection.isValid()) //no action is taken we're always allowing redirection
+            qDebug() << "server redirection : " << redirection.toString() ;
+        else {
+            qDebug() << "net error : " << myCurrentNetworkReply->errorString();
+            //the finsihed signal will follow
         }
+
         myCurrentNetworkError = error;
-    }
+        myCurrentNetworkReply->ignoreSslErrors();
+
+        statusCode =
+                myCurrentNetworkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+   }
 
     void networkAccessibleChangedSlot(QNetworkAccessManager::NetworkAccessibility accessible){
         if (accessible != QNetworkAccessManager::Accessible)
@@ -442,12 +456,12 @@ public:
 
     static std::string getBlk(const QString & baseUrl,int32_t blockNum,
                               QThread * ownerThread = QThread::currentThread()){
-#ifdef TRACE
+#ifdef TRACE3
         qDebug() << " get blk " << blockNum;
 #endif
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
-#ifdef TRACE
+#ifdef TRACE3
         qDebug() << " get blk 2 " << baseUrl;
 #endif
 
@@ -458,7 +472,7 @@ public:
         QString customRoute = "block/" + QString::number(blockNum);
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
-#ifdef TRACE
+#ifdef TRACE3
         qDebug() << " get blk 3 " << baseUrl;
 #endif
 
@@ -478,14 +492,14 @@ public:
         std::vector<std::string> ret{};
         for ( int i = blockNum; i <= blockEnd; i++) {
 #ifdef TRACE
-            qDebug() << " get blk " << i;
+//            qDebug() << "getBlk get blk: " << i;
 #endif
             //hard coded url
             //TODO move to settings
             QString customRoute = "block/" + QString::number(i);
             //customRoute = customRoute.arg(route).arg(blockNum);
             client.getData(customRoute,params,headers);
-#ifdef TRACE
+#ifdef TRACE4
             qDebug() << " get blk 3 " << baseUrl;
 #endif
 
@@ -497,14 +511,14 @@ public:
     }
 
     static int32_t getHeight(const QString & baseUrl, QThread * ownerThread = QThread::currentThread()) {
-        qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
+//        qDebug() << "inside getHeight : cureent thread" << QThread::currentThread();
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
         QMap<QString,QVariant> params;
         //hard coded url
         //TODO move to settings
-        QString customRoute("block-height");      
+        QString customRoute("block-height");
         client.getData(customRoute,params,headers);
         auto response = client.lastReply();
         QString str( response );
