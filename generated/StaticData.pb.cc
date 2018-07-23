@@ -47,6 +47,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* GameResult_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   GameResult_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SeasonResult_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SeasonResult_reflection_ = NULL;
+const ::google::protobuf::Descriptor* PlayerContractSymbol_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  PlayerContractSymbol_reflection_ = NULL;
 
 }  // namespace
 
@@ -188,12 +194,14 @@ void protobuf_AssignDesc_StaticData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Stats));
   PlayerResult_descriptor_ = file->message_type(7);
-  static const int PlayerResult_offsets_[5] = {
+  static const int PlayerResult_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, result_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, stats_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, fantaybitaward_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, fantasybitpnl_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, rowposdividend_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerResult, symbol_),
   };
   PlayerResult_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -207,11 +215,13 @@ void protobuf_AssignDesc_StaticData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PlayerResult));
   GameResult_descriptor_ = file->message_type(8);
-  static const int GameResult_offsets_[4] = {
+  static const int GameResult_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameResult, gameid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameResult, home_result_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameResult, away_result_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameResult, kickofftime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameResult, hometotal_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameResult, awaytotal_),
   };
   GameResult_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -224,6 +234,45 @@ void protobuf_AssignDesc_StaticData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GameResult));
+  SeasonResult_descriptor_ = file->message_type(9);
+  static const int SeasonResult_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SeasonResult, season_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SeasonResult, player_results_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SeasonResult, total_),
+  };
+  SeasonResult_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SeasonResult_descriptor_,
+      SeasonResult::default_instance_,
+      SeasonResult_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SeasonResult, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SeasonResult, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SeasonResult));
+  PlayerContractSymbol_descriptor_ = file->message_type(10);
+  static const int PlayerContractSymbol_offsets_[8] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, symbol_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, playerid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, sybhash_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, initals2_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, seq2_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, year2_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, type1sorw_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, week1or04s_),
+  };
+  PlayerContractSymbol_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      PlayerContractSymbol_descriptor_,
+      PlayerContractSymbol::default_instance_,
+      PlayerContractSymbol_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerContractSymbol, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(PlayerContractSymbol));
 }
 
 namespace {
@@ -254,6 +303,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
     PlayerResult_descriptor_, &PlayerResult::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     GameResult_descriptor_, &GameResult::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SeasonResult_descriptor_, &SeasonResult::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    PlayerContractSymbol_descriptor_, &PlayerContractSymbol::default_instance());
 }
 
 }  // namespace
@@ -277,6 +330,10 @@ void protobuf_ShutdownFile_StaticData_2eproto() {
   delete PlayerResult_reflection_;
   delete GameResult::default_instance_;
   delete GameResult_reflection_;
+  delete SeasonResult::default_instance_;
+  delete SeasonResult_reflection_;
+  delete PlayerContractSymbol::default_instance_;
+  delete PlayerContractSymbol_reflection_;
 }
 
 void protobuf_AddDesc_StaticData_2eproto() {
@@ -304,15 +361,24 @@ void protobuf_AddDesc_StaticData_2eproto() {
     "\001(\005\022\r\n\005onept\030n \001(\005\"s\n\005Stats\022\"\n\006ostats\030\n "
     "\001(\0132\022.fantasybit.Ostats\022\"\n\006dstats\030\024 \001(\0132"
     "\022.fantasybit.Dstats\022\"\n\006kstats\030\036 \001(\0132\022.fa"
-    "ntasybit.Kstats\"\271\001\n\014PlayerResult\022\020\n\010play"
+    "ntasybit.Kstats\"\374\001\n\014PlayerResult\022\020\n\010play"
     "erid\030\024 \001(\t\022\016\n\006result\030( \001(\002\022 \n\005stats\0302 \001("
     "\0132\021.fantasybit.Stats\0223\n\016fantaybitaward\030<"
     " \003(\0132\033.fantasybit.FantasyBitAward\0220\n\rfan"
     "tasybitpnl\030F \003(\0132\031.fantasybit.FantasyBit"
-    "Pnl\"\217\001\n\nGameResult\022\016\n\006gameid\030\001 \001(\t\022-\n\013ho"
-    "me_result\030\n \003(\0132\030.fantasybit.PlayerResul"
-    "t\022-\n\013away_result\030\024 \003(\0132\030.fantasybit.Play"
-    "erResult\022\023\n\013kickofftime\030\036 \001(\r", 1029);
+    "Pnl\0221\n\016rowposdividend\030P \003(\0132\031.fantasybit"
+    ".FantasyBitPnl\022\016\n\006symbol\030Z \001(\t\"\265\001\n\nGameR"
+    "esult\022\016\n\006gameid\030\001 \001(\t\022-\n\013home_result\030\n \003"
+    "(\0132\030.fantasybit.PlayerResult\022-\n\013away_res"
+    "ult\030\024 \003(\0132\030.fantasybit.PlayerResult\022\023\n\013k"
+    "ickofftime\030\036 \001(\r\022\021\n\thomeTotal\030( \001(\002\022\021\n\ta"
+    "wayTotal\0302 \001(\002\"_\n\014SeasonResult\022\016\n\006season"
+    "\030\001 \001(\004\0220\n\016player_results\030\n \003(\0132\030.fantasy"
+    "bit.PlayerResult\022\r\n\005total\030\024 \001(\002\"\237\001\n\024Play"
+    "erContractSymbol\022\016\n\006symbol\030\n \001(\t\022\020\n\010play"
+    "erid\030\024 \001(\t\022\017\n\007sybhash\030\036 \001(\004\022\020\n\010initals2\030"
+    "( \001(\t\022\014\n\004seq2\0302 \001(\t\022\r\n\005year2\030< \001(\t\022\021\n\tty"
+    "pe1sorw\030F \001(\t\022\022\n\nweek1or04s\030P \001(\t", 1393);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StaticData.proto", &protobuf_RegisterTypes);
   PlayerBase::default_instance_ = new PlayerBase();
@@ -324,6 +390,8 @@ void protobuf_AddDesc_StaticData_2eproto() {
   Stats::default_instance_ = new Stats();
   PlayerResult::default_instance_ = new PlayerResult();
   GameResult::default_instance_ = new GameResult();
+  SeasonResult::default_instance_ = new SeasonResult();
+  PlayerContractSymbol::default_instance_ = new PlayerContractSymbol();
   PlayerBase::default_instance_->InitAsDefaultInstance();
   GameInfo::default_instance_->InitAsDefaultInstance();
   WeeklySchedule::default_instance_->InitAsDefaultInstance();
@@ -333,6 +401,8 @@ void protobuf_AddDesc_StaticData_2eproto() {
   Stats::default_instance_->InitAsDefaultInstance();
   PlayerResult::default_instance_->InitAsDefaultInstance();
   GameResult::default_instance_->InitAsDefaultInstance();
+  SeasonResult::default_instance_->InitAsDefaultInstance();
+  PlayerContractSymbol::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_StaticData_2eproto);
 }
 
@@ -2941,6 +3011,8 @@ const int PlayerResult::kResultFieldNumber;
 const int PlayerResult::kStatsFieldNumber;
 const int PlayerResult::kFantaybitawardFieldNumber;
 const int PlayerResult::kFantasybitpnlFieldNumber;
+const int PlayerResult::kRowposdividendFieldNumber;
+const int PlayerResult::kSymbolFieldNumber;
 #endif  // !_MSC_VER
 
 PlayerResult::PlayerResult()
@@ -2963,6 +3035,7 @@ void PlayerResult::SharedCtor() {
   playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   result_ = 0;
   stats_ = NULL;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2973,6 +3046,9 @@ PlayerResult::~PlayerResult() {
 void PlayerResult::SharedDtor() {
   if (playerid_ != &::google::protobuf::internal::kEmptyString) {
     delete playerid_;
+  }
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
   }
   if (this != default_instance_) {
     delete stats_;
@@ -3011,9 +3087,15 @@ void PlayerResult::Clear() {
     if (has_stats()) {
       if (stats_ != NULL) stats_->::fantasybit::Stats::Clear();
     }
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
   }
   fantaybitaward_.Clear();
   fantasybitpnl_.Clear();
+  rowposdividend_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3096,6 +3178,38 @@ bool PlayerResult::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(562)) goto parse_fantasybitpnl;
+        if (input->ExpectTag(642)) goto parse_rowposdividend;
+        break;
+      }
+
+      // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+      case 80: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_rowposdividend:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_rowposdividend()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(642)) goto parse_rowposdividend;
+        if (input->ExpectTag(722)) goto parse_symbol;
+        break;
+      }
+
+      // optional string symbol = 90;
+      case 90: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_symbol:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3150,6 +3264,21 @@ void PlayerResult::SerializeWithCachedSizes(
       70, this->fantasybitpnl(i), output);
   }
 
+  // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+  for (int i = 0; i < this->rowposdividend_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      80, this->rowposdividend(i), output);
+  }
+
+  // optional string symbol = 90;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      90, this->symbol(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3194,6 +3323,23 @@ void PlayerResult::SerializeWithCachedSizes(
         70, this->fantasybitpnl(i), target);
   }
 
+  // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+  for (int i = 0; i < this->rowposdividend_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        80, this->rowposdividend(i), target);
+  }
+
+  // optional string symbol = 90;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        90, this->symbol(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -3224,6 +3370,13 @@ int PlayerResult::ByteSize() const {
           this->stats());
     }
 
+    // optional string symbol = 90;
+    if (has_symbol()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
+    }
+
   }
   // repeated .fantasybit.FantasyBitAward fantaybitaward = 60;
   total_size += 2 * this->fantaybitaward_size();
@@ -3239,6 +3392,14 @@ int PlayerResult::ByteSize() const {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         this->fantasybitpnl(i));
+  }
+
+  // repeated .fantasybit.FantasyBitPnl rowposdividend = 80;
+  total_size += 2 * this->rowposdividend_size();
+  for (int i = 0; i < this->rowposdividend_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->rowposdividend(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -3268,6 +3429,7 @@ void PlayerResult::MergeFrom(const PlayerResult& from) {
   GOOGLE_CHECK_NE(&from, this);
   fantaybitaward_.MergeFrom(from.fantaybitaward_);
   fantasybitpnl_.MergeFrom(from.fantasybitpnl_);
+  rowposdividend_.MergeFrom(from.rowposdividend_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_playerid()) {
       set_playerid(from.playerid());
@@ -3277,6 +3439,9 @@ void PlayerResult::MergeFrom(const PlayerResult& from) {
     }
     if (from.has_stats()) {
       mutable_stats()->::fantasybit::Stats::MergeFrom(from.stats());
+    }
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3306,6 +3471,8 @@ void PlayerResult::Swap(PlayerResult* other) {
     std::swap(stats_, other->stats_);
     fantaybitaward_.Swap(&other->fantaybitaward_);
     fantasybitpnl_.Swap(&other->fantasybitpnl_);
+    rowposdividend_.Swap(&other->rowposdividend_);
+    std::swap(symbol_, other->symbol_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -3328,6 +3495,8 @@ const int GameResult::kGameidFieldNumber;
 const int GameResult::kHomeResultFieldNumber;
 const int GameResult::kAwayResultFieldNumber;
 const int GameResult::kKickofftimeFieldNumber;
+const int GameResult::kHomeTotalFieldNumber;
+const int GameResult::kAwayTotalFieldNumber;
 #endif  // !_MSC_VER
 
 GameResult::GameResult()
@@ -3348,6 +3517,8 @@ void GameResult::SharedCtor() {
   _cached_size_ = 0;
   gameid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   kickofftime_ = 0u;
+  hometotal_ = 0;
+  awaytotal_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3392,6 +3563,8 @@ void GameResult::Clear() {
       }
     }
     kickofftime_ = 0u;
+    hometotal_ = 0;
+    awaytotal_ = 0;
   }
   home_result_.Clear();
   away_result_.Clear();
@@ -3463,6 +3636,38 @@ bool GameResult::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(325)) goto parse_homeTotal;
+        break;
+      }
+
+      // optional float homeTotal = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_homeTotal:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &hometotal_)));
+          set_has_hometotal();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(405)) goto parse_awayTotal;
+        break;
+      }
+
+      // optional float awayTotal = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_awayTotal:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &awaytotal_)));
+          set_has_awaytotal();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3511,6 +3716,16 @@ void GameResult::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(30, this->kickofftime(), output);
   }
 
+  // optional float homeTotal = 40;
+  if (has_hometotal()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(40, this->hometotal(), output);
+  }
+
+  // optional float awayTotal = 50;
+  if (has_awaytotal()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(50, this->awaytotal(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3548,6 +3763,16 @@ void GameResult::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(30, this->kickofftime(), target);
   }
 
+  // optional float homeTotal = 40;
+  if (has_hometotal()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(40, this->hometotal(), target);
+  }
+
+  // optional float awayTotal = 50;
+  if (has_awaytotal()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(50, this->awaytotal(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -3571,6 +3796,16 @@ int GameResult::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->kickofftime());
+    }
+
+    // optional float homeTotal = 40;
+    if (has_hometotal()) {
+      total_size += 2 + 4;
+    }
+
+    // optional float awayTotal = 50;
+    if (has_awaytotal()) {
+      total_size += 2 + 4;
     }
 
   }
@@ -3624,6 +3859,12 @@ void GameResult::MergeFrom(const GameResult& from) {
     if (from.has_kickofftime()) {
       set_kickofftime(from.kickofftime());
     }
+    if (from.has_hometotal()) {
+      set_hometotal(from.hometotal());
+    }
+    if (from.has_awaytotal()) {
+      set_awaytotal(from.awaytotal());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -3651,6 +3892,8 @@ void GameResult::Swap(GameResult* other) {
     home_result_.Swap(&other->home_result_);
     away_result_.Swap(&other->away_result_);
     std::swap(kickofftime_, other->kickofftime_);
+    std::swap(hometotal_, other->hometotal_);
+    std::swap(awaytotal_, other->awaytotal_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -3662,6 +3905,899 @@ void GameResult::Swap(GameResult* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = GameResult_descriptor_;
   metadata.reflection = GameResult_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SeasonResult::kSeasonFieldNumber;
+const int SeasonResult::kPlayerResultsFieldNumber;
+const int SeasonResult::kTotalFieldNumber;
+#endif  // !_MSC_VER
+
+SeasonResult::SeasonResult()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SeasonResult::InitAsDefaultInstance() {
+}
+
+SeasonResult::SeasonResult(const SeasonResult& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SeasonResult::SharedCtor() {
+  _cached_size_ = 0;
+  season_ = GOOGLE_ULONGLONG(0);
+  total_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SeasonResult::~SeasonResult() {
+  SharedDtor();
+}
+
+void SeasonResult::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SeasonResult::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SeasonResult::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SeasonResult_descriptor_;
+}
+
+const SeasonResult& SeasonResult::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_StaticData_2eproto();
+  return *default_instance_;
+}
+
+SeasonResult* SeasonResult::default_instance_ = NULL;
+
+SeasonResult* SeasonResult::New() const {
+  return new SeasonResult;
+}
+
+void SeasonResult::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    season_ = GOOGLE_ULONGLONG(0);
+    total_ = 0;
+  }
+  player_results_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SeasonResult::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint64 season = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &season_)));
+          set_has_season();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(82)) goto parse_player_results;
+        break;
+      }
+
+      // repeated .fantasybit.PlayerResult player_results = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_player_results:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_player_results()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(82)) goto parse_player_results;
+        if (input->ExpectTag(165)) goto parse_total;
+        break;
+      }
+
+      // optional float total = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_total:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &total_)));
+          set_has_total();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SeasonResult::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional uint64 season = 1;
+  if (has_season()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->season(), output);
+  }
+
+  // repeated .fantasybit.PlayerResult player_results = 10;
+  for (int i = 0; i < this->player_results_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      10, this->player_results(i), output);
+  }
+
+  // optional float total = 20;
+  if (has_total()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(20, this->total(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SeasonResult::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional uint64 season = 1;
+  if (has_season()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->season(), target);
+  }
+
+  // repeated .fantasybit.PlayerResult player_results = 10;
+  for (int i = 0; i < this->player_results_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        10, this->player_results(i), target);
+  }
+
+  // optional float total = 20;
+  if (has_total()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(20, this->total(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SeasonResult::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional uint64 season = 1;
+    if (has_season()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->season());
+    }
+
+    // optional float total = 20;
+    if (has_total()) {
+      total_size += 2 + 4;
+    }
+
+  }
+  // repeated .fantasybit.PlayerResult player_results = 10;
+  total_size += 1 * this->player_results_size();
+  for (int i = 0; i < this->player_results_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->player_results(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SeasonResult::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SeasonResult* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SeasonResult*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SeasonResult::MergeFrom(const SeasonResult& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  player_results_.MergeFrom(from.player_results_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_season()) {
+      set_season(from.season());
+    }
+    if (from.has_total()) {
+      set_total(from.total());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SeasonResult::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SeasonResult::CopyFrom(const SeasonResult& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SeasonResult::IsInitialized() const {
+
+  return true;
+}
+
+void SeasonResult::Swap(SeasonResult* other) {
+  if (other != this) {
+    std::swap(season_, other->season_);
+    player_results_.Swap(&other->player_results_);
+    std::swap(total_, other->total_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SeasonResult::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SeasonResult_descriptor_;
+  metadata.reflection = SeasonResult_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int PlayerContractSymbol::kSymbolFieldNumber;
+const int PlayerContractSymbol::kPlayeridFieldNumber;
+const int PlayerContractSymbol::kSybhashFieldNumber;
+const int PlayerContractSymbol::kInitals2FieldNumber;
+const int PlayerContractSymbol::kSeq2FieldNumber;
+const int PlayerContractSymbol::kYear2FieldNumber;
+const int PlayerContractSymbol::kType1SorwFieldNumber;
+const int PlayerContractSymbol::kWeek1Or04SFieldNumber;
+#endif  // !_MSC_VER
+
+PlayerContractSymbol::PlayerContractSymbol()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void PlayerContractSymbol::InitAsDefaultInstance() {
+}
+
+PlayerContractSymbol::PlayerContractSymbol(const PlayerContractSymbol& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void PlayerContractSymbol::SharedCtor() {
+  _cached_size_ = 0;
+  symbol_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  playerid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  sybhash_ = GOOGLE_ULONGLONG(0);
+  initals2_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  seq2_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  year2_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  type1sorw_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  week1or04s_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+PlayerContractSymbol::~PlayerContractSymbol() {
+  SharedDtor();
+}
+
+void PlayerContractSymbol::SharedDtor() {
+  if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+    delete symbol_;
+  }
+  if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+    delete playerid_;
+  }
+  if (initals2_ != &::google::protobuf::internal::kEmptyString) {
+    delete initals2_;
+  }
+  if (seq2_ != &::google::protobuf::internal::kEmptyString) {
+    delete seq2_;
+  }
+  if (year2_ != &::google::protobuf::internal::kEmptyString) {
+    delete year2_;
+  }
+  if (type1sorw_ != &::google::protobuf::internal::kEmptyString) {
+    delete type1sorw_;
+  }
+  if (week1or04s_ != &::google::protobuf::internal::kEmptyString) {
+    delete week1or04s_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void PlayerContractSymbol::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* PlayerContractSymbol::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return PlayerContractSymbol_descriptor_;
+}
+
+const PlayerContractSymbol& PlayerContractSymbol::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_StaticData_2eproto();
+  return *default_instance_;
+}
+
+PlayerContractSymbol* PlayerContractSymbol::default_instance_ = NULL;
+
+PlayerContractSymbol* PlayerContractSymbol::New() const {
+  return new PlayerContractSymbol;
+}
+
+void PlayerContractSymbol::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_symbol()) {
+      if (symbol_ != &::google::protobuf::internal::kEmptyString) {
+        symbol_->clear();
+      }
+    }
+    if (has_playerid()) {
+      if (playerid_ != &::google::protobuf::internal::kEmptyString) {
+        playerid_->clear();
+      }
+    }
+    sybhash_ = GOOGLE_ULONGLONG(0);
+    if (has_initals2()) {
+      if (initals2_ != &::google::protobuf::internal::kEmptyString) {
+        initals2_->clear();
+      }
+    }
+    if (has_seq2()) {
+      if (seq2_ != &::google::protobuf::internal::kEmptyString) {
+        seq2_->clear();
+      }
+    }
+    if (has_year2()) {
+      if (year2_ != &::google::protobuf::internal::kEmptyString) {
+        year2_->clear();
+      }
+    }
+    if (has_type1sorw()) {
+      if (type1sorw_ != &::google::protobuf::internal::kEmptyString) {
+        type1sorw_->clear();
+      }
+    }
+    if (has_week1or04s()) {
+      if (week1or04s_ != &::google::protobuf::internal::kEmptyString) {
+        week1or04s_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool PlayerContractSymbol::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string symbol = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_symbol()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->symbol().data(), this->symbol().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(162)) goto parse_playerid;
+        break;
+      }
+
+      // optional string playerid = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_playerid:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_playerid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->playerid().data(), this->playerid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_sybhash;
+        break;
+      }
+
+      // optional uint64 sybhash = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_sybhash:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &sybhash_)));
+          set_has_sybhash();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(322)) goto parse_initals2;
+        break;
+      }
+
+      // optional string initals2 = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_initals2:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_initals2()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->initals2().data(), this->initals2().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(402)) goto parse_seq2;
+        break;
+      }
+
+      // optional string seq2 = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_seq2:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_seq2()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->seq2().data(), this->seq2().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(482)) goto parse_year2;
+        break;
+      }
+
+      // optional string year2 = 60;
+      case 60: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_year2:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_year2()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->year2().data(), this->year2().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(562)) goto parse_type1sorw;
+        break;
+      }
+
+      // optional string type1sorw = 70;
+      case 70: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_type1sorw:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_type1sorw()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->type1sorw().data(), this->type1sorw().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(642)) goto parse_week1or04s;
+        break;
+      }
+
+      // optional string week1or04s = 80;
+      case 80: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_week1or04s:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_week1or04s()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->week1or04s().data(), this->week1or04s().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void PlayerContractSymbol::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string symbol = 10;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      10, this->symbol(), output);
+  }
+
+  // optional string playerid = 20;
+  if (has_playerid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->playerid().data(), this->playerid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      20, this->playerid(), output);
+  }
+
+  // optional uint64 sybhash = 30;
+  if (has_sybhash()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(30, this->sybhash(), output);
+  }
+
+  // optional string initals2 = 40;
+  if (has_initals2()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->initals2().data(), this->initals2().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      40, this->initals2(), output);
+  }
+
+  // optional string seq2 = 50;
+  if (has_seq2()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->seq2().data(), this->seq2().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      50, this->seq2(), output);
+  }
+
+  // optional string year2 = 60;
+  if (has_year2()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->year2().data(), this->year2().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      60, this->year2(), output);
+  }
+
+  // optional string type1sorw = 70;
+  if (has_type1sorw()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->type1sorw().data(), this->type1sorw().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      70, this->type1sorw(), output);
+  }
+
+  // optional string week1or04s = 80;
+  if (has_week1or04s()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->week1or04s().data(), this->week1or04s().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      80, this->week1or04s(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* PlayerContractSymbol::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string symbol = 10;
+  if (has_symbol()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->symbol().data(), this->symbol().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        10, this->symbol(), target);
+  }
+
+  // optional string playerid = 20;
+  if (has_playerid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->playerid().data(), this->playerid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        20, this->playerid(), target);
+  }
+
+  // optional uint64 sybhash = 30;
+  if (has_sybhash()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(30, this->sybhash(), target);
+  }
+
+  // optional string initals2 = 40;
+  if (has_initals2()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->initals2().data(), this->initals2().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        40, this->initals2(), target);
+  }
+
+  // optional string seq2 = 50;
+  if (has_seq2()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->seq2().data(), this->seq2().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        50, this->seq2(), target);
+  }
+
+  // optional string year2 = 60;
+  if (has_year2()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->year2().data(), this->year2().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        60, this->year2(), target);
+  }
+
+  // optional string type1sorw = 70;
+  if (has_type1sorw()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->type1sorw().data(), this->type1sorw().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        70, this->type1sorw(), target);
+  }
+
+  // optional string week1or04s = 80;
+  if (has_week1or04s()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->week1or04s().data(), this->week1or04s().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        80, this->week1or04s(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int PlayerContractSymbol::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string symbol = 10;
+    if (has_symbol()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->symbol());
+    }
+
+    // optional string playerid = 20;
+    if (has_playerid()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->playerid());
+    }
+
+    // optional uint64 sybhash = 30;
+    if (has_sybhash()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->sybhash());
+    }
+
+    // optional string initals2 = 40;
+    if (has_initals2()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->initals2());
+    }
+
+    // optional string seq2 = 50;
+    if (has_seq2()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->seq2());
+    }
+
+    // optional string year2 = 60;
+    if (has_year2()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->year2());
+    }
+
+    // optional string type1sorw = 70;
+    if (has_type1sorw()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->type1sorw());
+    }
+
+    // optional string week1or04s = 80;
+    if (has_week1or04s()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->week1or04s());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void PlayerContractSymbol::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const PlayerContractSymbol* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const PlayerContractSymbol*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void PlayerContractSymbol::MergeFrom(const PlayerContractSymbol& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_symbol()) {
+      set_symbol(from.symbol());
+    }
+    if (from.has_playerid()) {
+      set_playerid(from.playerid());
+    }
+    if (from.has_sybhash()) {
+      set_sybhash(from.sybhash());
+    }
+    if (from.has_initals2()) {
+      set_initals2(from.initals2());
+    }
+    if (from.has_seq2()) {
+      set_seq2(from.seq2());
+    }
+    if (from.has_year2()) {
+      set_year2(from.year2());
+    }
+    if (from.has_type1sorw()) {
+      set_type1sorw(from.type1sorw());
+    }
+    if (from.has_week1or04s()) {
+      set_week1or04s(from.week1or04s());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void PlayerContractSymbol::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void PlayerContractSymbol::CopyFrom(const PlayerContractSymbol& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool PlayerContractSymbol::IsInitialized() const {
+
+  return true;
+}
+
+void PlayerContractSymbol::Swap(PlayerContractSymbol* other) {
+  if (other != this) {
+    std::swap(symbol_, other->symbol_);
+    std::swap(playerid_, other->playerid_);
+    std::swap(sybhash_, other->sybhash_);
+    std::swap(initals2_, other->initals2_);
+    std::swap(seq2_, other->seq2_);
+    std::swap(year2_, other->year2_);
+    std::swap(type1sorw_, other->type1sorw_);
+    std::swap(week1or04s_, other->week1or04s_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata PlayerContractSymbol::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = PlayerContractSymbol_descriptor_;
+  metadata.reflection = PlayerContractSymbol_reflection_;
   return metadata;
 }
 

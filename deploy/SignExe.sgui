@@ -1,7 +1,0 @@
-SignTool=C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe
-PFX=C:\work\cert.pfx
-Password=ch@ngethw0rlD
-TimeStamp=http://timestamp.verisign.com/scripts/timstamp.dll
-ProgramTitle=Trading Football 2015 2.1
-ProgramURL=
-File1=C:\work\fantasybit-2015\deploy\tradingfootball.exe

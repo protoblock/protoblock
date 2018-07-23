@@ -1,5 +1,7 @@
 message(src $$PWD)
 
+include($$PWD/QmlModels/QmlModels.pri)
+include($$PWD/QmlSuperMacros/QmlSuperMacros.pri)
 include($$PWD/core/core.pri)
 include($$PWD/state-model/state-model.pri)
 
@@ -22,7 +24,6 @@ SOURCES += \
     $$PWD/dataservice.cpp \
     $$PWD/fullgateway.cpp \
     $$PWD/importLoader.cpp
-
 
 HEADERS += \
     $$PWD/PeerNode.h \

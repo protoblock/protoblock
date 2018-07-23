@@ -14,6 +14,7 @@
 #include "genericsingleton.h"
 #include <openssl/ripemd.h>
 
+
 namespace pb {
     uint8_t from_hex( char c );
 

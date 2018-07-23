@@ -1,6 +1,6 @@
 #include "sortfilterproxymodel.h"
 #include <QtDebug>
-#include <QtQml>
+//#include <QtQml>
 #include <QByteArray>
 SortFilterProxyModel::SortFilterProxyModel(QObject *parent) : QSortFilterProxyModel(parent),
     m_complete(false)
