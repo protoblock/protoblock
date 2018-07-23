@@ -6,4 +6,6 @@ SUBDIRS += \
 
 
 OTHER_FILES += \
-    $$PWD/protoblockd/deps.pri
+    $$PWD/protoblockd/deps.pri \
+    $$PWD/defs.pri
+
