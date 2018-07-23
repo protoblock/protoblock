@@ -1,3 +1,4 @@
+include ($$PWD/../defs.pri)
 ##############
 ## Globals
 ##############
@@ -38,3 +39,4 @@ DEFINES += USE_FIELD_10X26
 DEFINES += USE_FIELD_INV_BUILTIN
 DEFINES += USE_SCALAR_8X32
 DEFINES += USE_SCALAR_INV_BUILTIN
+

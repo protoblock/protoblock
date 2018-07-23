@@ -1,6 +1,5 @@
 include($$PWD/deps.pri)
 include($$PWD/../../src/src.pri)
-include($$PWD/../defs.pri)
 include($$PWD/../../share/protos.pri)
 
 
