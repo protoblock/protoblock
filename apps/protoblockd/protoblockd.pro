@@ -2,7 +2,7 @@ include($$PWD/deps.pri)
 
 include($$PWD/../../src/src.pri)
 include($$PWD/../../princlude/defs.pri)
-include($$PWD/../../princlude/protos.pri)
+include($$PWD/../../share/protos.pri)
 
 
 QT += core network websockets qml

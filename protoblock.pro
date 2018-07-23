@@ -2,8 +2,8 @@ CONFIG += ordered
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    $$PWD/apps 
-#    $$PWD/share
+    $$PWD/apps \
+    $$PWD/share
 
 
 OTHER_FILES += \

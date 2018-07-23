@@ -1,4 +1,4 @@
-include (share/genproto.pri)
+include (genproto.pri)
 INCLUDEPATH += $$GENERATEDDIR
 HEADERS += \
     $$GENERATEDDIR/*.pb.h
