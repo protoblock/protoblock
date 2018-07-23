@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>tfprod.db</file>
-    </qresource>
-</RCC>

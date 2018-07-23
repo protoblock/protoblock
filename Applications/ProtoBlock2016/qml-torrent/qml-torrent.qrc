@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>AddTorrentDialog.qml</file>
-        <file>TorrentDelegate.qml</file>
-        <file>SpeedLimit.qml</file>
-        <file>TorrentListView.qml</file>
-    </qresource>
-</RCC>
