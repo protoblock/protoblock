@@ -1,3 +1,0 @@
-[submodule "ProRotoQml/Communi"]
-	path = share/ProRotoQml/libcommuni
-	url = https://github.com/communi/libcommuni.git
