@@ -8,13 +8,8 @@ DIRPREFIX = $$PWD/../libs/
 ##############
 win32 {
     message(win32 Build)
-    INCLUDEPATH += $$DIRPREFIX
-    INCLUDEPATH += $$DIRPREFIX/nng/
+    INCLUDEPATH += $$DIRPREFIX/include
     LIBS+= -L$$DIRPREFIX
-
-    #nng
-#    LIBS += -lQsLog2
-
 
     #protobuf
     CONFIG(debug, debug|release) {
@@ -31,12 +26,8 @@ win32 {
 }
 macx {
     message(macx Build)
-    INCLUDEPATH += $$DIRPREFIX
+    INCLUDEPATH += $$DIRPREFIX/include
     LIBS+= -L$$DIRPREFIX
-
-    #nng
-#    LIBS += -lnng_static
-
 
     #protobuf
     LIBS += -lprotobuf
