@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>Utils.js</file>
-        <file>qwebchannel.js</file>
-        <file>QChart.js</file>
-    </qresource>
-</RCC>

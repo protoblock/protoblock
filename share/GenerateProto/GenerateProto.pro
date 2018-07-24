@@ -1,4 +1,4 @@
-include($$PWD/../../pri/genproto.pri)
+include($$PWD/../genproto.pri)
 
 TEMPLATE = aux
 

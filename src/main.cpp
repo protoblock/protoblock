@@ -12,7 +12,7 @@
 
 using namespace fantasybit;
 
-int main(int argc, char *argv[])
+int domain(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 

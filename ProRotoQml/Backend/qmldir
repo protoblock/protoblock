@@ -1,3 +1,0 @@
-module ProRotoQml.Backend
-plugin ProRotoQml.Backend
-classname ProRotoQmlBackendPlugin

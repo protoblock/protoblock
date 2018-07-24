@@ -1,0 +1,43 @@
+<RCC>
+    <qresource prefix="/icons/maps"/>
+    <qresource prefix="/icons/communication"/>
+    <qresource prefix="/icons/image"/>
+    <qresource prefix="/icons/alert"/>
+    <qresource prefix="/icons/content"/>
+    <qresource prefix="/icons/device"/>
+    <qresource prefix="/icons/file"/>
+    <qresource prefix="/icons/social"/>
+    <qresource prefix="/icons/action"/>
+    <qresource prefix="/icons/navigation"/>
+    <qresource prefix="/">
+        <file>logoOnly.png</file>
+        <file>logoFinal.png</file>
+        <file>icons/ic_timeline.png</file>
+        <file>icons/action_account_circle.png</file>
+        <file>icons/ic_poll.png</file>
+        <file>icons/ic_help.png</file>
+        <file>icons/ic_lightbulb.png</file>
+        <file>icons/navigation_menu.png</file>
+        <file>icons/action_settings.png</file>
+        <file>icons/power_settings.png</file>
+        <file>logo-wordsOnly.png</file>
+        <file>icons/ic_sync.png</file>
+        <file>bird-anim-sprites.png</file>
+        <file>icons/newspaper.png</file>
+        <file>icons/ic_contact_mail.png</file>
+        <file>icons/arrow_drop_down.png</file>
+        <file>icons/navigation_close.png</file>
+        <file>icons/navigation_more_vert.png</file>
+        <file>icons/upload.png</file>
+        <file>icons/play.png</file>
+        <file>icons/download.png</file>
+        <file>icons/ic_menu.png</file>
+        <file>icons/ic_contact_mail copy.png</file>
+        <file>icons/done.png</file>
+        <file>icons/pause.png</file>
+        <file>icons/local_atm.png</file>
+        <file>icons/ic_trending_down.png</file>
+        <file>icons/ic_trending_flat.png</file>
+        <file>icons/ic_trending_up.png</file>
+    </qresource>
+</RCC>

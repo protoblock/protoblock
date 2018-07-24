@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>GetName.qml</file>
+        <file>About.qml</file>
+        <file>Protoblock.qml</file>
+        <file>ContactUs.qml</file>
+        <file>Projections.qml</file>
+        <file>Account.qml</file>
+        <file>Import-Export.qml</file>
+        <file>Indicators.qml</file>
+        <file>ThemeButton.qml</file>
+        <file>Trading.qml</file>
+        <file>Quotes.qml</file>
+        <file>Orders.qml</file>
+        <file>Portfolio.qml</file>
+        <file>Leaderboard.qml</file>
+        <file>ScoringSystem.qml</file>
+        <file>BuySellTrading.qml</file>
+        <file>Wallet.qml</file>
+        <file>Explorer.qml</file>
+        <file>Secret.qml</file>
+    </qresource>
+</RCC>

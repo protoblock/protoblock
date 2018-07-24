@@ -1,3 +1,0 @@
-module ProRotoQml.Torrent
-plugin ProRotoQml.Torrent
-class ProRotoQmlTorrentPlugin

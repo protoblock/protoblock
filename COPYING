@@ -1,7 +1,0 @@
-Think about making extrenal infomation to handle git submod's for widget applicaiton and also extreanl specific versions of out side lib. 
-
-** Fix class QmlSettings
-
-** Fix pid and add unix only tags for QmlProcess
-
-

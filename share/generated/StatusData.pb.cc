@@ -174,12 +174,12 @@ void protobuf_AddDesc_StatusData_2eproto() {
     "\001(\r\"J\n\006Status\022\r\n\tSCHEDULED\020\000\022\013\n\007PREGAME\020"
     "\002\022\n\n\006INGAME\020\003\022\014\n\010POSTGAME\020\005\022\n\n\006CLOSED\020\004\""
     "F\n\tTeamDepth\022\n\n\002qb\030\n \003(\t\022\n\n\002rb\030\024 \003(\t\022\n\n\002"
-    "wr\030\036 \003(\t\022\n\n\002te\030( \003(\t\022\t\n\001k\0302 \003(\t\"\215\001\n\013Glob"
-    "alState\022,\n\005state\030\001 \001(\0162\035.fantasybit.Glob"
-    "alState.State\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 "
-    "\001(\r\"2\n\005State\022\r\n\tOFFSEASON\020\n\022\014\n\010INSEASON\020"
-    "\036\022\014\n\010PLAYOFFS\020(*+\n\020PlayerGameStatus\022\007\n\003O"
-    "UT\020\000\022\006\n\002IN\020\001\022\006\n\002NA\020\002", 660);
+    "wr\030\036 \003(\t\022\n\n\002te\030( \003(\t\022\t\n\001k\0302 \003(\t\"\177\n\013Globa"
+    "lState\022,\n\005state\030\001 \001(\0162\035.fantasybit.Globa"
+    "lState.State\022\016\n\006season\030\n \001(\r\022\014\n\004week\030\024 \001"
+    "(\r\"$\n\005State\022\r\n\tOFFSEASON\020\n\022\014\n\010INSEASON\020\036"
+    "*+\n\020PlayerGameStatus\022\007\n\003OUT\020\000\022\006\n\002IN\020\001\022\006\n"
+    "\002NA\020\002", 645);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "StatusData.proto", &protobuf_RegisterTypes);
   PlayerStatus::default_instance_ = new PlayerStatus();
@@ -1307,7 +1307,6 @@ bool GlobalState_State_IsValid(int value) {
   switch(value) {
     case 10:
     case 30:
-    case 40:
       return true;
     default:
       return false;
@@ -1317,7 +1316,6 @@ bool GlobalState_State_IsValid(int value) {
 #ifndef _MSC_VER
 const GlobalState_State GlobalState::OFFSEASON;
 const GlobalState_State GlobalState::INSEASON;
-const GlobalState_State GlobalState::PLAYOFFS;
 const GlobalState_State GlobalState::State_MIN;
 const GlobalState_State GlobalState::State_MAX;
 const int GlobalState::State_ARRAYSIZE;

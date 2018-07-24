@@ -1,3 +1,0 @@
-module ProRotoQml.PeerTwoPeer
-plugin ProRotoQml.PeerTwoPeer
-classname PeerTwoPeerChatPlugin

@@ -1,7 +1,11 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS += \
-    $$PWD/testclient \
-    $$PWD/testserver
+    $$PWD/protoblockd \
+    $$PWD/protoblock-qt
 
+
+OTHER_FILES += \
+    $$PWD/protoblockd/deps.pri \
+    $$PWD/defs.pri
 
