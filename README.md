@@ -1,5 +1,5 @@
 # Protoblock 
-This repositiory contains the open source protoblock blockchain, fantasybit token and proof-of-skill consensus code. 
+This repository contains the open source protoblock blockchain, fantasybit token and proof-of-skill consensus code. 
 
 [Webpage](https://protoblock.com)
 
