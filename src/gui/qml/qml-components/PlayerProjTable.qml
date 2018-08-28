@@ -492,7 +492,7 @@ Item {
                     id: lbl
 //                    anchors.fill: parent;
 //                    anchors.centerIn: parent
-                    anchors.right: but.left
+                    anchors.left: parent.left
                     anchors.top: parent.top
                     Layout.fillHeight: true
                     Layout.fillWidth: false
@@ -518,35 +518,41 @@ Item {
                     }
                 }
 
-                Material.Button {
-                    id: but
-                    focus: (topw.focuscount > 0) ? true : false
-                    width: ProtoScreen.guToPx(10)
-//                    anchors.left: lbl.right
+                Rectangle {
                     anchors.right: parent.right
                     height: parent.height
+                    width: ProtoScreen.guToPx(10)
+//                    color: "#f5f5f5"
                     visible: styleData.column === pcol
-                    enabled: styleData.column === pcol && MiddleMan.liveSync === "Live"
-                    text: "Send"
+                    Material.Button {
+                        id: but
+                        focus: (topw.focuscount > 0) ? true : false
+                        anchors.centerIn: parent
+//                        anchors.top: parent.top
+//                        anchors.horizontalCenter: parent.horizontalCenter
+                        height: parent.height * .75
+                        width: parent.width * .90
+                        visible: styleData.column === pcol
+                        enabled: styleData.column === pcol && MiddleMan.liveSync === "Live"
+                        text: "Send"
 
-                    onClicked : {
-                        console.log("clicked send")
-                        topw.focuscount = 0
-                        if ( realRoot.uname === "" ) {
-//                            rootLoader.source = "qrc:/Account.qml"
-                            pageHelper.selectedTabIndex = themeroot.accountIndex;
+                        onClicked : {
+                            console.log("clicked send")
+                            topw.focuscount = 0
+                            if ( realRoot.uname === "" ) {
+    //                            rootLoader.source = "qrc:/Account.qml"
+                                pageHelper.selectedTabIndex = themeroot.accountIndex;
+                            }
+                            else
+                                MiddleMan.sendProjections()
+                            but.focus = false
                         }
-                        else
-                            MiddleMan.sendProjections()
-                        but.focus = false
+
+                        backgroundColor: themeroot.theme.accentColor
+                        textColor: themeroot.theme.primaryColor//Material.Theme.light.textColor //themeroot.theme.secondaryColor
+                        elevation: 2 + ( 2 * topw.focuscount)
                     }
-
-                    backgroundColor: themeroot.theme.accentColor
-                    textColor:  Material.Theme.light.textColor //themeroot.theme.secondaryColor
-                    elevation: 2 + ( 2 * topw.focuscount)
-
                 }
-
                 Material.IconButton {
                     id: li
 //                    width: ProtoScreen.guToPx(5)//parent.width * .50
@@ -559,13 +565,8 @@ Item {
                     visible: styleData.column > pcol
                     enabled: styleData.column > pcol
                     onClicked : {
-                        console.log("clicked send")
-
-//                        tv.model.setData(tv.model.index(1,styleData.column),
-//                                         tv.model.get(1), 0)
+                        console.log("clicked Copy-Merge")
                         topw.focuscount = MiddleMan.copyProj(styleData.column, styleData.value, false, false)
-
-
                     }
 
                     size: ProtoScreen.guToPx(3)
@@ -591,7 +592,7 @@ Item {
                     enabled: styleData.column > pcol
                     size: ProtoScreen.guToPx(3)
                     onClicked : {
-                        console.log("clicked send")
+                        console.log("clicked Copy-Clone")
                         topw.focuscount = MiddleMan.copyProj(styleData.column, styleData.value, true, false)
                     }
                     action: Material.Action {

@@ -19,7 +19,7 @@ import Communi 3.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "2.9.1" //version
+    property string version: "3.0.1" //version
     property alias realRoot: themeroot
 
     property string  uname

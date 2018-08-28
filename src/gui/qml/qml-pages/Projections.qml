@@ -1,11 +1,9 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4
-//import ProRotoQml.Sql 1.0
 import Material.ListItems 1.0 as ListItems
 import Material 1.0
-//import ProRotoQml.Protoblock 1.0
 import ProRotoQml.Theme 1.0
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.3
 
 
 Item {
@@ -177,15 +175,12 @@ Item {
 
         SystemPalette { id: pal }
 
-
-
         StackView {
             anchors.top: cBan.bottom
             anchors.topMargin: ProtoScreen.guToPx(.25)
             width: parent.width
-            height: parent.height - cBan.height//- ProtoScreen.guToPx(1)
+            height: parent.height - cBan.height
             id: stack
-//                anchors.fill: parent
             initialItem: pptS
             property real leftwidth: (stack.currentItem.objectName === "pptS") ? schedr.width :
                                      (stack.currentItem.objectName === "prevWeekS") ? sched2.width : sched3.width
