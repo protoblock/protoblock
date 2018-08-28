@@ -52,6 +52,10 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
+#ifdef INTEL_KLUDGE
+    QGuiApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
+#endif
+
 #ifndef NO_DEBUG_FILE_OUT
     qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
     qInstallMessageHandler(messageHandler);
@@ -75,10 +79,6 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
     QObject::connect(&app, SIGNAL(lastWindowClosed()),
                      ml, SLOT(Quit()));
-
-    qDebug() << " exist " << QFileInfo(":/materialMain.qml").exists();
-
-    qDebug() << " exist2 " << QFileInfo("qrc:/materialMain.qml").exists();
 
 
     engine.load(QUrl(QStringLiteral("qrc:/materialMain.qml")));
