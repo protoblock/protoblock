@@ -110,69 +110,82 @@ Material.Card {
             width: parent.width
             property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
 
-                RowLayout {
-                    spacing: 0
-                    anchors.fill: parent
-                    ExclusiveGroup { id: tabPositionGroup }
-//                    width: parent.width
-//                    Layout.preferredHeight: ProtoScreen.guToPx(4)
-                    Repeater {
-                        model: [" Time "," Away "," Home "," Status "]
-                        Item {
-                            Layout.preferredWidth: (parent.width * ih.widths[index])
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            height: parent.height
-                            Rectangle {
-                                id: rec2
-                                height: parent.height * .50
-                                anchors.top: parent.top
-                                width: parent.width
-                                ComboBox {
-                                    id: combo
-                                    model: ["All"]//, "Scored" , "Locked", "All" ]
-                                    enabled: modelData === " Status "
-                                    currentIndex: 0 //3
-                                    visible: false//modelData === " Status "
-                                    anchors.fill: parent
-                                    onCurrentTextChanged: {
-                                        MiddleMan.setScheduleFilter(currentText)
-                                    }
-                                }
+            Rectangle {
+                color: "transparent"
+                Layout.fillHeight: true
+                Layout.fillWidth: false
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: parent.height * .5;
+                anchors.top: parent.top
 
+                Label {
+                    anchors.centerIn: parent
+                    text: "Week " + week + " Schedule";
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                    color: "green"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+
+            RowLayout {
+                spacing: 0
+                anchors.fill: parent
+                ExclusiveGroup { id: tabPositionGroup }
+                Repeater {
+                    model: [" Time "," Away "," Home "," Status "]
+                    Item {
+                        Layout.preferredWidth: (parent.width * ih.widths[index])
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        height: parent.height
+//                        Rectangle {
+//                            id: rec2
+//                            height: parent.height * .50
+//                            anchors.top: parent.top
+//                            width: parent.width
+//                            ComboBox {
+//                                id: combo
+//                                model: ["All"]//, "Scored" , "Locked", "All" ]
+//                                enabled: modelData === " Status "
+//                                currentIndex: 0 //3
+//                                visible: false//modelData === " Status "
+//                                anchors.fill: parent
+//                                onCurrentTextChanged: {
+//                                    MiddleMan.setScheduleFilter(currentText)
+//                                }
+//                            }
+
+//                        }
+
+                        Material.Card{
+                            anchors.bottom: parent.bottom
+                            width: parent.width
+                            border.color:"black"
+                            backgroundColor: themeroot.theme.primaryColor
+                            height: parent.height * .50
+                            Material.Label {
+                                anchors.centerIn: parent
+                                text: modelData
+                                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                color: "white"
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
                             }
 
-                            Material.Card{
-                                anchors.bottom: parent.bottom
-                                width: parent.width
-                                border.color:"black"
-                                backgroundColor: themeroot.theme.primaryColor
-                                height: parent.height * .50
-                                Material.Label {
-                                    anchors.centerIn: parent
-                                    text: modelData
-                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                                    color: "white"
-                                    verticalAlignment: Text.AlignVCenter
-                                    horizontalAlignment: Text.AlignHCenter
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    secsel = [["section"]]
+                                    isl.clear()
+                                    topc.changed()
                                 }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        secsel = [["section"]]
-                                        isl.clear()
-                                        topc.changed()
-                                    }
-                                }
-
                             }
+
                         }
                     }
                 }
-
-//            }
-//            }
+            }
        }
     }
 //    Component {

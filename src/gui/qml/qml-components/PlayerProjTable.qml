@@ -347,7 +347,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        console.log(" cliocked ")
+                        console.log(" clicked ")
                         if ( lbl.text !== "  " && model.knownProjection !== model.projection ) {
 //                                parseInt(lbl.text) !== model.projection) {
                             model.projection = model.knownProjection
@@ -368,6 +368,8 @@ Item {
                                  else
                                      return 0
                              })
+
+                            topw.focuscount--
                         }
                     }
                 }
@@ -541,7 +543,8 @@ Item {
 
                     backgroundColor: themeroot.theme.accentColor
                     textColor:  Material.Theme.light.textColor //themeroot.theme.secondaryColor
-                    elevation: 2
+                    elevation: 2 + ( 2 * topw.focuscount)
+
                 }
 
                 Material.IconButton {
@@ -560,7 +563,7 @@ Item {
 
 //                        tv.model.setData(tv.model.index(1,styleData.column),
 //                                         tv.model.get(1), 0)
-                        MiddleMan.copyProj(styleData.column, styleData.value, false, false)
+                        topw.focuscount = MiddleMan.copyProj(styleData.column, styleData.value, false, false)
 
 
                     }
@@ -589,7 +592,7 @@ Item {
                     size: ProtoScreen.guToPx(3)
                     onClicked : {
                         console.log("clicked send")
-                        MiddleMan.copyProj(styleData.column, styleData.value, true, false)
+                        topw.focuscount = MiddleMan.copyProj(styleData.column, styleData.value, true, false)
                     }
                     action: Material.Action {
 //                        name: "Copy-Clone Projection"

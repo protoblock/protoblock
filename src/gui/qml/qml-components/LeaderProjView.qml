@@ -32,7 +32,7 @@ Item {
             id: tv
             Component.onCompleted: {
 //                resizeColumnsToContents()
-                model.sortAgain("bits",Qt.DescendingOrder)
+                model.sortAgain("lastupdate",Qt.DescendingOrder)
             }
 
             sortIndicatorColumn: 1
@@ -95,7 +95,50 @@ Item {
 //                        color: Material.Theme.light.textColor
                         activeFocusOnPress: true
                     }
+                    Material.Label {
+                        text: "FantasySkill Leaderboard "
+                        anchors.left: parent.right
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        elide: Text.ElideRight
+                        wrapMode: Text.WordWrap
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        enabled: false//styleData.column === 1
+                        visible: false//styleData.column === 1
+                        color: "green"
+                        anchors.centerIn: parent
+
+                    }
+
                 }
+
+                Rectangle {
+                    id: rec2
+                    height: parent.height * .50
+                    width: tv.width - (parent.width *.50)
+//                    anchors.left: parent.right
+                    color: "transparent"
+                    anchors.top: parent.top
+                    anchors.left: parent.horizontalCenter
+                    anchors.margins: ProtoScreen.guToPx(.25)
+//                    anchors.horizontalCenter: tv.horizontalCenter
+//                    anchors.horizontalCenterOffset:
+                    enabled: styleData.column === 0
+                    visible: styleData.column === 0
+
+                    Material.Label {
+                        text: "Fantasy Skill Leaders "
+                        anchors.fill: parent
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        elide: Text.ElideRight
+                        wrapMode: Text.WordWrap
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        color: "green"
+
+                    }
+                }
+
                 Material.Card {
                     width: parent.width
                     height: parent.height * .50
@@ -137,7 +180,7 @@ Item {
                 role: "name"
                 title: "Fantasy Name"
                 horizontalAlignment : Text.AlignHCenter
-
+                movable: false
                 delegate:
 
 //                    Item {
@@ -257,92 +300,7 @@ Item {
             }
 
 
-
-            TableViewColumn {
-                role: "leaders20XX"
-                title: myTheWeek === 0 ? MiddleMan.theSeason-1 : MiddleMan.theSeason
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(8)
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
-            TableViewColumn {
-                role: "bits"
-                title: "Skill"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(8)
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
-            TableViewColumn {
-                role: "stake"
-                title: "Stake"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(8)
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
-            TableViewColumn {
-                role: "pnl"
-                title: "PnL"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(8)
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
-            TableViewColumn {
-                role: "net"
-                title: "Net"
-                horizontalAlignment : Text.AlignHCenter
-                width: ProtoScreen.guToPx(8)
-
-
-                delegate: Material.Label {
-                    anchors.centerIn: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-
-                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
-                }
-            }
-
+            //Block
             TableViewColumn{
                 role: "lastupdate"
                 title: "Block"
@@ -357,7 +315,103 @@ Item {
                     text: styleData.value
                 }
             }
-/*
+
+            //2018 Leaders - off season
+            TableViewColumn {
+                role: "leaders20XX"
+                title: myTheWeek === 0 ? MiddleMan.theSeason-1 : MiddleMan.theSeason
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+                visible: myTheWeek < 1 || myTheWeek > 17
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            //Skill - off season
+            TableViewColumn {
+                role: "bits"
+                title: "Skill"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+                visible: myTheWeek < 1 || myTheWeek > 17
+
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            //Stake - off season
+            TableViewColumn {
+                role: "stake"
+                title: "Stake"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+                visible: myTheWeek < 1 || myTheWeek > 17
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            //PnL - off season
+            TableViewColumn {
+                role: "pnl"
+                title: "PnL"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+                visible: myTheWeek < 1 || myTheWeek > 17
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            //Net - off season
+            TableViewColumn {
+                role: "net"
+                title: "Net"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+                visible: myTheWeek < 1 || myTheWeek > 17
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            //Count - in season
             TableViewColumn{
                 role: "numberproj"
                 title: "Count"
@@ -374,13 +428,15 @@ Item {
                     text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
                 }
             }
-/*
+
+            //Wk- in season
             TableViewColumn{
                 role:  "thisweek"
                 title: "wk" + myTheWeek
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
 
+                visible: myTheWeek >= 1 && myTheWeek < 17
 
 
                 delegate: Material.Label {
@@ -393,13 +449,14 @@ Item {
                 }
             }
 
+            //Wk-1 - in season
             TableViewColumn{
                 role:  "lastweek"
                 title: "wk" + (myTheWeek-1)
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(5)
 
-                visible: myTheWeek > 1
+                visible: myTheWeek > 1 && myTheWeek <= 17
                 delegate: Material.Label {
                     anchors.centerIn: parent
                     verticalAlignment: Text.AlignVCenter
@@ -409,11 +466,65 @@ Item {
                     text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
                 }
             }
-*/
+
+            //2018 Leaders - in season
+            TableViewColumn {
+                role: "leaders20XX"
+                title: MiddleMan.theSeason
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+                visible: myTheWeek >= 1 || myTheWeek <= 17
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            //Overall - in season
+            TableViewColumn {
+                role: "bits"
+                title: "Overall"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+                visible: myTheWeek >= 1 || myTheWeek <= 17
 
 
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
 
         }
+
+        Banner {
+            id: tvhead
+            Layout.fillWidth: false
+            fontSize: ProtoScreen.font(ProtoScreen.SMALL)
+            bold: true
+//            anchors.horizontalCenter: parent.horizontalCenter + fnamesearch.width
+            anchors.left: fnamesearch.right
+            text: " Skill Leaderboard "
+            color: themeroot.theme.primaryColor
+            backgroundColor: "white"
+
+            width: tv.width - fnamesearch.width
+            height: ProtoScreen.guToPx(4)
+            anchors.top: tv.top
+            anchrosHType: "center"
+            anchors.margins: 0
+        }
+
     }
 
 

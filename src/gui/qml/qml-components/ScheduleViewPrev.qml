@@ -71,6 +71,24 @@ Material.Card {
             width: parent.width
             property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
 
+            Rectangle {
+                color: "transparent"
+                Layout.fillHeight: true
+                Layout.fillWidth: false
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: parent.height * .5;
+                anchors.top: parent.top
+
+                Label {
+                    anchors.centerIn: parent
+                    text: "Week " + week + " Schedule";
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                    color: "green"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+
             RowLayout {
                 spacing: 0
                 anchors.fill: parent
@@ -82,12 +100,6 @@ Material.Card {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
                         height: parent.height
-                        Rectangle {
-                            id: rec2
-                            height: parent.height * .50
-                            anchors.top: parent.top
-                            width: parent.width
-                        }
 
                         Material.Card{
                             anchors.bottom: parent.bottom

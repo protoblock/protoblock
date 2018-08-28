@@ -133,9 +133,9 @@ Material.ApplicationWindow{
 
     property string defaultname
 
-    property string start: "qrc:/Trading.qml"
+    property string start: "qrc:/Projections.qml"
     property string account: "qrc:/Account.qml"
-    property int startindex: 2
+    property int startindex: 1
     property int accountIndex: 4
     property string  errorString
     property bool  reloadleaders: false
