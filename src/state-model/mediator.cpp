@@ -59,7 +59,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_height(0),
                     m_blocknum(0) ,
                     myFantasyName("") ,
-                    m_theSeason(2017),
+                    m_theSeason(2018),
                     m_pAccountsModel(new SortFilterProxyModel)  {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
@@ -71,7 +71,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     fnameindex = 0;
     //leader models
     m_pLeaderBoardSortModel->setSourceModel(m_pFantasyNameBalModel);
-    m_pLeaderBoardSortModel->setSortRole("bits");//mPlayerProjModel.roleForName("pos"));
+    m_pLeaderBoardSortModel->setSortRole("lastupdate");//mPlayerProjModel.roleForName("pos"));
 //    m_pLeaderBoardSortModel->setDynamicSortFilter(true);
     m_pLeaderBoardSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_pLeaderBoardSortModel->setFilterRole({"name"});

@@ -55,6 +55,30 @@ Item {
                 height: ProtoScreen.guToPx(8)
                 implicitWidth: textItem2.implicitWidth
                 color: "white"
+                Rectangle {
+                    id: rec
+                    height: parent.height * .50
+                    width: tvl.width
+                    color: "transparent"
+                    anchors.top: parent.top
+                    anchors.margins: ProtoScreen.guToPx(.25)
+                    anchors.horizontalCenter: tvl.horizontalCenter
+                    enabled: styleData.column === 0
+                    visible: styleData.column === 0
+
+                    Material.Label {
+                        text: "Fantasy Skill Awards "
+                        anchors.centerIn: parent
+                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                        elide: Text.ElideRight
+                        wrapMode: Text.WordWrap
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        color: "green"
+
+                    }
+                }
+
                 Material.Card {
                     width: parent.width
                     height: parent.height * .50

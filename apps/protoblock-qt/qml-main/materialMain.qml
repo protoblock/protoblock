@@ -19,7 +19,7 @@ import Communi 3.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "2.9.1" //version
+    property string version: "3.0.1" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -133,9 +133,9 @@ Material.ApplicationWindow{
 
     property string defaultname
 
-    property string start: "qrc:/Trading.qml"
+    property string start: "qrc:/Projections.qml"
     property string account: "qrc:/Account.qml"
-    property int startindex: 2
+    property int startindex: 1
     property int accountIndex: 4
     property string  errorString
     property bool  reloadleaders: false

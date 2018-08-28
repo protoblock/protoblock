@@ -44,42 +44,55 @@ Material.Card {
             height: ProtoScreen.guToPx(8)
             width: parent.width
             property var widths: [3.0/11.0,2.0/11.0,2.0/11.0,4.0/11.0]
-                RowLayout {
-                    spacing: 0
-                    anchors.fill: parent
-                    Repeater {
-                        model: [" Time "," Away "," Home "," Status "]
-                        Item {
-                            Layout.preferredWidth: (parent.width * ih.widths[index])
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            height: parent.height
-                            Rectangle {
-                                id: rec2
-                                height: parent.height * .50
-                                anchors.top: parent.top
-                                width: parent.width
+
+            Rectangle {
+                color: "transparent"
+                Layout.fillHeight: true
+                Layout.fillWidth: false
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: parent.height * .5;
+                anchors.top: parent.top
+
+                Label {
+                    anchors.centerIn: parent
+                    text: "Week " + week + " Schedule";
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                    color: "green"
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+
+            RowLayout {
+                spacing: 0
+                anchors.fill: parent
+                Repeater {
+                    model: [" Time "," Away "," Home "," Status "]
+                    Item {
+                        Layout.preferredWidth: (parent.width * ih.widths[index])
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        height: parent.height
+
+                        Material.Card{
+                            anchors.bottom: parent.bottom
+                            width: parent.width
+                            border.color:"black"
+                            backgroundColor: themeroot.theme.primaryColor
+                            height: parent.height * .50
+                            Material.Label {
+                                anchors.centerIn: parent
+                                text: modelData
+                                font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                                color: "white"
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
                             }
 
-                            Material.Card{
-                                anchors.bottom: parent.bottom
-                                width: parent.width
-                                border.color:"black"
-                                backgroundColor: themeroot.theme.primaryColor
-                                height: parent.height * .50
-                                Material.Label {
-                                    anchors.centerIn: parent
-                                    text: modelData
-                                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                                    color: "white"
-                                    verticalAlignment: Text.AlignVCenter
-                                    horizontalAlignment: Text.AlignHCenter
-                                }
-
-                            }
                         }
                     }
                 }
+            }
        }
     }
 
