@@ -384,9 +384,10 @@ public:
 
     }
 
-    Q_INVOKABLE void copyProj(int column, QString value, bool clone, bool random = false) {
+    Q_INVOKABLE int copyProj(int column, QString value, bool clone, bool random = false) {
 //        qDebug() << "CopyProj " << column << value << clone;
 
+        int ret =0;
         if ( value == "Average") {
             for ( auto *it : mPlayerProjModel) {
                 if ( !it->get_isopen() )
@@ -397,7 +398,7 @@ public:
                     if ( !m_pQItemSelectionModel->isSelected(m_pWeeklyScheduleModel->index(i)) )
                         continue;
                 }
-                if ( it->get_avg() > 0 )
+                if ( it->get_avg() > 0 ) {
                     if ( clone || it->get_projection () == 0) {
                         if  ( it->get_projection() != it->get_avg()) {
                             int projection = it->get_avg();
@@ -409,10 +410,13 @@ public:
                             it->set_projection(projection);
                         }
                     }
+                    if ( it->get_projection () != it->get_knownProjection ())
+                        ret++;
+                }
 
             }
             m_pProjectionsViewFilterProxyModel->invalidate();
-            return;
+            return ret;
         }
 
         std::unordered_map<std::string,int> theOtherGuyProjection = mGateway->dataService->GetProjByName(value.toStdString());
@@ -449,9 +453,13 @@ public:
 
                  qDebug() << " set " << it->first.data() << " to " << projection;
             }
+            if ( item->get_projection () != item->get_knownProjection ())
+                ret++;
+
 
         }
         m_pProjectionsViewFilterProxyModel->invalidate();
+        return ret;
 
     }
 
