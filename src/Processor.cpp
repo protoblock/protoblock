@@ -281,7 +281,7 @@ bool BlockProcessor::processDataBlock(const Block &sblock) {
             process(dt);
         }
 
-        qDebug() << " jay hack 2";       
+        qDebug() << " jay hack 2";
         return true;
     }
 #endif
@@ -766,7 +766,9 @@ void BlockProcessor::process(const DataTransition &indt) {
                 qWarning() << "wrong season! " << indt.DebugString().data();
                 mGlobalState.set_season(indt.season());
             }
-            mGlobalState.set_week(0);//indt.week());
+            else if ( mGlobalState.week () != indt.week())
+                mGlobalState.set_week(0);//indt.week());
+
             mGlobalState.set_state(GlobalState_State_INSEASON);
             mData.OnGlobalState(mGlobalState);
             OnSeasonStart(indt.season());
