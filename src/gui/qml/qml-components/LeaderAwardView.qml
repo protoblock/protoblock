@@ -61,8 +61,9 @@ Item {
                     width: tvl.width
                     color: "transparent"
                     anchors.top: parent.top
+                    anchors.left: parent.left
                     anchors.margins: ProtoScreen.guToPx(.25)
-                    anchors.horizontalCenter: tvl.horizontalCenter
+//                    anchors.horizontalCenter: tvl.horizontalCenter
                     enabled: styleData.column === 0
                     visible: styleData.column === 0
 

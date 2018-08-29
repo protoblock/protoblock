@@ -95,21 +95,6 @@ Item {
 //                        color: Material.Theme.light.textColor
                         activeFocusOnPress: true
                     }
-                    Material.Label {
-                        text: "FantasySkill Leaderboard "
-                        anchors.left: parent.right
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
-                        elide: Text.ElideRight
-                        wrapMode: Text.WordWrap
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        enabled: false//styleData.column === 1
-                        visible: false//styleData.column === 1
-                        color: "green"
-                        anchors.centerIn: parent
-
-                    }
-
                 }
 
                 Rectangle {
@@ -505,24 +490,6 @@ Item {
                 }
             }
 
-        }
-
-        Banner {
-            id: tvhead
-            Layout.fillWidth: false
-            fontSize: ProtoScreen.font(ProtoScreen.SMALL)
-            bold: true
-//            anchors.horizontalCenter: parent.horizontalCenter + fnamesearch.width
-            anchors.left: fnamesearch.right
-            text: " Skill Leaderboard "
-            color: themeroot.theme.primaryColor
-            backgroundColor: "white"
-
-            width: tv.width - fnamesearch.width
-            height: ProtoScreen.guToPx(4)
-            anchors.top: tv.top
-            anchrosHType: "center"
-            anchors.margins: 0
         }
 
     }

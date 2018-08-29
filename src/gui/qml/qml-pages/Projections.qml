@@ -182,14 +182,14 @@ Item {
             height: parent.height - cBan.height
             id: stack
             initialItem: pptS
-            property real leftwidth: (stack.currentItem.objectName === "pptS") ? schedr.width :
-                                     (stack.currentItem.objectName === "prevWeekS") ? sched2.width : sched3.width
+//            property real leftwidth: (stack.currentItem.objectName === "pptS") ? schedr.width :
+//                                     (stack.currentItem.objectName === "prevWeekS") ? sched2.width : sched3.width
 
-            property real midwidth: (stack.currentItem.objectName === "pptS") ? projr.width :
-                                     (stack.currentItem.objectName === "prevWeekS") ? proj2.width : proj3.width
+//            property real midwidth: (stack.currentItem.objectName === "pptS") ? projr.width :
+//                                     (stack.currentItem.objectName === "prevWeekS") ? proj2.width : proj3.width
 
-            property real ritwidth: (stack.currentItem.objectName === "pptS") ? rightr.width :
-                                     (stack.currentItem.objectName === "prevWeekS") ? right2.width : right3.width
+//            property real ritwidth: (stack.currentItem.objectName === "pptS") ? rightr.width :
+//                                     (stack.currentItem.objectName === "prevWeekS") ? rightr2.width : rightr3.width
 
 
             Component.onCompleted: {

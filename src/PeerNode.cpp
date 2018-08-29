@@ -523,6 +523,9 @@ int Node::getBootSeason() {
     QJsonObject jo = ret.object();
     auto sseason = jo.value("season").toString().toStdString();
 
+    if ( sseason == "" )
+        return 2018;
+
     return stoi(sseason);
 }
 

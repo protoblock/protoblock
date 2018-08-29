@@ -9,7 +9,6 @@ import QtQuick.Layouts 1.3
 Item {
     property string seasontext: "NFL Season " + MiddleMan.theSeason +
                                 (MiddleMan.theWeek === 0 ? "" : (" - Week " + MiddleMan.theWeek))
-    // MiddleMan.seasonString + " 2017 Season Trading "
     property string liveorresult: MiddleMan.liveSync
     property string wkorrow: "WEEK-" + MiddleMan.theWeek
 
