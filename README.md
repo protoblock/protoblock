@@ -2,6 +2,7 @@
 This repository contains the open source protoblock blockchain, fantasybit token and proof-of-skill consensus code. 
 
 [Webpage](https://protoblock.com)
+[Proof-of-Skill - Medium](https://medium.com/@jaybny/on-proof-of-skill-6af149f45ce8)
 
 QML/C++ desktop client for Protoblock blockchain full node + Fantasybit wallet 
 
