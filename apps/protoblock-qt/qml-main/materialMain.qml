@@ -647,6 +647,11 @@ Material.ApplicationWindow{
                 }
             }
         }
+
+        dismissOnTap: false
+        onClosed: {
+            MiddleMan.guiReady()
+        }
     }
 
 
@@ -760,8 +765,8 @@ Material.ApplicationWindow{
             console.log("there is a update")
             updateDialog.toggle()
         }else{
-
              console.log("There are NO UPDATES " + ProtoScreen.os)
+             MiddleMan.guiReady()
         }
     }
 
@@ -777,6 +782,7 @@ Material.ApplicationWindow{
             switch(status){
             case XmlListModel.Error :
                 console.log("ERROR IN UPDATE MACHINE " + source)
+                MiddleMan.guiReady()
                 break;
             case XmlListModel.Ready:
                 compairVersions(updateMachine.get(0).version)

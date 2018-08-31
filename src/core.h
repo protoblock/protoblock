@@ -36,7 +36,6 @@ public:
 
     void bootstrap();
 
-    void guiIsAwake();
 
     void waitForGui();    
 
@@ -72,7 +71,8 @@ public:
         IResolvable * theInstance = instance()->myNamedResolvableInstance.value(name.toLatin1(),NULL);
         return static_cast<T*>(theInstance);
         }
-
+public slots:
+    void guiIsAwake();
 private:
 
     QMap<QString,IResolvable *> myNamedResolvableInstance;
