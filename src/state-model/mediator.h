@@ -734,7 +734,7 @@ signals:
 protected slots:
     Q_INVOKABLE void guiReady() {
         qDebug() << " mediator guiReady";
-        setliveSync("Sync");
+//        setliveSync("Sync");
         set_busySend(false);
         Core::instance()->guiIsAwake();
     }

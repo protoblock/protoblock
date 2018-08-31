@@ -109,7 +109,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_theWeek = 0;
     m_thePrevWeek = 0;
     m_theNextWeek = 0;
-    m_liveSync ="";
+    m_liveSync = "Sync";
     m_seasonString = "";
     m_theNextSeason = 0;
     m_thePrevSeason = 0;
