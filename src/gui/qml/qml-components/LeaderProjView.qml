@@ -490,6 +490,26 @@ Item {
                 }
             }
 
+            //Stake - in season
+            TableViewColumn {
+                role: "stake"
+                title: "Stake"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+                visible: myTheWeek >= 1 || myTheWeek <= 17
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+
         }
 
     }

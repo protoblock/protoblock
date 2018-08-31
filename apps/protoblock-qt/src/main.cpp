@@ -78,6 +78,9 @@ int main(int argc, char *argv[])
     MainLAPIWorker *ml = Core::resolveByName<MainLAPIWorker>("coreapi");
     app.setQuitOnLastWindowClosed(false);
     QObject::connect(&app, SIGNAL(lastWindowClosed()),
+                     pb::Mediator::instance(), SLOT(guiReady()));
+
+    QObject::connect(&app, SIGNAL(lastWindowClosed()),
                      ml, SLOT(Quit()));
 
 

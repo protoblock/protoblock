@@ -125,7 +125,7 @@ void MainLAPIWorker::startPoint(){
 
     qDebug("Main Core Thread started");
 
-//    Core::instance()->waitForGui();
+    Core::instance()->waitForGui();
 
 #ifndef NOSYNC
     auto h = myNodeWorker->preinit();

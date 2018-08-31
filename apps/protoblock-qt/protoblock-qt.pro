@@ -2,6 +2,7 @@ include ($$PWD/../protoblockd/deps.pri)
 include ($$PWD/../../share/protos.pri)
 include ($$PWD/../../res/res.pri)
 
+win32 { DEFINES += INTEL_KLUDGE }
 
 TARGET = protoblock-qt
 TEMPLATE = app

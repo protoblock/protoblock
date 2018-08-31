@@ -27,6 +27,7 @@
 #include "RestFullCall.h"
 #include "playerresultmodel.h"
 #include "ExchangeData.h"
+#include "core.h"
 
 #ifdef PLAYERLOADERFD
 #include "../../fantasybit-2015/tradingfootball/playerloader.h"
@@ -731,6 +732,13 @@ signals:
     void haveRowSymbol();
 
 protected slots:
+    Q_INVOKABLE void guiReady() {
+        qDebug() << " mediator guiReady";
+//        setliveSync("Sync");
+        set_busySend(false);
+        Core::instance()->guiIsAwake();
+    }
+
 //    void handdleUsingName(const QString &name);
 //    void handdleNameStatus(const QString &name,const QString &status );
 //    void handdleNameStatuses();
