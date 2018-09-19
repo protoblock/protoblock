@@ -34,10 +34,10 @@ void messageHandler(QtMsgType type,
 #ifndef ALLOW_DEBUG
     return;
 #else
-    static QString logFileName = AppSettings::instance()->getSetting(AppSettings::LogFilePath).toString();
-    static std::ofstream  logFile(logFileName.toStdString(),std::ofstream::app);
-    if (logFile)
-        logFile << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
+//    static QString logFileName = AppSettings::instance()->getSetting(AppSettings::LogFilePath).toString();
+//    static std::ofstream  logFile(logFileName.toStdString(),std::ofstream::app);
+//    if (logFile)
+//        logFile << qPrintable(qFormatLogMessage(type,context, message))<< std::endl;
 #endif
 
 }
@@ -56,10 +56,10 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
 #endif
 
-#ifndef NO_DEBUG_FILE_OUT
-    qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
-    qInstallMessageHandler(messageHandler);
-#endif
+//#ifndef NO_DEBUG_FILE_OUT
+//    qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
+//    qInstallMessageHandler(messageHandler);
+//#endif
 
     QQuickStyle::setStyle("Material");
 
@@ -75,8 +75,10 @@ int main(int argc, char *argv[])
     pb::ImportLoader il;
     engine.rootContext()->setContextProperty("ImportLoader", &il);
 
+
     MainLAPIWorker *ml = Core::resolveByName<MainLAPIWorker>("coreapi");
     app.setQuitOnLastWindowClosed(false);
+
     QObject::connect(&app, SIGNAL(lastWindowClosed()),
                      pb::Mediator::instance(), SLOT(guiReady()));
 

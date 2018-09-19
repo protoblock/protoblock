@@ -1,62 +1,64 @@
-include($$PWD/../genproto.pri)
+include($$PWD/genproto.pri)
+TARGET = ProtoblockProtocols
+TEMPLATE = lib
+QT -= core gui
 
-TEMPLATE = aux
+CONFIG += \
+    c++11
 
-CONFIG += c++11 \
-                    ordered \
-                    warn_off
+QMAKE_DISTCLEAN += -r $$GENERATEDDIR
 
-PROTOLOC = $$PWD/Protodata/proto
+HEADERS += \
+    $$GENERATEDDIR/P2PData.pb.h \
+    $$GENERATEDDIR/ExData.pb.h \
+    $$GENERATEDDIR/NameData.pb.h \
+    $$GENERATEDDIR/StaticData.pb.h \
+    $$GENERATEDDIR/StatusData.pb.h\
+    $$GENERATEDDIR/ProtoData.pb.h \
+    $$GENERATEDDIR/StateData.pb.h \
+    $$GENERATEDDIR/ApiData.pb.h
 
-## SOURCES
-PROTOS += \
-    $$PROTOLOC/P2PData.proto \
-    $$PROTOLOC/ExData.proto \
-    $$PROTOLOC/NameData.proto \
-    $$PROTOLOC/StaticData.proto \
-    $$PROTOLOC/StatusData.proto \
-    $$PROTOLOC/ProtoData.proto
+headers.files += $$HEADERS
+headers.CONFIG += no_check_exist
 
+linux:!macx {
+    CONFIG += create_pc create_prl no_install_prl
+    QMAKE_PKGCONFIG_DESCRIPTION = Protocols for protoblock
+    QMAKE_PKGCONFIG_NAME = protoblock-protocols
 
-DEFINES += BUILD_PROTO
+    !isEmpty(INSTALL_PREFIX){
+        headers.path = $$INSTALL_PREFIX/include/protoblock-protocols
+        target.path = $$INSTALL_PREFIX/lib
+        QMAKE_PKGCONFIG_PREFIX = $$INSTALL_PREFIX
+    }
 
-protobuf_decl.name = protobuf headers
-protobuf_decl.input = PROTOS
-protobuf_decl.output = $$GENERATEDDIR/${QMAKE_FILE_BASE}.pb.h
+    isEmpty(INSTALL_PREFIX){
+        headers.path = /usr/include/protoblock-protocols
+        target.path = /usr/lib
+        QMAKE_PKGCONFIG_PREFIX = /usr
+    }
 
-contains(DEFINES, BUILD_PROTO) {
-
-osx {
-    protobuf_decl.commands = /Users/$$(USER)/Desktop/fc/prebuilt/osx/bin/protoc --cpp_out=$$GENERATEDDIR/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
+    QMAKE_PKGCONFIG_LIBDIR = $$target.path
+    QMAKE_PKGCONFIG_INCDIR = $$headers.path
+    QMAKE_PKGCONFIG_VERSION = $$VERSION
+    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 }
 
 
-ios {
-    protobuf_decl.commands = /Users/$$(USER)/Desktop/fc/ios/extrenal/prototbuf/platform/x86_64/bin/protoc --cpp_out=$$PWD/../$$GENERATEDDIR/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
+win32|win64{
+    CONFIG += static
+    headers.path = $$INSTALL_PREFIX/protoblock-protocols/usr/include
+    target.path = $$INSTALL_PREFIX/protoblock-protocols/usr/lib
+}
+ios{
+    headers.path = $$INSTALL_PREFIX/usr/local/include/protoblock-protocols
+    target.path = $$INSTALL_PREFIX/usr/local/lib
+}
+macx{
+    headers.path = $$INSTALL_PREFIX/usr/local/include/protoblock-protocols
+    target.path = $$INSTALL_PREFIX/usr/local/lib
 }
 
-android {
-    ##FIXME check the HOST to see if it is win32 if not warn that it can not build
-    ## IF YOU NEED THIS INSTALL VIA CELLAR BREW
-    message (Android coming in )
-    protobuf_decl.commands =/usr/local/Cellar/protobuf/2.5.0/bin/protoc --cpp_out=$$PWD/../$$GENERATEDDIR/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
-}
-
-
-win32{
-    protobuf_decl.commands = protoc --cpp_out=$$GENERATEDDIR/ --proto_path=${QMAKE_FILE_IN_PATH} ${QMAKE_FILE_NAME}
-}
-
-protobuf_decl.variable_out = HEADERS
-QMAKE_EXTRA_COMPILERS += protobuf_decl
-
-protobuf_impl.name = protobuf sources
-protobuf_impl.input = PROTOS
-protobuf_impl.output = $$GENERATEDDIR/${QMAKE_FILE_BASE}.pb.cc
-protobuf_impl.depends = $$GENERATEDDIR/${QMAKE_FILE_BASE}.pb.h
-protobuf_impl.commands = $$escape_expand(\n)
-#protobuf_impl.variable_out = SOURCES
-QMAKE_EXTRA_COMPILERS += protobuf_impl
-}
-
-#protoc --cpp_out=D:\work\protoblock\generated --proto_path=D:\work\protoblock\GenerateProto D:\work\protoblock\GenerateProto\*.proto
+INSTALLS += \
+    target \
+    headers

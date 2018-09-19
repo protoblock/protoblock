@@ -1,0 +1,3 @@
+module ProtoblockQml.Utils
+plugin ProtoblockQml.Utils
+classname ProtoblockQmlUtilsPlugin

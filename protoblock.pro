@@ -1,10 +1,9 @@
 CONFIG += ordered
 TEMPLATE = subdirs
-
 SUBDIRS += \
-    $$PWD/apps \
-    $$PWD/share
+    $$PWD/share \
+    $$PWD/apps
+
 
 OTHER_FILES += \
-        $$PWD/README.md \
-        $$PWD/LICENSE
+    $$PWD/.qmake.conf

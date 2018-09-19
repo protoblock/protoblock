@@ -1,0 +1,3 @@
+module ProtoblockQml.Theme
+plugin ProtoblockQml.Theme
+classname ProtoblockQmlThemePlugin

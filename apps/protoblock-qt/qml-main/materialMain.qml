@@ -3,8 +3,8 @@ import QtQuick.Window 2.0
 import QtQuick.XmlListModel 2.0
 
 //import ProRotoQml.Protoblock 1.0
-import ProRotoQml.Utils 1.0
-import ProRotoQml.Theme 1.0
+import ProtoblockQml.Utils 1.0
+import ProtoblockQml.Theme 1.0
 
 import Material 1.0 as Material
 import Material.ListItems 1.0 as ListItem
@@ -13,8 +13,6 @@ import Material.Extras 1.0
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 
-
-import Communi 3.0
 
 Material.ApplicationWindow{
     title: "Protoblock"
@@ -93,7 +91,7 @@ Material.ApplicationWindow{
 //    width: ProtoScreen.availableWidth * .95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableWidth //* .95 : ProtoScreen.availableWidth
 //    height: ProtoScreen.availableHeight *.95//(Device.productType === "windows" || Device.productType === "osx") ? ProtoScreen.availableHeight //* .95 : ProtoScreen.availableHeight
 
-    width: (Device.productType === "windows" || Device.productType === "osx" || Device.productType === "macos") ?
+    width: (Device.productType === "windows" || Device.productType === "osx" || Device.productType === "macos" || Device.productType === "linux") ?
                Math.min(1920, ProtoScreen.availableWidth) : ProtoScreen.availableWidth
 //    height: (Device.productType === "windows" || Device.productType === "osx") ?
 //               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
@@ -101,6 +99,7 @@ Material.ApplicationWindow{
     height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
     color: "transparent"
     Component.onCompleted: {
+        console.log("YO BOY LINUX IN THE HOUSE")
         setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
         setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
 
@@ -792,38 +791,38 @@ Material.ApplicationWindow{
     }
 
 
-    IrcConnection {
-        property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
-        property string tempName1: ""
-        id: ircConnectionPoint
-        host: "162.254.24.67"
-        port: 6667
-        secure: false
-        saslMechanism: ""
-        nickName: tempName
-        realName:tempName
-        userName:tempName
-        password:""
-    }
+//    IrcConnection {
+//        property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
+//        property string tempName1: ""
+//        id: ircConnectionPoint
+//        host: "162.254.24.67"
+//        port: 6667
+//        secure: false
+//        saslMechanism: ""
+//        nickName: tempName
+//        realName:tempName
+//        userName:tempName
+//        password:""
+//    }
 
-    IrcBufferModel {
-        id: ircBufferModel
-        sortMethod: Irc.SortByTitle
-        connection:ircConnectionPoint
-        onMessageIgnored: ircServerBuffer.receiveMessage(message)
-        function quit() {
-            bufferModel.clear()
-            ircConnectionPoint.quit("Fantasy Just Got Real")
-            ircConnectionPoint.close()
-        }
-    }
-    IrcBuffer {
-        id: ircServerBuffer
-        sticky: true
-        persistent: true
-        name: ircConnectionPoint.displayName
-        Component.onCompleted: ircBufferModel.add(ircServerBuffer)
-    }
+//    IrcBufferModel {
+//        id: ircBufferModel
+//        sortMethod: Irc.SortByTitle
+//        connection:ircConnectionPoint
+//        onMessageIgnored: ircServerBuffer.receiveMessage(message)
+//        function quit() {
+//            bufferModel.clear()
+//            ircConnectionPoint.quit("Fantasy Just Got Real")
+//            ircConnectionPoint.close()
+//        }
+//    }
+//    IrcBuffer {
+//        id: ircServerBuffer
+//        sticky: true
+//        persistent: true
+//        name: ircConnectionPoint.displayName
+//        Component.onCompleted: ircBufferModel.add(ircServerBuffer)
+//    }
 
     /*!
       * This is the left gesture bar that is used only for
