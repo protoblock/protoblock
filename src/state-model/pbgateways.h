@@ -83,6 +83,7 @@ public:
 protected: //signals: // <- ignored by moc and only serves as documentation aid
             // The code will work exactly the same if signals: is absent.
 
+    virtual void PlayName(string) = 0;
     virtual void NameStatus(fantasybit::MyFantasyName) = 0;
     virtual void LiveProj(fantasybit::FantasyBitProj) = 0;
     virtual void MyNames(std::vector<fantasybit::MyFantasyName>) = 0;

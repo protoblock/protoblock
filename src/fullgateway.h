@@ -35,12 +35,19 @@ public:
 //        mlapi->dataService = dataservice;
         this->dataService = datain;
         this->tradingProxy = this;
+        connect(mlapi, &MainLAPIWorker::PlayName,
+                this, [this](string inname) {
+            qDebug() << " FullGateway PlayName" << inname.data();
+            emit PlayName(inname);
+        });
+
         connect(mlapi, &MainLAPIWorker::NameStatus,
                 this, [this](fantasybit::MyFantasyName inname) {
             qDebug() << " FullGateway namestatus" << inname.DebugString().data();
             myName = inname;
             emit NameStatus(inname);
         });
+
 
         connect( mlapi, &MainLAPIWorker::LiveProj,
                 this, &FullGateway::LiveProj);
@@ -188,6 +195,7 @@ public:
     }
 
 signals:
+    void PlayName(string);
     void NameStatus(fantasybit::MyFantasyName);
     void LiveProj(fantasybit::FantasyBitProj);
     void MyNames(vector<fantasybit::MyFantasyName>);

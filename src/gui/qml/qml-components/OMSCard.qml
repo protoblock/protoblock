@@ -37,6 +37,7 @@ Item {
                 Layout.fillWidth: false
                 Layout.preferredWidth: wid
                 color: "red"
+                enabled: MiddleMan.allowAction
                 onClicked: {
                     MiddleMan.doCancel(refnum)
                 }
