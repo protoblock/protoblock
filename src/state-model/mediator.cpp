@@ -116,6 +116,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
     m_theSeason = 2014;
     mSeasonSuffix = "14s";
     mWeeklySuffix = "00w";
+    m_allowAction = false;
 
     //player selection
     m_pProjectionsViewFilterProxyModel =  new ProjectionsViewFilterProxyModel(m_pWeeklyScheduleModel,&myGamesSelectionModel);
@@ -171,7 +172,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
 void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     qDebug() << myFantasyName.data() << " mediator namestatus " << myname.DebugString().data();
 
-    if ( myname.name() == myFantasyName )
+    if ( myname.name() == myFantasyName &&  myname.name() != otherFantasyName)
         return;
 
     if ( nullptr != mGoodNameBalModel.getByUid(myname.name().data()) ) {
@@ -199,6 +200,7 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
         }
     }
 
+    otherFantasyName = "";
     myFantasyName = myname.name();
     auto mgit = mGoodNameBalModel.getByUid(myname.name().data());
     mgit->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName));
@@ -208,6 +210,28 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     emit usingFantasyName(myname.name().data());
     updateOnChangeFantasyName();
     set_busySend(false);
+    checkAllowAction();
+}
+
+void Mediator::OnPlayName(string pname) {
+    qDebug() << myFantasyName.data() << " mediator PlayName " << pname.data();
+
+    if ( pname == otherFantasyName )
+        return;
+
+    if ( otherFantasyName == pname )
+        return;
+
+    otherFantasyName = pname;
+    myFantasyName = otherFantasyName;
+    auto mgit = m_pFantasyNameBalModel->getByUid(pname.data());
+    mgit->updatePnl(mGateway->dataService->GetOpenPnl(myFantasyName));
+    update_pMyFantasyNameBalance(mgit);
+    qDebug() << "Mediator PlayName emitting using fantasy name " << pname.data();
+    myGamesSelectionModel.reset();
+    emit usingFantasyName(pname.data());
+    updateOnChangeFantasyName();
+    checkAllowAction();
 }
 
 void Mediator::LiveProj(FantasyBitProj proj) {
@@ -355,6 +379,8 @@ void Mediator::LiveGui(GlobalState gs) {
 
         setcontrolMessage("<html><style type=\"text/css\"></style>Follow us on Twitter. " \
                           "<a href=\"https://twitter.com/protoblock\">@protoblock</a></html>");
+
+        checkAllowAction();
     }
 
 //    FantasyNameBal fnb;
@@ -690,6 +716,8 @@ void Mediator::setupConnection(pb::IPBGateway *ingateway) {
     mOGateway = that;
 
 
+    connect(that, SIGNAL(PlayName(string)),
+            this, SLOT(OnPlayName(string)));
 
     connect(that, SIGNAL(NameStatus(fantasybit::MyFantasyName)),
             this, SLOT(NameStatus(fantasybit::MyFantasyName)));
@@ -858,6 +886,8 @@ QString Mediator::getSecret() {
 }
 
 void Mediator::doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size) {
+    if ( otherFantasyName != "" )
+        return;
 
     ExchangeOrder eo;
     eo.set_playerid(playerid.toStdString());
@@ -877,6 +907,9 @@ void Mediator::doTrade(QString playerid, QString symbol, bool isbuy, const qint3
 }
 
 void Mediator::doTransfer(const qint32 amount, QString toname) {
+    if ( otherFantasyName != "" )
+        return;
+
     qDebug() << " do transfer" << amount << "from: " << myFantasyName.data() << "to: " << toname;
     TransferTrans tt;
     tt.set_from(myFantasyName);
@@ -887,6 +920,9 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
 }
 
 void Mediator::doCancel(qint32 id) {
+    if ( otherFantasyName != "" )
+        return;
+
     ExchangeOrder eo;
     eo.set_type(ExchangeOrder::CANCEL);
 

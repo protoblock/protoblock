@@ -158,7 +158,7 @@ Item {
 
                 Material.Button {
 //                    focus: true
-                    enabled: MiddleMan.liveSync === "Live"
+                    enabled: MiddleMan.allowAction
                     elevation: 4
                     id: buybut
                     text: "Buy"
@@ -295,7 +295,7 @@ Item {
 
                 Button {
 //                    focus: true
-                    enabled: MiddleMan.liveSync === "Live"
+                    enabled: MiddleMan.allowAction
                     id: sellbut
                     text: "Sell"
                     backgroundColor: "red"

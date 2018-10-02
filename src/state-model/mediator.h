@@ -163,6 +163,9 @@ class Mediator : public QObject {
     QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pAccountsModel)
 
 
+    QML_READONLY_CSTREF_PROPERTY (bool, allowAction)
+
+
 //    QML_READONLY_PTR_PROPERTY(SortFilterProxyModel, pPlayerProjModel)
 
     static Mediator *myInstance;
@@ -175,6 +178,10 @@ public:
         CopyProjectionsFrmoFantasyData(pl.loadProj(m_theWeek));
     }
 #endif
+
+    void checkAllowAction() {
+         setallowAction(m_liveSync == "Live" && otherFantasyName == "" && myFantasyName != "");
+    }
 
     void CopyTheseProjections(const std::vector<fantasybit::PlayerPoints> &these) {
         for ( auto t : these) {
@@ -303,6 +310,9 @@ public:
     }
 
     Q_INVOKABLE void sendProjections() {
+        if ( otherFantasyName != "" )
+            return;
+
         std::unordered_map<string,vector<FantasyBitProj>> projbygame{};
         for ( auto it : mPlayerProjModel) {
             int projection = it->get_projection();
@@ -354,6 +364,9 @@ public:
     }
 
     Q_INVOKABLE bool isMyName(QString fname) {
+        if ( otherFantasyName.data() == fname )
+            return true;
+
         return m_pGoodNameBalModel->getByUid(fname) != nullptr;
     }
 
@@ -781,6 +794,7 @@ private:
 //    std::string lastPk2name;
     //fantasybit::FantasyAgent m_fantasy_agent;
     std::string myFantasyName;
+    std::string otherFantasyName;
 
 //    QString m_playersName;
 //    QString m_playersStatus;
@@ -884,6 +898,7 @@ private:
     }
 
 public slots:
+    void OnPlayName(string);
     void NameStatus(fantasybit::MyFantasyName);
     void LiveProj(fantasybit::FantasyBitProj);
     void MyNames(vector<fantasybit::MyFantasyName>);

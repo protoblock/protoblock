@@ -247,7 +247,7 @@ Item {
                 }
 
                 Material.Button {
-                    enabled: MiddleMan.liveSync === "Live" && sendqty.value > 0 && nameto.status === 1
+                    enabled: MiddleMan.allowAction && sendqty.value > 0 && nameto.status === 1
                     elevation: 2
                     id: sendbut
                     text: "send"

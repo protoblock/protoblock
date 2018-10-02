@@ -98,6 +98,7 @@ signals:
 
 
     //to GUI
+    void PlayName(string);
     void NameStatus(fantasybit::MyFantasyName);
     void LiveProj(fantasybit::FantasyBitProj);
     void MyNames(vector<fantasybit::MyFantasyName>);

@@ -416,14 +416,6 @@ void MainLAPIWorker::OnGetMyNames() {
 
     qDebug() << " MyNames(my)";
     emit MyNames(my);
-	/*
-    if ( my.size() > 0 )  {
-        myCurrentName = my.at(my.size()-1);
-        agent.UseName(myCurrentName.name());
-        emit NameStatus(myCurrentName);
-        namedata.Subscribe(myCurrentName.name());
-    }
-	*/
 }
 
 //from Gui
@@ -439,13 +431,17 @@ void MainLAPIWorker::OnUseName(QString name) {
         if ( agent.UseName(myCurrentName.name()) ) {
             myCurrentName = it->second;
         }
+
+
+        if ( myCurrentName.status() >= MyNameStatus::requested)
+            DoSubscribe(myCurrentName.name(),true);
+
+        qDebug() << "malpi NameStatus(myCurrentName)" << myCurrentName.DebugString().data();
+        emit NameStatus(myCurrentName);
     }
-
-    if ( myCurrentName.status() >= MyNameStatus::requested)
-        DoSubscribe(myCurrentName.name(),true);
-
-    qDebug() << "malpi NameStatus(myCurrentName)" << myCurrentName.DebugString().data();
-    emit NameStatus(myCurrentName);
+    else {
+        emit PlayName(myCurrentName.name());
+    }
 }
 
 

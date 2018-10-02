@@ -533,7 +533,7 @@ Item {
                         height: parent.height * .75
                         width: parent.width * .90
                         visible: styleData.column === pcol
-                        enabled: styleData.column === pcol && MiddleMan.liveSync === "Live"
+                        enabled: styleData.column === pcol && MiddleMan.allowAction
                         text: "Send"
 
                         onClicked : {
