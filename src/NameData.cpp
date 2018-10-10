@@ -143,15 +143,9 @@ void FantasyNameData::closeAll() {
     namestore.reset();
     projstore.reset();
 
-    //reset num for week todo:
-    //done 10/2/18 - reset Num, # count column
-    //std::pair<int32_t,int> mypair
-    decltype(decltype(Commissioner::GetFantasyNames())::value_type->getBlockNump()) mypair{0,0};
-    for ( auto fnb : Commissioner::GetFantasyNames() ) {
-        fnb->getBlockNump(&mypair.first,&mypair.second);
-        fnb->setBlockNump(mypair.first,0);
-    }
-
+    std::pair<int32_t,int> mypair;
+    for ( auto fnb : Commissioner::GetFantasyNames() )
+        fnb->setNump(0);
 }
 
 void FantasyNameData::DoTransfer(const string &from, const string &to,
