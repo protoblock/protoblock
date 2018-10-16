@@ -13,6 +13,9 @@ import QtQuick.Layouts 1.1
 Item {
     id: topi
 
+    property bool extvisible: false
+    property bool offvisible: (myTheWeek < 1 || myTheWeek > 17)
+
     signal releasedit(string fname)
     property string dragtarget: "dropProxy"
     property int myTheWeek: MiddleMan.theWeek
@@ -111,15 +114,44 @@ Item {
                     enabled: styleData.column === 0
                     visible: styleData.column === 0
 
-                    Material.Label {
-                        text: "Fantasy Skill Leaders "
+                    RowLayout {
                         anchors.fill: parent
-                        font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
-                        elide: Text.ElideRight
-                        wrapMode: Text.WordWrap
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        color: "green"
+
+                        Material.Label {
+                            text: "Fantasy Skill Leaders"
+                            Layout.preferredWidth: ProtoScreen.guToPx(12)
+                            font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
+                            elide: Text.ElideRight
+                            wrapMode: Text.WordWrap
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            color: "green"
+                            Layout.fillHeight: true
+                            Layout.fillWidth: false
+                        }
+                        Material.IconButton {
+//                            anchors.centerIn: parent
+//                            anchors.fill: parent
+                            Layout.fillHeight: true
+                            Layout.fillWidth: false
+                            Layout.alignment: Qt.AlignLeft
+                            width: ProtoScreen.guToPx(3)
+//                            height: parent.height
+                            color: Material.Theme.light.textColor
+                            onClicked: {
+                                extvisible = !extvisible;
+                            }
+                            size: ProtoScreen.guToPx(1.5)
+
+
+//                            visible: styleData.column === ocol && !posvisible
+//                            enabled: visible
+                            action: Material.Action {
+                                iconName: "awesome/expand"
+                                hoverAnimation: true
+                                name: "details"
+                            }
+                        }
 
                     }
                 }
@@ -308,7 +340,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: offvisible
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -326,7 +358,7 @@ Item {
                 title: "Skill"
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: offvisible
 
 
                 delegate: Material.Label {
@@ -346,7 +378,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: offvisible
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -365,7 +397,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: offvisible
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -384,7 +416,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek < 1 || myTheWeek > 17
+                visible: offvisible
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -497,7 +529,7 @@ Item {
                 horizontalAlignment : Text.AlignHCenter
                 width: ProtoScreen.guToPx(8)
 
-                visible: myTheWeek >= 1 || myTheWeek <= 17
+                visible: !offvisible && extvisible
 
                 delegate: Material.Label {
                     anchors.centerIn: parent
@@ -508,6 +540,44 @@ Item {
                     text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
                 }
             }
+
+            TableViewColumn {
+                role: "pnl"
+                title: "PnL"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+                visible: !offvisible && extvisible
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
+            //Net - off season
+            TableViewColumn {
+                role: "net"
+                title: "Net"
+                horizontalAlignment : Text.AlignHCenter
+                width: ProtoScreen.guToPx(8)
+
+                visible: !offvisible && extvisible
+
+                delegate: Material.Label {
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
+                    text: (styleData.value)//.replace( /(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " ƑɃ"
+                }
+            }
+
 
 
         }
