@@ -131,9 +131,17 @@ void FantasyNameData::init() {
     }
 }
 
+void FantasyNameData::clearProjCounts() {
+    for ( auto fff : FantasyNameProjections) {
+        auto fnp = Commissioner::getName(fff.first);
+        fnp->setBlockNump(0,0);
+    }
+}
+
 void FantasyNameData::closeAll() {
     Commissioner::clearAll();
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+    clearProjCounts();
     bool amlive = false;
     int week = 0;
     mSubscribed.clear();
@@ -143,9 +151,6 @@ void FantasyNameData::closeAll() {
     namestore.reset();
     projstore.reset();
 
-    std::pair<int32_t,int> mypair;
-    for ( auto fnb : Commissioner::GetFantasyNames() )
-        fnb->setNump(0);
 }
 
 void FantasyNameData::DoTransfer(const string &from, const string &to,
@@ -476,9 +481,10 @@ void FantasyNameData::OnFantasyNamePnl(FantasyNameBal &fn) {
 }
 
 
-void FantasyNameData::OnWeekOver(int in) {
+void FantasyNameData::OnWeekOver(int) {
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        clearProjCounts();
         FantasyNameProjections.clear();
         PlayerIDProjections.clear();
         PlayerIDSumProj.clear();
@@ -486,10 +492,6 @@ void FantasyNameData::OnWeekOver(int in) {
     auto *it = projstore->NewIterator(leveldb::ReadOptions());
     for (it->SeekToFirst(); it->Valid(); it->Next())
         projstore->Delete(write_sync, it->key());
-
-    if ( amlive )
-        for ( auto fnb : Commissioner::GetFantasyNames() )
-            fnb->setBlockNump(0,0);
 
     delete it;
     qDebug() << " clearProjections ";
