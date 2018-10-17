@@ -999,12 +999,12 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
         auto diff = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
                 std::chrono::nanoseconds(t.nonce());
 
-        auto diff2 = std::chrono::nanoseconds(t.nonce()) - std::chrono::seconds(BlockRecorder::BlockTimestamp);
-        auto sd2 = std::chrono::duration_cast<std::chrono::seconds>(diff);
-        qDebug() << sd2.count();
+//        auto diff2 = std::chrono::nanoseconds(t.nonce()) - std::chrono::seconds(BlockRecorder::BlockTimestamp);
+//        auto sd2 = std::chrono::duration_cast<std::chrono::seconds>(diff);
+//        qDebug() << sd2.count();
 
-        auto sd = std::chrono::duration_cast<std::chrono::minutes>(diff);
-        qDebug() << sd.count() << " -60" << std::chrono::minutes{-60}.count();
+//        auto sd = std::chrono::duration_cast<std::chrono::minutes>(diff);
+//        qDebug() << sd.count() << " -60" << std::chrono::minutes{-60}.count();
 
         if ( std::chrono::duration_cast<std::chrono::hours>(diff).count() > std::chrono::hours{48}.count() )  {
             qCritical() << " !isValidTx timeout older than 48 hours" << BlockRecorder::BlockTimestamp;
