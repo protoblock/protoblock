@@ -52,6 +52,7 @@ class FantasyNameData : public QObject {
     std::recursive_mutex data_mutex{};
 
 
+    void clearProjCounts();
 signals:
     void ProjectionLive(fantasybit::FantasyBitProj);
     void FantasyNameFound(string);
