@@ -150,7 +150,7 @@ Item {
         }
 
         Card {
-            id: otherNamePicker
+            id: othernamePicker
             width: parent.width / 1.07
             height: (othernamePickerBannner.height + 10) + playasgrid.height + ProtoScreen.guToPx(4)
             anchors.horizontalCenter: parent.horizontalCenter
