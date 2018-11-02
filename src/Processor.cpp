@@ -24,7 +24,7 @@
 #include "fbutils.h"
 #include "pbutils.h"
 #include "ldbwriter.h"
-
+#include "DataPersist.h"
 
 
 #ifdef BLOCK_EXPLORER
@@ -201,6 +201,11 @@ int32_t BlockProcessor::process(Block &sblock) {
         boot.set_previd(sblock.signedhead().head().prev_id());
         mExchangeData.addBootStrap(&boot);
         mNameData.addBootStrap(&boot,true);
+
+#ifndef DONT_WRITEBOOOT
+        string bootfile = "localbootstrap"  + boot.key() + ".out";
+        Writer<KeyValue> writer{"localbootstrap201805.out",ios::app};
+#endif
     }
 #endif
 
