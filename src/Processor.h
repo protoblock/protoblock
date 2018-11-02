@@ -42,6 +42,7 @@ class BlockProcessor : public QObject {
     int32_t realHeight = 0;
     int32_t lastidprocessed = 0;
     bool mLastWeekStart = false;
+    bool mLastWeekOver = false;
     GlobalState mGlobalState;
     bool verify_name(const SignedTransaction &, const NameTrans &,
                      const pb::signature&, const pb::sha256 &);

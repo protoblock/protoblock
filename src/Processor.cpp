@@ -192,22 +192,52 @@ int32_t BlockProcessor::process(Block &sblock) {
 
 #ifndef NOUSE_GENESIS_BOOT
     if ( mLastWeekStart ) {
+#ifndef DONT_WRITEBOOOT
+        {
+            leveldb::WriteOptions write_sync{};
+            write_sync.sync = true;
+            auto *it = Node::bootstrap->NewIterator(leveldb::ReadOptions());
+            for (it->SeekToFirst(); it->Valid(); it->Next()) {
+                Node::bootstrap->Delete(write_sync,it->key());
+            }
+            delete it;
+        }
+#endif
+        int32_t useblock = lastidprocessed;
+//        if ( !mLastWeekOver )
+//            useblock = lastidprocessed-1;
+
         mLastWeekStart = false;
         int week = mData.GetGlobalState().week();
         auto boot = mData.makeBootStrap(mData.GetGlobalState().season (),
                                         mData.GetGlobalState().week(),
-                                        lastidprocessed-1);
+                                        useblock);
         boot.set_key(to_string(mData.GetGlobalState().season ()) +  (week < 10 ? "0" : "") + to_string(week));
-        boot.set_previd(sblock.signedhead().head().prev_id());
+        boot.set_previd(FantasyAgent::BlockHash(sblock));
+                //sblock.signedhead().head().prev_id());
         mExchangeData.addBootStrap(&boot);
         mNameData.addBootStrap(&boot,true);
 
 #ifndef DONT_WRITEBOOOT
-        string bootfile = "localbootstrap"  + boot.key() + ".out";
-        Writer<KeyValue> writer{"localbootstrap201805.out",ios::app};
+        {
+            string bootfile = "localbootstrap"  + boot.key() + ".out";
+            Writer<KeyValue> writer{Platform::instance()->getRootDir() + bootfile};
+            auto *it = Node::bootstrap->NewIterator(leveldb::ReadOptions());
+            KeyValue kv;
+            for (it->SeekToFirst(); it->Valid(); it->Next()) {
+                kv.set_key(it->key().ToString());
+                kv.set_value(it->value().ToString());
+                writer(kv);
+                qDebug() << kv.DebugString().data();
+            }
+            delete it;
+        }
+
 #endif
     }
 #endif
+
+    if ( mLastWeekOver ) mLastWeekOver = false;
 
 #ifdef CLEAN_BLOCKS
     mRecorder.endBlock();
@@ -1277,6 +1307,7 @@ void BlockProcessor::OnWeekOver(int week) {
     mExchangeData.OnWeekOver(week);
 #endif
 
+    mLastWeekOver = true;
     emit WeekOver(week);
 }
 
