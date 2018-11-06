@@ -573,7 +573,7 @@ Item {
                     action: Material.Action {
                         name: "Copy-Merge Projection"
                         iconName: "awesome/copy"
-//                        hoverAnimation: true
+                        hoverAnimation: true
                     }
                 }
 
@@ -600,7 +600,7 @@ Item {
                         iconName: "awesome/clone"
                         text: "Copy-Clone Projection"
                         tooltip: "Copy and Replace your projection"
-//                        hoverAnimation: true
+                        hoverAnimation: true
                     }
 
                 }

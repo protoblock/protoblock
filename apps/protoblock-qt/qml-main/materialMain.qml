@@ -19,7 +19,7 @@ import Communi 3.0
 Material.ApplicationWindow{
     title: "Protoblock"
 
-    property string version: "3.0.1" //version
+    property string version: "3.0.2" //version
     property alias realRoot: themeroot
 
     property string  uname
@@ -813,7 +813,7 @@ Material.ApplicationWindow{
         onMessageIgnored: ircServerBuffer.receiveMessage(message)
         function quit() {
             bufferModel.clear()
-            ircConnectionPoint.quit("Fantasy Just Got Real")
+            ircConnectionPoint.quit("The Origional Football Blockchain")
             ircConnectionPoint.close()
         }
     }
