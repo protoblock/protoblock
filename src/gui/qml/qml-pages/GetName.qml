@@ -6,9 +6,6 @@ import Material.Extras 1.0
 import QtQuick.Controls 2.0
 import Material.ListItems 1.0 as ListItems
 
-//import QtQuick.Controls.Material 2.0
-//import QtQuick.Controls.Universal 2.0
-
 Material.PopupBase {
     id: onboardsplash
     globalMouseAreaEnabled: false
@@ -21,14 +18,11 @@ Material.PopupBase {
 
     opacity: showing ? 1 : 0
     visible: opacity > 0
-//    overlayLayer: "dialogOverlayLayer"
 
     StackLayout  {
         id: stackView
         anchors.fill: parent
-        currentIndex: 0//tabBar.currentIndex+1
-
-
+        currentIndex: 0
         Material.View {
             anchors.centerIn: parent;
             anchors.fill: parent
@@ -39,9 +33,7 @@ Material.PopupBase {
                 id: label1
                 color: "white";
                 text: qsTr("Welcome to Protoblock")
-//                    Layout.columnSpan: 4
                 verticalAlignment: Text.AlignVCenter
-//                    font.pixelSize: 17
                 font.bold: true
                 textFormat: Text.RichText
                 horizontalAlignment: Text.AlignHCenter
@@ -55,8 +47,7 @@ Material.PopupBase {
             }
 
             ColumnLayout {
-//                anchors.centerIn: parent;
-                anchors.topMargin: ProtoScreen.guToPx(20)
+                anchors.topMargin: ProtoScreen.guToPx(10)
                 id: columnLayout1
                 clip: false
                 spacing: ProtoScreen.guToPx(5)
@@ -72,7 +63,6 @@ Material.PopupBase {
                     elevation: 1
                     onClicked: {
                         onboardsplash.close();
-//                        rootLoader.source = "qrc:/Account.qml"
                         pageHelper.selectedTabIndex = themeroot.accountIndex;
                     }
                 }
@@ -83,13 +73,25 @@ Material.PopupBase {
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true;
                     elevation: 1
-//                    textColor: Material.Theme.light.textColor
                     onClicked: {
                         onboardsplash.close();
                         pageHelper.selectedTabIndex = themeroot.accountIndex;
                         rootLoader.source = "qrc:/Import-Export.qml"
                     }
                 }
+
+                Material.Button {
+                    text: "View-Only Account"
+                    Layout.preferredHeight: ProtoScreen.guToPx(8)
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillWidth: true;
+                    elevation: 1
+                    onClicked: {
+                        onboardsplash.close();
+                        pageHelper.selectedTabIndex = themeroot.accountIndex;
+                    }
+                }
+
 
                 Material.Button {
                     text: "Skip to App"
@@ -107,11 +109,6 @@ Material.PopupBase {
         Secret {
             isdisplay: currentindex === secret
         }
-
-//            Account {}
-//            Secret {}
-//            Bitcoin {}
-//            Balance {}
     }
 
     function show() {
