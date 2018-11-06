@@ -40,9 +40,6 @@ namespace fantasybit
 
 Node::Node() { current_boot.set_blocknum(-1);}
 void Node::init() {
-#ifndef NO_DOSPECIALRESULTS
-    doSpecialResults = false;
-#endif
 
 #ifndef NO_REMOVEALL_FORK1
     QFileInfo check_file( (GET_ROOT_DIR() + "postfork1.2").data ());
@@ -51,39 +48,6 @@ void Node::init() {
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
         QFile file( (GET_ROOT_DIR() + "postfork1.2").data () );
-        file.open(QIODevice::WriteOnly);
-    }
-#endif
-
-#ifdef STARTSUPERBOWL52
-        QFileInfo check_file1( (GET_ROOT_DIR() + "startSuperbowl52").data ());
-        if (!check_file1.exists() ) {
-            pb::remove_all(GET_ROOT_DIR() + "index/");
-            pb::remove_all(GET_ROOT_DIR() + "block/");
-            pb::remove_all(GET_ROOT_DIR() + "trade/");
-            QFile file( (GET_ROOT_DIR() + "startSuperbowl52").data () );
-            file.open(QIODevice::WriteOnly);
-        }
-#endif
-
-#ifdef START2017WITH2014
-    QFileInfo check_file( (GET_ROOT_DIR() + "start2017").data ());
-    if (!check_file.exists() ) {
-        pb::remove_all(GET_ROOT_DIR() + "index/");
-        pb::remove_all(GET_ROOT_DIR() + "block/");
-        pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "start2017").data () );
-        file.open(QIODevice::WriteOnly);
-    }
-#endif
-
-#ifdef REMOVEALL_SEASON_TRADING
-    QFileInfo check_file( (GET_ROOT_DIR() + "seasontrade2017wk2").data ());
-    if (!check_file.exists() ) {
-        pb::remove_all(GET_ROOT_DIR() + "index/");
-        pb::remove_all(GET_ROOT_DIR() + "block/");
-        pb::remove_all(GET_ROOT_DIR() + "trade/");
-        QFile file( (GET_ROOT_DIR() + "seasontrade2017wk2").data () );
         file.open(QIODevice::WriteOnly);
     }
 #endif
@@ -179,11 +143,6 @@ void Node::init() {
                 BlockRecorder::InitCheckpoint(current_hight);
             }
         }
-#ifndef NO_DOSPECIALRESULTS
-        else if ( doSpecialResults ) {
-            NFLStateData::InitCheckpoint(true);
-        }
-#endif
     }
 #endif
 
@@ -592,12 +551,6 @@ Bootstrap Node::getLastLocalBoot() {
 
         string globalhead = to_string(sseason) + (week < 10 ?  + "0" : "") + to_string(week);
 
-#ifndef NO_DOSPECIALRESULTS
-        if ( globalhead == "201613" && !Commissioner::BootStrapFileExists(globalhead) ) {
-            doSpecialResults = true;
-            qWarning() << "getLastLocalBoot  doSpecialResults " << doSpecialResults;
-        }
-#endif
         if ( globalhead > localhead  ) {
             head = Commissioner::makeGenesisBoot(ldb,globalhead);
             if ( head.blocknum() <= 0 ) {
@@ -621,14 +574,6 @@ Bootstrap Node::getLastLocalBoot() {
         }
         else {
             done = true;
-#ifndef NO_DOSPECIALRESULTS
-            if ( doSpecialResults ) {
-                auto holdhead = ldb.read("head");
-                Bootstrap temphead = Commissioner::makeGenesisBoot(ldb,globalhead);
-                ldb.write("head",holdhead);
-                qWarning() << "getLastLocalBoot  if doSpecialResults " << holdhead.data();
-            }
-#endif
         }
     }
 
@@ -763,7 +708,5 @@ decltype(Node::bootstrap) Node::bootstrap;
 decltype(Node::blockchain_mutex) Node::blockchain_mutex{};
 decltype(Node::GlobalHeight) Node::GlobalHeight{};
 bool Node::forking = false;
-#ifndef NO_DOSPECIALRESULTS
-bool Node::doSpecialResults = false;
-#endif
+
 }
