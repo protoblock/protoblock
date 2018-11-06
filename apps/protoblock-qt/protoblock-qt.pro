@@ -19,6 +19,7 @@ contains(DEFINES, CONSOLE) {
 
 osx{
     CONFIG+=app_bundle
+    QMAKE_MAC_SDK = macosx10.14
 }
 
 macx {
