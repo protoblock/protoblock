@@ -813,7 +813,7 @@ Material.ApplicationWindow{
         onMessageIgnored: ircServerBuffer.receiveMessage(message)
         function quit() {
             bufferModel.clear()
-            ircConnectionPoint.quit("Fantasy Just Got Real")
+            ircConnectionPoint.quit("The Origional Football Blockchain")
             ircConnectionPoint.close()
         }
     }
