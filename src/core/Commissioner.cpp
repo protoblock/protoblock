@@ -216,6 +216,8 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
     QString genesisBootFile = Platform::instance()->settings()->getSetting(AppSettings::ResourceLocation).toString();
     genesisBootFile = genesisBootFile +  filename;
     QFileInfo check_file(genesisBootFile);
+
+#ifndef NOCHECK_WEB_BOOT
     if ( !check_file.exists() ) {
 
         QString links("http://protoblock.com");
@@ -244,6 +246,8 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
 
     }
     check_file.refresh();
+#endif
+
     if ( !check_file.exists() ) {
         qDebug() << " after !check_file.exists() genesisBootFile" << genesisBootFile;
         return head;

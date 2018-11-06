@@ -271,7 +271,7 @@ namespace fantasybit {
         std::string ret = std::to_string(season-2000);
         if ( isweekly) {
             ret += "w";
-            if ( week < 9)
+            if ( week <= 9)
                 ret += "0";
 
             ret += std::to_string(week);

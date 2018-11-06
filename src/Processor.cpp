@@ -24,7 +24,7 @@
 #include "fbutils.h"
 #include "pbutils.h"
 #include "ldbwriter.h"
-
+#include "DataPersist.h"
 
 
 #ifdef BLOCK_EXPLORER
@@ -192,17 +192,52 @@ int32_t BlockProcessor::process(Block &sblock) {
 
 #ifndef NOUSE_GENESIS_BOOT
     if ( mLastWeekStart ) {
+#ifndef DONT_WRITEBOOOT
+        {
+            leveldb::WriteOptions write_sync{};
+            write_sync.sync = true;
+            auto *it = Node::bootstrap->NewIterator(leveldb::ReadOptions());
+            for (it->SeekToFirst(); it->Valid(); it->Next()) {
+                Node::bootstrap->Delete(write_sync,it->key());
+            }
+            delete it;
+        }
+#endif
+        int32_t useblock = lastidprocessed;
+//        if ( !mLastWeekOver )
+//            useblock = lastidprocessed-1;
+
         mLastWeekStart = false;
         int week = mData.GetGlobalState().week();
         auto boot = mData.makeBootStrap(mData.GetGlobalState().season (),
                                         mData.GetGlobalState().week(),
-                                        lastidprocessed-1);
+                                        useblock);
         boot.set_key(to_string(mData.GetGlobalState().season ()) +  (week < 10 ? "0" : "") + to_string(week));
-        boot.set_previd(sblock.signedhead().head().prev_id());
+        boot.set_previd(FantasyAgent::BlockHash(sblock));
+                //sblock.signedhead().head().prev_id());
         mExchangeData.addBootStrap(&boot);
         mNameData.addBootStrap(&boot,true);
+
+#ifndef DONT_WRITEBOOOT
+        {
+            string bootfile = "localbootstrap"  + boot.key() + ".out";
+            Writer<KeyValue> writer{Platform::instance()->getRootDir() + bootfile};
+            auto *it = Node::bootstrap->NewIterator(leveldb::ReadOptions());
+            KeyValue kv;
+            for (it->SeekToFirst(); it->Valid(); it->Next()) {
+                kv.set_key(it->key().ToString());
+                kv.set_value(it->value().ToString());
+                writer(kv);
+                qDebug() << kv.DebugString().data();
+            }
+            delete it;
+        }
+
+#endif
     }
 #endif
+
+    if ( mLastWeekOver ) mLastWeekOver = false;
 
 #ifdef CLEAN_BLOCKS
     mRecorder.endBlock();
@@ -999,12 +1034,12 @@ bool BlockProcessor::isValidTx(const SignedTransaction &st) {
         auto diff = std::chrono::seconds(BlockRecorder::BlockTimestamp) -
                 std::chrono::nanoseconds(t.nonce());
 
-        auto diff2 = std::chrono::nanoseconds(t.nonce()) - std::chrono::seconds(BlockRecorder::BlockTimestamp);
-        auto sd2 = std::chrono::duration_cast<std::chrono::seconds>(diff);
-        qDebug() << sd2.count();
+//        auto diff2 = std::chrono::nanoseconds(t.nonce()) - std::chrono::seconds(BlockRecorder::BlockTimestamp);
+//        auto sd2 = std::chrono::duration_cast<std::chrono::seconds>(diff);
+//        qDebug() << sd2.count();
 
-        auto sd = std::chrono::duration_cast<std::chrono::minutes>(diff);
-        qDebug() << sd.count() << " -60" << std::chrono::minutes{-60}.count();
+//        auto sd = std::chrono::duration_cast<std::chrono::minutes>(diff);
+//        qDebug() << sd.count() << " -60" << std::chrono::minutes{-60}.count();
 
         if ( std::chrono::duration_cast<std::chrono::hours>(diff).count() > std::chrono::hours{48}.count() )  {
             qCritical() << " !isValidTx timeout older than 48 hours" << BlockRecorder::BlockTimestamp;
@@ -1272,6 +1307,7 @@ void BlockProcessor::OnWeekOver(int week) {
     mExchangeData.OnWeekOver(week);
 #endif
 
+    mLastWeekOver = true;
     emit WeekOver(week);
 }
 
