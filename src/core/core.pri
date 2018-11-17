@@ -14,7 +14,9 @@ SOURCES += \
     $$PWD/platform.cpp \
     $$PWD/bitcoin-core-base58/base58.cpp \
     $$PWD/utils/utils.cpp \
-    $$PWD/ldbwriter.cpp
+    $$PWD/ldbwriter.cpp \
+    $$PWD/bitcoinutils.cpp \
+    $$PWD/bitcoinapi.cpp
 
 HEADERS += \
     $$PWD/appsettings.h \
@@ -35,5 +37,7 @@ HEADERS += \
     $$PWD/bitcoin-core-base58/base58.h \
     $$PWD/bitcoin-core-base58/hash.h \
     $$PWD/utils/utils.h \
-    $$PWD/ldbwriter.h
+    $$PWD/ldbwriter.h \
+    $$PWD/bitcoinutils.h \
+    $$PWD/bitcoinapi.h
 

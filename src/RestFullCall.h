@@ -183,7 +183,7 @@ public:
         return true;
     }
 
-    bool    getData(const QString & route,
+    bool getData(const QString & route,
                  const QMap<QString,QVariant> parameters,
                  const QMap<QString,QString> headersMap)  {
         QNetworkRequest request;
@@ -195,11 +195,17 @@ public:
         else
             url = myBaseUrl.toString();
 
-        if (parameters.count()> 1) url+="/";
-
+        bool first = true;
         foreach (QString paramName, parameters.keys()) {
-            url+=QString("%1?%2").arg(paramName).arg(parameters.value(paramName).toString());
+            if ( first ) {
+                first = false;
+                url+=QString("?%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
+            }
+            else {
+                url+=QString("&%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
+            }
         }
+
         request.setUrl(QUrl(url));
 
         //add headers
@@ -596,6 +602,138 @@ public:
 
         return client.lastReply().toStdString();
     }
+
+};
+
+class BitcoinRestfullService {
+
+public:
+    static long getBtcAddressBalance(const std::string &addr,
+                 QThread * ownerThread = QThread::currentThread()) {
+
+        QString url = QString(fantasybit::BLOCKCHAINAPI.data());
+        RestfullClient client(QUrl(url),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        QString customRoute("q/addressbalance/%1");
+        //customRoute = customRoute.arg(route).arg(blockNum);
+        client.getData(customRoute.arg(addr.data()),params,headers);
+
+        return client.lastReply().toLong ();
+        //toStdString();
+    }
+
+
+    static QByteArray getBtcAddressUnspent(const std::string &addr,
+                 QThread * ownerThread = QThread::currentThread()) {
+        return getBlockchainBtcAddressUnspent(addr,ownerThread);
+    }
+
+    static QByteArray getBlockchainBtcAddressUnspent(const std::string &addr,
+                 QThread * ownerThread = QThread::currentThread()) {
+
+        qDebug() << " getBlockchainBtcAddressUnspent";
+        QString url = QString(fantasybit::BLOCKCHAINAPI.data());
+        RestfullClient client(QUrl(url),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        params.insert ( QString("active"),QString(addr.data()));
+        QString customRoute("unspent");
+        //customRoute = customRoute.arg(route).arg(blockNum);
+        client.getData(customRoute,params,headers);
+        return client.lastReply();
+        //toStdString();
+    }
+
+    static QByteArray getChainsoBtcAddressUnspent(const std::string &addr,
+                 QThread * ownerThread = QThread::currentThread()) {
+
+        qDebug() << " getChainsoBtcAddressUnspent";
+
+        QString url = QString(fantasybit::CHAINSOAPI.data()).arg("get_tx_unspent");
+        RestfullClient client(QUrl(url),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        QString customRoute = addr.data();
+        //customRoute = customRoute.arg(route).arg(blockNum);
+        client.getData(customRoute,params,headers);
+
+        return client.lastReply();
+        //toStdString();
+    }
+
+    static QByteArray getChainsoBtcAddress(const std::string &addr,
+//                                           const QString &aftertx,
+                 QThread * ownerThread = QThread::currentThread()) {
+        qDebug() << " getChainsoBtcAddress";
+
+        //https://chain.so/api/v2/address/BTCTEST/mnBZiPHayJMSCc5Vj32Tn65tn1CcuCPWkv
+        QString url = QString(fantasybit::CHAINSOAPI.data()).arg("address");
+        RestfullClient client(QUrl(url),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        QString customRoute = addr.data();
+//        if ( !aftertx.isEmpty() )
+//            customRoute = QString("%1/%2").arg(customRoute).arg(aftertx);
+        client.getData(customRoute,params,headers);
+
+        return client.lastReply();
+        //toStdString();
+    }
+
+    static QByteArray pushTxXXX(const std::string &rawTx,
+                             QThread * ownerThread = QThread::currentThread()) {
+        QString url = QString(fantasybit::BLOCKCHAINAPI.data());
+        RestfullClient client(QUrl(url),ownerThread);
+
+        std::string sendit = "tx=" + rawTx;
+        QString customRoute("pushtx");
+//        client.postStringData(customRoute,"application/x-www-form-urlencoded",sendit.data(),RestfullClient::UTF8);
+        QByteArray data(sendit.data(),sendit.size());
+        client.postRawData(customRoute,"multipart/form-data;boundary=-------",data);
+//        client.postRawData(customRoute,"",data);
+
+        return client.lastReply();
+        //toStdString();
+    }
+
+    static QByteArray pushChainsoBitcoinTx(const std::string &rawTx,
+                             QThread * ownerThread = QThread::currentThread()) {
+        QString url = QString(fantasybit::CHAINSOAPI.data()).arg("send_tx");
+        RestfullClient client(QUrl(url),ownerThread);
+//        QMap<QString,QString>  headers;
+//        QMap<QString,QVariant> params;
+//        params.insert ( QString("tx_hex"),QString(rawTx.data()));
+       QString customRoute("");
+//        client.postTData(customRoute,params,headers);
+
+//        return client.lastReply();
+        //toStdString();
+
+        QJsonDocument doc;
+        QJsonObject obj;
+        obj.insert("tx_hex",QJsonValue(rawTx.data()));
+        doc.setObject(obj);
+        client.postJasonData(customRoute,"application/json",doc);
+        return client.lastReply();
+
+    }
+
+
+    static QByteArray pushBitcoinTx(const std::string &rawTx,
+                             QThread * ownerThread = QThread::currentThread()) {
+        QString url = QString(fantasybit::BLOCKCHAINAPI.data());
+        RestfullClient client(QUrl(url),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QString> params;
+        params.insert ( QString("tx"),QString(rawTx.data()));
+        QString customRoute("pushtx");
+        client.postTData(customRoute,params,headers);
+
+        return client.lastReply();
+        //toStdString();
+    }
+
 
 };
 

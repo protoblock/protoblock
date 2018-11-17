@@ -83,6 +83,18 @@ namespace fantasybit {
     static std::string DBNAME = "tfprod";
 #endif
 
+#ifdef USE_BTC_TESTNET
+    static std::string BLOCKCHAINAPI = "https://testnet.blockchain.info";
+    static std::string CHAINSOAPI = "https://chain.so/api/v2/%1/BTCTEST";
+    static unsigned char BTC_NETWORK = 0x6f;//0xc4;//0x6f; //0
+    static char P2SH_ADDRESS = '2';
+#else
+    static std::string BLOCKCHAINAPI = "https://blockchain.info";
+    static std::string CHAINSOAPI = "https://chain.so/api/v2/%1/BTC";
+    static unsigned char BTC_NETWORK = 0;//0xc4;//0x6f; //0
+    static char P2SH_ADDRESS = '3';
+#endif
+
     //static std::string LAPIURL = "158.222.102.83:9854";
 
     //#define NO_ORACLE_CHECK_TESTING
