@@ -75,6 +75,7 @@ class OrderUnique;
 class OrderDeets;
 class InsideUnique;
 class TimeTransition;
+class Bitcoin_UTXO;
 class SwapBid;
 class SwapFill;
 class SwapSent;
@@ -5068,6 +5069,128 @@ class TimeTransition : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Bitcoin_UTXO : public ::google::protobuf::Message {
+ public:
+  Bitcoin_UTXO();
+  virtual ~Bitcoin_UTXO();
+
+  Bitcoin_UTXO(const Bitcoin_UTXO& from);
+
+  inline Bitcoin_UTXO& operator=(const Bitcoin_UTXO& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Bitcoin_UTXO& default_instance();
+
+  void Swap(Bitcoin_UTXO* other);
+
+  // implements Message ----------------------------------------------
+
+  Bitcoin_UTXO* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Bitcoin_UTXO& from);
+  void MergeFrom(const Bitcoin_UTXO& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes txid = 10;
+  inline bool has_txid() const;
+  inline void clear_txid();
+  static const int kTxidFieldNumber = 10;
+  inline const ::std::string& txid() const;
+  inline void set_txid(const ::std::string& value);
+  inline void set_txid(const char* value);
+  inline void set_txid(const void* value, size_t size);
+  inline ::std::string* mutable_txid();
+  inline ::std::string* release_txid();
+  inline void set_allocated_txid(::std::string* txid);
+
+  // optional uint32 tx_output_n = 20;
+  inline bool has_tx_output_n() const;
+  inline void clear_tx_output_n();
+  static const int kTxOutputNFieldNumber = 20;
+  inline ::google::protobuf::uint32 tx_output_n() const;
+  inline void set_tx_output_n(::google::protobuf::uint32 value);
+
+  // optional uint64 in_value = 30;
+  inline bool has_in_value() const;
+  inline void clear_in_value();
+  static const int kInValueFieldNumber = 30;
+  inline ::google::protobuf::uint64 in_value() const;
+  inline void set_in_value(::google::protobuf::uint64 value);
+
+  // optional bytes locking_script = 40;
+  inline bool has_locking_script() const;
+  inline void clear_locking_script();
+  static const int kLockingScriptFieldNumber = 40;
+  inline const ::std::string& locking_script() const;
+  inline void set_locking_script(const ::std::string& value);
+  inline void set_locking_script(const char* value);
+  inline void set_locking_script(const void* value, size_t size);
+  inline ::std::string* mutable_locking_script();
+  inline ::std::string* release_locking_script();
+  inline void set_allocated_locking_script(::std::string* locking_script);
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Bitcoin_UTXO)
+ private:
+  inline void set_has_txid();
+  inline void clear_has_txid();
+  inline void set_has_tx_output_n();
+  inline void clear_has_tx_output_n();
+  inline void set_has_in_value();
+  inline void clear_has_in_value();
+  inline void set_has_locking_script();
+  inline void clear_has_locking_script();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* txid_;
+  ::google::protobuf::uint64 in_value_;
+  ::std::string* locking_script_;
+  ::google::protobuf::uint32 tx_output_n_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Bitcoin_UTXO* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class SwapBid : public ::google::protobuf::Message {
  public:
   SwapBid();
@@ -5129,6 +5252,13 @@ class SwapBid : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 satoshi_min() const;
   inline void set_satoshi_min(::google::protobuf::uint64 value);
 
+  // optional uint64 satoshi_max = 11;
+  inline bool has_satoshi_max() const;
+  inline void clear_satoshi_max();
+  static const int kSatoshiMaxFieldNumber = 11;
+  inline ::google::protobuf::uint64 satoshi_max() const;
+  inline void set_satoshi_max(::google::protobuf::uint64 value);
+
   // optional uint64 rate = 20;
   inline bool has_rate() const;
   inline void clear_rate();
@@ -5136,17 +5266,14 @@ class SwapBid : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 rate() const;
   inline void set_rate(::google::protobuf::uint64 value);
 
-  // optional bytes utxo = 30;
+  // optional .fantasybit.Bitcoin_UTXO utxo = 30;
   inline bool has_utxo() const;
   inline void clear_utxo();
   static const int kUtxoFieldNumber = 30;
-  inline const ::std::string& utxo() const;
-  inline void set_utxo(const ::std::string& value);
-  inline void set_utxo(const char* value);
-  inline void set_utxo(const void* value, size_t size);
-  inline ::std::string* mutable_utxo();
-  inline ::std::string* release_utxo();
-  inline void set_allocated_utxo(::std::string* utxo);
+  inline const ::fantasybit::Bitcoin_UTXO& utxo() const;
+  inline ::fantasybit::Bitcoin_UTXO* mutable_utxo();
+  inline ::fantasybit::Bitcoin_UTXO* release_utxo();
+  inline void set_allocated_utxo(::fantasybit::Bitcoin_UTXO* utxo);
 
   // optional bytes change_addr = 40;
   inline bool has_change_addr() const;
@@ -5168,6 +5295,8 @@ class SwapBid : public ::google::protobuf::Message {
  private:
   inline void set_has_satoshi_min();
   inline void clear_has_satoshi_min();
+  inline void set_has_satoshi_max();
+  inline void clear_has_satoshi_max();
   inline void set_has_rate();
   inline void clear_has_rate();
   inline void set_has_utxo();
@@ -5178,12 +5307,13 @@ class SwapBid : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint64 satoshi_min_;
+  ::google::protobuf::uint64 satoshi_max_;
   ::google::protobuf::uint64 rate_;
-  ::std::string* utxo_;
+  ::fantasybit::Bitcoin_UTXO* utxo_;
   ::std::string* change_addr_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -11133,6 +11263,194 @@ inline void TimeTransition::set_week(::google::protobuf::uint32 value) {
 
 // -------------------------------------------------------------------
 
+// Bitcoin_UTXO
+
+// optional bytes txid = 10;
+inline bool Bitcoin_UTXO::has_txid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Bitcoin_UTXO::set_has_txid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Bitcoin_UTXO::clear_has_txid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Bitcoin_UTXO::clear_txid() {
+  if (txid_ != &::google::protobuf::internal::kEmptyString) {
+    txid_->clear();
+  }
+  clear_has_txid();
+}
+inline const ::std::string& Bitcoin_UTXO::txid() const {
+  return *txid_;
+}
+inline void Bitcoin_UTXO::set_txid(const ::std::string& value) {
+  set_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    txid_ = new ::std::string;
+  }
+  txid_->assign(value);
+}
+inline void Bitcoin_UTXO::set_txid(const char* value) {
+  set_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    txid_ = new ::std::string;
+  }
+  txid_->assign(value);
+}
+inline void Bitcoin_UTXO::set_txid(const void* value, size_t size) {
+  set_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    txid_ = new ::std::string;
+  }
+  txid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bitcoin_UTXO::mutable_txid() {
+  set_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    txid_ = new ::std::string;
+  }
+  return txid_;
+}
+inline ::std::string* Bitcoin_UTXO::release_txid() {
+  clear_has_txid();
+  if (txid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = txid_;
+    txid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bitcoin_UTXO::set_allocated_txid(::std::string* txid) {
+  if (txid_ != &::google::protobuf::internal::kEmptyString) {
+    delete txid_;
+  }
+  if (txid) {
+    set_has_txid();
+    txid_ = txid;
+  } else {
+    clear_has_txid();
+    txid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional uint32 tx_output_n = 20;
+inline bool Bitcoin_UTXO::has_tx_output_n() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Bitcoin_UTXO::set_has_tx_output_n() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Bitcoin_UTXO::clear_has_tx_output_n() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Bitcoin_UTXO::clear_tx_output_n() {
+  tx_output_n_ = 0u;
+  clear_has_tx_output_n();
+}
+inline ::google::protobuf::uint32 Bitcoin_UTXO::tx_output_n() const {
+  return tx_output_n_;
+}
+inline void Bitcoin_UTXO::set_tx_output_n(::google::protobuf::uint32 value) {
+  set_has_tx_output_n();
+  tx_output_n_ = value;
+}
+
+// optional uint64 in_value = 30;
+inline bool Bitcoin_UTXO::has_in_value() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Bitcoin_UTXO::set_has_in_value() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Bitcoin_UTXO::clear_has_in_value() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Bitcoin_UTXO::clear_in_value() {
+  in_value_ = GOOGLE_ULONGLONG(0);
+  clear_has_in_value();
+}
+inline ::google::protobuf::uint64 Bitcoin_UTXO::in_value() const {
+  return in_value_;
+}
+inline void Bitcoin_UTXO::set_in_value(::google::protobuf::uint64 value) {
+  set_has_in_value();
+  in_value_ = value;
+}
+
+// optional bytes locking_script = 40;
+inline bool Bitcoin_UTXO::has_locking_script() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Bitcoin_UTXO::set_has_locking_script() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Bitcoin_UTXO::clear_has_locking_script() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Bitcoin_UTXO::clear_locking_script() {
+  if (locking_script_ != &::google::protobuf::internal::kEmptyString) {
+    locking_script_->clear();
+  }
+  clear_has_locking_script();
+}
+inline const ::std::string& Bitcoin_UTXO::locking_script() const {
+  return *locking_script_;
+}
+inline void Bitcoin_UTXO::set_locking_script(const ::std::string& value) {
+  set_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    locking_script_ = new ::std::string;
+  }
+  locking_script_->assign(value);
+}
+inline void Bitcoin_UTXO::set_locking_script(const char* value) {
+  set_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    locking_script_ = new ::std::string;
+  }
+  locking_script_->assign(value);
+}
+inline void Bitcoin_UTXO::set_locking_script(const void* value, size_t size) {
+  set_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    locking_script_ = new ::std::string;
+  }
+  locking_script_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Bitcoin_UTXO::mutable_locking_script() {
+  set_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    locking_script_ = new ::std::string;
+  }
+  return locking_script_;
+}
+inline ::std::string* Bitcoin_UTXO::release_locking_script() {
+  clear_has_locking_script();
+  if (locking_script_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = locking_script_;
+    locking_script_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Bitcoin_UTXO::set_allocated_locking_script(::std::string* locking_script) {
+  if (locking_script_ != &::google::protobuf::internal::kEmptyString) {
+    delete locking_script_;
+  }
+  if (locking_script) {
+    set_has_locking_script();
+    locking_script_ = locking_script;
+  } else {
+    clear_has_locking_script();
+    locking_script_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
 // SwapBid
 
 // optional uint64 satoshi_min = 10;
@@ -11157,15 +11475,37 @@ inline void SwapBid::set_satoshi_min(::google::protobuf::uint64 value) {
   satoshi_min_ = value;
 }
 
-// optional uint64 rate = 20;
-inline bool SwapBid::has_rate() const {
+// optional uint64 satoshi_max = 11;
+inline bool SwapBid::has_satoshi_max() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SwapBid::set_has_rate() {
+inline void SwapBid::set_has_satoshi_max() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SwapBid::clear_has_rate() {
+inline void SwapBid::clear_has_satoshi_max() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapBid::clear_satoshi_max() {
+  satoshi_max_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_max();
+}
+inline ::google::protobuf::uint64 SwapBid::satoshi_max() const {
+  return satoshi_max_;
+}
+inline void SwapBid::set_satoshi_max(::google::protobuf::uint64 value) {
+  set_has_satoshi_max();
+  satoshi_max_ = value;
+}
+
+// optional uint64 rate = 20;
+inline bool SwapBid::has_rate() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SwapBid::set_has_rate() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SwapBid::clear_has_rate() {
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void SwapBid::clear_rate() {
   rate_ = GOOGLE_ULONGLONG(0);
@@ -11179,85 +11519,53 @@ inline void SwapBid::set_rate(::google::protobuf::uint64 value) {
   rate_ = value;
 }
 
-// optional bytes utxo = 30;
+// optional .fantasybit.Bitcoin_UTXO utxo = 30;
 inline bool SwapBid::has_utxo() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void SwapBid::set_has_utxo() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void SwapBid::clear_has_utxo() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void SwapBid::clear_utxo() {
-  if (utxo_ != &::google::protobuf::internal::kEmptyString) {
-    utxo_->clear();
-  }
+  if (utxo_ != NULL) utxo_->::fantasybit::Bitcoin_UTXO::Clear();
   clear_has_utxo();
 }
-inline const ::std::string& SwapBid::utxo() const {
-  return *utxo_;
+inline const ::fantasybit::Bitcoin_UTXO& SwapBid::utxo() const {
+  return utxo_ != NULL ? *utxo_ : *default_instance_->utxo_;
 }
-inline void SwapBid::set_utxo(const ::std::string& value) {
+inline ::fantasybit::Bitcoin_UTXO* SwapBid::mutable_utxo() {
   set_has_utxo();
-  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
-    utxo_ = new ::std::string;
-  }
-  utxo_->assign(value);
-}
-inline void SwapBid::set_utxo(const char* value) {
-  set_has_utxo();
-  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
-    utxo_ = new ::std::string;
-  }
-  utxo_->assign(value);
-}
-inline void SwapBid::set_utxo(const void* value, size_t size) {
-  set_has_utxo();
-  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
-    utxo_ = new ::std::string;
-  }
-  utxo_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SwapBid::mutable_utxo() {
-  set_has_utxo();
-  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
-    utxo_ = new ::std::string;
-  }
+  if (utxo_ == NULL) utxo_ = new ::fantasybit::Bitcoin_UTXO;
   return utxo_;
 }
-inline ::std::string* SwapBid::release_utxo() {
+inline ::fantasybit::Bitcoin_UTXO* SwapBid::release_utxo() {
   clear_has_utxo();
-  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = utxo_;
-    utxo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
+  ::fantasybit::Bitcoin_UTXO* temp = utxo_;
+  utxo_ = NULL;
+  return temp;
 }
-inline void SwapBid::set_allocated_utxo(::std::string* utxo) {
-  if (utxo_ != &::google::protobuf::internal::kEmptyString) {
-    delete utxo_;
-  }
+inline void SwapBid::set_allocated_utxo(::fantasybit::Bitcoin_UTXO* utxo) {
+  delete utxo_;
+  utxo_ = utxo;
   if (utxo) {
     set_has_utxo();
-    utxo_ = utxo;
   } else {
     clear_has_utxo();
-    utxo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
 // optional bytes change_addr = 40;
 inline bool SwapBid::has_change_addr() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void SwapBid::set_has_change_addr() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void SwapBid::clear_has_change_addr() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void SwapBid::clear_change_addr() {
   if (change_addr_ != &::google::protobuf::internal::kEmptyString) {

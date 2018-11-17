@@ -456,7 +456,17 @@ message TimeTransition {
 
 // protoc --cpp_out d:/work/protoblock-open/share/generated --proto_path d:/work/protoblock-open/share/GenerateProto/Protodata/proto/ d:/work/protoblock-open/share/GenerateProto/Protodata/proto/ProtoData.proto
 
+// 100,000,000 satoshi per Bitcoin
+// 20 BTC = 1,000,000,000
+
 // JayToDo: cancel?
+
+message Bitcoin_UTXO {
+    optional bytes txid = 10;
+    optional uint32 tx_output_n = 20; //output number
+    optional uint64 in_value = 30;
+    optional bytes locking_script = 40; // PubkeyScript
+}
 
 //Alice has bitcoin - wants fantasybit
 message SwapBid {
@@ -465,10 +475,11 @@ message SwapBid {
     }
 
     optional uint64 satoshi_min = 10;
-    optional uint64 rate = 20; //satoshis per fb
-    // 100,000,000 satoshi per Bitcoin
+    optional uint64 satoshi_max = 11;
 
-    optional bytes utxo = 30;
+    optional uint64 rate = 20; //satoshis per fb
+
+    optional Bitcoin_UTXO utxo = 30;
     optional bytes change_addr = 40;
 }
 
