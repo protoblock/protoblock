@@ -52,6 +52,10 @@ enum TransType {
     EXCHANGE = 8;
     EXCHANGE_BLOCK = 9;
     TRANSFER = 10;
+    SWAPBID = 11;
+    SWAPFIL = 12;
+    SWAPSENT = 13;
+    PODP = 14;
 }
 
 message Transaction {
@@ -271,7 +275,6 @@ message ExchangeOrder {
     }
 
     enum Type { NEW=1; CANCEL=2; REPLACE=3; }
-
     optional Type type = 10;
     optional string playerid = 40;
     optional OrderCore core = 50;
@@ -280,6 +283,70 @@ message ExchangeOrder {
     optional string symbol = 120;
     extensions 500 to max;
 }
+
+
+/// Step 1: alice says i want to bid 100,000 sat per fb for 1mm
+    // 10 fb for 1mm sat
+
+/// step 2: bob says i will fill you
+// 1 - create a bitcoin transaction
+// sell system that if alice signs this tx - send he FB
+//
+// 3. alices send bitcoin - and shows signed hash
+
+// 4. proof of doube spend
+
+// protoc --cpp_out d:/work/protoblock-open/share/generated --proto_path d:/work/protoblock-open/share/GenerateProto/Protodata/proto/ d:/work/protoblock-open/share/GenerateProto/Protodata/proto/ProtoData.proto
+
+// JayToDo: cancel?
+
+//Alice has bitcoin - wants fantasybit
+message SwapBid {
+    extend Transaction {
+        optional SwapBid swapbid_tran = 500;
+    }
+
+    optional uint64 satoshi_min = 10;
+    optional uint64 rate = 20; //satoshis per fb
+
+    optional bytes utxo = 30;
+    optional bytes change_addr = 40;
+}
+
+//Bob has fantasybit - wants bitcoin
+message SwapFill {
+    extend Transaction {
+        optional SwapFill swapfil_tran = 600;
+    }
+
+    optional bytes swapbid = 10;
+    optional bytes hash_to_sign = 20;
+    //actual bitcoin tx structure○
+}
+
+//Proves Alice paid bob - system send alice FB (locked for 48 hours)
+message SwapSent {
+    extend Transaction {
+        optional SwapSent swapsent_tran = 700;
+    }
+
+    optional bytes swapfill = 10;
+    optional bytes sig = 20;
+}
+
+
+//Proof of Double Spend (gives FB back to Bob)
+message ProofOfDoubleSpend {
+    extend Transaction {
+        optional ProofOfDoubleSpend podp_tran = 800;
+    }
+
+    optional bytes swapsent = 10;
+    //actual bitcoin tx structure
+    optional bytes sig = 20;
+}
+
+
 
 //message TimeTransition {
 //    extend Transaction {
