@@ -211,6 +211,14 @@ public:
     }
 
     Q_INVOKABLE QString init();
+    Q_INVOKABLE QString toBTCAddess(const QString &inpk) {
+        qDebug() << " twitch inpk " << inpk;
+        auto pk = Commissioner::str2pk (inpk.toStdString());
+        std::string btc1 = pb::toBtcAddress (pk);
+        qDebug() << " twitch btc1 " << btc1.data();
+
+        return btc1.data();
+    }
 
     Q_INVOKABLE bool isTestNet() { return fantasybit::IS_TEST_NET; }
 

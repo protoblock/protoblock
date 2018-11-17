@@ -1082,6 +1082,28 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         switch (t.type())
         {
+
+        case TransType::SWAPBID: {
+            const auto & swapthis = t.GetExtension(SwapBid::swapbid_tran);
+            break;
+        }
+
+        case TransType::SWAPFIL: {
+            const auto & swapthis = t.GetExtension(SwapFill::swapfil_tran);
+            break;
+        }
+
+        case TransType::SWAPSENT: {
+            const auto & swapthis = t.GetExtension(SwapSent::swapsent_tran);
+            break;
+        }
+
+        case TransType::PODP: {
+            const auto & swapthis = t.GetExtension(ProofOfDoubleSpend::podp_tran);
+            break;
+        }
+
+
         case TransType::TRANSFER: {
             const TransferTrans & trt = t.GetExtension(TransferTrans::transfer_tran);
             if ( true ) {  // transfer is valid

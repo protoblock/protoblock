@@ -3,7 +3,39 @@ package fantasybit;
 import "StaticData.proto";
 import "StatusData.proto";
 import "ExData.proto";
+enum MyNameStatus
+{
+    none=1;
+    notavil=2;
+    requested=5;
+    transaction_sent=15;
+    confirmed=20;
+}
 
+message MyFantasyName
+{
+    optional string name=1;
+    optional MyNameStatus status=2;
+}
+
+message FantasyPlayer {
+    optional string name = 10;
+    optional uint64 bits = 20;
+}
+
+message Secret
+{
+    required string private_key = 1;
+    optional MyFantasyName myfantasyname=2;
+    optional NameTrans nametran = 10;
+}
+
+message Secret2
+{
+    optional string private_key = 1;
+    optional string fantasy_name = 20;
+    optional string public_key = 30;
+}
 
 message Secret3
 {
@@ -13,9 +45,40 @@ message Secret3
     optional string public_key = 30;
 }
 
+
+message OutData {
+    enum Type { MYFANTASYNAME = 1; SNAPSHOT = 2; HEARTBEAT=3; }
+    required Type type = 1;
+
+    optional MyFantasyName myfantasyname = 2;
+    extensions 100 to max;
+}
+
+// Elsewhere...
+//extend OutData {
+//	optional int32 test = 100;
+//}
+
+message InData {
+    enum Type { MINENAME = 1; QUIT=2; HEARTBEAT=3; CONNECT=4; MAKE_BLOCK=5; NEWNAME=6; PROJ=7;DATA=8;}
+    required Type type = 1;
+
+    optional string data = 2;
+    optional string data2 = 3;
+    optional int32 num = 4;
+        optional DataTransition data_trans=5;
+    extensions 100 to max;
+}
+
+// Elsewhere...
+//extend InData {
+//	optional int32 test = 100;
+//}
+
+
 message NameProof
 {
-    enum Type { POW=1; TWEET=2; ORACLE=3; MASTER=4; }
+        enum Type { POW=1; TWEET=2; ORACLE=3; MASTER=4; }
     optional Type type = 1;
     extensions 200 to max;
 }
@@ -76,25 +139,26 @@ message NameTrans {
     optional bytes recovery_key=40;
     optional bool am_agent = 50;
     optional string my_agent = 60;
+
 }
 
-// Units 
-// 
-// Point            100 = Fantasypoint   =         100 Fantasybit 
-// Coin               1 = Fantasybitcoin =           1 Fantasybit 
-// Cent            0.01 = Fantasycent    =         100 Fantasybit 
-// Yard           0.001 = Fantasyyard    =       1,000 Fantasybit 
-// Hash        0.000001 = Fantasyhash    =   1,000,000 Fantasybit 
-// Satoshi   0.00000001 = Fantasysatoshi = 100,000,000 Fantasybit 
+// Units
+//
+// Point            100 = Fantasypoint   =         100 Fantasybit
+// Coin               1 = Fantasybitcoin =           1 Fantasybit
+// Cent            0.01 = Fantasycent    =         100 Fantasybit
+// Yard           0.001 = Fantasyyard    =       1,000 Fantasybit
+// Hash        0.000001 = Fantasyhash    =   1,000,000 Fantasybit
+// Satoshi   0.00000001 = Fantasysatoshi = 100,000,000 Fantasybit
 
-message TransferTrans { 
+message TransferTrans {
     extend Transaction {
         optional TransferTrans transfer_tran = 400;
     }
 
     optional string from = 10;
     optional string to = 20;
-    optional uint64 amount = 30;
+    optional uint64 amount = 30;  //fantasysatoshi
 }
 
 message SignedTransaction {
@@ -104,8 +168,13 @@ message SignedTransaction {
     optional string fantasy_name = 40;
 }
 
+//message BlockHeader {
+//	optional int32 num = 10;
+//	optional bytes prev_id = 20;
+//}
+
 message BlockHeader {
-    enum Type { NORMAL=1; DATA=2; }
+        enum Type { NORMAL=1; DATA=2; }
 
     optional int32 version = 1;
     optional int32 num = 10;
@@ -127,7 +196,23 @@ message Block {
     optional SignedBlockHeader signedhead = 10;
     repeated SignedTransaction signed_transactions = 20;
 
+
     extensions 1000 to max;
+}
+
+message NodeRequest
+{
+    enum Type { HANDSHAKE=1; BLOCK_REQUEST=2; HIGHT_REQUEST=3; NAT_TEST=4;}
+    optional Type type = 10;
+    optional string myip=20;
+    optional int32 num=30;
+    optional string myhost=40;
+}
+
+message NodeReply
+{
+    optional int32 hight=10;
+    repeated string ips=20;
 }
 
 ////////////////////////////////////////////////////////////
@@ -139,8 +224,8 @@ message FantasyPlayerPoints {
     optional uint32 season = 10;
     optional uint32 week = 20;
     optional string playerid = 30;
-    optional int32 points = 40;
-    optional float result = 50;
+        optional int32 points = 40;
+        optional float result = 50;
 }
 
 ////////////////////////////////////////////////////////////
@@ -172,6 +257,8 @@ message ProjectionTransBlock {
     repeated PlayerPoints player_points = 30;
 }
 
+
+
 message Data {
     enum Type {
         SCHEDULE = 0;
@@ -186,6 +273,7 @@ message Data {
 
     extensions 100 to max;
 }
+
 
 message PlayerData {
     extend Data {
@@ -241,11 +329,35 @@ message DataTransition {
         optional DataTransition data_trans = 203;
     }
 
+
     optional TrType type =1;
     optional uint32 season =10;
     optional uint32 week = 20;
     repeated GameData gamedata = 30;
     repeated Data data = 40;
+}
+
+message TeamState {
+    enum State {
+        PREGAME = 1;
+        INGAME = 2;
+    }
+
+    optional State state =1;
+    optional uint32 week =10;
+    optional string teamid = 20;
+}
+
+message DeltaData {
+    enum Type { SNAPSHOT = 2; HEARTBEAT=3; }
+    optional Type type=1;
+    repeated MyFantasyName myfantasyname = 2;
+    optional GlobalState globalstate = 10;
+    repeated TeamState teamstates = 20;
+    repeated Data datas = 30;
+    repeated FantasyPlayer players = 40;
+
+    extensions 1000 to max;
 }
 
 message MessageData {
@@ -257,6 +369,7 @@ message MessageData {
     optional int32 gt  = 20;
     optional int32 lt = 30;
 }
+
 
 message StampedTrans {
     extend Transaction {
@@ -275,6 +388,7 @@ message ExchangeOrder {
     }
 
     enum Type { NEW=1; CANCEL=2; REPLACE=3; }
+
     optional Type type = 10;
     optional string playerid = 40;
     optional OrderCore core = 50;
@@ -283,6 +397,50 @@ message ExchangeOrder {
     optional string symbol = 120;
     extensions 500 to max;
 }
+
+message OrderUnique {
+    optional string public_key = 10;
+    optional uint32 season =20;
+    optional uint32 week = 30;
+    optional bool buyside = 40;
+    optional string playerid = 50;
+    optional int32 price = 70;
+}
+
+message OrderDeets {
+    optional bytes oid = 10;
+    optional OrderUnique order = 20;
+    optional int32 size  = 30;
+}
+
+message InsideUnique {
+    optional string playerid = 50;
+    optional string public_key = 10;
+    optional bool buyside = 40;
+    optional int32 price = 70;
+
+    optional bytes oid = 11;
+    optional OrderUnique order = 20;
+    optional int32 size  = 30;
+}
+
+
+message TimeTransition {
+    extend Transaction {
+        optional TimeTransition time_trans = 303;
+    }
+
+    enum Type {
+        TRADEOPEN=2; // trading session opened
+        TRADECLOSE=3; // trading session closed
+    }
+
+    optional Type type =1;
+    optional uint32 season =10;
+    optional uint32 week = 20;
+}
+
+
 
 
 /// Step 1: alice says i want to bid 100,000 sat per fb for 1mm
@@ -308,6 +466,7 @@ message SwapBid {
 
     optional uint64 satoshi_min = 10;
     optional uint64 rate = 20; //satoshis per fb
+    // 100,000,000 satoshi per Bitcoin
 
     optional bytes utxo = 30;
     optional bytes change_addr = 40;
@@ -345,20 +504,3 @@ message ProofOfDoubleSpend {
     //actual bitcoin tx structure
     optional bytes sig = 20;
 }
-
-
-
-//message TimeTransition {
-//    extend Transaction {
-//        optional TimeTransition time_trans = 303;
-//    }
-
-//    enum Type {
-//        TRADEOPEN=2; // trading session opened
-//        TRADECLOSE=3; // trading session closed
-//    }
-
-//    optional Type type =1;
-//    optional uint32 season =10;
-//    optional uint32 week = 20;
-//}

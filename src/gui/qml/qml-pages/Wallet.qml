@@ -38,7 +38,7 @@ Item {
                 height: parent.height
                 width : height
                 fillMode: Image.PreserveAspectFit
-                source: "qrc:/icons/action_account_circle.png"
+                source: "qrc:/icons/action_account○_circle.png"
             }
             itemLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
             itemValueLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
@@ -46,6 +46,12 @@ Item {
 
             valueText: "Skill[" + skillbal + " ƑɃ] Stake[" + stakebal +" ƑɃ] Net[" + netbal + " ƑɃ]";
             itemValueLabel.font.family: fontfamFB
+            secondaryItem: Label {
+                Layout.preferredWidth: ProtoScreen.guToPx(10)
+                Layout.fillWidth: true
+                Layout.fillHeight: false
+                text: MiddleMan.toBTCAddess(MiddleMan.pMyFantasyNameBalance.pk);
+            }
         }
 
         Material.Card {

@@ -75,6 +75,10 @@ class OrderUnique;
 class OrderDeets;
 class InsideUnique;
 class TimeTransition;
+class SwapBid;
+class SwapFill;
+class SwapSent;
+class ProofOfDoubleSpend;
 
 enum OutData_Type {
   OutData_Type_MYFANTASYNAME = 1,
@@ -314,11 +318,15 @@ enum TransType {
   STAMPED = 7,
   EXCHANGE = 8,
   EXCHANGE_BLOCK = 9,
-  TRANSFER = 10
+  TRANSFER = 10,
+  SWAPBID = 11,
+  SWAPFIL = 12,
+  SWAPSENT = 13,
+  PODP = 14
 };
 bool TransType_IsValid(int value);
 const TransType TransType_MIN = NAME;
-const TransType TransType_MAX = TRANSFER;
+const TransType TransType_MAX = PODP;
 const int TransType_ARRAYSIZE = TransType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* TransType_descriptor();
@@ -5057,6 +5065,450 @@ class TimeTransition : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static TimeTransition* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapBid : public ::google::protobuf::Message {
+ public:
+  SwapBid();
+  virtual ~SwapBid();
+
+  SwapBid(const SwapBid& from);
+
+  inline SwapBid& operator=(const SwapBid& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapBid& default_instance();
+
+  void Swap(SwapBid* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapBid* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapBid& from);
+  void MergeFrom(const SwapBid& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 satoshi_min = 10;
+  inline bool has_satoshi_min() const;
+  inline void clear_satoshi_min();
+  static const int kSatoshiMinFieldNumber = 10;
+  inline ::google::protobuf::uint64 satoshi_min() const;
+  inline void set_satoshi_min(::google::protobuf::uint64 value);
+
+  // optional uint64 rate = 20;
+  inline bool has_rate() const;
+  inline void clear_rate();
+  static const int kRateFieldNumber = 20;
+  inline ::google::protobuf::uint64 rate() const;
+  inline void set_rate(::google::protobuf::uint64 value);
+
+  // optional bytes utxo = 30;
+  inline bool has_utxo() const;
+  inline void clear_utxo();
+  static const int kUtxoFieldNumber = 30;
+  inline const ::std::string& utxo() const;
+  inline void set_utxo(const ::std::string& value);
+  inline void set_utxo(const char* value);
+  inline void set_utxo(const void* value, size_t size);
+  inline ::std::string* mutable_utxo();
+  inline ::std::string* release_utxo();
+  inline void set_allocated_utxo(::std::string* utxo);
+
+  // optional bytes change_addr = 40;
+  inline bool has_change_addr() const;
+  inline void clear_change_addr();
+  static const int kChangeAddrFieldNumber = 40;
+  inline const ::std::string& change_addr() const;
+  inline void set_change_addr(const ::std::string& value);
+  inline void set_change_addr(const char* value);
+  inline void set_change_addr(const void* value, size_t size);
+  inline ::std::string* mutable_change_addr();
+  inline ::std::string* release_change_addr();
+  inline void set_allocated_change_addr(::std::string* change_addr);
+
+  static const int kSwapbidTranFieldNumber = 500;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapBid >, 11, false >
+    swapbid_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapBid)
+ private:
+  inline void set_has_satoshi_min();
+  inline void clear_has_satoshi_min();
+  inline void set_has_rate();
+  inline void clear_has_rate();
+  inline void set_has_utxo();
+  inline void clear_has_utxo();
+  inline void set_has_change_addr();
+  inline void clear_has_change_addr();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint64 satoshi_min_;
+  ::google::protobuf::uint64 rate_;
+  ::std::string* utxo_;
+  ::std::string* change_addr_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapBid* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapFill : public ::google::protobuf::Message {
+ public:
+  SwapFill();
+  virtual ~SwapFill();
+
+  SwapFill(const SwapFill& from);
+
+  inline SwapFill& operator=(const SwapFill& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapFill& default_instance();
+
+  void Swap(SwapFill* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapFill* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapFill& from);
+  void MergeFrom(const SwapFill& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes swapbid = 10;
+  inline bool has_swapbid() const;
+  inline void clear_swapbid();
+  static const int kSwapbidFieldNumber = 10;
+  inline const ::std::string& swapbid() const;
+  inline void set_swapbid(const ::std::string& value);
+  inline void set_swapbid(const char* value);
+  inline void set_swapbid(const void* value, size_t size);
+  inline ::std::string* mutable_swapbid();
+  inline ::std::string* release_swapbid();
+  inline void set_allocated_swapbid(::std::string* swapbid);
+
+  // optional bytes hash_to_sign = 20;
+  inline bool has_hash_to_sign() const;
+  inline void clear_hash_to_sign();
+  static const int kHashToSignFieldNumber = 20;
+  inline const ::std::string& hash_to_sign() const;
+  inline void set_hash_to_sign(const ::std::string& value);
+  inline void set_hash_to_sign(const char* value);
+  inline void set_hash_to_sign(const void* value, size_t size);
+  inline ::std::string* mutable_hash_to_sign();
+  inline ::std::string* release_hash_to_sign();
+  inline void set_allocated_hash_to_sign(::std::string* hash_to_sign);
+
+  static const int kSwapfilTranFieldNumber = 600;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapFill >, 11, false >
+    swapfil_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapFill)
+ private:
+  inline void set_has_swapbid();
+  inline void clear_has_swapbid();
+  inline void set_has_hash_to_sign();
+  inline void clear_has_hash_to_sign();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* swapbid_;
+  ::std::string* hash_to_sign_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapFill* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapSent : public ::google::protobuf::Message {
+ public:
+  SwapSent();
+  virtual ~SwapSent();
+
+  SwapSent(const SwapSent& from);
+
+  inline SwapSent& operator=(const SwapSent& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapSent& default_instance();
+
+  void Swap(SwapSent* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapSent* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapSent& from);
+  void MergeFrom(const SwapSent& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes swapfill = 10;
+  inline bool has_swapfill() const;
+  inline void clear_swapfill();
+  static const int kSwapfillFieldNumber = 10;
+  inline const ::std::string& swapfill() const;
+  inline void set_swapfill(const ::std::string& value);
+  inline void set_swapfill(const char* value);
+  inline void set_swapfill(const void* value, size_t size);
+  inline ::std::string* mutable_swapfill();
+  inline ::std::string* release_swapfill();
+  inline void set_allocated_swapfill(::std::string* swapfill);
+
+  // optional bytes sig = 20;
+  inline bool has_sig() const;
+  inline void clear_sig();
+  static const int kSigFieldNumber = 20;
+  inline const ::std::string& sig() const;
+  inline void set_sig(const ::std::string& value);
+  inline void set_sig(const char* value);
+  inline void set_sig(const void* value, size_t size);
+  inline ::std::string* mutable_sig();
+  inline ::std::string* release_sig();
+  inline void set_allocated_sig(::std::string* sig);
+
+  static const int kSwapsentTranFieldNumber = 700;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapSent >, 11, false >
+    swapsent_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapSent)
+ private:
+  inline void set_has_swapfill();
+  inline void clear_has_swapfill();
+  inline void set_has_sig();
+  inline void clear_has_sig();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* swapfill_;
+  ::std::string* sig_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapSent* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProofOfDoubleSpend : public ::google::protobuf::Message {
+ public:
+  ProofOfDoubleSpend();
+  virtual ~ProofOfDoubleSpend();
+
+  ProofOfDoubleSpend(const ProofOfDoubleSpend& from);
+
+  inline ProofOfDoubleSpend& operator=(const ProofOfDoubleSpend& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProofOfDoubleSpend& default_instance();
+
+  void Swap(ProofOfDoubleSpend* other);
+
+  // implements Message ----------------------------------------------
+
+  ProofOfDoubleSpend* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProofOfDoubleSpend& from);
+  void MergeFrom(const ProofOfDoubleSpend& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes swapsent = 10;
+  inline bool has_swapsent() const;
+  inline void clear_swapsent();
+  static const int kSwapsentFieldNumber = 10;
+  inline const ::std::string& swapsent() const;
+  inline void set_swapsent(const ::std::string& value);
+  inline void set_swapsent(const char* value);
+  inline void set_swapsent(const void* value, size_t size);
+  inline ::std::string* mutable_swapsent();
+  inline ::std::string* release_swapsent();
+  inline void set_allocated_swapsent(::std::string* swapsent);
+
+  // optional bytes sig = 20;
+  inline bool has_sig() const;
+  inline void clear_sig();
+  static const int kSigFieldNumber = 20;
+  inline const ::std::string& sig() const;
+  inline void set_sig(const ::std::string& value);
+  inline void set_sig(const char* value);
+  inline void set_sig(const void* value, size_t size);
+  inline ::std::string* mutable_sig();
+  inline ::std::string* release_sig();
+  inline void set_allocated_sig(::std::string* sig);
+
+  static const int kPodpTranFieldNumber = 800;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::ProofOfDoubleSpend >, 11, false >
+    podp_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.ProofOfDoubleSpend)
+ private:
+  inline void set_has_swapsent();
+  inline void clear_has_swapsent();
+  inline void set_has_sig();
+  inline void clear_has_sig();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* swapsent_;
+  ::std::string* sig_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProofOfDoubleSpend* default_instance_;
 };
 // ===================================================================
 
@@ -10677,6 +11129,626 @@ inline ::google::protobuf::uint32 TimeTransition::week() const {
 inline void TimeTransition::set_week(::google::protobuf::uint32 value) {
   set_has_week();
   week_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SwapBid
+
+// optional uint64 satoshi_min = 10;
+inline bool SwapBid::has_satoshi_min() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapBid::set_has_satoshi_min() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapBid::clear_has_satoshi_min() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapBid::clear_satoshi_min() {
+  satoshi_min_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_min();
+}
+inline ::google::protobuf::uint64 SwapBid::satoshi_min() const {
+  return satoshi_min_;
+}
+inline void SwapBid::set_satoshi_min(::google::protobuf::uint64 value) {
+  set_has_satoshi_min();
+  satoshi_min_ = value;
+}
+
+// optional uint64 rate = 20;
+inline bool SwapBid::has_rate() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapBid::set_has_rate() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapBid::clear_has_rate() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapBid::clear_rate() {
+  rate_ = GOOGLE_ULONGLONG(0);
+  clear_has_rate();
+}
+inline ::google::protobuf::uint64 SwapBid::rate() const {
+  return rate_;
+}
+inline void SwapBid::set_rate(::google::protobuf::uint64 value) {
+  set_has_rate();
+  rate_ = value;
+}
+
+// optional bytes utxo = 30;
+inline bool SwapBid::has_utxo() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SwapBid::set_has_utxo() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SwapBid::clear_has_utxo() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SwapBid::clear_utxo() {
+  if (utxo_ != &::google::protobuf::internal::kEmptyString) {
+    utxo_->clear();
+  }
+  clear_has_utxo();
+}
+inline const ::std::string& SwapBid::utxo() const {
+  return *utxo_;
+}
+inline void SwapBid::set_utxo(const ::std::string& value) {
+  set_has_utxo();
+  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
+    utxo_ = new ::std::string;
+  }
+  utxo_->assign(value);
+}
+inline void SwapBid::set_utxo(const char* value) {
+  set_has_utxo();
+  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
+    utxo_ = new ::std::string;
+  }
+  utxo_->assign(value);
+}
+inline void SwapBid::set_utxo(const void* value, size_t size) {
+  set_has_utxo();
+  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
+    utxo_ = new ::std::string;
+  }
+  utxo_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapBid::mutable_utxo() {
+  set_has_utxo();
+  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
+    utxo_ = new ::std::string;
+  }
+  return utxo_;
+}
+inline ::std::string* SwapBid::release_utxo() {
+  clear_has_utxo();
+  if (utxo_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = utxo_;
+    utxo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapBid::set_allocated_utxo(::std::string* utxo) {
+  if (utxo_ != &::google::protobuf::internal::kEmptyString) {
+    delete utxo_;
+  }
+  if (utxo) {
+    set_has_utxo();
+    utxo_ = utxo;
+  } else {
+    clear_has_utxo();
+    utxo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes change_addr = 40;
+inline bool SwapBid::has_change_addr() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SwapBid::set_has_change_addr() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SwapBid::clear_has_change_addr() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SwapBid::clear_change_addr() {
+  if (change_addr_ != &::google::protobuf::internal::kEmptyString) {
+    change_addr_->clear();
+  }
+  clear_has_change_addr();
+}
+inline const ::std::string& SwapBid::change_addr() const {
+  return *change_addr_;
+}
+inline void SwapBid::set_change_addr(const ::std::string& value) {
+  set_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    change_addr_ = new ::std::string;
+  }
+  change_addr_->assign(value);
+}
+inline void SwapBid::set_change_addr(const char* value) {
+  set_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    change_addr_ = new ::std::string;
+  }
+  change_addr_->assign(value);
+}
+inline void SwapBid::set_change_addr(const void* value, size_t size) {
+  set_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    change_addr_ = new ::std::string;
+  }
+  change_addr_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapBid::mutable_change_addr() {
+  set_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    change_addr_ = new ::std::string;
+  }
+  return change_addr_;
+}
+inline ::std::string* SwapBid::release_change_addr() {
+  clear_has_change_addr();
+  if (change_addr_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = change_addr_;
+    change_addr_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapBid::set_allocated_change_addr(::std::string* change_addr) {
+  if (change_addr_ != &::google::protobuf::internal::kEmptyString) {
+    delete change_addr_;
+  }
+  if (change_addr) {
+    set_has_change_addr();
+    change_addr_ = change_addr;
+  } else {
+    clear_has_change_addr();
+    change_addr_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SwapFill
+
+// optional bytes swapbid = 10;
+inline bool SwapFill::has_swapbid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapFill::set_has_swapbid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapFill::clear_has_swapbid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapFill::clear_swapbid() {
+  if (swapbid_ != &::google::protobuf::internal::kEmptyString) {
+    swapbid_->clear();
+  }
+  clear_has_swapbid();
+}
+inline const ::std::string& SwapFill::swapbid() const {
+  return *swapbid_;
+}
+inline void SwapFill::set_swapbid(const ::std::string& value) {
+  set_has_swapbid();
+  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
+    swapbid_ = new ::std::string;
+  }
+  swapbid_->assign(value);
+}
+inline void SwapFill::set_swapbid(const char* value) {
+  set_has_swapbid();
+  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
+    swapbid_ = new ::std::string;
+  }
+  swapbid_->assign(value);
+}
+inline void SwapFill::set_swapbid(const void* value, size_t size) {
+  set_has_swapbid();
+  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
+    swapbid_ = new ::std::string;
+  }
+  swapbid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapFill::mutable_swapbid() {
+  set_has_swapbid();
+  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
+    swapbid_ = new ::std::string;
+  }
+  return swapbid_;
+}
+inline ::std::string* SwapFill::release_swapbid() {
+  clear_has_swapbid();
+  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = swapbid_;
+    swapbid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapFill::set_allocated_swapbid(::std::string* swapbid) {
+  if (swapbid_ != &::google::protobuf::internal::kEmptyString) {
+    delete swapbid_;
+  }
+  if (swapbid) {
+    set_has_swapbid();
+    swapbid_ = swapbid;
+  } else {
+    clear_has_swapbid();
+    swapbid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes hash_to_sign = 20;
+inline bool SwapFill::has_hash_to_sign() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapFill::set_has_hash_to_sign() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapFill::clear_has_hash_to_sign() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapFill::clear_hash_to_sign() {
+  if (hash_to_sign_ != &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_->clear();
+  }
+  clear_has_hash_to_sign();
+}
+inline const ::std::string& SwapFill::hash_to_sign() const {
+  return *hash_to_sign_;
+}
+inline void SwapFill::set_hash_to_sign(const ::std::string& value) {
+  set_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_ = new ::std::string;
+  }
+  hash_to_sign_->assign(value);
+}
+inline void SwapFill::set_hash_to_sign(const char* value) {
+  set_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_ = new ::std::string;
+  }
+  hash_to_sign_->assign(value);
+}
+inline void SwapFill::set_hash_to_sign(const void* value, size_t size) {
+  set_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_ = new ::std::string;
+  }
+  hash_to_sign_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapFill::mutable_hash_to_sign() {
+  set_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    hash_to_sign_ = new ::std::string;
+  }
+  return hash_to_sign_;
+}
+inline ::std::string* SwapFill::release_hash_to_sign() {
+  clear_has_hash_to_sign();
+  if (hash_to_sign_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = hash_to_sign_;
+    hash_to_sign_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapFill::set_allocated_hash_to_sign(::std::string* hash_to_sign) {
+  if (hash_to_sign_ != &::google::protobuf::internal::kEmptyString) {
+    delete hash_to_sign_;
+  }
+  if (hash_to_sign) {
+    set_has_hash_to_sign();
+    hash_to_sign_ = hash_to_sign;
+  } else {
+    clear_has_hash_to_sign();
+    hash_to_sign_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SwapSent
+
+// optional bytes swapfill = 10;
+inline bool SwapSent::has_swapfill() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapSent::set_has_swapfill() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapSent::clear_has_swapfill() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapSent::clear_swapfill() {
+  if (swapfill_ != &::google::protobuf::internal::kEmptyString) {
+    swapfill_->clear();
+  }
+  clear_has_swapfill();
+}
+inline const ::std::string& SwapSent::swapfill() const {
+  return *swapfill_;
+}
+inline void SwapSent::set_swapfill(const ::std::string& value) {
+  set_has_swapfill();
+  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
+    swapfill_ = new ::std::string;
+  }
+  swapfill_->assign(value);
+}
+inline void SwapSent::set_swapfill(const char* value) {
+  set_has_swapfill();
+  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
+    swapfill_ = new ::std::string;
+  }
+  swapfill_->assign(value);
+}
+inline void SwapSent::set_swapfill(const void* value, size_t size) {
+  set_has_swapfill();
+  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
+    swapfill_ = new ::std::string;
+  }
+  swapfill_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapSent::mutable_swapfill() {
+  set_has_swapfill();
+  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
+    swapfill_ = new ::std::string;
+  }
+  return swapfill_;
+}
+inline ::std::string* SwapSent::release_swapfill() {
+  clear_has_swapfill();
+  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = swapfill_;
+    swapfill_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapSent::set_allocated_swapfill(::std::string* swapfill) {
+  if (swapfill_ != &::google::protobuf::internal::kEmptyString) {
+    delete swapfill_;
+  }
+  if (swapfill) {
+    set_has_swapfill();
+    swapfill_ = swapfill;
+  } else {
+    clear_has_swapfill();
+    swapfill_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes sig = 20;
+inline bool SwapSent::has_sig() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapSent::set_has_sig() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapSent::clear_has_sig() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapSent::clear_sig() {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    sig_->clear();
+  }
+  clear_has_sig();
+}
+inline const ::std::string& SwapSent::sig() const {
+  return *sig_;
+}
+inline void SwapSent::set_sig(const ::std::string& value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void SwapSent::set_sig(const char* value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void SwapSent::set_sig(const void* value, size_t size) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapSent::mutable_sig() {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  return sig_;
+}
+inline ::std::string* SwapSent::release_sig() {
+  clear_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sig_;
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapSent::set_allocated_sig(::std::string* sig) {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    delete sig_;
+  }
+  if (sig) {
+    set_has_sig();
+    sig_ = sig;
+  } else {
+    clear_has_sig();
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// ProofOfDoubleSpend
+
+// optional bytes swapsent = 10;
+inline bool ProofOfDoubleSpend::has_swapsent() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_swapsent() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProofOfDoubleSpend::clear_has_swapsent() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProofOfDoubleSpend::clear_swapsent() {
+  if (swapsent_ != &::google::protobuf::internal::kEmptyString) {
+    swapsent_->clear();
+  }
+  clear_has_swapsent();
+}
+inline const ::std::string& ProofOfDoubleSpend::swapsent() const {
+  return *swapsent_;
+}
+inline void ProofOfDoubleSpend::set_swapsent(const ::std::string& value) {
+  set_has_swapsent();
+  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
+    swapsent_ = new ::std::string;
+  }
+  swapsent_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_swapsent(const char* value) {
+  set_has_swapsent();
+  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
+    swapsent_ = new ::std::string;
+  }
+  swapsent_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_swapsent(const void* value, size_t size) {
+  set_has_swapsent();
+  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
+    swapsent_ = new ::std::string;
+  }
+  swapsent_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProofOfDoubleSpend::mutable_swapsent() {
+  set_has_swapsent();
+  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
+    swapsent_ = new ::std::string;
+  }
+  return swapsent_;
+}
+inline ::std::string* ProofOfDoubleSpend::release_swapsent() {
+  clear_has_swapsent();
+  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = swapsent_;
+    swapsent_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProofOfDoubleSpend::set_allocated_swapsent(::std::string* swapsent) {
+  if (swapsent_ != &::google::protobuf::internal::kEmptyString) {
+    delete swapsent_;
+  }
+  if (swapsent) {
+    set_has_swapsent();
+    swapsent_ = swapsent;
+  } else {
+    clear_has_swapsent();
+    swapsent_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes sig = 20;
+inline bool ProofOfDoubleSpend::has_sig() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_sig() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ProofOfDoubleSpend::clear_has_sig() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProofOfDoubleSpend::clear_sig() {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    sig_->clear();
+  }
+  clear_has_sig();
+}
+inline const ::std::string& ProofOfDoubleSpend::sig() const {
+  return *sig_;
+}
+inline void ProofOfDoubleSpend::set_sig(const ::std::string& value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_sig(const char* value) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_sig(const void* value, size_t size) {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  sig_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProofOfDoubleSpend::mutable_sig() {
+  set_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    sig_ = new ::std::string;
+  }
+  return sig_;
+}
+inline ::std::string* ProofOfDoubleSpend::release_sig() {
+  clear_has_sig();
+  if (sig_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sig_;
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProofOfDoubleSpend::set_allocated_sig(::std::string* sig) {
+  if (sig_ != &::google::protobuf::internal::kEmptyString) {
+    delete sig_;
+  }
+  if (sig) {
+    set_has_sig();
+    sig_ = sig;
+  } else {
+    clear_has_sig();
+    sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 
