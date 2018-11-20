@@ -20,6 +20,7 @@
 #include <optional.hpp>
 
 
+
 namespace pb {
 using namespace fantasybit;
 
@@ -31,7 +32,24 @@ public:
                      uint64_t max = 999000000000,
                      uint64_t min = 200);
 
+
+
+    std::string createTX(const Bitcoin_UTXO &iutxo,
+                         std::string &input, std::string &in_script);
+
+    std::string createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
+                                     std::string &input, std::string &in_script);
+
 };
 
 }
 #endif // BITCOINUTILS_H
+
+
+
+
+
+
+
+
+

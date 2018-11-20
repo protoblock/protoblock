@@ -2,7 +2,7 @@
 #include <secp256k1/secp256k1.c>
 
 namespace pb {
-std::string to_hex(const char *d, uint32_t s) {
+std::string to_hex(const unsigned char *d, uint32_t s) {
     std::string r;
     const char* to_hex="0123456789abcdef";
     uint8_t* c = (uint8_t*)d;
@@ -73,7 +73,7 @@ bool operator == ( const sha256& h1, const sha256& h2 ) {
 }
 
 std::string sha256::str() const {
-    return to_hex( (char*)begin(), 32 );
+    return to_hex( (unsigned char*)begin(), 32 );
 }
 
 std::string sha256::reversestr() const {

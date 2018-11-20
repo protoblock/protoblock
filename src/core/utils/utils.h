@@ -13,12 +13,59 @@
 #include "base58.h"
 #include "genericsingleton.h"
 #include <openssl/ripemd.h>
+#include <sstream>
+#include <iomanip>
 
 
 namespace pb {
+    inline bool is_big_endian( )
+    {
+       union
+       {
+          uint32_t i;
+          char c[ 4 ];
+       } bint = { 0x01020304 };
+
+       return bint.c[ 0 ] == 1;
+    }
+
+    inline uint32_t fix_endian( uint32_t x )
+    {
+       if( is_big_endian( ) )
+          return x;
+       else
+          return ( ( ( x & 0x000000ff ) << 24 ) | ( ( x & 0x0000ff00 ) << 8 )
+           | ( ( x & 0x00ff0000 ) >> 8 ) | ( ( x & 0xff000000 ) >> 24 ) );
+    }
+
+    inline uint64_t fix_endian( uint64_t x )
+    {
+       if( !is_big_endian( ) )
+       {
+          x = ( x & 0x00000000ffffffff ) << 32 | ( x & 0xffffffff00000000 ) >> 32;
+          x = ( x & 0x0000ffff0000ffff ) << 16 | ( x & 0xffff0000ffff0000 ) >> 16;
+          x = ( x & 0x00ff00ff00ff00ff ) << 8 | ( x & 0xff00ff00ff00ff00 ) >> 8;
+       }
+
+       return x;
+    }
+
+
+    inline std::string toReverseHexFromDecimal(uint32_t  t) {
+        std::ostringstream is;
+        is << std::hex << std::setw( 8 ) << std::setfill( '0' ) << fix_endian(t);
+        return is.str();
+    }
+
+    inline std::string toReverseHexFromDecimal(uint64_t t) {
+        std::ostringstream is;
+        is << std::hex << std::setw( 16 ) << std::setfill( '0' ) << fix_endian(t);
+        return is.str();
+    }
+
     uint8_t from_hex( char c );
 
-    std::string to_hex( const char* d, uint32_t s );
+    std::string to_hex( const unsigned char* d, uint32_t s );
 
     class TheCTX : public GenericSingleton<TheCTX> {
         friend class GenericSingleton<TheCTX>;
@@ -238,6 +285,13 @@ namespace pb {
         memcpy((unsigned char*)&hash2[21],ret2x.begin (),4);
         return EncodeBase58(hash2,hash2+25);
     }
+
+    static std::string fromBtcAddress(const std::string &in ) {
+        std::vector<unsigned char> out;
+        DecodeBase58 (in,out);
+        return to_hex(((unsigned char*)out.data())+1,out.size ()-5);
+    }
+
 
     static pb::sha256 hashit(const public_key_data &in) {
         pb::sha256 ret;
