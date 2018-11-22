@@ -28,6 +28,7 @@
 #include "playerresultmodel.h"
 #include "ExchangeData.h"
 #include "core.h"
+#include <bitcoinutils.h>
 
 #ifdef PLAYERLOADERFD
 #include "../../fantasybit-2015/tradingfootball/playerloader.h"
@@ -212,10 +213,29 @@ public:
 
     Q_INVOKABLE QString init();
     Q_INVOKABLE QString toBTCAddess(const QString &inpk) {
+
         qDebug() << " twitch inpk " << inpk;
         auto pk = Commissioner::str2pk (inpk.toStdString());
         std::string btc1 = pb::toBtcAddress (pk);
         qDebug() << " twitch btc1 " << btc1.data();
+
+
+
+        BitcoinUtils btu;
+        auto utxo = btu.getUtxo("1BPw53Gf5faxAwSmXrCqHDWkhM1xK2jUX9");
+        if ( !utxo )
+            qDebug() << " twitch2 no go";
+        else
+            qDebug() << " twitch2 " << (*utxo).DebugString().data();
+
+
+        string in, ins;
+        auto test2 = btu.createInputsFromUTXO(*utxo,in,ins);
+        qDebug() << "twitch3 in" << in.data();
+        qDebug() << "twitch3 ins" << ins.data();
+
+        auto thetx = btu.createTX(*utxo,in,ins);
+        qDebug() << "twitch3 thetx" << thetx.data();
 
         return btc1.data();
     }
