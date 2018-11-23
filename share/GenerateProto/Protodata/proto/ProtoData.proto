@@ -115,10 +115,11 @@ enum TransType {
     EXCHANGE = 8;
     EXCHANGE_BLOCK = 9;
     TRANSFER = 10;
-    SWAPBID = 11;
-    SWAPFIL = 12;
-    SWAPSENT = 13;
-    PODP = 14;
+    SWAPASK = 11;
+    SWAPBID = 12;
+    SWAPFIL = 13;
+    SWAPSENT = 14;
+    PODP = 15;
 }
 
 message Transaction {
@@ -468,6 +469,17 @@ message Bitcoin_UTXO {
     optional bytes locking_script = 40; // PubkeyScript
 }
 
+//Bob broadcast intent to sell Fantasybit
+message SwapAsk {
+    extend Transaction {
+        optional SwapAsk swapask_tran = 450;
+    }
+
+    optional uint64 satoshi_min = 10;
+    optional uint64 satoshi_max = 11;
+    optional uint64 rate = 20; //satoshis per fb
+}
+
 //Alice has bitcoin - wants fantasybit
 message SwapBid {
     extend Transaction {
@@ -481,6 +493,8 @@ message SwapBid {
 
     optional Bitcoin_UTXO utxo = 30;
     optional bytes change_addr = 40;
+
+    optional SwapAsk this_offer = 50;
 }
 
 //Bob has fantasybit - wants bitcoin
@@ -489,7 +503,7 @@ message SwapFill {
         optional SwapFill swapfil_tran = 600;
     }
 
-    optional bytes swapbid = 10;
+    optional SwapBid swapbid = 10;
     optional bytes hash_to_sign = 20;
     //actual bitcoin tx structure○
 }

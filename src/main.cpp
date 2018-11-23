@@ -31,7 +31,10 @@ int domain(int argc, char *argv[])
 
     fantasybit::ExchangeData exchangedata;
 
-    fantasybit::BlockProcessor processor(data,namedata, exchangedata);
+    fantasybit::SwapStateData swapstate;
+
+
+    fantasybit::BlockProcessor processor(data, namedata, exchangedata, swapstate);
 
     int32_t last_block = processor.init();
 

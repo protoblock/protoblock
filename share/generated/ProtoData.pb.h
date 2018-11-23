@@ -76,6 +76,7 @@ class OrderDeets;
 class InsideUnique;
 class TimeTransition;
 class Bitcoin_UTXO;
+class SwapAsk;
 class SwapBid;
 class SwapFill;
 class SwapSent;
@@ -320,10 +321,11 @@ enum TransType {
   EXCHANGE = 8,
   EXCHANGE_BLOCK = 9,
   TRANSFER = 10,
-  SWAPBID = 11,
-  SWAPFIL = 12,
-  SWAPSENT = 13,
-  PODP = 14
+  SWAPASK = 11,
+  SWAPBID = 12,
+  SWAPFIL = 13,
+  SWAPSENT = 14,
+  PODP = 15
 };
 bool TransType_IsValid(int value);
 const TransType TransType_MIN = NAME;
@@ -5191,6 +5193,112 @@ class Bitcoin_UTXO : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class SwapAsk : public ::google::protobuf::Message {
+ public:
+  SwapAsk();
+  virtual ~SwapAsk();
+
+  SwapAsk(const SwapAsk& from);
+
+  inline SwapAsk& operator=(const SwapAsk& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapAsk& default_instance();
+
+  void Swap(SwapAsk* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapAsk* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapAsk& from);
+  void MergeFrom(const SwapAsk& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 satoshi_min = 10;
+  inline bool has_satoshi_min() const;
+  inline void clear_satoshi_min();
+  static const int kSatoshiMinFieldNumber = 10;
+  inline ::google::protobuf::uint64 satoshi_min() const;
+  inline void set_satoshi_min(::google::protobuf::uint64 value);
+
+  // optional uint64 satoshi_max = 11;
+  inline bool has_satoshi_max() const;
+  inline void clear_satoshi_max();
+  static const int kSatoshiMaxFieldNumber = 11;
+  inline ::google::protobuf::uint64 satoshi_max() const;
+  inline void set_satoshi_max(::google::protobuf::uint64 value);
+
+  // optional uint64 rate = 20;
+  inline bool has_rate() const;
+  inline void clear_rate();
+  static const int kRateFieldNumber = 20;
+  inline ::google::protobuf::uint64 rate() const;
+  inline void set_rate(::google::protobuf::uint64 value);
+
+  static const int kSwapaskTranFieldNumber = 450;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapAsk >, 11, false >
+    swapask_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapAsk)
+ private:
+  inline void set_has_satoshi_min();
+  inline void clear_has_satoshi_min();
+  inline void set_has_satoshi_max();
+  inline void clear_has_satoshi_max();
+  inline void set_has_rate();
+  inline void clear_has_rate();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint64 satoshi_min_;
+  ::google::protobuf::uint64 satoshi_max_;
+  ::google::protobuf::uint64 rate_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapAsk* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class SwapBid : public ::google::protobuf::Message {
  public:
   SwapBid();
@@ -5287,6 +5395,15 @@ class SwapBid : public ::google::protobuf::Message {
   inline ::std::string* release_change_addr();
   inline void set_allocated_change_addr(::std::string* change_addr);
 
+  // optional .fantasybit.SwapAsk this_offer = 50;
+  inline bool has_this_offer() const;
+  inline void clear_this_offer();
+  static const int kThisOfferFieldNumber = 50;
+  inline const ::fantasybit::SwapAsk& this_offer() const;
+  inline ::fantasybit::SwapAsk* mutable_this_offer();
+  inline ::fantasybit::SwapAsk* release_this_offer();
+  inline void set_allocated_this_offer(::fantasybit::SwapAsk* this_offer);
+
   static const int kSwapbidTranFieldNumber = 500;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapBid >, 11, false >
@@ -5303,6 +5420,8 @@ class SwapBid : public ::google::protobuf::Message {
   inline void clear_has_utxo();
   inline void set_has_change_addr();
   inline void clear_has_change_addr();
+  inline void set_has_this_offer();
+  inline void clear_has_this_offer();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -5311,9 +5430,10 @@ class SwapBid : public ::google::protobuf::Message {
   ::google::protobuf::uint64 rate_;
   ::fantasybit::Bitcoin_UTXO* utxo_;
   ::std::string* change_addr_;
+  ::fantasybit::SwapAsk* this_offer_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -5378,17 +5498,14 @@ class SwapFill : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional bytes swapbid = 10;
+  // optional .fantasybit.SwapBid swapbid = 10;
   inline bool has_swapbid() const;
   inline void clear_swapbid();
   static const int kSwapbidFieldNumber = 10;
-  inline const ::std::string& swapbid() const;
-  inline void set_swapbid(const ::std::string& value);
-  inline void set_swapbid(const char* value);
-  inline void set_swapbid(const void* value, size_t size);
-  inline ::std::string* mutable_swapbid();
-  inline ::std::string* release_swapbid();
-  inline void set_allocated_swapbid(::std::string* swapbid);
+  inline const ::fantasybit::SwapBid& swapbid() const;
+  inline ::fantasybit::SwapBid* mutable_swapbid();
+  inline ::fantasybit::SwapBid* release_swapbid();
+  inline void set_allocated_swapbid(::fantasybit::SwapBid* swapbid);
 
   // optional bytes hash_to_sign = 20;
   inline bool has_hash_to_sign() const;
@@ -5415,7 +5532,7 @@ class SwapFill : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* swapbid_;
+  ::fantasybit::SwapBid* swapbid_;
   ::std::string* hash_to_sign_;
 
   mutable int _cached_size_;
@@ -11451,6 +11568,76 @@ inline void Bitcoin_UTXO::set_allocated_locking_script(::std::string* locking_sc
 
 // -------------------------------------------------------------------
 
+// SwapAsk
+
+// optional uint64 satoshi_min = 10;
+inline bool SwapAsk::has_satoshi_min() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapAsk::set_has_satoshi_min() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapAsk::clear_has_satoshi_min() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapAsk::clear_satoshi_min() {
+  satoshi_min_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_min();
+}
+inline ::google::protobuf::uint64 SwapAsk::satoshi_min() const {
+  return satoshi_min_;
+}
+inline void SwapAsk::set_satoshi_min(::google::protobuf::uint64 value) {
+  set_has_satoshi_min();
+  satoshi_min_ = value;
+}
+
+// optional uint64 satoshi_max = 11;
+inline bool SwapAsk::has_satoshi_max() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapAsk::set_has_satoshi_max() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapAsk::clear_has_satoshi_max() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapAsk::clear_satoshi_max() {
+  satoshi_max_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_max();
+}
+inline ::google::protobuf::uint64 SwapAsk::satoshi_max() const {
+  return satoshi_max_;
+}
+inline void SwapAsk::set_satoshi_max(::google::protobuf::uint64 value) {
+  set_has_satoshi_max();
+  satoshi_max_ = value;
+}
+
+// optional uint64 rate = 20;
+inline bool SwapAsk::has_rate() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SwapAsk::set_has_rate() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SwapAsk::clear_has_rate() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SwapAsk::clear_rate() {
+  rate_ = GOOGLE_ULONGLONG(0);
+  clear_has_rate();
+}
+inline ::google::protobuf::uint64 SwapAsk::rate() const {
+  return rate_;
+}
+inline void SwapAsk::set_rate(::google::protobuf::uint64 value) {
+  set_has_rate();
+  rate_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // SwapBid
 
 // optional uint64 satoshi_min = 10;
@@ -11627,11 +11814,49 @@ inline void SwapBid::set_allocated_change_addr(::std::string* change_addr) {
   }
 }
 
+// optional .fantasybit.SwapAsk this_offer = 50;
+inline bool SwapBid::has_this_offer() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void SwapBid::set_has_this_offer() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void SwapBid::clear_has_this_offer() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void SwapBid::clear_this_offer() {
+  if (this_offer_ != NULL) this_offer_->::fantasybit::SwapAsk::Clear();
+  clear_has_this_offer();
+}
+inline const ::fantasybit::SwapAsk& SwapBid::this_offer() const {
+  return this_offer_ != NULL ? *this_offer_ : *default_instance_->this_offer_;
+}
+inline ::fantasybit::SwapAsk* SwapBid::mutable_this_offer() {
+  set_has_this_offer();
+  if (this_offer_ == NULL) this_offer_ = new ::fantasybit::SwapAsk;
+  return this_offer_;
+}
+inline ::fantasybit::SwapAsk* SwapBid::release_this_offer() {
+  clear_has_this_offer();
+  ::fantasybit::SwapAsk* temp = this_offer_;
+  this_offer_ = NULL;
+  return temp;
+}
+inline void SwapBid::set_allocated_this_offer(::fantasybit::SwapAsk* this_offer) {
+  delete this_offer_;
+  this_offer_ = this_offer;
+  if (this_offer) {
+    set_has_this_offer();
+  } else {
+    clear_has_this_offer();
+  }
+}
+
 // -------------------------------------------------------------------
 
 // SwapFill
 
-// optional bytes swapbid = 10;
+// optional .fantasybit.SwapBid swapbid = 10;
 inline bool SwapFill::has_swapbid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -11642,62 +11867,30 @@ inline void SwapFill::clear_has_swapbid() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void SwapFill::clear_swapbid() {
-  if (swapbid_ != &::google::protobuf::internal::kEmptyString) {
-    swapbid_->clear();
-  }
+  if (swapbid_ != NULL) swapbid_->::fantasybit::SwapBid::Clear();
   clear_has_swapbid();
 }
-inline const ::std::string& SwapFill::swapbid() const {
-  return *swapbid_;
+inline const ::fantasybit::SwapBid& SwapFill::swapbid() const {
+  return swapbid_ != NULL ? *swapbid_ : *default_instance_->swapbid_;
 }
-inline void SwapFill::set_swapbid(const ::std::string& value) {
+inline ::fantasybit::SwapBid* SwapFill::mutable_swapbid() {
   set_has_swapbid();
-  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
-    swapbid_ = new ::std::string;
-  }
-  swapbid_->assign(value);
-}
-inline void SwapFill::set_swapbid(const char* value) {
-  set_has_swapbid();
-  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
-    swapbid_ = new ::std::string;
-  }
-  swapbid_->assign(value);
-}
-inline void SwapFill::set_swapbid(const void* value, size_t size) {
-  set_has_swapbid();
-  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
-    swapbid_ = new ::std::string;
-  }
-  swapbid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SwapFill::mutable_swapbid() {
-  set_has_swapbid();
-  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
-    swapbid_ = new ::std::string;
-  }
+  if (swapbid_ == NULL) swapbid_ = new ::fantasybit::SwapBid;
   return swapbid_;
 }
-inline ::std::string* SwapFill::release_swapbid() {
+inline ::fantasybit::SwapBid* SwapFill::release_swapbid() {
   clear_has_swapbid();
-  if (swapbid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = swapbid_;
-    swapbid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
+  ::fantasybit::SwapBid* temp = swapbid_;
+  swapbid_ = NULL;
+  return temp;
 }
-inline void SwapFill::set_allocated_swapbid(::std::string* swapbid) {
-  if (swapbid_ != &::google::protobuf::internal::kEmptyString) {
-    delete swapbid_;
-  }
+inline void SwapFill::set_allocated_swapbid(::fantasybit::SwapBid* swapbid) {
+  delete swapbid_;
+  swapbid_ = swapbid;
   if (swapbid) {
     set_has_swapbid();
-    swapbid_ = swapbid;
   } else {
     clear_has_swapbid();
-    swapbid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

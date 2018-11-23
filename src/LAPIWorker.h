@@ -44,9 +44,11 @@ class MainLAPIWorker : public QObject , public IResolvable
     fantasybit::FantasyAgent agent{};
     fantasybit::NFLStateData data;
     fantasybit::FantasyNameData namedata;
-    fantasybit::BlockProcessor processor;
+    fantasybit::SwapStateData swapstate;
 
+    fantasybit::BlockProcessor processor;
     fantasybit::ExchangeData exchangedata;
+
 
     //fantasybit::DeltaData deltadata{};
     std::map<std::string,fantasybit::MyFantasyName> myfantasynames{};
@@ -74,6 +76,9 @@ public:
     fantasybit::FantasyAgent &Agent() { return agent; }
 
     fantasybit::ExchangeData &ExData() { return exchangedata; }
+
+    fantasybit::SwapStateData &SwapState() { return swapstate; }
+
 
     /*
     std::vector<fantasybit::GameRoster> getWeekGameRosters(int week){

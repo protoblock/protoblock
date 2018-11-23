@@ -27,6 +27,10 @@
 #include "SqlStuff.h"
 #endif
 
+#ifndef NOUSE_SWAP
+#include <SwapStateData.h>
+#endif
+
 
 
 namespace fantasybit
@@ -36,9 +40,13 @@ class BlockProcessor : public QObject {
     Q_OBJECT
 
     BlockRecorder mRecorder{};
+
+    //State Data Variables
     NFLStateData &mData;
     FantasyNameData &mNameData;
     ExchangeData &mExchangeData;
+    SwapStateData &mSwapStateData;
+
     int32_t realHeight = 0;
     int32_t lastidprocessed = 0;
     bool mLastWeekStart = false;
@@ -71,7 +79,7 @@ signals:
 
 public:
     BlockProcessor(NFLStateData &data, FantasyNameData &namedata,
-                   ExchangeData &ed);
+                   ExchangeData &ed, SwapStateData &);
 
     int32_t init();
 

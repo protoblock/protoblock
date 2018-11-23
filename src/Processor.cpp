@@ -48,6 +48,8 @@ void BlockProcessor::hardReset() {
     mExchangeData.removeAll();
 #endif
 
+    mSwapStateData.closeAll();
+
     pb::remove_all(Platform::instance()->getRootDir() + "index/");
 #ifndef NOUSE_GENESIS_BOOT
     NFLStateData::InitCheckpoint();
@@ -87,6 +89,7 @@ int32_t BlockProcessor::init() {
 #ifdef TRADE_FEATURE
     mExchangeData.init(mGlobalState);
 #endif
+    mSwapStateData.init();
 
 //    OnSeasonStart(mData.GetGlobalState().season());
 
@@ -1083,8 +1086,18 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         switch (t.type())
         {
 
+        case TransType::SWAPASK: {
+            const auto & swapthis = t.GetExtension(SwapAsk::swapask_tran);
+            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name());
+            break;
+        }
+
         case TransType::SWAPBID: {
             const auto & swapthis = t.GetExtension(SwapBid::swapbid_tran);
+#ifdef TRACE
+            qDebug() << " calling mSwapStateData " << t.DebugString().data():
+#endif
+            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name());
             break;
         }
 
@@ -1562,11 +1575,12 @@ bool BlockProcessor::verify_name(const SignedTransaction &st, const NameTrans &n
     */
 }
 
-BlockProcessor::BlockProcessor(NFLStateData &data, FantasyNameData &namedata, ExchangeData &ed) :
+BlockProcessor::BlockProcessor(NFLStateData &data, FantasyNameData &namedata,
+                               ExchangeData &ed, SwapStateData &swapdata) :
 //    #if defined(DATAAGENTWRITENAMES) || defined(DATAAGENTWRITEPROFIT)
 //        sql("satoshifantasy","distribution"),
 //    #endif
-    mData(data), mNameData(namedata) , mExchangeData(ed) {
+    mData(data), mNameData(namedata) , mExchangeData(ed), mSwapStateData(swapdata) {
 
     }
 

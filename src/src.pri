@@ -23,7 +23,8 @@ SOURCES += \
     $$PWD/iresolvable.cpp \
     $$PWD/dataservice.cpp \
     $$PWD/fullgateway.cpp \
-    $$PWD/importLoader.cpp
+    $$PWD/importLoader.cpp \
+    $$PWD/SwapStateData.cpp
 
 HEADERS += \
     $$PWD/PeerNode.h \
@@ -40,4 +41,5 @@ HEADERS += \
     $$PWD/iresolvable.h \
     $$PWD/dataservice.h \
     $$PWD/fullgateway.h \
-    $$PWD/importLoader.h
+    $$PWD/importLoader.h \
+    $$PWD/SwapStateData.h

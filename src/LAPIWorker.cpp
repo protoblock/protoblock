@@ -15,8 +15,10 @@ using namespace std;
 using namespace fantasybit;
 
 MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
-    data{}, namedata{}, exchangedata{}, processor(data,namedata, exchangedata)
+                               data{}, namedata{}, exchangedata{}, swapstate{},
+                               processor(data,namedata, exchangedata, swapstate)
 {
+
     timer = new QTimer(this);
 #ifndef NOSYNC
     node.thread()->connect(node.thread(),

@@ -147,6 +147,9 @@ const ::google::protobuf::EnumDescriptor* TimeTransition_Type_descriptor_ = NULL
 const ::google::protobuf::Descriptor* Bitcoin_UTXO_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Bitcoin_UTXO_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SwapAsk_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SwapAsk_reflection_ = NULL;
 const ::google::protobuf::Descriptor* SwapBid_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SwapBid_reflection_ = NULL;
@@ -865,13 +868,31 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Bitcoin_UTXO));
-  SwapBid_descriptor_ = file->message_type(39);
-  static const int SwapBid_offsets_[5] = {
+  SwapAsk_descriptor_ = file->message_type(39);
+  static const int SwapAsk_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapAsk, satoshi_min_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapAsk, satoshi_max_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapAsk, rate_),
+  };
+  SwapAsk_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SwapAsk_descriptor_,
+      SwapAsk::default_instance_,
+      SwapAsk_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapAsk, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapAsk, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SwapAsk));
+  SwapBid_descriptor_ = file->message_type(40);
+  static const int SwapBid_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapBid, satoshi_min_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapBid, satoshi_max_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapBid, rate_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapBid, utxo_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapBid, change_addr_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapBid, this_offer_),
   };
   SwapBid_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -884,7 +905,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SwapBid));
-  SwapFill_descriptor_ = file->message_type(40);
+  SwapFill_descriptor_ = file->message_type(41);
   static const int SwapFill_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapFill, swapbid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapFill, hash_to_sign_),
@@ -900,7 +921,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SwapFill));
-  SwapSent_descriptor_ = file->message_type(41);
+  SwapSent_descriptor_ = file->message_type(42);
   static const int SwapSent_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapSent, swapfill_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapSent, sig_),
@@ -916,7 +937,7 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SwapSent));
-  ProofOfDoubleSpend_descriptor_ = file->message_type(42);
+  ProofOfDoubleSpend_descriptor_ = file->message_type(43);
   static const int ProofOfDoubleSpend_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProofOfDoubleSpend, swapsent_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProofOfDoubleSpend, sig_),
@@ -1026,6 +1047,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Bitcoin_UTXO_descriptor_, &Bitcoin_UTXO::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SwapAsk_descriptor_, &SwapAsk::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SwapBid_descriptor_, &SwapBid::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SwapFill_descriptor_, &SwapFill::default_instance());
@@ -1116,6 +1139,8 @@ void protobuf_ShutdownFile_ProtoData_2eproto() {
   delete TimeTransition_reflection_;
   delete Bitcoin_UTXO::default_instance_;
   delete Bitcoin_UTXO_reflection_;
+  delete SwapAsk::default_instance_;
+  delete SwapAsk_reflection_;
   delete SwapBid::default_instance_;
   delete SwapBid_reflection_;
   delete SwapFill::default_instance_;
@@ -1281,12 +1306,17 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "ion\030\257\002 \001(\0132\032.fantasybit.TimeTransition\"["
     "\n\014Bitcoin_UTXO\022\014\n\004txid\030\n \001(\014\022\023\n\013tx_outpu"
     "t_n\030\024 \001(\r\022\020\n\010in_value\030\036 \001(\004\022\026\n\016locking_s"
-    "cript\030( \001(\014\"\303\001\n\007SwapBid\022\023\n\013satoshi_min\030\n"
-    " \001(\004\022\023\n\013satoshi_max\030\013 \001(\004\022\014\n\004rate\030\024 \001(\004\022"
-    "&\n\004utxo\030\036 \001(\0132\030.fantasybit.Bitcoin_UTXO\022"
-    "\023\n\013change_addr\030( \001(\0142C\n\014swapbid_tran\022\027.f"
-    "antasybit.Transaction\030\364\003 \001(\0132\023.fantasybi"
-    "t.SwapBid\"w\n\010SwapFill\022\017\n\007swapbid\030\n \001(\014\022\024"
+    "cript\030( \001(\014\"\206\001\n\007SwapAsk\022\023\n\013satoshi_min\030\n"
+    " \001(\004\022\023\n\013satoshi_max\030\013 \001(\004\022\014\n\004rate\030\024 \001(\0042"
+    "C\n\014swapask_tran\022\027.fantasybit.Transaction"
+    "\030\302\003 \001(\0132\023.fantasybit.SwapAsk\"\354\001\n\007SwapBid"
+    "\022\023\n\013satoshi_min\030\n \001(\004\022\023\n\013satoshi_max\030\013 \001"
+    "(\004\022\014\n\004rate\030\024 \001(\004\022&\n\004utxo\030\036 \001(\0132\030.fantasy"
+    "bit.Bitcoin_UTXO\022\023\n\013change_addr\030( \001(\014\022\'\n"
+    "\nthis_offer\0302 \001(\0132\023.fantasybit.SwapAsk2C"
+    "\n\014swapbid_tran\022\027.fantasybit.Transaction\030"
+    "\364\003 \001(\0132\023.fantasybit.SwapBid\"\214\001\n\010SwapFill"
+    "\022$\n\007swapbid\030\n \001(\0132\023.fantasybit.SwapBid\022\024"
     "\n\014hash_to_sign\030\024 \001(\0142D\n\014swapfil_tran\022\027.f"
     "antasybit.Transaction\030\330\004 \001(\0132\024.fantasybi"
     "t.SwapFill\"p\n\010SwapSent\022\020\n\010swapfill\030\n \001(\014"
@@ -1297,17 +1327,17 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "ybit.Transaction\030\240\006 \001(\0132\036.fantasybit.Pro"
     "ofOfDoubleSpend*Y\n\014MyNameStatus\022\010\n\004none\020"
     "\001\022\013\n\007notavil\020\002\022\r\n\trequested\020\005\022\024\n\020transac"
-    "tion_sent\020\017\022\r\n\tconfirmed\020\024*\333\001\n\tTransType"
+    "tion_sent\020\017\022\r\n\tconfirmed\020\024*\350\001\n\tTransType"
     "\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002\022\010"
     "\n\004DATA\020\003\022\024\n\020PROJECTION_BLOCK\020\004\022\017\n\013MASTER"
     "_NAME\020\005\022\010\n\004TIME\020\006\022\013\n\007STAMPED\020\007\022\014\n\010EXCHAN"
     "GE\020\010\022\022\n\016EXCHANGE_BLOCK\020\t\022\014\n\010TRANSFER\020\n\022\013"
-    "\n\007SWAPBID\020\013\022\013\n\007SWAPFIL\020\014\022\014\n\010SWAPSENT\020\r\022\010"
-    "\n\004PODP\020\016*\260\001\n\006TrType\022\017\n\013SEASONSTART\020\002\022\r\n\t"
-    "SEASONEND\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020"
-    "\006\022\014\n\010WEEKOVER\020\007\022\025\n\021TRADESESSIONSTART\020\010\022\037"
-    "\n\033TRADESESSIONCLOSEANDPREOPEN\020\t\022\020\n\014PLAYO"
-    "FFSTART\020\n\022\020\n\014SUPERBOWLEND\020\014", 6867);
+    "\n\007SWAPASK\020\013\022\013\n\007SWAPBID\020\014\022\013\n\007SWAPFIL\020\r\022\014\n"
+    "\010SWAPSENT\020\016\022\010\n\004PODP\020\017*\260\001\n\006TrType\022\017\n\013SEAS"
+    "ONSTART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tHEARTBEAT\020\005\022"
+    "\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER\020\007\022\025\n\021TRADESES"
+    "SIONSTART\020\010\022\037\n\033TRADESESSIONCLOSEANDPREOP"
+    "EN\020\t\022\020\n\014PLAYOFFSTART\020\n\022\020\n\014SUPERBOWLEND\020\014", 7080);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -1349,6 +1379,7 @@ void protobuf_AddDesc_ProtoData_2eproto() {
   InsideUnique::default_instance_ = new InsideUnique();
   TimeTransition::default_instance_ = new TimeTransition();
   Bitcoin_UTXO::default_instance_ = new Bitcoin_UTXO();
+  SwapAsk::default_instance_ = new SwapAsk();
   SwapBid::default_instance_ = new SwapBid();
   SwapFill::default_instance_ = new SwapFill();
   SwapSent::default_instance_ = new SwapSent();
@@ -1452,6 +1483,11 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     303, 11, false, false,
     &::fantasybit::TimeTransition::default_instance());
   Bitcoin_UTXO::default_instance_->InitAsDefaultInstance();
+  SwapAsk::default_instance_->InitAsDefaultInstance();
+  ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
+    &::fantasybit::Transaction::default_instance(),
+    450, 11, false, false,
+    &::fantasybit::SwapAsk::default_instance());
   SwapBid::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::ExtensionSet::RegisterMessageExtension(
     &::fantasybit::Transaction::default_instance(),
@@ -1519,6 +1555,7 @@ bool TransType_IsValid(int value) {
     case 12:
     case 13:
     case 14:
+    case 15:
       return true;
     default:
       return false;
@@ -14975,11 +15012,306 @@ void Bitcoin_UTXO::Swap(Bitcoin_UTXO* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int SwapAsk::kSatoshiMinFieldNumber;
+const int SwapAsk::kSatoshiMaxFieldNumber;
+const int SwapAsk::kRateFieldNumber;
+#endif  // !_MSC_VER
+
+#ifndef _MSC_VER
+const int SwapAsk::kSwapaskTranFieldNumber;
+#endif
+::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+    ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapAsk >, 11, false >
+  SwapAsk::swapask_tran(kSwapaskTranFieldNumber, ::fantasybit::SwapAsk::default_instance());
+SwapAsk::SwapAsk()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SwapAsk::InitAsDefaultInstance() {
+}
+
+SwapAsk::SwapAsk(const SwapAsk& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SwapAsk::SharedCtor() {
+  _cached_size_ = 0;
+  satoshi_min_ = GOOGLE_ULONGLONG(0);
+  satoshi_max_ = GOOGLE_ULONGLONG(0);
+  rate_ = GOOGLE_ULONGLONG(0);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SwapAsk::~SwapAsk() {
+  SharedDtor();
+}
+
+void SwapAsk::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SwapAsk::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SwapAsk::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SwapAsk_descriptor_;
+}
+
+const SwapAsk& SwapAsk::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ProtoData_2eproto();
+  return *default_instance_;
+}
+
+SwapAsk* SwapAsk::default_instance_ = NULL;
+
+SwapAsk* SwapAsk::New() const {
+  return new SwapAsk;
+}
+
+void SwapAsk::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    satoshi_min_ = GOOGLE_ULONGLONG(0);
+    satoshi_max_ = GOOGLE_ULONGLONG(0);
+    rate_ = GOOGLE_ULONGLONG(0);
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SwapAsk::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint64 satoshi_min = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &satoshi_min_)));
+          set_has_satoshi_min();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(88)) goto parse_satoshi_max;
+        break;
+      }
+
+      // optional uint64 satoshi_max = 11;
+      case 11: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_satoshi_max:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &satoshi_max_)));
+          set_has_satoshi_max();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(160)) goto parse_rate;
+        break;
+      }
+
+      // optional uint64 rate = 20;
+      case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_rate:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &rate_)));
+          set_has_rate();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SwapAsk::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional uint64 satoshi_min = 10;
+  if (has_satoshi_min()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(10, this->satoshi_min(), output);
+  }
+
+  // optional uint64 satoshi_max = 11;
+  if (has_satoshi_max()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(11, this->satoshi_max(), output);
+  }
+
+  // optional uint64 rate = 20;
+  if (has_rate()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(20, this->rate(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SwapAsk::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional uint64 satoshi_min = 10;
+  if (has_satoshi_min()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(10, this->satoshi_min(), target);
+  }
+
+  // optional uint64 satoshi_max = 11;
+  if (has_satoshi_max()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(11, this->satoshi_max(), target);
+  }
+
+  // optional uint64 rate = 20;
+  if (has_rate()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(20, this->rate(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SwapAsk::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional uint64 satoshi_min = 10;
+    if (has_satoshi_min()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->satoshi_min());
+    }
+
+    // optional uint64 satoshi_max = 11;
+    if (has_satoshi_max()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->satoshi_max());
+    }
+
+    // optional uint64 rate = 20;
+    if (has_rate()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->rate());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SwapAsk::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SwapAsk* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SwapAsk*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SwapAsk::MergeFrom(const SwapAsk& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_satoshi_min()) {
+      set_satoshi_min(from.satoshi_min());
+    }
+    if (from.has_satoshi_max()) {
+      set_satoshi_max(from.satoshi_max());
+    }
+    if (from.has_rate()) {
+      set_rate(from.rate());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SwapAsk::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SwapAsk::CopyFrom(const SwapAsk& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SwapAsk::IsInitialized() const {
+
+  return true;
+}
+
+void SwapAsk::Swap(SwapAsk* other) {
+  if (other != this) {
+    std::swap(satoshi_min_, other->satoshi_min_);
+    std::swap(satoshi_max_, other->satoshi_max_);
+    std::swap(rate_, other->rate_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SwapAsk::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SwapAsk_descriptor_;
+  metadata.reflection = SwapAsk_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int SwapBid::kSatoshiMinFieldNumber;
 const int SwapBid::kSatoshiMaxFieldNumber;
 const int SwapBid::kRateFieldNumber;
 const int SwapBid::kUtxoFieldNumber;
 const int SwapBid::kChangeAddrFieldNumber;
+const int SwapBid::kThisOfferFieldNumber;
 #endif  // !_MSC_VER
 
 #ifndef _MSC_VER
@@ -14995,6 +15327,7 @@ SwapBid::SwapBid()
 
 void SwapBid::InitAsDefaultInstance() {
   utxo_ = const_cast< ::fantasybit::Bitcoin_UTXO*>(&::fantasybit::Bitcoin_UTXO::default_instance());
+  this_offer_ = const_cast< ::fantasybit::SwapAsk*>(&::fantasybit::SwapAsk::default_instance());
 }
 
 SwapBid::SwapBid(const SwapBid& from)
@@ -15010,6 +15343,7 @@ void SwapBid::SharedCtor() {
   rate_ = GOOGLE_ULONGLONG(0);
   utxo_ = NULL;
   change_addr_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  this_offer_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -15023,6 +15357,7 @@ void SwapBid::SharedDtor() {
   }
   if (this != default_instance_) {
     delete utxo_;
+    delete this_offer_;
   }
 }
 
@@ -15059,6 +15394,9 @@ void SwapBid::Clear() {
       if (change_addr_ != &::google::protobuf::internal::kEmptyString) {
         change_addr_->clear();
       }
+    }
+    if (has_this_offer()) {
+      if (this_offer_ != NULL) this_offer_->::fantasybit::SwapAsk::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -15142,6 +15480,20 @@ bool SwapBid::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(402)) goto parse_this_offer;
+        break;
+      }
+
+      // optional .fantasybit.SwapAsk this_offer = 50;
+      case 50: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_this_offer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_this_offer()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -15191,6 +15543,12 @@ void SwapBid::SerializeWithCachedSizes(
       40, this->change_addr(), output);
   }
 
+  // optional .fantasybit.SwapAsk this_offer = 50;
+  if (has_this_offer()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      50, this->this_offer(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -15226,6 +15584,13 @@ void SwapBid::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         40, this->change_addr(), target);
+  }
+
+  // optional .fantasybit.SwapAsk this_offer = 50;
+  if (has_this_offer()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        50, this->this_offer(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -15274,6 +15639,13 @@ int SwapBid::ByteSize() const {
           this->change_addr());
     }
 
+    // optional .fantasybit.SwapAsk this_offer = 50;
+    if (has_this_offer()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->this_offer());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -15316,6 +15688,9 @@ void SwapBid::MergeFrom(const SwapBid& from) {
     if (from.has_change_addr()) {
       set_change_addr(from.change_addr());
     }
+    if (from.has_this_offer()) {
+      mutable_this_offer()->::fantasybit::SwapAsk::MergeFrom(from.this_offer());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -15344,6 +15719,7 @@ void SwapBid::Swap(SwapBid* other) {
     std::swap(rate_, other->rate_);
     std::swap(utxo_, other->utxo_);
     std::swap(change_addr_, other->change_addr_);
+    std::swap(this_offer_, other->this_offer_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -15378,6 +15754,7 @@ SwapFill::SwapFill()
 }
 
 void SwapFill::InitAsDefaultInstance() {
+  swapbid_ = const_cast< ::fantasybit::SwapBid*>(&::fantasybit::SwapBid::default_instance());
 }
 
 SwapFill::SwapFill(const SwapFill& from)
@@ -15388,7 +15765,7 @@ SwapFill::SwapFill(const SwapFill& from)
 
 void SwapFill::SharedCtor() {
   _cached_size_ = 0;
-  swapbid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  swapbid_ = NULL;
   hash_to_sign_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -15398,13 +15775,11 @@ SwapFill::~SwapFill() {
 }
 
 void SwapFill::SharedDtor() {
-  if (swapbid_ != &::google::protobuf::internal::kEmptyString) {
-    delete swapbid_;
-  }
   if (hash_to_sign_ != &::google::protobuf::internal::kEmptyString) {
     delete hash_to_sign_;
   }
   if (this != default_instance_) {
+    delete swapbid_;
   }
 }
 
@@ -15432,9 +15807,7 @@ SwapFill* SwapFill::New() const {
 void SwapFill::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_swapbid()) {
-      if (swapbid_ != &::google::protobuf::internal::kEmptyString) {
-        swapbid_->clear();
-      }
+      if (swapbid_ != NULL) swapbid_->::fantasybit::SwapBid::Clear();
     }
     if (has_hash_to_sign()) {
       if (hash_to_sign_ != &::google::protobuf::internal::kEmptyString) {
@@ -15452,12 +15825,12 @@ bool SwapFill::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional bytes swapbid = 10;
+      // optional .fantasybit.SwapBid swapbid = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_swapbid()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_swapbid()));
         } else {
           goto handle_uninterpreted;
         }
@@ -15497,9 +15870,9 @@ bool SwapFill::MergePartialFromCodedStream(
 
 void SwapFill::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional bytes swapbid = 10;
+  // optional .fantasybit.SwapBid swapbid = 10;
   if (has_swapbid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       10, this->swapbid(), output);
   }
 
@@ -15517,10 +15890,10 @@ void SwapFill::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SwapFill::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional bytes swapbid = 10;
+  // optional .fantasybit.SwapBid swapbid = 10;
   if (has_swapbid()) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
         10, this->swapbid(), target);
   }
 
@@ -15542,10 +15915,10 @@ int SwapFill::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional bytes swapbid = 10;
+    // optional .fantasybit.SwapBid swapbid = 10;
     if (has_swapbid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->swapbid());
     }
 
@@ -15584,7 +15957,7 @@ void SwapFill::MergeFrom(const SwapFill& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_swapbid()) {
-      set_swapbid(from.swapbid());
+      mutable_swapbid()->::fantasybit::SwapBid::MergeFrom(from.swapbid());
     }
     if (from.has_hash_to_sign()) {
       set_hash_to_sign(from.hash_to_sign());
