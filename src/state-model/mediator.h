@@ -212,7 +212,21 @@ public:
     }
 
     Q_INVOKABLE QString init();
+
     Q_INVOKABLE QString toBTCAddess(const QString &inpk) {
+        qDebug() << " twitch toBTCAddess " << inpk;
+        toBTCAddess2(inpk);
+        return pb::toBtcAddress (Commissioner::str2pk (inpk.toStdString())).data() ;
+    }
+
+    Q_INVOKABLE quint64 toBTCbalance(const QString &inaddress) {
+        BitcoinUtils btu;
+//        return QString("%1 BTC").arg(btu.getBTCbalance(inaddress.toStdString()));
+
+        return btu.getBTCbalance(inaddress.toStdString());
+    }
+
+    Q_INVOKABLE QString toBTCAddess2(const QString &inpk) {
 
         qDebug() << " twitch inpk " << inpk;
         auto pk = Commissioner::str2pk (inpk.toStdString());
@@ -237,6 +251,8 @@ public:
         auto thetx = btu.createTX(*utxo,in,ins);
         qDebug() << "twitch3 thetx" << thetx.data();
 
+
+        qDebug() << "twitch4 btc bal" << btu.getBTCbalance("1BPw53Gf5faxAwSmXrCqHDWkhM1xK2jUX9");
         return btc1.data();
     }
 

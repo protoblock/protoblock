@@ -19,5 +19,6 @@
         <file>Wallet.qml</file>
         <file>Explorer.qml</file>
         <file>Secret.qml</file>
+        <file>Swap.qml</file>
     </qresource>
 </RCC>

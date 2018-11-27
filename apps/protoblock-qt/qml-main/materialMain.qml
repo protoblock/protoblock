@@ -182,10 +182,11 @@ Material.ApplicationWindow{
     }
 
     // Level Zero
-    property var levelZero: [ "Wallet", "Explorer"]
+    property var levelZero: [ "Wallet", "Explorer", "Swap"]
     property var levelZeroIcons: [
         "qrc:/icons/local_atm.png",
-        "qrc:/icons/local_atm.png"
+        "qrc:/icons/local_atm.png",
+        "qrc:/icons/btc.png"
     ]
 
     // Level One

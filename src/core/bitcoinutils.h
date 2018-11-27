@@ -40,6 +40,8 @@ public:
     std::string createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
                                      std::string &input, std::string &in_script);
 
+    uint64_t getBTCbalance(const std::string &btcaddress);
+
 };
 
 }

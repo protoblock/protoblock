@@ -54,6 +54,11 @@ std::string BitcoinUtils::createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
 
     return "";
 }
+
+uint64_t BitcoinUtils::getBTCbalance(const std::string &btcaddress) {
+    return BitcoinRestfullService::getBtcAddressBalance(btcaddress);
+}
+
 std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
                                    std::string &input, std::string &in_script) {
     std::string OP_DUP = "76";

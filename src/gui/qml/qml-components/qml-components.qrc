@@ -28,5 +28,8 @@
         <file>FantasyNameContextBanner.qml</file>
         <file>ListSymbolSearch.qml</file>
         <file>TradingComp.qml</file>
+        <file>Atomic.qml</file>
+        <file>QRCode.qml</file>
+        <file>qqr.js</file>
     </qresource>
 </RCC>
