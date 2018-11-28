@@ -40,5 +40,6 @@
         <file>icons/ic_trending_flat.png</file>
         <file>icons/ic_trending_up.png</file>
         <file>btc.png</file>
+        <file>fb.png</file>
     </qresource>
 </RCC>

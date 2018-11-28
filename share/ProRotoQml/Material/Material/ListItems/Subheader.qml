@@ -11,6 +11,8 @@
 import QtQuick 2.4
 import Material 1.0
 import ProRotoQml.Utils 1.0
+import ProRotoQml.Theme 1.0
+
 
 /*!
    \qmltype Subheader
@@ -23,8 +25,8 @@ View {
 
     //----- STYLE PROPERTIES -----//
 
-    height: 48 * Units.dp
-    property int margins: 16 * Units.dp
+    height: ProtoScreen.guToPx(6)
+    property int margins: ProtoScreen.guToPx(2)
 
     anchors {
         left: parent.left
@@ -40,9 +42,9 @@ View {
     Label {
         id: label
 
-        font.pixelSize: 14 * Units.dp
-        font.family: "Roboto"
-        font.weight: Font.DemiBold
+//        font.pixelSize: 14 * Units.dp
+//        font.family: "Roboto"
+//        font.weight: Font.DemiBold
 
         anchors {
             verticalCenter: parent.verticalCenter
