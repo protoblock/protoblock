@@ -525,12 +525,15 @@ Item {
                 color: "transparent"
                 anchors.top: parent.top
                 ComboBox {
+                    anchors.centerIn: parent
+                    height: parent.height * .75
+                    width: parent.width * .90
                     id: cbc
                     model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
                     enabled: styleData.column === 1
                     currentIndex: 0
                     visible: styleData.column === 1
-                    anchors.fill: parent
+//                    anchors.fill: parent
                     onCurrentTextChanged: {
                        MiddleMan.pResultsViewFilterProxyModel.setPos(currentText)
                         kicker = def = qb = (currentIndex === 0)

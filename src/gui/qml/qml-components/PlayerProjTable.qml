@@ -169,7 +169,7 @@ Item {
 //                width: parent.width
 //                anchors.fill: parent
 //                width: lbl.implicitWidth + 2
-                width: ProtoScreen.guToPx(4)
+                width: ProtoScreen.guToPx(6)
                 delegate: Material.Card {
                     flat: true
                     radius: 0
@@ -436,24 +436,21 @@ Item {
 //            anchors.fill: parent
             color: "white"
             Rectangle {
-//                enabled: styleData.column > 3
-//                visible: styleData.column > 3
                 id: rec
                 height: parent.height * .50
                 width: parent.width
                 color: "transparent"
-                //styleData.column < 3 ? "white" : "grey"
                 anchors.top: parent.top
-//                border.width: ProtoScreen.guToPx(.125)
-//                border.color: light.textColor
-//                radius: ProtoScreen.guToPx(.125)
                 ComboBox {
+                    anchors.centerIn: parent
+                    height: parent.height * .75
+                    width: parent.width * .90
                     id: cbc
                     model: ["All","QB" , "RB" , "WR" , "TE" , "K" , "DEF"]
                     enabled: styleData.column === 1
                     currentIndex: 0
                     visible: styleData.column === 1
-                    anchors.fill: parent
+//                    anchors.fill: parent
                     onCurrentTextChanged: {
                        MiddleMan.pProjectionsViewFilterProxyModel.setPos(currentText)
                     }
@@ -461,28 +458,20 @@ Item {
 
                 Material.IconButton {
                     id: exportit
-//                    anchors.fill: parent;
-//                    anchors.centerIn: parent
                     anchors.left: parent.left
                     anchors.top: parent.top
                     Layout.fillHeight: true
                     Layout.fillWidth: false
                     width: ProtoScreen.guToPx(6)
                     height: parent.height
-//                    color: "black"
-//                    iconSource: "icon://" + "awesome/undo"// "qrc:/icons/navigation_close.png"
                     onClicked: {
                         importexportDialog.show();
-//                        MiddleMan.copyFDProj()
                     }
 
                     size: ProtoScreen.guToPx(2.5)
-
-
                     visible: styleData.column === 0
                     enabled: styleData.column === 0 && MiddleMan.liveSync === "Live"
                     action: Material.Action {
-//                        name: "cod"
                         iconName: "awesome/code"
                         hoverAnimation: true
                     }
@@ -490,16 +479,12 @@ Item {
 
                 Material.IconButton {
                     id: lbl
-//                    anchors.fill: parent;
-//                    anchors.centerIn: parent
                     anchors.left: parent.left
                     anchors.top: parent.top
                     Layout.fillHeight: true
                     Layout.fillWidth: false
                     width: ProtoScreen.guToPx(6)
                     height: parent.height
-//                    color: "black"
-//                    iconSource: "icon://" + "awesome/undo"// "qrc:/icons/navigation_close.png"
                     onClicked: {
                         MiddleMan.undoProj()
                         console.log("clicked icon")
@@ -507,8 +492,6 @@ Item {
                     }
 
                     size: ProtoScreen.guToPx(2.5)
-
-
                     visible: styleData.column === pcol
                     enabled: styleData.column === pcol
                     action: Material.Action {
@@ -553,9 +536,9 @@ Item {
                         elevation: 2 + ( 2 * topw.focuscount)
                     }
                 }
+
                 Material.IconButton {
                     id: li
-//                    width: ProtoScreen.guToPx(5)//parent.width * .50
                     anchors.right: parent.horizontalCenter
                     anchors.rightMargin: ProtoScreen.guToPx(.50)
                     height: parent.height
@@ -568,7 +551,6 @@ Item {
                         console.log("clicked Copy-Merge")
                         topw.focuscount = MiddleMan.copyProj(styleData.column, styleData.value, false, false)
                     }
-
                     size: ProtoScreen.guToPx(3)
                     action: Material.Action {
                         name: "Copy-Merge Projection"
@@ -652,35 +634,8 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                     color: styleData.column === pcol ? Material.Theme.light.textColor : styleData.column < 6 ? "white" : Material.Theme.light.textColor
-//                    font.bold: styleData.column === 4
                 }
             }
-
-//            function tmyMethod() {
-////                console.log(" col " + styleData.column + " " + widths[styleData.column] )
-
-//                rec.color = Qt.binding(function() {
-////                    console.log(" col " + styleData.column + " " + widths[styleData.column] )
-//                    if ( styleData.column >= 3)
-//                        return "green"
-//                    else
-//                        return rec.color
-//                })
-//            }
-
-//            function donedropM() {
-//                rec.color = Qt.binding(function() {
-//                    if ( styleData.column >= 3)
-//                        return "grey"
-//                    else
-//                        return rec.color
-//                })
-//            }
-
-//            Component.onCompleted: {
-////                topw.indrop.connect(tmyMethod)
-////                topw.donedrop.connect(donedropM)
-//            }
         }
     }
 
