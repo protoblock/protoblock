@@ -442,16 +442,36 @@ message TimeTransition {
 }
 
 
+// Step 0: BOB says I want to offer 1000 FB for Btcoin
+// at a rate of .00001 BTC per FB
+// 1000 SAT per FB
+// so bob wants .01 BTC (1,000,000 SAT) for 1000 FB
+// lock 1000 FB
 
 
-/// Step 1: alice says i want to bid 100,000 sat per fb for 1mm
-    // 10 fb for 1mm sat
+// Step 1: Alice says I will SWAP .01 BTC for 1000 FB with BOB
+// to  1000 SAT per FB for 1000
+// and Here is by Bitcoin UTXOs that I will use
 
-/// step 2: bob says i will fill you
-// 1 - create a bitcoin transaction
-// sell system that if alice signs this tx - send he FB
-//
-// 3. alices send bitcoin - and shows signed hash
+
+// Step 2: Bob says here sign this "nkkcnsakfndc" and you get my 1000 FB
+//  1 - create a bitcoin transaction
+//      tells system that if Alice signs this tx - send he FB
+
+
+// Step 3: Alice sends message with signature to Protoblock blockchain
+//     by consensus 1000 FB are now transfered from BOB to alice
+
+// Step 4: Bob takes signature creates a complete bitcoin tx - sends it to bitcoin
+// Alt Step 4: Alice sens tx to bitcoin
+// * FB are locked for 48 hours
+
+// Step 5 good: Bob say - all good unlock
+// Step 5 bad: Bob provides Proof Of Double Spend within 48 hours
+
+
+
+//  2. alices send bitcoin - and shows signed hash
 
 // 4. proof of doube spend
 

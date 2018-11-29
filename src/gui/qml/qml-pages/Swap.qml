@@ -14,7 +14,9 @@ Item {
 Pane {
     id: swappane
     property string btcadddr: MiddleMan.toBTCAddess(MiddleMan.pMyFantasyNameBalance.pk);
-    property string btcbal: MiddleMan.toBTCbalance(swappane.btcadddr).toLocaleString();
+    property real btcbal: 3.089109// MiddleMan.toBTCbalance(swappane.btcadddr);
+    property string sbtcbal: btcbal.toLocaleString();
+    property int fbbal: MiddleMan.pMyFantasyNameBalance.net
     property bool btcsell: true
     property real swaprate: .00001
     property int satoshirate: (swaprate * 100000000.0)
@@ -63,7 +65,6 @@ Pane {
                 font.pixelSize: (ProtoScreen.font(ProtoScreen.NORMAL))
             }
 
-
             ListItems.Subtitled {
                 id: ibtc
                 Layout.row: 2
@@ -77,7 +78,7 @@ Pane {
                 text: "Bitcoin"
                 subText: (!swappane.btcsell ? //("1 ƑɃ = " + swappane.satoshirate.toLocaleString()  + " SAT")
                                               ("1 ƑɃ = " +  Number(swappane.swaprate.toLocaleString(Qt.locale("en-US"), 'f', 8)) + " BTC")
-                                            : swappane.btcbal  + " BTC")
+                                            : swappane.sbtcbal  + " BTC")
                         ;
 
                 action:Image{
@@ -130,31 +131,196 @@ Pane {
                 itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                 itemSubLabel.font.family: fontfamFB
             }
-        }
 
-        ListItems.Standard {
-            border.color: "#2580a6"
+            //btc input
+            SpinBox {
+                id: btcbox
+
+                Layout.row: 3
+                Layout.column: swappane.btcsell ? 1 : 5
+                Layout.columnSpan: 2
+                Layout.alignment: Qt.AlignCenter
+
+                editable: swappane.btcsell
+                wheelEnabled: editable
+                focus: editable
+                focusPolicy: editable ? Qt.StrongFocus : Qt.NoFocus
+
+
+                stepSize: 10000
+                from: 0
+                to: (editable ? swappane.btcbal : swappane.fbbal * swappane.swaprate) * 100000000;
+                property int decimals: 8
+                property real realValue: value * .00000001
+                validator: DoubleValidator {
+                    bottom: Math.min(btcbox.from, btcbox.to)
+                    top:  Math.max(btcbox.from, btcbox.to)
+                }
+                textFromValue: function(value, locale) {
+                    console.log( " from value" + value)
+                    return Number(value * .00000001 ).toLocaleString(Qt.locale("en-US"), 'f', btcbox.decimals) + " BTC"
+                }
+
+                valueFromText: function(text, locale) {
+                    console.log( " from text " + text)
+                    var t = text.split(" ")[0]
+                    var d = Number.fromLocaleString(Qt.locale("en-US"), t)
+                    var dd = d * 100000000
+                    console.log(d / 0.00000001)
+                    console.log(dd)
+                    return Math.round(dd * 100000000) / 100000000
+                }
+
+                onValueChanged: {
+                    console.log("btcbox new value " + value)
+                }
+                value: editable ? 0 : fbbox.value * swappane.satoshirate
+           }
+
+            //fb input
+            SpinBox {
+                id: fbbox
+
+                Layout.row: 3
+                Layout.column: !swappane.btcsell ? 1 : 5
+                Layout.columnSpan: 2
+
+                Layout.alignment: Qt.AlignCenter
+
+                editable: !swappane.btcsell
+                wheelEnabled: editable
+                focus: editable
+                focusPolicy: editable ? Qt.StrongFocus : Qt.NoFocus
+
+                stepSize: 1
+                from: 0
+                to: editable ? swappane.fbbal : (swappane.btcbal * swappane.swaprate)
+                textFromValue: function(value, locale) {
+                    return Number(value).toLocaleString(locale, 'f', 0) + " ƑɃ";
+                }
+
+                valueFromText: function(text, locale) {
+                    console.log( "fb from text " + text)
+                    var t = text.split(" ")[0]
+                    var d = Number.fromLocaleString(Qt.locale("en-US"), t)
+                    return d;
+                }
+
+                onValueChanged: {
+                    console.log("fbbox new value " + value)
+                }
+
+
+                font.family: fontfamFB
+                value: editable ? 0 : btcbox.realValue
+            }
+
+        }
+/*
+        ListItems.Subtitled {
+            Layout.row: 3
+            Layout.column: !swappane.btcsell ? 1 : 5
+            Layout.columnSpan: 3
             radius: 10
-            elevation: 0
-            Layout.fillWidth: true
-            Layout.preferredWidth: ProtoScreen.guToPx(40)
-            text: "Text"
-            valueText: "valueText"
-            iconName: "clone";
+
+//            border.color: "#2580a6"
+//            radius: 10
+            elevation: 1
+            Layout.fillWidth: false
+            Layout.preferredWidth: ProtoScreen.guToPx(20)
+//            text: "Text"
+//            valueText: "valueText"
+//            iconName: "clone";
+
+            secondaryItem: SpinBox {
+                focusPolicy: Qt.StrongFocus
+                wheelEnabled: true
+                id: bbox2
+                stepSize: 1
+                from: 0
+                to: fbabale
+                value: 0
+                property int decimals: 8
+                property real realValue: value * .00000001
+                validator: DoubleValidator {
+                    bottom: Math.min(bbox2.from, bbox2.to)
+                    top:  Math.max(bbox2.from, bbox2.to)
+                }
+                textFromValue: function(value, locale) {
+                    console.log( " from value" + value)
+                    return Number(value * 00000001 ).toLocaleString(Qt.locale("en-US"), 'f', bbox2.decimals) + " BTC"
+                }
+
+                valueFromText: function(text, locale) {
+                    console.log( " from text " + text)
+                    var t = text.split(" ")[0]
+                    var d = Number.fromLocaleString(Qt.locale("en-US"), t)
+                    var dd = d * 100000000
+                    console.log(d / 0.00000001)
+                    console.log(dd)
+                    return Math.round(dd * 100000000) / 100000000
+                }
+
+                font.pixelSize: 10
+                editable: !swappane.btcsell
+                onValueChanged: {
+                    console.log("new value " + value)
+                }
+//                Layout.alignment: Qt.AlignCenter
+//                Layout.columnSpan: 1
+//                Layout.rowSpan: 2
+//                Layout.column: 6
+//                Layout.row: 1
+//                Layout.preferredHeight: 20
+//                Layout.preferredWidth: image12.implicitWidth * 2
+            }
 
             content: Button {
                     id: button
-                    text: qsTr("content")
-                }
-
-//            action: Button {
-//                    text: qsTr("action")
-//                }
+                    text: qsTr("SELL")
+            }
         }
-
+/*
 //        Column {
 //            anchors.fill: parent
 //            width: parent.width
+
+
+  /*
+        SpinBox {
+            focusPolicy: Qt.StrongFocus
+            wheelEnabled: true
+            focus: true
+            id: box2
+            stepSize: 1000
+            from: 1000
+            to: CoinSale.totalAvailable
+            font.pixelSize: 12
+            editable: true
+            Layout.preferredHeight: 20
+            Layout.preferredWidth: image12.implicitWidth * 2
+            textFromValue: function(value, locale) {
+                return Number(value).toLocaleString(locale, 'f', 0) + " ƑɃ";
+            }
+
+            valueFromText: function(text, locale) {
+                console.log( "fb from text " + text)
+                var t = text.split(" ")[0]
+                var d = Number.fromLocaleString(Qt.locale("en-US"), t)
+                return d;
+            }
+
+            font.family: fontfamFB
+
+
+           value: bbox2.value / 2
+           Layout.alignment: Qt.AlignCenter
+            Layout.columnSpan: 1
+            Layout.rowSpan: 2
+            Layout.column: 5
+            Layout.row: 1
+        }
+*/
             ListItems.Subheader {
                 text: "Section Subheader"
             }
