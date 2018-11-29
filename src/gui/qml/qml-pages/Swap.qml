@@ -132,51 +132,6 @@ Pane {
                 itemSubLabel.font.family: fontfamFB
             }
 
-            //btc input
-            SpinBox {
-                id: btcbox
-
-                Layout.row: 3
-                Layout.column: swappane.btcsell ? 1 : 5
-                Layout.columnSpan: 2
-                Layout.alignment: Qt.AlignCenter
-
-                editable: swappane.btcsell
-                wheelEnabled: editable
-                focus: editable
-                focusPolicy: editable ? Qt.StrongFocus : Qt.NoFocus
-
-
-                stepSize: 10000
-                from: 0
-                to: (editable ? swappane.btcbal : swappane.fbbal * swappane.swaprate) * 100000000;
-                property int decimals: 8
-                property real realValue: value * .00000001
-                validator: DoubleValidator {
-                    bottom: Math.min(btcbox.from, btcbox.to)
-                    top:  Math.max(btcbox.from, btcbox.to)
-                }
-                textFromValue: function(value, locale) {
-                    console.log( " from value" + value)
-                    return Number(value * .00000001 ).toLocaleString(Qt.locale("en-US"), 'f', btcbox.decimals) + " BTC"
-                }
-
-                valueFromText: function(text, locale) {
-                    console.log( " from text " + text)
-                    var t = text.split(" ")[0]
-                    var d = Number.fromLocaleString(Qt.locale("en-US"), t)
-                    var dd = d * 100000000
-                    console.log(d / 0.00000001)
-                    console.log(dd)
-                    return Math.round(dd * 100000000) / 100000000
-                }
-
-                onValueChanged: {
-                    console.log("btcbox new value " + value)
-                }
-                value: editable ? 0 : fbbox.value * swappane.satoshirate
-           }
-
             //fb input
             SpinBox {
                 id: fbbox
@@ -191,11 +146,14 @@ Pane {
                 wheelEnabled: editable
                 focus: editable
                 focusPolicy: editable ? Qt.StrongFocus : Qt.NoFocus
+                enabled: editable
 
                 stepSize: 1
                 from: 0
-                to: editable ? swappane.fbbal : (swappane.btcbal * swappane.swaprate)
+                to:  editable ? swappane.fbbal : Math.round(swappane.btcbal / swappane.swaprate )//(swappane.btcbal * swappane.swaprate)
                 textFromValue: function(value, locale) {
+                    console.log( "fb from value " + value)
+
                     return Number(value).toLocaleString(locale, 'f', 0) + " ƑɃ";
                 }
 
@@ -208,12 +166,64 @@ Pane {
 
                 onValueChanged: {
                     console.log("fbbox new value " + value)
+                    if ( editable )
+                        btcbox.value = (value * swappane.satoshirate)
                 }
 
 
-                font.family: fontfamFB
-                value: editable ? 0 : btcbox.realValue
+//                font.family: fontfamFB
+//                value: 0//editable ? 0 : Number(btcbox.value / swappane.satoshirate)
             }
+
+            //btc input
+            SpinBox {
+                id: btcbox
+
+                Layout.row: 3
+                Layout.column: swappane.btcsell ? 1 : 5
+                Layout.columnSpan: 2
+                Layout.alignment: Qt.AlignCenter
+
+                editable: swappane.btcsell
+                wheelEnabled: editable
+                focus: editable
+                focusPolicy: editable ? Qt.StrongFocus : Qt.NoFocus
+                enabled: editable
+
+                stepSize: 10000
+                from: 0
+                to: (editable ? swappane.btcbal : swappane.fbbal * swappane.swaprate) * 100000000;
+                property int decimals: 8
+                property real realValue: value * .00000001
+                validator: DoubleValidator {
+                    bottom: Math.min(btcbox.from, btcbox.to)
+                    top:  Math.max(btcbox.from, btcbox.to)
+                }
+                textFromValue: function(value, locale) {
+                    console.log( " btcbox from value" + value)
+                    return Number(value * .00000001 ).toLocaleString(Qt.locale("en-US"), 'f', btcbox.decimals) + " BTC"
+                }
+
+                valueFromText: function(text, locale) {
+                    console.log( " btcbox from text " + text)
+                    var t = text.split(" ")[0]
+                    var d = Number.fromLocaleString(Qt.locale("en-US"), t)
+                    var dd = d * 100000000
+//                    console.log(dd)
+                    return Math.round(dd * 100000000) / 100000000
+                }
+
+                onValueChanged: {
+                    console.log("btcbox new value " + value)
+                    if ( editable ) {
+                        console.log("btcbox new value2 " + (value * .00000001) / swappane.swaprate)
+                        console.log("try set" + Math.round( (value * .00000001) / swappane.swaprate ))
+                        fbbox.value = Math.round((value * .00000001) / swappane.swaprate )
+                    }
+                }
+                value: 0//editable ? 0 : (fbbox.value * swappane.satoshirate)
+           }
+
 
         }
 /*
