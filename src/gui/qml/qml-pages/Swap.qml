@@ -18,8 +18,8 @@ Pane {
     property string sbtcbal: btcbal.toLocaleString();
     property int fbbal: MiddleMan.pMyFantasyNameBalance.net
     property bool btcsell: true
-    property real swaprate: .00001
-    property int satoshirate: (swaprate * 100000000.0)
+    property real swaprate: ratesb.value / 1000000
+    property int satoshirate: ratesb.value
 
     ColumnLayout {
         width: ProtoScreen.guToPx(80)
@@ -40,7 +40,7 @@ Pane {
             anchors.centerIn: parent
             anchors.fill: parent
             id: grid
-            columns: 7
+            columns: 9
 //            width: parent.
 //            Layout.alignment: Qt.AlignCenter
 //            layoutDirection: swappane.btcsell ? Qt.LeftToRight : Qt.RightToLeft
@@ -68,8 +68,8 @@ Pane {
             ListItems.Subtitled {
                 id: ibtc
                 Layout.row: 2
-                Layout.column: swappane.btcsell ? 1 : 5
-                Layout.columnSpan: 3
+                Layout.column: swappane.btcsell ? 1 : 6
+                Layout.columnSpan: 4
                 border.color: "#FF9900"
                 radius: 10
                 elevation: 0
@@ -78,9 +78,7 @@ Pane {
                 text: "Bitcoin"
                 subText: (!swappane.btcsell ? //("1 ƑɃ = " + swappane.satoshirate.toLocaleString()  + " SAT")
                                               ("1 ƑɃ = " +  Number(swappane.swaprate.toLocaleString(Qt.locale("en-US"), 'f', 8)) + " BTC")
-                                            : swappane.sbtcbal  + " BTC")
-                        ;
-
+                                            : swappane.sbtcbal  + " BTC");
                 action:Image{
                     height: parent.height
                     fillMode: Image.PreserveAspectFit
@@ -93,8 +91,10 @@ Pane {
 
             Material.IconButton {
                 Layout.row: 2
-                Layout.column: 4
+                Layout.column: 5
                 Layout.columnSpan: 1
+                Layout.alignment: Qt.AlignCenter
+                Layout.fillWidth: false
 
                 size: ProtoScreen.guToPx(5)
                 action: Material.Action {
@@ -110,8 +110,8 @@ Pane {
                 Layout.row: 2
                 id: ifb
                 border.color: "#2580a6"
-                Layout.column: !swappane.btcsell ? 1 : 5
-                Layout.columnSpan: 3
+                Layout.column: !swappane.btcsell ? 1 : 6
+                Layout.columnSpan: 4
                 radius: 10
                 elevation: 0
                 Layout.fillWidth: true
@@ -137,8 +137,8 @@ Pane {
                 id: fbbox
 
                 Layout.row: 3
-                Layout.column: !swappane.btcsell ? 1 : 5
-                Layout.columnSpan: 2
+                Layout.column: !swappane.btcsell ? 1 : 7
+                Layout.columnSpan: 3
 
                 Layout.alignment: Qt.AlignCenter
 
@@ -175,13 +175,50 @@ Pane {
 //                value: 0//editable ? 0 : Number(btcbox.value / swappane.satoshirate)
             }
 
+            SpinBox {
+                id: ratesb
+
+                Layout.row: 3
+                Layout.column: 4
+                Layout.columnSpan: 3
+                Layout.alignment: Qt.AlignCenter
+
+                editable: true
+                wheelEnabled: editable
+                focus: editable
+                focusPolicy: editable ? Qt.StrongFocus : Qt.NoFocus
+                enabled: editable
+
+                stepSize: 10
+                from: 0
+                to: 1000000
+
+                property int decimals: 6
+                property real realValue: value / to
+
+                validator: DoubleValidator {
+                    bottom: Math.min(ratesb.from, ratesb.to)
+                    top:  Math.max(ratesb.from, ratesb.to)
+                }
+
+                textFromValue: function(value, locale) {
+                    return Number(value / to).toLocaleString(locale, 'f', ratesb.decimals)
+                }
+
+                valueFromText: function(text, locale) {
+                    return Number.fromLocaleString(locale, text) * to
+                }
+
+                value: 10
+            }
+
             //btc input
             SpinBox {
                 id: btcbox
 
                 Layout.row: 3
-                Layout.column: swappane.btcsell ? 1 : 5
-                Layout.columnSpan: 2
+                Layout.column: swappane.btcsell ? 1 : 7
+                Layout.columnSpan: 3
                 Layout.alignment: Qt.AlignCenter
 
                 editable: swappane.btcsell
