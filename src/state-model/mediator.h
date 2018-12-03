@@ -320,6 +320,10 @@ public:
     Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void doTransfer(const qint32 amount, QString toname);
+    Q_INVOKABLE void doSwap() {
+//        emit new swap
+    }
+
 //    Q_INVOKABLE QString getOrderModelSymbol() {
 //        return m_pGlobalOpenOrdersModel->get_pidsymbol();
 //    }
