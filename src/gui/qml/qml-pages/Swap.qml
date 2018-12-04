@@ -14,6 +14,7 @@ import Material 1.0 as Material
 
 Item {
     id: swappane
+    property string fname: MiddleMan.pMyFantasyNameBalance.name
     property string btcadddr: MiddleMan.toBTCAddess(MiddleMan.pMyFantasyNameBalance.pk);
     property real btcbal: 3.089109// MiddleMan.toBTCbalance(swappane.btcadddr);
     property string sbtcbal: btcbal.toLocaleString();
@@ -71,6 +72,35 @@ Item {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
                 font.pixelSize: (ProtoScreen.font(ProtoScreen.NORMAL))
             }
+
+            Label {
+                text: (swappane.btcsell ? btcadddr : fname)
+                Layout.column: 1
+                Layout.columnSpan: 2
+                Layout.row: 3
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                font.pixelSize: (ProtoScreen.font(ProtoScreen.VERYSMALL))
+//                color: (swappane.btcsell ? "#FF9900" : "#2580a6")
+            }
+
+            Label {
+                Layout.row: 3
+                Layout.column: 3
+                Layout.columnSpan: 1
+            }
+
+            Label {
+                text: (!swappane.btcsell ? btcadddr : fname)
+                Layout.column: 4
+                Layout.columnSpan: 2
+                Layout.row: 3
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                font.pixelSize: (ProtoScreen.font(ProtoScreen.VERYSMALL))
+//                color: (!swappane.btcsell ? "#FF9900" : "#2580a6")
+            }
+
 
             ListItems.Subtitled {
                 id: ibtc
@@ -143,7 +173,7 @@ Item {
             SpinBox {
                 id: fbbox
 
-                Layout.row: 3
+                Layout.row: 4
                 Layout.column: !swappane.btcsell ? 1 : 4
 //                Layout.columnSpan: 2
 //                Layout.preferredWidth: ProtoScreen.guToPx(25)
@@ -188,7 +218,7 @@ Item {
             SpinBox {
                 id: ratesb
 
-                Layout.row: 3
+                Layout.row: 4
                 Layout.column: 3
 //                Layout.columnSpan: 2
 //                Layout.alignment: Qt.AlignCenter
@@ -226,7 +256,7 @@ Item {
             SpinBox {
                 id: btcbox
 
-                Layout.row: 3
+                Layout.row: 4
                 Layout.column: swappane.btcsell ? 1 : 4
 //                Layout.columnSpan: 3
 //                Layout.alignment: Qt.AlignCenter
@@ -271,7 +301,7 @@ Item {
            }
 
             Button {
-                Layout.row: 4
+                Layout.row: 5
                 Layout.column: 3
                 Layout.alignment: Qt.AlignCenter
 

@@ -158,6 +158,9 @@ public slots:
     void OnNewOrder(fantasybit::ExchangeOrder);
     void OnNewTransfer(fantasybit::TransferTrans);
 
+    void OnNewSwapAsk(fantasybit::SwapAsk);
+    void OnNewSwapBid(fantasybit::SwapBid);
+
     void Quit();
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);

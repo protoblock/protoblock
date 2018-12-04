@@ -618,6 +618,19 @@ void MainLAPIWorker::DoSubscribe(const std::string &name, bool suborun) {
     }
 }
 
+void MainLAPIWorker::OnNewTransfer(TransferTrans tt) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::TRANSFER);
+    trans.MutableExtension(TransferTrans::transfer_tran)->CopyFrom(tt);
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+    DoPostTx(sn);
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
+}
+
 void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
@@ -631,18 +644,37 @@ void MainLAPIWorker::OnNewOrder(fantasybit::ExchangeOrder eo) {
     timer->start(intervalstart);
 }
 
-void MainLAPIWorker::OnNewTransfer(TransferTrans tt) {
+void MainLAPIWorker::OnNewSwapAsk(fantasybit::SwapAsk sa) {
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
-    trans.set_type(TransType::TRANSFER);
-    trans.MutableExtension(TransferTrans::transfer_tran)->CopyFrom(tt);
+    trans.set_type(TransType::SWAPASK);
+    trans.MutableExtension(SwapAsk::swapask_tran)->CopyFrom(sa);
+
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
+
     DoPostTx(sn);
     DoSubscribe(myCurrentName.name(),true);
     count = bcount = 0;
     timer->start(intervalstart);
 }
+
+void MainLAPIWorker::OnNewSwapBid(fantasybit::SwapBid sb) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::SWAPBID);
+    trans.MutableExtension(SwapAsk::swapask_tran)->CopyFrom(sb);
+
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+
+    DoPostTx(sn);
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
+}
+
+
 
 /*ys
 //ToDo: convert names with a status OnLive()

@@ -919,6 +919,12 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
     emit NewTransfer(tt);
 }
 
+//void Mediator::doSwap() {
+
+//    SwapAsk ask;
+
+//}
+
 void Mediator::doCancel(qint32 id) {
     if ( otherFantasyName != "" )
         return;
