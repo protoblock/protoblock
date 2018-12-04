@@ -11,6 +11,7 @@ import Material 1.0 as Material
 
 
 Item {
+
 Pane {
     id: swappane
     property string btcadddr: MiddleMan.toBTCAddess(MiddleMan.pMyFantasyNameBalance.pk);
@@ -40,7 +41,7 @@ Pane {
             anchors.centerIn: parent
             anchors.fill: parent
             id: grid
-            columns: 9
+            columns: 5
 //            width: parent.
 //            Layout.alignment: Qt.AlignCenter
 //            layoutDirection: swappane.btcsell ? Qt.LeftToRight : Qt.RightToLeft
@@ -48,7 +49,7 @@ Pane {
             Label {
                 text: "SEND"
                 Layout.column: 1
-                Layout.columnSpan: 4
+                Layout.columnSpan: 2
                 Layout.row: 1
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
@@ -57,14 +58,14 @@ Pane {
 
             Label {
                 Layout.row: 1
-                Layout.column: 5
+                Layout.column: 3
                 Layout.columnSpan: 1
             }
 
             Label {
                 text: "RECEIVE"
-                Layout.column: 6
-                Layout.columnSpan: 4
+                Layout.column: 4
+                Layout.columnSpan: 2
                 Layout.row: 1
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
@@ -74,8 +75,8 @@ Pane {
             ListItems.Subtitled {
                 id: ibtc
                 Layout.row: 2
-                Layout.column: swappane.btcsell ? 1 : 6
-                Layout.columnSpan: 4
+                Layout.column: swappane.btcsell ? 1 : 4
+                Layout.columnSpan: 2
                 border.color: "#FF9900"
                 radius: 10
                 elevation: 0
@@ -97,7 +98,7 @@ Pane {
 
             Material.IconButton {
                 Layout.row: 2
-                Layout.column: 5
+                Layout.column: 3
                 Layout.columnSpan: 1
                 Layout.alignment: Qt.AlignCenter
                 Layout.fillWidth: false
@@ -116,8 +117,8 @@ Pane {
                 Layout.row: 2
                 id: ifb
                 border.color: "#2580a6"
-                Layout.column: !swappane.btcsell ? 1 : 6
-                Layout.columnSpan: 4
+                Layout.column: !swappane.btcsell ? 1 : 4
+                Layout.columnSpan: 2
                 radius: 10
                 elevation: 0
                 Layout.fillWidth: true
@@ -143,10 +144,11 @@ Pane {
                 id: fbbox
 
                 Layout.row: 3
-                Layout.column: !swappane.btcsell ? 1 : 7
-                Layout.columnSpan: 3
+                Layout.column: !swappane.btcsell ? 1 : 4
+//                Layout.columnSpan: 2
+//                Layout.preferredWidth: ProtoScreen.guToPx(25)
 
-                Layout.alignment: Qt.AlignCenter
+//                Layout.alignment: Qt.AlignCenter
 
                 editable: !swappane.btcsell
                 wheelEnabled: editable
@@ -172,22 +174,24 @@ Pane {
 
                 onValueChanged: {
                     console.log("fbbox new value " + value)
-                    if ( editable )
-                        btcbox.value = (value * swappane.satoshirate)
+//                    if ( editable )
+//                        btcbox.value = (value * swappane.satoshirate)
                 }
 
 
 //                font.family: fontfamFB
-//                value: 0//editable ? 0 : Number(btcbox.value / swappane.satoshirate)
+                value: editable ? 0 :  Math.round((btcbox.value * .00000001) / swappane.swaprate )//Number(btcbox.value / swappane.satoshirate)
+//                /fbbox.value = Math.round((btcbox.value * .00000001) / swappane.satoshirate )
+
             }
 
             SpinBox {
                 id: ratesb
 
                 Layout.row: 3
-                Layout.column: 4
-                Layout.columnSpan: 3
-                Layout.alignment: Qt.AlignCenter
+                Layout.column: 3
+//                Layout.columnSpan: 2
+//                Layout.alignment: Qt.AlignCenter
 
                 editable: true
                 wheelEnabled: editable
@@ -223,9 +227,9 @@ Pane {
                 id: btcbox
 
                 Layout.row: 3
-                Layout.column: swappane.btcsell ? 1 : 7
-                Layout.columnSpan: 3
-                Layout.alignment: Qt.AlignCenter
+                Layout.column: swappane.btcsell ? 1 : 4
+//                Layout.columnSpan: 3
+//                Layout.alignment: Qt.AlignCenter
 
                 editable: swappane.btcsell
                 wheelEnabled: editable
@@ -252,31 +256,37 @@ Pane {
                     var t = text.split(" ")[0]
                     var d = Number.fromLocaleString(Qt.locale("en-US"), t)
                     var dd = d * 100000000
-//                    console.log(dd)
                     return Math.round(dd * 100000000) / 100000000
                 }
 
                 onValueChanged: {
-                    console.log("btcbox new value " + value)
-                    if ( editable ) {
-                        console.log("btcbox new value2 " + (value * .00000001) / swappane.swaprate)
-                        console.log("try set" + Math.round( (value * .00000001) / swappane.swaprate ))
-                        fbbox.value = Math.round((value * .00000001) / swappane.swaprate )
-                    }
+//                    console.log("btcbox new value " + value)
+//                    if ( editable ) {
+//                        console.log("btcbox new value2 " + (value * .00000001) / swappane.swaprate)
+//                        console.log("try set" + Math.round( (value * .00000001) / swappane.swaprate ))
+//                        fbbox.value = Math.round((value * .00000001) / swappane.swaprate )
+//                    }
                 }
-                value: 0//editable ? 0 : (fbbox.value * swappane.satoshirate)
+                value: editable ? 0 : (fbbox.value * swappane.satoshirate)
            }
 
-//            Button {
-//                Layout.row: 4
-////                Layout.column: 4
-////                Layout.columnSpan: 3
-//                Layout.alignment: Qt.AlignCenter
 
-//                id: button
-//                text: "Swap"
-//            }
+            Button {
+                Layout.row: 4
+//                Layout.column: 4
+//                Layout.columnSpan: 3
+                Layout.alignment: Qt.AlignCenter
+
+                id: button
+                text: "Swap"
+            }
         }
+
+    }
+}
+
+}
+
 /*
         ListItems.Subtitled {
             Layout.row: 3
@@ -382,6 +392,7 @@ Pane {
             Layout.row: 1
         }
 */
+        /*
             ListItems.Subheader {
                 text: "Section Subheader"
             }
@@ -433,10 +444,11 @@ Pane {
                 text: "Subtitled list item"
                 model: ["A", "B and some long text that should not clip", "C"]
             }
-//        }
+*/
+            //        }
 
-    }
-/*
+
+    /*
     Material.Dialog {
         id: mySwapDialog
 
@@ -519,13 +531,6 @@ Pane {
 //        }
 
 //    }
-}
-
-//Component {
-//    id: isbtc
-//}
-
-}
 
 /*##^## Designer {
     D{i:0;autoSize:true;height:480;width:640}
