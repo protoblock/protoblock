@@ -10,9 +10,9 @@ import ProRotoQml.Theme 1.0
 import Material 1.0 as Material
 
 
-Item {
+//Item {
 
-Pane {
+Item {
     id: swappane
     property string btcadddr: MiddleMan.toBTCAddess(MiddleMan.pMyFantasyNameBalance.pk);
     property real btcbal: 3.089109// MiddleMan.toBTCbalance(swappane.btcadddr);
@@ -270,22 +270,95 @@ Pane {
                 value: editable ? 0 : (fbbox.value * swappane.satoshirate)
            }
 
-
             Button {
                 Layout.row: 4
-//                Layout.column: 4
-//                Layout.columnSpan: 3
+                Layout.column: 3
                 Layout.alignment: Qt.AlignCenter
 
                 id: button
                 text: "Swap"
+                onClicked: {
+                    mySwapDialog.show()
+                }
             }
+        }
+
+    }
+
+    Material.Dialog {
+        id: mySwapDialog
+
+        height: ProtoScreen.guToPx(34)
+        property int count: 0
+        minimumHeight: ProtoScreen.guToPx(8)
+        width: ProtoScreen.guToPx(77)
+        minimumWidth: ProtoScreen.guToPx(16)
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        property string side: "none"
+        property int price
+        property int qty
+        property string player
+        positiveButtonText: "Swap It"
+        title: "Confirm Swap Order - " + (true ? ("Send ƑɃ - Receive BTC") : ("Send BTC - Receive FB"))
+        text: "Protoblock Wallet: " + realRoot.uname
+        dialogContent: Column {
+            anchors.fill: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: ProtoScreen.guToPx(.5)
+
+            Text{
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                wrapMode: Text.WordWrap
+                text:  "xxx"
+                // myTradeDialog.side + " " + myTradeDialog.qty.toString() +
+                // " contract(s) at price " + myTradeDialog.price.toString()
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+
+            Text{
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                wrapMode: Text.WordWrap
+                text:  "of " + myTradeDialog.player
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+
+        }
+
+        onAccepted: {
+//            if ( realRoot.uname === "" ) {
+//                pageHelper.selectedTabIndex = themeroot.accountIndex;
+//            }
+//            else if ( MiddleMan.pMyFantasyNameBalance.stake <= 0 ) {
+//                console.log("Error: Zero Balace - must have balance to trade")
+//                title = "Error: Zero Balace - must have balance to trade";
+//                if ( count === 0) {
+//                    count = 1
+//                    show()
+//                }
+//            }
+
+//            else if ( inplay.symbol !== "" ) {
+//                console.log(MiddleMan.pMyFantasyNameBalance.stake +  " Balace - must have balance to trade")
+
+//                MiddleMan.doTrade(
+//                     inplay.playerid,
+//                    inplay.symbol
+//                    ,(side == "Buy") ? true : false
+//                 ,myTradeDialog.price
+//                 ,myTradeDialog.qty
+//                    )
+//            }
+            MiddleMan.doSwap();
         }
 
     }
 }
 
-}
+//}
 
 /*
         ListItems.Subtitled {
@@ -448,79 +521,8 @@ Pane {
             //        }
 
 
-    /*
-    Material.Dialog {
-        id: mySwapDialog
 
-        height: ProtoScreen.guToPx(34)
-        property int count: 0
-        minimumHeight: ProtoScreen.guToPx(8)
-        width: ProtoScreen.guToPx(77)
-        minimumWidth: ProtoScreen.guToPx(16)
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        property string side: "none"
-        property int price
-        property int qty
-        property string player
-        positiveButtonText: "Swap It"
-        title: "Confirm Swap Order - " + (true ? ("Send ƑɃ - Receive BTC") : ("Send BTC - Receive FB"))
-        text: "Protoblock Wallet: " + realRoot.uname
-        dialogContent: Column {
-            anchors.fill: parent
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: ProtoScreen.guToPx(.5)
 
-            Text{
-                width: parent.width
-                anchors.horizontalCenter: parent.horizontalCenter
-                wrapMode: Text.WordWrap
-                text:  "xxx"
-                // myTradeDialog.side + " " + myTradeDialog.qty.toString() +
-                // " contract(s) at price " + myTradeDialog.price.toString()
-                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
-            }
-
-            Text{
-                width: parent.width
-                anchors.horizontalCenter: parent.horizontalCenter
-                wrapMode: Text.WordWrap
-                text:  "of " + myTradeDialog.player
-                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
-            }
-
-        }
-
-        onAccepted: {
-//            if ( realRoot.uname === "" ) {
-//                pageHelper.selectedTabIndex = themeroot.accountIndex;
-//            }
-//            else if ( MiddleMan.pMyFantasyNameBalance.stake <= 0 ) {
-//                console.log("Error: Zero Balace - must have balance to trade")
-//                title = "Error: Zero Balace - must have balance to trade";
-//                if ( count === 0) {
-//                    count = 1
-//                    show()
-//                }
-//            }
-
-//            else if ( inplay.symbol !== "" ) {
-//                console.log(MiddleMan.pMyFantasyNameBalance.stake +  " Balace - must have balance to trade")
-
-//                MiddleMan.doTrade(
-//                     inplay.playerid,
-//                    inplay.symbol
-//                    ,(side == "Buy") ? true : false
-//                 ,myTradeDialog.price
-//                 ,myTradeDialog.qty
-//                    )
-//            }
-            MiddleMan.doSwap();
-        }
-
-    }
-*/
 //        QRCode {
 //            id: qrc
 ////            anchors.centerIn: parent
