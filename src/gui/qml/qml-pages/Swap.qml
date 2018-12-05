@@ -22,6 +22,8 @@ Item {
     property bool btcsell: true
     property real swaprate: ratesb.value / 1000000
     property int satoshirate: ratesb.value
+    property string counter: ""
+
 
     ColumnLayout {
         width: ProtoScreen.guToPx(80)
@@ -139,6 +141,7 @@ Item {
                     hoverAnimation: true
                 }
                 onClicked : {
+                    swappane.counter = ""
                     swappane.btcsell = !swappane.btcsell
                 }
             }
@@ -313,6 +316,38 @@ Item {
             }
         }
 
+        ListView {
+            id: sbook
+
+            width: parent.width
+            Layout.preferredHeight: ProtoScreen.guToPx(50)
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            model: swappane.btcsell ? MiddleMan.pSwapOrderModel : 0
+            header: Label { text: swappane.btcsell ? "Sellers" : "Buyers" }
+            delegate: ListItems.Subtitled {
+                width: parent.width
+                text: model.name
+                subText: "rate - " + model.rate
+                secondaryItem: Button {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "Buy"
+                    onClicked: {
+                        ratesb.value = model.rate
+                        swappane.counter = model.name
+                        console.log("twitch8 clicked button")
+                        mySwapDialog.show()
+                    }
+                }
+
+                onClicked: {
+                    console.log("twitch8 clicked item" + model.name)
+                    ratesb.value = model.rate
+                    swappane.counter = model.name
+                }
+            }
+
+        }
     }
 
     Material.Dialog {
@@ -330,7 +365,7 @@ Item {
         property int qty
         property string player
         positiveButtonText: "Swap It"
-        title: "Confirm Swap Order - " + (true ? ("Send ƑɃ - Receive BTC") : ("Send BTC - Receive FB"))
+        title: "Confirm Swap Order - " + (!swappane.btcsell ? ("Send ƑɃ - Receive BTC") : ("Send BTC - Receive FB"))
         text: "Protoblock Wallet: " + realRoot.uname
         dialogContent: Column {
             anchors.fill: parent
@@ -342,9 +377,18 @@ Item {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
-                text:  "xxx"
+                text:  "Swap: " + (swappane.btcsell ? btcbox.value : fbbox.value)
                 // myTradeDialog.side + " " + myTradeDialog.qty.toString() +
                 // " contract(s) at price " + myTradeDialog.price.toString()
+                font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
+            }
+
+            Text{
+                visible: swappane.counter !== ""
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                wrapMode: Text.WordWrap
+                text:  "With: " + swappane.counter
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
 
@@ -352,13 +396,20 @@ Item {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
-                text:  "of " + myTradeDialog.player
+                text:  "For: " + (!swappane.btcsell ? btcbox.value : fbbox.value)
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
+
 
         }
 
         onAccepted: {
+            MiddleMan.doSwap(swappane.satoshirate,!swappane.btcsell,swappane.counter);
+        }
+
+    }
+}
+
 //            if ( realRoot.uname === "" ) {
 //                pageHelper.selectedTabIndex = themeroot.accountIndex;
 //            }
@@ -382,15 +433,23 @@ Item {
 //                 ,myTradeDialog.qty
 //                    )
 //            }
-            MiddleMan.doSwap();
-        }
 
-    }
-}
 
 //}
 
 /*
+
+            ListModel {
+                ListElement {
+                    name: "Bob"
+                    rate: 1000
+                }
+                ListElement {
+                    name: "Other Bob"
+                    rate: 1000
+                }
+            }
+
         ListItems.Subtitled {
             Layout.row: 3
             Layout.column: !swappane.btcsell ? 1 : 5

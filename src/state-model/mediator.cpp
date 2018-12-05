@@ -16,7 +16,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     mROWDepthMarketModel{},
                     mTradingPositionsModel{this,QByteArray(),{"symbol"}},
                     mROWTradingPositionsModel{this,QByteArray(),{"symbol"}},
-
+                    mSwapOrderModel{this},
 
                     mFantasyNameBalModel(this,QByteArray(),{"name"}),
                     mGoodNameBalModel(this,QByteArray(),{"name"}),
@@ -48,6 +48,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_pTradingPositionsModel(&mTradingPositionsModel),
                     m_pROWTradingPositionsModel(&mROWTradingPositionsModel),
 
+                    m_pSwapOrderModel(&mSwapOrderModel),
                     m_pGoodNameBalModel(&mGoodNameBalModel),
                     m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem},
 
@@ -57,9 +58,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_pPrevQItemSelectionModel(&myPrevGamesSelectionModel),
                     m_pResultSelectedModel(new SortFilterProxyModel),
                     m_height(0),
+                    m_theSeason(2018),
                     m_blocknum(0) ,
                     myFantasyName("") ,
-                    m_theSeason(2018),
                     m_pAccountsModel(new SortFilterProxyModel)  {
 
     fnames = {"fname1", "fname2","fname3", "fname4", "fname5"};
@@ -917,6 +918,29 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
     tt.set_amount(amount);
 
     emit NewTransfer(tt);
+}
+
+void Mediator::doSwap(quint64 rate, bool isask, QString) {
+    if ( !isask ) return;
+
+    SwapAsk ask;
+    ask.set_rate(rate);
+    ask.set_satoshi_min(rate);
+    qint64 mn = m_pMyFantasyNameBalance->get_net();
+    if ( mn <= 0 ) {
+        qDebug() << " zero balance ";
+        return;
+    }
+
+    ask.set_satoshi_max( static_cast<quint64>(mn));
+
+    if ( ask.satoshi_max() < ask.satoshi_min() ) {
+        qDebug() << " max < min " << ask.DebugString().data();
+        return;
+    }
+
+    emit NewSwapAsk(ask);
+
 }
 
 //void Mediator::doSwap() {

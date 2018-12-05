@@ -104,6 +104,8 @@ Q_DECLARE_METATYPE(fantasybit::TradeTic*)
 Q_DECLARE_METATYPE(fantasybit::FullPosition)
 Q_DECLARE_METATYPE(fantasybit::FullOrderDelta)
 Q_DECLARE_METATYPE(fantasybit::TransferTrans)
+Q_DECLARE_METATYPE(fantasybit::SwapAsk)
+Q_DECLARE_METATYPE(fantasybit::SwapBid)
 
 
 #endif // CORE_H

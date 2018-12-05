@@ -21,4 +21,6 @@ HEADERS += \
     $$PWD/playerprojmodel.h \
     $$PWD/playerresultmodel.h \
     $$PWD/sortfilterproxymodel.h \
+    $$PWD/sortfilterproxymodel.h \
+    $$PWD/swapordermodel.h \
     $$PWD/pbgateways.h

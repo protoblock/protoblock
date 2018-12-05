@@ -34,6 +34,7 @@
 #include "../../fantasybit-2015/tradingfootball/playerloader.h"
 #endif
 
+#include <swapordermodel.h>
 using namespace std;
 
 //QML_ENUM_CLASS (nameStatus, none=1, notavil, requested, confirmed )
@@ -58,6 +59,9 @@ class Mediator : public QObject {
     //positions
     TradingPositionsModel mTradingPositionsModel;
     TradingPositionsModel mROWTradingPositionsModel;
+
+    //swap
+    SwapOrderModel mSwapOrderModel;
 
     //fnamebal
     FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
@@ -94,6 +98,8 @@ class Mediator : public QObject {
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pTradingPositionsModel)
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pROWTradingPositionsModel)
 
+    //Swap
+    QML_READONLY_PTR_PROPERTY(SwapOrderModel, pSwapOrderModel)
 
 
     //fantasyname
@@ -320,28 +326,7 @@ public:
     Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void doTransfer(const qint32 amount, QString toname);
-    Q_INVOKABLE void doSwap(quint64 rate = 1000, bool isask = true) {
-        if ( !isask ) return;
-
-        SwapAsk ask;
-        ask.set_rate(rate);
-        ask.set_satoshi_min(rate);
-        qint64 mn = m_pMyFantasyNameBalance->get_net();
-        if ( mn <= 0 ) {
-            qDebug() << " zero balance ";
-            return;
-        }
-
-        ask.set_satoshi_max( static_cast<quint64>(mn));
-
-        if ( ask.satoshi_max() < ask.satoshi_min() ) {
-            qDebug() << " max < min " << ask.DebugString().data();
-            return;
-        }
-
-        emit NewSwapAsk(ask);
-
-    }
+    Q_INVOKABLE void doSwap(quint64 rate = 1000, bool isask = true, QString with = "");
 
 //    Q_INVOKABLE QString getOrderModelSymbol() {
 //        return m_pGlobalOpenOrdersModel->get_pidsymbol();

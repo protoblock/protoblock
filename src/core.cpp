@@ -35,6 +35,9 @@ void Core::bootstrap(){
     qRegisterMetaType<fantasybit::Order*>("fantasybit::Order&");
     qRegisterMetaType<fantasybit::FullPosition>("fantasybit::FullPosition");
     qRegisterMetaType<fantasybit::FullOrderDelta>("fantasybit::FullOrderDelta");
+    qRegisterMetaType<fantasybit::SwapAsk>("fantasybit::SwapAsk");
+    qRegisterMetaType<fantasybit::SwapBid>("fantasybit::SwapBid");
+
 
 
     qRegisterMetaType<string>("string");
