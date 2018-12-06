@@ -921,26 +921,46 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
 }
 
 void Mediator::doSwap(quint64 rate, bool isask, QString) {
-    if ( !isask ) return;
+    if ( isask ) {
+        SwapAsk ask;
+        ask.set_rate(rate);
+        ask.set_satoshi_min(rate);
+        qint64 mn = m_pMyFantasyNameBalance->get_net();
+        if ( mn <= 0 ) {
+            qDebug() << " zero balance ";
+            return;
+        }
 
-    SwapAsk ask;
-    ask.set_rate(rate);
-    ask.set_satoshi_min(rate);
-    qint64 mn = m_pMyFantasyNameBalance->get_net();
-    if ( mn <= 0 ) {
-        qDebug() << " zero balance ";
-        return;
+        ask.set_satoshi_max( static_cast<quint64>(mn));
+
+        if ( ask.satoshi_max() < ask.satoshi_min() ) {
+            qDebug() << " max < min " << ask.DebugString().data();
+            return;
+        }
+
+        emit NewSwapAsk(ask);
     }
+    else {
+        SwapBid bid;
 
-    ask.set_satoshi_max( static_cast<quint64>(mn));
+        bid.set_rate(rate);
+        bid.set_satoshi_min(rate);
+        qint64 mn = m_pMyFantasyNameBalance->get_net();
+        if ( mn <= 0 ) {
+            qDebug() << " zero balance ";
+            return;
+        }
 
-    if ( ask.satoshi_max() < ask.satoshi_min() ) {
-        qDebug() << " max < min " << ask.DebugString().data();
-        return;
+        ask.set_satoshi_max( static_cast<quint64>(mn));
+
+        if ( ask.satoshi_max() < ask.satoshi_min() ) {
+            qDebug() << " max < min " << ask.DebugString().data();
+            return;
+        }
+
+        emit NewSwapAsk(ask);
+
     }
-
-    emit NewSwapAsk(ask);
-
 }
 
 //void Mediator::doSwap() {
