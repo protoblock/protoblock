@@ -158,7 +158,7 @@ namespace fantasybit {
     }
 
     inline uint64_t maxSatQtySwapFromRate(uint64_t max, uint64_t rate) {
-        return std::min(std::min(MAX_SAT_QTY_SWAP,max) , (MAX_FB_QTY_SWAP / rate));
+        return std::min(std::min(MAX_SAT_QTY_SWAP,max) , (MAX_FB_QTY_SWAP * rate));
     }
 
 

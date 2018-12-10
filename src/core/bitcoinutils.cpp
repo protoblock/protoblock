@@ -22,10 +22,18 @@ bool BitcoinUtils::getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress,
         bu->set_locking_script(utxo.script.toStdString());
         bu->set_in_value(utxo.in_value);
 
+#ifdef TRACE
+    qDebug() << " new utxo " << bu->DebugString().data();
+#endif
+
         utxos.set_total_value(utxos.total_value()+utxo.in_value);
         if ( utxos.total_value() >= max)
-            return false;
+            return true;
     }
+
+#ifdef TRACE
+    qDebug() << " utxos.total_value() " << utxos.total_value() << " min " << min;
+#endif
 
     return utxos.total_value() > min;
 }

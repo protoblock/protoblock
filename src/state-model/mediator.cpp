@@ -986,9 +986,11 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
             qDebug() << " not enough utxos";
             return;
         }
+        else
+            qDebug() << bid.DebugString().data();
 
 
-        emit NewSwapBid(bid);
+//        emit NewSwapBid(bid);
 
     }
 }

@@ -238,7 +238,7 @@ Item {
 
 
 //                font.family: fontfamFB
-                value: editable ? 0 :  Math.round(btcbox.realValue / swappane.swaprate) // /  Math.round((btcbox.value * .00000001) / swappane.swaprate )//Number(btcbox.value / swappane.satoshirate)
+                value: editable ? 0 :  Math.round((btcbox.value * .00000001) / swappane.swaprate) // /  Math.round((btcbox.value * .00000001) / swappane.swaprate )//Number(btcbox.value / swappane.satoshirate)
 //                /fbbox.value = Math.round((btcbox.value * .00000001) / swappane.satoshirate )
 
 
@@ -301,7 +301,7 @@ Item {
                 //max int is 2147483647 = that 21 times 100 million
                 to: editable ? Math.round(swappane.satbal) : Math.round(Math.min(swappane.fbbal, 21) * 100000000)
                 property int decimals: 8
-                property real realValue: value * .00000001
+                property double realValue: value * .00000001
 //                validator: DoubleValidator {
 //                    bottom: Math.min(btcbox.from, btcbox.to)
 //                    top:  Math.max(btcbox.from, btcbox.to)
@@ -322,6 +322,11 @@ Item {
                 onValueChanged: {
                     console.log("btcbox new value " + value)
                     console.log("btcbox new value IntValidator.top" +   IntValidator.top)
+
+                    console.log("btcbox new realValue " + realValue)
+                    console.log("btcbox new swappane.swaprate " + swappane.swaprate)
+                    console.log("btcbox new Math.round(btcbox.realValue / swappane.swaprate) " + Math.round(btcbox.realValue / swappane.swaprate) )
+
 
 //                    if ( editable ) {
 //                        console.log("btcbox new value2 " + (value * .00000001) / swappane.swaprate)
@@ -370,7 +375,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Buy"
                     onClicked: {
-                        ratesb.value = model.rate
+                        ratesb.value = model.rate / 100
                         swappane.counter = model.name
                         console.log("twitch8 clicked button")
                         mySwapDialog.show()
@@ -379,7 +384,7 @@ Item {
 
                 onClicked: {
                     console.log("twitch8 clicked item" + model.name)
-                    ratesb.value = model.rate
+                    ratesb.value = model.rate / 100
                     swappane.counter = model.name
                 }
             }
@@ -440,7 +445,7 @@ Item {
         }
 
         onAccepted: {
-            MiddleMan.doSwap(swappane.satoshirate,!swappane.btcsell,swappane.counter);
+            MiddleMan.doSwap(qty,swappane.satoshirate,!swappane.btcsell,swappane.counter,0);
         }
 
     }
