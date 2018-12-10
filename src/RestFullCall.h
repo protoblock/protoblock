@@ -608,7 +608,7 @@ public:
 class BitcoinRestfullService {
 
 public:
-    static long getBtcAddressBalance(const std::string &addr,
+    static uint64_t getBtcAddressBalance(const QString &addr,
                  QThread * ownerThread = QThread::currentThread()) {
 
         QString url = QString(fantasybit::BLOCKCHAINAPI.data());
@@ -617,11 +617,12 @@ public:
         QMap<QString,QVariant> params;
         QString customRoute("q/addressbalance/%1");
         //customRoute = customRoute.arg(route).arg(blockNum);
-        client.getData(customRoute.arg(addr.data()),params,headers);
+        client.getData(customRoute.arg(addr),params,headers);
 
-        return client.lastReply().toLong ();
+        return client.lastReply().toULongLong();
         //toStdString();
     }
+
 
 
     static QByteArray getBtcAddressUnspent(const std::string &addr,

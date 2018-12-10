@@ -1095,7 +1095,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         case TransType::SWAPBID: {
             const auto & swapthis = t.GetExtension(SwapBid::swapbid_tran);
 #ifdef TRACE
-            qDebug() << " calling mSwapStateData " << t.DebugString().data():
+            qDebug() << " calling mSwapStateData " << t.DebugString().data();
 #endif
             mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name());
             break;

@@ -273,16 +273,16 @@ namespace pb {
     static std::string toBtcAddress(const public_key_data &in ) {
         pb::sha256 ret;
         hashc(in.key_data, 33, ret.data);
-        qDebug() << ret.str ().data ();
+//        qDebug() << ret.str ().data ();
         unsigned char hash2data[25];
-        unsigned char *hash2 = hash2data;//new unsigned char[25];
+        unsigned char *hash2 = hash2data;
 
-        RIPEMD160(ret.data, sizeof(ret.data), (unsigned char*)&hash2[1]);
+        RIPEMD160(ret.data, sizeof(ret.data), static_cast<unsigned char*>(&hash2[1]));
         hash2[0] = 0;
         hashc(hash2, 21, ret.data);
         pb::sha256  ret2x;
         hashc(ret.data,sizeof(ret.data),ret2x.data);
-        memcpy((unsigned char*)&hash2[21],ret2x.begin (),4);
+        memcpy(static_cast<unsigned char*>(&hash2[21]),ret2x.begin (),4);
         return EncodeBase58(hash2,hash2+25);
     }
 

@@ -49,6 +49,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_pROWTradingPositionsModel(&mROWTradingPositionsModel),
 
                     m_pSwapOrderModel(&mSwapOrderModel),
+                    m_bitcoinBalance(0),
                     m_pGoodNameBalModel(&mGoodNameBalModel),
                     m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem},
 
@@ -528,6 +529,8 @@ void Mediator::updateWeek() {
 void Mediator::updateOnChangeFantasyName() {
     updateCurrentFantasyPlayerProjections();
     updateCurrentFantasyPlayerOrderPositions();
+    setbitcoinBalance(BitcoinUtils::getBTCbalance(m_pMyFantasyNameBalance->get_btcaddr()));
+
 }
 
 void Mediator::updateCurrentFantasyPlayerProjections(){
@@ -920,18 +923,28 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
     emit NewTransfer(tt);
 }
 
-void Mediator::doSwap(quint64 rate, bool isask, QString) {
+void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint64 min) {
     if ( isask ) {
         SwapAsk ask;
-        ask.set_rate(rate);
-        ask.set_satoshi_min(rate);
+        ask.set_rate(fantasybit::satRateSwap(rate));
+        ask.set_satoshi_min(fantasybit::minSatQtySwap(min));
+
         qint64 mn = m_pMyFantasyNameBalance->get_net();
         if ( mn <= 0 ) {
             qDebug() << " zero balance ";
             return;
         }
 
-        ask.set_satoshi_max( static_cast<quint64>(mn));
+        if ( qty == 0 )
+            qty = static_cast<quint64>(mn);
+
+        if ( qty < fantasybit::minFBSwapQty(ask.rate(),ask.satoshi_min()) ) {
+            qDebug() << " not enough FB for Swap " << qty;
+            return;
+        }
+
+        ask.set_fb_qty(qty);
+        ask.set_satoshi_max( fantasybit::maxSatQtySwap(qty,rate) );
 
         if ( ask.satoshi_max() < ask.satoshi_min() ) {
             qDebug() << " max < min " << ask.DebugString().data();
@@ -940,25 +953,42 @@ void Mediator::doSwap(quint64 rate, bool isask, QString) {
 
         emit NewSwapAsk(ask);
     }
-    else {
+    else if ( with == "" ) {
         SwapBid bid;
 
-        bid.set_rate(rate);
-        bid.set_satoshi_min(rate);
-        qint64 mn = m_pMyFantasyNameBalance->get_net();
-        if ( mn <= 0 ) {
-            qDebug() << " zero balance ";
+        bid.set_rate(fantasybit::satRateSwap(rate));
+        bid.set_satoshi_min(fantasybit::minSatQtySwapFromRate(min,bid.rate()));
+
+        quint64 bb = m_bitcoinBalance;
+        if ( bb == 0 ) {
+            qDebug() << " zero bitcoin balance ";
             return;
         }
 
-        ask.set_satoshi_max( static_cast<quint64>(mn));
+        if ( qty == 0 || qty > bb)
+            qty = bb;
 
-        if ( ask.satoshi_max() < ask.satoshi_min() ) {
-            qDebug() << " max < min " << ask.DebugString().data();
+        if ( qty < bid.satoshi_min() ) {
+            qDebug() << " not enough BTC for Swap " << qty;
             return;
         }
 
-        emit NewSwapAsk(ask);
+        bid.set_satoshi_max( fantasybit::maxSatQtySwapFromRate(qty,rate) );
+
+        if ( bid.satoshi_max() < bid.satoshi_min() ) {
+            qDebug() << " max < min " << bid.DebugString().data();
+            return;
+        }
+
+        if ( !BitcoinUtils::getUtxos(*bid.mutable_utxos(),
+                                     m_pMyFantasyNameBalance->get_btcaddr().toStdString(),
+                                     bid.satoshi_max(),bid.satoshi_min())) {
+            qDebug() << " not enough utxos";
+            return;
+        }
+
+
+        emit NewSwapBid(bid);
 
     }
 }

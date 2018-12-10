@@ -69,9 +69,9 @@ bool FantasyAgent::readFromSecret(const std::string &readfrom, bool transfer) {
                 qInfo() << " is oracle key";
             }
 
-            auto pk = Commissioner::str2pk (secret.public_key ());
-            std::string btc1 = pb::toBtcAddress (pk);
-            qDebug() << secret.public_key ().data () << btc1.data ();
+//            auto pk = Commissioner::str2pk (secret.public_key ());
+//            std::string btc1 = pb::toBtcAddress (pk);
+//            qDebug() << secret.public_key ().data () << btc1.data ();
 
         }
     }

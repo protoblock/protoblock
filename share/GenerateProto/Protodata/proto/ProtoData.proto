@@ -489,6 +489,11 @@ message Bitcoin_UTXO {
     optional bytes locking_script = 40; // PubkeyScript
 }
 
+message Bitcoin_UTXOS {
+    optional uint64 total_value = 10;
+    repeated Bitcoin_UTXO utxo = 20;
+}
+
 //Bob broadcast intent to sell Fantasybit
 message SwapAsk {
     extend Transaction {
@@ -498,6 +503,8 @@ message SwapAsk {
     optional uint64 satoshi_min = 10;
     optional uint64 satoshi_max = 11;
     optional uint64 rate = 20; //satoshis per fb
+    optional uint64 fb_qty = 30;
+
 }
 
 //Alice has bitcoin - wants fantasybit
@@ -510,8 +517,7 @@ message SwapBid {
     optional uint64 satoshi_max = 11;
 
     optional uint64 rate = 20; //satoshis per fb
-
-    optional Bitcoin_UTXO utxo = 30;
+    optional Bitcoin_UTXOS utxos = 30;
     optional bytes change_addr = 40;
 
     optional SwapAsk this_offer = 50;

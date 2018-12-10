@@ -247,7 +247,7 @@ public:
 
 struct MatchingEngine {
     MatchingEngine(const string &symbol,bool il = false)
-        : mSymbol(symbol), islocked(il), blocknum(0)
+        :  islocked(il), mSymbol(symbol), blocknum(0)
     {
 
     }

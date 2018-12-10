@@ -28,19 +28,28 @@ class BitcoinUtils
 {
 public:
 
-    fc::optional<Bitcoin_UTXO> getUtxo(const std::string &btcaddress,
+    static bool getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress, uint64_t max, uint64_t min);
+
+    static fc::optional<Bitcoin_UTXO> getUtxo(const std::string &btcaddress,
                      uint64_t max = 999000000000,
                      uint64_t min = 200);
 
 
 
-    std::string createTX(const Bitcoin_UTXO &iutxo,
+    static std::string createTX(const Bitcoin_UTXO &iutxo,
                          std::string &input, std::string &in_script);
 
-    std::string createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
+    static std::string createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
                                      std::string &input, std::string &in_script);
 
-    uint64_t getBTCbalance(const std::string &btcaddress);
+    static uint64_t getBTCbalance(const std::string &btcaddress) {
+        return BitcoinRestfullService::getBtcAddressBalance(btcaddress.data());
+    }
+
+    static uint64_t getBTCbalance(const QString &btcaddress) {
+        return BitcoinRestfullService::getBtcAddressBalance(btcaddress);
+    }
+
 
 };
 

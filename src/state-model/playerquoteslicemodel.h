@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QString>
-#include "../QmlSupermacros/QQmlConstRefPropertyHelpers.h"
-#include "../QmlModels/QQmlObjectListModel.h"
+#include <QQmlConstRefPropertyHelpers.h>
+#include <QQmlObjectListModel.h>
 #include "StateData.pb.h"
 #include "sortfilterproxymodel.h"
 #include "fbutils.h"

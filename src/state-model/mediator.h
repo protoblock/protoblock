@@ -100,6 +100,7 @@ class Mediator : public QObject {
 
     //Swap
     QML_READONLY_PTR_PROPERTY(SwapOrderModel, pSwapOrderModel)
+    QML_READONLY_CSTREF_PROPERTY (quint64, bitcoinBalance)
 
 
     //fantasyname
@@ -219,15 +220,14 @@ public:
 
     Q_INVOKABLE QString init();
 
-    Q_INVOKABLE QString toBTCAddess(const QString &inpk) {
-        qDebug() << " twitch toBTCAddess " << inpk;
-        toBTCAddess2(inpk);
-        return pb::toBtcAddress (Commissioner::str2pk (inpk.toStdString())).data() ;
-    }
-
+//    Q_INVOKABLE QString toBTCAddess(const QString &inpk) {
+//        qDebug() << " twitch toBTCAddess " << inpk;
+//        toBTCAddess2(inpk);
+//        return pb::toBtcAddress (Commissioner::str2pk (inpk.toStdString())).data() ;
+//    }
+/*
     Q_INVOKABLE quint64 toBTCbalance(const QString &inaddress) {
         BitcoinUtils btu;
-//        return QString("%1 BTC").arg(btu.getBTCbalance(inaddress.toStdString()));
 
         return btu.getBTCbalance(inaddress.toStdString());
     }
@@ -261,7 +261,7 @@ public:
         qDebug() << "twitch4 btc bal" << btu.getBTCbalance("1BPw53Gf5faxAwSmXrCqHDWkhM1xK2jUX9");
         return btc1.data();
     }
-
+*/
     Q_INVOKABLE bool isTestNet() { return fantasybit::IS_TEST_NET; }
 
     QStringList m_goodList;
@@ -326,7 +326,7 @@ public:
     Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void doTransfer(const qint32 amount, QString toname);
-    Q_INVOKABLE void doSwap(quint64 rate = 1000, bool isask = true, QString with = "");
+    Q_INVOKABLE void doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint64 min);
 
 //    Q_INVOKABLE QString getOrderModelSymbol() {
 //        return m_pGlobalOpenOrdersModel->get_pidsymbol();

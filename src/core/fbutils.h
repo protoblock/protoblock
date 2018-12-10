@@ -114,6 +114,61 @@ namespace fantasybit {
 
     using Signature = std::string;
 
+//    static double MIN_BTC_QTY_SWAP = .0001;
+
+    static uint64_t MIN_SAT_RATE_SWAP = 10;
+    static uint64_t MIN_SAT_QTY_SWAP = 10000;
+    static uint64_t MIN_FB_QTY_SWAP = 10;
+
+    static uint64_t MAX_SAT_QTY_SWAP = 100000000000;
+    static uint64_t MAX_FB_QTY_SWAP = 1000000;
+
+    static uint64_t MIN_SAT_TX_SWAP = 10000;
+    static uint64_t MIN_SAT_TX_FEE = 2000;
+    static uint64_t MIN_SAT_BYTE_TX_FEE = 10;
+
+    static uint64_t MAX_SAT_RATE_SWAP = 10000000;
+    static uint64_t MAX_SAT_BYTE_TX_FEE = 500;
+    static uint64_t MAX_BTC_TX_BYTE_SIZE = 1000;
+
+    static uint64_t MAX_SAT_TX_FEE = MAX_BTC_TX_BYTE_SIZE * MAX_SAT_BYTE_TX_FEE;
+
+
+
+    inline uint64_t minFBSwapQty(uint64_t rate = 0, uint64_t min_sat =0 ) {
+        return std::max(MIN_FB_QTY_SWAP,
+                        std::max(min_sat,MIN_SAT_QTY_SWAP) * std::max(rate,MIN_SAT_RATE_SWAP));
+    }
+
+    inline uint64_t FBSwapQty(uint64_t rate, uint64_t min_sat ) {
+        return std::max(MIN_FB_QTY_SWAP,
+                        std::max(min_sat,MIN_SAT_QTY_SWAP) * std::max(rate,MIN_SAT_RATE_SWAP));
+    }
+
+    inline uint64_t satRateSwap(uint64_t rate = 0) {
+        return std::min(MAX_SAT_RATE_SWAP, std::max(MIN_SAT_RATE_SWAP,rate));
+    }
+
+    inline uint64_t minSatQtySwap(uint64_t min = 0) {
+        return std::max(MIN_SAT_QTY_SWAP, min);
+    }
+
+    inline uint64_t minSatQtySwapFromRate(uint64_t min = 0,uint64_t rate = 0) {
+        return std::max(minSatQtySwap(min),  (MIN_FB_QTY_SWAP / satRateSwap(rate)));
+    }
+
+    inline uint64_t maxSatQtySwapFromRate(uint64_t max, uint64_t rate) {
+        return std::min(std::min(MAX_SAT_QTY_SWAP,max) , (MAX_FB_QTY_SWAP / rate));
+    }
+
+
+    inline uint64_t maxSatQtySwap(uint64_t fb, uint64_t rate) {
+        return  std::min(MAX_SAT_QTY_SWAP, std::min(fb, MAX_FB_QTY_SWAP) * rate);
+    }
+
+
+
+
 #if defined(Jay2015PrePreSeasonTestDemo) || defined(DATAAGENTGUIJay2015PrePreSeasonTestDemo)
 //#ifdef FBWIN
 //    static std::string ROOT_DIR_("C:/fantasybit-internal2/");

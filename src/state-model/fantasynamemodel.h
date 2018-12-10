@@ -3,9 +3,9 @@
 
 #include <QObject>
 #include <QString>
-#include "../QmlSupermacros/QQmlConstRefPropertyHelpers.h"
-#include "../QmlModels/QQmlObjectListModel.h"
-#include "../QmlSuperMacros/QQmlHelpersCommon.h"
+#include <QQmlConstRefPropertyHelpers.h>
+#include <QQmlObjectListModel.h>
+#include <QQmlHelpersCommon.h>
 #include "NameData.pb.h"
 #include <QQmlHelpersCommon.h>
 #include "FantasyName.h"
@@ -27,6 +27,8 @@ class FantasyNameBalModelItem : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (quint64, leaders20XX)
     QML_WRITABLE_CSTREF_PROPERTY (int, numberproj)
     QML_WRITABLE_CSTREF_PROPERTY (int, lastupdate)
+    QML_WRITABLE_CSTREF_PROPERTY (QString, btcaddr)
+
 
 public:
     FantasyNameBalModelItem() :  QObject(nullptr) {
@@ -39,6 +41,7 @@ public:
         m_numberproj = m_lastupdate = 0;
         m_pnl = 0;
         m_net = 0;
+        m_btcaddr = "";
     }
 
     explicit FantasyNameBalModelItem(QString &name) :  QObject(nullptr) {
@@ -55,7 +58,8 @@ public:
     explicit FantasyNameBalModelItem(const fantasybit::FantasyNameBal &in) :  QObject(nullptr) {
         m_name = in.name().data();
         m_pk = in.public_key().data();
-        m_stake = in.stake() + in.bits();
+        m_btcaddr = pb::toBtcAddress (Commissioner::str2pk (in.public_key())).data();
+        m_stake = in.stake() + static_cast<qint64>(in.bits());
         m_bits = in.bits();
         m_pnl = 0;
         m_net = m_stake + m_pnl;
@@ -63,17 +67,16 @@ public:
         m_lastweek = 0;
         m_leaders20XX = 0;
         m_numberproj = m_lastupdate = 0;
-//        m_chash = in.chash();
     }
 
     explicit FantasyNameBalModelItem(fantasybit::FantasyName &in) :  QObject(nullptr) {
         m_name = in.alias().data();
         m_pk = Commissioner::pk2str(in.pubkey()).data();
+        m_btcaddr = pb::toBtcAddress (in.pubkey()).data();
         m_stake = in.getStakeBalance();
         m_bits = in.getBalance();
         m_pnl = 0;
         m_net = m_stake + m_pnl;
-//        m_chash = in.hash();
         auto blocknump = in.getBlockNump ();
         set_numberproj(blocknump.second);
         set_lastupdate(blocknump.first);
@@ -87,40 +90,36 @@ public:
         qDebug() << "FantasyNameBalModelItem copy constructin " << in.get_name ();
         set_name( in.get_name());
         set_pk(in.get_pk());
+        set_btcaddr(in.get_btcaddr());
         set_stake(in.get_stake());
         set_bits(in.get_bits());
         set_pnl(in.get_pnl());
         set_net(in.get_net());
-//        set_chash(in.get_chash());
         m_thisweek = 0;
         m_lastweek = 0;
         m_leaders20XX = 0;
         m_numberproj = m_lastupdate = 0;
-
     }
 
     void    update(const fantasybit::FantasyNameBal &in) {
         set_name(in.name().data());
         set_pk (in.public_key().data());
+        set_btcaddr(pb::toBtcAddress (Commissioner::str2pk (in.public_key())).data());
         if ( in.has_stake() ) {
-            set_stake ( in.stake() + in.bits() );
+            set_stake ( in.stake() + static_cast<qint64>(in.bits()) );
             set_net( m_stake + m_pnl);
         }
         set_bits ( in.bits());
-
-
-//        set_chash(in.chash());
     }
 
     void    update(const FantasyNameBalModelItem &in) {
         set_name( in.get_name());
         set_pk(in.get_pk());
+        set_btcaddr(in.get_btcaddr());
         set_stake(in.get_stake());
         set_bits(in.get_bits());
         set_pnl(in.get_pnl());
         set_net(in.get_net());
-
-//        set_chash(in.get_chash());
     }
 
     void updatePnl(int pnl) {
@@ -164,7 +163,6 @@ public:
             my->update(*in);
         else {
             FantasyNameBalModelItem *n = new FantasyNameBalModelItem(*in);
-//            n->update(*in);
             append(n);
         }
 

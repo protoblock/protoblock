@@ -13,6 +13,23 @@
 
 namespace pb {
 
+bool BitcoinUtils::getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress, uint64_t max, uint64_t min) {
+    utxos.set_total_value(0);
+    for ( const auto &utxo : BitcoinApi::getUtxo(btcaddress) ) {
+        auto *bu = utxos.add_utxo();
+        bu->set_txid(utxo.tx_hash.toStdString());
+        bu->set_tx_output_n(utxo.tx_output_n);
+        bu->set_locking_script(utxo.script.toStdString());
+        bu->set_in_value(utxo.in_value);
+
+        utxos.set_total_value(utxos.total_value()+utxo.in_value);
+        if ( utxos.total_value() >= max)
+            return false;
+    }
+
+    return utxos.total_value() > min;
+}
+
 fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxo(const std::string &btcaddress, uint64_t max, uint64_t min) {
 
     fc::optional<Bitcoin_UTXO> ret;
@@ -55,9 +72,8 @@ std::string BitcoinUtils::createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
     return "";
 }
 
-uint64_t BitcoinUtils::getBTCbalance(const std::string &btcaddress) {
-    return BitcoinRestfullService::getBtcAddressBalance(btcaddress);
-}
+
+
 
 std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
                                    std::string &input, std::string &in_script) {

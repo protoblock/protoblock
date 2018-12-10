@@ -12,10 +12,9 @@
 #include <QObject>
 #include <QString>
 #include <QQmlConstRefPropertyHelpers.h>
-#include "../QmlModels/QQmlObjectListModel.h"
-#include "../QmlSuperMacros/QQmlHelpersCommon.h"
-#include "NameData.pb.h"
+#include <QQmlObjectListModel.h>
 #include <QQmlHelpersCommon.h>
+#include "NameData.pb.h"
 #include "FantasyName.h"
 #include "Commissioner.h"
 #include <pbgateways.h>
@@ -25,17 +24,7 @@ using namespace fantasybit;
 class SwapOrderModelItem : public QObject {
     Q_OBJECT
     QML_WRITABLE_CSTREF_PROPERTY (QString, name)
-//    QML_WRITABLE_CSTREF_PROPERTY (QString, pk)
-//    QML_WRITABLE_CSTREF_PROPERTY (qint64, stake)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, rate)
-//    QML_WRITABLE_CSTREF_PROPERTY (qint64, pnl)
-//    QML_WRITABLE_CSTREF_PROPERTY (qint64, net)
-//    QML_WRITABLE_CSTREF_PROPERTY (quint64, thisweek)
-//    QML_WRITABLE_CSTREF_PROPERTY (quint64, lastweek)
-//    QML_WRITABLE_CSTREF_PROPERTY (quint64, leaders20XX)
-//    QML_WRITABLE_CSTREF_PROPERTY (int, numberproj)
-//    QML_WRITABLE_CSTREF_PROPERTY (int, lastupdate)
-
 public:
     SwapOrderModelItem() :  QObject(nullptr) {
         m_name = "noname";

@@ -76,6 +76,7 @@ class OrderDeets;
 class InsideUnique;
 class TimeTransition;
 class Bitcoin_UTXO;
+class Bitcoin_UTXOS;
 class SwapAsk;
 class SwapBid;
 class SwapFill;
@@ -5193,6 +5194,101 @@ class Bitcoin_UTXO : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Bitcoin_UTXOS : public ::google::protobuf::Message {
+ public:
+  Bitcoin_UTXOS();
+  virtual ~Bitcoin_UTXOS();
+
+  Bitcoin_UTXOS(const Bitcoin_UTXOS& from);
+
+  inline Bitcoin_UTXOS& operator=(const Bitcoin_UTXOS& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Bitcoin_UTXOS& default_instance();
+
+  void Swap(Bitcoin_UTXOS* other);
+
+  // implements Message ----------------------------------------------
+
+  Bitcoin_UTXOS* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Bitcoin_UTXOS& from);
+  void MergeFrom(const Bitcoin_UTXOS& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 total_value = 10;
+  inline bool has_total_value() const;
+  inline void clear_total_value();
+  static const int kTotalValueFieldNumber = 10;
+  inline ::google::protobuf::uint64 total_value() const;
+  inline void set_total_value(::google::protobuf::uint64 value);
+
+  // repeated .fantasybit.Bitcoin_UTXO utxo = 20;
+  inline int utxo_size() const;
+  inline void clear_utxo();
+  static const int kUtxoFieldNumber = 20;
+  inline const ::fantasybit::Bitcoin_UTXO& utxo(int index) const;
+  inline ::fantasybit::Bitcoin_UTXO* mutable_utxo(int index);
+  inline ::fantasybit::Bitcoin_UTXO* add_utxo();
+  inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO >&
+      utxo() const;
+  inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO >*
+      mutable_utxo();
+
+  // @@protoc_insertion_point(class_scope:fantasybit.Bitcoin_UTXOS)
+ private:
+  inline void set_has_total_value();
+  inline void clear_has_total_value();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint64 total_value_;
+  ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO > utxo_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static Bitcoin_UTXOS* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class SwapAsk : public ::google::protobuf::Message {
  public:
   SwapAsk();
@@ -5268,6 +5364,13 @@ class SwapAsk : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 rate() const;
   inline void set_rate(::google::protobuf::uint64 value);
 
+  // optional uint64 fb_qty = 30;
+  inline bool has_fb_qty() const;
+  inline void clear_fb_qty();
+  static const int kFbQtyFieldNumber = 30;
+  inline ::google::protobuf::uint64 fb_qty() const;
+  inline void set_fb_qty(::google::protobuf::uint64 value);
+
   static const int kSwapaskTranFieldNumber = 450;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapAsk >, 11, false >
@@ -5280,15 +5383,18 @@ class SwapAsk : public ::google::protobuf::Message {
   inline void clear_has_satoshi_max();
   inline void set_has_rate();
   inline void clear_has_rate();
+  inline void set_has_fb_qty();
+  inline void clear_has_fb_qty();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint64 satoshi_min_;
   ::google::protobuf::uint64 satoshi_max_;
   ::google::protobuf::uint64 rate_;
+  ::google::protobuf::uint64 fb_qty_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -5374,14 +5480,14 @@ class SwapBid : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 rate() const;
   inline void set_rate(::google::protobuf::uint64 value);
 
-  // optional .fantasybit.Bitcoin_UTXO utxo = 30;
-  inline bool has_utxo() const;
-  inline void clear_utxo();
-  static const int kUtxoFieldNumber = 30;
-  inline const ::fantasybit::Bitcoin_UTXO& utxo() const;
-  inline ::fantasybit::Bitcoin_UTXO* mutable_utxo();
-  inline ::fantasybit::Bitcoin_UTXO* release_utxo();
-  inline void set_allocated_utxo(::fantasybit::Bitcoin_UTXO* utxo);
+  // optional .fantasybit.Bitcoin_UTXOS utxos = 30;
+  inline bool has_utxos() const;
+  inline void clear_utxos();
+  static const int kUtxosFieldNumber = 30;
+  inline const ::fantasybit::Bitcoin_UTXOS& utxos() const;
+  inline ::fantasybit::Bitcoin_UTXOS* mutable_utxos();
+  inline ::fantasybit::Bitcoin_UTXOS* release_utxos();
+  inline void set_allocated_utxos(::fantasybit::Bitcoin_UTXOS* utxos);
 
   // optional bytes change_addr = 40;
   inline bool has_change_addr() const;
@@ -5416,8 +5522,8 @@ class SwapBid : public ::google::protobuf::Message {
   inline void clear_has_satoshi_max();
   inline void set_has_rate();
   inline void clear_has_rate();
-  inline void set_has_utxo();
-  inline void clear_has_utxo();
+  inline void set_has_utxos();
+  inline void clear_has_utxos();
   inline void set_has_change_addr();
   inline void clear_has_change_addr();
   inline void set_has_this_offer();
@@ -5428,7 +5534,7 @@ class SwapBid : public ::google::protobuf::Message {
   ::google::protobuf::uint64 satoshi_min_;
   ::google::protobuf::uint64 satoshi_max_;
   ::google::protobuf::uint64 rate_;
-  ::fantasybit::Bitcoin_UTXO* utxo_;
+  ::fantasybit::Bitcoin_UTXOS* utxos_;
   ::std::string* change_addr_;
   ::fantasybit::SwapAsk* this_offer_;
 
@@ -11568,6 +11674,57 @@ inline void Bitcoin_UTXO::set_allocated_locking_script(::std::string* locking_sc
 
 // -------------------------------------------------------------------
 
+// Bitcoin_UTXOS
+
+// optional uint64 total_value = 10;
+inline bool Bitcoin_UTXOS::has_total_value() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Bitcoin_UTXOS::set_has_total_value() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Bitcoin_UTXOS::clear_has_total_value() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Bitcoin_UTXOS::clear_total_value() {
+  total_value_ = GOOGLE_ULONGLONG(0);
+  clear_has_total_value();
+}
+inline ::google::protobuf::uint64 Bitcoin_UTXOS::total_value() const {
+  return total_value_;
+}
+inline void Bitcoin_UTXOS::set_total_value(::google::protobuf::uint64 value) {
+  set_has_total_value();
+  total_value_ = value;
+}
+
+// repeated .fantasybit.Bitcoin_UTXO utxo = 20;
+inline int Bitcoin_UTXOS::utxo_size() const {
+  return utxo_.size();
+}
+inline void Bitcoin_UTXOS::clear_utxo() {
+  utxo_.Clear();
+}
+inline const ::fantasybit::Bitcoin_UTXO& Bitcoin_UTXOS::utxo(int index) const {
+  return utxo_.Get(index);
+}
+inline ::fantasybit::Bitcoin_UTXO* Bitcoin_UTXOS::mutable_utxo(int index) {
+  return utxo_.Mutable(index);
+}
+inline ::fantasybit::Bitcoin_UTXO* Bitcoin_UTXOS::add_utxo() {
+  return utxo_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO >&
+Bitcoin_UTXOS::utxo() const {
+  return utxo_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::fantasybit::Bitcoin_UTXO >*
+Bitcoin_UTXOS::mutable_utxo() {
+  return &utxo_;
+}
+
+// -------------------------------------------------------------------
+
 // SwapAsk
 
 // optional uint64 satoshi_min = 10;
@@ -11634,6 +11791,28 @@ inline ::google::protobuf::uint64 SwapAsk::rate() const {
 inline void SwapAsk::set_rate(::google::protobuf::uint64 value) {
   set_has_rate();
   rate_ = value;
+}
+
+// optional uint64 fb_qty = 30;
+inline bool SwapAsk::has_fb_qty() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SwapAsk::set_has_fb_qty() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SwapAsk::clear_has_fb_qty() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SwapAsk::clear_fb_qty() {
+  fb_qty_ = GOOGLE_ULONGLONG(0);
+  clear_has_fb_qty();
+}
+inline ::google::protobuf::uint64 SwapAsk::fb_qty() const {
+  return fb_qty_;
+}
+inline void SwapAsk::set_fb_qty(::google::protobuf::uint64 value) {
+  set_has_fb_qty();
+  fb_qty_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -11706,41 +11885,41 @@ inline void SwapBid::set_rate(::google::protobuf::uint64 value) {
   rate_ = value;
 }
 
-// optional .fantasybit.Bitcoin_UTXO utxo = 30;
-inline bool SwapBid::has_utxo() const {
+// optional .fantasybit.Bitcoin_UTXOS utxos = 30;
+inline bool SwapBid::has_utxos() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void SwapBid::set_has_utxo() {
+inline void SwapBid::set_has_utxos() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void SwapBid::clear_has_utxo() {
+inline void SwapBid::clear_has_utxos() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void SwapBid::clear_utxo() {
-  if (utxo_ != NULL) utxo_->::fantasybit::Bitcoin_UTXO::Clear();
-  clear_has_utxo();
+inline void SwapBid::clear_utxos() {
+  if (utxos_ != NULL) utxos_->::fantasybit::Bitcoin_UTXOS::Clear();
+  clear_has_utxos();
 }
-inline const ::fantasybit::Bitcoin_UTXO& SwapBid::utxo() const {
-  return utxo_ != NULL ? *utxo_ : *default_instance_->utxo_;
+inline const ::fantasybit::Bitcoin_UTXOS& SwapBid::utxos() const {
+  return utxos_ != NULL ? *utxos_ : *default_instance_->utxos_;
 }
-inline ::fantasybit::Bitcoin_UTXO* SwapBid::mutable_utxo() {
-  set_has_utxo();
-  if (utxo_ == NULL) utxo_ = new ::fantasybit::Bitcoin_UTXO;
-  return utxo_;
+inline ::fantasybit::Bitcoin_UTXOS* SwapBid::mutable_utxos() {
+  set_has_utxos();
+  if (utxos_ == NULL) utxos_ = new ::fantasybit::Bitcoin_UTXOS;
+  return utxos_;
 }
-inline ::fantasybit::Bitcoin_UTXO* SwapBid::release_utxo() {
-  clear_has_utxo();
-  ::fantasybit::Bitcoin_UTXO* temp = utxo_;
-  utxo_ = NULL;
+inline ::fantasybit::Bitcoin_UTXOS* SwapBid::release_utxos() {
+  clear_has_utxos();
+  ::fantasybit::Bitcoin_UTXOS* temp = utxos_;
+  utxos_ = NULL;
   return temp;
 }
-inline void SwapBid::set_allocated_utxo(::fantasybit::Bitcoin_UTXO* utxo) {
-  delete utxo_;
-  utxo_ = utxo;
-  if (utxo) {
-    set_has_utxo();
+inline void SwapBid::set_allocated_utxos(::fantasybit::Bitcoin_UTXOS* utxos) {
+  delete utxos_;
+  utxos_ = utxos;
+  if (utxos) {
+    set_has_utxos();
   } else {
-    clear_has_utxo();
+    clear_has_utxos();
   }
 }
 

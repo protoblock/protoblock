@@ -15,15 +15,18 @@ import Material 1.0 as Material
 Item {
     id: swappane
     property string fname: MiddleMan.pMyFantasyNameBalance.name
-    property string btcadddr: MiddleMan.toBTCAddess(MiddleMan.pMyFantasyNameBalance.pk);
-    property real btcbal: 3.089109// MiddleMan.toBTCbalance(swappane.btcadddr);
+    property string btcadddr: MiddleMan.pMyFantasyNameBalance.btcaddr;
+    property int satbal: MiddleMan.bitcoinBalance // MiddleMan.toBTCbalance(swappane.btcadddr);
+    property real btcbal: satbal * .00000001//3.089109// MiddleMan.bitcoinBalance
     property string sbtcbal: btcbal.toLocaleString();
     property int fbbal: MiddleMan.pMyFantasyNameBalance.net
     property bool btcsell: true
     property real swaprate: ratesb.value / 1000000
-    property int satoshirate: ratesb.value
+    property int satoshirate: ratesb.value * 100
     property string counter: ""
 
+    property int fillsbtc: 0 // MiddleMan.toBTCbalance(swappane.btcadddr);
+    property int fillsfb: 0 // MiddleMan.toBTCbalance(swappane.btcadddr);
 
     ColumnLayout {
         width: ProtoScreen.guToPx(80)
@@ -103,7 +106,6 @@ Item {
 //                color: (!swappane.btcsell ? "#FF9900" : "#2580a6")
             }
 
-
             ListItems.Subtitled {
                 id: ibtc
                 Layout.row: 2
@@ -126,6 +128,15 @@ Item {
                 itemLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                 itemValueLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                 itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
+                interactive: swappane.btcsell
+//                selected: false
+//                onClicked: {
+//                    selected = true
+//                    fbbox.value = Qt.binding( function() {
+//                        return swappane.fbbal;
+//                    })
+//                }
+
             }
 
             Material.IconButton {
@@ -170,6 +181,12 @@ Item {
                 itemValueLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                 itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                 itemSubLabel.font.family: fontfamFB
+                interactive: !swappane.btcsell
+//                onClicked: {
+//                    btcbox.value = Qt.binding( function() {
+//                        return swappane.satbal
+//                    })
+//                }
             }
 
             //fb input
@@ -191,7 +208,7 @@ Item {
 
                 stepSize: 1
                 from: 0
-                to:  editable ? swappane.fbbal : Math.round(swappane.btcbal / swappane.swaprate )//(swappane.btcbal * swappane.swaprate)
+                to:  editable ? swappane.fbbal : swappane.satbal
                 textFromValue: function(value, locale) {
                     console.log( "fb from value " + value)
 
@@ -205,16 +222,25 @@ Item {
                     return d;
                 }
 
-                onValueChanged: {
-                    console.log("fbbox new value " + value)
+//                onValueChanged: {
+//                    console.log("fbbox new value value " + value)
+//                    console.log("fbbox new value swappane.satoshirate " + swappane.satoshirate)
+//                    console.log("fbbox new value fbbox.value * swappane.satoshirate " + fbbox.value * swappane.satoshirate)
+//                    console.log("fbbox new value btcbox.realValue " + btcbox.realValue)
+//                    console.log("fbbox new value swappane.swaprate " + swappane.swaprate)
+//                    console.log("fbbox new value btcbox.realValue / swappane.swaprate" + btcbox.realValue / swappane.swaprate)
+//                    console.log("fbbox new value  Math.round(btcbox.realValue / swappane.swaprate)" +  Math.round(btcbox.realValue / swappane.swaprate))
+
+
 //                    if ( editable )
 //                        btcbox.value = (value * swappane.satoshirate)
-                }
+//                }
 
 
 //                font.family: fontfamFB
-                value: editable ? 0 :  Math.round((btcbox.value * .00000001) / swappane.swaprate )//Number(btcbox.value / swappane.satoshirate)
+                value: editable ? 0 :  Math.round(btcbox.realValue / swappane.swaprate) // /  Math.round((btcbox.value * .00000001) / swappane.swaprate )//Number(btcbox.value / swappane.satoshirate)
 //                /fbbox.value = Math.round((btcbox.value * .00000001) / swappane.satoshirate )
+
 
             }
 
@@ -239,10 +265,10 @@ Item {
                 property int decimals: 6
                 property real realValue: value / to
 
-                validator: DoubleValidator {
-                    bottom: Math.min(ratesb.from, ratesb.to)
-                    top:  Math.max(ratesb.from, ratesb.to)
-                }
+//                validator: DoubleValidator {
+//                    bottom: Math.min(ratesb.from, ratesb.to)
+//                    top:  Math.max(ratesb.from, ratesb.to)
+//                }
 
                 textFromValue: function(value, locale) {
                     return Number(value / to).toLocaleString(locale, 'f', ratesb.decimals)
@@ -267,18 +293,19 @@ Item {
                 editable: swappane.btcsell
                 wheelEnabled: editable
                 focus: editable
-                focusPolicy: editable ? Qt.StrongFocus : Qt.NoFocus
+//                focusPolicy: editable ? Qt.StrongFocus : Qt.NoFocus
                 enabled: editable
 
                 stepSize: 10000
                 from: 0
-                to: (editable ? swappane.btcbal : swappane.fbbal * swappane.swaprate) * 100000000;
+                //max int is 2147483647 = that 21 times 100 million
+                to: editable ? Math.round(swappane.satbal) : Math.round(Math.min(swappane.fbbal, 21) * 100000000)
                 property int decimals: 8
                 property real realValue: value * .00000001
-                validator: DoubleValidator {
-                    bottom: Math.min(btcbox.from, btcbox.to)
-                    top:  Math.max(btcbox.from, btcbox.to)
-                }
+//                validator: DoubleValidator {
+//                    bottom: Math.min(btcbox.from, btcbox.to)
+//                    top:  Math.max(btcbox.from, btcbox.to)
+//                }
                 textFromValue: function(value, locale) {
                     console.log( " btcbox from value" + value)
                     return Number(value * .00000001 ).toLocaleString(Qt.locale("en-US"), 'f', btcbox.decimals) + " BTC"
@@ -293,14 +320,24 @@ Item {
                 }
 
                 onValueChanged: {
-//                    console.log("btcbox new value " + value)
+                    console.log("btcbox new value " + value)
+                    console.log("btcbox new value IntValidator.top" +   IntValidator.top)
+
 //                    if ( editable ) {
 //                        console.log("btcbox new value2 " + (value * .00000001) / swappane.swaprate)
 //                        console.log("try set" + Math.round( (value * .00000001) / swappane.swaprate ))
 //                        fbbox.value = Math.round((value * .00000001) / swappane.swaprate )
 //                    }
                 }
-                value: editable ? 0 : (fbbox.value * swappane.satoshirate)
+
+//                onValueModified: {
+//                    console.log("btcbox onValueModified ibtc.selected " + ibtc.selected)
+//                    console.log("btcbox onValueModified swappane.satbal " + swappane.satbal)
+//                    ibtc.selected = false;
+//                }
+
+                value: editable ?  0 : (fbbox.value * swappane.satoshirate)
+//                value: editable ? (ibtc.selected ? swappane.satbal : 0) : (fbbox.value * swappane.satoshirate)
            }
 
             Button {
@@ -360,13 +397,13 @@ Item {
         minimumWidth: ProtoScreen.guToPx(16)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        property string side: "none"
-        property int price
-        property int qty
+        property string side: swappane.btcsell ? "bid" : "ask"; //bidding for fb with btc
+        property int price: swappane.satoshirate
+        property int qty: swappane.btcsell ? btcbox.value : fbbox.value
         property string player
         positiveButtonText: "Swap It"
         title: "Confirm Swap Order - " + (!swappane.btcsell ? ("Send ƑɃ - Receive BTC") : ("Send BTC - Receive FB"))
-        text: "Protoblock Wallet: " + realRoot.uname
+        text: "Protoblock Wallet: " + realRoot.uname + "Bitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
         dialogContent: Column {
             anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter
@@ -399,7 +436,6 @@ Item {
                 text:  "For: " + (!swappane.btcsell ? btcbox.value : fbbox.value)
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
-
 
         }
 

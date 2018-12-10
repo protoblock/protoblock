@@ -3,9 +3,8 @@
 
 #include <QObject>
 #include <QString>
-#include "../QmlSupermacros/QQmlConstRefPropertyHelpers.h"
-#include "../QmlModels/QQmlObjectListModel.h"
-#include "../QmlSuperMacros/QQmlHelpersCommon.h"
+#include <QQmlConstRefPropertyHelpers.h>
+#include <QQmlObjectListModel.h>
 #include "StateData.pb.h"
 #include <QQmlHelpersCommon.h>
 #include "QQmlPtrPropertyHelpers.h"
