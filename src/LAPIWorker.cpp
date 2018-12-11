@@ -51,6 +51,8 @@ MainLAPIWorker::MainLAPIWorker(QObject * parent):  QObject(parent),
     QObject::connect(this,SIGNAL(LiveData(bool)),&data,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&namedata,SLOT(OnLive(bool)));
     QObject::connect(this,SIGNAL(LiveData(bool)),&processor,SLOT(OnLive(bool)));
+    QObject::connect(this,SIGNAL(LiveData(bool)),&swapstate,SLOT(OnLive(bool)));
+
 
     /*
     QObject::connect(&exchangedata,SIGNAL(NewFantasyNameOrder(fantasybit::Order&)),
@@ -665,7 +667,7 @@ void MainLAPIWorker::OnNewSwapBid(fantasybit::SwapBid sb) {
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::SWAPBID);
-    trans.MutableExtension(SwapAsk::swapask_tran)->CopyFrom(sb);
+    trans.MutableExtension(SwapBid::swapbid_tran)->CopyFrom(sb);
 
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);

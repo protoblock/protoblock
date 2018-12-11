@@ -537,6 +537,13 @@ void Mediator::updateWeek() {
             }
 #endif
 
+void Mediator::OnSwapData(fantasybit::SwapOrder so) {
+    if ( so.isask() )
+        m_pSwapSellModel->add(so);
+    else
+        m_pSwapBuyModel->add(so);
+}
+
 void Mediator::updateOnChangeFantasyName() {
     updateCurrentFantasyPlayerProjections();
     updateCurrentFantasyPlayerOrderPositions();
@@ -938,7 +945,7 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
 
     qDebug() << " doSwap " << qty << "rate: " << rate << isask << with << min;
 
-    if ( isask ) {
+    if ( isask && with == "" ) {
         SwapAsk ask;
         ask.set_rate(fantasybit::satRateSwap(rate));
         ask.set_satoshi_min(fantasybit::minSatQtySwap(min));
@@ -968,6 +975,10 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
         }
 
         emit NewSwapAsk(ask);
+    }
+    else if ( isask && with != "" ) {
+        const auto &sb = mGateway->dataService->GetSwapBid(with);
+        qDebug() << sb.bid.DebugString().data();
     }
     else if ( with == "" ) {
         SwapBid bid;
@@ -1007,7 +1018,6 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
 
 
         emit NewSwapBid(bid);
-
     }
 }
 

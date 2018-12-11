@@ -63,7 +63,7 @@ public:
 
     void add(const fantasybit::SwapOrder so) {
         append(new SwapOrderModelItem(so.fname().data(),so.rate()));
-        qDebug() << "adding " << so.DebugString().data();
+        qDebug() << "swap adding " << so.DebugString().data();
     }
 
 };

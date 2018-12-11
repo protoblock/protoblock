@@ -49,7 +49,9 @@ void BlockProcessor::hardReset() {
 #endif
 
     mSwapStateData.closeAll();
+    mExchangeData.removeAll();
 
+    qInfo() <<  "delete all leveldb, should have nothing";
     pb::remove_all(Platform::instance()->getRootDir() + "index/");
 #ifndef NOUSE_GENESIS_BOOT
     NFLStateData::InitCheckpoint();
@@ -64,14 +66,15 @@ int32_t BlockProcessor::init() {
     if (!mRecorder.isValid() ) {
         emit InvalidState(mRecorder.getLastBlockId());
         qInfo() <<  "mRecorder not valid! ";
-        mRecorder.closeAll();
-        pb::remove_all(Platform::instance()->getRootDir() + "index/");
-        qInfo() <<  "delete all leveldb, should have nothing";
+        hardReset();
+//        mRecorder.closeAll();
+//        pb::remove_all(Platform::instance()->getRootDir() + "index/");
+//        qInfo() <<  "delete all leveldb, should have nothing";
 
-#ifndef NOUSE_GENESIS_BOOT
-        NFLStateData::InitCheckpoint();
-#endif
-        BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
+//#ifndef NOUSE_GENESIS_BOOT
+//        NFLStateData::InitCheckpoint();
+//#endif
+//        BlockRecorder::InitCheckpoint(BlockRecorder::zeroblock);
         qDebug() << "BlockProcessor::init() zb" << BlockRecorder::zeroblock;
 
         mRecorder.init();
@@ -91,10 +94,7 @@ int32_t BlockProcessor::init() {
 #endif
     mSwapStateData.init();
 
-//    OnSeasonStart(mData.GetGlobalState().season());
-
-    //qInfo() <<  "YES mRecorder is valid";
-
+    qInfo() <<  "YES mRecorder is valid";
     lastidprocessed =  mRecorder.getLastBlockId();
 
 #ifdef BLOCK_EXPLORER
@@ -1088,7 +1088,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         case TransType::SWAPASK: {
             const auto & swapthis = t.GetExtension(SwapAsk::swapask_tran);
-            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name());
+            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(), st.id());
             break;
         }
 
@@ -1097,7 +1097,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 #ifdef TRACE
             qDebug() << " calling mSwapStateData " << t.DebugString().data();
 #endif
-            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name());
+            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(),st.id());
             break;
         }
 

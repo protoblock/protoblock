@@ -47,6 +47,7 @@ void Node::init() {
         pb::remove_all(GET_ROOT_DIR() + "index/");
         pb::remove_all(GET_ROOT_DIR() + "block/");
         pb::remove_all(GET_ROOT_DIR() + "trade/");
+        pb::remove_all(GET_ROOT_DIR() + "swap/");
         QFile file( (GET_ROOT_DIR() + "postfork1.2").data () );
         file.open(QIODevice::WriteOnly);
     }

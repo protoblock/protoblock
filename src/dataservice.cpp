@@ -136,3 +136,14 @@ std::vector<SwapOrder> DataService::GetCurrentSwapSnaps() {
     return worker->SwapState().GetCurrentSwapSnaps();
 }
 
+SwapBuyer DataService::GetSwapBid(const QString &fn) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->SwapState().GetSwapBid(fn);
+}
+
+SwapSeller DataService::GetSwapAsk(const QString &fn) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->SwapState().GetSwapAsk(fn);
+}
+
+

@@ -60,6 +60,8 @@ public:
     std::map<std::string, std::string> GetTeamSymbols(const std::list<std::string> &teams);
 
     std::vector<SwapOrder> GetCurrentSwapSnaps();
+    SwapBuyer GetSwapBid(const QString &);
+    SwapSeller GetSwapAsk(const QString &);
 
 };
 

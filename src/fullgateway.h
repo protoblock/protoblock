@@ -274,6 +274,7 @@ public slots:
 
         Mediator *med = Mediator::instance();
         ExchangeData *exchangedata = &(mlapi->ExData());
+        SwapStateData *swapdata = &(mlapi->SwapState());
 
         //trading
         QObject::connect(exchangedata,SIGNAL(NewMarketTicker(fantasybit::MarketTicker,int32_t)),
@@ -292,6 +293,10 @@ public slots:
         QObject::connect(exchangedata,
                          SIGNAL(NewPos(fantasybit::FullPosition)),
                           med,SLOT(OnNewPos(fantasybit::FullPosition)));
+
+        QObject::connect(swapdata,SIGNAL(NewSwapData(fantasybit::SwapOrder)),
+                          med,SLOT(OnSwapData(fantasybit::SwapOrder)));
+
     }
 
     void ClientReady() {
@@ -353,6 +358,9 @@ public:
    }
 
     PlayerQuoteSliceModel m_PlayerQuoteSliceModel;
+
+//    ThreadedQObject<BitcoinWalletWorker> myBitcoinWalletThread;
+
 
     /*
     std::unordered_map<std::string,PlayerDetail>

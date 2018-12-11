@@ -1041,6 +1041,8 @@ public slots:
     void OnNewPos(fantasybit::FullPosition);
     void OnNewOO(fantasybit::FullOrderDelta);
     void MyPosPriceChange(PlayerQuoteSliceModelItem*);
+    void OnSwapData(fantasybit::SwapOrder);
+
 
     void doBlockString(qint32 num) {
         auto b = Node::getLocalBlock(num);

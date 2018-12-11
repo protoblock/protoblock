@@ -10,6 +10,7 @@
 //#include "playerquoteslicemodel.h"
 #include "ExchangeData.h"
 #include "SwapData.pb.h"
+#include <swapstatedata.h>
 
 namespace pb {
 
@@ -73,6 +74,9 @@ public:
     virtual std::map<std::string, std::string> GetTeamSymbols(const std::list<std::string> &teams) = 0;
 
     virtual std::vector<SwapOrder> GetCurrentSwapSnaps() = 0;
+    virtual SwapBuyer GetSwapBid(const QString &) = 0;
+    virtual SwapSeller GetSwapAsk(const QString &) = 0;
+
 
 
 };

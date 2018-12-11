@@ -9,6 +9,7 @@
 #include <SwapStateData.h>
 #include <fbutils.h>
 #include <mutex>
+#include <pbutils.h>
 
 namespace fantasybit {
 
@@ -73,10 +74,16 @@ void SwapStateData::closeAll() {
     mOrderBook.clear();
     swapasks.reset();
     swapbids.reset();
-
 }
 
-void SwapStateData::OnNewSwapTx(const SwapBid &inbid, const string &fname ) {
+void SwapStateData::removeAll() {
+    swapasks.reset();
+    swapbids.reset();
+    pb::remove_all(GET_ROOT_DIR() + "swap/");
+}
+
+
+void SwapStateData::OnNewSwapTx(const SwapBid &inbid, const string &fname,const string & ) {
     //store local in memory
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
@@ -90,9 +97,18 @@ void SwapStateData::OnNewSwapTx(const SwapBid &inbid, const string &fname ) {
     }
 
     AddNewSwapOrder(inbid,fname);
+    if ( amlive ) {
+        SwapOrder so;
+        so.set_isask(false);
+        so.set_satoshi_min(inbid.satoshi_min());
+        so.set_satoshi_max(inbid.satoshi_max());
+        so.set_rate(inbid.rate());
+        so.set_fname(fname);
+        emit NewSwapData(so);
+    }
 }
 
-void SwapStateData::OnNewSwapTx(const SwapAsk &inoffer, const string &fname ) {
+void SwapStateData::OnNewSwapTx(const SwapAsk &inoffer, const string &fname, const string & ) {
     //store local in memory
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
@@ -106,6 +122,16 @@ void SwapStateData::OnNewSwapTx(const SwapAsk &inoffer, const string &fname ) {
     }
 
     AddNewSwapOrder(inoffer,fname);
+    if ( amlive ) {
+        SwapOrder so;
+        so.set_isask(true);
+        so.set_satoshi_min(inoffer.satoshi_min());
+        so.set_satoshi_max(inoffer.satoshi_max());
+        so.set_rate(inoffer.rate());
+        so.set_fname(fname);
+        emit NewSwapData(so);
+    }
+
 }
 
 std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
@@ -144,6 +170,34 @@ std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
     }
 
     return vso;
+}
+
+SwapBuyer SwapStateData::GetSwapBid(const QString &fname) {
+    SwapBuyer sb;
+    sb.fname  = fname.toStdString();
+
+    string temp;
+    if ( !swapbids->Get(leveldb::ReadOptions(), sb.fname, &temp).ok() ) {
+        qWarning() << "cant rad swapbid for" << fname;
+        return sb;
+    }
+
+    sb.bid.ParseFromString(temp);
+    return sb;
+}
+
+SwapSeller SwapStateData::GetSwapAsk(const QString &fname) {
+    SwapSeller sa;
+    sa.fname  = fname.toStdString();
+
+    string temp;
+    if ( !swapasks->Get(leveldb::ReadOptions(), sa.fname, &temp).ok() ) {
+        qWarning() << "cant rad swapask for" << fname;
+        return sa;
+    }
+
+    sa.offer.ParseFromString(temp);
+    return sa;
 }
 
 void SwapStateData::AddNewSwapOrder(const SwapBid &inbid, const string &fname ) {

@@ -366,14 +366,17 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: swappane.btcsell ? MiddleMan.pSwapSellModel : MiddleMan.pSwapBuyModel
-            header: Label { text: swappane.btcsell ? "Sellers" : "Buyers" }
+            header: Label {
+                text: swappane.btcsell ? "Sellers" : "Buyers";
+                font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL);
+            }
             delegate: ListItems.Subtitled {
                 width: parent.width
                 text: model.name
                 subText: "rate - " + model.rate
                 secondaryItem: Button {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: "Buy"
+                    text: swappane.btcsell ? "Buy" : "Sell";
                     onClicked: {
                         ratesb.value = model.rate / 100
                         swappane.counter = model.name
@@ -407,8 +410,8 @@ Item {
         property int qty: swappane.btcsell ? btcbox.value : fbbox.value
         property string player
         positiveButtonText: "Swap It"
-        title: "Confirm Swap Order - " + (!swappane.btcsell ? ("Send ƑɃ - Receive BTC") : ("Send BTC - Receive FB"))
-        text: "Protoblock Wallet: " + realRoot.uname + "Bitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
+        title: "Confirm Swap: " + (!swappane.btcsell ? ("Send Fantasybit - Receive Bitcoin") : ("Send Bitcoin - Receive Fantasybit"))
+        text: "Protoblock Wallet: " + realRoot.uname + " Bitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
         dialogContent: Column {
             anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter

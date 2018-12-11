@@ -37,6 +37,7 @@ struct SwapSeller {
     uint64_t pending_fill;
     uint64_t open;
 
+    SwapSeller() {}
     SwapSeller( const std::string &ifn, SwapAsk in)
                 : fname(ifn), offer(in),
                   filled(0), pending_fill(0) {
@@ -59,6 +60,7 @@ struct SwapSells {
 };
 
 struct SwapBuyer {
+    SwapBuyer() {}
     SwapBuyer( const std::string &ifn, SwapBid in) : fname(ifn), bid(in) {}
     std::string fname;
     SwapBid bid;
@@ -126,7 +128,7 @@ class SwapStateData : public QObject {
 //    std::unordered_map<std::string,SwapBid> mSwapNameMap;
 
     SwapOrderBook mOrderBook;
-
+    bool amlive = false;
     std::string filedir(const std::string &in) {
         return fantasybit::GET_ROOT_DIR() + "swap/" + in;
     }
@@ -137,10 +139,23 @@ public:
     void closeAll();
     void AddNewSwapOrder(const SwapBid &inbid, const std::string &fname );
     void AddNewSwapOrder(const SwapAsk &inbid, const std::string &fname );
-    void OnNewSwapTx(const SwapBid &inbid, const std::string &fname);
-    void OnNewSwapTx(const SwapAsk &inoffer, const std::string &fname);
+    void OnNewSwapTx(const SwapBid &inbid, const std::string &fname,const std::string &txid);
+    void OnNewSwapTx(const SwapAsk &inoffer, const std::string &fname,const std::string &txid);
 
     std::vector<SwapOrder> GetCurrentSwapSnaps();
+    SwapBuyer GetSwapBid(const QString &);
+    SwapSeller GetSwapAsk(const QString &);
+
+
+    void removeAll();
+public slots:
+    void OnLive(bool) {
+        amlive = true;
+    }
+
+signals:
+    void NewSwapData(fantasybit::SwapOrder);
+
 
 };
 
