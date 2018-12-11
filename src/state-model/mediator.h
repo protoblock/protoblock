@@ -29,6 +29,8 @@
 #include "ExchangeData.h"
 #include "core.h"
 #include <bitcoinutils.h>
+#include <SwapData.pb.h>
+
 
 #ifdef PLAYERLOADERFD
 #include "../../fantasybit-2015/tradingfootball/playerloader.h"
@@ -61,7 +63,7 @@ class Mediator : public QObject {
     TradingPositionsModel mROWTradingPositionsModel;
 
     //swap
-    SwapOrderModel mSwapOrderModel;
+    SwapOrderModel mSwapBuyModel, mSwapSellModel;
 
     //fnamebal
     FantasyNameBalModel mFantasyNameBalModel, mGoodNameBalModel;
@@ -99,7 +101,9 @@ class Mediator : public QObject {
     QML_READONLY_PTR_PROPERTY(TradingPositionsModel, pROWTradingPositionsModel)
 
     //Swap
-    QML_READONLY_PTR_PROPERTY(SwapOrderModel, pSwapOrderModel)
+    QML_READONLY_PTR_PROPERTY(SwapOrderModel, pSwapBuyModel)
+    QML_READONLY_PTR_PROPERTY(SwapOrderModel, pSwapSellModel)
+
     QML_READONLY_CSTREF_PROPERTY (quint64, bitcoinBalance)
 
 
@@ -772,7 +776,7 @@ public:
     void updateCurrentFantasyPlayerProjections();
 signals:
     void importSuccess(const QString name, bool passfail);
-    void usingFantasyName(const QString &name);
+    void usingFantasyName(const QString &name, const QString &btcaddress);
     void nameCheckGet( const QString & name, const QString & status );
     void OnClaimName(QString name);
     void noName();

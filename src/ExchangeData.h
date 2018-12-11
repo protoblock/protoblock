@@ -626,7 +626,7 @@ signals:
     void StartMarketSnapShot(int);
     void NewDepthDelta(fantasybit::DepthFeedDelta*);
     void NewTradeTic(fantasybit::TradeTic *);
-    void NewFantasyNameOrder(fantasybit::Order&);
+//    void NewFantasyNameOrder(fantasybit::Order&);
     void NewPos(fantasybit::FullPosition);
     void NewOO(fantasybit::FullOrderDelta);
 

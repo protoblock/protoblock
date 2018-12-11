@@ -131,3 +131,8 @@ std::string DataService::GetPidfromSymb(const std::string &symb) {
     return worker->NFLState().mSym2Pid[symb];
 }
 
+std::vector<SwapOrder> DataService::GetCurrentSwapSnaps() {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->SwapState().GetCurrentSwapSnaps();
+}
+

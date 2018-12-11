@@ -16,8 +16,8 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     mROWDepthMarketModel{},
                     mTradingPositionsModel{this,QByteArray(),{"symbol"}},
                     mROWTradingPositionsModel{this,QByteArray(),{"symbol"}},
-                    mSwapOrderModel{this},
-
+                    mSwapBuyModel{this},
+                    mSwapSellModel{this},
                     mFantasyNameBalModel(this,QByteArray(),{"name"}),
                     mGoodNameBalModel(this,QByteArray(),{"name"}),
                     mPlayerSymbolsModel{this,{"symbol"},{"symbol"}},
@@ -48,7 +48,9 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_pTradingPositionsModel(&mTradingPositionsModel),
                     m_pROWTradingPositionsModel(&mROWTradingPositionsModel),
 
-                    m_pSwapOrderModel(&mSwapOrderModel),
+                    m_pSwapBuyModel(&mSwapBuyModel),
+                    m_pSwapSellModel(&mSwapSellModel),
+
                     m_bitcoinBalance(0),
                     m_pGoodNameBalModel(&mGoodNameBalModel),
                     m_pMyFantasyNameBalance{&dummyFantasyNameBalModelItem},
@@ -209,7 +211,7 @@ void Mediator::NameStatus(fantasybit::MyFantasyName myname) {
     update_pMyFantasyNameBalance(mgit);
     qDebug() << "Mediator  emitting using fantasy name " << myname.name().data();
     myGamesSelectionModel.reset();
-    emit usingFantasyName(myname.name().data());
+    emit usingFantasyName(myname.name().data(),mgit->get_btcaddr());
     updateOnChangeFantasyName();
     set_busySend(false);
     checkAllowAction();
@@ -231,7 +233,7 @@ void Mediator::OnPlayName(string pname) {
     update_pMyFantasyNameBalance(mgit);
     qDebug() << "Mediator PlayName emitting using fantasy name " << pname.data();
     myGamesSelectionModel.reset();
-    emit usingFantasyName(pname.data());
+    emit usingFantasyName(pname.data(),"");
     updateOnChangeFantasyName();
     checkAllowAction();
 }
@@ -503,6 +505,15 @@ void Mediator::updateWeek() {
                     else emit haveRowSymbol ();
                 }
             }
+        }
+
+
+        const auto &vso = mGateway->dataService->GetCurrentSwapSnaps();
+        for  (auto so : vso ) {
+            if ( so.isask() )
+                m_pSwapSellModel->add(so);
+            else
+                m_pSwapBuyModel->add(so);
         }
 
         if (myFantasyName != "" ) {
@@ -924,6 +935,9 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
 }
 
 void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint64 min) {
+
+    qDebug() << " doSwap " << qty << "rate: " << rate << isask << with << min;
+
     if ( isask ) {
         SwapAsk ask;
         ask.set_rate(fantasybit::satRateSwap(rate));
@@ -937,6 +951,8 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
 
         if ( qty == 0 )
             qty = static_cast<quint64>(mn);
+
+        qDebug() << " doSwap1 " << ask.DebugString().data();
 
         if ( qty < fantasybit::minFBSwapQty(ask.rate(),ask.satoshi_min()) ) {
             qDebug() << " not enough FB for Swap " << qty;
@@ -990,7 +1006,7 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
             qDebug() << bid.DebugString().data();
 
 
-//        emit NewSwapBid(bid);
+        emit NewSwapBid(bid);
 
     }
 }

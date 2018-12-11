@@ -653,7 +653,7 @@ void MainLAPIWorker::OnNewSwapAsk(fantasybit::SwapAsk sa) {
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
 
-#ifdef SWAP_FEATURE_SEND
+#ifndef NO_SWAP_FEATURE_SEND
     DoPostTx(sn);
     DoSubscribe(myCurrentName.name(),true);
     count = bcount = 0;
@@ -670,7 +670,7 @@ void MainLAPIWorker::OnNewSwapBid(fantasybit::SwapBid sb) {
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
 
-#ifdef SWAP_FEATURE_SEND
+#ifndef NO_SWAP_FEATURE_SEND
     DoPostTx(sn);
     DoSubscribe(myCurrentName.name(),true);
     count = bcount = 0;

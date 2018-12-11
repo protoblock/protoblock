@@ -18,6 +18,7 @@
 #include "FantasyName.h"
 #include "Commissioner.h"
 #include <pbgateways.h>
+#include <SwapData.pb.h>
 
 using namespace fantasybit;
 
@@ -56,8 +57,13 @@ public:
                                     QQmlObjectListModel<SwapOrderModelItem>
                                                     (parent,displayRole,uidRole)
     {
-        append(new SwapOrderModelItem("bob0",1000));
-        append(new SwapOrderModelItem("other bob",1100));
+//        append(new SwapOrderModelItem("bob0",1000));
+//        append(new SwapOrderModelItem("other bob",1100));
+    }
+
+    void add(const fantasybit::SwapOrder so) {
+        append(new SwapOrderModelItem(so.fname().data(),so.rate()));
+        qDebug() << "adding " << so.DebugString().data();
     }
 
 };

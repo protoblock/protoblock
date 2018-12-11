@@ -108,6 +108,44 @@ void SwapStateData::OnNewSwapTx(const SwapAsk &inoffer, const string &fname ) {
     AddNewSwapOrder(inoffer,fname);
 }
 
+std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+
+    qDebug() << "get GetCurrentSwapSnaps" ;
+    std::vector<SwapOrder> vso{};
+
+    for (auto &it : mOrderBook.bids) {
+        for ( auto &b  : it.second.sbuyers ) {
+            SwapOrder so;
+            so.set_isask(false);
+            so.set_rate(it.first);
+            so.set_satoshi_min(b.bid.satoshi_min());
+            so.set_satoshi_max(b.bid.satoshi_max());
+            so.set_rate(b.bid.rate());
+            so.set_fname(b.fname);
+            vso.emplace_back(so);
+        }
+    }
+
+    for (auto &it : mOrderBook.asks) {
+        for ( auto &a  : it.second.ssellers ) {
+            SwapOrder so;
+            so.set_isask(true);
+            so.set_rate(it.first);
+            so.set_satoshi_min(a.offer.satoshi_min());
+            so.set_satoshi_max(a.offer.satoshi_max());
+            so.set_rate(a.offer.rate());
+            so.set_fname(a.fname);
+
+            so.set_pendq(a.pending_fill);
+            so.set_fillq(a.filled);
+            vso.emplace_back(so);
+        }
+    }
+
+    return vso;
+}
+
 void SwapStateData::AddNewSwapOrder(const SwapBid &inbid, const string &fname ) {
     qDebug() << " AddNewSwapBid " << inbid.DebugString().data();
 

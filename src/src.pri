@@ -24,7 +24,8 @@ SOURCES += \
     $$PWD/dataservice.cpp \
     $$PWD/fullgateway.cpp \
     $$PWD/importLoader.cpp \
-    $$PWD/SwapStateData.cpp
+    $$PWD/SwapStateData.cpp \
+    $$PWD/bitcoinwalletworker.cpp
 
 HEADERS += \
     $$PWD/PeerNode.h \
@@ -42,4 +43,5 @@ HEADERS += \
     $$PWD/dataservice.h \
     $$PWD/fullgateway.h \
     $$PWD/importLoader.h \
-    $$PWD/SwapStateData.h
+    $$PWD/SwapStateData.h \
+    $$PWD/bitcoinwalletworker.h

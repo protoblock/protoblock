@@ -365,7 +365,7 @@ Item {
             Layout.preferredHeight: ProtoScreen.guToPx(50)
             Layout.fillWidth: true
             Layout.fillHeight: true
-            model: swappane.btcsell ? MiddleMan.pSwapOrderModel : 0
+            model: swappane.btcsell ? MiddleMan.pSwapSellModel : MiddleMan.pSwapBuyModel
             header: Label { text: swappane.btcsell ? "Sellers" : "Buyers" }
             delegate: ListItems.Subtitled {
                 width: parent.width

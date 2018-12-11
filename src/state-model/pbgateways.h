@@ -9,6 +9,7 @@
 //#include "playerprojmodel.h"
 //#include "playerquoteslicemodel.h"
 #include "ExchangeData.h"
+#include "SwapData.pb.h"
 
 namespace pb {
 
@@ -70,6 +71,8 @@ public:
     virtual int GetOpenPnl(const std::string &fname) = 0;
 
     virtual std::map<std::string, std::string> GetTeamSymbols(const std::list<std::string> &teams) = 0;
+
+    virtual std::vector<SwapOrder> GetCurrentSwapSnaps() = 0;
 
 
 };

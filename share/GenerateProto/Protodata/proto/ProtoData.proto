@@ -515,7 +515,6 @@ message SwapBid {
 
     optional uint64 satoshi_min = 10;
     optional uint64 satoshi_max = 11;
-
     optional uint64 rate = 20; //satoshis per fb
     optional Bitcoin_UTXOS utxos = 30;
     optional bytes change_addr = 40;

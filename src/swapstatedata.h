@@ -19,6 +19,7 @@
 #include "ldbwriter.h"
 #include <unordered_map>
 #include <fbutils.h>
+#include <SwapData.pb.h>
 
 //#include <set>
 //#include "ApiData.pb.h"
@@ -81,7 +82,6 @@ struct SwapBuys {
 };
 
 struct SwapOrderBook {
-    SwapBid bid;
     std::map<uint64_t, SwapBuys> bids;
     std::map<uint64_t, SwapSells> asks;
     void Add(SwapBuyer &inbuyer) {
@@ -139,6 +139,9 @@ public:
     void AddNewSwapOrder(const SwapAsk &inbid, const std::string &fname );
     void OnNewSwapTx(const SwapBid &inbid, const std::string &fname);
     void OnNewSwapTx(const SwapAsk &inoffer, const std::string &fname);
+
+    std::vector<SwapOrder> GetCurrentSwapSnaps();
+
 };
 
 }
