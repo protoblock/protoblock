@@ -107,6 +107,8 @@ Q_DECLARE_METATYPE(fantasybit::TransferTrans)
 Q_DECLARE_METATYPE(fantasybit::SwapAsk)
 Q_DECLARE_METATYPE(fantasybit::SwapBid)
 Q_DECLARE_METATYPE(fantasybit::SwapOrder)
+Q_DECLARE_METATYPE(fantasybit::SwapFill)
+
 
 
 

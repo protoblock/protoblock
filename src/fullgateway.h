@@ -270,6 +270,15 @@ public slots:
         connect(Mediator::instance(),&Mediator::NewSwapBid,
                 mlapi,&MainLAPIWorker::OnNewSwapBid);
 
+        connect(Mediator::instance(),&Mediator::NewSwapSent,
+                mlapi,&MainLAPIWorker::OnNewSwapSent);
+
+        connect(Mediator::instance(),&Mediator::NewSwapFill,
+                mlapi,&MainLAPIWorker::OnNewSwapFill);
+
+        connect(Mediator::instance(),&Mediator::NewProofOfDoubleSpend,
+                mlapi,&MainLAPIWorker::OnNewProofOfDoubleSpend);
+
 
 
         Mediator *med = Mediator::instance();

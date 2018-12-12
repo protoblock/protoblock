@@ -5625,6 +5625,20 @@ class SwapFill : public ::google::protobuf::Message {
   inline ::std::string* release_hash_to_sign();
   inline void set_allocated_hash_to_sign(::std::string* hash_to_sign);
 
+  // optional uint64 satoshi_fee = 30;
+  inline bool has_satoshi_fee() const;
+  inline void clear_satoshi_fee();
+  static const int kSatoshiFeeFieldNumber = 30;
+  inline ::google::protobuf::uint64 satoshi_fee() const;
+  inline void set_satoshi_fee(::google::protobuf::uint64 value);
+
+  // optional uint64 fb_qty = 40;
+  inline bool has_fb_qty() const;
+  inline void clear_fb_qty();
+  static const int kFbQtyFieldNumber = 40;
+  inline ::google::protobuf::uint64 fb_qty() const;
+  inline void set_fb_qty(::google::protobuf::uint64 value);
+
   static const int kSwapfilTranFieldNumber = 600;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapFill >, 11, false >
@@ -5635,14 +5649,20 @@ class SwapFill : public ::google::protobuf::Message {
   inline void clear_has_swapbid();
   inline void set_has_hash_to_sign();
   inline void clear_has_hash_to_sign();
+  inline void set_has_satoshi_fee();
+  inline void clear_has_satoshi_fee();
+  inline void set_has_fb_qty();
+  inline void clear_has_fb_qty();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::fantasybit::SwapBid* swapbid_;
   ::std::string* hash_to_sign_;
+  ::google::protobuf::uint64 satoshi_fee_;
+  ::google::protobuf::uint64 fb_qty_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -12141,6 +12161,50 @@ inline void SwapFill::set_allocated_hash_to_sign(::std::string* hash_to_sign) {
     clear_has_hash_to_sign();
     hash_to_sign_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional uint64 satoshi_fee = 30;
+inline bool SwapFill::has_satoshi_fee() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SwapFill::set_has_satoshi_fee() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SwapFill::clear_has_satoshi_fee() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SwapFill::clear_satoshi_fee() {
+  satoshi_fee_ = GOOGLE_ULONGLONG(0);
+  clear_has_satoshi_fee();
+}
+inline ::google::protobuf::uint64 SwapFill::satoshi_fee() const {
+  return satoshi_fee_;
+}
+inline void SwapFill::set_satoshi_fee(::google::protobuf::uint64 value) {
+  set_has_satoshi_fee();
+  satoshi_fee_ = value;
+}
+
+// optional uint64 fb_qty = 40;
+inline bool SwapFill::has_fb_qty() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SwapFill::set_has_fb_qty() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SwapFill::clear_has_fb_qty() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SwapFill::clear_fb_qty() {
+  fb_qty_ = GOOGLE_ULONGLONG(0);
+  clear_has_fb_qty();
+}
+inline ::google::protobuf::uint64 SwapFill::fb_qty() const {
+  return fb_qty_;
+}
+inline void SwapFill::set_fb_qty(::google::protobuf::uint64 value) {
+  set_has_fb_qty();
+  fb_qty_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -14,6 +14,7 @@ struct utxoData {
     QString script;
     uint64_t in_value;
     uint32_t tx_output_n;
+    int     confirms;
 };
 
 struct txData {
@@ -55,6 +56,7 @@ public:
                 utd.script = vo.value("script").toString();
                 utd.in_value = vo.value("value").toInt();
                 utd.tx_output_n = vo.value("tx_output_n").toInt();
+                utd.confirms = vo.value("confirmations").toInt();
             }
 
             return ret;
@@ -77,6 +79,7 @@ public:
                 auto strval = vo.value("value").toString();
                 utd.in_value = strval.remove('.').toULongLong();
                 utd.tx_output_n = vo.value("output_no").toInt();
+                utd.confirms = vo.value("confirmations").toInt();
             }
 
             return ret;

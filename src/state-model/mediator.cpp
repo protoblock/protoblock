@@ -977,10 +977,91 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
         emit NewSwapAsk(ask);
     }
     else if ( isask && with != "" ) {
-        const auto &sb = mGateway->dataService->GetSwapBid(with);
+
+        const SwapBuyer &sb = mGateway->dataService->GetSwapBid(with);
         qDebug() << sb.bid.DebugString().data();
+
+        if ( sb.is_pending ) {
+            qDebug() << "Swap buy order already filled?";
+            return;
+        }
+
+        if ( with.toStdString() != sb.fname ) {
+            qDebug() << "Fatal With != fname" << with << sb.fname.data();
+            return;
+        }
+
+
+        //sanity qty checks
+        qint64 mn = m_pMyFantasyNameBalance->get_net();
+        if ( mn <= 0 ) {
+            qDebug() << " zero balance ";
+            return;
+        }
+
+        if ( qty == 0 )
+            qty = static_cast<quint64>(mn);
+
+        auto minfb = fantasybit::FBSwapQty(sb.bid.rate(),sb.bid.satoshi_min());
+        auto maxfb = fantasybit::FBSwapQty(sb.bid.rate(),sb.bid.satoshi_max());
+
+        int addfreebee = 0;
+        if ( sb.bid.rate() * maxfb < sb.bid.satoshi_max())
+            addfreebee = sb.bid.satoshi_max() - ( sb.bid.rate() * maxfb );
+
+        if ( minfb < fantasybit::minFBSwapQty(sb.bid.rate(),sb.bid.satoshi_min()) )  {
+            qDebug() << " bad data " ;
+            return;
+        }
+
+        if ( qty > maxfb )
+            qty = std::min(static_cast<quint64>(mn),maxfb);
+
+        if ( qty < minfb ) {
+            qDebug() << " not enough FB for Swap " << qty;
+            return;
+        }
+
+        SwapFill sf;
+        //sf.mutable_swapbid()->CopyFrom(sb.bid);
+        sf.set_satoshi_fee(fantasybit::MIN_SAT_BYTE_TX_FEE);
+        sf.set_fb_qty(qty);
+
+        int minconfirms = 1;
+        auto *item = mFantasyNameBalModel.getByUid(with);
+        if ( item == nullptr ) {
+            qDebug() << " cant find fname" << with;
+            return;
+        };
+
+        string btcaddr = item->get_btcaddr().toStdString();
+        for ( const auto &utxo : sb.bid.utxos().utxo() ) {
+            if ( minconfirms < BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
+                qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
+                return;
+            }
+        }
+
+        if ( sb.bid.utxos().utxo().size() != 1) {
+            qDebug() << " not yet";
+            return;
+        }
+
+        auto myinput = sb.bid.utxos().utxo().Get(0);
+
+        string input, inputscript;
+        BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
+        sf.set_hash_to_sign(
+            BitcoinUtils::createTX(myinput,input,inputscript,
+                                   m_pMyFantasyNameBalance->get_btcaddr().toStdString(),
+                                   fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()) + addfreebee,
+                                   sf.satoshi_fee(),
+                                   btcaddr));
+
+        qDebug() << sf.DebugString().data();
+        emit NewSwapFill(sf);
     }
-    else if ( with == "" ) {
+    else if ( !isask && with == "" ) {
         SwapBid bid;
 
         bid.set_rate(fantasybit::satRateSwap(rate));

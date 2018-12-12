@@ -530,6 +530,9 @@ message SwapFill {
 
     optional SwapBid swapbid = 10;
     optional bytes hash_to_sign = 20;
+    optional uint64 satoshi_fee = 30;
+    optional uint64 fb_qty = 40;
+
     //actual bitcoin tx structure○
 }
 

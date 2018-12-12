@@ -803,6 +803,13 @@ signals:
     //swaps
     void NewSwapAsk(fantasybit::SwapAsk);
     void NewSwapBid(fantasybit::SwapBid);
+    void NewSwapFill(fantasybit::SwapFill);
+    void NewSwapSent(fantasybit::SwapSent);
+    void NewProofOfDoubleSpend(fantasybit::ProofOfDoubleSpend);
+
+
+
+
 
 
 

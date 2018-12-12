@@ -681,6 +681,60 @@ void MainLAPIWorker::OnNewSwapBid(fantasybit::SwapBid sb) {
 
 }
 
+void MainLAPIWorker::OnNewSwapFill(fantasybit::SwapFill sb) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::SWAPFIL);
+    trans.MutableExtension(SwapFill::swapfil_tran)->CopyFrom(sb);
+
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+
+#ifndef NO_SWAP_FEATURE_SEND
+    DoPostTx(sn);
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
+#endif
+
+}
+
+void MainLAPIWorker::OnNewSwapSent(fantasybit::SwapSent sb) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::SWAPSENT);
+    trans.MutableExtension(SwapBid::swapbid_tran)->CopyFrom(sb);
+
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+
+#ifndef NO_SWAP_FEATURE_SEND
+    DoPostTx(sn);
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
+#endif
+
+}
+
+void MainLAPIWorker::OnNewProofOfDoubleSpend(fantasybit::ProofOfDoubleSpend sb) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::PODP);
+    trans.MutableExtension(SwapBid::swapbid_tran)->CopyFrom(sb);
+
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+
+#ifndef NO_SWAP_FEATURE_SEND
+    DoPostTx(sn);
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
+#endif
+
+}
+
 
 
 /*ys

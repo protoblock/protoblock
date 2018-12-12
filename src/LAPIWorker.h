@@ -161,6 +161,10 @@ public slots:
     void OnNewSwapAsk(fantasybit::SwapAsk);
     void OnNewSwapBid(fantasybit::SwapBid);
 
+    void OnNewSwapFill(fantasybit::SwapFill);
+    void OnNewSwapSent(fantasybit::SwapSent);
+    void OnNewProofOfDoubleSpend(fantasybit::ProofOfDoubleSpend);
+
     void Quit();
     //data
     //void OnGlobalStateChange(fantasybit::GlobalState);

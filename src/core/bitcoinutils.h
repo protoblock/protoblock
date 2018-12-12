@@ -34,12 +34,17 @@ public:
                      uint64_t max = 999000000000,
                      uint64_t min = 200);
 
-
+    static int checkUtxo(const Bitcoin_UTXO &iutxo, const std::string &btcaddress);
 
     static std::string createTX(const Bitcoin_UTXO &iutxo,
-                         std::string &input, std::string &in_script);
+                                       const std::string &input,
+                                       const std::string &in_script,
+                                       const std::string &to_address,
+                                       uint64_t amount,
+                                       uint64_t btyefee,
+                                       const std::string &change_address);
 
-    static std::string createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
+    static void createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
                                      std::string &input, std::string &in_script);
 
     static uint64_t getBTCbalance(const std::string &btcaddress) {

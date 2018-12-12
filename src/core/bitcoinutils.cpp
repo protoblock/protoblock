@@ -64,7 +64,27 @@ fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxo(const std::string &btcaddress, 
     return ret;
 }
 
-std::string BitcoinUtils::createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
+int BitcoinUtils::checkUtxo(const Bitcoin_UTXO &iutxo, const std::string &btcaddress) {
+    for ( const auto &utxo : BitcoinApi::getUtxo(btcaddress) ) {
+        if ( utxo.tx_hash.toStdString() != iutxo.txid() )
+            continue;
+
+        if ( utxo.tx_hash != iutxo.tx_output_n() )
+            continue;
+
+        if ( utxo.script.toStdString() != iutxo.locking_script() )
+            continue;
+
+        if ( utxo.in_value != iutxo.in_value())
+            continue;
+
+        return utxo.confirms;
+    }
+
+    return -1;
+}
+
+void BitcoinUtils::createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
                                                std::string &input, std::string &in_script) {
 
     input += iutxo.txid();
@@ -76,34 +96,35 @@ std::string BitcoinUtils::createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
         auto sstr = pb::to_hex ( &ssize, sizeof( unsigned char ) );
         in_script = sstr + iutxo.locking_script();
     }
-
-    return "";
 }
 
 
 
 
 std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
-                                   std::string &input, std::string &in_script) {
-    std::string OP_DUP = "76";
-    std::string OP_HASH160 = "a9";
-    std::string OP_EQUALVERIFY = "88";
-    std::string OP_CHECKSIG = "ac";
-    std::string OP_RETURN = "6a";
-    std::string OP_EQUAL = "87";
-    std::string sighash_all = "01000000";
-
-
-    uint64_t amount = iutxo.in_value();
-    pb::public_key_data publick_key;
-    std::string to_address = "1CKo57EJuBjJ1Sdioqed4mLrWGoKGn4dzS";
+                                   const std::string &input,
+                                   const std::string &in_script,
+                                   const std::string &to_address,
+                                   uint64_t amount,
+                                   uint64_t btyefee,
+                                   const std::string &change_address) {
+    const std::string OP_DUP = "76";
+    const std::string OP_HASH160 = "a9";
+    const std::string OP_EQUALVERIFY = "88";
+    const std::string OP_CHECKSIG = "ac";
+    const std::string OP_RETURN = "6a";
+    const std::string OP_EQUAL = "87";
+    const std::string sighash_all = "01000000";
 
     int numinputs = 1;
-    uint64_t satoshifee = 5000;
+    uint64_t change = amount - iutxo.in_value();
+    pb::public_key_data publick_key;
+    uint64_t satoshifee = btyefee * 150;
 
     //output
     std::string raw_transaction_out;
     int numoutputs = 1;
+    //    if ( change > 0 ) numoutputs++;
     {
         auto size = ( unsigned char )numoutputs;
         auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
@@ -123,7 +144,6 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     }
     p2pkh += pubkeyHash;
     p2pkh += OP_EQUALVERIFY + OP_CHECKSIG;
-
     {
         auto size = ( unsigned char )( p2pkh.size( ) / 2 );
         auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
@@ -134,13 +154,11 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     std::string locktime = "00000000";
     raw_transaction_out += locktime;
 
-
     //to_sign
     std::string to_sign = input + in_script;
     to_sign +=  "ffffffff";
     to_sign += raw_transaction_out;
     to_sign += sighash_all;
-
 
 
     //create tx
