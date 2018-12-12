@@ -1103,6 +1103,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         case TransType::SWAPFIL: {
             const auto & swapthis = t.GetExtension(SwapFill::swapfil_tran);
+            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(),st.id());
             break;
         }
 

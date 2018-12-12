@@ -774,6 +774,7 @@ public:
 //    void OnGoodName(const QString &goodname, const fantasybit::FantasyNameBal &fnb);
 
     void updateCurrentFantasyPlayerProjections();
+    void doSwapSent(const fantasybit::SwapOrder &so);
 signals:
     void importSuccess(const QString name, bool passfail);
     void usingFantasyName(const QString &name, const QString &btcaddress);

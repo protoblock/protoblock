@@ -35,11 +35,31 @@ void SwapStateData::init() {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
         auto *it = swapbids->NewIterator(leveldb::ReadOptions());
         SwapBid sb;
+        SwapFill sf;
+        std::vector<std::pair<std::string,SwapFill>> vsf;
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
-            sb.ParseFromString(it->value().ToString());
+            auto str = it->key().ToString();
+            auto pos =  str.find_last_of(':');
+            if ( pos != string::npos) {
+                sf.ParseFromString(it->value().ToString());
+                vsf.push_back({str,sf});
+            }
+            else {
+                sb.ParseFromString(it->value().ToString());
+                SwapBuyer sb2(it->key().ToString(), sb);
+                mOrderBook.Add( sb2 );
+            }
+        }
 
-            SwapBuyer sb2(it->key().ToString(), sb);
-            mOrderBook.Add( sb2 );
+        for ( auto ssf : vsf) {
+            auto pos =  ssf.first.find_last_of(':');
+            auto fnamebuyer = ssf.first.substr(0, pos); //Alica
+            auto fnameseller = ssf.first.substr(pos+1); //Bob
+
+            if ( !mOrderBook.Fill( ssf.second, fnameseller ) ) {
+                qDebug() << "init !mOrderBook.Fill( infill )  " << ssf.second.fb_qty();
+                return;
+            }
         }
 
         delete it;
@@ -131,7 +151,38 @@ void SwapStateData::OnNewSwapTx(const SwapAsk &inoffer, const string &fname, con
         so.set_fname(fname);
         emit NewSwapData(so);
     }
+}
 
+void SwapStateData::OnNewSwapTx(const SwapFill &infill, const string &fname, const string & ) {
+    //store local in memory
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        if ( infill.fb_qty() <= 0 ) {
+            qDebug() << "invalid SwapFill qty " << infill.fb_qty();
+            return;
+        }
+        if ( !mOrderBook.Fill( infill, fname ) ) {
+            qDebug() << "!mOrderBook.Fill( infill )  " << infill.fb_qty();
+            return;
+        }
+    }
+
+//    SwapBuyer sb = GetSwapBid(infill.counterparty().data());
+//    if ( sb.is_pending ) {
+//        qDebug() << "Invalid SwapFill - SwapBid already pending " << infill.DebugString().data();
+//        return;
+//    }
+//    sb.is_pending = true;
+
+    AddNewSwapOrder(infill,fname);
+    if ( amlive ) {
+        SwapOrder so;
+        so.set_isask(false);
+        so.set_fname(infill.counterparty());
+        so.set_pendq(infill.fb_qty());
+        so.set_ref(fname);
+        emit NewSwapData(so);
+    }
 }
 
 std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
@@ -149,6 +200,7 @@ std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
             so.set_satoshi_max(b.bid.satoshi_max());
             so.set_rate(b.bid.rate());
             so.set_fname(b.fname);
+            so.set_ref(b.counterparty);
             vso.emplace_back(so);
         }
     }
@@ -162,7 +214,6 @@ std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
             so.set_satoshi_max(a.offer.satoshi_max());
             so.set_rate(a.offer.rate());
             so.set_fname(a.fname);
-
             so.set_pendq(a.pending_fill);
             so.set_fillq(a.filled);
             vso.emplace_back(so);
@@ -178,7 +229,8 @@ SwapBuyer SwapStateData::GetSwapBid(const QString &fname) {
 
     string temp;
     if ( !swapbids->Get(leveldb::ReadOptions(), sb.fname, &temp).ok() ) {
-        qWarning() << "cant rad swapbid for" << fname;
+        qWarning() << "cant read swapbid for" << fname;
+        sb.fname = "";
         return sb;
     }
 
@@ -193,11 +245,27 @@ SwapSeller SwapStateData::GetSwapAsk(const QString &fname) {
     string temp;
     if ( !swapasks->Get(leveldb::ReadOptions(), sa.fname, &temp).ok() ) {
         qWarning() << "cant rad swapask for" << fname;
+        sa.fname = "";
         return sa;
     }
 
     sa.offer.ParseFromString(temp);
     return sa;
+}
+
+SwapFill SwapStateData::GetSwapFill(const QString &buyer, const QString &seller_ref) {
+    SwapFill sf;
+
+    QString qkey("%1:%2");
+    std::string key = qkey.arg(buyer).arg(seller_ref).toStdString();
+    string temp;
+    if ( !swapbids->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
+        qWarning() << "cant read swapbids for" << key.data() << buyer << seller_ref;
+        return sf;
+    }
+
+    sf.ParseFromString(temp);
+    return sf;
 }
 
 void SwapStateData::AddNewSwapOrder(const SwapBid &inbid, const string &fname ) {
@@ -211,6 +279,14 @@ void SwapStateData::AddNewSwapOrder(const SwapAsk &inask, const string &fname ) 
 
     swapasks->Put(write_sync, fname, inask.SerializeAsString());
 }
+
+void SwapStateData::AddNewSwapOrder(const SwapFill &infill, const string &fname ) {
+    qDebug() << " AddNewSwapFill " << infill.DebugString().data();
+
+    std::string key = infill.counterparty() + ":" +  fname;
+    swapbids->Put(write_sync, key, infill.SerializeAsString());
+}
+
 
 }
 

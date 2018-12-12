@@ -146,4 +146,10 @@ SwapSeller DataService::GetSwapAsk(const QString &fn) {
     return worker->SwapState().GetSwapAsk(fn);
 }
 
+SwapFill DataService::GetSwapFill(const QString &buyer, const QString &seller_ref) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->SwapState().GetSwapFill(buyer, seller_ref);
+}
+
+
 

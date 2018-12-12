@@ -62,6 +62,8 @@ public:
     std::vector<SwapOrder> GetCurrentSwapSnaps();
     SwapBuyer GetSwapBid(const QString &);
     SwapSeller GetSwapAsk(const QString &);
+    SwapFill GetSwapFill(const QString &buyer, const QString &seller_ref);
+
 
 };
 

@@ -76,6 +76,7 @@ public:
     virtual std::vector<SwapOrder> GetCurrentSwapSnaps() = 0;
     virtual SwapBuyer GetSwapBid(const QString &) = 0;
     virtual SwapSeller GetSwapAsk(const QString &) = 0;
+    virtual SwapFill GetSwapFill(const QString &buyer, const QString &seller_ref) = 0;
 
 
 

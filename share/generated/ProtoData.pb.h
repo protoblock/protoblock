@@ -5639,6 +5639,18 @@ class SwapFill : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 fb_qty() const;
   inline void set_fb_qty(::google::protobuf::uint64 value);
 
+  // optional string counterparty = 50;
+  inline bool has_counterparty() const;
+  inline void clear_counterparty();
+  static const int kCounterpartyFieldNumber = 50;
+  inline const ::std::string& counterparty() const;
+  inline void set_counterparty(const ::std::string& value);
+  inline void set_counterparty(const char* value);
+  inline void set_counterparty(const char* value, size_t size);
+  inline ::std::string* mutable_counterparty();
+  inline ::std::string* release_counterparty();
+  inline void set_allocated_counterparty(::std::string* counterparty);
+
   static const int kSwapfilTranFieldNumber = 600;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapFill >, 11, false >
@@ -5653,6 +5665,8 @@ class SwapFill : public ::google::protobuf::Message {
   inline void clear_has_satoshi_fee();
   inline void set_has_fb_qty();
   inline void clear_has_fb_qty();
+  inline void set_has_counterparty();
+  inline void clear_has_counterparty();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -5660,9 +5674,10 @@ class SwapFill : public ::google::protobuf::Message {
   ::std::string* hash_to_sign_;
   ::google::protobuf::uint64 satoshi_fee_;
   ::google::protobuf::uint64 fb_qty_;
+  ::std::string* counterparty_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -12205,6 +12220,76 @@ inline ::google::protobuf::uint64 SwapFill::fb_qty() const {
 inline void SwapFill::set_fb_qty(::google::protobuf::uint64 value) {
   set_has_fb_qty();
   fb_qty_ = value;
+}
+
+// optional string counterparty = 50;
+inline bool SwapFill::has_counterparty() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SwapFill::set_has_counterparty() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SwapFill::clear_has_counterparty() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SwapFill::clear_counterparty() {
+  if (counterparty_ != &::google::protobuf::internal::kEmptyString) {
+    counterparty_->clear();
+  }
+  clear_has_counterparty();
+}
+inline const ::std::string& SwapFill::counterparty() const {
+  return *counterparty_;
+}
+inline void SwapFill::set_counterparty(const ::std::string& value) {
+  set_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    counterparty_ = new ::std::string;
+  }
+  counterparty_->assign(value);
+}
+inline void SwapFill::set_counterparty(const char* value) {
+  set_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    counterparty_ = new ::std::string;
+  }
+  counterparty_->assign(value);
+}
+inline void SwapFill::set_counterparty(const char* value, size_t size) {
+  set_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    counterparty_ = new ::std::string;
+  }
+  counterparty_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapFill::mutable_counterparty() {
+  set_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    counterparty_ = new ::std::string;
+  }
+  return counterparty_;
+}
+inline ::std::string* SwapFill::release_counterparty() {
+  clear_has_counterparty();
+  if (counterparty_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = counterparty_;
+    counterparty_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapFill::set_allocated_counterparty(::std::string* counterparty) {
+  if (counterparty_ != &::google::protobuf::internal::kEmptyString) {
+    delete counterparty_;
+  }
+  if (counterparty) {
+    set_has_counterparty();
+    counterparty_ = counterparty;
+  } else {
+    clear_has_counterparty();
+    counterparty_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

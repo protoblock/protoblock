@@ -512,6 +512,8 @@ void Mediator::updateWeek() {
         for  (auto so : vso ) {
             if ( so.isask() )
                 m_pSwapSellModel->add(so);
+            else if ( so.ref() != "" )
+                doSwapSent(so);
             else
                 m_pSwapBuyModel->add(so);
         }
@@ -538,11 +540,17 @@ void Mediator::updateWeek() {
 #endif
 
 void Mediator::OnSwapData(fantasybit::SwapOrder so) {
-    if ( so.isask() )
+    if ( so.isask() ) {
         m_pSwapSellModel->add(so);
-    else
-        m_pSwapBuyModel->add(so);
+    }
+    else {
+        if ( so.ref() != "" )
+            doSwapSent(so);
+        else
+            m_pSwapBuyModel->add(so);
+    }
 }
+
 
 void Mediator::updateOnChangeFantasyName() {
     updateCurrentFantasyPlayerProjections();
@@ -991,7 +999,6 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
             return;
         }
 
-
         //sanity qty checks
         qint64 mn = m_pMyFantasyNameBalance->get_net();
         if ( mn <= 0 ) {
@@ -1023,9 +1030,10 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
         }
 
         SwapFill sf;
-        //sf.mutable_swapbid()->CopyFrom(sb.bid);
+        sf.mutable_swapbid()->CopyFrom(sb.bid);
         sf.set_satoshi_fee(fantasybit::MIN_SAT_BYTE_TX_FEE);
         sf.set_fb_qty(qty);
+        sf.set_counterparty(sb.fname);
 
         int minconfirms = 1;
         auto *item = mFantasyNameBalModel.getByUid(with);
@@ -1101,6 +1109,24 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
         emit NewSwapBid(bid);
     }
 }
+
+void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
+    qDebug() << "doSwapSent  " << so.DebugString().data();
+
+    const SwapFill &sf = mGateway->dataService->GetSwapFill(so.fname().data(),
+                                                            so.ref().data());
+
+    qDebug() << "doSwapSent2  " << sf.DebugString().data();
+
+
+    //if I am alice
+    //verify the hash to sign
+    // sign it
+    // create SwapSent TX
+    // send SwapSent TX
+    // ?? send bitcoin tx to bitcon blockchain
+}
+
 
 //void Mediator::doSwap() {
 

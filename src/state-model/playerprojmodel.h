@@ -3,10 +3,6 @@
 
 #include <QObject>
 #include <QString>
-#include "../QmlSupermacros/QQmlConstRefPropertyHelpers.h"
-#include "../QmlModels/QQmlObjectListModel.h"
-#include "../QmlSupermacros/QQmlVarPropertyHelpers.h"
-
 #include "StateData.pb.h"
 #include "globals.h"
 #include <unordered_map>
