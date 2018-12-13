@@ -67,6 +67,8 @@ namespace pb {
 
     std::string to_hex( const unsigned char* d, uint32_t s );
 
+    std::string to_hex( const std::string &in );
+
     class TheCTX : public GenericSingleton<TheCTX> {
         friend class GenericSingleton<TheCTX>;
         TheCTX(){
@@ -238,6 +240,15 @@ namespace pb {
         secp256k1_sha256_finalize(&hasher, out32);
     }
 
+    inline std::string serialize_der(const secp256k1_ecdsa_signature &in) {
+        std::vector <char> buffer(100);
+        size_t size = buffer.size ();
+        secp256k1_ecdsa_signature_serialize_der(pb::TheCTX::instance ()->CTX (),
+                                                reinterpret_cast<unsigned char*>(buffer.data ()),&size,&in);
+        std::string ret;
+        ret.assign (buffer.data (),size);
+        return ret;
+    }
 
 
     inline secp256k1_ecdsa_signature  parse_der(const unsigned char *input, size_t inputlen) {
@@ -268,6 +279,15 @@ namespace pb {
     // Fuck we need to rebuild protobuf as _public
     inline pb::sha256 hashit(const GOOGLE_NAMESPACE::protobuf::Message  &in) {
         return hashit(in.SerializeAsString());
+    }
+
+    inline pb::sha256 hashfromhex(const std::string &in) {
+        auto size = (in.size()/2) + 1;
+        std::vector<char> buffer(size);
+        size = from_hex(in,&buffer[0],buffer.size());
+        pb::sha256 ret;
+        hashc(reinterpret_cast<const unsigned char*>(&buffer[0]), size, ret.data);
+        return ret;
     }
 
     static std::string toBtcAddress(const public_key_data &in ) {

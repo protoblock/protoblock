@@ -508,15 +508,6 @@ void Mediator::updateWeek() {
         }
 
 
-        const auto &vso = mGateway->dataService->GetCurrentSwapSnaps();
-        for  (auto so : vso ) {
-            if ( so.isask() )
-                m_pSwapSellModel->add(so);
-            else if ( so.ref() != "" )
-                doSwapSent(so);
-            else
-                m_pSwapBuyModel->add(so);
-        }
 
         if (myFantasyName != "" ) {
             updateOnChangeFantasyName();
@@ -556,6 +547,19 @@ void Mediator::updateOnChangeFantasyName() {
     updateCurrentFantasyPlayerProjections();
     updateCurrentFantasyPlayerOrderPositions();
     setbitcoinBalance(BitcoinUtils::getBTCbalance(m_pMyFantasyNameBalance->get_btcaddr()));
+
+    m_pSwapSellModel->clear();
+    m_pSwapBuyModel->clear();
+    const auto &vso = mGateway->dataService->GetCurrentSwapSnaps();
+    for  (auto so : vso ) {
+        if ( so.isask() )
+            m_pSwapSellModel->add(so);
+        else if ( so.ref() != "" )
+            doSwapSent(so);
+        else
+            m_pSwapBuyModel->add(so);
+    }
+
 
 }
 
@@ -1110,21 +1114,53 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
     }
 }
 
+
+
 void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
     qDebug() << "doSwapSent  " << so.DebugString().data();
 
+    //if I am alice
+    if ( so.fname() != myFantasyName )
+        return;
+
+    //YES I CAN BUY FANTASYBIT!!
     const SwapFill &sf = mGateway->dataService->GetSwapFill(so.fname().data(),
                                                             so.ref().data());
+
+    //verify the hash to sign
+    // sign it
+//    auto &in = sf.hash_to_sign();
+//    auto size = (in.size()/2) + 1;
+//    std::vector<char> buffer(size);
+//    size = from_hex(in,&buffer[0],buffer.size());
+//    pb::sha256 ret;
+//    pb::hashc((const unsigned char*)&buffer[0], size, ret.data);
+
+////    auto dblhash = pb::hashit(pb::hashfromhex(to_sign.at(i)));
+//    auto dblhash = pb::hashit(ret);
+//    auto sig = pvk.sign(dblhash);
+//    auto dersig = pb::serialize_der (sig);
+//    dersig = pb::to_hex(dersig);
+
+
+    //auto dblhash = pb::hashit(pb::hashfromhex(to_sign.at(i)));
+    // create SwapSent TX
+    SwapSent ss;
+    ss.mutable_swapfill()->CopyFrom(sf);
+    // send SwapSent TX
+    emit NewSwapSent(ss);
+
+    // ?? send bitcoin tx to bitcon blockchain
+    // BitcoinApi::sendrawTx(mTx);
+
+
 
     qDebug() << "doSwapSent2  " << sf.DebugString().data();
 
 
-    //if I am alice
-    //verify the hash to sign
-    // sign it
-    // create SwapSent TX
-    // send SwapSent TX
-    // ?? send bitcoin tx to bitcon blockchain
+//    https://bitcoin.stackexchange.com/questions/3374/how-to-redeem-a-basic-tx
+
+
 }
 
 

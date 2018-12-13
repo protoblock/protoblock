@@ -6,7 +6,7 @@
 //  Created by Jay Berg on 11/23/18
 //
 */
-#include <SwapStateData.h>
+#include <swapstatedata.h>
 #include <fbutils.h>
 #include <mutex>
 #include <pbutils.h>

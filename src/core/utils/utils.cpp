@@ -82,6 +82,10 @@ std::string sha256::reversestr() const {
     return copy.str();
 }
 
+std::string to_hex( const std::string &in ) {
+    return to_hex( (unsigned char*)in.data (), in.size ());
+}
+
 sha256::operator std::string()const { return  str(); }
 
 }

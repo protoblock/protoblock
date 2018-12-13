@@ -698,12 +698,29 @@ void MainLAPIWorker::OnNewSwapFill(fantasybit::SwapFill sb) {
 #endif
 
 }
+//    auto size = (in.size()/2) + 1;
+//    std::vector<char> buffer(size);
+//    size = pb::from_hex(in,&buffer[0],buffer.size());
+//    pb::sha256 ret;
+////    pb::hashc((const unsigned char*)&buffer[0], size, ret.data);
+//    pb::hashc(reinterpret_cast<const unsigned char*>(&buffer[0]), size, ret.data);
 
-void MainLAPIWorker::OnNewSwapSent(fantasybit::SwapSent sb) {
+void MainLAPIWorker::OnNewSwapSent(fantasybit::SwapSent ss) {
+    qDebug() << "twitch11 ss";// << ss.DebugString().data();
+    // sign it
+    auto &in = ss.swapfill().hash_to_sign();
+
+    auto dblhash = pb::hashit(pb::hashfromhex(in));
+    auto sig = agent.sign_raw(dblhash);
+    auto dersig = pb::serialize_der (sig);
+    dersig = pb::to_hex(dersig);
+    ss.set_sig(dersig);
+
+    qDebug() << "ainLAPIWorker::OnNewSwapSent" <<  ss.DebugString().data();
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::SWAPSENT);
-    trans.MutableExtension(SwapBid::swapbid_tran)->CopyFrom(sb);
+    trans.MutableExtension(SwapSent::swapsent_tran)->CopyFrom(ss);
 
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);

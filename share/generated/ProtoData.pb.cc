@@ -1350,25 +1350,26 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "satoshi_fee\030\036 \001(\004\022\016\n\006fb_qty\030( \001(\004\022\024\n\014cou"
     "nterparty\0302 \001(\t2D\n\014swapfil_tran\022\027.fantas"
     "ybit.Transaction\030\330\004 \001(\0132\024.fantasybit.Swa"
-    "pFill\"p\n\010SwapSent\022\020\n\010swapfill\030\n \001(\014\022\013\n\003s"
-    "ig\030\024 \001(\0142E\n\rswapsent_tran\022\027.fantasybit.T"
-    "ransaction\030\274\005 \001(\0132\024.fantasybit.SwapSent\""
-    "\200\001\n\022ProofOfDoubleSpend\022\020\n\010swapsent\030\n \001(\014"
-    "\022\013\n\003sig\030\024 \001(\0142K\n\tpodp_tran\022\027.fantasybit."
-    "Transaction\030\240\006 \001(\0132\036.fantasybit.ProofOfD"
-    "oubleSpend*Y\n\014MyNameStatus\022\010\n\004none\020\001\022\013\n\007"
-    "notavil\020\002\022\r\n\trequested\020\005\022\024\n\020transaction_"
-    "sent\020\017\022\r\n\tconfirmed\020\024*\350\001\n\tTransType\022\010\n\004N"
-    "AME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002\022\010\n\004DAT"
-    "A\020\003\022\024\n\020PROJECTION_BLOCK\020\004\022\017\n\013MASTER_NAME"
-    "\020\005\022\010\n\004TIME\020\006\022\013\n\007STAMPED\020\007\022\014\n\010EXCHANGE\020\010\022"
-    "\022\n\016EXCHANGE_BLOCK\020\t\022\014\n\010TRANSFER\020\n\022\013\n\007SWA"
-    "PASK\020\013\022\013\n\007SWAPBID\020\014\022\013\n\007SWAPFIL\020\r\022\014\n\010SWAP"
-    "SENT\020\016\022\010\n\004PODP\020\017*\260\001\n\006TrType\022\017\n\013SEASONSTA"
-    "RT\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGA"
-    "MESTART\020\006\022\014\n\010WEEKOVER\020\007\022\025\n\021TRADESESSIONS"
-    "TART\020\010\022\037\n\033TRADESESSIONCLOSEANDPREOPEN\020\t\022"
-    "\020\n\014PLAYOFFSTART\020\n\022\020\n\014SUPERBOWLEND\020\014", 7235);
+    "pFill\"\206\001\n\010SwapSent\022&\n\010swapfill\030\n \001(\0132\024.f"
+    "antasybit.SwapFill\022\013\n\003sig\030\024 \001(\0142E\n\rswaps"
+    "ent_tran\022\027.fantasybit.Transaction\030\274\005 \001(\013"
+    "2\024.fantasybit.SwapSent\"\200\001\n\022ProofOfDouble"
+    "Spend\022\020\n\010swapsent\030\n \001(\014\022\013\n\003sig\030\024 \001(\0142K\n\t"
+    "podp_tran\022\027.fantasybit.Transaction\030\240\006 \001("
+    "\0132\036.fantasybit.ProofOfDoubleSpend*Y\n\014MyN"
+    "ameStatus\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequ"
+    "ested\020\005\022\024\n\020transaction_sent\020\017\022\r\n\tconfirm"
+    "ed\020\024*\350\001\n\tTransType\022\010\n\004NAME\020\000\022\016\n\nPROJECTI"
+    "ON\020\001\022\n\n\006RESULT\020\002\022\010\n\004DATA\020\003\022\024\n\020PROJECTION"
+    "_BLOCK\020\004\022\017\n\013MASTER_NAME\020\005\022\010\n\004TIME\020\006\022\013\n\007S"
+    "TAMPED\020\007\022\014\n\010EXCHANGE\020\010\022\022\n\016EXCHANGE_BLOCK"
+    "\020\t\022\014\n\010TRANSFER\020\n\022\013\n\007SWAPASK\020\013\022\013\n\007SWAPBID"
+    "\020\014\022\013\n\007SWAPFIL\020\r\022\014\n\010SWAPSENT\020\016\022\010\n\004PODP\020\017*"
+    "\260\001\n\006TrType\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEND"
+    "\020\003\022\r\n\tHEARTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEK"
+    "OVER\020\007\022\025\n\021TRADESESSIONSTART\020\010\022\037\n\033TRADESE"
+    "SSIONCLOSEANDPREOPEN\020\t\022\020\n\014PLAYOFFSTART\020\n"
+    "\022\020\n\014SUPERBOWLEND\020\014", 7258);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -16479,6 +16480,7 @@ SwapSent::SwapSent()
 }
 
 void SwapSent::InitAsDefaultInstance() {
+  swapfill_ = const_cast< ::fantasybit::SwapFill*>(&::fantasybit::SwapFill::default_instance());
 }
 
 SwapSent::SwapSent(const SwapSent& from)
@@ -16489,7 +16491,7 @@ SwapSent::SwapSent(const SwapSent& from)
 
 void SwapSent::SharedCtor() {
   _cached_size_ = 0;
-  swapfill_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  swapfill_ = NULL;
   sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -16499,13 +16501,11 @@ SwapSent::~SwapSent() {
 }
 
 void SwapSent::SharedDtor() {
-  if (swapfill_ != &::google::protobuf::internal::kEmptyString) {
-    delete swapfill_;
-  }
   if (sig_ != &::google::protobuf::internal::kEmptyString) {
     delete sig_;
   }
   if (this != default_instance_) {
+    delete swapfill_;
   }
 }
 
@@ -16533,9 +16533,7 @@ SwapSent* SwapSent::New() const {
 void SwapSent::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_swapfill()) {
-      if (swapfill_ != &::google::protobuf::internal::kEmptyString) {
-        swapfill_->clear();
-      }
+      if (swapfill_ != NULL) swapfill_->::fantasybit::SwapFill::Clear();
     }
     if (has_sig()) {
       if (sig_ != &::google::protobuf::internal::kEmptyString) {
@@ -16553,12 +16551,12 @@ bool SwapSent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional bytes swapfill = 10;
+      // optional .fantasybit.SwapFill swapfill = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_swapfill()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_swapfill()));
         } else {
           goto handle_uninterpreted;
         }
@@ -16598,9 +16596,9 @@ bool SwapSent::MergePartialFromCodedStream(
 
 void SwapSent::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional bytes swapfill = 10;
+  // optional .fantasybit.SwapFill swapfill = 10;
   if (has_swapfill()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       10, this->swapfill(), output);
   }
 
@@ -16618,10 +16616,10 @@ void SwapSent::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SwapSent::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional bytes swapfill = 10;
+  // optional .fantasybit.SwapFill swapfill = 10;
   if (has_swapfill()) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
         10, this->swapfill(), target);
   }
 
@@ -16643,10 +16641,10 @@ int SwapSent::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional bytes swapfill = 10;
+    // optional .fantasybit.SwapFill swapfill = 10;
     if (has_swapfill()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->swapfill());
     }
 
@@ -16685,7 +16683,7 @@ void SwapSent::MergeFrom(const SwapSent& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_swapfill()) {
-      set_swapfill(from.swapfill());
+      mutable_swapfill()->::fantasybit::SwapFill::MergeFrom(from.swapfill());
     }
     if (from.has_sig()) {
       set_sig(from.sig());

@@ -454,7 +454,7 @@ message TimeTransition {
 // and Here is by Bitcoin UTXOs that I will use
 
 
-// Step 2: Bob says here sign this "nkkcnsakfndc" and you get my 1000 FB
+// Step 2: Bob says here sign this hash and you get my 1000 FB
 //  1 - create a bitcoin transaction
 //      tells system that if Alice signs this tx - send he FB
 
@@ -543,7 +543,7 @@ message SwapSent {
         optional SwapSent swapsent_tran = 700;
     }
 
-    optional bytes swapfill = 10;
+    optional SwapFill swapfill = 10;
     optional bytes sig = 20;
 }
 

@@ -5742,17 +5742,14 @@ class SwapSent : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional bytes swapfill = 10;
+  // optional .fantasybit.SwapFill swapfill = 10;
   inline bool has_swapfill() const;
   inline void clear_swapfill();
   static const int kSwapfillFieldNumber = 10;
-  inline const ::std::string& swapfill() const;
-  inline void set_swapfill(const ::std::string& value);
-  inline void set_swapfill(const char* value);
-  inline void set_swapfill(const void* value, size_t size);
-  inline ::std::string* mutable_swapfill();
-  inline ::std::string* release_swapfill();
-  inline void set_allocated_swapfill(::std::string* swapfill);
+  inline const ::fantasybit::SwapFill& swapfill() const;
+  inline ::fantasybit::SwapFill* mutable_swapfill();
+  inline ::fantasybit::SwapFill* release_swapfill();
+  inline void set_allocated_swapfill(::fantasybit::SwapFill* swapfill);
 
   // optional bytes sig = 20;
   inline bool has_sig() const;
@@ -5779,7 +5776,7 @@ class SwapSent : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* swapfill_;
+  ::fantasybit::SwapFill* swapfill_;
   ::std::string* sig_;
 
   mutable int _cached_size_;
@@ -12296,7 +12293,7 @@ inline void SwapFill::set_allocated_counterparty(::std::string* counterparty) {
 
 // SwapSent
 
-// optional bytes swapfill = 10;
+// optional .fantasybit.SwapFill swapfill = 10;
 inline bool SwapSent::has_swapfill() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -12307,62 +12304,30 @@ inline void SwapSent::clear_has_swapfill() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void SwapSent::clear_swapfill() {
-  if (swapfill_ != &::google::protobuf::internal::kEmptyString) {
-    swapfill_->clear();
-  }
+  if (swapfill_ != NULL) swapfill_->::fantasybit::SwapFill::Clear();
   clear_has_swapfill();
 }
-inline const ::std::string& SwapSent::swapfill() const {
-  return *swapfill_;
+inline const ::fantasybit::SwapFill& SwapSent::swapfill() const {
+  return swapfill_ != NULL ? *swapfill_ : *default_instance_->swapfill_;
 }
-inline void SwapSent::set_swapfill(const ::std::string& value) {
+inline ::fantasybit::SwapFill* SwapSent::mutable_swapfill() {
   set_has_swapfill();
-  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
-    swapfill_ = new ::std::string;
-  }
-  swapfill_->assign(value);
-}
-inline void SwapSent::set_swapfill(const char* value) {
-  set_has_swapfill();
-  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
-    swapfill_ = new ::std::string;
-  }
-  swapfill_->assign(value);
-}
-inline void SwapSent::set_swapfill(const void* value, size_t size) {
-  set_has_swapfill();
-  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
-    swapfill_ = new ::std::string;
-  }
-  swapfill_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SwapSent::mutable_swapfill() {
-  set_has_swapfill();
-  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
-    swapfill_ = new ::std::string;
-  }
+  if (swapfill_ == NULL) swapfill_ = new ::fantasybit::SwapFill;
   return swapfill_;
 }
-inline ::std::string* SwapSent::release_swapfill() {
+inline ::fantasybit::SwapFill* SwapSent::release_swapfill() {
   clear_has_swapfill();
-  if (swapfill_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = swapfill_;
-    swapfill_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
+  ::fantasybit::SwapFill* temp = swapfill_;
+  swapfill_ = NULL;
+  return temp;
 }
-inline void SwapSent::set_allocated_swapfill(::std::string* swapfill) {
-  if (swapfill_ != &::google::protobuf::internal::kEmptyString) {
-    delete swapfill_;
-  }
+inline void SwapSent::set_allocated_swapfill(::fantasybit::SwapFill* swapfill) {
+  delete swapfill_;
+  swapfill_ = swapfill;
   if (swapfill) {
     set_has_swapfill();
-    swapfill_ = swapfill;
   } else {
     clear_has_swapfill();
-    swapfill_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

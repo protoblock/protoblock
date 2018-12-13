@@ -84,7 +84,7 @@ struct SwapBuys {
     }
 
     bool Fill(const std::string &fname, const std::string &counterparty ) {
-        for (auto sb : sbuyers) {
+        for (auto &sb : sbuyers) {
             if (sb.fname != fname )
                 continue;
             if ( !sb.is_pending ) {
