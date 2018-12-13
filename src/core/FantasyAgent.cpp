@@ -307,6 +307,18 @@ bool FantasyAgent::amDataAgent() {
         return false;
 }
 
+secp256k1_ecdsa_signature FantasyAgent::sign_raw(const pb::sha256 &in) {
+    if ( HaveClient() )
+        return m_priv.sign(in);
+
+    else
+        return secp256k1_ecdsa_signature();
+}
+
+string FantasyAgent::sign(const pb::sha256 &in) {
+    return Commissioner::sig2str( HaveClient() ? m_priv.sign(in) : secp256k1_ecdsa_signature());
+}
+
 bool FantasyAgent::AmFantasyAgent(pb::public_key_data pubkey) {
     return Commissioner::GENESIS_PUB_KEY == pubkey;
 }

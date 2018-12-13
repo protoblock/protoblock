@@ -132,8 +132,7 @@ namespace pb {
         unsigned char key_data[33];
         unsigned char * begin() {  return &key_data[0]; }
         const unsigned char * begin() const {  return &key_data[0]; }
-
-
+        static const size_t size = 33;
     };
 
     inline bool operator==( const public_key_data& a, const public_key_data& b ) {
@@ -249,7 +248,6 @@ namespace pb {
         ret.assign (buffer.data (),size);
         return ret;
     }
-
 
     inline secp256k1_ecdsa_signature  parse_der(const unsigned char *input, size_t inputlen) {
         secp256k1_ecdsa_signature sig;

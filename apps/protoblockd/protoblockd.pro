@@ -9,7 +9,7 @@ TEMPLATE = lib
 TARGET = protoblockd
 
 !contains(DEFINES, PRODFOOTBALL){
-    TARGET = STAGING--$${TARGET}
+    TARGET = STAGING-$${TARGET}
 }
 
 contains(DEFINES, DATAAGENTDEFS){

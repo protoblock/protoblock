@@ -225,9 +225,9 @@ public slots:
         qDebug() << "FullGateway received Livegui ";
         amLive = true;
         m_gs = gs;
-        emit LiveGui(gs);
         if ( heslive ) {
             initBothLive();
+            emit LiveGui(gs);
             if ( !holdfresh.empty() ) {
                 if ( !m_mynames.empty())
                      emit MyNames(m_mynames);
@@ -239,6 +239,9 @@ public slots:
             if ( gotAllSnaps )
                 emit GotMarketSnaps();
         }
+        else
+            emit LiveGui(gs);
+
     }
 
     void OnClaimName(QString s) {
@@ -309,6 +312,7 @@ public slots:
     }
 
     void ClientReady() {
+        heslive = true;
         if ( amLive ) {
             initBothLive();
 
@@ -324,7 +328,6 @@ public slots:
                  emit NameBal(v);
             holdfresh.clear();
         }
-        heslive = true;
     }
 
 /**** trading

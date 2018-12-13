@@ -85,7 +85,8 @@ int BitcoinUtils::checkUtxo(const Bitcoin_UTXO &iutxo, const std::string &btcadd
 }
 
 void BitcoinUtils::createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
-                                               std::string &input, std::string &in_script) {
+                                        std::string &input,
+                                        std::string &in_script) {
 
     input += iutxo.txid();
     auto reversetxoun = pb::toReverseHexFromDecimal (iutxo.tx_output_n());
@@ -114,7 +115,10 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     const std::string OP_CHECKSIG = "ac";
     const std::string OP_RETURN = "6a";
     const std::string OP_EQUAL = "87";
-    const std::string sighash_all = "01000000";
+//    const std::string SIGHASH_ALL = "01000000";
+    const std::string SEQUENCE = "ffffffff";
+    const std::string LOCKTIME = "00000000";
+    const std::string VERSION = "01000000";
 
     int numinputs = 1;
     uint64_t change = amount - iutxo.in_value();
@@ -151,28 +155,38 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     }
     raw_transaction_out += p2pkh;
 
-    std::string locktime = "00000000";
+    std::string locktime = LOCKTIME;
     raw_transaction_out += locktime;
 
-    //to_sign
-    std::string to_sign = input + in_script;
-    to_sign +=  "ffffffff";
-    to_sign += raw_transaction_out;
-    to_sign += sighash_all;
 
 
-    //create tx
-    std::string raw_transaction_pre = "01000000"; // i.e. version
+    //create tx pre
+    std::string raw_transaction_pre = VERSION; // i.e. version
     {
         auto size = ( unsigned char )numinputs;
         auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
         raw_transaction_pre += sstr;
     }
+
+    //to_sign
+    std::string to_sign;
+    to_sign += raw_transaction_pre;
+    to_sign += input;
+    to_sign += in_script;
+    to_sign += SEQUENCE;
+    to_sign += raw_transaction_out;
+    to_sign += pb::SIGHASH_ALL_4;
+
+    //create tx
+    std::string final_tx;
+    final_tx += raw_transaction_pre;
+    final_tx += input;
+    final_tx += "%1"; // sigout_len + sigout
+    final_tx += SEQUENCE;
+    final_tx += raw_transaction_out;
+
     /**/
-    return raw_transaction_pre + to_sign;
-
-
-
+    return final_tx;
 }
 
 }

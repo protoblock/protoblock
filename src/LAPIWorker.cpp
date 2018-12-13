@@ -9,6 +9,7 @@
 #include "core.h"
 #include <vector>
 #include "Commissioner.h"
+#include <bitcoinutils.h>
 
 
 using namespace std;
@@ -706,17 +707,25 @@ void MainLAPIWorker::OnNewSwapFill(fantasybit::SwapFill sb) {
 //    pb::hashc(reinterpret_cast<const unsigned char*>(&buffer[0]), size, ret.data);
 
 void MainLAPIWorker::OnNewSwapSent(fantasybit::SwapSent ss) {
-    qDebug() << "twitch11 ss";// << ss.DebugString().data();
+    qDebug() << "twitch11 mainLAPIWorker::OnNewSwapSent" <<  ss.DebugString().data();
+
     // sign it
-    auto &in = ss.swapfill().hash_to_sign();
+    auto in = ss.swapfill().hash_to_sign();// + pb::SIGHASH_ALL;
 
-    auto dblhash = pb::hashit(pb::hashfromhex(in));
-    auto sig = agent.sign_raw(dblhash);
-    auto dersig = pb::serialize_der (sig);
-    dersig = pb::to_hex(dersig);
-    ss.set_sig(dersig);
+    pb::sha256 digest(ss.swapfill().hash_to_sign());
+    ss.set_sig(agent.sign(digest));
 
-    qDebug() << "ainLAPIWorker::OnNewSwapSent" <<  ss.DebugString().data();
+//    auto dblhash = pb::hashit(pb::hashfromhex(in));
+//    auto sigstr = agent.sign_raw(digest);
+    auto sig = Commissioner::str2sig(ss.sig());
+    if ( !Commissioner::verify(sig,digest,agent.pubKey()) ) {
+        qDebug() << "1 twitch11 error verify sig";
+        return;
+    }
+    else
+        qDebug() << "1 twitch11 YES verify sig";
+
+
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::SWAPSENT);
@@ -732,6 +741,25 @@ void MainLAPIWorker::OnNewSwapSent(fantasybit::SwapSent ss) {
     timer->start(intervalstart);
 #endif
 
+    /*
+    //finish transaction
+    auto dersig = pb::serialize_der (sig);
+    dersig = pb::to_hex(dersig);
+    dersig += pb::SIGHASH_ALL_1;
+    {
+        auto size = ( unsigned char )( dersig.size( ) / 2 );
+        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+        dersig = sstr + dersig;
+    }
+
+    auto hex_pubk = pb::to_hex(agent.pubKey().begin (),pb::public_key_data::size);
+    {
+        unsigned char  size = pb::public_key_data::size;
+        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+        hex_pubk = sstr + hex_pubk;
+    }
+    */
+    return;
 }
 
 void MainLAPIWorker::OnNewProofOfDoubleSpend(fantasybit::ProofOfDoubleSpend sb) {

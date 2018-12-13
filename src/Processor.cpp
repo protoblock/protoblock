@@ -1109,6 +1109,15 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         case TransType::SWAPSENT: {
             const auto & swapthis = t.GetExtension(SwapSent::swapsent_tran);
+            auto sig = Commissioner::str2sig(swapthis.sig());
+            pb::sha256 digest(swapthis.swapfill().hash_to_sign());
+            if ( Commissioner::verifyByName(sig,digest,st.fantasy_name() )) {
+                 qDebug() << "twitch11 valid signature SWAPSENT";
+            }
+            else {
+                qDebug() << "twitch11 bad signature SWAPSENT" << swapthis.DebugString().data();
+            }
+
             break;
         }
 

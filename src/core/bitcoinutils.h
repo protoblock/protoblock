@@ -24,6 +24,9 @@
 namespace pb {
 using namespace fantasybit;
 
+const std::string SIGHASH_ALL_1 = "01";
+const std::string SIGHASH_ALL_4 = "01000000";
+
 class BitcoinUtils
 {
 public:

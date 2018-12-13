@@ -53,13 +53,9 @@ public:
     bool HaveClient() const;
     bool amDataAgent();
 
-    secp256k1_ecdsa_signature sign_raw(const pb::sha256 &in) {
-        if ( HaveClient() )
-            return m_priv.sign(in);
+    secp256k1_ecdsa_signature sign_raw(const pb::sha256 &in);
 
-        else
-            return secp256k1_ecdsa_signature();
-    }
+    std::string sign(const pb::sha256 &in);
 
     static bool AmFantasyAgent(pb::public_key_data pubkey);
 
