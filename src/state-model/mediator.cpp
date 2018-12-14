@@ -1348,9 +1348,9 @@ void Mediator::doSendSwapBTC(const SwapOrder &so) {
         }
 
         auto pk = Commissioner::str2pk(item->get_pk().toStdString());
-        auto hex_pubk = pb::to_hex(pk.begin (),pb::public_key_data::size);
+        auto hex_pubk = pb::to_hex(pk.begin (),33);
         {
-            unsigned char  size = pb::public_key_data::size;
+            unsigned char  size = 33;
             auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
             hex_pubk = sstr + hex_pubk;
         }

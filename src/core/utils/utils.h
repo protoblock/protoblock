@@ -9,15 +9,17 @@
 
 #include <google/protobuf/message.h>
 
-#include "../city.hpp"
-#include "base58.h"
-#include "genericsingleton.h"
+#include <city.hpp>
+#include <base58.h>
+#include <genericsingleton.h>
 #include <openssl/ripemd.h>
 #include <sstream>
 #include <iomanip>
-
+#include <fbutils.h>
 
 namespace pb {
+
+
     inline bool is_big_endian( )
     {
        union
@@ -50,7 +52,6 @@ namespace pb {
        return x;
     }
 
-
     inline std::string toReverseHexFromDecimal(uint32_t  t) {
         std::ostringstream is;
         is << std::hex << std::setw( 8 ) << std::setfill( '0' ) << fix_endian(t);
@@ -62,6 +63,7 @@ namespace pb {
         is << std::hex << std::setw( 16 ) << std::setfill( '0' ) << fix_endian(t);
         return is.str();
     }
+
 
     uint8_t from_hex( char c );
 
@@ -98,9 +100,9 @@ namespace pb {
         operator std::string()const;
 
         std::string str()const;
-        std::string reversestr() const;
 
-//        s+ha256::operator string()const { return  str(); }
+        std::string reversestr()const;
+//        sha256::operator string()const { return  str(); }
         sha256(const sha256 &other) {
             memcpy(begin(),other.begin(),32);
         }
@@ -132,7 +134,8 @@ namespace pb {
         unsigned char key_data[33];
         unsigned char * begin() {  return &key_data[0]; }
         const unsigned char * begin() const {  return &key_data[0]; }
-        static const size_t size = 33;
+
+
     };
 
     inline bool operator==( const public_key_data& a, const public_key_data& b ) {
@@ -197,7 +200,8 @@ namespace pb {
 
         secp256k1_ecdsa_signature sign(const pb::sha256 &in) {
             secp256k1_ecdsa_signature sig;
-            if ( 1 != secp256k1_ecdsa_sign(pb::TheCTX::instance()->CTX(), &sig, in.data, key_data, NULL, NULL) ) {
+            if ( 1 != secp256k1_ecdsa_sign(pb::TheCTX::instance()->CTX(),
+                                           &sig, in.data, key_data, NULL, NULL) ) {
                 qDebug() << " error sig";
             }
             return sig;
@@ -230,8 +234,6 @@ namespace pb {
 
     };
 
-
-
     inline void hashc(const unsigned  char *in,size_t size,unsigned char *out32) {
         secp256k1_sha256_t hasher;
         secp256k1_sha256_initialize(&hasher);
@@ -239,11 +241,11 @@ namespace pb {
         secp256k1_sha256_finalize(&hasher, out32);
     }
 
+
     inline std::string serialize_der(const secp256k1_ecdsa_signature &in) {
         std::vector <char> buffer(100);
         size_t size = buffer.size ();
-        secp256k1_ecdsa_signature_serialize_der(pb::TheCTX::instance ()->CTX (),
-                                                reinterpret_cast<unsigned char*>(buffer.data ()),&size,&in);
+        secp256k1_ecdsa_signature_serialize_der(pb::TheCTX::instance ()->CTX (),(unsigned char*)buffer.data (),&size,&in);
         std::string ret;
         ret.assign (buffer.data (),size);
         return ret;
@@ -279,15 +281,6 @@ namespace pb {
         return hashit(in.SerializeAsString());
     }
 
-//    inline pb::sha256 hashfromhex(const std::string &in) {
-//        auto size = (in.size()/2) + 1;
-//        std::vector<char> buffer(size);
-//        size = from_hex(in,&buffer[0],buffer.size());
-//        pb::sha256 ret;
-//        hashc(reinterpret_cast<const unsigned char*>(&buffer[0]), size, ret.data);
-//        return ret;
-//    }
-
     inline pb::sha256 hashfromhex(const std::string &in) {
         int size = (in.size()/2) + 1;
         std::vector<char> buffer(size);
@@ -297,44 +290,51 @@ namespace pb {
         return ret;
     }
 
+    inline pb::sha256 hashit(const pb::sha256 &in) {
+        pb::sha256 ret;
+        hashc(in.data,sizeof(in.data),ret.data);
+        return ret;
+    }
 
     static std::string toBtcAddress(const public_key_data &in ) {
         pb::sha256 ret;
         hashc(in.key_data, 33, ret.data);
-//        qDebug() << ret.str ().data ();
+        qDebug() << ret.str ().data ();
         unsigned char hash2data[25];
-        unsigned char *hash2 = hash2data;
+        unsigned char *hash2 = hash2data;//new unsigned char[25];
 
-        RIPEMD160(ret.data, sizeof(ret.data), static_cast<unsigned char*>(&hash2[1]));
-        hash2[0] = 0;
+        RIPEMD160(ret.data, sizeof(ret.data), (unsigned char*)&hash2[1]);
+        hash2[0] = fantasybit::BTC_NETWORK;
         hashc(hash2, 21, ret.data);
         pb::sha256  ret2x;
         hashc(ret.data,sizeof(ret.data),ret2x.data);
-        memcpy(static_cast<unsigned char*>(&hash2[21]),ret2x.begin (),4);
+        memcpy((unsigned char*)&hash2[21],ret2x.begin (),4);
+        std::string   temp =  to_hex(hash2,25);
+
+//       temp;
+//        temp.assign((char *)hash2,25);
+
+        qDebug() << " temp string " << temp.data ();
         return EncodeBase58(hash2,hash2+25);
     }
+
+//    static std::string toRedeemScript(const public_key_data &in ) {
+//        pb::sha256 ret;
+//        hashc(in.key_data, 33, ret.data);
+//        qDebug() << ret.str ().data ();
+//        unsigned char hash2data[20];
+//        unsigned char *hash2 = hash2data;//new unsigned char[25];
+
+//        RIPEMD160(ret.data, sizeof(ret.data), (unsigned char*)&hash2[0]);
+//        std::string   temp =  to_hex(hash2,20);
+//        return temp;
+
+//    }
 
     static std::string fromBtcAddress(const std::string &in ) {
         std::vector<unsigned char> out;
         DecodeBase58 (in,out);
         return to_hex(((unsigned char*)out.data())+1,out.size ()-5);
-    }
-
-
-    static pb::sha256 hashit(const public_key_data &in) {
-        pb::sha256 ret;
-        hashc(in.key_data, 33, ret.data);
-        return ret;
-    }
-
-    static pb::sha256 generating_signature(const sha256 &prev_gs, const public_key_data &pk) {
-        pb::sha256 ret;
-        secp256k1_sha256_t hasher;
-        secp256k1_sha256_initialize(&hasher);
-        secp256k1_sha256_write(&hasher, prev_gs.begin(), 32);
-        secp256k1_sha256_write(&hasher, pk.begin(), 33);
-        secp256k1_sha256_finalize(&hasher, ret.data);
-        return ret;
     }
 
     static std::string to_base58( const public_key_data &in ) {

@@ -335,6 +335,7 @@ SignedTransaction FantasyAgent::makeSigned(Transaction &trans) {
     st.mutable_trans()->CopyFrom(trans);
     string strTrans = string(trans.SerializeAsString());
     std::pair<std::string, std::string> p = getIdSig(strTrans);
+
     st.set_id(p.first);
     st.set_sig(p.second);
     st.set_fantasy_name(client->alias());
