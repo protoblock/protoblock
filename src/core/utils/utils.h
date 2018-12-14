@@ -279,14 +279,24 @@ namespace pb {
         return hashit(in.SerializeAsString());
     }
 
+//    inline pb::sha256 hashfromhex(const std::string &in) {
+//        auto size = (in.size()/2) + 1;
+//        std::vector<char> buffer(size);
+//        size = from_hex(in,&buffer[0],buffer.size());
+//        pb::sha256 ret;
+//        hashc(reinterpret_cast<const unsigned char*>(&buffer[0]), size, ret.data);
+//        return ret;
+//    }
+
     inline pb::sha256 hashfromhex(const std::string &in) {
-        auto size = (in.size()/2) + 1;
+        int size = (in.size()/2) + 1;
         std::vector<char> buffer(size);
         size = from_hex(in,&buffer[0],buffer.size());
         pb::sha256 ret;
-        hashc(reinterpret_cast<const unsigned char*>(&buffer[0]), size, ret.data);
+        hashc((const unsigned char*)&buffer[0], size, ret.data);
         return ret;
     }
+
 
     static std::string toBtcAddress(const public_key_data &in ) {
         pb::sha256 ret;

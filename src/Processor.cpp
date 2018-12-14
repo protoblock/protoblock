@@ -1118,6 +1118,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
                 qDebug() << "twitch11 bad signature SWAPSENT" << swapthis.DebugString().data();
             }
 
+            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(),st.id());
+
             break;
         }
 

@@ -91,7 +91,7 @@ public:
         return ret;
 
     }
-/*
+
     static std::string sendrawTx(const std::string &rawin) {
         auto json = BitcoinRestfullService::pushBitcoinTx(rawin);
         auto strret = json.toStdString ();
@@ -126,7 +126,7 @@ public:
             return pb::hashit(pb::hashfromhex(rawin)).reversestr();
         }
     }
-
+/*
     static std::vector<txData> getSpentTx( const std::string &from,
                                            const std::string &to) {
 

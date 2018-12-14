@@ -36,31 +36,50 @@ void SwapStateData::init() {
         auto *it = swapbids->NewIterator(leveldb::ReadOptions());
         SwapBid sb;
         SwapFill sf;
+        SwapSent ss;
         std::vector<std::pair<std::string,SwapFill>> vsf;
+        std::vector<std::pair<std::string,SwapSent>> vss;
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             auto str = it->key().ToString();
             auto pos =  str.find_last_of(':');
             if ( pos != string::npos) {
                 sf.ParseFromString(it->value().ToString());
                 vsf.push_back({str,sf});
+                qDebug() << "twitch111" << sf.DebugString().data();
+
+            }
+            else if ( str.at(0) == '^' ) {
+                ss.ParseFromString(it->value().ToString());
+                vss.push_back({str.substr(1),ss});
+                qDebug() << "twitch111" << ss.DebugString().data();
             }
             else {
                 sb.ParseFromString(it->value().ToString());
                 SwapBuyer sb2(it->key().ToString(), sb);
                 mOrderBook.Add( sb2 );
+                qDebug() << "twitch111" << sb.DebugString().data();
+
             }
         }
 
         for ( auto ssf : vsf) {
             auto pos =  ssf.first.find_last_of(':');
-            auto fnamebuyer = ssf.first.substr(0, pos); //Alica
+            auto fnamebuyer = ssf.first.substr(0, pos); //Alice
             auto fnameseller = ssf.first.substr(pos+1); //Bob
 
             if ( !mOrderBook.Fill( ssf.second, fnameseller ) ) {
                 qDebug() << "init !mOrderBook.Fill( infill )  " << ssf.second.fb_qty();
-                return;
+                continue;
             }
         }
+
+        for ( auto sss : vss) {
+            if ( mOrderBook.Sent(sss.second, sss.first ) == "") {
+                qDebug() << "init !mOrderBook.Sent(  )  " << sss.first.data();
+                continue;
+            }
+        }
+
 
         delete it;
     }
@@ -81,6 +100,7 @@ void SwapStateData::init() {
 
             SwapSeller ss(it->key().ToString(), sa);
             mOrderBook.Add( ss );
+            qDebug() << "twitch111" << sa.DebugString().data();
         }
 
         delete it;
@@ -100,32 +120,6 @@ void SwapStateData::removeAll() {
     swapasks.reset();
     swapbids.reset();
     pb::remove_all(GET_ROOT_DIR() + "swap/");
-}
-
-
-void SwapStateData::OnNewSwapTx(const SwapBid &inbid, const string &fname,const string & ) {
-    //store local in memory
-    {
-        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
-        if ( inbid.rate() <= 0 ) {
-            qDebug() << "invalid bid rate " << inbid.rate();
-            return;
-        }
-
-        SwapBuyer sb(fname, inbid);
-        mOrderBook.Add( sb );
-    }
-
-    AddNewSwapOrder(inbid,fname);
-    if ( amlive ) {
-        SwapOrder so;
-        so.set_isask(false);
-        so.set_satoshi_min(inbid.satoshi_min());
-        so.set_satoshi_max(inbid.satoshi_max());
-        so.set_rate(inbid.rate());
-        so.set_fname(fname);
-        emit NewSwapData(so);
-    }
 }
 
 void SwapStateData::OnNewSwapTx(const SwapAsk &inoffer, const string &fname, const string & ) {
@@ -148,6 +142,31 @@ void SwapStateData::OnNewSwapTx(const SwapAsk &inoffer, const string &fname, con
         so.set_satoshi_min(inoffer.satoshi_min());
         so.set_satoshi_max(inoffer.satoshi_max());
         so.set_rate(inoffer.rate());
+        so.set_fname(fname);
+        emit NewSwapData(so);
+    }
+}
+
+void SwapStateData::OnNewSwapTx(const SwapBid &inbid, const string &fname,const string & ) {
+    //store local in memory
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        if ( inbid.rate() <= 0 ) {
+            qDebug() << "invalid bid rate " << inbid.rate();
+            return;
+        }
+
+        SwapBuyer sb(fname, inbid);
+        mOrderBook.Add( sb );
+    }
+
+    AddNewSwapOrder(inbid,fname);
+    if ( amlive ) {
+        SwapOrder so;
+        so.set_isask(false);
+        so.set_satoshi_min(inbid.satoshi_min());
+        so.set_satoshi_max(inbid.satoshi_max());
+        so.set_rate(inbid.rate());
         so.set_fname(fname);
         emit NewSwapData(so);
     }
@@ -185,6 +204,30 @@ void SwapStateData::OnNewSwapTx(const SwapFill &infill, const string &fname, con
     }
 }
 
+void SwapStateData::OnNewSwapTx(const SwapSent &insent, const string &fname, const string & ) {
+    std::string counterparty = "";
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        counterparty = mOrderBook.Sent(insent, fname );
+        if ( counterparty == "" ) {
+            qDebug() << "!mOrderBook.Sent( insent )  " << fname.data();
+            return;
+        }
+    }
+
+    AddNewSwapOrder(insent,fname);
+    if ( amlive ) {
+        SwapOrder so;
+        so.set_isask(false);
+        so.set_fname(fname);
+//        so.set_fillq(insent.swapfill().fb_qty());
+        so.set_ref(counterparty);
+        so.set_msg(insent.sig());
+        emit NewSwapData(so);
+    }
+}
+
+
 std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
 
@@ -201,6 +244,7 @@ std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
             so.set_rate(b.bid.rate());
             so.set_fname(b.fname);
             so.set_ref(b.counterparty);
+            so.set_msg(b.signature);
             vso.emplace_back(so);
         }
     }
@@ -285,6 +329,13 @@ void SwapStateData::AddNewSwapOrder(const SwapFill &infill, const string &fname 
 
     std::string key = infill.counterparty() + ":" +  fname;
     swapbids->Put(write_sync, key, infill.SerializeAsString());
+}
+
+void SwapStateData::AddNewSwapOrder(const SwapSent &insent, const string &fname ) {
+    qDebug() << " AddNewSwapSent " << insent.DebugString().data();
+
+    std::string key =  "^" +  fname;
+    swapbids->Put(write_sync, key, insent.SerializeAsString());
 }
 
 

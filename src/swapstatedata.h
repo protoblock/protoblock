@@ -69,6 +69,7 @@ struct SwapBuyer {
 //    uint64_t open;
     bool is_pending = false;
     std::string counterparty = "";
+    std::string signature = "";
 };
 
 struct SwapBuys {
@@ -96,6 +97,20 @@ struct SwapBuys {
 
         return false;
     }
+
+    std::string Sent(const std::string &fname, const std::string &sig ) {
+        for (auto &sb : sbuyers) {
+            if (sb.fname != fname )
+                continue;
+            if ( sb.is_pending ) {
+                sb.signature = sig;
+                return sb.counterparty;
+            }
+        }
+
+        return false;
+    }
+
 };
 
 struct SwapOrderBook {
@@ -134,6 +149,16 @@ struct SwapOrderBook {
         return it->second.Fill(infill.counterparty(),fname);
     }
 
+    std::string Sent(const SwapSent &infill,const std::string &fname) {
+        auto rate = infill.swapfill().swapbid().rate();
+        auto it = bids.find(rate);
+        if ( it == end(bids))
+            return "";
+
+        return it->second.Sent(fname,infill.sig());
+    }
+
+
     void clear() {
         bids.clear();
         asks.clear();
@@ -162,12 +187,15 @@ public:
     void init();
     void closeAll();
     void AddNewSwapOrder(const SwapBid &inbid, const std::string &fname );
-    void AddNewSwapOrder(const SwapAsk &inbid, const std::string &fname );
+    void AddNewSwapOrder(const SwapAsk &inask, const std::string &fname );
     void AddNewSwapOrder(const SwapFill &infill, const std::string &fname );
+    void AddNewSwapOrder(const SwapSent &insent, const std::string &fname );
+
 
     void OnNewSwapTx(const SwapBid &inbid, const std::string &fname,const std::string &txid);
     void OnNewSwapTx(const SwapAsk &inoffer, const std::string &fname,const std::string &txid);
     void OnNewSwapTx(const SwapFill &infill, const std::string &fname,const std::string &txid);
+    void OnNewSwapTx(const SwapSent &insent, const std::string &fname,const std::string &txid);
 
 
     std::vector<SwapOrder> GetCurrentSwapSnaps();

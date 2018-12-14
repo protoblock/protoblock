@@ -710,13 +710,13 @@ void MainLAPIWorker::OnNewSwapSent(fantasybit::SwapSent ss) {
     qDebug() << "twitch11 mainLAPIWorker::OnNewSwapSent" <<  ss.DebugString().data();
 
     // sign it
-    auto in = ss.swapfill().hash_to_sign();// + pb::SIGHASH_ALL;
-
     pb::sha256 digest(ss.swapfill().hash_to_sign());
     ss.set_sig(agent.sign(digest));
 
-//    auto dblhash = pb::hashit(pb::hashfromhex(in));
-//    auto sigstr = agent.sign_raw(digest);
+//    auto sig1 = agent.sign_raw(digest);
+//    auto sss = Commissioner::sig2str(sig1);
+//    auto sss3 = agent.sign(digest);
+
     auto sig = Commissioner::str2sig(ss.sig());
     if ( !Commissioner::verify(sig,digest,agent.pubKey()) ) {
         qDebug() << "1 twitch11 error verify sig";

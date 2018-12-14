@@ -15,6 +15,7 @@ PROTOS += \
     $$PROTOLOC/NameData.proto \
     $$PROTOLOC/StaticData.proto \
     $$PROTOLOC/StatusData.proto \
+    $$PROTOLOC/SwapData.proto \
     $$PROTOLOC/ProtoData.proto
 
 

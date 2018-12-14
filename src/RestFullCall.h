@@ -261,23 +261,31 @@ public:
     int statusCode = 0;
 
     bool postTData(const QString & route,
-                 const QMap<QString,QString> parameters,
+                 const QMap<QString,QVariant> parameters,
                  const QMap<QString,QString> headersMap)  {
         QNetworkRequest request;
         restNetworkStatus();
         //construct url with parameters
-        QString url = myBaseUrl.toString();
         //if (parameters.count()> 0) url+="?";
+        QString url;
+        if ( route != "" )
+            url = myBaseUrl.toString()+"/"+route;
+        else
+            url = myBaseUrl.toString();
 
         QByteArray postBodyContent;
+        bool first = true;
         foreach (QString paramName, parameters.keys()) {
-            //url+=QString("%1=%2").arg(paramName) + QUrl::toPercentEncoding(parameters.value(paramName).toString());
-            postBodyContent.append(QUrl::toPercentEncoding(paramName) + QString("=").toUtf8() +
-                                   QUrl::toPercentEncoding(parameters.value(paramName)));
-
+            if ( first ) {
+                first = false;
+                url+=QString("?%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
+            }
+            else {
+                url+=QString("&%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
+            }
+//            postBodyContent += QString("&%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
         }
-        request.setUrl(QUrl(url));
-
+        request.setUrl(url);
         //add headers
         foreach (QString headerKey, headersMap.keys()) {
             request.setRawHeader(headerKey.toUtf8(),headersMap.value(headerKey).toUtf8());
@@ -285,7 +293,7 @@ public:
 
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 #ifdef TRACE
-        qDebug() << "Post : " << request.url().toDisplayString();
+        qDebug() << "Post: " << request.url().toDisplayString();
 #endif
 
         if (myNetworkManager.networkAccessible()==QNetworkAccessManager::Accessible){
@@ -300,7 +308,7 @@ public:
             return false;
         }
     }
-    /**/
+       /**/
 
 
 signals:
@@ -726,7 +734,7 @@ public:
         QString url = QString(fantasybit::BLOCKCHAINAPI.data());
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QString> params;
+        QMap<QString,QVariant> params;
         params.insert ( QString("tx"),QString(rawTx.data()));
         QString customRoute("pushtx");
         client.postTData(customRoute,params,headers);

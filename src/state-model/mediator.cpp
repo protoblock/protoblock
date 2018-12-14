@@ -535,7 +535,9 @@ void Mediator::OnSwapData(fantasybit::SwapOrder so) {
         m_pSwapSellModel->add(so);
     }
     else {
-        if ( so.ref() != "" )
+        if ( so.msg() != "" )
+            doSendSwapBTC(so);
+        else if ( so.ref() != "" )
             doSwapSent(so);
         else
             m_pSwapBuyModel->add(so);
@@ -554,6 +556,8 @@ void Mediator::updateOnChangeFantasyName() {
     for  (auto so : vso ) {
         if ( so.isask() )
             m_pSwapSellModel->add(so);
+        else if ( so.msg() != "" )
+            doSendSwapBTC(so);
         else if ( so.ref() != "" )
             doSwapSent(so);
         else
@@ -1016,9 +1020,8 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
         auto minfb = fantasybit::FBSwapQty(sb.bid.rate(),sb.bid.satoshi_min());
         auto maxfb = fantasybit::FBSwapQty(sb.bid.rate(),sb.bid.satoshi_max());
 
-        int addfreebee = 0;
-        if ( sb.bid.rate() * maxfb < sb.bid.satoshi_max())
-            addfreebee = sb.bid.satoshi_max() - ( sb.bid.rate() * maxfb );
+//        if ( sb.bid.rate() * maxfb < sb.bid.satoshi_max())
+//            addfreebee = sb.bid.satoshi_max() - ( sb.bid.rate() * maxfb );
 
         if ( minfb < fantasybit::minFBSwapQty(sb.bid.rate(),sb.bid.satoshi_min()) )  {
             qDebug() << " bad data " ;
@@ -1064,16 +1067,21 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
         string input, inputscript;
         BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
 
-        QString tx_template =
-                BitcoinUtils::createTX(myinput,input,inputscript,
-                               m_pMyFantasyNameBalance->get_btcaddr().toStdString(),
-                               fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()) + addfreebee,
-                               sf.satoshi_fee(),
-                               btcaddr).data();
+        string to_address = m_pMyFantasyNameBalance->get_btcaddr().toStdString();
+        string pre, post;
+        BitcoinUtils::createTX(myinput,input,inputscript,
+                       to_address,
+                       fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()),
+                       sf.satoshi_fee(),
+                       btcaddr,pre,post);
 
-        auto tosigntraw = tx_template.arg(inputscript.data()).toStdString();
-        tosigntraw.append(SIGHASH_ALL_4);
-        auto dblhash = pb::hashit(pb::hashfromhex(tosigntraw));
+        auto tosigntraw = pre + inputscript + post + SIGHASH_ALL_4;
+        qDebug() << "twitch11 a tosigntraw" << tosigntraw.data();
+        auto hashfromhex = pb::hashfromhex(tosigntraw);
+        qDebug() << "twitch11 a hashfromhex" << hashfromhex.str().data();
+        auto dblhash = pb::hashit(hashfromhex);
+        qDebug() << "twitch11 a dblhash" << dblhash.str().data();
+
         sf.set_hash_to_sign(dblhash.str());
 
         qDebug() << sf.DebugString().data();
@@ -1156,9 +1164,8 @@ void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
         auto minfb = fantasybit::FBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min());
         auto maxfb = fantasybit::FBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_max());
 
-        int addfreebee = 0;
-        if ( sf.swapbid().rate() * maxfb < sf.swapbid().satoshi_max())
-            addfreebee = sf.swapbid().satoshi_max() - ( sf.swapbid().rate() * maxfb );
+//        if ( sf.swapbid().rate() * maxfb < sf.swapbid().satoshi_max())
+//            addfreebee = sf.swapbid().satoshi_max() - ( sf.swapbid().rate() * maxfb );
 
         if ( minfb < fantasybit::minFBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min()) )  {
             qDebug() << " bad data " ;
@@ -1197,17 +1204,22 @@ void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
         string input, inputscript;
         BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
 
-        QString tx_template =
-                BitcoinUtils::createTX(myinput,input,inputscript,
-                               item->get_btcaddr().toStdString(),
-                               fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()) + addfreebee,
-                               sf.satoshi_fee(),
-                               btcaddr).data();
+        string to_address = item->get_btcaddr().toStdString();
 
+        string pre, post;
+        BitcoinUtils::createTX(myinput,input,inputscript,
+                       to_address,
+                       fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()),
+                       sf.satoshi_fee(),
+                       btcaddr,pre,post);
 
-        auto tosigntraw = tx_template.arg(inputscript.data()).toStdString();
-        tosigntraw.append(SIGHASH_ALL_4);
-        auto dblhash = pb::hashit(pb::hashfromhex(tosigntraw));
+        auto tosigntraw = pre + inputscript + post + SIGHASH_ALL_4;
+        qDebug() << "twitch11 b tosigntraw" << tosigntraw.data();
+        auto hashfromhex = pb::hashfromhex(tosigntraw);
+        qDebug() << "twitch11 b hashfromhex" << hashfromhex.str().data();
+        auto dblhash = pb::hashit(hashfromhex);
+        qDebug() << "twitch11 b dblhash" << dblhash.str().data();
+
         auto hash_to_sign = dblhash.str();
         if ( hash_to_sign != sf.hash_to_sign() ) {
             qDebug() << "BAD HASH TO SIGN!!" << hash_to_sign.data() << sf.hash_to_sign();
@@ -1229,6 +1241,134 @@ void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
     qDebug() << "doSwapSent2  " << sf.DebugString().data();
 
     //https://bitcoin.stackexchange.com/questions/3374/how-to-redeem-a-basic-tx
+}
+
+void Mediator::doSendSwapBTC(const SwapOrder &so) {
+    qDebug() << "doSendSwapBTC" << so.DebugString().data();
+
+    //if I am alice
+    if (so.ref() != myFantasyName )
+        return;
+
+    const SwapFill &sf = mGateway->dataService->GetSwapFill(so.fname().data(),
+                                                            so.ref().data());
+
+
+    bool dosanity = true;
+    if ( dosanity ) {
+        //sanity qty checks
+
+        qint64 mn = m_pMyFantasyNameBalance->get_net();
+        if ( mn <= 0 ) {
+            qDebug() << " zero balance ";
+            return;
+        }
+
+        quint64 qty = sf.fb_qty();
+        if ( qty == 0 )
+            qty = static_cast<quint64>(mn);
+
+        auto minfb = fantasybit::FBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min());
+        auto maxfb = fantasybit::FBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_max());
+
+//        if ( sf.swapbid().rate() * maxfb < sf.swapbid().satoshi_max())
+//            addfreebee = sf.swapbid().satoshi_max() - ( sf.swapbid().rate() * maxfb );
+
+        if ( minfb < fantasybit::minFBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min()) )  {
+            qDebug() << " bad data " ;
+            return;
+        }
+
+        if ( qty > maxfb )
+            qty = std::min(static_cast<quint64>(mn),maxfb);
+
+        if ( qty < minfb ) {
+            qDebug() << " not enough FB for Swap " << qty;
+            return;
+        }
+
+        if ( sf.satoshi_fee() < fantasybit::MIN_SAT_BYTE_TX_FEE ||
+             sf.fb_qty() != qty ) {
+            qDebug() << " bad swapfil data ";
+            return;
+        }
+
+        auto *item = mFantasyNameBalModel.getByUid(so.fname().data());
+        if ( item == nullptr ) {
+            qDebug() << " cant find fname" << so.fname().data();
+            return;
+        };
+
+        int minconfirms = 0;
+        string btcaddr = item->get_btcaddr().toStdString();
+        for ( const auto &utxo : sf.swapbid().utxos().utxo() ) {
+            if ( minconfirms < BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
+                qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
+                return;
+            }
+        }
+
+        if ( sf.swapbid().utxos().utxo().size() != 1) {
+            qDebug() << " not yet";
+            return;
+        }
+
+        auto myinput = sf.swapbid().utxos().utxo().Get(0);
+        string input, inputscript;
+        BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
+        string to_address = m_pMyFantasyNameBalance->get_btcaddr().toStdString();
+
+        string pre, post;
+        BitcoinUtils::createTX(myinput,input,inputscript,
+                       to_address,
+                       fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()),
+                       sf.satoshi_fee(),
+                       btcaddr,pre,post);
+
+        {
+            auto tosigntraw = pre + inputscript + post + SIGHASH_ALL_4;
+            auto dblhash = pb::hashit(pb::hashfromhex(tosigntraw));
+            auto hash_to_sign = dblhash.str();
+            if ( hash_to_sign != sf.hash_to_sign() ) {
+                qDebug() << "BAD HASH TO SIGN!!" << hash_to_sign.data() << sf.hash_to_sign();
+                return;
+            }
+            else
+                qDebug() << "Ok - Good hash_to_sign";
+        }
+        auto sig = Commissioner::str2sig(so.msg());
+        //finish transaction
+        auto dersig = pb::serialize_der(sig);
+        dersig = pb::to_hex(dersig);
+        dersig += pb::SIGHASH_ALL_1;
+        {
+            auto size = ( unsigned char )( dersig.size( ) / 2 );
+            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+            dersig = sstr + dersig;
+        }
+
+        auto pk = Commissioner::str2pk(item->get_pk().toStdString());
+        auto hex_pubk = pb::to_hex(pk.begin (),pb::public_key_data::size);
+        {
+            unsigned char  size = pb::public_key_data::size;
+            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+            hex_pubk = sstr + hex_pubk;
+        }
+
+        auto sigscript = dersig + hex_pubk;
+        {
+            auto size = ( unsigned char )( sigscript.size( ) / 2 );
+            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+            sigscript = sstr + sigscript;
+        }
+
+        auto finaltx = pre + sigscript + post;
+
+        BitcoinApi::sendrawTx(finaltx);
+        qDebug() << finaltx.data();
+    }
+
+
 }
 
 

@@ -108,7 +108,12 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
                                    const std::string &to_address,
                                    uint64_t amount,
                                    uint64_t btyefee,
-                                   const std::string &change_address) {
+                                   const std::string &change_address,
+                                   std::string &pre_script,
+                                   std::string &post_script) {
+
+    qDebug() << "createTX" << input.data() << in_script.data() << to_address.data() << amount << btyefee;
+
     const std::string OP_DUP = "76";
     const std::string OP_HASH160 = "a9";
     const std::string OP_EQUALVERIFY = "88";
@@ -185,8 +190,10 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     final_tx += SEQUENCE;
     final_tx += raw_transaction_out;
 
+    pre_script = raw_transaction_pre + input;
+    post_script = SEQUENCE + raw_transaction_out;
     /**/
-    return final_tx;
+    return to_sign;
 }
 
 }
