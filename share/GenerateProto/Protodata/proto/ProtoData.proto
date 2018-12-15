@@ -547,7 +547,6 @@ message SwapSent {
     optional bytes sig = 20;
 }
 
-
 //Proof of Double Spend (gives FB back to Bob)
 message ProofOfDoubleSpend {
     extend Transaction {
