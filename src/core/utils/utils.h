@@ -299,7 +299,7 @@ namespace pb {
     static std::string toBtcAddress(const public_key_data &in ) {
         pb::sha256 ret;
         hashc(in.key_data, 33, ret.data);
-        qDebug() << ret.str ().data ();
+//        qDebug() << ret.str ().data ();
         unsigned char hash2data[25];
         unsigned char *hash2 = hash2data;//new unsigned char[25];
 
@@ -314,7 +314,7 @@ namespace pb {
 //       temp;
 //        temp.assign((char *)hash2,25);
 
-        qDebug() << " temp string " << temp.data ();
+//        qDebug() << " temp string " << temp.data ();
         return EncodeBase58(hash2,hash2+25);
     }
 

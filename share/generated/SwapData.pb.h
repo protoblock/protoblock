@@ -119,12 +119,12 @@ class SwapOrder : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 rate() const;
   inline void set_rate(::google::protobuf::uint64 value);
 
-  // optional uint64 startq = 50;
-  inline bool has_startq() const;
-  inline void clear_startq();
-  static const int kStartqFieldNumber = 50;
-  inline ::google::protobuf::uint64 startq() const;
-  inline void set_startq(::google::protobuf::uint64 value);
+  // optional uint64 openq = 50;
+  inline bool has_openq() const;
+  inline void clear_openq();
+  static const int kOpenqFieldNumber = 50;
+  inline ::google::protobuf::uint64 openq() const;
+  inline void set_openq(::google::protobuf::uint64 value);
 
   // optional uint64 pendq = 60;
   inline bool has_pendq() const;
@@ -176,6 +176,18 @@ class SwapOrder : public ::google::protobuf::Message {
   inline ::std::string* release_ref();
   inline void set_allocated_ref(::std::string* ref);
 
+  // optional string directed = 110;
+  inline bool has_directed() const;
+  inline void clear_directed();
+  static const int kDirectedFieldNumber = 110;
+  inline const ::std::string& directed() const;
+  inline void set_directed(const ::std::string& value);
+  inline void set_directed(const char* value);
+  inline void set_directed(const char* value, size_t size);
+  inline ::std::string* mutable_directed();
+  inline ::std::string* release_directed();
+  inline void set_allocated_directed(::std::string* directed);
+
   // @@protoc_insertion_point(class_scope:fantasybit.SwapOrder)
  private:
   inline void set_has_isask();
@@ -186,8 +198,8 @@ class SwapOrder : public ::google::protobuf::Message {
   inline void clear_has_satoshi_max();
   inline void set_has_rate();
   inline void clear_has_rate();
-  inline void set_has_startq();
-  inline void clear_has_startq();
+  inline void set_has_openq();
+  inline void clear_has_openq();
   inline void set_has_pendq();
   inline void clear_has_pendq();
   inline void set_has_fillq();
@@ -198,22 +210,25 @@ class SwapOrder : public ::google::protobuf::Message {
   inline void clear_has_msg();
   inline void set_has_ref();
   inline void clear_has_ref();
+  inline void set_has_directed();
+  inline void clear_has_directed();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint64 satoshi_min_;
   ::google::protobuf::uint64 satoshi_max_;
   ::google::protobuf::uint64 rate_;
-  ::google::protobuf::uint64 startq_;
+  ::google::protobuf::uint64 openq_;
   ::google::protobuf::uint64 pendq_;
   ::google::protobuf::uint64 fillq_;
   ::std::string* fname_;
   ::std::string* msg_;
   ::std::string* ref_;
+  ::std::string* directed_;
   bool isask_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
 
   friend void  protobuf_AddDesc_SwapData_2eproto();
   friend void protobuf_AssignDesc_SwapData_2eproto();
@@ -317,26 +332,26 @@ inline void SwapOrder::set_rate(::google::protobuf::uint64 value) {
   rate_ = value;
 }
 
-// optional uint64 startq = 50;
-inline bool SwapOrder::has_startq() const {
+// optional uint64 openq = 50;
+inline bool SwapOrder::has_openq() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void SwapOrder::set_has_startq() {
+inline void SwapOrder::set_has_openq() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void SwapOrder::clear_has_startq() {
+inline void SwapOrder::clear_has_openq() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void SwapOrder::clear_startq() {
-  startq_ = GOOGLE_ULONGLONG(0);
-  clear_has_startq();
+inline void SwapOrder::clear_openq() {
+  openq_ = GOOGLE_ULONGLONG(0);
+  clear_has_openq();
 }
-inline ::google::protobuf::uint64 SwapOrder::startq() const {
-  return startq_;
+inline ::google::protobuf::uint64 SwapOrder::openq() const {
+  return openq_;
 }
-inline void SwapOrder::set_startq(::google::protobuf::uint64 value) {
-  set_has_startq();
-  startq_ = value;
+inline void SwapOrder::set_openq(::google::protobuf::uint64 value) {
+  set_has_openq();
+  openq_ = value;
 }
 
 // optional uint64 pendq = 60;
@@ -590,6 +605,76 @@ inline void SwapOrder::set_allocated_ref(::std::string* ref) {
   } else {
     clear_has_ref();
     ref_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string directed = 110;
+inline bool SwapOrder::has_directed() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void SwapOrder::set_has_directed() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void SwapOrder::clear_has_directed() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void SwapOrder::clear_directed() {
+  if (directed_ != &::google::protobuf::internal::kEmptyString) {
+    directed_->clear();
+  }
+  clear_has_directed();
+}
+inline const ::std::string& SwapOrder::directed() const {
+  return *directed_;
+}
+inline void SwapOrder::set_directed(const ::std::string& value) {
+  set_has_directed();
+  if (directed_ == &::google::protobuf::internal::kEmptyString) {
+    directed_ = new ::std::string;
+  }
+  directed_->assign(value);
+}
+inline void SwapOrder::set_directed(const char* value) {
+  set_has_directed();
+  if (directed_ == &::google::protobuf::internal::kEmptyString) {
+    directed_ = new ::std::string;
+  }
+  directed_->assign(value);
+}
+inline void SwapOrder::set_directed(const char* value, size_t size) {
+  set_has_directed();
+  if (directed_ == &::google::protobuf::internal::kEmptyString) {
+    directed_ = new ::std::string;
+  }
+  directed_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapOrder::mutable_directed() {
+  set_has_directed();
+  if (directed_ == &::google::protobuf::internal::kEmptyString) {
+    directed_ = new ::std::string;
+  }
+  return directed_;
+}
+inline ::std::string* SwapOrder::release_directed() {
+  clear_has_directed();
+  if (directed_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = directed_;
+    directed_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapOrder::set_allocated_directed(::std::string* directed) {
+  if (directed_ != &::google::protobuf::internal::kEmptyString) {
+    delete directed_;
+  }
+  if (directed) {
+    set_has_directed();
+    directed_ = directed;
+  } else {
+    clear_has_directed();
+    directed_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

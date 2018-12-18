@@ -520,6 +520,8 @@ message SwapBid {
     optional bytes change_addr = 40;
 
     optional SwapAsk this_offer = 50;
+    optional string counteroffer = 60;
+
 }
 
 //Bob has fantasybit - wants bitcoin

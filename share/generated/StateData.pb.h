@@ -1035,6 +1035,27 @@ class FantasyNameBalMeta : public ::google::protobuf::Message {
   inline ::google::protobuf::int64 stake() const;
   inline void set_stake(::google::protobuf::int64 value);
 
+  // optional int32 block = 41;
+  inline bool has_block() const;
+  inline void clear_block();
+  static const int kBlockFieldNumber = 41;
+  inline ::google::protobuf::int32 block() const;
+  inline void set_block(::google::protobuf::int32 value);
+
+  // optional int32 count = 42;
+  inline bool has_count() const;
+  inline void clear_count();
+  static const int kCountFieldNumber = 42;
+  inline ::google::protobuf::int32 count() const;
+  inline void set_count(::google::protobuf::int32 value);
+
+  // optional uint64 nonce = 45;
+  inline bool has_nonce() const;
+  inline void clear_nonce();
+  static const int kNonceFieldNumber = 45;
+  inline ::google::protobuf::uint64 nonce() const;
+  inline void set_nonce(::google::protobuf::uint64 value);
+
   // optional bytes awardmetaroot = 50;
   inline bool has_awardmetaroot() const;
   inline void clear_awardmetaroot();
@@ -1097,6 +1118,12 @@ class FantasyNameBalMeta : public ::google::protobuf::Message {
   inline void clear_has_bits();
   inline void set_has_stake();
   inline void clear_has_stake();
+  inline void set_has_block();
+  inline void clear_has_block();
+  inline void set_has_count();
+  inline void clear_has_count();
+  inline void set_has_nonce();
+  inline void clear_has_nonce();
   inline void set_has_awardmetaroot();
   inline void clear_has_awardmetaroot();
   inline void set_has_pnlmetaroot();
@@ -1114,13 +1141,16 @@ class FantasyNameBalMeta : public ::google::protobuf::Message {
   ::std::string* public_key_;
   ::google::protobuf::uint64 bits_;
   ::google::protobuf::int64 stake_;
+  ::google::protobuf::int32 block_;
+  ::google::protobuf::int32 count_;
+  ::google::protobuf::uint64 nonce_;
   ::std::string* awardmetaroot_;
   ::std::string* pnlmetaroot_;
   ::std::string* prev_;
   ::std::string* next_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
 
   friend void  protobuf_AddDesc_StateData_2eproto();
   friend void protobuf_AssignDesc_StateData_2eproto();
@@ -9678,15 +9708,81 @@ inline void FantasyNameBalMeta::set_stake(::google::protobuf::int64 value) {
   stake_ = value;
 }
 
-// optional bytes awardmetaroot = 50;
-inline bool FantasyNameBalMeta::has_awardmetaroot() const {
+// optional int32 block = 41;
+inline bool FantasyNameBalMeta::has_block() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void FantasyNameBalMeta::set_has_awardmetaroot() {
+inline void FantasyNameBalMeta::set_has_block() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void FantasyNameBalMeta::clear_has_awardmetaroot() {
+inline void FantasyNameBalMeta::clear_has_block() {
   _has_bits_[0] &= ~0x00000040u;
+}
+inline void FantasyNameBalMeta::clear_block() {
+  block_ = 0;
+  clear_has_block();
+}
+inline ::google::protobuf::int32 FantasyNameBalMeta::block() const {
+  return block_;
+}
+inline void FantasyNameBalMeta::set_block(::google::protobuf::int32 value) {
+  set_has_block();
+  block_ = value;
+}
+
+// optional int32 count = 42;
+inline bool FantasyNameBalMeta::has_count() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void FantasyNameBalMeta::set_has_count() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void FantasyNameBalMeta::clear_has_count() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void FantasyNameBalMeta::clear_count() {
+  count_ = 0;
+  clear_has_count();
+}
+inline ::google::protobuf::int32 FantasyNameBalMeta::count() const {
+  return count_;
+}
+inline void FantasyNameBalMeta::set_count(::google::protobuf::int32 value) {
+  set_has_count();
+  count_ = value;
+}
+
+// optional uint64 nonce = 45;
+inline bool FantasyNameBalMeta::has_nonce() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void FantasyNameBalMeta::set_has_nonce() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void FantasyNameBalMeta::clear_has_nonce() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void FantasyNameBalMeta::clear_nonce() {
+  nonce_ = GOOGLE_ULONGLONG(0);
+  clear_has_nonce();
+}
+inline ::google::protobuf::uint64 FantasyNameBalMeta::nonce() const {
+  return nonce_;
+}
+inline void FantasyNameBalMeta::set_nonce(::google::protobuf::uint64 value) {
+  set_has_nonce();
+  nonce_ = value;
+}
+
+// optional bytes awardmetaroot = 50;
+inline bool FantasyNameBalMeta::has_awardmetaroot() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void FantasyNameBalMeta::set_has_awardmetaroot() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void FantasyNameBalMeta::clear_has_awardmetaroot() {
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void FantasyNameBalMeta::clear_awardmetaroot() {
   if (awardmetaroot_ != &::google::protobuf::internal::kEmptyString) {
@@ -9750,13 +9846,13 @@ inline void FantasyNameBalMeta::set_allocated_awardmetaroot(::std::string* award
 
 // optional bytes pnlmetaroot = 60;
 inline bool FantasyNameBalMeta::has_pnlmetaroot() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void FantasyNameBalMeta::set_has_pnlmetaroot() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void FantasyNameBalMeta::clear_has_pnlmetaroot() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void FantasyNameBalMeta::clear_pnlmetaroot() {
   if (pnlmetaroot_ != &::google::protobuf::internal::kEmptyString) {
@@ -9820,13 +9916,13 @@ inline void FantasyNameBalMeta::set_allocated_pnlmetaroot(::std::string* pnlmeta
 
 // optional bytes prev = 70;
 inline bool FantasyNameBalMeta::has_prev() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void FantasyNameBalMeta::set_has_prev() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void FantasyNameBalMeta::clear_has_prev() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void FantasyNameBalMeta::clear_prev() {
   if (prev_ != &::google::protobuf::internal::kEmptyString) {
@@ -9890,13 +9986,13 @@ inline void FantasyNameBalMeta::set_allocated_prev(::std::string* prev) {
 
 // optional bytes next = 80;
 inline bool FantasyNameBalMeta::has_next() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void FantasyNameBalMeta::set_has_next() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void FantasyNameBalMeta::clear_has_next() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void FantasyNameBalMeta::clear_next() {
   if (next_ != &::google::protobuf::internal::kEmptyString) {

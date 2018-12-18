@@ -6,10 +6,12 @@ message SwapOrder {
     optional uint64 satoshi_min = 20;
     optional uint64 satoshi_max = 30;
     optional uint64 rate = 40;
-    optional uint64 startq = 50; //fb_qty
+    optional uint64 openq = 50; //fb_qty
     optional uint64 pendq = 60;
     optional uint64 fillq = 70;
     optional string fname = 80;
     optional string msg = 90;
     optional string ref = 100;
+    optional string directed = 110;
+
 }

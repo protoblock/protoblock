@@ -539,6 +539,8 @@ void Mediator::OnSwapData(fantasybit::SwapOrder so) {
             doSendSwapBTC(so);
         else if ( so.ref() != "" )
             doSwapSent(so);
+        else if ( so.directed() != "")
+            doSwapFill(so);
         else
             m_pSwapBuyModel->add(so);
     }
@@ -560,6 +562,8 @@ void Mediator::updateOnChangeFantasyName() {
             doSendSwapBTC(so);
         else if ( so.ref() != "" )
             doSwapSent(so);
+        else if ( so.directed() != "")
+            doSwapFill(so);
         else
             m_pSwapBuyModel->add(so);
     }
@@ -1087,7 +1091,7 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
         qDebug() << sf.DebugString().data();
         emit NewSwapFill(sf);
     }
-    else if ( !isask && with == "" ) {
+    else if ( !isask ) {
         SwapBid bid;
 
         bid.set_rate(fantasybit::satRateSwap(rate));
@@ -1123,12 +1127,124 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
         else
             qDebug() << bid.DebugString().data();
 
-
+        bid.set_counteroffer(with.toStdString());
         emit NewSwapBid(bid);
     }
 }
 
+void Mediator::doSwapFill(const fantasybit::SwapOrder  &so) {
+    //if I am bob continue
+    if (so.directed() != myFantasyName )
+        return;
 
+    const SwapSeller ss = mGateway->dataService->GetSwapAsk(myFantasyName.data());
+    if ( ss.fname != myFantasyName )  {
+        qDebug() << "Fatal fname != fname" << ss.fname.data() << myFantasyName.data();
+        return;
+    }
+
+    auto it = ss.pending.find(so.fname());
+    if ( it == end(ss.pending)) {
+        qDebug() << "Fatal ss.pending.find";
+        return;
+    }
+
+    quint64 qty = it->second;
+
+    const SwapBuyer &sb = mGateway->dataService->GetSwapBid(so.fname().data());
+    //qDebug() << sb.bid.DebugString().data();
+
+
+    if ( sb.is_pending ) {
+        qDebug() << "Swap buy order already filled?";
+        return;
+    }
+
+    if ( so.fname() != sb.fname ) {
+        qDebug() << "Fatal With != fname" << so.fname().data() << sb.fname.data();
+        return;
+    }
+
+    //sanity qty checks
+    qint64 mn = m_pMyFantasyNameBalance->get_net();
+    if ( mn <= 0 ) {
+        qDebug() << " zero balance ";
+        return;
+    }
+
+    if ( qty == 0 )
+        qty = static_cast<quint64>(mn);
+
+    auto minfb = fantasybit::FBSwapQty(sb.bid.rate(),sb.bid.satoshi_min());
+    auto maxfb = fantasybit::FBSwapQty(sb.bid.rate(),sb.bid.satoshi_max());
+
+//        if ( sb.bid.rate() * maxfb < sb.bid.satoshi_max())
+//            addfreebee = sb.bid.satoshi_max() - ( sb.bid.rate() * maxfb );
+
+    if ( minfb < fantasybit::minFBSwapQty(sb.bid.rate(),sb.bid.satoshi_min()) )  {
+        qDebug() << " bad data " ;
+        return;
+    }
+
+    if ( qty > maxfb )
+        qty = std::min(static_cast<quint64>(mn),maxfb);
+
+    if ( qty < minfb ) {
+        qDebug() << " not enough FB for Swap " << qty;
+        return;
+    }
+
+    SwapFill sf;
+    sf.mutable_swapbid()->CopyFrom(sb.bid);
+    sf.set_satoshi_fee(fantasybit::MIN_SAT_BYTE_TX_FEE);
+    sf.set_fb_qty(qty);
+    sf.set_counterparty(sb.fname);
+
+    int minconfirms = 1;
+    auto *item = mFantasyNameBalModel.getByUid(so.fname().data());
+    if ( item == nullptr ) {
+        qDebug() << " cant find fname" << so.fname().data();
+        return;
+    };
+
+    string btcaddr = item->get_btcaddr().toStdString();
+    for ( const auto &utxo : sb.bid.utxos().utxo() ) {
+        if ( minconfirms < BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
+            qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
+            return;
+        }
+    }
+
+    if ( sb.bid.utxos().utxo().size() != 1) {
+        qDebug() << " not yet";
+        return;
+    }
+
+    auto myinput = sb.bid.utxos().utxo().Get(0);
+
+    string input, inputscript;
+    BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
+
+    string to_address = m_pMyFantasyNameBalance->get_btcaddr().toStdString();
+    string pre, post;
+    BitcoinUtils::createTX(myinput,input,inputscript,
+                   to_address,
+                   fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()),
+                   sf.satoshi_fee(),
+                   btcaddr,pre,post);
+
+    auto tosigntraw = pre + inputscript + post + SIGHASH_ALL_4;
+    qDebug() << "twitch11 a tosigntraw" << tosigntraw.data();
+    auto hashfromhex = pb::hashfromhex(tosigntraw);
+    qDebug() << "twitch11 a hashfromhex" << hashfromhex.str().data();
+    auto dblhash = pb::hashit(hashfromhex);
+    qDebug() << "twitch11 a dblhash" << dblhash.str().data();
+
+    sf.set_hash_to_sign(dblhash.str());
+
+    qDebug() << sf.DebugString().data();
+    emit NewSwapFill(sf);
+}
 
 void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
     qDebug() << "twitch11 doSwapSent  " << so.DebugString().data();

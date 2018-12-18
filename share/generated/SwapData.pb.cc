@@ -34,17 +34,18 @@ void protobuf_AssignDesc_SwapData_2eproto() {
       "SwapData.proto");
   GOOGLE_CHECK(file != NULL);
   SwapOrder_descriptor_ = file->message_type(0);
-  static const int SwapOrder_offsets_[10] = {
+  static const int SwapOrder_offsets_[11] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, isask_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, satoshi_min_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, satoshi_max_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, rate_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, startq_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, openq_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, pendq_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, fillq_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, fname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, msg_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, ref_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, directed_),
   };
   SwapOrder_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -87,11 +88,12 @@ void protobuf_AddDesc_SwapData_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016SwapData.proto\022\nfantasybit\"\251\001\n\tSwapOrd"
+    "\n\016SwapData.proto\022\nfantasybit\"\272\001\n\tSwapOrd"
     "er\022\r\n\005isask\030\n \001(\010\022\023\n\013satoshi_min\030\024 \001(\004\022\023"
-    "\n\013satoshi_max\030\036 \001(\004\022\014\n\004rate\030( \001(\004\022\016\n\006sta"
-    "rtq\0302 \001(\004\022\r\n\005pendq\030< \001(\004\022\r\n\005fillq\030F \001(\004\022"
-    "\r\n\005fname\030P \001(\t\022\013\n\003msg\030Z \001(\t\022\013\n\003ref\030d \001(\t", 200);
+    "\n\013satoshi_max\030\036 \001(\004\022\014\n\004rate\030( \001(\004\022\r\n\005ope"
+    "nq\0302 \001(\004\022\r\n\005pendq\030< \001(\004\022\r\n\005fillq\030F \001(\004\022\r"
+    "\n\005fname\030P \001(\t\022\013\n\003msg\030Z \001(\t\022\013\n\003ref\030d \001(\t\022"
+    "\020\n\010directed\030n \001(\t", 217);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "SwapData.proto", &protobuf_RegisterTypes);
   SwapOrder::default_instance_ = new SwapOrder();
@@ -113,12 +115,13 @@ const int SwapOrder::kIsaskFieldNumber;
 const int SwapOrder::kSatoshiMinFieldNumber;
 const int SwapOrder::kSatoshiMaxFieldNumber;
 const int SwapOrder::kRateFieldNumber;
-const int SwapOrder::kStartqFieldNumber;
+const int SwapOrder::kOpenqFieldNumber;
 const int SwapOrder::kPendqFieldNumber;
 const int SwapOrder::kFillqFieldNumber;
 const int SwapOrder::kFnameFieldNumber;
 const int SwapOrder::kMsgFieldNumber;
 const int SwapOrder::kRefFieldNumber;
+const int SwapOrder::kDirectedFieldNumber;
 #endif  // !_MSC_VER
 
 SwapOrder::SwapOrder()
@@ -141,12 +144,13 @@ void SwapOrder::SharedCtor() {
   satoshi_min_ = GOOGLE_ULONGLONG(0);
   satoshi_max_ = GOOGLE_ULONGLONG(0);
   rate_ = GOOGLE_ULONGLONG(0);
-  startq_ = GOOGLE_ULONGLONG(0);
+  openq_ = GOOGLE_ULONGLONG(0);
   pendq_ = GOOGLE_ULONGLONG(0);
   fillq_ = GOOGLE_ULONGLONG(0);
   fname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ref_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  directed_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -163,6 +167,9 @@ void SwapOrder::SharedDtor() {
   }
   if (ref_ != &::google::protobuf::internal::kEmptyString) {
     delete ref_;
+  }
+  if (directed_ != &::google::protobuf::internal::kEmptyString) {
+    delete directed_;
   }
   if (this != default_instance_) {
   }
@@ -195,7 +202,7 @@ void SwapOrder::Clear() {
     satoshi_min_ = GOOGLE_ULONGLONG(0);
     satoshi_max_ = GOOGLE_ULONGLONG(0);
     rate_ = GOOGLE_ULONGLONG(0);
-    startq_ = GOOGLE_ULONGLONG(0);
+    openq_ = GOOGLE_ULONGLONG(0);
     pendq_ = GOOGLE_ULONGLONG(0);
     fillq_ = GOOGLE_ULONGLONG(0);
     if (has_fname()) {
@@ -213,6 +220,11 @@ void SwapOrder::Clear() {
     if (has_ref()) {
       if (ref_ != &::google::protobuf::internal::kEmptyString) {
         ref_->clear();
+      }
+    }
+    if (has_directed()) {
+      if (directed_ != &::google::protobuf::internal::kEmptyString) {
+        directed_->clear();
       }
     }
   }
@@ -285,19 +297,19 @@ bool SwapOrder::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(400)) goto parse_startq;
+        if (input->ExpectTag(400)) goto parse_openq;
         break;
       }
 
-      // optional uint64 startq = 50;
+      // optional uint64 openq = 50;
       case 50: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_startq:
+         parse_openq:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &startq_)));
-          set_has_startq();
+                 input, &openq_)));
+          set_has_openq();
         } else {
           goto handle_uninterpreted;
         }
@@ -384,6 +396,23 @@ bool SwapOrder::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(882)) goto parse_directed;
+        break;
+      }
+
+      // optional string directed = 110;
+      case 110: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_directed:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_directed()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->directed().data(), this->directed().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -426,9 +455,9 @@ void SwapOrder::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(40, this->rate(), output);
   }
 
-  // optional uint64 startq = 50;
-  if (has_startq()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(50, this->startq(), output);
+  // optional uint64 openq = 50;
+  if (has_openq()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(50, this->openq(), output);
   }
 
   // optional uint64 pendq = 60;
@@ -468,6 +497,15 @@ void SwapOrder::SerializeWithCachedSizes(
       100, this->ref(), output);
   }
 
+  // optional string directed = 110;
+  if (has_directed()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->directed().data(), this->directed().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      110, this->directed(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -496,9 +534,9 @@ void SwapOrder::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(40, this->rate(), target);
   }
 
-  // optional uint64 startq = 50;
-  if (has_startq()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(50, this->startq(), target);
+  // optional uint64 openq = 50;
+  if (has_openq()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(50, this->openq(), target);
   }
 
   // optional uint64 pendq = 60;
@@ -541,6 +579,16 @@ void SwapOrder::SerializeWithCachedSizes(
         100, this->ref(), target);
   }
 
+  // optional string directed = 110;
+  if (has_directed()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->directed().data(), this->directed().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        110, this->directed(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -578,11 +626,11 @@ int SwapOrder::ByteSize() const {
           this->rate());
     }
 
-    // optional uint64 startq = 50;
-    if (has_startq()) {
+    // optional uint64 openq = 50;
+    if (has_openq()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->startq());
+          this->openq());
     }
 
     // optional uint64 pendq = 60;
@@ -620,6 +668,13 @@ int SwapOrder::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->ref());
+    }
+
+    // optional string directed = 110;
+    if (has_directed()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->directed());
     }
 
   }
@@ -661,8 +716,8 @@ void SwapOrder::MergeFrom(const SwapOrder& from) {
     if (from.has_rate()) {
       set_rate(from.rate());
     }
-    if (from.has_startq()) {
-      set_startq(from.startq());
+    if (from.has_openq()) {
+      set_openq(from.openq());
     }
     if (from.has_pendq()) {
       set_pendq(from.pendq());
@@ -680,6 +735,9 @@ void SwapOrder::MergeFrom(const SwapOrder& from) {
     }
     if (from.has_ref()) {
       set_ref(from.ref());
+    }
+    if (from.has_directed()) {
+      set_directed(from.directed());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -708,12 +766,13 @@ void SwapOrder::Swap(SwapOrder* other) {
     std::swap(satoshi_min_, other->satoshi_min_);
     std::swap(satoshi_max_, other->satoshi_max_);
     std::swap(rate_, other->rate_);
-    std::swap(startq_, other->startq_);
+    std::swap(openq_, other->openq_);
     std::swap(pendq_, other->pendq_);
     std::swap(fillq_, other->fillq_);
     std::swap(fname_, other->fname_);
     std::swap(msg_, other->msg_);
     std::swap(ref_, other->ref_);
+    std::swap(directed_, other->directed_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

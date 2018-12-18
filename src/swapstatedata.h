@@ -36,12 +36,13 @@ struct SwapSeller {
     uint64_t filled;
     uint64_t pending_fill;
     uint64_t open;
+    std::map<std::string,uint64_t> pending;
 
     SwapSeller() {}
     SwapSeller( const std::string &ifn, SwapAsk in)
                 : fname(ifn), offer(in),
                   filled(0), pending_fill(0) {
-        open = in.satoshi_max();
+        open = in.fb_qty();
     }
 
 };
@@ -52,22 +53,54 @@ struct SwapSells {
     int qty = 0;
 
     SwapSells(uint64_t irate) : rate(irate) {}
-    void Add(const SwapSeller &inseller) {
+    void Add(SwapSeller &inseller) {
         //ToDo: deal with multiple same buyers
         ssellers.push_back(inseller);
     }
+
+    uint64_t Hit(const std::string &fname, const std::string counter,
+             uint64_t min, uint64_t max ) {
+        for (auto &ss : ssellers) {
+            if (ss.fname != fname )
+                continue;
+
+            uint64_t delta_open = 0;
+            auto it = ss.pending.find(counter);
+            if ( it != end(ss.pending) )
+                delta_open = it->second;
+
+            if ( ss.open + delta_open < min )
+                return false;
+
+            auto qty = std::min(ss.open + delta_open,max);
+            ss.pending[counter] = qty;
+
+            qty -= delta_open;
+            ss.pending_fill += qty;
+            ss.open -= qty;
+            return  qty + delta_open;
+        }
+
+        return 0;
+    }
+
 
 };
 
 struct SwapBuyer {
     SwapBuyer() {}
-    SwapBuyer( const std::string &ifn, SwapBid in) : fname(ifn), bid(in) {}
+    SwapBuyer( const std::string &ifn, SwapBid in) : fname(ifn), bid(in) {
+        counteroffer = in.counteroffer();
+        is_directed = counteroffer != "";
+    }
     std::string fname;
     SwapBid bid;
 //    uint64_t filled;
 //    uint64_t pending_fill;
 //    uint64_t open;
     bool is_pending = false;
+    bool is_directed = false;
+    std::string counteroffer = "";
     std::string counterparty = "";
     std::string signature = "";
 };
@@ -88,11 +121,13 @@ struct SwapBuys {
         for (auto &sb : sbuyers) {
             if (sb.fname != fname )
                 continue;
-            if ( !sb.is_pending ) {
-                sb.is_pending = true;
-                sb.counterparty = counterparty;
-                return  true;
-            }
+
+            if ( sb.is_pending )
+                return false;
+
+            sb.is_pending = true;
+            sb.counterparty = counterparty;
+            return true;
         }
 
         return false;
@@ -102,13 +137,14 @@ struct SwapBuys {
         for (auto &sb : sbuyers) {
             if (sb.fname != fname )
                 continue;
-            if ( sb.is_pending ) {
-                sb.signature = sig;
-                return sb.counterparty;
-            }
+            if ( !sb.is_pending )
+                return "";
+
+            sb.signature = sig;
+            return sb.counterparty;
         }
 
-        return false;
+        return "";
     }
 
 };
@@ -116,6 +152,9 @@ struct SwapBuys {
 struct SwapOrderBook {
     std::map<uint64_t, SwapBuys> bids;
     std::map<uint64_t, SwapSells> asks;
+    std::unordered_map<std::string, uint64_t> theBuyers;
+    std::unordered_map<std::string, uint64_t> theSellers;
+
     void Add(SwapBuyer &inbuyer) {
         auto rate = inbuyer.bid.rate();
         auto it = bids.find(rate);
@@ -126,6 +165,7 @@ struct SwapOrderBook {
         }
 
         it->second.Add( inbuyer );
+        theBuyers[inbuyer.fname] = rate;
     }
 
     void Add(SwapSeller &inseller) {
@@ -138,6 +178,51 @@ struct SwapOrderBook {
         }
 
         it->second.Add( inseller );
+        theSellers[inseller.fname] = rate;
+    }
+
+    SwapSeller GetSeller(const std::string &fname) {
+        const auto &iit = theSellers.find(fname);
+        if ( iit != end(theSellers) ) {
+            auto it = asks.find(iit->second);
+            if ( it != end(asks)) {
+                for ( const auto &ss : it->second.ssellers) {
+                    if ( ss.fname == fname )
+                        return ss;
+                }
+            }
+        }
+
+        return SwapSeller();
+    }
+
+    SwapBuyer GetBuyer(const std::string &fname) {
+        const auto &iit = theBuyers.find(fname);
+        if ( iit != end(theBuyers) ) {
+            auto it = bids.find(iit->second);
+            if ( it != end(bids)) {
+                for ( const auto &ss : it->second.sbuyers) {
+                    if ( ss.fname == fname )
+                        return ss;
+                }
+            }
+        }
+
+        return SwapBuyer();
+    }
+
+    bool Buy(const SwapBid &inbid, const std::string &fname) {
+        auto rate = inbid.rate();
+        auto it = asks.find(rate);
+        if ( it == end(asks)) {
+            qDebug() << " cant find asks" << rate;
+            return false;
+        }
+
+        auto minfb = fantasybit::FBSwapQty(rate,inbid.satoshi_min());
+        auto maxfb = fantasybit::FBSwapQty(rate,inbid.satoshi_max());
+
+        return 0 < it->second.Hit(inbid.counteroffer(),fname,minfb,maxfb);
     }
 
     bool Fill(const SwapFill &infill,const std::string &fname) {

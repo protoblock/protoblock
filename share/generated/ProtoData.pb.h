@@ -5510,6 +5510,18 @@ class SwapBid : public ::google::protobuf::Message {
   inline ::fantasybit::SwapAsk* release_this_offer();
   inline void set_allocated_this_offer(::fantasybit::SwapAsk* this_offer);
 
+  // optional string counteroffer = 60;
+  inline bool has_counteroffer() const;
+  inline void clear_counteroffer();
+  static const int kCounterofferFieldNumber = 60;
+  inline const ::std::string& counteroffer() const;
+  inline void set_counteroffer(const ::std::string& value);
+  inline void set_counteroffer(const char* value);
+  inline void set_counteroffer(const char* value, size_t size);
+  inline ::std::string* mutable_counteroffer();
+  inline ::std::string* release_counteroffer();
+  inline void set_allocated_counteroffer(::std::string* counteroffer);
+
   static const int kSwapbidTranFieldNumber = 500;
   static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
       ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapBid >, 11, false >
@@ -5528,6 +5540,8 @@ class SwapBid : public ::google::protobuf::Message {
   inline void clear_has_change_addr();
   inline void set_has_this_offer();
   inline void clear_has_this_offer();
+  inline void set_has_counteroffer();
+  inline void clear_has_counteroffer();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -5537,9 +5551,10 @@ class SwapBid : public ::google::protobuf::Message {
   ::fantasybit::Bitcoin_UTXOS* utxos_;
   ::std::string* change_addr_;
   ::fantasybit::SwapAsk* this_offer_;
+  ::std::string* counteroffer_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -12060,6 +12075,76 @@ inline void SwapBid::set_allocated_this_offer(::fantasybit::SwapAsk* this_offer)
     set_has_this_offer();
   } else {
     clear_has_this_offer();
+  }
+}
+
+// optional string counteroffer = 60;
+inline bool SwapBid::has_counteroffer() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void SwapBid::set_has_counteroffer() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void SwapBid::clear_has_counteroffer() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void SwapBid::clear_counteroffer() {
+  if (counteroffer_ != &::google::protobuf::internal::kEmptyString) {
+    counteroffer_->clear();
+  }
+  clear_has_counteroffer();
+}
+inline const ::std::string& SwapBid::counteroffer() const {
+  return *counteroffer_;
+}
+inline void SwapBid::set_counteroffer(const ::std::string& value) {
+  set_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    counteroffer_ = new ::std::string;
+  }
+  counteroffer_->assign(value);
+}
+inline void SwapBid::set_counteroffer(const char* value) {
+  set_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    counteroffer_ = new ::std::string;
+  }
+  counteroffer_->assign(value);
+}
+inline void SwapBid::set_counteroffer(const char* value, size_t size) {
+  set_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    counteroffer_ = new ::std::string;
+  }
+  counteroffer_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SwapBid::mutable_counteroffer() {
+  set_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    counteroffer_ = new ::std::string;
+  }
+  return counteroffer_;
+}
+inline ::std::string* SwapBid::release_counteroffer() {
+  clear_has_counteroffer();
+  if (counteroffer_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = counteroffer_;
+    counteroffer_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SwapBid::set_allocated_counteroffer(::std::string* counteroffer) {
+  if (counteroffer_ != &::google::protobuf::internal::kEmptyString) {
+    delete counteroffer_;
+  }
+  if (counteroffer) {
+    set_has_counteroffer();
+    counteroffer_ = counteroffer;
+  } else {
+    clear_has_counteroffer();
+    counteroffer_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
