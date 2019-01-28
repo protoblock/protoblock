@@ -962,8 +962,11 @@ void protobuf_AssignDesc_ProtoData_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SwapSent));
   ProofOfDoubleSpend_descriptor_ = file->message_type(44);
-  static const int ProofOfDoubleSpend_offsets_[2] = {
+  static const int ProofOfDoubleSpend_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProofOfDoubleSpend, swapsent_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProofOfDoubleSpend, utxo_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProofOfDoubleSpend, pre_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProofOfDoubleSpend, post_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProofOfDoubleSpend, sig_),
   };
   ProofOfDoubleSpend_reflection_ =
@@ -1355,22 +1358,25 @@ void protobuf_AddDesc_ProtoData_2eproto() {
     "\022&\n\010swapfill\030\n \001(\0132\024.fantasybit.SwapFill"
     "\022\013\n\003sig\030\024 \001(\0142E\n\rswapsent_tran\022\027.fantasy"
     "bit.Transaction\030\274\005 \001(\0132\024.fantasybit.Swap"
-    "Sent\"\200\001\n\022ProofOfDoubleSpend\022\020\n\010swapsent\030"
-    "\n \001(\014\022\013\n\003sig\030\024 \001(\0142K\n\tpodp_tran\022\027.fantas"
-    "ybit.Transaction\030\240\006 \001(\0132\036.fantasybit.Pro"
-    "ofOfDoubleSpend*Y\n\014MyNameStatus\022\010\n\004none\020"
-    "\001\022\013\n\007notavil\020\002\022\r\n\trequested\020\005\022\024\n\020transac"
-    "tion_sent\020\017\022\r\n\tconfirmed\020\024*\350\001\n\tTransType"
-    "\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006RESULT\020\002\022\010"
-    "\n\004DATA\020\003\022\024\n\020PROJECTION_BLOCK\020\004\022\017\n\013MASTER"
-    "_NAME\020\005\022\010\n\004TIME\020\006\022\013\n\007STAMPED\020\007\022\014\n\010EXCHAN"
-    "GE\020\010\022\022\n\016EXCHANGE_BLOCK\020\t\022\014\n\010TRANSFER\020\n\022\013"
-    "\n\007SWAPASK\020\013\022\013\n\007SWAPBID\020\014\022\013\n\007SWAPFIL\020\r\022\014\n"
-    "\010SWAPSENT\020\016\022\010\n\004PODP\020\017*\260\001\n\006TrType\022\017\n\013SEAS"
-    "ONSTART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tHEARTBEAT\020\005\022"
-    "\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER\020\007\022\025\n\021TRADESES"
-    "SIONSTART\020\010\022\037\n\033TRADESESSIONCLOSEANDPREOP"
-    "EN\020\t\022\020\n\014PLAYOFFSTART\020\n\022\020\n\014SUPERBOWLEND\020\014", 7280);
+    "Sent\"\331\001\n\022ProofOfDoubleSpend\022&\n\010swapsent\030"
+    "\n \001(\0132\024.fantasybit.SwapSent\022&\n\004utxo\030\024 \001("
+    "\0132\030.fantasybit.Bitcoin_UTXO\022\013\n\003pre\030\036 \001(\014"
+    "\022\014\n\004post\030( \001(\014\022\013\n\003sig\0302 \001(\0142K\n\tpodp_tran"
+    "\022\027.fantasybit.Transaction\030\240\006 \001(\0132\036.fanta"
+    "sybit.ProofOfDoubleSpend*Y\n\014MyNameStatus"
+    "\022\010\n\004none\020\001\022\013\n\007notavil\020\002\022\r\n\trequested\020\005\022\024"
+    "\n\020transaction_sent\020\017\022\r\n\tconfirmed\020\024*\350\001\n\t"
+    "TransType\022\010\n\004NAME\020\000\022\016\n\nPROJECTION\020\001\022\n\n\006R"
+    "ESULT\020\002\022\010\n\004DATA\020\003\022\024\n\020PROJECTION_BLOCK\020\004\022"
+    "\017\n\013MASTER_NAME\020\005\022\010\n\004TIME\020\006\022\013\n\007STAMPED\020\007\022"
+    "\014\n\010EXCHANGE\020\010\022\022\n\016EXCHANGE_BLOCK\020\t\022\014\n\010TRA"
+    "NSFER\020\n\022\013\n\007SWAPASK\020\013\022\013\n\007SWAPBID\020\014\022\013\n\007SWA"
+    "PFIL\020\r\022\014\n\010SWAPSENT\020\016\022\010\n\004PODP\020\017*\260\001\n\006TrTyp"
+    "e\022\017\n\013SEASONSTART\020\002\022\r\n\tSEASONEND\020\003\022\r\n\tHEA"
+    "RTBEAT\020\005\022\r\n\tGAMESTART\020\006\022\014\n\010WEEKOVER\020\007\022\025\n"
+    "\021TRADESESSIONSTART\020\010\022\037\n\033TRADESESSIONCLOS"
+    "EANDPREOPEN\020\t\022\020\n\014PLAYOFFSTART\020\n\022\020\n\014SUPER"
+    "BOWLEND\020\014", 7369);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoData.proto", &protobuf_RegisterTypes);
   MyFantasyName::default_instance_ = new MyFantasyName();
@@ -16790,6 +16796,9 @@ void SwapSent::Swap(SwapSent* other) {
 
 #ifndef _MSC_VER
 const int ProofOfDoubleSpend::kSwapsentFieldNumber;
+const int ProofOfDoubleSpend::kUtxoFieldNumber;
+const int ProofOfDoubleSpend::kPreFieldNumber;
+const int ProofOfDoubleSpend::kPostFieldNumber;
 const int ProofOfDoubleSpend::kSigFieldNumber;
 #endif  // !_MSC_VER
 
@@ -16805,6 +16814,8 @@ ProofOfDoubleSpend::ProofOfDoubleSpend()
 }
 
 void ProofOfDoubleSpend::InitAsDefaultInstance() {
+  swapsent_ = const_cast< ::fantasybit::SwapSent*>(&::fantasybit::SwapSent::default_instance());
+  utxo_ = const_cast< ::fantasybit::Bitcoin_UTXO*>(&::fantasybit::Bitcoin_UTXO::default_instance());
 }
 
 ProofOfDoubleSpend::ProofOfDoubleSpend(const ProofOfDoubleSpend& from)
@@ -16815,7 +16826,10 @@ ProofOfDoubleSpend::ProofOfDoubleSpend(const ProofOfDoubleSpend& from)
 
 void ProofOfDoubleSpend::SharedCtor() {
   _cached_size_ = 0;
-  swapsent_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  swapsent_ = NULL;
+  utxo_ = NULL;
+  pre_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  post_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -16825,13 +16839,18 @@ ProofOfDoubleSpend::~ProofOfDoubleSpend() {
 }
 
 void ProofOfDoubleSpend::SharedDtor() {
-  if (swapsent_ != &::google::protobuf::internal::kEmptyString) {
-    delete swapsent_;
+  if (pre_ != &::google::protobuf::internal::kEmptyString) {
+    delete pre_;
+  }
+  if (post_ != &::google::protobuf::internal::kEmptyString) {
+    delete post_;
   }
   if (sig_ != &::google::protobuf::internal::kEmptyString) {
     delete sig_;
   }
   if (this != default_instance_) {
+    delete swapsent_;
+    delete utxo_;
   }
 }
 
@@ -16859,8 +16878,19 @@ ProofOfDoubleSpend* ProofOfDoubleSpend::New() const {
 void ProofOfDoubleSpend::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_swapsent()) {
-      if (swapsent_ != &::google::protobuf::internal::kEmptyString) {
-        swapsent_->clear();
+      if (swapsent_ != NULL) swapsent_->::fantasybit::SwapSent::Clear();
+    }
+    if (has_utxo()) {
+      if (utxo_ != NULL) utxo_->::fantasybit::Bitcoin_UTXO::Clear();
+    }
+    if (has_pre()) {
+      if (pre_ != &::google::protobuf::internal::kEmptyString) {
+        pre_->clear();
+      }
+    }
+    if (has_post()) {
+      if (post_ != &::google::protobuf::internal::kEmptyString) {
+        post_->clear();
       }
     }
     if (has_sig()) {
@@ -16879,21 +16909,63 @@ bool ProofOfDoubleSpend::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional bytes swapsent = 10;
+      // optional .fantasybit.SwapSent swapsent = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_swapsent()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_swapsent()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(162)) goto parse_sig;
+        if (input->ExpectTag(162)) goto parse_utxo;
         break;
       }
 
-      // optional bytes sig = 20;
+      // optional .fantasybit.Bitcoin_UTXO utxo = 20;
       case 20: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_utxo:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_utxo()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(242)) goto parse_pre;
+        break;
+      }
+
+      // optional bytes pre = 30;
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_pre:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_pre()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(322)) goto parse_post;
+        break;
+      }
+
+      // optional bytes post = 40;
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_post:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_post()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(402)) goto parse_sig;
+        break;
+      }
+
+      // optional bytes sig = 50;
+      case 50: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_sig:
@@ -16924,16 +16996,34 @@ bool ProofOfDoubleSpend::MergePartialFromCodedStream(
 
 void ProofOfDoubleSpend::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional bytes swapsent = 10;
+  // optional .fantasybit.SwapSent swapsent = 10;
   if (has_swapsent()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       10, this->swapsent(), output);
   }
 
-  // optional bytes sig = 20;
+  // optional .fantasybit.Bitcoin_UTXO utxo = 20;
+  if (has_utxo()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      20, this->utxo(), output);
+  }
+
+  // optional bytes pre = 30;
+  if (has_pre()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      30, this->pre(), output);
+  }
+
+  // optional bytes post = 40;
+  if (has_post()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      40, this->post(), output);
+  }
+
+  // optional bytes sig = 50;
   if (has_sig()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      20, this->sig(), output);
+      50, this->sig(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -16944,18 +17034,39 @@ void ProofOfDoubleSpend::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ProofOfDoubleSpend::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional bytes swapsent = 10;
+  // optional .fantasybit.SwapSent swapsent = 10;
   if (has_swapsent()) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
         10, this->swapsent(), target);
   }
 
-  // optional bytes sig = 20;
+  // optional .fantasybit.Bitcoin_UTXO utxo = 20;
+  if (has_utxo()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        20, this->utxo(), target);
+  }
+
+  // optional bytes pre = 30;
+  if (has_pre()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        30, this->pre(), target);
+  }
+
+  // optional bytes post = 40;
+  if (has_post()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        40, this->post(), target);
+  }
+
+  // optional bytes sig = 50;
   if (has_sig()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        20, this->sig(), target);
+        50, this->sig(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -16969,14 +17080,35 @@ int ProofOfDoubleSpend::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional bytes swapsent = 10;
+    // optional .fantasybit.SwapSent swapsent = 10;
     if (has_swapsent()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->swapsent());
     }
 
-    // optional bytes sig = 20;
+    // optional .fantasybit.Bitcoin_UTXO utxo = 20;
+    if (has_utxo()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->utxo());
+    }
+
+    // optional bytes pre = 30;
+    if (has_pre()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->pre());
+    }
+
+    // optional bytes post = 40;
+    if (has_post()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->post());
+    }
+
+    // optional bytes sig = 50;
     if (has_sig()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -17011,7 +17143,16 @@ void ProofOfDoubleSpend::MergeFrom(const ProofOfDoubleSpend& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_swapsent()) {
-      set_swapsent(from.swapsent());
+      mutable_swapsent()->::fantasybit::SwapSent::MergeFrom(from.swapsent());
+    }
+    if (from.has_utxo()) {
+      mutable_utxo()->::fantasybit::Bitcoin_UTXO::MergeFrom(from.utxo());
+    }
+    if (from.has_pre()) {
+      set_pre(from.pre());
+    }
+    if (from.has_post()) {
+      set_post(from.post());
     }
     if (from.has_sig()) {
       set_sig(from.sig());
@@ -17040,6 +17181,9 @@ bool ProofOfDoubleSpend::IsInitialized() const {
 void ProofOfDoubleSpend::Swap(ProofOfDoubleSpend* other) {
   if (other != this) {
     std::swap(swapsent_, other->swapsent_);
+    std::swap(utxo_, other->utxo_);
+    std::swap(pre_, other->pre_);
+    std::swap(post_, other->post_);
     std::swap(sig_, other->sig_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

@@ -192,6 +192,7 @@ void SwapStateData::OnNewSwapTx(const SwapFill &infill, const string &fname, con
     //store local in memory
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        //todo: check balance
         if ( infill.fb_qty() <= 0 ) {
             qDebug() << "invalid SwapFill qty " << infill.fb_qty();
             return;
@@ -241,6 +242,10 @@ void SwapStateData::OnNewSwapTx(const SwapSent &insent, const string &fname, con
         so.set_msg(insent.sig());
         emit NewSwapData(so);
     }
+}
+
+void SwapStateData::OnNewSwapTx(const ProofOfDoubleSpend &inpods, const std::string &fname,const std::string &txid) {
+
 }
 
 
@@ -342,6 +347,15 @@ SwapFill SwapStateData::GetSwapFill(const QString &buyer, const QString &seller_
 
     sf.ParseFromString(temp);
     return sf;
+}
+
+uint64_t SwapStateData::GetLocked(const std::string &fname)  {
+    std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+    auto it = mTotLocked.find(fname);
+    if ( it == end(mTotLocked) )
+        return 0;
+
+    return it->second;
 }
 
 void SwapStateData::AddNewSwapOrder(const SwapBid &inbid, const string &fname ) {

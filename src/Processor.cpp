@@ -1103,6 +1103,8 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         case TransType::SWAPFIL: {
             const auto & swapthis = t.GetExtension(SwapFill::swapfil_tran);
+
+            int pnl = mExchangeData.GetOpenPnl(st.fantasy_name());    //ToDo:
             mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(),st.id());
             break;
         }
@@ -1125,6 +1127,7 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         case TransType::PODP: {
             const auto & swapthis = t.GetExtension(ProofOfDoubleSpend::podp_tran);
+            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(),st.id());
             break;
         }
 

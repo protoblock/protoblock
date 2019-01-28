@@ -555,7 +555,9 @@ message ProofOfDoubleSpend {
         optional ProofOfDoubleSpend podp_tran = 800;
     }
 
-    optional bytes swapsent = 10;
-    //actual bitcoin tx structure
-    optional bytes sig = 20;
+    optional SwapSent swapsent = 10;
+    optional Bitcoin_UTXO utxo = 20;
+    optional bytes pre = 30;
+    optional bytes post = 40;
+    optional bytes sig = 50;
 }

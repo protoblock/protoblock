@@ -5860,22 +5860,52 @@ class ProofOfDoubleSpend : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional bytes swapsent = 10;
+  // optional .fantasybit.SwapSent swapsent = 10;
   inline bool has_swapsent() const;
   inline void clear_swapsent();
   static const int kSwapsentFieldNumber = 10;
-  inline const ::std::string& swapsent() const;
-  inline void set_swapsent(const ::std::string& value);
-  inline void set_swapsent(const char* value);
-  inline void set_swapsent(const void* value, size_t size);
-  inline ::std::string* mutable_swapsent();
-  inline ::std::string* release_swapsent();
-  inline void set_allocated_swapsent(::std::string* swapsent);
+  inline const ::fantasybit::SwapSent& swapsent() const;
+  inline ::fantasybit::SwapSent* mutable_swapsent();
+  inline ::fantasybit::SwapSent* release_swapsent();
+  inline void set_allocated_swapsent(::fantasybit::SwapSent* swapsent);
 
-  // optional bytes sig = 20;
+  // optional .fantasybit.Bitcoin_UTXO utxo = 20;
+  inline bool has_utxo() const;
+  inline void clear_utxo();
+  static const int kUtxoFieldNumber = 20;
+  inline const ::fantasybit::Bitcoin_UTXO& utxo() const;
+  inline ::fantasybit::Bitcoin_UTXO* mutable_utxo();
+  inline ::fantasybit::Bitcoin_UTXO* release_utxo();
+  inline void set_allocated_utxo(::fantasybit::Bitcoin_UTXO* utxo);
+
+  // optional bytes pre = 30;
+  inline bool has_pre() const;
+  inline void clear_pre();
+  static const int kPreFieldNumber = 30;
+  inline const ::std::string& pre() const;
+  inline void set_pre(const ::std::string& value);
+  inline void set_pre(const char* value);
+  inline void set_pre(const void* value, size_t size);
+  inline ::std::string* mutable_pre();
+  inline ::std::string* release_pre();
+  inline void set_allocated_pre(::std::string* pre);
+
+  // optional bytes post = 40;
+  inline bool has_post() const;
+  inline void clear_post();
+  static const int kPostFieldNumber = 40;
+  inline const ::std::string& post() const;
+  inline void set_post(const ::std::string& value);
+  inline void set_post(const char* value);
+  inline void set_post(const void* value, size_t size);
+  inline ::std::string* mutable_post();
+  inline ::std::string* release_post();
+  inline void set_allocated_post(::std::string* post);
+
+  // optional bytes sig = 50;
   inline bool has_sig() const;
   inline void clear_sig();
-  static const int kSigFieldNumber = 20;
+  static const int kSigFieldNumber = 50;
   inline const ::std::string& sig() const;
   inline void set_sig(const ::std::string& value);
   inline void set_sig(const char* value);
@@ -5892,16 +5922,25 @@ class ProofOfDoubleSpend : public ::google::protobuf::Message {
  private:
   inline void set_has_swapsent();
   inline void clear_has_swapsent();
+  inline void set_has_utxo();
+  inline void clear_has_utxo();
+  inline void set_has_pre();
+  inline void clear_has_pre();
+  inline void set_has_post();
+  inline void clear_has_post();
   inline void set_has_sig();
   inline void clear_has_sig();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* swapsent_;
+  ::fantasybit::SwapSent* swapsent_;
+  ::fantasybit::Bitcoin_UTXO* utxo_;
+  ::std::string* pre_;
+  ::std::string* post_;
   ::std::string* sig_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_ProtoData_2eproto();
   friend void protobuf_AssignDesc_ProtoData_2eproto();
@@ -12490,7 +12529,7 @@ inline void SwapSent::set_allocated_sig(::std::string* sig) {
 
 // ProofOfDoubleSpend
 
-// optional bytes swapsent = 10;
+// optional .fantasybit.SwapSent swapsent = 10;
 inline bool ProofOfDoubleSpend::has_swapsent() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -12501,74 +12540,220 @@ inline void ProofOfDoubleSpend::clear_has_swapsent() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void ProofOfDoubleSpend::clear_swapsent() {
-  if (swapsent_ != &::google::protobuf::internal::kEmptyString) {
-    swapsent_->clear();
-  }
+  if (swapsent_ != NULL) swapsent_->::fantasybit::SwapSent::Clear();
   clear_has_swapsent();
 }
-inline const ::std::string& ProofOfDoubleSpend::swapsent() const {
-  return *swapsent_;
+inline const ::fantasybit::SwapSent& ProofOfDoubleSpend::swapsent() const {
+  return swapsent_ != NULL ? *swapsent_ : *default_instance_->swapsent_;
 }
-inline void ProofOfDoubleSpend::set_swapsent(const ::std::string& value) {
+inline ::fantasybit::SwapSent* ProofOfDoubleSpend::mutable_swapsent() {
   set_has_swapsent();
-  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
-    swapsent_ = new ::std::string;
-  }
-  swapsent_->assign(value);
-}
-inline void ProofOfDoubleSpend::set_swapsent(const char* value) {
-  set_has_swapsent();
-  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
-    swapsent_ = new ::std::string;
-  }
-  swapsent_->assign(value);
-}
-inline void ProofOfDoubleSpend::set_swapsent(const void* value, size_t size) {
-  set_has_swapsent();
-  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
-    swapsent_ = new ::std::string;
-  }
-  swapsent_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* ProofOfDoubleSpend::mutable_swapsent() {
-  set_has_swapsent();
-  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
-    swapsent_ = new ::std::string;
-  }
+  if (swapsent_ == NULL) swapsent_ = new ::fantasybit::SwapSent;
   return swapsent_;
 }
-inline ::std::string* ProofOfDoubleSpend::release_swapsent() {
+inline ::fantasybit::SwapSent* ProofOfDoubleSpend::release_swapsent() {
   clear_has_swapsent();
-  if (swapsent_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = swapsent_;
-    swapsent_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
+  ::fantasybit::SwapSent* temp = swapsent_;
+  swapsent_ = NULL;
+  return temp;
 }
-inline void ProofOfDoubleSpend::set_allocated_swapsent(::std::string* swapsent) {
-  if (swapsent_ != &::google::protobuf::internal::kEmptyString) {
-    delete swapsent_;
-  }
+inline void ProofOfDoubleSpend::set_allocated_swapsent(::fantasybit::SwapSent* swapsent) {
+  delete swapsent_;
+  swapsent_ = swapsent;
   if (swapsent) {
     set_has_swapsent();
-    swapsent_ = swapsent;
   } else {
     clear_has_swapsent();
-    swapsent_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
-// optional bytes sig = 20;
-inline bool ProofOfDoubleSpend::has_sig() const {
+// optional .fantasybit.Bitcoin_UTXO utxo = 20;
+inline bool ProofOfDoubleSpend::has_utxo() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ProofOfDoubleSpend::set_has_sig() {
+inline void ProofOfDoubleSpend::set_has_utxo() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ProofOfDoubleSpend::clear_has_sig() {
+inline void ProofOfDoubleSpend::clear_has_utxo() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProofOfDoubleSpend::clear_utxo() {
+  if (utxo_ != NULL) utxo_->::fantasybit::Bitcoin_UTXO::Clear();
+  clear_has_utxo();
+}
+inline const ::fantasybit::Bitcoin_UTXO& ProofOfDoubleSpend::utxo() const {
+  return utxo_ != NULL ? *utxo_ : *default_instance_->utxo_;
+}
+inline ::fantasybit::Bitcoin_UTXO* ProofOfDoubleSpend::mutable_utxo() {
+  set_has_utxo();
+  if (utxo_ == NULL) utxo_ = new ::fantasybit::Bitcoin_UTXO;
+  return utxo_;
+}
+inline ::fantasybit::Bitcoin_UTXO* ProofOfDoubleSpend::release_utxo() {
+  clear_has_utxo();
+  ::fantasybit::Bitcoin_UTXO* temp = utxo_;
+  utxo_ = NULL;
+  return temp;
+}
+inline void ProofOfDoubleSpend::set_allocated_utxo(::fantasybit::Bitcoin_UTXO* utxo) {
+  delete utxo_;
+  utxo_ = utxo;
+  if (utxo) {
+    set_has_utxo();
+  } else {
+    clear_has_utxo();
+  }
+}
+
+// optional bytes pre = 30;
+inline bool ProofOfDoubleSpend::has_pre() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_pre() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ProofOfDoubleSpend::clear_has_pre() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ProofOfDoubleSpend::clear_pre() {
+  if (pre_ != &::google::protobuf::internal::kEmptyString) {
+    pre_->clear();
+  }
+  clear_has_pre();
+}
+inline const ::std::string& ProofOfDoubleSpend::pre() const {
+  return *pre_;
+}
+inline void ProofOfDoubleSpend::set_pre(const ::std::string& value) {
+  set_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    pre_ = new ::std::string;
+  }
+  pre_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_pre(const char* value) {
+  set_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    pre_ = new ::std::string;
+  }
+  pre_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_pre(const void* value, size_t size) {
+  set_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    pre_ = new ::std::string;
+  }
+  pre_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProofOfDoubleSpend::mutable_pre() {
+  set_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    pre_ = new ::std::string;
+  }
+  return pre_;
+}
+inline ::std::string* ProofOfDoubleSpend::release_pre() {
+  clear_has_pre();
+  if (pre_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = pre_;
+    pre_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProofOfDoubleSpend::set_allocated_pre(::std::string* pre) {
+  if (pre_ != &::google::protobuf::internal::kEmptyString) {
+    delete pre_;
+  }
+  if (pre) {
+    set_has_pre();
+    pre_ = pre;
+  } else {
+    clear_has_pre();
+    pre_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes post = 40;
+inline bool ProofOfDoubleSpend::has_post() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_post() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ProofOfDoubleSpend::clear_has_post() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ProofOfDoubleSpend::clear_post() {
+  if (post_ != &::google::protobuf::internal::kEmptyString) {
+    post_->clear();
+  }
+  clear_has_post();
+}
+inline const ::std::string& ProofOfDoubleSpend::post() const {
+  return *post_;
+}
+inline void ProofOfDoubleSpend::set_post(const ::std::string& value) {
+  set_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    post_ = new ::std::string;
+  }
+  post_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_post(const char* value) {
+  set_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    post_ = new ::std::string;
+  }
+  post_->assign(value);
+}
+inline void ProofOfDoubleSpend::set_post(const void* value, size_t size) {
+  set_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    post_ = new ::std::string;
+  }
+  post_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProofOfDoubleSpend::mutable_post() {
+  set_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    post_ = new ::std::string;
+  }
+  return post_;
+}
+inline ::std::string* ProofOfDoubleSpend::release_post() {
+  clear_has_post();
+  if (post_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = post_;
+    post_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProofOfDoubleSpend::set_allocated_post(::std::string* post) {
+  if (post_ != &::google::protobuf::internal::kEmptyString) {
+    delete post_;
+  }
+  if (post) {
+    set_has_post();
+    post_ = post;
+  } else {
+    clear_has_post();
+    post_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes sig = 50;
+inline bool ProofOfDoubleSpend::has_sig() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ProofOfDoubleSpend::set_has_sig() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ProofOfDoubleSpend::clear_has_sig() {
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void ProofOfDoubleSpend::clear_sig() {
   if (sig_ != &::google::protobuf::internal::kEmptyString) {

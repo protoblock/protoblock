@@ -259,7 +259,15 @@ class SwapStateData : public QObject {
 
     std::recursive_mutex data_mutex{};
 
-//    std::unordered_map<std::string,SwapBid> mSwapNameMap;
+    //coins locked after sent to alice - waiting time or PODS
+    std::unordered_map<std::string,int> mTotWaitQty;
+
+    //coins locked after bob offered them to alice - waiting Sent or Cancel
+    std::unordered_map<std::string,int> mTotOfferQty;
+
+    //coins locked from bob offer or alice sent
+    std::unordered_map<std::string,uint64_t> mTotLocked;
+
 
     SwapOrderBook mOrderBook;
     bool amlive = false;
@@ -281,6 +289,7 @@ public:
     void OnNewSwapTx(const SwapAsk &inoffer, const std::string &fname,const std::string &txid);
     void OnNewSwapTx(const SwapFill &infill, const std::string &fname,const std::string &txid);
     void OnNewSwapTx(const SwapSent &insent, const std::string &fname,const std::string &txid);
+    void OnNewSwapTx(const ProofOfDoubleSpend &inpods, const std::string &fname,const std::string &txid);
 
 
     std::vector<SwapOrder> GetCurrentSwapSnaps();
@@ -289,6 +298,7 @@ public:
     SwapFill  GetSwapFill(const QString &buyer, const QString &seller_ref);
 
 
+    uint64_t GetLocked(const std::string &fname);
 
     void removeAll();
 public slots:

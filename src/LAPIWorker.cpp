@@ -762,11 +762,11 @@ void MainLAPIWorker::OnNewSwapSent(fantasybit::SwapSent ss) {
     return;
 }
 
-void MainLAPIWorker::OnNewProofOfDoubleSpend(fantasybit::ProofOfDoubleSpend sb) {
+void MainLAPIWorker::OnNewProofOfDoubleSpend(fantasybit::ProofOfDoubleSpend pods) {
     Transaction trans{};
     trans.set_version(Commissioner::TRANS_VERSION);
     trans.set_type(TransType::PODP);
-    trans.MutableExtension(SwapBid::swapbid_tran)->CopyFrom(sb);
+    trans.MutableExtension(ProofOfDoubleSpend::podp_tran)->CopyFrom(pods);
 
     SignedTransaction sn = agent.makeSigned(trans);
     agent.onSignedTransaction(sn);
