@@ -40,14 +40,14 @@ public:
     static int checkUtxo(const Bitcoin_UTXO &iutxo, const std::string &btcaddress);
 
     static std::string createTX(const Bitcoin_UTXO &iutxo,
-                                       const std::string &input,
-                                       const std::string &in_script,
-                                       const std::string &to_address,
-                                       uint64_t amount,
-                                       uint64_t btyefee,
-                                       const std::string &change_address,
-                                    std::string &pre_script,
-                                    std::string &post_script);
+                                const std::string &input,
+                                const std::string &in_script,
+                                const std::string &to_address,
+                                uint64_t amount,
+                                uint64_t btyefee,
+                                const std::string &change_address,
+                                std::string &pre_script,
+                                std::string &post_script);
 
     static void createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
                                      std::string &input, std::string &in_script);

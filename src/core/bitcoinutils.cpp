@@ -69,7 +69,7 @@ int BitcoinUtils::checkUtxo(const Bitcoin_UTXO &iutxo, const std::string &btcadd
         if ( utxo.tx_hash.toStdString() != iutxo.txid() )
             continue;
 
-        if ( utxo.tx_hash != iutxo.tx_output_n() )
+        if ( utxo.tx_output_n != iutxo.tx_output_n() )
             continue;
 
         if ( utxo.script.toStdString() != iutxo.locking_script() )
@@ -163,8 +163,6 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     std::string locktime = LOCKTIME;
     raw_transaction_out += locktime;
 
-
-
     //create tx pre
     std::string raw_transaction_pre = VERSION; // i.e. version
     {
@@ -182,15 +180,16 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     to_sign += raw_transaction_out;
     to_sign += pb::SIGHASH_ALL_4;
 
-    //create tx
+    /*create tx
     std::string final_tx;
     final_tx += raw_transaction_pre;
     final_tx += input;
     final_tx += "%1"; // sigout_len + sigout
     final_tx += SEQUENCE;
     final_tx += raw_transaction_out;
+    */
 
-    pre_script = raw_transaction_pre + input;
+    pre_script = raw_transaction_pre;// + input;
     post_script = SEQUENCE + raw_transaction_out;
     /**/
     return to_sign;

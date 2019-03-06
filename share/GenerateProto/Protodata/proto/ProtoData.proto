@@ -539,7 +539,7 @@ message SwapFill {
     //actual bitcoin tx structure○
 }
 
-//Proves Alice paid bob - system send alice FB (locked for 48 hours)
+//Proves Alice paid bob - system sends alice FB (locked for 48 hours)
 message SwapSent {
     extend Transaction {
         optional SwapSent swapsent_tran = 700;

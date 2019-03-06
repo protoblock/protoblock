@@ -671,6 +671,26 @@ public:
         //toStdString();
     }
 
+    static QByteArray getChainsoIsTXSpent(const std::string &txid, uint numo,
+                 QThread * ownerThread = QThread::currentThread()) {
+
+        //GET /api/v2/is_tx_spent/{NETWORK}/{TXID}/{OUTPUT_NO}
+
+        qDebug() << " getChainsoIsTXSpent" << txid.data() << numo;
+
+        QString url = QString(fantasybit::CHAINSOAPI.data()).arg("is_tx_spent");
+        RestfullClient client(QUrl(url),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        QString customRoute = (txid + "/$1").data();
+        customRoute = customRoute.arg(numo);
+        client.getData(customRoute,params,headers);
+
+        return client.lastReply();
+        //toStdString();
+    }
+
+
     static QByteArray getChainsoBtcAddress(const std::string &addr,
 //                                           const QString &aftertx,
                  QThread * ownerThread = QThread::currentThread()) {

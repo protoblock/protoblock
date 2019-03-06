@@ -126,12 +126,31 @@ public:
             return pb::hashit(pb::hashfromhex(rawin)).reversestr();
         }
     }
-/*
-    static std::vector<txData> getSpentTx( const std::string &from,
-                                           const std::string &to) {
+
+    static std::pair<bool,txData> getChainsoIsTXSpent(const std::string &intx, uint num) {
+        txData ret;
+        auto json2 = BitcoinRestfullService::getChainsoIsTXSpent (intx, num);
+
+        QJsonValue data = getChainData(json2);
+        if ( data.isNull() )
+            return {true,ret};
+
+        QJsonObject jo2 = data.toObject();
+        if ( !jo2.value("is_spent").toBool() )
+            return {false,ret};
+
+        jo2 = jo2.value("spent").toObject();
+        ret.tx_hash = jo2.value("txid").toString();
+        ret.out_value = jo2.value("input_no").toInt();
+        return {true,ret};
+    }
+
+    /*
+    static std::vector<txData> getSpentUTXOtx(const std::string &from,
+                                              const utxoData &utxo) {
 
         std::vector<txData> ret;
-        auto json2 = RestfullService::getChainsoBtcAddress (from);
+        auto json2 = BitcoinRestfullService::getChainsoBtcAddress (from);
         QJsonValue data = getChainData(json2);
         if ( data.isNull() )
             return ret;
@@ -168,7 +187,8 @@ public:
 
         return ret;
     }
-*/
+    */
+
     static QJsonValue getChainData(const QByteArray &json2) {
         QJsonParseError * error = NULL;
         QJsonDocument doc = QJsonDocument::fromJson(json2,error);

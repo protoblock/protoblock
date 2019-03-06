@@ -1055,7 +1055,7 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
 
         string btcaddr = item->get_btcaddr().toStdString();
         for ( const auto &utxo : sb.bid.utxos().utxo() ) {
-            if ( minconfirms < BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
+            if ( minconfirms > BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
                 qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
                 return;
             }
@@ -1079,7 +1079,7 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
                        sf.satoshi_fee(),
                        btcaddr,pre,post);
 
-        auto tosigntraw = pre + inputscript + post + SIGHASH_ALL_4;
+        auto tosigntraw = pre + input + inputscript + post + SIGHASH_ALL_4;
         qDebug() << "twitch11 a tosigntraw" << tosigntraw.data();
         auto hashfromhex = pb::hashfromhex(tosigntraw);
         qDebug() << "twitch11 a hashfromhex" << hashfromhex.str().data();
@@ -1209,7 +1209,7 @@ void Mediator::doSwapFill(const fantasybit::SwapOrder  &so) {
 
     string btcaddr = item->get_btcaddr().toStdString();
     for ( const auto &utxo : sb.bid.utxos().utxo() ) {
-        if ( minconfirms < BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
+        if ( minconfirms > BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
             qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
             return;
         }
@@ -1233,7 +1233,7 @@ void Mediator::doSwapFill(const fantasybit::SwapOrder  &so) {
                    sf.satoshi_fee(),
                    btcaddr,pre,post);
 
-    auto tosigntraw = pre + inputscript + post + SIGHASH_ALL_4;
+    auto tosigntraw = pre + input + inputscript + post + SIGHASH_ALL_4;
     qDebug() << "twitch11 a tosigntraw" << tosigntraw.data();
     auto hashfromhex = pb::hashfromhex(tosigntraw);
     qDebug() << "twitch11 a hashfromhex" << hashfromhex.str().data();
@@ -1305,7 +1305,7 @@ void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
         int minconfirms = 0;
         string btcaddr = m_pMyFantasyNameBalance->get_btcaddr().toStdString();
         for ( const auto &utxo : sf.swapbid().utxos().utxo() ) {
-            if ( minconfirms < BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
+            if ( minconfirms > BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
                 qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
                 return;
             }
@@ -1329,7 +1329,7 @@ void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
                        sf.satoshi_fee(),
                        btcaddr,pre,post);
 
-        auto tosigntraw = pre + inputscript + post + SIGHASH_ALL_4;
+        auto tosigntraw = pre + input + inputscript + post + SIGHASH_ALL_4;
         qDebug() << "twitch11 b tosigntraw" << tosigntraw.data();
         auto hashfromhex = pb::hashfromhex(tosigntraw);
         qDebug() << "twitch11 b hashfromhex" << hashfromhex.str().data();
@@ -1362,13 +1362,12 @@ void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
 void Mediator::doSendSwapBTC(const SwapOrder &so) {
     qDebug() << "doSendSwapBTC" << so.DebugString().data();
 
-    //if I am alice
     if (so.ref() != myFantasyName )
         return;
+    //i am bob
 
     const SwapFill &sf = mGateway->dataService->GetSwapFill(so.fname().data(),
                                                             so.ref().data());
-
 
     bool dosanity = true;
     if ( dosanity ) {
@@ -1408,83 +1407,135 @@ void Mediator::doSendSwapBTC(const SwapOrder &so) {
             qDebug() << " bad swapfil data ";
             return;
         }
-
-        auto *item = mFantasyNameBalModel.getByUid(so.fname().data());
-        if ( item == nullptr ) {
-            qDebug() << " cant find fname" << so.fname().data();
-            return;
-        };
-
-        int minconfirms = 0;
-        string btcaddr = item->get_btcaddr().toStdString();
-        for ( const auto &utxo : sf.swapbid().utxos().utxo() ) {
-            if ( minconfirms < BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
-                qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
-                return;
-            }
-        }
-
-        if ( sf.swapbid().utxos().utxo().size() != 1) {
-            qDebug() << " not yet";
-            return;
-        }
-
-        auto myinput = sf.swapbid().utxos().utxo().Get(0);
-        string input, inputscript;
-        BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
-        string to_address = m_pMyFantasyNameBalance->get_btcaddr().toStdString();
-
-        string pre, post;
-        BitcoinUtils::createTX(myinput,input,inputscript,
-                       to_address,
-                       fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()),
-                       sf.satoshi_fee(),
-                       btcaddr,pre,post);
-
-        {
-            auto tosigntraw = pre + inputscript + post + SIGHASH_ALL_4;
-            auto dblhash = pb::hashit(pb::hashfromhex(tosigntraw));
-            auto hash_to_sign = dblhash.str();
-            if ( hash_to_sign != sf.hash_to_sign() ) {
-                qDebug() << "BAD HASH TO SIGN!!" << hash_to_sign.data() << sf.hash_to_sign();
-                return;
-            }
-            else
-                qDebug() << "Ok - Good hash_to_sign";
-        }
-        auto sig = Commissioner::str2sig(so.msg());
-        //finish transaction
-        auto dersig = pb::serialize_der(sig);
-        dersig = pb::to_hex(dersig);
-        dersig += pb::SIGHASH_ALL_1;
-        {
-            auto size = ( unsigned char )( dersig.size( ) / 2 );
-            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
-            dersig = sstr + dersig;
-        }
-
-        auto pk = Commissioner::str2pk(item->get_pk().toStdString());
-        auto hex_pubk = pb::to_hex(pk.begin (),33);
-        {
-            unsigned char  size = 33;
-            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
-            hex_pubk = sstr + hex_pubk;
-        }
-
-        auto sigscript = dersig + hex_pubk;
-        {
-            auto size = ( unsigned char )( sigscript.size( ) / 2 );
-            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
-            sigscript = sstr + sigscript;
-        }
-
-        auto finaltx = pre + sigscript + post;
-
-        BitcoinApi::sendrawTx(finaltx);
-        qDebug() << finaltx.data();
     }
 
+    auto *item = mFantasyNameBalModel.getByUid(so.fname().data());
+    if ( item == nullptr ) {
+        qDebug() << " cant find fname" << so.fname().data();
+        return;
+    };
 
+    int minconfirms = 0;
+    bool isdoublespend = false;
+    string btcaddr = item->get_btcaddr().toStdString();
+    for ( const auto &utxo : sf.swapbid().utxos().utxo() ) {
+        if ( minconfirms > BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
+            qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
+            isdoublespend = true;
+        }
+    }
+
+    if ( sf.swapbid().utxos().utxo().size() != 1) {
+        qDebug() << "todo: multiple inputs not yet";
+        return;
+    }
+
+    if ( isdoublespend )
+        return doProofOfDoubleSpend(so);
+
+    auto myinput = sf.swapbid().utxos().utxo().Get(0);
+    string input, inputscript;
+    BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
+    string to_address = m_pMyFantasyNameBalance->get_btcaddr().toStdString();
+
+    string pre, post;
+    BitcoinUtils::createTX(myinput,input,inputscript,
+                   to_address,
+                   fantasybit::SATSwapQty(sf.swapbid().rate(),sf.fb_qty()),
+                   sf.satoshi_fee(),
+                   btcaddr,pre,post);
+
+    {
+        auto tosigntraw = pre + input + inputscript + post + SIGHASH_ALL_4;
+        auto dblhash = pb::hashit(pb::hashfromhex(tosigntraw));
+        auto hash_to_sign = dblhash.str();
+        if ( hash_to_sign != sf.hash_to_sign() ) {
+            qDebug() << "BAD HASH TO SIGN!!" << hash_to_sign.data() << sf.hash_to_sign();
+            return;
+        }
+        else
+            qDebug() << "Ok - Good hash_to_sign";
+    }
+    auto sig = Commissioner::str2sig(so.msg());
+    //finish transaction
+    auto dersig = pb::serialize_der(sig);
+    dersig = pb::to_hex(dersig);
+    dersig += pb::SIGHASH_ALL_1;
+    {
+        auto size = ( unsigned char )( dersig.size( ) / 2 );
+        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+        dersig = sstr + dersig;
+    }
+
+    auto pk = Commissioner::str2pk(item->get_pk().toStdString());
+    auto hex_pubk = pb::to_hex(pk.begin (),33);
+    {
+        unsigned char  size = 33;
+        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+        hex_pubk = sstr + hex_pubk;
+    }
+
+    auto sigscript = dersig + hex_pubk;
+    {
+        auto size = ( unsigned char )( sigscript.size( ) / 2 );
+        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+        sigscript = sstr + sigscript;
+    }
+
+    auto finaltx = pre + input + sigscript + post;
+
+    BitcoinApi::sendrawTx(finaltx);
+    qDebug() << finaltx.data();
+
+
+}
+
+void Mediator::doProofOfDoubleSpend(const SwapOrder &so) {
+    qDebug() << "doProofOfDoubleSpend" << so.DebugString().data();
+
+    if (so.ref() != myFantasyName )
+        return;
+    //i am bob
+
+    const SwapFill &sf = mGateway->dataService->GetSwapFill(so.fname().data(),
+                                                            so.ref().data());
+
+    auto *item = mFantasyNameBalModel.getByUid(so.fname().data());
+    if ( item == nullptr ) {
+        qDebug() << " cant find fname" << so.fname().data();
+        return;
+    };
+
+
+    SwapSent ss;
+    ss.mutable_swapfill()->CopyFrom(sf);
+    ss.set_sig(so.msg());
+
+    ProofOfDoubleSpend pods;
+    pods.mutable_swapsent()->CopyFrom(ss);
+
+    int minconfirms = 0;
+    txData spentin;
+    bool isds = false;
+    string btcaddr = item->get_btcaddr().toStdString();
+    for ( const auto &utxo : sf.swapbid().utxos().utxo() ) {
+        if ( minconfirms > BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
+            qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
+            auto pbin = BitcoinApi::getChainsoIsTXSpent(utxo.txid(),utxo.tx_output_n());
+            if ( pbin.first ) {
+                isds = true;
+                spentin = pbin.second;
+                pods.mutable_utxo()->CopyFrom(utxo);
+                break;
+            }
+        }
+    }
+
+    if ( !isds ) return;
+
+    //ToDo: show sig on double spend by parsing the transaction
+
+    emit NewProofOfDoubleSpend(pods);
 }
 
 
