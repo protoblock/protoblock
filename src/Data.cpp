@@ -325,6 +325,17 @@ void NFLStateData::init() {
     }
     }
 #endif
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        auto *it = statsstore->NewIterator(leveldb::ReadOptions());
+        for (it->SeekToFirst(); it->Valid(); it->Next()) {
+            qDebug() << "statsstore dump " << it->key().ToString().data();
+            SeasonResult sr;
+            sr.ParseFromString(it->value().ToString());
+            qDebug() << "statsstore dump2 " << sr.DebugString().data();
+
+        }
+    }
 
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };

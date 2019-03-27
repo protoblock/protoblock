@@ -92,6 +92,20 @@ public:
 
     }
 
+    static QByteArray getRawTX(const std::string &txid) {
+        auto json = BitcoinRestfullService::getBlockchainBtcTX (txid);
+//        qDebug() << json << json.toStdString().data ();
+        if ( json != "Service Unavailable") {
+            if ( json == "Transaction not found") {
+                qDebug() << json;
+                return json;
+            }
+
+            return json;
+        }
+        else return json;
+    }
+
     static std::string sendrawTx(const std::string &rawin) {
         auto json = BitcoinRestfullService::pushBitcoinTx(rawin);
         auto strret = json.toStdString ();

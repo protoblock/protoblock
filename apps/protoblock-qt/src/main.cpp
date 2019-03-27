@@ -19,7 +19,7 @@
 #include "DataPersist.h"
 #include <QQmlContext>
 #include <QQuickStyle>
-
+#include "bitcoinapi.h"
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
@@ -86,5 +86,6 @@ int main(int argc, char *argv[])
 
     engine.load(QUrl(QStringLiteral("qrc:/materialMain.qml")));
 
+    BitcoinUtils::parseRawTx(BitcoinApi::getRawTX("b657e22827039461a9493ede7bdf55b01579254c1630b0bfc9185ec564fc05ab"));
     return app.exec();
 }

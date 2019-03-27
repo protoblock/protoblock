@@ -654,6 +654,20 @@ public:
         //toStdString();
     }
 
+    static QByteArray getBlockchainBtcTX(const std::string &txid,
+                 QThread * ownerThread = QThread::currentThread()) {
+
+        qDebug() << " getBlockchainBtcTX";
+        QString url = QString(fantasybit::BLOCKCHAINAPI.data());
+        RestfullClient client(QUrl(url),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QVariant> params;
+        params.insert ( QString("format"),QString("hex"));
+        QString customRoute("rawtx/%1");
+        client.getData(customRoute.arg(txid.data()),params,headers);
+        return client.lastReply();
+    }
+
     static QByteArray getChainsoBtcAddressUnspent(const std::string &addr,
                  QThread * ownerThread = QThread::currentThread()) {
 
@@ -689,7 +703,6 @@ public:
         return client.lastReply();
         //toStdString();
     }
-
 
     static QByteArray getChainsoBtcAddress(const std::string &addr,
 //                                           const QString &aftertx,

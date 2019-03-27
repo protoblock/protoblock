@@ -1486,8 +1486,6 @@ void Mediator::doSendSwapBTC(const SwapOrder &so) {
 
     BitcoinApi::sendrawTx(finaltx);
     qDebug() << finaltx.data();
-
-
 }
 
 void Mediator::doProofOfDoubleSpend(const SwapOrder &so) {
@@ -1534,6 +1532,8 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so) {
     if ( !isds ) return;
 
     //ToDo: show sig on double spend by parsing the transaction
+    qDebug() << "doProofOfDoubleSpend" << BitcoinApi::getRawTX(spentin.tx_hash.toStdString());
+
 
     emit NewProofOfDoubleSpend(pods);
 }
