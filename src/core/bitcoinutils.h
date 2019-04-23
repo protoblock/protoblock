@@ -110,133 +110,66 @@ public:
         return c;
     }
 
+    static std::string getStr(uint size, QDataStream &stream) {
+        std::vector<char> c(size+1);
+        stream.readRawData(&c[0],size);
+        c[size] = '\0';
+        return c.data();
+    }
+
+    static var_data getVarStr(QDataStream &stream) {
+        var_data vd;
+        vd.size = getStr<2>(stream);
+
+        uint8_t len;
+        pb::from_hex(vd.size,(char *)&len,sizeof( uint8_t ));
+
+        vd.data = getStr(len*2,stream);
+        return vd;
+    }
+
+    static uint8_t getInt8Str(std::string &out, QDataStream &stream) {
+        char c[3];
+        stream.readRawData(&c[0],2);
+        c[2] = '\0';
+        out = c;
+
+        uint8_t num = 0;
+        pb::from_hex(c,(char *)&num,sizeof( uint8_t ));
+        return num;
+    }
+
     static bitcoin_hex_tx parseRawHexTx(const QByteArray &rawtx) {
         QByteArray data;
         QDataStream stream(rawtx);
         bitcoin_hex_tx btx;
-        {
-            int size = VERSION_NORMAL.size();
-            std::vector<char> version(size+1);
-            size = stream.readRawData(&version[0],size);
-            version[size] = '\0';
-            btx.version = version.data();
+        btx.version = getStr<8>(stream);
 
+        if ( btx.version == VERSION_NORMAL )
+            qDebug() << "podp yes VERSION_NORMAL ";
+        else
+            qDebug() << "podp no VERSION_NORMAL ";
 
-            if ( strcmp (version.data(),VERSION_NORMAL.c_str()) == 0)
-                qDebug() << "jayversion yes VERSION_NORMAL ";
-            else
-                qDebug() << "jayversion no VERSION_NORMAL ";
-        }
-//        version.resize(11);
-//        stream.readRawData(&version[0],10);
-//        version[10] = '\0';
-//        qDebug() << version;
-
-        uint8_t numinputs = 0;
-        {
-            std::vector<char> vsz(3);
-            stream.readRawData(&vsz[0],2);
-            vsz[2] = '\0';
-            std::string sz(&vsz[0]);
-            pb::from_hex(sz,(char *)&numinputs,sizeof( uint8_t ));
-            btx.input_count = sz;
-            qDebug() << sz.data() << "jay size" << numinputs << "size jay";
-        }
-
+        uint8_t numinputs = getInt8Str(btx.input_count,stream);
         std::vector<btx_input> &inputs = btx.inputs;
         for ( int i =0; i < numinputs; i++) {
             btx_input in;
-
             in.rtxid = getStr<64>(stream);
-            if ( false ){
-                std::vector<char> prevhash_reverse(65);
-                stream.readRawData(&prevhash_reverse[0],64);
-                prevhash_reverse[64] = '\0';
-                in.rtxid = prevhash_reverse.data();
-            }
-
-            {
-                std::vector<char> ti(9);
-                stream.readRawData(&ti[0],8);
-                ti[8] = '\0';
-                in.txindex = ti.data();
-            }
-
-            {
-                std::vector<char> vsz(3);
-                stream.readRawData(&vsz[0],2);
-                vsz[2] = '\0';
-                in.script.size = vsz.data();
-
-                uint8_t len;
-                pb::from_hex(in.script.size,(char *)&len,sizeof( uint8_t ));
-
-                len*=2;
-                std::vector<char> sdata(len + 1);
-                stream.readRawData(&sdata[0],len);
-                sdata[len] = '\0';
-                in.script.data = sdata.data();
-            }
-
-            {
-                std::vector<char> seq(9);
-                stream.readRawData(&seq[0],8);
-                seq[8] = '\0';
-                in.sequence = seq.data();
-            }
-
+            in.txindex = getStr<8>(stream);
+            in.script = getVarStr(stream);
+            in.sequence = getStr<8>(stream);
             inputs.push_back(in);
         }
 
-        uint8_t numout = 0;
-        {
-            std::vector<char> vsz(3);
-            stream.readRawData(&vsz[0],2);
-            vsz[2] = '\0';
-            //std::string sz(&vsz[0]);
-            pb::from_hex(&vsz[0],(char *)&numout,sizeof( uint8_t ));
-            btx.output_count = vsz.data();
-        }
-
+        uint8_t numout = getInt8Str(btx.output_count,stream);
         std::vector<btx_output> &outs = btx.outputs;
         for ( int i =0; i < numout; i++) {
             btx_output out;
-
-            {
-                const int _size = 16;
-                std::vector<char> amount(_size+1);
-                stream.readRawData(&amount[0],_size);
-                amount[_size] = '\0';
-                out.amount = amount.data();
-            }
-
-            {
-                int _size = 2;
-                std::vector<char> vsz(_size+1);
-                stream.readRawData(&vsz[0],_size);
-                vsz[_size] = '\0';
-                out.script.size = vsz.data();
-
-                uint8_t len;
-                pb::from_hex(out.script.size,(char *)&len,sizeof( uint8_t ));
-
-                _size = len*2;
-                std::vector<char> sdata(_size + 1);
-                stream.readRawData(&sdata[0],_size);
-                sdata[_size] = '\0';
-                out.script.data = sdata.data();
-            }
-
+            out.amount = getStr<16>(stream);
+            out.script = getVarStr(stream);
             outs.push_back(out);
         }
-
-        {
-            const int _size = 8;
-            std::vector<char> lock(_size+1);
-            stream.readRawData(&lock[0],_size);
-            lock[_size] = '\0';
-            btx.locktime = lock.data();
-        }
+        btx.locktime = getStr<8>(stream);
 
         return btx;
     }
@@ -250,16 +183,13 @@ public:
        for ( const auto &ov : tx.outputs )
            ret += ov;
 
-
        ret += tx.locktime;
-
        return ret;
     }
 
-
+    //01000000010123449fad6289dda5365a197fa822e320cdfc106bed243bf773cac64cfdb237050000006a473044022036be6403aeb4e0e6fd54720b328d9d81bea32fb79684da0288743668fb5ef3ee02202023a71ef7217061fb9b4f35a05143de71447032e5a35b39c3d14b3210bad10b0121032725846bb7bc2e47b7b5a50670d77c8268f4d7f3243bdcf1b22174a67faaf528feffffff0200213900000000001976a914659042e01e864e2f29641ea3a213c51a956d33c788ac288c0f00000000001976a9144fc238bcda3f884ff6ce8d9feeb89b50dfd3da8888ac2c480700
 
     /*
-     *
     01000000
     01
     0123449fad6289dda5365a197fa822e320cdfc106bed243bf773cac64cfdb237
@@ -284,10 +214,6 @@ public:
         4fc238bcda3f884ff6ce8d9feeb89b50dfd3da88
         88ac
     2c480700  //locktime
-
-
-
-
 
     const MyKey32 Transaction::getDigest ( const int n, const QByteArray& scr ) const
     {

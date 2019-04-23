@@ -85,14 +85,16 @@ int main(int argc, char *argv[])
 
 
     engine.load(QUrl(QStringLiteral("qrc:/materialMain.qml")));
+    //b657e22827039461a9493ede7bdf55b01579254c1630b0bfc9185ec564fc05ab
 
-    auto bytes = BitcoinApi::getRawTX("b657e22827039461a9493ede7bdf55b01579254c1630b0bfc9185ec564fc05ab");
+    auto bytes = BitcoinApi::getRawTX("9cf061e23cb958d03000e692997cda261ebd4d0c9067bac89c3299a4a8ae808e");
     auto tx = BitcoinUtils::parseRawHexTx (bytes);
 
     if ( bytes.toStdString () == BitcoinUtils::toRawHexTx(tx) )
-        qDebug() << " winner jay berg ";
-    else qDebug() << " not winner jay berg " << bytes.toStdString ().data ();
+        qDebug() << " podp test yes";
+    else qDebug() << " podp test no" << bytes.toStdString ().data ();
 
-    qDebug() << "jay berg " << BitcoinUtils::toRawHexTx(tx).data ();
+    qDebug() << " podp test " << BitcoinUtils::toRawHexTx(tx).data ();
+
     return app.exec();
 }
