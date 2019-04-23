@@ -33,6 +33,10 @@ const std::string VERSION_NORMAL = "01000000";
 struct var_data {
     std::string size;
     std::string data;
+    operator std::string() const {
+        return size + data;
+    }
+
 };
 
 struct btx_input {
@@ -40,14 +44,23 @@ struct btx_input {
     std::string txindex; //8
     var_data script;
     std::string sequence; //8
+
+    operator std::string() const {
+        return rtxid + txindex + std::string(script) + sequence;
+    }
+
 };
 
 struct btx_output {
     std::string amount; //16 - reverse hex
     var_data script;
+    operator std::string() const {
+        return amount + std::string(script);
+    }
+
 };
 
-struct bitcoin_tx {
+struct bitcoin_hex_tx {
     std::string version; //8
     std::string input_count; // var
     std::vector<btx_input> inputs;
@@ -89,10 +102,18 @@ public:
         return BitcoinRestfullService::getBtcAddressBalance(btcaddress);
     }
 
-    static void parseRawTx(const QByteArray &rawtx) {
+    template<int T>
+    static std::string getStr(QDataStream &stream) {
+        char c[T+1];
+        stream.readRawData(&c[0],T);
+        c[T] = '\0';
+        return c;
+    }
+
+    static bitcoin_hex_tx parseRawHexTx(const QByteArray &rawtx) {
         QByteArray data;
         QDataStream stream(rawtx);
-        bitcoin_tx btx;
+        bitcoin_hex_tx btx;
         {
             int size = VERSION_NORMAL.size();
             std::vector<char> version(size+1);
@@ -126,7 +147,8 @@ public:
         for ( int i =0; i < numinputs; i++) {
             btx_input in;
 
-            {
+            in.rtxid = getStr<64>(stream);
+            if ( false ){
                 std::vector<char> prevhash_reverse(65);
                 stream.readRawData(&prevhash_reverse[0],64);
                 prevhash_reverse[64] = '\0';
@@ -181,26 +203,27 @@ public:
             btx_output out;
 
             {
-                std::vector<char> amount(17);
-                stream.readRawData(&amount[0],16);
-                amount[16] = '\0';
+                const int _size = 16;
+                std::vector<char> amount(_size+1);
+                stream.readRawData(&amount[0],_size);
+                amount[_size] = '\0';
                 out.amount = amount.data();
             }
 
-
             {
-                std::vector<char> vsz(3);
-                stream.readRawData(&vsz[0],2);
-                vsz[2] = '\0';
+                int _size = 2;
+                std::vector<char> vsz(_size+1);
+                stream.readRawData(&vsz[0],_size);
+                vsz[_size] = '\0';
                 out.script.size = vsz.data();
 
                 uint8_t len;
                 pb::from_hex(out.script.size,(char *)&len,sizeof( uint8_t ));
 
-                len*=2;
-                std::vector<char> sdata(len + 1);
-                stream.readRawData(&sdata[0],len);
-                sdata[len] = '\0';
+                _size = len*2;
+                std::vector<char> sdata(_size + 1);
+                stream.readRawData(&sdata[0],_size);
+                sdata[_size] = '\0';
                 out.script.data = sdata.data();
             }
 
@@ -208,12 +231,32 @@ public:
         }
 
         {
-            std::vector<char> lock(9);
-            stream.readRawData(&lock[0],8);
-            lock[8] = '\0';
+            const int _size = 8;
+            std::vector<char> lock(_size+1);
+            stream.readRawData(&lock[0],_size);
+            lock[_size] = '\0';
             btx.locktime = lock.data();
         }
+
+        return btx;
     }
+
+    static std::string toRawHexTx(const bitcoin_hex_tx &tx) {
+       auto ret = tx.version + tx.input_count;
+       for ( const auto &v : tx.inputs )
+           ret += v;
+
+       ret += tx.output_count;
+       for ( const auto &ov : tx.outputs )
+           ret += ov;
+
+
+       ret += tx.locktime;
+
+       return ret;
+    }
+
+
 
     /*
      *
