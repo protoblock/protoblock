@@ -48,7 +48,6 @@ struct btx_input {
     operator std::string() const {
         return rtxid + txindex + std::string(script) + sequence;
     }
-
 };
 
 struct btx_output {
@@ -102,6 +101,51 @@ public:
         return BitcoinRestfullService::getBtcAddressBalance(btcaddress);
     }
 
+    static bool createProofOfUtxoSpend(const bitcoin_hex_tx &ref,
+                                       const Bitcoin_UTXO &spent,
+                                       std::string &pre, std::string &post) {
+        pre = ref.version + ref.input_count;
+
+        bool seen = false;
+        for ( auto &r : ref.inputs ) {
+            if ( r.rtxid == spent.txid () &&
+                 getInt8(r.txindex) == spent.tx_output_n() ) {
+                if ( seen ) {
+                    qCritical() << " bad seen";
+                    return false;
+                }
+
+                std::string input, script;
+                createInputsFromUTXO(spent,input,script);
+
+                if ( input+script+r.sequence != std::string(r)) {
+                    qCritical() << " bad " << std::string(r).data ();
+                }
+                //pre += r.rtxid + r.txindex + r.script;
+
+
+                seen = true;
+                post = r.sequence;
+            }
+            else {
+                btx_input bin = r;
+                bin.script.size = "00";
+                bin.script.data = "";
+
+                if ( !seen )
+                    pre += bin;
+                else
+                    post += bin;
+            }
+        }
+
+        return seen;
+    }
+
+    static bitcoin_hex_tx parseRawHexTx(const QByteArray &rawtx);
+
+    static std::string toRawHexTx(const bitcoin_hex_tx &tx);
+
     template<int T>
     static std::string getStr(QDataStream &stream) {
         char c[T+1];
@@ -128,64 +172,22 @@ public:
         return vd;
     }
 
+    static uint8_t getInt8(const std::string &in) {
+        uint8_t num = 0;
+        pb::from_hex(in,(char *)&num,sizeof( uint8_t ));
+        return num;
+    }
+
     static uint8_t getInt8Str(std::string &out, QDataStream &stream) {
         char c[3];
         stream.readRawData(&c[0],2);
         c[2] = '\0';
         out = c;
 
-        uint8_t num = 0;
-        pb::from_hex(c,(char *)&num,sizeof( uint8_t ));
-        return num;
+        return getInt8(c);
     }
 
-    static bitcoin_hex_tx parseRawHexTx(const QByteArray &rawtx) {
-        QByteArray data;
-        QDataStream stream(rawtx);
-        bitcoin_hex_tx btx;
-        btx.version = getStr<8>(stream);
 
-        if ( btx.version == VERSION_NORMAL )
-            qDebug() << "podp yes VERSION_NORMAL ";
-        else
-            qDebug() << "podp no VERSION_NORMAL ";
-
-        uint8_t numinputs = getInt8Str(btx.input_count,stream);
-        std::vector<btx_input> &inputs = btx.inputs;
-        for ( int i =0; i < numinputs; i++) {
-            btx_input in;
-            in.rtxid = getStr<64>(stream);
-            in.txindex = getStr<8>(stream);
-            in.script = getVarStr(stream);
-            in.sequence = getStr<8>(stream);
-            inputs.push_back(in);
-        }
-
-        uint8_t numout = getInt8Str(btx.output_count,stream);
-        std::vector<btx_output> &outs = btx.outputs;
-        for ( int i =0; i < numout; i++) {
-            btx_output out;
-            out.amount = getStr<16>(stream);
-            out.script = getVarStr(stream);
-            outs.push_back(out);
-        }
-        btx.locktime = getStr<8>(stream);
-
-        return btx;
-    }
-
-    static std::string toRawHexTx(const bitcoin_hex_tx &tx) {
-       auto ret = tx.version + tx.input_count;
-       for ( const auto &v : tx.inputs )
-           ret += v;
-
-       ret += tx.output_count;
-       for ( const auto &ov : tx.outputs )
-           ret += ov;
-
-       ret += tx.locktime;
-       return ret;
-    }
 
     //01000000010123449fad6289dda5365a197fa822e320cdfc106bed243bf773cac64cfdb237050000006a473044022036be6403aeb4e0e6fd54720b328d9d81bea32fb79684da0288743668fb5ef3ee02202023a71ef7217061fb9b4f35a05143de71447032e5a35b39c3d14b3210bad10b0121032725846bb7bc2e47b7b5a50670d77c8268f4d7f3243bdcf1b22174a67faaf528feffffff0200213900000000001976a914659042e01e864e2f29641ea3a213c51a956d33c788ac288c0f00000000001976a9144fc238bcda3f884ff6ce8d9feeb89b50dfd3da8888ac2c480700
 

@@ -99,6 +99,19 @@ void BitcoinUtils::createInputsFromUTXO(const Bitcoin_UTXO &iutxo,
     }
 }
 
+std::string BitcoinUtils::toRawHexTx(const bitcoin_hex_tx &tx) {
+    auto ret = tx.version + tx.input_count;
+    for ( const auto &v : tx.inputs )
+        ret += v;
+
+    ret += tx.output_count;
+    for ( const auto &ov : tx.outputs )
+        ret += ov;
+
+    ret += tx.locktime;
+    return ret;
+}
+
 
 
 
