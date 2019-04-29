@@ -13,5 +13,6 @@ message SwapOrder {
     optional string msg = 90;
     optional string ref = 100;
     optional string directed = 110;
+    optional bool double_spent = 120;
 
 }

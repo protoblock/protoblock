@@ -103,6 +103,7 @@ struct SwapBuyer {
     std::string counteroffer = "";
     std::string counterparty = "";
     std::string signature = "";
+    ProofOfDoubleSpend podp;
 };
 
 struct SwapBuys {
@@ -147,6 +148,20 @@ struct SwapBuys {
         return "";
     }
 
+    bool doubleSpent( const std::string &fname, const  ProofOfDoubleSpend &podp) {
+        for (auto &sb : sbuyers) {
+            if (sb.fname != fname )
+                continue;
+
+            if ( !sb.is_pending )
+                return false;
+
+            sb.podp = podp;
+            return true;
+        }
+
+        return false;
+    }
 };
 
 struct SwapOrderBook {
@@ -243,6 +258,15 @@ struct SwapOrderBook {
         return it->second.Sent(fname,infill.sig());
     }
 
+    bool doubleSpent(const ProofOfDoubleSpend &podp, const std::string &fname) {
+        auto rate = podp.swapsent().swapfill().swapbid().rate();
+        auto it = bids.find(rate);
+        if ( it == end(bids))
+            return false;
+
+
+        return it->second.doubleSpent(podp.swapsent().swapfill().counterparty(),podp);
+    }
 
     void clear() {
         bids.clear();
@@ -283,6 +307,7 @@ public:
     void AddNewSwapOrder(const SwapAsk &inask, const std::string &fname );
     void AddNewSwapOrder(const SwapFill &infill, const std::string &fname );
     void AddNewSwapOrder(const SwapSent &insent, const std::string &fname );
+    void AddNewSwapOrder(const ProofOfDoubleSpend &inpodp, const std::string &fname );
 
 
     void OnNewSwapTx(const SwapBid &inbid, const std::string &fname,const std::string &txid);

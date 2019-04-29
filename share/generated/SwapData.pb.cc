@@ -34,7 +34,7 @@ void protobuf_AssignDesc_SwapData_2eproto() {
       "SwapData.proto");
   GOOGLE_CHECK(file != NULL);
   SwapOrder_descriptor_ = file->message_type(0);
-  static const int SwapOrder_offsets_[11] = {
+  static const int SwapOrder_offsets_[12] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, isask_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, satoshi_min_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, satoshi_max_),
@@ -46,6 +46,7 @@ void protobuf_AssignDesc_SwapData_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, msg_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, ref_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, directed_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SwapOrder, double_spent_),
   };
   SwapOrder_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -88,12 +89,12 @@ void protobuf_AddDesc_SwapData_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016SwapData.proto\022\nfantasybit\"\272\001\n\tSwapOrd"
+    "\n\016SwapData.proto\022\nfantasybit\"\320\001\n\tSwapOrd"
     "er\022\r\n\005isask\030\n \001(\010\022\023\n\013satoshi_min\030\024 \001(\004\022\023"
     "\n\013satoshi_max\030\036 \001(\004\022\014\n\004rate\030( \001(\004\022\r\n\005ope"
     "nq\0302 \001(\004\022\r\n\005pendq\030< \001(\004\022\r\n\005fillq\030F \001(\004\022\r"
     "\n\005fname\030P \001(\t\022\013\n\003msg\030Z \001(\t\022\013\n\003ref\030d \001(\t\022"
-    "\020\n\010directed\030n \001(\t", 217);
+    "\020\n\010directed\030n \001(\t\022\024\n\014double_spent\030x \001(\010", 239);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "SwapData.proto", &protobuf_RegisterTypes);
   SwapOrder::default_instance_ = new SwapOrder();
@@ -122,6 +123,7 @@ const int SwapOrder::kFnameFieldNumber;
 const int SwapOrder::kMsgFieldNumber;
 const int SwapOrder::kRefFieldNumber;
 const int SwapOrder::kDirectedFieldNumber;
+const int SwapOrder::kDoubleSpentFieldNumber;
 #endif  // !_MSC_VER
 
 SwapOrder::SwapOrder()
@@ -151,6 +153,7 @@ void SwapOrder::SharedCtor() {
   msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ref_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   directed_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  double_spent_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -227,6 +230,7 @@ void SwapOrder::Clear() {
         directed_->clear();
       }
     }
+    double_spent_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -413,6 +417,22 @@ bool SwapOrder::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(960)) goto parse_double_spent;
+        break;
+      }
+
+      // optional bool double_spent = 120;
+      case 120: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_double_spent:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &double_spent_)));
+          set_has_double_spent();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -506,6 +526,11 @@ void SwapOrder::SerializeWithCachedSizes(
       110, this->directed(), output);
   }
 
+  // optional bool double_spent = 120;
+  if (has_double_spent()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(120, this->double_spent(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -587,6 +612,11 @@ void SwapOrder::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         110, this->directed(), target);
+  }
+
+  // optional bool double_spent = 120;
+  if (has_double_spent()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(120, this->double_spent(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -677,6 +707,11 @@ int SwapOrder::ByteSize() const {
           this->directed());
     }
 
+    // optional bool double_spent = 120;
+    if (has_double_spent()) {
+      total_size += 2 + 1;
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -739,6 +774,9 @@ void SwapOrder::MergeFrom(const SwapOrder& from) {
     if (from.has_directed()) {
       set_directed(from.directed());
     }
+    if (from.has_double_spent()) {
+      set_double_spent(from.double_spent());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -773,6 +811,7 @@ void SwapOrder::Swap(SwapOrder* other) {
     std::swap(msg_, other->msg_);
     std::swap(ref_, other->ref_);
     std::swap(directed_, other->directed_);
+    std::swap(double_spent_, other->double_spent_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

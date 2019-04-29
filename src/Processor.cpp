@@ -24,7 +24,7 @@
 #include "fbutils.h"
 #include "pbutils.h"
 #include "ldbwriter.h"
-
+#include "bitcoinutils.h"
 
 
 #ifdef BLOCK_EXPLORER
@@ -1127,6 +1127,11 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
 
         case TransType::PODP: {
             const auto & swapthis = t.GetExtension(ProofOfDoubleSpend::podp_tran);
+            if ( pb::BitcoinUtils::verifyProofOfUtxoSpend(swapthis) )
+                qDebug() << "pb::BitcoinUtils::verifyProofOfUtxoSpend()";
+            else
+                qDebug() << "!pb::BitcoinUtils::verifyProofOfUtxoSpend()";
+
             mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(),st.id());
             break;
         }

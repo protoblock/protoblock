@@ -188,6 +188,13 @@ class SwapOrder : public ::google::protobuf::Message {
   inline ::std::string* release_directed();
   inline void set_allocated_directed(::std::string* directed);
 
+  // optional bool double_spent = 120;
+  inline bool has_double_spent() const;
+  inline void clear_double_spent();
+  static const int kDoubleSpentFieldNumber = 120;
+  inline bool double_spent() const;
+  inline void set_double_spent(bool value);
+
   // @@protoc_insertion_point(class_scope:fantasybit.SwapOrder)
  private:
   inline void set_has_isask();
@@ -212,6 +219,8 @@ class SwapOrder : public ::google::protobuf::Message {
   inline void clear_has_ref();
   inline void set_has_directed();
   inline void clear_has_directed();
+  inline void set_has_double_spent();
+  inline void clear_has_double_spent();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -226,9 +235,10 @@ class SwapOrder : public ::google::protobuf::Message {
   ::std::string* ref_;
   ::std::string* directed_;
   bool isask_;
+  bool double_spent_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
 
   friend void  protobuf_AddDesc_SwapData_2eproto();
   friend void protobuf_AssignDesc_SwapData_2eproto();
@@ -676,6 +686,28 @@ inline void SwapOrder::set_allocated_directed(::std::string* directed) {
     clear_has_directed();
     directed_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional bool double_spent = 120;
+inline bool SwapOrder::has_double_spent() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void SwapOrder::set_has_double_spent() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void SwapOrder::clear_has_double_spent() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void SwapOrder::clear_double_spent() {
+  double_spent_ = false;
+  clear_has_double_spent();
+}
+inline bool SwapOrder::double_spent() const {
+  return double_spent_;
+}
+inline void SwapOrder::set_double_spent(bool value) {
+  set_has_double_spent();
+  double_spent_ = value;
 }
 
 

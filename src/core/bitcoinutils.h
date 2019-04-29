@@ -110,7 +110,7 @@ public:
         bool seen = false;
         for ( auto &r : ref.inputs ) {
             if ( r.rtxid == spent.txid () &&
-                 getInt8(r.txindex) == spent.tx_output_n() ) {
+                getInt8(r.txindex) == spent.tx_output_n() ) {
                 if ( seen ) {
                     qCritical() << " bad seen";
                     return false;
@@ -125,9 +125,9 @@ public:
                 }
                 //pre += r.rtxid + r.txindex + r.script;
 
-
                 seen = true;
                 post = r.sequence;
+                sigscript = std::string(r.script);
             }
             else {
                 btx_input bin = r;
@@ -144,6 +144,9 @@ public:
         return seen;
     }
 
+    static bool verifyProofOfUtxoSpend(const ProofOfDoubleSpend &podp) {
+        return false;
+    }
     static bitcoin_hex_tx parseRawHexTx(const QByteArray &rawtx);
 
     static std::string toRawHexTx(const bitcoin_hex_tx &tx);

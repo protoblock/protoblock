@@ -111,10 +111,6 @@ void SwapStateData::init() {
 
         delete it;
     }
-
-
-
-
 }
 
 void SwapStateData::closeAll() {
@@ -245,9 +241,26 @@ void SwapStateData::OnNewSwapTx(const SwapSent &insent, const string &fname, con
 }
 
 void SwapStateData::OnNewSwapTx(const ProofOfDoubleSpend &inpods, const std::string &fname,const std::string &txid) {
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        if ( !mOrderBook.doubleSpent(inpods, fname ) )  {
+            qDebug() << "!mOrderBook.doubleSpent( )  " << inpods.DebugString().data();
+            return;
+        }
+    }
 
+    AddNewSwapOrder(inpods,fname);
+    if ( amlive ) {
+        SwapOrder so;
+        so.set_isask(false);
+        so.set_fname(inpods.swapsent().swapfill().counterparty());
+        so.set_pendq(inpods.swapsent().swapfill().fb_qty());
+        so.set_ref(fname);
+        so.set_msg(inpods.swapsent().sig());
+        so.set_double_spent(true);
+        emit NewSwapData(so);
+    }
 }
-
 
 std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
     std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
@@ -382,6 +395,13 @@ void SwapStateData::AddNewSwapOrder(const SwapSent &insent, const string &fname 
 
     std::string key =  "^" +  fname;
     swapbids->Put(write_sync, key, insent.SerializeAsString());
+}
+
+void SwapStateData::AddNewSwapOrder(const ProofOfDoubleSpend &inpodp, const string &fname ) {
+    qDebug() << " AddNewSwapOrder inpodp ";
+
+    std::string key =  "^^" +  fname;
+    swapbids->Put(write_sync, key, inpodp.SerializeAsString());
 }
 
 

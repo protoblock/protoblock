@@ -535,7 +535,8 @@ void Mediator::OnSwapData(fantasybit::SwapOrder so) {
         m_pSwapSellModel->add(so);
     }
     else {
-        if ( so.msg() != "" )
+        if ( so.double_spent() );
+        else if ( so.msg() != "" )
             doSendSwapBTC(so);
         else if ( so.ref() != "" )
             doSwapSent(so);
@@ -543,6 +544,8 @@ void Mediator::OnSwapData(fantasybit::SwapOrder so) {
             doSwapFill(so);
         else
             m_pSwapBuyModel->add(so);
+
+        m_pSwapBuyModel->update(so);
     }
 }
 
@@ -1536,15 +1539,14 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
     auto bytes = BitcoinApi::getRawTX(spentin.tx_hash.toStdString());
     auto tx = BitcoinUtils::parseRawHexTx (bytes);
 
-    std::string pre, post;
-    if ( BitcoinUtils::createProofOfUtxoSpend(tx,pods.utxo (),pre, post) ) {
+    std::string pre, post, sigscript;
+    if ( BitcoinUtils::createProofOfUtxoSpend(tx,pods.utxo (),pre, post, sigscript) ) {
         qDebug() << "doProofOfDoubleSpend" << bytes;
 
         pods.set_pre (pre);
         pods.set_post (post);
-        pods.set_sig();
+        pods.set_sig(sigscript);
     }
-
 
     emit NewProofOfDoubleSpend(pods);
 }
