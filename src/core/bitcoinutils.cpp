@@ -112,8 +112,40 @@ std::string BitcoinUtils::toRawHexTx(const bitcoin_hex_tx &tx) {
     return ret;
 }
 
+bitcoin_hex_tx BitcoinUtils::parseRawHexTx(const QByteArray &rawtx) {
+    QByteArray data;
+    QDataStream stream(rawtx);
+    bitcoin_hex_tx btx;
+    btx.version = getStr<8>(stream);
 
+    if ( btx.version == VERSION_NORMAL )
+        qDebug() << "podp yes VERSION_NORMAL ";
+    else
+        qDebug() << "podp no VERSION_NORMAL ";
 
+    uint8_t numinputs = getInt8Str(btx.input_count,stream);
+    std::vector<btx_input> &inputs = btx.inputs;
+    for ( int i =0; i < numinputs; i++) {
+        btx_input in;
+        in.rtxid = getStr<64>(stream);
+        in.txindex = getStr<8>(stream);
+        in.script = getVarStr(stream);
+        in.sequence = getStr<8>(stream);
+        inputs.push_back(in);
+    }
+
+    uint8_t numout = getInt8Str(btx.output_count,stream);
+    std::vector<btx_output> &outs = btx.outputs;
+    for ( int i =0; i < numout; i++) {
+        btx_output out;
+        out.amount = getStr<16>(stream);
+        out.script = getVarStr(stream);
+        outs.push_back(out);
+    }
+    btx.locktime = getStr<8>(stream);
+
+    return btx;
+}
 
 std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
                                    const std::string &input,

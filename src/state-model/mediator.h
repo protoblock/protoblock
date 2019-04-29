@@ -777,7 +777,7 @@ public:
     void doSwapSent(const fantasybit::SwapOrder &so);
     void doSendSwapBTC(const fantasybit::SwapOrder &so);
     void doSwapFill(const fantasybit::SwapOrder &so);
-    void doProofOfDoubleSpend(const fantasybit::SwapOrder &so);
+    void doProofOfDoubleSpend(const fantasybit::SwapOrder &so, const std::string &txid);
 
 signals:
     void importSuccess(const QString name, bool passfail);
