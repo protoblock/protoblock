@@ -55,6 +55,9 @@ public:
 
     virtual fantasybit::MyFantasyName importMnemonic(const std::string &in)= 0;
     virtual std::string exportMnemonic(std::string &in)= 0;
+
+    virtual pb::signature signIt(const pb::sha256 &in) = 0;
+
     virtual int GetAvgProjection(const std::string &playerid) = 0;
 
 

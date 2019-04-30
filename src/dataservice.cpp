@@ -111,6 +111,11 @@ string DataService::exportMnemonic(std::string &in) {
     return worker->Agent().getMnemonic(in);
 }
 
+pb::signature DataService::signIt(const pb::sha256 &in) {
+    MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
+    return worker->Agent().sign_raw(in);
+}
+
 ordsnap_t DataService::GetOrdersPositionsByName(const std::string &fname) {
     MainLAPIWorker* worker = Core::resolveByName<MainLAPIWorker>("coreapi");
     return worker->ExData().GetOrdersPositionsByName(fname);

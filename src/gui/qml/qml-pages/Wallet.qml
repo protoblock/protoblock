@@ -607,7 +607,7 @@ Item {
         }
 
         onAccepted: {
-            if ( realRoot.uname === "" )  {
+            if ( realRoot.uname !== "" )  {
                 if ( !isbtc ) {
                     if ( mytransferdialog.amount > 0 &&
                             mytransferdialog.amount <= Math.min(MiddleMan.pMyFantasyNameBalance.net, MiddleMan.pMyFantasyNameBalance.stake)) {
@@ -623,7 +623,7 @@ Item {
                         MiddleMan.doBtcTransfer(mytransferdialog.amount,mytransferdialog.to);
                     }
                     else {
-                        console.log("not btc enough funds " + satbal;
+                        console.log("not btc enough funds " + walltti.satbal)
                     }
                 }
             }

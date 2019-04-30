@@ -9,6 +9,7 @@
 //#include <QMutexLocker>
 #include "pbgateways.h"
 #include "ExchangeData.h"
+#include "utils/utils.h"
 
 class DataService : public GenericSingleton<DataService>
         , public pb::IDataService
@@ -45,6 +46,8 @@ public:
 
     fantasybit::MyFantasyName importMnemonic(const std::string &in);
     std::string exportMnemonic(std::string &in);
+
+    pb::signature signIt(const pb::sha256 &in);
 
     ordsnap_t
         GetOrdersPositionsByName(const std::string &fname);

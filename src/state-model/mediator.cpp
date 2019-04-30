@@ -953,11 +953,75 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
     emit NewTransfer(tt);
 }
 
-void Mediator::doBtcTransfer(const qint32 amount, QString toname) {
+void Mediator::doBtcTransfer(const quint64 amount, QString toname) {
     if ( otherFantasyName != "" )
         return;
 
     qDebug() << " do btc transfer" << amount << "from: " << m_pMyFantasyNameBalance->get_btcaddr() << "to: " << toname;
+
+    Bitcoin_UTXOS utxos;
+    if ( !BitcoinUtils::getUtxos(utxos,
+                                 m_pMyFantasyNameBalance->get_btcaddr().toStdString(),
+                                 amount,amount) ) {
+        qDebug() << "doBtcTransfer not enough utxos";
+        return;
+    }
+
+    if ( utxos.utxo_size()!= 1) {
+        qDebug() << "doBtcTransfer not yet";
+        return;
+    }
+
+    auto myinput = utxos.utxo().Get(0);
+    string input, inputscript;
+    BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
+
+    string to_address = m_pMyFantasyNameBalance->get_btcaddr().toStdString();
+    string pre, post;
+    auto to_sign = BitcoinUtils::createTX(myinput,input,inputscript,
+                                           to_address,
+                                           amount,
+                                           fantasybit::MIN_SAT_BYTE_TX_FEE,
+                                           to_address,pre,post);
+
+    auto hashfromhex = pb::hashfromhex(to_sign);
+    auto dblhash = pb::hashit(hashfromhex);
+
+    // sign it
+    pb::sha256 digest(dblhash);
+    auto rawsig = mGateway->dataService->signIt(digest);
+
+    //finish transaction
+    auto dersig = pb::serialize_der(rawsig);
+    dersig = pb::to_hex(dersig);
+    dersig += pb::SIGHASH_ALL_1;
+    {
+        auto size = ( unsigned char )( dersig.size( ) / 2 );
+        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+        dersig = sstr + dersig;
+    }
+
+    auto pk = Commissioner::str2pk(m_pMyFantasyNameBalance->get_pk().toStdString());
+    auto hex_pubk = pb::to_hex(pk.begin (),33);
+    {
+        unsigned char  size = 33;
+        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+        hex_pubk = sstr + hex_pubk;
+    }
+
+    auto sigscript = dersig + hex_pubk;
+    {
+        auto size = ( unsigned char )( sigscript.size( ) / 2 );
+        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+        sigscript = sstr + sigscript;
+    }
+
+    auto finaltx = pre + input + sigscript + post;
+
+    qDebug() << "doBtcTransfer final " << finaltx.data();
+    auto txid = BitcoinApi::sendrawTx(finaltx);
+    qDebug() << "doBtcTransfer txid " << txid.data();
+
 }
 
 void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint64 min) {
