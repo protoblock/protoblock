@@ -224,6 +224,14 @@ public:
 
     Q_INVOKABLE QString init();
 
+
+    Q_INVOKABLE bool isValidBitcoinAddress(const QString &inaddr) {
+        if ( inaddr.at(0) != "1" )
+            return false;
+
+        return isValidBtcAddress(inaddr.toStdString());
+    }
+
 //    Q_INVOKABLE QString toBTCAddess(const QString &inpk) {
 //        qDebug() << " twitch toBTCAddess " << inpk;
 //        toBTCAddess2(inpk);
@@ -330,6 +338,7 @@ public:
     Q_INVOKABLE void doCancel(qint32 id);
     Q_INVOKABLE void doTrade(QString playerid, QString symbol, bool isbuy, const qint32 price, qint32 size);
     Q_INVOKABLE void doTransfer(const qint32 amount, QString toname);
+    Q_INVOKABLE void doBtcTransfer(const qint32 amount, QString toname);
     Q_INVOKABLE void doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint64 min);
 
 //    Q_INVOKABLE QString getOrderModelSymbol() {

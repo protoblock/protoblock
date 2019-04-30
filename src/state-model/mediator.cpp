@@ -953,6 +953,13 @@ void Mediator::doTransfer(const qint32 amount, QString toname) {
     emit NewTransfer(tt);
 }
 
+void Mediator::doBtcTransfer(const qint32 amount, QString toname) {
+    if ( otherFantasyName != "" )
+        return;
+
+    qDebug() << " do btc transfer" << amount << "from: " << m_pMyFantasyNameBalance->get_btcaddr() << "to: " << toname;
+}
+
 void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint64 min) {
 
     qDebug() << " doSwap " << qty << "rate: " << rate << isask << with << min;
@@ -1340,7 +1347,7 @@ void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
     SwapSent ss;
     ss.mutable_swapfill()->CopyFrom(sf);
 
-    // send SwapSent TX tp be signed
+    // send SwapSent TX to be signed
     emit NewSwapSent(ss);
 
     // ?? send bitcoin tx to bitcon blockchain
@@ -1474,8 +1481,11 @@ void Mediator::doSendSwapBTC(const SwapOrder &so) {
 
     auto finaltx = pre + input + sigscript + post;
 
-    if ( !isspent )
+    if ( !isspent ) {
+#ifndef NOSEND_BTCTX_SWAP
         BitcoinApi::sendrawTx(finaltx);
+#endif
+    }
     else {
         doProofOfDoubleSpend(so, hashit (finaltx));
 

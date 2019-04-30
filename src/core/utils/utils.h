@@ -337,6 +337,16 @@ namespace pb {
         return to_hex(((unsigned char*)out.data())+1,out.size ()-5);
     }
 
+    static bool isValidBtcAddress(const std::string &in ) {
+        std::vector<unsigned char> out;
+        DecodeBase58 (in,out);
+        pb::sha256  d1, d2;
+        hashc(&out[0],21,d1.data);
+        d2 = hashit(d1);
+
+        return memcmp(&out[21],d2.data,4) == 0;
+    }
+
     static std::string to_base58( const public_key_data &in ) {
         return EncodeBase58( in.key_data, in.key_data+33);
     }
