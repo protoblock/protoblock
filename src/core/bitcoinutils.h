@@ -141,6 +141,10 @@ public:
             }
         }
 
+        post += ref.output_count;
+        for ( const auto &o : ref.outputs)
+            post += o;
+
         return seen;
     }
 

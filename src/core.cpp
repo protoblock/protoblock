@@ -40,6 +40,7 @@ void Core::bootstrap(){
     qRegisterMetaType<fantasybit::SwapOrder>("fantasybit::SwapOrder");
     qRegisterMetaType<fantasybit::SwapFill>("fantasybit::SwapFill");
     qRegisterMetaType<fantasybit::SwapSent>("fantasybit::SwapSent");
+    qRegisterMetaType<fantasybit::ProofOfDoubleSpend>("fantasybit::ProofOfDoubleSpend");
 
 
 

@@ -1594,7 +1594,7 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
     for ( const auto &utxo : sf.swapbid().utxos().utxo() ) {
         if ( minconfirms > BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
             qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
-            auto pbin = BitcoinApi::getChainsoIsTXSpent(utxo.txid(),utxo.tx_output_n());
+            auto pbin = BitcoinApi::getChainsoIsTXSpent(pb::sha256(utxo.txid()).reversestr(),utxo.tx_output_n());
             if ( pbin.first ) {
                 if ( pbin.second.tx_hash.toStdString() == txid)
                     break;
@@ -1614,7 +1614,7 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
     auto tx = BitcoinUtils::parseRawHexTx (bytes);
 
     std::string pre, post, sigscript;
-    if ( BitcoinUtils::createProofOfUtxoSpend(tx,pods.utxo (),pre, post, sigscript) ) {
+    if ( BitcoinUtils::createProofOfUtxoSpend(tx,pods.utxo(),pre,post,sigscript) ) {
         qDebug() << "doProofOfDoubleSpend" << bytes;
 
         pods.set_pre (pre);

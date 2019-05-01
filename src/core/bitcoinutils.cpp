@@ -165,7 +165,7 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     const std::string OP_CHECKSIG = "ac";
     const std::string OP_RETURN = "6a";
     const std::string OP_EQUAL = "87";
-//    const std::string SIGHASH_ALL = "01000000";
+    //const std::string SIGHASH_ALL = "01000000";
     const std::string SEQUENCE = "ffffffff";
     const std::string LOCKTIME = "00000000";
     const std::string VERSION = "01000000";
