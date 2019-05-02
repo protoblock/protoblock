@@ -87,6 +87,23 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/materialMain.qml")));
     //b657e22827039461a9493ede7bdf55b01579254c1630b0bfc9185ec564fc05ab
 
+    uint32_t dec32;
+    pb::toDecimalFromReverseHex("05000000",dec32);
+    auto str = toReverseHexFromDecimal(dec32);
+    uint64_t dec64;
+    pb::toDecimalFromReverseHex("2823000000000000",dec64);
+    str = toReverseHexFromDecimal(dec64);
+
+
+    pb::toDecimalFromReverseHex("00000005",dec32);
+    str = toReverseHexFromDecimal(dec32);
+
+    pb::toDecimalFromReverseHex("0000000000002823",dec64);
+    str = toReverseHexFromDecimal(dec64);
+
+
+
+
     auto bytes = BitcoinApi::getRawTX("9cf061e23cb958d03000e692997cda261ebd4d0c9067bac89c3299a4a8ae808e");
     auto tx = BitcoinUtils::parseRawHexTx (bytes);
 

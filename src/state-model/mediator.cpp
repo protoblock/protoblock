@@ -1622,7 +1622,15 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
         pods.set_sig(sigscript);
     }
 
-    emit NewProofOfDoubleSpend(pods);
+    if ( !BitcoinUtils::verifyProofOfUtxoSpend(pods) )
+        qDebug() << "! verfiedProofOfDoubleSpend" << pods.DebugString().data();
+    else {
+#ifndef NOSEND_PODP_SWAP
+        emit NewProofOfDoubleSpend(pods);
+#endif
+
+    }
+
 }
 
 

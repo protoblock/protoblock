@@ -696,7 +696,7 @@ public:
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
         QMap<QString,QVariant> params;
-        QString customRoute = (txid + "/$1").data();
+        QString customRoute = (txid + "/%1").data();
         customRoute = customRoute.arg(numo);
         client.getData(customRoute,params,headers);
 

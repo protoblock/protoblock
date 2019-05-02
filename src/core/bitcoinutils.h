@@ -41,7 +41,7 @@ struct var_data {
 
 struct btx_input {
     std::string rtxid; //64
-    std::string txindex; //8
+    std::string txindex; //8 - reverse hex - uint32
     var_data script;
     std::string sequence; //8
 
@@ -51,7 +51,7 @@ struct btx_input {
 };
 
 struct btx_output {
-    std::string amount; //16 - reverse hex
+    std::string amount; //16 - reverse hex - uint64
     var_data script;
     operator std::string() const {
         return amount + std::string(script);
@@ -60,12 +60,12 @@ struct btx_output {
 };
 
 struct bitcoin_hex_tx {
-    std::string version; //8
+    std::string version; //8 - reverse hex - uint32
     std::string input_count; // var
     std::vector<btx_input> inputs;
     std::string output_count; // var
     std::vector<btx_output> outputs;
-    std::string locktime; //8 - reverse hex
+    std::string locktime; //8
 };
 
 class BitcoinUtils
@@ -104,53 +104,9 @@ public:
     static bool createProofOfUtxoSpend(const bitcoin_hex_tx &ref,
                                        const Bitcoin_UTXO &spent,
                                        std::string &pre, std::string &post,
-                                       std::string &sigscript) {
-        pre = ref.version + ref.input_count;
+                                       std::string &sigscript);
 
-        bool seen = false;
-        for ( auto &r : ref.inputs ) {
-            if ( r.rtxid == spent.txid () &&
-                getInt8(r.txindex) == spent.tx_output_n() ) {
-                if ( seen ) {
-                    qCritical() << " bad seen";
-                    return false;
-                }
-
-                std::string input, script;
-                createInputsFromUTXO(spent,input,script);
-
-                //ToDo: verify
-                if ( input+script+r.sequence != std::string(r)) {
-                    qCritical() << " bad " << std::string(r).data ();
-                }
-                //pre += r.rtxid + r.txindex + r.script;
-
-                seen = true;
-                post = r.sequence;
-                sigscript = std::string(r.script);
-            }
-            else {
-                btx_input bin = r;
-                bin.script.size = "00";
-                bin.script.data = "";
-
-                if ( !seen )
-                    pre += bin;
-                else
-                    post += bin;
-            }
-        }
-
-        post += ref.output_count;
-        for ( const auto &o : ref.outputs)
-            post += o;
-
-        return seen;
-    }
-
-    static bool verifyProofOfUtxoSpend(const ProofOfDoubleSpend &podp) {
-        return false;
-    }
+    static bool verifyProofOfUtxoSpend(const ProofOfDoubleSpend &podp);
     static bitcoin_hex_tx parseRawHexTx(const QByteArray &rawtx);
 
     static std::string toRawHexTx(const bitcoin_hex_tx &tx);
@@ -163,7 +119,69 @@ public:
         return c;
     }
 
-    static std::string getStr(uint size, QDataStream &stream) {
+    static std::string getVarSize(QDataStream &stream, uint64_t &len) {
+        std::string sz1 = getStr<2>(stream);
+        if ( sz1 == "fd") {
+            std::string sz = getStr<4>(stream);
+            uint16_t l;
+            toDecimalFromReverseHex(sz,l);
+            len = l;
+            sz1 += sz;
+        }
+        else if ( sz1 == "fe") {
+            std::string sz = getStr<8>(stream);
+            uint32_t l;
+            toDecimalFromReverseHex(sz,l);
+            len = l;
+            sz1 += sz;
+        }
+        else if  (sz1 == "ff") {
+            std::string sz = getStr<16>(stream);
+            uint64_t l;
+            toDecimalFromReverseHex(sz,l);
+            len = l;
+            sz1 += sz;
+        }
+        else {
+            uint8_t l;
+            toDecimalFromReverseHex(sz1,l);
+            len = l;
+        }
+        return sz1;
+    }
+
+    static std::string getVarSize(const std::string &str, uint64_t &len) {
+        std::string sz1 = str.substr(0,2);
+        if ( sz1 == "fd") {
+            std::string sz = str.substr(2,4);
+            uint16_t l;
+            toDecimalFromReverseHex(sz,l);
+            len = l;
+            sz1 += sz;
+        }
+        else if ( sz1 == "fe") {
+            std::string sz = str.substr(2,8);
+            uint32_t l;
+            toDecimalFromReverseHex(sz,l);
+            len = l;
+            sz1 += sz;
+        }
+        else if  (sz1 == "ff") {
+            std::string sz = str.substr(2,16);
+            uint64_t l;
+            toDecimalFromReverseHex(sz,l);
+            len = l;
+            sz1 += sz;
+        }
+        else {
+            uint8_t l;
+            toDecimalFromReverseHex(sz1,l);
+            len = l;
+        }
+        return sz1;
+    }
+
+    static std::string getStr(uint64_t size, QDataStream &stream) {
         std::vector<char> c(size+1);
         stream.readRawData(&c[0],size);
         c[size] = '\0';
@@ -172,29 +190,35 @@ public:
 
     static var_data getVarStr(QDataStream &stream) {
         var_data vd;
-        vd.size = getStr<2>(stream);
-
-        uint8_t len;
-        pb::from_hex(vd.size,(char *)&len,sizeof( uint8_t ));
-
+        uint64_t len;
+        vd.size = getVarSize(stream, len);
         vd.data = getStr(len*2,stream);
         return vd;
     }
 
-    static uint8_t getInt8(const std::string &in) {
-        uint8_t num = 0;
-        pb::from_hex(in,(char *)&num,sizeof( uint8_t ));
-        return num;
+    static var_data getVarStr(const std::string &str) {
+        var_data vd;
+        uint64_t len;
+        vd.size = getVarSize(str, len);
+        vd.data = str.substr(vd.size.size(),len*2);
+        return vd;
     }
 
-    static uint8_t getInt8Str(std::string &out, QDataStream &stream) {
-        char c[3];
-        stream.readRawData(&c[0],2);
-        c[2] = '\0';
-        out = c;
+//    static uint8_t getInt8(const std::string &in) {
+//        uint8_t num = 0;
+//        pb::from_hex(in,(char *)&num,sizeof( uint8_t ));
+//        return num;
+//    }
 
-        return getInt8(c);
-    }
+//    static uint8_t getInt8Str(std::string &out, QDataStream &stream) {
+//        char c[3];
+//        stream.readRawData(&c[0],2);
+//        c[2] = '\0';
+//        out = c;
+
+//        return getInt8(c);
+//    }
+
 
 
 
@@ -257,6 +281,7 @@ public:
     */
 
 };
+
 
 }
 #endif // BITCOINUTILS_H

@@ -8,10 +8,14 @@
 */
 #include "bitcoinutils.h"
 #include <utils/utils.h>
+#include "Commissioner.h"
 //Input 1 script length: 0x17 (23 bytes)
 //Input 1 signature script: 16001427c106013c0042da165c082b3870c31fb3ab4683
 
 namespace pb {
+using namespace std;
+using namespace fantasybit;
+
 
 bool BitcoinUtils::getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress, uint64_t max, uint64_t min) {
     utxos.set_total_value(0);
@@ -123,7 +127,8 @@ bitcoin_hex_tx BitcoinUtils::parseRawHexTx(const QByteArray &rawtx) {
     else
         qDebug() << "podp no VERSION_NORMAL ";
 
-    uint8_t numinputs = getInt8Str(btx.input_count,stream);
+    uint64_t numinputs;
+    btx.input_count = getVarSize(stream,numinputs);
     std::vector<btx_input> &inputs = btx.inputs;
     for ( int i =0; i < numinputs; i++) {
         btx_input in;
@@ -134,11 +139,13 @@ bitcoin_hex_tx BitcoinUtils::parseRawHexTx(const QByteArray &rawtx) {
         inputs.push_back(in);
     }
 
-    uint8_t numout = getInt8Str(btx.output_count,stream);
+    uint64_t numout;
+    btx.output_count = getVarSize(stream,numout);
     std::vector<btx_output> &outs = btx.outputs;
     for ( int i =0; i < numout; i++) {
         btx_output out;
         out.amount = getStr<16>(stream);
+        uint64_t amount = toDecimalReverseHex<uint64_t>(out.amount);
         out.script = getVarStr(stream);
         outs.push_back(out);
     }
@@ -239,6 +246,103 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     /**/
     return to_sign;
 }
+
+bool BitcoinUtils::createProofOfUtxoSpend(const bitcoin_hex_tx &ref, const Bitcoin_UTXO &spent,
+                                          std::string &pre, std::string &post, std::string &sigscript) {
+    pre = ref.version + ref.input_count;
+
+    bool seen = false;
+    for ( auto &r : ref.inputs ) {
+        if ( r.rtxid == spent.txid () &&
+            toDecimalReverseHex<uint32_t>(r.txindex) == spent.tx_output_n() ) {
+            if ( seen ) {
+                qCritical() << " bad seen";
+                return false;
+            }
+
+            std::string input, script;
+            createInputsFromUTXO(spent,input,script);
+
+            seen = true;
+            post = r.sequence;
+            sigscript = std::string(r.script);
+        }
+        else {
+            btx_input bin = r;
+            bin.script.size = "00";
+            bin.script.data = "";
+
+            if ( !seen )
+                pre += bin;
+            else
+                post += bin;
+        }
+    }
+
+    post += ref.output_count;
+    for ( const auto &o : ref.outputs)
+        post += o;
+
+    post += ref.locktime;
+    return seen;
+}
+
+
+/*
+ *  verifyProofOfUtxoSpend - verify a sign tx - that will revert a Swap
+ *
+ */
+bool BitcoinUtils::verifyProofOfUtxoSpend(const ProofOfDoubleSpend &podp) {
+
+    const SwapFill &sf = podp.swapsent().swapfill();
+
+    auto sigscript = getVarStr(podp.sig());
+    auto dersig = getVarStr(sigscript.data);
+    auto hexsig = dersig.data.substr(0,dersig.data.size()-2);
+    if (dersig.data.substr(dersig.data.size()-2) != pb::SIGHASH_ALL_1) {
+        qDebug() << "nogood verifyProofOfUtxoSpend dersig  !SIGHASH_ALL_1 ";
+    }
+
+    std::vector<unsigned char> sigv( (hexsig.size()/2) + 1 );
+    auto rsz = from_hex(hexsig,(char *)(&sigv[0]),sigv.size());
+    if (rsz != 71) {
+        qDebug() << "nogood verifyProofOfUtxoSpend dersig size !70 " << rsz;
+    }
+
+    auto sig = pb::parse_der(&sigv[0],rsz);
+    sig = pb::signature_normalize(sig);
+
+    bool found = false;
+    for ( const auto &theutxo : sf.swapbid().utxos().utxo() ) {
+        if ( theutxo.txid() == podp.utxo().txid() &&
+             theutxo.tx_output_n() == podp.utxo().tx_output_n() ) {
+            found = true;
+            break;
+        }
+    }
+
+    if ( !found ) {
+        qDebug() << "nogood verifyProofOfUtxoSpend !found utxo";
+    }
+
+    string input, inputscript;
+    createInputsFromUTXO(podp.utxo(),input,inputscript);
+
+    auto tosigntraw = podp.pre() + input + inputscript + podp.post() + SIGHASH_ALL_4;
+    auto dblhash = pb::hashit(pb::hashfromhex(tosigntraw));
+    auto hash_signed = dblhash.str();
+    if ( hash_signed == podp.swapsent().swapfill().hash_to_sign() ) {
+        qDebug() << "nogood verifyProofOfUtxoSpend hash match! ";
+    }
+
+    if ( !Commissioner::verifyByName(sig, dblhash, sf.counterparty()) ) {
+        qDebug() << "nogood verifyProofOfUtxoSpend !verifyByName " << sf.counterparty().data();
+        return false;
+    }
+
+    return true;
+}
+
 
 }
 

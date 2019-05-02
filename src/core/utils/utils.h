@@ -18,7 +18,12 @@
 #include <fbutils.h>
 
 namespace pb {
+    uint8_t from_hex( char c );
+    size_t from_hex( const std::string& hex_str, char* out_data, size_t out_data_len );
 
+    std::string to_hex( const unsigned char* d, uint32_t s );
+
+    std::string to_hex( const std::string &in );
 
     inline bool is_big_endian( )
     {
@@ -31,16 +36,16 @@ namespace pb {
        return bint.c[ 0 ] == 1;
     }
 
-    inline uint32_t fix_endian( uint32_t x )
+    inline uint32_t big_endian( uint32_t x )
     {
-       if( is_big_endian( ) )
-          return x;
-       else
-          return ( ( ( x & 0x000000ff ) << 24 ) | ( ( x & 0x0000ff00 ) << 8 )
-           | ( ( x & 0x00ff0000 ) >> 8 ) | ( ( x & 0xff000000 ) >> 24 ) );
+        if( !is_big_endian() )
+            x = ( ( ( x & 0x000000ff ) << 24 ) | ( ( x & 0x0000ff00 ) << 8 )
+            | ( ( x & 0x00ff0000 ) >> 8 ) | ( ( x & 0xff000000 ) >> 24 ) );
+
+        return x;
     }
 
-    inline uint64_t fix_endian( uint64_t x )
+    inline uint64_t big_endian( uint64_t x )
     {
        if( !is_big_endian( ) )
        {
@@ -52,24 +57,83 @@ namespace pb {
        return x;
     }
 
+    inline uint16_t lil_endian( uint16_t x )
+    {
+       if (is_big_endian() )
+           x = static_cast<uint16_t>((x & 0x00ff) << 8) | static_cast<uint16_t>((x & 0xff00) >> 8);
+
+       return x;
+    }
+
+    inline uint32_t lil_endian( uint32_t x )
+    {
+       if (is_big_endian() )
+           x = ( ( ( x & 0x000000ff ) << 24 ) | ( ( x & 0x0000ff00 ) << 8 )
+           | ( ( x & 0x00ff0000 ) >> 8 ) | ( ( x & 0xff000000 ) >> 24 ) );
+
+       return x;
+    }
+
+    inline uint64_t lil_endian( uint64_t x )
+    {
+       if(is_big_endian( ) )
+       {
+          x = ( x & 0x00000000ffffffff ) << 32 | ( x & 0xffffffff00000000 ) >> 32;
+          x = ( x & 0x0000ffff0000ffff ) << 16 | ( x & 0xffff0000ffff0000 ) >> 16;
+          x = ( x & 0x00ff00ff00ff00ff ) << 8 | ( x & 0xff00ff00ff00ff00 ) >> 8;
+       }
+
+       return x;
+    }
+
     inline std::string toReverseHexFromDecimal(uint32_t  t) {
         std::ostringstream is;
-        is << std::hex << std::setw( 8 ) << std::setfill( '0' ) << fix_endian(t);
+        is << std::hex << std::setw( 8 ) << std::setfill( '0' ) << big_endian(t);
         return is.str();
     }
 
     inline std::string toReverseHexFromDecimal(uint64_t t) {
         std::ostringstream is;
-        is << std::hex << std::setw( 16 ) << std::setfill( '0' ) << fix_endian(t);
+        is << std::hex << std::setw( 16 ) << std::setfill( '0' ) << big_endian(t);
         return is.str();
     }
 
+    inline void toDecimalFromReverseHex(const std::string &in, uint64_t &t) {
+        t = 0;
+        from_hex(in,(char *)&t,sizeof( uint64_t ));
+        t = lil_endian(t);
+    }
 
-    uint8_t from_hex( char c );
+    inline void toDecimalFromReverseHex(const std::string &in, uint32_t &t) {
+        t = 0;
+        from_hex(in,(char *)&t,sizeof( uint32_t ));
+        t = lil_endian(t);
+    }
 
-    std::string to_hex( const unsigned char* d, uint32_t s );
+    inline void toDecimalFromReverseHex(const std::string &in, uint16_t &t) {
+        t = 0;
+        from_hex(in,(char *)&t,sizeof( uint16_t ));
+        t = lil_endian(t);
+    }
 
-    std::string to_hex( const std::string &in );
+    inline void toDecimalFromReverseHex(const std::string &in, uint8_t &t) {
+        t = 0;
+        from_hex(in,(char *)&t,sizeof( uint8_t ));
+    }
+
+    template<class T>
+    inline T toDecimalReverseHex(const std::string &in) {
+        T t = 0;
+        from_hex(in,(char *)&t,sizeof( T ));
+        return lil_endian(t);
+    }
+
+    template<uint8_t>
+    inline uint8_t toDecimalReverseHex(const std::string &in) {
+        uint8_t t = 0;
+        from_hex(in,(char *)&t,sizeof( uint8_t ));
+        return t;
+    }
 
     class TheCTX : public GenericSingleton<TheCTX> {
         friend class GenericSingleton<TheCTX>;
@@ -84,7 +148,6 @@ namespace pb {
         }
     };
 
-    size_t from_hex( const std::string& hex_str, char* out_data, size_t out_data_len );
 
     typedef secp256k1_ecdsa_signature signature;
 
