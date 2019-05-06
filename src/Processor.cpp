@@ -112,6 +112,30 @@ int32_t BlockProcessor::init() {
     //    mFutContract.set_week(0);
 #endif
 
+    auto b = Node::getLocalBlock(lastidprocessed);
+    if (!b) {
+        qWarning() << " !b" << lastidprocessed;
+        return lastidprocessed;
+    }
+
+    auto lastvalid = std::chrono::seconds(b->signedhead().head().timestamp()) -
+            std::chrono::hours{50};
+
+    while ( b->signedhead().head().timestamp() > lastvalid.count() ) {
+        auto ip = mTimeOfTxidBlock.insert({b->signedhead().head().timestamp(),{}});
+        for ( const auto &tx : b->signed_transactions() ) {
+            ip.first->second.push_back(tx.id());
+            mUsedTxId.insert(tx.id());
+        }
+
+        auto num = b->signedhead().head().num()-1;
+        b = Node::getLocalBlock(num);
+        if (!b) {
+            qWarning() << " !b" << num;
+            break;
+        }
+    }
+
     return lastidprocessed;
 }
 
