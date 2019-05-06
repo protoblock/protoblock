@@ -59,8 +59,10 @@ void SwapStateData::init() {
         SwapBid sb;
         SwapFill sf;
         SwapSent ss;
+        ProofOfDoubleSpend pods;
         std::vector<std::pair<std::string,SwapFill>> vsf;
         std::vector<std::pair<std::string,SwapSent>> vss;
+        std::vector<std::pair<std::string,ProofOfDoubleSpend>> vds;
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             auto str = it->key().ToString();
             auto pos =  str.find_last_of(':');
@@ -71,9 +73,16 @@ void SwapStateData::init() {
 
             }
             else if ( str.at(0) == '^' ) {
-                ss.ParseFromString(it->value().ToString());
-                vss.push_back({str.substr(1),ss});
-                qDebug() << "twitch111" << ss.DebugString().data();
+                if ( str.at(1) == '^' ) {
+                    pods.ParseFromString(it->value().ToString());
+                    vds.push_back({str.substr(2),pods});
+                    qDebug() << "twitch111" << pods.DebugString().data();
+                }
+                else {
+                    ss.ParseFromString(it->value().ToString());
+                    vss.push_back({str.substr(1),ss});
+                    qDebug() << "twitch111" << ss.DebugString().data();
+                }
             }
             else {
                 sb.ParseFromString(it->value().ToString());
@@ -107,6 +116,14 @@ void SwapStateData::init() {
                 continue;
             }
         }
+
+        for ( auto sds : vds) {
+            if ( !mOrderBook.doubleSpent(sds.second, sds.first )) {
+                qDebug() << "init !mOrderBook.doubleSpent(  )  " << sds.first.data();
+                continue;
+            }
+        }
+
 
 
         delete it;
@@ -280,6 +297,7 @@ std::vector<SwapOrder> SwapStateData::GetCurrentSwapSnaps() {
             so.set_ref(b.counterparty);
             so.set_msg(b.signature);
             so.set_directed(b.counteroffer);
+            so.set_double_spent(b.podp.has_sig());
             vso.emplace_back(so);
         }
     }
