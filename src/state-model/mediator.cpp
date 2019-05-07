@@ -1563,11 +1563,11 @@ void Mediator::doSendSwapBTC(const SwapOrder &so) {
     qDebug() << finaltx.data();
 }
 
-void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid) {
+bool Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid) {
     qDebug() << "doProofOfDoubleSpend" << so.DebugString().data() << txid.data ();
 
     if (so.ref() != myFantasyName )
-        return;
+        return false;
     //i am bob
 
     const SwapFill &sf = mGateway->dataService->GetSwapFill(so.fname().data(),
@@ -1576,7 +1576,7 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
     auto *item = mFantasyNameBalModel.getByUid(so.fname().data());
     if ( item == nullptr ) {
         qDebug() << " cant find fname" << so.fname().data();
-        return;
+        return false;
     };
 
 
@@ -1590,12 +1590,14 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
     int minconfirms = 0;
     txData spentin;
     bool isdoublespend = false;
+    string spent;
     string btcaddr = item->get_btcaddr().toStdString();
     for ( const auto &utxo : sf.swapbid().utxos().utxo() ) {
         if ( minconfirms > BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
             qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
             auto pbin = BitcoinApi::getChainsoIsTXSpent(pb::sha256(utxo.txid()).reversestr(),utxo.tx_output_n());
             if ( pbin.first ) {
+                spent = pbin.second.tx_hash.toStdString();
                 if ( pbin.second.tx_hash.toStdString() == txid)
                     break;
 
@@ -1607,7 +1609,16 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
         }
     }
 
-    if ( !isdoublespend ) return;
+    if ( !isdoublespend ) {
+        if ( spent == txid ) {
+            SwapSentAck ssa;
+            ssa.mutable_swapsent()->CopyFrom(ss);
+#ifndef NOSEND_SWAPACK_SWAP
+            emit NewSwapSentAck(ssa);
+#endif
+        }
+        return false;
+    }
 
     //show sig on double spend by parsing the transaction
     auto bytes = BitcoinApi::getRawTX(spentin.tx_hash.toStdString());
@@ -1622,13 +1633,15 @@ void Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
         pods.set_sig(sigscript);
     }
 
-    if ( !BitcoinUtils::verifyProofOfUtxoSpend(pods) )
+    if ( !BitcoinUtils::verifyProofOfUtxoSpend(pods) ) {
         qDebug() << "! verfiedProofOfDoubleSpend" << pods.DebugString().data();
+        return false;
+    }
     else {
 #ifndef NOSEND_PODP_SWAP
         emit NewProofOfDoubleSpend(pods);
 #endif
-
+        return true;
     }
 
 }

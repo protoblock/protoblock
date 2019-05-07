@@ -110,6 +110,8 @@ Q_DECLARE_METATYPE(fantasybit::SwapOrder)
 Q_DECLARE_METATYPE(fantasybit::SwapFill)
 Q_DECLARE_METATYPE(fantasybit::SwapSent)
 Q_DECLARE_METATYPE(fantasybit::ProofOfDoubleSpend)
+Q_DECLARE_METATYPE(fantasybit::SwapSentAck)
+
 
 
 

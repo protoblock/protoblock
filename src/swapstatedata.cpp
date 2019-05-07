@@ -257,6 +257,10 @@ void SwapStateData::OnNewSwapTx(const SwapSent &insent, const string &fname, con
     }
 }
 
+void SwapStateData::OnNewSwapTx(const SwapSentAck &insentack, const string &fname, const string & ) {
+    //ToDo: finalize swap
+}
+
 void SwapStateData::OnNewSwapTx(const ProofOfDoubleSpend &inpods, const std::string &fname,const std::string &txid) {
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };

@@ -1136,6 +1136,12 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
             break;
         }
 
+        case TransType::SWAPSENTACK: {
+            const auto & swapthis = t.GetExtension(SwapSentAck::swapsentack_tran);
+            mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(),st.id());
+            break;
+        }
+
 
         case TransType::TRANSFER: {
             const TransferTrans & trt = t.GetExtension(TransferTrans::transfer_tran);

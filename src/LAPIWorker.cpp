@@ -780,6 +780,23 @@ void MainLAPIWorker::OnNewProofOfDoubleSpend(fantasybit::ProofOfDoubleSpend pods
 
 }
 
+void MainLAPIWorker::OnNewSwapSentAck(fantasybit::SwapSentAck ssa) {
+    Transaction trans{};
+    trans.set_version(Commissioner::TRANS_VERSION);
+    trans.set_type(TransType::SWAPSENTACK);
+    trans.MutableExtension(SwapSentAck::swapsentack_tran)->CopyFrom(ssa);
+
+    SignedTransaction sn = agent.makeSigned(trans);
+    agent.onSignedTransaction(sn);
+
+#ifndef NO_SWAP_FEATURE_SEND
+    DoPostTx(sn);
+    DoSubscribe(myCurrentName.name(),true);
+    count = bcount = 0;
+    timer->start(intervalstart);
+#endif
+
+}
 
 
 /*ys

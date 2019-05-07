@@ -282,6 +282,9 @@ public slots:
         connect(Mediator::instance(),&Mediator::NewProofOfDoubleSpend,
                 mlapi,&MainLAPIWorker::OnNewProofOfDoubleSpend);
 
+        connect(Mediator::instance(),&Mediator::NewSwapSentAck,
+                mlapi,&MainLAPIWorker::OnNewSwapSentAck);
+
 
 
         Mediator *med = Mediator::instance();

@@ -120,6 +120,7 @@ enum TransType {
     SWAPFIL = 13;
     SWAPSENT = 14;
     PODP = 15;
+    SWAPSENTACK = 16;
 }
 
 message Transaction {
@@ -560,4 +561,13 @@ message ProofOfDoubleSpend {
     optional bytes pre = 30;
     optional bytes post = 40;
     optional bytes sig = 50;
+}
+
+//bob ACK swapsent - dont wait x hous to relese fantasybit
+message SwapSentAck {
+    extend Transaction {
+        optional SwapSentAck swapsentack_tran = 810;
+    }
+
+    optional SwapSent swapsent = 10;
 }

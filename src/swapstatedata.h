@@ -44,7 +44,6 @@ struct SwapSeller {
                   filled(0), pending_fill(0) {
         open = in.fb_qty();
     }
-
 };
 
 struct SwapSells {
@@ -83,8 +82,6 @@ struct SwapSells {
 
         return 0;
     }
-
-
 };
 
 struct SwapBuyer {
@@ -292,7 +289,6 @@ class SwapStateData : public QObject {
     //coins locked from bob offer or alice sent
     std::unordered_map<std::string,uint64_t> mTotLocked;
 
-
     SwapOrderBook mOrderBook;
     bool amlive = false;
     std::string filedir(const std::string &in) {
@@ -315,6 +311,8 @@ public:
     void OnNewSwapTx(const SwapFill &infill, const std::string &fname,const std::string &txid);
     void OnNewSwapTx(const SwapSent &insent, const std::string &fname,const std::string &txid);
     void OnNewSwapTx(const ProofOfDoubleSpend &inpods, const std::string &fname,const std::string &txid);
+    void OnNewSwapTx(const SwapSentAck &insentack, const std::string &fname,const std::string &txid);
+
 
 
     std::vector<SwapOrder> GetCurrentSwapSnaps();

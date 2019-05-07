@@ -82,6 +82,7 @@ class SwapBid;
 class SwapFill;
 class SwapSent;
 class ProofOfDoubleSpend;
+class SwapSentAck;
 
 enum OutData_Type {
   OutData_Type_MYFANTASYNAME = 1,
@@ -326,11 +327,12 @@ enum TransType {
   SWAPBID = 12,
   SWAPFIL = 13,
   SWAPSENT = 14,
-  PODP = 15
+  PODP = 15,
+  SWAPSENTACK = 16
 };
 bool TransType_IsValid(int value);
 const TransType TransType_MIN = NAME;
-const TransType TransType_MAX = PODP;
+const TransType TransType_MAX = SWAPSENTACK;
 const int TransType_ARRAYSIZE = TransType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* TransType_descriptor();
@@ -5948,6 +5950,94 @@ class ProofOfDoubleSpend : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ProofOfDoubleSpend* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SwapSentAck : public ::google::protobuf::Message {
+ public:
+  SwapSentAck();
+  virtual ~SwapSentAck();
+
+  SwapSentAck(const SwapSentAck& from);
+
+  inline SwapSentAck& operator=(const SwapSentAck& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapSentAck& default_instance();
+
+  void Swap(SwapSentAck* other);
+
+  // implements Message ----------------------------------------------
+
+  SwapSentAck* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SwapSentAck& from);
+  void MergeFrom(const SwapSentAck& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .fantasybit.SwapSent swapsent = 10;
+  inline bool has_swapsent() const;
+  inline void clear_swapsent();
+  static const int kSwapsentFieldNumber = 10;
+  inline const ::fantasybit::SwapSent& swapsent() const;
+  inline ::fantasybit::SwapSent* mutable_swapsent();
+  inline ::fantasybit::SwapSent* release_swapsent();
+  inline void set_allocated_swapsent(::fantasybit::SwapSent* swapsent);
+
+  static const int kSwapsentackTranFieldNumber = 810;
+  static ::google::protobuf::internal::ExtensionIdentifier< ::fantasybit::Transaction,
+      ::google::protobuf::internal::MessageTypeTraits< ::fantasybit::SwapSentAck >, 11, false >
+    swapsentack_tran;
+  // @@protoc_insertion_point(class_scope:fantasybit.SwapSentAck)
+ private:
+  inline void set_has_swapsent();
+  inline void clear_has_swapsent();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::fantasybit::SwapSent* swapsent_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_ProtoData_2eproto();
+  friend void protobuf_AssignDesc_ProtoData_2eproto();
+  friend void protobuf_ShutdownFile_ProtoData_2eproto();
+
+  void InitAsDefaultInstance();
+  static SwapSentAck* default_instance_;
 };
 // ===================================================================
 
@@ -12812,6 +12902,48 @@ inline void ProofOfDoubleSpend::set_allocated_sig(::std::string* sig) {
   } else {
     clear_has_sig();
     sig_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SwapSentAck
+
+// optional .fantasybit.SwapSent swapsent = 10;
+inline bool SwapSentAck::has_swapsent() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapSentAck::set_has_swapsent() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapSentAck::clear_has_swapsent() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapSentAck::clear_swapsent() {
+  if (swapsent_ != NULL) swapsent_->::fantasybit::SwapSent::Clear();
+  clear_has_swapsent();
+}
+inline const ::fantasybit::SwapSent& SwapSentAck::swapsent() const {
+  return swapsent_ != NULL ? *swapsent_ : *default_instance_->swapsent_;
+}
+inline ::fantasybit::SwapSent* SwapSentAck::mutable_swapsent() {
+  set_has_swapsent();
+  if (swapsent_ == NULL) swapsent_ = new ::fantasybit::SwapSent;
+  return swapsent_;
+}
+inline ::fantasybit::SwapSent* SwapSentAck::release_swapsent() {
+  clear_has_swapsent();
+  ::fantasybit::SwapSent* temp = swapsent_;
+  swapsent_ = NULL;
+  return temp;
+}
+inline void SwapSentAck::set_allocated_swapsent(::fantasybit::SwapSent* swapsent) {
+  delete swapsent_;
+  swapsent_ = swapsent;
+  if (swapsent) {
+    set_has_swapsent();
+  } else {
+    clear_has_swapsent();
   }
 }
 
