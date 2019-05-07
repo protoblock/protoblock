@@ -18,7 +18,7 @@ Item {
     property string btcadddr: MiddleMan.pMyFantasyNameBalance.btcaddr;
     property int satbal: MiddleMan.bitcoinBalance // MiddleMan.toBTCbalance(swappane.btcadddr);
     property real btcbal: satbal * .00000001//3.089109// MiddleMan.bitcoinBalance
-    property string sbtcbal: btcbal.toLocaleString();
+    property string sbtcbal: btcbal.toLocaleString(Qt.locale("en-US"), 'f', 8).replace(/\.?0+$/,"")
     property int fbbal: MiddleMan.pMyFantasyNameBalance.net
     property bool btcsell: true
     property real swaprate: ratesb.value / 1000000
@@ -411,7 +411,7 @@ Item {
         property string player
         positiveButtonText: "Swap It"
         title: "Confirm Swap: " + (!swappane.btcsell ? ("Send Fantasybit - Receive Bitcoin") : ("Send Bitcoin - Receive Fantasybit"))
-        text: "Protoblock Wallet: " + realRoot.uname + " Bitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
+        text: "Protoblock Wallet: " + realRoot.uname + "\n Bitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
         dialogContent: Column {
             anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter

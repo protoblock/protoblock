@@ -29,8 +29,7 @@ Item {
                           MiddleMan.bitcoinBalance
 
     property real btcbal: satbal * .00000001
-    property string sbtcbal: btcbal.toLocaleString();
-
+    property string sbtcbal: btcbal.toLocaleString(Qt.locale("en-US"), 'f', 8).replace(/\.?0+$/,"")
     property string stakebal: !MiddleMan.pMyFantasyNameBalance ?  "0" : (MiddleMan.pMyFantasyNameBalance.stake).toLocaleString();
     property string skillbal: !MiddleMan.pMyFantasyNameBalance ?  "0" : (MiddleMan.pMyFantasyNameBalance.bits).toLocaleString();
     property string netbal: !MiddleMan.pMyFantasyNameBalance ?  "0" : (MiddleMan.pMyFantasyNameBalance.net).toLocaleString();
