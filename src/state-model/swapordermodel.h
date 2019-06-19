@@ -27,24 +27,23 @@ class SwapOrderModelItem : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (QString, name)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, rate)
     QML_WRITABLE_CSTREF_PROPERTY (QString, status)
+    QML_WRITABLE_CSTREF_PROPERTY (quint64, qty)
+    QML_WRITABLE_CSTREF_PROPERTY (quint64, sat_min)
+
 
 public:
     SwapOrderModelItem() :  QObject(nullptr) {
         m_name = "noname";
         m_rate = 0;
-//        m_bits = 0;
-//        m_thisweek = 0;
-//        m_lastweek = 0;
-//        m_leaders20XX = 0;
-//        m_numberproj = m_lastupdate = 0;
-//        m_pnl = 0;
-//        m_net = 0;
+        m_qty = 0;
+        m_sat_min = 0;
     }
 
-    explicit SwapOrderModelItem(const QString &name, quint64 rate = 0)
-                               : QObject(nullptr),
-                                 m_name(name) {
-        m_rate = rate;
+    explicit SwapOrderModelItem(const fantasybit::SwapOrder &so) : QObject(nullptr) {
+        m_name = so.fname().data();
+        m_rate = so.rate();
+        m_qty = so.openq();
+        m_sat_min = so.satoshi_min();
     }
 
 };
@@ -58,19 +57,18 @@ public:
                                     const QByteArray & uidRole     = "name") :
                                     QQmlObjectListModel<SwapOrderModelItem>
                                                     (parent,displayRole,uidRole)
-    {
-//        append(new SwapOrderModelItem("bob0",1000));
-//        append(new SwapOrderModelItem("other bob",1100));
-    }
+    {}
 
     void add(const fantasybit::SwapOrder &so) {
         auto it = this->getByUid(so.fname().data());
         if ( it == nullptr ) {
-            append(new SwapOrderModelItem(so.fname().data(),so.rate()));
+            append(new SwapOrderModelItem(so));
             qDebug() << "swap adding " << so.DebugString().data();
         }
         else {
             it->set_rate(so.rate());
+            it->set_qty(so.openq());
+            it->set_sat_min(so.satoshi_min());
             it->set_status("");
         }
     }

@@ -195,10 +195,11 @@ Item {
 
                 Layout.row: 4
                 Layout.column: !swappane.btcsell ? 1 : 4
-//                Layout.columnSpan: 2
+                Layout.columnSpan: 2
+                Layout.alignment: Qt.AlignHCenter
+
 //                Layout.preferredWidth: ProtoScreen.guToPx(25)
 
-//                Layout.alignment: Qt.AlignCenter
 
                 editable: !swappane.btcsell
                 wheelEnabled: editable
@@ -241,7 +242,7 @@ Item {
                 value: editable ? 0 :  Math.round((btcbox.value * .00000001) / swappane.swaprate) // /  Math.round((btcbox.value * .00000001) / swappane.swaprate )//Number(btcbox.value / swappane.satoshirate)
 //                /fbbox.value = Math.round((btcbox.value * .00000001) / swappane.satoshirate )
 
-
+                font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL));
             }
 
             SpinBox {
@@ -279,6 +280,8 @@ Item {
                 }
 
                 value: 10
+                font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL));
+
             }
 
             //btc input
@@ -287,8 +290,9 @@ Item {
 
                 Layout.row: 4
                 Layout.column: swappane.btcsell ? 1 : 4
-//                Layout.columnSpan: 3
-//                Layout.alignment: Qt.AlignCenter
+                Layout.columnSpan: 2
+                Layout.alignment: Qt.AlignHCenter
+
 
                 editable: swappane.btcsell
                 wheelEnabled: editable
@@ -343,6 +347,8 @@ Item {
 
                 value: editable ?  0 : (fbbox.value * swappane.satoshirate)
 //                value: editable ? (ibtc.selected ? swappane.satbal : 0) : (fbbox.value * swappane.satoshirate)
+                font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL));
+
            }
 
             Button {
@@ -355,6 +361,7 @@ Item {
                 onClicked: {
                     mySwapDialog.show()
                 }
+                font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL));
             }
         }
 
@@ -373,17 +380,29 @@ Item {
             delegate: ListItems.Subtitled {
                 width: parent.width
                 text: model.name
-                subText: "rate - " + model.rate
+                valueText: Number(model.rate / 100000000) + " BTC/ƑɃ"
+                subText: "Qty: " + model.qty + " ƑɃ" + " (" +
+                         Number(model.rate * model.qty) / 100000000 +
+                         " BTC) Min: " +
+                         Number(model.sat_min / 100000000) + " BTC"
                 secondaryItem: Button {
                     anchors.verticalCenter: parent.verticalCenter
+                    height: width * .90
+                    width: parent.height * .90
                     text: swappane.btcsell ? "Buy" : "Sell";
                     onClicked: {
                         ratesb.value = model.rate / 100
                         swappane.counter = model.name
-                        console.log("twitch8 clicked button")
                         mySwapDialog.show()
                     }
                 }
+
+                itemLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.NORMAL))
+                itemValueLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.NORMAL))
+                itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.NORMAL))
+
+                itemValueLabel.font.bold: true
+
 
                 onClicked: {
                     console.log("twitch8 clicked item" + model.name)
