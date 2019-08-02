@@ -102,7 +102,7 @@ public:
 
 
     static GlobalState InitialGlobalState () {
-        GlobalState gs{};
+        GlobalState gs = gs.default_instance();
         gs.set_season(2014);
         gs.set_state(GlobalState::OFFSEASON);
         gs.set_week(0);

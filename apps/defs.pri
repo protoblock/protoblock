@@ -14,6 +14,7 @@ win32 {
     #protobuf
     CONFIG(debug, debug|release) {
         LIBS += -llibprotobufd
+#        LIBS += -lC:\work\protobuf-2.5.0\vsprojects\Debug\libprotobuf
         LIBS += -lleveldbd
     }
     else {

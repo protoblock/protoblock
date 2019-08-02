@@ -6,7 +6,7 @@ SUBDIRS += \
         $$PWD/Material/QtMaterial.pro \
         $$PWD/libcommuni/libcommuni.pro
 
-QMAKE_MAC_SDK = macosx10.12
+#QMAKE_MAC_SDK = macosx10.12
 
 
 

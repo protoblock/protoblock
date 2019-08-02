@@ -1,6 +1,6 @@
 import QtQuick 2.6
 import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.0
 import Qt.labs.settings 1.0
 
@@ -36,6 +36,11 @@ Item {
         anchors.top: parent.top
         anchors.margins: ProtoScreen.guToPx(3)
 
+        Material.Card {
+            id: sendcard
+            Layout.preferredWidth: ProtoScreen.guToPx(80)
+            Layout.preferredHeight: ProtoScreen.guToPx(36)
+
         GridLayout {
 //            id: rlay
 //            Layout.alignment: Qt.AlignHCenter
@@ -46,6 +51,7 @@ Item {
             Layout.fillHeight: true
             anchors.centerIn: parent
             anchors.fill: parent
+            anchors.margins: ProtoScreen.guToPx(2)
             id: grid
             columns: 5
 //            width: parent.
@@ -364,7 +370,7 @@ Item {
                 font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL));
             }
         }
-
+        }
         ListView {
             id: sbook
 
@@ -380,6 +386,9 @@ Item {
             delegate: ListItems.Subtitled {
                 width: parent.width
                 text: model.name
+                radius: 10
+                elevation: 1
+
                 valueText: Number(model.rate / 100000000) + " BTC/ƑɃ"
                 subText: "Qty: " + model.qty + " ƑɃ" + " (" +
                          Number(model.rate * model.qty) / 100000000 +

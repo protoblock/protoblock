@@ -56,6 +56,10 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
 #endif
 
+//    QGuiApplication::setAttribute(Qt::AA_UseOpenGLES);
+
+
+
 #ifndef NO_DEBUG_FILE_OUT
     qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
     qInstallMessageHandler(messageHandler);
@@ -63,7 +67,7 @@ int main(int argc, char *argv[])
 
     QQuickStyle::setStyle("Material");
 
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+//    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     qputenv("QT_QUICK_CONTROLS_STYLE", "Base");
 
     Core::instance()->bootstrap();
