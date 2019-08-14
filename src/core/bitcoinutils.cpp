@@ -178,39 +178,72 @@ std::string BitcoinUtils::createTX(const Bitcoin_UTXO &iutxo,
     const std::string VERSION = "01000000";
 
     int numinputs = 1;
-    uint64_t change = amount - iutxo.in_value();
     pb::public_key_data publick_key;
     uint64_t satoshifee = btyefee * 150;
+    uint64_t change = iutxo.in_value() - amount;
+    if ( change > 0 ) {
+        if ( change < satoshifee ) {
+            satoshifee -= change;
+            change = 0;
+        }
+    }
+
+    if ( change > 0 )
+        change -= (btyefee*50);
 
     //output
     std::string raw_transaction_out;
     int numoutputs = 1;
-    //    if ( change > 0 ) numoutputs++;
+    if ( change > 0 ) numoutputs++;
     {
         auto size = ( unsigned char )numoutputs;
         auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
         raw_transaction_out += sstr;
     }
-    auto amstr = pb::toReverseHexFromDecimal(uint64_t(amount - satoshifee));
-    raw_transaction_out += amstr;
 
+    {  //main output
+        auto amstr = pb::toReverseHexFromDecimal(uint64_t(amount - satoshifee));
+        raw_transaction_out += amstr;
 
-    //locking script
-    std::string p2pkh  = OP_DUP + OP_HASH160;
-    std::string pubkeyHash = pb::fromBtcAddress (to_address);
-    {
-        auto size = ( unsigned char )( pubkeyHash.size( ) / 2 );
-        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
-        p2pkh += sstr;
+        //locking script
+        std::string p2pkh  = OP_DUP + OP_HASH160;
+        std::string pubkeyHash = pb::fromBtcAddress (to_address);
+        {
+            auto size = ( unsigned char )( pubkeyHash.size( ) / 2 );
+            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+            p2pkh += sstr;
+        }
+        p2pkh += pubkeyHash;
+        p2pkh += OP_EQUALVERIFY + OP_CHECKSIG;
+        {
+            auto size = ( unsigned char )( p2pkh.size( ) / 2 );
+            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+            raw_transaction_out += sstr;
+        }
+        raw_transaction_out += p2pkh;
     }
-    p2pkh += pubkeyHash;
-    p2pkh += OP_EQUALVERIFY + OP_CHECKSIG;
-    {
-        auto size = ( unsigned char )( p2pkh.size( ) / 2 );
-        auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
-        raw_transaction_out += sstr;
+
+    if ( change > 0 ) {  //change output
+        auto amstr = pb::toReverseHexFromDecimal(uint64_t(change));
+        raw_transaction_out += amstr;
+
+        //locking script
+        std::string p2pkh  = OP_DUP + OP_HASH160;
+        std::string pubkeyHash = pb::fromBtcAddress (change_address);
+        {
+            auto size = ( unsigned char )( pubkeyHash.size( ) / 2 );
+            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+            p2pkh += sstr;
+        }
+        p2pkh += pubkeyHash;
+        p2pkh += OP_EQUALVERIFY + OP_CHECKSIG;
+        {
+            auto size = ( unsigned char )( p2pkh.size( ) / 2 );
+            auto sstr = pb::to_hex ( &size, sizeof( unsigned char ) );
+            raw_transaction_out += sstr;
+        }
+        raw_transaction_out += p2pkh;
     }
-    raw_transaction_out += p2pkh;
 
     std::string locktime = LOCKTIME;
     raw_transaction_out += locktime;

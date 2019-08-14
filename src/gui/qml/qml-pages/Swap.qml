@@ -439,7 +439,7 @@ Item {
         property string player
         positiveButtonText: "Swap It"
         title: "Confirm Swap: " + (!swappane.btcsell ? ("Send Fantasybit - Receive Bitcoin") : ("Send Bitcoin - Receive Fantasybit"))
-        text: "Protoblock Wallet: " + realRoot.uname + "\n Bitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
+        text: "Protoblock Wallet: " + realRoot.uname + "\nBitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
         dialogContent: Column {
             anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter
@@ -450,7 +450,9 @@ Item {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
-                text:  "Swap: " + (swappane.btcsell ? btcbox.value : fbbox.value)
+                text:  "Swap: " + (swappane.btcsell ? (btcbox.value + " SATs")
+                                                    : (fbbox.value + " FBs "))
+
                 // myTradeDialog.side + " " + myTradeDialog.qty.toString() +
                 // " contract(s) at price " + myTradeDialog.price.toString()
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
@@ -469,7 +471,9 @@ Item {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
-                text:  "For: " + (!swappane.btcsell ? btcbox.value : fbbox.value)
+                text:  "For: " + (!swappane.btcsell ?
+                                      (btcbox.value + " SATs") :
+                                      (fbbox.value + " FBs "))
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
 
