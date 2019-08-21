@@ -532,7 +532,10 @@ void Mediator::updateWeek() {
 
 void Mediator::OnSwapData(fantasybit::SwapOrder so) {
     if ( so.isask() ) {
-        m_pSwapSellModel->add(so);
+        if ( so.rate() > 0 )
+            m_pSwapSellModel->add(so);
+        else
+            m_pSwapSellModel->update(so);
     }
     else {
         if ( so.double_spent() );
@@ -542,7 +545,7 @@ void Mediator::OnSwapData(fantasybit::SwapOrder so) {
             doSwapSent(so);
         else if ( so.directed() != "")
             doSwapFill(so);
-        else
+        else if ( so.rate() > 0 )
             m_pSwapBuyModel->add(so);
 
         m_pSwapBuyModel->update(so);

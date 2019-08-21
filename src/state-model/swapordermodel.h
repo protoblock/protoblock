@@ -78,11 +78,15 @@ public:
         if ( it == nullptr )
             return;
 
-        QString st("msg(%1) ref(%2) directed(%3) ");
-        st = st.arg(so.msg().data()).arg(so.ref().data()).arg(so.directed().data());
-        if ( so.double_spent() )
-            st.append(" double spent");
-        it->set_status(st);
+        if ( so.rate() == 0 )
+            this->remove(it);
+        else {
+            QString st("msg(%1) ref(%2) directed(%3) ");
+            st = st.arg(so.msg().data()).arg(so.ref().data()).arg(so.directed().data());
+            if ( so.double_spent() )
+                st.append(" double spent");
+            it->set_status(st);
+        }
     }
 };
 
