@@ -1,6 +1,8 @@
 CONFIG += ordered
 TEMPLATE = subdirs
 
+message(p $$CONFIG )
+
 SUBDIRS += \
     $$PWD/apps \
     $$PWD/share

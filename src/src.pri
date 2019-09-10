@@ -8,7 +8,7 @@ include($$PWD/state-model/state-model.pri)
 INCLUDEPATH += $$PWD
 
 SOURCES += \
-    $$PWD/main.cpp \
+#    $$PWD/main.cpp \
     $$PWD/Data.cpp \
     $$PWD/DistributionAlgo.cpp \
     $$PWD/Processor.cpp \
@@ -24,8 +24,8 @@ SOURCES += \
     $$PWD/dataservice.cpp \
     $$PWD/fullgateway.cpp \
     $$PWD/importLoader.cpp \
-    $$PWD/SwapStateData.cpp \
-    $$PWD/bitcoinwalletworker.cpp
+    $$PWD/SwapStateData.cpp
+#    $$PWD/bitcoinwalletworker.cpp
 
 HEADERS += \
     $$PWD/PeerNode.h \
@@ -43,5 +43,5 @@ HEADERS += \
     $$PWD/dataservice.h \
     $$PWD/fullgateway.h \
     $$PWD/importLoader.h \
-    $$PWD/SwapStateData.h \
-    $$PWD/bitcoinwalletworker.h
+    $$PWD/SwapStateData.h
+#    $$PWD/bitcoinwalletworker.h

@@ -20,6 +20,7 @@
 #include <QQmlContext>
 #include <QQuickStyle>
 #include "bitcoinapi.h"
+#include "domainstatic.h"
 
 #ifdef QT_WEBVIEW_WEBENGINE_BACKEND
 #include <QtWebEngine>
@@ -45,6 +46,7 @@ void messageHandler(QtMsgType type,
 
 int main(int argc, char *argv[])
 {
+    std::cout << " run main " << std::endl;
     RunGuard guard( "protoblockqtprodapp" );
         if ( !guard.tryToRun() )
             return 0;
@@ -59,6 +61,7 @@ int main(int argc, char *argv[])
 //    QGuiApplication::setAttribute(Qt::AA_UseOpenGLES);
 
 
+//    QGuiApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
 
 #ifndef NO_DEBUG_FILE_OUT
     qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
@@ -117,5 +120,9 @@ int main(int argc, char *argv[])
 
     qDebug() << " podp test " << BitcoinUtils::toRawHexTx(tx).data ();
 
-    return app.exec();
+    qDebug() << QSslSocket::supportsSsl();
+    qDebug() << QSslSocket::sslLibraryVersionString();
+    qDebug() << QSslSocket::sslLibraryBuildVersionString();
+
+    return DoMainStatic::domain<QGuiApplication>(argc, argv, &app);
 }

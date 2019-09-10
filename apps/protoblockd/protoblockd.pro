@@ -4,7 +4,7 @@ include($$PWD/../../share/protos.pri)
 
 
 QT += core network websockets qml
-CONFIG += qt c++11 static
+CONFIG += qt c++11
 TEMPLATE = lib
 TARGET = protoblockd
 

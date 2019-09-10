@@ -147,5 +147,5 @@ RESOURCES += \
     fonts/fonts.qrc
 
 message("materialpro" $$installPath)
-CONFIG(debug,debug|release):message("Debug mode")
-CONFIG(release,debug|release):message("Release mode")
+CONFIG(debug,debug|release) { message("material Debug mode") }
+CONFIG(release,debug|release) { message("Release mode") }
