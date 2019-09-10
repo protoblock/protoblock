@@ -41,23 +41,24 @@ Item {
         visible: false
     }
     ColumnLayout {
-        width: ProtoScreen.guToPx(80)
-        anchors.horizontalCenter: parent.horizontalCenter
+        width: Math.min(parent.width * .90,  ProtoScreen.guToPx(90))
+//        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: ProtoScreen.guToPx(3)
         spacing: ProtoScreen.guToPx(3)
 
         RowLayout {
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: ProtoScreen.guToPx(10)
+            Layout.alignment: Qt.AlignCenter
+            spacing: ProtoScreen.guToPx(5)
 
             ListItems.Subtitled {
                 border.color: fbselected ? "#2580a6" : "transparent"
-                radius: 10
-                elevation: 1
+//                backgroundColor: fbselected ? "white" : "transparent"
+                border.width: ProtoScreen.guToPx(.25)
+                radius: fbselected ? 10 : 0
+                elevation: fbselected ? 2 : 0
                 text: "Fantasybit"
-//                subText: "Skill[" + skillbal + " ƑɃ] Stake[" + stakebal +" ƑɃ] Net[" + netbal + " ƑɃ]";
-//                itemSubLabel.font.family: fontfamFB
                 valueText: netbal
                 action:Image{
                     height: parent.height
@@ -77,9 +78,10 @@ Item {
 
             ListItems.Subtitled {
                 border.color: !fbselected ? "#FF9900" : "transparent"
-
-                radius: 10
-                elevation: 1
+//                backgroundColor: !fbselected ? "white" : "transparent"
+                border.width: ProtoScreen.guToPx(.25)
+                radius: !fbselected ? 10 : 0
+                elevation: !fbselected ? 2 : 0
                 text: "Bitcoin"
 //                subText: btcadddr
                 valueText: sbtcbal
@@ -101,32 +103,20 @@ Item {
             }
         }
 
-//        Rectangle {
-//            border.color: fbselected ? "#2580a6" : "#FF9900";
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            width: ProtoScreen.guToPx(80)
-//            Layout.fillHeight: true
-//            height: stackView.height
-
         StackLayout  {
             id: stackView
-    //        anchors.fill: parent
             currentIndex: fbselected ? 0 : 1
             anchors.margins: ProtoScreen.guToPx(1)
-
+            width: parent.width
             ColumnLayout {
-                spacing: ProtoScreen.guToPx(1)
-                anchors.horizontalCenter: parent.horizontalCenter
-
-//                anchors.top: parent.top
-//                anchors.left: parent.left
-//                anchors.margins: ProtoScreen.guToPx(2)
+                width: parent.width
+                spacing: ProtoScreen.guToPx(3)
+                Layout.alignment: Qt.AlignHCenter
 
                 ListItems.Subtitled {
                     id: thelist
                     elevation: 1
                     text: MiddleMan.pMyFantasyNameBalance.name
-//                    subText: MiddleMan.pMyFantasyNameBalance.pk
                     subText: "Skill[" + skillbal + " ƑɃ] Stake[" + stakebal +" ƑɃ] Net[" + netbal + " ƑɃ]";
                     itemSubLabel.font.family: fontfamFB
                     action:Image{
@@ -138,20 +128,11 @@ Item {
                     itemLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                     itemValueLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                     itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
-
-    //                valueText: "Skill[" + skillbal + " ƑɃ] Stake[" + stakebal +" ƑɃ] Net[" + netbal + " ƑɃ]";
-    //                itemValueLabel.font.family: fontfamFB
-        //            secondaryItem: Label {
-        //                Layout.preferredWidth: ProtoScreen.guToPx(10)
-        //                Layout.fillWidth: true
-        //                Layout.fillHeight: false
-        //                text: MiddleMan.toBTCAddess(MiddleMan.pMyFantasyNameBalance.pk);
-        //            }
                 }
 
                 Material.Card {
                     id: sendcard
-                    Layout.preferredWidth: ProtoScreen.guToPx(80)
+                    Layout.preferredWidth: parent.width
                     Layout.preferredHeight: ProtoScreen.guToPx(18)
         //            height: ProtoScreen.guToPx(30)
         //            width: ProtoScreen.guToPx(100)
@@ -166,7 +147,7 @@ Item {
                         rows: 3
                         Label {
                             text: "Send to:"
-                            Layout.preferredWidth: ProtoScreen.guToPx(10)
+                            Layout.preferredWidth: parent.width / 8.0
 
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignRight
@@ -194,7 +175,7 @@ Item {
                             Layout.columnSpan: 3
         //                    Layout.fillHeight: true
                             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                            Layout.preferredWidth: ProtoScreen.guToPx(50)
+                            Layout.preferredWidth: parent.width * .875
                             textColor: status === 0 ? Colors.black : status === 1 ? Colors.green : Colors.red
                             onTextChanged: {
                                 console.log("nameto onTextChanged " +  textColor)
@@ -244,14 +225,11 @@ Item {
                                 else if ( !accepting && text !== "" )
                                     accepted()
                             }
-
-
                         }
 
                         Mat2.ComboBox {
-
                             font.pixelSize: ProtoScreen.font(ProtoScreen.SMALL)
-                            anchors.right: nameto.right
+//                            anchors.right: nameto.right
                             flat: true
         //                    highlighted: false
                             inputMethodHints: Qt.ImhNoPredictiveText
@@ -266,7 +244,7 @@ Item {
                             Layout.alignment: Qt.AlignCenter
                             Layout.fillWidth: true
                             Layout.columnSpan: 2
-                            Layout.preferredWidth: ProtoScreen.guToPx(20)
+                            Layout.preferredWidth: parent.width / 4.0
 
                             Component.onCompleted: {
                                 model.sortAgain("name",Qt.AscendingOrder)
@@ -337,7 +315,7 @@ Item {
                             Layout.row: 2
                             Layout.alignment: Qt.AlignRight
                             Layout.fillWidth: false
-                            Layout.preferredWidth: ProtoScreen.guToPx(9)
+                            Layout.preferredWidth: parent.width / 8.0
                             onValueChanged: {
                                 console.log("netbal " + netbal)
                                 console.log("stakebal " + stakebal)
@@ -380,7 +358,7 @@ Item {
                                 }
                             }
                             Layout.preferredHeight: ProtoScreen.guToPx(3)
-                            Layout.preferredWidth: ProtoScreen.guToPx(9)
+                            Layout.preferredWidth: parent.width / 8.0
 
                         }
                     }
@@ -388,7 +366,8 @@ Item {
             }
 
             ColumnLayout {
-                spacing: ProtoScreen.guToPx(2)
+                width: parent.width
+                spacing: ProtoScreen.guToPx(3)
 //                anchors.top: parent.top
 //                anchors.left: parent.left
 //                anchors.margins: ProtoScreen.guToPx(2)
@@ -415,7 +394,7 @@ Item {
 
                 Material.Card {
                     id: sendbtccard
-                    Layout.preferredWidth: ProtoScreen.guToPx(80)
+                    Layout.preferredWidth: parent.width
                     Layout.preferredHeight: ProtoScreen.guToPx(18)
 
                     GridLayout {
@@ -426,7 +405,7 @@ Item {
                         rows: 3
                         Label {
                             text: "Send to:"
-                            Layout.preferredWidth: ProtoScreen.guToPx(10)
+                            Layout.preferredWidth: parent.width / 8.0
 
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignRight
@@ -556,7 +535,7 @@ Item {
                                 }
                             }
                             Layout.preferredHeight: ProtoScreen.guToPx(3)
-                            Layout.preferredWidth: ProtoScreen.guToPx(9)
+                            Layout.preferredWidth: parent.width / 8.0
 
                         }
                     }

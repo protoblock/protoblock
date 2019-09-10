@@ -28,20 +28,23 @@ Item {
     property int fillsbtc: 0 // MiddleMan.toBTCbalance(swappane.btcadddr);
     property int fillsfb: 0 // MiddleMan.toBTCbalance(swappane.btcadddr);
 
+    anchors.fill: parent
     ColumnLayout {
-        width: ProtoScreen.guToPx(80)
-        anchors.horizontalCenter: parent.horizontalCenter
+        width: Math.min(parent.width * .90,  ProtoScreen.guToPx(100))
+        height: parent.height
+//        anchors.horizontalCenter: parent.horizontalCenter
         id: columnLayout
-        //        anchors.bottomMargin: 268
         anchors.top: parent.top
+        anchors.left: parent.left
         anchors.margins: ProtoScreen.guToPx(3)
+        spacing: ProtoScreen.guToPx(3)
 
         Material.Card {
             id: sendcard
-            Layout.preferredWidth: ProtoScreen.guToPx(80)
-            Layout.preferredHeight: ProtoScreen.guToPx(36)
+            width: parent.width
+//            Layout.preferredHeight: ProtoScreen.guToPx(36)
 
-        GridLayout {
+           GridLayout {
 //            id: rlay
 //            Layout.alignment: Qt.AlignHCenter
 //            anchors.horizontalCenter: parent.horizontalCenter
@@ -118,6 +121,7 @@ Item {
                 Layout.column: swappane.btcsell ? 1 : 4
                 Layout.columnSpan: 2
                 border.color: "#FF9900"
+                border.width: ProtoScreen.guToPx(.25)
                 radius: 10
                 elevation: 0
                 Layout.fillWidth: true
@@ -167,6 +171,7 @@ Item {
                 Layout.row: 2
                 id: ifb
                 border.color: "#2580a6"
+                border.width: ProtoScreen.guToPx(.25)
                 Layout.column: !swappane.btcsell ? 1 : 4
                 Layout.columnSpan: 2
                 radius: 10
@@ -188,11 +193,9 @@ Item {
                 itemSubLabel.font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL))
                 itemSubLabel.font.family: fontfamFB
                 interactive: !swappane.btcsell
-//                onClicked: {
-//                    btcbox.value = Qt.binding( function() {
-//                        return swappane.satbal
-//                    })
-//                }
+                onClicked: {
+                    fbbox.textFromValue(swappane.satbal)
+                }
             }
 
             //fb input
@@ -287,7 +290,7 @@ Item {
 
                 value: 10
                 font.pixelSize: (ProtoScreen.font(ProtoScreen.SMALL));
-
+                onValueChanged:  swappane.counter = ""
             }
 
             //btc input
@@ -363,7 +366,9 @@ Item {
                 Layout.alignment: Qt.AlignCenter
 
                 id: button
-                text: "Swap"
+                text:  "SWAP " +
+                       (swappane.counter !== "" ? (( swappane.btcsell ? "SELL to " : "BUY from ") + swappane.counter)
+                        : (swappane.btcsell ? "ASK" : "BID"))
                 onClicked: {
                     mySwapDialog.show()
                 }
@@ -371,11 +376,11 @@ Item {
             }
         }
         }
+
         ListView {
             id: sbook
-
             width: parent.width
-            Layout.preferredHeight: ProtoScreen.guToPx(50)
+//            Layout.preferredHeight: ProtoScreen.guToPx(50)
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: swappane.btcsell ? MiddleMan.pSwapSellModel : MiddleMan.pSwapBuyModel
@@ -398,11 +403,19 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     height: width * .90
                     width: parent.height * .90
-                    text: swappane.btcsell ? "Buy" : "Sell";
+                    text: (fname === model.name) ? "Cancel"
+                          : (swappane.btcsell ? "Buy" : "Sell");
                     onClicked: {
                         ratesb.value = model.rate / 100
-                        swappane.counter = model.name
-                        mySwapDialog.show()
+                        if ( text === "Cancel") {
+                            mySwapDialog.iscancel = true;
+                            mySwapDialog.show();
+                        }
+                        else {
+                            mySwapDialog.iscancel = false;
+                            swappane.counter = model.name
+                            mySwapDialog.show()
+                        }
                     }
                 }
 
@@ -416,7 +429,9 @@ Item {
                 onClicked: {
                     console.log("twitch8 clicked item" + model.name)
                     ratesb.value = model.rate / 100
-                    swappane.counter = model.name
+                    if ( model.name !== fname ) {
+                        swappane.counter = model.name
+                    }
                 }
             }
 
@@ -426,10 +441,11 @@ Item {
     Material.Dialog {
         id: mySwapDialog
 
+        property bool iscancel: false
         height: ProtoScreen.guToPx(34)
         property int count: 0
         minimumHeight: ProtoScreen.guToPx(8)
-        width: ProtoScreen.guToPx(77)
+        width: Math.min(parent.width * .80,  ProtoScreen.guToPx(80))
         minimumWidth: ProtoScreen.guToPx(16)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -437,9 +453,10 @@ Item {
         property int price: swappane.satoshirate
         property int qty: swappane.btcsell ? btcbox.value : fbbox.value
         property string player
-        positiveButtonText: "Swap It"
-        title: "Confirm Swap: " + (!swappane.btcsell ? ("Send Fantasybit - Receive Bitcoin") : ("Send Bitcoin - Receive Fantasybit"))
-        text: "Protoblock Wallet: " + realRoot.uname + "\n Bitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
+        positiveButtonText: iscancel ? "Cancel Swap " : "Confirm Swap "
+        negativeButtonText: "Back"
+        title: positiveButtonText + (!swappane.btcsell ? ("Send Fantasybit - Receive Bitcoin") : ("Send Bitcoin - Receive Fantasybit"))
+        text: "Protoblock Wallet: " + realRoot.uname + "\nBitcoin Address: " + MiddleMan.pMyFantasyNameBalance.btcaddr
         dialogContent: Column {
             anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter
@@ -450,7 +467,12 @@ Item {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
-                text:  "Swap: " + (swappane.btcsell ? btcbox.value : fbbox.value)
+                text:  "Swap: " + (swappane.btcsell
+                     ? (btcbox.value.toLocaleString(locale, 'f', 0) + " SAT ( " +
+                        Number(.00000001 * btcbox.value).toLocaleString(Qt.locale("en-US"), 'f', btcbox.decimals)
+                        + " BTC )")
+                      : Number(fbbox.value).toLocaleString(Qt.locale("en-US"), 'f', 0) + " ƑɃ");
+
                 // myTradeDialog.side + " " + myTradeDialog.qty.toString() +
                 // " contract(s) at price " + myTradeDialog.price.toString()
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
@@ -469,14 +491,22 @@ Item {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
-                text:  "For: " + (!swappane.btcsell ? btcbox.value : fbbox.value)
+                text:  "For: " + (!swappane.btcsell
+                     ? (btcbox.value.toLocaleString(locale, 'f', 0) + " SAT ( " +
+                        Number(.00000001 * btcbox.value).toLocaleString(Qt.locale("en-US"), 'f', btcbox.decimals)
+                        + " BTC )")
+                      : Number(fbbox.value).toLocaleString(locale, 'f', 0) + " ƑɃ");
+
                 font.pixelSize:ProtoScreen.font( ProtoScreen.NORMAL)
             }
 
         }
 
         onAccepted: {
-            MiddleMan.doSwap(qty,swappane.satoshirate,!swappane.btcsell,swappane.counter,0);
+            if ( iscancel )
+                MiddleMan.doSwapCancel(!swappane.btcsell);
+            else
+                MiddleMan.doSwap(qty,swappane.satoshirate,!swappane.btcsell,swappane.counter,0);
         }
 
     }

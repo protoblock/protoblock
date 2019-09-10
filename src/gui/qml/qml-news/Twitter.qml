@@ -30,7 +30,6 @@ Rectangle {
             flipBar.flipUp()
             flipBar.flipped = true
             timer.stop ()
-
         }
     }
 

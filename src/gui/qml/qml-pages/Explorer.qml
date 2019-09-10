@@ -15,19 +15,29 @@ Item {
     id: explorer
     anchors.fill: parent
     ColumnLayout {
-        spacing: ProtoScreen.guToPx(2)
+        width: Math.min(parent.width * .90,  ProtoScreen.guToPx(100 ))
+        height: parent.height
+//        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.margins: ProtoScreen.guToPx(3)
+        spacing: ProtoScreen.guToPx(3)
+
+//        spacing: ProtoScreen.guToPx(2)
 //        anchors.top: parent.top
 //
-        anchors.left: parent.left
-        anchors.margins: ProtoScreen.guToPx(2)
+//        anchors.left: parent.left
+//        anchors.margins: ProtoScreen.guToPx(2)
 //        height: parent.height
-        anchors.fill: parent
+//        anchors.fill: parent
         Card {
-            Layout.preferredWidth: ProtoScreen.guToPx(80)
-            Layout.preferredHeight: ProtoScreen.guToPx(10)
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: parent.height * .10
 
             GridLayout {
 //                anchors.fill: parent
+                Layout.fillWidth: true
+                width: parent.width / 4
                 anchors.margins: ProtoScreen.guToPx(1)
                 anchors.centerIn: parent
                 columns: 2
@@ -59,10 +69,11 @@ Item {
                     Layout.row: 1
                     Layout.alignment: Qt.AlignLeft
                     Layout.fillWidth: false
-                    Layout.preferredWidth: ProtoScreen.guToPx(9)
+//                    Layout.preferredWidth: parent.width * .10
                     onValueChanged: {
                         MiddleMan.set_blocknum_string_num(blocknum.value)
                     }
+                    font.pixelSize: ProtoScreen.font(ProtoScreen.NORMAL)
                 }
 
 //                Button {
@@ -87,9 +98,12 @@ Item {
         }
 
         TextArea{
-            Layout.preferredWidth: ProtoScreen.guToPx(80)
-            Layout.preferredHeight: contentHeight
+            Layout.preferredWidth: parent.width
+//            Layout.preferredHeight: contentHeight
+            Layout.preferredHeight: parent.height * .85
             Layout.fillHeight: true
+
+            textMargin: ProtoScreen.guToPx(3)
 
 //            anchors.horizontalCenter: parent.horizontalCenter
             text: MiddleMan.blocknum_string

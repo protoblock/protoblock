@@ -19,7 +19,7 @@ Item {
             width: parent.width
             elevation:  5
             text: model.title
-            subText: model.summary + "   Copyright 2018, RotoWorld"
+            subText: model.summary + "   Copyright 2019, RotoWorld"
             maximumLineCount: 2
             onClicked:{
                 Qt.openUrlExternally(model.link)
@@ -28,7 +28,7 @@ Item {
     }
     XmlListModel{
         id: xmlModel
-        source: "http://www.rotoworld.com/rss/feed.aspx?sport=nfl&ftype=article&count=50&format=rss"
+        source: "http://dev.rotoworld.com/rss/feed.aspx?sport=nfl&ftype=news&count=50&format=rss"
         query: "/rss/channel/item"
         XmlRole{name: "title" ; query: "title/string()" }
         XmlRole{name: "summary" ; query: "description/string()" }

@@ -23,7 +23,7 @@ Pane {
         visible: false
     }
 
-    property real maxwidt: Math.min(ProtoScreen.guToPx(60),parent.width)
+    property real maxwidt: Math.min(ProtoScreen.guToPx(80),parent.width)
 
 //    TextEdit {
 //        id: pasthelper
@@ -107,7 +107,7 @@ Pane {
 
 
         Frame {
-            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.horizontalCenter: parent.horizontalCenter
             id: rec1
 
             Column {
@@ -236,11 +236,10 @@ Pane {
             width: grid.cellWidth
             height: grid.cellHeight
 
-
             RowLayout {
                 height: parent.height
                 width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
+//                LayouyverticalCenter: parent.verticalCenter
 //                spacing: ProtoScreen.guToPx(1)
 //                Layout.alignment: index < 6 ? Qt.AlignRight : Qt.AlignLeft
 
@@ -250,8 +249,8 @@ Pane {
                     horizontalAlignment: Text.AlignRight
 
 //                    horizontalAlignment: index < 6 ? Text.AlignLeft : Text.AlignRight
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.verticalCenterOffset: -2
+//                    anchors.verticalCenter: parent.verticalCenter
+//                    Layout.anchors.verticalCenterOffset: -2
                     Layout.preferredWidth: parent.width * .20
                     id: lb
                     text: (index < 9 ? " " : "") +(index+1) + ": "
@@ -260,9 +259,10 @@ Pane {
 
 
                 }
+
                 TextField {
                     height: parent.height
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
                     verticalAlignment: Text.AlignBottom
 //                    horizontalAlignment: Text.AlignLeft
 //                    Layout.alignment: Qt.AlignLeft

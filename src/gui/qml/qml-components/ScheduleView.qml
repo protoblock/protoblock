@@ -402,7 +402,9 @@ Material.Card {
             }
 
             MouseArea {
-                anchors.fill: parent
+//                anchors.fill: parent
+                Layout.fillHeight: true
+                Layout.fillWidth: true
                 onClicked: {
                     MiddleMan.toggle(index,ItemSelectionModel.Toggle)
                     dcard.elevation = Qt.binding(

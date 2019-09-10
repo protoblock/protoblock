@@ -12,7 +12,7 @@ Item {
     Flickable{
         height: parent.height
         width: parent.width
-        contentHeight: parent.height * 4
+        contentHeight: parent.height * 1.25
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
 
@@ -47,7 +47,7 @@ Item {
 
                     CardWithBanner{
                         width: parent.width / 1.07
-                        bannerText: "Professional Rotisserie Blockchain "
+                        bannerText: "Professional Roto Blockchain "
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "Protoblock is new game based directly on NFL PPR projections.  It distinguishes skilled experts while eliminating luck factors.  The game is fair, open and decentralized in a way that makes each Protoblock Player an owner."
                     }
@@ -69,9 +69,9 @@ Item {
 
                     CardWithBanner{
                         width: parent.width / 1.07
-                        bannerText: "2018 Season Long Contracts "
+                        bannerText: theqmlseason + " Season Long Contracts "
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Hedge dynasty risk, with  future season long 2018 contracts. Contact us for more info. contact@protoblock.com"
+                        text: "Hedge dynasty risk, with  future season long " + theqmlseason + " contracts. Contact us for more info. contact@protoblock.com"
                     }
 
                 }

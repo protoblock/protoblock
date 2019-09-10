@@ -14,7 +14,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 
 
-import Communi 3.0
+//import Communi 3.0
 
 Material.ApplicationWindow{
     title: "Protoblock"
@@ -99,7 +99,7 @@ Material.ApplicationWindow{
 //               (ProtoScreen.availableWidth >= 1920 ?  1080 : ProtoScreen.availableHeight - ProtoScreen.guToPx(7)) : ProtoScreen.availableHeight
 
     height: ProtoScreen.availableHeight - ProtoScreen.guToPx(4)
-    color: "transparent"
+    color: "white"
     Component.onCompleted: {
         setX(ProtoScreen.availrect.x + ProtoScreen.availableWidth /2 - width / 2 );
         setY(ProtoScreen.availrect.y + (ProtoScreen.availableHeight - height))
@@ -133,9 +133,9 @@ Material.ApplicationWindow{
 
     property string defaultname
 
-    property string start: "qrc:/Wallet.qml"
+    property string start: "qrc:/Projections.qml"
     property string account: "qrc:/Account.qml"
-    property int startindex: 0
+    property int startindex: 1
     property int accountIndex: 4
     property string  errorString
     property bool  reloadleaders: false
@@ -792,7 +792,7 @@ Material.ApplicationWindow{
         }
     }
 
-
+/*
     IrcConnection {
         property string  tempName: realRoot.uname === "" ? "protblockUser" + Math.floor(Math.random() * 5000) + 1  : realRoot.uname
         property string tempName1: ""
@@ -825,7 +825,7 @@ Material.ApplicationWindow{
         name: ircConnectionPoint.displayName
         Component.onCompleted: ircBufferModel.add(ircServerBuffer)
     }
-
+*/
     /*!
       * This is the left gesture bar that is used only for
       * tablets and phones and phablets. It is a swipe gesture to

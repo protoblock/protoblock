@@ -24,8 +24,10 @@ Material.PopupBase {
         anchors.fill: parent
         currentIndex: 0
         Material.View {
-            anchors.centerIn: parent;
-            anchors.fill: parent
+//            anchors.centerIn: parent;
+//            anchors.fill: parent
+            Layout.fillHeight: true
+            Layout.fillWidth: true
             backgroundColor: themeroot.theme.primaryColor
             id: view
 
