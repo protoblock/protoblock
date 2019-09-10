@@ -1,4 +1,4 @@
-/*
+﻿/*
 //  swapstatedata.h
 //
 //  Protoblock
@@ -82,6 +82,27 @@ struct SwapSells {
 
         return 0;
     }
+
+    bool filled(const std::string &fname, const std::string &buyer, uint64_t qty) {
+        for ( auto it = ssellers.begin(); it != end(ssellers) ; ++it) {
+            if ( it->fname == fname ) {
+                auto it2 = it->pending.find(buyer);
+                if ( it2 != end(it->pending) ) {
+                    auto pend_amount = it2->second;
+                    it->pending.erase(it2);
+                    it->pending_fill -= pend_amount;
+                    it->filled += pend_amount;
+
+                    if ( (it->pending_fill + it->open) < MIN_FB_QTY_SWAP) {
+                        it = ssellers.erase(it);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 };
 
 struct SwapBuyer {
@@ -155,6 +176,17 @@ struct SwapBuys {
 
             sb.podp = podp;
             return true;
+        }
+
+        return false;
+    }
+
+    bool ack( const std::string &fname, const  SwapSentAck &sack) {
+        for ( auto it = sbuyers.begin(); it != end(sbuyers) ; ++it) {
+            if ( it->fname == fname ) {
+                it = sbuyers.erase(it);
+                return true;
+            }
         }
 
         return false;
@@ -265,6 +297,41 @@ struct SwapOrderBook {
         return it->second.doubleSpent(podp.swapsent().swapfill().counterparty(),podp);
     }
 
+    int Acked(const SwapSentAck &inack, const std::string &fname) {
+        auto rate = inack.swapsent().swapfill().swapbid().rate();
+        auto it = bids.find(rate);
+        if ( it == end(bids))
+            return 0;
+
+        auto buyer = inack.swapsent().swapfill().counterparty();
+        if ( it->second.ack(buyer,inack) ) {
+            if ( it->second.sbuyers.empty() )
+                bids.erase(it);
+
+            theBuyers.erase(buyer);
+        }
+
+        {
+            auto it = asks.find(rate);
+            if ( it == end(asks)) {
+                qDebug() << " cant find asks" << rate;
+                return 0;
+            }
+            else {
+                if ( it->second.filled(fname,buyer,inack.swapsent().swapfill().fb_qty()) ) {
+                    if ( it->second.ssellers.empty() )  {
+                        asks.erase(it);
+                        theSellers.erase(fname);
+                        return -1;
+                    }
+                }
+            }
+        }
+
+
+        return 1;
+    }
+
     void clear() {
         bids.clear();
         asks.clear();
@@ -304,6 +371,7 @@ public:
     void AddNewSwapOrder(const SwapFill &infill, const std::string &fname );
     void AddNewSwapOrder(const SwapSent &insent, const std::string &fname );
     void AddNewSwapOrder(const ProofOfDoubleSpend &inpodp, const std::string &fname );
+    void RemoveSwapOrder(const std::string &buyer, const std::string &seller, bool sell_done);
 
 
     void OnNewSwapTx(const SwapBid &inbid, const std::string &fname,const std::string &txid);

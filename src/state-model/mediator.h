@@ -229,7 +229,7 @@ public:
         if ( inaddr.at(0) != "1" )
             return false;
 
-        return isValidBtcAddress(inaddr.toStdString());
+        return pb::isValidBtcAddress(inaddr.toStdString());
     }
 
 //    Q_INVOKABLE QString toBTCAddess(const QString &inpk) {

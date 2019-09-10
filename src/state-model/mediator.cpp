@@ -532,7 +532,10 @@ void Mediator::updateWeek() {
 
 void Mediator::OnSwapData(fantasybit::SwapOrder so) {
     if ( so.isask() ) {
-        m_pSwapSellModel->add(so);
+        if ( so.rate() > 0 )
+            m_pSwapSellModel->add(so);
+        else
+            m_pSwapSellModel->update(so);
     }
     else {
         if ( so.double_spent() );
@@ -542,7 +545,7 @@ void Mediator::OnSwapData(fantasybit::SwapOrder so) {
             doSwapSent(so);
         else if ( so.directed() != "")
             doSwapFill(so);
-        else
+        else if ( so.rate() > 0 )
             m_pSwapBuyModel->add(so);
 
         m_pSwapBuyModel->update(so);
@@ -976,13 +979,15 @@ void Mediator::doBtcTransfer(const quint64 amount, QString toname) {
     string input, inputscript;
     BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
 
-    string to_address = m_pMyFantasyNameBalance->get_btcaddr().toStdString();
+    string to_address = toname.toStdString();
     string pre, post;
-    auto to_sign = BitcoinUtils::createTX(myinput,input,inputscript,
-                                           to_address,
-                                           amount,
-                                           fantasybit::MIN_SAT_BYTE_TX_FEE,
-                                           to_address,pre,post);
+    auto to_sign =
+            BitcoinUtils::createTX(myinput,input,inputscript,
+                               to_address,
+                               amount,
+                               fantasybit::MIN_SAT_BYTE_TX_FEE,
+                               m_pMyFantasyNameBalance->get_btcaddr().toStdString(),
+                               pre,post);
 
     auto hashfromhex = pb::hashfromhex(to_sign);
     auto dblhash = pb::hashit(hashfromhex);
@@ -1035,7 +1040,7 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
     if ( isask && with == "" ) {
         SwapAsk ask;
         ask.set_rate(fantasybit::satRateSwap(rate));
-        ask.set_satoshi_min(fantasybit::minSatQtySwap(min));
+        ask.set_satoshi_min(fantasybit::minSatQtySwapFromRate(min,ask.rate()));
 
         qint64 mn = m_pMyFantasyNameBalance->get_net();
         if ( mn <= 0 ) {
@@ -1095,9 +1100,14 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
 //            addfreebee = sb.bid.satoshi_max() - ( sb.bid.rate() * maxfb );
 
         if ( minfb < fantasybit::minFBSwapQty(sb.bid.rate(),sb.bid.satoshi_min()) )  {
-            qDebug() << " bad data " ;
-            return;
+            qDebug() << " bad min data " <<  minfb << " < " <<
+                        fantasybit::minFBSwapQty(sb.bid.rate(),sb.bid.satoshi_min());
+            if ( minfb > maxfb ) {
+                qDebug() << " bad min data  minfb > maxfb " <<  minfb << " > " << maxfb;
+                return;
+            }
         }
+
 
         if ( qty > maxfb )
             qty = std::min(static_cast<quint64>(mn),maxfb);
@@ -1174,7 +1184,8 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
             qty = bb;
 
         if ( qty < bid.satoshi_min() ) {
-            qDebug() << " not enough BTC for Swap " << qty;
+            qDebug() << " not enough BTC for Swap " << qty
+                     << "min: " << bid.satoshi_min();
             return;
         }
 
@@ -1253,8 +1264,12 @@ void Mediator::doSwapFill(const fantasybit::SwapOrder  &so) {
 //            addfreebee = sb.bid.satoshi_max() - ( sb.bid.rate() * maxfb );
 
     if ( minfb < fantasybit::minFBSwapQty(sb.bid.rate(),sb.bid.satoshi_min()) )  {
-        qDebug() << " bad data " ;
-        return;
+        qDebug() << " bad min data " <<  minfb << " < " <<
+                    fantasybit::minFBSwapQty(sb.bid.rate(),sb.bid.satoshi_min());
+        if ( minfb > maxfb ) {
+            qDebug() << " bad min data  minfb > maxfb " <<  minfb << " > " << maxfb;
+            return;
+        }
     }
 
     if ( qty > maxfb )
@@ -1351,12 +1366,13 @@ void Mediator::doSwapSent(const fantasybit::SwapOrder  &so) {
         auto minfb = fantasybit::FBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min());
         auto maxfb = fantasybit::FBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_max());
 
-//        if ( sf.swapbid().rate() * maxfb < sf.swapbid().satoshi_max())
-//            addfreebee = sf.swapbid().satoshi_max() - ( sf.swapbid().rate() * maxfb );
-
         if ( minfb < fantasybit::minFBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min()) )  {
-            qDebug() << " bad data " ;
-            return;
+            qDebug() << " bad min data " <<  minfb << " < " <<
+                        fantasybit::minFBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min());
+            if ( minfb > maxfb ) {
+                qDebug() << " bad min data  minfb > maxfb " <<  minfb << " > " << maxfb;
+                return;
+            }
         }
 
         if ( qty > maxfb )
@@ -1459,10 +1475,13 @@ void Mediator::doSendSwapBTC(const SwapOrder &so) {
 
 //        if ( sf.swapbid().rate() * maxfb < sf.swapbid().satoshi_max())
 //            addfreebee = sf.swapbid().satoshi_max() - ( sf.swapbid().rate() * maxfb );
-
         if ( minfb < fantasybit::minFBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min()) )  {
-            qDebug() << " bad data " ;
-            return;
+            qDebug() << " bad min data " <<  minfb << " < " <<
+                        fantasybit::minFBSwapQty(sf.swapbid().rate(),sf.swapbid().satoshi_min());
+            if ( minfb > maxfb ) {
+                qDebug() << " bad min data  minfb > maxfb " <<  minfb << " > " << maxfb;
+                return;
+            }
         }
 
         if ( qty > maxfb )

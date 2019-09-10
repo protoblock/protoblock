@@ -625,6 +625,7 @@ public:
         QMap<QString,QString>  headers;
         QMap<QString,QString> params;// = {{ "api_key" , fantasybit::CHAINAPIKEY.data() }};
         QString customRoute("q/addressbalance/%1");
+        //QString customRoute("q/addressbalance/%1?confirmations=1");
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute.arg(addr),params,headers);
 
@@ -648,6 +649,8 @@ public:
         QMap<QString,QString>  headers;
         QMap<QString,QString> params;// = {{ "api_key" , fantasybit::CHAINAPIKEY.data() }};
         params.insert ( QString("active"),QString(addr.data()));
+        //params.insert ( QString("confirmations"),QString("1"));
+
         QString customRoute("unspent");
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);

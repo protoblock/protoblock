@@ -1138,6 +1138,16 @@ void BlockProcessor::processTxfrom(const Block &b,int start, bool nameonly ) {
         case TransType::SWAPSENTACK: {
             const auto & swapthis = t.GetExtension(SwapSentAck::swapsentack_tran);
             mSwapStateData.OnNewSwapTx(swapthis, st.fantasy_name(),st.id());
+            auto to = swapthis.swapsent().swapfill().counterparty();
+            auto from = swapthis.swapsent().swapfill().swapbid().counteroffer();
+            if ( from != st.fantasy_name()) {
+                qDebug() << " SWAPSENTACK not from counterparty " << from.data();
+                break;
+            }
+
+            int pnl = mExchangeData.GetOpenPnl(from);
+            mNameData.DoTransfer (from, to, swapthis.swapsent().swapfill().fb_qty(), pnl);
+
             break;
         }
 

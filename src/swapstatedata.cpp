@@ -259,6 +259,33 @@ void SwapStateData::OnNewSwapTx(const SwapSent &insent, const string &fname, con
 
 void SwapStateData::OnNewSwapTx(const SwapSentAck &insentack, const string &fname, const string & ) {
     //ToDo: finalize swap
+    int64_t sellerqty = 0;
+    {
+        std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
+        sellerqty = mOrderBook.Acked(insentack, fname );
+
+        if ( sellerqty == 0 ){
+             qDebug() << "!mOrderBook.Acked " << insentack.DebugString().data();
+             return;
+        }
+    }
+
+    RemoveSwapOrder(insentack.swapsent().swapfill().counterparty(),fname, sellerqty == -1);
+    if ( amlive ) {
+        {
+            SwapOrder so;
+            so.set_isask(false);
+            so.set_fname(insentack.swapsent().swapfill().counterparty());
+            emit NewSwapData(so);
+        }
+        if ( sellerqty == -1 ) {
+            SwapOrder so;
+            so.set_isask(true);
+            so.set_fname(fname);
+            emit NewSwapData(so);
+        }
+
+    }
 }
 
 void SwapStateData::OnNewSwapTx(const ProofOfDoubleSpend &inpods, const std::string &fname,const std::string &txid) {
@@ -424,6 +451,14 @@ void SwapStateData::AddNewSwapOrder(const ProofOfDoubleSpend &inpodp, const stri
 
     std::string key =  "^^" +  fname;
     swapbids->Put(write_sync, key, inpodp.SerializeAsString());
+}
+
+void SwapStateData::RemoveSwapOrder(const string &buyer, const string &seller, bool seller_done) {
+    swapbids->Delete(write_sync, buyer);
+    if ( seller_done ) swapasks->Delete(write_sync, seller);
+    std::string key = buyer + ":" +  seller;
+    swapbids->Delete(write_sync, "^" + buyer);
+    swapbids->Delete(write_sync, "^^" + seller);
 }
 
 
