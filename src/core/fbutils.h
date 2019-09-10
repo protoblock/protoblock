@@ -93,6 +93,9 @@ namespace fantasybit {
     static std::string CHAINSOAPI = "https://chain.so/api/v2/%1/BTC";
     static unsigned char BTC_NETWORK = 0;//0xc4;//0x6f; //0
     static char P2SH_ADDRESS = '3';
+    static std::string CHAINAPIKEY = "fa2d-df11-ff97-fe12";
+    static std::string BLOCKCYPHERAPI = "https://api.blockcypher.com/v1/btc/main";
+
 #endif
 
     //static std::string LAPIURL = "158.222.102.83:9854";

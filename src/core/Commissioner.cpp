@@ -222,7 +222,7 @@ Bootstrap Commissioner::makeGenesisBoot(LdbWriter &ldb, string genesiskey) {
         QString route(filename);
 
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
 
 
         QUrl url;

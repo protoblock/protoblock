@@ -354,7 +354,8 @@ void ExchangeData::closeAll(bool saverow) {
     ///snapstore.reset();
     ///
     ///
-    {
+    ///
+    if ( settlestore ) {
         auto *it = settlestore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             settlestore->Delete(write_sync,it->key());
@@ -362,7 +363,7 @@ void ExchangeData::closeAll(bool saverow) {
         delete it;
     }
 
-    {
+    if ( bookdeltastore ) {
         auto *it = bookdeltastore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             bookdeltastore->Delete(write_sync,it->key());
@@ -370,7 +371,7 @@ void ExchangeData::closeAll(bool saverow) {
         delete it;
     }
 
-    {
+    if ( posstore ) {
         auto *it = posstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             if ( saverow ) {

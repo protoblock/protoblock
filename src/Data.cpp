@@ -332,7 +332,7 @@ void NFLStateData::init() {
             qDebug() << "statsstore dump " << it->key().ToString().data();
             SeasonResult sr;
             sr.ParseFromString(it->value().ToString());
-            qDebug() << "statsstore dump2 " << sr.DebugString().data();
+//            qDebug() << "statsstore dump2 " << sr.DebugString().data();
 
         }
     }
@@ -414,6 +414,7 @@ void NFLStateData::init() {
             string temp;
             if ( !staticstore->Get(leveldb::ReadOptions(), key, &temp).ok() ) {
                 qWarning() << "NFLStateData::init cant find schedule " << key.data();
+                gs.ByteSize();
                 qDebug() << gs.DebugString().data();
                 break;
             }

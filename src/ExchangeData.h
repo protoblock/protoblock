@@ -312,7 +312,7 @@ class ExchangeData : public QObject {
 
     void UpdateOpenPnl(MatchingEngine &ma);
 public:
-    ExchangeData() : mMaxSeason(2018), mMinSeason(2018)
+    ExchangeData() : mMaxSeason(2114), mMinSeason(2014)
 #if defined(TIMEAGENTWRITEFILLS)
       , mSql{"protoblock","timeagentwrite"}
 #endif

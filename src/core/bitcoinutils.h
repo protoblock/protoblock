@@ -72,11 +72,13 @@ class BitcoinUtils
 {
 public:
 
-    static bool getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress, uint64_t max, uint64_t min);
+//    static bool getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress, uint64_t max, uint64_t min);
 
-    static fc::optional<Bitcoin_UTXO> getUtxo(const std::string &btcaddress,
-                     uint64_t max = 999000000000,
-                     uint64_t min = 200);
+//    static fc::optional<Bitcoin_UTXO> getUtxo(const std::string &btcaddress,
+//                     uint64_t min = 200, uint64_t max = 999000000000);
+
+    static fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxoExact(const std::string &btcaddress, uint64_t amount);
+    static fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxoMax(const std::string &btcaddress, uint64_t max, uint64_t min);
 
     static int checkUtxo(const Bitcoin_UTXO &iutxo, const std::string &btcaddress);
 

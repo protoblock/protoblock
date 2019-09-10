@@ -184,7 +184,7 @@ public:
     }
 
     bool getData(const QString & route,
-                 const QMap<QString,QVariant> parameters,
+                 const QMap<QString,QString> parameters,
                  const QMap<QString,QString> headersMap)  {
         QNetworkRequest request;
         restNetworkStatus();
@@ -199,13 +199,14 @@ public:
         foreach (QString paramName, parameters.keys()) {
             if ( first ) {
                 first = false;
-                url+=QString("?%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
+                url+=QString("?%1=%2").arg(paramName).arg(parameters.value(paramName));
             }
             else {
-                url+=QString("&%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
+                url+=QString("&%1=%2").arg(paramName).arg(parameters.value(paramName));
             }
         }
 
+        qDebug() << " url " << url;
         request.setUrl(QUrl(url));
 
         //add headers
@@ -229,19 +230,19 @@ public:
 
     bool getData(const QString & route) {
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         return getData(route,params,headers);
     }
 
-    bool getData(const QString & route,const QMap<QString,QVariant> parameters) {
+    bool getData(const QString & route,const QMap<QString,QString> parameters) {
         QMap<QString,QString>  headers;
         return getData(route,parameters,headers);
     }
 
-    bool getData(const QString & route, const QMap<QString,QString> headersMap) {
-        QMap<QString,QVariant> parameters;
-        return getData(route,parameters,headersMap);
-    }
+//    bool getData(const QString & route, const QMap<QString,QString> headersMap) {
+//        QMap<QString,QString> parameters;
+//        return getData(route,parameters,headersMap);
+//    }
 
     QByteArray lastReply() {
 #ifdef TRACE3
@@ -261,7 +262,7 @@ public:
     int statusCode = 0;
 
     bool postTData(const QString & route,
-                 const QMap<QString,QVariant> parameters,
+                 const QMap<QString,QString> parameters,
                  const QMap<QString,QString> headersMap)  {
         QNetworkRequest request;
         restNetworkStatus();
@@ -278,10 +279,10 @@ public:
         foreach (QString paramName, parameters.keys()) {
             if ( first ) {
                 first = false;
-                url+=QString("?%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
+                url+=QString("?%1=%2").arg(paramName).arg(parameters.value(paramName));
             }
             else {
-                url+=QString("&%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
+                url+=QString("&%1=%2").arg(paramName).arg(parameters.value(paramName));
             }
 //            postBodyContent += QString("&%1=%2").arg(paramName).arg(parameters.value(paramName).toString());
         }
@@ -434,7 +435,7 @@ public:
     static fantasybit::Block retrieveBlock(const QString & baseUrl,const QString route,int blockNum,QThread * ownerThread = QThread::currentThread()){
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         //hard coded url
         //TODO move to settings
         QString customRoute("%1/block/%3");
@@ -480,7 +481,7 @@ public:
 #endif
 
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         //hard coded url
         //TODO move to settings
         QString customRoute = "block/" + QString::number(blockNum);
@@ -501,7 +502,7 @@ public:
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
 
         std::vector<std::string> ret{};
         for ( int i = blockNum; i <= blockEnd; i++) {
@@ -529,7 +530,7 @@ public:
 
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         //hard coded url
         //TODO move to settings
         QString customRoute("block-height");
@@ -569,7 +570,7 @@ public:
                              QThread * ownerThread = QThread::currentThread()){
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         //hard coded url
         //TODO move to settings
         QString customRoute("tx");
@@ -583,7 +584,7 @@ public:
                              QThread * ownerThread = QThread::currentThread()){
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         //hard coded url
         //TODO move to settings
         QString customRoute("trade");
@@ -601,7 +602,7 @@ public:
                              QThread * ownerThread = QThread::currentThread()){
         RestfullClient client(QUrl(baseUrl),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         //hard coded url
         //TODO move to settings
         QString customRoute("tx/peek");
@@ -622,7 +623,7 @@ public:
         QString url = QString(fantasybit::BLOCKCHAINAPI.data());
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;// = {{ "api_key" , fantasybit::CHAINAPIKEY.data() }};
         QString customRoute("q/addressbalance/%1");
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute.arg(addr),params,headers);
@@ -645,7 +646,7 @@ public:
         QString url = QString(fantasybit::BLOCKCHAINAPI.data());
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;// = {{ "api_key" , fantasybit::CHAINAPIKEY.data() }};
         params.insert ( QString("active"),QString(addr.data()));
         QString customRoute("unspent");
         //customRoute = customRoute.arg(route).arg(blockNum);
@@ -661,7 +662,7 @@ public:
         QString url = QString(fantasybit::BLOCKCHAINAPI.data());
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         params.insert ( QString("format"),QString("hex"));
         QString customRoute("rawtx/%1");
         client.getData(customRoute.arg(txid.data()),params,headers);
@@ -676,13 +677,29 @@ public:
         QString url = QString(fantasybit::CHAINSOAPI.data()).arg("get_tx_unspent");
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         QString customRoute = addr.data();
         //customRoute = customRoute.arg(route).arg(blockNum);
         client.getData(customRoute,params,headers);
 
         return client.lastReply();
         //toStdString();
+    }
+
+    static QByteArray getBlockCypherTX(const std::string &txid,
+                 QThread * ownerThread = QThread::currentThread()) {
+
+        qDebug() << " getBlockCypherTX" << txid.data();
+
+        QString url = QString(fantasybit::BLOCKCYPHERAPI.data()).append("/txs");
+        RestfullClient client(QUrl(url),ownerThread);
+        QMap<QString,QString>  headers;
+        QMap<QString,QString> params;
+
+        QString customRoute = txid.data();
+        client.getData(customRoute,params,headers);
+
+        return client.lastReply();
     }
 
     static QByteArray getChainsoIsTXSpent(const std::string &txid, uint numo,
@@ -695,7 +712,9 @@ public:
         QString url = QString(fantasybit::CHAINSOAPI.data()).arg("is_tx_spent");
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+//        QMap<QString,QString> params;
+        QMap<QString,QString> params = {{ "api_key" , fantasybit::CHAINAPIKEY.data() }};
+
         QString customRoute = (txid + "/%1").data();
         customRoute = customRoute.arg(numo);
         client.getData(customRoute,params,headers);
@@ -713,7 +732,7 @@ public:
         QString url = QString(fantasybit::CHAINSOAPI.data()).arg("address");
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         QString customRoute = addr.data();
 //        if ( !aftertx.isEmpty() )
 //            customRoute = QString("%1/%2").arg(customRoute).arg(aftertx);
@@ -744,7 +763,7 @@ public:
         QString url = QString(fantasybit::CHAINSOAPI.data()).arg("send_tx");
         RestfullClient client(QUrl(url),ownerThread);
 //        QMap<QString,QString>  headers;
-//        QMap<QString,QVariant> params;
+//        QMap<QString,QString> params;
 //        params.insert ( QString("tx_hex"),QString(rawTx.data()));
        QString customRoute("");
 //        client.postTData(customRoute,params,headers);
@@ -767,7 +786,7 @@ public:
         QString url = QString(fantasybit::BLOCKCHAINAPI.data());
         RestfullClient client(QUrl(url),ownerThread);
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
         params.insert ( QString("tx"),QString(rawTx.data()));
         QString customRoute("pushtx");
         client.postTData(customRoute,params,headers);

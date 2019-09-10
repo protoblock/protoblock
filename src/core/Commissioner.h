@@ -102,7 +102,7 @@ public:
 
 
     static GlobalState InitialGlobalState () {
-        GlobalState gs = gs.default_instance();
+        GlobalState gs; //  = gs.default_instance();
         gs.set_season(2014);
         gs.set_state(GlobalState::OFFSEASON);
         gs.set_week(0);
@@ -111,7 +111,7 @@ public:
     }
 
     static Block makeGenesisBlock();
-    static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = "201800");
+    static Bootstrap makeGenesisBoot(LdbWriter &ldb,string = "201900");
     static bool BootStrapFileExists(string);
 
     static const int BLOCK_VERSION = 1;

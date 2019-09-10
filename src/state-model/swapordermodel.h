@@ -29,6 +29,8 @@ class SwapOrderModelItem : public QObject {
     QML_WRITABLE_CSTREF_PROPERTY (QString, status)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, qty)
     QML_WRITABLE_CSTREF_PROPERTY (quint64, sat_min)
+//    QML_WRITABLE_CSTREF_PROPERTY (quint64, sat_max)
+
 
 
 public:
@@ -42,7 +44,11 @@ public:
     explicit SwapOrderModelItem(const fantasybit::SwapOrder &so) : QObject(nullptr) {
         m_name = so.fname().data();
         m_rate = so.rate();
-        m_qty = so.openq();
+        if ( so.isask() )
+            m_qty = so.openq();
+        else if ( so.rate() > 0 )
+            m_qty = so.satoshi_max() / so.rate();
+
         m_sat_min = so.satoshi_min();
     }
 

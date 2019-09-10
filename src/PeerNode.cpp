@@ -468,7 +468,7 @@ int Node::getBootSeason() {
     QString route("season");
 
     QMap<QString,QString>  headers;
-    QMap<QString,QVariant> params;
+    QMap<QString,QString> params;
 
     QUrl url;
     url.setUrl(links);
@@ -484,7 +484,7 @@ int Node::getBootSeason() {
     auto sseason = jo.value("season").toString().toStdString();
 
     if ( sseason == "" )
-        return 2018;
+        return 2019;
 
     return stoi(sseason);
 }
@@ -496,7 +496,7 @@ Bootstrap Node::getLastLocalBoot() {
     QString route("week");
 
     QMap<QString,QString>  headers;
-    QMap<QString,QVariant> params;
+    QMap<QString,QString> params;
 
     QUrl url;
     url.setUrl(links);
@@ -520,6 +520,8 @@ Bootstrap Node::getLastLocalBoot() {
     //todo: season
     int sseason = getBootSeason();
 
+    sseason = 2019;
+    week = 0;
 #ifdef NOCHECK_LOCAL_BOOTSTRAP_ONLY1
     week = 1;
 #endif

@@ -30,6 +30,8 @@ void BlockRecorder::init() {
 
     status = leveldb::DB::Open(options, filedir("blockstatus"), &db1);
     qDebug() << filedir("blockstatus").data();
+    qDebug() << " blockstatus status " << status.ToString().data();
+
     if (!status.ok()) {
         std::string err = status.ToString();
         qWarning() << err.data();
@@ -37,6 +39,8 @@ void BlockRecorder::init() {
     blockstatus.reset(db1);
     std::string value;
     status = blockstatus->Get(leveldb::ReadOptions(), "lastblock", &value);
+    qDebug() << " blockstatus lastblock  status " << status.ToString().data();
+
     if (!status.ok()) {
         lastBlock =  BlockRecorder::zeroblock;
         qWarning() << "!ok no blocks start from " << lastBlock;
@@ -87,7 +91,13 @@ int32_t BlockRecorder::endBlock(int32_t num) {
 
 bool BlockRecorder::isValid() {
     std::string value;
-    if (blockstatus->Get(leveldb::ReadOptions(), "processing", &value).IsNotFound())
+    auto status = blockstatus->Get(leveldb::ReadOptions(), "processing", &value);
+    if (status.IsNotFound())
+        return true;
+
+    qDebug() << " processing status " << status.ToString().data();
+
+    if ( !status.ok() )
         return true;
 
     int32_t num = *(reinterpret_cast<const int32_t *>(value.data()));

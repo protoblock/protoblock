@@ -788,6 +788,7 @@ public:
     void doSwapFill(const fantasybit::SwapOrder &so);
     bool doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid);
 
+    void doSwapCancel(bool isask);
 signals:
     void importSuccess(const QString name, bool passfail);
     void usingFantasyName(const QString &name, const QString &btcaddress);
@@ -928,7 +929,7 @@ private:
 //        qDebug() << " calling route " << route;
 
         QMap<QString,QString>  headers;
-        QMap<QString,QVariant> params;
+        QMap<QString,QString> params;
 
         QUrl url;
         url.setUrl(links);

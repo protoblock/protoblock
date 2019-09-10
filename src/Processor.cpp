@@ -49,7 +49,6 @@ void BlockProcessor::hardReset() {
 #endif
 
     mSwapStateData.closeAll();
-    mExchangeData.removeAll();
 
     qInfo() <<  "delete all leveldb, should have nothing";
     pb::remove_all(Platform::instance()->getRootDir() + "index/");

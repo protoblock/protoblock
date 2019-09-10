@@ -17,9 +17,15 @@ using namespace std;
 using namespace fantasybit;
 
 
+/*
 bool BitcoinUtils::getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress, uint64_t max, uint64_t min) {
     utxos.set_total_value(0);
-    for ( const auto &utxo : BitcoinApi::getUtxo(btcaddress) ) {
+    std::vector<utxoData> theutxos;
+
+    if ( 0 != BitcoinApi::getUtxo(btcaddress,theutxos) ) {
+        return false;
+    }
+    for ( const auto &utxo :  theutxos ) {
         auto *bu = utxos.add_utxo();
         bu->set_txid(utxo.tx_hash.toStdString());
         bu->set_tx_output_n(utxo.tx_output_n);
@@ -29,7 +35,6 @@ bool BitcoinUtils::getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress,
 #ifdef TRACE
     qDebug() << " new utxo " << bu->DebugString().data();
 #endif
-
         utxos.set_total_value(utxos.total_value()+utxo.in_value);
         if ( utxos.total_value() >= max)
             return true;
@@ -42,12 +47,101 @@ bool BitcoinUtils::getUtxos(Bitcoin_UTXOS &utxos, const std::string &btcaddress,
     return utxos.total_value() > min;
 }
 
-fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxo(const std::string &btcaddress, uint64_t max, uint64_t min) {
+*/
 
+fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxoExact(const std::string &btcaddress, uint64_t amount) {
+
+    std::vector<utxoData> theutxos;
+    fc::optional<Bitcoin_UTXO> ret;
+    utxoData use;
+    uint64_t diff = 999000000000;
+    bool found = false;
+    if ( 0 != BitcoinApi::getUtxo(btcaddress,theutxos) ) {
+        qDebug() << " bad getUtxo";
+        return ret;
+    }
+
+    for ( const auto &utxo :  theutxos ) {
+        if ( utxo.in_value < amount)
+            continue;
+
+        if ( !found )
+            found = true;
+
+        if ( diff > (utxo.in_value - amount) ) {
+            diff = utxo.in_value - amount;
+            use = utxo;
+        }
+    }
+
+    if ( found ) { //found it
+        ret = Bitcoin_UTXO{};
+        ret->set_txid(use.tx_hash.toStdString());
+        ret->set_tx_output_n(use.tx_output_n);
+        ret->set_locking_script(use.script.toStdString());
+        ret->set_in_value(use.in_value);
+    }
+
+    return ret;
+}
+
+fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxoMax(const std::string &btcaddress, uint64_t max, uint64_t min) {
+
+    std::vector<utxoData> theutxos;
+    fc::optional<Bitcoin_UTXO> ret;
+    utxoData use;
+    uint64_t diff = 0;
+    bool found = false;
+    if ( 0 != BitcoinApi::getUtxo(btcaddress,theutxos) ) {
+        qDebug() << " bad getUtxo";
+        return ret;
+    }
+
+    for ( const auto &utxo : theutxos ) {
+        if ( utxo.in_value < min)
+            continue;
+
+        if ( !found ) {
+            found = true;
+            use = utxo;
+            if ( utxo.in_value >= max )
+                break;
+            else
+                diff = max-utxo.in_value;
+        }
+        else if (utxo.in_value >= max) {
+            use = utxo;
+            break;
+        }
+        else if ( diff > (max - utxo.in_value ) ) {
+            diff = max - utxo.in_value;
+            use = utxo;
+        }
+    }
+
+    if ( found ) { //found it
+        ret = Bitcoin_UTXO{};
+        ret->set_txid(use.tx_hash.toStdString());
+        ret->set_tx_output_n(use.tx_output_n);
+        ret->set_locking_script(use.script.toStdString());
+        ret->set_in_value(use.in_value);
+    }
+
+    return ret;
+}
+/*
+fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxo(const std::string &btcaddress, uint64_t min, uint64_t max) {
+
+    std::vector<utxoData> theutxos;
     fc::optional<Bitcoin_UTXO> ret;
     utxoData use;
     uint64_t diff = max+1;
-    for ( const auto &utxo : BitcoinApi::getUtxo(btcaddress) ) {
+    if ( 0 != BitcoinApi::getUtxo(btcaddress,theutxos) ) {
+        qDebug() << " bad getUtxo";
+        return ret;
+    }
+
+    for ( const auto &utxo :  theutxos ) {
         if ( utxo.in_value < min || utxo.in_value > max)
             continue;
 
@@ -67,9 +161,15 @@ fc::optional<Bitcoin_UTXO> BitcoinUtils::getUtxo(const std::string &btcaddress, 
 
     return ret;
 }
-
+*/
 int BitcoinUtils::checkUtxo(const Bitcoin_UTXO &iutxo, const std::string &btcaddress) {
-    for ( const auto &utxo : BitcoinApi::getUtxo(btcaddress) ) {
+    std::vector<utxoData> theutxos;
+    if ( 0 != BitcoinApi::getUtxo(btcaddress,theutxos) ) {
+        qDebug() << " bad getUtxo";
+        return -1;
+    }
+
+    for ( const auto &utxo : theutxos ) {
         if ( utxo.tx_hash.toStdString() != iutxo.txid() )
             continue;
 

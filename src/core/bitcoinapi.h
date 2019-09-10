@@ -26,22 +26,23 @@ class BitcoinApi {
 public:
     BitcoinApi();
 
-    static std::vector<utxoData> getUtxo(const std::string &btcaddress) {
-        std::vector<utxoData> ret;
-
+    static int getUtxo(const std::string &btcaddress, std::vector<utxoData> &ret) {
+//        std::vector<utxoData> ret;
+        { // blockchain
         auto json = BitcoinRestfullService::getBlockchainBtcAddressUnspent (btcaddress);
         if ( json != "Service Unavailable") {
             if ( json == "No free outputs to spend") {
                 qDebug() << json;
-                return ret;
+                return 0;
             }
 
             QJsonParseError * error = NULL;
             QJsonDocument doc = QJsonDocument::fromJson(json,error);
             if (error != NULL || doc.isEmpty()){
                     qDebug() << " error parsing json:" << json;
-                if ( error != NULL ) qDebug() << error->errorString();
-                    return ret;
+                if ( error != NULL )
+                    qDebug() << error->errorString();
+                return 0;
             }
 
             qDebug() << json;
@@ -59,12 +60,18 @@ public:
                 utd.confirms = vo.value("confirmations").toInt();
             }
 
-            return ret;
+            return 0;
+        }
         }
 
+        { //chain
         auto json2 = BitcoinRestfullService::getChainsoBtcAddressUnspent (btcaddress);
         QJsonValue data = getChainData(json2);
-        if ( !data.isNull() ) {
+        if ( data.isNull() ) {
+            qDebug() << " error getChainsoBtcAddressUnspent ";
+            return 1;
+        }
+        else {
             QJsonObject jo2 = data.toObject();
             QJsonArray utxos = jo2.value("txs").toArray();
             for(QJsonValueRef ut : utxos) {
@@ -82,14 +89,9 @@ public:
                 utd.confirms = vo.value("confirmations").toInt();
             }
 
-            return ret;
+            return 0;
         }
-        else {
-            qDebug() << " error getChainsoBtcAddressUnspent ";
         }
-
-        return ret;
-
     }
 
     static QByteArray getRawTX(const std::string &txid) {
@@ -156,6 +158,48 @@ public:
         jo2 = jo2.value("spent").toObject();
         ret.tx_hash = jo2.value("txid").toString();
         ret.out_value = jo2.value("input_no").toInt();
+        return {true,ret};
+    }
+
+    static std::pair<bool,txData> getBlockCypherIsTxSpent(const std::string &intx, uint num) {
+        txData ret;
+        ret.out_value = 400;
+
+        auto json2 = BitcoinRestfullService::getBlockCypherTX (intx);
+
+        QJsonParseError * error = nullptr;
+        QJsonDocument doc = QJsonDocument::fromJson(json2,error);
+        if (error != nullptr || doc.isEmpty()){
+                qDebug() << " error parsing json";
+            if ( error != nullptr )
+                qDebug() << error->errorString();
+            return {false, ret};
+        }
+
+        qDebug() << json2;
+        qDebug() << doc.isNull() << doc.isEmpty() << doc.isArray() << doc.isObject();
+        QJsonObject jo = doc.object();
+        if ( jo.value("hash").toString() != intx.data() )
+            return {false,ret};
+
+        QJsonArray outputs = jo.value("outputs").toArray();
+        if ( outputs.count() < num) {
+            qDebug() << "bad outputcount " << outputs.count() << num;
+            return { false, ret};
+        }
+
+        QJsonValue numo = outputs.at(num);
+        if ( numo.isNull() ) {
+            qDebug() << "bad output " << num;
+            return { false, ret};
+        }
+
+        QJsonObject outob = numo.toObject();
+        if ( !outob.contains("spent_by") ) {
+            return { false, ret };
+        }
+        ret.tx_hash = outob.value("spent_by").toString();
+        ret.out_value = 200;
         return {true,ret};
     }
 

@@ -61,7 +61,7 @@ Mediator::Mediator(QObject *parent) :  QObject(parent),
                     m_pPrevQItemSelectionModel(&myPrevGamesSelectionModel),
                     m_pResultSelectedModel(new SortFilterProxyModel),
                     m_height(0),
-                    m_theSeason(2018),
+                    m_theSeason(2014),
                     m_blocknum(0) ,
                     myFantasyName("") ,
                     m_pAccountsModel(new SortFilterProxyModel)  {
@@ -959,20 +959,20 @@ void Mediator::doBtcTransfer(const quint64 amount, QString toname) {
 
     qDebug() << " do btc transfer" << amount << "from: " << m_pMyFantasyNameBalance->get_btcaddr() << "to: " << toname;
 
-    Bitcoin_UTXOS utxos;
-    if ( !BitcoinUtils::getUtxos(utxos,
-                                 m_pMyFantasyNameBalance->get_btcaddr().toStdString(),
-                                 amount,amount) ) {
+    fc::optional<Bitcoin_UTXO> utxos =
+            BitcoinUtils::getUtxoExact(m_pMyFantasyNameBalance->get_btcaddr().toStdString(),amount);
+
+    if ( !utxos ) {
         qDebug() << "doBtcTransfer not enough utxos";
         return;
     }
 
-    if ( utxos.utxo_size()!= 1) {
-        qDebug() << "doBtcTransfer not yet";
-        return;
-    }
+//    if ( (*utxos).utxo_size() != 1) {
+//        qDebug() << "doBtcTransfer not yet";
+//        return;
+//    }
 
-    auto myinput = utxos.utxo().Get(0);
+    Bitcoin_UTXO myinput = *utxos;//.utxo().Get(0);
     string input, inputscript;
     BitcoinUtils::createInputsFromUTXO(myinput,input,inputscript);
 
@@ -1022,6 +1022,10 @@ void Mediator::doBtcTransfer(const quint64 amount, QString toname) {
     auto txid = BitcoinApi::sendrawTx(finaltx);
     qDebug() << "doBtcTransfer txid " << txid.data();
 
+}
+
+void Mediator::doSwapCancel(bool isask) {
+    //todo
 }
 
 void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint64 min) {
@@ -1181,14 +1185,18 @@ void Mediator::doSwap(quint64 qty, quint64 rate, bool isask, QString with, quint
             return;
         }
 
-        if ( !BitcoinUtils::getUtxos(*bid.mutable_utxos(),
-                                     m_pMyFantasyNameBalance->get_btcaddr().toStdString(),
-                                     bid.satoshi_max(),bid.satoshi_min())) {
+        auto theutxo = BitcoinUtils::getUtxoMax(m_pMyFantasyNameBalance->get_btcaddr().toStdString(),
+                                             bid.satoshi_max(),bid.satoshi_min());
+
+        if ( !theutxo ) {
             qDebug() << " not enough utxos";
             return;
         }
-        else
-            qDebug() << bid.DebugString().data();
+
+        if ( (*theutxo).in_value() < bid.satoshi_max() )
+            bid.set_satoshi_max((*theutxo).in_value());
+
+        qDebug() << bid.DebugString().data();
 
         bid.set_counteroffer(with.toStdString());
         emit NewSwapBid(bid);
@@ -1551,7 +1559,8 @@ void Mediator::doSendSwapBTC(const SwapOrder &so) {
 #endif
     }
     else {
-        doProofOfDoubleSpend(so, hashit (finaltx));
+        doProofOfDoubleSpend(so, pb::hashit(pb::hashfromhex(finaltx)).reversestr());
+
 
         //get txid
         //check txid confirms
@@ -1595,10 +1604,13 @@ bool Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
     for ( const auto &utxo : sf.swapbid().utxos().utxo() ) {
         if ( minconfirms > BitcoinUtils::checkUtxo(utxo,btcaddr) ) {
             qDebug() << minconfirms << " cant find UTXO (confirms) " << utxo.DebugString().data();
-            auto pbin = BitcoinApi::getChainsoIsTXSpent(pb::sha256(utxo.txid()).reversestr(),utxo.tx_output_n());
+            auto pbin = BitcoinApi::getBlockCypherIsTxSpent(pb::sha256(utxo.txid()).reversestr(),utxo.tx_output_n());
             if ( pbin.first ) {
                 spent = pbin.second.tx_hash.toStdString();
                 if ( pbin.second.tx_hash.toStdString() == txid)
+                    break;
+
+                if ( spent == "" )
                     break;
 
                 isdoublespend = true;
@@ -1608,6 +1620,9 @@ bool Mediator::doProofOfDoubleSpend(const SwapOrder &so, const std::string &txid
             }
         }
     }
+
+    if ( spent == "" )
+        return false;
 
     if ( !isdoublespend ) {
         if ( spent == txid ) {
