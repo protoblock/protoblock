@@ -301,7 +301,7 @@ struct SwapOrderBook {
         auto rate = inack.swapsent().swapfill().swapbid().rate();
         auto it = bids.find(rate);
         if ( it == end(bids))
-            return 0;
+            return 1;
 
         auto buyer = inack.swapsent().swapfill().counterparty();
         if ( it->second.ack(buyer,inack) ) {
@@ -329,7 +329,7 @@ struct SwapOrderBook {
         }
 
 
-        return 1;
+        return 0;
     }
 
     void clear() {

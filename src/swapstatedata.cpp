@@ -40,7 +40,7 @@ void SwapStateData::init() {
 
             SwapSeller ss(it->key().ToString(), sa);
             mOrderBook.Add( ss );
-            qDebug() << "twitch111" << sa.DebugString().data();
+            qDebug() << it->key().ToString().data() << "ask twitch111" << sa.DebugString().data();
         }
 
         delete it;
@@ -69,23 +69,25 @@ void SwapStateData::init() {
             if ( pos != string::npos) {
                 sf.ParseFromString(it->value().ToString());
                 vsf.push_back({str,sf});
-                qDebug() << "twitch111" << sf.DebugString().data();
+                qDebug() << it->key().ToString().data() << ":! twitch111" << sf.DebugString().data();
 
             }
             else if ( str.at(0) == '^' ) {
                 if ( str.at(1) == '^' ) {
                     pods.ParseFromString(it->value().ToString());
                     vds.push_back({str.substr(2),pods});
-                    qDebug() << "twitch111" << pods.DebugString().data();
+                    qDebug() << it->key().ToString().data() << "^^! twitch111" << pods.DebugString().data();
                 }
                 else {
                     ss.ParseFromString(it->value().ToString());
                     vss.push_back({str.substr(1),ss});
-                    qDebug() << "twitch111" << ss.DebugString().data();
+                    qDebug() << it->key().ToString().data() << "^! twitch111" << ss.DebugString().data();
                 }
             }
             else {
+
                 sb.ParseFromString(it->value().ToString());
+                qDebug() << it->key().ToString().data() << "!^ twitch111" << sb.DebugString().data();
                 if ( sb.counteroffer() != "" ) {
                     if ( !mOrderBook.Buy( sb, it->key().ToString() ) ) {
                         qDebug() << "init !mOrderBook.Buy( inbid )  " << sb.DebugString().data();
@@ -94,7 +96,6 @@ void SwapStateData::init() {
 
                 SwapBuyer sb2(it->key().ToString(), sb);
                 mOrderBook.Add( sb2 );
-                qDebug() << "twitch111" << sb.DebugString().data();
 
             }
         }
@@ -259,18 +260,18 @@ void SwapStateData::OnNewSwapTx(const SwapSent &insent, const string &fname, con
 
 void SwapStateData::OnNewSwapTx(const SwapSentAck &insentack, const string &fname, const string & ) {
     //ToDo: finalize swap
-    int64_t sellerqty = 0;
+    int64_t ret_sellerqty = 0;
     {
         std::lock_guard<std::recursive_mutex> lockg{ data_mutex };
-        sellerqty = mOrderBook.Acked(insentack, fname );
+        ret_sellerqty = mOrderBook.Acked(insentack, fname );
 
-        if ( sellerqty == 0 ){
+        if ( ret_sellerqty == 0 ){
              qDebug() << "!mOrderBook.Acked " << insentack.DebugString().data();
              return;
         }
     }
 
-    RemoveSwapOrder(insentack.swapsent().swapfill().counterparty(),fname, sellerqty == -1);
+    RemoveSwapOrder(insentack.swapsent().swapfill().counterparty(),fname, ret_sellerqty == -1);
     if ( amlive ) {
         {
             SwapOrder so;
@@ -278,7 +279,7 @@ void SwapStateData::OnNewSwapTx(const SwapSentAck &insentack, const string &fnam
             so.set_fname(insentack.swapsent().swapfill().counterparty());
             emit NewSwapData(so);
         }
-        if ( sellerqty == -1 ) {
+        if ( ret_sellerqty == -1 ) {
             SwapOrder so;
             so.set_isask(true);
             so.set_fname(fname);
