@@ -21,11 +21,9 @@ win32 {
         LIBS += -lleveldb
     }
     #openssl
-    LIBS += -llibcrypto \
-            -llibssl
-
-#    LIBS += -llibeay32 \
-#            -lssleay32
+    INCLUDEPATH += $$OPENSSL_PREFIX/include
+    LIBS += -L$$OPENSSL_PREFIX/lib
+    LIBS += -llibssl -llibcrypto
 }
 macx {
     message(macx Build)

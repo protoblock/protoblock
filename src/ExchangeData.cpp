@@ -271,14 +271,16 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
 
     leveldb::DB *db4;
     status = leveldb::DB::Open(options, filedir("posstore"), &db4);
-    posstore.reset(db4);
     if ( !status.ok() ) {
         qCritical() << " cant open " << filedir("posstore").data();
         //todo emit fatal
         return;
     }
-    else {
-        auto *it = posstore->NewIterator(leveldb::ReadOptions());
+
+    posstore.reset(db4);
+
+    {
+        auto it = posstore->NewIterator(leveldb::ReadOptions());
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             auto str = it->key().ToString();
             int ii =  str.find_first_of(':');
@@ -319,7 +321,7 @@ void ExchangeData::init(const fantasybit::GlobalState &st) {
             //ToDO already have this from settlepos?
             it3->second->mPkPos.insert(make_pair(fname,pos));
         }
-        delete it;
+        if ( it != NULL ) delete it;
     }
 
 
