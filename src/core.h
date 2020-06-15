@@ -74,7 +74,7 @@ public:
 public slots:
     void guiIsAwake();
 private:
-
+    int mCount = 0;
     QMap<QString,IResolvable *> myNamedResolvableInstance;
     QWaitCondition myWaitForGUI;
     QMutex myMutex;
@@ -111,9 +111,6 @@ Q_DECLARE_METATYPE(fantasybit::SwapFill)
 Q_DECLARE_METATYPE(fantasybit::SwapSent)
 Q_DECLARE_METATYPE(fantasybit::ProofOfDoubleSpend)
 Q_DECLARE_METATYPE(fantasybit::SwapSentAck)
-
-
-
 
 
 

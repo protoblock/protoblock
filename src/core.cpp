@@ -45,8 +45,6 @@ void Core::bootstrap(){
 
 
 
-
-
     qRegisterMetaType<string>("string");
 //    qSetMessagePattern(AppSettings::instance()->getSetting(AppSettings::LogMessagePattern).toString());
 //    qInstallMessageHandler(messageHandler);
@@ -57,12 +55,24 @@ void Core::bootstrap(){
 
 void Core::waitForGui(){
     myWaitForGuiMutex.lock();
-    myWaitForGUI.wait(&myWaitForGuiMutex);
+    if ( mCount <= 0)
+        myWaitForGUI.wait(&myWaitForGuiMutex);
     myWaitForGuiMutex.unlock();
 }
 
 void Core::guiIsAwake(){
+//    myWaitForGuiMutex.lock();
+//    while (mCount > 0) {
+//        myWaitForGuiMutex.unlock();
+//        QThread::currentThread()->msleep(1000);
+//        myWaitForGuiMutex.lock();
+//    }
+
+
     myWaitForGUI.wakeAll();
+    myWaitForGuiMutex.lock();
+    ++mCount;
+    myWaitForGuiMutex.unlock();
 }
 
 Core::~Core(){}
