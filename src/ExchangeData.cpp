@@ -408,7 +408,7 @@ void ExchangeData::OnCancelOrderMsg(const ExchangeOrder& eo,
         return;
     }
 
-    mBookDelta->set_blocknum(blocknum);
+    mBookDelta->theBookDelta.set_blocknum(blocknum);
     OnOrderCancel(eo,seqnum,fn);
 }
 
@@ -424,7 +424,7 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
         return;
     }
 
-    mBookDelta->set_blocknum(blocknum);
+    mBookDelta->theBookDelta.set_blocknum(blocknum);
     qDebug() << symbol.data() << ":newOrder:" << seqnum << " : " << fn->alias().data();
 
     int stake = fn->getStakeBalance();
@@ -533,10 +533,10 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
 
     }
 
-    //mBookDelta->set_playerid(eo.playerid());
-    mBookDelta->set_fantasy_name(fn->alias());
-    if ( mBookDelta->level1tic_size() > 0 ) {
-        ma.blocknum = mBookDelta->blocknum();
+    //mBookDelta->theBookDelta.set_playerid(eo.playerid());
+    mBookDelta->theBookDelta.set_fantasy_name(fn->alias());
+    if ( mBookDelta->theBookDelta.level1tic_size() > 0 ) {
+        ma.blocknum = mBookDelta->theBookDelta.blocknum();
         UpdateOpenPnl(ma);
     }
 
@@ -547,9 +547,9 @@ void ExchangeData::OnNewOrderMsg(const ExchangeOrder& eo,
     if ( !amlive )
         return;
 #endif
-    if ( mBookDelta->level1tic_size() > 0 ) {
+    if ( mBookDelta->theBookDelta.level1tic_size() > 0 ) {
 //        SqlStuff sql("satoshifantasy","md_level1");
-        mSql.mdlevel1(mBookDelta->symbol(),mMarketQuote[mBookDelta->symbol()]);
+        mSql.mdlevel1(mBookDelta->theBookDelta.symbol(),mMarketQuote[mBookDelta->theBookDelta.symbol()]);
     }
 #endif
 }
@@ -624,11 +624,11 @@ void ExchangeData::OnDeltaPos(const string &symbol, int32_t seqnum,
 
 void ExchangeData::SaveBookDelta() {
 #ifdef TRACE
-    qDebug() << "level2 ExchangeData SaveBookDelta" << mBookDelta->DebugString().data();
+    qDebug() << "level2 ExchangeData SaveBookDelta" << mBookDelta->theBookDelta.DebugString().data();
 #endif
 
-    mBookDelta->SerializeToString(&mBookDelta->mSerialized);
-    int32_t seqnum = mBookDelta->seqnum();
+    mBookDelta->theBookDelta.SerializeToString(&mBookDelta->mSerialized);
+    int32_t seqnum = mBookDelta->theBookDelta.seqnum();
     leveldb::Slice snum((char*)&seqnum, sizeof(int32_t));
     leveldb::Status st = bookdeltastore->Put(mBookDelta->write_sync, snum, mBookDelta->mSerialized );
     if ( !st.ok() )
@@ -636,7 +636,7 @@ void ExchangeData::SaveBookDelta() {
 
     {
         std::lock_guard<std::recursive_mutex> lockg{ ex_mutex };
-        ProcessBookDelta(*mBookDelta);
+        ProcessBookDelta(mBookDelta->theBookDelta);
     }
 }
 
@@ -777,12 +777,12 @@ void ExchangeData::OnOrderCancel(const ExchangeOrder& eo, int32_t seqnum,
     MatchingEngine &ma = *(it->second);
     //ord.mutable_core()->CopyFrom(eo.core());
     //ord.set_refnum(eo.cancel_oref());
-    mBookDelta->set_seqnum(seqnum);
+    mBookDelta->theBookDelta.set_seqnum(seqnum);
     ma.mLimitBook->CancelOrder(ord);
-    mBookDelta->set_symbol(ticker);
-    mBookDelta->set_fantasy_name(fn->alias());
-    if ( mBookDelta->level1tic_size() > 0 ) {
-        ma.blocknum = mBookDelta->blocknum();
+    mBookDelta->theBookDelta.set_symbol(ticker);
+    mBookDelta->theBookDelta.set_fantasy_name(fn->alias());
+    if ( mBookDelta->theBookDelta.level1tic_size() > 0 ) {
+        ma.blocknum = mBookDelta->theBookDelta.blocknum();
         UpdateOpenPnl(ma);
     }
     SaveBookDelta();
@@ -1029,7 +1029,7 @@ void ExchangeData::OnMarketTicker(const string &symbol, fantasybit::MarketTicker
     if ( amlive )
 #endif
     {
-        emit NewMarketTicker(mt,mBookDelta->blocknum());
+        emit NewMarketTicker(mt,mBookDelta->theBookDelta.blocknum());
     }
 }
 
@@ -1100,7 +1100,7 @@ void LimitBook::SaveRemove(Order &o,int32_t fillqty) {
         qDebug() << "level2 SaveRemove " << o.DebugString().data() << "fillqty" << fillqty;
 #endif
 
-    auto no = mBookDelta->add_removes();
+    auto no = mBookDelta->theBookDelta.add_removes();
     no->CopyFrom(o);
     no->mutable_core()->set_size(fillqty);
 
@@ -1116,7 +1116,7 @@ void LimitBook::SaveNew(const OrderCore &oc) {
     qDebug() << "level2 New SaveNew " << s.data()  << oc.price() << oc.size();
 #endif
 
-    mBookDelta->mutable_newnew()->CopyFrom(oc);
+    mBookDelta->theBookDelta.mutable_newnew()->CopyFrom(oc);
 }
 
 void LimitBook::NewTop(int price, int32_t qty, bool isbuy) {
@@ -1125,7 +1125,7 @@ void LimitBook::NewTop(int price, int32_t qty, bool isbuy) {
     mt.set_type(isbuy ? MarketTicker::BID : MarketTicker::ASK);
     mt.set_price(price);
     mt.set_size(qty);
-    mBookDelta->add_level1tic()->CopyFrom(mt);
+    mBookDelta->theBookDelta.add_level1tic()->CopyFrom(mt);
     //emit pExchangeData->get()->NewMarketTicker(pmt);
     pExchangeData->get()->OnMarketTicker(mSymbol,mt);
 
@@ -1160,9 +1160,9 @@ void LimitBook::NewDepth(bool isbuy,int price) {
 
 bool LimitBook::NewOrder(Order &o, Position &posdelta) {
     bool haspos = false;
-    //mBookDelta->Clear();
-    mBookDelta->set_seqnum(o.refnum());
-    //mBookDelta->set_allocated_newnew(o.mutable_core());
+    //mBookDelta->theBookDelta.Clear();
+    mBookDelta->theBookDelta.set_seqnum(o.refnum());
+    //mBookDelta->theBookDelta.set_allocated_newnew(o.mutable_core());
     if ( o.core().buyside() ) {
         if ( o.core().price() > 0 && o.core().size() > 0 && o.core().size() <= 100000 )
             haspos = NewBid(o,posdelta);
@@ -1180,7 +1180,7 @@ bool LimitBook::NewOrder(Order &o, Position &posdelta) {
 }
 
 int32_t LimitBook::CancelOrder(Order &order) {
-    //mBookDelta->Clear();
+    //mBookDelta->theBookDelta.Clear();
     auto myprice = order.core().price()-1;
     if ( (myprice < 0) || (myprice >= BOOK_SIZE) )
         return -1;
@@ -1188,7 +1188,7 @@ int32_t LimitBook::CancelOrder(Order &order) {
     if (order.core().buyside()) {
         mBids[myprice].Cancel(order);
         SaveRemove(order,order.core().size());
-        //mBookDelta->add_removes()->CopyFrom(order);
+        //mBookDelta->theBookDelta.add_removes()->CopyFrom(order);
         //{
         //Send(new BookFeedData(ExecType.Canceled, order));
 
@@ -1587,7 +1587,7 @@ void LimitBook::SendFill(Order &o, int32_t q, int price, bool ispassive ) {
     if ( ispassive )
         return;
 
-    MarketTicker *lst = mBookDelta->add_level1tic();
+    MarketTicker *lst = mBookDelta->theBookDelta.add_level1tic();
     lst->set_type(MarketTicker::LAST);
     lst->set_price(price);
     lst->set_size(q);

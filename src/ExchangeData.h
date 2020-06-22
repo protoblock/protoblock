@@ -646,10 +646,11 @@ public:
     }
 };
 
-class BookDeltaMediator : public BookDelta {
+class BookDeltaMediator {
 public:
+    BookDelta theBookDelta{};
     void OnFill(MarketTicker *mt) {
-        auto &myphlc = *mutable_ohlc();
+        auto &myphlc = *theBookDelta.mutable_ohlc();
 
         if ( myphlc.has_high() || mt->price() > myphlc.high())
             myphlc.set_high(mt->price());
@@ -663,11 +664,11 @@ public:
     }
 
     void Reset(const string &symbol) {
-        auto holdit = blocknum();
-        Clear();
-        set_blocknum(holdit);
-        set_symbol(symbol);
-        mutable_ohlc()->set_symbol(symbol);
+        auto holdit = theBookDelta.blocknum();
+        theBookDelta.Clear();
+        theBookDelta.set_blocknum(holdit);
+        theBookDelta.set_symbol(symbol);
+        theBookDelta.mutable_ohlc()->set_symbol(symbol);
     }
 
     std::string mSerialized;

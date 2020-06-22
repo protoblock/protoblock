@@ -11,10 +11,15 @@ import Material.ListItems 1.0 as ListItem
 import Material.Extras 1.0
 
 import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.0
+//import QtQuick.Layouts 1.0
 
+//import QtQuick 2.12
+import QtQuick.Controls 2.15
+//import QtQuick.Controls.Material 2.12
 
 //import Communi 3.0
+
+import QtQuick.Layouts 1.5
 
 Material.ApplicationWindow{
     title: "Protoblock"
@@ -687,12 +692,12 @@ Material.ApplicationWindow{
         target: MiddleMan
 
 
-        onTheWeekChanged: {
+        function onTheWeekChanged(week) {
             console.log( "onTheWeekChanged")
-            fillDefaultModels(MiddleMan.theWeek)
+            fillDefaultModels(week)
         }
 
-        onNameCheckGet: {
+        function onNameCheckGet(name, status) {
             console.log( "namehcek material main" + name + status)
             if(status === "true" ) {
                 MiddleMan.signPlayer(name)
@@ -710,7 +715,7 @@ Material.ApplicationWindow{
             }
         }
 
-        onNoName: {
+        function onNoName() {
             console.log("no name");
             pageHelper.selectedTabIndex = startindex
             loginDialog.currentindex = loginDialog.start
@@ -718,7 +723,7 @@ Material.ApplicationWindow{
             firstname = true
         }
 
-        onUsingFantasyName: {
+        function onUsingFantasyName(name, address) {
             console.log(uname + " qml usingfantay name " + name)
             var dosecret = (waitingName === name)
             if ( dosecret ) waitingName = ""
@@ -747,7 +752,7 @@ Material.ApplicationWindow{
             else console.log("ignoring usingfantasyname")
         }
 
-        onImportSuccess: {
+        function onImportSuccess(name, passfail) {
             console.log(passfail + "onImportSucess " + name )
             if ( passfail ) {
                 msgString = name + " - Imported!"

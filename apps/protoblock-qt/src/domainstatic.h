@@ -17,9 +17,9 @@ public:
     static int domain(int argc, char *argv[], QT*app) {
             Core::instance()->bootstrap();
 
-            Core::instance()->guiIsAwake();
+//            Core::instance()->guiIsAwake();
 
-            QThread::currentThread()->msleep(10000);
+            QThread::currentThread()->msleep(10);
             Core::resolveByName<MainLAPIWorker>("coreapi")->NFLState().seasonFreeze(2015);
             Core::resolveByName<MainLAPIWorker>("coreapi")->NameData().seasonFreeze(2015);
 
