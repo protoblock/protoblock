@@ -2,19 +2,23 @@
 ## Globals
 ##############
 
-DIRPREFIX = $$PWD/../libs/
+LDDIRPREFIX = $$PWD/../libs-ldb17/
+PBDIRPREFIX = $$PWD/../libs-pb3/
+
 ##############
 ##  WINDOWS
 ##############
 win32 {
     message(win32 Build)
-    INCLUDEPATH += $$DIRPREFIX/include
-    LIBS+= -L$$DIRPREFIX
+    INCLUDEPATH += $$LDDIRPREFIX/include
+    INCLUDEPATH += $$PBDIRPREFIX/include
+    LIBS+= -L$$LDDIRPREFIX
+    LIBS+= -L$$PBDIRPREFIX
 
     #protobuf
     CONFIG(debug, debug|release) {
         LIBS += -llibprotobufd
-        LIBS += -lleveldbd
+        LIBS += -lleveldb
     }
     else {
         LIBS += -llibprotobuf
